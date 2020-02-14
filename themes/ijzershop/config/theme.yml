@@ -1,0 +1,14 @@
+parent: classic
+name: ijzershop
+display_name: Thema voor ijzershop webshops
+version: 1.0.0
+author:
+  name: "Ijzershop"
+  email: "jelmer@ijzershop.nl"
+  url: "https://ijzershop.nl"
+meta:
+  compatibility:
+      from: 1.7.0.0
+      to: ~
+assets:
+  use_parent_assets: true

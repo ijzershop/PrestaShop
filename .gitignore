@@ -124,6 +124,7 @@ modules/*
 override/*
 themes/*/
 !themes/classic
+!themes/ijzershop
 !themes/_core
 !themes/_libraries
 themes/classic/assets/css/*_rtl.css

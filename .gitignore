@@ -121,6 +121,9 @@ app/config/config.php
 # Themes, modules and overrides
 
 modules/*
+!modules/sawandcutmodule
+!modules/ijzershopkiyoh
+!modules/offerintergration
 override/*
 themes/*/
 !themes/classic

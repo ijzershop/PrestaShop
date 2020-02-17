@@ -1,0 +1,9 @@
+[submodule "modules/sawandcutmodule"]
+	path = modules/sawandcutmodule
+	url = https://ijzershop@bitbucket.org/ijzershop/sawandcutmodule.git
+[submodule "modules/ijzershopkiyoh"]
+	path = modules/ijzershopkiyoh
+	url = https://ijzershop@bitbucket.org/ijzershop/ijzershopkiyoh.git
+[submodule "modules/offerintergration"]
+	path = modules/offerintergration
+	url = https://ijzershop@bitbucket.org/ijzershop/offerintergration.git

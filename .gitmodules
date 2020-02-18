@@ -1,0 +1,12 @@
+[submodule "themes/modernesmid"]
+	path = themes/modernesmid
+	url = https://github.com/ijzershop/modernesmid-theme.git
+[submodule "modules/sawandcutmodule"]
+	path = modules/sawandcutmodule
+	url = https://ijzershop@bitbucket.org/ijzershop/sawandcutmodule.git
+[submodule "modules/ijzershopkiyoh"]
+	path = modules/ijzershopkiyoh
+	url = https://ijzershop@bitbucket.org/ijzershop/ijzershopkiyoh.git
+[submodule "modules/offerintegration"]
+	path = modules/offerintegration
+	url = https://ijzershop@bitbucket.org/ijzershop/offerintegration.git

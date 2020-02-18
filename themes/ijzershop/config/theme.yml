@@ -12,3 +12,8 @@ meta:
       to: ~
 assets:
   use_parent_assets: true
+   hooks:
+    custom_hooks:
+       - name: kiyohBanner
+         title: kiyohBanner
+         description: Adds kiyoh block

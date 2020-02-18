@@ -4,6 +4,6 @@
 [submodule "modules/ijzershopkiyoh"]
 	path = modules/ijzershopkiyoh
 	url = https://ijzershop@bitbucket.org/ijzershop/ijzershopkiyoh.git
-[submodule "modules/offerintergration"]
-	path = modules/offerintergration
+[submodule "modules/offerintegration"]
+	path = modules/offerintegration
 	url = https://ijzershop@bitbucket.org/ijzershop/offerintergration.git

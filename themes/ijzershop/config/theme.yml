@@ -1,7 +1,6 @@
-parent: classic
 name: ijzershop
 display_name: Thema voor ijzershop webshops
-version: 1.0.0
+version: 1.0.1
 author:
   name: "Ijzershop"
   email: "jelmer@ijzershop.nl"
@@ -10,10 +9,21 @@ meta:
   compatibility:
       from: 1.7.0.0
       to: ~
-assets:
-  use_parent_assets: true
-   hooks:
+  hooks:
     custom_hooks:
        - name: kiyohBanner
          title: kiyohBanner
          description: Adds kiyoh block
+assets:
+    css:
+      all:
+        - id: theme-core-style
+          path: assets/theme-core-bundled.css
+          media: all
+          priority: 1
+    js:
+      all:
+        - id: theme-core-js
+          path: assets/js/theme-core.js
+          priority: 1
+          position: bottom

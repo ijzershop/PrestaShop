@@ -7,7 +7,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <a href="/content/16-bezorgen" class="zekerheden-banner-img" title="Snelle levering in heel Nederland">
-                                <img src="/themes/ijzershop/assets/img/levertijd.gif" alt="Snelle levering in heel Nederland" width="auto" height="40" class="hover_effect_target">
+                                <img src="/themes/modernesmid/assets/img/levertijd.gif" alt="Snelle levering in heel Nederland" width="auto" height="40" class="hover_effect_target">
                             </a>
                         </div>
                         <div class="col-lg-8">
@@ -28,7 +28,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <a href="/content/37-offerte-aanvragen" class="zekerheden-banner-img" title="Wij reageren direct op offerteaanvragen">
-                                <img src="/themes/ijzershop/assets/img/offerte.gif" alt="Wij reageren direct op offerteaanvragen" width="auto" height="40" class="hover_effect_target">
+                                <img src="/themes/modernesmid/assets/img/offerte.gif" alt="Wij reageren direct op offerteaanvragen" width="auto" height="40" class="hover_effect_target">
                             </a>
                         </div>
                         <div class="col-lg-8">
@@ -49,7 +49,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <a href="/content/17-constructiewerk/" class="zekerheden-banner-img" title="Wij zagen ook in verstek, boren gaten en verzorgen laswerk">
-                                <img src="/themes/ijzershop/assets/img/lasser.jpg" alt="Wij zagen ook in verstek, boren gaten en verzorgen laswerk" width="59" height="35" class="hover_effect_target">
+                                <img src="/themes/modernesmid/assets/img/lasser.jpg" alt="Wij zagen ook in verstek, boren gaten en verzorgen laswerk" width="59" height="35" class="hover_effect_target">
                             </a>
                         </div>
                         <div class="col-lg-8">
@@ -70,7 +70,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <a href="/content/15-betalen" class="zekerheden-banner-img" title="Verzenden in Nederland, altijd 7,75 euro exclusief BTW">
-                                <img src="/themes/ijzershop/assets/img/leverkosten.gif" alt="Verzenden in Nederland, altijd 7,75 euro exclusief BTW" width="auto" height="40" class="hover_effect_target">
+                                <img src="/themes/modernesmid/assets/img/leverkosten.gif" alt="Verzenden in Nederland, altijd 7,75 euro exclusief BTW" width="auto" height="40" class="hover_effect_target">
                             </a>
                         </div>
                         <div class="col-lg-8">
@@ -90,7 +90,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <a href="/content/33-informatieaanvraag" class="zekerheden-banner-img" title="Direct advies van de vakman zelf via mail, whatsapp of telefoon">
-                                <img src="/themes/ijzershop/assets/img/chat.png" alt="Direct advies van de vakman zelf via mail, whatsapp of telefoon" width="auto" height="40" class="hover_effect_target">
+                                <img src="/themes/modernesmid/assets/img/chat.png" alt="Direct advies van de vakman zelf via mail, whatsapp of telefoon" width="auto" height="40" class="hover_effect_target">
                             </a>
                         </div>
                         <div class="col-lg-8">

@@ -10,3 +10,6 @@
 [submodule "modules/offerintegration"]
 	path = modules/offerintegration
 	url = https://ijzershop@bitbucket.org/ijzershop/offerintegration.git
+[submodule "modules/modernesmidthemeconfigurator"]
+	path = modules/modernesmidthemeconfigurator
+	url = https://github.com/ijzershop/modernesmidthemeconfigurator.git

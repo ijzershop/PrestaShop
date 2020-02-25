@@ -24,7 +24,7 @@ function changeToMaterial() {
     'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>',
   };
 
-  $.each(materialIconAssoc, function (index, value) {
+  $.each(materialIconAssoc, function(index, value) {
     $('.' + index).replaceWith(value);
   });
 }
@@ -45,20 +45,46 @@ function tinySetup(config) {
     config.selector = '.' + config.editor_selector;
   }
 
+    if (typeof (base_url) == "undefined") {
+        // detect the root url
+        var base_url = location.protocol + '//' + location.host + '/';
+        // detect localhost
+        // the value must include your local window.location.hostname
+        const LOCAL_DOMAINS = ["localhost", "127.0.0.1", "ijzershop176.local"];
+        if (LOCAL_DOMAINS.includes(window.location.hostname)) {
+            var tbpKey = 'cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpntwY68zKhPuBBBfiucVaylNhbNzuWdxME7vwNnVxE8VOFkf7RlqjEyxMsiu6eEK7Q=';
+        } else {
+            var tbpKey = 'cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpntwY68zKhPuBBBfiucVaylNhbNzuWdxME7vwNnVxE8VOFkf7RlqjEyxMsiu6eEK7Q='; // replace with your production server key
+        }
+    }
 
   var default_config = {
-    selector: ".rte",
-    plugins: "align colorpicker link image filemanager table media placeholder advlist code table autoresize",
+    general: {
+      debug: true,
+    },
+    selector: "textarea.rte",
+    plugins: ['link', 'image', 'filemanager', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap'],
     browser_spellcheck: true,
-    toolbar1: "code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect",
-    toolbar2: "",
+    toolbar1: "code colorpicker | bold | italic | underline | strikethrough | blockquote | link | bullist | numlist | table | filemanager | formatselect | bootstrap",
+    toolbar2: false,
+    contextmenu: "bootstrap",
+    bootstrapConfig: {
+      language: iso_user, 
+      url: base_url + 'js/tiny_mce/plugins/bootstrap/',
+      iconFont: 'fontawesome5',
+      // imagesPath: base_url+'uploads',
+      key: 'cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpntwY68zKhPuBBBfiucVaylNhbNzuWdxME7vwNnVxE8VOFkf7RlqjEyxMsiu6eEK7Q=',
+    },
     external_filemanager_path: baseAdminDir + "filemanager/",
     filemanager_title: "File manager",
-    external_plugins: {"filemanager": baseAdminDir + "filemanager/plugin.min.js"},
+    external_plugins: {
+      "filemanager": baseAdminDir + "filemanager/plugin.min.js"
+    },
     language: iso_user,
-    content_style : (lang_is_rtl === '1' ? "body {direction:rtl;}" : ""),
-    skin: "prestashop",
-    menubar: false,
+    content_style: (lang_is_rtl === '1' ? "body {direction:rtl;}" : ""),
+    skin: "oxide",
+    themes: "silver",
+    menubar: 'tools format',
     statusbar: false,
     relative_urls: false,
     convert_urls: false,
@@ -66,19 +92,20 @@ function tinySetup(config) {
     extended_valid_elements: "em[class|name|id],@[role|data-*|aria-*]",
     valid_children: "+*[*]",
     valid_elements: "*[*]",
-    init_instance_callback: "changeToMaterial",
-    rel_list:[
-      { title: 'nofollow', value: 'nofollow' }
-    ]
+    // init_instance_callback: "changeToMaterial",
+    rel_list: [{
+      title: 'nofollow',
+      value: 'nofollow'
+    }]
   };
 
-  $.each(default_config, function (index, el) {
+  $.each(default_config, function(index, el) {
     if (config[index] === undefined)
       config[index] = el;
   });
 
   // Change icons in popups
-  $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', function () {
+  $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', function() {
     changeToMaterial();
   });
 

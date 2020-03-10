@@ -52,6 +52,6 @@ module.exports = (env, argv) => {
     externals: {
       prestashop: 'prestashop'
     },
-    devtool: 'source-map'
+    // devtool: 'source-map'
   };
 };

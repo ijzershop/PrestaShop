@@ -25,7 +25,7 @@
 <div id="login-panel">
 	<div id="login-header">
 		<h1 class="text-center">
-			<img id="logo" src="{$img_dir}prestashop@2x.png" width="123px" height="24px" alt="PrestaShop" />
+			{$shop_name}
 		</h1>
 		<div class="text-center">{$ps_version}</div>
 		<div id="error" class="hide alert alert-danger">
@@ -49,7 +49,8 @@
 		<div class="alert alert-warning">{$warningSslMessage}</div>
 		{/if}
 	</div>
-	<div id="shop-img"><img src="{$img_dir}preston-login@2x.png" alt="{$shop_name}" width="69.5px" height="118.5px" /></div>
+	<div>
+		<img class="mx-auto" src="/themes/modernesmid/assets/img/ijzershop-logo-518x115.jpg" alt="{$shop_name}" /></div>
 	<div class="flip-container">
 		<div class="flipper">
 			<div class="front front_login panel" {if isset($reset_token) && isset($id_employee)}style="display:none;"{/if}>
@@ -165,7 +166,7 @@
 		{/if}
 	</div>
 	{hook h="displayAdminLogin"}
-	<div id="login-footer">
+{* 	<div id="login-footer">
 		<p class="text-center text-muted">
 			<a href="http://www.prestashop.com/" onclick="return !window.open(this.href);">
 				&copy; PrestaShop&#8482; 2007-{$smarty.now|date_format:"%Y"} - All rights reserved
@@ -185,5 +186,5 @@
 				<i class="icon-google-plus"></i>
 			</a>
 		</p>
-	</div>
+	</div> *}
 </div>

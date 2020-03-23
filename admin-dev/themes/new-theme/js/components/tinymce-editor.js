@@ -132,12 +132,16 @@ class TinyMCEEditor {
     }
 
     config = Object.assign({
-    selector: '.rte',
+    selector: 'textarea.rte',
     plugins: ['link', 'image', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap'],
     browser_spellcheck: true,
     toolbar: "undo redo code image| bold italic underline strikethrough | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
-    toolbar2: false,
     contextmenu: "bootstrap",
+     //     external_filemanager_path: config.baseAdminUrl + 'filemanager/',
+  //     filemanager_title: 'File manager',
+  //     external_plugins: {
+  //       'filemanager': config.baseAdminUrl + 'filemanager/plugin.min.js'
+  //     },
     bootstrapConfig: {
       language: iso_user, 
       url: base_url + 'js/tiny_mce/plugins/bootstrap/',
@@ -200,7 +204,7 @@ class TinyMCEEditor {
     };
     },
       editor_selector :'autoload_rte',
-      init_instance_callback: () => { this.changeToMaterial(); },
+      init_instance_callback: () => {  },
       setup : (editor) => { this.setupEditor(editor); },
     }, config);
 
@@ -320,7 +324,7 @@ class TinyMCEEditor {
     const textarea = $(`#${id}`);
     const counter = textarea.attr('counter');
     const counterType = textarea.attr('counter_type');
-    const max = tinyMCE.activeEditor.getBody().textContent.length;
+    const max = tinyMCE.activeEditor.getContent().textContent;
 
     textarea.parent().find('span.currentLength').text(max);
     if ('recommended' !== counterType && max > counter) {

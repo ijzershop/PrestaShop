@@ -43,7 +43,7 @@ $(document).ready(function() {
     let textarea = $('#'+id);
     let counter = textarea.attr('counter');
     let counter_type = textarea.attr('counter_type');
-    let max = tinyMCE.activeEditor.getBody().textContent.length;
+    let max = tinyMCE.activeEditor.getContent().textContent;
 
     textarea.parent().find('span.currentLength').text(max);
     if ('recommended' !== counter_type && max > counter) {

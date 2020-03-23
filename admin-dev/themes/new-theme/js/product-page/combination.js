@@ -28,20 +28,22 @@ export default function() {
       form.send(false, false, generate);
     });
 
-    const productDropzone = Dropzone.forElement('#product-images-dropzone');
-    const updateCombinationImages = function() {
-      const productAttributeIds = $.map(
-        $('.js-combinations-list .combination'),
-        (combination) => {
-          return $(combination).data('index');
-        }
-      );
+    // Dropzone.autoDiscover = false;
+    // const productDropzone = Dropzone.forElement('#product-images-dropzone');
 
-      $.get(refreshImagesUrl).then((response) => {
-        refreshImagesCombination(response, productAttributeIds);
-      });
-    };
-    productDropzone.on('success', updateCombinationImages);
+    // const updateCombinationImages = function() {
+    //   const productAttributeIds = $.map(
+    //     $('.js-combinations-list .combination'),
+    //     (combination) => {
+    //       return $(combination).data('index');
+    //     }
+    //   );
+
+    //   $.get(refreshImagesUrl).then((response) => {
+    //     refreshImagesCombination(response, productAttributeIds);
+    //   });
+    // };
+    // productDropzone.on('success', updateCombinationImages);
 
     $(document).on('click', '#form .product-combination-image', function() {
       const input = $(this).find('input');

@@ -45,7 +45,17 @@ import 'magnific-popup/dist/magnific-popup.css';
 import '../scss/theme.scss';
 
 // Theme Javascript
-window.Dropzone.autoDiscover = false;
+if(window.Dropzone === undefined){
+	window.Dropzone = require('dropzone/dist/min/dropzone.min.js');
+	window.Dropzone.autoDiscover = false;
+}
+
+// // Theme Javascript
+// console.log(window.jwerty);
+// if(window.jwerty === undefined){
+// 	window.jwerty = require('jwerty/jwerty.js');
+// }
+
 import NavBar from './nav_bar';
 
 // this needs to be ported into the UI kit

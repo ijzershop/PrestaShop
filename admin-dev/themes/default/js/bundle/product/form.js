@@ -798,47 +798,47 @@ var form = (function() {
   return {
     'init': function() {
       /** prevent form submit on ENTER keypress */
-      jwerty.key('enter', function(e) {
-        e.preventDefault();
-      });
+      // jwerty.key('enter', function(e) {
+      //   e.preventDefault();
+      // });
 
-      /** create keyboard event for save */
-      jwerty.key('alt+shift+S', function(e) {
-        e.preventDefault();
-        send();
-      });
+      // /** create keyboard event for save */
+      // jwerty.key('alt+shift+S', function(e) {
+      //   e.preventDefault();
+      //   send();
+      // });
 
-      /** create keyboard event for save & duplicate */
-      jwerty.key('alt+shift+D', function(e) {
-        e.preventDefault();
-        send($('.product-footer .duplicate').attr('data-redirect'));
-      });
+      // /** create keyboard event for save & duplicate */
+      // jwerty.key('alt+shift+D', function(e) {
+      //   e.preventDefault();
+      //   send($('.product-footer .duplicate').attr('data-redirect'));
+      // });
 
-      /** create keyboard event for save & new */
-      jwerty.key('alt+shift+P', function(e) {
-        e.preventDefault();
-        send($('.product-footer .new-product').attr('data-redirect'));
-      });
+      // /** create keyboard event for save & new */
+      // jwerty.key('alt+shift+P', function(e) {
+      //   e.preventDefault();
+      //   send($('.product-footer .new-product').attr('data-redirect'));
+      // });
 
-      /** create keyboard event for save & go catalog */
-      jwerty.key('alt+shift+Q', function(e) {
-        e.preventDefault();
-        send($('.product-footer .go-catalog').attr('data-redirect'));
-      });
+      // /** create keyboard event for save & go catalog */
+      // jwerty.key('alt+shift+Q', function(e) {
+      //   e.preventDefault();
+      //   send($('.product-footer .go-catalog').attr('data-redirect'));
+      // });
 
-      /** create keyboard event for save & go preview */
-      jwerty.key('alt+shift+V', function(e) {
-          e.preventDefault();
-          var productFooter = $('.product-footer .preview');
-          send(productFooter.attr('data-redirect'), productFooter.attr('target'));
-      });
+      // /** create keyboard event for save & go preview */
+      // jwerty.key('alt+shift+V', function(e) {
+      //     e.preventDefault();
+      //     var productFooter = $('.product-footer .preview');
+      //     send(productFooter.attr('data-redirect'), productFooter.attr('target'));
+      // });
 
-      /** create keyboard event for save & active or desactive product*/
-      jwerty.key('alt+shift+O', function(e) {
-        e.preventDefault();
-        var step1CheckBox = $('#form_step1_active');
-        step1CheckBox.prop('checked', !step1CheckBox.is(':checked'));
-      });
+      // /** create keyboard event for save & active or desactive product*/
+      // jwerty.key('alt+shift+O', function(e) {
+      //   e.preventDefault();
+      //   var step1CheckBox = $('#form_step1_active');
+      //   step1CheckBox.prop('checked', !step1CheckBox.is(':checked'));
+      // });
 
       elem.submit(function(event) {
         event.preventDefault();
@@ -1425,7 +1425,9 @@ var imagesProduct = (function() {
           imagesProduct.initExpander();
         }
       };
-
+      if(dropZoneElem[0].dropzone){
+        dropZoneElem[0].dropzone.destroy();
+      }
       dropZoneElem.dropzone(jQuery.extend(dropzoneOptions));
     },
     'updateDisplayCover': function(id_image) {

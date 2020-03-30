@@ -13,3 +13,9 @@
 [submodule "modules/modernesmidthemeconfigurator"]
 	path = modules/modernesmidthemeconfigurator
 	url = https://github.com/ijzershop/modernesmidthemeconfigurator.git
+[submodule "modules/smallorderfee"]
+	path = modules/smallorderfee
+	url = https://github.com/ijzershop/smallorderfee.git
+[submodule "modules/koopmanorderexport"]
+	path = modules/koopmanorderexport
+	url = https://github.com/ijzershop/koopmanorderexport.git

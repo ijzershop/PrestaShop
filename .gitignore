@@ -124,6 +124,8 @@ modules/*
 !modules/ijzershopkiyoh
 !modules/sawandcutmodule
 !modules/offerintegration
+!modules/smallorderfee
+!modules/koopmanorderexport
 override/*
 themes/*/
 !themes/classic

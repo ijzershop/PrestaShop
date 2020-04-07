@@ -145,7 +145,6 @@ class CartControllerCore extends FrontController
                 'cart' => $presentedCart,
                 'errors' => empty($this->updateOperationError) ? '' : reset($this->updateOperationError),
             ]));
-
             return;
         } else {
             $this->ajaxRender(Tools::jsonEncode([

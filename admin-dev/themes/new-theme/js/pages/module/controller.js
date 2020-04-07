@@ -719,7 +719,6 @@ class AdminModuleController {
         self.isUploadStarted = false;
       },
     };
-
     dropzone.dropzone($.extend(dropzoneOptions));
   }
 

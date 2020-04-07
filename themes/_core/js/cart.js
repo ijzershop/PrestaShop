@@ -27,109 +27,112 @@ import prestashop from 'prestashop';
 import { refreshCheckoutPage } from './common';
 
 $(document).ready(() => {
-  prestashop.on('updateCart', (event) => {
-    prestashop.cart = event.reason.cart;
-    var getCartViewUrl = $('.js-cart').data('refresh-url');
+//   prestashop.on('updateCart', (event) => {
+//     prestashop.cart = event.reason.cart;
+//     var getCartViewUrl = $('.js-cart').data('refresh-url');
+// console.log(getCartViewUrl);
+//     if (!getCartViewUrl) {
+//       return;
+//     }
 
-    if (!getCartViewUrl) {
-      return;
-    }
+//     var requestData = {};
 
-    var requestData = {};
+//     if (event && event.reason) {
+//       requestData = {
+//         id_product_attribute: event.reason.idProductAttribute,
+//         id_product: event.reason.idProduct
+//       };
+//     }
 
-    if (event && event.reason) {
-      requestData = {
-        id_product_attribute: event.reason.idProductAttribute,
-        id_product: event.reason.idProduct
-      };
-    }
 
-    $.post(getCartViewUrl, requestData).then((resp) => {
-      $('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
-      $('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
-      $('.cart-summary-subtotals-container').replaceWith(resp.cart_summary_subtotals_container);
-      $('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
-      $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
-      $('.cart-voucher').replaceWith(resp.cart_voucher);
-      $('.cart-overview').replaceWith(resp.cart_detailed);
+// console.log([getCartViewUrl, requestData]);
 
-      $('#product_customization_id').val(0);
+//     $.post(getCartViewUrl, requestData).then((resp) => {
+//       $('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
+//       $('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
+//       $('.cart-summary-subtotals-container').replaceWith(resp.cart_summary_subtotals_container);
+//       $('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
+//       $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
+//       $('.cart-voucher').replaceWith(resp.cart_voucher);
+//       $('.cart-overview').replaceWith(resp.cart_detailed);
 
-      $('.js-cart-line-product-quantity').each((index, input) => {
-        var $input = $(input);
-        $input.attr('value', $input.val());
-      });
+//       $('#product_customization_id').val(0);
 
-      if ($('.js-cart-payment-step-refresh').length) {
-        // we get the refresh flag : on payment step we need to refresh page to be sure
-        // amount is correctly updated on payment modules
-        refreshCheckoutPage();
-      }
+//       $('.js-cart-line-product-quantity').each((index, input) => {
+//         var $input = $(input);
+//         $input.attr('value', $input.val());
+//       });
 
-      prestashop.emit('updatedCart', {eventType: 'updateCart', resp: resp});
-    }).fail((resp) => {
-      prestashop.emit('handleError', {eventType: 'updateCart', resp: resp})
-    });
-  });
+//       if ($('.js-cart-payment-step-refresh').length) {
+//         // we get the refresh flag : on payment step we need to refresh page to be sure
+//         // amount is correctly updated on payment modules
+//         refreshCheckoutPage();
+//       }
+
+//       prestashop.emit('updatedCart', {eventType: 'updateCart', resp: resp});
+//     }).fail((resp) => {
+//       prestashop.emit('handleError', {eventType: 'updateCart', resp: resp})
+//     });
+//   });
 
   var $body = $('body');
 
-  $body.on(
-    'click',
-    '[data-button-action="add-to-cart"]',
-    (event) => {
-      event.preventDefault();
-      if ($('#quantity_wanted').val() > $('[data-stock]').data('stock') && $('[data-allow-oosp]').data('allow-oosp').length === 0) {
-          $('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
-      } else {
-        let $form = $(event.target).closest('form');
-        let query = $form.serialize() + '&add=1&action=update';
-        let actionURL = $form.attr('action');
+  // $body.on(
+  //   'click',
+  //   '[data-button-action="add-to-cart"]',
+  //   (event) => {
+  //     event.preventDefault();
+  //     if ($('#quantity_wanted').val() > $('[data-stock]').data('stock') && $('[data-allow-oosp]').data('allow-oosp').length === 0) {
+  //         $('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
+  //     } else {
+  //       let $form = $(event.target).closest('form');
+  //       let query = $form.serialize() + '&add=1&action=update';
+  //       let actionURL = $form.attr('action');
 
-        let isQuantityInputValid = ($input) => {
-          var validInput = true;
+  //       let isQuantityInputValid = ($input) => {
+  //         var validInput = true;
 
-          $input.each((index, input) => {
-            let $input = $(input);
-            let minimalValue = parseInt($input.attr('min'), 10);
-            if (minimalValue && $input.val() < minimalValue) {
-              onInvalidQuantity($input);
-              validInput = false;
-            }
-          });
+  //         $input.each((index, input) => {
+  //           let $input = $(input);
+  //           let minimalValue = parseInt($input.attr('min'), 10);
+  //           if (minimalValue && $input.val() < minimalValue) {
+  //             onInvalidQuantity($input);
+  //             validInput = false;
+  //           }
+  //         });
 
-          return validInput;
-        };
+  //         return validInput;
+  //       };
 
-        let onInvalidQuantity = ($input) => {
-          $input.parents('.product-add-to-cart').first().find('.product-minimal-quantity').addClass('error');
-          $input.parent().find('label').addClass('error');
-        };
+  //       let onInvalidQuantity = ($input) => {
+  //         $input.parents('.product-add-to-cart').first().find('.product-minimal-quantity').addClass('error');
+  //         $input.parent().find('label').addClass('error');
+  //       };
 
-        let $quantityInput = $form.find('input[min]' );
-        if (!isQuantityInputValid($quantityInput)) {
-          onInvalidQuantity($quantityInput);
+  //       let $quantityInput = $form.find('input[min]' );
+  //       if (!isQuantityInputValid($quantityInput)) {
+  //         onInvalidQuantity($quantityInput);
 
-          return;
-        }
+  //         return;
+  //       }
 
-        $.post(actionURL, query, null, 'json').then((resp) => {
-          prestashop.emit('updateCart', {
-            reason: {
-              idProduct: resp.id_product,
-              idProductAttribute: resp.id_product_attribute,
-              idCustomization: resp.id_customization,
-              linkAction: 'add-to-cart',
-              cart: resp.cart
-            },
-            resp: resp
-          });
-        }).fail((resp) => {
-          prestashop.emit('handleError', {eventType: 'addProductToCart', resp: resp});
-        });
-      }
-    }
-  );
+  //       $.post(actionURL, query, null, 'json').then((resp) => {
+  //         prestashop.emit('updateCart', {
+  //           reason: {
+  //             idProduct: resp.id_product,
+  //             idProductAttribute: resp.id_product_attribute,
+  //             idCustomization: resp.id_customization,
+  //             linkAction: 'add-to-cart',
+  //             cart: resp.cart
+  //           },
+  //           resp: resp
+  //         });
+  //       }).fail((resp) => {
+  //         prestashop.emit('handleError', {eventType: 'addProductToCart', resp: resp});
+  //       });
+  //     }
+  //   }
+  // );
 
   $body.on(
     'submit',

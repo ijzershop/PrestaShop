@@ -45,16 +45,11 @@ import 'magnific-popup/dist/magnific-popup.css';
 import '../scss/theme.scss';
 
 // Theme Javascript
+// 
 if(window.Dropzone === undefined){
-	window.Dropzone = require('dropzone/dist/min/dropzone.min.js');
+	window.Dropzone = require('dropzone/dist/dropzone.js');
 	window.Dropzone.autoDiscover = false;
 }
-
-// // Theme Javascript
-// console.log(window.jwerty);
-// if(window.jwerty === undefined){
-// 	window.jwerty = require('jwerty/jwerty.js');
-// }
 
 import NavBar from './nav_bar';
 

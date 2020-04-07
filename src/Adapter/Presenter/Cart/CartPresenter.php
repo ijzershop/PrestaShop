@@ -318,7 +318,6 @@ class CartPresenter implements PresenterInterface
         } else {
             $rawProducts = $cart->getProducts(true);
         }
-
         $products = array_map(array($this, 'presentProduct'), $rawProducts);
         $products = $this->addCustomizedData($products, $cart);
         $subtotals = array();

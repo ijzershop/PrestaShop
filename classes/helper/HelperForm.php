@@ -245,7 +245,7 @@ class HelperFormCore extends Helper
 
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
-
+        
         $this->tpl->assign(array(
             'title' => $this->title,
             'toolbar_btn' => $this->toolbar_btn,

@@ -106,5 +106,7 @@ const switchEditAddressButtonColor = function switchEditAddressButtonColor(enabl
  * Enable/disable the continue address button
  */
 const switchConfirmAddressesButtonState = function switchConfirmAddressesButtonState(enable) {
-  $('button[name=confirm-addresses]').prop("disabled", !enable);
+  if($('input.is-valid, select.is_valid').length >= 5){
+    $('button[name=confirm-addresses]').prop("disabled", !enable);
+  }
 };

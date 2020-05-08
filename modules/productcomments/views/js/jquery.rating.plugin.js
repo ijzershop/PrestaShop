@@ -71,8 +71,11 @@ jQuery.fn.rating = function(generalOptions) {
       $ratingComponent.append(ratingInput);
       initInteractiveGrade();
     } else {
+
+
       displayGrade(ratingValue);
     }
+      
 
     function initInteractiveGrade() {
       emptyStars.html('');

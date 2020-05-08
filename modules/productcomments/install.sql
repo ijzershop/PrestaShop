@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_comment_report` (
   PRIMARY KEY (`id_product_comment`, `id_customer`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-INSERT IGNORE INTO `PREFIX_product_comment_criterion` VALUES ('1', '1', '1');
+INSERT IGNORE INTO `PREFIX_product_comment_criterion` (`id_product_comment_criterion`, `id_product_comment_criterion_type`, `active`) VALUES ('1', '1', '1');
 
 INSERT IGNORE INTO `PREFIX_product_comment_criterion_lang` (`id_product_comment_criterion`, `id_lang`, `name`)
   (

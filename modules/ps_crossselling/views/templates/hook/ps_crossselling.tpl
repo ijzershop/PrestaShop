@@ -26,8 +26,8 @@
 <section>
   <h2>{l s='Customers who bought this product also bought:' d='Modules.Crossselling.Shop'}</h2>
   <div class="products">
-    {foreach from=$products item="product"}
+{*     {foreach from=$products item="product"}
       {include file="catalog/_partials/miniatures/product.tpl" product=$product}
-    {/foreach}
+    {/foreach} *}
   </div>
 </section>

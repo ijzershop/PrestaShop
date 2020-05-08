@@ -1,4 +1,3 @@
-<?php
 /*
 * 2007-2016 PrestaShop
 *
@@ -23,13 +22,19 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-				    	
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
-						
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-						
-header("Location: ../../");
-exit;
+
+function getProductCriterionForm()
+{
+	if (document.forms)
+		return (document.forms['product_criterion_form']);
+	else
+		return (document.product_criterion_form);
+}
+
+function getProductCriterion(path, id_product, id_lang)
+{
+	$.get(path + 'productcommentscriterion.php', { id_product: id_product, id_lang: id_lang },
+	function(data){
+		document.getElementById('product_criterions').innerHTML = data;
+	});
+}

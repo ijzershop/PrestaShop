@@ -1,5 +1,4 @@
-<?php
-/*
+{*
 * 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -20,16 +19,28 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2016 PrestaShop SA
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*/
-				    	
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
-						
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-						
-header("Location: ../../");
-exit;
+*
+*  MODIFIED BY MYPRESTA.EU FOR PRESTASHOP 1.7 PURPOSES !
+*
+*}
+{assign var="showText" value=false}
+{if isset($withtext)}
+    {assign var="showText" value=$withtext}
+{/if}
+<div class="comments_note row">
+    {if $averageTotal>0 && Configuration::get('PRODUCT_COMMENTS_LIST') == 1}
+        <div class="star_content clearfix col p-0" style="max-width:95px;">
+            {section name="i" start=0 loop=5 step=1}
+                {if $averageTotal le $smarty.section.i.index}
+                    <div class="star"></div>
+                {else}
+                    <div class="star star_on"></div>
+                {/if}
+            {/section}
+        </div>
+        <span class="col p-0 {if !$showText}d-none{/if}">{l s='%s Review(s)' mod='productcomments' sprintf=[$nbComments]}&nbsp</span>
+    {/if}
+</div>

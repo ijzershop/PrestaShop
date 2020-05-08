@@ -132,10 +132,10 @@
               <p class="required"><sup>*</sup> {l s='Required fields' d='Modules.Productcomments.Shop'}</p>
             </div>
             <div class="col-md-6 col-sm-6 post-comment-buttons">
-              <button type="button" class="btn btn-comment-inverse btn-comment-big" data-dismiss="modal" aria-label="{l s='Cancel' d='Modules.Productcomments.Shop'}">
+              <button type="button" class="btn btn-dark btn-comment-inverse btn-comment-big" data-dismiss="modal" aria-label="{l s='Cancel' d='Modules.Productcomments.Shop'}">
                 {l s='Cancel' d='Modules.Productcomments.Shop'}
               </button>
-              <button type="submit" class="btn btn-comment btn-comment-big">
+              <button type="submit" class="btn btn-dark btn-comment btn-comment-big">
                 {l s='Send' d='Modules.Productcomments.Shop'}
               </button>
             </div>
@@ -147,7 +147,7 @@
 </div>
 
 {* Comment posted modal *}
-{if $moderation_active}
+{if true}
   {assign var='comment_posted_message' value={l s='Your comment has been submitted and will be available once approved by a moderator.' d='Modules.Productcomments.Shop'}}
 {else}
   {assign var='comment_posted_message' value={l s='Your comment has been added!' d='Modules.Productcomments.Shop'}}

@@ -37,7 +37,7 @@ class ProductCommentsListCommentsModuleFrontController extends ModuleFrontContro
         $productComments = $productCommentRepository->paginate(
             $idProduct,
             $page,
-            Configuration::get('PRODUCT_COMMENTS_COMMENTS_PER_PAGE'),
+            5,
             Configuration::get('PRODUCT_COMMENTS_MODERATE')
         );
         $productCommentsNb = $productCommentRepository->getCommentsNumber($idProduct, Configuration::get('PRODUCT_COMMENTS_MODERATE'));

@@ -37,10 +37,10 @@
   var productcomment_ok = '{l s='OK ' mod='productcomments ' js=1}';
   var moderation_active = true;
   </script>
+  {if $comments}
   <div id="productCommentsBlock" class="w-100 mt-3">
     <span class="col-12" style="font-size:15px;font-weight:bold;color:#777777;font-family:Helvetica, Tahoma, sans-serif, Arial;">Beoordelingen voor dit product</span>
       <div id="product_comments_block_tab" class="col-12">
-        {if $comments}
         {foreach from=$comments item=comment}
         {if $comment.content}
         <div class="comment clearfix row" itemprop="review" itemscope itemtype="https://schema.org/Review">
@@ -91,8 +91,31 @@
         </div>
         {/if}
         {/foreach}
-        {/if}
       </div>
+          <div class="col-12">
+            <input type="hidden" id="current-reviews-list-index" value="1" data-per-list="5">
+            <button id="showMoreComments" class="btn btn-ouline-dark w-100">Toon meer beoordelingen</button>
+          </div>
+        {/if}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <div class="modal" id="productCommentsModal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="saw-modal">
       <div class="modal-dialog row" role="document">
         <div class="modal-content col-12">
@@ -105,17 +128,16 @@
           <div class="modal-body row">
             <div id="new_comment_form_ok" class="alert alert-success" style="display:none;padding:15px 25px"></div>
             {if isset($productcomments_product) && $productcomments_product}
-              <div id="new_comment_form" class="col-12">
+              <div id="new_comment_form" class="row">
                   {if isset($productcomments_product) && $productcomments_product}
-                  <div class="product clearfix">
+                  <div class="product clearfix col-12">
                     <div class="product_desc">
                       <p class="product_name mb-0 p-0"><strong>{if isset($productcomments_product->name)}{$productcomments_product->name}{elseif isset($productcomments_product.name)}{$productcomments_product.name}{/if}</strong></p>
                       {if isset($productcomments_product->description_short)}{$productcomments_product->description_short nofilter}{elseif isset($productcomments_product.description_short)}{$productcomments_product.description_short nofilter}{/if}
                     </div>
                   </div>
                   {/if}
-              </div>
-            {/if}
+            
             <div class="new_comment_form_content col-12">
                 <div id="new_comment_form_error" class="error w-100" style="display:none;padding:15px 25px">
                     <ul></ul>
@@ -125,15 +147,15 @@
               <ul id="criterions_list" class="list-unstyled w-100">
                 {foreach from=$criterions item='criterion'}
                 <li class="row">
-                  <label class="col-4">Uw score</label>
-                  <div class="star_content col-8">
+                  <label class="w-auto">Uw score</label>
+                  <div class="star_content col">
                     <input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="1">
                     <input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="2">
                     <input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="3">
                     <input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="4">
                     <input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="5" checked="checked">
                   </div>
-                  <div class="clearfix"></div>
+                  <div class="clearfix col-12"></div>
                 </li>
                 {/foreach}
               </ul>
@@ -181,6 +203,8 @@
             </div>
             </form><!-- /end new_comment_form_content -->
           </div>
+            </div>
+            {/if}
         </div>
       </div>
     </div>

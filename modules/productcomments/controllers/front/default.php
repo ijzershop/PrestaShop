@@ -59,10 +59,29 @@ class ProductCommentsDefaultModuleFrontController extends ModuleFrontController
 				case 'comment_is_usefull':
 					$this->ajaxProcessCommentIsUsefull();
 					break;
+				case 'get_more_comments':
+					$this->ajaxProcessGetMoreComments();
+					break;
 			}
 		}
 	}
 
+	protected function ajaxProcessGetMoreComments()
+	{
+		$result =  ProductComment::getByProduct((int)Tools::getValue('id_product'), (int)Tools::getValue('page'), (int)Tools::getValue('per_list'), $this->context->cookie->id_customer);
+		if(is_countable($result) && count($result) > 0)
+		{
+			$errors = '';
+		} else {
+			$errors = 'Er zijn geen beoordelingen beschikbaar voor dit product';
+		}
+
+		die(Tools::jsonEncode(array(
+			'result' => $result,
+			'errors' => $errors
+		)));
+
+	}
 	protected function ajaxProcessAddComment()
 	{
 		$module_instance = new ProductComments();

@@ -990,7 +990,7 @@ class ProductComments extends Module
             'action_url' => '',
             'link' => $this->context->link,
             'productcomments_product' => $product,
-            'comments' => ProductComment::getByProduct((int)Tools::getValue('id_product'), 1, null, $this->context->cookie->id_customer),
+            'comments' => ProductComment::getByProduct((int)Tools::getValue('id_product'), 1, 3, $this->context->cookie->id_customer),
             'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), $this->context->language->id),
             'averages' => $averages,
             'product_comment_path' => $this->_path,

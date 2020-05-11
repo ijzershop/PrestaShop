@@ -106,9 +106,8 @@
 #new_comment_form #criterions_list label {
     display: inline;
     float: left;
-    margin: 6px 10px 0 60px;
+    margin: 6px 10px 0 15px;
     text-align: right;
-    min-width: 150px;
 }
 
 .comments_note {

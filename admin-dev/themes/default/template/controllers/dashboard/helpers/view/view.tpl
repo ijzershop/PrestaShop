@@ -87,15 +87,15 @@
 		<div class="col-md-4 col-lg-3" id="hookDashboardZoneOne">
 			{$hookDashboardZoneOne}
 		</div>
-		<div class="col-md-8 col-lg-7" id="hookDashboardZoneTwo">
+		<div class="col-md-8 col-lg-9" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
-			<div id="dashaddons" class="row-margin-bottom">
+{* 			<div id="dashaddons" class="row-margin-bottom">
 				<a href="https://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">
 					<i class="icon-plus"></i> {l s='Add more dashboard modules' d='Admin.Dashboard.Feature'}
 				</a>
-			</div>
+			</div> *}
 		</div>
-		<div class="col-md-12 col-lg-2">
+{* 		<div class="col-md-12 col-lg-2">
 			<section class="dash_news panel">
 				<h3><i class="icon-rss"></i> {l s='PrestaShop News' d='Admin.Dashboard.Feature'}</h3>
 				<div class="dash_news_content"></div>
@@ -115,6 +115,6 @@
 						<dd>{l s="Traffic, conversion rate, customer loyalty... Increase your sales with all of the PrestaShop modules and themes" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 			</section>
-		</div>
+		</div> *}
 	</div>
 </div>

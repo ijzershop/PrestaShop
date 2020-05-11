@@ -89,7 +89,7 @@ $_MODULE['<{productcomments}prestashop>productcomments_51ec9bf4aaeab1b25bb57f9f8
 $_MODULE['<{productcomments}prestashop>productcomments_240f3031f25601fa128bd4e15f0a37de'] = 'Opmerking:';
 $_MODULE['<{productcomments}prestashop>productcomments_a2ed44743411cf8b80e397448fce104c'] = 'Uw naam:';
 $_MODULE['<{productcomments}prestashop>productcomments_a4d3b161ce1309df1c4e25df28694b7b'] = 'Opslaan';
-$_MODULE['<{productcomments}prestashop>productcomments_4e3ee0f5bd8f527715fb0776741b9754'] = 'Uw opmerking is toegeveogd en zal getoond worden als deze is goedgekeurd door onze administratie.';
+$_MODULE['<{productcomments}prestashop>productcomments_4e3ee0f5bd8f527715fb0776741b9754'] = 'Uw opmerking is toegevoegd en zal getoond worden als deze is goedgekeurd door onze administratie.';
 $_MODULE['<{productcomments}prestashop>products-comparison_5d9acecbb0b55a71dea7403896356001'] = 'Bekijk opmerkingen';
 $_MODULE['<{productcomments}prestashop>tab_34e80a799d144cfe4af46815e103f017'] = 'Beoordelingen';
 

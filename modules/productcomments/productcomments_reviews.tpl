@@ -30,7 +30,7 @@
 {if isset($withtext)}
     {assign var="showText" value=$withtext}
 {/if}
-<div class="comments_note row">
+<div class="comments_note w-100">
     {if $averageTotal>0 && Configuration::get('PRODUCT_COMMENTS_LIST') == 1}
         <div class="star_content clearfix col p-0" style="max-width:95px;">
             {section name="i" start=0 loop=5 step=1}

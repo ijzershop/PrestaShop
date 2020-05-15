@@ -2,9 +2,7 @@
 
 class Order extends OrderCore
 {
-    /**
-     * @var int Round type method used for this order
-     */
+    
     public $added_to_order;
 
     public static $definition = array(
@@ -61,6 +59,35 @@ class Order extends OrderCore
 
     );
 
+    public static function generateReference()
+    {
+        if (!Module::isEnabled('gmnumeric')) {
+            return parent::generateReference();
+        }
+        $isRandom = Configuration::get('GMNUMERIC_RANDOM');
+        $prefix = Configuration::get('GMNUMERIC_PREFIX');
+        $prefixLength = strlen($prefix);
+        $restLength = 9 - $prefixLength;
+        if ($isRandom) {
+            $reference = Tools::passwdGen($restLength, 'NUMERIC');
+        } else {
+
+                 $query = "SELECT `reference` FROM "._DB_PREFIX_."orders ORDER BY `id_order` DESC";
+
+            $previousOrderId = (int) Db::getInstance()->getValue($query);
+
+            $prefix = Configuration::get('GMNUMERIC_PREFIX');
+            $nextOrderId = (int) str_replace($prefix,'', $previousOrderId)+1;  
+            
+            $zeros = Configuration::get('GMNUMERIC_ZEROS');
+            if ($zeros == 'on') {
+                $reference = sprintf('%0'.$restLength.'d', $nextOrderId);
+            } else {
+                $reference = $nextOrderId;
+            }
+        }
+        return $prefix.$reference;
+    }
 }
 
 ?>

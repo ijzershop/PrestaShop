@@ -29,6 +29,7 @@ class CheckoutDeliveryStep extends CheckoutDeliveryStepCore
  
     public function handleRequest(array $requestParams = array())
     {
+
         if (isset($requestParams['delivery_option'])) {
             $this->setComplete(false);
             $this->getCheckoutSession()->setDeliveryOption(
@@ -43,6 +44,12 @@ class CheckoutDeliveryStep extends CheckoutDeliveryStepCore
                 $useGift,
                 ($useGift && isset($requestParams['gift_message'])) ? $requestParams['gift_message'] : ''
             );
+        }
+
+        // Fetch new value to cart params
+        if( isset($requestParams['added_to_order'])){
+            $this->context->cart->added_to_order = $requestParams['added_to_order'];
+            $this->context->cart->update();
         }
 
         if (isset($requestParams['delivery_message'])) {
@@ -64,15 +71,8 @@ class CheckoutDeliveryStep extends CheckoutDeliveryStepCore
                 && $this->isModuleComplete($requestParams)
             );
         }
-
-        // Fetch new value to cart params
-        $checkoutCart = $this->getCheckoutSession()->getCart();
-        if( isset($requestParams['added_to_order'])){
-            $checkoutCart->added_to_order = $requestParams['added_to_order'];
-        }
-
         $this->setTitle($this->getTranslator()->trans('Shipping Method', array(), 'Shop.Theme.Checkout'));
 
-        Hook::exec('actionCarrierProcess', array('cart' => $checkoutCart));
+        Hook::exec('actionCarrierProcess', array('cart' => $this->getCheckoutSession()->getCart()));
     }
 }

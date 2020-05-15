@@ -227,7 +227,7 @@ Class AdminAddressesController extends AdminAddressesControllerCore
                     'type' => 'text',
                     'label' => $this->trans('Home phone', array(), 'Admin.Global'),
                     'name' => 'phone',
-                    'required' => in_array('phone', $required_fields),
+                    'required' => true,
                     'col' => '4',
                 );
             } elseif ($addr_field_item == 'phone_mobile') {

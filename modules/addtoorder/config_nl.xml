@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>addtoorder</name>
-    <displayName><![CDATA[Extended options to add to order delivery method]]></displayName>
+    <displayName><![CDATA[Add to order delivery option extended]]></displayName>
     <version><![CDATA[1.0.0]]></version>
     <description><![CDATA[Module for the configurations of the Moderne Smid BV]]></description>
     <author><![CDATA[ijzershop]]></author>

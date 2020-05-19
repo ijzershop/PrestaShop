@@ -19,3 +19,6 @@ url=https://github.com/ijzershop/offerintegration.git
 [submodule "modules/koopmanorderexport"]
 	path = modules/koopmanorderexport
 	url = https://github.com/ijzershop/koopmanorderexport.git
+[submodule "modules/productcomments"]
+	path = modules/productcomments
+	url = https://github.com/ijzershop/customercomments.git

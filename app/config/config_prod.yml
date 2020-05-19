@@ -30,3 +30,7 @@ doctrine:
     orm:
         metadata_cache_driver: "%cache.driver%"
         query_cache_driver:    "%cache.driver%"
+
+sensio_framework_extra:
+ router:
+     annotations: false

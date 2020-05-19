@@ -80,15 +80,13 @@ class Ps_Shoppingcart extends Module implements WidgetInterface
     public function getWidgetVariables($hookName, array $params)
     {
         $cart_url = $this->getCartSummaryURL();
-        
+
         return array(
-            'cart' => (new CartPresenter)->present(isset($params['cart']) ? $params['cart'] : $this->context->cart, true),
+            'cart' => (new CartPresenter())->present(isset($params['cart']) ? $params['cart'] : $this->context->cart),
             'refresh_url' => $this->context->link->getModuleLink('ps_shoppingcart', 'ajax', array(), null, null, null, true),
             'cart_url' => $cart_url,
-            'order_url' => version_compare(_PS_VERSION_, '1.7', '>=') ? $cart_url.'&checkout' : $this->context->link->getPageLink('order')
         );
     }
-
 
     public function renderWidget($hookName, array $params)
     {
@@ -101,6 +99,27 @@ class Ps_Shoppingcart extends Module implements WidgetInterface
         return $this->fetch('module:ps_shoppingcart/ps_shoppingcart.tpl');
     }
 
+    public function renderModal(Cart $cart, $id_product, $id_product_attribute, $id_customization)
+    {
+        $data = (new CartPresenter())->present($cart);
+        $product = null;
+        foreach ($data['products'] as $p) {
+            if ((int) $p['id_product'] == $id_product &&
+                (int) $p['id_product_attribute'] == $id_product_attribute &&
+                (int) $p['id_customization'] == $id_customization) {
+                $product = $p;
+                break;
+            }
+        }
+
+        $this->smarty->assign(array(
+            'product' => $product,
+            'cart' => $data,
+            'cart_url' => $this->getCartSummaryURL(),
+        ));
+
+        return $this->fetch('module:ps_shoppingcart/modal.tpl');
+    }
 
     public function getContent()
     {
@@ -188,48 +207,5 @@ class Ps_Shoppingcart extends Module implements WidgetInterface
         return array(
             'PS_BLOCK_CART_AJAX' => (bool) Tools::getValue('PS_BLOCK_CART_AJAX', Configuration::get('PS_BLOCK_CART_AJAX')),
         );
-    }
-
-    public function renderModal(Cart $cart, $id_product, $id_product_attribute)
-    {
-        $data = (new CartPresenter)->present($cart, true);
-        $product = null;
-        foreach ($data['products'] as $p) {
-            if ($p['id_product'] == $id_product && $p['id_product_attribute'] == $id_product_attribute) {
-                $product = $p;
-                break;
-            }
-        }
-
-        if(!$product)
-            return false;
-
-        $values = array(
-            'product' => $product,
-            'cart' => $data,
-            'cart_cross_selling' => $this->getCartCrossSelling($id_product),
-            'cart_url' => $this->getCartSummaryURL(),
-            'order_url' => $this->context->link->getPageLink('order'),
-            'is_rtl' => (int)$this->context->language->is_rtl
-        );
-        $this->smarty->assign($values);
-
-        return $this->fetch('module:stshoppingcart/views/templates/hook/modal.tpl');
-    }
-
-
-    public function renderList(Cart $cart)
-    {
-        $data = (new CartPresenter)->present($cart, true);
-
-        $values = array(
-            'products' => $data['products'],
-            'cart' => $data,
-            'cart_url' => $this->getCartSummaryURL(),
-            'order_url' => $this->context->link->getPageLink('order'),
-        );
-        $this->smarty->assign($values);
-
-        return $this->fetch('themes/modernesmid/modules/ps_shoppingcart/ps_shoppingcart-list.tpl');
     }
 }

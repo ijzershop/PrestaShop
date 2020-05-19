@@ -38,9 +38,9 @@ monolog:
         #firephp:
         #    type:   firephp
         #    level:  info
-        #chromephp:
-        #    type:   chromephp
-        #    level:  info
+        chromephp:
+           type:   chromephp
+           level:  info
 
 swiftmailer:
    delivery_address: jelmer@ijzershop.nl
@@ -49,3 +49,7 @@ prestashop:
     addons:
         api_client:
             ttl: 300 # 5min
+
+sensio_framework_extra:
+ router:
+     annotations: false

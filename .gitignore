@@ -120,13 +120,13 @@ app/config/config.php
 
 # Themes, modules and overrides
 
-# modules/*
-!modules/ijzershopkiyoh
-!modules/sawandcutmodule
-!modules/offerintegration
-!modules/smallorderfee
-!modules/koopmanorderexport
-!modules/productcomments
+# # modules/*
+# !modules/ijzershopkiyoh
+# !modules/sawandcutmodule
+# !modules/offerintegration
+# !modules/smallorderfee
+# !modules/koopmanorderexport
+# !modules/productcomments
 # override/*
 themes/*/
 !themes/classic

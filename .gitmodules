@@ -22,3 +22,9 @@ url=https://github.com/ijzershop/offerintegration.git
 [submodule "modules/productcomments"]
 	path = modules/productcomments
 	url = https://github.com/ijzershop/productcomments
+[submodule "modules/customdeliveryslipsexport"]
+	path = modules/customdeliveryslipsexport
+	url = https://github.com/ijzershop/customdeliveryslipsexport.git
+[submodule "modules/addtoorder"]
+	path = modules/addtoorder
+	url = https://github.com/ijzershop/addtoorder.git

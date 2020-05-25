@@ -12,59 +12,59 @@
 
     var bsItems = {
       btn: {
-        text: 'Button',
+        text: 'Knop',
         icon: 'btn',
-        tooltip: 'Insert/Edit Bootstrap Button'
+        tooltip: 'Invoegen/Wijzigen Knop'
       },
       icon: {
-        text: 'Icon',
+        text: 'Icoon',
         icon: 'icon',
-        tooltip: 'Insert/Edit Bootstrap Icon'
+        tooltip: 'Invoegen/Wijzigen Icoon'
       },
       image: {
-        text: 'Image',
+        text: 'Afbeelding',
         icon: 'image',
-        tooltip: 'Insert/Edit Bootstrap Image'
+        tooltip: 'Invoegen/Wijzigen Afbeelding'
       },
       table: {
-        text: 'Table',
+        text: 'Tabel',
         icon: 'table',
-        tooltip: 'Insert/Edit Bootstrap Table'
+        tooltip: 'Invoegen/Wijzigen Tabel'
       },
       template: {
         text: 'Template',
         icon: 'template',
-        tooltip: 'Insert Bootstrap Template'
+        tooltip: 'Invoegen Template'
       },
       breadcrumb: {
         text: 'Breadcrumb',
         icon: 'breadcrumb',
-        tooltip: 'Insert/Edit Bootstrap Breadcrumb'
+        tooltip: 'Invoegen/Wijzigen Breadcrumb'
       },
       pagination: {
         text: 'Pagination',
         icon: 'pagination',
-        tooltip: 'Insert/Edit Bootstrap Pagination'
+        tooltip: 'Invoegen/Wijzigen Pagination'
       },
       badge: {
         text: 'Badge',
         icon: 'badge',
-        tooltip: 'Insert/Edit Bootstrap Badge'
+        tooltip: 'Invoegen/Wijzigen Badge'
       },
       alert: {
         text: 'Alert',
         icon: 'alert',
-        tooltip: 'Insert/Edit Bootstrap Alert'
+        tooltip: 'Invoegen/Wijzigen Alert'
       },
       card: {
         text: 'Card',
         icon: 'card',
-        tooltip: 'Insert/Edit Bootstrap Card'
+        tooltip: 'Invoegen/Wijzigen Bootstrap Card'
       },
       snippet: {
         text: 'Snippet',
         icon: 'snippet',
-        tooltip: 'Insert/Edit Snippet'
+        tooltip: 'Invoegen/Wijzigen Snippet'
       }
     };
 
@@ -6047,6 +6047,7 @@
             toolbarElements.push('bs-' + key);
           }
         }
+        console.log(this.editor.settings.toolbar);
         if (typeof this.editor.settings.toolbar === 'string') {
           this.editor.settings.toolbar = this.editor.settings.toolbar.replace('bootstrap', 'bootstrap ' + toolbarElements.join(' '));
         } else {
@@ -6928,64 +6929,7 @@
     }();
 
     var setup = function (editor, url) {
-      
-      tinymce.addI18n("nl", {
-    "Add col after": "Voeg kolom toe na",
-    "Add col before": "Voeg kolom toe voor",
-    "Add paragraph after": "Voeg paragraaf toe na",
-    "Add paragraph at beginning container": "Voeg paragraaf toe aan het begin van de huidige container",
-    "Add paragraph at beginning": "Voeg paragraaf toe aan het begin van het document",
-    "Add paragraph at end container": "Voeg paragraaf toe aan het einde van de huidige container",
-    "Add paragraph at end": "Voeg paragraaf toe aan het einde van het document",
-    "Add paragraph before": "Voeg paragraaf toe voor",
-    "Add row after": "Voeg rij toe voor",
-    "Add row before": "Voeg rij toe na",
-    "Alert": "Notificatie",
-    "Badge": "Badge",
-    "Bootstrap Elements": "Bootstrap Elementen",
-    "Breadcrumb": "Breadcrumb",
-    "Button": "Knop",
-    "Cancel": "Annuleren",
-    "Card": "Kaart",
-    "column": "kolom",
-    "columns": "kolommen",
-    "Default": "Standaard",
-    "Disable Template Edition": "Schakel template editie uit",
-    "Edit col": "Wijzig kolom",
-    "Edit row": "Wijzig rij",
-    "Enable Template Edition": "Schakel template editie in",
-    "Hide Modal": "Verberd modal",
-    "Icon": "Icoon",
-    "Image": "Afbeelding",
-    "Insert/Edit Bootstrap Alert": "Toevoegen/Wijzigen Notificatie",
-    "Insert/Edit Bootstrap Badge": "Toevoegen/Wijzigen Badge",
-    "Insert/Edit Bootstrap Breadcrumb": "Toevoegen/Wijzigen Breadcrumb",
-    "Insert/Edit Bootstrap Button": "Toevoegen/Wijzigen Knop",
-    "Insert/Edit Bootstrap Card": "Toevoegen/Wijzigen Kaart",
-    "Insert/Edit Bootstrap Icon": "Toevoegen/Wijzigen Icoon",
-    "Insert/Edit Bootstrap Image": "Toevoegen/Wijzigen Afbeelding",
-    "Insert/Edit Bootstrap Pager": "Toevoegen/Wijzigen Pager",
-    "Insert/Edit Bootstrap Pagination": "Toevoegen/Wijzigen Paginatie",
-    "Insert/Edit Bootstrap Table": "Toevoegen/Wijzigen Tabel",
-    "Insert/Edit Bootstrap Template": "Toevoegen/Wijzigen Template",
-    "Insert/Edit Snippet": "Toevoegen/Wijzigen Sinppet",
-    "Label": "Label",
-    "New column": "Nieuwe kolom",
-    "New paragraph": "Nieuwe paragraaf",
-    "OK": "OK",
-    "Pager": "Pager",
-    "Pagination": "Paginatie",
-    "Remove col": "Verwijder kolom",
-    "Remove row": "Verwijder rij",
-    "Screens": "Schermen",
-    "Show Modal": "Toon Modal",
-    "Snippet": "Snippet",
-    "Table": "Tabel",
-    "Template": "Template"
-});
-
-
-
+      // tinymce.addI18n(editor.settings.bootstrapConfig.url + 'langs/' + editor.settings.bootstrapConfig.language + '.js');
       var bs = new BootstrapPlugin(editor, url);
       bs.editor.on('init', function () {
         bs.init();

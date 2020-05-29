@@ -57,4 +57,155 @@ class Cart extends CartCore
         ),
     );
 
+
+    /**
+     * This function returns the total cart amount.
+     *
+     * @param bool $withTaxes With or without taxes
+     * @param int $type Total type enum
+     *                  - Cart::ONLY_PRODUCTS
+     *                  - Cart::ONLY_DISCOUNTS
+     *                  - Cart::BOTH
+     *                  - Cart::BOTH_WITHOUT_SHIPPING
+     *                  - Cart::ONLY_SHIPPING
+     *                  - Cart::ONLY_WRAPPING
+     *                  - Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
+     *                  - Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
+     * @param array $products
+     * @param int $id_carrier
+     * @param bool $use_cache @deprecated
+     *
+     * @return float Order total
+     *
+     * @throws \Exception
+     */
+    public function getOrderTotal(
+        $withTaxes = true,
+        $type = Cart::BOTH,
+        $products = null,
+        $id_carrier = null,
+        $use_cache = false
+    ) {
+        if ((int) $id_carrier <= 0) {
+            $id_carrier = null;
+        }
+
+        // deprecated type
+        if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
+            $type = Cart::ONLY_PRODUCTS;
+        }
+
+        // check type
+        $type = (int) $type;
+        $allowedTypes = array(
+            Cart::ONLY_PRODUCTS,
+            Cart::ONLY_DISCOUNTS,
+            Cart::BOTH,
+            Cart::BOTH_WITHOUT_SHIPPING,
+            Cart::ONLY_SHIPPING,
+            Cart::ONLY_WRAPPING,
+            Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING,
+        );
+        if (!in_array($type, $allowedTypes)) {
+            throw new \Exception('Invalid calculation type: ' . $type);
+        }
+
+        // EARLY RETURNS
+
+        // if cart rules are not used
+        if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive()) {
+            return 0;
+        }
+        // no shipping cost if is a cart with only virtuals products
+        $virtual = $this->isVirtualCart();
+        if ($virtual && $type == Cart::ONLY_SHIPPING) {
+            return 0;
+        }
+        if ($virtual && $type == Cart::BOTH) {
+            $type = Cart::BOTH_WITHOUT_SHIPPING;
+        }
+
+        // filter products
+        if (null === $products) {
+            $products = $this->getProducts();
+        }
+
+        if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
+            foreach ($products as $key => $product) {
+                if ($product['is_virtual']) {
+                    unset($products[$key]);
+                }
+            }
+            $type = Cart::ONLY_PRODUCTS;
+        }
+
+        if (Tax::excludeTaxeOption()) {
+            $withTaxes = false;
+        }
+
+        // CART CALCULATION
+        $cartRules = array();
+        if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
+            $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
+        }
+
+        $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
+        $computePrecision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        switch ($type) {
+            case Cart::ONLY_SHIPPING:
+                $calculator->calculateRows();
+                $calculator->calculateFees($computePrecision);
+                $amount = $calculator->getFees()->getInitialShippingFees();
+
+                break;
+            case Cart::ONLY_WRAPPING:
+                $calculator->calculateRows();
+                $calculator->calculateFees($computePrecision);
+                $amount = $calculator->getFees()->getInitialWrappingFees();
+
+                break;
+            case Cart::BOTH:
+                $calculator->processCalculation($computePrecision);
+                $amount = $calculator->getTotal();
+
+                break;
+            case Cart::BOTH_WITHOUT_SHIPPING:
+                $calculator->calculateRows();
+                // dont process free shipping to avoid calculation loop (and maximum nested functions !)
+                $calculator->calculateCartRulesWithoutFreeShipping();
+                $amount = $calculator->getTotal(true);
+                break;
+            case Cart::ONLY_PRODUCTS:
+                $calculator->calculateRows();
+                $amount = $calculator->getRowTotal();
+
+                break;
+            case Cart::ONLY_DISCOUNTS:
+                $calculator->processCalculation($computePrecision);
+                $amount = $calculator->getDiscountTotal();
+
+                break;
+            default:
+                throw new \Exception('unknown cart calculation type : ' . $type);
+        }
+
+
+               $productTotal = $calculator->getRowTotal()->getTaxExcluded();    
+                //Add small order fee
+                if(!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')){
+                   $small_order_fee_addition = 0;
+                   
+                } else {
+                   $small_order_fee_addition = (double)Configuration::get('SMALLORDERFEE_ORDER_FEE');
+                }
+        // TAXES ?
+        $value = $withTaxes ? $amount->getTaxIncluded() + $small_order_fee_addition : $amount->getTaxExcluded() + $small_order_fee_addition;   
+        // ROUND AND RETURN
+
+        $compute_precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+
+        return Tools::ps_round($value, $compute_precision);
+    }
+
+
 }

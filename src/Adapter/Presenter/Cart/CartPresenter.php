@@ -363,6 +363,7 @@ class CartPresenter implements PresenterInterface
 
         if (!$cart->isVirtualCart()) {
             $shippingCost = $cart->getTotalShippingCost(null, $this->includeTaxes());
+            $shippingCostWithoutTax = $cart->getTotalShippingCost(null, false);
         } else {
             $shippingCost = 0;
         }
@@ -370,6 +371,7 @@ class CartPresenter implements PresenterInterface
             'type' => 'shipping',
             'label' => $this->translator->trans('Shipping', array(), 'Shop.Theme.Checkout'),
             'amount' => $shippingCost,
+            'amount_without_tax' => $shippingCostWithoutTax,
             'value' => $shippingCost != 0
                 ? $this->priceFormatter->format($shippingCost)
                 : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),

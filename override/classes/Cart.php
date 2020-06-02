@@ -190,14 +190,14 @@ class Cart extends CartCore
         }
 
 
-               $productTotal = $calculator->getRowTotal()->getTaxExcluded();    
+               $productTotal = $calculator->getRowTotal()->getTaxExcluded();
                 //Add small order fee
-                if(!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')){
+                if((!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')) || $productTotal === 0.0){
                    $small_order_fee_addition = 0;
-                   
                 } else {
                    $small_order_fee_addition = (double)Configuration::get('SMALLORDERFEE_ORDER_FEE');
                 }
+   
         // TAXES ?
         $value = $withTaxes ? $amount->getTaxIncluded() + $small_order_fee_addition : $amount->getTaxExcluded() + $small_order_fee_addition;   
         // ROUND AND RETURN

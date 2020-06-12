@@ -45,7 +45,9 @@ class AdminOrdersController extends AdminOrdersControllerCore
 		a.id_order AS id_pdf,
 		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
 		osl.`name` AS `osname`,
+        osl.`id_order_state` AS `osorderstate`,
 		os.`color`,
+        osr.`state` as `osrorderstate`,
 		IF((SELECT so.id_order FROM `' . _DB_PREFIX_ . 'orders` so WHERE so.id_customer = a.id_customer AND so.id_order < a.id_order LIMIT 1) > 0, 0, 1) as new,
 		country_lang.name as cname,
 		IF(a.valid, 1, 0) badge_success';
@@ -56,6 +58,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 		INNER JOIN `' . _DB_PREFIX_ . 'country` country ON address.id_country = country.id_country
 		INNER JOIN `' . _DB_PREFIX_ . 'country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = ' . (int) $this->context->language->id . ')
 		LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON (os.`id_order_state` = a.`current_state`)
+        LEFT JOIN `' . _DB_PREFIX_ . 'order_return` osr ON (osr.`state` = a.`current_state`)
 		LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $this->context->language->id . ')';
         $this->_orderBy = 'id_order';
         $this->_orderWay = 'DESC';
@@ -136,6 +139,13 @@ class AdminOrdersController extends AdminOrdersControllerCore
                 'search' => false,
                 'remove_onclick' => true,
             ),
+            'osorderstate' => array(
+                'title' => $this->trans('Retour order', array(), 'Admin.Global'),
+                'align' => 'text-center',
+                'callback' => 'printRetourButton',
+                'orderby' => false,
+                'search' => false
+            ),
         ));
 
         if (Country::isCurrentlyUsed('country', true)) {
@@ -192,6 +202,32 @@ class AdminOrdersController extends AdminOrdersControllerCore
         );
     }
 
+    public function printRetourButton($id_order, $tr)
+    {
+        static $valid_order_state = array();
+        $order = new Order($id_order);
+
+        if (!Validate::isLoadedObject($order)) {
+            return '';
+        }
+
+        $this->context->smarty->assign(array(
+            'order' => $order,
+            'tr' => $tr,
+        ));
+
+            if(in_array($order->current_state, [5, 6,12, 14])){
+                //state when the retour is made
+                if(in_array($order->current_state, [14])){
+                    return 'Retour aangemaakt';                
+                } else {
+                    return '<button type="button" class="btn btn-sm createRetour" data-order-id="'.$id_order.'">Retour aanmaken</button>';
+                }    
+            } else {
+                    return 'Geen retour mogelijk';
+            }
+    }
+
 
    public function renderAddedToCart($value)
     {
@@ -201,5 +237,29 @@ class AdminOrdersController extends AdminOrdersControllerCore
         } else {
             return '';
         }
+    }
+
+
+    public function ajaxProcessMigrateOrderToCustomer(){
+        $email = Tools::getValue('customer_email');
+        $customer = Tools::getValue('customer');
+        $order = Tools::getValue('order');
+        
+        $cust = new Customer;
+        $customerObj = $cust->getCustomersByEmail($email);
+        if(isset($customerObj[0])){
+            if(!is_null($customerObj[0]['id_customer'])){
+                $id = $customerObj[0]['id_customer'];
+                // Update order and set new customer id
+                $result = Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'orders` SET `id_customer`='.$id.' WHERE `id_order` = '.(int)$order);
+                if($result){
+                    return die(json_encode(array('success'=>true,'msg'=>'Bestelling gekoppeld aan klant: '. $customer)));
+                } else {
+                    return die(json_encode(array('success'=>false,'msg'=>'Koppelen van de bestelling aan klant : '. $customer. ' is niet gelukt, probeer het nogmaal')));
+                }
+            }
+        }
+        return die(json_encode(array('success'=>false,'msg'=>'Klant met naam: '. $customer.' en email adres: '.$email.' kon niet gevonden worden in de database')));
+
     }
 }

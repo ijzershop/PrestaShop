@@ -60,9 +60,9 @@ function tinySetup(config) {
 
   var default_config = {
     selector: "textarea.rte",
-    plugins: ['link', 'image', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap'],
+    plugins: ['link', 'image', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap','fullscreen'],
     browser_spellcheck: true,
-    toolbar: "undo redo code image| bold italic underline strikethrough | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
+    toolbar: "undo redo code image | bold italic underline strikethrough | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap | fullscreen",
     toolbar2: false,
     contextmenu: "bootstrap",
     bootstrapConfig: {

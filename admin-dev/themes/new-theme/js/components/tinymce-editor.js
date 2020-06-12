@@ -133,9 +133,9 @@ class TinyMCEEditor {
 
     config = Object.assign({
     selector: 'textarea.rte',
-    plugins: ['link', 'image', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap'],
+    plugins: ['link', 'image', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen'],
     browser_spellcheck: true,
-    toolbar: "undo redo code image| bold italic underline strikethrough | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
+    toolbar: "undo redo code image| bold italic underline strikethrough fullscreen | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
     contextmenu: "bootstrap",
      //     external_filemanager_path: config.baseAdminUrl + 'filemanager/',
   //     filemanager_title: 'File manager',

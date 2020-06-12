@@ -224,7 +224,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
                     return '<button type="button" class="btn btn-sm createRetour" data-order-id="'.$id_order.'">Retour aanmaken</button>';
                 }    
             } else {
-                    return 'Geen retour mogelijk';
+                return 'Geen retour mogelijk';
             }
     }
 

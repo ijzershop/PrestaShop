@@ -56,15 +56,9 @@
 </script>
 <style>
     {literal}
-    .closeFontAwesome:before {
-        content: "\f00d";
-        font-family: "FontAwesome";
-        display: inline-block;
-        font-size: 23px;
-        line-height: 23px;
-        color: {/literal}#{$vareu->uecookie_closex}{literal};
-        padding-right: 15px;
+    .closeFontAwesome { 
         cursor: pointer;
+        padding: 2px 5px 2px 15px;
     }
 
     .closeButtonNormal {
@@ -93,45 +87,20 @@
 
     {/literal}
 </style>
-{if Configuration::get('uecookie_x_fa')==1}
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-{/if}
-<div id="cookieNotice" style=" width: 100%; position: fixed; {if $vareu->uecookie_position==2}bottom:0px; box-shadow: 0px 0 10px 0 #{$vareu->uecookie_shadow};{else} top:0px; box-shadow: 0 0 10px 0 #{$vareu->uecookie_shadow};{/if} background: #{$vareu->uecookie_bg}; z-index: 9999; font-size: 14px; line-height: 1.3em; font-family: arial; left: 0px; text-align:center; color:#FFF; opacity: {$vareu->uecookie_opacity} ">
+
+<div id="cookieNotice" style=" width: 100%; position: fixed; {if $vareu->uecookie_position==2}bottom:0px; box-shadow: 0px 0 10px 0 #{$vareu->uecookie_shadow};{else} top:0px; box-shadow: 0 0 10px 0 #{$vareu->uecookie_shadow};{/if} background: #{$vareu->uecookie_bg}; z-index: 9999; font-size: 12px; line-height: 1.3em; font-family: arial; left: 0px; text-align:center; color:#444; opacity: {$vareu->uecookie_opacity} ">
     <div id="cookieNoticeContent" style="position:relative; margin:auto; width:100%; display:block;">
-        <table style="width:100%;">
+        <table style="width:100%;margin: 10px;">
             <tr>
-            {if Configuration::get('uecookie_x_where')==1}
-                <td style="width:80px; vertical-align:middle; padding-right:20px; text-align:left;">
-                    {if Configuration::get('uecookie_usex')==1}
-                        <span class="closeFontAwesome" onclick="closeUeNotify()"></span>
-                    {else}
-                        <span class="closeButtonNormal" onclick="closeUeNotify()">{l s='close' mod='uecookie'}</span>
-                    {/if}
-                </td>
-            {/if}
             <td style="text-align:center;">
                 {$uecookie nofilter}
             </td>
-            {if Configuration::get('uecookie_x_where')==2}
-                <td style="width:80px; vertical-align:middle; padding-right:20px; text-align:right;">
-                    {if Configuration::get('uecookie_usex')==1}
-                        <span class="closeFontAwesome" onclick="closeUeNotify()"></span>
-                    {else}
-                        <span class="closeButtonNormal" onclick="closeUeNotify()">{l s='close' mod='uecookie'}</span>
-                    {/if}
-                </td>
-            {/if}
             </tr>
             <tr>
-                {if Configuration::get('uecookie_x_where')==3}
-                    <td style="width:80px; vertical-align:middle; padding-right:20px; text-align:center;">
-                        {if Configuration::get('uecookie_usex')==1}
-                            <span class="closeFontAwesome" onclick="closeUeNotify()"></span>
-                        {else}
-                            <span class="closeButtonNormal" onclick="closeUeNotify()">{l s='close' mod='uecookie'}</span>
-                        {/if}
-                    </td>
-                {/if}
+                <td colspan="2">
+                    <button class="btn btn-sm btn-dark rounded-0" onclick="window.location">Privacy voorwaarden</button>
+                    <button class="btn btn-sm btn-dark rounded-0" onclick="closeUeNotify()">Ok</button>
+                </td>
             </tr>
         </table>
     </div>

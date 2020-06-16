@@ -785,7 +785,7 @@ class Psgdpr extends Module
                 array_push($messages, array(
                     'id_customer_thread' => $message['id_customer_thread'],
                     'message' => $message['message'],
-                    'ip' => long2ip($message['ip_address']),
+                    'ip' => (int) $message['ip_address'] == $message['ip_address'] ? long2ip((int) $message['ip_address']) : $message['ip_address'],
                     'date_add' => $message['date_add'],
                 ));
             }
@@ -811,10 +811,10 @@ class Psgdpr extends Module
     public function getCustomerDataFromModules($customer)
     {
         $modulesData = Hook::getHookModuleExecList('actionExportGDPRData'); // get modules using the export gdpr hook
-        if ($modulesData == false && count($modulesData) >= 1) {
-            return;
+         if (empty($modulesData) || count($modulesData) >= 1) {
+            return [];
         }
-
+        
         $customer = (array)$customer;
         $data = array();
 

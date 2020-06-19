@@ -147,7 +147,7 @@ class TinyMCEEditor {
       url: base_url + 'js/tiny_mce/plugins/bootstrap/',
       iconFont: 'fontawesome5',
       imagesPath: '/upload',
-      key: 'cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpntwY68zKhPuBBBfiucVaylNhbNzuWdxME7vwNnVxE8VOFkf7RlqjEyxMsiu6eEK7Q=',
+      key: tbpKey,
       enableTemplateEdition: false,
     },
       editorStyleFormats: {

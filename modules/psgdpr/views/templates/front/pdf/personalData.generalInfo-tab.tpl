@@ -73,22 +73,6 @@
                 </tr>
                 <tr>
                     <td class="grey" width="50%">
-                        {l s='Birth date' mod='psgdpr'}
-                    </td>
-                    <td class="white" width="50%">
-                        {$customerInfo['birthday']}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="grey" width="50%">
-                        {l s='Age' mod='psgdpr'}
-                    </td>
-                    <td class="white" width="50%">
-                        {$customerInfo['age']}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="grey" width="50%">
                         {l s='Email' mod='psgdpr'}
                     </td>
                     <td class="white" width="50%">
@@ -126,34 +110,10 @@
                 </tr>
                 <tr>
                     <td class="grey" width="50%">
-                        {l s='Siret' mod='psgdpr'}
-                    </td>
-                    <td class="white" width="50%">
-                        {$customerInfo['siret']}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="grey" width="50%">
-                        {l s='Ape' mod='psgdpr'}
-                    </td>
-                    <td class="white" width="50%">
-                        {$customerInfo['ape']}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="grey" width="50%">
                         {l s='Company' mod='psgdpr'}
                     </td>
                     <td class="white" width="50%">
                         {$customerInfo['company']}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="grey" width="50%">
-                        {l s='Website' mod='psgdpr'}
-                    </td>
-                    <td class="white" width="50%">
-                        {$customerInfo['website']}
                     </td>
                 </tr>
             </table>

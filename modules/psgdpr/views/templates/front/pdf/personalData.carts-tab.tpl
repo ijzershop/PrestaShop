@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-<h2>{l s='Carts' mod='psgdpr'}</h2>
+<h2>{l s='Winkelwagens' mod='psgdpr'}</h2>
 <br>
 <table id="summary-tab" width="100%">
     <tr>
@@ -56,7 +56,7 @@
                 {foreach from=$cart['products'] item=product}
                 <tr>
                     <td class="center white">{$product['product_reference']|escape:'html':'UTF-8'}</td>
-                    <td class="center white">{$product['product_name']|escape:'html':'UTF-8'}</td>
+                    <td class="center white">{if strpos($product['product_name'], 'Zaagsnede') !== false}{substr($product['product_name'], 0, (int)strpos($product['product_name'], '- Zaagsnede'))|escape:'html':'UTF-8'}{elseif strpos($product['product_name'], 'Knippen') !== false}{substr($product['product_name'], 0, (int)strpos($product['product_name'], '- Knippen'))|escape:'html':'UTF-8'}{else}{$product['product_name']|escape:'html':'UTF-8'}{/if}</td>
                     <td class="center white">{$product['product_quantity']|escape:'html':'UTF-8'}</td>
                 </tr>
                 {/foreach}

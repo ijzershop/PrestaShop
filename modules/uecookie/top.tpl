@@ -98,7 +98,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <button class="btn btn-sm btn-dark rounded-0" onclick="window.location">Privacy voorwaarden</button>
+                    <a class="btn btn-sm btn-dark rounded-0" href="{$link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_PRIVACY'))}">Privacy voorwaarden</a>
                     <button class="btn btn-sm btn-dark rounded-0" onclick="closeUeNotify()">Ok</button>
                 </td>
             </tr>

@@ -1,5 +1,6 @@
-{#**
- * 2007-2020 PrestaShop and Contributors
+<?php
+/**
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -21,30 +22,14 @@
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% extends '@PrestaShop/Admin/Module/Includes/card_list.html.twig' %}
+ */
 
-{# Twig extension for "Addons to update" part in notification page #}
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
 
-{# Display "Old version -> New version" #}
-{% block addon_version %}
-  v{{ module.database.version }} <i class="material-icons" style="font-size: 10px; ">arrow_forward</i> v{{ module.attributes.version_available }}
-{% endblock %}
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 
-{# Display changelog instead of the description #}
-{% block addon_description %}
-  {% if module.attributes.changeLog is defined %}
-    <ul>
-      {% for version, lines in module.attributes.changeLog|arrayCast %}
-        <li><b>{{ version }}:</b>
-          {% for line in lines %}
-            {{ line }}<br/>
-          {% endfor %}
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <i>{{ 'No changelog provided'|trans({}, 'Admin.Modules.Notification') }}</i>
-  {% endif %}
-
-{% endblock %}
+header("Location: ../");
+exit;

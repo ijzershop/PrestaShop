@@ -26,6 +26,7 @@
 class ContactOfferControllerCore extends FrontController
 {
     public $php_self = 'contactoffer';
+    public $template  = 'contact_offer';
     public $ssl = true;
 
     /**
@@ -45,8 +46,8 @@ class ContactOfferControllerCore extends FrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = [
-            'title' => $this->getTranslator()->trans('Contact us', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('contact', true),
+            'title' => $this->getTranslator()->trans('Offerte aanvragen', [], 'Shop.Theme.Global'),
+            'url' => '/offerte-aanvragen',
         ];
 
         return $breadcrumb;

@@ -432,6 +432,7 @@ class Contactform extends Module implements WidgetInterface
     {
         $extension = ['.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg'];
         $file_attachment = Tools::fileAttachment('fileUpload');
+        $file_attachment['rename'] = $file_attachment['rename'];
         $message = trim(Tools::getValue('message'));
         $url = Tools::getValue('url');
         $clientToken = Tools::getValue('token');
@@ -549,9 +550,9 @@ class Contactform extends Module implements WidgetInterface
                         $cm->id_customer_thread = $ct->id;
                         $cm->message = $message;
 
-                        if ($testFileUpload && rename($file_attachment['tmp_name'], _PS_UPLOAD_DIR_ . basename($file_attachment['rename']))) {
+                        if ($testFileUpload && rename($file_attachment['tmp_name'], _PS_UPLOAD_DIR_. '/contactforms/' . basename($file_attachment['rename']))) {
                             $cm->file_name = $file_attachment['rename'];
-                            @chmod(_PS_UPLOAD_DIR_ . basename($file_attachment['rename']), 0664);
+                            @chmod(_PS_UPLOAD_DIR_. '/contactforms/' . basename($file_attachment['rename']), 0664);
                         }
                         $cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
                         $cm->user_agent = $_SERVER['HTTP_USER_AGENT'];

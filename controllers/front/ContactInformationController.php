@@ -45,8 +45,8 @@ class ContactInformationControllerCore extends FrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = [
-            'title' => $this->getTranslator()->trans('Contact us', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('contact', true),
+            'title' => $this->getTranslator()->trans('Informatie aanvragen', [], 'Shop.Theme.Global'),
+            'url' => '/informatie-aanvragen',
         ];
 
         return $breadcrumb;

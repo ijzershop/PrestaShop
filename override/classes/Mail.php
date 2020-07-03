@@ -74,6 +74,18 @@ class Mail extends MailCore
             $idShop = Context::getContext()->shop->id;
         }
 
+        if($template == 'contact' && array_key_exists('{order_name}', $templateVars)){
+            $template = 'contact_information';
+            $templateVars['{postcode}'] = Tools::getValue('postalcode');
+            $templateVars['{phonenumber}'] = Tools::getValue('phonenumber');
+        }
+
+        if($template == 'contact' && !array_key_exists('{order_name}', $templateVars)){
+            $template = 'contact_offer';
+            $templateVars['{postcode}'] = Tools::getValue('postalcode');
+            $templateVars['{phonenumber}'] = Tools::getValue('phonenumber');
+        }
+
         $hookBeforeEmailResult = Hook::exec(
             'actionEmailSendBefore',
             [
@@ -478,6 +490,7 @@ class Mail extends MailCore
                 true
             );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
+
             $swift->registerPlugin(new \Swift_Plugins_DecoratorPlugin(array($toPlugin => $templateVars)));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
@@ -507,6 +520,7 @@ class Mail extends MailCore
                     }
                 }
             }
+
             /* Send mail */
             $message->setFrom(array($from => $fromName));
 

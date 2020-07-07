@@ -109,11 +109,11 @@ $(document).ready(function() {
   updateFilterMenu();
 
   /** create keyboard event for save & new */
-  jwerty.key('ctrl+P', function(e) {
-    e.preventDefault();
-    var url = $('form#product_catalog_list').attr('newproducturl');
-    window.location.href = url;
-  });
+  // jwerty.key('ctrl+P', function(e) {
+  //   e.preventDefault();
+  //   var url = $('form#product_catalog_list').attr('newproducturl');
+  //   window.location.href = url;
+  // });
 });
 
 function productOrderTable(orderBy, orderWay) {

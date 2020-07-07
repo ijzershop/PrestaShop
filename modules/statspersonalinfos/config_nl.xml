@@ -2,7 +2,7 @@
 <module>
     <name>statspersonalinfos</name>
     <displayName><![CDATA[Geregistreerde klanten overzicht]]></displayName>
-    <version><![CDATA[2.0.2]]></version>
+    <version><![CDATA[2.0.3]]></version>
     <description><![CDATA[Voegt informatie over geregistreerde klanten (zoals geslacht en leeftijd) toe aan het statistieken dashboard.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>

@@ -2,11 +2,10 @@
 <module>
     <name>ps_faviconnotificationbo</name>
     <displayName><![CDATA[Bestel notificaties op de Favicon]]></displayName>
-    <version><![CDATA[2.0.0]]></version>
+    <version><![CDATA[2.1.0]]></version>
     <description><![CDATA[Ontvang een melding wanneer u een nieuwe bestelling, nieuwe klant of een nieuw bericht ontvangt op uw browser tabblad van uw backoffice, zelfs als u op een andere pagina werkt.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[administration]]></tab>
-	<confirmUninstall><![CDATA[Weet u zeker dat u deze module wilt deïnstalleren?]]></confirmUninstall>
     <is_configurable>1</is_configurable>
     <need_instance>1</need_instance>
 	<limited_countries></limited_countries>

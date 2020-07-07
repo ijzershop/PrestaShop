@@ -432,7 +432,6 @@ class Contactform extends Module implements WidgetInterface
     {
         $extension = ['.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg'];
         $file_attachment = Tools::fileAttachment('fileUpload');
-        $file_attachment['rename'] = $file_attachment['rename'];
         $message = trim(Tools::getValue('message'));
         $url = Tools::getValue('url');
         $clientToken = Tools::getValue('token');

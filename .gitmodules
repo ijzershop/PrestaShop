@@ -3,28 +3,28 @@
 url=git@github.com:ijzershop/modernesmid-theme.git
 [submodule "modules/sawandcutmodule"]
 	path = modules/sawandcutmodule
-	url=https://github.com/ijzershop/sawandcutmodule.git
+url=git@github.com:ijzershop/sawandcutmodule.git
 [submodule "modules/ijzershopkiyoh"]
 	path = modules/ijzershopkiyoh
 	url = https://ijzershop@bitbucket.org/ijzershop/ijzershopkiyoh.git
 [submodule "modules/offerintegration"]
 	path = modules/offerintegration
-	url=https://github.com/ijzershop/offerintegration.git
+url=git@github.com:ijzershop/offerintegration.git
 [submodule "modules/modernesmidthemeconfigurator"]
 	path = modules/modernesmidthemeconfigurator
-	url = https://github.com/ijzershop/modernesmidthemeconfigurator.git
+url=git@github.com:ijzershop/modernesmidthemeconfigurator.git
 [submodule "modules/smallorderfee"]
 	path = modules/smallorderfee
-	url = https://github.com/ijzershop/smallorderfee.git
+url=git@github.com:ijzershop/smallorderfee.git
 [submodule "modules/koopmanorderexport"]
 	path = modules/koopmanorderexport
-	url = https://github.com/ijzershop/koopmanorderexport.git
+url=git@github.com:ijzershop/koopmanorderexport.git
 [submodule "modules/productcomments"]
 	path = modules/productcomments
-	url = https://github.com/ijzershop/productcomments
+url=git@github.com:ijzershop/productcomments
 [submodule "modules/customdeliveryslipsexport"]
 	path = modules/customdeliveryslipsexport
-	url = https://github.com/ijzershop/customdeliveryslipsexport.git
+url=git@github.com:ijzershop/customdeliveryslipsexport.git
 [submodule "modules/addtoorder"]
 	path = modules/addtoorder
-	url = https://github.com/ijzershop/addtoorder.git
+url=git@github.com:ijzershop/addtoorder.git

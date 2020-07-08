@@ -258,7 +258,7 @@ abstract class PaymentModuleCore extends Module
             // For each package, generate an order
             $delivery_option_list = $this->context->cart->getDeliveryOptionList();
             $package_list = $this->context->cart->getPackageList();
-            $cart_delivery_option = $this->context->cart->getDeliveryOption();
+            $cart_delivery_option = $this->context->cart->getDeliveryOption(null,true,false);
 
             // If some delivery options are not defined, or not valid, use the first valid option
             foreach ($delivery_option_list as $id_address => $package) {

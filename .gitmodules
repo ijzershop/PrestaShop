@@ -28,3 +28,6 @@ url=git@github.com:ijzershop/customdeliveryslipsexport.git
 [submodule "modules/addtoorder"]
 	path = modules/addtoorder
 url=git@github.com:ijzershop/addtoorder.git
+[submodule "modules/ps_shoppingcart"]
+	path = modules/ps_shoppingcart
+	url = git@github.com:ijzershop/ps_shoppingcart.git

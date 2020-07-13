@@ -87,7 +87,6 @@
         "prestashop/statssearch": "^2",
         "prestashop/statsstock": "^2",
         "prestashop/statsvisits": "^2",
-        "prestashop/ps_shoppingcart": "^2",
         "prestashop/translationtools-bundle": "^3",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^5.0.0",

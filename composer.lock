@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "077363253b3f1651b897127005283cb7",
+    "content-hash": "58f0d698b91721a69ca7768eea535df6",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -3232,16 +3232,16 @@
         },
         {
             "name": "prestashop/dashproducts",
-            "version": "v2.0.4",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashproducts.git",
-                "reference": "dc07a3385e1f7274e54ad1c8254f0eb5235c9c05"
+                "reference": "ad716b965b9dc851d7b0e489e7c3122c5f9360d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/dc07a3385e1f7274e54ad1c8254f0eb5235c9c05",
-                "reference": "dc07a3385e1f7274e54ad1c8254f0eb5235c9c05",
+                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/ad716b965b9dc851d7b0e489e7c3122c5f9360d5",
+                "reference": "ad716b965b9dc851d7b0e489e7c3122c5f9360d5",
                 "shasum": ""
             },
             "require": {
@@ -3260,7 +3260,7 @@
             ],
             "description": "PrestaShop module dashproducts",
             "homepage": "https://github.com/PrestaShop/dashproducts",
-            "time": "2018-08-14T16:14:27+00:00"
+            "time": "2020-07-09T11:40:45+00:00"
         },
         {
             "name": "prestashop/dashtrends",
@@ -3540,16 +3540,16 @@
         },
         {
             "name": "prestashop/ps_contactinfo",
-            "version": "v3.2.0",
+            "version": "v3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_contactinfo.git",
-                "reference": "407bd65291e8f3c64084ab267af1d8c9476872ea"
+                "reference": "1c74f18a12118cbb7622e79044c48aaa55ce93c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_contactinfo/zipball/407bd65291e8f3c64084ab267af1d8c9476872ea",
-                "reference": "407bd65291e8f3c64084ab267af1d8c9476872ea",
+                "url": "https://api.github.com/repos/PrestaShop/ps_contactinfo/zipball/1c74f18a12118cbb7622e79044c48aaa55ce93c3",
+                "reference": "1c74f18a12118cbb7622e79044c48aaa55ce93c3",
                 "shasum": ""
             },
             "require": {
@@ -3558,7 +3558,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3568,7 +3568,7 @@
             ],
             "description": "PrestaShop module ps_contactinfo",
             "homepage": "https://github.com/PrestaShop/ps_contactinfo",
-            "time": "2019-08-30T17:11:48+00:00"
+            "time": "2020-05-28T12:57:52+00:00"
         },
         {
             "name": "prestashop/ps_currencyselector",
@@ -4024,6 +4024,42 @@
             "description": "PrestaShop module ps_searchbar",
             "homepage": "https://github.com/PrestaShop/ps_searchbar",
             "time": "2017-03-23T10:36:40+00:00"
+        },
+        {
+            "name": "prestashop/ps_shoppingcart",
+            "version": "v2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_shoppingcart.git",
+                "reference": "eea54698cfb4324508ae0c89efe737c1c3c03f17"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_shoppingcart/zipball/eea54698cfb4324508ae0c89efe737c1c3c03f17",
+                "reference": "eea54698cfb4324508ae0c89efe737c1c3c03f17",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.14",
+                "prestashop/php-coding-standards": "dev-master"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module ps_shoppingcart",
+            "homepage": "https://github.com/PrestaShop/ps_shoppingcart",
+            "time": "2019-10-30T14:07:17+00:00"
         },
         {
             "name": "prestashop/ps_themecusto",
@@ -8532,20 +8568,20 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "1.9.0",
+            "version": "1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozart/assert.git",
-                "reference": "9dc4f203e36f2b486149058bade43c851dd97451"
+                "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/9dc4f203e36f2b486149058bade43c851dd97451",
-                "reference": "9dc4f203e36f2b486149058bade43c851dd97451",
+                "url": "https://api.github.com/repos/webmozart/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
+                "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3.3 || ^7.0",
+                "php": "^5.3.3 || ^7.0 || ^8.0",
                 "symfony/polyfill-ctype": "^1.8"
             },
             "conflict": {
@@ -8577,7 +8613,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2020-06-16T10:16:42+00:00"
+            "time": "2020-07-08T17:02:28+00:00"
         }
     ],
     "aliases": [],

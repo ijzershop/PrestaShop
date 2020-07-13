@@ -24,8 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
-
 class Ps_ShoppingcartAjaxModuleFrontController extends ModuleFrontController
 {
     public $ssl = true;
@@ -35,53 +33,24 @@ class Ps_ShoppingcartAjaxModuleFrontController extends ModuleFrontController
      */
     public function initContent()
     {
-        $modal = $flying_image = null;
-        $id_product = (int)Tools::getValue('id_product');
-        $id_product_attribute = (int)Tools::getValue('id_product_attribute');
-        if (Tools::getValue('action') === 'add-to-cart') {
+        parent::initContent();
 
-                $modal = $this->module->renderList(
+        $modal = null;
+
+        if (Tools::getValue('action') === 'add-to-cart') {
+            $modal = $this->module->renderModal(
                 $this->context->cart,
-                    $id_product,
-                    $id_product_attribute
+                (int) Tools::getValue('id_product'),
+                (int) Tools::getValue('id_product_attribute'),
+                (int) Tools::getValue('id_customization')
             );
-        $maximum_already = 0;
-        if($minimal_quantity = Tools::getValue('minimal-quantity')){
-            $product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $this->context->shop->id);
-            //why processChangeProductInCart bu jian cha stock.
-            //from cart updateQty
-            $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this->context->cart);
-            $availableOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
-            if ($productQuantity < $minimal_quantity && !$availableOutOfStock) {
-                $maximum_already = 1;
         }
-        }
-        $cart = (new CartPresenter)->present($this->context->cart, true);
+
         ob_end_clean();
         header('Content-Type: application/json');
-
-        if(is_null($cart['subtotals']['products']['value']))
-        {
-            $cart['subtotals']['products']['value'] = '';
-        }
-
         die(json_encode([
-            'preview' => $this->module->renderProductList(null, ['cart' => $this->context->cart]),
+            'preview' => $this->module->renderWidget(null, ['cart' => $this->context->cart]),
             'modal' => $modal,
-            'cart'   => $cart,
-            'flying_image'   => $flying_image,
-            'products_count' => $cart['products_count'],
-            'total_value' => $cart['subtotals']['products']['value'],
-            'maximum_already' => $maximum_already,
         ]));
-    } else {
-        $modal = $this->module->renderList(
-                    $this->context->cart,
-                    $id_product,
-                    $id_product_attribute
-                );
-        die($modal);
     }
-    }
-
 }

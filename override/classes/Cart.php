@@ -151,52 +151,57 @@ class Cart extends CartCore
 
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
         $computePrecision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
-        switch ($type) {
-            case Cart::ONLY_SHIPPING:
-                $calculator->calculateRows();
-                $calculator->calculateFees($computePrecision);
-                $amount = $calculator->getFees()->getInitialShippingFees();
+        $small_order_fee_addition = 0;
 
-                break;
-            case Cart::ONLY_WRAPPING:
-                $calculator->calculateRows();
-                $calculator->calculateFees($computePrecision);
-                $amount = $calculator->getFees()->getInitialWrappingFees();
-
-                break;
-            case Cart::BOTH:
-                $calculator->processCalculation($computePrecision);
-                $amount = $calculator->getTotal();
-
-                break;
-            case Cart::BOTH_WITHOUT_SHIPPING:
-                $calculator->calculateRows();
-                // dont process free shipping to avoid calculation loop (and maximum nested functions !)
-                $calculator->calculateCartRulesWithoutFreeShipping();
-                $amount = $calculator->getTotal(true);
-                break;
-            case Cart::ONLY_PRODUCTS:
-                $calculator->calculateRows();
-                $amount = $calculator->getRowTotal();
-
-                break;
-            case Cart::ONLY_DISCOUNTS:
-                $calculator->processCalculation($computePrecision);
-                $amount = $calculator->getDiscountTotal();
-
-                break;
-            default:
-                throw new \Exception('unknown cart calculation type : ' . $type);
-        }
-
-
-               $productTotal = $calculator->getRowTotal()->getTaxExcluded();
-                //Add small order fee
-                if((!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')) || $productTotal === 0.0){
-                   $small_order_fee_addition = 0;
-                } else {
-                   $small_order_fee_addition = (double)Configuration::get('SMALLORDERFEE_ORDER_FEE');
+            switch ($type) {
+                case Cart::ONLY_SHIPPING:
+                    $calculator->calculateRows();
+                    $calculator->calculateFees($computePrecision);
+                    $amount = $calculator->getFees()->getInitialShippingFees();
+                    break;
+                case Cart::ONLY_WRAPPING:
+                    $calculator->calculateRows();
+                    $calculator->calculateFees($computePrecision);
+                    $amount = $calculator->getFees()->getInitialWrappingFees();
+                    break;
+                case Cart::BOTH:
+                    $calculator->processCalculation($computePrecision);
+                    $amount = $calculator->getTotal();
+    
+                    //Add small order fee
+                    $productTotal = $calculator->getRowTotal()->getTaxExcluded();
+                    if((!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')) || $productTotal === 0.0){
+                       $small_order_fee_addition = 0;
+                    } else {
+                       $small_order_fee_addition = (double)Configuration::get('SMALLORDERFEE_ORDER_FEE');
+                    }
+                    break;
+                case Cart::BOTH_WITHOUT_SHIPPING:
+                    $calculator->calculateRows();
+                    // dont process free shipping to avoid calculation loop (and maximum nested functions !)
+                    $calculator->calculateCartRulesWithoutFreeShipping();
+                    $amount = $calculator->getTotal(true);
+                    
+                    //Add small order fee
+                    $productTotal = $calculator->getRowTotal()->getTaxExcluded();
+                    if((!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')) || $productTotal === 0.0){
+                       $small_order_fee_addition = 0;
+                    } else {
+                       $small_order_fee_addition = (double)Configuration::get('SMALLORDERFEE_ORDER_FEE');
+                    }
+                    break;
+                case Cart::ONLY_PRODUCTS:
+                    $calculator->calculateRows();
+                    $amount = $calculator->getRowTotal();
+                    break;
+                case Cart::ONLY_DISCOUNTS:
+                    $calculator->processCalculation($computePrecision);
+                    $amount = $calculator->getDiscountTotal();
+                    break;
+                default:
+                    throw new \Exception('unknown cart calculation type : ' . $type);
                 }
+
    
         // TAXES ?
         $value = $withTaxes ? $amount->getTaxIncluded() + $small_order_fee_addition : $amount->getTaxExcluded() + $small_order_fee_addition;   

@@ -1564,7 +1564,6 @@ class ProductCore extends ObjectModel
         }
 
         ksort($attributes);
-
         return $attributes;
     }
 

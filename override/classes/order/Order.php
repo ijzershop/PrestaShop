@@ -68,13 +68,15 @@ class Order extends OrderCore
         $prefix = Configuration::get('GMNUMERIC_PREFIX');
         $prefixLength = strlen($prefix);
         $restLength = 9 - $prefixLength;
+
         if ($isRandom) {
             $reference = Tools::passwdGen($restLength, 'NUMERIC');
         } else {
 
                  $query = "SELECT `reference` FROM "._DB_PREFIX_."orders ORDER BY `id_order` DESC";
 
-            $previousOrderId = (int) Db::getInstance()->getValue($query);
+
+            $previousOrderId = Db::getInstance()->getValue($query);
 
             $prefix = Configuration::get('GMNUMERIC_PREFIX');
             $nextOrderId = (int) str_replace($prefix,'', $previousOrderId)+1;  

@@ -31,6 +31,7 @@ class Product extends ProductCore {
     public $saw_loss;
     public $min_saw_size;
     public $min_cut_size;
+    public $default_cut_price;
     /*
     * module: offerintegration
     * date: 2020-03-06 14:52:31
@@ -40,19 +41,20 @@ class Product extends ProductCore {
     {
         self::$definition['fields']['saw_loss'] = array('type' => self::TYPE_INT, 
                                                                 'shop' => 'true', 
-                                                                'validate' => 
                                                                 'isNullOrUnsignedId', 
                                                                 'required' => false);
         self::$definition['fields']['min_saw_size'] = array('type' => self::TYPE_INT, 
                                                                 'shop' => 'true', 
-                                                                'validate' => 
                                                                 'isNullOrUnsignedId', 
                                                                 'required' => false);
         self::$definition['fields']['min_cut_size'] = array('type' => self::TYPE_INT, 
                                                                 'shop' => 'true', 
-                                                                'validate' => 
                                                                 'isNullOrUnsignedId', 
                                                                 'required' => false);
+        self::$definition['fields']['default_cut_price'] = array('type' => self::TYPE_FLOAT, 
+                                                                'shop' => 'true', 
+                                                                'required' => false);
+
         
         self::$definition['fields']['id_oi_offer'] = array('type' => ObjectModel::TYPE_INT,
                                                                  'shop' => 'true',

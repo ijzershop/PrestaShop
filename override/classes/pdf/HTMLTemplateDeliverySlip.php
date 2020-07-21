@@ -121,6 +121,43 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
         $order_details = $this->order_invoice->getProducts();
 
+            foreach ($order_details as &$order_detail) {
+                if(!is_null($order_detail['customizedDatas'])){
+                    foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
+                        if(!is_null($customization)){
+                            foreach ($customization as $customizationId => $customized) {
+                                if(isset($customized['datas'])){
+
+                                    if(class_exists("Imagick") )
+                                    {
+                                        $file = $customized['datas'][1][0]['technical_image'];
+                                        $fileContents = file_get_contents(Context::getContext()->shop->getBaseURL(true).$file);
+                                        $doc = new SimpleXMLElement($fileContents);
+                                        foreach($doc->g as $seg)
+                                        {
+                                            if($seg->attributes()->id[0] == 'cutline') {
+                                                $dom=dom_import_simplexml($seg);
+                                                $dom->parentNode->removeChild($dom);
+                                            }
+                                        }
+                                        
+                                        $im = new Imagick();
+                                        $im->readImageBlob($doc->asXml());
+                                        $im->setImageFormat('png24');
+                                        $im->writeImage(_PS_CORE_DIR_.'/'.$file . '.png');
+                                        $im->clear();
+                                        $im->destroy();  
+                          
+                                    }
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+            }
+                
+
         if (Configuration::get('PS_PDF_IMG_DELIVERY')) {
             foreach ($order_details as &$order_detail) {
                 if ($order_detail['image'] != null) {
@@ -133,12 +170,12 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                         ImageManager::thumbnail($path, $name, 45, 'jpg', false),
                         1
                     );
-
                     if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
                         $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
                     } else {
                         $order_detail['image_size'] = false;
                     }
+
                 }
             }
         }
@@ -153,6 +190,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             'carrier' => $carrier,
             'display_product_images' => Configuration::get('PS_PDF_IMG_DELIVERY'),
         ));
+
 
         $tpls = array(
             'style_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.style-tab')),

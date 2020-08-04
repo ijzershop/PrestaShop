@@ -2764,6 +2764,7 @@ class AdminProductsControllerCore extends AdminController
     {
         $idProduct = $idProduct ? $idProduct : Tools::getValue('id_product');
 
+
         self::$currentIndex = 'index.php?tab=AdminProducts';
         $product = new Product((int) $idProduct);
         $legends = Tools::getValue('legend');
@@ -2785,6 +2786,10 @@ class AdminProductsControllerCore extends AdminController
             $image = new Image();
             $image->id_product = (int) ($product->id);
             $image->position = Image::getHighestPosition($product->id) + 1;
+
+            if(strrpos($file['name'], 'techntabel') != false){
+                $image->legend = $file['name'];
+            }
 
             foreach ($legends as $key => $legend) {
                 if (!empty($legend)) {

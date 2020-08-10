@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ csoft_invisible_recaptcha_v2 front-end module version 1.1.1 for Prestashop 1.7
+  ~ Support contact : prestashop@comonsoft.com.
+  ~
+  ~ NOTICE OF LICENSE
+  ~
+  ~ This source file is the property of Com'onSoft
+  ~ that is bundled with this package.
+  ~ It is also available through the world-wide-web at this URL:
+  ~ https://boutique.comonsoft.com/
+  ~
+  ~ @category  front-end
+  ~ @package   csoft_invisible_recaptcha_v2
+  ~ @author    Com'onSoft (http://www.comonsoft.com/)
+  ~ @copyright 2016-2020. Com'onSoft and contributors
+  ~ @version   1.1.2
+  -->
+
+<module>
+    <name>csoft_invisible_recaptcha_v2</name>
+    <displayName><![CDATA[Invisible reCaptcha]]></displayName>
+    <version><![CDATA[1.1.0]]></version>
+    <description><![CDATA[Add an invisible ReCaptcha at your contact form and register account page]]></description>
+    <author><![CDATA[comonsoft]]></author>
+    <tab><![CDATA[front_office_features]]></tab>
+	<confirmUninstall><![CDATA[Are you sure you want to uninstall ?]]></confirmUninstall>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+ </module>

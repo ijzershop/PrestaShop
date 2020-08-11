@@ -44,26 +44,28 @@ class Csoft_invisible_recaptcha_v2 extends Module
 
 	public function install()
 	{
-		$contactFormTplChild = file_get_contents(_PS_THEME_DIR_.'modules/contactform/views/templates/widget/contactform.tpl');
-		$contactFormTplParent = file_get_contents(_PS_PARENT_THEME_DIR_.'modules/contactform/views/templates/widget/contactform.tpl');
+		// $contactFormTplChild = file_get_contents(_PS_THEME_DIR_.'modules/contactform/views/templates/widget/contactform.tpl');
+		// $contactFormTplParent = file_get_contents(_PS_PARENT_THEME_DIR_.'modules/contactform/views/templates/widget/contactform.tpl');
 
-		if($contactFormTplChild){
-			$pos = strpos($contactFormTplChild, 'name="submitMessage"');
-			if(!$pos){
-				$this->_errors[] = $this->l('HTML tag input type="submit" name="submitMessage" not found in "contactform.tpl"');
-			}
-		}elseif($contactFormTplParent){
-			$pos = strpos($contactFormTplParent, 'name="submitMessage"');
-			if(!$pos){
-				$this->_errors[] = $this->l('HTML tag input type="submit" name="submitMessage" not found in "contactform.tpl"');
-			}
-		}else{
-			$this->_errors[] = $this->l('Template "contactform.tpl" was not found in your theme!');
-		}
+		// if($contactFormTplChild){
+		// 	$pos = strpos($contactFormTplChild, 'name="submitMessage"');
+		// 	if(!$pos){
+		// 		$this->_errors[] = $this->l('HTML tag input type="submit" name="submitMessage" not found in "contactform.tpl"');
+		// 	}
+		// }elseif($contactFormTplParent){
+		// 	$pos = strpos($contactFormTplParent, 'name="submitMessage"');
+		// 	if(!$pos){
+		// 		$this->_errors[] = $this->l('HTML tag input type="submit" name="submitMessage" not found in "contactform.tpl"');
+		// 	}
+		// }else{
+		// 	$this->_errors[] = $this->l('Template "contactform.tpl" was not found in your theme!');
+		// }
 
-		if(count($this->_errors)){
-			return false;
-		}else
+		// if(count($this->_errors)){
+		// 	return false;
+		// }else
+
+
 		if (!parent::install() || !$this->registerHook('header') || !$this->registerHook('actionSubmitAccountBefore') || !$this->registerHook('actionBeforeSubmitAccount') || !Configuration::updateValue('RECAPTCHA_BADGE', 1) || !Configuration::updateValue('RECAPTCHA_ACCOUNT', 1)){
 			return false;
 		}else{
@@ -240,7 +242,7 @@ class Csoft_invisible_recaptcha_v2 extends Module
 	public function hookHeader($params)
 	{
 		// Display on the contact form
-		if ($this->context->controller instanceof ContactController || $this->context->controller instanceof ContactInformationController || $this->context->controller instanceof ContactOfferController){
+		if ($this->context->controller instanceof ContactController || $this->context->controller instanceof ContactInformationController || $this->context->controller instanceof ContactOfferController || $this->context->controller instanceof CategoryController){
 
 			$this->context->controller->registerJavascript(
 				'recaptcha',

@@ -29,11 +29,14 @@ var onloadCallback = function() {
         $('form input[name=submitMessage]').attr('disabled','disabled');
         $('form').append('<input type="hidden" name="submitMessage">');
     }else{
+       if($('form input[name=submitMessage]').length > 0){
+        
         grecaptcha.render('submitMessage', {
             'sitekey' : recaptchaKey,
             'callback' : onSubmit
         });
         $('form').append('<input type="hidden" name="submitMessage">');
+       }
     }
 
 

@@ -20,7 +20,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class Csoft_Invisible_Recaptcha_V2 extends Module
+class Csoft_invisible_recaptcha_v2 extends Module
 {
 
 	private $_html = '';
@@ -63,7 +63,8 @@ class Csoft_Invisible_Recaptcha_V2 extends Module
 
 		if(count($this->_errors)){
 			return false;
-		}elseif (!parent::install() || !$this->registerHook('header') || !$this->registerHook('actionSubmitAccountBefore') || !$this->registerHook('actionBeforeSubmitAccount') || !Configuration::updateValue('RECAPTCHA_BADGE', 1) || !Configuration::updateValue('RECAPTCHA_ACCOUNT', 1)){
+		}else
+		if (!parent::install() || !$this->registerHook('header') || !$this->registerHook('actionSubmitAccountBefore') || !$this->registerHook('actionBeforeSubmitAccount') || !Configuration::updateValue('RECAPTCHA_BADGE', 1) || !Configuration::updateValue('RECAPTCHA_ACCOUNT', 1)){
 			return false;
 		}else{
 			return true;
@@ -239,7 +240,7 @@ class Csoft_Invisible_Recaptcha_V2 extends Module
 	public function hookHeader($params)
 	{
 		// Display on the contact form
-		if ($this->context->controller instanceof ContactController){
+		if ($this->context->controller instanceof ContactController || $this->context->controller instanceof ContactInformationController || $this->context->controller instanceof ContactOfferController){
 
 			$this->context->controller->registerJavascript(
 				'recaptcha',

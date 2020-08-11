@@ -2,7 +2,7 @@
 <module>
     <name>statsdata</name>
     <displayName><![CDATA[Data exploitatie voor de statistieken]]></displayName>
-    <version><![CDATA[2.0.0]]></version>
+    <version><![CDATA[2.1.0]]></version>
     <description><![CDATA[Deze module moet ingeschakeld zijn als u Statistieken wilt gebruiken.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>

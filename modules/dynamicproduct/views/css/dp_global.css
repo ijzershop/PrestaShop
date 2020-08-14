@@ -1,0 +1,13 @@
+.dp_thumb_view{display:inline-block;width:29px;height:29px;vertical-align:middle;}
+
+tr.customization td {
+  border-top-color: #FFF !important;
+}
+
+tr.dp_monitor_product_row td {
+  border-bottom-color: #FFF !important;
+}
+
+td.cart_description, td.cart_avail{
+  border-right-color: #FFF !important;
+}

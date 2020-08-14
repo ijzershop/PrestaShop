@@ -1,0 +1,11 @@
+b, strong{
+	color: #00AFF0;
+}
+
+b.dp_unavailable, strong.dp_unavailable{
+	color: red;
+}
+
+font{
+	color: #000;
+}

@@ -1,36 +1,11 @@
 <?php
-/**
- * 2007-2019 PrestaShop and Contributors
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
+
 
 class Cart extends CartCore
 {
     public $added_to_order;
 
-    /**
-     * @see ObjectModel::$definition
-     */
+    
     public static $definition = array(
         'table' => 'cart',
         'primary' => 'id_cart',
@@ -58,27 +33,7 @@ class Cart extends CartCore
     );
 
 
-    /**
-     * This function returns the total cart amount.
-     *
-     * @param bool $withTaxes With or without taxes
-     * @param int $type Total type enum
-     *                  - Cart::ONLY_PRODUCTS
-     *                  - Cart::ONLY_DISCOUNTS
-     *                  - Cart::BOTH
-     *                  - Cart::BOTH_WITHOUT_SHIPPING
-     *                  - Cart::ONLY_SHIPPING
-     *                  - Cart::ONLY_WRAPPING
-     *                  - Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
-     *                  - Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
-     * @param array $products
-     * @param int $id_carrier
-     * @param bool $use_cache @deprecated
-     *
-     * @return float Order total
-     *
-     * @throws \Exception
-     */
+    
     public function getOrderTotal(
         $withTaxes = true,
         $type = Cart::BOTH,
@@ -89,13 +44,9 @@ class Cart extends CartCore
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
         }
-
-        // deprecated type
         if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
             $type = Cart::ONLY_PRODUCTS;
         }
-
-        // check type
         $type = (int) $type;
         $allowedTypes = array(
             Cart::ONLY_PRODUCTS,
@@ -109,14 +60,9 @@ class Cart extends CartCore
         if (!in_array($type, $allowedTypes)) {
             throw new \Exception('Invalid calculation type: ' . $type);
         }
-
-        // EARLY RETURNS
-
-        // if cart rules are not used
         if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive()) {
             return 0;
         }
-        // no shipping cost if is a cart with only virtuals products
         $virtual = $this->isVirtualCart();
         if ($virtual && $type == Cart::ONLY_SHIPPING) {
             return 0;
@@ -124,8 +70,6 @@ class Cart extends CartCore
         if ($virtual && $type == Cart::BOTH) {
             $type = Cart::BOTH_WITHOUT_SHIPPING;
         }
-
-        // filter products
         if (null === $products) {
             $products = $this->getProducts();
         }
@@ -142,8 +86,6 @@ class Cart extends CartCore
         if (Tax::excludeTaxeOption()) {
             $withTaxes = false;
         }
-
-        // CART CALCULATION
         $cartRules = array();
         if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
@@ -167,8 +109,6 @@ class Cart extends CartCore
                 case Cart::BOTH:
                     $calculator->processCalculation($computePrecision);
                     $amount = $calculator->getTotal();
-    
-                    //Add small order fee
                     $productTotal = $calculator->getRowTotal()->getTaxExcluded();
                     if((!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')) || $productTotal === 0.0){
                        $small_order_fee_addition = 0;
@@ -178,11 +118,8 @@ class Cart extends CartCore
                     break;
                 case Cart::BOTH_WITHOUT_SHIPPING:
                     $calculator->calculateRows();
-                    // dont process free shipping to avoid calculation loop (and maximum nested functions !)
                     $calculator->calculateCartRulesWithoutFreeShipping();
                     $amount = $calculator->getTotal(true);
-                    
-                    //Add small order fee
                     $productTotal = $calculator->getRowTotal()->getTaxExcluded();
                     if((!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')) || $productTotal === 0.0){
                        $small_order_fee_addition = 0;
@@ -201,11 +138,7 @@ class Cart extends CartCore
                 default:
                     throw new \Exception('unknown cart calculation type : ' . $type);
                 }
-
-   
-        // TAXES ?
         $value = $withTaxes ? $amount->getTaxIncluded() + $small_order_fee_addition : $amount->getTaxExcluded() + $small_order_fee_addition;   
-        // ROUND AND RETURN
 
         $compute_precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
 
@@ -213,4 +146,24 @@ class Cart extends CartCore
     }
 
 
+    /*
+    * module: dynamicproduct
+    * date: 2020-08-14 11:59:27
+    * version: 2.3.4
+    */
+    public function duplicate()
+    {
+        $id_cart_old = (int)$this->id;
+        $result = parent::duplicate();
+        $id_cart_new = (int)$this->id;
+        if (Module::isEnabled('dynamicproduct')) {
+            
+            $module = Module::getInstanceByName('dynamicproduct');
+            $module->hookCartDuplicated(array(
+                'id_cart_old' => $id_cart_old,
+                'id_cart_new' => $id_cart_new,
+            ));
+        }
+        return $result;
+    }
 }

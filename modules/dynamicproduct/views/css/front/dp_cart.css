@@ -1,0 +1,15 @@
+.dp_cart{_display:none;}
+.dp_seven_cart{display:block;}
+.dp_input_div{padding-left:5px;clear: both;}
+.dp_url{color:#22C4FF;}
+.dp_cust{display:none;}
+.dp_input_div .dp_cust{display:block;margin-left:-5px;}
+.dp_input_div .dp_input_unit_price{display: none;}
+.dp_hidden{display:none !important;}
+.dp_picker_value {
+  display: inline-block;
+  width: 24px;
+  height: 16px;
+  border-radius: 4px;
+  vertical-align: text-bottom;
+}

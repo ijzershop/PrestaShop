@@ -20,7 +20,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class Csoft_invisible_recaptcha_v2 extends Module
+class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 {
 
 	private $_html = '';

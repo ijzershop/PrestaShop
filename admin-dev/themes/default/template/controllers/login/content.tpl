@@ -50,7 +50,7 @@
 		{/if}
 	</div>
 	<div>
-		<img class="mx-auto" src="/themes/modernesmid/assets/img/ijzershop-logo-518x115.jpg" alt="{$shop_name}" /></div>
+		<img class="mx-auto" src="{$shop.logo}" alt="{$shop_name}" /></div>
 	<div class="flip-container">
 		<div class="flipper">
 			<div class="front front_login panel" {if isset($reset_token) && isset($id_employee)}style="display:none;"{/if}>

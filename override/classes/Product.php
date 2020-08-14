@@ -1,42 +1,18 @@
 <?php
 class Product extends ProductCore {
-    /*
-    * module: offerintegration
-    * date: 2020-03-06 14:52:31
-    * version: 1.0.9.1
-    */
-    /*
-    * module: offerintegration
-    * date: 2020-03-06 14:52:31
-    * version: 1.0.9.1
-    */
     
-    /*
-    * module: offerintegration
-    * date: 2020-03-06 14:52:31
-    * version: 1.0.9.1
-    */
-    /*
-    * module: offerintegration
-    * date: 2020-03-06 14:52:31
-    * version: 1.0.9.1
-    */
+    
+    
+    
+    
     public $id_oi_offer;
-    /*
-    * module: offerintegration
-    * date: 2020-03-06 14:52:31
-    * version: 1.0.9.1
-    */
+    
     public $name;
     public $saw_loss;
     public $min_saw_size;
     public $min_cut_size;
     public $default_cut_price;
-    /*
-    * module: offerintegration
-    * date: 2020-03-06 14:52:31
-    * version: 1.0.9.1
-    */
+    
     public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
     {
         self::$definition['fields']['saw_loss'] = array('type' => self::TYPE_INT, 
@@ -59,18 +35,10 @@ class Product extends ProductCore {
         self::$definition['fields']['id_oi_offer'] = array('type' => ObjectModel::TYPE_INT,
                                                                  'shop' => 'true',
                                                                  'required' => false);
-        // self::$definition['fields']['name'] = array('type' => ObjectModel::TYPE_STRING,
-        //                                                          'lang' => true,
-        //                                                          'validate' => 'isCatalogName',
-        //                                                          'required' => true, 'size' => 255);
 
         parent::__construct($id_product, $full, $id_lang, $id_shop);
     }
-    /*
-    * module: offerintegration
-    * date: 2020-03-06 14:52:31
-    * version: 1.0.9.1
-    */
+    
     public static function getOfferRows($id_oi_offer = null, $id_lang = 1) {
         if ($id_oi_offer == null || !is_numeric($id_oi_offer)) {
             return array();
@@ -93,23 +61,18 @@ class Product extends ProductCore {
     }
 
 
-        /*
-    ** Customization management
-    */
+        
 
     public static function getAllCustomizedDatas($id_cart, $id_lang = null, $only_in_cart = true, $id_shop = null, $id_customization = null)
     {
         if (!Customization::isFeatureActive()) {
             return false;
         }
-
-        // No need to query if there isn't any real cart!
         if (!$id_cart) {
             return false;
         }
 
         if ($id_customization === 0) {
-            // Backward compatibility: check if there are no products in cart with specific `id_customization` before returning false
             $product_customizations = (int) Db::getInstance()->getValue('
                 SELECT COUNT(`id_customization`) FROM `' . _DB_PREFIX_ . 'cart_product`
                 WHERE `id_cart` = ' . (int) $id_cart .
@@ -144,8 +107,6 @@ class Product extends ProductCore {
 
         foreach ($result as $row) {
             if ((int) $row['id_module'] && (int) $row['type'] == Product::CUSTOMIZE_TEXTFIELD) {
-                // Hook displayCustomization: Call only the module in question
-                // When a module saves a customization programmatically, it should add its ID in the `id_module` column
                 $row['value'] = Hook::exec('displayCustomization', array('customization' => $row), (int) $row['id_module']);
             }
             $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['datas'][(int) $row['type']][] = $row;
@@ -171,4 +132,26 @@ class Product extends ProductCore {
         return $customized_datas;
     }
 
+    /*
+    * module: dynamicproduct
+    * date: 2020-08-14 11:59:27
+    * version: 2.3.4
+    */
+    public static function getProductProperties($id_lang, $row, Context $context = null)
+    {
+        $result = parent::getProductProperties($id_lang, $row, $context);
+        
+        $module = Module::getInstanceByName('dynamicproduct');
+        if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
+            $id_product = (int)$row['id_product'];
+            $is_active = DynamicConfig::isActive($id_product);
+            if ($is_active) {
+                $displayed_price = DynamicConfig::getDisplayedPrice($id_product);
+                if ($displayed_price) {
+                    $module->calculator->assignProductPrices($row, $displayed_price, $result);
+                }
+            }
+        }
+        return $result;
+    }
 }

@@ -1,0 +1,86 @@
+.dp_style i {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: transparent;
+  vertical-align: middle;
+}
+
+.dp_style i.icon-check {
+  background-image: url('../../img/icons/icon-check.png');
+}
+
+.dp_style i.icon-eye-open {
+  background-image: url('../../img/icons/icon-eye-open.png');
+}
+
+.dp_style i.icon-eye-close {
+  background-image: url('../../img/icons/icon-eye-close.png');
+}
+
+.dp_style i.icon-external-link-sign {
+  background-image: url('../../img/icons/icon-external-link-sign.png');
+}
+
+.dp_style i.icon-external-link-square {
+  background-image: url('../../img/icons/icon-external-link-square.png');
+}
+
+.dp_style i.icon-paint-brush {
+  background-image: url('../../img/icons/icon-paint-brush.png');
+}
+
+.dp_style i.icon-list {
+  background-image: url('../../img/icons/icon-list.png');
+}
+
+.dp_style i.icon-remove {
+  background-image: url('../../img/icons/icon-remove.png');
+}
+
+.dp_style i.icon-copy {
+  background-image: url('../../img/icons/icon-copy.png');
+}
+
+.dp_style i.icon-trash {
+  background-image: url('../../img/icons/icon-trash.png');
+}
+
+.dp_style i.icon-star {
+  background-image: url('../../img/icons/icon-star.png');
+}
+
+.dp_style i.icon-star-empty {
+
+  background-image: url('../../img/icons/icon-star-empty.png');
+}
+
+.dp_style i.icon-share-alt-square {
+  background-image: url('../../img/icons/icon-share-alt-square.png');
+}
+
+.dp_style i.icon-share-alt {
+  background-image: url('../../img/icons/icon-share-alt.png');
+}
+
+.dp_style i.process-icon-eraser {
+  background-image: url('../../img/icons/process-icon-eraser.png');
+}
+
+.dp_style i.process-icon-new {
+  background-image: url('../../img/icons/process-icon-new.png');
+}
+
+.dp_style i.process-icon-preview {
+  background-image: url('../../img/icons/process-icon-preview.png');
+}
+
+.dp_style i.process-icon-save {
+  background-image: url('../../img/icons/process-icon-save.png');
+}
+
+.dp_style i.process-icon-close {
+  background-image: url('../../img/icons/process-icon-close.png');
+}
+
+

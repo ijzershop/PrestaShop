@@ -1,0 +1,498 @@
+.dp-tab {
+  background: #FFF url(../../../logo.png) no-repeat center right;
+}
+
+#dp_fields_table td {
+  padding: 3px 2px;
+}
+
+.dp_hide {
+  display: none;
+  visibility: hidden;
+}
+
+.dp_clear {
+  clear: both;
+}
+
+.dp_always_visible {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.dp_away {
+  position: fixed;
+  top: -10000px;
+  left: -10000px;
+}
+
+.dp_middle_right {
+  top: 10px;
+  right: 15px !important;
+  bottom: unset;
+  left: unset;
+}
+
+#dp_fields_table select {
+  padding: 4px 1px !important;
+}
+
+#dp_fields_table input {
+  padding: 4px 3px !important;
+}
+
+td.id_field {
+  text-align: center;
+}
+
+.dp_tr_clone {
+  display: none;
+}
+
+.dp_equation {
+  background-color: #FCFDFE;
+  padding: 10px;
+  border: 1px solid #EEE;
+  border-radius: 3px;
+  margin-bottom: 5px;
+  outline: none;
+  transition: all .2s linear;
+}
+
+.dp_equation:focus {
+  box-shadow: 0 0 1px 1px #2EF77D;
+}
+
+.dp_equation_container.dp_invalid .dp_equation {
+  box-shadow: 0 0 1px 1px #F72E7D;
+}
+
+.dp_equation_error {
+  display: none;
+  color: #F72E7D;
+  font-weight: bold;
+}
+
+.dp_equation_container.dp_invalid .dp_equation_error {
+  display: inline;
+}
+
+.dp_equation_container iframe {
+  height: 35px !important;
+}
+
+.dp_equation_fields {
+  border: 1px solid #EEE;
+  border-radius: 3px;
+  padding: 10px 5px;
+}
+
+.dp_equation_field_clone {
+  display: none;
+}
+
+.dp_equation_field {
+  cursor: pointer;
+  padding: 3px 5px;
+  background-color: #00AFF0;
+  color: #FFF !important;
+  border-radius: 3px;
+  text-decoration: none !important;
+  margin: 0px 3px;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+}
+
+.dp_attribute_field {
+  background-color: #00f068;
+}
+
+.dp_feature_field {
+  background-color: #de00f0;
+}
+
+.dp_equation_tools {
+  border: 1px solid #EEE;
+  border-radius: 3px;
+  padding: 10px 5px;
+  margin: 5px 0px;
+}
+
+.dp_equation_tool {
+  display: inline-block;
+  padding: 3px 5px;
+  background: #93CD60;
+  color: #FFF !important;
+  border-radius: 3px;
+  text-decoration: none !important;
+  margin: 0px 3px;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  width: 23px;
+  text-align: center;
+}
+
+/* exclusion */
+.dp_dynamic_field[rel=dp_changed_9] {
+  visibility: hidden !important;
+}
+
+.dp_dynamic_field[rel=dp_changed_8] {
+  visibility: hidden !important;
+}
+
+.dp_dynamic_field[rel=dp_changed_16] {
+  visibility: hidden !important;
+}
+
+.dp_dynamic_field[rel=dp_changed_17] {
+  visibility: hidden !important;
+}
+
+.dp_dynamic_field[rel=dp_changed_12] {
+  visibility: hidden !important;
+}
+
+.dp_dynamic_field[rel=dp_changed_7] {
+  visibility: hidden !important;
+}
+
+.dp_dynamic_field[rel=dp_changed_10] {
+  visibility: hidden !important;
+}
+
+.dp_dynamic_field[rel=dp_changed_6] {
+  visibility: hidden !important;
+}
+
+.dp_dynamic_field[rel=dp_changed_5] {
+  visibility: hidden !important;
+}
+
+.dp_dynamic_field[rel=dp_changed_4] {
+  visibility: hidden !important;
+}
+
+.dp_dynamic_field[rel=dp_changed_13] {
+  visibility: hidden !important;
+}
+
+.dp_dynamic_field[rel=dp_changed_14] {
+  visibility: hidden !important;
+}
+
+.dp_dynamic_field[rel=dp_changed_15] {
+  visibility: hidden !important;
+}
+
+.dp_unit_value[rel=dp_changed_10] {
+  visibility: visible !important;
+}
+
+.dp_unit_value[rel=dp_changed_9] {
+  visibility: visible !important;
+}
+
+.dp_unit_value[rel=dp_changed_8] {
+  visibility: visible !important;
+}
+
+.dp_unit_value[rel=dp_changed_16] {
+  visibility: visible !important;
+}
+
+.dp_unit_value[rel=dp_changed_12] {
+  visibility: visible !important;
+}
+
+.dp_unit_value[rel=dp_changed_6] {
+  visibility: visible !important;
+}
+
+.dp_unit_value[rel=dp_changed_5] {
+  visibility: visible !important;
+}
+
+.dp_unit_value[rel=dp_changed_4] {
+  visibility: visible !important;
+}
+
+.dp_unit_value[rel=dp_changed_13] {
+  visibility: visible !important;
+}
+
+.dp_unit_value[rel=dp_changed_14] {
+  visibility: visible !important;
+}
+
+.dp_unit_value[rel=dp_changed_17] {
+  visibility: visible !important;
+}
+
+.dp_unit_value[rel=dp_changed_3] {
+  visibility: hidden !important;
+}
+
+.dp_unit_value[rel=dp_changed_2] {
+  visibility: hidden !important;
+}
+
+.dp_unit_select[rel=dp_changed_3] {
+  visibility: hidden !important;
+}
+
+.dp_unit_select[rel=dp_changed_2] {
+  visibility: hidden !important;
+}
+
+.dp_val_1 .icon-check-sign, .dp_val_0 .icon-check-empty {
+  display: inline;
+}
+
+.dp_val_1 .icon-check-empty, .dp_val_0 .icon-check-sign {
+  display: none;
+}
+
+.dp_unit_values .dp_upload img {
+  border: 1px solid #EEE;
+}
+
+#dp_iframe {
+  display: none;
+}
+
+.dp_field_image_form {
+  position: fixed;
+  top: -10000px;
+  left: -10000px;
+}
+
+.dp_upload {
+  position: relative;
+  width: 35px;
+  height: 35px;
+  margin: 0 auto;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.dp_upload:not(.dp_empty):hover img {
+  opacity: 0.2;
+}
+
+.dp_upload form {
+  position: absolute;
+  top: -2px;
+  left: -1px;
+}
+
+.dp_file {
+  font-size: 26px !important;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.dp_upload a {
+  display: none;
+}
+
+.dp_upload:hover a {
+  display: inline-block;
+}
+
+.dp_u_delete {
+  z-index: 10001;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #F00 !important;
+}
+
+.dp_u_external {
+  z-index: 10001;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.dp_u_color {
+  display: none;
+  visibility: hidden;
+  z-index: 10001;
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  color: #0F0 !important;
+}
+
+.dp_upload.dp_empty a:not(.dp_u_color) {
+  display: none;
+  visibility: none;
+}
+
+.dp_upload.dp_empty:hover a.dp_u_color {
+  display: block;
+  visibility: visible;
+}
+
+.dp_unit_values .dp_upload.dp_empty:hover a.dp_u_delete {
+  display: block;
+  visibility: visible;
+}
+
+.dp_qtip {
+  width: 600px;
+  max-width: 600px;
+}
+
+.dp_qtip .qtip-content {
+  max-height: 600px;
+  overflow: auto !important;
+}
+
+#dp_combinations {
+  display: none;
+}
+
+.dp_combination_clone {
+  display: none;
+}
+
+.dp_combination_input {
+  max-width: 300px;
+}
+
+.dp_combination_input[rel="full"] {
+  font-weight: bold;
+  color: #1CB1FF !important;
+}
+
+th.dp_drag {
+  width: 20px;
+  padding: 0px !important;
+}
+
+td.dp_drag {
+  text-align: right;
+  padding: 0px !important;
+}
+
+td.dp_drag a {
+  cursor: move;
+  display: block;
+  background: transparent url(../../img/drag.png) no-repeat;
+  width: 14px;
+  height: 25px;
+}
+
+.dp_dragged > td {
+  background: #DAF2FF !important;
+}
+
+.dp_p_info {
+  color: #999;
+  text-align: left;
+  margin: 0px !important;
+}
+
+.dp_td_info {
+  vertical-align: top !important;
+  padding-top: 6px !important;
+}
+
+.dp_visibility_clone {
+  display: none;
+}
+
+.dp_slide .panel-heading {
+  cursor: pointer;
+}
+
+.dp_collapsed {
+  overflow: hidden;
+  height: 42px;
+}
+
+#dp_load_product {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+}
+
+.dp_proportion_value {
+  text-align: center;
+}
+
+.dp_proportion {
+  margin-bottom: 10px;
+}
+
+tr.dp_favorite_field td:not(.dp_fav) {
+  background-color: #ffcc80 !important;
+}
+
+tr.dp_favorite_field td.id_field {
+  border-left: 2px solid #ffcc80;
+}
+
+tr.dp_common_field td:not(.dp_fav) {
+  background-color: #81d4fa !important;
+}
+
+tr.dp_linked_field td:not(.dp_fav) {
+  background-color: #c5e1a5 !important;
+}
+
+.dp_fav {
+  text-align: center;
+  width: 40px !important;
+  padding: 0px !important;
+}
+
+.dp_add_favorite_btn {
+  display: none;
+  color: #FF9800 !important
+}
+
+.dp_remove_favorite_btn {
+  display: none;
+  color: #FF9800 !important;
+}
+
+#dp_fields_table tr:hover .dp_add_favorite_btn {
+  display: inline-block;
+}
+
+#dp_fields_table tr.dp_favorite_field:hover .dp_remove_favorite_btn {
+  display: inline-block;
+}
+
+tr.dp_favorite_field .dp_add_favorite_btn {
+  display: none !important;
+}
+
+.dp_add_common_btn {
+  display: none;
+  color: #03a9f4 !important
+}
+
+.dp_remove_common_btn {
+  display: none;
+  color: #03a9f4 !important;
+}
+
+#dp_fields_table tr:hover .dp_add_common_btn {
+  display: inline-block;
+}
+
+#dp_fields_table tr.dp_common_field:hover .dp_remove_common_btn {
+  display: inline-block;
+}
+
+tr.dp_common_field .dp_add_common_btn {
+  display: none !important;
+}

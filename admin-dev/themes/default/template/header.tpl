@@ -114,8 +114,9 @@
     <nav id="header_infos" role="navigation">
       <i class="material-icons js-mobile-menu">menu</i>
 
+
       {* Logo *}
-      <a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
+      <a id="header_logo" style="background: url('/img/{Configuration::get('PS_LOGO', null, null, 1)}');background-size: contain;height: 100%;background-repeat: no-repeat;margin-left:0px;" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
       <span id="shop_version">{$ps_version}</span>
 
       {* Quick access *}

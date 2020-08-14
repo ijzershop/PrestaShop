@@ -63,11 +63,6 @@ npm-debug.log.*
 !/img/t/index.php
 !/img/tmp/index.php
 
-# Upload
-/upload/*
-!/upload/index.php
-!/upload/.htaccess
-
 /vendor/*
 /docs/phpdoc-sf/
 /composer.lock

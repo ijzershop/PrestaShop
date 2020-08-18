@@ -16,8 +16,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-
-<h2>{l s='Carts' mod='psgdpr'}</h2>
+<h2>{l s='Winkelwagens' mod='psgdpr'}</h2>
 <br>
 <table id="summary-tab" width="100%">
     <tr>
@@ -50,7 +49,7 @@
                 {foreach from=$cart['products'] item=product}
                 <tr>
                     <td class="center white">{$product['product_reference']|escape:'html':'UTF-8'}</td>
-                    <td class="center white">{$product['product_name']|escape:'html':'UTF-8'}</td>
+                    <td class="center white">{AttributeGroup::stripSawCutModuleAttributeGroupName($product['product_name'], Context::getContext()->cookie->id_lang)|escape:'html':'UTF-8'}</td>
                     <td class="center white">{$product['product_quantity']|escape:'html':'UTF-8'}</td>
                 </tr>
                 {/foreach}

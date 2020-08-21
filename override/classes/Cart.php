@@ -170,7 +170,7 @@ class Cart extends CartCore
     
                     //Add small order fee
                     $productTotal = $calculator->getRowTotal()->getTaxExcluded();
-                    if((!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')) || $productTotal === 0.0){
+                    if(!Module::isEnabled('smallorderfee') || (!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')) || $productTotal === 0.0){
                        $small_order_fee_addition = 0;
                     } else {
                        $small_order_fee_addition = (double)Configuration::get('SMALLORDERFEE_ORDER_FEE');
@@ -184,7 +184,7 @@ class Cart extends CartCore
                     
                     //Add small order fee
                     $productTotal = $calculator->getRowTotal()->getTaxExcluded();
-                    if((!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')) || $productTotal === 0.0){
+                    if(!Module::isEnabled('smallorderfee') || (!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')) || $productTotal === 0.0){
                        $small_order_fee_addition = 0;
                     } else {
                        $small_order_fee_addition = (double)Configuration::get('SMALLORDERFEE_ORDER_FEE');
@@ -212,5 +212,49 @@ class Cart extends CartCore
         return Tools::ps_round($value, $compute_precision);
     }
 
+
+    /**
+     * Return shipping total for the cart.
+     *
+     * @param array|null $delivery_option Array of the delivery option for each address
+     * @param bool $use_tax Use taxes
+     * @param Country|null $default_country Default Country
+     *
+     * @return float Shipping total
+     */
+    public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
+    {
+        if (isset(Context::getContext()->cookie->id_country)) {
+            $default_country = new Country(Context::getContext()->cookie->id_country);
+        }
+        if (null === $delivery_option) {
+            $delivery_option = $this->getDeliveryOption($default_country, false, false);
+        }
+
+        $_total_shipping = array(
+            'with_tax' => 0,
+            'without_tax' => 0,
+        );
+        $delivery_option_list = $this->getDeliveryOptionList($default_country);
+        foreach ($delivery_option as $id_address => $key) {
+            if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
+                continue;
+            }
+
+            $_total_shipping['with_tax'] += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
+            $_total_shipping['without_tax'] += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
+        }
+        $extraShippingFee = 0;
+        foreach (Context::getContext()->cart->getProducts() as $key => $prod) {
+            $prodObj = new Product($prod['id_product']);
+            if($prodObj->oi_offer_extra_shipping > 0 && $extraShippingFee == 0){
+                $offerConf = unserialize(Configuration::get('OFFER_INTEGRATION'));
+                if($offerConf){
+                    $extraShippingFee = $_total_shipping['without_tax']/100*$offerConf['extra_shipping']-$_total_shipping['without_tax'];
+                }
+            }
+        }
+        return ($use_tax) ? $_total_shipping['with_tax']+$extraShippingFee: $_total_shipping['without_tax']+$extraShippingFee;
+    }
 
 }

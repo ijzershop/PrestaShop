@@ -201,7 +201,6 @@ class SearchProvider implements FacetsRendererInterface, ProductSearchProviderIn
         if (empty($facetsVar)) {
             return '';
         }
-
         $this->module->getContext()->smarty->assign(
             [
                 'show_quantities' => Configuration::get('PS_LAYERED_SHOW_QTIES'),

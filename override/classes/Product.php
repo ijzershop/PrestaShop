@@ -1,4 +1,5 @@
 <?php
+use classes\models\DynamicConfig;
 class Product extends ProductCore {
 
     /*
@@ -80,6 +81,7 @@ class Product extends ProductCore {
         $result = parent::getProductProperties($id_lang, $row, $context);
         
         $module = Module::getInstanceByName('dynamicproduct');
+
         if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
             $id_product = (int)$row['id_product'];
             $is_active = DynamicConfig::isActive($id_product);
@@ -192,5 +194,87 @@ class Product extends ProductCore {
         }
         return $results_array;
 
+    }
+
+     public static function getPriceStatic(
+        $id_product,
+        $usetax = true,
+        $id_product_attribute = null,
+        $decimals = 6,
+        $divisor = null,
+        $only_reduc = false,
+        $usereduc = true,
+        $quantity = 1,
+        $force_associated_tax = false,
+        $id_customer = null,
+        $id_cart = null,
+        $id_address = null,
+        &$specific_price_output = null,
+        $with_ecotax = true,
+        $use_group_reduction = true,
+        Context $context = null,
+        $use_customer_price = true,
+        $id_customization = null
+    ) {
+        if (!$context) {
+            $context = Context::getContext();
+        }
+        $return = parent::getPriceStatic(
+            $id_product,
+            $usetax,
+            $id_product_attribute,
+            $decimals,
+            $divisor,
+            $only_reduc,
+            $usereduc,
+            $quantity,
+            $force_associated_tax,
+            $id_customer,
+            $id_cart,
+            $id_address,
+            $specific_price_output,
+            $with_ecotax,
+            $use_group_reduction,
+            $context,
+            $use_customer_price,
+            $id_customization
+        );
+
+        $module = Module::getInstanceByName('dynamicproduct');
+        if (!$module->active|| $only_reduc) {
+            return $return;
+        }
+        if ((int)$id_cart && DynamicConfig::isExcluded($id_product)) {
+            if ((int)$id_product_attribute || (int)$id_customization) {
+                $base_price = parent::getPriceStatic(
+                    $id_product,
+                    $usetax,
+                    false,
+                    $decimals,
+                    $divisor,
+                    $only_reduc,
+                    $usereduc,
+                    $quantity,
+                    $force_associated_tax,
+                    $id_customer,
+                    $id_cart,
+                    $id_address,
+                    $specific_price_output,
+                    $with_ecotax,
+                    $use_group_reduction,
+                    $context,
+                    $use_customer_price
+                );
+                $difference = $return - $base_price;
+                $id_currency = Validate::isLoadedObject($context->currency) ?
+                    (int)$context->currency->id :
+                    (int) Configuration::get('PS_CURRENCY_DEFAULT');
+                $difference = Tools::convertPrice($difference, $id_currency);
+                return max($difference, 0);
+            } else {
+                return 0;
+            }
+        }
+        return $return;
     }
 }

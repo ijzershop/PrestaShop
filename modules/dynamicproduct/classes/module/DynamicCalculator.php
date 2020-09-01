@@ -257,7 +257,12 @@ class DynamicCalculator
     public function assignProductPrices($product, $display_price, &$result)
     {
         $id_product = (int)$product['id_product'];
-        $id_attribute = (int)$product['id_product_attribute'];
+
+        if(!isset($product['id_product_attribute'])){
+            $id_attribute = null;
+        } else {
+            $id_attribute = (int)$product['id_product_attribute'];
+        }
         $product_price_ttc = Product::getPriceStatic(
             $id_product,
             !Product::getTaxCalculationMethod(),

@@ -126,6 +126,10 @@ class Product extends ProductCore {
                                                                 'validate' => 
                                                                 'isNullOrUnsignedId', 
                                                                 'required' => false);
+        self::$definition['fields']['default_cut_price'] = array('type' => null, 
+                                                                'shop' => 'true', 
+                                                                'validate' => false, 
+                                                                'required' => false);
         self::$definition['fields']['min_saw_size'] = array('type' => self::TYPE_INT, 
                                                                 'shop' => 'true', 
                                                                 'validate' => 

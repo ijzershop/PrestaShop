@@ -91,7 +91,7 @@ class Product extends ProductCore {
             }
         }
         return $result;
-   
+   }
     
     
     

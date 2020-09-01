@@ -27,7 +27,7 @@
 </div>
 
 <div class="dp_container" style="display: _none;">
-	<img class="dp_loader" src="{$dp_module_dir|escape:'htmlall':'UTF-8'}views/img/loader.gif" alt="loader" />
+	<img class="dp_loader" src="{* {$dp_module_dir|escape:'htmlall':'UTF-8'} *}views/img/loader.gif" alt="loader" />
 	{foreach from=$dp_fields item=field}
 		{if !$field->active}{continue}{/if}
 		<div class="dp_field_container dp_container_type_{$field->type|intval} dp_field_container_{$field->id|intval}" data-id_field="{$field->id|intval}">

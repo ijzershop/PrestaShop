@@ -146,7 +146,7 @@ class Cart extends CartCore
     }
 
 
-<<<<<<< HEAD
+
     /*
     * module: dynamicproduct
     * date: 2020-08-14 11:59:27
@@ -167,7 +167,7 @@ class Cart extends CartCore
         }
         return $result;
     }
-=======
+
     /**
      * Return shipping total for the cart.
      *
@@ -212,5 +212,5 @@ class Cart extends CartCore
         return ($use_tax) ? $_total_shipping['with_tax']+$extraShippingFee: $_total_shipping['without_tax']+$extraShippingFee;
     }
 
->>>>>>> modernesmid-core
+
 }

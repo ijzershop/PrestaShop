@@ -22,27 +22,30 @@ if (!defined('_PS_VERSION_')) {
 class ContactformOverride extends Contactform {
     public function sendMessage()
     {
-        $data = array(
-            'secret' => Tools::getValue('RECAPTCHA_PRIVATE_KEY', Configuration::get('RECAPTCHA_PRIVATE_KEY')),
-            'response' => $_POST['g-recaptcha-response']
-        );
-        $verify = curl_init();
-        if(isset($verify) && $verify){
-            curl_setopt($verify, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
-            curl_setopt($verify, CURLOPT_POST, true);
-            curl_setopt($verify, CURLOPT_POSTFIELDS, http_build_query($data));
-            curl_setopt($verify, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($verify, CURLOPT_RETURNTRANSFER, true);
-            $response = @curl_exec($verify);
-            curl_close($verify);
-            $decode = json_decode($response, true);
-            if (!$decode['success'] == true) {
-                $this->context->controller->errors[] = $this->trans('Formulaire invalide.', array(), 'Modules.Contactform.Shop');
+        if(!empty($_POST) && array_key_exists('g-recaptcha-response', $_POST)){
+
+            $data = array(
+                'secret' => Tools::getValue('RECAPTCHA_PRIVATE_KEY', Configuration::get('RECAPTCHA_PRIVATE_KEY')),
+                'response' => $_POST['g-recaptcha-response']
+            );
+            $verify = curl_init();
+            if(isset($verify) && $verify){
+                curl_setopt($verify, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+                curl_setopt($verify, CURLOPT_POST, true);
+                curl_setopt($verify, CURLOPT_POSTFIELDS, http_build_query($data));
+                curl_setopt($verify, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($verify, CURLOPT_RETURNTRANSFER, true);
+                $response = @curl_exec($verify);
+                curl_close($verify);
+                $decode = json_decode($response, true);
+                if (!$decode['success'] == true) {
+                    $this->context->controller->errors[] = $this->trans('Formulaire invalide.', array(), 'Modules.Contactform.Shop');
+                }else{
+                    parent::sendMessage();
+                }
             }else{
-                parent::sendMessage();
+                $this->context->controller->errors[] = $this->trans('Erreur de traitement.', array(), 'Modules.Contactform.Shop');
             }
-        }else{
-            $this->context->controller->errors[] = $this->trans('Erreur de traitement.', array(), 'Modules.Contactform.Shop');
         }
     }
 }

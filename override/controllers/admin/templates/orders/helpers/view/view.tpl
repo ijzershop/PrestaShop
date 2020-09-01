@@ -1182,7 +1182,7 @@
                         </div>
                         <p class="help-block"><i class="icon-warning-sign"></i> {l
                             s='(Max %s %s)'
-                            sprintf=[Tools::displayPrice(Tools::ps_round($shipping_refundable, 2), $currency->id) , $smarty.capture.TaxMethod]
+                            sprintf=[(Tools::convertPrice(Tools::ps_round($shipping_refundable, 2), $currency->id) , $smarty.capture.TaxMethod]
                             d='Admin.Orderscustomers.Feature'
                             }
                         </p>

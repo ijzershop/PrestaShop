@@ -99,10 +99,10 @@ class PaymentModule extends PaymentModuleCore
         $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $order->product_list, $carrierId));
         $order->total_discounts = $order->total_discounts_tax_incl;
 
-        $order->total_shipping_tax_excl = (float) $cart->getPackageShippingCost($carrierId, false, null, $order->product_list);
-        $order->total_shipping_tax_incl = (float) $cart->getPackageShippingCost($carrierId, true, null, $order->product_list);
+        $order->total_shipping_tax_excl = (float) $cart->getTotalShippingCost(null, false);
+        $order->total_shipping_tax_incl = (float) $cart->getTotalShippingCost(null, true);
         $order->total_shipping = $order->total_shipping_tax_incl;
-
+        
         if (null !== $carrier && Validate::isLoadedObject($carrier)) {
             $order->carrier_tax_rate = $carrier->getTaxesRate(new Address((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
         }

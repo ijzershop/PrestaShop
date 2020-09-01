@@ -204,7 +204,7 @@ class psgdprExportDataToCsvModuleFrontController extends ModuleFrontController
                     $line = [
                         $order['reference'],
                         $product['product_reference'],
-                        $product['product_name'],
+                        AttributeGroup::stripSawCutModuleAttributeGroupName($product['product_name'], Context::getContext()->cookie->id_lang),
                         $product['product_quantity'],
                     ];
                     fputcsv($fh, $line, $delimiter);
@@ -272,7 +272,7 @@ class psgdprExportDataToCsvModuleFrontController extends ModuleFrontController
                         $line = [
                             '#' . $cart['id_cart'],
                             $product['product_reference'],
-                            $product['product_name'],
+                            AttributeGroup::stripSawCutModuleAttributeGroupName($product['product_name'], Context::getContext()->cookie->id_lang),
                             $product['product_quantity'],
                         ];
                         fputcsv($fh, $line, $delimiter);

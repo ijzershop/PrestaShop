@@ -1,6 +1,21 @@
 <?php
 use classes\models\DynamicConfig;
+use classes\models\DynamicEquation;
 class Product extends ProductCore {
+
+    public static function isDynamicProduct($product){
+        if(is_array($product)){
+            $id_product = $product['id_product'];
+        } else {
+            $id_product = $product->id;
+        }
+        $equation =   DynamicEquation::getEquationsByIdProduct($id_product);
+        if(array_key_exists(0, $equation) && !empty($equation[0]->formula)){
+            return true;
+        }
+        return false;
+    }
+
 
     /*
     * module: offerintegration
@@ -144,7 +159,7 @@ class Product extends ProductCore {
                                                                 'required' => false);
         self::$definition['fields']['default_cut_price'] = array('type' => null, 
                                                                 'shop' => 'true', 
-                                                                'validate' => false, 
+                                                                'validate' => 'isPrice', 
                                                                 'required' => false);
         self::$definition['fields']['min_saw_size'] = array('type' => self::TYPE_INT, 
                                                                 'shop' => 'true', 

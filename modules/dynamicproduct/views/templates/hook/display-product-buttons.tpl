@@ -22,9 +22,9 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
-<div id="dp_oos" class="alert alert-warning">
+{* <div id="dp_oos" class="alert alert-warning">
 	{l s='This product is no longer in stock with the selected values, please select smaller values.' mod='dynamicproduct'}
-</div>
+</div> *}
 
 <div class="dp_container" style="display: _none;">
 	<img class="dp_loader" src="{* {$dp_module_dir|escape:'htmlall':'UTF-8'} *}views/img/loader.gif" alt="loader" />
@@ -84,13 +84,13 @@
 		<label class="attribute_label dp_weight_str dp_hidden">{l s='Weight' mod='dynamicproduct'}:</label> <span id="dp_weight_str" class="dp_weight_str dp_hidden">0 {Configuration::get('PS_WEIGHT_UNIT')|escape:'htmlall':'UTF-8'}</span>
 	{/if}
 
-    <div class="dp_validation_messages alert alert-danger">
+    <div class="dp_validation_messages alert alert-danger d-none">
 		<ul>
 			<li></li>
 		</ul>
 	</div>
 
-	<div class="dp_messages alert alert-danger">
+	<div class="dp_messages alert alert-danger d-none">
 
 	</div>
 

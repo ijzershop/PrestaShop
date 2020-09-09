@@ -246,7 +246,6 @@ class DynamicEquation extends DynamicObject
         $input_fields
     ) {
         $result = 0;
-
         if (Validate::isLoadedObject($equation)) {
             $result = self::evaluateFormula($id_product, $id_attribute, $equation->formula, $input_fields);
         }

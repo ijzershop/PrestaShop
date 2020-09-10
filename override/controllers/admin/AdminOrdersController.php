@@ -177,9 +177,15 @@ class AdminOrdersController extends AdminOrdersControllerCore
         }
 
         //Profile 3 is werplaats medewerkers admin is 1
-        if($this->context->cookie->__get('profile') == 3){
+        $workshopProfiles = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_WORKSHOP_PROFILES');
+        $profiles = array();
+        if(!empty($workshopProfiles)){
+            $profiles = explode(',', $workshopProfiles);
+        }
+
+        if(in_array($this->context->cookie->__get('profile'), $profiles)){
             //disabled array
-            $disabledArray = ['cname','new','total_paid_tax_incl','payment'];
+            $disabledArray = ['id_order','cname','new','total_paid_tax_incl','payment','osorderstate'];
             foreach ($this->fields_list as $key => $value) {
                 if(in_array($key, $disabledArray)){
                     unset($this->fields_list[$key]); 

@@ -185,7 +185,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 
         if(in_array($this->context->cookie->__get('profile'), $profiles)){
             //disabled array
-            $disabledArray = ['id_order','cname','new','total_paid_tax_incl','payment','osorderstate'];
+            $disabledArray = ['cname','new','total_paid_tax_incl','payment','osorderstate','id_pdf'];
             foreach ($this->fields_list as $key => $value) {
                 if(in_array($key, $disabledArray)){
                     unset($this->fields_list[$key]); 

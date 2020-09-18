@@ -27,7 +27,7 @@
 		{if count($input->input_fields)}
 			{foreach from=$input->input_fields item=input_field}
 				{if $input_field->isSkipped()}{continue}{/if}
-				<strong>{$input_field->label|escape:'htmlall':'UTF-8'}:</strong>
+				<strong>{$input_field->name|escape:'htmlall':'UTF-8'}:</strong>
 				{if is_file($input_field->getTemplatePath())}
 					{include file=$input_field->getTemplatePath()}
 				{else}

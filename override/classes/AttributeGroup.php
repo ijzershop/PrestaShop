@@ -7,7 +7,7 @@ class AttributeGroup extends AttributeGroupCore
 	 * @param  integer $idLang language id
 	 * @return array list of attribute group names
 	 */
-	public function getSawCutModuleAttributeGroupNames($idLang=1){
+	static public function getSawCutModuleAttributeGroupNames($idLang=1){
 		$sawCutConf = unserialize(Configuration::get('SAWANDCUTMODULE'));
 
         $resultSawCut =  Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'attribute_group_lang` WHERE `id_attribute_group` = '.(int)$sawCutConf['id_attribute_group_cut'].' AND `id_lang` = ' . (int) $idLang);
@@ -38,7 +38,7 @@ class AttributeGroup extends AttributeGroupCore
  * @param  string  $column  specifies the column name or public_name
  * @return string attribute group name
  */
-	public function getSawCutModuleAttributeGroupName($cutting=true, $idLang=1, $column='public_name'){
+	static public function getSawCutModuleAttributeGroupName($cutting=true, $idLang=1, $column='public_name'){
 		$sawCutConf = unserialize(Configuration::get('SAWANDCUTMODULE'));
 
 		if($cutting){
@@ -52,13 +52,14 @@ class AttributeGroup extends AttributeGroupCore
 
 
 
-	public function stripSawCutModuleAttributeGroupName($productName, $idLang=1){
+	static public function stripSawCutModuleAttributeGroupName($productName, $idLang=1){
 			$list = AttributeGroup::getSawCutModuleAttributeGroupNames($idLang);
 			$filteredName = $productName;
 			foreach ($list as $key => $attribute) {
 				if(strpos($productName, $attribute) !== false)
 				{
 					$filteredName = substr($productName, 0, (int)strpos($productName, ' - '.$attribute));
+				} else {
 				}
 			}
 		return $filteredName;

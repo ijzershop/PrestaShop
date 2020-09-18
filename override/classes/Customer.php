@@ -90,6 +90,8 @@ class Customer extends CustomerCore
     {
         if(Context::getContext()->cookie->__isset('psgdpr_remove')){
             $this->psgdpr_remove = Context::getContext()->cookie->__get('psgdpr_remove');
+        } else {
+            $this->psgdpr_remove = 0;
         }
 
         $this->id_shop = ($this->id_shop) ? $this->id_shop : Context::getContext()->shop->id;

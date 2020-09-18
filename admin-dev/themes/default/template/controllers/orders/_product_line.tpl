@@ -35,7 +35,7 @@
 	<td>{if isset($product.image) && $product.image->id}{$product.image_tag}{/if}</td>
 	<td>
 		<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product['product_id']|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
-			<span class="productName">{$product['product_name']}</span><br />
+			<span class="productName">{AttributeGroup::stripSawCutModuleAttributeGroupName($product['product_name'], Context::getContext()->cookie->id_lang)}</span><br />
 			{if $product.product_reference}{l s='Reference number:' d='Admin.Orderscustomers.Feature'} {$product.product_reference}<br />{/if}
 			{if $product.product_supplier_reference}{l s='Supplier reference:' d='Admin.Orderscustomers.Feature'} {$product.product_supplier_reference}{/if}
 		</a>

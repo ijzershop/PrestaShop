@@ -37,8 +37,8 @@
 		</td>
 		<td>
 			<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product['product_id']|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
-			<span class="productName">{$product['product_name']} - {l s='Customized' d='Admin.Orderscustomers.Feature'}</span><br />
-			{if ($product['product_reference'])}{l s='Reference number:' d='Admin.Orderscustomers.Feature'} {$product['product_reference']}<br />{/if}
+			<span class="productName">{AttributeGroup::stripSawCutModuleAttributeGroupName($product['product_name'], Context::getContext()->cookie->id_lang)} - {l s='Customized' d='Admin.Orderscustomers.Feature'}</span><br />
+			{if ($product['product_reference'])}{l s='Ref:' d='Admin.Orderscustomers.Feature'} {$product['product_reference']}<br />{/if}
 			{if ($product['product_supplier_reference'])}{l s='Supplier reference:' d='Admin.Orderscustomers.Feature'} {$product['product_supplier_reference']}{/if}
 			</a>
 		</td>
@@ -127,8 +127,8 @@
 							{if ($type == Product::CUSTOMIZE_FILE)}
 								{foreach from=$datas item=data}
 									<div class="form-group">
-										<span class="col-lg-4 control-label"><strong>{if $data['name']}{$data['name']}{else}{l s='Picture #' d='Admin.Orderscustomers.Feature'}{$data@iteration}{/if}</strong></span>
-										<div class="col-lg-8">
+										<span class="{if empty($data['name'])}d-none{else}col-lg-4{/if} control-label"><strong>{if $data['name']}{$data['name']}{else}{l s='Picture #' d='Admin.Orderscustomers.Feature'}{$data@iteration}{/if}</strong></span>
+										<div class="{if empty($data['name'])}col-lg-12{else}col-lg-8{/if}">
 											<a href="{$link->getAdminLink('AdminCarts', true, [], ['ajax' => 1, 'action' => 'customizationImage', 'img' => $data['value'], 'name' => $order->id|intval|cat:'-file'|cat:$data@iteration])}" class="_blank">
 												<img class="img-thumbnail" src="{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt=""/>
 											</a>
@@ -138,8 +138,8 @@
 							{elseif ($type == Product::CUSTOMIZE_TEXTFIELD)}
 								{foreach from=$datas item=data}
 									<div class="form-group">
-										<span class="col-lg-4 control-label"><strong>{if $data['name']}{$data['name']}{else}{l s='' sprintf=[$data@iteration] d='Admin.Orderscustomers.Feature'}{/if}</strong></span>
-										<div class="col-lg-8">
+										<span class="{if empty($data['name'])}d-none{else}col-lg-4{/if} control-label"><strong>{if $data['name']}{$data['name']}{else}{l s='' sprintf=[$data@iteration] d='Admin.Orderscustomers.Feature'}{/if}</strong></span>
+										<div class="{if empty($data['name'])}col-lg-12{else}col-lg-8 {/if}">
 											<p class="form-control-static">{$data['value']}</p>
 										</div>
 									</div>
@@ -158,7 +158,7 @@
 					{/if}
 				</td>
 				{if $display_warehouse}<td>&nbsp;</td>{/if}
-				{if ($order->hasBeenPaid())}
+{* 				{if ($order->hasBeenPaid())}
 				<td class="text-center">
 					{if !empty($product['amount_refund'])}
 					{l s='%quantity_refunded% (%amount_refunded% refund)' sprintf=['%quantity_refunded%' => $customization['quantity_refunded'], '%amount_refunded%' => $product['amount_refund']] d='Admin.Orderscustomers.Feature'}
@@ -166,7 +166,7 @@
 					<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
 					<input type="hidden" value="{(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal']))}" class="partialRefundProductAmount" />
 				</td>
-				{/if}
+				{/if} *}
 				{if ($order->hasBeenDelivered())}<td class="text-center">{$customization['quantity_returned']}</td>{/if}
 				<td class="text-center">-</td>
 				{if $stock_location_is_available}<td class="text-center">-</td>{$product['location']}</td>{/if}

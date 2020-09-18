@@ -131,22 +131,24 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                                     if(class_exists("Imagick") )
                                     {
                                         $file = $customized['datas'][1][0]['technical_image'];
-                                        $fileContents = file_get_contents(Context::getContext()->shop->getBaseURL(true).$file);
-                                        $doc = new SimpleXMLElement($fileContents);
-                                        foreach($doc->g as $seg)
-                                        {
-                                            if($seg->attributes()->id[0] == 'cutline') {
-                                                $dom=dom_import_simplexml($seg);
-                                                $dom->parentNode->removeChild($dom);
+                                        if(!is_null($file)){
+                                            $fileContents = file_get_contents(Context::getContext()->shop->getBaseURL(true).$file);
+                                            $doc = new SimpleXMLElement($fileContents);
+                                            foreach($doc->g as $seg)
+                                            {
+                                                if($seg->attributes()->id[0] == 'cutline') {
+                                                    $dom=dom_import_simplexml($seg);
+                                                    $dom->parentNode->removeChild($dom);
+                                                }
                                             }
+                                            
+                                            $im = new Imagick();
+                                            $im->readImageBlob($doc->asXml());
+                                            $im->setImageFormat('png24');
+                                            $im->writeImage(_PS_CORE_DIR_.'/'.$file . '.png');
+                                            $im->clear();
+                                            $im->destroy();  
                                         }
-                                        
-                                        $im = new Imagick();
-                                        $im->readImageBlob($doc->asXml());
-                                        $im->setImageFormat('png24');
-                                        $im->writeImage(_PS_CORE_DIR_.'/'.$file . '.png');
-                                        $im->clear();
-                                        $im->destroy();  
                           
                                     }
                                 }

@@ -200,3 +200,4 @@ if (!defined('_PS_JQUERY_VERSION_')) {
 }
 
 define('_PS_CACHE_CA_CERT_FILE_', _PS_CACHE_DIR_.'cacert.pem');
+// define('K_TCPDF_CALLS_IN_HTML', true);

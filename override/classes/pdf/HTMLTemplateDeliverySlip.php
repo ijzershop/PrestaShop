@@ -134,21 +134,25 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                                         if(!is_null($file) && !empty($file)){
                                        
                                             $fileContents = file_get_contents(Context::getContext()->shop->getBaseURL(true).$file);
-                                            $doc = new SimpleXMLElement($fileContents);
-                                            foreach($doc->g as $seg)
-                                            {
-                                                if($seg->attributes()->id[0] == 'cutline') {
-                                                    $dom=dom_import_simplexml($seg);
-                                                    $dom->parentNode->removeChild($dom);
+
+                                            if($fileContents != false){
+
+                                                $doc = new SimpleXMLElement($fileContents);
+                                                foreach($doc->g as $seg)
+                                                {
+                                                    if($seg->attributes()->id[0] == 'cutline') {
+                                                        $dom=dom_import_simplexml($seg);
+                                                        $dom->parentNode->removeChild($dom);
+                                                    }
                                                 }
+                                                
+                                                $im = new Imagick();
+                                                $im->readImageBlob($doc->asXml());
+                                                $im->setImageFormat('png24');
+                                                $im->writeImage(_PS_CORE_DIR_.'/'.$file . '.png');
+                                                $im->clear();
+                                                $im->destroy();  
                                             }
-                                            
-                                            $im = new Imagick();
-                                            $im->readImageBlob($doc->asXml());
-                                            $im->setImageFormat('png24');
-                                            $im->writeImage(_PS_CORE_DIR_.'/'.$file . '.png');
-                                            $im->clear();
-                                            $im->destroy();  
                                         }
                           
                                     }
@@ -185,7 +189,6 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
 
         $this->smarty->assign(array(
-            'tcpdf' => new PDFGenerator((bool) Configuration::get('PS_PDF_USE_CACHE'), 'P'),
             'order' => $this->order,
             'order_details' => $order_details,
             'customer_contact' => $customer_contact,

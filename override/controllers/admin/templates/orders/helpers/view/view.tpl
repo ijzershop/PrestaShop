@@ -131,6 +131,25 @@
             }
           });
       });
+
+      $('#clearDesiredDeliveryDate').on('click', function(event) {
+        event.preventDefault();
+        $('#desired_delivery_date').val(null);
+          $.ajax({
+            type: 'GET',
+            url: 'index.php?ajax=1&controller=AdminOrders&action=setDesiredDeliveryDate&token='+token,
+            data: { date:null, id_order:id_order},
+            success: function(r){
+              r = JSON.parse(r);
+              if(r.success){
+                $.growl({ title: "Gewenste leverdatum gewijzigd!", message: 'Leverdatum is geleegd, deze word niet meer op de pakbon getoond'});
+                window.location.reload(true); 
+              } else {
+                $.growl.error({ title: "Fout bij legen van leverdatum!", message: r.msg});
+              }
+            }
+          });
+      });
   });
   </script>
 
@@ -207,9 +226,13 @@
           <span class="badge" style="border:0px;">
             <form class="form-inline">
               <label class="h6" for="desired_delivery_date">Gewenste leverdatum</label>
-              {$order->desired_delivery_date}
-              <input type="date" min="{date("Y-m-d")}" name="desired_delivery_date" id="desired_delivery_date" value="{$order->desired_delivery_date}" class="form-control-sm input-sm mb-2 mr-sm-2">
-              <button type="button" id="submitDesiredDeliveryDate" class="btn btn-primary mb-2">Submit</button>
+                <div class="input-group input-group-sm">
+              <input style="min-width:120px;" type="date" min="{date("Y-m-d")}" name="desired_delivery_date" id="desired_delivery_date" value="{$order->desired_delivery_date}" class="form-control-sm input-sm mb-2 mr-sm-2">
+                  <div class="input-group-btn">
+                    <button type="button" id="clearDesiredDeliveryDate" class="btn btn-primary mb-2">Clear</button>
+                    <button type="button" id="submitDesiredDeliveryDate" class="btn btn-primary mb-2">Submit</button>
+                  </div>
+                </div>
             </form>
           </span>
 

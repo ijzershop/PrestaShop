@@ -43,4 +43,12 @@
       {/foreach}
     </div>
   </div>
+  <style type="text/css">
+    #content{
+      margin-right: 50px;
+    }
+    .table-responsive-row{
+      overflow: auto;
+    }
+  </style>
   {/if}

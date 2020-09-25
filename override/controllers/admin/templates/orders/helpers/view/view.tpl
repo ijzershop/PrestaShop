@@ -90,12 +90,11 @@
       $('#migrateOrder').on('click', function(event) {
         event.preventDefault();
         var customerEmail = $('#selectCustomerToMigrate').val().split(' # ');
-        console.log(customerEmail);
         
         var postdata = {
                     customer_email:customerEmail[0],
                     customer:customerEmail[1],
-                    order: id_order,
+                    order: id_order
                     };
           $.ajax({
             type: 'GET',
@@ -111,8 +110,26 @@
               }
             }
           });
-        
+      });
 
+
+      $('#submitDesiredDeliveryDate').on('click', function(event) {
+        event.preventDefault();
+        var date = $('#desired_delivery_date').val();
+        $.ajax({
+            type: 'GET',
+            url: 'index.php?ajax=1&controller=AdminOrders&action=setDesiredDeliveryDate&token='+token,
+            data: { date:date, id_order:id_order},
+            success: function(r){
+              r = JSON.parse(r);
+              if(r.success){
+                $.growl({ title: "Gewenste leverdatum ingesteld!", message: r.msg });
+                window.location.reload(true); 
+              } else {
+                $.growl.error({ title: "Fout bij instellen gewenste leverdatum!", message: r.msg});
+              }
+            }
+          });
       });
   });
   </script>
@@ -125,6 +142,8 @@
   {assign var="order_documents" value=$order->getDocuments()}
   {assign var="order_shipping" value=$order->getShipping()}
   {assign var="order_return" value=$order->getReturn()}
+
+
 
   <div class="panel kpi-container">
     <div class="row">
@@ -184,6 +203,17 @@
           {l s='Order' d='Admin.Global'}
           <span class="badge">{$order->reference}</span>
           <span class="badge">{l s="#" d='Admin.Orderscustomers.Feature'}{$order->id}</span>
+          
+          <span class="badge" style="border:0px;">
+            <form class="form-inline">
+              <label class="h6" for="desired_delivery_date">Gewenste leverdatum</label>
+              {$order->desired_delivery_date}
+              <input type="date" min="{date("Y-m-d")}" name="desired_delivery_date" id="desired_delivery_date" value="{$order->desired_delivery_date}" class="form-control-sm input-sm mb-2 mr-sm-2">
+              <button type="button" id="submitDesiredDeliveryDate" class="btn btn-primary mb-2">Submit</button>
+            </form>
+          </span>
+
+
           <div class="panel-heading-action">
             <div class="btn-group">
               <a class="btn btn-default{if !$previousOrder} disabled{/if}" href="{$link->getAdminLink('AdminOrders', true, [], ['vieworder' => 1, 'id_order' => $previousOrder|intval])|escape:'html':'UTF-8'}">

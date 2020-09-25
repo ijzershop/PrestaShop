@@ -43,6 +43,7 @@
       {/foreach}
     </div>
   </div>
+  {else}
   <style type="text/css">
     #content{
       margin-right: 50px;

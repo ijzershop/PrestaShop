@@ -131,7 +131,8 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                                     if(class_exists("Imagick") )
                                     {
                                         $file = $customized['datas'][1][0]['technical_image'];
-                                        if(!is_null($file)){
+                                        if(!is_null($file) && !empty($file)){
+                                       
                                             $fileContents = file_get_contents(Context::getContext()->shop->getBaseURL(true).$file);
                                             $doc = new SimpleXMLElement($fileContents);
                                             foreach($doc->g as $seg)
@@ -181,8 +182,10 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                 }
             }
         }
-        
+
+
         $this->smarty->assign(array(
+            'tcpdf' => new PDFGenerator((bool) Configuration::get('PS_PDF_USE_CACHE'), 'P'),
             'order' => $this->order,
             'order_details' => $order_details,
             'customer_contact' => $customer_contact,

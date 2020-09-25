@@ -193,6 +193,10 @@ class AdminOrdersController extends AdminOrdersControllerCore
             }
         }
 
+// var_dump(Context::getContext()->cookie);
+// die();
+
+
         $this->shopLinkType = 'shop';
         $this->shopShareDatas = Shop::SHARE_ORDER;
 
@@ -266,6 +270,23 @@ class AdminOrdersController extends AdminOrdersControllerCore
             }
         }
         return die(json_encode(array('success'=>false,'msg'=>'Klant met naam: '. $customer.' en email adres: '.$email.' kon niet gevonden worden in de database')));
+
+    }
+
+
+    public function ajaxProcessSetDesiredDeliveryDate(){
+        $order = Tools::getValue('id_order');
+        $date = Tools::getValue('date');
+            if(!is_null($date)){
+                $result = Db::getInstance()->execute("UPDATE `" . _DB_PREFIX_ . "orders` SET `desired_delivery_date`='".$date."' WHERE `id_order` = ".(int)$order);
+
+                if($result){
+                    return die(json_encode(array('success'=>true,'msg'=>'Gewenste leverdatum '.$date.' is ingesteld')));
+                } else {
+                    return die(json_encode(array('success'=>false,'msg'=>'Het instellen van de gewenste leverdatum is niet gelukt')));
+                }
+            }
+            return die(json_encode(array('success'=>false,'msg'=>'U heeft geen datum geselecteerd, selecteer de gewenste leverdatum en probeer opnieuw')));
 
     }
 }

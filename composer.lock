@@ -7,7 +7,63 @@
     "content-hash": "154bd909ad9469e57a8aca8fe72c9b11",
     "packages": [
         {
+<<<<<<< HEAD
             "name": "beberlei/DoctrineExtensions",
+=======
+            "name": "analog/analog",
+            "version": "1.0.12-stable",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jbroadway/analog.git",
+                "reference": "4ac87ac59555db6eaba734b2b022fcc296e8729d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jbroadway/analog/zipball/4ac87ac59555db6eaba734b2b022fcc296e8729d",
+                "reference": "4ac87ac59555db6eaba734b2b022fcc296e8729d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "psr/log": "1.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.36 || ^5.7 || ^6.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Analog": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Johnny Broadway",
+                    "email": "johnny@johnnybroadway.com",
+                    "homepage": "http://www.johnnybroadway.com/"
+                }
+            ],
+            "description": "PHP logging class that can be extended via closures. Includes several pre-built handlers including file, mail, syslog, HTTP post, and MongoDB.",
+            "homepage": "https://github.com/jbroadway/analog",
+            "keywords": [
+                "alerts",
+                "debug",
+                "debugging",
+                "error",
+                "log",
+                "logger",
+                "logging",
+                "syslog"
+            ],
+            "time": "2019-03-05T22:41:22+00:00"
+        },
+        {
+            "name": "beberlei/doctrineextensions",
+>>>>>>> a8d871e60b4d0b6e163afbcae4ae4cf6b320878a
             "version": "v1.1.9",
             "source": {
                 "type": "git",
@@ -3155,16 +3211,16 @@
         },
         {
             "name": "prestashop/contactform",
-            "version": "v4.2.0",
+            "version": "v4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/contactform.git",
-                "reference": "4826b7903b6066f4e1a4c0963c68108aa0c546e1"
+                "reference": "849aae54ec564aca94877b9bee50e71bb0468edb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/4826b7903b6066f4e1a4c0963c68108aa0c546e1",
-                "reference": "4826b7903b6066f4e1a4c0963c68108aa0c546e1",
+                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/849aae54ec564aca94877b9bee50e71bb0468edb",
+                "reference": "849aae54ec564aca94877b9bee50e71bb0468edb",
                 "shasum": ""
             },
             "require": {
@@ -3184,7 +3240,7 @@
             ],
             "description": "PrestaShop module contactform",
             "homepage": "https://github.com/PrestaShop/contactform",
-            "time": "2020-06-01T09:46:43+00:00"
+            "time": "2020-09-15T09:37:15+00:00"
         },
         {
             "name": "prestashop/dashactivity",
@@ -5445,7 +5501,12 @@
                 "configuration",
                 "distribution"
             ],
+<<<<<<< HEAD
             "time": "2019-06-18T15:43:58+00:00"
+=======
+            "abandoned": true,
+            "time": "2018-12-14T17:36:15+00:00"
+>>>>>>> a8d871e60b4d0b6e163afbcae4ae4cf6b320878a
         },
         {
             "name": "sensio/framework-extra-bundle",
@@ -5942,8 +6003,13 @@
                     "email": "BackEndTea@gmail.com"
                 },
                 {
+<<<<<<< HEAD
                     "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
+=======
+                    "name": "Gert de Pagter",
+                    "email": "BackEndTea@gmail.com"
+>>>>>>> a8d871e60b4d0b6e163afbcae4ae4cf6b320878a
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -7275,7 +7341,11 @@
         },
         {
             "name": "mikey179/vfsstream",
+<<<<<<< HEAD
             "version": "v1.6.8",
+=======
+            "version": "v1.6.5",
+>>>>>>> a8d871e60b4d0b6e163afbcae4ae4cf6b320878a
             "source": {
                 "type": "git",
                 "url": "https://github.com/bovigo/vfsStream.git",
@@ -7929,6 +7999,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2017-12-04T08:55:13+00:00"
         },
         {

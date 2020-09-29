@@ -7,14 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.css">
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="../lib/jquery-sortable/jquery-sortable.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.css">
     <style> .small { font-size: 75%; } .snippet-category { border: 1px solid #E8E9EB; } .snippet-name, .snippet-code { position: relative; } .snippet-name:after, .snippet-code:after { position: absolute; right: 5px; bottom: 2px; display: block; color: #99a6b1; opacity: .5; } .snippet-name { border: 1px dashed #6c757d; } .snippet-name:after { content: "Snippet Name"; font-size: .75em; } .snippet-code-wrapper { position:relative; min-height: 150px; } .snippet-code { margin: auto; height: 200px; width: 100%; } .snippet-code:after { content: "Snippet Code"; } .drag-me { cursor: move; } .category-remove, .snippet-remove { cursor: pointer; } a[data-toggle="collapse"] { -webkit-transition: all 200ms ease-in-out; -moz-transition: all 200ms ease-in-out; -ms-transition: all 200ms ease-in-out; -o-transition: all 200ms ease-in-out; transition: all 200ms ease-in-out; } a[data-toggle="collapse"][aria-expanded="true"] { -moz-transform: rotate(90deg); -webkit-transform: rotate(90deg); -o-transform: rotate(90deg); -ms-transform: rotate(90deg); transform: rotate(90deg); } </style>
 
-    <title>tinyMce Bootstrap plugin Snippets Manager</title>
-    <meta name="description" content="Bootstrap Snippet Manager for Tinymce Bootstrap plugin - Create, organize and store any code snippet here">
+    <title>Bootstrap Plugin for TinyMCE - Snippets Manager</title>
+    <meta name="description" content="Bootstrap Snippet Manager for Tinymce - Create, organize and store any code snippet here">
     <meta name="locations" content="Global">
     <meta name="robots" content="index, follow">
     <meta name="distribution" content="Global">
@@ -25,7 +25,7 @@
 
 <body>
 
-    <h1 class="h2 text-secondary text-center py-3">TinyMce Bootstrap plugin<br><small>Snippets Manager</small></h1>
+    <h1 class="h2 text-secondary text-center py-3">Bootstrap Plugin for TinyMCE<br><small>Snippets Manager</small></h1>
     <div class="container">
 
         <details class="mb-4">
@@ -42,6 +42,7 @@
                         <li>re-order the categories &amp; snippets</li>
                     </ul>
                     <p>The snippets are available in the main plugin <strong>Snippet dialog</strong>. </p>
+                    <p><a href="https://www.tinymce-bootstrap-plugin.com/documentation/index" class="text-light border-bottom text-decoration-none">Bootstrap Plugin for TinyMCE - Documentation</a></p>
                 </div>
                 <div class="card-body">
 
@@ -142,19 +143,19 @@
     </template>
 
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!-- Ace code editor -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ace.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/theme-tomorrow_night.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-language_tools.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/mode-html.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/mode-json.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ace.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/theme-tomorrow_night.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-language_tools.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/mode-html.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/mode-json.js"></script>
     <!-- Font awesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/fontawesome.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/solid.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/fontawesome.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/solid.js"></script>
     <!-- jQuery HTML clean -->
     <script src="../lib/js-beautify/beautify-html.min.js"></script>
     <!-- jQuery sortable -->

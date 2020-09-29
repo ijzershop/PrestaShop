@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -52,5 +52,5 @@ if (!defined('_DP_CACHE_')) {
 }
 
 if (!defined('_DP_THUMB_')) {
-    define('_DP_THUMB_', 128);
+    define('_DP_THUMB_', 256);
 }

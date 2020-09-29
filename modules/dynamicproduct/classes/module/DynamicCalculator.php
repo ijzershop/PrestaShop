@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -28,16 +28,19 @@ namespace classes\module;
 
 use Address;
 use classes\DynamicTools;
+use classes\helpers\DynamicCalculatorHelper;
+use classes\models\DynamicConfig;
 use Configuration;
 use Context;
 use Customer;
 use DynamicProduct;
+use Exception;
 use Group;
 use GroupReductionCore;
+use PrestaShopLogger;
 use Product;
 use SpecificPrice;
 use Tax;
-use Tools;
 use Validate;
 
 class DynamicCalculator
@@ -47,9 +50,6 @@ class DynamicCalculator
     public $module;
     /** @var Context $context */
     public $context;
-
-    private $total_cost;
-    private $total_weight;
 
     private $addresses = array();
 
@@ -128,7 +128,7 @@ class DynamicCalculator
 
     public function getProductReduction($id_product)
     {
-        $specific_price = SpecificPrice::getSpecificPrice(
+        return SpecificPrice::getSpecificPrice(
             (int)$id_product,
             (int)$this->context->shop->id,
             (int)$this->module->provider->getCurrency(),
@@ -139,48 +139,6 @@ class DynamicCalculator
             (int)$this->module->provider->getCustomer(),
             (int)$this->module->provider->getCart()
         );
-        return $specific_price;
-    }
-
-    public function getReductionText($specific_price)
-    {
-        if (!$specific_price) {
-            return '';
-        }
-        if (!(float)$specific_price['reduction']) {
-            return '';
-        }
-        if ($specific_price['reduction_type'] === 'percentage') {
-            $reduction_text = (float)sprintf('%f', $specific_price['reduction'] * 100) . '%';
-        } else {
-            $reduction_text = Tools::convertPrice($specific_price['reduction']);
-        }
-        return $reduction_text;
-    }
-
-    public function getProductPrices($input, $quantity = 1)
-    {
-        $products_prices = array();
-        $products_prices['with_reduction'] = Product::getPriceStatic(
-            $input['id_product'],
-            !Product::getTaxCalculationMethod(),
-            $input['id_attribute'],
-            6,
-            null,
-            false,
-            true,
-            (int)$quantity
-        );
-        $products_prices['without_reduction'] = Product::getPriceStatic(
-            $input['id_product'],
-            !Product::getTaxCalculationMethod(),
-            $input['id_attribute'],
-            6,
-            null,
-            false,
-            false
-        );
-        return $products_prices;
     }
 
     public function applyReduction($price, $specific_price)
@@ -230,17 +188,6 @@ class DynamicCalculator
         return $this->addresses[$id_address] = new Address($id_address);
     }
 
-    public function emptyCache()
-    {
-        $this->total_cost = null;
-        $this->total_weight = null;
-    }
-
-    public function displayProductPrice($display_price)
-    {
-        return Product::convertAndFormatPrice($display_price);
-    }
-
     private function calculateDisplayPrice($id_product, $display_price, $with_tax = true, $use_reduc = true)
     {
         $result = $display_price;
@@ -258,29 +205,19 @@ class DynamicCalculator
     {
         $id_product = (int)$product['id_product'];
 
-        if(!isset($product['id_product_attribute'])){
-            $id_attribute = null;
-        } else {
-            $id_attribute = (int)$product['id_product_attribute'];
-        }
+        $dynamic_config = new DynamicConfig($id_product);
+
+        $id_attribute = isset($product['id_product_attribute']) ? (int)$product['id_product_attribute'] : 0;
         $product_price_ttc = Product::getPriceStatic(
             $id_product,
             !Product::getTaxCalculationMethod(),
-            $id_attribute,
-            6,
-            null,
-            false,
-            true
+            $id_attribute
         );
 
         $product_price_ht = Product::getPriceStatic(
             $id_product,
             false,
-            $id_attribute,
-            6,
-            null,
-            false,
-            true
+            $id_attribute
         );
 
         $product_price_nr = Product::getPriceStatic(
@@ -293,7 +230,23 @@ class DynamicCalculator
             false
         );
 
-        $display_price_ttc = $this->calculateDisplayPrice($id_product, $display_price, true);
+        if ($dynamic_config->display_dynamic_price) {
+            $dynamic_calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
+            try {
+                $display_price = $dynamic_calculator_helper->calculateDisplayPrice($id_product, $id_attribute);
+            } catch (Exception $e) {
+                PrestaShopLogger::addLog(
+                    sprintf('Error in formula: %s', $e->getMessage()),
+                    3,
+                    1,
+                    'Product',
+                    $id_product,
+                    false
+                );
+            }
+        }
+
+        $display_price_ttc = $this->calculateDisplayPrice($id_product, $display_price);
         $display_price_ht = $this->calculateDisplayPrice($id_product, $display_price, false);
         $display_price_nr = $this->calculateDisplayPrice($id_product, $display_price, true, false);
 
@@ -301,8 +254,8 @@ class DynamicCalculator
         $price_ht = $display_price_ht + $product_price_ht;
         $price_nr = $display_price_nr + $product_price_nr;
 
-        $result['price'] = $this->displayProductPrice($price_ttc);
-        $result['price_tax_exc'] = $this->displayProductPrice($price_ht);
-        $result['price_without_reduction'] = $this->displayProductPrice($price_nr);
+        $result['price'] = $price_ttc;
+        $result['price_tax_exc'] = $price_ht;
+        $result['price_without_reduction'] = $price_nr;
     }
 }

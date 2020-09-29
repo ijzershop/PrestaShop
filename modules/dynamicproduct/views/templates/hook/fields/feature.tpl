@@ -18,9 +18,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2019 PrestaShop SA
+*  @copyright 2007-2020 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<span id="dp_{$field->name|escape:'htmlall':'UTF-8'}">{$field->value|escape:'htmlall':'UTF-8'}</span> {include file="../tooltip/text-area-tooltip.tpl"}
+<span id="dp_{$field->name|escape:'htmlall':'UTF-8'}"
+     data-id="{$field->id|intval}"
+     data-type="{$field->type|intval}"
+     class="dp_entry dp_feature dp_feature_{$field->id|intval}"
+     data-name="{$field->name|escape:'htmlall':'UTF-8'}">
+        {$field->value|escape:'htmlall':'UTF-8'}
+  </span>
+{include file="module:dynamicproduct/views/templates/hook/tooltip/text-area-tooltip.tpl"}

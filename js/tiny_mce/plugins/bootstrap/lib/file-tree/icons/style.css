@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'file-tree-icons';
-  src:  url('fonts/file-tree-icons.eot?q65wqs');
-  src:  url('fonts/file-tree-icons.eot?q65wqs#iefix') format('embedded-opentype'),
-    url('fonts/file-tree-icons.ttf?q65wqs') format('truetype'),
-    url('fonts/file-tree-icons.woff?q65wqs') format('woff'),
-    url('fonts/file-tree-icons.svg?q65wqs#file-tree-icons') format('svg');
+  src:  url('fonts/file-tree-icons.eot?117yyb');
+  src:  url('fonts/file-tree-icons.eot?117yyb#iefix') format('embedded-opentype'),
+    url('fonts/file-tree-icons.ttf?117yyb') format('truetype'),
+    url('fonts/file-tree-icons.woff?117yyb') format('woff'),
+    url('fonts/file-tree-icons.svg?117yyb#file-tree-icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -60,9 +60,6 @@
 }
 .ft-icon-checkmark:before {
   content: "\ea10";
-}
-.ft-icon-circle-down:before {
-  content: "\ea43";
 }
 .ft-icon-file-pdf:before {
   content: "\eadf";

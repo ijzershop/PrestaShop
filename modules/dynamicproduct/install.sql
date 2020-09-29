@@ -1,4 +1,12 @@
-  CREATE TABLE IF NOT EXISTS `__PREFIX_unit` (
+CREATE TABLE IF NOT EXISTS `__PREFIX_main_config` (
+    `id_main_config` int(11) NOT NULL,
+    `debug_mode` tinyint(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id_main_config`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+INSERT IGNORE INTO `__PREFIX_main_config` (`id_main_config`) VALUES (1);
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_unit` (
 	`id_unit` int(11) NOT NULL AUTO_INCREMENT,
 	`symbol` varchar(100) NOT NULL DEFAULT '',
 	`displayed` tinyint(1) NOT NULL DEFAULT 1,
@@ -38,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `__PREFIX_field_lang` (
   `id_lang` int(11) NOT NULL,
   `label` varchar(200) NOT NULL,
   `value` varchar(100) NOT NULL,
-  `description` varchar(256) NOT NULL,
+  `description` text NOT NULL,
   PRIMARY KEY (`id_field`,`id_lang`)
 ) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
 
@@ -119,6 +127,7 @@ CREATE TABLE IF NOT EXISTS `__PREFIX_input_field` (
   `id_field` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `value` varchar(200) NOT NULL,
+  `secondary_value` varchar(200) NOT NULL,
   `options` varchar(200) NOT NULL,
   `type` int(11) NOT NULL,
   `visible` tinyint(1) NOT NULL DEFAULT 1,
@@ -128,6 +137,13 @@ CREATE TABLE IF NOT EXISTS `__PREFIX_input_field` (
   `size` int(11) NOT NULL,
   PRIMARY KEY (`id_input_field`)
 ) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_combination_field` (
+  `id_combination_field` int(11) NOT NULL AUTO_INCREMENT,
+  `id_product` int(11) NOT NULL,
+  `id_field` int(11) NOT NULL,
+  PRIMARY KEY (`id_combination_field`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `__PREFIX_combination_value` (
   `id_combination_value` int(11) NOT NULL AUTO_INCREMENT,
@@ -150,6 +166,7 @@ CREATE TABLE IF NOT EXISTS `__PREFIX_dropdown_option` (
   `id_dropdown_option` int(11) NOT NULL AUTO_INCREMENT,
   `id_field` int(11) NOT NULL,
   `value` varchar(100) NOT NULL,
+  `secondary_value` varchar(100) NOT NULL,
   `color` varchar(100) NOT NULL,
   `position` int(11) NOT NULL,
   `is_default` tinyint(1) NOT NULL DEFAULT 0,
@@ -168,6 +185,7 @@ CREATE TABLE IF NOT EXISTS `__PREFIX_radio_option` (
   `id_radio_option` int(11) NOT NULL AUTO_INCREMENT,
   `id_field` int(11) NOT NULL,
   `value` varchar(100) NOT NULL,
+  `secondary_value` varchar(100) NOT NULL,
   `color` varchar(100) NOT NULL,
   `position` int(11) NOT NULL,
   `is_default` tinyint(1) NOT NULL DEFAULT 0,
@@ -186,6 +204,7 @@ CREATE TABLE IF NOT EXISTS `__PREFIX_thumbnails_option` (
   `id_thumbnails_option` int(11) NOT NULL AUTO_INCREMENT,
   `id_field` int(11) NOT NULL,
   `value` varchar(100) NOT NULL,
+  `secondary_value` varchar(100) NOT NULL,
   `color` varchar(100) NOT NULL,
   `position` int(11) NOT NULL,
   `is_default` tinyint(1) NOT NULL DEFAULT 0,
@@ -224,10 +243,130 @@ CREATE TABLE IF NOT EXISTS `__PREFIX_condition_visibility` (
   PRIMARY KEY (`id_condition`,`id_field`)
 ) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `__PREFIX_condition_option_visibility` (
+  `id_condition` int(11) NOT NULL,
+  `id_field` int(11) NOT NULL,
+  `id_option` int(11) NOT NULL,
+  `visible` tinyint(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id_condition`,`id_field`,`id_option`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `__PREFIX_field_formula` (
   `id_field_formula` int(11) NOT NULL AUTO_INCREMENT,
   `id_product` int(11) NOT NULL,
   `formula` text NOT NULL,
   `position` int(11) NOT NULL,
   PRIMARY KEY (`id_field_formula`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_interval` (
+  `id_interval` int(11) NOT NULL AUTO_INCREMENT,
+  `id_product` int(11) NOT NULL,
+  PRIMARY KEY (`id_interval`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_interval_field` (
+  `id_interval_field` int(11) NOT NULL AUTO_INCREMENT,
+  `id_interval` int(11) NOT NULL,
+  `id_field` int(11) NOT NULL,
+  PRIMARY KEY (`id_interval_field`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_interval_condition_group` (
+  `id_interval_condition_group` int(11) NOT NULL AUTO_INCREMENT,
+  `id_interval` int(11) NOT NULL,
+  PRIMARY KEY (`id_interval_condition_group`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_interval_condition` (
+  `id_interval_condition` int(11) NOT NULL AUTO_INCREMENT,
+  `id_interval_condition_group` int(11) NOT NULL,
+  `id_field` int(11) NOT NULL,
+  `type` enum('range','values') NOT NULL,
+  PRIMARY KEY (`id_interval_condition`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_interval_condition_range` (
+  `id_interval_condition_range` int(11) NOT NULL AUTO_INCREMENT,
+  `id_interval_condition` int(11) NOT NULL,
+  `min` decimal(20,6) NOT NULL,
+  `max` decimal(20,6) NOT NULL,
+  PRIMARY KEY (`id_interval_condition_range`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_interval_condition_value` (
+  `id_interval_condition_value` int(11) NOT NULL AUTO_INCREMENT,
+  `id_interval_condition` int(11) NOT NULL,
+  `value` decimal(20,6) NOT NULL,
+  PRIMARY KEY (`id_interval_condition_value`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_interval_formula` (
+  `id_interval_formula` int(11) NOT NULL AUTO_INCREMENT,
+  `id_interval_condition_group` int(11) NOT NULL,
+  `id_interval_field` int(11) NOT NULL,
+  `formula` text NOT NULL,
+  PRIMARY KEY (`id_interval_formula`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_grid` (
+  `id_grid` int(11) NOT NULL AUTO_INCREMENT,
+  `id_product` int(11) NOT NULL,
+  `id_field_target` int(11) NOT NULL,
+  `id_field_column` int(11) NOT NULL,
+  `id_field_row` int(11) NOT NULL,
+  PRIMARY KEY (`id_grid`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_grid_column` (
+  `id_grid_column` int(11) NOT NULL AUTO_INCREMENT,
+  `id_grid` int(11) NOT NULL,
+  `value` DECIMAL(18, 6) NOT NULL,
+  PRIMARY KEY (`id_grid_column`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_grid_row` (
+  `id_grid_row` int(11) NOT NULL AUTO_INCREMENT,
+  `id_grid` int(11) NOT NULL,
+  `value` DECIMAL(18, 6) NOT NULL,
+  PRIMARY KEY (`id_grid_row`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_grid_value` (
+  `id_grid_value` int(11) NOT NULL AUTO_INCREMENT,
+  `id_grid` int(11) NOT NULL,
+  `id_grid_column` int(11) NOT NULL,
+  `id_grid_row` int(11) NOT NULL,
+  `value` DECIMAL(18, 6) NOT NULL,
+  PRIMARY KEY (`id_grid_value`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_exec_order` (
+  `id_exec_order` int(11) NOT NULL AUTO_INCREMENT,
+  `id_product` int(11) NOT NULL,
+  `id_exec` int(11) NOT NULL,
+  `position` int(11) NOT NULL,
+  PRIMARY KEY (`id_exec_order`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_field_group` (
+    `id_field_group` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(100),
+    `show_label` tinyint(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id_field_group`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_field_group_lang` (
+    `id_field_group` int(11) NOT NULL,
+    `id_lang` int(11) NOT NULL,
+    `label` varchar(100) NOT NULL,
+    PRIMARY KEY (`id_field_group`, `id_lang`)
+) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `__PREFIX_product_field_group` (
+    `id_product_field_group` int(11) NOT NULL AUTO_INCREMENT,
+    `id_product` int(11) NOT NULL,
+    `id_field_group` int(11) NOT NULL,
+    `position` int(11) NOT NULL,
+    PRIMARY KEY (`id_product_field_group`)
 ) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;

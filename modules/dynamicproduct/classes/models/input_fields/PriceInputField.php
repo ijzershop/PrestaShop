@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,18 +20,21 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 namespace classes\models\input_fields;
 
+use classes\DynamicTools;
 use classes\models\DynamicInputField;
+use Tools;
 
 class PriceInputField extends DynamicInputField
 {
-    public function __construct($id = null, $id_lang = null, $id_shop = null)
+    public function displayValue()
     {
-        parent::__construct($id, $id_lang, $id_shop);
+        $converted = (float)Tools::convertPriceFull($this->value, null, $this->context->currency);
+        return DynamicTools::formatPrice($converted);
     }
 }

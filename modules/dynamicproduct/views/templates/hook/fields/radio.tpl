@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2019 PrestaShop SA
+*  @copyright 2007-2020 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -30,17 +30,19 @@
      data-name="{$field->name|escape:'htmlall':'UTF-8'}"
      data-label="{$field->label|escape:'htmlall':'UTF-8'}">
     {foreach from=$field->options item=radio_option}
-        <label for="{$field->name|escape:'htmlall':'UTF-8'}_{$radio_option->id|intval}">
-        <input
-            type="radio"
-            id="{$field->name|escape:'htmlall':'UTF-8'}_{$radio_option->id|intval}"
-            name="{$field->name|escape:'htmlall':'UTF-8'}"
-            data-id="{$radio_option->id|intval}"
-            data-label="{$radio_option->label|escape:'htmlall':'UTF-8'}"
-            value="{$radio_option->value|escape:'htmlall':'UTF-8'}"
-            {if $radio_option->is_default}checked="checked"{/if}/>
-                <span class="dp_radio_label">{$radio_option->label|escape:'htmlall':'UTF-8'}</span>
+        <label for="{$field->name|escape:'htmlall':'UTF-8'}_{$radio_option->id|intval}"
+               class="dp_option dp_option_{$radio_option->id|intval}"
+        >
+            <input
+                type="radio"
+                id="{$field->name|escape:'htmlall':'UTF-8'}_{$radio_option->id|intval}"
+                name="{$field->name|escape:'htmlall':'UTF-8'}"
+                data-id="{$radio_option->id|intval}"
+                data-label="{$radio_option->label|escape:'htmlall':'UTF-8'}"
+                value="{$radio_option->value|escape:'htmlall':'UTF-8'}"
+                data-secondary_value="{$radio_option->secondary_value|escape:'htmlall':'UTF-8'}"
+                {if $radio_option->is_default}checked="checked"{/if}/>
+                    <span class="dp_radio_label">{$radio_option->label|escape:'htmlall':'UTF-8'}</span>
         </label>
     {/foreach}
 </div>
-{include file="../tooltip/tooltip.tpl"}

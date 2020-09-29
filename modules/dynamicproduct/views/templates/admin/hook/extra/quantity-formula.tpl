@@ -18,22 +18,21 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2019 PrestaShop SA
+*  @copyright 2007-2020 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div id="dp_quantity_equation"  class="dp_dynamicproduct_equation">
-    <div class="dp_formula_container dp_equation_container" data-id_attribute="0">
-        <label>{l s='Formula' mod='dynamicproduct'}:</label>
+<div id="dp_quantity_equation"  class="dp_dynamicproduct_equation dp_formula_bloc">
+    <div class="dp_formula_container dp_equation_container" data-id_attribute="0" data-tab_name="quantity_formula">
+        <label class="dp_main_label">{l s='Quantity Formula' mod='dynamicproduct'}:</label>
         <span class="dp_equation_error"></span>
-        <textarea class="dp_equation_content" id="dp_equation_2">&nbsp;</textarea>
+        <textarea class="dp_equation_content" id="dp_equation_2" data-tab_name="quantity_formula"></textarea>
         <div class="dp_equation_tools">
             <a href="#" class="dp_equation_tool">+</a>
             <a href="#" class="dp_equation_tool">-</a>
             <a href="#" class="dp_equation_tool">*</a>
             <a href="#" class="dp_equation_tool">/</a>
-            <a href="#" class="dp_equation_tool">²</a>
             <a href="#" class="dp_equation_tool">(</a>
             <a href="#" class="dp_equation_tool">)</a>
         </div>

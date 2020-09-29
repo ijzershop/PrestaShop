@@ -18,52 +18,52 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2019 PrestaShop SA
+*  @copyright 2007-2020 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {if count($dp_oos_inputs)}
-<div id="dp_errors" style="clear: both; padding-top: 15px; margin: 5px 20px">
-    {foreach from=$dp_oos_inputs item=dp_oos_input}
+  <div id="dp_errors" style="clear: both; padding-top: 15px; margin: 5px 20px">
+      {foreach from=$dp_oos_inputs item=dp_oos_input}
         <div class="alert alert-warning">
             {l s='An item in your cart is no longer available in this quantity' mod='dynamicproduct'}
-            <br>
-            <a style="color: #0e0e0e" href="{$dp_oos_input->getEditLink()|escape:'htmlall':'UTF-8'}">
-                <strong>{l s='Click here to edit the customization' mod='dynamicproduct'}</strong>
-            </a>
+          <br>
+          <a style="color: #0e0e0e" href="{$dp_oos_input->getEditLink()|escape:'htmlall':'UTF-8'}">
+            <strong>{l s='Click here to edit the customization' mod='dynamicproduct'}</strong>
+          </a>
         </div>
-    {/foreach}
-</div>
-<script type="text/javascript">
-	var _intv = setInterval(function () {
-		if (typeof $ === 'function') {
-			hidePaymentMethods();
-			clearInterval(_intv);
-		}
-	}, 100);
-	function hidePaymentMethods() {
-		$('#opc_payment_methods-content').hide();
-		$('#HOOK_PAYMENT .row').hide();
-		// for 1.7
-		$('.payment-options').hide();
-		$('#conditions-to-approve').hide();
-	};
-</script>
+      {/foreach}
+  </div>
+  <script type="text/javascript">
+    var _intv = setInterval(function () {
+      if (typeof $ === "function") {
+        hidePaymentMethods();
+        clearInterval(_intv);
+      }
+    }, 100);
+
+    function hidePaymentMethods() {
+      $(".payment-options").remove();
+      $("#conditions-to-approve").remove();
+      $("#payment-confirmation").remove();
+    };
+  </script>
 {else}
-<script type="text/javascript">
-	var _intv = setInterval(function () {
-		if (typeof $ === 'function') {
-			showPaymentMethods();
-			clearInterval(_intv);
-		}
-	}, 100);
-	function showPaymentMethods() {
-		$('#opc_payment_methods-content').show();
-		$('#HOOK_PAYMENT .row').show();
-		// for 1.7
-		$('.payment-options').show();
-		$('#conditions-to-approve').show();
-	};
-</script>
+  <script type="text/javascript">
+    var _intv = setInterval(function () {
+      if (typeof $ === "function") {
+        showPaymentMethods();
+        clearInterval(_intv);
+      }
+    }, 100);
+
+    function showPaymentMethods() {
+      $("#opc_payment_methods-content").show();
+      $("#HOOK_PAYMENT .row").show();
+      // for 1.7
+      $(".payment-options").show();
+      $("#conditions-to-approve").show();
+    };
+  </script>
 {/if}

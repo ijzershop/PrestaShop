@@ -1,5 +1,5 @@
 {**
-* 2010-2019 Tuni-Soft
+* 2010-2020 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author
-*  @copyright 2014-2015
+*  @copyright 2014-2020
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
@@ -27,8 +27,8 @@
         {if count($input->input_fields)}
             {foreach from=$input->input_fields item=input_field}
                 {if $input_field->isSkipped()}{continue}{/if}
-                <strong>{$input_field->name|escape:'htmlall':'UTF-8'}:</strong>
-                {if is_file($input_field->getTemplatePath())}
+                <strong>{$input_field->label|escape:'htmlall':'UTF-8'}:</strong>
+                {if $input_field->getTemplatePath()}
                     {include file=$input_field->getTemplatePath()}
                 {else}
                     {$input_field->displayValue()|escape:'htmlall':'UTF-8'}

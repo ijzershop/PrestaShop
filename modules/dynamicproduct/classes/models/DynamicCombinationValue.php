@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -28,7 +28,6 @@ namespace classes\models;
 
 use Db;
 use DbQuery;
-use Product;
 use Validate;
 
 class DynamicCombinationValue extends DynamicObject
@@ -60,51 +59,6 @@ class DynamicCombinationValue extends DynamicObject
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
         $sql->where('id_product = ' . (int)$id_product);
-        $rows = Db::getInstance()->executeS($sql, false);
-        while ($row = Db::getInstance()->nextRow($rows)) {
-            $id_combination_value = $row['id_combination_value'];
-            $combination_value = new self($id_combination_value);
-            if (Validate::isLoadedObject($combination_value)) {
-                $combination_values[$id_combination_value] = $combination_value;
-            }
-        }
-        return $combination_values;
-    }
-
-    /**
-     * @param $id_product
-     * @param $id_attribute
-     * @return DynamicCombinationValue[]
-     */
-    public static function getValuesByIdAttribute($id_product, $id_attribute)
-    {
-        $combination_values = array();
-        $sql = new DbQuery();
-        $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_product);
-        $sql->where('id_attribute = ' . (int)$id_attribute);
-        $rows = Db::getInstance()->executeS($sql, false);
-        while ($row = Db::getInstance()->nextRow($rows)) {
-            $id_combination_value = $row['id_combination_value'];
-            $combination_value = new self($id_combination_value);
-            if (Validate::isLoadedObject($combination_value)) {
-                $combination_value->convertPrice();
-                $combination_values[$id_combination_value] = $combination_value;
-            }
-        }
-        return $combination_values;
-    }
-
-    /**
-     * @param $id_field
-     * @return DynamicCombinationValue[]
-     */
-    public static function getValuesByIdField($id_field)
-    {
-        $combination_values = array();
-        $sql = new DbQuery();
-        $sql->from(self::$definition['table']);
-        $sql->where('id_field = ' . (int)$id_field);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id_combination_value = $row['id_combination_value'];
@@ -152,14 +106,6 @@ class DynamicCombinationValue extends DynamicObject
             return false;
         }
         return (float)$init;
-    }
-
-    private function convertPrice()
-    {
-        $field = new DynamicField($this->id_field);
-        if ((int)$field->type === _DP_PRICE_) {
-            $this->value = Product::convertAndFormatPrice($this->value);
-        }
     }
 
     /**

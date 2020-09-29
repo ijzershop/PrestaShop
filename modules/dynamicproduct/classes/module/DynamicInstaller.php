@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,17 +20,20 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 namespace classes\module;
 
+use classes\DynamicTools;
 use classes\helpers\FolderHelper;
 use Context;
+use Db;
 use DynamicProduct;
 use Language;
 use Tab;
+use Tools;
 
 class DynamicInstaller
 {
@@ -40,7 +43,30 @@ class DynamicInstaller
     /** @var Context $context */
     public $context;
 
+    private $hooks_front = array(
+        'displayHeader',
+        'displayProductAdditionalInfo',
+        'actionValidateOrder',
+        'displayProductPriceBlock',
+        'displayCustomization',
+        'displayPaymentTop',
+        'displayBeforeShoppingCartBlock',
+        'displayShoppingCart',
+    );
+    private $hooks_admin = array(
+        'displayBackOfficeHeader',
+        'displayAdminProductsExtra',
+        'actionObjectProductAddAfter',
+        'actionAdminControllerSetMedia',
+        'actionOrderStatusPostUpdate',
+        'actionClearCompileCache',
+    );
+
     private static $controllers = array(
+        array(
+            'name'  => 'Dynamic Main Config',
+            'class' => 'DynamicMainConfig'
+        ),
         array(
             'name'  => 'Dynamic Product Settings',
             'class' => 'DynamicProductSettings'
@@ -86,6 +112,26 @@ class DynamicInstaller
             'class'  => 'DpRedirect',
             'parent' => 'AdminParentModulesSf'
         ),
+        array(
+            'name'  => 'Dynamic Product Intervals',
+            'class' => 'DynamicProductIntervals'
+        ),
+        array(
+            'name'  => 'Dynamic Product Grids',
+            'class' => 'DynamicProductGrids'
+        ),
+        array(
+            'name'  => 'Dynamic Product Exec Order',
+            'class' => 'DynamicProductExecOrder'
+        ),
+        array(
+            'name'  => 'Dynamic Product Field Groups',
+            'class' => 'DynamicProductFieldGroups'
+        ),
+        array(
+            'name'  => 'Dynamic Product Dev',
+            'class' => 'DynamicProductDev'
+        ),
     );
 
     public function __construct($module, $context)
@@ -94,31 +140,37 @@ class DynamicInstaller
         $this->context = $context;
     }
 
+    public function getHooks()
+    {
+        return array_merge($this->hooks_front, $this->hooks_admin);
+    }
+
+    public function getFrontHooks()
+    {
+        return $this->hooks_front;
+    }
+
     public function installHooks()
     {
-        return
-            $this->module->registerHook('displayBackOfficeHeader') &&
-            $this->module->registerHook('displayHeader') &&
-            $this->module->registerHook('displayProductAdditionalInfo') &&
-            $this->module->registerHook('displayFooterProduct') &&
-            $this->module->registerHook('actionCartSave') &&
-            $this->module->registerHook('actionValidateOrder') &&
-            $this->module->registerHook('displayProductPriceBlock') &&
-            $this->module->registerHook('displayCustomization') &&
-            $this->module->registerHook('displayAdminProductsExtra') &&
-            $this->module->registerHook('hookActionProductAdd') &&
-            $this->module->registerHook('actionAdminControllerSetMedia') &&
-            $this->module->registerHook('displayPaymentTop') &&
-            $this->module->registerHook('displayBeforeShoppingCartBlock') &&
-            $this->module->registerHook('displayShoppingCart') &&
-            $this->module->registerHook('actionOrderStatusPostUpdate');
+        foreach ($this->getHooks() as $hook) {
+            $this->module->registerHook($hook);
+        }
+        return true;
+    }
+
+    public function uninstallHooks()
+    {
+        foreach ($this->getHooks() as $hook) {
+            $this->module->unregisterHook($hook);
+        }
+        return true;
     }
 
     public function installControllers()
     {
         $success = true;
         foreach (self::$controllers as $controller) {
-            $success &= $this->installController($controller, $success);
+            $success &= $this->installController($controller);
         }
         return $success;
     }
@@ -141,12 +193,17 @@ class DynamicInstaller
         return $tab->add();
     }
 
+    public function uninstallController($name)
+    {
+        $tab = new Tab((int)Tab::getIdFromClassName($name));
+        return $tab->delete();
+    }
+
     public function uninstallControllers()
     {
         $success = true;
         foreach (self::$controllers as $controller) {
-            $tab = new Tab((int)Tab::getIdFromClassName($controller['class']));
-            $success &= $tab->delete();
+            $success &= $this->uninstallController($controller ['class']);
         }
         return $success;
     }
@@ -162,9 +219,11 @@ class DynamicInstaller
             'declarations',
             'scripts',
             'upload',
+            'cache',
             'images',
             'images/field',
             'images/thumbnails',
+            'images/dropdown',
         );
 
         $index_file = $this->module->getDir() . 'index.php';
@@ -178,12 +237,14 @@ class DynamicInstaller
         }
 
         $files = array(
-            'install/calculator/.htaccess'     => 'calculator/.htaccess',
-            'install/calculator/readme.txt'    => 'calculator/readme.txt',
+            'install/calculator/.htaccess'  => 'calculator/.htaccess',
+            'install/calculator/readme.txt' => 'calculator/readme.txt',
 
             'install/allocations/.htaccess' => 'allocations/.htaccess',
 
-            'install/declarations/.htaccess' => 'declarations/.htaccess'
+            'install/declarations/.htaccess' => 'declarations/.htaccess',
+
+            'install/cache/.htaccess' => 'cache/.htaccess'
         );
 
         foreach ($files as $src => $dest) {
@@ -219,5 +280,59 @@ class DynamicInstaller
             $folder_helper->copyFolder($src, $dest);
         }
         return true;
+    }
+
+    public function execSQLFile($path)
+    {
+        if (!file_exists($path)) {
+            return false;
+        }
+
+        if (!$sql = Tools::file_get_contents($path)) {
+            return false;
+        }
+        $sql = str_replace(
+            array('__PREFIX', '_MYSQL_ENGINE_'),
+            array(_DB_PREFIX_ . $this->module->name, _MYSQL_ENGINE_),
+            $sql
+        );
+        $sql = preg_split('/;\s*[\r\n]+/', $sql);
+        foreach ($sql as $query) {
+            if (trim($query) && !Db::getInstance()->execute(trim($query))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function execUninstallScript()
+    {
+        $success = true;
+        $uninstall_script = $this->module->getDir() . 'sql/tables.json';
+        $contents = Tools::file_get_contents($uninstall_script);
+        $tables = json_decode($contents, true);
+        if (is_array($tables)) {
+            foreach ($tables as $table) {
+                $table = $this->restoreTableName($table);
+                $sql = 'DROP TABLE IF EXISTS `__PREFIX_' . pSQL($table) . '`;';
+                $sql = str_replace('__PREFIX', pSQL(_DB_PREFIX_ . $this->module->name), $sql);
+                $success &= Db::getInstance()->execute($sql);
+            }
+        }
+        return $success;
+    }
+
+    private function restoreTableName($table)
+    {
+        if (!DynamicTools::isModuleDevMode() && Tools::substr($table, 0, 1) === '_') {
+            $table = Tools::substr($table, 1);
+        }
+        return $table;
+    }
+
+    public function upgradeSQL($version)
+    {
+        $path = $this->module->getFolderPath('upgrade/sql') . "upgrade-{$version}.sql";
+        return $this->execSQLFile($path);
     }
 }

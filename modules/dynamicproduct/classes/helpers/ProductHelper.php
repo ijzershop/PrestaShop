@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -28,6 +28,7 @@ namespace classes\helpers;
 
 use AttributeGroup;
 use classes\DynamicTools;
+use Configuration;
 use Context;
 use DynamicProduct;
 use Product;
@@ -47,25 +48,10 @@ class ProductHelper
         $this->context = $context;
     }
 
-    public static function getProductFeatures($id_product)
-    {
-        $features = array();
-        $id_lang = Context::getContext()->language->id;
-        $product_features = Product::getFrontFeaturesStatic($id_lang, $id_product);
-        foreach ($product_features as $product_feature) {
-            $name = DynamicTools::convertToVariableName($product_feature['name']);
-            $name = 'feature_' . str_replace(' ', '_', Tools::strtolower($name));
-            $value = $product_feature['value'];
-            $features[$name] = $value;
-        }
-        return $features;
-    }
-
     public static function getProductFeatureFields($id_product)
     {
         $feature_fields = array();
-        $id_lang = Context::getContext()->language->id;
-        $product_features = Product::getFrontFeaturesStatic($id_lang, $id_product);
+        $product_features = Product::getFrontFeaturesStatic((int)Configuration::get('PS_LANG_DEFAULT'), $id_product);
         foreach ($product_features as $product_feature) {
             $label = $product_feature['name'];
             $name = self::getCleanFeatureName($label);
@@ -78,27 +64,10 @@ class ProductHelper
         return $feature_fields;
     }
 
-    public static function getProductAttributes($id_product, $id_attribute)
-    {
-        $attributes = array();
-        $product = new Product($id_product, false);
-        $product_attributes = $product->getAttributeCombinationsById(
-            $id_attribute,
-            Context::getContext()->language->id
-        );
-        foreach ($product_attributes as $product_attribute) {
-            $name = DynamicTools::convertToVariableName($product_attribute['group_name']);
-            $name = 'attribute_' . str_replace(' ', '_', Tools::strtolower($name));
-            $value = $product_attribute['attribute_name'];
-            $attributes[$name] = $value;
-        }
-        return $attributes;
-    }
-
     public static function getProductAttributeFields($id_product)
     {
         $attribute_fields = array();
-        $groups = AttributeGroup::getAttributesGroups(Context::getContext()->language->id);
+        $groups = AttributeGroup::getAttributesGroups((int)Configuration::get('PS_LANG_DEFAULT'));
         foreach ($groups as $group) {
             $id_group = $group['id_attribute_group'];
             if (DynamicTools::productHasAttributeGroup($id_product, $id_group)) {
@@ -127,5 +96,11 @@ class ProductHelper
         $name = preg_replace('/[^0-9a-zA-Z_]/', '', $name);
         $name = 'feature_' . Tools::strtolower($name);
         return $name;
+    }
+
+    public function isAvailableWhenOutOfStock($id_product)
+    {
+        $product = new Product($id_product, true);
+        return Product::isAvailableWhenOutOfStock($product->out_of_stock);
     }
 }

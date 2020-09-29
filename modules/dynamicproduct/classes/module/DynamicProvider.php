@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -30,9 +30,11 @@ use Address;
 use Cart;
 use Category;
 use classes\DynamicTools;
+use classes\models\DynamicMainConfig;
 use Combination;
 use Configuration;
 use Context;
+use Cookie;
 use Currency;
 use Customer;
 use Db;
@@ -70,8 +72,9 @@ class DynamicProvider
     public function getCustomerGroup()
     {
         if ($this->context->customer) {
-            $this->context->customer->id_default_group;
+            return $this->context->customer->id_default_group;
         }
+        return null;
     }
 
     public function getCustomerFromCart($id_cart)
@@ -161,6 +164,39 @@ class DynamicProvider
         return $product_link;
     }
 
+    /**
+     * @param $id_product
+     * @param $id_attribute
+     * @return float
+     */
+    public function getProductPrice($id_product, $id_attribute)
+    {
+        $context = DynamicTools::getContext();
+        $id_default_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+        $clone_context = $context->cloneContext();
+        $clone_context->currency = new Currency($id_default_currency);
+        $specific_price_output = null;
+
+        return (float)Product::getPriceStatic(
+            $id_product,
+            false,
+            $id_attribute,
+            6,
+            null,
+            false,
+            false,
+            1,
+            false,
+            null,
+            null,
+            null,
+            $specific_price_output,
+            false,
+            false,
+            $clone_context
+        );
+    }
+
     public function getProductWeight($id_product, $id_attribute)
     {
         $sql = new DbQuery();
@@ -245,9 +281,26 @@ class DynamicProvider
         return defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ === true;
     }
 
+    public function isModuleDevMode()
+    {
+        return defined('_PS_MODULE_DEV_') && _PS_MODULE_DEV_ === true;
+    }
+
+    public function isModuleDebugMode()
+    {
+        return (int)DynamicMainConfig::getConfig()->debug_mode;
+    }
+
     public function getOldField($fields_new, $id_field)
     {
         return isset($fields_new[$id_field]) ? $fields_new[$id_field] : $id_field;
+    }
+
+    public function getOldOption($options_new, $id_field, $id_option)
+    {
+        return isset($options_new[$id_field]) && isset($options_new[$id_field][$id_option]) ?
+            $options_new[$id_field][$id_option] :
+            $id_option;
     }
 
     public function getTabID($class_name)
@@ -288,5 +341,39 @@ class DynamicProvider
             . ($parameter ? '&' : '') . $parameter;
         $link = str_replace('&#', '#', $link);
         return $link;
+    }
+
+    public function isDuplicateRequest()
+    {
+        if (!isset($_SERVER['PATH_INFO'])) {
+            return false;
+        }
+        $PATH_INFO = $_SERVER['PATH_INFO'];
+        return
+            strpos($PATH_INFO, '/products/unit/duplicate/') !== false ||
+            strpos($PATH_INFO, '/product/unit/duplicate/') !== false;
+    }
+
+    public function getProductIdFromDuplicateRequest()
+    {
+        $id_product = (int)Tools::getValue('id_product');
+        return $id_product ?: (int)str_replace(
+            array(
+                '/sell/catalog/products/unit/duplicate/',
+                '/product/unit/duplicate/'
+            ),
+            '',
+            $_SERVER['PATH_INFO']
+        );
+    }
+
+    public function isAdmin()
+    {
+        $cookie = new Cookie('psAdmin');
+        if ((int)$cookie->id_employee) {
+            // we have an employee in the cookie
+            return true;
+        }
+        return false;
     }
 }

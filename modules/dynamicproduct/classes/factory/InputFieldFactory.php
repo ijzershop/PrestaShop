@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -31,6 +31,7 @@ use classes\models\input_fields\CheckboxInputField;
 use classes\models\input_fields\ColorPickerInputField;
 use classes\models\input_fields\DateInputField;
 use classes\models\input_fields\DropdownInputField;
+use classes\models\input_fields\FeatureInputField;
 use classes\models\input_fields\FileInputField;
 use classes\models\input_fields\FixedInputField;
 use classes\models\input_fields\HtmlInputField;
@@ -67,6 +68,7 @@ class InputFieldFactory
         _DP_SLIDER_      => SliderInputField::class,
         _DP_THUMBNAILS_  => ThumbnailsInputField::class,
         _DP_TEXTAREA_    => TextAreaInputField::class,
+        _DP_FEATURE_     => FeatureInputField::class,
         _DP_RADIO_       => RadioInputField::class,
         _DP_COLORPICKER_ => ColorPickerInputField::class,
         _DP_HTML_        => HtmlInputField::class,

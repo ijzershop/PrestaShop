@@ -73,6 +73,11 @@
     border: 1px solid transparent;
 }
 
+.popover.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
 .selector,
 .selector:before,
 #preview-content:not(.no-transition) * {
@@ -135,7 +140,7 @@
 }
 
 
-#snippets-wrapper .snippet-preview > div.small :not(h6) {
+#snippets-wrapper .snippet-preview>div.small :not(h6) {
     -moz-transform: scale(.95);
     -webkit-transform: scale(.95);
     -o-transform: scale(.95);
@@ -143,7 +148,7 @@
     transform: scale(.95);
 }
 
-#snippets-wrapper .snippet-preview > div.small img {
+#snippets-wrapper .snippet-preview>div.small img {
     max-width: 100%;
     max-height: 100%;
 }
@@ -209,8 +214,8 @@
 }
 
 .list-group-item {
-	width: 95%;
-	margin: 1% !important;
+    width: 95%;
+    margin: 1% !important;
 }
 
 .color-toggle.active {
@@ -218,10 +223,10 @@
 }
 
 @media (min-width: 576px) {
-	.list-group-item {
-		width: 47%;
-		margin: 5px 1.5% !important;
-	}
+    .list-group-item {
+        width: 47%;
+        margin: 5px 1.5% !important;
+    }
 }
 
 .template-preview .col,
@@ -231,7 +236,9 @@
     border-bottom: 1px solid #D1CFCD;
     border-left: 1px solid #D1CFCD;
 }
-.template-preview .col:last-child, .template-preview [class*="col-"]:last-child {
+
+.template-preview .col:last-child,
+.template-preview [class*="col-"]:last-child {
     border-right: 1px solid #D1CFCD;
 }
 
@@ -242,9 +249,9 @@
 @font-face {
     font-family: 'icomoon-tbp';
     src:
-    url('../fonts/icomoon-tbp.ttf?m7ewb4') format('truetype'),
-    url('../fonts/icomoon-tbp.woff?m7ewb4') format('woff'),
-    url('../fonts/icomoon-tbp.svg?m7ewb4#icomoon-tbp') format('svg');
+        url('../fonts/icomoon-tbp.ttf?m7ewb4') format('truetype'),
+        url('../fonts/icomoon-tbp.woff?m7ewb4') format('woff'),
+        url('../fonts/icomoon-tbp.svg?m7ewb4#icomoon-tbp') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -269,81 +276,107 @@
 .bootstrap-icon-info:before {
     content: "\ea0c";
 }
+
 .bootstrap-icon-cross:before {
     content: "\ea0f";
 }
+
 .bootstrap-icon-circle-up:before {
     content: "\ea41";
 }
+
 .bootstrap-icon-circle-right:before {
     content: "\ea42";
 }
+
 .bootstrap-icon-circle-down:before {
     content: "\ea43";
 }
+
 .bootstrap-icon-circle-left:before {
     content: "\ea44";
 }
+
 .bootstrap-icon-bootstrap:before {
     content: "\e600";
 }
+
 .bootstrap-icon-desktop:before {
     content: "\e601";
 }
+
 .bootstrap-icon-mobile:before {
     content: "\e602";
 }
+
 .bootstrap-icon-tablet:before {
     content: "\e603";
 }
+
 .bootstrap-icon-tablet-horizontal:before {
     content: "\e604";
 }
+
 .bootstrap-icon-btn:before {
     content: "\e605";
 }
+
 .bootstrap-icon-icon:before {
     content: "\e606";
 }
+
 .bootstrap-icon-card:before {
     content: "\e607";
 }
+
 .bootstrap-icon-alert:before {
     content: "\e608";
 }
+
 .bootstrap-icon-badge:before {
     content: "\e609";
 }
+
 .bootstrap-icon-pager:before {
     content: "\e60a";
 }
+
 .bootstrap-icon-pagination:before {
     content: "\e60b";
 }
+
 .bootstrap-icon-breadcrumb:before {
     content: "\e60c";
 }
+
 .bootstrap-icon-template:before {
     content: "\e60d";
 }
+
 .bootstrap-icon-table:before {
     content: "\e60e";
 }
+
 .bootstrap-icon-label:before {
     content: "\e60f";
 }
+
 .bootstrap-icon-image:before {
     content: "\e90d";
 }
+
 .bootstrap-icon-snippet:before {
     content: "\e9d9";
 }
+
 .bootstrap-icon-plus:before {
     content: "\ea0a";
 }
+
 .bootstrap-icon-minus:before {
     content: "\ea0b";
 }
+
 .bootstrap-icon-check:before {
     content: "\ea10";
 }
@@ -443,9 +476,11 @@
 .popper .popper__arrow {
     border-color: #F8F9FA;
 }
+
 .popper[x-placement^="top"] {
     margin-bottom: 5px;
 }
+
 .popper[x-placement^="top"] .popper__arrow {
     border-width: 5px 5px 0 5px;
     border-left-color: transparent;
@@ -456,9 +491,11 @@
     margin-top: 0;
     margin-bottom: 0;
 }
+
 .popper[x-placement^="bottom"] {
     margin-top: 5px;
 }
+
 .popper[x-placement^="bottom"] .popper__arrow {
     border-width: 0 5px 5px 5px;
     top: -5px;
@@ -470,9 +507,11 @@
     border-style: solid;
     border-width: 0 5px 5px 5px;
 }
+
 .popper[x-placement^="right"] {
     margin-left: 5px;
 }
+
 .popper[x-placement^="right"] .popper__arrow {
     border-width: 5px 5px 5px 0;
     border-left-color: transparent;
@@ -483,9 +522,11 @@
     margin-left: 0;
     margin-right: 0;
 }
+
 .popper[x-placement^="left"] {
     margin-right: 5px;
 }
+
 .popper[x-placement^="left"] .popper__arrow {
     border-width: 5px 0 5px 5px;
     border-top-color: transparent;

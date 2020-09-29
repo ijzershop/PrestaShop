@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,15 +20,15 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-
-/** @noinspection PhpUnusedPrivateMethodInspection */
 
 use classes\DynamicTools;
 use classes\models\DynamicEquation;
 use classes\models\FieldFormula;
+
+/** @noinspection PhpUnused */
 
 class DynamicProductFieldFormulasController extends ModuleAdminController
 {
@@ -56,7 +56,8 @@ class DynamicProductFieldFormulasController extends ModuleAdminController
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
         if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(Tools::jsonEncode(array(
-                'error' => $this->module->l('This product is for viewing only!')
+                'error'   => true,
+                'message' => $this->module->l('This product is for viewing only!')
             )));
         }
 
@@ -68,14 +69,17 @@ class DynamicProductFieldFormulasController extends ModuleAdminController
         exit();
     }
 
+    /** @noinspection PhpUnused */
     public function processAddFieldFormula()
     {
         $field_formula = new FieldFormula();
         $field_formula->id_product = $this->id_product;
+        $field_formula->position = FieldFormula::getHighestPosition($field_formula);
         $field_formula->save();
         $this->respond();
     }
 
+    /** @noinspection PhpUnused */
     public function processSaveFieldFormula()
     {
         $id_field_formula = (int)Tools::getValue('id_field_formula');
@@ -85,11 +89,13 @@ class DynamicProductFieldFormulasController extends ModuleAdminController
         $this->respond();
     }
 
+    /** @noinspection PhpUnusedPrivateMethodInspection */
     private function processSaveFormula()
     {
         $id_field_formula = (int)Tools::getValue('id_field_formula');
         $formula = Tools::getValue('formula');
-        $validation = DynamicEquation::checkFormula($this->id_product, $formula);
+        $fields = Tools::getValue('fields');
+        $validation = DynamicEquation::checkFormula($this->id_product, $formula, $fields);
         if ($validation !== true) {
             $this->respond(array('error' => $validation));
         }
@@ -108,6 +114,7 @@ class DynamicProductFieldFormulasController extends ModuleAdminController
         $this->respond();
     }
 
+    /** @noinspection PhpUnused */
     public function processDeleteFieldFormula()
     {
         $id_field_formula = (int)Tools::getValue('id_field_formula');
@@ -116,6 +123,7 @@ class DynamicProductFieldFormulasController extends ModuleAdminController
         $this->respond();
     }
 
+    /** @noinspection PhpUnused */
     public function processSaveOrder()
     {
         $order = Tools::getValue('order');
@@ -127,6 +135,7 @@ class DynamicProductFieldFormulasController extends ModuleAdminController
         $this->respond();
     }
 
+    /** @noinspection PhpUnusedPrivateMethodInspection */
     private function processReloadList()
     {
         exit($this->module->hookDisplayFieldFormulasList($this->id_product));
@@ -137,7 +146,6 @@ class DynamicProductFieldFormulasController extends ModuleAdminController
         $success = $success && (int)!array_key_exists('error', $data);
         $arr = array(
             'success' => $success,
-            'action'  => $this->action
         );
         $arr = array_merge($arr, $data);
         exit(Tools::jsonEncode($arr));

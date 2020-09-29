@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2019 PrestaShop SA
+*  @copyright 2007-2020 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,11 +32,28 @@
     {foreach from=$field->options item=dropdown_option}
         <option data-id="{$dropdown_option->id|intval}"
                 data-label="{$dropdown_option->label|escape:'htmlall':'UTF-8'}"
+                data-color="{$dropdown_option->color|escape:'htmlall':'UTF-8'}"
+                data-thumb="{$dropdown_option->getThumbUrl()|escape:'htmlall':'UTF-8'}"
+                data-image="{$dropdown_option->getImageUrl()|escape:'htmlall':'UTF-8'}"
+                data-has-image="{$dropdown_option->hasImage()|boolval}"
                 value="{$dropdown_option->value|escape:'htmlall':'UTF-8'}"
+                data-secondary_value="{$dropdown_option->secondary_value|escape:'htmlall':'UTF-8'}"
+                class="dp_option dp_option_{$dropdown_option->id|intval}"
                 {if $dropdown_option->is_default}selected="selected"{/if}
         >
             {$dropdown_option->label|escape:'htmlall':'UTF-8'}
         </option>
     {/foreach}
 </select>
-{include file="../tooltip/tooltip.tpl"}
+{include file="module:dynamicproduct/views/templates/hook/tooltip/tooltip.tpl"}
+<div class="dp_dropdown_image_container">
+    <a class="dp_dropdown_image_link" href="#">
+        <img class="dp_dropdown_image"
+             data-pixel="{$field->getPixelUrl()|escape:'htmlall':'UTF-8'}"
+             src="{$field->getPixelUrl()|escape:'htmlall':'UTF-8'}"
+             alt="{l s='Option image' mod='dynamicproduct'}"
+        />
+    </a>
+    <div class="dp_dropdown_color"></div>
+    {include file="module:dynamicproduct/views/templates/hook/fields/components/modal.tpl"}
+</div>

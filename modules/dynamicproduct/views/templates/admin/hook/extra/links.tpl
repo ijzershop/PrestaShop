@@ -1,5 +1,5 @@
 {*
-* 2007-2019 PrestaShop
+* 2007-2020 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,20 +18,24 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2019 PrestaShop SA
+*  @copyright 2007-2020 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <p class="dp_useful_links">
-    <a class="btn btn-link bt-icon" href="{$dp_product_link|escape:'htmlall':'UTF-8'}" target="dp_product_page">
-        <i class="material-icons">visibility</i>
-        {l s='Product Page' mod='dynamicproduct'}
-    </a>
-    <a class="btn btn-link bt-icon" href="{$dp_module_link|escape:'htmlall':'UTF-8'}" target="dp_module_page">
-        <i class="material-icons">settings</i>
-        {l s='Module configuration' mod='dynamicproduct'}
-    </a>
+  <a class="btn btn-link bt-icon" href="{$dp_dev_link|escape:'htmlall':'UTF-8'}" target="tn_dev_page">
+    <i class="material-icons">open_in_new</i>
+      {l s='Open in a new tab' mod='dynamicproduct'}
+  </a>
+  <a class="btn btn-link bt-icon" href="{$dp_product_link|escape:'htmlall':'UTF-8'}" target="tn_product_page">
+    <i class="material-icons">visibility</i>
+      {l s='Product Page' mod='dynamicproduct'}
+  </a>
+  <a class="btn btn-link bt-icon" href="{$dp_module_link|escape:'htmlall':'UTF-8'}" target="dp_module_page">
+    <i class="material-icons">settings</i>
+      {l s='Module configuration' mod='dynamicproduct'}
+  </a>
 </p>
 
 <div style="clear: both"></div>

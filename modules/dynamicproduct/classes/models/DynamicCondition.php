@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -74,7 +74,7 @@ class DynamicCondition extends DynamicObject
         return Db::getInstance()->delete(self::$definition['table'], 'id_product = ' . (int)$id_product);
     }
 
-    public function getVisibilityValues()
+    public function getFieldsVisibilityValues()
     {
         $sql = new DbQuery();
         $sql->from($this->module->name . '_condition_visibility');
@@ -82,5 +82,15 @@ class DynamicCondition extends DynamicObject
         $sql->where('visible = 0');
         $result = Db::getInstance()->executeS($sql);
         return DynamicTools::organizeBy('id_field', $result, 'visible');
+    }
+
+    public function getOptionsVisibilityValues()
+    {
+        $sql = new DbQuery();
+        $sql->from($this->module->name . '_condition_option_visibility');
+        $sql->where('id_condition = ' . (int)$this->id);
+        $sql->where('visible = 0');
+        $result = Db::getInstance()->executeS($sql);
+        return DynamicTools::organizeDoubleBy('id_field', 'id_option', $result, 'visible');
     }
 }

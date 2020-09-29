@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -36,8 +36,15 @@ use Product;
 class DynamicConfig
 {
 
+    /**
+     * List of field types.
+     */
     const TYPE_INT = 1;
+    const TYPE_BOOL = 2;
+    const TYPE_STRING = 3;
     const TYPE_FLOAT = 4;
+    const TYPE_DATE = 5;
+    const TYPE_HTML = 6;
 
     /** @var DynamicProduct $module */
     protected $module;
@@ -47,6 +54,8 @@ class DynamicConfig
     public $required = 0;
     public $exclude = 0;
     public $displayed_price = 0;
+    public $displayed_price_label = null;
+    public $display_dynamic_price = 0;
     public $display_weight = 0;
     public $hide_qty = 0;
     public $multiply_price = 0;
@@ -54,14 +63,16 @@ class DynamicConfig
     public static $definition = array(
         'table'  => 'dynamicproduct_config',
         'fields' => array(
-            'id_product'      => array('type' => self::TYPE_INT),
-            'active'          => array('type' => self::TYPE_INT),
-            'required'        => array('type' => self::TYPE_INT),
-            'exclude'         => array('type' => self::TYPE_INT),
-            'displayed_price' => array('type' => self::TYPE_FLOAT),
-            'display_weight'  => array('type' => self::TYPE_INT),
-            'hide_qty'        => array('type' => self::TYPE_INT),
-            'multiply_price'  => array('type' => self::TYPE_INT)
+            'id_product'            => array('type' => self::TYPE_INT),
+            'active'                => array('type' => self::TYPE_INT),
+            'required'              => array('type' => self::TYPE_INT),
+            'exclude'               => array('type' => self::TYPE_INT),
+            'displayed_price'       => array('type' => self::TYPE_FLOAT),
+            'displayed_price_label' => array('type' => self::TYPE_STRING),
+            'display_dynamic_price' => array('type' => self::TYPE_INT),
+            'display_weight'        => array('type' => self::TYPE_INT),
+            'hide_qty'              => array('type' => self::TYPE_INT),
+            'multiply_price'        => array('type' => self::TYPE_INT)
         )
     );
 
@@ -140,7 +151,7 @@ class DynamicConfig
         foreach ($active_products as $id_product) {
             $products[$id_product] = array(
                 'id_product' => $id_product,
-                'label' => $id_product . ' - ' . Product::getProductName($id_product, null, $id_lang)
+                'label'      => $id_product . ' - ' . Product::getProductName($id_product, null, $id_lang)
             );
         }
         return $products;

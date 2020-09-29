@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -31,9 +31,11 @@ use Context;
 use Db;
 use DbQuery;
 use DynamicProduct;
+use Language;
 use ObjectModel;
 use Tools;
 use Uploader;
+use Validate;
 
 class DynamicObject extends ObjectModel
 {
@@ -68,6 +70,63 @@ class DynamicObject extends ObjectModel
     public function getUrl()
     {
         return $this->module->provider->getDataDirUrl($this->dir);
+    }
+
+    /**
+     * @param $model
+     * @return DynamicObject
+     */
+    public static function getModelClass($model)
+    {
+        $namespace = 'classes\models\\';
+        $class_name = 'Dynamic' . Tools::toCamelCase($model, true);
+        return $namespace . $class_name;
+    }
+
+    /**
+     * @param DynamicObject $object
+     * @return mixed
+     */
+    public static function getValues($object, $fill_lang_values = false)
+    {
+        if ($fill_lang_values) {
+            $object = self::fillLangFields($object);
+        }
+        return json_decode(json_encode($object), true);
+    }
+
+    /**
+     * @param DynamicObject $object
+     * @return DynamicObject
+     * // TODO: remove this
+     */
+    private static function fillLangFields($object)
+    {
+        $languages = Language::getLanguages();
+        $lang_fields = self::getLangFields($object);
+        foreach ($lang_fields as $lang_field) {
+            $value_all_langs = $object->{$lang_field};
+            foreach ($languages as $language) {
+                $id_lang = $language['id_lang'];
+                if (!isset($value_all_langs[$id_lang])) {
+                    $value_all_langs[$id_lang] = '';
+                }
+            }
+        }
+        return $object;
+    }
+
+    protected static function getLangFields($object)
+    {
+        $lang_fields = array();
+        $definition = ObjectModel::getDefinition($object);
+        $fields = $definition['fields'];
+        foreach ($fields as $field_name => $field) {
+            if (self::isLangField($field)) {
+                $lang_fields[] = $field_name;
+            }
+        }
+        return $lang_fields;
     }
 
     public function getPathForCreation($name = 'file')
@@ -106,7 +165,7 @@ class DynamicObject extends ObjectModel
 
     public function getPixelUrl()
     {
-        return $this->getUrl() . 'views/img/pixel.png';
+        return $this->module->getUrl() . 'views/img/pixel.png';
     }
 
     public function delete()
@@ -246,6 +305,30 @@ class DynamicObject extends ObjectModel
         return $objects;
     }
 
+    /**
+     * @param $id_product
+     * @return self[]
+     */
+    public static function getByIdProduct($id_product, $order = false)
+    {
+        $objects = array();
+        $sql = new DbQuery();
+        $sql->from(static::$definition['table']);
+        $sql->where('id_product = ' . (int)$id_product);
+        if ($order) {
+            $sql->orderBy('position ASC');
+        }
+        $rows = Db::getInstance()->executeS($sql, false);
+        while ($row = Db::getInstance()->nextRow($rows)) {
+            $id = $row[static::$definition['primary']];
+            $object = new static($id);
+            if (Validate::isLoadedObject($object)) {
+                $objects[$id] = $object;
+            }
+        }
+        return $objects;
+    }
+
     public static function isLangField($field)
     {
         return isset($field['lang']) && $field['lang'];
@@ -283,7 +366,7 @@ class DynamicObject extends ObjectModel
         $fields = static::$definition['fields'];
         foreach ($fields as $field => $info) {
             $type = $info['type'];
-            if (\in_array((int)$type, array(self::TYPE_INT, self::TYPE_FLOAT), true)) {
+            if (in_array((int)$type, array(self::TYPE_INT, self::TYPE_FLOAT), true)) {
                 $original_value = $this->$field;
                 if ($original_value !== null) {
                     $value = self::formatValue($original_value, $type);

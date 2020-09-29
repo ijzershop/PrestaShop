@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,71 +20,65 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
+use classes\controllers\front\DynamicFrontController;
 use classes\helpers\DynamicCalculatorHelper;
 use classes\helpers\DynamicCustomizationHelper;
+use classes\helpers\FieldsVisibilityHelper;
 use classes\models\DynamicInput;
 use classes\models\DynamicInputField;
 
-class DynamicProductCustomizationModuleFrontController extends ModuleFrontController
+/** @noinspection PhpUnused */
+
+class DynamicProductCustomizationModuleFrontController extends DynamicFrontController
 {
-    /** @var DynamicProduct */
-    public $module;
-    public $action;
-    private $id_product;
-    private $id_attribute;
-
-    public function __construct()
+    /** @noinspection PhpUnused */
+    protected function processSaveCustomization()
     {
-        parent::__construct();
-        $this->context = Context::getContext();
-        $this->action = Tools::getValue('action');
-        $this->id_product = (int)Tools::getValue('id_product');
-        $this->id_attribute = $this->getAttributeID();
-    }
+        $id_customization = (int)Tools::getValue('id_customization');
 
-    private function getAttributeID()
-    {
-        $id_attribute = (int)Tools::getValue('id_attribute');
-        $attributes = Tools::getValue('attributes');
-        if ($attributes) {
-            $id_attribute = $this->module->provider->getAttributeID($this->id_product, $attributes);
-        }
-        return $id_attribute;
-    }
-
-    public function initContent()
-    {
-        $method = 'process' . Tools::toCamelCase($this->action, true);
-        if (method_exists($this, $method)) {
-            return $this->{$method}();
-        }
-        exit();
-    }
-
-    private function processSaveCustomization()
-    {
         $dp_input = (int)Tools::getValue('dp_id_input');
         DynamicInput::deleteCustomization($dp_input);
 
         $fields = Tools::getValue('fields');
-        $input_fields = DynamicInputField::getInputFieldsFromData($this->id_product, $this->id_attribute, $fields);
+        $input_fields = DynamicInputField::getInputFieldsFromData(
+            $this->id_product,
+            $this->id_attribute,
+            $fields,
+            false
+        );
 
         $calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
 
         try {
-            $calculator_helper->checkFormulas($this->id_product, $this->id_attribute, $input_fields);
+            $calculator_helper->checkFormulas($this->id_product, $input_fields);
         } catch (Exception $e) {
             $this->respond(array(
                 'error'   => 1,
                 'message' => $e->getMessage()
             ));
         }
+
+        $visibility_helper = new FieldsVisibilityHelper($this->module, $this->context);
+        $fields_visibility = array();
+        try {
+            $fields_visibility = $visibility_helper->getFieldsVisibility(
+                $this->id_product,
+                $this->id_attribute,
+                $input_fields
+            );
+        } catch (Exception $e) {
+            $this->respond(array(
+                'error'   => 1,
+                'message' => $e->getMessage()
+            ));
+        }
+        $visibility_helper->setExcludedFields($input_fields, $fields_visibility);
 
         $dp_cart = (int)Tools::getValue('dp_cart', 0);
         $id_cart = $dp_cart ?: (int)$this->module->handler->addCart();
@@ -94,12 +88,14 @@ class DynamicProductCustomizationModuleFrontController extends ModuleFrontContro
 
         $customization_helper = new DynamicCustomizationHelper($this->module, $this->context);
 
-        $id_customization = $customization_helper->saveCustomization(
-            $this->id_product,
-            $this->id_attribute,
-            $id_address_delivery,
-            $id_cart
-        );
+        if (!$id_customization) {
+            $id_customization = $customization_helper->saveCustomization(
+                $this->id_product,
+                $this->id_attribute,
+                $id_address_delivery,
+                $id_cart
+            );
+        }
 
         $price_equation_result = $calculator_helper->getPriceEquationResult(
             $this->id_product,
@@ -136,18 +132,56 @@ class DynamicProductCustomizationModuleFrontController extends ModuleFrontContro
         $this->respond(array(
             'id_input'         => (int)$dynamic_input->id,
             'id_attribute'     => $this->id_attribute,
-            'id_customization' => $id_customization
+            'id_module'        => $this->module->id,
+            'id_customization' => $id_customization,
         ));
     }
 
-    public function respond($data = array(), $success = 1)
+    /** @noinspection PhpUnused */
+    public function processSaveInput()
     {
-        $success = $success && (int)!array_key_exists('error', $data);
-        $arr = array(
-            'success' => $success,
-            'action'  => $this->action
+        if (!$this->module->provider->isAdmin()) {
+            $this->respond(array(
+                'error'   => true,
+                'message' => 'Forbidden'
+            ));
+        }
+
+        $id_input = (int)Tools::getValue('dp_id_input');
+        $dynamic_input = new DynamicInput($id_input);
+
+        $fields = Tools::getValue('fields');
+        $input_fields = DynamicInputField::getInputFieldsFromData(
+            $this->id_product,
+            $this->id_attribute,
+            $fields,
+            false
         );
-        $arr = array_merge($arr, $data);
-        exit(Tools::jsonEncode($arr));
+
+        $visibility_helper = new FieldsVisibilityHelper($this->module, $this->context);
+        $fields_visibility = array();
+        try {
+            $fields_visibility = $visibility_helper->getFieldsVisibility(
+                $this->id_product,
+                $this->id_attribute,
+                $input_fields
+            );
+        } catch (Exception $e) {
+            $this->respond(array(
+                'error'   => 1,
+                'message' => $e->getMessage()
+            ));
+        }
+        $visibility_helper->setExcludedFields($input_fields, $fields_visibility);
+
+        $customization_helper = new DynamicCustomizationHelper($this->module, $this->context);
+
+        $input_fields_old = DynamicInputField::getByIdInput($dynamic_input->id);
+        foreach ($input_fields_old as $input_field) {
+            $input_field->delete();
+        }
+
+        $customization_helper->saveInputFields($input_fields, $dynamic_input->id);
+        $this->respond();
     }
 }

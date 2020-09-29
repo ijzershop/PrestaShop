@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2019 PrestaShop SA
+*  @copyright 2007-2020 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -34,4 +34,4 @@
           rows="5"
           {if $field->settings->max}maxlength="{$field->settings->max|intval}"{/if}
 >{$field->value|escape:'htmlall':'UTF-8'}</textarea>
-{include file="../tooltip/text-area-tooltip.tpl"}
+{include file="module:dynamicproduct/views/templates/hook/tooltip/text-area-tooltip.tpl"}

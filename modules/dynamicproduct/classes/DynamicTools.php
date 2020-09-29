@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -38,14 +38,13 @@ class DynamicTools
     public static $name;
     public static $context;
     public static $languages;
-    public static $id_special;
 
     public static function getCallingFile()
     {
         $trace = debug_backtrace(false);
         $file = '';
-        if (isset($trace[2])) {
-            $file = $trace[2]['file'];
+        if (isset($trace[1])) {
+            $file = $trace[1]['file'];
         }
         return $file;
     }
@@ -79,6 +78,17 @@ class DynamicTools
     public static function isDemoMode()
     {
         return defined('_DP_DEMO_') && _DP_DEMO_;
+    }
+
+    public static function isModuleDevMode()
+    {
+        return \defined('_PS_MODULE_DEV_') && _PS_MODULE_DEV_;
+    }
+
+    public static function isSuperAdmin()
+    {
+        $context = self::getContext();
+        return (int)$context->employee->id_profile === 1;
     }
 
     public static function getDir()
@@ -138,7 +148,6 @@ class DynamicTools
 
     public static function checkAddress()
     {
-        self::getModule()->hookActionCartSave();
         $context = self::getContext();
         $id_cart = $context->cart ? $context->cart->id : 0;
         if (!$id_cart) {
@@ -240,11 +249,6 @@ class DynamicTools
         );
     }
 
-    public static function convertToVariableName($name)
-    {
-        return preg_replace('/[^a-z0-9]+/i', '_', $name);
-    }
-
     public static function removeAnchor($product_url)
     {
         return preg_replace('/#.*/', '', $product_url);
@@ -253,5 +257,43 @@ class DynamicTools
     public static function canUseCache()
     {
         return !count($_POST);
+    }
+
+    public static function formatPrice($price)
+    {
+        $context = self::getContext();
+        if (method_exists($context, 'getCurrentLocale')) {
+            $locale = $context->getCurrentLocale();
+            return $locale->formatPrice($price, $context->currency->iso_code);
+        }
+
+        return Tools::displayPrice($price);
+    }
+
+    /**
+     * Get contents of a URL and cache it
+     *
+     * @param string $url address to read from
+     * @param float $minutes interval between refreshes, false => no cache
+     *
+     * @return string content of the URL
+     * @noinspection PhpUnused
+     */
+    public static function getURL($url, $minutes = 60)
+    {
+        $dynamic_product = self::getModule();
+        $cache = $dynamic_product->provider->getDataFile('cache/' . md5($url) . '.cache');
+        $should_use_cache = (bool)$minutes;
+        if ($should_use_cache) {
+            if (file_exists($cache)) {
+                $is_cache_valid = filemtime($cache) > time() - 60 * (float)$minutes;
+                if ($is_cache_valid) {
+                    return Tools::file_get_contents($cache);
+                }
+            }
+        }
+        $content = Tools::file_get_contents($url);
+        file_put_contents($cache, $content);
+        return $content;
     }
 }

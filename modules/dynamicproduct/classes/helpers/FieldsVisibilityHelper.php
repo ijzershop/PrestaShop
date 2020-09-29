@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -54,17 +54,7 @@ class FieldsVisibilityHelper
 
     private function mergeVisibility($attribute_visibility, array $conditions_visibility)
     {
-        $visibility = $attribute_visibility + $conditions_visibility;
-        $ids = array_keys($visibility);
-        foreach ($ids as $id_field) {
-            if ($this->isHidden($attribute_visibility, $id_field) ||
-                $this->isHidden($conditions_visibility, $id_field)) {
-                $visibility[$id_field] = 0;
-            } else {
-                unset($visibility[$id_field]);
-            }
-        }
-        return $visibility;
+        return $attribute_visibility + $conditions_visibility;
     }
 
     public function getMetConditions($id_product, $input_fields)
@@ -84,11 +74,22 @@ class FieldsVisibilityHelper
             if ($this->isHidden($fields_visibility, $input_field->id_field)) {
                 $input_field->setExcluded();
             }
+            if ($this->hasHiddenOptions($fields_visibility, $input_field->id_field)) {
+                $input_field->setExcludedOptions($fields_visibility[$input_field->id_field]);
+                if ($input_field->type === _DP_DROPDOWN_ && $input_field->isSelectedOptionExcluded()) {
+                    $input_field->selectFirstVisibleOption();
+                }
+            }
         }
     }
 
     private function isHidden($visibility, $id_field)
     {
         return isset($visibility[$id_field]) && (int)$visibility[$id_field] === 0;
+    }
+
+    private function hasHiddenOptions($visibility, $id_field)
+    {
+        return isset($visibility[$id_field]) && is_array($visibility[$id_field]);
     }
 }

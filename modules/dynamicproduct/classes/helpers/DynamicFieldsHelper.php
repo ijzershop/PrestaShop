@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -47,20 +47,32 @@ class DynamicFieldsHelper
         $this->context = $context;
     }
 
-    public function addFields($id_product, $id_attribute, &$fields)
+    public function addFields($id_product, $id_attribute, &$fields, $load_all)
     {
-        $dynamic_fields = DynamicField::getFieldsByIdProduct($id_product);
+        $id_lang = $this->context->language->id;
+        $dynamic_fields = DynamicField::getFieldsByIdProduct($id_product, $id_lang);
 
         foreach ($dynamic_fields as $dynamic_field) {
-            if (in_array((int)$dynamic_field->type, array(_DP_PRICE_, _DP_FIXED_), true)) {
-                $value = $this->getCombinationValue($id_product, $id_attribute, $dynamic_field);
+            $field_name = $dynamic_field->name;
+            if (!isset($fields[$field_name])) {
                 $this->addField($fields, array(
                     'id_product' => (int)$id_product,
                     'id_field'   => (int)$dynamic_field->id,
                     'name'       => $dynamic_field->name,
-                    'value'      => (float)$value,
+                    'value'      => $dynamic_field->getInitialValue(),
                     'type'       => $dynamic_field->type,
                 ));
+            }
+            $is_dynamic_value = in_array((int)$dynamic_field->type, array(_DP_PRICE_, _DP_FIXED_, _DP_PHP_), true);
+
+            if (empty($fields[$field_name]['value']) && $is_dynamic_value) {
+                $fields[$field_name]['value'] = $dynamic_field->getInitialValue();
+            }
+
+            $value = $this->getCombinationValue($id_product, $id_attribute, $dynamic_field);
+
+            if ($value !== null && ($load_all || $is_dynamic_value)) {
+                $fields[$field_name]['value'] = $value;
             }
         }
     }
@@ -96,24 +108,48 @@ class DynamicFieldsHelper
         }
     }
 
+    public function addExtraFields($id_product, $id_attribute, &$fields)
+    {
+        $product_price = $this->module->provider->getProductPrice($id_product, $id_attribute);
+
+        $this->addField($fields, array(
+            'id_product' => (int)$id_product,
+            'id_field'   => 0,
+            'name'       => 'product_price',
+            'value'      => $product_price,
+            'type'       => 0,
+            'hidden'     => true
+        ));
+
+        $product_weight = $this->module->provider->getProductWeight($id_product, $id_attribute);
+
+        $this->addField($fields, array(
+            'id_product' => (int)$id_product,
+            'id_field'   => 0,
+            'name'       => 'product_weight',
+            'value'      => $product_weight,
+            'type'       => 0,
+            'hidden'     => true
+        ));
+    }
+
     private function getCombinationValue($id_product, $id_attribute, $dynamic_field)
     {
-        $value = $dynamic_field->init;
         $combination_value = DynamicCombinationValue::getCombinationValue(
             $id_product,
             $id_attribute,
             $dynamic_field->id
         );
         if (Validate::isLoadedObject($combination_value)) {
-            $value = $combination_value->value;
+            return $combination_value->value;
         }
-        return $value;
+        return null;
     }
 
     private function addField(&$fields, $field)
     {
         $name = $field['name'];
-        if (isset($fields['name'])) {
+        if (isset($fields[$name])) {
             $fields[$name] = array_merge($fields[$name], $field);
         } else {
             $fields[$name] = $field;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -31,6 +31,7 @@ use classes\models\DynamicInputField;
 
 class DropdownInputField extends DynamicInputField
 {
+
     public function displayValue()
     {
         if (!count($this->selected_options)) {
@@ -39,7 +40,7 @@ class DropdownInputField extends DynamicInputField
 
         $id_dropown_option = $this->getFirstOption();
         if (!$id_dropown_option) {
-            return null;
+            return $this->value_formatted;
         }
 
         return (new DynamicDropdownOption($id_dropown_option, $this->id_lang))->label;

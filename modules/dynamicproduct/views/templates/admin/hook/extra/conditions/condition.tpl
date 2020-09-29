@@ -1,5 +1,5 @@
 {*
-* 2007-2019 PrestaShop
+* 2007-2020 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2019 PrestaShop SA
+*  @copyright 2007-2020 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,7 +33,7 @@
         <input type="text" value="{$dp_condition->name|escape:'htmlall':'UTF-8'}" placeholder="{l s='Name (optional)' mod='dynamicproduct'}">
     </div>
 
-    {$dp_condition_visibility = $dp_condition->getVisibilityValues()}
+    {$dp_condition_visibility = $dp_condition->getFieldsVisibilityValues()}
     <div class="dp_equation_fields">
         <label class="dp_condition_label">{l s='Visibility' mod='dynamicproduct'}</label>
         {foreach from=$dp_fields key=id_field item=field}
@@ -47,11 +47,22 @@
             {/if}
 
             <a href="#"
+               title="{l s='Click to toggle field visibility' mod='dynamicproduct'}"
                data-id_field="{$field->id|intval}"
                data-value="{$value|intval}"
                class="dp_equation_field dp_condition_field dp_condition_field_{$field->id|intval} {$field_visibility_class|escape:'htmlall':'UTF-8'}"
             >
                 {$field->name|escape:'htmlall':'UTF-8'}
+                {if isset($dp_field_types[$field->type]['options']) && $dp_field_types[$field->type]['options']}
+                    <span class="dp_condition_options_btn"
+                          title="{l s='Configure options visibility' mod='dynamicproduct'}"
+                          data-id_condition="{$dp_condition->id|intval}"
+                          data-id_field="{$field->id|intval}"
+                    >
+                        <i class="material-icons">settings</i>
+                    </span>
+                    <div class="dp_conditions_options_dialog dp_style"></div>
+                {/if}
             </a>
         {/foreach}
     </div>

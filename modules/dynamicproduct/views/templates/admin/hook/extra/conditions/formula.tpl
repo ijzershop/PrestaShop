@@ -1,5 +1,5 @@
 {*
-* 2007-2019 PrestaShop
+* 2007-2020 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2019 PrestaShop SA
+*  @copyright 2007-2020 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,7 +27,7 @@
 <div id="dp_condition_equation" class="dp_dynamicproduct_equation dp_style">
     <div class="dp_formula_container dp_condition_container">
         <span class="dp_equation_error"></span>
-        <textarea class="dp_equation_content" id="dp_condition_formula">&nbsp;</textarea>
+        <textarea class="dp_equation_content" id="dp_condition_formula"></textarea>
         <div class="dp_equation_tools">
             <a href="#" class="dp_equation_tool">=</a>
             <a href="#" data-sign="!=" class="dp_equation_tool" title="{l s='not equal' mod='dynamicproduct'}">≠</a>

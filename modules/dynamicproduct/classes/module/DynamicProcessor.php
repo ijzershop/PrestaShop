@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -28,6 +28,7 @@ namespace classes\module;
 
 use classes\DynamicTools;
 use classes\models\DynamicField;
+use classes\models\DynamicFieldGroup;
 use classes\models\DynamicUnit;
 use Context;
 use DynamicProduct;
@@ -52,7 +53,7 @@ class DynamicProcessor
         $request = array_merge($_GET, $_POST);
         $keys = array_keys($request);
         foreach ($keys as $key) {
-            if (preg_match('/^submit_/', $key)) {
+            if (strpos($key, 'submit_') === 0) {
                 // return current action
                 return str_replace('submit_', '', $key);
             }
@@ -87,6 +88,27 @@ class DynamicProcessor
             $unit = new DynamicUnit($id_unit);
             $unit->delete();
         }
+    }
+
+    public function processAddFieldGroup()
+    {
+        $field_group = new DynamicFieldGroup();
+        $field_group->saveFromPost();
+    }
+
+    public function processEditFieldGroup()
+    {
+        $id_field_group = (int)Tools::getValue('id_field_group');
+        $field_group = new DynamicFieldGroup($id_field_group);
+        $field_group->saveFromPost();
+        DynamicTools::redirect();
+    }
+
+    public function processDeleteFieldGroup()
+    {
+        $id_field_group = (int)Tools::getValue('id_field_group');
+        $field_group = new DynamicFieldGroup($id_field_group);
+        $field_group->delete();
     }
 
     public function processRemoveFavoriteField()

@@ -1,6 +1,6 @@
 <?php
 /**
-* 2010-2019 Tuni-Soft
+* 2010-2020 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -20,11 +20,9 @@
 * for more information.
 *
 * @author    Tuni-Soft
-* @copyright 2010-2019 Tuni-Soft
+* @copyright 2010-2020 Tuni-Soft
 * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 */
-
-use classes\models\DynamicInput;
 
 class Carrier extends CarrierCore
 {
@@ -36,6 +34,7 @@ class Carrier extends CarrierCore
         $cart = null,
         &$error = array()
     ) {
+        Module::getInstanceByName('dynamicproduct');
         if (!Module::isEnabled('dynamicproduct')) {
             return parent::getAvailableCarrierList(
                 $product,
@@ -50,10 +49,16 @@ class Carrier extends CarrierCore
         if ($cart === null) {
             $cart = Context::getContext()->cart;
         }
-        $sizes = DynamicInput::getMaxSizes($cart->id);
-        $product->width = $sizes['width'];
-        $product->height = $sizes['height'];
-        $product->depth = $sizes['depth'];
+        $sizes = classes\models\DynamicInput::getMaxSizes($cart->id);
+        if ((float)$sizes['width']) {
+            $product->width = $sizes['width'];
+        }
+        if ((float)$sizes['height']) {
+            $product->height = $sizes['height'];
+        }
+        if ((float)$sizes['depth']) {
+            $product->depth = $sizes['depth'];
+        }
         return parent::getAvailableCarrierList($product, $id_warehouse, $id_address_delivery, $id_shop, $cart, $error);
     }
 }

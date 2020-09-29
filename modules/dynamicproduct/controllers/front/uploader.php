@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,38 +20,22 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
+use classes\controllers\front\DynamicFrontController;
 use classes\helpers\FileHelper;
 use classes\models\DynamicField;
 
-class DynamicProductUploaderModuleFrontController extends ModuleFrontController
+/** @noinspection PhpUnused */
+
+class DynamicProductUploaderModuleFrontController extends DynamicFrontController
 {
-    /** @var DynamicProduct */
-    public $module;
-    public $action;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->context = Context::getContext();
-        $this->action = Tools::getValue('action');
-    }
-
-    public function initContent()
-    {
-        $method = 'process' . Tools::toCamelCase($this->action, true);
-        if (method_exists($this, $method)) {
-            return $this->{$method}();
-        }
-        exit();
-    }
-
-    private function processUploadImage()
+    /** @noinspection PhpUnused */
+    protected function processUploadImage()
     {
         $id_field = (int)Tools::getValue('id_field');
 
@@ -127,7 +111,7 @@ class DynamicProductUploaderModuleFrontController extends ModuleFrontController
         $folder_url = $this->module->provider->getDataDirUrl('upload/');
 
         ImageManager::resize($save_path, $image, null, null, $extension);
-        ImageManager::resize($save_path, $thumb, 29, 29, $extension);
+        ImageManager::resize($save_path, $thumb, 256, 256, $extension);
 
         $this->respond(array(
             'id_field' => $id_field,
@@ -138,7 +122,8 @@ class DynamicProductUploaderModuleFrontController extends ModuleFrontController
         ));
     }
 
-    private function processUploadFile()
+    /** @noinspection PhpUnused */
+    protected function processUploadFile()
     {
         $id_field = (int)Tools::getValue('id_field');
 
@@ -177,7 +162,7 @@ class DynamicProductUploaderModuleFrontController extends ModuleFrontController
             $this->respond(array(
                 'id_field' => $id_field,
                 'error' =>
-                    $this->module->l('This image is too big, the maximum allowed size is')
+                    $this->module->l('This file is too big, the maximum allowed size is')
                     . ' ' . $options->max_size . ' ' . $this->module->l('MB')
             ));
         }
@@ -191,7 +176,7 @@ class DynamicProductUploaderModuleFrontController extends ModuleFrontController
 
         $file = $file_dir . $filename . '.' . $extension;
 
-        if (rename($file_dir . $upload['name'], $file)) {
+        if (rename($upload['save_path'], $file)) {
             $data = array(
                 'id_field' => $id_field,
                 'type'     => 'file',
@@ -202,7 +187,7 @@ class DynamicProductUploaderModuleFrontController extends ModuleFrontController
             if ($file_helper->isImage($file)) {
                 $folder_url = $this->module->provider->getDataDirUrl('upload/');
                 $thumb = $file_dir . $filename . '-thumb.jpg';
-                ImageManager::resize($file, $thumb, 29, 29, $extension);
+                ImageManager::resize($file, $thumb, 256, 256, $extension);
                 $data['thumb_url'] = $folder_url . basename($thumb);
                 $data['image_url'] = $folder_url . basename($file);
             }
@@ -213,16 +198,5 @@ class DynamicProductUploaderModuleFrontController extends ModuleFrontController
                 'error' => $this->module->l('The upload could not be completed')
             ));
         }
-    }
-
-    public function respond($data = array(), $success = 1)
-    {
-        $success = $success && (int)!array_key_exists('error', $data);
-        $arr = array(
-            'success' => $success,
-            'action'  => $this->action
-        );
-        $arr = array_merge($arr, $data);
-        exit(Tools::jsonEncode($arr));
     }
 }

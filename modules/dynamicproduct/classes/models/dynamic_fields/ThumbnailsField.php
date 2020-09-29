@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -31,8 +31,21 @@ use classes\models\DynamicThumbnailsOption;
 
 class ThumbnailsField extends DynamicField
 {
+    /** @var DynamicThumbnailsOption[] */
+    public $options;
+
     public function getOptions()
     {
         return DynamicThumbnailsOption::getThumbnailsOptionsByIdField($this->id, $this->id_lang);
+    }
+
+    public function getInitialValue()
+    {
+        foreach ($this->options as $option) {
+            if ($option->is_default) {
+                return $option->value;
+            }
+        }
+        return 0;
     }
 }

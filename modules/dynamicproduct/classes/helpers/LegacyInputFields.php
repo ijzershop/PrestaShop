@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -58,6 +58,7 @@ class LegacyInputFields
                     $input_field->label = $dynamic_field->label;
                     $input_field->name = $field_name;
                     $input_field->value = $value;
+                    $input_field->secondary_value = $value;
                     $input_field->visible = true;
                     $input_field->setFormattedValue();
                     $input_fields[] = $input_field;

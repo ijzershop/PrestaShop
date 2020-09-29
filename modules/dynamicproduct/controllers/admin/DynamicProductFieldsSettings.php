@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,13 +20,14 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
 use classes\DynamicTools;
+use classes\factory\DynamicFieldFactory;
 use classes\helpers\TranslationHelper;
 use classes\models\DynamicField;
 use classes\models\DynamicUnitValue;
@@ -76,7 +77,8 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
         if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(Tools::jsonEncode(array(
-                'error' => $this->module->l('This product is for viewing only!')
+                'error'   => true,
+                'message' => $this->module->l('This product is for viewing only!')
             )));
         }
 
@@ -90,7 +92,7 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
 
     private function processGetDialogContent()
     {
-        $dynamic_field = new DynamicField($this->id_field);
+        $dynamic_field = DynamicFieldFactory::create(0, $this->id_field);
         $type = (int)$dynamic_field->type;
         if (isset(self::$types[$type])) {
             $type_name = self::$types[$type];
@@ -263,6 +265,12 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
 
     private function processSaveHtmlSettings()
     {
+        if (DynamicTools::isDemoMode() && !DynamicTools::isSuperAdmin()) {
+            $this->respond(array(
+                'error'   => true,
+                'message' => 'This function is not available in the demo mode!',
+            ));
+        }
         $options = Tools::getValue('options');
         $descriptions = $options['description'];
 
@@ -330,6 +338,16 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
         $this->respond();
     }
 
+    private function processSaveThumbnailSize()
+    {
+        $value = (int)Tools::getValue('value');
+        $options = DynamicUnitValue::getUnitValue($this->id_field);
+        $options->id_field = $this->id_field;
+        $options->max_size = $value;
+        $options->save();
+        $this->respond();
+    }
+
     private function processSaveFieldDescription()
     {
         $descriptions = Tools::getValue('description');
@@ -348,7 +366,6 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
         $success = $success && (int)!array_key_exists('error', $data);
         $arr = array(
             'success' => $success,
-            'action'  => $this->action
         );
         $arr = array_merge($arr, $data);
         exit(Tools::jsonEncode($arr));

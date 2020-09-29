@@ -1,5 +1,5 @@
 {**
-* 2010-2019 Tuni-Soft
+* 2010-2020 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author
-*  @copyright 2014-2015
+*  @copyright 2014-2020
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
@@ -29,7 +29,7 @@
 		<tbody>
 			<tr>
 				<td class="fixed-width-md center"><span class="title_box">{l s='Value' mod='dynamicproduct'}</span></td>
-				<td class="center">
+				<td class="center dp_lang_column">
 					<div class="dp_group dp_input_lang">
 						<div class="dp_lang_container">
 							{foreach from=$dp_languages item=lang}
@@ -42,9 +42,9 @@
 					</div>
 				</td>
 			</tr>
-			<tr>
+			<tr class="dp_row_tall">
 				<td class="fixed-width-md center"><span class="title_box">{l s='Description' mod='dynamicproduct'}</span></td>
-				<td class="center">
+				<td class="center dp_lang_column">
 					<div class="dp_group dp_input_lang">
 						<div class="dp_lang_container">
 							{foreach from=$dp_languages item=lang}

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -37,6 +37,7 @@ class DynamicThumbnailsOption extends DynamicObject
 
     public $id_field;
     public $value;
+    public $secondary_value;
     public $is_default;
     public $position;
     public $color;
@@ -54,13 +55,14 @@ class DynamicThumbnailsOption extends DynamicObject
         'complement' => 'is_default',
         'multilang'  => true,
         'fields'     => array(
-            'id_field'   => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'value'      => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'color'      => array('type' => self::TYPE_STRING),
-            'is_default' => array('type' => self::TYPE_INT),
-            'position'   => array('type' => self::TYPE_INT),
+            'id_field'        => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'value'           => array('type' => self::TYPE_STRING),
+            'secondary_value' => array('type' => self::TYPE_STRING),
+            'color'           => array('type' => self::TYPE_STRING),
+            'is_default'      => array('type' => self::TYPE_INT),
+            'position'        => array('type' => self::TYPE_INT),
             /* Lang fields */
-            'label'      => array(
+            'label'           => array(
                 'type'     => self::TYPE_STRING,
                 'lang'     => true,
                 'required' => false,
@@ -109,10 +111,15 @@ class DynamicThumbnailsOption extends DynamicObject
         $path = $this->getThumbPath('id');
         if (!$path) {
             $image_path = $this->getPath('id');
-            ImageManager::resize($image_path, $this->getDir() . $this->id . '-thumb.jpg', _DP_THUMB_, _DP_THUMB_);
-            $path = $this->getThumbPath('id');
+            if ($image_path) {
+                ImageManager::resize($image_path, $this->getDir() . $this->id . '-thumb.jpg', _DP_THUMB_, _DP_THUMB_);
+                $path = $this->getThumbPath('id');
+            }
         }
-        return $this->getUrl() . basename($path);
+        if ($path) {
+            return $this->getUrl() . basename($path);
+        }
+        return $this->getPixelUrl();
     }
 
     public function getImage()

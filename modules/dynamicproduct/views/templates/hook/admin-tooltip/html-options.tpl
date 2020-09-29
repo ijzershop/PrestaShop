@@ -1,5 +1,5 @@
 {**
-* 2010-2019 Tuni-Soft
+* 2010-2020 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author
-*  @copyright 2014-2015
+*  @copyright 2014-2020
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
@@ -29,7 +29,7 @@
 		{foreach from=$dp_languages item=lang}
 		<div class="dp_html_area">
 			<label><img alt="({$lang.iso_code|escape:'htmlall':'UTF-8'})" class="dp_flag" title="{$lang.name|escape:'htmlall':'UTF-8'}" src="{$ps_base_url|escape:'htmlall':'UTF-8'}img/l/{$lang.id_lang|intval}.jpg"/> {$lang.name}</label>
-			<textarea class="rte" name="options[description][{$lang.id_lang|intval}]">{include file="string:{$field->description[{$lang.id_lang|intval}]}" inline}</textarea>
+			<textarea class="rte" name="options[description][{$lang.id_lang|intval}]">{$field->description[{$lang.id_lang|intval}]}{* html filled by admin *}</textarea>
 		</div>
 		{/foreach}
 	</div>

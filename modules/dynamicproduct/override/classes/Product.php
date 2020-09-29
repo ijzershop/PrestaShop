@@ -1,6 +1,6 @@
 <?php
 /**
-* 2010-2019 Tuni-Soft
+* 2010-2020 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -20,11 +20,9 @@
 * for more information.
 *
 * @author    Tuni-Soft
-* @copyright 2010-2019 Tuni-Soft
+* @copyright 2010-2020 Tuni-Soft
 * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 */
-
-use classes\models\DynamicConfig;
 
 class Product extends ProductCore
 {
@@ -35,10 +33,10 @@ class Product extends ProductCore
         $module = Module::getInstanceByName('dynamicproduct');
         if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
             $id_product = (int)$row['id_product'];
-            $is_active = DynamicConfig::isActive($id_product);
-            if ($is_active) {
-                $displayed_price = DynamicConfig::getDisplayedPrice($id_product);
-                if ($displayed_price) {
+            $dynamic_config = new classes\models\DynamicConfig($id_product);
+            if ($dynamic_config->active) {
+                $displayed_price = classes\models\DynamicConfig::getDisplayedPrice($id_product);
+                if ($displayed_price || $dynamic_config->display_dynamic_price) {
                     $module->calculator->assignProductPrices($row, $displayed_price, $result);
                 }
             }

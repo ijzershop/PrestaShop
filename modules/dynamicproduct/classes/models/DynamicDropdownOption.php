@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -28,14 +28,16 @@ namespace classes\models;
 
 use Db;
 use DbQuery;
+use ImageManager;
 use Validate;
 
 class DynamicDropdownOption extends DynamicObject
 {
-    public $dir = 'dropdown';
+    public $dir = 'images/dropdown';
     public $id_field;
 
     public $value;
+    public $secondary_value;
     public $is_default;
     public $position;
     public $color;
@@ -55,13 +57,14 @@ class DynamicDropdownOption extends DynamicObject
         'complement' => 'is_default',
         'multilang'  => true,
         'fields'     => array(
-            'id_field'   => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'value'      => array('type' => self::TYPE_STRING),
-            'color'      => array('type' => self::TYPE_STRING),
-            'is_default' => array('type' => self::TYPE_INT),
-            'position'   => array('type' => self::TYPE_INT),
+            'id_field'        => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'value'           => array('type' => self::TYPE_STRING),
+            'secondary_value' => array('type' => self::TYPE_STRING),
+            'color'           => array('type' => self::TYPE_STRING),
+            'is_default'      => array('type' => self::TYPE_INT),
+            'position'        => array('type' => self::TYPE_INT),
             /* Lang fields */
-            'label'      => array(
+            'label'           => array(
                 'type'     => self::TYPE_STRING,
                 'lang'     => true,
                 'required' => false,
@@ -104,6 +107,11 @@ class DynamicDropdownOption extends DynamicObject
         return self::$dropdown_options[$key] = new self($id_dropdown_option, $id_lang);
     }
 
+    public function hasImage()
+    {
+        return $this->getPath('id');
+    }
+
     public function getThumb()
     {
         return $this->getThumbPath('id');
@@ -111,7 +119,15 @@ class DynamicDropdownOption extends DynamicObject
 
     public function getThumbUrl()
     {
-        if ($path = $this->getThumbPath('id')) {
+        $path = $this->getThumbPath('id');
+        if (!$path) {
+            $image_path = $this->getPath('id');
+            if ($image_path) {
+                ImageManager::resize($image_path, $this->getDir() . $this->id . '-thumb.jpg', _DP_THUMB_, _DP_THUMB_);
+                $path = $this->getThumbPath('id');
+            }
+        }
+        if ($path) {
             return $this->getUrl() . basename($path);
         }
         return $this->getPixelUrl();

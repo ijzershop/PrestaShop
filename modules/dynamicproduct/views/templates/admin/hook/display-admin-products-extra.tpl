@@ -1,5 +1,5 @@
 {**
-* 2010-2019 Tuni-Soft
+* 2010-2020 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author
-*  @copyright 2014-2015
+*  @copyright 2014-2020
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
@@ -35,68 +35,120 @@
 
 {include file="./extra/links.tpl"}
 
-<div id="dp_tabs">
+<div id="dp_tabs" style="display: none;">
 
-    <ul>
-        <li><a href="#dp_tab_product_settings">{l s='Settings' mod='dynamicproduct'}</a></li>
-        <li><a href="#dp_tab_price_formula">{l s='Price Formula' mod='dynamicproduct'}</a></li>
-        <li><a href="#dp_tab_weight_formula">{l s='Weight Formula' mod='dynamicproduct'}</a></li>
-        <li><a href="#dp_tab_quantity_formula">{l s='Quantity Formula' mod='dynamicproduct'}</a></li>
-        <li><a href="#dp_tab_fields">{l s='Fields' mod='dynamicproduct'}</a></li>
-        <li id="dp_combinations_tab_btn"><a href="#dp_tab_combinations">{l s='Combinations' mod='dynamicproduct'}</a></li>
-        <li id="dp_visibility_tab_btn"><a href="#dp_tab_visibility">{l s='Visibility' mod='dynamicproduct'}</a></li>
-        <li><a href="#dp_tab_conditions">{l s='Conditions' mod='dynamicproduct'}</a></li>
-        <li><a href="#dp_tab_field_formulas">{l s='Field Formulas' mod='dynamicproduct'}</a></li>
-        <li><a href="#dp_tab_proportions">{l s='Proportions' mod='dynamicproduct'}</a></li>
-    </ul>
+  <ul>
+    <li>
+      <a href="#dp_tab_product_settings">
+        <i class="material-icons">settings</i> {l s='Settings' mod='dynamicproduct'}
+      </a>
+    </li>
+    <li>
+        <a href="#dp_tab_fields">
+            <i class="material-icons">list</i> {l s='Fields' mod='dynamicproduct'}
+        </a>
+    </li>
+    <li>
+        <a href="#dp_tab_formulas">
+            <i class="material-icons">functions</i> {l s='Formulas' mod='dynamicproduct'}
+        </a>
+    </li>
+    <li id="dp_combinations_tab_btn">
+        <a href="#dp_tab_combinations">
+            <i class="material-icons">settings</i> {l s='Combinations' mod='dynamicproduct'}
+        </a>
+    </li>
+    <li id="dp_visibility_tab_btn">
+        <a href="#dp_tab_visibility">
+            <i class="material-icons">visibility</i> {l s='Visibility' mod='dynamicproduct'}
+        </a>
+    </li>
+    <li>
+        <a href="#dp_tab_conditions">
+            <i class="material-icons">call_split</i> {l s='Conditions' mod='dynamicproduct'}
+        </a>
+    </li>
+    <li>
+        <a href="#dp_tab_field_formulas">
+            <i class="material-icons">functions</i> {l s='Field Formulas' mod='dynamicproduct'}
+        </a>
+    </li>
+    <li>
+        <a href="#dp_tab_proportions">
+            <i class="material-icons">repeat</i> {l s='Proportions' mod='dynamicproduct'}
+        </a>
+    </li>
+    <li>
+        <a href="#dp_tab_intervals">
+            <i class="material-icons">timeline</i> {l s='Intervals' mod='dynamicproduct'}
+        </a>
+    </li>
+    <li>
+        <a href="#dp_tab_grids">
+            <i class="material-icons">view_comfy</i> {l s='Grids' mod='dynamicproduct'}
+        </a>
+    </li>
+    <li>
+        <a href="#dp_tab_field_groups">
+            <i class="material-icons">group_work</i> {l s='Groups' mod='dynamicproduct'}
+        </a>
+    </li>
+  </ul>
 
-    <div id="dp_tab_product_settings">
-        {include file="./extra/settings.tpl"}
+  <div id="dp_tab_product_settings">
+      {include file="./extra/settings.tpl"}
+  </div>
+
+  <div id="dp_tab_formulas">
+      {include file="./extra/price-formula.tpl"}
+      {include file="./extra/weight-formula.tpl"}
+      {include file="./extra/quantity-formula.tpl"}
+  </div>
+
+  <div id="dp_tab_fields">
+      {include file="./extra/fields.tpl"}
+  </div>
+
+  <div id="dp_tab_combinations">
+      {include file="./extra/combinations.tpl"}
+  </div>
+
+  <div id="dp_tab_visibility">
+      {include file="./extra/visibility.tpl"}
+  </div>
+
+  <div id="dp_tab_conditions">
+      {include file="./extra/conditions.tpl"}
+  </div>
+
+  <div id="dp_tab_field_formulas">
+      {include file="./extra/field_formulas.tpl"}
+  </div>
+
+  <div id="dp_tab_proportions">
+    <div id="dp_proportions_container">
+        {include file="./extra/proportions.tpl"}
     </div>
+  </div>
 
-    <div id="dp_tab_price_formula">
-        {include file="./extra/price-formula.tpl"}
-    </div>
+  <div id="dp_tab_intervals">
+    <div id="dp_intervals_container"></div>
+  </div>
 
-    <div id="dp_tab_weight_formula">
-        {include file="./extra/weight-formula.tpl"}
-    </div>
+  <div id="dp_tab_grids">
+    <div id="dp_grids_container"></div>
+  </div>
 
-    <div id="dp_tab_quantity_formula">
-        {include file="./extra/quantity-formula.tpl"}
-    </div>
-
-    <div id="dp_tab_fields">
-        {include file="./extra/fields.tpl"}
-    </div>
-
-    <div id="dp_tab_combinations">
-        {include file="./extra/combinations.tpl"}
-    </div>
-
-    <div id="dp_tab_visibility">
-        {include file="./extra/visibility.tpl"}
-    </div>
-
-    <div id="dp_tab_conditions">
-        {include file="./extra/conditions.tpl"}
-    </div>
-
-    <div id="dp_tab_field_formulas">
-        {include file="./extra/field_formulas.tpl"}
-    </div>
-
-    <div id="dp_tab_proportions">
-        <div id="dp_proportions_container">
-            {include file="./extra/proportions.tpl"}
-        </div>
-    </div>
+  <div id="dp_tab_field_groups">
+    <div id="dp_field_groups_container"></div>
+  </div>
 
 </div>
 
+{include file="./extra/generic-formula.tpl"}
+
 <script type="text/javascript">
   $(function () {
-    $(document).trigger('dp-content-ready');
-    // dp_admin.init();
+    $(document).trigger("dp-content-ready");
   });
 </script>

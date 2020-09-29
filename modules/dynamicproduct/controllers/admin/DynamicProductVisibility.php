@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -56,7 +56,8 @@ class DynamicProductVisibilityController extends ModuleAdminController
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
         if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(Tools::jsonEncode(array(
-                'error' => $this->module->l('This product is for viewing only!')
+                'error'   => true,
+                'message' => $this->module->l('This product is for viewing only!')
             )));
         }
 
@@ -103,7 +104,6 @@ class DynamicProductVisibilityController extends ModuleAdminController
         $success = $success && (int)!array_key_exists('error', $data);
         $arr = array(
             'success' => $success,
-            'action'  => $this->action
         );
         $arr = array_merge($arr, $data);
         exit(Tools::jsonEncode($arr));

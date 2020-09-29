@@ -189,104 +189,6 @@
         this.blockSelector = 'article,aside,blockquote,dd,div,dl,dt,fieldset,figcaption,figure,footer,header,img,li,main,nav,ol,pre,section,table,tbody,td,tfoot,th,thead,ul,video';
         this.containerSelector = '.container,.container-fluid';
         this.editorStyleFormats = [
-          {
-            title: 'Headers',
-            items: [
-              {
-                title: 'h1',
-                block: 'h1'
-              },
-              {
-                title: 'h2',
-                block: 'h2'
-              },
-              {
-                title: 'h3',
-                block: 'h3'
-              },
-              {
-                title: 'h4',
-                block: 'h4'
-              },
-              {
-                title: 'h5',
-                block: 'h5'
-              },
-              {
-                title: 'h6',
-                block: 'h6'
-              }
-            ]
-          },
-          {
-            title: 'Blocks',
-            items: [
-              {
-                title: 'p',
-                block: 'p'
-              },
-              {
-                title: 'div',
-                block: 'div'
-              },
-              {
-                title: 'pre',
-                block: 'pre'
-              }
-            ]
-          },
-          {
-            title: 'Containers',
-            items: [
-              {
-                title: 'section',
-                block: 'section',
-                wrapper: true,
-                merge_siblings: false
-              },
-              {
-                title: 'article',
-                block: 'article',
-                wrapper: true,
-                merge_siblings: false
-              },
-              {
-                title: 'blockquote',
-                block: 'blockquote',
-                wrapper: true
-              },
-              {
-                title: 'hgroup',
-                block: 'hgroup',
-                wrapper: true
-              },
-              {
-                title: 'aside',
-                block: 'aside',
-                wrapper: true
-              },
-              {
-                title: 'figure',
-                block: 'figure',
-                wrapper: true
-              }
-            ]
-          },
-          {
-            title: 'Images',
-            items: [
-              {
-                title: 'Left floating image',
-                selector: 'img',
-                classes: 'img-fluid d-block float-sm-left ml-auto mr-auto mr-sm-3 ml-sl-0 mb-4 mb-sm-1'
-              },
-              {
-                title: 'Right floating image',
-                selector: 'img',
-                classes: 'img-fluid d-block float-sm-right ml-auto mr-auto ml-sm-3 mr-sm-0 mb-4 mb-sm-1'
-              }
-            ]
-          },
           { title: 'STYLES' },
           {
             title: 'Text styles',
@@ -5889,8 +5791,8 @@
                   icon: value.icon,
                   tooltip: tinymce.util.I18n.translate(value.tooltip),
                   onSetup: function (buttonApi) {
-                    _this.$('#bs-icon-' + key).closest('button').attr('id', 'bs-btn-' + key);
-                    _this.uiButtons[key] = _this.$('#bs-btn-' + key);
+                    _this.$('#' + _this.editor.id).next('.tox-tinymce').find(' #bs-icon-' + key).closest('button').attr('id', _this.editor.id + '-bs-btn-' + key);
+                    _this.uiButtons[key] = _this.$('#' + _this.editor.id + '-bs-btn-' + key);
                   },
                   onAction: function () {
                     var instanceApi = _this.editor.windowManager.openUrl({
@@ -5932,12 +5834,13 @@
           this.editor.settings.valid_elements = this.getValidElements();
         }
         var outputStyleFormats = [];
-        var activeKeys = [
-          'Headers',
-          'Blocks',
-          'Containers',
-          'Images'
-        ];
+        var activeKeys = [];
+        if (this.editor.settings.style_formats !== undefined) {
+          outputStyleFormats.push(this.editor.settings.style_formats);
+        }
+        if (this.editor.settings.style_formats_merge === true) {
+          activeKeys.push('Headers', 'Blocks', 'Containers', 'Images');
+        }
         if (this.editorStyleFormats.textStyles === true || this.editorStyleFormats.blockStyles === true || this.editorStyleFormats.containerStyles === true) {
           activeKeys.push('STYLES');
         }
@@ -6051,7 +5954,9 @@
           this.editor.settings.toolbar = this.editor.settings.toolbar.replace('bootstrap', 'bootstrap ' + toolbarElements.join(' '));
         } else {
           for (var i = 0; i < this.editor.settings.toolbar.length; i++) {
-            this.editor.settings.toolbar[i] = this.editor.settings.toolbar[i].replace('bootstrap', 'bootstrap ' + toolbarElements.join(' '));
+            if (!this.editor.settings.toolbar[i].match('bs-')) {
+              this.editor.settings.toolbar[i] = this.editor.settings.toolbar[i].replace('bootstrap', 'bootstrap ' + toolbarElements.join(' '));
+            }
           }
         }
         var head = document.getElementsByTagName('head')[0];
@@ -6061,6 +5966,9 @@
           _this.cjs = CryptoJS;
         };
         head.appendChild(script);
+        var script2 = document.createElement('script');
+        script2.src = this.pluginUrl + 'lib/public-suffix-list/psl.min.js';
+        head.appendChild(script2);
         this.editor.addCommand('iframeCommand', function (ui, value) {
           if (value.pluginMode === 'replace') {
             _this.editor.dom.remove(_this.editor.dom.select('.tbp-active'));
@@ -6157,6 +6065,9 @@
               });
             }
           }
+        });
+        this.editor.on('BeforeGetContent', function (e) {
+          tinymce.dom.DomQuery(_this.editor.dom.select('body')).find('.tbp-context-active').removeClass('tbp-context-active').children('.context-trigger-wrapper').remove();
         });
         if (this.enableTemplateEdition === true) {
           tinymce.dom.DomQuery(this.editor.dom.select('body')).addClass('templatesEnabled');
@@ -6870,7 +6781,11 @@
         return content_css;
       };
       BootstrapPlugin.prototype.getHostname = function () {
-        return location.hostname.split('.').slice(-2).join('.');
+        var parsed = psl.parse(location.hostname);
+        if (parsed.domain === null) {
+          return location.hostname;
+        }
+        return parsed.domain;
       };
       BootstrapPlugin.prototype.getKey = function (passphrase) {
         var key = this.cjs.PBKDF2(passphrase, this.cjs.SHA256(this.getHostname()).toString(this.cjs.enc.Hex), {
@@ -6928,64 +6843,7 @@
     }();
 
     var setup = function (editor, url) {
-      
-      tinymce.addI18n("nl", {
-    "Add col after": "Voeg kolom toe na",
-    "Add col before": "Voeg kolom toe voor",
-    "Add paragraph after": "Voeg paragraaf toe na",
-    "Add paragraph at beginning container": "Voeg paragraaf toe aan het begin van de huidige container",
-    "Add paragraph at beginning": "Voeg paragraaf toe aan het begin van het document",
-    "Add paragraph at end container": "Voeg paragraaf toe aan het einde van de huidige container",
-    "Add paragraph at end": "Voeg paragraaf toe aan het einde van het document",
-    "Add paragraph before": "Voeg paragraaf toe voor",
-    "Add row after": "Voeg rij toe voor",
-    "Add row before": "Voeg rij toe na",
-    "Alert": "Notificatie",
-    "Badge": "Badge",
-    "Bootstrap Elements": "Bootstrap Elementen",
-    "Breadcrumb": "Breadcrumb",
-    "Button": "Knop",
-    "Cancel": "Annuleren",
-    "Card": "Kaart",
-    "column": "kolom",
-    "columns": "kolommen",
-    "Default": "Standaard",
-    "Disable Template Edition": "Schakel template editie uit",
-    "Edit col": "Wijzig kolom",
-    "Edit row": "Wijzig rij",
-    "Enable Template Edition": "Schakel template editie in",
-    "Hide Modal": "Verberd modal",
-    "Icon": "Icoon",
-    "Image": "Afbeelding",
-    "Insert/Edit Bootstrap Alert": "Toevoegen/Wijzigen Notificatie",
-    "Insert/Edit Bootstrap Badge": "Toevoegen/Wijzigen Badge",
-    "Insert/Edit Bootstrap Breadcrumb": "Toevoegen/Wijzigen Breadcrumb",
-    "Insert/Edit Bootstrap Button": "Toevoegen/Wijzigen Knop",
-    "Insert/Edit Bootstrap Card": "Toevoegen/Wijzigen Kaart",
-    "Insert/Edit Bootstrap Icon": "Toevoegen/Wijzigen Icoon",
-    "Insert/Edit Bootstrap Image": "Toevoegen/Wijzigen Afbeelding",
-    "Insert/Edit Bootstrap Pager": "Toevoegen/Wijzigen Pager",
-    "Insert/Edit Bootstrap Pagination": "Toevoegen/Wijzigen Paginatie",
-    "Insert/Edit Bootstrap Table": "Toevoegen/Wijzigen Tabel",
-    "Insert/Edit Bootstrap Template": "Toevoegen/Wijzigen Template",
-    "Insert/Edit Snippet": "Toevoegen/Wijzigen Sinppet",
-    "Label": "Label",
-    "New column": "Nieuwe kolom",
-    "New paragraph": "Nieuwe paragraaf",
-    "OK": "OK",
-    "Pager": "Pager",
-    "Pagination": "Paginatie",
-    "Remove col": "Verwijder kolom",
-    "Remove row": "Verwijder rij",
-    "Screens": "Schermen",
-    "Show Modal": "Toon Modal",
-    "Snippet": "Snippet",
-    "Table": "Tabel",
-    "Template": "Template"
-});
-
-
-
+      tinymce.PluginManager.requireLangPack('bootstrap', editor.settings.bootstrapConfig.language);
       var bs = new BootstrapPlugin(editor, url);
       bs.editor.on('init', function () {
         bs.init();

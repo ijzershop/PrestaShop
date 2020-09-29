@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,68 +20,46 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
+use classes\controllers\front\DynamicFrontController;
 use classes\helpers\DynamicCalculatorHelper;
 use classes\helpers\FieldsVisibilityHelper;
 use classes\models\DynamicInputField;
 
-class DynamicProductCalculatorModuleFrontController extends ModuleFrontController
+/** @noinspection PhpUnused */
+
+class DynamicProductCalculatorModuleFrontController extends DynamicFrontController
 {
-    /** @var DynamicProduct */
-    public $module;
-    public $action;
-    private $id_product;
-    private $id_attribute;
-
-    public function __construct()
+    /** @noinspection PhpUnused */
+    protected function processCalculateResult()
     {
-        parent::__construct();
-        $this->context = Context::getContext();
-        $this->action = Tools::getValue('action');
-        $this->id_product = (int)Tools::getValue('id_product');
-        $this->id_attribute = $this->getAttributeID();
-    }
-
-    private function getAttributeID()
-    {
-        $id_attribute = (int)Tools::getValue('id_attribute');
-        $attributes = Tools::getValue('attributes');
-        if ($attributes) {
-            $id_attribute = $this->module->provider->getAttributeID($this->id_product, $attributes);
-        }
-        return $id_attribute;
-    }
-
-    public function initContent()
-    {
-        $method = 'process' . Tools::toCamelCase($this->action, true);
-        if (method_exists($this, $method)) {
-            return $this->{$method}();
-        }
-        exit();
-    }
-
-    private function processCalculateResult()
-    {
-        $changed_field = Tools::getValue('changed_field');
         $fields = Tools::getValue('fields');
+        $adapter_data = Tools::getValue('adapter_data');
+        $input_fields = array();
 
-        $input_fields = DynamicInputField::getInputFieldsFromData(
-            $this->id_product,
-            $this->id_attribute,
-            $fields,
-            $changed_field
-        );
+        try {
+            $input_fields = DynamicInputField::getInputFieldsFromData(
+                $this->id_product,
+                $this->id_attribute,
+                $fields,
+                empty($fields['changed']['value'])
+            );
+        } catch (Exception $e) {
+            $this->respond(array(
+                'error'   => 1,
+                'message' => $e->getMessage()
+            ));
+        }
 
         $calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
 
         try {
-            $calculator_helper->checkFormulas($this->id_product, $this->id_attribute, $input_fields);
+            $calculator_helper->checkFormulas($this->id_product, $input_fields);
         } catch (Exception $e) {
             $this->respond(array(
                 'error'   => 1,
@@ -90,18 +68,35 @@ class DynamicProductCalculatorModuleFrontController extends ModuleFrontControlle
         }
 
         $visibility_helper = new FieldsVisibilityHelper($this->module, $this->context);
-        $fields_visibility = $visibility_helper->getFieldsVisibility(
-            $this->id_product,
-            $this->id_attribute,
-            $input_fields
-        );
+        $fields_visibility = array();
+        try {
+            $fields_visibility = $visibility_helper->getFieldsVisibility(
+                $this->id_product,
+                $this->id_attribute,
+                $input_fields
+            );
+        } catch (Exception $e) {
+            $this->respond(array(
+                'error'   => 1,
+                'message' => $e->getMessage()
+            ));
+        }
         $visibility_helper->setExcludedFields($input_fields, $fields_visibility);
 
-        $calculated_prices = $calculator_helper->getCalculatedPrices(
-            $this->id_product,
-            $this->id_attribute,
-            $input_fields
-        );
+        $calculated_prices = array();
+        try {
+            $calculated_prices = $calculator_helper->getCalculatedPrices(
+                $this->id_product,
+                $this->id_attribute,
+                $input_fields,
+                $adapter_data
+            );
+        } catch (Exception $e) {
+            $this->respond(array(
+                'error'   => true,
+                'message' => $e->getMessage()
+            ));
+        }
 
         $calculated_weight = $calculator_helper->getCalculatedWeight(
             $this->id_product,
@@ -118,7 +113,7 @@ class DynamicProductCalculatorModuleFrontController extends ModuleFrontControlle
             $input_fields
         );
 
-        $debug_messages = $calculator_helper->getDebugMessages($this->id_product, $this->id_attribute, $input_fields);
+        $debug_messages = $calculator_helper->getDebugMessages($this->id_product, $input_fields);
 
         $response =
             $calculated_prices +
@@ -130,18 +125,5 @@ class DynamicProductCalculatorModuleFrontController extends ModuleFrontControlle
             array('input_fields' => $input_fields);
 
         $this->respond($response);
-    }
-
-    public function respond($data = array(), $success = 1)
-    {
-        if (array_key_exists('error', $data)) {
-            $success = 0;
-        }
-        $arr = array(
-            'success' => $success,
-            'action'  => $this->action
-        );
-        $arr = array_merge($arr, $data);
-        exit(Tools::jsonEncode($arr));
     }
 }

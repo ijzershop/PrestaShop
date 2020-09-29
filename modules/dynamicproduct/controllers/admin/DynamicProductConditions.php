@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -56,7 +56,8 @@ class DynamicProductConditionsController extends ModuleAdminController
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
         if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(Tools::jsonEncode(array(
-                'error' => $this->module->l('This product is for viewing only!')
+                'error'   => true,
+                'message' => $this->module->l('This product is for viewing only!')
             )));
         }
 
@@ -95,8 +96,8 @@ class DynamicProductConditionsController extends ModuleAdminController
                 $this->module->name . '_condition_visibility',
                 array(
                     'id_condition' => (int)$id_condition,
-                    'id_field' => (int)$id_field,
-                    'visible' => (int)$visible,
+                    'id_field'     => (int)$id_field,
+                    'visible'      => (int)$visible,
                 ),
                 false,
                 true,
@@ -125,7 +126,8 @@ class DynamicProductConditionsController extends ModuleAdminController
     {
         $id_condition = (int)Tools::getValue('id_condition');
         $formula = Tools::getValue('formula');
-        $validation = DynamicEquation::checkFormula($this->id_product, $formula);
+        $fields = Tools::getValue('fields');
+        $validation = DynamicEquation::checkFormula($this->id_product, $formula, $fields);
         if ($validation !== true) {
             $this->respond(array('error' => $validation));
         }
@@ -143,6 +145,43 @@ class DynamicProductConditionsController extends ModuleAdminController
         $this->respond();
     }
 
+    private function processDisplayOptions()
+    {
+        $id_condition = (int)Tools::getValue('id_condition');
+        $id_field = (int)Tools::getValue('id_field');
+        exit($this->module->hookDisplayOptionsList($id_condition, $id_field));
+    }
+
+    private function processSaveOptionState()
+    {
+        $id_condition = Tools::getValue('id_condition');
+        $id_field = Tools::getValue('id_field');
+        $id_option = Tools::getValue('id_option');
+        $visible = Tools::getValue('visible');
+        if (!(int)$visible) {
+            Db::getInstance()->insert(
+                $this->module->name . '_condition_option_visibility',
+                array(
+                    'id_condition' => (int)$id_condition,
+                    'id_field'     => (int)$id_field,
+                    'id_option'     => (int)$id_option,
+                    'visible'      => (int)$visible,
+                ),
+                false,
+                true,
+                Db::REPLACE
+            );
+        } else {
+            Db::getInstance()->delete(
+                $this->module->name . '_condition_option_visibility',
+                'id_condition = ' . (int)$id_condition . ' AND ' .
+                'id_field = ' . (int)$id_field . ' AND ' .
+                'id_option = ' . (int)$id_option
+            );
+        }
+        $this->respond();
+    }
+
     private function processReloadList()
     {
         exit($this->module->hookDisplayConditionsList($this->id_product));
@@ -153,7 +192,6 @@ class DynamicProductConditionsController extends ModuleAdminController
         $success = $success && (int)!array_key_exists('error', $data);
         $arr = array(
             'success' => $success,
-            'action'  => $this->action
         );
         $arr = array_merge($arr, $data);
         exit(Tools::jsonEncode($arr));

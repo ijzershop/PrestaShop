@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -102,19 +102,5 @@ class DynamicCommonField extends DynamicObject
         $common_field->id_field = (int)$id_field;
         $common_field->id_product = (int)$id_product;
         return $common_field;
-    }
-
-    public static function getFieldByName($id_product, $field_name, $id_lang)
-    {
-        $sql = 'SELECT id_field FROM `' . _DB_PREFIX_ . 'dynamicproduct_field` 
-        WHERE name = "' . pSQL($field_name) . '" 
-        AND id_field IN 
-        (
-            SELECT id_field 
-            FROM ' . _DB_PREFIX_ . 'dynamicproduct_common_field 
-            WHERE id_product = ' . (int)$id_product . '
-        )';
-        $id_field = (int)Db::getInstance()->getValue($sql);
-        return new DynamicField($id_field, $id_lang);
     }
 }

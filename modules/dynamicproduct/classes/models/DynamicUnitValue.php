@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -77,7 +77,7 @@ class DynamicUnitValue extends DynamicObject
      * @param $id_field
      * @return DynamicUnitValue
      */
-    public static function getUnitValue($id_field)
+    public static function getUnitValue($id_field, $id_lang = null)
     {
         $key = $id_field;
         if (isset(self::$unit_values[$key])) {
@@ -88,7 +88,7 @@ class DynamicUnitValue extends DynamicObject
         $sql->from(self::$definition['table']);
         $sql->where('id_field = ' . (int)$id_field);
         $id_unit_value = Db::getInstance()->getValue($sql);
-        return self::$unit_values[$key] = new self($id_unit_value);
+        return self::$unit_values[$key] = new self($id_unit_value, $id_lang);
     }
 
     /**
@@ -98,10 +98,5 @@ class DynamicUnitValue extends DynamicObject
     public static function getUnitValuesByIdField($id_field)
     {
         return self::getUnitValue($id_field);
-    }
-
-    public function setInitialValue($init)
-    {
-        $this->init = $init;
     }
 }

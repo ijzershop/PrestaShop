@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,14 +20,18 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 namespace classes\models;
 
+use classes\DynamicTools;
 use classes\factory\DynamicFieldFactory;
 use classes\helpers\ColorHelper;
+use classes\helpers\FieldGroupHelper;
+use classes\models\intervals\IntervalField;
+use Context;
 use Db;
 use DbQuery;
 use Validate;
@@ -49,7 +53,10 @@ class DynamicField extends DynamicObject
     public $value;
     public $description;
 
+    /** @var DynamicUnitValue */
     public $settings;
+
+    /** @var DynamicDropdownOption[]|DynamicThumbnailsOption[]|DynamicRadioOption[] */
     public $options;
 
     public $unit;
@@ -93,7 +100,6 @@ class DynamicField extends DynamicObject
                 'lang'     => true,
                 'required' => false,
                 'validate' => 'iscleanhtml',
-                'size'     => 256
             ),
         )
     );
@@ -101,7 +107,7 @@ class DynamicField extends DynamicObject
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         parent::__construct($id, $id_lang, $id_shop);
-        $this->initSettings();
+        $this->initSettings($id_lang);
         $this->initOptions();
     }
 
@@ -144,7 +150,7 @@ class DynamicField extends DynamicObject
         JOIN `' . _DB_PREFIX_ . 'dynamicproduct_field` f
         ON f.`id_field` = cf.`id_field`
         WHERE cf.`id_product` = ' . (int)$id_product . ')
-        ORDER BY `position` ASC';
+        ORDER BY `position`';
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id_field = $row['id_field'];
@@ -153,6 +159,52 @@ class DynamicField extends DynamicObject
             $dynamic_fields[$id_field] = $dynamic_field;
         }
         return $dynamic_fields;
+    }
+
+    public static function getGroupedFields($id_product, $id_lang)
+    {
+        $module = DynamicTools::getModule();
+
+        $grouped = array();
+
+        $group_helper = new FieldGroupHelper($module, Context::getContext());
+
+        /** @var DynamicFieldGroup[] $groups */
+        $groups = DynamicFieldGroup::getAll($id_lang);
+
+        /** @var DynamicProductFieldGroup[] $product_groups */
+        $product_groups = DynamicProductFieldGroup::getByIdProduct($id_product, true);
+
+        foreach ($product_groups as $product_group) {
+            $grouped[$product_group->id] = array(
+                'group' => $group_helper->getGroup($product_group->id_field_group, $groups),
+                'fields' => array(),
+            );
+        }
+        // add a default group for fields with no group
+        $grouped[0] = array(
+            'group' => $group_helper->getGroup(0, $groups),
+            'fields' => array(),
+        );
+
+        $fields = self::getFieldsByIdProduct($id_product, $id_lang);
+        foreach ($fields as $field) {
+            $id_group = $field->id_group;
+            if (!isset($grouped[$id_group])) {
+                $grouped[0]['fields'][$field->id] = $field;
+            } else {
+                $grouped[$id_group]['fields'][$field->id] = $field;
+            }
+        }
+
+        // clear empty groups
+        foreach ($grouped as $id_field_group => $item) {
+            if (!count($item['fields'])) {
+                unset($grouped[$id_field_group]);
+            }
+        }
+
+        return $grouped;
     }
 
     /**
@@ -197,22 +249,27 @@ class DynamicField extends DynamicObject
         return $dynamic_fields;
     }
 
-    private function initSettings()
+    private function initSettings($id_lang)
     {
-        $this->settings = $this->getSettings();
+        $this->settings = $this->getSettings($id_lang);
     }
 
     /**
      * @return DynamicUnitValue
      */
-    public function getSettings()
+    public function getSettings($id_lang = null)
     {
-        return DynamicUnitValue::getUnitValue($this->id);
+        return DynamicUnitValue::getUnitValue($this->id, $id_lang);
     }
 
     private function initOptions()
     {
         $this->options = $this->getOptions();
+    }
+
+    public function getInitialValue()
+    {
+        return $this->init;
     }
 
     public function getOptions()
@@ -311,6 +368,12 @@ class DynamicField extends DynamicObject
         if (is_file($thumb)) {
             unlink($thumb);
         }
+
+        $interval_fields = IntervalField::getByField($this->id);
+        foreach ($interval_fields as $interval_field) {
+            $interval_field->delete();
+        }
+
         parent::delete();
     }
 
@@ -318,5 +381,14 @@ class DynamicField extends DynamicObject
     {
         $color_helper = new ColorHelper($this->module, $this->context);
         return $color_helper->getClearColor($this->value);
+    }
+
+    public static function createDefaultField($id_product)
+    {
+        $dynamic_field = new DynamicField();
+        $dynamic_field->id_product = $id_product;
+        $dynamic_field->active = true;
+        $dynamic_field->type = _DP_INPUT_;
+        return $dynamic_field;
     }
 }

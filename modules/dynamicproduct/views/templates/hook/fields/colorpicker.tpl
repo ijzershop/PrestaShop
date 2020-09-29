@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2019 PrestaShop SA
+*  @copyright 2007-2020 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,7 +33,7 @@
     value="{$field->settings->color|strtoupper|escape:'htmlall':'UTF-8'}"
     data-label="{$field->label|escape:'htmlall':'UTF-8'}"
     style="background-color: {$field->settings->color|escape:'htmlall':'UTF-8'}; color: {$field->getClearColor()|escape:'htmlall':'UTF-8'}"
-> {include file="../tooltip/tooltip.tpl"}
+> {include file="module:dynamicproduct/views/templates/hook/tooltip/tooltip.tpl"}
 <a href="#"
    {if $field->settings->color}
    value="{$field->settings->color|strtoupper|escape:'htmlall':'UTF-8'}"

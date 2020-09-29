@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -75,7 +75,8 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
         if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(Tools::jsonEncode(array(
-                'error' => $this->module->l('This product is for viewing only!')
+                'error'   => true,
+                'message' => $this->module->l('This product is for viewing only!')
             )));
         }
 
@@ -90,6 +91,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
     private function processAddOption()
     {
         $new_option = $this->getOptionClass($this->id_field);
+        $new_option->value = 0;
         $new_option->id_field = $this->id_field;
         $new_option->position = $new_option::getHighestPosition($new_option);
         $new_option->save();
@@ -103,6 +105,15 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         $value = Tools::getValue('value');
         $option = $this->getOptionClass($this->id_field, $this->id_option);
         $option->value = $value;
+        $option->save();
+        $this->respond();
+    }
+
+    private function processSaveSecondaryValue()
+    {
+        $secondary_value = Tools::getValue('secondary_value');
+        $option = $this->getOptionClass($this->id_field, $this->id_option);
+        $option->secondary_value = $secondary_value;
         $option->save();
         $this->respond();
     }
@@ -212,7 +223,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
 
     /**
      * @param int $id_option
-     * @return DynamicThumbnailsOption
+     * @return DynamicDropdownOption | DynamicThumbnailsOption | DynamicRadioOption
      */
     private function getOptionClass($id_field, $id_option = 0)
     {
@@ -227,7 +238,6 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         $success = $success && (int)!array_key_exists('error', $data);
         $arr = array(
             'success' => $success,
-            'action'  => $this->action
         );
         $arr = array_merge($arr, $data);
         exit(Tools::jsonEncode($arr));

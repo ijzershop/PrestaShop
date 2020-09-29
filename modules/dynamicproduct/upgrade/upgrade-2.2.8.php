@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -50,6 +50,7 @@ function upgrade_module_2_2_8($module)
         }
     }
 
+    $module->installer->uninstallController('DynamicProductFieldFormulas');
     $module->installer->installController(array(
         'name'  => 'Dynamic Product Field Formulas',
         'class' => 'DynamicProductFieldFormulas'

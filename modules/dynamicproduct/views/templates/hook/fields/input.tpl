@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2019 PrestaShop SA
+*  @copyright 2007-2020 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,4 +33,4 @@
        data-min="{$field->settings->min|floatval}"
        data-max="{$field->settings->max|floatval}"
        data-step="{$field->settings->step|floatval}"
-       value="{$field->init|floatval}"> {if $field->id_unit}<span class="dp_unit" title="{$field->getUnitName()|escape:'htmlall':'UTF-8'}">{$field->getUnitSymbol()|escape:'htmlall':'UTF-8'}</span>{else}<span class="dp_unit">{$field->getUnitName()|escape:'htmlall':'UTF-8'}</span>{/if} {include file="../tooltip/tooltip.tpl"}
+       value="{$field->init|floatval}"> {if $field->id_unit}<span class="dp_unit" title="{$field->getUnitName()|escape:'htmlall':'UTF-8'}">{$field->getUnitSymbol()|escape:'htmlall':'UTF-8'}</span>{else}<span class="dp_unit">{$field->getUnitName()|escape:'htmlall':'UTF-8'}</span>{/if}

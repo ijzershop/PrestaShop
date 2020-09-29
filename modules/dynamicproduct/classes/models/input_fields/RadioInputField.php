@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -44,7 +44,7 @@ class RadioInputField extends DynamicInputField
 
         $id_radio_option = $this->getFirstOption();
         if (!$id_radio_option) {
-            return null;
+            return $this->value_formatted;
         }
 
         return (new DynamicRadioOption($id_radio_option, $this->id_lang))->label;

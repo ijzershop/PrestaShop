@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2019 Tuni-Soft
+ * 2010-2020 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2019 Tuni-Soft
+ * @copyright 2010-2020 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -33,6 +33,7 @@ class UploadInputField extends DynamicInputField
 {
     public $dir = 'upload';
 
+    /** @noinspection PhpUnused */
     public function getFileUrl()
     {
         $folder_url = $this->module->provider->getDataDirUrl('upload/');
@@ -57,6 +58,7 @@ class UploadInputField extends DynamicInputField
         return $this->module->provider->getDataDir('upload') . $this->value;
     }
 
+    /** @noinspection PhpUnused */
     public function getThumbUrl()
     {
         $folder_url = $this->module->provider->getDataDirUrl('upload/');
@@ -64,6 +66,7 @@ class UploadInputField extends DynamicInputField
         return $folder_url . str_replace('.'.$extension, $this->thumb_suffix, $this->value);
     }
 
+    /** @noinspection PhpUnused */
     public function isImage()
     {
         $file_helper = new FileHelper($this->module, $this->context);

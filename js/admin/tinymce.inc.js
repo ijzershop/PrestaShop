@@ -50,7 +50,7 @@ function tinySetup(config) {
         var base_url = location.protocol + '//' + location.host + '/';
         // detect localhost
         // the value must include your local window.location.hostname
-        const LOCAL_DOMAINS = ["localhost", "127.0.0.1", "ijzershop176.local"];
+        const LOCAL_DOMAINS = ["localhost", "127.0.0.1", "ijzershop176.local", "constructiebalk176.local"];
         if (LOCAL_DOMAINS.includes(window.location.hostname)) {
             var tbpKey = 'cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpntwY68zKhPuBBBfiucVaylNhbNzuWdxME7vwNnVxE8VOFkf7RlqjEyxMsiu6eEK7Q=';
         } else {
@@ -60,7 +60,7 @@ function tinySetup(config) {
 
   var default_config = {
     selector: "textarea.rte",
-    plugins: ['link', 'image', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap','fullscreen'],
+    plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap','fullscreen'],
     browser_spellcheck: true,
     toolbar: "undo redo code image | bold italic underline strikethrough | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap | fullscreen",
     toolbar2: false,

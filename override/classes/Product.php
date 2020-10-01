@@ -111,14 +111,25 @@ class Product extends ProductCore {
    }
     
     
-    
-    
     /*
     * module: offerintegration
     * date: 2020-08-21 11:00:54
     * version: 1.0.9.1
     */
-    public $min_saw_size;
+    public $min_saw_size;    
+
+        /*
+    * module: offerintegration
+    * date: 2020-08-21 11:00:54
+    * version: 1.0.9.1
+    */
+    public $min_cut_remainder;    
+    /*
+    * module: offerintegration
+    * date: 2020-08-21 11:00:54
+    * version: 1.0.9.1
+    */
+    public $saw_loss;
     
     /*
     * module: offerintegration

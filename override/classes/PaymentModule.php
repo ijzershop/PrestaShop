@@ -119,6 +119,7 @@ class PaymentModule extends PaymentModuleCore
 
         $order->invoice_date = '0000-00-00 00:00:00';
         $order->delivery_date = '0000-00-00 00:00:00';
+        $order->desired_delivery_date = '0000-00-00 00:00:00';
 
         if ($debug) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order is about to be added', 1, null, 'Cart', (int) $cart->id, true);

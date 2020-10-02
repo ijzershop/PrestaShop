@@ -1,8 +1,5 @@
-*.jpg
-*.jpeg
-*.png
-*.gif
-*.pdf
-*.txt
-*.svg
-*.pdf
+*
+*/
+!lane_1/
+!lane_2/
+!lane_3/

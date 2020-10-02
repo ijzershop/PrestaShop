@@ -556,6 +556,7 @@ class DynamicHandler
             return false;
         }
         $dynamic_inputs = DynamicInput::getInputsByIdCart($id_cart_old);
+
         foreach ($dynamic_inputs as $dynamic_input) {
             $id_custom_product_new = (int)$dynamic_input->duplicateInput($id_cart_new);
             if ($id_custom_product_new) {

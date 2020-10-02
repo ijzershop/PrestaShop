@@ -161,7 +161,7 @@ themes/default-bootstrap/modules/*/mails/*
 
 /bin/
 /.web-server-pid
-/app/Resources/geoip/GeoLite2-City.mmdb
+!/app/Resources/geoip/GeoLite2-City.mmdb
 /app/Resources/translations/*
 !/app/Resources/translations/default
 /app/config/parameters.yml

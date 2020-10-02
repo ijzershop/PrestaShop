@@ -1,0 +1,10 @@
+[{shop_url}] 
+
+Hallo {firstname} {lastname}, 
+
+Nieuw bericht van {shop_name} omtrent bestelling {order_name}.
+
+BERICHT: {message} 		 
+
+{custom_footer_txt}
+

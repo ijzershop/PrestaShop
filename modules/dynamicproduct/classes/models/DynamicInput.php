@@ -159,6 +159,9 @@ class DynamicInput extends DynamicObject
         }
         $dynamic_inputs = array();
         $rows = self::getInputRowsByIdCart($id_cart);
+
+
+
         if (is_array($rows)) {
             foreach ($rows as $row) {
                 $id_input = $row['id_input'];
@@ -168,6 +171,7 @@ class DynamicInput extends DynamicObject
                 }
             }
         }
+
         Cache::store($cache_key, $dynamic_inputs);
         return $dynamic_inputs;
     }
@@ -371,6 +375,11 @@ class DynamicInput extends DynamicObject
         $this->id_guest = (int)$this->module->provider->getGuest();
         $this->id_customer = (int)$this->module->provider->getCustomer();
         $this->add();
+
+        if(is_null($this->input_fields)){
+            $this->input_fields = $this->getInputsByProduct($this->id_product, $this->id_attribute);
+        }
+
         foreach ($this->input_fields as $input_field) {
             $input_field->id_input = $this->id;
             $input_field->add();

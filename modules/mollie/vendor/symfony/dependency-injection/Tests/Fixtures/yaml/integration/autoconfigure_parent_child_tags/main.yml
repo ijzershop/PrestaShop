@@ -1,0 +1,7 @@
+imports:
+    - { resource: _child.yml }
+
+services:
+    parent_service:
+        class: _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Compiler\IntegrationTestStub
+        autoconfigure: true

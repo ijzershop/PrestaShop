@@ -443,6 +443,13 @@ class Mail extends MailCore
             $templateVars['{shop_name}'] = Tools::safeOutput($configuration['PS_SHOP_NAME']);
             $templateVars['{custom_footer_html}'] = Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', ''));
             $templateVars['{custom_footer_txt}'] = Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT_TXT', ''));
+            $templateVars['{faq_page}'] = Tools::safeOutput(Context::getContext()->link->getCMSLink(
+                Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ'),
+                null,
+                true,
+                $idLang,
+                $idShop
+            ));
             $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink(
                 'index',
                 true,

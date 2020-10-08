@@ -34,3 +34,6 @@ url=git@github.com:ijzershop/addtoorder.git
 [submodule "modules/modernesmiddynamicproduct"]
 	path = modules/modernesmiddynamicproduct
 	url = git@github.com:ijzershop/modernesmiddynamicproduct.git
+[submodule "modules/ps_emailalerts"]
+	path = modules/ps_emailalerts
+	url = https://github.com/PrestaShop/ps_emailalerts.git

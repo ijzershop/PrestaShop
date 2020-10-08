@@ -4,62 +4,59 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "154bd909ad9469e57a8aca8fe72c9b11",
+    "content-hash": "31c688b723757b184c10dad09625a907",
     "packages": [
         {
-            "name": "analog/analog",
-            "version": "1.0.12-stable",
+            "name": "bacon/bacon-qr-code",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jbroadway/analog.git",
-                "reference": "4ac87ac59555db6eaba734b2b022fcc296e8729d"
+                "url": "https://github.com/Bacon/BaconQrCode.git",
+                "reference": "add6d9ff97336b62f95a3b94f75cea4e085465b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jbroadway/analog/zipball/4ac87ac59555db6eaba734b2b022fcc296e8729d",
-                "reference": "4ac87ac59555db6eaba734b2b022fcc296e8729d",
+                "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/add6d9ff97336b62f95a3b94f75cea4e085465b2",
+                "reference": "add6d9ff97336b62f95a3b94f75cea4e085465b2",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2",
-                "psr/log": "1.*"
+                "dasprid/enum": "^1.0",
+                "ext-iconv": "*",
+                "php": "^7.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.36 || ^5.7 || ^6.5"
+                "phly/keep-a-changelog": "^1.4",
+                "phpunit/phpunit": "^7 | ^8 | ^9",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "suggest": {
+                "ext-imagick": "to generate QR code images"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Analog": "lib/"
+                "psr-4": {
+                    "BaconQrCode\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
-                    "name": "Johnny Broadway",
-                    "email": "johnny@johnnybroadway.com",
-                    "homepage": "http://www.johnnybroadway.com/"
+                    "name": "Ben Scholzen 'DASPRiD'",
+                    "email": "mail@dasprids.de",
+                    "homepage": "https://dasprids.de/",
+                    "role": "Developer"
                 }
             ],
-            "description": "PHP logging class that can be extended via closures. Includes several pre-built handlers including file, mail, syslog, HTTP post, and MongoDB.",
-            "homepage": "https://github.com/jbroadway/analog",
-            "keywords": [
-                "alerts",
-                "debug",
-                "debugging",
-                "error",
-                "log",
-                "logger",
-                "logging",
-                "syslog"
-            ],
-            "time": "2019-03-05T22:41:22+00:00"
+            "description": "BaconQrCode is a QR code generator for PHP.",
+            "homepage": "https://github.com/Bacon/BaconQrCode",
+            "time": "2020-07-30T16:40:58+00:00"
         },
         {
-            "name": "beberlei/doctrineextensions",
+            "name": "beberlei/DoctrineExtensions",
             "version": "v1.1.9",
             "source": {
                 "type": "git",
@@ -473,6 +470,49 @@
                 "dot"
             ],
             "time": "2018-09-05T17:16:47+00:00"
+        },
+        {
+            "name": "dasprid/enum",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DASPRiD/Enum.git",
+                "reference": "5abf82f213618696dda8e3bf6f64dd042d8542b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DASPRiD/Enum/zipball/5abf82f213618696dda8e3bf6f64dd042d8542b2",
+                "reference": "5abf82f213618696dda8e3bf6f64dd042d8542b2",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7 | ^8 | ^9",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DASPRiD\\Enum\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Scholzen 'DASPRiD'",
+                    "email": "mail@dasprids.de",
+                    "homepage": "https://dasprids.de/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP 7.1 enum implementation",
+            "keywords": [
+                "enum",
+                "map"
+            ],
+            "time": "2020-10-02T16:03:48+00:00"
         },
         {
             "name": "defuse/php-encryption",
@@ -1316,6 +1356,197 @@
             "time": "2017-12-17T02:57:51+00:00"
         },
         {
+            "name": "endroid/installer",
+            "version": "1.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/endroid/installer.git",
+                "reference": "f6c383d69fe94b7d194a56caccb5f1f79725ad65"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/endroid/installer/zipball/f6c383d69fe94b7d194a56caccb5f1f79725ad65",
+                "reference": "f6c383d69fe94b7d194a56caccb5f1f79725ad65",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1 || ^2.0",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "composer/composer": "^1.8",
+                "endroid/quality": "dev-master"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                },
+                "class": "Endroid\\Installer\\Installer"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Endroid\\Installer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeroen van den Enden",
+                    "email": "info@endroid.nl"
+                }
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/endroid",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-04-23T12:37:40+00:00"
+        },
+        {
+            "name": "endroid/qr-code",
+            "version": "3.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/endroid/qr-code.git",
+                "reference": "8605e2c958ed568788da4e16bd8a9502e32f375f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/endroid/qr-code/zipball/8605e2c958ed568788da4e16bd8a9502e32f375f",
+                "reference": "8605e2c958ed568788da4e16bd8a9502e32f375f",
+                "shasum": ""
+            },
+            "require": {
+                "bacon/bacon-qr-code": "^2.0",
+                "ext-gd": "*",
+                "khanamiryan/qrcode-detector-decoder": "^1.0.2",
+                "myclabs/php-enum": "^1.5",
+                "php": ">=7.2",
+                "symfony/options-resolver": "^3.4||^4.4||^5.0",
+                "symfony/property-access": "^3.4||^4.4||^5.0"
+            },
+            "require-dev": {
+                "endroid/quality": "dev-master",
+                "setasign/fpdf": "^1.8"
+            },
+            "suggest": {
+                "roave/security-advisories": "Avoids installation of package versions with vulnerabilities",
+                "setasign/fpdf": "Required to use the FPDF writer.",
+                "symfony/security-checker": "Checks your composer.lock for vulnerabilities"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Endroid\\QrCode\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeroen van den Enden",
+                    "email": "info@endroid.nl"
+                }
+            ],
+            "description": "Endroid QR Code",
+            "homepage": "https://github.com/endroid/qr-code",
+            "keywords": [
+                "bundle",
+                "code",
+                "endroid",
+                "php",
+                "qr",
+                "qrcode"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/endroid",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-07-10T10:16:06+00:00"
+        },
+        {
+            "name": "endroid/qr-code-bundle",
+            "version": "3.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/endroid/qr-code-bundle.git",
+                "reference": "36d7e61e02d84c92702138cc1c6dac5a0565a5ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/endroid/qr-code-bundle/zipball/36d7e61e02d84c92702138cc1c6dac5a0565a5ff",
+                "reference": "36d7e61e02d84c92702138cc1c6dac5a0565a5ff",
+                "shasum": ""
+            },
+            "require": {
+                "endroid/installer": "^1.2.2",
+                "endroid/qr-code": "^3.7.8",
+                "php": ">=7.2",
+                "symfony/framework-bundle": "^3.4||^4.4||^5.0",
+                "symfony/twig-bundle": "^3.4||^4.4||^5.0",
+                "symfony/yaml": "^3.4||^4.4||^5.0"
+            },
+            "require-dev": {
+                "endroid/quality": "dev-master"
+            },
+            "suggest": {
+                "roave/security-advisories": "Avoids installation of package versions with vulnerabilities",
+                "symfony/security-checker": "Checks your composer.lock for vulnerabilities"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Endroid\\QrCodeBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeroen van den Enden",
+                    "email": "info@endroid.nl"
+                }
+            ],
+            "description": "Endroid QR Code Bundle",
+            "homepage": "https://github.com/endroid/qr-code-bundle",
+            "keywords": [
+                "bundle",
+                "code",
+                "endroid",
+                "php",
+                "qr",
+                "symfony"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/endroid",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-04-25T13:48:19+00:00"
+        },
+        {
             "name": "ezyang/htmlpurifier",
             "version": "v4.12.0",
             "source": {
@@ -2014,6 +2245,56 @@
             "time": "2014-01-12T16:20:24+00:00"
         },
         {
+            "name": "khanamiryan/qrcode-detector-decoder",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/khanamiryan/php-qrcode-detector-decoder.git",
+                "reference": "89b57f2d9939dd57394b83f6ccbd3e1a74659e34"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/khanamiryan/php-qrcode-detector-decoder/zipball/89b57f2d9939dd57394b83f6ccbd3e1a74659e34",
+                "reference": "89b57f2d9939dd57394b83f6ccbd3e1a74659e34",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6|^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zxing\\": "lib/"
+                },
+                "files": [
+                    "lib/Common/customFunctions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ashot Khanamiryan",
+                    "email": "a.khanamiryan@gmail.com",
+                    "homepage": "https://github.com/khanamiryan",
+                    "role": "Developer"
+                }
+            ],
+            "description": "QR code decoder / reader",
+            "homepage": "https://github.com/khanamiryan/php-qrcode-detector-decoder/",
+            "keywords": [
+                "barcode",
+                "qr",
+                "zxing"
+            ],
+            "time": "2020-04-19T16:18:51+00:00"
+        },
+        {
             "name": "league/tactician",
             "version": "v1.0.3",
             "source": {
@@ -2694,6 +2975,52 @@
             "time": "2017-11-03T21:04:01+00:00"
         },
         {
+            "name": "myclabs/php-enum",
+            "version": "1.7.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/php-enum.git",
+                "reference": "5f36467c7a87e20fbdc51e524fd8f9d1de80187c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/5f36467c7a87e20fbdc51e524fd8f9d1de80187c",
+                "reference": "5f36467c7a87e20fbdc51e524fd8f9d1de80187c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7",
+                "squizlabs/php_codesniffer": "1.*",
+                "vimeo/psalm": "^3.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MyCLabs\\Enum\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP Enum contributors",
+                    "homepage": "https://github.com/myclabs/php-enum/graphs/contributors"
+                }
+            ],
+            "description": "PHP Enum implementation",
+            "homepage": "http://github.com/myclabs/php-enum",
+            "keywords": [
+                "enum"
+            ],
+            "time": "2020-02-14T08:15:52+00:00"
+        },
+        {
             "name": "nikic/php-parser",
             "version": "v3.1.5",
             "source": {
@@ -3007,16 +3334,16 @@
         },
         {
             "name": "pelago/emogrifier",
-            "version": "v2.2.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MyIntervals/emogrifier.git",
-                "reference": "2472bc1c3a2dee8915ecc2256139c6100024332f"
+                "reference": "8ee7fb5ad772915451ed3415c1992bd3697d4983"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MyIntervals/emogrifier/zipball/2472bc1c3a2dee8915ecc2256139c6100024332f",
-                "reference": "2472bc1c3a2dee8915ecc2256139c6100024332f",
+                "url": "https://api.github.com/repos/MyIntervals/emogrifier/zipball/8ee7fb5ad772915451ed3415c1992bd3697d4983",
+                "reference": "8ee7fb5ad772915451ed3415c1992bd3697d4983",
                 "shasum": ""
             },
             "require": {
@@ -3034,7 +3361,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0.x-dev"
+                    "dev-master": "2.1.x-dev"
                 }
             },
             "autoload": {
@@ -3048,6 +3375,16 @@
             ],
             "authors": [
                 {
+                    "name": "John Reeve",
+                    "email": "jreeve@pelagodesign.com"
+                },
+                {
+                    "name": "Cameron Brooks"
+                },
+                {
+                    "name": "Jaime Prado"
+                },
+                {
                     "name": "Oliver Klee",
                     "email": "github@oliverklee.de"
                 },
@@ -3056,18 +3393,8 @@
                     "email": "zoli.szabo+github@gmail.com"
                 },
                 {
-                    "name": "John Reeve",
-                    "email": "jreeve@pelagodesign.com"
-                },
-                {
                     "name": "Jake Hotson",
                     "email": "jake@qzdesign.co.uk"
-                },
-                {
-                    "name": "Cameron Brooks"
-                },
-                {
-                    "name": "Jaime Prado"
                 }
             ],
             "description": "Converts CSS styles into inline style attributes in your HTML code",
@@ -3077,7 +3404,7 @@
                 "email",
                 "pre-processing"
             ],
-            "time": "2019-09-04T16:07:59+00:00"
+            "time": "2018-12-10T10:36:30+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",
@@ -3172,38 +3499,6 @@
                 "xlsx"
             ],
             "time": "2019-07-08T21:21:25+00:00"
-        },
-        {
-            "name": "prestashop/blockreassurance",
-            "version": "v3.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/blockreassurance.git",
-                "reference": "a9aaa86d0ed984796f4afe42c1abae827d1e4189"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/a9aaa86d0ed984796f4afe42c1abae827d1e4189",
-                "reference": "a9aaa86d0ed984796f4afe42c1abae827d1e4189",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "AFL - Academic Free License (AFL 3.0)"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop module blockreassurance",
-            "homepage": "https://github.com/PrestaShop/blockreassurance",
-            "time": "2017-06-29T07:28:29+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -3547,38 +3842,6 @@
             "time": "2017-02-20T11:14:52+00:00"
         },
         {
-            "name": "prestashop/ps_banner",
-            "version": "v2.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/ps_banner.git",
-                "reference": "9616f7fc9cda997ef1860562d3212fd021205805"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_banner/zipball/9616f7fc9cda997ef1860562d3212fd021205805",
-                "reference": "9616f7fc9cda997ef1860562d3212fd021205805",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "AFL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop module ps_banner",
-            "homepage": "https://github.com/PrestaShop/ps_banner",
-            "time": "2018-02-05T21:44:48+00:00"
-        },
-        {
             "name": "prestashop/ps_categorytree",
             "version": "v2.0.0",
             "source": {
@@ -3808,18 +4071,6 @@
         },
         {
             "name": "prestashop/ps_emailsubscription",
-<<<<<<< HEAD
-            "version": "v2.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/ps_emailsubscription.git",
-                "reference": "dddd04c9b0cab5908e71257ce662a07bcc8baee8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/dddd04c9b0cab5908e71257ce662a07bcc8baee8",
-                "reference": "dddd04c9b0cab5908e71257ce662a07bcc8baee8",
-=======
             "version": "v2.6.0",
             "source": {
                 "type": "git",
@@ -3830,7 +4081,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/d4ef6d74fe3dd3f2f3a0cd7c7c6b92bf0f9277f6",
                 "reference": "d4ef6d74fe3dd3f2f3a0cd7c7c6b92bf0f9277f6",
->>>>>>> 382f091f4114980f3eff949dcfa6831f17a9ba0c
                 "shasum": ""
             },
             "require": {
@@ -3849,11 +4099,7 @@
             ],
             "description": "PrestaShop module ps_emailsubscription",
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
-<<<<<<< HEAD
-            "time": "2019-08-30T17:15:50+00:00"
-=======
             "time": "2020-06-18T06:13:36+00:00"
->>>>>>> 382f091f4114980f3eff949dcfa6831f17a9ba0c
         },
         {
             "name": "prestashop/ps_facetedsearch",
@@ -4145,112 +4391,6 @@
             "description": "PrestaShop module ps_searchbar",
             "homepage": "https://github.com/PrestaShop/ps_searchbar",
             "time": "2017-03-23T10:36:40+00:00"
-        },
-        {
-<<<<<<< HEAD
-=======
-            "name": "prestashop/ps_sharebuttons",
-            "version": "v2.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/ps_sharebuttons.git",
-                "reference": "2a0302774b84820be38e76a34188d777de12403f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_sharebuttons/zipball/2a0302774b84820be38e76a34188d777de12403f",
-                "reference": "2a0302774b84820be38e76a34188d777de12403f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "AFL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop module ps_sharebuttons",
-            "homepage": "https://github.com/PrestaShop/ps_sharebuttons",
-            "time": "2020-05-20T12:16:49+00:00"
-        },
-        {
->>>>>>> 382f091f4114980f3eff949dcfa6831f17a9ba0c
-            "name": "prestashop/ps_shoppingcart",
-            "version": "v2.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/ps_shoppingcart.git",
-                "reference": "eea54698cfb4324508ae0c89efe737c1c3c03f17"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_shoppingcart/zipball/eea54698cfb4324508ae0c89efe737c1c3c03f17",
-                "reference": "eea54698cfb4324508ae0c89efe737c1c3c03f17",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.14",
-                "prestashop/php-coding-standards": "dev-master"
-            },
-            "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "AFL - Academic Free License (AFL 3.0)"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop module ps_shoppingcart",
-            "homepage": "https://github.com/PrestaShop/ps_shoppingcart",
-            "time": "2019-10-30T14:07:17+00:00"
-<<<<<<< HEAD
-=======
-        },
-        {
-            "name": "prestashop/ps_socialfollow",
-            "version": "v2.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/ps_socialfollow.git",
-                "reference": "2a1bb73cbcdcf929b876b624f033d87c8b101133"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_socialfollow/zipball/2a1bb73cbcdcf929b876b624f033d87c8b101133",
-                "reference": "2a1bb73cbcdcf929b876b624f033d87c8b101133",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "AFL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop module ps_socialfollow",
-            "homepage": "https://github.com/PrestaShop/ps_socialfollow",
-            "time": "2020-04-15T15:03:48+00:00"
->>>>>>> 382f091f4114980f3eff949dcfa6831f17a9ba0c
         },
         {
             "name": "prestashop/ps_themecusto",
@@ -5125,44 +5265,6 @@
             "time": "2019-08-05T13:44:51+00:00"
         },
         {
-            "name": "prestashop/welcome",
-            "version": "v6.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "a0ad26a5fdeb0311e1aea1a42be3d9c74e889a50"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/a0ad26a5fdeb0311e1aea1a42be3d9c74e889a50",
-                "reference": "a0ad26a5fdeb0311e1aea1a42be3d9c74e889a50",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "type": "prestashop-module",
-            "autoload": {
-                "psr-4": {
-                    "OnBoarding\\": "OnBoarding/"
-                },
-                "exclude-from-classmap": []
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "AFL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "Welcome module for PrestaShop helping the users to create products.",
-            "homepage": "https://github.com/PrestaShop/welcome",
-            "time": "2019-05-02T15:48:46+00:00"
-        },
-        {
             "name": "psr/cache",
             "version": "1.0.1",
             "source": {
@@ -5497,12 +5599,8 @@
                 "configuration",
                 "distribution"
             ],
-<<<<<<< HEAD
-            "time": "2019-06-18T15:43:58+00:00"
-=======
             "abandoned": true,
-            "time": "2018-12-14T17:36:15+00:00"
->>>>>>> a8d871e60b4d0b6e163afbcae4ae4cf6b320878a
+            "time": "2019-06-18T15:43:58+00:00"
         },
         {
             "name": "sensio/framework-extra-bundle",
@@ -5999,13 +6097,8 @@
                     "email": "BackEndTea@gmail.com"
                 },
                 {
-<<<<<<< HEAD
                     "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
-=======
-                    "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
->>>>>>> a8d871e60b4d0b6e163afbcae4ae4cf6b320878a
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -6865,6 +6958,58 @@
     ],
     "packages-dev": [
         {
+            "name": "analog/analog",
+            "version": "1.0.12-stable",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jbroadway/analog.git",
+                "reference": "4ac87ac59555db6eaba734b2b022fcc296e8729d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jbroadway/analog/zipball/4ac87ac59555db6eaba734b2b022fcc296e8729d",
+                "reference": "4ac87ac59555db6eaba734b2b022fcc296e8729d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "psr/log": "1.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.36 || ^5.7 || ^6.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Analog": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Johnny Broadway",
+                    "email": "johnny@johnnybroadway.com",
+                    "homepage": "http://www.johnnybroadway.com/"
+                }
+            ],
+            "description": "PHP logging class that can be extended via closures. Includes several pre-built handlers including file, mail, syslog, HTTP post, and MongoDB.",
+            "homepage": "https://github.com/jbroadway/analog",
+            "keywords": [
+                "alerts",
+                "debug",
+                "debugging",
+                "error",
+                "log",
+                "logger",
+                "logging",
+                "syslog"
+            ],
+            "time": "2019-03-05T22:41:22+00:00"
+        },
+        {
             "name": "behat/behat",
             "version": "v3.6.1",
             "source": {
@@ -7188,6 +7333,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
+            "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
@@ -7337,11 +7483,7 @@
         },
         {
             "name": "mikey179/vfsstream",
-<<<<<<< HEAD
             "version": "v1.6.8",
-=======
-            "version": "v1.6.5",
->>>>>>> a8d871e60b4d0b6e163afbcae4ae4cf6b320878a
             "source": {
                 "type": "git",
                 "url": "https://github.com/bovigo/vfsStream.git",
@@ -7995,7 +8137,6 @@
             "keywords": [
                 "tokenizer"
             ],
-            "abandoned": true,
             "time": "2017-12-04T08:55:13+00:00"
         },
         {
@@ -8139,6 +8280,208 @@
             ],
             "abandoned": true,
             "time": "2017-06-30T09:13:00+00:00"
+        },
+        {
+            "name": "prestashop/blockreassurance",
+            "version": "v3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockreassurance.git",
+                "reference": "a9aaa86d0ed984796f4afe42c1abae827d1e4189"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/a9aaa86d0ed984796f4afe42c1abae827d1e4189",
+                "reference": "a9aaa86d0ed984796f4afe42c1abae827d1e4189",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockreassurance",
+            "homepage": "https://github.com/PrestaShop/blockreassurance",
+            "time": "2017-06-29T07:28:29+00:00"
+        },
+        {
+            "name": "prestashop/ps_banner",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_banner.git",
+                "reference": "9616f7fc9cda997ef1860562d3212fd021205805"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_banner/zipball/9616f7fc9cda997ef1860562d3212fd021205805",
+                "reference": "9616f7fc9cda997ef1860562d3212fd021205805",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module ps_banner",
+            "homepage": "https://github.com/PrestaShop/ps_banner",
+            "time": "2018-02-05T21:44:48+00:00"
+        },
+        {
+            "name": "prestashop/ps_sharebuttons",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_sharebuttons.git",
+                "reference": "2a0302774b84820be38e76a34188d777de12403f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_sharebuttons/zipball/2a0302774b84820be38e76a34188d777de12403f",
+                "reference": "2a0302774b84820be38e76a34188d777de12403f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module ps_sharebuttons",
+            "homepage": "https://github.com/PrestaShop/ps_sharebuttons",
+            "time": "2020-05-20T12:16:49+00:00"
+        },
+        {
+            "name": "prestashop/ps_shoppingcart",
+            "version": "v2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_shoppingcart.git",
+                "reference": "eea54698cfb4324508ae0c89efe737c1c3c03f17"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_shoppingcart/zipball/eea54698cfb4324508ae0c89efe737c1c3c03f17",
+                "reference": "eea54698cfb4324508ae0c89efe737c1c3c03f17",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.14",
+                "prestashop/php-coding-standards": "dev-master"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module ps_shoppingcart",
+            "homepage": "https://github.com/PrestaShop/ps_shoppingcart",
+            "time": "2019-10-30T14:07:17+00:00"
+        },
+        {
+            "name": "prestashop/ps_socialfollow",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_socialfollow.git",
+                "reference": "2a1bb73cbcdcf929b876b624f033d87c8b101133"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_socialfollow/zipball/2a1bb73cbcdcf929b876b624f033d87c8b101133",
+                "reference": "2a1bb73cbcdcf929b876b624f033d87c8b101133",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module ps_socialfollow",
+            "homepage": "https://github.com/PrestaShop/ps_socialfollow",
+            "time": "2020-04-15T15:03:48+00:00"
+        },
+        {
+            "name": "prestashop/welcome",
+            "version": "v6.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/welcome.git",
+                "reference": "a0ad26a5fdeb0311e1aea1a42be3d9c74e889a50"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/a0ad26a5fdeb0311e1aea1a42be3d9c74e889a50",
+                "reference": "a0ad26a5fdeb0311e1aea1a42be3d9c74e889a50",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "prestashop-module",
+            "autoload": {
+                "psr-4": {
+                    "OnBoarding\\": "OnBoarding/"
+                },
+                "exclude-from-classmap": []
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "Welcome module for PrestaShop helping the users to create products.",
+            "homepage": "https://github.com/PrestaShop/welcome",
+            "time": "2019-05-02T15:48:46+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -8655,18 +8998,6 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-<<<<<<< HEAD
-            "version": "v3.4.40",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "58c7de42b8b13c3bec82dbb8a87d00e4d83dd7c2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/58c7de42b8b13c3bec82dbb8a87d00e4d83dd7c2",
-                "reference": "58c7de42b8b13c3bec82dbb8a87d00e4d83dd7c2",
-=======
             "version": "v3.4.42",
             "source": {
                 "type": "git",
@@ -8677,7 +9008,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/ac355e1e9ebde4cf6ef5187f5cf4b43001f9a29f",
                 "reference": "ac355e1e9ebde4cf6ef5187f5cf4b43001f9a29f",
->>>>>>> 382f091f4114980f3eff949dcfa6831f17a9ba0c
                 "shasum": ""
             },
             "require": {
@@ -8743,11 +9073,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2020-04-25T12:18:34+00:00"
-=======
             "time": "2020-06-04T15:36:03+00:00"
->>>>>>> 382f091f4114980f3eff949dcfa6831f17a9ba0c
         },
         {
             "name": "symfony/polyfill-php72",

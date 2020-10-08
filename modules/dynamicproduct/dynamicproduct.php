@@ -1293,7 +1293,10 @@ class DynamicProduct extends Module
         if (Tools::getValue('controller') === 'validation') {
             $input->price = $this->calculator->applyTax($input->price, false, false, $input->id_product);
         }
+
+
         $this->context->smarty->assign(array(
+            'controller' => Context::getContext()->controller->controller_name,
             'is_pdf'   => Tools::getValue('controller') === 'AdminPdf' || !empty($_POST),
             'is_admin' => true,
             'input'    => $input,

@@ -27,7 +27,7 @@
       {if count($input->input_fields)}
           {foreach from=$input->input_fields item=input_field}
               {if $input_field->isSkipped()}{continue}{/if}
-            <strong>{$input_field->label|escape:'htmlall':'UTF-8'}:</strong>
+            <strong>{$input_field->name|escape:'htmlall':'UTF-8'}</strong>
               {if $input_field->getTemplatePath()}
                   {include file=$input_field->getTemplatePath()}
               {else}
@@ -42,8 +42,7 @@
           {$input->weight|floatval} {Configuration::get('PS_WEIGHT_UNIT')|escape:'htmlall':'UTF-8'}
         <br>
       {/if}
-
-      {if !$is_pdf}
+      {if !$is_pdf && $controller != 'Admin'}
         <a target="_blank" class="btn btn-default" style="margin-top: 10px;"
            href="{$input->getEditLink(true)|escape:'htmlall':'UTF-8'}">{l s='Edit this customization' mod='dynamicproduct'}</a>
       {/if}

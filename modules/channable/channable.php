@@ -31,13 +31,17 @@ if (!defined('_PS_VERSION_')) {
 class Channable extends Module
 {
     protected $config_form = false;
+    protected $this_file = __FILE__;
     protected static $sent_update_ids = array();
 
+    /**
+     * Channable constructor.
+     */
     public function __construct()
     {
         $this->name = 'channable';
         $this->tab = 'market_place';
-        $this->version = '2.5.5';
+        $this->version = '2.5.9';
         $this->author = 'patworx multimedia GmbH';
         $this->need_instance = 1;
 
@@ -58,6 +62,10 @@ class Channable extends Module
         require_once(dirname(__FILE__) . '/classes/ChannableProduct.php');
     }
 
+    /**
+     * @return bool
+     * @throws PrestaShopException
+     */
     public function install()
     {
         $this->enableApi();
@@ -99,9 +107,13 @@ class Channable extends Module
             $this->registerHook('actionUpdateQuantity') &&
             $this->registerHook('actionProductUpdate') &&
             $this->registerHook('actionProductAttributeUpdate') &&
+            $this->registerHook('adminOrder') &&
             $this->registerHook('backOfficeHeader');
     }
 
+    /**
+     * @return bool
+     */
     public function uninstall()
     {
         Configuration::deleteByName('CHANNABLE_FEEDMODE_ALTERNATIVE');
@@ -115,6 +127,12 @@ class Channable extends Module
         return parent::uninstall();
     }
 
+    /**
+     * @return bool|string
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws SmartyException
+     */
     public function getContent()
     {
         if (((bool)Tools::isSubmit('submitChannableModule')) == true) {
@@ -200,6 +218,10 @@ class Channable extends Module
         return $output;
     }
 
+    /**
+     * @return string
+     * @throws PrestaShopException
+     */
     protected function renderForm()
     {
         $helper = new HelperForm();
@@ -224,7 +246,10 @@ class Channable extends Module
     
         return $helper->generateForm(array($this->getConfigForm()));
     }
-    
+
+    /**
+     * @return array[]
+     */
     protected function getConfigForm()
     {
         return array(
@@ -387,7 +412,10 @@ class Channable extends Module
             ),
         );
     }
-    
+
+    /**
+     * @return array
+     */
     protected function getConfigFormValues()
     {
         return array(
@@ -402,7 +430,10 @@ class Channable extends Module
             'CHANNABLE_USE_GUEST_CHECKOUT' => Tools::getValue('CHANNABLE_USE_GUEST_CHECKOUT', Configuration::get('CHANNABLE_USE_GUEST_CHECKOUT') == '1' ? 1 : 0),
         );
     }
-    
+
+    /**
+     * update config routine
+     */
     protected function postProcess()
     {
         $form_values = $this->getConfigFormValues();
@@ -412,6 +443,9 @@ class Channable extends Module
         }
     }
 
+    /**
+     * Backoffice header hook
+     */
     public function hookBackOfficeHeader()
     {
         if (Tools::getValue('module_name') == $this->name ||
@@ -421,7 +455,12 @@ class Channable extends Module
             $this->context->controller->addCSS($this->_path.'views/css/back.css');
         }
     }
-    
+
+    /**
+     * @param $params
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function hookActionUpdateQuantity($params)
     {
         $sql = 'SELECT product_attribute_shop.id_product_attribute
@@ -438,7 +477,12 @@ class Channable extends Module
             $this->sendProductUpdate($params);
         }
     }
-    
+
+    /**
+     * @param $params
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function hookActionProductUpdate($params)
     {   
         $sql = 'SELECT product_attribute_shop.id_product_attribute
@@ -455,12 +499,22 @@ class Channable extends Module
             $this->sendProductUpdate($params);
         }
     }
-    
+
+    /**
+     * @param $params
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function hookActionProductAttributeUpdate($params)
     {
         $this->sendProductUpdate($params);
     }
-    
+
+    /**
+     * @param $params
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     protected function sendProductUpdate($params)
     {
         $webHookData = ChannableWebhook::getAllWebhooks();
@@ -530,7 +584,11 @@ class Channable extends Module
             */
         }
     }
-    
+
+    /**
+     * @return bool
+     * @throws PrestaShopException
+     */
     protected function enableApi()
     {
         Configuration::updateValue('PS_WEBSERVICE', 1);
@@ -562,13 +620,21 @@ class Channable extends Module
         Configuration::updateValue('CHANNABLE_API_ID', (int)$webserviceKey->id);
         return true;
     }
-    
+
+    /**
+     * @param $type
+     * @return false|string[]
+     */
     public function getOrderStates($type)
     {
         $states = Configuration::get('CHANNABLE_ORDER_STATES_' . Tools::strtoupper($type));
         return explode(',', $states);
     }
 
+    /**
+     * @param $type
+     * @return false|string[]
+     */
     public static function getChannableOrderStates($type)
     {
         switch ($type) {
@@ -582,9 +648,29 @@ class Channable extends Module
                 break;
         }
     }
-    
+
+    /**
+     * @return bool|string
+     */
     public static function fetchPhpInput()
     {
         return Tools::file_get_contents('php://input');
+    }
+
+    /**
+     * @param $params
+     * @return bool|string|void
+     * @throws PrestaShopDatabaseException
+     */
+    public function hookAdminOrder($params)
+    {
+        if (!isset($params['id_order'])) {
+            return;
+        }
+        $additionalData = ChannableOrdersAdditionalData::getByOrderId($params['id_order']);
+        if ($additionalData) {
+            $this->context->smarty->assign('additionalData', $additionalData);
+            return $this->display($this->this_file, 'views/templates/admin/hookAdminOrder.tpl');
+        }
     }
 }

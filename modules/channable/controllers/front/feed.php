@@ -147,7 +147,6 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                    AND (pas.id_shop = \'' . (int)Context::getContext()->shop->id . '\' OR pas.id_shop IS NULL)
                        ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
                        ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (pq.quantity > 0) ' : '') . '
-                       AND p.id_category_default NOT IN(\'1278\',\'1279\')
               GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
               ORDER BY p.id_product ' . $limit_string;
                 
@@ -227,7 +226,6 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 (pas.id_shop = \'' . (int)Context::getContext()->shop->id . '\' OR pas.id_shop IS NULL)
                 ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
                 ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (' . (Configuration::get('PS_STOCK_MANAGEMENT') ? 'sav.quantity' : 'pq.quantity') . ' > 0) ' : '') . '
-                AND p.id_category_default NOT IN(\'1278\',\'1279\')
             GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
             ORDER BY p.id_product ' . ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? '' : $limit_string);
                     
@@ -475,16 +473,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                             $row[$key] = $specData[1];
                         }
                     }
-                    $features = $this->getFeatures($row['parent_id']);
-                    if (is_array($features)) {
-                        foreach ($features as $feature) {
-                            $key = Tools::strtolower($feature['name']);
-                            if (isset($row[$key])) {
-                                $key = $key . '-2';
-                            }
-                            $row[$key] = $feature['value'];
-                        }
-                    }
+                    $row = $this->buildFeatures($row);
                     unset($row['combination']);
                     unset($row['specifications']);
                 } else {
@@ -500,16 +489,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                             $row[Tools::strtolower($combination['group_name'])] = $combination['attribute_name'];
                         }
                     }
-                    $features = $this->getFeatures($row['parent_id']);
-                    if (is_array($features)) {
-                        foreach ($features as $feature) {
-                            $key = Tools::strtolower($feature['name']);
-                            if (isset($row[$key])) {
-                                $key = $key . '-2';
-                            }
-                            $row[$key] = $feature['value'];
-                        }
-                    }
+                    $row = $this->buildFeatures($row);
                 }
                 
                 if ($currency) {
@@ -604,7 +584,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                     $specific_prices_obj
                     );
                 
-                if (!isset($row['tax_rate'])) {
+                if (!isset($row['tax_rate']) || is_null($row['tax_rate'])) {
                     if (isset($channable_default_address_id)) {
                         Context::getContext()->cart->id_customer = $channable_customer_id;
                         Context::getContext()->cart->id_address_delivery = (int)$channable_default_address_id;
@@ -618,6 +598,11 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                     if (Context::getContext()->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} != null) {
                         $address = Context::getContext()->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
                         $product->tax_rate = $product->getTaxesRate(new Address($address));
+                    } else {
+                        try {
+                            $product->tax_rate = $product->getTaxesRate();
+                        } catch (\Exception $e) {
+                        }
                     }
                     $row['tax_rate'] = $product->tax_rate;
                 }
@@ -736,7 +721,10 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
         echo Tools::jsonEncode($items);
         die();
     }
-    
+
+    /**
+     * @return string
+     */
     protected function getPossibleCombinationQuery()
     {
         if (Configuration::get('CHANNABLE_FEEDMODE_ALTERNATIVE') != 1) {
@@ -744,7 +732,10 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                     SEPARATOR \'' . self::$combination_separator . '\') as combination,';
         }
     }
-    
+
+    /**
+     * @return string
+     */
     protected function getPossibleSpecificationsQuery()
     {
         if (Configuration::get('CHANNABLE_FEEDMODE_ALTERNATIVE') != 1) {
@@ -752,7 +743,10 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                     SEPARATOR \'' . self::$combination_separator . '\') as specifications,';
         }
     }
-    
+
+    /**
+     * @return string
+     */
     protected function getPossibleCategoriesQuery()
     {
         if (Configuration::get('CHANNABLE_FEEDMODE_ALTERNATIVE') != 1) {
@@ -760,7 +754,10 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                     cpl.name as product_category, ';
         }
     }
-    
+
+    /**
+     * @return string
+     */
     protected function getPossibleCombinationGroupLangJoin()
     {
         if (Configuration::get('CHANNABLE_FEEDMODE_ALTERNATIVE') != 1) {
@@ -768,7 +765,10 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 '._DB_PREFIX_.'attribute_group_lang pgl ON (pgl.id_attribute_group = pattrib.id_attribute_group)';
         }
     }
-    
+
+    /**
+     * @return string
+     */
     protected function getPossibleFeaturesJoins()
     {
         if (Configuration::get('CHANNABLE_FEEDMODE_ALTERNATIVE') != 1) {
@@ -780,7 +780,10 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 '._DB_PREFIX_.'feature_value_lang fvl ON (fp.id_feature_value = fvl.id_feature_value)';
         }
     }
-    
+
+    /**
+     * @return string
+     */
     protected function getPossibleCategoriesJoins()
     {
         if (Configuration::get('CHANNABLE_FEEDMODE_ALTERNATIVE') != 1) {
@@ -792,7 +795,10 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 '._DB_PREFIX_.'category_lang cpl2 ON (cp.id_category = cpl2.id_category) ';
         }
     }
-    
+
+    /**
+     * @return string
+     */
     protected function getPossibleCombinationWhere()
     {
         if (Configuration::get('CHANNABLE_FEEDMODE_ALTERNATIVE') != 1) {
@@ -800,7 +806,10 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 (pgl.id_lang = pl.id_lang OR pgl.id_lang IS NULL)';
         }
     }
-    
+
+    /**
+     * @return string
+     */
     protected function getPossibleFeaturesWhere()
     {
         if (Configuration::get('CHANNABLE_FEEDMODE_ALTERNATIVE') != 1) {
@@ -810,7 +819,10 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 (fvl.id_lang = pl.id_lang OR fvl.id_lang IS NULL)';
         }
     }
-    
+
+    /**
+     * @return string
+     */
     protected function getPossibleCategoriesWhere()
     {
         if (Configuration::get('CHANNABLE_FEEDMODE_ALTERNATIVE') != 1) {
@@ -820,7 +832,12 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 (cpl2.id_lang = pl.id_lang OR cpl2.id_lang IS NULL) ';
         }
     }
-    
+
+    /**
+     * @param $id_product
+     * @return array|bool|false|mysqli_result|PDOStatement|resource|null
+     * @throws PrestaShopDatabaseException
+     */
     protected function getFeatures($id_product)
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -834,13 +851,22 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                   AND (fvl.id_lang = ' . (int)Context::getContext()->language->id . ')');
         return $result;
     }
-    
+
+    /**
+     * @param $id_product
+     * @return string
+     */
     protected function fetchCategories($id_product)
     {
         $categories = ProductCore::getProductCategories((int)$id_product);
         return join(",", $categories);
     }
-    
+
+    /**
+     * @param $id_product_attribute
+     * @return array|bool|false|mysqli_result|PDOStatement|resource|null
+     * @throws PrestaShopDatabaseException
+     */
     protected function getAttributesImages($id_product_attribute)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -852,7 +878,10 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
             ORDER BY i.position
 		');
     }
-    
+
+    /**
+     * @return string
+     */
     protected function getManualAssignedFeedFields()
     {
         $feedfields = ChannableFeedfield::getAllFeedfields();
@@ -864,7 +893,34 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
         }
         return $ret;
     }
-    
+
+    /**
+     * @param $row
+     * @return mixed
+     */
+    protected function buildFeatures($row)
+    {
+        $features = $this->getFeatures($row['parent_id']);
+        if (is_array($features)) {
+            foreach ($features as $feature) {
+                $key = Tools::strtolower($feature['name']);
+                if (isset($row[$key])) {
+                    if (substr($row[$key], 0, 5) != 'list:') {
+                        $row[$key] = 'list: ' . $row[$key];
+                    }
+                    $row[$key] = $row[$key] . '|' . $feature['value'];
+                } else {
+                    $row[$key] = $feature['value'];
+                }
+            }
+        }
+        return $row;
+    }
+
+    /**
+     * @param $table
+     * @return string
+     */
     protected function getTableShort($table)
     {
         switch ($table) {

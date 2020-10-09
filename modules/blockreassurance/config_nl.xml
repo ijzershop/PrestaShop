@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>blockreassurance</name>
+    <displayName><![CDATA[Blok overtuigen]]></displayName>
+    <version><![CDATA[3.0.1]]></version>
+    <description><![CDATA[Voeg een blok toe om extra informatie te tonen om uw klanten te overtuigen]]></description>
+    <author><![CDATA[PrestaShop]]></author>
+    <tab><![CDATA[]]></tab>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

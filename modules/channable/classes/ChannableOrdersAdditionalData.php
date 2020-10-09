@@ -63,5 +63,25 @@ class ChannableOrdersAdditionalData extends ObjectModel
             )
         )
     );
+
+    /**
+     * @param $id_order
+     * @return array|bool
+     * @throws PrestaShopDatabaseException
+     */
+    public static function getByOrderId($id_order)
+    {
+        $return = false;
+        $sql = 'SELECT * FROM '._DB_PREFIX_.self::$definition['table'].' WHERE id_order = ' . (int)$id_order;
+        if ($results = Db::getInstance()->ExecuteS($sql)) {
+            foreach ($results as $row) {
+                if (!$return) {
+                    $return = [];
+                }
+                $return[] = $row;
+            }
+        }
+        return $return;
+    }
         
 }

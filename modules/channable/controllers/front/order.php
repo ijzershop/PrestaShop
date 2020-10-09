@@ -37,10 +37,13 @@ class ChannableOrderModuleFrontController extends ModuleFrontController
     
     const GENDER_MALE = '1';
     const GENDER_FEMALE = '2';
-    
+
+    /**
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function postProcess()
     {
-        
         if (!Tools::getValue('key')) {
             die('Not authenticated');
         }
@@ -81,9 +84,10 @@ class ChannableOrderModuleFrontController extends ModuleFrontController
                         }
                         if (!$checkedProduct) {
                             $valid = false;
-                        }
-                        if (!$checkedProduct->checkQty((int)$product->quantity)) {
-                            $error_array[] = 'Product out of stock';
+                        } else {
+                            if (!$checkedProduct->checkQty((int)$product->quantity)) {
+                                $error_array[] = 'Product out of stock';
+                            }
                         }
                     }
                 }
@@ -119,7 +123,16 @@ class ChannableOrderModuleFrontController extends ModuleFrontController
                             
                             $this->context->customer = $customer;
                             $this->context->cart = new Cart();
-                            $this->context->cart->id_currency = Currency::getDefaultCurrency()->id;
+
+                            $id_currency = Currency::getDefaultCurrency()->id;
+                            if (isset($postData->price->currency)) {
+                                $currencyDetect = Currency::getIdByIsoCode($postData->price->currency);
+                                if ($currencyDetect > 0) {
+                                    $id_currency = (int)$currencyDetect;
+                                }
+                            }
+
+                            $this->context->cart->id_currency = $id_currency;
                             $this->context->cart->id_lang = Configuration::get('PS_LANG_DEFAULT');
                             $this->context->cart->id_customer = (int) $customer->id;
                             $this->context->cart->add();
@@ -129,7 +142,9 @@ class ChannableOrderModuleFrontController extends ModuleFrontController
                                 if (!$product) {
                                     $product = $this->checkAndGetProduct($channable_product->gtin);
                                 }
-                                $this->context->cart->updateQty((int)$channable_product->quantity, (int)$product->id, (isset($product->id_product_attribute) ? $product->id_product_attribute : null));
+                                if ($product) {
+                                    $this->context->cart->updateQty((int)$channable_product->quantity, (int)$product->id, (isset($product->id_product_attribute) ? $product->id_product_attribute : null));
+                                }
                             }
                             
                             $order = new Order();
@@ -142,16 +157,16 @@ class ChannableOrderModuleFrontController extends ModuleFrontController
                                     } else {
                                         $rate = $product_list[$product_key]['rate'];
                                     }
-                                    $product_list[$product_key]['price'] = round((float)($product->price / (100 + $rate) * 100));
+                                    $product_list[$product_key]['price'] = round((float)($product->price / (100 + $rate) * 100), 6);
                                     $product_list[$product_key]['price_without_reduction'] = $product->price;
                                     $product_list[$product_key]['price_with_reduction'] = $product->price;
                                     $product_list[$product_key]['price_with_reduction_without_tax'] = $product->price / (100 + $rate) * 100;
-                                    $product_list[$product_key]['total'] = $product->price;
-                                    $product_list[$product_key]['total_wt'] = (float)$product->price;
+                                    $product_list[$product_key]['total'] = (float)(($product->price / (100 + $rate) * 100) * $product->quantity);
+                                    $product_list[$product_key]['total_wt'] = (float)($product->price * $product->quantity);
                                     $product_list[$product_key]['price_wt'] = round((float)$product->price, 6);
                                 }
                             }
-                            
+
                             $delivery_address = new Address();
                             $delivery_address->id_customer = (int) $customer->id;
                             $delivery_address->id_country = Country::getByIso($postData->shipping->country_code);
@@ -180,6 +195,9 @@ class ChannableOrderModuleFrontController extends ModuleFrontController
                             $invoice_address->id_customer = (int) $customer->id;
                             $invoice_address->id_country = Country::getByIso($postData->billing->country_code);
                             $invoice_address->alias = 'Invoice Address';
+                            if (isset($postData->billing->company)) {
+                                $invoice_address->company = $postData->billing->company;
+                            }
                             $invoice_address->lastname = $postData->billing->last_name;
                             $invoice_address->firstname = $postData->billing->first_name;
                             $invoice_address->address1 = $postData->billing->address_line_1;
@@ -198,6 +216,9 @@ class ChannableOrderModuleFrontController extends ModuleFrontController
                             }
                             $invoice_address->phone_mobile = $postData->customer->mobile;
                             $invoice_address->phone = $postData->customer->phone;
+                            if (isset($postData->billing->vat_number)) {
+                                $invoice_address->vat_number = $postData->billing->vat_number;
+                            }
                             $invoice_address->save();
                             
                             $order->product_list = $product_list;
@@ -212,7 +233,7 @@ class ChannableOrderModuleFrontController extends ModuleFrontController
                             $order->id_customer = (int)$customer->id;
                             $order->id_address_invoice = (int)$invoice_address->id;
                             $order->id_address_delivery = (int)$delivery_address->id;
-                            $order->id_currency = Currency::getDefaultCurrency()->id;
+                            $order->id_currency = $id_currency;
                             $order->id_lang = Configuration::get('PS_LANG_DEFAULT');
                             $order->id_cart = $this->context->cart->id;
                             $order->reference = $postData->channable_id;
@@ -264,7 +285,7 @@ class ChannableOrderModuleFrontController extends ModuleFrontController
                             
                             $order_status_id = Configuration::get('CHANNABLE_ORDER_STATE_IMPORT');
                             $order->setCurrentState($order_status_id);
-                            
+
                             $order_list = array($order);
                             
                             $order_detail = new OrderDetail(null, null, $this->context);
@@ -288,6 +309,41 @@ class ChannableOrderModuleFrontController extends ModuleFrontController
                                 $ordersAdditionalData->field_in_post = 'commission';
                                 $ordersAdditionalData->value_in_post = (float)$postData->price->commission;
                                 $ordersAdditionalData->save();
+                            }
+                            if (isset($postData->channel_name)) {
+                                $ordersAdditionalData = new ChannableOrdersAdditionalData();
+                                $ordersAdditionalData->id_order = (int)$order->id;
+                                $ordersAdditionalData->field_in_post = 'marketplace';
+                                $ordersAdditionalData->value_in_post = $postData->channel_name;
+                                $ordersAdditionalData->save();
+                            }
+                            if (isset($postData->channel_id)) {
+                                $ordersAdditionalData = new ChannableOrdersAdditionalData();
+                                $ordersAdditionalData->id_order = (int)$order->id;
+                                $ordersAdditionalData->field_in_post = 'marketplace_order_id';
+                                $ordersAdditionalData->value_in_post = $postData->channel_id;
+                                $ordersAdditionalData->save();
+                            }
+
+                            $transaction_id = '';
+                            if (isset($postData->price->transaction_id)) {
+                                $transaction_id = $postData->price->transaction_id;
+                            }
+
+                            $orderPayment = OrderPayment::getByOrderReference(
+                                $order->reference
+                            );
+                            if (is_array($orderPayment) && sizeof($orderPayment) > 0) {
+                                $currentPaymentObject = current($orderPayment);
+                                $currentPaymentObject->payment_method = $postData->price->payment_method;
+                                $currentPaymentObject->transaction_id = $transaction_id;
+                                $currentPaymentObject->update();
+                            } else {
+                                $order->addOrderPayment(
+                                    $order->total_paid_real,
+                                    $postData->price->payment_method,
+                                    $transaction_id
+                                );
                             }
                             
                             if (Configuration::get('CHANNABLE_COMMENT_AS_NOTE') == '1') {
@@ -354,7 +410,13 @@ class ChannableOrderModuleFrontController extends ModuleFrontController
         }
         die();
     }
-    
+
+    /**
+     * @param $id
+     * @return bool|Product
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     private function checkAndGetProductById($id)
     {
         $ids = explode("_", $id);
@@ -390,9 +452,18 @@ class ChannableOrderModuleFrontController extends ModuleFrontController
         }
         return false;
     }
-    
+
+    /**
+     * @param $gtin
+     * @return bool|Product
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     private function checkAndGetProduct($gtin)
     {
+        if (trim($gtin) == '') {
+            return false;
+        }
         $result = Db::getInstance()->executeS(
             'SELECT p.`id_product` AS id
     			FROM `'._DB_PREFIX_.'product` p

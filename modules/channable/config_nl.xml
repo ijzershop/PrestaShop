@@ -2,7 +2,7 @@
 <module>
     <name>channable</name>
     <displayName><![CDATA[Channable]]></displayName>
-    <version><![CDATA[2.5.5]]></version>
+    <version><![CDATA[2.5.9]]></version>
     <description><![CDATA[channable module om uw winkel aan te sluiten op de dienst van channable]]></description>
     <author><![CDATA[patworx multimedia GmbH]]></author>
     <tab><![CDATA[market_place]]></tab>

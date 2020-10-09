@@ -79,7 +79,7 @@
 
 
   $(document).ready(function() {
-      var availableCustomers = JSON.parse('{json_encode(Customer::getCustomers(true))}');
+      var availableCustomers = {json_encode(Customer::getCustomers(true))};
       var availableCustomersList = availableCustomers.map(function(elem, index) {
         return elem.email+' # '+elem.firstname+' '+elem.lastname;
       });

@@ -53,3 +53,50 @@
     }
   </style>
   {/if}
+<style type="text/css">
+  /*Koopman settings */
+.cc-koopman{
+  margin-top:10px;
+}
+
+
+  .cc-koopman input{
+    position:absolute;
+    z-index:999;
+}
+.envelope{
+  background-image:url('../modules/koopmanorderexport/views/templates/img/envelop_koopman.png');
+}
+.plaat{
+  background-image:url('../modules/koopmanorderexport/views/templates/img/plaat_koopman.png');
+}
+.meter-1{
+  background-image:url('../modules/koopmanorderexport/views/templates/img/1m_koopman.png');
+}
+.meter-larger-2{
+  background-image:url('../modules/koopmanorderexport/views/templates/img/2m+35_koopman.png');
+}
+.meter-smaller-2{
+  background-image:url('../modules/koopmanorderexport/views/templates/img/2m-35_koopman.png');
+}
+.type-cc{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:80px;height:80px;
+    margin:0px 15px 0px 0px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: opacity(1);
+       -moz-filter: opacity(1);
+            filter: opacity(1);
+}
+.type-cc:hover{
+    -webkit-filter: opacity(.7);
+       -moz-filter: opacity(.7);
+            filter: opacity(.7);
+}
+  </style>
+</style>

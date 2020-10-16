@@ -358,4 +358,3 @@ tools/build/releases/*
 !tools/build/releases/.gitkeep
 dynamicproduct/cache/input-116-1-1.html
 dynamicproduct/cache/
-config/defines.inc.php

@@ -44,6 +44,15 @@ class Cart extends CartCore
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
         }
+
+        $cookie = new Cookie('psAdmin', '', (int)Configuration::get('PS_COOKIE_LIFETIME_BO'));
+        if (isset($cookie->id_employee) && $cookie->id_employee) {
+            if(in_array($cookie->profile, explode(',',Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_SHOP_PROFILES')))){
+                $id_carrier = 7;
+            }
+        }
+
+
         if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
             $type = Cart::ONLY_PRODUCTS;
         }

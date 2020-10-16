@@ -99,14 +99,12 @@ class CartController extends CartControllerCore
         $cookie = new Cookie('psAdmin', '', (int)Configuration::get('PS_COOKIE_LIFETIME_BO'));
         if (isset($cookie->id_employee) && $cookie->id_employee) {
             if(in_array($cookie->profile, explode(',',Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_SHOP_PROFILES')))){
-
+                $this->context->smarty->assign([
+                    'isEmployee'=> true,
+                    'canPrintShoppingCart'=> true
+                ]);
             }
         }
-
-        $this->context->smarty->assign([
-            'isEmployee'=> true,
-            'canPrintShoppingCart'=> true
-        ]);
         // end check employee login and generate store slip
     
         $presenter = new CartPresenter();

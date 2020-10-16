@@ -85,4 +85,46 @@ class CartController extends CartControllerCore
         }
     }
 
+
+    /**
+     * @see FrontController::initContent()
+     */
+    public function initContent()
+    {
+        if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show') {
+            Tools::redirect('index.php');
+        }
+
+        // check employee login and generate store slip
+        $cookie = new Cookie('psAdmin', '', (int)Configuration::get('PS_COOKIE_LIFETIME_BO'));
+        if (isset($cookie->id_employee) && $cookie->id_employee) {
+            if(in_array($cookie->profile, explode(',',Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_SHOP_PROFILES')))){
+
+            }
+        }
+
+        $this->context->smarty->assign([
+            'isEmployee'=> true,
+            'canPrintShoppingCart'=> true
+        ]);
+        // end check employee login and generate store slip
+    
+        $presenter = new CartPresenter();
+        $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true);
+
+        $this->context->smarty->assign([
+            'cart' => $presented_cart,
+            'static_token' => Tools::getToken(false),
+        ]);
+
+        if (count($presented_cart['products']) > 0) {
+            $this->setTemplate('checkout/cart');
+        } else {
+            $this->context->smarty->assign([
+                'allProductsLink' => $this->context->link->getCategoryLink(Configuration::get('PS_HOME_CATEGORY')),
+            ]);
+            $this->setTemplate('checkout/cart-empty');
+        }
+        parent::initContent();
+    }
 }

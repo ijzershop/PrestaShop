@@ -70,14 +70,10 @@
 							<td>
 								<table style="width: 100%;"><tr><td>
 									{foreach $order_detail['customizedDatas'][$order_detail['id_product']][$order_detail['id_product_attribute']][$order_detail['id_address_delivery']][$order_detail['id_customization']] as $customization}
-
 											{foreach $customization[1] as $customization_infos}
 												{$customization_infos.name}: {$customization_infos.value}
 												{if !$smarty.foreach.custo_foreach.last}<br />{/if}
 											{/foreach}
-				
-
-
 									{/foreach}
 								</td></tr></table>
 							</td>

@@ -48,6 +48,8 @@ class AdminOrdersController extends AdminOrdersControllerCore
         osl.`id_order_state` AS `osorderstate`,
 		os.`color`,
         osr.`state` as `osrorderstate`,
+        `reference` as `ref`,
+        `reference` as `reference`,
 		IF((SELECT so.id_order FROM `' . _DB_PREFIX_ . 'orders` so WHERE so.id_customer = a.id_customer AND so.id_order < a.id_order LIMIT 1) > 0, 0, 1) as new,
 		country_lang.name as cname,
 		IF(a.valid, 1, 0) badge_success';
@@ -78,9 +80,13 @@ class AdminOrdersController extends AdminOrdersControllerCore
             'reference' => array(
                 'title' => $this->trans('Reference', array(), 'Admin.Global'),
             ),
+            'ref' => array(
+                'title' => $this->trans('Toegevoegde orders', array(), 'Admin.Global'),
+                'callback' => 'renderAddedOrders',
+            ),
             'added_to_order' => array(
-                'title' => $this->trans('Added To Order', array(), 'Admin.Global'),
-                'callback' => 'renderAddedToCart',
+                'title' => $this->trans('Toegevoegd aan order', array(), 'Admin.Global'),
+                'callback' => 'renderAddedToOrder',
             ),
             'new' => array(
                 'title' => $this->trans('New client', array(), 'Admin.Orderscustomers.Feature'),
@@ -239,7 +245,24 @@ class AdminOrdersController extends AdminOrdersControllerCore
     }
 
 
-   public function renderAddedToCart($value)
+    public function renderAddedOrders($value)
+    {
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT o.`id_order`, o.`reference`, o.`date_add` FROM `' . _DB_PREFIX_ . 'orders` o WHERE o.`added_to_order` = "'.$value.'" ORDER BY o.`date_add` ASC');
+
+        if(count($result) > 0){
+            $orderList = '<ul class="list-unstyled">';
+            for ($i=0; $i < count($result); $i++) { 
+                $orderList .= '<li><strong>'.$result[$i]['reference'].'</strong> - <small data-order-id="'.(int)$result[$i]['id_order'].'">'.date_format(date_create($result[$i]['date_add']),'d M').'</small></li>';
+            }
+            $orderList .= '</ul>';
+
+            return $orderList;
+        } else {
+            return '';
+        }
+    }
+
+    public function renderAddedToOrder($value)
     {
         $refOrder = Order::getByReference($value)->getFirst();
         if(!empty($value)){

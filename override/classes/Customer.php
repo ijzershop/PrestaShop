@@ -71,7 +71,7 @@ class Customer extends CustomerCore
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
             'reset_password_token' => array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false),
             'reset_password_validity' => array('type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false),
-            'psgdpr_remove' => array('type' => self::TYPE_INT, 'validate' => 'isBool', 'copy_post' => false)
+            'psgdpr_remove' => array('type' => self::TYPE_INT, 'copy_post' => false)
         )
     );
 

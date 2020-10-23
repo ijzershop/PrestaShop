@@ -43,7 +43,7 @@ class PDFGenerator extends PDFGeneratorCore
         $id_order = Tools::getValue('id_order');
         $reference = Order::getUniqReferenceOf($id_order);
 
-        $this->write2DBarcode(Tools::getAdminTokenLite('AdminOrders').'/'.$reference, 'QRCODE,H', 160, 39, 40, 40, $style, 'R');
+        $this->write2DBarcode('FOL/'.Tools::getAdminTokenLite('AdminOrders').'/'.$reference, 'QRCODE,H', 160, 39, 40, 40, $style, 'R');
         }
         $this->writeHTML($this->content, true, false, true, false, '');
     }

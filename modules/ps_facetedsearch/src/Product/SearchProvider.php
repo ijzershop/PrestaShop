@@ -1,26 +1,33 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ * 2007-2019 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.md.
+ * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\Module\FacetedSearch\Product;
 
 use Configuration;
+use Context;
 use PrestaShop\Module\FacetedSearch\Filters;
 use PrestaShop\Module\FacetedSearch\URLSerializer;
 use PrestaShop\PrestaShop\Core\Product\Search\Facet;
@@ -52,21 +59,14 @@ class SearchProvider implements FacetsRendererInterface, ProductSearchProviderIn
      */
     private $facetsSerializer;
 
-    /**
-     * @var SearchFactory
-     */
-    private $searchFactory;
-
     public function __construct(
         Ps_Facetedsearch $module,
         Filters\Converter $converter,
-        URLSerializer $serializer,
-        SearchFactory $searchFactory = null
+        URLSerializer $serializer
     ) {
         $this->module = $module;
         $this->filtersConverter = $converter;
         $this->facetsSerializer = $serializer;
-        $this->searchFactory = $searchFactory === null ? new SearchFactory() : $searchFactory;
     }
 
     /**
@@ -74,7 +74,6 @@ class SearchProvider implements FacetsRendererInterface, ProductSearchProviderIn
      */
     private function getAvailableSortOrders()
     {
-        $sortSalesDesc = new SortOrder('product', 'sales', 'desc');
         $sortPosAsc = new SortOrder('product', 'position', 'asc');
         $sortNameAsc = new SortOrder('product', 'name', 'asc');
         $sortNameDesc = new SortOrder('product', 'name', 'desc');
@@ -83,9 +82,6 @@ class SearchProvider implements FacetsRendererInterface, ProductSearchProviderIn
         $translator = $this->module->getTranslator();
 
         return [
-            $sortSalesDesc->setLabel(
-                $translator->trans('Best sellers', [], 'Modules.Facetedsearch.Shop')
-            ),
             $sortPosAsc->setLabel(
                 $translator->trans('Relevance', [], 'Modules.Facetedsearch.Shop')
             ),
@@ -119,7 +115,7 @@ class SearchProvider implements FacetsRendererInterface, ProductSearchProviderIn
         $facetedSearchFilters = $this->filtersConverter->createFacetedSearchFiltersFromQuery($query);
 
         $context = $this->module->getContext();
-        $facetedSearch = $this->searchFactory->build($context);
+        $facetedSearch = new Search($context);
         // init the search with the initial population associated with the current filters
         $facetedSearch->initSearch($facetedSearchFilters);
 

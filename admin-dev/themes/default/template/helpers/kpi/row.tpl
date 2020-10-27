@@ -58,9 +58,7 @@
 .cc-koopman{
   margin-top:10px;
 }
-
-
-  .cc-koopman input{
+.cc-koopman input{
     position:absolute;
     z-index:999;
 }
@@ -78,6 +76,12 @@
 }
 .meter-smaller-2{
   background-image:url('../modules/koopmanorderexport/views/templates/img/2m-35_koopman.png');
+}
+.toegevoegd{
+  background-image:url('../modules/koopmanorderexport/views/templates/img/toegevoegd.png');
+}
+.aftehalen{
+  background-image:url('../modules/koopmanorderexport/views/templates/img/aftehalen.png');
 }
 .type-cc{
     cursor:pointer;

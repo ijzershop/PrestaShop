@@ -26,11 +26,6 @@
 use classes\models\DynamicInput;
 class Carrier extends CarrierCore
 {
-    /*
-    * module: dynamicproduct
-    * date: 2020-08-14 11:59:26
-    * version: 2.3.4
-    */
     public static function getAvailableCarrierList(
         Product $product,
         $id_warehouse,
@@ -39,8 +34,16 @@ class Carrier extends CarrierCore
         $cart = null,
         &$error = array()
     ) {
+
+        $storeCustomer = (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE');
+        $storeCustomerLoggedIn = false;
+
+        if($storeCustomer == Context::getContext()->customer->id){
+            $storeCustomerLoggedIn = true;
+        }
+
         if (!Module::isEnabled('dynamicproduct')) {
-            return parent::getAvailableCarrierList(
+            $carrierList = parent::getAvailableCarrierList(
                 $product,
                 $id_warehouse,
                 $id_address_delivery,
@@ -48,6 +51,13 @@ class Carrier extends CarrierCore
                 $cart,
                 $error
             );
+            if($storeCustomerLoggedIn){
+                $paidShippingCarrier = unserialize(Configuration::get("koopmanOrderExport"));
+                if(!empty($paidShippingCarrier) && isset($paidShippingCarrier['select_carrier'])){
+                    unset($carrierList[(int)$paidShippingCarrier['select_carrier']]);
+                }
+            }
+            return $carrierList;
         }
         if ($cart === null) {
             $cart = Context::getContext()->cart;
@@ -56,6 +66,13 @@ class Carrier extends CarrierCore
         $product->width = $sizes['width'];
         $product->height = $sizes['height'];
         $product->depth = $sizes['depth'];
-        return parent::getAvailableCarrierList($product, $id_warehouse, $id_address_delivery, $id_shop, $cart, $error);
+        $carrierList = parent::getAvailableCarrierList($product, $id_warehouse, $id_address_delivery, $id_shop, $cart, $error);
+        if($storeCustomerLoggedIn){
+                $paidShippingCarrier = unserialize(Configuration::get("koopmanOrderExport"));
+                if(!empty($paidShippingCarrier) && isset($paidShippingCarrier['select_carrier'])){
+                    unset($carrierList[(int)$paidShippingCarrier['select_carrier']]);
+                }
+            }
+            return $carrierList;
     }
 }

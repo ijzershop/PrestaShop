@@ -63,6 +63,9 @@ npm-debug.log.*
 !/img/t/index.php
 !/img/tmp/index.php
 
+!/upload/CAT-bussen.png
+!/upload/CAT-blokken.png
+!/upload/CAT-assen.png
 !/upload/balk-behandeling-4.jpg
 !/upload/balk-berekening.png
 !/upload/bankoverschrijving.png
@@ -109,6 +112,87 @@ npm-debug.log.*
 !/upload/Werkplaats-sfeer-6_1.jpg
 !/upload/zagen1.png
 !/upload/zetten1.png
+
+
+!/upload/BOUWHOOGTE-WIELEN.png
+!/upload/Betaalgemak-B2 (1).jpg
+!/upload/C-aluminium.jpg
+!/upload/CAT-aftekenen.png
+!/upload/CAT-assen.png
+!/upload/CAT-blokken.png
+!/upload/CAT-buiskoppelingen.png
+!/upload/CAT-bussen.png
+!/upload/CAT-constructiebalken.png
+!/upload/CAT-corten-2.jpg
+!/upload/CAT-draaiwerk.png
+!/upload/CAT-spuitverf.png
+!/upload/CAT-techn-spray.png
+!/upload/RVS draadstang.png
+!/upload/RVS profielen.jpg
+!/upload/RVS-moeren-assorti.png
+!/upload/RVS-ringen-assorti.png
+!/upload/RVS-zeskantbout.png
+!/upload/RVSplaat.png
+!/upload/aanlasplaten-cat.jpg
+!/upload/aluminium-overzicht.png
+!/upload/aluminium-verstek.png
+!/upload/bevestigingsmateriaal.jpg
+!/upload/bouten-moeren.png
+!/upload/cat-boren-en-tappen.png
+!/upload/cat-gehardeassen.png
+!/upload/cat-veiligheid.png
+!/upload/cat-verbruiksmaterialen.png
+!/upload/cat-werkplaatsa.png
+!/upload/cilinderkopbout.png
+!/upload/constructieplaten-cat.jpg
+!/upload/corten-profielen.jpg
+!/upload/cortenplaat.png
+!/upload/doppen-ass.png
+!/upload/draadstang-ass.png
+!/upload/glijlager.jpg
+!/upload/inslag-cat.png
+!/upload/knoppen-ass.png
+!/upload/kogellager.jpg
+!/upload/kunststof_profielen.jpg
+!/upload/laagbolkop.png
+!/upload/lagerblok.jpg
+!/upload/lagers-cat.png
+!/upload/lasbochten-cat.png
+!/upload/lasproducten-cat.png
+!/upload/maatvoering-flensmontageblok.png
+!/upload/maatvoering-lineairlager.png
+!/upload/maatvoering-montageblok.png
+!/upload/messing_profielen_2.jpg
+!/upload/moer-assorti.png
+!/upload/moer-maten.png
+!/upload/moerkap-cat.png
+!/upload/montage-apparaatwielen.png
+!/upload/montage-universeel.png
+!/upload/oogmoer-cat-2.png
+!/upload/perfo.png
+!/upload/perfo_1.png
+!/upload/popnagel-cat.png
+!/upload/ring-assorti.png
+!/upload/ring-cat.png
+!/upload/rvs-strekmetaal.jpg
+!/upload/sleutel-cat.png
+!/upload/slotbout-cat.png
+!/upload/staalplaat.png
+!/upload/stalen-profielen.png
+!/upload/stelschroef-cat.png
+!/upload/strekmetaal.png
+!/upload/traanplaat.png
+!/upload/verzinkte draadstang.png
+!/upload/verzinkte_profielen.jpg
+!/upload/verzonken kopbout-2.png
+!/upload/verzonken kopbout.png
+!/upload/vleugelbout-cat.png
+!/upload/vleugelmoet-cat.png
+!/upload/wielen-cat.png
+!/upload/zeskantbouten.png
+!/upload/zincor-verzinkt.jpg
+
+
 
 /vendor/*
 /docs/phpdoc-sf/

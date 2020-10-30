@@ -235,7 +235,6 @@ abstract class PaymentModuleCore extends Module
         if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery') {
             $context_country = $this->context->country;
         }
-
         $order_status = new OrderState((int) $id_order_state, (int) $this->context->language->id);
         if (!Validate::isLoadedObject($order_status)) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status cannot be loaded', 3, null, 'Cart', (int) $id_cart, true);
@@ -274,14 +273,14 @@ abstract class PaymentModuleCore extends Module
             $order_list = array();
             $order_detail_list = array();
 
+
             do {
                 $reference = Order::generateReference();
-            } while (Order::getByReference($reference)->count());
+                } while (Order::getByReference($reference)->count() < 1);
 
             $this->currentOrderReference = $reference;
 
             $cart_total_paid = (float) Tools::ps_round((float) $this->context->cart->getOrderTotal(true, Cart::BOTH), 2);
-
             foreach ($cart_delivery_option as $id_address => $key_carriers) {
                 foreach ($delivery_option_list[$id_address][$key_carriers]['carrier_list'] as $id_carrier => $data) {
                     foreach ($data['package_list'] as $id_package) {

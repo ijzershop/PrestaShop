@@ -31,14 +31,8 @@ class MACustomer extends EM1Main implements EM1CustomerInterface
     /** @var int $customerId id from request, id_customer field in database */
     protected $customerId = 0;
 
-    /** @var int $shopId shop_id from request, id_shop field in database */
-    protected $shopId;
-
     /** @var int $shopGroupId shop_group_id from request, id_shop_group field in database */
     protected $shopGroupId;
-
-    /** @var int $languageId lang_id from request, id_lang field in database */
-    protected $languageId;
 
     /** @var int $currencyId currency_id from request, id_currency field in database */
     protected $currencyId;
@@ -57,10 +51,12 @@ class MACustomer extends EM1Main implements EM1CustomerInterface
      *
      * @param $languageId   int Language Id from database
      * @param $currencyId   int Currency Id from database
+     * @param bool $taxIncl
+     * @param bool $shippingIncl
      */
-    public function __construct($languageId = null, $currencyId = null)
+    public function __construct($languageId = null, $currencyId = null, $taxIncl = false, $shippingIncl = false)
     {
-        $this->languageId = $languageId;
+        parent::__construct(null, $languageId, $taxIncl, $shippingIncl);
         $this->currencyId = $currencyId;
     }
 
@@ -406,11 +402,12 @@ class MACustomer extends EM1Main implements EM1CustomerInterface
         /** @var DbQueryCore $dbQuery */
         $dbQuery = new DbQuery();
 
+        $total_field = $this->getOrderTotalField();
         // Execute query after build it
         return self::getQueryRow(
             $dbQuery->select(
                 'COUNT(*) AS orders_count, 
-                 IFNULL(SUM(o.`total_paid_tax_incl`/o.`conversion_rate`), 0) AS orders_total'
+                 IFNULL(SUM(' . $total_field . '), 0) AS orders_total'
             )
                 ->from('orders', 'o')
                 ->where('o.`id_customer` = ' . $customerId)
@@ -432,12 +429,13 @@ class MACustomer extends EM1Main implements EM1CustomerInterface
         /** @var DbQueryCore $dbQuery */
         $dbQuery = new DbQuery();
 
+        $total_field = $this->getOrderTotalField();
         // Execute query after build it
         return self::getQueryResult(
             $dbQuery->select('
                 c.`id_customer`, 
                 COUNT(o.`id_order`) AS orders_count, 
-                SUM(o.`total_paid_tax_incl`/o.`conversion_rate`) AS orders_total
+                SUM(' . $total_field . ') AS orders_total
             ')
                 ->from('customer', 'c')
                 ->leftJoin('orders', 'o', 'o.`id_customer` = c.`id_customer`')

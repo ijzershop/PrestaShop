@@ -27,12 +27,6 @@ includedCustomerServiceFiles();
  */
 class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
 {
-
-    /**
-     * @var int $languageId
-     */
-    private $languageId;
-
     /**
      * @var int $languageId
      */

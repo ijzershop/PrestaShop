@@ -28,15 +28,6 @@ includedAbandonedCartFiles();
 
 class MAAbandonedCart extends EM1Main implements EM1AbandonedCartInterface
 {
-    /** @var int $shopId shop_id from request, id_shop field in database */
-    protected $shopId;
-
-    /** @var int $shopGroupId shop_group_id from request, id_shop_group field in database */
-    protected $shopGroupId;
-
-    /** @var int $languageId lang_id from request, id_lang field in database */
-    private $languageId;
-
     /** @var int $currencyId currency_id from request, id_currency field in database */
     protected $currencyId;
 

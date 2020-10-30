@@ -27,8 +27,6 @@ includedProductCombinationFiles();
  */
 class MAProductCombination extends EM1Main implements EM1ProductCombinationInterface
 {
-    private $languageId;
-
     /**
      * MAProductCombination constructor.
      * @param null $languageId

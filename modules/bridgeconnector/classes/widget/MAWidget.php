@@ -28,12 +28,6 @@ includedWidgetFiles();
 
 class MAWidget extends EM1Main implements EM1WidgetInterface
 {
-    /** @var int $shopId shop_id from request, id_shop field in database */
-    protected $shopId;
-
-    /** @var int $langId lang_id from request, id_lang field in database */
-    protected $langId;
-
     /** @var int $dateFrom date_from from request in format of timestamp with milliseconds */
     private $dateFrom;
 
@@ -51,9 +45,9 @@ class MAWidget extends EM1Main implements EM1WidgetInterface
      * @param   $shopId   int
      */
 
-    public function __construct($shopId)
+    public function __construct($shopId, $taxIncl = false, $shippingIncl = false)
     {
-        $this->shopId = $shopId;
+        parent::__construct($shopId, 0, $taxIncl, $shippingIncl);
     }
 
     /**
@@ -96,11 +90,13 @@ class MAWidget extends EM1Main implements EM1WidgetInterface
         /** @var DbQueryCore $dbQuery */
         $dbQuery = new DbQuery();
 
+        $total_field = $this->getOrderTotalField();
+
         // Execute query after build it
         return self::getQueryRow(
             $dbQuery->select(
                 'COUNT(o.`id_order`) AS orders_count, 
-                    IFNULL(SUM(o.`total_paid_tax_incl`/o.`conversion_rate`), 0) AS orders_total'
+                    IFNULL(SUM(' . $total_field . '), 0) AS orders_total'
             )
                 ->from('orders', 'o')
                 ->leftJoin(

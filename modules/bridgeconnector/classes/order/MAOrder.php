@@ -31,9 +31,6 @@ class MAOrder extends EM1Main implements EM1OrderInterface
     /** @var int $orderId order_id from request, id_order field in database */
     protected $orderId = 0;
 
-    /** @var int $languageId lang_id from request, id_lang field in database */
-    private $languageId;
-
     /** @var string $whereQuery preparation of where query part */
     private $whereQuery = '1';
 
@@ -43,11 +40,14 @@ class MAOrder extends EM1Main implements EM1OrderInterface
     /**
      * MAOrders constructor.
      *
+     * @param $shopId
      * @param int $languageId
+     * @param bool $taxIncl
+     * @param bool $shippingIncl
      */
-    public function __construct($languageId)
+    public function __construct($shopId, $languageId, $taxIncl = false, $shippingIncl = false)
     {
-        $this->languageId = $languageId;
+        parent::__construct($shopId, $languageId, $taxIncl, $shippingIncl);
     }
 
     /**
@@ -98,12 +98,22 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                 throw new EM1Exception(EM1Exception::ERROR_CODE_ORDER_OBJECT_EXECUTION_ERROR, $exception->getMessage());
             }
 
-            $orderTotal         = $this->round(
-                (float)$order->total_paid_tax_incl/(float)$order->conversion_rate
-            );
+            $total_val = (float)$order->total_products;
+            if($this->taxIncl && !$this->shippingIncl) {
+                $total_val = (float)$order->total_products_wt;
+            }
+            if(!$this->taxIncl && $this->shippingIncl) {
+                $total_val = (float)$order->total_paid_tax_excl;
+            }
+            if($this->taxIncl && $this->shippingIncl) {
+                $total_val = (float)$order->total_paid_tax_incl;
+            }
+            $total_val = $total_val/(float)$order->conversion_rate;
+            $orderTotal         = $this->round($total_val);
 
             $orderPayments     = $this->getOrderPayments((string)$order->reference, (int)$order->id_lang);
-            $ordersResult[] = array(
+
+            $orderResult = array(
                 self::KEY_ORDER_ID              => (int)$order->id,
                 self::KEY_REFERENCE             => (string)$order->reference,
                 self::KEY_SHOP_ID               => (int)$order->id_shop,
@@ -123,6 +133,11 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                 ),
                 self::KEY_PRODUCTS_COUNT        => (int)$orderValue['items_count'],
                 self::KEY_PAYMENTS_COUNT        => count($orderPayments),
+            );
+
+            $ordersResult[] = array_merge(
+                $orderResult,
+                $this->getOrderCarrier($orderId, (int)$this->languageId)
             );
         }
 
@@ -210,6 +225,20 @@ class MAOrder extends EM1Main implements EM1OrderInterface
         $orderCurrencyId     = (int)$order->id_currency;
         $orderConversionRate = (float)$order->conversion_rate;
         $orderPayments      = $this->getOrderPayments((string)$order->reference, (int)$order->id_lang);
+
+        $total_val = (float)$order->total_products;
+        if($this->taxIncl && !$this->shippingIncl) {
+            $total_val = (float)$order->total_products_wt;
+        }
+        if(!$this->taxIncl && $this->shippingIncl) {
+            $total_val = (float)$order->total_paid_tax_excl;
+        }
+        if($this->taxIncl && $this->shippingIncl) {
+            $total_val = (float)$order->total_paid_tax_incl;
+        }
+        $total_val = $total_val/(float)$order->conversion_rate;
+        $orderTotal         = $this->round($total_val);
+
         $orderResult         = array(
             self::KEY_ORDER_ID => $orderId,
             self::KEY_REFERENCE => (string)$order->reference,
@@ -219,9 +248,9 @@ class MAOrder extends EM1Main implements EM1OrderInterface
             self::KEY_CUSTOMER_FIRST_NAME => (string)$customer->firstname,
             self::KEY_CUSTOMER_LAST_NAME => (string)$customer->lastname,
             self::KEY_STATUS_ID => (int)$order->current_state,
-            self::KEY_TOTAL => $this->round($order->total_paid_real / $orderConversionRate),
+            self::KEY_TOTAL => $orderTotal,
             self::KEY_FORMATTED_TOTAL => $this->displayPrice(
-                $order->total_paid_tax_incl / $orderConversionRate,
+                $orderTotal,
                 $orderCurrencyId,
                 $order->id_lang
             ),
@@ -255,6 +284,11 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                 $orderCurrencyId,
                 $order->id_lang
             ),
+            self::KEY_FORMATTED_TOTAL_PAID_WITH_TAX => $this->displayPrice(
+                $order->total_paid_tax_incl / $orderConversionRate,
+                $orderCurrencyId,
+                $order->id_lang
+            ),
             self::KEY_DATE_ADD => self::convertTimestampToMillisecondsTimestamp(
                 (int)strtotime($order->date_add)
             ),
@@ -278,7 +312,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
         $this->orderResponse(
             array_merge(
                 $orderResult,
-                $this->getOrderCarrier($orderId),
+                $this->getOrderCarrier($orderId, (int)$this->languageId),
                 $this->getOrderItemsData($orderId, $pageSize, $pageIndex)
             )
         );
@@ -654,6 +688,14 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                     $this->getProductLinkRewrite($productId, $this->languageId, $orderItem->id_shop)
                 );
             }
+
+            $total_val = (float)$orderItem->total_price_tax_excl;
+            if($this->taxIncl) {
+                $total_val = (float)$orderItem->total_price_tax_incl;
+            }
+
+            $orderItemTotal = $this->round($total_val);
+
             $orderItems = array(
                 self::KEY_ORDER_PRODUCT_ID                  => (int)$orderItem->id_order_detail,
                 self::KEY_PRODUCT_ID                        => $productId,
@@ -667,9 +709,9 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                 property_exists($orderItem, 'product_isbn') ? $orderItem->product_isbn : null
                 ),
                 self::KEY_QUANTITY                          => (int)$orderItem->product_quantity,
-                self::KEY_TOTAL_PRICE_WITHOUT_TAX           => $this->round((float)$orderItem->total_price_tax_excl),
+                self::KEY_TOTAL_PRICE_WITHOUT_TAX           => $orderItemTotal,
                 self::KEY_FORMATTED_TOTAL_PRICE_WITHOUT_TAX => $this->displayPrice(
-                    $orderItem->total_price_tax_excl,
+                    $orderItemTotal,
                     $orderItemValue['id_currency'],
                     $order->id_lang
                 ),
@@ -870,6 +912,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
             " AND (
           CONCAT(c.`firstname`, ' ', c.`lastname`) LIKE '%" . pSQL($searchPhrase) . "%' 
           OR c.`email` LIKE '%" . pSQL($searchPhrase) . "%'
+          OR o.`reference` LIKE '%" . pSQL($searchPhrase) . "%'
         ) ";
     }
 
@@ -934,7 +977,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
      * @return array
      * @throws EM1Exception
      */
-    private function getOrderCarrier($orderId)
+    private function getOrderCarrier($orderId, $id_lang = null)
     {
         /** @var DbQueryCore $dbQuery */
         $dbQuery = new DbQuery();
@@ -946,13 +989,15 @@ class MAOrder extends EM1Main implements EM1OrderInterface
         );
         try {
             $orderCarrier = new OrderCarrier($carrierId);
-            $carrier      = new Carrier($orderCarrier->id_carrier);
+            $carrier      = new Carrier($orderCarrier->id_carrier, $id_lang);
 
-            return array(
+           return array(
                 self::KEY_CARRIER_ID      => (int)$orderCarrier->id_carrier,
                 self::KEY_TRACKING_CODE   => (string)$orderCarrier->tracking_number,
                 self::KEY_TRACKING_URL    => str_replace('@', $orderCarrier->tracking_number, $carrier->url),
-                self::KEY_WEIGHT          => (float)$orderCarrier->weight
+                self::KEY_WEIGHT          => (float)$orderCarrier->weight,
+                self::KEY_NAME           => (string)$carrier->name,
+                self::KEY_DELAY           => (string)$carrier->delay,
             );
         } catch (PrestaShopException $exception) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_FAILED_WHEN_LOAD_ORDER_CARRIER, $exception->getMessage());
@@ -1014,9 +1059,11 @@ class MAOrder extends EM1Main implements EM1OrderInterface
         /** @var DbQueryCore $dbQuery */
         $dbQuery = new DbQuery();
 
+        $total_field = $this->getOrderTotalField();
+
         return self::getQueryRow(
             $dbQuery->select(
-                'IFNULL(SUM(o.`total_paid_tax_incl`/o.`conversion_rate`), 0) AS orders_total, 
+                'IFNULL(SUM(' . $total_field . '), 0) AS orders_total, 
                 COUNT(o.`id_order`) AS orders_count'
             )
                 ->leftJoin('customer', 'c', 'c.`id_customer` = o.`id_customer`')

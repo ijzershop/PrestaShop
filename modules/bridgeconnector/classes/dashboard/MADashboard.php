@@ -27,9 +27,6 @@ includedDashboardFiles();
  */
 class MADashboard extends EM1Main implements EM1DashboardInterface
 {
-    /** @var int $shopId shop_id from request, id_shop field in database */
-    protected $shopId;
-
     /** @var int $languageId lang_id from request, id_lang field in database */
     protected $languageId;
 
@@ -57,7 +54,8 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
      * @param $dateFrom                 int
      * @param $dateTo                   int
      * @param $orderStatuses            array
-     *
+     * @param bool $taxIncl
+     * @param bool $shippingIncl
      * @throws EM1Exception
      */
     public function __construct(
@@ -66,13 +64,13 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
         $currencyId,
         $dateFrom,
         $dateTo,
-        $orderStatuses = array()
+        $orderStatuses = array(),
+        $taxIncl = false,
+        $shippingIncl = false
     ) {
-
-        $this->shopId               = $shopId;
-        $this->currencyId           = $currencyId;
-        $this->languageId           = $languageId;
-        $this->orderStatuses        = implode(',', $orderStatuses);
+        $this->currencyId = $currencyId;
+        $this->orderStatuses = implode(',', $orderStatuses);
+        parent::__construct($shopId, $languageId, $taxIncl, $shippingIncl);
 
         // Prepare dates before using
         if (!empty($dateFrom) && !empty($dateTo) && $dateFrom !== -1 && $dateTo !== -1) {
@@ -82,15 +80,15 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
 
         if ($dateTo === -1 || $dateFrom === -1) {
             try {
-                $dateRange = self::getQueryRow(
-                    'SELECT MIN(dateRange.max_date) AS `date_from`, MAX(dateRange.min_date) AS `date_to` FROM (
-                    SELECT MIN(`date_add`) AS `max_date`, MAX(`date_add`) AS `min_date`
+                $sql = 'SELECT MIN(dateRange.min_date) AS `date_from`, MAX(dateRange.max_date) AS `date_to` FROM (
+                    SELECT MIN(`date_add`) AS `min_date`, MAX(`date_add`) AS `max_date`
                     FROM `' . _DB_PREFIX_ . 'orders`
                     UNION ALL
-                    SELECT MIN(`date_add`) AS `max_date`, MAX(`date_add`) AS `min_date`
+                    SELECT MIN(`date_add`) AS `min_date`, MAX(`date_add`) AS `max_date`
                     FROM `' . _DB_PREFIX_ . 'customer`
-                ) AS dateRange'
-                );
+                ) AS dateRange';
+
+                $dateRange = self::getQueryRow($sql);
 
                 if (empty($this->dateFrom) && !empty($dateRange)) {
                     $this->dateFrom = strtotime($dateRange[self::KEY_DATE_FROM]);
@@ -195,7 +193,6 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
             $queryDBWhereParts[] = 'o.date_add >= \'' . date(EM1Constants::GLOBAL_DATE_FORMAT, $this->dateFrom) . '\'';
             $queryDBWhereParts[] = 'o.date_add <= \'' . date(EM1Constants::GLOBAL_DATE_FORMAT, $this->dateTo) . '\'';
         }
-
         if ($this->shopId > 0) {
             $queryDBWhereParts[] = 'o.id_shop = ' . $this->shopId;
         }
@@ -207,10 +204,12 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
         /** @var DbQueryCore $dbQuery */
         $dbQuery = new DbQuery();
 
+        $total_field = $this->getOrderTotalField();
+
         // Execute query after build it
         return self::getQueryRow(
             $dbQuery
-                ->select('COUNT(o.id_order) AS orders_count, IFNULL(SUM(o.total_paid_tax_excl), 0) AS orders_total')
+                ->select('COUNT(o.id_order) AS orders_count, IFNULL(SUM(' . $total_field .'), 0) AS orders_total')
                 ->from('orders', 'o')
                 ->leftJoin(
                     'order_state_lang',
@@ -278,12 +277,12 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
         /** @var DbQueryCore $dbQuery */
         $dbQuery = new DbQuery();
 
+        $qry = $dbQuery->select('COUNT(*) AS customers_count')
+            ->from('customer')
+            ->where(implode(' AND ', $queryDBWhereParts));
+
         // Execute query after build it
-        return self::getQueryRow(
-            $dbQuery->select('COUNT(*) AS customers_count')
-                ->from('customer')
-                ->where(implode(' AND ', $queryDBWhereParts))
-        );
+        return self::getQueryRow($qry);
     }
 
     /**
@@ -336,11 +335,27 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
      */
     private function getGraphsValues($orders, $customers)
     {
-        if (empty($orders) && empty($customers)) {
-            $this->graphResponse();
-        }
+//        if (empty($orders) && empty($customers)) {
+//            $this->graphResponse();
+//        }
 
-        if (!empty($orders)) {
+        if(!empty($orders) && !empty($customers)) {
+            try {
+                $orderMinDate = $this->getDateTimeTimestamp(reset($orders)[self::KEY_ORDERS_DATE]);
+                $orderMaxDate = $this->getDateTimeTimestamp(end($orders)[self::KEY_ORDERS_DATE]);
+
+                $customerMinDate = $this->getDateTimeTimestamp(reset($customers)[self::KEY_CUSTOMERS_DATE]);
+                $customerMaxDate = $this->getDateTimeTimestamp(end($customers)[self::KEY_CUSTOMERS_DATE]);
+
+                $minDate = $orderMinDate > $customerMinDate ? $customerMinDate : $orderMinDate;
+                $maxDate = $orderMaxDate > $customerMaxDate ? $orderMaxDate : $customerMaxDate;
+            } catch (Exception $e) {
+                throw new EM1Exception(
+                    EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT,
+                    $e->getMessage()
+                );
+            }
+        } elseif (!empty($orders)) {
             try {
                 $minDate = $this->getDateTimeTimestamp(reset($orders)[self::KEY_ORDERS_DATE]);
                 $maxDate = $this->getDateTimeTimestamp(end($orders)[self::KEY_ORDERS_DATE]);
@@ -360,16 +375,11 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
                     $e->getMessage()
                 );
             }
-        } else {
+        }
+
+        if (empty($minDate) && $this->dateFrom > 0) {
             try {
-                $orderMinDate = $this->getDateTimeTimestamp(reset($orders)[self::KEY_ORDERS_DATE]);
-                $orderMaxDate = $this->getDateTimeTimestamp(end($orders)[self::KEY_ORDERS_DATE]);
-
-                $customerMinDate = $this->getDateTimeTimestamp(reset($customers)[self::KEY_CUSTOMERS_DATE]);
-                $customerMaxDate = $this->getDateTimeTimestamp(end($customers)[self::KEY_CUSTOMERS_DATE]);
-
-                $minDate = $orderMinDate > $customerMinDate ? $customerMinDate : $orderMinDate;
-                $maxDate = $orderMaxDate > $customerMaxDate ? $orderMaxDate : $customerMaxDate;
+                $minDate = $this->getDateTimeTimestamp($this->dateFrom);
             } catch (Exception $e) {
                 throw new EM1Exception(
                     EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT,
@@ -378,9 +388,9 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
             }
         }
 
-        if (empty($minDate) && $this->dateFrom > 0) {
+        if (empty($maxDate) && $this->dateTo > 0) {
             try {
-                $minDate = $this->getDateTimeTimestamp($this->dateFrom);
+                $maxDate = $this->getDateTimeTimestamp($this->dateTo);
             } catch (Exception $e) {
                 throw new EM1Exception(
                     EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT,
@@ -403,6 +413,7 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
         }
 
         $maxDate = $newMaxDate;
+
         try {
             for ($timestamp = $minDate, $dateTime = new DateTime(),
                  $dateInterval = new DateInterval(self::INTERVAL[$this->dashboardGrouping]);
@@ -425,6 +436,7 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
                 foreach ($customers as $customerValue) {
                     $customerDateTime = new DateTime($customerValue[self::KEY_CUSTOMERS_DATE]);
                     $customerTimestamp = $customerDateTime->getTimestamp();
+
                     if ($this->compareDatesByGrouping($timestamp, $customerTimestamp)) {
                         $customerCount += (int)$customerValue[self::KEY_CUSTOMERS_COUNT];
                         continue;
@@ -521,11 +533,16 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
                     && date('Y', $timestamp) === date('Y', $comparedTimestamp)
                 );
             case self::GROUP_BY_DAY:
-                return $timestamp === $comparedTimestamp;
+                return (
+                    date('d', $timestamp) === date('d', $comparedTimestamp)
+                    && date('m', $timestamp) === date('m', $comparedTimestamp)
+                    && date('Y', $timestamp) === date('Y', $comparedTimestamp)
+                );
+//                return $timestamp === $comparedTimestamp;
             case self::GROUP_BY_WEEK:
                 return (
                     date('W', $timestamp) === date('W', $comparedTimestamp)
-                    && date('Y', $timestamp) === date('Y', $comparedTimestamp)
+                    && date('o', $timestamp) === date('o', $comparedTimestamp)
                 );
             case self::GROUP_BY_MONTH:
                 return (
@@ -545,13 +562,14 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
      */
     private function getOrderGraphResultData($ordersWhereStatement, $groupingByDay)
     {
+        $total_field = $this->getOrderTotalField();
         // Execute query
         return self::getQueryResult(
             'SELECT ' .
             ($groupingByDay ? 'o.`date_add`'
                 : "CONCAT(DATE(o.`date_add`), ' ', HOUR(o.`date_add`), ':00:00')") .
             ' AS orders_date,
-              SUM(o.`total_paid_tax_excl`) AS orders_total,
+              SUM(' . $total_field . ') AS orders_total,
               COUNT(o.`id_order`) AS orders_count
           FROM `' . _DB_PREFIX_ . 'orders` AS o
           LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` AS osl ON osl.id_order_state = o.current_state
@@ -603,6 +621,7 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
                         break;
                     }
                 }
+                if(empty($statusName)) $statusName = "[no title]";
 
                 $orderStatusesReturn[] = array(
                     self::KEY_ID                        => $orderStateId,
@@ -639,10 +658,12 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
             $queryDBWhereParts .= ' AND o.current_state IN (' . pSQL($this->orderStatuses) . ')';
         }
 
+        $total_field = $this->getOrderTotalField();
+
         // Execute query
         return self::getQueryResult(
             'SELECT o.`current_state` AS `id`, osl.`name` AS title, 
-                          COUNT(o.`id_order`) AS count, SUM(o.`total_paid_tax_excl`) AS total
+                          COUNT(o.`id_order`) AS count, SUM(' . $total_field . ') AS total
              FROM `' . _DB_PREFIX_ . 'orders` o 
              LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON osl.`id_order_state` = o.`current_state` 
              AND osl.`id_lang` = ' . $this->languageId . '

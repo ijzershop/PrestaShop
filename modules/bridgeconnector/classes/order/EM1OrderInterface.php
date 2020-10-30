@@ -47,12 +47,15 @@ interface EM1OrderInterface
     const KEY_FORMATTED_TOTAL_WRAPPING          = 'formatted_total_wrapping';
     const KEY_FORMATTED_TOTAL_PRODUCTS          = 'formatted_total_products';
     const KEY_FORMATTED_TOTAL_PRODUCTS_WITH_TAX = 'formatted_total_products_with_tax';
+    const KEY_FORMATTED_TOTAL_PAID_WITH_TAX     = 'formatted_total_paid_with_tax';
     const KEY_SHIPPING_ADDRESS                  = 'shipping_address';
     const KEY_INVOICE_ADDRESS                   = 'invoice_address';
     const KEY_CARRIER_ID                        = 'carrier_id';
     const KEY_TRACKING_CODE                     = 'tracking_code';
     const KEY_TRACKING_URL                      = 'tracking_url';
     const KEY_WEIGHT                            = 'weight';
+    const KEY_DELAY                             = 'delay';
+    const KEY_NAME                              = 'name';
     const KEY_ADDRESS_ID                        = 'address_id';
     const KEY_FIRST_NAME                        = 'first_name';
     const KEY_LAST_NAME                         = 'last_name';

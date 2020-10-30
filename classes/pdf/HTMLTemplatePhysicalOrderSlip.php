@@ -43,8 +43,15 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplateInvoice
 
         $this->cart = $cart;
         $this->id_cart = $this->cart->id;
-        $this->order = new Order();
-        $products = $this->cart->getProducts(true);
+        
+        if(is_null($this->cart->id)){
+            $this->order = new Order((int)Tools::getValue('id_order'));
+            $this->cart = new Cart($this->order->id_cart);
+            $products = $this->cart->getProducts(true);
+        } else {
+            $this->order = new Order();
+            $products = $this->cart->getProducts(true);
+        }
 
         foreach ($products as $key => $product) {
             $customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, null, (int) $product['id_customization']);

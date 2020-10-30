@@ -9,18 +9,18 @@
  *
  *   eMagicOne Store Manager Bridge Connector is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with eMagicOne Store Manager Bridge Connector.  If not, see <http://www.gnu.org/licenses/>.
+ *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
  * @copyright 2014-2019 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
 
-class PrestashopOverrider extends BridgeConnectorCore
+class PrestaShopOverrider extends BridgeConnectorCore
 {
     public function __construct($module_name, $options_name)
     {
@@ -163,8 +163,8 @@ class PrestashopOverrider extends BridgeConnectorCore
     {
         return Tools::jsonEncode(
             array(
-                'cart_version' => _PS_VERSION_,
-                'cookie_key' => _COOKIE_KEY_,
+                'cart_version'  => _PS_VERSION_,
+                'cookie_key'    => _COOKIE_KEY_,
             )
         );
     }
@@ -341,12 +341,12 @@ class PrestashopOverrider extends BridgeConnectorCore
                 self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
                 self::KEY_MESSAGE   => 'Unable to resize one or more of your pictures',
             )));
-        } else {
-            die($this->jsonEncode(array(
-                self::CODE_RESPONSE => self::SUCCESSFUL,
-                self::KEY_MESSAGE   => 'Upload and resize of images has been executed successfully',
-            )));
         }
+
+        die($this->jsonEncode(array(
+            self::CODE_RESPONSE => self::SUCCESSFUL,
+            self::KEY_MESSAGE   => 'Upload and resize of images has been executed successfully',
+        )));
     }
 
     public function getImageDir($type)
@@ -427,18 +427,18 @@ class PrestashopOverrider extends BridgeConnectorCore
                     self::CODE_RESPONSE => self::SUCCESSFUL,
                     self::KEY_MESSAGE   => 'Image was deleted from FTP Server successfully',
                 )));
-            } else {
-                die($this->jsonEncode(array(
-                    self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-                    self::KEY_MESSAGE   => 'Image was not deleted from FTP Server',
-                )));
             }
-        } else {
+
             die($this->jsonEncode(array(
                 self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
                 self::KEY_MESSAGE   => 'Image was not deleted from FTP Server',
             )));
         }
+
+        die($this->jsonEncode(array(
+            self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+            self::KEY_MESSAGE   => 'Image was not deleted from FTP Server',
+        )));
     }
 
     public function deleteFile($filepath)
@@ -539,12 +539,12 @@ class PrestashopOverrider extends BridgeConnectorCore
                 self::CODE_RESPONSE => self::SUCCESSFUL,
                 self::KEY_MESSAGE   => 'File was successfully uploaded',
             )));
-        } else {
-            die($this->jsonEncode(array(
-                self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-                self::KEY_MESSAGE   => 'File was not uploaded',
-            )));
         }
+
+        die($this->jsonEncode(array(
+            self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+            self::KEY_MESSAGE   => 'File was not uploaded',
+        )));
     }
 
     public function checkDataChanges($tables_arr = '')

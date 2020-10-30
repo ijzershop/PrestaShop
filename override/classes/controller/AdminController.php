@@ -40,7 +40,7 @@ class AdminController extends AdminControllerCore
 
         $token = Tools::getValue('token');
         
-        if ($token === $this->token || Tools::getValue('controller') == 'AdminOrders') {
+        if ($token === $this->token || $token === Configuration::get('MODERNESMIDTHEMECONFIGURATOR_TOKEN')) {
             return true;
         }
 

@@ -106,11 +106,11 @@ $(function () {
     }
 
     function setEvents() {
-        $('div.mobassistantconnector_status').live('click', function () {
+        $('body').on('click', 'div.mobassistantconnector_status', function() {
             changeStatus($(this));
         });
 
-        $('div.mobassistantconnector_users_delete').live('click', function () {
+        $('body').on('click', 'div.mobassistantconnector_users_delete', function() {
             if (isNewUser($(this)) == '0') {
                 if (confirm('Are you sure you want to delete user?')) {
                     deleteUser($(this).attr('user_id'));
@@ -123,26 +123,26 @@ $(function () {
             }
         });
 
-        $('#mobassistantconnector_users_bulk_select_all').live('click', function () {
+        $('body').on('click', '#mobassistantconnector_users_bulk_select_all', function() {
             $('.mobassistantconnector_users').each(function () {
                 $(this).prop('checked', true);
             });
         });
 
-        $('#mobassistantconnector_users_bulk_unselect_all').live('click', function () {
+        $('body').on('click', '#mobassistantconnector_users_bulk_unselect_all', function() {
             $('.mobassistantconnector_users').each(function () {
                 $(this).prop('checked', false);
             });
         });
 
-        $('.mobassistantconnector_users_td_employees').live('click', function () {
+        $('body').on('click', '.mobassistantconnector_users_td_employees', function() {
             let user_id = $(this).attr('user_id');
 
             showUserEmploeesDialog(user_id);
             getEmployees(user_id);
         });
 
-        $('.mobassistantconnector_users_td_actions').live('click', function () {
+        $('body').on('click', '.mobassistantconnector_users_td_actions', function() {
             let user_id = $(this).attr('user_id');
 
             showUserPermissionsDialog(user_id);
@@ -154,7 +154,7 @@ $(function () {
             }
         });
 
-        $('.mobassistantconnector_users_icon_qr_code').live('click', function () {
+        $('body').on('click', '.mobassistantconnector_users_icon_qr_code', function() {
             let user_id = $(this).attr('user_id');
             let qr_code_link = $('#mobassistantconnector_qr_code_link_user_' + user_id).val();
 
@@ -176,7 +176,7 @@ $(function () {
             setDialogPosition($('#mobassistantconnector_users_qr_code_dialog'));
         });
 
-        $('#mobassistantconnector_user_permissions_toggle_all').live('click', function () {
+        $('body').on('click', '#mobassistantconnector_user_permissions_toggle_all', function() {
             let is_checked = $('#mobassistantconnector_user_permissions_chb_toggle_all').is(':checked');
 
             $('.mobassistantconnector_user_permissions').each(function () {
@@ -184,15 +184,15 @@ $(function () {
             });
         });
 
-        $('#mobassistantconnector_add_user').live('click', function () {
+        $('body').on('click', '#mobassistantconnector_add_user', function() {
             addNewUserRow();
         });
 
-        $('.mobassistantconnector_users_save').live('click', function () {
+        $('body').on('click', '.mobassistantconnector_users_save', function() {
             checkUserData($(this).attr('user_id'), isNewUser($(this)));
         });
 
-        $('.mobassistantconnector_users_status').live('click', function () {
+        $('body').on('click', '.mobassistantconnector_users_status', function() {
             if (isNewUser($(this)) == '0') {
                 changeStatusForUser($(this));
             } else {
@@ -200,44 +200,46 @@ $(function () {
             }
         });
 
-        $('#mobassistantconnector_users_bulk_status_active').live('click', function () {
+        $('body').on('click', '#mobassistantconnector_users_bulk_status_active', function() {
             changeUserStatusBulk(1);
         });
 
-        $('#mobassistantconnector_users_bulk_status_inactive').live('click', function () {
+        $('body').on('click', '#mobassistantconnector_users_bulk_status_inactive', function() {
             changeUserStatusBulk(0);
         });
 
-        $('#mobassistantconnector_users_bulk_delete').live('click', function () {
+        $('body').on('click', '#mobassistantconnector_users_bulk_delete', function() {
             if (confirm('Are you sure you want to delete selected users?')) {
                 deleteUserBulk();
             }
         });
 
-        $('.mobassistantconnector_users_login').live('click', function () {
+        $('body').on('click', '.mobassistantconnector_users_login', function() {
             $(this).keyup(function () {
                 processSaveButtonVisibility($(this).attr('user_id'));
             });
         });
 
-        $('.mobassistantconnector_users_password').live('click', function () {
+        $('body').on('click', '.mobassistantconnector_users_password', function() {
             $(this).keyup(function () {
                 processSaveButtonVisibility($(this).attr('user_id'));
             });
         });
 
-        $('.mobassistantconnector_users_save_login_password').live('click', function () {
+        $('body').on('click', '.mobassistantconnector_users_save_login_password', function() {
             checkUserData($(this).attr('user_id'), isNewUser($(this)));
         });
 
-        $('.mobassistantconnector_user_permissions').live('change', function () {
+        $('body').on('change', '.mobassistantconnector_user_permissions', function() {
             processSelectedAction($(this));
         });
 
-        $('.mobassistantconnector_users_td_actions_text').live('mouseenter', function () {
+        $('body').on('mouseenter', '.mobassistantconnector_users_td_actions_text', function() {
             $('#mobassistantconnector_users_actions_text_user_' + $(this).attr('user_id'))
                 .addClass('mobassistantconnector_actions_hover');
-        }).live('mouseleave', function () {
+        })
+
+        $('body').on('mouseleave', '.mobassistantconnector_users_td_actions_text', function() {
             $('#mobassistantconnector_users_actions_text_user_' + $(this).attr('user_id'))
                 .removeClass('mobassistantconnector_actions_hover');
         });

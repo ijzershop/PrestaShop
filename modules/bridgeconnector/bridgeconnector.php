@@ -42,7 +42,7 @@ class Bridgeconnector extends Module
         // Module settings
         $this->name                 = 'bridgeconnector';
         $this->tab                  = 'others';
-        $this->version              = '3.0.8';
+        $this->version              = '3.0.13';
         $this->author               = 'eMagicOne';
         $this->module_key           = '0d90a4ec7c4a83fa979f710a1ead2c72';
         $this->need_instance        = 0;

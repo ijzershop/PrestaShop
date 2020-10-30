@@ -33,9 +33,6 @@ includedProductFiles();
 
 class MAProduct extends EM1Main implements EM1ProductInterface
 {
-    /** @var int $languageId lang_id from request, id_lang field in database */
-    private $languageId;
-
     /** @var string $whereQuery preparation of where query part */
     private $whereQuery = '1';
 
@@ -480,13 +477,13 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             }
 
             $productsResult[] = array(
-                self::KEY_PRODUCT_ID                            => (int)$product->id,
-                self::KEY_PRODUCT_TYPE                          => $this->getProductType($product->getType()),
-                self::KEY_REFERENCE                             => (string)$product->reference,
-                self::KEY_EAN13                                 => (string)$product->ean13,
-                self::KEY_LANGUAGE_VALUES                       => $productLanguagesResult,
-                self::KEY_IMAGES                                => $productImagesResult,
-                self::KEY_SHOPS                                 => $productShopsResult
+                self::KEY_PRODUCT_ID      => (int)$product->id,
+                self::KEY_PRODUCT_TYPE    => $this->getProductType($product->getType()),
+                self::KEY_REFERENCE       => (string)$product->reference,
+                self::KEY_EAN13           => (string)$product->ean13,
+                self::KEY_LANGUAGE_VALUES => $productLanguagesResult,
+                self::KEY_IMAGES          => $productImagesResult,
+                self::KEY_SHOPS           => $productShopsResult
             );
         }
 
@@ -524,7 +521,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             $id_product_query_part
             pl.`name` LIKE '%{$searchValue}%' OR
             p.`reference` LIKE '%{$searchValue}%' OR
-            p.`ean13` LIKE '%{$searchValue}%'
+            p.`ean13` LIKE '%{$searchValue}%' OR
+            pa.`reference` LIKE '%{$searchValue}%' OR
+	        pa.`ean13` LIKE '%{$searchValue}%'
         ) ";
     }
 
@@ -693,18 +692,17 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         $context = Context::getContext();
 
         $sql = pSQL('SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, 
-                p.`quantity`, pl.`name`, image_shop.`id_image` id_image, il.`legend`, p.`cache_default_attribute`
-                FROM `' . _DB_PREFIX_ . 'product` p
-                ' . Shop::addSqlAssociation('product', 'p') . '
+                    p.`quantity`, pl.`name`, image_shop.`id_image` id_image, il.`legend`, p.`cache_default_attribute`
+                FROM `' . _DB_PREFIX_ . 'product` p ' . Shop::addSqlAssociation('product', 'p') . '
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (pl.id_product = p.id_product 
-                AND pl.id_lang = ' . (int)$this->languageId . Shop::addSqlRestrictionOnLang('pl') . ')
+                    AND pl.id_lang = ' . (int)$this->languageId . Shop::addSqlRestrictionOnLang('pl') . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
                     ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 
                     AND image_shop.id_shop=' . (int)$shopId . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` 
-                AND il.`id_lang` = ' . (int)$this->languageId . ')
+                    AND il.`id_lang` = ' . (int)$this->languageId . ')
                 WHERE (pl.name LIKE \'%' . pSQL($searchPhrase) . '%\' 
-                OR p.reference LIKE \'%' . pSQL($searchPhrase) . '%\')' .
+                    OR p.reference LIKE \'%' . pSQL($searchPhrase) . '%\')' .
             ($excludeVirtuals ?
                 'AND NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ .
                 'product_download` pd WHERE (pd.id_product = p.id_product))' :
@@ -961,19 +959,18 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      */
     private function getProductsIds($pageSize, $pageIndex)
     {
-        return self::getQueryResult(
-            /** @lang MySQL */'SELECT p.`id_product` FROM `' . _DB_PREFIX_ . 'product` p'
-            . Shop::addSqlAssociation('product', 'p')
+        $query = 'SELECT p.`id_product` FROM `' . _DB_PREFIX_ . 'product` p' . Shop::addSqlAssociation('product', 'p')
             . ' LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON p.`id_product` = pl.`id_product` 
-            AND pl.`id_lang` = ' . $this->languageId .
-            Shop::addSqlRestrictionOnLang('pl', (int)Shop::getContextShopID()) .
+                AND pl.`id_lang` = ' . $this->languageId . Shop::addSqlRestrictionOnLang('pl', (int)Shop::getContextShopID()) .
             ' LEFT JOIN `' . _DB_PREFIX_ . 'stock_available` sa ON sa.`id_product` = p.`id_product` 
-                AND sa.`id_product_attribute` = 0 '
-            . StockAvailable::addSqlShopRestriction(null, (int)Shop::getContextShopID(), 'sa') .
+                AND sa.`id_product_attribute` = 0 ' . StockAvailable::addSqlShopRestriction(null, (int)Shop::getContextShopID(), 'sa') .
+            ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product = p.`id_product`' .
             ' WHERE ' . $this->whereQuery .
+            ' GROUP BY p.`id_product` ' .
             ' ORDER BY '.$this->orderByQuery .
-            ' LIMIT ' . (($pageIndex - 1) * $pageSize) . ',' . $pageSize
-        );
+            ' LIMIT ' . (($pageIndex - 1) * $pageSize) . ',' . $pageSize;
+
+        return self::getQueryResult($query);
     }
 
     /**
@@ -982,9 +979,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     private function getProductsCount()
     {
         return self::getQueryValue(
-            /** @lang MySQL */'SELECT COUNT(p.`id_product`) AS `count` FROM `' . _DB_PREFIX_ . 'product` p 
-            LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product` 
-            AND pl.`id_lang` = ' .
+            /** @lang MySQL */'SELECT COUNT(DISTINCT p.`id_product`) AS `count` FROM `' . _DB_PREFIX_ . 'product` p
+            LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product = p.`id_product` 
+            LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = ' .
             $this->languageId . Shop::addSqlRestrictionOnLang('pl', (int)Shop::getContextShopID()) . ') ' .
             Shop::addSqlAssociation('product', 'p') .
             ' WHERE ' . $this->whereQuery

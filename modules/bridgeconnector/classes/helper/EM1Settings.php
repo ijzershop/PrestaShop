@@ -190,7 +190,15 @@ class EM1Settings extends EM1Main
     public function getOrdersStatuses($langId)
     {
         $statuses = array();
-        foreach (OrderState::getOrderStates($langId) as $status) {
+
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            SELECT os.id_order_state, osl.name, os.color 
+            FROM `' . _DB_PREFIX_ . 'order_state` os
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $langId . ')
+            WHERE deleted = 0
+            ORDER BY `name` ASC');
+
+        foreach ($result as $status) {
             $statuses[] = array(
                 self::KEY_ID        => (int)$status['id_order_state'],
                 self::KEY_NAME      => (string)$status['name'],

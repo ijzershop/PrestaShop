@@ -61,6 +61,8 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
     private $employeeId;
     private $email;
     private $comment;
+    private $taxIncl;
+    private $shippingIncl;
 
     public function __construct()
     {
@@ -140,11 +142,11 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
         }
 
         // Prepare parameters
-        $this->languageId                = empty($this->languageId)
+        $this->languageId = empty($this->languageId)
             ? (int)Configuration::get('PS_LANG_DEFAULT')
             : (int)$this->languageId;
-        $this->languageLocale            = (string)$this->getLanguageLocal();
-        $this->currencyId                = empty($this->currencyId)
+        $this->languageLocale = (string)$this->getLanguageLocal();
+        $this->currencyId = empty($this->currencyId)
             ? (int)Configuration::get('PS_CURRENCY_DEFAULT')
             : (int)$this->currencyId;
         $this->pageSize = (empty($this->pageSize) || $this->pageSize < 1) ? 25 : (int)$this->pageSize;
@@ -158,7 +160,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
     private function getLanguageLocal()
     {
         $lang = new Language($this->languageId);
-        if(method_exists ($lang, "getLocale")) return $lang->getLocale();
+        if (method_exists($lang, "getLocale")) return $lang->getLocale();
 
         return $lang->language_code;
     }
@@ -209,7 +211,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
             return;
         }
 
-        $this->shopId      = $this->shopId > 0 ? (int)$this->shopId : null;
+        $this->shopId = $this->shopId > 0 ? (int)$this->shopId : null;
         $this->shopGroupId = $this->shopGroupId > 0 ? (int)$this->shopGroupId : null;
         $method_name = EM1Main::snakeCaseToCamelCase(Tools::getValue('call_function'));
         if ($this->shopId <= 0 && $this->isContextShopRequiredInMethod($method_name)) {
@@ -275,13 +277,14 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function getDashboard()
     {
-        $dashboard = new MADashboard(
-            $this->shopId,
+        $dashboard = new MADashboard($this->shopId,
             $this->languageId,
             $this->currencyId,
             $this->dateFrom,
             $this->dateTo,
-            $this->orderStatuses
+            $this->orderStatuses,
+            $this->taxIncl,
+            $this->shippingIncl
         );
 
         $dashboard->getDashboard();
@@ -292,9 +295,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function getWidgetData()
     {
-        $widget = new MAWidget(
-            $this->shopId
-        );
+        $widget = new MAWidget($this->shopId, $this->taxIncl, $this->shippingIncl);
 
         $widget->getWidgetData(
             $this->dateFrom,
@@ -308,7 +309,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function getOrders()
     {
-        $order = new MAOrder($this->languageId);
+        $order = new MAOrder($this->shopId, $this->languageId, $this->taxIncl, $this->shippingIncl);
         $order->getOrders(
             $this->dateFrom,
             $this->dateTo,
@@ -322,7 +323,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
 
     private function getOrderPickingProducts()
     {
-        $order = new MAOrder($this->languageId);
+        $order = new MAOrder($this->shopId, $this->languageId);
         $order->getOrderPickingProducts($this->orderIds, $this->pageSize, $this->pageIndex);
     }
 
@@ -331,7 +332,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function searchOrders()
     {
-        $order = new MAOrder($this->languageId);
+        $order = new MAOrder($this->shopId, $this->languageId, $this->taxIncl, $this->shippingIncl);
         $order->searchOrdersBy(
             $this->dateFrom,
             $this->dateTo,
@@ -349,7 +350,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function getOrderDetails()
     {
-        $order = new MAOrder($this->languageId);
+        $order = new MAOrder($this->shopId, $this->languageId, $this->taxIncl, $this->shippingIncl);
         $order->getOrderDetails(
             $this->id,
             $this->pageSize,
@@ -362,7 +363,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function updateOrderShippingDetails()
     {
-        $order = new MAOrder($this->languageId);
+        $order = new MAOrder($this->shopId, $this->languageId);
         $order->updateOrderShippingDetails(
             $this->id,
             $this->carrierId,
@@ -376,7 +377,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function changeOrderStatus()
     {
-        $order = new MAOrder($this->languageId);
+        $order = new MAOrder($this->shopId, $this->languageId);
         $order->changeOrderStatus($this->id, $this->orderStatusId);
     }
 
@@ -385,7 +386,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function checkDownloadOrderInvoiceAvailability()
     {
-        $order = new MAOrder($this->languageId);
+        $order = new MAOrder($this->shopId, $this->languageId);
         $order->checkDownloadOrderInvoiceAvailability($this->id);
     }
 
@@ -394,7 +395,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function downloadOrderInvoice()
     {
-        $order = new MAOrder($this->languageId);
+        $order = new MAOrder($this->shopId, $this->languageId);
         $order->downloadOrderInvoice($this->id);
     }
 
@@ -403,7 +404,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function getOrderProducts()
     {
-        $order = new MAOrder($this->languageId);
+        $order = new MAOrder($this->shopId, $this->languageId, $this->taxIncl, $this->shippingIncl);
         $order->getOrderProducts(
             $this->id,
             $this->pageSize,
@@ -451,8 +452,12 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function getCustomerDetails()
     {
-        $customer = new MACustomer($this->languageId, $this->currencyId);
-        $customer->getCustomerDetails($this->id, $this->pageIndex, $this->pageSize);
+        $customer = new MACustomer($this->languageId, $this->currencyId, $this->taxIncl, $this->shippingIncl);
+        $customer->getCustomerDetails(
+            $this->id,
+            $this->pageIndex,
+            $this->pageSize
+        );
     }
 
     /**
@@ -460,8 +465,12 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function getCustomerOrders()
     {
-        $customer = new MACustomer($this->languageId, $this->currencyId);
-        $customer->getCustomerOrders($this->id, $this->pageIndex, $this->pageSize);
+        $customer = new MACustomer($this->languageId, $this->currencyId, $this->taxIncl, $this->shippingIncl);
+        $customer->getCustomerOrders(
+            $this->id,
+            $this->pageIndex,
+            $this->pageSize
+        );
     }
 
     /**
@@ -1087,7 +1096,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
 
         $customerService = new MACustomerService($this->languageId, $this->id, 1);
         $messages = $customerService->getCustomerThreadMessages();
-        $output = $this->displayMessage($messages, true, (int) $messages);
+        $output = $this->displayMessage($messages, true, (int)$messages);
         $translatedFields = $this->prepareTranslatedFields();
         if ($this->employeeId) {
             $customerService->forwardCustomerThreadMessages(
@@ -1270,7 +1279,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
         $translatedEmailSubject = '';
         $translatedEmailMessage = '';
         if ($this->employeeId) {
-            $forwardEmployee        = new Employee($this->employeeId);
+            $forwardEmployee = new Employee($this->employeeId);
             $translatedEmailSubject = $this->trans(
                 'Fwd: Customer message',
                 array(),
@@ -1278,16 +1287,16 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
                 $this->languageLocale
             );
             $translatedEmailMessage = $this->trans(
-                'Message forwarded to',
-                array(),
-                'Admin.Catalog.Feature'
-            ) . ' ' .
+                    'Message forwarded to',
+                    array(),
+                    'Admin.Catalog.Feature'
+                ) . ' ' .
                 $forwardEmployee->firstname . ' ' .
                 $forwardEmployee->lastname . "\n" .
                 $this->trans('Comment:') . ' ' .
                 $this->comment;
         } elseif ($this->email && Validate::isEmail($this->email)) {
-            $translatedEmailSubject    =
+            $translatedEmailSubject =
                 $this->trans('Fwd: Customer message', array(), 'Emails.Subject', $this->languageLocale);
             $translatedEmailMessage = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature') . ' '
                 . $this->email . "\n" . $this->trans('Comment:') . ' ' . $this->comment;
@@ -1350,7 +1359,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
         );
 
         $is_valid_order_id = true;
-        $order = new Order((int) $message['id_order']);
+        $order = new Order((int)$message['id_order']);
 
         if (!Validate::isLoadedObject($order)) {
             $is_valid_order_id = false;
@@ -1361,7 +1370,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
             array(
                 'thread_url' => Tools::getAdminUrl(basename(_PS_ADMIN_DIR_) . '/' .
                     $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
-                    . (int) $message['id_customer_thread'] . '&amp;viewcustomer_thread=1'),
+                    . (int)$message['id_customer_thread'] . '&amp;viewcustomer_thread=1'),
                 'link' => Context::getContext()->link,
                 'current' => 'index.php?controller=AdminCustomerThreads',
                 'token' => Tools::getAdminTokenLite('AdminCustomerThreadsController'),
@@ -1381,8 +1390,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
 
     protected function createTemplate($tpl_name)
     {
-        return Context::getContext(
-        )->smarty->createTemplate(_PS_MODULE_DIR_ . '/bridgeconnector/views/templates/front/' . $tpl_name);
+        return Context::getContext()->smarty->createTemplate(_PS_MODULE_DIR_ . '/bridgeconnector/views/templates/front/' . $tpl_name);
     }
 
     /**
@@ -1411,22 +1419,22 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
         foreach ($scan as $filename) {
             //====================================================================//
             // Filename Is Folder
-            if (!is_dir($homedir."/".$filename)) {
+            if (!is_dir($homedir . "/" . $filename)) {
                 continue;
             }
             //====================================================================//
             // This Folder Includes Admin Files
-            if (!is_file($homedir."/".$filename."/"."ajax-tab.php")) {
+            if (!is_file($homedir . "/" . $filename . "/" . "ajax-tab.php")) {
                 continue;
             }
             //====================================================================//
             // This Folder Includes Admin Files
-            if (!is_file($homedir."/".$filename."/"."backup.php")) {
+            if (!is_file($homedir . "/" . $filename . "/" . "backup.php")) {
                 continue;
             }
             //====================================================================//
             // Define Folder As Admin Folder
-            define('_PS_ADMIN_DIR_', $homedir."/".$filename);
+            define('_PS_ADMIN_DIR_', $homedir . "/" . $filename);
             return _PS_ADMIN_DIR_;
         }
         return false;

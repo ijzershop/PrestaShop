@@ -28,6 +28,19 @@ class EM1Main extends EM1Database
     const RESPONSE_CODE_SUCCESS     = 'success';
     const ERROR_MESSAGE             = 'error_message';
 
+    protected $languageId;
+    protected $shopId;
+    protected $taxIncl;
+    protected $shippingIncl;
+
+    public function __construct($shopId = 0, $languageId = null, $taxIncl = false, $shippingIncl = false)
+    {
+        $this->shopId = $shopId;
+        $this->languageId = $languageId;
+        $this->taxIncl = $taxIncl;
+        $this->shippingIncl = $shippingIncl;
+    }
+
     public static function convertTimestampToMillisecondsTimestamp($timestamp)
     {
         if ($timestamp === null) {
@@ -100,6 +113,21 @@ class EM1Main extends EM1Database
         $str[0] = Tools::strtolower($str[0]);
 
         return $str;
+    }
+
+    public function getOrderTotalField() {
+        $total_field = "o.`total_products`/o.`conversion_rate`";
+
+        if($this->taxIncl && !$this->shippingIncl) {
+            $total_field = "o.`total_products_wt`/o.`conversion_rate`";
+        }
+        if(!$this->taxIncl && $this->shippingIncl) {
+            $total_field = "o.`total_paid_tax_excl`/o.`conversion_rate`";
+        }
+        if($this->taxIncl && $this->shippingIncl) {
+            $total_field = "o.`total_paid_tax_incl`/o.`conversion_rate`";
+        }
+        return $total_field;
     }
 }
 

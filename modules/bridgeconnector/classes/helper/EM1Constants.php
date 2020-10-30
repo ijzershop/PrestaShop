@@ -30,9 +30,9 @@ class EM1Constants
      * 3. Specify the number of new (public) functions (MA_MODULE_NEW_REQUESTS)
      */
 
-    const MODULE_VERSION                                        = '3.0.8';
+    const MODULE_VERSION                                        = '3.0.13';
     const BC_MODULE_REVISION                                    = 20;
-    const MA_MODULE_REVISION                                    = 14;
+    const MA_MODULE_REVISION                                    = 19;
     const MA_MODULE_NEW_REQUESTS                                = 0;
 
     const MODULE_NAME                                           = 'bridgeconnector';

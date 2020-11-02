@@ -939,12 +939,13 @@ class OrderCore extends ObjectModel
         if (!$res) {
             return array();
         }
-
+ 
         foreach ($res as $key => $val) {
             $res[$key]['order_state'] = $indexedOrderStates[$val['id_order_state']]['name'];
             $res[$key]['invoice'] = $indexedOrderStates[$val['id_order_state']]['invoice'];
             $res[$key]['order_state_color'] = $indexedOrderStates[$val['id_order_state']]['color'];
         }
+
 
         return $res;
     }

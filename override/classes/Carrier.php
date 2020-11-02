@@ -38,7 +38,7 @@ class Carrier extends CarrierCore
         $storeCustomer = (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE');
         $storeCustomerLoggedIn = false;
 
-        if($storeCustomer == Context::getContext()->customer->id){
+        if(!is_null(Context::getContext()->customer) && $storeCustomer == Context::getContext()->customer->id){
             $storeCustomerLoggedIn = true;
         }
 

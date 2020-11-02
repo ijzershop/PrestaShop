@@ -440,6 +440,30 @@ class Mail extends MailCore
                 Context::getContext()->link = new Link();
             }
 
+            $templateVars['{add_to_order}'] = '';
+            $carrierCheck = new Carrier(Configuration::get('ADDTOORDER_DELIVERY_METHOD'));
+            if(Module::isEnabled('addtoorder') && $carrierCheck->active){
+                $templateVars['{add_to_order}'] = '<tr>
+                                                    <td class="footer padding1020 bg-white">
+                                                      <br/>
+                                                      <span class="text-small">
+                                                        <strong>
+                                                          <span class="font-arial">
+                                                            <span class="text-grey font-arial">Iets vergeten? </span>
+                                                          </span>
+                                                        </strong>
+                                                      </span>
+                                                      <br />
+                                                      <span class="text-small">
+                                                        <span class="font-arial">
+                                                          <span class="text-grey font-arial">Tot u bericht krijgt dat uw bestelling is verstuurd kunt u iets toevoegen aan uw bestelling zonder dat er extra verzendkosten in rekening worden gebracht. Maak hiervoor een nieuwe bestelling en kies bij verzending voor: "Toevoegen".
+                                                          </span>
+                                                        </span>
+                                                      </span>
+                                                    </td>
+                                                  </tr>';
+            }
+
             $templateVars['{shop_name}'] = Tools::safeOutput($configuration['PS_SHOP_NAME']);
             $templateVars['{custom_footer_html}'] = Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', ''));
             $templateVars['{custom_footer_txt}'] = Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT_TXT', ''));

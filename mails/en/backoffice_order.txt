@@ -1,13 +1,11 @@
-
 [{shop_url}] 
 
-Hi {firstname} {lastname}, 
+Hallo {firstname} {lastname}, 
 
-A new order has been generated on your behalf. 
+Een nieuwe bestelling is voor u aangemaakt. 
 
-Please go on {order_link} [{order_link}] to
-finalize the payment. 		 
+Ga naar: {order_link} [{order_link}] om uw
+betaling af te ronden. 		 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer_txt}
 

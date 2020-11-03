@@ -1,18 +1,11 @@
-
 [{shop_url}] 
 
-Your message to {shop_name} Customer Service 
+Uw bericht is succesvol verzonden aan {shop_name} klantenservice. 
 
-Your message has been sent successfully.
+Uw bericht is succesvol verzonden.
+	 
 
-ORDER ID: {order_name}
+We zullen zo spoedig mogelijk antwoorden. 
 
-PRODUCT: {product_name}
-
-ATTACHED FILE: {attached_file} 		 
-
-We will answer as soon as possible. 
-
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer_txt}
 

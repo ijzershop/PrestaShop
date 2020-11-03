@@ -1,11 +1,10 @@
 [{shop_url}] 
 
-Hallo {firstname} {lastname}, 
+Hallo, 
 
-Een nieuwe bestelling is voor u aangemaakt. 
+Er is een nieuwe bestelling gedaan op {shop_url}, graag leveren op: {desired_delivery_date}. Bij deze de pakbon. 
 
-Ga naar: {order_link} [{order_link}] om uw
-betaling af te ronden. 		 
+Alvast bedankt voor de levering.
 
 {custom_footer_txt}
 

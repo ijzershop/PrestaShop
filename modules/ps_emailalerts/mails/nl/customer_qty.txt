@@ -1,15 +1,13 @@
 
 [{shop_url}] 
 
-Hi, 
+Hallo, 
 
-This item is once again in-stock.
+{product} is weer beschikbaar.
 
-You can access the product page by clicking on the link: {product}
-[{product_link}]
+Dit product is weer op voorraad. 
+U kunt het product bekijken door op de volgende link te klikken: {product}[{product_link}]
 
-You can order it right now from our online shop. 		 
+U kunt het direct bestellen in onze webshop.
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
-
+{custom_footer}

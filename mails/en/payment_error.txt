@@ -1,24 +1,20 @@
-
 [{shop_url}] 
 
-Hi {firstname} {lastname}, 
+Hallo {firstname} {lastname}, 
 
-There is a problem with your payment for {shop_name} order with the
-reference {order_name}. Please contact us at your earliest
-convenience.
+Er is een probleem met uw betaling voor {shop_name} bestelling met
+referentie {order_name}. Neemt u a.u.b. contact met ons op.
 
-WE CANNOT SHIP YOUR ORDER UNTIL WE RECEIVE YOUR PAYMENT. 		 
+UW BESTELLING ZAL PAS VERWERKT WORDEN ALS DIT PROBLEEM IS OPGELOST.
 
-You can review your order and download your invoice from the
-"Order history" [{history_url}] section of your
-customer account by clicking "My account"
-[{my_account_url}] on our shop. 
+U kunt uw bestelling bekijken en de factuur downloaden vanuit de
+sectie "Bestelgeschiedenis" [{history_url}] op de
+klantportal, door te klikken op de link "Mijn account"
+[{my_account_url}] in onze winkel. 
 
-If you have a guest account, you can follow your order via the
-"Guest Tracking"
-[{guest_tracking_url}?id_order={order_name}]
-section on our shop. 
+Indien u hebt afgerekend zonder het aanmaken van een account, dan
+kunt u deze bestelling volgen via "deze link"
+[{guest_tracking_url}?id_order={order_name}]. 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer_txt}
 

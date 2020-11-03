@@ -1,11 +1,8 @@
 
 [{shop_url}] 
 
-Hi, 
+Hallo, 
 
-Regarding your newsletter subscription, we are pleased to offer
-you the following voucher: {discount} 
+Naar aanleiding van uw abonering op onze nieuwsbrief willen wij u graag de volgende kortingscode: {discount} aanbieden.
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
-
+{custom_footer}

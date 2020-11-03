@@ -1,17 +1,16 @@
-
 [{shop_url}] 
 
-Hi {firstname} {lastname}, 
+Hallo {firstname} {lastname}, 
 
-Your guest account for {shop_name} was converted to a customer
-account. 
+Uw gastaccount voor {shop_name} is omgezet naar een klantaccount. 
 
-E-MAIL ADDRESS: {email} 		 
+E-MAILADRES: {email} 		 
 
-Please be careful when sharing these login details with others. 
+Wees alstublieft voorzichtig wanneer u deze aanmeldgegevens deelt
+met anderen. 
 
-You can access your customer account on our shop: {shop_url} 
+U hebt toegang tot uw account op onze website: {shop_url}
+{shop_url} 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer_txt}
 

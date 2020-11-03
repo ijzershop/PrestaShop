@@ -1,21 +1,10 @@
 
 [{shop_url}]
 
-Hi {firstname} {lastname},
+Hallo {firstname} {lastname},
 
-Your order with the reference {order_name} from {shop_name} has
-been modified.
+Uw bestelling met referentie {order_name} van {shop_name is gewijzigd
 
-You can review your order and download your invoice from the
-"Order history" [{history_url}] section of your
-customer account by clicking "My account"
-[{my_account_url}] on our shop.
+U kunt de bestelling bekijken en uw factuur downloaden in het "Bestel overzicht" [{history_url}] van uw klant account. Uw klant account kunt u vinden onder "Mijn account" [{my_account_url}] op onze webshop.
 
-If you have a guest account, you can follow your order via the
-"Guest Tracking"
-[{guest_tracking_url}?id_order={order_name}] section
-on our shop.
-
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/]
-
+{custom_footer}

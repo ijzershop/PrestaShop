@@ -1,16 +1,13 @@
 
 [{shop_url}] 
 
-Hi, 
+Hallo, 
 
-The remaining stock is now less than the specified minimum of
-{last_qty}.
+De huidige voorraad is minder dan de aangegeven hoeveelheid van {last_qty}.
 
-REMAINING STOCK: {qty}
+NOG OP VOORRAAD: {qty}
 
-You are advised to open the product's admin Product Page in order to
-replenish your inventory. 		 
+U word geadvisseerd om de product voorraad in de backoffice bij te werken.
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer}
 

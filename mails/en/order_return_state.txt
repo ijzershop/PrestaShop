@@ -1,16 +1,14 @@
-
 [{shop_url}] 
 
-Hi {firstname} {lastname}, 
+Hallo {firstname} {lastname}, 
 
-We have updated the progress on your return #{id_order_return}, the
-new status is: "{state_order_return}"
+Uw retourzending (#{id_order_return}) status is bijgewerkt, de nieuwe
+status is: "{state_order_return}" "{state_order_return}"
 
-You can review your order and download your invoice from the
-"Order history" [{history_url}] section of your
-customer account by clicking "My account"
-[{my_account_url}] on our shop. 
+U kunt uw bestelling bekijken en de factuur downloaden vanuit de
+sectie "Bestelgeschiedenis" [{history_url}] op de
+klantportal, door te klikken op de link "Mijn account"
+[{my_account_url}] in onze winkel. 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer_txt}
 

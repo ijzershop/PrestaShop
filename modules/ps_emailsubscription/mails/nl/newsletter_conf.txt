@@ -1,10 +1,9 @@
 
 [{shop_url}] 
 
-Hi, 
+Hallo, 
 
-THANK YOU FOR SUBSCRIBING TO OUR NEWSLETTER. 
+Bedankt voor uw abonering op onze nieuwsbrief.
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer}
 

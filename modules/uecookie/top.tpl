@@ -15,7 +15,7 @@
         var wartosc = '1';
         var expire = new Date();
         expire.setMonth(expire.getMonth() + 12);
-        document.cookie = nazwa + "=" + escape(wartosc) + ";path=/;" + ((expire == null) ? "" : ("; expires=" + expire.toGMTString()))
+        document.cookie = nazwa + "=" + escape(wartosc) + ";path=/;"+ ";SameSite = strict;Secure; HttpOnly;" + ((expire == null) ? "" : ("; expires=" + expire.toGMTString()))
     }
 
     {/literal}

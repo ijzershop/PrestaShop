@@ -1,48 +1,47 @@
 
 [{shop_url}] 
 
-Congratulations! 
+Gefeliciteerd! 
 
-A new order was placed on {shop_name} by the following customer:
-{firstname} {lastname} ({email}) 
+Een nieuwe bestelling is door de volgende klant: {firstname} {lastname} - {email} geplaatst op {shop_name}
 
-ORDER: {order_name} Placed on {date}
+Bestelling: {order_name} besteld op {date}
 
-PAYMENT: {payment} 		 
+Betaalwijze: {payment} 		 
 
-REFERENCE
+Referentie
 
-PRODUCT
+Product
 
-UNIT PRICE
+Prijs
 
-QUANTITY
+Aantal
 
-TOTAL PRICE
+Totaal prijs
 
 {items} 
 
-PRODUCTS 
+Producten
 
 {total_products} 
 
-DISCOUNTS 
+Korting 
 
 {total_discounts} 
 
-GIFT-WRAPPING 
+Cadeau verpakking 
 
 {total_wrapping} 
 
-SHIPPING 
+Verzending 
 
 {total_shipping} 
 
-TOTAL TAX PAID 
+Totaal Btw 
 
 {total_tax_paid} 
 
-TOTAL PAID 
+Totaal 
 
 {total_paid} 
 
@@ -54,6 +53,4 @@ TOTAL PAID
 
 {message} 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
-
+{custom_footer}

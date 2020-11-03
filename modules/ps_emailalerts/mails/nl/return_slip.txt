@@ -1,36 +1,34 @@
 
 [{shop_url}] 
 
-Hi, 
+Hallo, 
 
-You have received a new return request for {shop_name}. 
+U heeft een retouraanvraag ontvangen op {shop_name}. 
 
-Return details 
+Retour details
 
-ORDER: {order_name} Placed on {date}
+Bestelling: {order_name} geplaatst op {date}
 
-CUSTOMER: {firstname} {lastname}, ({email}) 
+Klant: {firstname} {lastname} - ({email}) 
 
-REFERENCE
+Referentie
 
-PRODUCT
+Product
 
-QUANTITY
+Aantal
 
 {items} 
 
-Delivery address
+Aflever address
 
 {delivery_block_html} 		 
 
-Billing address
+Factuur address
 
 {invoice_block_html} 
 
-Customer message: 
+Klant bericht: 
 
 {message} 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
-
+{custom_footer}

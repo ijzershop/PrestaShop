@@ -1,13 +1,12 @@
-
 [{shop_url}] 
 
-Hi {firstname} {lastname}, 
+Hallo {firstname} {lastname}, 
 
-WARNING: you have received a new log alert in your Back Office.
+WAARSCHUWING: er is een nieuwe waarschuwing uit het logboek in de
+backoffice.
 
 You can check for it in the "TOOLS" > "LOGS" section of your Back
 Office. 		 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer_txt}
 

@@ -1,14 +1,12 @@
-
 [{shop_url}] 
 
-Hi {firstname} {lastname}, 
+Hallo {firstname} {lastname}, 
 
-{employee} wanted to forward this discussion to you. 
+{employee} heeft dit bericht naar je doorgestuurd. 
 
-DISCUSSION HISTORY: {messages}
+BERICHT GESCHIEDENIS: {messages}
 
-{employee} added "{comment}" 		 
+{employee} heeft het volgende bericht achtergelaten: {comment} 		 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer_txt}
 

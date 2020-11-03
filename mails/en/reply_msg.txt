@@ -1,15 +1,14 @@
-
 [{shop_url}] 
 
-Hi {firstname} {lastname}, 
+Hallo {firstname} {lastname}, 
 
 {reply} 
 
-Please do not reply directly to this email, we will not receive it. 
+Geautomatiseerde mailbox: a. u. b. niet direct antwoorden op deze
+mail want we zullen deze mogelijk niet ontvangen. 
 
-In order to reply, please use the following link: {link}
+Om te reageren, gebruik de volgende link: {link}
 [{link}] 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer_txt}
 

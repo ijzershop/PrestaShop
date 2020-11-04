@@ -1,12 +1,10 @@
-
 [{shop_url}] 
 
-Hello 
+Hallo 
 
-This is a TEST E-MAIL from your shop.
+Dit is een TEST E-MAIL van uw webwinkel.
 
-If you can read this, the test was successful!. 
+Indien u deze kan lezen, dan was de test succesvol!. 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer_txt}
 

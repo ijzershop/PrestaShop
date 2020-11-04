@@ -1,21 +1,23 @@
-
 [{shop_url}] 
 
-Hi {firstname} {lastname}, 
+Hallo,, 
 
-We are currently processing your {shop_name} order with the
-reference {order_name}. 
+Een medewerker van de IJzerShop heeft uw bestelling ingepakt en voorzien van een verzendlabel.
+Indien uw bestelling uit meerdere pakketten bestaat zult u deze mail meerdere keren ontvangen.
 
-You can review your order and download your invoice from the
-"Order history" [{history_url}] section of your
-customer account by clicking "My account"
-[{my_account_url}] on our shop. 
+Uw bestelling zal aan het eind van de dag worden opgehaald en op de eerstvolgende werkdag door onze expediteur worden afgeleverd, u ontvangt op de dag van levering nog een mail met informatie over het tijdstip waarop de levering zal plaatsvinden en een trackingcode.
 
-If you have a guest account, you can follow your order via the
-"Guest Tracking"
-[{guest_tracking_url}?id_order={order_name}]
-section on our shop. 
+We zouden graag van u willen horen of alles naar wens is afgehandeld.
+U kunt een recensie plaatsen op onze website.
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+Met vriendelijke groet,
+
+
+IJZERSHOP.NL
+Venusweg 15,
+8938bc Leeuwarden
+
+
+
+
 

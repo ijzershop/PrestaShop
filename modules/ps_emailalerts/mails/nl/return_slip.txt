@@ -1,0 +1,34 @@
+
+[{shop_url}] 
+
+Hallo, 
+
+U heeft een retouraanvraag ontvangen op {shop_name}. 
+
+Retour details
+
+Bestelling: {order_name} geplaatst op {date}
+
+Klant: {firstname} {lastname} - ({email}) 
+
+Referentie
+
+Product
+
+Aantal
+
+{items} 
+
+Aflever address
+
+{delivery_block_html} 		 
+
+Factuur address
+
+{invoice_block_html} 
+
+Klant bericht: 
+
+{message} 
+
+{custom_footer}

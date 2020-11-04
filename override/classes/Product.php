@@ -267,6 +267,7 @@ class Product extends ProductCore {
         );
 
         $module = Module::getInstanceByName('dynamicproduct');
+
         if (!$module->active|| $only_reduc) {
             return $return;
         }

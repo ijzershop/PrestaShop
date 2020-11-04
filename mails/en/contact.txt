@@ -1,16 +1,14 @@
-
 [{shop_url}] 
 
-Message from a {shop_name} customer 
+Bericht van een {shop_name} klant 
 
-CUSTOMER E-MAIL ADDRESS: {email}
+E-MAILADRES VAN KLANT: {email}
 
-CUSTOMER MESSAGE: {message}
+KLANTBERICHT: {message}
 
-ORDER ID: {order_name}
+ORDERNUMMER: {order_name}
 
-ATTACHED FILE: {attached_file} 		 
+BIJLAGE: {attached_file} 		 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer_txt}
 

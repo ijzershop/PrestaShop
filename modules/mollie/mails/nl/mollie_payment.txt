@@ -1,0 +1,7 @@
+Hallo {firstName} {lastName},
+
+Bedankt voor uw bestelling bij {shop_name}!
+
+[U kunt uw bestelling afronden door op deze link te klikken]({checkoutUrl}).
+
+[{shop_name}]({shop_url})

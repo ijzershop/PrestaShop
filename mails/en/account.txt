@@ -1,28 +1,26 @@
-
 [{shop_url}] 
 
-Hi {firstname} {lastname},
+Hallo {firstname} {lastname},
 
-Thank you for creating a customer account at {shop_name}. 
+Bedankt voor het aanmaken van uw klantaccount bij {shop_name}. 
 
-Here are your login details:
+Hier zijn uw aanmeldgegevens
 
-E-MAIL ADDRESS: {email} 		 
+E-MAILADRES: {email} 		 
 
-Important Security Tips:
+Belangrijke veiligheidstips
 
-* Always keep your account details safe.
+* Bewaar uw accountgegevens op een veilige plaats.
 
-* Never disclose your login details to anyone.
+* Verstrek uw aanmeldgegevens nooit aan derden.
 
-* Change your password regularly.
+* Wijzig uw wachtwoord regelmatig.
 
-* Should you suspect someone is using your account illegally, please
-notify us immediately.
+* Als u vermoedt dat iemand anders uw account zonder uw toestemming
+gebruikt, neem dan onmiddellijk contact met ons op.
 
-You can now place orders on our shop: {shop_name}
+U kunt nu bestellingen op onze website plaatsen: {shop_name}
 [{shop_url}] 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer_txt}
 

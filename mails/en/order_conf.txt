@@ -1,70 +1,67 @@
-
 [{shop_url}] 
 
-Hi {firstname} {lastname},
+Hallo {firstname} {lastname},
 
-Thank you for shopping with {shop_name}! 
+Bedankt voor het winkelen bij {shop_name}! 
 
-ORDER: {order_name} Placed on {date}
+BESTELLING: {order_name} Geplaatst op {date}
 
-PAYMENT: {payment} 		 
+BETALING: {payment} 		 
 
-REFERENCE
+REFERENTIE
 
 PRODUCT
 
-UNIT PRICE
+STUKPRIJS
 
-QUANTITY
+AANTAL
 
-TOTAL PRICE
+TOTAALPRIJS
 
 {products_txt} 
 
 {discounts} 
 
-PRODUCTS 
+PRODUCTEN 
 
 {total_products} 
 
-DISCOUNTS 
+KORTINGEN 
 
 {total_discounts} 
 
-GIFT-WRAPPING 
+CADEAUVERPAKKING 
 
 {total_wrapping} 
 
-SHIPPING 
+VERZENDING 
 
 {total_shipping} 
 
-TOTAL TAX PAID 
+TOTAAL BTW 
 
 {total_tax_paid} 
 
-TOTAL PAID 
+TOTAAL BETAALD 
 
 {total_paid} 
 
-CARRIER: {carrier}
+VERVOERDER: {carrier}
 
-PAYMENT: {payment} 		 
+BETALING: {payment} 		 
 
 {delivery_block_txt} 
 
 {invoice_block_txt} 
 
-You can review your order and download your invoice from the
-"Order history" [{history_url}] section of your
-customer account by clicking "My account"
-[{my_account_url}] on our shop. 
+U kunt uw bestelling bekijken en de factuur downloaden vanuit de
+sectie "Bestelgeschiedenis" [{history_url}] op de
+klantportal, door te klikken op de link "Mijn account"
+[{my_account_url}] in onze winkel. 
 
-If you have a guest account, you can follow your order via the
-"Guest Tracking"
-[{guest_tracking_url}?id_order={order_name}]
-section on our shop. 
+Indien u hebt afgerekend zonder het aanmaken van een account, dan
+kunt u deze bestelling volgen via "deze link"
+[{guest_tracking_url}?id_order={order_name}]. 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{custom_footer_txt}
 

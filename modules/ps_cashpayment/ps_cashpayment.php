@@ -99,7 +99,7 @@ public function addOrderState($name)
                 break;
             }
         }
- 
+
         if (!$state_exist) {
             // create new order state
             $order_state = new OrderState();
@@ -124,7 +124,7 @@ public function addOrderState($name)
     protected function _postProcess()
     {
         if (Tools::isSubmit('btnSubmit')) {
-           
+
             $custom_text = array();
             $languages = Language::getLanguages(false);
             foreach ($languages as $lang) {
@@ -138,7 +138,7 @@ public function addOrderState($name)
 
     public function getContent()
     {
-        if (Tools::isSubmit('btnSubmit')){ 
+        if (Tools::isSubmit('btnSubmit')){
             if (!count($this->_postErrors)) {
                 $this->_postProcess();
             } else {
@@ -172,7 +172,7 @@ public function addOrderState($name)
 
         $newOption = new PaymentOption();
         $newOption->setModuleName($this->name)
-                ->setCallToActionText($this->trans('Cash payment', array(), 'Modules.Cashpayment.Shop'))
+                ->setCallToActionText($this->trans('Contant betalen', array(), 'Modules.Cashpayment.Shop'))
                 ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
                 ->setLogo(_MODULE_DIR_ .'/ps_cashpayment/ps_cashpayment.png')
                 ->setAdditionalInformation($this->fetch('module:ps_cashpayment/views/templates/hook/ps_cashpayment_intro.tpl'));

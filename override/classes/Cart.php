@@ -1,11 +1,10 @@
 <?php
 
-
 class Cart extends CartCore
 {
     public $added_to_order;
 
-    
+
     public static $definition = array(
         'table' => 'cart',
         'primary' => 'id_cart',
@@ -33,7 +32,7 @@ class Cart extends CartCore
     );
 
 
-    
+
     public function getOrderTotal(
         $withTaxes = true,
         $type = Cart::BOTH,
@@ -147,7 +146,7 @@ class Cart extends CartCore
                 default:
                     throw new \Exception('unknown cart calculation type : ' . $type);
                 }
-        $value = $withTaxes ? $amount->getTaxIncluded() + $small_order_fee_addition : $amount->getTaxExcluded() + $small_order_fee_addition;   
+        $value = $withTaxes ? $amount->getTaxIncluded() + $small_order_fee_addition : $amount->getTaxExcluded() + $small_order_fee_addition;
 
         $compute_precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
 
@@ -167,7 +166,7 @@ class Cart extends CartCore
         $result = parent::duplicate();
         $id_cart_new = (int)$this->id;
         if (Module::isEnabled('dynamicproduct')) {
-            
+
             $module = Module::getInstanceByName('dynamicproduct');
             $module->hookCartDuplicated(array(
                 'id_cart_old' => $id_cart_old,
@@ -219,6 +218,104 @@ class Cart extends CartCore
             }
         }
         return ($use_tax) ? $_total_shipping['with_tax']+$extraShippingFee: $_total_shipping['without_tax']+$extraShippingFee;
+    }
+
+
+
+
+
+    /**
+     * Delete a product from the cart.
+     *
+     * @param int $id_product Product ID
+     * @param int $id_product_attribute Attribute ID if needed
+     * @param int $id_customization Customization id
+     * @param int $id_address_delivery Delivery Address id
+     *
+     * @return bool Whether the product has been successfully deleted
+     */
+    public function deleteProduct(
+        $id_product,
+        $id_product_attribute = 0,
+        $id_customization = 0,
+        $id_address_delivery = 0
+    ) {
+        if (isset(self::$_nbProducts[$this->id])) {
+            unset(self::$_nbProducts[$this->id]);
+        }
+
+        if (isset(self::$_totalWeight[$this->id])) {
+            unset(self::$_totalWeight[$this->id]);
+        }
+
+        if ((int) $id_customization) {
+            if (!$this->_deleteCustomization((int) $id_customization, (int) $id_product, (int) $id_product_attribute, (int) $id_address_delivery)) {
+                return false;
+            }
+        }
+
+        $productItem = new Product($id_product);
+        if($productItem && $productItem->reference == Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_REFERENCE')){
+        // is an custom product remove product from database
+            $productItem->delete();
+        }
+
+        /* Get customization quantity */
+        $result = Db::getInstance()->getRow('
+            SELECT SUM(`quantity`) AS \'quantity\'
+            FROM `' . _DB_PREFIX_ . 'customization`
+            WHERE `id_cart` = ' . (int) $this->id . '
+            AND `id_product` = ' . (int) $id_product . '
+            AND `id_customization` = ' . (int) $id_customization . '
+            AND `id_product_attribute` = ' . (int) $id_product_attribute);
+
+        if ($result === false) {
+            return false;
+        }
+
+        /* If the product still possesses customization it does not have to be deleted */
+        if (Db::getInstance()->numRows() && (int) $result['quantity']) {
+            return Db::getInstance()->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+                SET `quantity` = ' . (int) $result['quantity'] . '
+                WHERE `id_cart` = ' . (int) $this->id . '
+                AND `id_product` = ' . (int) $id_product . '
+                AND `id_customization` = ' . (int) $id_customization .
+                ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
+            );
+        }
+
+        $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
+        if ($preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] > 0) {
+            return Db::getInstance()->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+                SET `quantity` = ' . (int) $preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] . '
+                WHERE `id_cart` = ' . (int) $this->id . '
+                AND `id_product` = ' . (int) $id_product .
+                ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
+            );
+        }
+
+        /* Product deletion */
+        $result = Db::getInstance()->execute('
+        DELETE FROM `' . _DB_PREFIX_ . 'cart_product`
+        WHERE `id_product` = ' . (int) $id_product . '
+        AND `id_customization` = ' . (int) $id_customization .
+            (null !== $id_product_attribute ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '') . '
+        AND `id_cart` = ' . (int) $this->id . '
+        ' . ((int) $id_address_delivery ? 'AND `id_address_delivery` = ' . (int) $id_address_delivery : ''));
+
+        if ($result) {
+            $return = $this->update();
+            // refresh cache of self::_products
+            $this->_products = $this->getProducts(true);
+            CartRule::autoRemoveFromCart();
+            CartRule::autoAddToCart();
+
+            return $return;
+        }
+
+        return false;
     }
 
 

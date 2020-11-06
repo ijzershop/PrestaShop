@@ -24,7 +24,6 @@
  */
 
 const $ = window.$;
-
 /**
  * This class init TinyMCE instances in the back-office. It is wildly inspired by
  * the scripts from js/admin And it actually loads TinyMCE from the js/tiny_mce
@@ -69,7 +68,27 @@ class TinyMCEEditor {
       this.initTinyMCE(config);
     }
   }
+  
+  fetchKey(hostname) {
+    var keys = [];
+        keys["bouwstaalmat.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["bouwstaalmat.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["constructiebalk.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["constructieklus.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["constructieklus.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["demodernesmid.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["demodernesmid.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["gerofitness.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["gerofitness.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["ijzershop.frl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["ijzershop.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["ijzershop176.local"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["paneelhek.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["paneelhek.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
 
+    return keys[hostname];
+
+  }
   /**
    * Prepare the config and init all TinyMCE editors
    *
@@ -123,13 +142,8 @@ class TinyMCEEditor {
         var base_url = location.protocol + '//' + location.host + '/';
         // detect localhost
         // the value must include your local window.location.hostname
-        const LOCAL_DOMAINS = ["localhost", "127.0.0.1", "ijzershop176.local"];
-        if (LOCAL_DOMAINS.includes(window.location.hostname)) {
-            var tbpKey = 'cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpntwY68zKhPuBBBfiucVaylNhbNzuWdxME7vwNnVxE8VOFkf7RlqjEyxMsiu6eEK7Q=';
-        } else {
-            var tbpKey = 'paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4='; // replace with your production server key
-        }
     }
+    var tbpKey = this.fetchKey(window.location.hostname);
 
     config = Object.assign({
     selector: 'textarea.rte',

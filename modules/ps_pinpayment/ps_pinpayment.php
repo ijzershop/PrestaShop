@@ -99,7 +99,7 @@ public function addOrderState($name)
                 break;
             }
         }
- 
+
         if (!$state_exist) {
             // create new order state
             $order_state = new OrderState();
@@ -124,7 +124,7 @@ public function addOrderState($name)
     protected function _postProcess()
     {
         if (Tools::isSubmit('btnSubmit')) {
-           
+
             $custom_text = array();
             $languages = Language::getLanguages(false);
             foreach ($languages as $lang) {
@@ -138,7 +138,7 @@ public function addOrderState($name)
 
     public function getContent()
     {
-        if (Tools::isSubmit('btnSubmit')){ 
+        if (Tools::isSubmit('btnSubmit')){
             if (!count($this->_postErrors)) {
                 $this->_postProcess();
             } else {
@@ -172,7 +172,7 @@ public function addOrderState($name)
 
         $newOption = new PaymentOption();
         $newOption->setModuleName($this->name)
-                ->setCallToActionText($this->trans('Pin payment', array(), 'Modules.Pinpayment.Shop'))
+                ->setCallToActionText($this->trans('Betalen met pin', array(), 'Modules.Pinpayment.Shop'))
                 ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
                 ->setLogo(_MODULE_DIR_ .'/ps_pinpayment/ps_pinpayment.png')
                 ->setAdditionalInformation($this->fetch('module:ps_pinpayment/views/templates/hook/ps_pinpayment_intro.tpl'));

@@ -68,7 +68,7 @@ class TinyMCEEditor {
       this.initTinyMCE(config);
     }
   }
-  
+
   fetchKey(hostname) {
     var keys = [];
         keys["bouwstaalmat.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
@@ -80,7 +80,7 @@ class TinyMCEEditor {
         keys["demodernesmid.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
         keys["gerofitness.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
         keys["gerofitness.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
-        keys["ijzershop.frl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["ijzershop.frl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=";
         keys["ijzershop.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
         keys["ijzershop176.local"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
         keys["paneelhek.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
@@ -135,7 +135,7 @@ class TinyMCEEditor {
   //   tinyMCE.init(config);
   //   this.watchTabChanges(config);
   // }
-  // 
+  //
   initTinyMCE(config) {
     if (typeof (base_url) == "undefined") {
         // detect the root url
@@ -157,7 +157,7 @@ class TinyMCEEditor {
   //       'filemanager': config.baseAdminUrl + 'filemanager/plugin.min.js'
   //     },
     bootstrapConfig: {
-      language: iso_user, 
+      language: iso_user,
       url: base_url + 'js/tiny_mce/plugins/bootstrap/',
       iconFont: 'fontawesome5',
       imagesPath: '/upload',
@@ -195,7 +195,7 @@ class TinyMCEEditor {
   xhr.withCredentials = false;
   xhr.open('POST', '/custom_uploader/upload.php');
 
-  var file = document.querySelectorAll('.tox-form input')[0].files[0];  
+  var file = document.querySelectorAll('.tox-form input')[0].files[0];
     formData = new FormData();
     formData.append('path','');
     formData.append('path_thumb','');

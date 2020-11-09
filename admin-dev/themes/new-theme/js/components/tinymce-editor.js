@@ -182,7 +182,7 @@ class TinyMCEEditor {
     relative_urls: false,
     convert_urls: false,
     entity_encoding: "raw",
-    extended_valid_elements: "em[class|name|id|itemscope|itemtype|itemprop],@[role|data-*|aria-*]",
+    extended_valid_elements: "em[class|name|id,@[role|data-*|aria-*]",
     valid_children: "+*[*]",
     valid_elements: "*[*]",
     rel_list: [{

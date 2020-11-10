@@ -32,7 +32,7 @@
 *}
 <div class="dropdown" style="margin-bottom: 20px">
   <button
-    class="btn btn-outline-primary dropdown-toggle"
+    class="btn btn-secondary dropdown-toggle"
     type="button"
     data-toggle="dropdown"
     aria-haspopup="true"

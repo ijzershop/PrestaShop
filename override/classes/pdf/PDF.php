@@ -60,7 +60,7 @@ class PDFCore
          */
         $this->smarty = clone $smarty;
         $this->smarty->escape_html = false;
- 
+
         /* We need to get the old instance of the LazyRegister
          * because some of the functions are already defined
          * and we need to check in the old one first
@@ -108,6 +108,7 @@ class PDFCore
         foreach ($this->objects as $object) {
             $this->pdf_renderer->startPageGroup();
             $template = $this->getTemplateObject($object);
+
             if (!$template) {
                 continue;
             }
@@ -118,14 +119,13 @@ class PDFCore
                     $this->filename = $template->getBulkFilename();
                 }
             }
-
+            
             $template->assignHookData($object);
-
             $this->pdf_renderer->createHeader($template->getHeader());
             $this->pdf_renderer->createFooter($template->getFooter());
             $this->pdf_renderer->createPagination($template->getPagination());
             $this->pdf_renderer->createContent($template->getContent());
-            $this->pdf_renderer->writePage();
+            $this->pdf_renderer->writePage($template->order->reference);
             $render = true;
 
             unset($template);

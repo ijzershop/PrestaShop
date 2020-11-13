@@ -27,10 +27,10 @@
 	<li>
 		<a href="{$product.link|escape:'html'}">{$product.name}</a>
 		{if isset($product.deadline)}
-			expires on {$product.deadline}
+			verloopt op {$product.deadline}
 		{/if}
 		{if isset($product.downloadable)}
-			downloadable {$product.downloadable} time(s)
+			{$product.downloadable} keer te downloaden
 		{/if}
 	</li>
 {/foreach}

@@ -122,6 +122,12 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $order_details = $this->order_invoice->getProducts();
 
             foreach ($order_details as &$order_detail) {
+                if(!is_null($order_detail['id_oi_offer'])){
+                    $descProduct = new Product($order_detail['product_id']);
+                    if($descProduct){
+                        $order_detail['product_desc_short'] = reset($descProduct->description_short);
+                    }
+                }
                 if(!is_null($order_detail['customizedDatas'])){
                     foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
                         if(!is_null($customization)){

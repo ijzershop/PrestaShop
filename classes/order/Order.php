@@ -941,9 +941,11 @@ class OrderCore extends ObjectModel
         }
  
         foreach ($res as $key => $val) {
-            $res[$key]['order_state'] = $indexedOrderStates[$val['id_order_state']]['name'];
-            $res[$key]['invoice'] = $indexedOrderStates[$val['id_order_state']]['invoice'];
-            $res[$key]['order_state_color'] = $indexedOrderStates[$val['id_order_state']]['color'];
+            if(array_key_exists($val['id_order_state'], $indexedOrderStates)){
+                $res[$key]['order_state'] = $indexedOrderStates[$val['id_order_state']]['name'];
+                $res[$key]['invoice'] = $indexedOrderStates[$val['id_order_state']]['invoice'];
+                $res[$key]['order_state_color'] = $indexedOrderStates[$val['id_order_state']]['color'];
+            }
         }
 
 

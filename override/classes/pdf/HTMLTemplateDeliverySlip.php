@@ -104,14 +104,31 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $customer_contact['email'] = $customer->email;
 
         $delivery_address = new Address((int) $this->order->id_address_delivery);
-        $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
+            $formatted_delivery_address = $delivery_address->firstname .' '. $delivery_address->lastname.'<br />';
+            $formatted_delivery_address .= $delivery_address->company.'<br />';
+            $formatted_delivery_address .= $delivery_address->address1.' '.$delivery_address->house_number.' '.$delivery_address->house_number_extension.'<br />';
+            if(!empty($delivery_address->address2)){
+                $formatted_delivery_address .= $delivery_address->address2.'<br />';
+            }
+            $formatted_delivery_address .= ucwords($delivery_address->postcode). ' ' . $delivery_address->city .'<br />';
+            $formatted_delivery_address .= $delivery_address->country .'<br />';
+
         $customer_contact['phone'] = $delivery_address->phone;
         $customer_contact['mobile'] = $delivery_address->phone_mobile;
         $formatted_invoice_address = '';
 
         if ($this->order->id_address_delivery != $this->order->id_address_invoice) {
             $invoice_address = new Address((int) $this->order->id_address_invoice);
-            $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
+            
+            $formatted_invoice_address .= $invoice_address->firstname .' '. $invoice_address->lastname .'<br />';
+            $formatted_invoice_address .= $invoice_address->company.'<br />';
+            $formatted_invoice_address .= $invoice_address->address1.' '.$invoice_address->house_number.' '.$invoice_address->house_number_extension.'<br />';
+            if(!empty($invoice_address->address2)){
+                $formatted_invoice_address .= $invoice_address->address2.'<br />';
+            }
+            $formatted_invoice_address .= ucwords($invoice_address->postcode). ' ' . $invoice_address->city .'<br />';
+            $formatted_invoice_address .= $invoice_address->country .'<br />';
+            
             $customer_contact['phone'] = $invoice_address->phone;
             $customer_contact['mobile'] = $invoice_address->phone_mobile;
         }
@@ -120,8 +137,14 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
 
         $order_details = $this->order_invoice->getProducts();
-
             foreach ($order_details as &$order_detail) {
+                if(!is_null($order_detail['id_oi_offer'])){
+                    $descProduct = new Product($order_detail['product_id']);
+                    if($descProduct){
+                        $order_detail['product_desc_short'] = reset($descProduct->description_short);
+                    }
+                }
+
                 if(!is_null($order_detail['customizedDatas'])){
                     foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
                         if(!is_null($customization)){

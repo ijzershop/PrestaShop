@@ -74,17 +74,21 @@ class Mail extends MailCore
             $idShop = Context::getContext()->shop->id;
         }
 
-        if($template == 'contact' && array_key_exists('{order_name}', $templateVars)){
+        $templateType = Tools::getValue('template_type');
+
+        if($template == 'contact' && $templateType == 'information'){
             $template = 'contact_information';
             $templateVars['{postcode}'] = Tools::getValue('postalcode');
             $templateVars['{phonenumber}'] = Tools::getValue('phonenumber');
         }
 
-        if($template == 'contact' && !array_key_exists('{order_name}', $templateVars)){
+        if($template == 'contact' && $templateType == 'offer'){
             $template = 'contact_offer';
             $templateVars['{postcode}'] = Tools::getValue('postalcode');
             $templateVars['{phonenumber}'] = Tools::getValue('phonenumber');
         }
+
+
 
         $hookBeforeEmailResult = Hook::exec(
             'actionEmailSendBefore',

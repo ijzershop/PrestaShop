@@ -29,6 +29,27 @@ function changeToMaterial() {
   });
 }
 
+function fetchKey(hostname) {
+    var keys = [];
+        keys["bouwstaalmat.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["bouwstaalmat.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["constructiebalk.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["constructieklus.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["constructieklus.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["demodernesmid.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["demodernesmid.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["gerofitness.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["gerofitness.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["ijzershop.frl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=";
+        keys["ijzershop.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["ijzershop176.local"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["paneelhek.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+        keys["paneelhek.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO9yHYiDX1FIbMhKaKEsr9z3JUc1FVLBgiEko/nDSAET3Lsm2V0m87mIzeLdJ6yG1rw==";
+
+    return keys[hostname];
+
+  }
+
 function tinySetup(config) {
   if (typeof tinyMCE === 'undefined') {
     setTimeout(function() {
@@ -49,29 +70,26 @@ function tinySetup(config) {
         // detect the root url
         var base_url = location.protocol + '//' + location.host + '/';
         // detect localhost
-        // the value must include your local window.location.hostname
-        const LOCAL_DOMAINS = ["localhost", "127.0.0.1", "ijzershop176.local", "constructiebalk176.local"];
-        if (LOCAL_DOMAINS.includes(window.location.hostname)) {
-            var tbpKey = 'cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpntwY68zKhPuBBBfiucVaylNhbNzuWdxME7vwNnVxE8VOFkf7RlqjEyxMsiu6eEK7Q=';
-        } else {
-            var tbpKey = 'cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpntwY68zKhPuBBBfiucVaylNhbNzuWdxME7vwNnVxE8VOFkf7RlqjEyxMsiu6eEK7Q='; // replace with your production server key
-        }
     }
+    var tbpKey = this.fetchKey(window.location.hostname);
 
   var default_config = {
-    selector: "textarea.rte",
-    plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap','fullscreen'],
+    selector: 'textarea.rte',
+    plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
     browser_spellcheck: true,
-    toolbar: "undo redo code image | bold italic underline strikethrough | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap | fullscreen",
-    toolbar2: false,
+    toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
     contextmenu: "bootstrap",
+    image_advtab: true ,
+    external_filemanager_path:"/js/filemanager/",
+    filemanager_title:"Bestands beheer" ,
+    external_plugins: { "filemanager" : "/js/filemanager/plugin.min.js"},
     bootstrapConfig: {
-      language: iso_user, 
+      language: iso_user,
       url: base_url + 'js/tiny_mce/plugins/bootstrap/',
       iconFont: 'fontawesome5',
       imagesPath: '/upload',
-      key: 'cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpntwY68zKhPuBBBfiucVaylNhbNzuWdxME7vwNnVxE8VOFkf7RlqjEyxMsiu6eEK7Q=',
-      enableTemplateEdition: false,
+      key: tbpKey,
+      enableTemplateEdition: true,
     },
       editorStyleFormats: {
                 textStyles: true, // true or false

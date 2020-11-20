@@ -199,10 +199,6 @@ class AdminOrdersController extends AdminOrdersControllerCore
             }
         }
 
-// var_dump(Context::getContext()->cookie);
-// die();
-
-
         $this->shopLinkType = 'shop';
         $this->shopShareDatas = Shop::SHARE_ORDER;
 

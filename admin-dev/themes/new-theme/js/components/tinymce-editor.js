@@ -94,48 +94,6 @@ class TinyMCEEditor {
    *
    * @param config
    */
-  // initTinyMCE(config) {
-  //   config = Object.assign({
-  //     selector: '.rte',
-  //     plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
-  //     browser_spellcheck: true,
-  //     toolbar1: 'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
-  //     toolbar2: '',
-  //     external_filemanager_path: config.baseAdminUrl + 'filemanager/',
-  //     filemanager_title: 'File manager',
-  //     external_plugins: {
-  //       'filemanager': config.baseAdminUrl + 'filemanager/plugin.min.js'
-  //     },
-  //     language: iso_user,
-  //     content_style : (config.langIsRtl ? 'body {direction:rtl;}' : ''),
-  //     skin: 'prestashop',
-  //     menubar: false,
-  //     statusbar: false,
-  //     relative_urls: false,
-  //     convert_urls: false,
-  //     entity_encoding: 'raw',
-  //     extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
-  //     valid_children: '+*[*]',
-  //     valid_elements: '*[*]',
-  //     rel_list:[
-  //       { title: 'nofollow', value: 'nofollow' }
-  //     ],
-  //     editor_selector :'autoload_rte',
-  //     init_instance_callback: () => { this.changeToMaterial(); },
-  //     setup : (editor) => { this.setupEditor(editor); },
-  //   }, config);
-
-  //   if (typeof config.editor_selector != 'undefined') {
-  //     config.selector = '.' + config.editor_selector;
-  //   }
-
-  //   // Change icons in popups
-  //   $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => { this.changeToMaterial(); });
-
-  //   tinyMCE.init(config);
-  //   this.watchTabChanges(config);
-  // }
-  //
   initTinyMCE(config) {
     if (typeof (base_url) == "undefined") {
         // detect the root url
@@ -147,22 +105,21 @@ class TinyMCEEditor {
 
     config = Object.assign({
     selector: 'textarea.rte',
-    plugins: ['link', 'image', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen'],
+    plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
     browser_spellcheck: true,
-    toolbar: "undo redo code image| bold italic underline strikethrough fullscreen | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
+    toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
     contextmenu: "bootstrap",
-     //     external_filemanager_path: config.baseAdminUrl + 'filemanager/',
-  //     filemanager_title: 'File manager',
-  //     external_plugins: {
-  //       'filemanager': config.baseAdminUrl + 'filemanager/plugin.min.js'
-  //     },
+    image_advtab: true ,
+    external_filemanager_path:"/js/filemanager/",
+    filemanager_title:"Bestands beheer" ,
+    external_plugins: { "filemanager" : "/js/filemanager/plugin.min.js"},
     bootstrapConfig: {
       language: iso_user,
       url: base_url + 'js/tiny_mce/plugins/bootstrap/',
       iconFont: 'fontawesome5',
       imagesPath: '/upload',
       key: tbpKey,
-      enableTemplateEdition: false,
+      enableTemplateEdition: true,
     },
       editorStyleFormats: {
                 textStyles: true, // true or false
@@ -182,7 +139,7 @@ class TinyMCEEditor {
     relative_urls: false,
     convert_urls: false,
     entity_encoding: "raw",
-    extended_valid_elements: "em[class|name|id,@[role|data-*|aria-*]",
+    extended_valid_elements: "em[class|name|id|itemscope|itemtype|itemprop],@[role|data-*|aria-*]",
     valid_children: "+*[*]",
     valid_elements: "*[*]",
     rel_list: [{

@@ -198,6 +198,7 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                 p.height as package_height,
                 p.width as package_width,
                 p.depth as package_depth,
+                cl.top_description as category_technical_description,
                 ' . (Configuration::get('PS_STOCK_MANAGEMENT') ? 'sav.quantity as stock, ' : 'pq.quantity as stock, ') . '
                 ' . $this->getManualAssignedFeedFields() . '
                 p.id_category_default
@@ -207,6 +208,8 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                 '._DB_PREFIX_.'product_shop ps ON (p.id_product = ps.id_product AND ps.id_shop = \'' . (int)Context::getContext()->shop->id . '\' ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND ps.active = 1' : '') . ')
                     LEFT JOIN
                 '._DB_PREFIX_.'product_attribute pa ON (p.id_product = pa.id_product)
+                    LEFT JOIN
+                '._DB_PREFIX_.'category_lang cl ON (p.id_category_default = cl.id_category)
                     LEFT JOIN
                 '._DB_PREFIX_.'product_attribute_shop pas ON (pa.id_product_attribute = pas.id_product_attribute OR pa.id_product_attribute IS NULL)
                     LEFT JOIN
@@ -258,6 +261,7 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                 pl.description_short as short_description_html,
                 pl.meta_title,
                 pl.meta_description,
+                cl.top_description as category_technical_description,
                 @id_image := ifnull(pai.id_image, pid.id_image) as id_image,
                 concat(\'http://\',
                         ifnull(shop_domain.value, \'domain\'),
@@ -349,6 +353,8 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                 '._DB_PREFIX_.'stock_available sav ON (sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` =
                 ( if(pa.id_product_attribute IS NULL, 0, pa.id_product_attribute) )
                 '.StockAvailable::addSqlShopRestriction(null, null, 'sav').')
+                    LEFT JOIN
+                '._DB_PREFIX_.'category_lang cl ON (p.id_category_default = cl.id_category)
             WHERE
                 ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product_and_attribute') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' if(pa.id_product_attribute IS NULL, p.id_product, concat(p.id_product, \'_\', pa.id_product_attribute)) IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '

@@ -147,10 +147,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         // $deliveryAddressPatternRules = json_decode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
 
         // $invoice_address = new Address((int) $this->order->id_address_invoice);
-        // $country = new Country((int) $invoice_address->id_country);
+        $country = new Country((int) $invoice_address->id_country);
         // $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
 
-        // $delivery_address = null;
+        $delivery_address = null;
         // $formatted_delivery_address = '';
         // if (isset($this->order->id_address_delivery) && $this->order->id_address_delivery) {
         //     $delivery_address = new Address((int) $this->order->id_address_delivery);

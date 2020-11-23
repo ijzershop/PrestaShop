@@ -43,6 +43,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
         $this->_select = '
 		a.id_currency,
 		a.id_order AS id_pdf,
+        a.id_order AS id_retour_order,
 		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
 		osl.`name` AS `osname`,
         osl.`id_order_state` AS `osorderstate`,
@@ -145,7 +146,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
                 'search' => false,
                 'remove_onclick' => true,
             ),
-            'osorderstate' => array(
+            'id_retour_order' => array(
                 'title' => $this->trans('Retour order', array(), 'Admin.Global'),
                 'align' => 'text-center',
                 'callback' => 'printRetourButton',

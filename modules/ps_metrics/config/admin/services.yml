@@ -1,0 +1,7 @@
+services:
+  ps_metrics.tracker.segment:
+    class: 'PrestaShop\Module\Ps_metrics\Tracker\Segment'
+    arguments:
+      - '@ps_metrics.env.segment'
+  ps_metrics.env.segment:
+    class: 'PrestaShop\Module\Ps_metrics\Environment\SegmentEnv'

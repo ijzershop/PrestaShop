@@ -228,8 +228,13 @@ class AdminOrdersController extends AdminOrdersControllerCore
             'order' => $order,
             'tr' => $tr,
         ));
+        $config = unserialize(Configuration::get("koopmanOrderExport"));
+        $states = [];
+        if(isset($config['retour_accepted_statusses']) && !empty($config['retour_accepted_statusses'])){
+            $states = explode(',', $config['retour_accepted_statusses']);
+        }
 
-            if(in_array($order->current_state, [5, 6,12, 14])){
+            if(in_array($order->current_state, $states)){
                 //state when the retour is made
                 if(in_array($order->current_state, [14])){
                     return 'Retour aangemaakt';                

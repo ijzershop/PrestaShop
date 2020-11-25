@@ -90,7 +90,7 @@
       $('#migrateOrder').on('click', function(event) {
         event.preventDefault();
         var customerEmail = $('#selectCustomerToMigrate').val().split(' # ');
-        
+
         var postdata = {
                     customer_email:customerEmail[0],
                     customer:customerEmail[1],
@@ -104,7 +104,7 @@
               r = JSON.parse(r);
               if(r.success){
                 $.growl({ title: "Geslaagd!", message: r.msg });
-                window.location.reload(true); 
+                window.location.reload(true);
               } else {
                 $.growl.error({ title: "Fout!", message: r.msg});
               }
@@ -124,7 +124,7 @@
               r = JSON.parse(r);
               if(r.success){
                 $.growl({ title: "Gewenste leverdatum ingesteld!", message: r.msg });
-                window.location.reload(true); 
+                window.location.reload(true);
               } else {
                 $.growl.error({ title: "Fout bij instellen gewenste leverdatum!", message: r.msg});
               }
@@ -143,7 +143,7 @@
               r = JSON.parse(r);
               if(r.success){
                 $.growl({ title: "Gewenste leverdatum gewijzigd!", message: 'Leverdatum is geleegd, deze word niet meer op de pakbon getoond'});
-                window.location.reload(true); 
+                window.location.reload(true);
               } else {
                 $.growl.error({ title: "Fout bij legen van leverdatum!", message: r.msg});
               }
@@ -199,7 +199,7 @@
             </a>
           </div>
         </div>
-        
+
       </div>
       <div class="col-xs-12 col-sm-3">
         <form id="migrateToCustomer" class="row">
@@ -222,7 +222,7 @@
           {l s='Order' d='Admin.Global'}
           <span class="badge">{$order->reference}</span>
           <span class="badge">{l s="#" d='Admin.Orderscustomers.Feature'}{$order->id}</span>
-          
+
           <span class="badge" style="border:0px;">
             <form class="form-inline">
               <label class="h6" for="desired_delivery_date">Gewenste leverdatum</label>
@@ -815,7 +815,7 @@
                               selected="selected"
                             {/if}>
                             {$address['alias']} -
-                            {$address['address1']}
+                            {$address['address1']} {$address['house_number']} {$address['house_number_extension']}
                             {$address['postcode']}
                             {$address['city']}
                             {if !empty($address['state'])}

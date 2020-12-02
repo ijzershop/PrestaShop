@@ -36,13 +36,11 @@
 namespace Mollie\Install;
 
 use Configuration;
-use Context;
 use Db;
 use DbQuery;
 use Exception;
 use Feature;
 use FeatureValue;
-use FeatureValueLang;
 use Language;
 use Mollie;
 use Mollie\Config\Config;
@@ -53,8 +51,9 @@ use PrestaShopDatabaseException;
 use PrestaShopException;
 use Tab;
 use Tools;
+use Validate;
 
-class Installer
+class Installer implements InstallerInterface
 {
     const FILE_NAME = 'Installer';
 
@@ -73,15 +72,28 @@ class Installer
      */
     private $imageService;
 
-    public function __construct(Mollie $module, ImageService $imageService)
-    {
+    /**
+     * @var InstallerInterface
+     */
+    private $databaseTableInstaller;
+
+    public function __construct(
+        Mollie $module,
+        ImageService $imageService,
+        InstallerInterface $databaseTableInstaller
+    ) {
         $this->module = $module;
         $this->imageService = $imageService;
+        $this->databaseTableInstaller = $databaseTableInstaller;
     }
 
     public function install()
     {
         foreach (self::getHooks() as $hook) {
+            if (version_compare(_PS_VERSION_, '1.7.0.0', '>=') && $hook === 'displayPaymentEU') {
+                continue;
+            }
+
             $this->module->registerHook($hook);
         }
 
@@ -113,11 +125,16 @@ class Installer
             return false;
         }
 
+        try {
+            $this->installVoucherFeatures();
+        } catch (Exception $e) {
+            $this->errors[] = $this->module->l('Unable to install voucher attributes', self::FILE_NAME);
+            return false;
+        }
+
         $this->copyEmailTemplates();
 
-        include(dirname(__FILE__) . '/../../sql/install.php');
-
-        return true;
+        return $this->databaseTableInstaller->install();
     }
 
     public function getErrors()
@@ -155,7 +172,7 @@ class Installer
      * @since 2.0.0
      *
      */
-    private function partialRefundOrderState()
+    private function createPartialRefundOrderState()
     {
         $orderState = new OrderState();
         $orderState->send_email = false;
@@ -181,7 +198,7 @@ class Installer
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function partialShippedOrderState()
+    public function createPartialShippedOrderState()
     {
         $orderState = new OrderState();
         $orderState->send_email = false;
@@ -203,16 +220,16 @@ class Installer
 
     public function createMollieStatuses()
     {
-        if (!$this->partialRefundOrderState()) {
+        if (!$this->createPartialRefundOrderState()) {
             return false;
         }
-        if (!$this->awaitingMollieOrderState()) {
+        if (!$this->createAwaitingMollieOrderState()) {
             return false;
         }
-        if(!$this->partialShippedOrderState()) {
+        if(!$this->createPartialShippedOrderState()) {
             return false;
         }
-        if(!$this->orderCompletedOrderState()) {
+        if(!$this->createOrderCompletedOrderState()) {
             return false;
         }
 
@@ -226,7 +243,7 @@ class Installer
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function awaitingMollieOrderState()
+    public function createAwaitingMollieOrderState()
     {
         $orderState = new OrderState();
         $orderState->send_email = false;
@@ -241,7 +258,7 @@ class Installer
         if ($orderState->add()) {
             $this->imageService->createOrderStateLogo($orderState->id);
         }
-        Configuration::updateValue(Mollie\Config\Config::STATUS_MOLLIE_AWAITING, (int)$orderState->id);
+        Configuration::updateValue(Mollie\Config\Config::MOLLIE_STATUS_AWAITING, (int)$orderState->id);
 
         return true;
     }
@@ -252,7 +269,7 @@ class Installer
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function orderCompletedOrderState()
+    public function createOrderCompletedOrderState()
     {
         $orderState = new OrderState();
         $orderState->send_email = false;
@@ -392,5 +409,31 @@ class Installer
         }
 
         return true;
+    }
+
+    public function installVoucherFeatures()
+    {
+        $mollieVoucherId = Configuration::get(Config::MOLLIE_VOUCHER_FEATURE_ID);
+        if ($mollieVoucherId) {
+            $mollieFeature = new Feature($mollieVoucherId);
+            $doesFeatureExist = Validate::isLoadedObject($mollieFeature);
+            if($doesFeatureExist) {
+                return;
+            }
+        }
+
+        $feature = new Feature();
+        $feature->name = MultiLangUtility::createMultiLangField('Voucher');
+        $feature->add();
+
+        foreach (Config::MOLLIE_VOUCHER_CATEGORIES as $key => $categoryName) {
+            $featureValue = new FeatureValue();
+            $featureValue->id_feature = $feature->id;
+            $featureValue->value = MultiLangUtility::createMultiLangField($categoryName);
+            $featureValue->add();
+            Configuration::updateValue(Config::MOLLIE_VOUCHER_FEATURE . $key, $featureValue->id);
+        }
+
+        Configuration::updateValue(Config::MOLLIE_VOUCHER_FEATURE_ID, $feature->id);
     }
 }

@@ -35,10 +35,10 @@
 
 namespace Mollie\Builder;
 
-use _PhpScoper5eddef0da618a\Mollie\Api\Types\OrderStatus;
-use _PhpScoper5eddef0da618a\Mollie\Api\Types\PaymentMethod;
-use _PhpScoper5eddef0da618a\Mollie\Api\Types\PaymentStatus;
-use _PhpScoper5eddef0da618a\Mollie\Api\Types\RefundStatus;
+use MolliePrefix\Mollie\Api\Types\OrderStatus;
+use MolliePrefix\Mollie\Api\Types\PaymentMethod;
+use MolliePrefix\Mollie\Api\Types\PaymentStatus;
+use MolliePrefix\Mollie\Api\Types\RefundStatus;
 use Configuration;
 use HelperForm;
 use Module;
@@ -410,12 +410,21 @@ class FormBuilder
             'name' => '',
             'title' => $this->module->l('Payment methods', self::FILE_NAME),
         ];
+        $molliePaymentMethods = $this->apiService->getMethodsForConfig($this->module->api, $this->module->getPathUri());
+
+        if (empty($molliePaymentMethods)) {
+            $input[] = [
+                'type' => 'mollie-payment-empty-alert',
+                'tab' => $generalSettings,
+                'name' => '',
+            ];
+        }
 
         $dateStamp = time();
         $input[] = [
             'type' => 'mollie-methods',
             'name' => Config::METHODS_CONFIG,
-            'paymentMethods' => $this->apiService->getMethodsForConfig($this->module->api, $this->module->getPathUri()),
+            'paymentMethods' => $molliePaymentMethods,
             'countries' => $this->countryService->getActiveCountriesList(),
             'tab' => $generalSettings,
             'onlyOrderMethods' => [
@@ -535,7 +544,9 @@ class FormBuilder
         $descriptionStatus = $this->module->l('`%s` payments get status `%s`', self::FILE_NAME);
         $messageMail = $this->module->l('Send mails when %s', self::FILE_NAME);
         $descriptionMail = $this->module->l('Send mails when transaction status becomes %s?, self::FILE_NAME', self::FILE_NAME);
-        $allStatuses = array_merge([['id_order_state' => 0, 'name' => $this->module->l('Skip this status', self::FILE_NAME), 'color' => '#565656']], OrderState::getOrderStates($this->lang->id));
+        $allStatuses =  OrderState::getOrderStates($this->lang->id);
+        $allStatusesWithSkipOption = array_merge([['id_order_state' => 0, 'name' => $this->module->l('Skip this status', self::FILE_NAME), 'color' => '#565656']], $allStatuses);
+
         $statuses = [];
         foreach (Config::getStatuses() as $name => $val) {
             if ($name === PaymentStatus::STATUS_AUTHORIZED) {
@@ -577,6 +588,7 @@ class FormBuilder
 
         foreach (array_filter($statuses, function ($status) {
             return in_array($status['name'], [
+                Config::MOLLIE_AWAITING_PAYMENT,
                 PaymentStatus::STATUS_PAID,
                 OrderStatus::STATUS_COMPLETED,
                 PaymentStatus::STATUS_AUTHORIZED,
@@ -609,6 +621,8 @@ class FormBuilder
                     ],
                 ];
             }
+
+            $isStatusAwaiting = $status['name'] === Config::MOLLIE_AWAITING_PAYMENT;
             $input[] = [
                 'type' => 'select',
                 'label' => $status['message'],
@@ -616,7 +630,7 @@ class FormBuilder
                 'desc' => $status['description'],
                 'name' => $status['key'],
                 'options' => [
-                    'query' => $allStatuses,
+                    'query' => $isStatusAwaiting ? $allStatuses : $allStatusesWithSkipOption,
                     'id' => 'id_order_state',
                     'name' => 'name',
                 ],

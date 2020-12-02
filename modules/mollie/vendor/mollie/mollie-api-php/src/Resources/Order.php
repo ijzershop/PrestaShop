@@ -1,10 +1,10 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Resources;
+namespace _PhpScoper5eddef0da618a\Mollie\Api\Resources;
 
-use MolliePrefix\Mollie\Api\MollieApiClient;
-use MolliePrefix\Mollie\Api\Types\OrderStatus;
-class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
+use _PhpScoper5eddef0da618a\Mollie\Api\MollieApiClient;
+use _PhpScoper5eddef0da618a\Mollie\Api\Types\OrderStatus;
+class Order extends \_PhpScoper5eddef0da618a\Mollie\Api\Resources\BaseResource
 {
     /**
      * @var string
@@ -124,48 +124,6 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      */
     public $createdAt;
     /**
-     * UTC datetime the order the order will expire in ISO-8601 format.
-     *
-     * @example "2013-12-25T10:30:54+00:00"
-     * @var string|null
-     */
-    public $expiresAt;
-    /**
-     * UTC datetime if the order is expired, the time of expiration will be present in ISO-8601 format.
-     *
-     * @example "2013-12-25T10:30:54+00:00"
-     * @var string|null
-     */
-    public $expiredAt;
-    /**
-     * UTC datetime if the order has been paid, the time of payment will be present in ISO-8601 format.
-     *
-     * @example "2013-12-25T10:30:54+00:00"
-     * @var string|null
-     */
-    public $paidAt;
-    /**
-     * UTC datetime if the order has been authorized, the time of authorization will be present in ISO-8601 format.
-     *
-     * @example "2013-12-25T10:30:54+00:00"
-     * @var string|null
-     */
-    public $authorizedAt;
-    /**
-     * UTC datetime if the order has been canceled, the time of cancellation will be present in ISO 8601 format.
-     *
-     * @example "2013-12-25T10:30:54+00:00"
-     * @var string|null
-     */
-    public $canceledAt;
-    /**
-     * UTC datetime if the order is completed, the time of completion will be present in ISO 8601 format.
-     *
-     * @example "2013-12-25T10:30:54+00:00"
-     * @var string|null
-     */
-    public $completedAt;
-    /**
      * The order lines contain the actual things the customer bought.
      *
      * @var array|object[]
@@ -188,7 +146,7 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      */
     public function isCreated()
     {
-        return $this->status === \MolliePrefix\Mollie\Api\Types\OrderStatus::STATUS_CREATED;
+        return $this->status === \_PhpScoper5eddef0da618a\Mollie\Api\Types\OrderStatus::STATUS_CREATED;
     }
     /**
      * Is this order paid for?
@@ -197,7 +155,7 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      */
     public function isPaid()
     {
-        return $this->status === \MolliePrefix\Mollie\Api\Types\OrderStatus::STATUS_PAID;
+        return $this->status === \_PhpScoper5eddef0da618a\Mollie\Api\Types\OrderStatus::STATUS_PAID;
     }
     /**
      * Is this order authorized?
@@ -206,7 +164,7 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      */
     public function isAuthorized()
     {
-        return $this->status === \MolliePrefix\Mollie\Api\Types\OrderStatus::STATUS_AUTHORIZED;
+        return $this->status === \_PhpScoper5eddef0da618a\Mollie\Api\Types\OrderStatus::STATUS_AUTHORIZED;
     }
     /**
      * Is this order canceled?
@@ -215,7 +173,7 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      */
     public function isCanceled()
     {
-        return $this->status === \MolliePrefix\Mollie\Api\Types\OrderStatus::STATUS_CANCELED;
+        return $this->status === \_PhpScoper5eddef0da618a\Mollie\Api\Types\OrderStatus::STATUS_CANCELED;
     }
     /**
      * (Deprecated) Is this order refunded?
@@ -225,7 +183,7 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      */
     public function isRefunded()
     {
-        return $this->status === \MolliePrefix\Mollie\Api\Types\OrderStatus::STATUS_REFUNDED;
+        return $this->status === \_PhpScoper5eddef0da618a\Mollie\Api\Types\OrderStatus::STATUS_REFUNDED;
     }
     /**
      * Is this order shipping?
@@ -234,7 +192,7 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      */
     public function isShipping()
     {
-        return $this->status === \MolliePrefix\Mollie\Api\Types\OrderStatus::STATUS_SHIPPING;
+        return $this->status === \_PhpScoper5eddef0da618a\Mollie\Api\Types\OrderStatus::STATUS_SHIPPING;
     }
     /**
      * Is this order completed?
@@ -243,7 +201,7 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      */
     public function isCompleted()
     {
-        return $this->status === \MolliePrefix\Mollie\Api\Types\OrderStatus::STATUS_COMPLETED;
+        return $this->status === \_PhpScoper5eddef0da618a\Mollie\Api\Types\OrderStatus::STATUS_COMPLETED;
     }
     /**
      * Is this order expired?
@@ -252,7 +210,7 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      */
     public function isExpired()
     {
-        return $this->status === \MolliePrefix\Mollie\Api\Types\OrderStatus::STATUS_EXPIRED;
+        return $this->status === \_PhpScoper5eddef0da618a\Mollie\Api\Types\OrderStatus::STATUS_EXPIRED;
     }
     /**
      * Is this order completed?
@@ -261,7 +219,7 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      */
     public function isPending()
     {
-        return $this->status === \MolliePrefix\Mollie\Api\Types\OrderStatus::STATUS_PENDING;
+        return $this->status === \_PhpScoper5eddef0da618a\Mollie\Api\Types\OrderStatus::STATUS_PENDING;
     }
     /**
      * Cancels this order.
@@ -311,7 +269,7 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      */
     public function lines()
     {
-        return \MolliePrefix\Mollie\Api\Resources\ResourceFactory::createBaseResourceCollection($this->client, \MolliePrefix\Mollie\Api\Resources\OrderLine::class, $this->lines);
+        return \_PhpScoper5eddef0da618a\Mollie\Api\Resources\ResourceFactory::createBaseResourceCollection($this->client, \_PhpScoper5eddef0da618a\Mollie\Api\Resources\OrderLine::class, $this->lines);
     }
     /**
      * Create a shipment for some order lines. You can provide an empty array for the
@@ -402,10 +360,10 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
     public function refunds()
     {
         if (!isset($this->_links->refunds->href)) {
-            return new \MolliePrefix\Mollie\Api\Resources\RefundCollection($this->client, 0, null);
+            return new \_PhpScoper5eddef0da618a\Mollie\Api\Resources\RefundCollection($this->client, 0, null);
         }
-        $result = $this->client->performHttpCallToFullUrl(\MolliePrefix\Mollie\Api\MollieApiClient::HTTP_GET, $this->_links->refunds->href);
-        return \MolliePrefix\Mollie\Api\Resources\ResourceFactory::createCursorResourceCollection($this->client, $result->_embedded->refunds, \MolliePrefix\Mollie\Api\Resources\Refund::class, $result->_links);
+        $result = $this->client->performHttpCallToFullUrl(\_PhpScoper5eddef0da618a\Mollie\Api\MollieApiClient::HTTP_GET, $this->_links->refunds->href);
+        return \_PhpScoper5eddef0da618a\Mollie\Api\Resources\ResourceFactory::createCursorResourceCollection($this->client, $result->_embedded->refunds, \_PhpScoper5eddef0da618a\Mollie\Api\Resources\Refund::class, $result->_links);
     }
     /**
      * Saves the order's updated billingAddress and/or shippingAddress.
@@ -418,9 +376,9 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
         if (!isset($this->_links->self->href)) {
             return $this;
         }
-        $body = \json_encode(array("billingAddress" => $this->billingAddress, "shippingAddress" => $this->shippingAddress, "orderNumber" => $this->orderNumber, "redirectUrl" => $this->redirectUrl, "webhookUrl" => $this->webhookUrl));
-        $result = $this->client->performHttpCallToFullUrl(\MolliePrefix\Mollie\Api\MollieApiClient::HTTP_PATCH, $this->_links->self->href, $body);
-        return \MolliePrefix\Mollie\Api\Resources\ResourceFactory::createFromApiResult($result, new \MolliePrefix\Mollie\Api\Resources\Order($this->client));
+        $body = \json_encode(array("billingAddress" => $this->billingAddress, "shippingAddress" => $this->shippingAddress, "orderNumber" => $this->orderNumber));
+        $result = $this->client->performHttpCallToFullUrl(\_PhpScoper5eddef0da618a\Mollie\Api\MollieApiClient::HTTP_PATCH, $this->_links->self->href, $body);
+        return \_PhpScoper5eddef0da618a\Mollie\Api\Resources\ResourceFactory::createFromApiResult($result, new \_PhpScoper5eddef0da618a\Mollie\Api\Resources\Order($this->client));
     }
     /**
      * Create a new payment for this Order.
@@ -445,7 +403,7 @@ class Order extends \MolliePrefix\Mollie\Api\Resources\BaseResource
         if (!isset($this->_embedded, $this->_embedded->payments)) {
             return null;
         }
-        return \MolliePrefix\Mollie\Api\Resources\ResourceFactory::createCursorResourceCollection($this->client, $this->_embedded->payments, \MolliePrefix\Mollie\Api\Resources\Payment::class);
+        return \_PhpScoper5eddef0da618a\Mollie\Api\Resources\ResourceFactory::createCursorResourceCollection($this->client, $this->_embedded->payments, \_PhpScoper5eddef0da618a\Mollie\Api\Resources\Payment::class);
     }
     /**
      * When accessed by oAuth we want to pass the testmode by default

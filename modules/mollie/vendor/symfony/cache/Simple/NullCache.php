@@ -8,13 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace MolliePrefix\Symfony\Component\Cache\Simple;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\Cache\Simple;
 
-use MolliePrefix\Psr\SimpleCache\CacheInterface;
+use _PhpScoper5eddef0da618a\Psr\SimpleCache\CacheInterface;
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class NullCache implements \MolliePrefix\Psr\SimpleCache\CacheInterface
+class NullCache implements \_PhpScoper5eddef0da618a\Psr\SimpleCache\CacheInterface
 {
     /**
      * {@inheritdoc}

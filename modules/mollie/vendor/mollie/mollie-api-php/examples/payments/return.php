@@ -1,6 +1,6 @@
 <?php
 
-namespace MolliePrefix;
+namespace _PhpScoper5eddef0da618a;
 
 /*
  * How to show a return page to the customer.
@@ -13,7 +13,7 @@ namespace MolliePrefix;
  * Please use a real database like MySQL in production code.
  */
 require_once "../functions.php";
-$status = \MolliePrefix\database_read($_GET["order_id"]);
+$status = \_PhpScoper5eddef0da618a\database_read($_GET["order_id"]);
 /*
  * Determine the url parts to these example files.
  */

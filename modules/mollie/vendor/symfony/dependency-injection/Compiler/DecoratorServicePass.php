@@ -8,10 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace MolliePrefix\Symfony\Component\DependencyInjection\Compiler;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Compiler;
 
-use MolliePrefix\Symfony\Component\DependencyInjection\Alias;
-use MolliePrefix\Symfony\Component\DependencyInjection\ContainerBuilder;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Alias;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * Overwrites a service but keeps the overridden one.
  *
@@ -19,9 +19,9 @@ use MolliePrefix\Symfony\Component\DependencyInjection\ContainerBuilder;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Diego Saint Esteben <diego@saintesteben.me>
  */
-class DecoratorServicePass implements \MolliePrefix\Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface
+class DecoratorServicePass implements \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface
 {
-    public function process(\MolliePrefix\Symfony\Component\DependencyInjection\ContainerBuilder $container)
+    public function process(\_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ContainerBuilder $container)
     {
         $definitions = new \SplPriorityQueue();
         $order = \PHP_INT_MAX;
@@ -44,7 +44,7 @@ class DecoratorServicePass implements \MolliePrefix\Symfony\Component\Dependency
                 $alias = $container->getAlias($inner);
                 $public = $alias->isPublic();
                 $private = $alias->isPrivate();
-                $container->setAlias($renamedId, new \MolliePrefix\Symfony\Component\DependencyInjection\Alias($container->normalizeId($alias), \false));
+                $container->setAlias($renamedId, new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Alias($container->normalizeId($alias), \false));
             } else {
                 $decoratedDefinition = $container->getDefinition($inner);
                 $public = $decoratedDefinition->isPublic();

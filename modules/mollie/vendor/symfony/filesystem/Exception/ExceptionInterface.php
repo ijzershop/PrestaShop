@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace MolliePrefix\Symfony\Component\Filesystem\Exception;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\Filesystem\Exception;
 
 /**
  * Exception interface for all exceptions thrown by the component.

@@ -30,8 +30,6 @@
  * @package    Mollie
  * @link       https://www.mollie.nl
  */
-import {array} from "locutus/php";
-
 export interface ITranslations {
   [key: string]: string;
 }
@@ -146,7 +144,6 @@ export interface IMollieApiOrder {
   lines: Array<IMollieOrderLine>;
   refunds: Array<IMollieApiRefund>;
   availableRefundAmount: IMollieAmount;
-  details: IMollieOrderDetails;
 }
 
 export interface IMollieOrderLine {
@@ -227,15 +224,4 @@ export enum QrStatus {
   pending = 1,
   success = 2,
   refresh = 3,
-}
-
-export interface IMollieOrderDetails {
-  issuer: string;
-  remainderMethod: string;
-  vouchers: Array<IMollieVoucher>;
-}
-
-export interface IMollieVoucher {
-  issuer: string;
-  amount: IMollieAmount
 }

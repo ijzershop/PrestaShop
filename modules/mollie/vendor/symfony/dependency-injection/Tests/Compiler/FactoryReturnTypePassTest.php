@@ -8,36 +8,36 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace MolliePrefix\Symfony\Component\DependencyInjection\Tests\Compiler;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Compiler;
 
-use MolliePrefix\PHPUnit\Framework\TestCase;
-use MolliePrefix\Symfony\Component\DependencyInjection\Compiler\FactoryReturnTypePass;
-use MolliePrefix\Symfony\Component\DependencyInjection\ContainerBuilder;
-use MolliePrefix\Symfony\Component\DependencyInjection\Reference;
-use MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy;
-use MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\factoryFunction;
-use MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryParent;
+use _PhpScoper5eddef0da618a\PHPUnit\Framework\TestCase;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Compiler\FactoryReturnTypePass;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ContainerBuilder;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Reference;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\factoryFunction;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryParent;
 /**
  * @author Guilhem N. <egetick@gmail.com>
  *
  * @group legacy
  */
-class FactoryReturnTypePassTest extends \MolliePrefix\PHPUnit\Framework\TestCase
+class FactoryReturnTypePassTest extends \_PhpScoper5eddef0da618a\PHPUnit\Framework\TestCase
 {
     public function testProcess()
     {
-        $container = new \MolliePrefix\Symfony\Component\DependencyInjection\ContainerBuilder();
+        $container = new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ContainerBuilder();
         $factory = $container->register('factory');
-        $factory->setFactory([\MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, 'createFactory']);
+        $factory->setFactory([\_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, 'createFactory']);
         $container->setAlias('alias_factory', 'factory');
         $foo = $container->register('foo');
-        $foo->setFactory([new \MolliePrefix\Symfony\Component\DependencyInjection\Reference('alias_factory'), 'create']);
+        $foo->setFactory([new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Reference('alias_factory'), 'create']);
         $bar = $container->register('bar', __CLASS__);
-        $bar->setFactory([new \MolliePrefix\Symfony\Component\DependencyInjection\Reference('factory'), 'create']);
-        $pass = new \MolliePrefix\Symfony\Component\DependencyInjection\Compiler\FactoryReturnTypePass();
+        $bar->setFactory([new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Reference('factory'), 'create']);
+        $pass = new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Compiler\FactoryReturnTypePass();
         $pass->process($container);
         if (\method_exists(\ReflectionMethod::class, 'getReturnType')) {
-            $this->assertEquals(\MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, $factory->getClass());
+            $this->assertEquals(\_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, $factory->getClass());
             $this->assertEquals(\stdClass::class, $foo->getClass());
         } else {
             $this->assertNull($factory->getClass());
@@ -53,10 +53,10 @@ class FactoryReturnTypePassTest extends \MolliePrefix\PHPUnit\Framework\TestCase
         if (!$hhvmSupport && \defined('HHVM_VERSION')) {
             $this->markTestSkipped('Scalar typehints not supported by hhvm.');
         }
-        $container = new \MolliePrefix\Symfony\Component\DependencyInjection\ContainerBuilder();
+        $container = new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ContainerBuilder();
         $service = $container->register('service');
         $service->setFactory($factory);
-        $pass = new \MolliePrefix\Symfony\Component\DependencyInjection\Compiler\FactoryReturnTypePass();
+        $pass = new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Compiler\FactoryReturnTypePass();
         $pass->process($container);
         if (\method_exists(\ReflectionMethod::class, 'getReturnType')) {
             $this->assertEquals($returnType, $service->getClass());
@@ -68,20 +68,20 @@ class FactoryReturnTypePassTest extends \MolliePrefix\PHPUnit\Framework\TestCase
     {
         return [
             // must be loaded before the function as they are in the same file
-            [[\MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, 'createBuiltin'], null, \false],
-            [[\MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, 'createParent'], \MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryParent::class],
-            [[\MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, 'createSelf'], \MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class],
-            [\MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\factoryFunction::class, \MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class],
+            [[\_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, 'createBuiltin'], null, \false],
+            [[\_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, 'createParent'], \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryParent::class],
+            [[\_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, 'createSelf'], \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class],
+            [\_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\factoryFunction::class, \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class],
         ];
     }
     public function testCircularReference()
     {
-        $container = new \MolliePrefix\Symfony\Component\DependencyInjection\ContainerBuilder();
+        $container = new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ContainerBuilder();
         $factory = $container->register('factory');
-        $factory->setFactory([new \MolliePrefix\Symfony\Component\DependencyInjection\Reference('factory2'), 'createSelf']);
+        $factory->setFactory([new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Reference('factory2'), 'createSelf']);
         $factory2 = $container->register('factory2');
-        $factory2->setFactory([new \MolliePrefix\Symfony\Component\DependencyInjection\Reference('factory'), 'create']);
-        $pass = new \MolliePrefix\Symfony\Component\DependencyInjection\Compiler\FactoryReturnTypePass();
+        $factory2->setFactory([new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Reference('factory'), 'create']);
+        $pass = new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Compiler\FactoryReturnTypePass();
         $pass->process($container);
         $this->assertNull($factory->getClass());
         $this->assertNull($factory2->getClass());
@@ -92,10 +92,10 @@ class FactoryReturnTypePassTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testCompile()
     {
-        $container = new \MolliePrefix\Symfony\Component\DependencyInjection\ContainerBuilder();
+        $container = new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ContainerBuilder();
         $factory = $container->register('factory');
-        $factory->setFactory([\MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, 'createFactory']);
+        $factory->setFactory([\_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, 'createFactory']);
         $container->compile();
-        $this->assertEquals(\MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, $container->getDefinition('factory')->getClass());
+        $this->assertEquals(\_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummy::class, $container->getDefinition('factory')->getClass());
     }
 }

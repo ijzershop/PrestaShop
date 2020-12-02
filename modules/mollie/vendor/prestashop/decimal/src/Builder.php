@@ -6,9 +6,9 @@
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-namespace MolliePrefix\PrestaShop\Decimal;
+namespace _PhpScoper5eddef0da618a\PrestaShop\Decimal;
 
-use MolliePrefix\PrestaShop\Decimal\DecimalNumber;
+use _PhpScoper5eddef0da618a\PrestaShop\Decimal\Number;
 /**
  * Builds Number instances
  */
@@ -27,7 +27,7 @@ class Builder
      *
      * @param string $number
      *
-     * @return DecimalNumber
+     * @return Number
      */
     public static function parseNumber($number)
     {
@@ -63,7 +63,7 @@ class Builder
                 $fractionalDigits = 0;
             }
         }
-        return new \MolliePrefix\PrestaShop\Decimal\DecimalNumber($numberParts['sign'] . $coefficient, $fractionalDigits);
+        return new \_PhpScoper5eddef0da618a\PrestaShop\Decimal\Number($numberParts['sign'] . $coefficient, $fractionalDigits);
     }
     /**
      * @param string $number

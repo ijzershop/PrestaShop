@@ -8,31 +8,31 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace MolliePrefix\Symfony\Component\Yaml\Tests;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\Yaml\Tests;
 
-use MolliePrefix\PHPUnit\Framework\TestCase;
-use MolliePrefix\Symfony\Component\Yaml\Exception\ParseException;
-use MolliePrefix\Symfony\Component\Yaml\Inline;
-use MolliePrefix\Symfony\Component\Yaml\Yaml;
-class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
+use _PhpScoper5eddef0da618a\PHPUnit\Framework\TestCase;
+use _PhpScoper5eddef0da618a\Symfony\Component\Yaml\Exception\ParseException;
+use _PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline;
+use _PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml;
+class InlineTest extends \_PhpScoper5eddef0da618a\PHPUnit\Framework\TestCase
 {
     protected function setUp()
     {
-        \MolliePrefix\Symfony\Component\Yaml\Inline::initialize(0, 0);
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::initialize(0, 0);
     }
     /**
      * @dataProvider getTestsForParse
      */
     public function testParse($yaml, $value, $flags = 0)
     {
-        $this->assertSame($value, \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yaml, $flags), \sprintf('::parse() converts an inline YAML to a PHP structure (%s)', $yaml));
+        $this->assertSame($value, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yaml, $flags), \sprintf('::parse() converts an inline YAML to a PHP structure (%s)', $yaml));
     }
     /**
      * @dataProvider getTestsForParseWithMapObjects
      */
-    public function testParseWithMapObjects($yaml, $value, $flags = \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_OBJECT_FOR_MAP)
+    public function testParseWithMapObjects($yaml, $value, $flags = \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_OBJECT_FOR_MAP)
     {
-        $actual = \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yaml, $flags);
+        $actual = \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yaml, $flags);
         $this->assertSame(\serialize($value), \serialize($actual));
     }
     /**
@@ -40,24 +40,24 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testParsePhpConstants($yaml, $value)
     {
-        $actual = \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yaml, \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_CONSTANT);
+        $actual = \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yaml, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_CONSTANT);
         $this->assertSame($value, $actual);
     }
     public function getTestsForParsePhpConstants()
     {
-        return [['!php/const Symfony\\Component\\Yaml\\Yaml::PARSE_CONSTANT', \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_CONSTANT], ['!php/const PHP_INT_MAX', \PHP_INT_MAX], ['[!php/const PHP_INT_MAX]', [\PHP_INT_MAX]], ['{ foo: !php/const PHP_INT_MAX }', ['foo' => \PHP_INT_MAX]], ['{ !php/const PHP_INT_MAX: foo }', [\PHP_INT_MAX => 'foo']], ['!php/const NULL', null]];
+        return [['!php/const Symfony\\Component\\Yaml\\Yaml::PARSE_CONSTANT', \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_CONSTANT], ['!php/const PHP_INT_MAX', \PHP_INT_MAX], ['[!php/const PHP_INT_MAX]', [\PHP_INT_MAX]], ['{ foo: !php/const PHP_INT_MAX }', ['foo' => \PHP_INT_MAX]], ['{ !php/const PHP_INT_MAX: foo }', [\PHP_INT_MAX => 'foo']], ['!php/const NULL', null]];
     }
     public function testParsePhpConstantThrowsExceptionWhenUndefined()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
         $this->expectExceptionMessage('The constant "WRONG_CONSTANT" is not defined');
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse('!php/const WRONG_CONSTANT', \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_CONSTANT);
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('!php/const WRONG_CONSTANT', \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_CONSTANT);
     }
     public function testParsePhpConstantThrowsExceptionOnInvalidType()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
-        $this->expectExceptionMessageMatches('#The string "!php/const PHP_INT_MAX" could not be parsed as a constant.*#');
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse('!php/const PHP_INT_MAX', \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE);
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        $this->expectExceptionMessageRegExp('#The string "!php/const PHP_INT_MAX" could not be parsed as a constant.*#');
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('!php/const PHP_INT_MAX', \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE);
     }
     /**
      * @group legacy
@@ -66,11 +66,11 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testDeprecatedConstantTag($yaml, $expectedValue)
     {
-        $this->assertSame($expectedValue, \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yaml, \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_CONSTANT));
+        $this->assertSame($expectedValue, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yaml, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_CONSTANT));
     }
     public function getTestsForParseLegacyPhpConstants()
     {
-        return [['!php/const:Symfony\\Component\\Yaml\\Yaml::PARSE_CONSTANT', \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_CONSTANT], ['!php/const:PHP_INT_MAX', \PHP_INT_MAX], ['[!php/const:PHP_INT_MAX]', [\PHP_INT_MAX]], ['{ foo: !php/const:PHP_INT_MAX }', ['foo' => \PHP_INT_MAX]], ['{ !php/const:PHP_INT_MAX: foo }', [\PHP_INT_MAX => 'foo']], ['!php/const:NULL', null]];
+        return [['!php/const:Symfony\\Component\\Yaml\\Yaml::PARSE_CONSTANT', \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_CONSTANT], ['!php/const:PHP_INT_MAX', \PHP_INT_MAX], ['[!php/const:PHP_INT_MAX]', [\PHP_INT_MAX]], ['{ foo: !php/const:PHP_INT_MAX }', ['foo' => \PHP_INT_MAX]], ['{ !php/const:PHP_INT_MAX: foo }', [\PHP_INT_MAX => 'foo']], ['!php/const:NULL', null]];
     }
     /**
      * @group legacy
@@ -78,7 +78,7 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testParseWithMapObjectsPassingTrue($yaml, $value)
     {
-        $actual = \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yaml, \false, \false, \true);
+        $actual = \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yaml, \false, \false, \true);
         $this->assertSame(\serialize($value), \serialize($actual));
     }
     /**
@@ -86,8 +86,8 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testDump($yaml, $value, $parseFlags = 0)
     {
-        $this->assertEquals($yaml, \MolliePrefix\Symfony\Component\Yaml\Inline::dump($value), \sprintf('::dump() converts a PHP structure to an inline YAML (%s)', $yaml));
-        $this->assertSame($value, \MolliePrefix\Symfony\Component\Yaml\Inline::parse(\MolliePrefix\Symfony\Component\Yaml\Inline::dump($value), $parseFlags), 'check consistency');
+        $this->assertEquals($yaml, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::dump($value), \sprintf('::dump() converts a PHP structure to an inline YAML (%s)', $yaml));
+        $this->assertSame($value, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse(\_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::dump($value), $parseFlags), 'check consistency');
     }
     public function testDumpNumericValueWithLocale()
     {
@@ -100,7 +100,7 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
             if (\false === \setlocale(\LC_NUMERIC, $requiredLocales)) {
                 $this->markTestSkipped('Could not set any of required locales: ' . \implode(', ', $requiredLocales));
             }
-            $this->assertEquals('1.2', \MolliePrefix\Symfony\Component\Yaml\Inline::dump(1.2));
+            $this->assertEquals('1.2', \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::dump(1.2));
             $this->assertStringContainsStringIgnoringCase('fr', \setlocale(\LC_NUMERIC, 0));
         } finally {
             \setlocale(\LC_NUMERIC, $locale);
@@ -109,36 +109,36 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
     public function testHashStringsResemblingExponentialNumericsShouldNotBeChangedToINF()
     {
         $value = '686e444';
-        $this->assertSame($value, \MolliePrefix\Symfony\Component\Yaml\Inline::parse(\MolliePrefix\Symfony\Component\Yaml\Inline::dump($value)));
+        $this->assertSame($value, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse(\_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::dump($value)));
     }
     public function testParseScalarWithNonEscapedBlackslashShouldThrowException()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
         $this->expectExceptionMessage('Found unknown escape character "\\V".');
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse('"Foo\\Var"');
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('"Foo\\Var"');
     }
     public function testParseScalarWithNonEscapedBlackslashAtTheEndShouldThrowException()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse('"Foo\\"');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('"Foo\\"');
     }
     public function testParseScalarWithIncorrectlyQuotedStringShouldThrowException()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
         $value = "'don't do somthin' like that'";
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse($value);
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($value);
     }
     public function testParseScalarWithIncorrectlyDoubleQuotedStringShouldThrowException()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
         $value = '"don"t do somthin" like that"';
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse($value);
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($value);
     }
     public function testParseInvalidMappingKeyShouldThrowException()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
         $value = '{ "foo " bar": "bar" }';
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse($value);
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($value);
     }
     /**
      * @group legacy
@@ -147,35 +147,35 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testParseMappingKeyWithColonNotFollowedBySpace()
     {
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse('{1:""}');
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('{1:""}');
     }
     public function testParseInvalidMappingShouldThrowException()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse('[foo] bar');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('[foo] bar');
     }
     public function testParseInvalidSequenceShouldThrowException()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse('{ foo: bar } bar');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('{ foo: bar } bar');
     }
     public function testParseInvalidTaggedSequenceShouldThrowException()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse('!foo { bar: baz } qux', \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_CUSTOM_TAGS);
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('!foo { bar: baz } qux', \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_CUSTOM_TAGS);
     }
     public function testParseScalarWithCorrectlyQuotedStringShouldReturnString()
     {
         $value = "'don''t do somthin'' like that'";
         $expect = "don't do somthin' like that";
-        $this->assertSame($expect, \MolliePrefix\Symfony\Component\Yaml\Inline::parseScalar($value));
+        $this->assertSame($expect, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parseScalar($value));
     }
     /**
      * @dataProvider getDataForParseReferences
      */
     public function testParseReferences($yaml, $expected)
     {
-        $this->assertSame($expected, \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yaml, 0, ['var' => 'var-value']));
+        $this->assertSame($expected, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yaml, 0, ['var' => 'var-value']));
     }
     /**
      * @group legacy
@@ -183,7 +183,7 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testParseReferencesAsFifthArgument($yaml, $expected)
     {
-        $this->assertSame($expected, \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yaml, \false, \false, \false, ['var' => 'var-value']));
+        $this->assertSame($expected, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yaml, \false, \false, \false, ['var' => 'var-value']));
     }
     public function getDataForParseReferences()
     {
@@ -192,7 +192,7 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
     public function testParseMapReferenceInSequence()
     {
         $foo = ['a' => 'Steve', 'b' => 'Clark', 'c' => 'Brian'];
-        $this->assertSame([$foo], \MolliePrefix\Symfony\Component\Yaml\Inline::parse('[*foo]', 0, ['foo' => $foo]));
+        $this->assertSame([$foo], \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('[*foo]', 0, ['foo' => $foo]));
     }
     /**
      * @group legacy
@@ -200,28 +200,28 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
     public function testParseMapReferenceInSequenceAsFifthArgument()
     {
         $foo = ['a' => 'Steve', 'b' => 'Clark', 'c' => 'Brian'];
-        $this->assertSame([$foo], \MolliePrefix\Symfony\Component\Yaml\Inline::parse('[*foo]', \false, \false, \false, ['foo' => $foo]));
+        $this->assertSame([$foo], \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('[*foo]', \false, \false, \false, ['foo' => $foo]));
     }
     public function testParseUnquotedAsterisk()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
         $this->expectExceptionMessage('A reference must contain at least one character at line 1.');
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse('{ foo: * }');
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('{ foo: * }');
     }
     public function testParseUnquotedAsteriskFollowedByAComment()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
         $this->expectExceptionMessage('A reference must contain at least one character at line 1.');
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse('{ foo: * #foo }');
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('{ foo: * #foo }');
     }
     /**
      * @dataProvider getReservedIndicators
      */
     public function testParseUnquotedScalarStartingWithReservedIndicator($indicator)
     {
-        $this->expectException(\MolliePrefix\Symfony\Component\Yaml\Exception\ParseException::class);
+        $this->expectException(\_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Exception\ParseException::class);
         $this->expectExceptionMessage(\sprintf('cannot start a plain scalar; you need to quote the scalar at line 1 (near "%sfoo ").', $indicator));
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse(\sprintf('{ foo: %sfoo }', $indicator));
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse(\sprintf('{ foo: %sfoo }', $indicator));
     }
     public function getReservedIndicators()
     {
@@ -232,9 +232,9 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testParseUnquotedScalarStartingWithScalarIndicator($indicator)
     {
-        $this->expectException(\MolliePrefix\Symfony\Component\Yaml\Exception\ParseException::class);
+        $this->expectException(\_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Exception\ParseException::class);
         $this->expectExceptionMessage(\sprintf('cannot start a plain scalar; you need to quote the scalar at line 1 (near "%sfoo ").', $indicator));
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse(\sprintf('{ foo: %sfoo }', $indicator));
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse(\sprintf('{ foo: %sfoo }', $indicator));
     }
     public function getScalarIndicators()
     {
@@ -247,14 +247,14 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testParseUnquotedScalarStartingWithPercentCharacter()
     {
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse('{ foo: %bar }');
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('{ foo: %bar }');
     }
     /**
      * @dataProvider getDataForIsHash
      */
     public function testIsHash($array, $expected)
     {
-        $this->assertSame($expected, \MolliePrefix\Symfony\Component\Yaml\Inline::isHash($array));
+        $this->assertSame($expected, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::isHash($array));
     }
     public function getDataForIsHash()
     {
@@ -370,8 +370,8 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
             ['[  foo  ,   bar , false  ,  null     ,  12  ]', ['foo', 'bar', \false, null, 12]],
             ['[\'foo,bar\', \'foo bar\']', ['foo,bar', 'foo bar']],
             // mappings
-            ['{foo: bar,bar: foo,"false": false,"null": null,integer: 12}', (object) ['foo' => 'bar', 'bar' => 'foo', 'false' => \false, 'null' => null, 'integer' => 12], \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_OBJECT_FOR_MAP],
-            ['{ foo  : bar, bar : foo,  "false"  :   false,  "null"  :   null,  integer :  12  }', (object) ['foo' => 'bar', 'bar' => 'foo', 'false' => \false, 'null' => null, 'integer' => 12], \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_OBJECT_FOR_MAP],
+            ['{foo: bar,bar: foo,"false": false,"null": null,integer: 12}', (object) ['foo' => 'bar', 'bar' => 'foo', 'false' => \false, 'null' => null, 'integer' => 12], \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_OBJECT_FOR_MAP],
+            ['{ foo  : bar, bar : foo,  "false"  :   false,  "null"  :   null,  integer :  12  }', (object) ['foo' => 'bar', 'bar' => 'foo', 'false' => \false, 'null' => null, 'integer' => 12], \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_OBJECT_FOR_MAP],
             ['{foo: \'bar\', bar: \'foo: bar\'}', (object) ['foo' => 'bar', 'bar' => 'foo: bar']],
             ['{\'foo\': \'bar\', "bar": \'foo: bar\'}', (object) ['foo' => 'bar', 'bar' => 'foo: bar']],
             ['{\'foo\'\'\': \'bar\', "bar\\"": \'foo: bar\'}', (object) ['foo\'' => 'bar', 'bar"' => 'foo: bar']],
@@ -448,13 +448,6 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
             ['[foo, { bar: foo, foo: [foo, { bar: foo }] }, [foo, { bar: foo }]]', ['foo', ['bar' => 'foo', 'foo' => ['foo', ['bar' => 'foo']]], ['foo', ['bar' => 'foo']]]],
             ['[foo, \'@foo.baz\', { \'%foo%\': \'foo is %foo%\', bar: \'%foo%\' }, true, \'@service_container\']', ['foo', '@foo.baz', ['%foo%' => 'foo is %foo%', 'bar' => '%foo%'], \true, '@service_container']],
             ['{ foo: { bar: { 1: 2, baz: 3 } } }', ['foo' => ['bar' => [1 => 2, 'baz' => 3]]]],
-            // numeric strings with trailing whitespaces
-            ["'0123 '", '0123 '],
-            ['"0123\\f"', "0123\f"],
-            ['"0123\\n"', "0123\n"],
-            ['"0123\\r"', "0123\r"],
-            ['"0123\\t"', "0123\t"],
-            ['"0123\\v"', "0123\v"],
         ];
     }
     /**
@@ -462,7 +455,7 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testParseTimestampAsUnixTimestampByDefault($yaml, $year, $month, $day, $hour, $minute, $second)
     {
-        $this->assertSame(\gmmktime($hour, $minute, $second, $month, $day, $year), \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yaml));
+        $this->assertSame(\gmmktime($hour, $minute, $second, $month, $day, $year), \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yaml));
     }
     /**
      * @dataProvider getTimestampTests
@@ -477,7 +470,7 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
         } else {
             $expected->setTime($hour, $minute, $second);
         }
-        $date = \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yaml, \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_DATETIME);
+        $date = \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yaml, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_DATETIME);
         $this->assertEquals($expected, $date);
         $this->assertSame($timezone, $date->format('O'));
     }
@@ -500,14 +493,14 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
         }
         $expectedNested = ['nested' => [$expected]];
         $yamlNested = "{nested: [{$yaml}]}";
-        $this->assertEquals($expectedNested, \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yamlNested, \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_DATETIME));
+        $this->assertEquals($expectedNested, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yamlNested, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_DATETIME));
     }
     /**
      * @dataProvider getDateTimeDumpTests
      */
     public function testDumpDateTime($dateTime, $expected)
     {
-        $this->assertSame($expected, \MolliePrefix\Symfony\Component\Yaml\Inline::dump($dateTime));
+        $this->assertSame($expected, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::dump($dateTime));
     }
     public function getDateTimeDumpTests()
     {
@@ -523,7 +516,7 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testParseBinaryData($data)
     {
-        $this->assertSame('Hello world', \MolliePrefix\Symfony\Component\Yaml\Inline::parse($data));
+        $this->assertSame('Hello world', \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($data));
     }
     public function getBinaryData()
     {
@@ -534,9 +527,9 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testParseInvalidBinaryData($data, $expectedMessage)
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
-        $this->expectExceptionMessageMatches($expectedMessage);
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse($data);
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        $this->expectExceptionMessageRegExp($expectedMessage);
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($data);
     }
     public function getInvalidBinaryData()
     {
@@ -544,15 +537,15 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
     }
     public function testNotSupportedMissingValue()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
         $this->expectExceptionMessage('Malformed inline YAML string: "{this, is not, supported}" at line 1.');
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse('{this, is not, supported}');
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('{this, is not, supported}');
     }
     public function testVeryLongQuotedStrings()
     {
         $longStringWithQuotes = \str_repeat("x\r\n\\\"x\"x", 1000);
-        $yamlString = \MolliePrefix\Symfony\Component\Yaml\Inline::dump(['longStringWithQuotes' => $longStringWithQuotes]);
-        $arrayFromYaml = \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yamlString);
+        $yamlString = \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::dump(['longStringWithQuotes' => $longStringWithQuotes]);
+        $arrayFromYaml = \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yamlString);
         $this->assertEquals($longStringWithQuotes, $arrayFromYaml['longStringWithQuotes']);
     }
     /**
@@ -561,14 +554,14 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testOmittedMappingKeyIsParsedAsColon()
     {
-        $this->assertSame([':' => 'foo'], \MolliePrefix\Symfony\Component\Yaml\Inline::parse('{: foo}'));
+        $this->assertSame([':' => 'foo'], \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('{: foo}'));
     }
     /**
      * @dataProvider getTestsForNullValues
      */
     public function testParseMissingMappingValueAsNull($yaml, $expected)
     {
-        $this->assertSame($expected, \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yaml));
+        $this->assertSame($expected, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yaml));
     }
     public function getTestsForNullValues()
     {
@@ -576,7 +569,7 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
     }
     public function testTheEmptyStringIsAValidMappingKey()
     {
-        $this->assertSame(['' => 'foo'], \MolliePrefix\Symfony\Component\Yaml\Inline::parse('{ "": foo }'));
+        $this->assertSame(['' => 'foo'], \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('{ "": foo }'));
     }
     /**
      * @group legacy
@@ -585,7 +578,7 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testImplicitStringCastingOfMappingKeysIsDeprecated($yaml, $expected)
     {
-        $this->assertSame($expected, \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yaml));
+        $this->assertSame($expected, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yaml));
     }
     /**
      * @group legacy
@@ -595,7 +588,7 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testExplicitStringCastingOfMappingKeys($yaml, $expected)
     {
-        $this->assertSame($expected, \MolliePrefix\Symfony\Component\Yaml\Yaml::parse($yaml, \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_KEYS_AS_STRINGS));
+        $this->assertSame($expected, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::parse($yaml, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_KEYS_AS_STRINGS));
     }
     public function getNotPhpCompatibleMappingKeyData()
     {
@@ -607,20 +600,20 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testDeprecatedStrTag()
     {
-        $this->assertSame(['foo' => 'bar'], \MolliePrefix\Symfony\Component\Yaml\Inline::parse('{ foo: !str bar }'));
+        $this->assertSame(['foo' => 'bar'], \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('{ foo: !str bar }'));
     }
     public function testUnfinishedInlineMap()
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Yaml\\Exception\\ParseException');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Yaml\\Exception\\ParseException');
         $this->expectExceptionMessage('Unexpected end of line, expected one of ",}" at line 1 (near "{abc: \'def\'").');
-        \MolliePrefix\Symfony\Component\Yaml\Inline::parse("{abc: 'def'");
+        \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse("{abc: 'def'");
     }
     /**
      * @dataProvider getTestsForOctalNumbers
      */
     public function testParseOctalNumbers($expected, $yaml)
     {
-        self::assertSame($expected, \MolliePrefix\Symfony\Component\Yaml\Inline::parse($yaml));
+        self::assertSame($expected, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($yaml));
     }
     public function getTestsForOctalNumbers()
     {
@@ -631,7 +624,7 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testPhpObjectWithEmptyValue($expected, $value)
     {
-        $this->assertSame($expected, \MolliePrefix\Symfony\Component\Yaml\Inline::parse($value, \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_OBJECT));
+        $this->assertSame($expected, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($value, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_OBJECT));
     }
     public function phpObjectTagWithEmptyValueProvider()
     {
@@ -642,7 +635,7 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testPhpConstTagWithEmptyValue($expected, $value)
     {
-        $this->assertSame($expected, \MolliePrefix\Symfony\Component\Yaml\Inline::parse($value, \MolliePrefix\Symfony\Component\Yaml\Yaml::PARSE_CONSTANT));
+        $this->assertSame($expected, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse($value, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Yaml::PARSE_CONSTANT));
     }
     public function phpConstTagWithEmptyValueProvider()
     {
@@ -650,18 +643,10 @@ class InlineTest extends \MolliePrefix\PHPUnit\Framework\TestCase
     }
     public function testParsePositiveOctalNumberContainingInvalidDigits()
     {
-        self::assertSame('0123456789', \MolliePrefix\Symfony\Component\Yaml\Inline::parse('0123456789'));
+        self::assertSame(342391, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('0123456789'));
     }
     public function testParseNegativeOctalNumberContainingInvalidDigits()
     {
-        self::assertSame('-0123456789', \MolliePrefix\Symfony\Component\Yaml\Inline::parse('-0123456789'));
-    }
-    public function testParseCommentNotPrefixedBySpaces()
-    {
-        self::assertSame('foo', \MolliePrefix\Symfony\Component\Yaml\Inline::parse('"foo"#comment'));
-    }
-    public function testParseUnquotedStringContainingHashTagNotPrefixedBySpace()
-    {
-        self::assertSame('foo#nocomment', \MolliePrefix\Symfony\Component\Yaml\Inline::parse('foo#nocomment'));
+        self::assertSame(-342391, \_PhpScoper5eddef0da618a\Symfony\Component\Yaml\Inline::parse('-0123456789'));
     }
 }

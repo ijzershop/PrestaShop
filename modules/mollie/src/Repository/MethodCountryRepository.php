@@ -38,9 +38,6 @@ namespace Mollie\Repository;
 use Db;
 use DbQuery;
 
-/**
- * Repository related with payment methods country.
- */
 class MethodCountryRepository
 {
 

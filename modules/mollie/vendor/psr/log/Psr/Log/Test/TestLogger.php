@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\Psr\Log\Test;
+namespace _PhpScoper5eddef0da618a\Psr\Log\Test;
 
-use MolliePrefix\Psr\Log\AbstractLogger;
+use _PhpScoper5eddef0da618a\Psr\Log\AbstractLogger;
 /**
  * Used for testing purposes.
  *
@@ -53,7 +53,7 @@ use MolliePrefix\Psr\Log\AbstractLogger;
  * @method bool hasInfoThatPasses($message)
  * @method bool hasDebugThatPasses($message)
  */
-class TestLogger extends \MolliePrefix\Psr\Log\AbstractLogger
+class TestLogger extends \_PhpScoper5eddef0da618a\Psr\Log\AbstractLogger
 {
     /**
      * @var array

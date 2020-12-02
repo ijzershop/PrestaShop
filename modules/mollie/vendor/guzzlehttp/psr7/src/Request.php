@@ -1,15 +1,15 @@
 <?php
 
-namespace MolliePrefix\GuzzleHttp\Psr7;
+namespace _PhpScoper5eddef0da618a\GuzzleHttp\Psr7;
 
 use InvalidArgumentException;
-use MolliePrefix\Psr\Http\Message\RequestInterface;
-use MolliePrefix\Psr\Http\Message\StreamInterface;
-use MolliePrefix\Psr\Http\Message\UriInterface;
+use _PhpScoper5eddef0da618a\Psr\Http\Message\RequestInterface;
+use _PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface;
+use _PhpScoper5eddef0da618a\Psr\Http\Message\UriInterface;
 /**
  * PSR-7 request implementation.
  */
-class Request implements \MolliePrefix\Psr\Http\Message\RequestInterface
+class Request implements \_PhpScoper5eddef0da618a\Psr\Http\Message\RequestInterface
 {
     use MessageTrait;
     /** @var string */
@@ -28,8 +28,8 @@ class Request implements \MolliePrefix\Psr\Http\Message\RequestInterface
     public function __construct($method, $uri, array $headers = [], $body = null, $version = '1.1')
     {
         $this->assertMethod($method);
-        if (!$uri instanceof \MolliePrefix\Psr\Http\Message\UriInterface) {
-            $uri = new \MolliePrefix\GuzzleHttp\Psr7\Uri($uri);
+        if (!$uri instanceof \_PhpScoper5eddef0da618a\Psr\Http\Message\UriInterface) {
+            $uri = new \_PhpScoper5eddef0da618a\GuzzleHttp\Psr7\Uri($uri);
         }
         $this->method = \strtoupper($method);
         $this->uri = $uri;
@@ -39,7 +39,7 @@ class Request implements \MolliePrefix\Psr\Http\Message\RequestInterface
             $this->updateHostFromUri();
         }
         if ($body !== '' && $body !== null) {
-            $this->stream = \MolliePrefix\GuzzleHttp\Psr7\Utils::streamFor($body);
+            $this->stream = stream_for($body);
         }
     }
     public function getRequestTarget()
@@ -80,7 +80,7 @@ class Request implements \MolliePrefix\Psr\Http\Message\RequestInterface
     {
         return $this->uri;
     }
-    public function withUri(\MolliePrefix\Psr\Http\Message\UriInterface $uri, $preserveHost = \false)
+    public function withUri(\_PhpScoper5eddef0da618a\Psr\Http\Message\UriInterface $uri, $preserveHost = \false)
     {
         if ($uri === $this->uri) {
             return $this;

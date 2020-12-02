@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\GuzzleHttp\Psr7;
+namespace _PhpScoper5eddef0da618a\GuzzleHttp\Psr7;
 
-use MolliePrefix\Psr\Http\Message\StreamInterface;
+use _PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface;
 /**
  * Stream decorator trait
  * @property StreamInterface stream
@@ -12,7 +12,7 @@ trait StreamDecoratorTrait
     /**
      * @param StreamInterface $stream Stream to decorate
      */
-    public function __construct(\MolliePrefix\Psr\Http\Message\StreamInterface $stream)
+    public function __construct(\_PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface $stream)
     {
         $this->stream = $stream;
     }
@@ -47,7 +47,7 @@ trait StreamDecoratorTrait
     }
     public function getContents()
     {
-        return \MolliePrefix\GuzzleHttp\Psr7\Utils::copyToString($this);
+        return copy_to_string($this);
     }
     /**
      * Allow decorators to implement custom methods
@@ -119,7 +119,6 @@ trait StreamDecoratorTrait
      * Implement in subclasses to dynamically create streams when requested.
      *
      * @return StreamInterface
-     *
      * @throws \BadMethodCallException
      */
     protected function createStream()

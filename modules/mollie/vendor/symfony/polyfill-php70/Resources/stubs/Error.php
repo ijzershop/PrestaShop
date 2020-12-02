@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix;
+namespace _PhpScoper5eddef0da618a;
 
 class Error extends \Exception
 {
 }
-\class_alias('MolliePrefix\\Error', 'Error', \false);
+\class_alias('_PhpScoper5eddef0da618a\\Error', 'Error', \false);

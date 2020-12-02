@@ -1,6 +1,6 @@
 <?php
 
-namespace MolliePrefix;
+namespace _PhpScoper5eddef0da618a;
 
 /*
  * Make sure to disable the display of errors in production code!
@@ -15,5 +15,5 @@ require_once __DIR__ . "/functions.php";
  *
  * See: https://www.mollie.com/dashboard/developers/api-keys
  */
-$mollie = new \MolliePrefix\Mollie\Api\MollieApiClient();
+$mollie = new \_PhpScoper5eddef0da618a\Mollie\Api\MollieApiClient();
 $mollie->setApiKey("test_dHar4XY7LxsDOtmnkVtjNVWXLSlXsM");

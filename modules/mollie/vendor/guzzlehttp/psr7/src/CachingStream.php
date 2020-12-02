@@ -1,13 +1,13 @@
 <?php
 
-namespace MolliePrefix\GuzzleHttp\Psr7;
+namespace _PhpScoper5eddef0da618a\GuzzleHttp\Psr7;
 
-use MolliePrefix\Psr\Http\Message\StreamInterface;
+use _PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface;
 /**
  * Stream decorator that can cache previously read bytes from a sequentially
  * read stream.
  */
-class CachingStream implements \MolliePrefix\Psr\Http\Message\StreamInterface
+class CachingStream implements \_PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface
 {
     use StreamDecoratorTrait;
     /** @var StreamInterface Stream being wrapped */
@@ -20,10 +20,10 @@ class CachingStream implements \MolliePrefix\Psr\Http\Message\StreamInterface
      * @param StreamInterface $stream Stream to cache
      * @param StreamInterface $target Optionally specify where data is cached
      */
-    public function __construct(\MolliePrefix\Psr\Http\Message\StreamInterface $stream, \MolliePrefix\Psr\Http\Message\StreamInterface $target = null)
+    public function __construct(\_PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface $stream, \_PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface $target = null)
     {
         $this->remoteStream = $stream;
-        $this->stream = $target ?: new \MolliePrefix\GuzzleHttp\Psr7\Stream(\fopen('php://temp', 'r+'));
+        $this->stream = $target ?: new \_PhpScoper5eddef0da618a\GuzzleHttp\Psr7\Stream(\fopen('php://temp', 'r+'));
     }
     public function getSize()
     {
@@ -108,8 +108,8 @@ class CachingStream implements \MolliePrefix\Psr\Http\Message\StreamInterface
     }
     private function cacheEntireStream()
     {
-        $target = new \MolliePrefix\GuzzleHttp\Psr7\FnStream(['write' => 'strlen']);
-        \MolliePrefix\GuzzleHttp\Psr7\Utils::copyToStream($this, $target);
+        $target = new \_PhpScoper5eddef0da618a\GuzzleHttp\Psr7\FnStream(['write' => 'strlen']);
+        copy_to_stream($this, $target);
         return $this->tell();
     }
 }

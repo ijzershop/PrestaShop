@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix;
+namespace _PhpScoper5eddef0da618a;
 
-class ProjectWithXsdExtension extends \MolliePrefix\ProjectExtension
+class ProjectWithXsdExtension extends \_PhpScoper5eddef0da618a\ProjectExtension
 {
     public function getXsdValidationBasePath()
     {
@@ -17,4 +17,4 @@ class ProjectWithXsdExtension extends \MolliePrefix\ProjectExtension
         return 'projectwithxsd';
     }
 }
-\class_alias('MolliePrefix\\ProjectWithXsdExtension', 'MolliePrefix\\ProjectWithXsdExtension', \false);
+\class_alias('_PhpScoper5eddef0da618a\\ProjectWithXsdExtension', 'ProjectWithXsdExtension', \false);

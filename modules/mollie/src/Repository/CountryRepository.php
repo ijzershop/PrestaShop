@@ -35,16 +35,10 @@
 
 namespace Mollie\Repository;
 
-use Country;
 use Db;
 
-final class CountryRepository extends AbstractRepository
+class CountryRepository
 {
-    public function __construct()
-    {
-        parent::__construct(Country::class);
-    }
-
     public function getMethodCountryIds($methodId)
     {
         $sql = 'SELECT id_country FROM `' . _DB_PREFIX_ . 'mol_country` WHERE id_method = "' . pSQL($methodId) . '"';
@@ -90,7 +84,7 @@ final class CountryRepository extends AbstractRepository
 
     public function getExcludedCountryIds($methodId)
     {
-        $sql = 'SELECT id_country
+        $sql = 'SELECT id_country 
                     FROM `' . _DB_PREFIX_ . 'mol_excluded_country`
                     WHERE id_method = "' . pSQL($methodId) . '"';
 
@@ -118,7 +112,7 @@ final class CountryRepository extends AbstractRepository
         $response = true;
         foreach ($idCountries as $idCountry) {
             $allCountries = 0;
-            $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'mol_excluded_country` (id_method, id_country, all_countries)
+            $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'mol_excluded_country` (id_method, id_country, all_countries) 
                 VALUES (';
 
             if ($idCountry === '0') {

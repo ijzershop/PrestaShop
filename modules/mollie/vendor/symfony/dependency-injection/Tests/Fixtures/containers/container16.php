@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix;
+namespace _PhpScoper5eddef0da618a;
 
-use MolliePrefix\Symfony\Component\DependencyInjection\ContainerBuilder;
-$container = new \MolliePrefix\Symfony\Component\DependencyInjection\ContainerBuilder();
-$container->register('foo', 'MolliePrefix\\FooClass\\Foo')->setDecoratedService('bar')->setPublic(\true);
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ContainerBuilder;
+$container = new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ContainerBuilder();
+$container->register('foo', '_PhpScoper5eddef0da618a\\FooClass\\Foo')->setDecoratedService('bar')->setPublic(\true);
 return $container;

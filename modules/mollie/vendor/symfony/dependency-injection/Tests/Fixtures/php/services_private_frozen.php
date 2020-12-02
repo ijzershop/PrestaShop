@@ -1,21 +1,21 @@
 <?php
 
-namespace MolliePrefix;
+namespace _PhpScoper5eddef0da618a;
 
-use MolliePrefix\Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
-use MolliePrefix\Symfony\Component\DependencyInjection\ContainerInterface;
-use MolliePrefix\Symfony\Component\DependencyInjection\Container;
-use MolliePrefix\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use MolliePrefix\Symfony\Component\DependencyInjection\Exception\LogicException;
-use MolliePrefix\Symfony\Component\DependencyInjection\Exception\RuntimeException;
-use MolliePrefix\Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ContainerInterface;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Container;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\LogicException;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 /**
  * This class has been auto-generated
  * by the Symfony Dependency Injection Component.
  *
  * @final since Symfony 3.3
  */
-class ProjectServiceContainer extends \MolliePrefix\Symfony\Component\DependencyInjection\Container
+class ProjectServiceContainer extends \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Container
 {
     private $parameters = [];
     private $targetDirs = [];
@@ -28,11 +28,11 @@ class ProjectServiceContainer extends \MolliePrefix\Symfony\Component\Dependency
     }
     public function getRemovedIds()
     {
-        return ['MolliePrefix\\Psr\\Container\\ContainerInterface' => \true, 'MolliePrefix\\Symfony\\Component\\DependencyInjection\\ContainerInterface' => \true, 'baz_service' => \true];
+        return ['_PhpScoper5eddef0da618a\\Psr\\Container\\ContainerInterface' => \true, '_PhpScoper5eddef0da618a\\Symfony\\Component\\DependencyInjection\\ContainerInterface' => \true, 'baz_service' => \true];
     }
     public function compile()
     {
-        throw new \MolliePrefix\Symfony\Component\DependencyInjection\Exception\LogicException('You cannot compile a dumped container that was already compiled.');
+        throw new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\LogicException('You cannot compile a dumped container that was already compiled.');
     }
     public function isCompiled()
     {
@@ -77,4 +77,4 @@ class ProjectServiceContainer extends \MolliePrefix\Symfony\Component\Dependency
  *
  * @final since Symfony 3.3
  */
-\class_alias('MolliePrefix\\ProjectServiceContainer', 'MolliePrefix\\ProjectServiceContainer', \false);
+\class_alias('_PhpScoper5eddef0da618a\\ProjectServiceContainer', 'ProjectServiceContainer', \false);

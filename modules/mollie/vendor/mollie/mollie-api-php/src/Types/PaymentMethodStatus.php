@@ -1,6 +1,6 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Types;
+namespace _PhpScoper5eddef0da618a\Mollie\Api\Types;
 
 class PaymentMethodStatus
 {

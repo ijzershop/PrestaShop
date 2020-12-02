@@ -8,11 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace MolliePrefix\Symfony\Component\ExpressionLanguage\Tests\Node;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\ExpressionLanguage\Tests\Node;
 
-use MolliePrefix\PHPUnit\Framework\TestCase;
-use MolliePrefix\Symfony\Component\ExpressionLanguage\Compiler;
-abstract class AbstractNodeTest extends \MolliePrefix\PHPUnit\Framework\TestCase
+use _PhpScoper5eddef0da618a\PHPUnit\Framework\TestCase;
+use _PhpScoper5eddef0da618a\Symfony\Component\ExpressionLanguage\Compiler;
+abstract class AbstractNodeTest extends \_PhpScoper5eddef0da618a\PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider getEvaluateData
@@ -27,7 +27,7 @@ abstract class AbstractNodeTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testCompile($expected, $node, $functions = [])
     {
-        $compiler = new \MolliePrefix\Symfony\Component\ExpressionLanguage\Compiler($functions);
+        $compiler = new \_PhpScoper5eddef0da618a\Symfony\Component\ExpressionLanguage\Compiler($functions);
         $node->compile($compiler);
         $this->assertSame($expected, $compiler->getSource());
     }

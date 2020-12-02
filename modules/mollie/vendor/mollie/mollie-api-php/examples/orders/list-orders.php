@@ -1,11 +1,11 @@
 <?php
 
-namespace MolliePrefix;
+namespace _PhpScoper5eddef0da618a;
 
 /*
  * List orders using the Mollie API.
  */
-use MolliePrefix\Mollie\Api\Resources\OrderCollection;
+use _PhpScoper5eddef0da618a\Mollie\Api\Resources\OrderCollection;
 try {
     /*
      * Initialize the Mollie API library with your API key or OAuth access token.
@@ -18,11 +18,11 @@ try {
      */
     echo '<ul>';
     $latestOrders = $mollie->orders->page();
-    \MolliePrefix\printOrders($latestOrders);
+    \_PhpScoper5eddef0da618a\printOrders($latestOrders);
     $previousOrders = $latestOrders->next();
-    \MolliePrefix\printOrders($previousOrders);
+    \_PhpScoper5eddef0da618a\printOrders($previousOrders);
     echo '</ul>';
-} catch (\MolliePrefix\Mollie\Api\Exceptions\ApiException $e) {
+} catch (\_PhpScoper5eddef0da618a\Mollie\Api\Exceptions\ApiException $e) {
     echo "API call failed: " . \htmlspecialchars($e->getMessage());
 }
 function printOrders($orders)

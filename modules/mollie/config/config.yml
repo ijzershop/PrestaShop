@@ -9,7 +9,6 @@ imports:
   - { resource: command.yml }
   - { resource: provider.yml }
   - { resource: adapter.yml }
-  - { resource: handler.yml }
 
 services:
   mollie:
@@ -27,7 +26,6 @@ services:
   Mollie\Install\Uninstall:
     arguments:
       - '@Mollie\Install\DatabaseTableUninstaller'
-      - '@Mollie\Repository\OrderStateRepository'
 
   Mollie\Install\DatabaseTableInstaller:
 

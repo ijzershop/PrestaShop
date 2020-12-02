@@ -1,10 +1,10 @@
 <?php
 
-namespace MolliePrefix\GuzzleHttp\Exception;
+namespace _PhpScoper5eddef0da618a\GuzzleHttp\Exception;
 
 /**
  * Exception when a client error is encountered (4xx codes)
  */
-class ClientException extends \MolliePrefix\GuzzleHttp\Exception\BadResponseException
+class ClientException extends \_PhpScoper5eddef0da618a\GuzzleHttp\Exception\BadResponseException
 {
 }

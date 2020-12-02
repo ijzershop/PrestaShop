@@ -1,6 +1,6 @@
 <?php
 
-namespace MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures\Container;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures\Container;
 
 class ConstructorWithoutArgumentsContainer
 {

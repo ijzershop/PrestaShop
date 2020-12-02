@@ -8,15 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace MolliePrefix\Symfony\Component\Cache\Tests\Simple;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\Cache\Tests\Simple;
 
-use MolliePrefix\Doctrine\DBAL\DriverManager;
-use MolliePrefix\Symfony\Component\Cache\Simple\PdoCache;
-use MolliePrefix\Symfony\Component\Cache\Tests\Traits\PdoPruneableTrait;
+use _PhpScoper5eddef0da618a\Doctrine\DBAL\DriverManager;
+use _PhpScoper5eddef0da618a\Doctrine\DBAL\Version;
+use _PhpScoper5eddef0da618a\Symfony\Component\Cache\Simple\PdoCache;
+use _PhpScoper5eddef0da618a\Symfony\Component\Cache\Tests\Traits\PdoPruneableTrait;
 /**
  * @group time-sensitive
  */
-class PdoDbalCacheTest extends \MolliePrefix\Symfony\Component\Cache\Tests\Simple\CacheTestCase
+class PdoDbalCacheTest extends \_PhpScoper5eddef0da618a\Symfony\Component\Cache\Tests\Simple\CacheTestCase
 {
     use PdoPruneableTrait;
     protected static $dbFile;
@@ -25,8 +26,11 @@ class PdoDbalCacheTest extends \MolliePrefix\Symfony\Component\Cache\Tests\Simpl
         if (!\extension_loaded('pdo_sqlite')) {
             self::markTestSkipped('Extension pdo_sqlite required.');
         }
+        if (\PHP_VERSION_ID >= 80000 && \class_exists(\_PhpScoper5eddef0da618a\Doctrine\DBAL\Version::class)) {
+            self::markTestSkipped('Doctrine DBAL 2.x is incompatible with PHP 8.');
+        }
         self::$dbFile = \tempnam(\sys_get_temp_dir(), 'sf_sqlite_cache');
-        $pool = new \MolliePrefix\Symfony\Component\Cache\Simple\PdoCache(\MolliePrefix\Doctrine\DBAL\DriverManager::getConnection(['driver' => 'pdo_sqlite', 'path' => self::$dbFile]));
+        $pool = new \_PhpScoper5eddef0da618a\Symfony\Component\Cache\Simple\PdoCache(\_PhpScoper5eddef0da618a\Doctrine\DBAL\DriverManager::getConnection(['driver' => 'pdo_sqlite', 'path' => self::$dbFile]));
         $pool->createTable();
     }
     public static function tearDownAfterClass()
@@ -35,6 +39,6 @@ class PdoDbalCacheTest extends \MolliePrefix\Symfony\Component\Cache\Tests\Simpl
     }
     public function createSimpleCache($defaultLifetime = 0)
     {
-        return new \MolliePrefix\Symfony\Component\Cache\Simple\PdoCache(\MolliePrefix\Doctrine\DBAL\DriverManager::getConnection(['driver' => 'pdo_sqlite', 'path' => self::$dbFile]), '', $defaultLifetime);
+        return new \_PhpScoper5eddef0da618a\Symfony\Component\Cache\Simple\PdoCache(\_PhpScoper5eddef0da618a\Doctrine\DBAL\DriverManager::getConnection(['driver' => 'pdo_sqlite', 'path' => self::$dbFile]), '', $defaultLifetime);
     }
 }

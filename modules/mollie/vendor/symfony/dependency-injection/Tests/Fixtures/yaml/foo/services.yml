@@ -1,4 +1,4 @@
 services:
-    MolliePrefix\MolliePrefix\MolliePrefix\AppBundle\Hello:
+    _PhpScoper5eddef0da618a\AppBundle\Hello:
         arguments:
-            - !service {class: MolliePrefix\MolliePrefix\MolliePrefix\AppBundle\World}
+            - !service {class: _PhpScoper5eddef0da618a\AppBundle\World}

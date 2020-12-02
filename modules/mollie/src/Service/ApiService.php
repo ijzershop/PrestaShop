@@ -35,20 +35,19 @@
 
 namespace Mollie\Service;
 
-use Mollie\Service\PaymentMethod\PaymentMethodSortProviderInterface;
-use MolliePrefix\Mollie\Api\Exceptions\ApiException;
-use MolliePrefix\Mollie\Api\Resources\Order as MollieOrderAlias;
+use _PhpScoper5eddef0da618a\Mollie\Api\Exceptions\ApiException;
+use _PhpScoper5eddef0da618a\Mollie\Api\MollieApiClient;
+use _PhpScoper5eddef0da618a\Mollie\Api\Resources\Order as MollieOrderAlias;
 use Configuration;
 use Context;
 use ErrorException;
 use Exception;
-use MolliePrefix\Mollie\Api\Resources\Payment;
+use _PhpScoper5eddef0da618a\Mollie\Api\Resources\Payment;
 use Mollie\Config\Config;
 use Mollie\Repository\CountryRepository;
 use Mollie\Repository\PaymentMethodRepository;
 use Mollie\Utility\CartPriceUtility;
 use Mollie\Utility\UrlPathUtility;
-use MolliePrefix\Mollie\Api\MollieApiClient;
 use MollieWebhookModuleFrontController;
 use MolPaymentMethod;
 use PrestaShop\PrestaShop\Adapter\CoreException;
@@ -71,16 +70,13 @@ class ApiService
      * @var CountryRepository
      */
     private $countryRepository;
-    private $paymentMethodSortProvider;
 
     public function __construct(
         PaymentMethodRepository $methodRepository,
-        CountryRepository $countryRepository,
-        PaymentMethodSortProviderInterface $paymentMethodSortProvider
+        CountryRepository $countryRepository
     ) {
         $this->methodRepository = $methodRepository;
         $this->countryRepository = $countryRepository;
-        $this->paymentMethodSortProvider = $paymentMethodSortProvider;
     }
 
     public function setApiKey($apiKey, $moduleVersion)
@@ -195,7 +191,6 @@ class ApiService
         $methods = $this->getMethodsObjForConfig($methods);
         $methods = $this->getMethodsCountriesForConfig($methods);
         $methods = $this->getExcludedCountriesForConfig($methods);
-        $methods = $this->paymentMethodSortProvider->getSortedInAscendingWayForConfiguration($methods);
 
         return $methods;
     }
@@ -398,14 +393,8 @@ class ApiService
             $order = null;
         }
 
-        /** @var Payment $payment */
         foreach ($mollieOrder->payments() as $payment) {
-            $amountRemaining = [
-                'value' => '0.00',
-                'currency' => $payment->amount->currency
-            ];
-            $order['availableRefundAmount'] = $payment->amountRemaining ?: $amountRemaining;
-            $order['details'] = $payment->details ?: new \stdClass();
+            $order['availableRefundAmount'] = $payment->amountRemaining;
         }
 
         return $order;

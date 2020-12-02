@@ -6,7 +6,7 @@
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-namespace MolliePrefix\PrestaShop\Decimal\Exception;
+namespace _PhpScoper5eddef0da618a\PrestaShop\Decimal\Exception;
 
 /**
  * Thrown when attempting to divide by zero

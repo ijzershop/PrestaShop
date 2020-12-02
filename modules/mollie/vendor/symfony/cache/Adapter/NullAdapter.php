@@ -8,24 +8,24 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace MolliePrefix\Symfony\Component\Cache\Adapter;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\Cache\Adapter;
 
-use MolliePrefix\Psr\Cache\CacheItemInterface;
-use MolliePrefix\Symfony\Component\Cache\CacheItem;
+use _PhpScoper5eddef0da618a\Psr\Cache\CacheItemInterface;
+use _PhpScoper5eddef0da618a\Symfony\Component\Cache\CacheItem;
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
  */
-class NullAdapter implements \MolliePrefix\Symfony\Component\Cache\Adapter\AdapterInterface
+class NullAdapter implements \_PhpScoper5eddef0da618a\Symfony\Component\Cache\Adapter\AdapterInterface
 {
     private $createCacheItem;
     public function __construct()
     {
         $this->createCacheItem = \Closure::bind(function ($key) {
-            $item = new \MolliePrefix\Symfony\Component\Cache\CacheItem();
+            $item = new \_PhpScoper5eddef0da618a\Symfony\Component\Cache\CacheItem();
             $item->key = $key;
             $item->isHit = \false;
             return $item;
-        }, $this, \MolliePrefix\Symfony\Component\Cache\CacheItem::class);
+        }, $this, \_PhpScoper5eddef0da618a\Symfony\Component\Cache\CacheItem::class);
     }
     /**
      * {@inheritdoc}
@@ -73,14 +73,14 @@ class NullAdapter implements \MolliePrefix\Symfony\Component\Cache\Adapter\Adapt
     /**
      * {@inheritdoc}
      */
-    public function save(\MolliePrefix\Psr\Cache\CacheItemInterface $item)
+    public function save(\_PhpScoper5eddef0da618a\Psr\Cache\CacheItemInterface $item)
     {
         return \false;
     }
     /**
      * {@inheritdoc}
      */
-    public function saveDeferred(\MolliePrefix\Psr\Cache\CacheItemInterface $item)
+    public function saveDeferred(\_PhpScoper5eddef0da618a\Psr\Cache\CacheItemInterface $item)
     {
         return \false;
     }

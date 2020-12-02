@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\Symfony\Component\DependencyInjection\Tests\Fixtures;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Tests\Fixtures;
 
-use MolliePrefix\Symfony\Component\DependencyInjection\Definition;
-class TestDefinition2 extends \MolliePrefix\Symfony\Component\DependencyInjection\Definition
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Definition;
+class TestDefinition2 extends \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Definition
 {
 }

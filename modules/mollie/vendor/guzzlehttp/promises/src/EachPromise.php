@@ -1,25 +1,25 @@
 <?php
 
-namespace MolliePrefix\GuzzleHttp\Promise;
+namespace _PhpScoper5eddef0da618a\GuzzleHttp\Promise;
 
 /**
  * Represents a promise that iterates over many promises and invokes
  * side-effect functions in the process.
  */
-class EachPromise implements \MolliePrefix\GuzzleHttp\Promise\PromisorInterface
+class EachPromise implements \_PhpScoper5eddef0da618a\GuzzleHttp\Promise\PromisorInterface
 {
     private $pending = [];
-    /** @var \Iterator|null */
+    /** @var \Iterator */
     private $iterable;
-    /** @var callable|int|null */
+    /** @var callable|int */
     private $concurrency;
-    /** @var callable|null */
+    /** @var callable */
     private $onFulfilled;
-    /** @var callable|null */
+    /** @var callable */
     private $onRejected;
-    /** @var Promise|null */
+    /** @var Promise */
     private $aggregate;
-    /** @var bool|null */
+    /** @var bool */
     private $mutex;
     /**
      * Configuration hash can include the following key value pairs:
@@ -39,12 +39,12 @@ class EachPromise implements \MolliePrefix\GuzzleHttp\Promise\PromisorInterface
      *   allowed number of outstanding concurrently executing promises,
      *   creating a capped pool of promises. There is no limit by default.
      *
-     * @param mixed $iterable Promises or values to iterate.
-     * @param array $config   Configuration options
+     * @param mixed    $iterable Promises or values to iterate.
+     * @param array    $config   Configuration options
      */
     public function __construct($iterable, array $config = [])
     {
-        $this->iterable = \MolliePrefix\GuzzleHttp\Promise\Create::iterFor($iterable);
+        $this->iterable = iter_for($iterable);
         if (isset($config['concurrency'])) {
             $this->concurrency = $config['concurrency'];
         }
@@ -55,7 +55,6 @@ class EachPromise implements \MolliePrefix\GuzzleHttp\Promise\PromisorInterface
             $this->onRejected = $config['rejected'];
         }
     }
-    /** @psalm-suppress InvalidNullableReturnType */
     public function promise()
     {
         if ($this->aggregate) {
@@ -63,41 +62,30 @@ class EachPromise implements \MolliePrefix\GuzzleHttp\Promise\PromisorInterface
         }
         try {
             $this->createPromise();
-            /** @psalm-assert Promise $this->aggregate */
             $this->iterable->rewind();
-            if (!$this->checkIfFinished()) {
-                $this->refillPending();
-            }
+            $this->refillPending();
         } catch (\Throwable $e) {
-            /**
-             * @psalm-suppress NullReference
-             * @phpstan-ignore-next-line
-             */
             $this->aggregate->reject($e);
         } catch (\Exception $e) {
-            /**
-             * @psalm-suppress NullReference
-             * @phpstan-ignore-next-line
-             */
             $this->aggregate->reject($e);
         }
-        /**
-         * @psalm-suppress NullableReturnStatement
-         * @phpstan-ignore-next-line
-         */
         return $this->aggregate;
     }
     private function createPromise()
     {
         $this->mutex = \false;
-        $this->aggregate = new \MolliePrefix\GuzzleHttp\Promise\Promise(function () {
+        $this->aggregate = new \_PhpScoper5eddef0da618a\GuzzleHttp\Promise\Promise(function () {
             \reset($this->pending);
+            if (empty($this->pending) && !$this->iterable->valid()) {
+                $this->aggregate->resolve(null);
+                return;
+            }
             // Consume a potentially fluctuating list of promises while
             // ensuring that indexes are maintained (precluding array_shift).
             while ($promise = \current($this->pending)) {
                 \next($this->pending);
                 $promise->wait();
-                if (\MolliePrefix\GuzzleHttp\Promise\Is::settled($this->aggregate)) {
+                if ($this->aggregate->getState() !== \_PhpScoper5eddef0da618a\GuzzleHttp\Promise\PromiseInterface::PENDING) {
                     return;
                 }
             }
@@ -138,21 +126,16 @@ class EachPromise implements \MolliePrefix\GuzzleHttp\Promise\PromisorInterface
         if (!$this->iterable || !$this->iterable->valid()) {
             return \false;
         }
-        $promise = \MolliePrefix\GuzzleHttp\Promise\Create::promiseFor($this->iterable->current());
-        $key = $this->iterable->key();
-        // Iterable keys may not be unique, so we add the promises at the end
-        // of the pending array and retrieve the array index being used
-        $this->pending[] = null;
-        \end($this->pending);
-        $idx = \key($this->pending);
-        $this->pending[$idx] = $promise->then(function ($value) use($idx, $key) {
+        $promise = promise_for($this->iterable->current());
+        $idx = $this->iterable->key();
+        $this->pending[$idx] = $promise->then(function ($value) use($idx) {
             if ($this->onFulfilled) {
-                \call_user_func($this->onFulfilled, $value, $key, $this->aggregate);
+                \call_user_func($this->onFulfilled, $value, $idx, $this->aggregate);
             }
             $this->step($idx);
-        }, function ($reason) use($idx, $key) {
+        }, function ($reason) use($idx) {
             if ($this->onRejected) {
-                \call_user_func($this->onRejected, $reason, $key, $this->aggregate);
+                \call_user_func($this->onRejected, $reason, $idx, $this->aggregate);
             }
             $this->step($idx);
         });
@@ -183,7 +166,7 @@ class EachPromise implements \MolliePrefix\GuzzleHttp\Promise\PromisorInterface
     private function step($idx)
     {
         // If the promise was already resolved, then ignore this step.
-        if (\MolliePrefix\GuzzleHttp\Promise\Is::settled($this->aggregate)) {
+        if ($this->aggregate->getState() !== \_PhpScoper5eddef0da618a\GuzzleHttp\Promise\PromiseInterface::PENDING) {
             return;
         }
         unset($this->pending[$idx]);

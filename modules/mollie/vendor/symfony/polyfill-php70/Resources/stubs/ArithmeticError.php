@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix;
+namespace _PhpScoper5eddef0da618a;
 
 class ArithmeticError extends \Error
 {
 }
-\class_alias('MolliePrefix\\ArithmeticError', 'ArithmeticError', \false);
+\class_alias('_PhpScoper5eddef0da618a\\ArithmeticError', 'ArithmeticError', \false);

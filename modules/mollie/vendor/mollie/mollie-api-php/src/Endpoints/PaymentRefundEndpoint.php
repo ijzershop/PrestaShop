@@ -1,11 +1,11 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Endpoints;
+namespace _PhpScoper5eddef0da618a\Mollie\Api\Endpoints;
 
-use MolliePrefix\Mollie\Api\Resources\Payment;
-use MolliePrefix\Mollie\Api\Resources\Refund;
-use MolliePrefix\Mollie\Api\Resources\RefundCollection;
-class PaymentRefundEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpointAbstract
+use _PhpScoper5eddef0da618a\Mollie\Api\Resources\Payment;
+use _PhpScoper5eddef0da618a\Mollie\Api\Resources\Refund;
+use _PhpScoper5eddef0da618a\Mollie\Api\Resources\RefundCollection;
+class PaymentRefundEndpoint extends \_PhpScoper5eddef0da618a\Mollie\Api\Endpoints\CollectionEndpointAbstract
 {
     protected $resourcePath = "payments_refunds";
     /**
@@ -15,7 +15,7 @@ class PaymentRefundEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\Collectio
      */
     protected function getResourceObject()
     {
-        return new \MolliePrefix\Mollie\Api\Resources\Refund($this->client);
+        return new \_PhpScoper5eddef0da618a\Mollie\Api\Resources\Refund($this->client);
     }
     /**
      * Get the collection object that is used by this API endpoint. Every API endpoint uses one type of collection object.
@@ -27,7 +27,7 @@ class PaymentRefundEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\Collectio
      */
     protected function getResourceCollectionObject($count, $_links)
     {
-        return new \MolliePrefix\Mollie\Api\Resources\RefundCollection($this->client, $count, $_links);
+        return new \_PhpScoper5eddef0da618a\Mollie\Api\Resources\RefundCollection($this->client, $count, $_links);
     }
     /**
      * @param Payment $payment
@@ -37,7 +37,7 @@ class PaymentRefundEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\Collectio
      * @return Refund
      * @throws \Mollie\Api\Exceptions\ApiException
      */
-    public function getFor(\MolliePrefix\Mollie\Api\Resources\Payment $payment, $refundId, array $parameters = [])
+    public function getFor(\_PhpScoper5eddef0da618a\Mollie\Api\Resources\Payment $payment, $refundId, array $parameters = [])
     {
         return $this->getForId($payment->id, $refundId, $parameters);
     }

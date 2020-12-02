@@ -1,6 +1,6 @@
 <?php
 
-namespace MolliePrefix;
+namespace _PhpScoper5eddef0da618a;
 
 if (!\is_callable('random_int')) {
     /**
@@ -52,13 +52,13 @@ if (!\is_callable('random_int')) {
          */
         try {
             /** @var int $min */
-            $min = \MolliePrefix\RandomCompat_intval($min);
+            $min = \_PhpScoper5eddef0da618a\RandomCompat_intval($min);
         } catch (\TypeError $ex) {
             throw new \TypeError('random_int(): $min must be an integer');
         }
         try {
             /** @var int $max */
-            $max = \MolliePrefix\RandomCompat_intval($max);
+            $max = \_PhpScoper5eddef0da618a\RandomCompat_intval($max);
         } catch (\TypeError $ex) {
             throw new \TypeError('random_int(): $max must be an integer');
         }

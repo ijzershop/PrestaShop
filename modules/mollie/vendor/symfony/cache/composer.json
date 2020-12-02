@@ -40,11 +40,16 @@
     },
     "autoload": {
         "psr-4": {
-            "MolliePrefix\\MolliePrefix\\MolliePrefix\\Symfony\\Component\\Cache\\": ""
+            "_PhpScoper5eddef0da618a\\Symfony\\Component\\Cache\\": ""
         },
         "exclude-from-classmap": [
             "\/Tests\/"
         ]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.4-dev"
+        }
+    }
 }

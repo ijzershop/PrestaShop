@@ -1,13 +1,13 @@
 <?php
 
-namespace MolliePrefix\GuzzleHttp\Psr7;
+namespace _PhpScoper5eddef0da618a\GuzzleHttp\Psr7;
 
-use MolliePrefix\Psr\Http\Message\StreamInterface;
+use _PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface;
 /**
  * Stream that when read returns bytes for a streaming multipart or
  * multipart/form-data stream.
  */
-class MultipartStream implements \MolliePrefix\Psr\Http\Message\StreamInterface
+class MultipartStream implements \_PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface
 {
     use StreamDecoratorTrait;
     private $boundary;
@@ -57,22 +57,22 @@ class MultipartStream implements \MolliePrefix\Psr\Http\Message\StreamInterface
      */
     protected function createStream(array $elements)
     {
-        $stream = new \MolliePrefix\GuzzleHttp\Psr7\AppendStream();
+        $stream = new \_PhpScoper5eddef0da618a\GuzzleHttp\Psr7\AppendStream();
         foreach ($elements as $element) {
             $this->addElement($stream, $element);
         }
         // Add the trailing boundary with CRLF
-        $stream->addStream(\MolliePrefix\GuzzleHttp\Psr7\Utils::streamFor("--{$this->boundary}--\r\n"));
+        $stream->addStream(stream_for("--{$this->boundary}--\r\n"));
         return $stream;
     }
-    private function addElement(\MolliePrefix\GuzzleHttp\Psr7\AppendStream $stream, array $element)
+    private function addElement(\_PhpScoper5eddef0da618a\GuzzleHttp\Psr7\AppendStream $stream, array $element)
     {
         foreach (['contents', 'name'] as $key) {
             if (!\array_key_exists($key, $element)) {
                 throw new \InvalidArgumentException("A '{$key}' key is required");
             }
         }
-        $element['contents'] = \MolliePrefix\GuzzleHttp\Psr7\Utils::streamFor($element['contents']);
+        $element['contents'] = stream_for($element['contents']);
         if (empty($element['filename'])) {
             $uri = $element['contents']->getMetadata('uri');
             if (\substr($uri, 0, 6) !== 'php://') {
@@ -80,14 +80,14 @@ class MultipartStream implements \MolliePrefix\Psr\Http\Message\StreamInterface
             }
         }
         list($body, $headers) = $this->createElement($element['name'], $element['contents'], isset($element['filename']) ? $element['filename'] : null, isset($element['headers']) ? $element['headers'] : []);
-        $stream->addStream(\MolliePrefix\GuzzleHttp\Psr7\Utils::streamFor($this->getHeaders($headers)));
+        $stream->addStream(stream_for($this->getHeaders($headers)));
         $stream->addStream($body);
-        $stream->addStream(\MolliePrefix\GuzzleHttp\Psr7\Utils::streamFor("\r\n"));
+        $stream->addStream(stream_for("\r\n"));
     }
     /**
      * @return array
      */
-    private function createElement($name, \MolliePrefix\Psr\Http\Message\StreamInterface $stream, $filename, array $headers)
+    private function createElement($name, \_PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface $stream, $filename, array $headers)
     {
         // Set a default content-disposition header if one was no provided
         $disposition = $this->getHeader($headers, 'content-disposition');
@@ -104,7 +104,7 @@ class MultipartStream implements \MolliePrefix\Psr\Http\Message\StreamInterface
         // Set a default Content-Type if one was not supplied
         $type = $this->getHeader($headers, 'content-type');
         if (!$type && ($filename === '0' || $filename)) {
-            if ($type = \MolliePrefix\GuzzleHttp\Psr7\MimeType::fromFilename($filename)) {
+            if ($type = mimetype_from_filename($filename)) {
                 $headers['Content-Type'] = $type;
             }
         }

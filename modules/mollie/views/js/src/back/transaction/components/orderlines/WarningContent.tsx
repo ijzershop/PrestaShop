@@ -48,7 +48,7 @@ export default function WarningContent(): ReactElement<{}> {
     let message = '';
     switch (orderWarning) {
         case "refunded" :
-            message = translations.refundSuccessMessage;
+            message = translations.refundWarning;
             break;
         case "shipped":
             message = translations.shipmentWarning;

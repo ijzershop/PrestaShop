@@ -1,6 +1,6 @@
 <?php
 
-namespace MolliePrefix;
+namespace _PhpScoper5eddef0da618a;
 
 /*
  * How to create a new customer in the Mollie API.
@@ -39,12 +39,12 @@ try {
     /*
      * In this example we store the order with its payment status in a database.
      */
-    \MolliePrefix\database_write($orderId, $payment->status);
+    \_PhpScoper5eddef0da618a\database_write($orderId, $payment->status);
     /*
      * Send the customer off to complete the payment.
      * This request should always be a GET, thus we enforce 303 http response code
      */
     \header("Location: " . $payment->getCheckoutUrl(), \true, 303);
-} catch (\MolliePrefix\Mollie\Api\Exceptions\ApiException $e) {
+} catch (\_PhpScoper5eddef0da618a\Mollie\Api\Exceptions\ApiException $e) {
     echo "API call failed: " . \htmlspecialchars($e->getMessage());
 }

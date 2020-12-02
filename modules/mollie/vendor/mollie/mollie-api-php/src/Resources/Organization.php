@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Resources;
+namespace _PhpScoper5eddef0da618a\Mollie\Api\Resources;
 
-class Organization extends \MolliePrefix\Mollie\Api\Resources\BaseResource
+class Organization extends \_PhpScoper5eddef0da618a\Mollie\Api\Resources\BaseResource
 {
     /**
      * Id of the payment method.

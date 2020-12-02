@@ -40,14 +40,7 @@ import {
   IUpdateViewportWidthAction, IUpdateWarningAction,
   ReduxActionTypes
 } from '@transaction/store/actions';
-import {
-  ICurrencies,
-  IMollieApiOrder,
-  IMollieApiPayment,
-  IMollieOrderConfig,
-  IMollieOrderDetails,
-  ITranslations
-} from '@shared/globals';
+import { ICurrencies, IMollieApiOrder, IMollieApiPayment, IMollieOrderConfig, ITranslations } from '@shared/globals';
 
 declare global {
   interface IMollieOrderState {

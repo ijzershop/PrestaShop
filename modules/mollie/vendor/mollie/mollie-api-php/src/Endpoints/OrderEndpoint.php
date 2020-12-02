@@ -1,11 +1,11 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Endpoints;
+namespace _PhpScoper5eddef0da618a\Mollie\Api\Endpoints;
 
-use MolliePrefix\Mollie\Api\Exceptions\ApiException;
-use MolliePrefix\Mollie\Api\Resources\Order;
-use MolliePrefix\Mollie\Api\Resources\OrderCollection;
-class OrderEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpointAbstract
+use _PhpScoper5eddef0da618a\Mollie\Api\Exceptions\ApiException;
+use _PhpScoper5eddef0da618a\Mollie\Api\Resources\Order;
+use _PhpScoper5eddef0da618a\Mollie\Api\Resources\OrderCollection;
+class OrderEndpoint extends \_PhpScoper5eddef0da618a\Mollie\Api\Endpoints\CollectionEndpointAbstract
 {
     protected $resourcePath = "orders";
     /**
@@ -20,7 +20,7 @@ class OrderEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpoin
      */
     protected function getResourceObject()
     {
-        return new \MolliePrefix\Mollie\Api\Resources\Order($this->client);
+        return new \_PhpScoper5eddef0da618a\Mollie\Api\Resources\Order($this->client);
     }
     /**
      * Get the collection object that is used by this API endpoint. Every API
@@ -33,7 +33,7 @@ class OrderEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpoin
      */
     protected function getResourceCollectionObject($count, $_links)
     {
-        return new \MolliePrefix\Mollie\Api\Resources\OrderCollection($this->client, $count, $_links);
+        return new \_PhpScoper5eddef0da618a\Mollie\Api\Resources\OrderCollection($this->client, $count, $_links);
     }
     /**
      * Creates a order in Mollie.
@@ -62,7 +62,7 @@ class OrderEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpoin
     public function get($orderId, array $parameters = [])
     {
         if (empty($orderId) || \strpos($orderId, self::RESOURCE_ID_PREFIX) !== 0) {
-            throw new \MolliePrefix\Mollie\Api\Exceptions\ApiException("Invalid order ID: '{$orderId}'. An order ID should start with '" . self::RESOURCE_ID_PREFIX . "'.");
+            throw new \_PhpScoper5eddef0da618a\Mollie\Api\Exceptions\ApiException("Invalid order ID: '{$orderId}'. An order ID should start with '" . self::RESOURCE_ID_PREFIX . "'.");
         }
         return parent::rest_read($orderId, $parameters);
     }

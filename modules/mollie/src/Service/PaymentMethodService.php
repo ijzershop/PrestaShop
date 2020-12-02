@@ -35,8 +35,7 @@
 
 namespace Mollie\Service;
 
-use Mollie\Utility\NumberUtility;
-use MolliePrefix\Mollie\Api\Types\PaymentMethod;
+use _PhpScoper5eddef0da618a\Mollie\Api\Types\PaymentMethod;
 use Address;
 use Cart;
 use Configuration;
@@ -51,14 +50,12 @@ use Mollie\DTO\PaymentData;
 use Mollie\Provider\CreditCardLogoProvider;
 use Mollie\Repository\MethodCountryRepository;
 use Mollie\Repository\PaymentMethodRepository;
-use Mollie\Service\PaymentMethod\PaymentMethodSortProviderInterface;
 use Mollie\Utility\CustomLogoUtility;
 use Mollie\Utility\EnvironmentUtility;
 use Mollie\Utility\LocaleUtility;
 use Mollie\Utility\PaymentFeeUtility;
 use Mollie\Utility\TextFormatUtility;
 use Mollie\Utility\TextGeneratorUtility;
-use Mollie\Provider\PhoneNumberProviderInterface;
 use MolPaymentMethod;
 use Order;
 use PrestaShopDatabaseException;
@@ -80,7 +77,7 @@ class PaymentMethodService
     /**
      * @var MethodCountryRepository
      */
-    private $methodCountryRepository;
+    private $countryRepository;
 
     /**
      * @var CartLinesService
@@ -102,32 +99,22 @@ class PaymentMethodService
      */
     private $creditCardLogoProvider;
 
-    private $paymentMethodSortProvider;
-
-    private $countryRepository;
-
-    private $phoneNumberProvider;
-
     public function __construct(
         Mollie $module,
         PaymentMethodRepository $methodRepository,
-        MethodCountryRepository $methodCountryRepository,
+        MethodCountryRepository $countryRepository,
         CartLinesService $cartLinesService,
         PaymentsTranslationService $paymentsTranslationService,
         CustomerService $customerService,
-        CreditCardLogoProvider $creditCardLogoProvider,
-        PaymentMethodSortProviderInterface $paymentMethodSortProvider,
-        PhoneNumberProviderInterface $phoneNumberProvider
+        CreditCardLogoProvider $creditCardLogoProvider
     ) {
         $this->module = $module;
         $this->methodRepository = $methodRepository;
-        $this->methodCountryRepository = $methodCountryRepository;
+        $this->countryRepository = $countryRepository;
         $this->cartLinesService = $cartLinesService;
         $this->paymentsTranslationService = $paymentsTranslationService;
         $this->customerService = $customerService;
         $this->creditCardLogoProvider = $creditCardLogoProvider;
-        $this->paymentMethodSortProvider = $paymentMethodSortProvider;
-        $this->phoneNumberProvider = $phoneNumberProvider;
     }
 
     public function savePaymentMethod($method)
@@ -177,9 +164,6 @@ class PaymentMethodService
         if (!$apiKey) {
             return [];
         }
-        if (false === Configuration::get(Config::MOLLIE_STATUS_AWAITING)) {
-            return [];
-        }
         $context = Context::getContext();
         $iso = Tools::strtolower($context->currency->iso_code);
         $apiEnvironment = Configuration::get(Config::MOLLIE_ENVIRONMENT);
@@ -217,23 +201,17 @@ class PaymentMethodService
                     unset($methods[$index]);
                 }
             }
-            if ($methodObj->id_method === Config::MOLLIE_VOUCHER_METHOD_ID) {
-                $totalOrderCost = $context->cart->getOrderTotal(true);
-                if (!$this->isVoucherPaymentAvailable($totalOrderCost)) {
-                    unset($methods[$index]);
-                }
-            }
         }
 
         if (version_compare(_PS_VERSION_, '1.6.0.9', '>')) {
             foreach ($methods as $index => $methodId) {
                 $methodObj = new MolPaymentMethod($methodId['id_payment_method']);
                 if ($methodObj->is_countries_applicable) {
-                    if (!$this->methodCountryRepository->checkIfMethodIsAvailableInCountry($methodObj->id_method, $country = Country::getByIso($countryCode))) {
+                    if (!$this->countryRepository->checkIfMethodIsAvailableInCountry($methodObj->id_method, $country = Country::getByIso($countryCode))) {
                         unset($methods[$index]);
                     }
                 } else {
-                    if ($this->methodCountryRepository->checkIfCountryIsExcluded($methodObj->id_method, $country = Country::getByIso($countryCode))) {
+                    if ($this->countryRepository->checkIfCountryIsExcluded($methodObj->id_method, $country = Country::getByIso($countryCode))) {
                         unset($methods[$index]);
                     }
                 }
@@ -251,8 +229,6 @@ class PaymentMethodService
                 }
             }
         }
-
-        $methods = $this->paymentMethodSortProvider->getSortedInAscendingWayForCheckout($methods);
 
         return $methods;
     }
@@ -384,14 +360,11 @@ class PaymentMethodService
 
             if (isset($cart->id_address_invoice)) {
                 $billing = new Address((int)$cart->id_address_invoice);
-
                 $orderData->setBillingAddress($billing);
-                $orderData->setBillingPhoneNumber($this->phoneNumberProvider->getFromAddress($billing));
             }
             if (isset($cart->id_address_delivery)) {
                 $shipping = new Address((int)$cart->id_address_delivery);
                 $orderData->setShippingAddress($shipping);
-                $orderData->setDeliveryPhoneNumber($this->phoneNumberProvider->getFromAddress($shipping));
             }
             $orderData->setOrderNumber($orderReference);
             $orderData->setLocale($this->getLocale($molPaymentMethod->method));
@@ -463,14 +436,5 @@ class PaymentMethodService
         $isSingleClickPaymentEnabled = Configuration::get(Config::MOLLIE_SINGLE_CLICK_PAYMENT);
 
         return !$isComponentsEnabled && $isSingleClickPaymentEnabled;
-    }
-
-    private function isVoucherPaymentAvailable($totalOrderCost)
-    {
-        if (NumberUtility::isLowerThan($totalOrderCost, Config::MOLLIE_VOUCHER_MINIMAL_AMOUNT)) {
-            return false;
-        }
-
-        return true;
     }
 }

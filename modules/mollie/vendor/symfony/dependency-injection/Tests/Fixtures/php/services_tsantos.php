@@ -1,38 +1,38 @@
 <?php
 
-namespace MolliePrefix;
+namespace _PhpScoper5eddef0da618a;
 
-use MolliePrefix\Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
-use MolliePrefix\Symfony\Component\DependencyInjection\ContainerInterface;
-use MolliePrefix\Symfony\Component\DependencyInjection\Container;
-use MolliePrefix\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use MolliePrefix\Symfony\Component\DependencyInjection\Exception\LogicException;
-use MolliePrefix\Symfony\Component\DependencyInjection\Exception\RuntimeException;
-use MolliePrefix\Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ContainerInterface;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Container;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\LogicException;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 /**
  * This class has been auto-generated
  * by the Symfony Dependency Injection Component.
  *
  * @final since Symfony 3.3
  */
-class ProjectServiceContainer extends \MolliePrefix\Symfony\Component\DependencyInjection\Container
+class ProjectServiceContainer extends \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Container
 {
     private $parameters = [];
     private $targetDirs = [];
     public function __construct()
     {
         $this->services = [];
-        $this->normalizedIds = ['MolliePrefix\\tsantos\\serializer\\serializerinterface' => 'MolliePrefix\\TSantos\\Serializer\\SerializerInterface'];
+        $this->normalizedIds = ['_PhpScoper5eddef0da618a\\tsantos\\serializer\\serializerinterface' => '_PhpScoper5eddef0da618a\\TSantos\\Serializer\\SerializerInterface'];
         $this->methodMap = ['tsantos_serializer' => 'getTsantosSerializerService'];
-        $this->aliases = ['MolliePrefix\\TSantos\\Serializer\\SerializerInterface' => 'tsantos_serializer'];
+        $this->aliases = ['_PhpScoper5eddef0da618a\\TSantos\\Serializer\\SerializerInterface' => 'tsantos_serializer'];
     }
     public function getRemovedIds()
     {
-        return ['MolliePrefix\\Psr\\Container\\ContainerInterface' => \true, 'MolliePrefix\\Symfony\\Component\\DependencyInjection\\ContainerInterface' => \true];
+        return ['_PhpScoper5eddef0da618a\\Psr\\Container\\ContainerInterface' => \true, '_PhpScoper5eddef0da618a\\Symfony\\Component\\DependencyInjection\\ContainerInterface' => \true];
     }
     public function compile()
     {
-        throw new \MolliePrefix\Symfony\Component\DependencyInjection\Exception\LogicException('You cannot compile a dumped container that was already compiled.');
+        throw new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\LogicException('You cannot compile a dumped container that was already compiled.');
     }
     public function isCompiled()
     {
@@ -50,15 +50,15 @@ class ProjectServiceContainer extends \MolliePrefix\Symfony\Component\Dependency
      */
     protected function getTsantosSerializerService()
     {
-        $a = new \MolliePrefix\TSantos\Serializer\NormalizerRegistry();
-        $b = new \MolliePrefix\TSantos\Serializer\Normalizer\CollectionNormalizer();
-        $c = new \MolliePrefix\TSantos\Serializer\EventDispatcher\EventDispatcher();
-        $c->addSubscriber(new \MolliePrefix\TSantos\SerializerBundle\EventListener\StopwatchListener(new \MolliePrefix\Symfony\Component\Stopwatch\Stopwatch(\true)));
-        $this->services['tsantos_serializer'] = $instance = new \MolliePrefix\TSantos\Serializer\EventEmitterSerializer(new \MolliePrefix\TSantos\Serializer\Encoder\JsonEncoder(), $a, $c);
+        $a = new \_PhpScoper5eddef0da618a\TSantos\Serializer\NormalizerRegistry();
+        $b = new \_PhpScoper5eddef0da618a\TSantos\Serializer\Normalizer\CollectionNormalizer();
+        $c = new \_PhpScoper5eddef0da618a\TSantos\Serializer\EventDispatcher\EventDispatcher();
+        $c->addSubscriber(new \_PhpScoper5eddef0da618a\TSantos\SerializerBundle\EventListener\StopwatchListener(new \_PhpScoper5eddef0da618a\Symfony\Component\Stopwatch\Stopwatch(\true)));
+        $this->services['tsantos_serializer'] = $instance = new \_PhpScoper5eddef0da618a\TSantos\Serializer\EventEmitterSerializer(new \_PhpScoper5eddef0da618a\TSantos\Serializer\Encoder\JsonEncoder(), $a, $c);
         $b->setSerializer($instance);
-        $d = new \MolliePrefix\TSantos\Serializer\Normalizer\JsonNormalizer();
+        $d = new \_PhpScoper5eddef0da618a\TSantos\Serializer\Normalizer\JsonNormalizer();
         $d->setSerializer($instance);
-        $a->add(new \MolliePrefix\TSantos\Serializer\Normalizer\ObjectNormalizer(new \MolliePrefix\TSantos\SerializerBundle\Serializer\CircularReferenceHandler()));
+        $a->add(new \_PhpScoper5eddef0da618a\TSantos\Serializer\Normalizer\ObjectNormalizer(new \_PhpScoper5eddef0da618a\TSantos\SerializerBundle\Serializer\CircularReferenceHandler()));
         $a->add($b);
         $a->add($d);
         return $instance;
@@ -70,4 +70,4 @@ class ProjectServiceContainer extends \MolliePrefix\Symfony\Component\Dependency
  *
  * @final since Symfony 3.3
  */
-\class_alias('MolliePrefix\\ProjectServiceContainer', 'MolliePrefix\\ProjectServiceContainer', \false);
+\class_alias('_PhpScoper5eddef0da618a\\ProjectServiceContainer', 'ProjectServiceContainer', \false);

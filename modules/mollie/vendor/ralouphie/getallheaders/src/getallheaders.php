@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix;
+namespace _PhpScoper5eddef0da618a;
 
-if (!\function_exists('MolliePrefix\\getallheaders')) {
+if (!\function_exists('_PhpScoper5eddef0da618a\\getallheaders')) {
     /**
      * Get all HTTP header key/values as an associative array for the current request.
      *

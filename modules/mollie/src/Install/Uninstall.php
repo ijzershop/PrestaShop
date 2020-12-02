@@ -37,7 +37,6 @@ namespace Mollie\Install;
 
 use Configuration;
 use Mollie\Config\Config;
-use Mollie\Repository\OrderStateRepository;
 use OrderState;
 use Tab;
 use Validate;
@@ -54,22 +53,14 @@ class Uninstall implements UninstallerInterface
      */
     private $databaseUninstaller;
 
-    /**
-     * @var OrderStateRepository
-     */
-    private $orderStateRepository;
-
-    public function __construct(
-        UninstallerInterface $databaseUninstaller,
-        OrderStateRepository $orderStateRepository
-    ) {
+    public function __construct(UninstallerInterface $databaseUninstaller)
+    {
         $this->databaseUninstaller = $databaseUninstaller;
-        $this->orderStateRepository = $orderStateRepository;
     }
 
     public function uninstall()
     {
-        $this->orderStateRepository->deleteStatuses();
+        $this->deleteMollieStatuses();
 
         $this->deleteConfig();
 
@@ -125,7 +116,7 @@ class Uninstall implements UninstallerInterface
             Config::MOLLIE_STATUS_COMPLETED,
             Config::MOLLIE_STATUS_ORDER_COMPLETED,
             Config::MOLLIE_MAIL_WHEN_COMPLETED,
-            Config::MOLLIE_STATUS_AWAITING,
+            Config::STATUS_MOLLIE_AWAITING,
         ];
 
         $this->deleteConfigurations($configurations);
@@ -138,6 +129,19 @@ class Uninstall implements UninstallerInterface
     {
         foreach ($configurations as $configuration) {
             Configuration::deleteByName($configuration);
+        }
+    }
+
+    private function deleteMollieStatuses()
+    {
+        foreach (Config::getMollieOrderStatuses() as $mollieStatus) {
+            $statusId = Configuration::get($mollieStatus);
+            $orderState = new OrderState($statusId);
+            if (!Validate::isLoadedObject($orderState)) {
+                return;
+            }
+            $orderState->deleted = 1;
+            $orderState->update();
         }
     }
 

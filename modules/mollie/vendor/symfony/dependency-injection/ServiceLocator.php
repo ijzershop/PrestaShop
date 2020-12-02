@@ -8,16 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace MolliePrefix\Symfony\Component\DependencyInjection;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection;
 
-use MolliePrefix\Psr\Container\ContainerInterface as PsrContainerInterface;
-use MolliePrefix\Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
-use MolliePrefix\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use _PhpScoper5eddef0da618a\Psr\Container\ContainerInterface as PsrContainerInterface;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
+use _PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 /**
  * @author Robin Chalas <robin.chalas@gmail.com>
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class ServiceLocator implements \MolliePrefix\Psr\Container\ContainerInterface
+class ServiceLocator implements \_PhpScoper5eddef0da618a\Psr\Container\ContainerInterface
 {
     private $factories;
     private $loading = [];
@@ -43,13 +43,13 @@ class ServiceLocator implements \MolliePrefix\Psr\Container\ContainerInterface
     public function get($id)
     {
         if (!isset($this->factories[$id])) {
-            throw new \MolliePrefix\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException($id, \end($this->loading) ?: null, null, [], $this->createServiceNotFoundMessage($id));
+            throw new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException($id, \end($this->loading) ?: null, null, [], $this->createServiceNotFoundMessage($id));
         }
         if (isset($this->loading[$id])) {
             $ids = \array_values($this->loading);
             $ids = \array_slice($this->loading, \array_search($id, $ids));
             $ids[] = $id;
-            throw new \MolliePrefix\Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException($id, $ids);
+            throw new \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException($id, $ids);
         }
         $this->loading[$id] = $id;
         try {
@@ -65,7 +65,7 @@ class ServiceLocator implements \MolliePrefix\Psr\Container\ContainerInterface
     /**
      * @internal
      */
-    public function withContext($externalId, \MolliePrefix\Symfony\Component\DependencyInjection\Container $container)
+    public function withContext($externalId, \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Container $container)
     {
         $locator = clone $this;
         $locator->externalId = $externalId;
@@ -90,7 +90,7 @@ class ServiceLocator implements \MolliePrefix\Psr\Container\ContainerInterface
             try {
                 $this->container->get($id);
                 $class = null;
-            } catch (\MolliePrefix\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException $e) {
+            } catch (\_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException $e) {
                 if ($e->getAlternatives()) {
                     $msg[] = \sprintf('did you mean %s? Anyway,', $this->formatAlternatives($e->getAlternatives(), 'or'));
                 } else {
@@ -105,7 +105,7 @@ class ServiceLocator implements \MolliePrefix\Psr\Container\ContainerInterface
         }
         if (!$class) {
             // no-op
-        } elseif (\is_subclass_of($class, \MolliePrefix\Symfony\Component\DependencyInjection\ServiceSubscriberInterface::class)) {
+        } elseif (\is_subclass_of($class, \_PhpScoper5eddef0da618a\Symfony\Component\DependencyInjection\ServiceSubscriberInterface::class)) {
             $msg[] = \sprintf('Unless you need extra laziness, try using dependency injection instead. Otherwise, you need to declare it using "%s::getSubscribedServices()".', \preg_replace('/([^\\\\]++\\\\)++/', '', $class));
         } else {
             $msg[] = 'Try using dependency injection instead.';

@@ -1,9 +1,9 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Endpoints;
+namespace _PhpScoper5eddef0da618a\Mollie\Api\Endpoints;
 
-use MolliePrefix\Mollie\Api\Resources\BaseResource;
-class WalletEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\EndpointAbstract
+use _PhpScoper5eddef0da618a\Mollie\Api\Resources\BaseResource;
+class WalletEndpoint extends \_PhpScoper5eddef0da618a\Mollie\Api\Endpoints\EndpointAbstract
 {
     /**
      * Get the object that is used by this API endpoint. Every API endpoint uses one type of object.

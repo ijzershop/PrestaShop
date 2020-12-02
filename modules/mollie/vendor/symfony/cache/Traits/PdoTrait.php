@@ -8,13 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace MolliePrefix\Symfony\Component\Cache\Traits;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\Cache\Traits;
 
-use MolliePrefix\Doctrine\DBAL\Connection;
-use MolliePrefix\Doctrine\DBAL\DBALException;
-use MolliePrefix\Doctrine\DBAL\Driver\ServerInfoAwareConnection;
-use MolliePrefix\Doctrine\DBAL\Schema\Schema;
-use MolliePrefix\Symfony\Component\Cache\Exception\InvalidArgumentException;
+use _PhpScoper5eddef0da618a\Doctrine\DBAL\Connection;
+use _PhpScoper5eddef0da618a\Doctrine\DBAL\DBALException;
+use _PhpScoper5eddef0da618a\Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use _PhpScoper5eddef0da618a\Doctrine\DBAL\Schema\Schema;
+use _PhpScoper5eddef0da618a\Symfony\Component\Cache\Exception\InvalidArgumentException;
 /**
  * @internal
  */
@@ -36,19 +36,19 @@ trait PdoTrait
     private function init($connOrDsn, $namespace, $defaultLifetime, array $options)
     {
         if (isset($namespace[0]) && \preg_match('#[^-+.A-Za-z0-9]#', $namespace, $match)) {
-            throw new \MolliePrefix\Symfony\Component\Cache\Exception\InvalidArgumentException(\sprintf('Namespace contains "%s" but only characters in [-+.A-Za-z0-9] are allowed.', $match[0]));
+            throw new \_PhpScoper5eddef0da618a\Symfony\Component\Cache\Exception\InvalidArgumentException(\sprintf('Namespace contains "%s" but only characters in [-+.A-Za-z0-9] are allowed.', $match[0]));
         }
         if ($connOrDsn instanceof \PDO) {
             if (\PDO::ERRMODE_EXCEPTION !== $connOrDsn->getAttribute(\PDO::ATTR_ERRMODE)) {
-                throw new \MolliePrefix\Symfony\Component\Cache\Exception\InvalidArgumentException(\sprintf('"%s" requires PDO error mode attribute be set to throw Exceptions (i.e. $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION)).', __CLASS__));
+                throw new \_PhpScoper5eddef0da618a\Symfony\Component\Cache\Exception\InvalidArgumentException(\sprintf('"%s" requires PDO error mode attribute be set to throw Exceptions (i.e. $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION)).', __CLASS__));
             }
             $this->conn = $connOrDsn;
-        } elseif ($connOrDsn instanceof \MolliePrefix\Doctrine\DBAL\Connection) {
+        } elseif ($connOrDsn instanceof \_PhpScoper5eddef0da618a\Doctrine\DBAL\Connection) {
             $this->conn = $connOrDsn;
         } elseif (\is_string($connOrDsn)) {
             $this->dsn = $connOrDsn;
         } else {
-            throw new \MolliePrefix\Symfony\Component\Cache\Exception\InvalidArgumentException(\sprintf('"%s" requires PDO or Doctrine\\DBAL\\Connection instance or DSN string as first argument, "%s" given.', __CLASS__, \is_object($connOrDsn) ? \get_class($connOrDsn) : \gettype($connOrDsn)));
+            throw new \_PhpScoper5eddef0da618a\Symfony\Component\Cache\Exception\InvalidArgumentException(\sprintf('"%s" requires PDO or Doctrine\\DBAL\\Connection instance or DSN string as first argument, "%s" given.', __CLASS__, \is_object($connOrDsn) ? \get_class($connOrDsn) : \gettype($connOrDsn)));
         }
         $this->table = isset($options['db_table']) ? $options['db_table'] : $this->table;
         $this->idCol = isset($options['db_id_col']) ? $options['db_id_col'] : $this->idCol;
@@ -75,12 +75,12 @@ trait PdoTrait
     {
         // connect if we are not yet
         $conn = $this->getConnection();
-        if ($conn instanceof \MolliePrefix\Doctrine\DBAL\Connection) {
+        if ($conn instanceof \_PhpScoper5eddef0da618a\Doctrine\DBAL\Connection) {
             $types = ['mysql' => 'binary', 'sqlite' => 'text', 'pgsql' => 'string', 'oci' => 'string', 'sqlsrv' => 'string'];
             if (!isset($types[$this->driver])) {
                 throw new \DomainException(\sprintf('Creating the cache table is currently not implemented for PDO driver "%s".', $this->driver));
             }
-            $schema = new \MolliePrefix\Doctrine\DBAL\Schema\Schema();
+            $schema = new \_PhpScoper5eddef0da618a\Doctrine\DBAL\Schema\Schema();
             $table = $schema->createTable($this->table);
             $table->addColumn($this->idCol, $types[$this->driver], ['length' => 255]);
             $table->addColumn($this->dataCol, 'blob', ['length' => 16777215]);
@@ -88,11 +88,7 @@ trait PdoTrait
             $table->addColumn($this->timeCol, 'integer', ['unsigned' => \true]);
             $table->setPrimaryKey([$this->idCol]);
             foreach ($schema->toSql($conn->getDatabasePlatform()) as $sql) {
-                if (\method_exists($conn, 'executeStatement')) {
-                    $conn->executeStatement($sql);
-                } else {
-                    $conn->exec($sql);
-                }
+                $conn->exec($sql);
             }
             return;
         }
@@ -120,11 +116,7 @@ trait PdoTrait
             default:
                 throw new \DomainException(\sprintf('Creating the cache table is currently not implemented for PDO driver "%s".', $this->driver));
         }
-        if (\method_exists($conn, 'executeStatement')) {
-            $conn->executeStatement($sql);
-        } else {
-            $conn->exec($sql);
-        }
+        $conn->exec($sql);
     }
     /**
      * {@inheritdoc}
@@ -156,14 +148,13 @@ trait PdoTrait
         foreach ($ids as $id) {
             $stmt->bindValue(++$i, $id);
         }
-        $result = $stmt->execute();
-        if (\is_object($result)) {
-            $result = $result->iterateNumeric();
+        $stmt->execute();
+        if (\method_exists($stmt, 'iterateNumeric')) {
+            $stmt = $stmt->iterateNumeric();
         } else {
             $stmt->setFetchMode(\PDO::FETCH_NUM);
-            $result = $stmt;
         }
-        foreach ($result as $row) {
+        foreach ($stmt as $row) {
             if (null === $row[1]) {
                 $expired[] = $row[0];
             } else {
@@ -190,8 +181,8 @@ trait PdoTrait
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bindValue(':id', $id);
         $stmt->bindValue(':time', \time(), \PDO::PARAM_INT);
-        $result = $stmt->execute();
-        return (bool) (\is_object($result) ? $result->fetchOne() : $stmt->fetchColumn());
+        $stmt->execute();
+        return (bool) $stmt->fetchColumn();
     }
     /**
      * {@inheritdoc}
@@ -208,11 +199,7 @@ trait PdoTrait
         } else {
             $sql = "DELETE FROM {$this->table} WHERE {$this->idCol} LIKE '{$namespace}%'";
         }
-        if (\method_exists($conn, 'executeStatement')) {
-            $conn->executeStatement($sql);
-        } else {
-            $conn->exec($sql);
-        }
+        $conn->exec($sql);
         return \true;
     }
     /**
@@ -296,11 +283,11 @@ trait PdoTrait
             $insertStmt->bindValue(':time', $now, \PDO::PARAM_INT);
         }
         foreach ($serialized as $id => $data) {
-            $result = $stmt->execute();
-            if (null === $driver && !(\is_object($result) ? $result->rowCount() : $stmt->rowCount())) {
+            $stmt->execute();
+            if (null === $driver && !$stmt->rowCount()) {
                 try {
                     $insertStmt->execute();
-                } catch (\MolliePrefix\Doctrine\DBAL\DBALException $e) {
+                } catch (\_PhpScoper5eddef0da618a\Doctrine\DBAL\DBALException $e) {
                 } catch (\PDOException $e) {
                     // A concurrent write won, let it be
                 }
@@ -321,35 +308,24 @@ trait PdoTrait
             if ($this->conn instanceof \PDO) {
                 $this->driver = $this->conn->getAttribute(\PDO::ATTR_DRIVER_NAME);
             } else {
-                $driver = $this->conn->getDriver();
-                switch (\true) {
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\AbstractMySQLDriver:
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\DrizzlePDOMySql\Driver:
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\Mysqli\Driver:
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\PDOMySql\Driver:
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\PDO\MySQL\Driver:
+                switch ($this->driver = $this->conn->getDriver()->getName()) {
+                    case 'mysqli':
+                    case 'pdo_mysql':
+                    case 'drizzle_pdo_mysql':
                         $this->driver = 'mysql';
                         break;
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\PDOSqlite\Driver:
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\PDO\SQLite\Driver:
+                    case 'pdo_sqlite':
                         $this->driver = 'sqlite';
                         break;
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\PDOPgSql\Driver:
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\PDO\PgSQL\Driver:
+                    case 'pdo_pgsql':
                         $this->driver = 'pgsql';
                         break;
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\OCI8\Driver:
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\PDOOracle\Driver:
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\PDO\OCI\Driver:
+                    case 'oci8':
+                    case 'pdo_oracle':
                         $this->driver = 'oci';
                         break;
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\SQLSrv\Driver:
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\PDOSqlsrv\Driver:
-                    case $driver instanceof \MolliePrefix\Doctrine\DBAL\Driver\PDO\SQLSrv\Driver:
+                    case 'pdo_sqlsrv':
                         $this->driver = 'sqlsrv';
-                        break;
-                    default:
-                        $this->driver = \get_class($driver);
                         break;
                 }
             }
@@ -365,7 +341,7 @@ trait PdoTrait
             $conn = $this->conn instanceof \PDO ? $this->conn : $this->conn->getWrappedConnection();
             if ($conn instanceof \PDO) {
                 $this->serverVersion = $conn->getAttribute(\PDO::ATTR_SERVER_VERSION);
-            } elseif ($conn instanceof \MolliePrefix\Doctrine\DBAL\Driver\ServerInfoAwareConnection) {
+            } elseif ($conn instanceof \_PhpScoper5eddef0da618a\Doctrine\DBAL\Driver\ServerInfoAwareConnection) {
                 $this->serverVersion = $conn->getServerVersion();
             } else {
                 $this->serverVersion = '0';

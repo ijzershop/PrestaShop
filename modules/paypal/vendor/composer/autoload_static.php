@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0384b104a9acbdf96f182658a4592131
+class ComposerStaticInit4a89ed68d03e714b6c971caa88772a39
 {
     public static $files = array (
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
@@ -440,10 +440,21 @@ class ComposerStaticInit0384b104a9acbdf96f182658a4592131
         'PaypalAddons\\classes\\API\\Response\\ResponseOrderRefund' => __DIR__ . '/../..' . '/classes/API/Response/ResponseOrderRefund.php',
         'PaypalAddons\\classes\\AbstractMethodPaypal' => __DIR__ . '/../..' . '/classes/AbstractMethodPaypal.php',
         'PaypalAddons\\classes\\AdminPayPalController' => __DIR__ . '/../..' . '/classes/AdminPayPalController.php',
+        'PaypalAddons\\classes\\Exception\\OrderFullyRefundedException' => __DIR__ . '/../..' . '/classes/Exception/OrderFullyRefundedException.php',
+        'PaypalAddons\\classes\\Exception\\RefundCalculationException' => __DIR__ . '/../..' . '/classes/Exception/RefundCalculationException.php',
         'PaypalAddons\\classes\\PaypalException' => __DIR__ . '/../..' . '/classes/PaypalException.php',
+        'PaypalAddons\\classes\\Shortcut\\Form\\Definition\\CustomizeButtonStyleSectionDefinition' => __DIR__ . '/../..' . '/classes/Shortcut/Form/Definition/CustomizeButtonStyleSectionDefinition.php',
+        'PaypalAddons\\classes\\Shortcut\\Form\\Field\\FieldInteface' => __DIR__ . '/../..' . '/classes/Shortcut/Form/Field/FieldInteface.php',
+        'PaypalAddons\\classes\\Shortcut\\Form\\Field\\InputChain' => __DIR__ . '/../..' . '/classes/Shortcut/Form/Field/InputChain.php',
+        'PaypalAddons\\classes\\Shortcut\\Form\\Field\\Select' => __DIR__ . '/../..' . '/classes/Shortcut/Form/Field/Select.php',
+        'PaypalAddons\\classes\\Shortcut\\Form\\Field\\SelectOption' => __DIR__ . '/../..' . '/classes/Shortcut/Form/Field/SelectOption.php',
+        'PaypalAddons\\classes\\Shortcut\\Form\\Field\\TextInput' => __DIR__ . '/../..' . '/classes/Shortcut/Form/Field/TextInput.php',
         'PaypalAddons\\classes\\Shortcut\\ShortcutAbstract' => __DIR__ . '/../..' . '/classes/Shortcut/ShortcutAbstract.php',
         'PaypalAddons\\classes\\Shortcut\\ShortcutCart' => __DIR__ . '/../..' . '/classes/Shortcut/ShortcutCart.php',
+        'PaypalAddons\\classes\\Shortcut\\ShortcutConfiguration' => __DIR__ . '/../..' . '/classes/Shortcut/ShortcutConfiguration.php',
+        'PaypalAddons\\classes\\Shortcut\\ShortcutPreview' => __DIR__ . '/../..' . '/classes/Shortcut/ShortcutPreview.php',
         'PaypalAddons\\classes\\Shortcut\\ShortcutProduct' => __DIR__ . '/../..' . '/classes/Shortcut/ShortcutProduct.php',
+        'PaypalAddons\\classes\\Shortcut\\ShortcutSignup' => __DIR__ . '/../..' . '/classes/Shortcut/ShortcutSignup.php',
         'PaypalAddons\\services\\ServicePaypalIpn' => __DIR__ . '/../..' . '/services/ServicePaypalIpn.php',
         'PaypalAddons\\services\\ServicePaypalLog' => __DIR__ . '/../..' . '/services/ServicePaypalLog.php',
         'PaypalAddons\\services\\ServicePaypalOrder' => __DIR__ . '/../..' . '/services/ServicePaypalOrder.php',
@@ -510,10 +521,10 @@ class ComposerStaticInit0384b104a9acbdf96f182658a4592131
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0384b104a9acbdf96f182658a4592131::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0384b104a9acbdf96f182658a4592131::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit0384b104a9acbdf96f182658a4592131::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit0384b104a9acbdf96f182658a4592131::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit4a89ed68d03e714b6c971caa88772a39::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit4a89ed68d03e714b6c971caa88772a39::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit4a89ed68d03e714b6c971caa88772a39::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit4a89ed68d03e714b6c971caa88772a39::$classMap;
 
         }, null, ClassLoader::class);
     }

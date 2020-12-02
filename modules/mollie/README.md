@@ -191,7 +191,3 @@ Copyright (c) 2013-2019, Mollie B.V.
 
 Do you have problems with the installation or do you think the module contains a bug? Send an email
 to info@mollie.com with a accurate description of the problem.
-
-# release preparation #
-
-A pull request and merge generates zip archive which can be used for release.

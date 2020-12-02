@@ -32,8 +32,6 @@
  * @link       https://www.mollie.nl
  */
 
-use Mollie\Install\Installer;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -42,7 +40,7 @@ if (!defined('_PS_VERSION_')) {
  * @param Mollie $module
  * @return bool
  */
-function upgrade_module_4_0_0(Mollie $module)
+function upgrade_module_4_0_0()
 {
     $sql = [];
     $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'mol_payment_method` (

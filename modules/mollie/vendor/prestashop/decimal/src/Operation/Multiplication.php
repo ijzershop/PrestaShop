@@ -6,9 +6,9 @@
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-namespace MolliePrefix\PrestaShop\Decimal\Operation;
+namespace _PhpScoper5eddef0da618a\PrestaShop\Decimal\Operation;
 
-use MolliePrefix\PrestaShop\Decimal\DecimalNumber;
+use _PhpScoper5eddef0da618a\PrestaShop\Decimal\Number as DecimalNumber;
 /**
  * Computes the multiplication between two decimal numbers
  */
@@ -22,9 +22,9 @@ class Multiplication
      *
      * @return DecimalNumber Result of the multiplication
      */
-    public function compute(\MolliePrefix\PrestaShop\Decimal\DecimalNumber $a, \MolliePrefix\PrestaShop\Decimal\DecimalNumber $b)
+    public function compute(\_PhpScoper5eddef0da618a\PrestaShop\Decimal\Number $a, \_PhpScoper5eddef0da618a\PrestaShop\Decimal\Number $b)
     {
-        if (\function_exists('MolliePrefix\\bcmul')) {
+        if (\function_exists('_PhpScoper5eddef0da618a\\bcmul')) {
             return $this->computeUsingBcMath($a, $b);
         }
         return $this->computeWithoutBcMath($a, $b);
@@ -37,11 +37,11 @@ class Multiplication
      *
      * @return DecimalNumber Result of the multiplication
      */
-    public function computeUsingBcMath(\MolliePrefix\PrestaShop\Decimal\DecimalNumber $a, \MolliePrefix\PrestaShop\Decimal\DecimalNumber $b)
+    public function computeUsingBcMath(\_PhpScoper5eddef0da618a\PrestaShop\Decimal\Number $a, \_PhpScoper5eddef0da618a\PrestaShop\Decimal\Number $b)
     {
         $precision1 = $a->getPrecision();
         $precision2 = $b->getPrecision();
-        return new \MolliePrefix\PrestaShop\Decimal\DecimalNumber((string) \bcmul($a, $b, $precision1 + $precision2));
+        return new \_PhpScoper5eddef0da618a\PrestaShop\Decimal\Number((string) bcmul($a, $b, $precision1 + $precision2));
     }
     /**
      * Performs the multiplication without BC Math
@@ -51,13 +51,13 @@ class Multiplication
      *
      * @return DecimalNumber Result of the multiplication
      */
-    public function computeWithoutBcMath(\MolliePrefix\PrestaShop\Decimal\DecimalNumber $a, \MolliePrefix\PrestaShop\Decimal\DecimalNumber $b)
+    public function computeWithoutBcMath(\_PhpScoper5eddef0da618a\PrestaShop\Decimal\Number $a, \_PhpScoper5eddef0da618a\PrestaShop\Decimal\Number $b)
     {
         $aAsString = (string) $a;
         $bAsString = (string) $b;
         // optimization: if either one is zero, the result is zero
         if ('0' === $aAsString || '0' === $bAsString) {
-            return new \MolliePrefix\PrestaShop\Decimal\DecimalNumber('0');
+            return new \_PhpScoper5eddef0da618a\PrestaShop\Decimal\Number('0');
         }
         // optimization: if either one is one, the result is the other one
         if ('1' === $aAsString) {
@@ -71,7 +71,7 @@ class Multiplication
         // a multiplication has at most as many decimal figures as the sum
         // of the number of decimal figures the factors have
         $exponent = $a->getExponent() + $b->getExponent();
-        return new \MolliePrefix\PrestaShop\Decimal\DecimalNumber($sign . $result, $exponent);
+        return new \_PhpScoper5eddef0da618a\PrestaShop\Decimal\Number($sign . $result, $exponent);
     }
     /**
      * Multiplies two integer numbers as strings.
@@ -93,7 +93,7 @@ class Multiplication
             return $this->multiplyStrings($bottomNumber, $topNumber);
         }
         $stepNumber = 0;
-        $result = new \MolliePrefix\PrestaShop\Decimal\DecimalNumber('0');
+        $result = new \_PhpScoper5eddef0da618a\PrestaShop\Decimal\Number('0');
         for ($i = $bottomNumberLength - 1; $i >= 0; $i--) {
             $carryOver = 0;
             $partialResult = '';
@@ -120,7 +120,7 @@ class Multiplication
             $padding = \str_pad('', $stepNumber, '0');
             $partialResult = $padding . $partialResult;
             // add to the result
-            $result = $result->plus(new \MolliePrefix\PrestaShop\Decimal\DecimalNumber(\strrev($partialResult)));
+            $result = $result->plus(new \_PhpScoper5eddef0da618a\PrestaShop\Decimal\Number(\strrev($partialResult)));
             $stepNumber++;
         }
         return (string) $result;

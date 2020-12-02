@@ -1,6 +1,6 @@
 <?php
 
-namespace MolliePrefix\Psr\Http\Message;
+namespace _PhpScoper5eddef0da618a\Psr\Http\Message;
 
 /**
  * Value object representing a URI.

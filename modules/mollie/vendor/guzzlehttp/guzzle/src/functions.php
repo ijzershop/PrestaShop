@@ -1,11 +1,11 @@
 <?php
 
-namespace MolliePrefix\GuzzleHttp;
+namespace _PhpScoper5eddef0da618a\GuzzleHttp;
 
-use MolliePrefix\GuzzleHttp\Handler\CurlHandler;
-use MolliePrefix\GuzzleHttp\Handler\CurlMultiHandler;
-use MolliePrefix\GuzzleHttp\Handler\Proxy;
-use MolliePrefix\GuzzleHttp\Handler\StreamHandler;
+use _PhpScoper5eddef0da618a\GuzzleHttp\Handler\CurlHandler;
+use _PhpScoper5eddef0da618a\GuzzleHttp\Handler\CurlMultiHandler;
+use _PhpScoper5eddef0da618a\GuzzleHttp\Handler\Proxy;
+use _PhpScoper5eddef0da618a\GuzzleHttp\Handler\StreamHandler;
 /**
  * Expands a URI template
  *
@@ -18,12 +18,12 @@ function uri_template($template, array $variables)
 {
     if (\extension_loaded('uri_template')) {
         // @codeCoverageIgnoreStart
-        return \MolliePrefix\uri_template($template, $variables);
+        return \_PhpScoper5eddef0da618a\uri_template($template, $variables);
         // @codeCoverageIgnoreEnd
     }
     static $uriTemplate;
     if (!$uriTemplate) {
-        $uriTemplate = new \MolliePrefix\GuzzleHttp\UriTemplate();
+        $uriTemplate = new \_PhpScoper5eddef0da618a\GuzzleHttp\UriTemplate();
     }
     return $uriTemplate->expand($template, $variables);
 }
@@ -93,14 +93,14 @@ function choose_handler()
 {
     $handler = null;
     if (\function_exists('curl_multi_exec') && \function_exists('curl_exec')) {
-        $handler = \MolliePrefix\GuzzleHttp\Handler\Proxy::wrapSync(new \MolliePrefix\GuzzleHttp\Handler\CurlMultiHandler(), new \MolliePrefix\GuzzleHttp\Handler\CurlHandler());
+        $handler = \_PhpScoper5eddef0da618a\GuzzleHttp\Handler\Proxy::wrapSync(new \_PhpScoper5eddef0da618a\GuzzleHttp\Handler\CurlMultiHandler(), new \_PhpScoper5eddef0da618a\GuzzleHttp\Handler\CurlHandler());
     } elseif (\function_exists('curl_exec')) {
-        $handler = new \MolliePrefix\GuzzleHttp\Handler\CurlHandler();
+        $handler = new \_PhpScoper5eddef0da618a\GuzzleHttp\Handler\CurlHandler();
     } elseif (\function_exists('curl_multi_exec')) {
-        $handler = new \MolliePrefix\GuzzleHttp\Handler\CurlMultiHandler();
+        $handler = new \_PhpScoper5eddef0da618a\GuzzleHttp\Handler\CurlMultiHandler();
     }
     if (\ini_get('allow_url_fopen')) {
-        $handler = $handler ? \MolliePrefix\GuzzleHttp\Handler\Proxy::wrapStreaming($handler, new \MolliePrefix\GuzzleHttp\Handler\StreamHandler()) : new \MolliePrefix\GuzzleHttp\Handler\StreamHandler();
+        $handler = $handler ? \_PhpScoper5eddef0da618a\GuzzleHttp\Handler\Proxy::wrapStreaming($handler, new \_PhpScoper5eddef0da618a\GuzzleHttp\Handler\StreamHandler()) : new \_PhpScoper5eddef0da618a\GuzzleHttp\Handler\StreamHandler();
     } elseif (!$handler) {
         throw new \RuntimeException('GuzzleHttp requires cURL, the ' . 'allow_url_fopen ini setting, or a custom HTTP handler.');
     }
@@ -115,7 +115,7 @@ function default_user_agent()
 {
     static $defaultAgent = '';
     if (!$defaultAgent) {
-        $defaultAgent = 'GuzzleHttp/' . \MolliePrefix\GuzzleHttp\Client::VERSION;
+        $defaultAgent = 'GuzzleHttp/' . \_PhpScoper5eddef0da618a\GuzzleHttp\Client::VERSION;
         if (\extension_loaded('curl') && \function_exists('curl_version')) {
             $defaultAgent .= ' curl/' . \curl_version()['version'];
         }
@@ -269,7 +269,7 @@ function json_decode($json, $assoc = \false, $depth = 512, $options = 0)
 {
     $data = \json_decode($json, $assoc, $depth, $options);
     if (\JSON_ERROR_NONE !== \json_last_error()) {
-        throw new \MolliePrefix\GuzzleHttp\Exception\InvalidArgumentException('json_decode error: ' . \json_last_error_msg());
+        throw new \_PhpScoper5eddef0da618a\GuzzleHttp\Exception\InvalidArgumentException('json_decode error: ' . \json_last_error_msg());
     }
     return $data;
 }
@@ -288,7 +288,7 @@ function json_encode($value, $options = 0, $depth = 512)
 {
     $json = \json_encode($value, $options, $depth);
     if (\JSON_ERROR_NONE !== \json_last_error()) {
-        throw new \MolliePrefix\GuzzleHttp\Exception\InvalidArgumentException('json_encode error: ' . \json_last_error_msg());
+        throw new \_PhpScoper5eddef0da618a\GuzzleHttp\Exception\InvalidArgumentException('json_encode error: ' . \json_last_error_msg());
     }
     return $json;
 }

@@ -1,13 +1,13 @@
 <?php
 
-namespace MolliePrefix\GuzzleHttp\Psr7;
+namespace _PhpScoper5eddef0da618a\GuzzleHttp\Psr7;
 
-use MolliePrefix\Psr\Http\Message\ResponseInterface;
-use MolliePrefix\Psr\Http\Message\StreamInterface;
+use _PhpScoper5eddef0da618a\Psr\Http\Message\ResponseInterface;
+use _PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface;
 /**
  * PSR-7 response implementation.
  */
-class Response implements \MolliePrefix\Psr\Http\Message\ResponseInterface
+class Response implements \_PhpScoper5eddef0da618a\Psr\Http\Message\ResponseInterface
 {
     use MessageTrait;
     /** @var array Map of standard HTTP status code/reason phrases */
@@ -30,7 +30,7 @@ class Response implements \MolliePrefix\Psr\Http\Message\ResponseInterface
         $this->assertStatusCodeRange($status);
         $this->statusCode = $status;
         if ($body !== '' && $body !== null) {
-            $this->stream = \MolliePrefix\GuzzleHttp\Psr7\Utils::streamFor($body);
+            $this->stream = stream_for($body);
         }
         $this->setHeaders($headers);
         if ($reason == '' && isset(self::$phrases[$this->statusCode])) {
@@ -58,7 +58,7 @@ class Response implements \MolliePrefix\Psr\Http\Message\ResponseInterface
         if ($reasonPhrase == '' && isset(self::$phrases[$new->statusCode])) {
             $reasonPhrase = self::$phrases[$new->statusCode];
         }
-        $new->reasonPhrase = (string) $reasonPhrase;
+        $new->reasonPhrase = $reasonPhrase;
         return $new;
     }
     private function assertStatusCodeIsInteger($statusCode)

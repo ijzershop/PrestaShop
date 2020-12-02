@@ -1,14 +1,14 @@
 <?php
 
-namespace MolliePrefix\GuzzleHttp\Psr7;
+namespace _PhpScoper5eddef0da618a\GuzzleHttp\Psr7;
 
-use MolliePrefix\Psr\Http\Message\StreamInterface;
+use _PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface;
 /**
  * PHP stream implementation.
  *
  * @var $stream
  */
-class Stream implements \MolliePrefix\Psr\Http\Message\StreamInterface
+class Stream implements \_PhpScoper5eddef0da618a\Psr\Http\Message\StreamInterface
 {
     /**
      * Resource modes.
@@ -67,10 +67,8 @@ class Stream implements \MolliePrefix\Psr\Http\Message\StreamInterface
     public function __toString()
     {
         try {
-            if ($this->isSeekable()) {
-                $this->seek(0);
-            }
-            return $this->getContents();
+            $this->seek(0);
+            return (string) \stream_get_contents($this->stream);
         } catch (\Exception $e) {
             return '';
         }

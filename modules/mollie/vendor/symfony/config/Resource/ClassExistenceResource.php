@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace MolliePrefix\Symfony\Component\Config\Resource;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\Config\Resource;
 
 /**
  * ClassExistenceResource represents a class existence.
@@ -18,7 +18,7 @@ namespace MolliePrefix\Symfony\Component\Config\Resource;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class ClassExistenceResource implements \MolliePrefix\Symfony\Component\Config\Resource\SelfCheckingResourceInterface, \Serializable
+class ClassExistenceResource implements \_PhpScoper5eddef0da618a\Symfony\Component\Config\Resource\SelfCheckingResourceInterface, \Serializable
 {
     private $resource;
     private $exists;
@@ -160,16 +160,11 @@ class ClassExistenceResource implements \MolliePrefix\Symfony\Component\Config\R
         }
         $trace = \debug_backtrace();
         $autoloadFrame = ['function' => 'spl_autoload_call', 'args' => [$class]];
-        if (\PHP_VERSION_ID >= 80000 && isset($trace[1])) {
-            $callerFrame = $trace[1];
-            $i = 2;
-        } elseif (\false !== ($i = \array_search($autoloadFrame, $trace, \true))) {
-            $callerFrame = $trace[++$i];
-        } else {
+        if (\false === ($i = \array_search($autoloadFrame, $trace, \true))) {
             throw $e;
         }
-        if (isset($callerFrame['function']) && !isset($callerFrame['class'])) {
-            switch ($callerFrame['function']) {
+        if (isset($trace[++$i]['function']) && !isset($trace[$i]['class'])) {
+            switch ($trace[$i]['function']) {
                 case 'get_class_methods':
                 case 'get_class_vars':
                 case 'get_parent_class':
@@ -186,7 +181,7 @@ class ClassExistenceResource implements \MolliePrefix\Symfony\Component\Config\R
                 case 'is_callable':
                     return;
             }
-            $props = ['file' => isset($callerFrame['file']) ? $callerFrame['file'] : null, 'line' => isset($callerFrame['line']) ? $callerFrame['line'] : null, 'trace' => \array_slice($trace, 1 + $i)];
+            $props = ['file' => isset($trace[$i]['file']) ? $trace[$i]['file'] : null, 'line' => isset($trace[$i]['line']) ? $trace[$i]['line'] : null, 'trace' => \array_slice($trace, 1 + $i)];
             foreach ($props as $p => $v) {
                 if (null !== $v) {
                     $r = new \ReflectionProperty('Exception', $p);

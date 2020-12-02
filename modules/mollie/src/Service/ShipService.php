@@ -35,9 +35,9 @@
 
 namespace Mollie\Service;
 
-use MolliePrefix\Mollie\Api\Exceptions\ApiException;
+use _PhpScoper5eddef0da618a\Mollie\Api\Exceptions\ApiException;
 use Mollie;
-use MolliePrefix\Mollie\Api\Resources\Order as MollieOrderAlias;
+use _PhpScoper5eddef0da618a\Mollie\Api\Resources\Order as MollieOrderAlias;
 
 class ShipService
 {

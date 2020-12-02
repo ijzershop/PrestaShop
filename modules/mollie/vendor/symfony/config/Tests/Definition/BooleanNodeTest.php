@@ -8,18 +8,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace MolliePrefix\Symfony\Component\Config\Tests\Definition;
+namespace _PhpScoper5eddef0da618a\Symfony\Component\Config\Tests\Definition;
 
-use MolliePrefix\PHPUnit\Framework\TestCase;
-use MolliePrefix\Symfony\Component\Config\Definition\BooleanNode;
-class BooleanNodeTest extends \MolliePrefix\PHPUnit\Framework\TestCase
+use _PhpScoper5eddef0da618a\PHPUnit\Framework\TestCase;
+use _PhpScoper5eddef0da618a\Symfony\Component\Config\Definition\BooleanNode;
+class BooleanNodeTest extends \_PhpScoper5eddef0da618a\PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider getValidValues
      */
     public function testNormalize($value)
     {
-        $node = new \MolliePrefix\Symfony\Component\Config\Definition\BooleanNode('test');
+        $node = new \_PhpScoper5eddef0da618a\Symfony\Component\Config\Definition\BooleanNode('test');
         $this->assertSame($value, $node->normalize($value));
     }
     /**
@@ -29,7 +29,7 @@ class BooleanNodeTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testValidNonEmptyValues($value)
     {
-        $node = new \MolliePrefix\Symfony\Component\Config\Definition\BooleanNode('test');
+        $node = new \_PhpScoper5eddef0da618a\Symfony\Component\Config\Definition\BooleanNode('test');
         $node->setAllowEmptyValue(\false);
         $this->assertSame($value, $node->finalize($value));
     }
@@ -42,8 +42,8 @@ class BooleanNodeTest extends \MolliePrefix\PHPUnit\Framework\TestCase
      */
     public function testNormalizeThrowsExceptionOnInvalidValues($value)
     {
-        $this->expectException('MolliePrefix\\Symfony\\Component\\Config\\Definition\\Exception\\InvalidTypeException');
-        $node = new \MolliePrefix\Symfony\Component\Config\Definition\BooleanNode('test');
+        $this->expectException('_PhpScoper5eddef0da618a\\Symfony\\Component\\Config\\Definition\\Exception\\InvalidTypeException');
+        $node = new \_PhpScoper5eddef0da618a\Symfony\Component\Config\Definition\BooleanNode('test');
         $node->normalize($value);
     }
     public function getInvalidValues()

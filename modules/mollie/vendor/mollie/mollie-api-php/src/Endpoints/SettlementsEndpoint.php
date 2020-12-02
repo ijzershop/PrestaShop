@@ -1,11 +1,11 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Endpoints;
+namespace _PhpScoper5eddef0da618a\Mollie\Api\Endpoints;
 
-use MolliePrefix\Mollie\Api\Exceptions\ApiException;
-use MolliePrefix\Mollie\Api\Resources\Settlement;
-use MolliePrefix\Mollie\Api\Resources\SettlementCollection;
-class SettlementsEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpointAbstract
+use _PhpScoper5eddef0da618a\Mollie\Api\Exceptions\ApiException;
+use _PhpScoper5eddef0da618a\Mollie\Api\Resources\Settlement;
+use _PhpScoper5eddef0da618a\Mollie\Api\Resources\SettlementCollection;
+class SettlementsEndpoint extends \_PhpScoper5eddef0da618a\Mollie\Api\Endpoints\CollectionEndpointAbstract
 {
     protected $resourcePath = "settlements";
     /**
@@ -15,7 +15,7 @@ class SettlementsEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionE
      */
     protected function getResourceObject()
     {
-        return new \MolliePrefix\Mollie\Api\Resources\Settlement($this->client);
+        return new \_PhpScoper5eddef0da618a\Mollie\Api\Resources\Settlement($this->client);
     }
     /**
      * Get the collection object that is used by this API. Every API uses one type of collection object.
@@ -27,7 +27,7 @@ class SettlementsEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionE
      */
     protected function getResourceCollectionObject($count, $_links)
     {
-        return new \MolliePrefix\Mollie\Api\Resources\SettlementCollection($this->client, $count, $_links);
+        return new \_PhpScoper5eddef0da618a\Mollie\Api\Resources\SettlementCollection($this->client, $count, $_links);
     }
     /**
      * Retrieve a single settlement from Mollie.

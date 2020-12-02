@@ -147,7 +147,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         // $deliveryAddressPatternRules = json_decode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
 
         // $invoice_address = new Address((int) $this->order->id_address_invoice);
-        $country = new Country((int) $invoice_address->id_country);
         // $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
 
         $delivery_address = null;
@@ -156,7 +155,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         //     $delivery_address = new Address((int) $this->order->id_address_delivery);
         //     $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
         // }
-        $invoice_address = new Address((int) $this->order->id_address_invoice);
+            $invoice_address = new Address((int) $this->order->id_address_invoice);
+            $country = new Country((int) $invoice_address->id_country);
             $formatted_invoice_address = $invoice_address->firstname .' '. $invoice_address->lastname.'<br />';
             $formatted_invoice_address .= $invoice_address->company.'<br />';
             $formatted_invoice_address .= $invoice_address->address1.' '.$invoice_address->house_number.' '.$invoice_address->house_number_extension.'<br />';

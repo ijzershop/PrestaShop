@@ -85,7 +85,8 @@ final class DatabaseTableInstaller implements InstallerInterface
 				`surcharge_percentage` decimal(20,6),
 				`surcharge_limit` decimal(20,6),
 				`images_json` TEXT,
-				`live_environment` TINYINT(1)
+				`live_environment` TINYINT(1),
+				`position` INT(10)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
         $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'mol_payment_method_issuer` (
@@ -116,10 +117,10 @@ final class DatabaseTableInstaller implements InstallerInterface
 
         $sql[] = '
             CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'mol_pending_order_cart` (
-                        `id_mol_pending_order_cart`  INT(64)  NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                        `order_id` INT(64) NOT NULL,
-                        `cart_id` INT(64) NOT NULL
-                    ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;
+                `id_mol_pending_order_cart`  INT(64)  NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                `order_id` INT(64) NOT NULL,
+                `cart_id` INT(64) NOT NULL
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;
         ';
 
         $sql[] = '
@@ -131,6 +132,7 @@ final class DatabaseTableInstaller implements InstallerInterface
                         `created_at` VARCHAR(64) NOT NULL
                     ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;
         ';
+
         return $sql;
     }
 }

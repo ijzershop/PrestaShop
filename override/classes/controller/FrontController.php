@@ -33,7 +33,12 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class FrontController extends FrontControllerCore
 {
-
+    private function initDebugguer()
+    {
+        if (true === _PS_MODE_DEV_) {
+            Debug::enable();
+        }
+    }
 
     /**
      * Initializes front controller: sets smarty variables,

@@ -195,7 +195,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
             $disabledArray = ['cname','new','total_paid_tax_incl','payment','osorderstate','id_pdf'];
             foreach ($this->fields_list as $key => $value) {
                 if(in_array($key, $disabledArray)){
-                    unset($this->fields_list[$key]); 
+                    unset($this->fields_list[$key]);
                 }
             }
         }
@@ -237,10 +237,10 @@ class AdminOrdersController extends AdminOrdersControllerCore
             if(in_array($order->current_state, $states)){
                 //state when the retour is made
                 if(in_array($order->current_state, [14])){
-                    return 'Retour aangemaakt';                
+                    return 'Retour aangemaakt';
                 } else {
                     return '<button type="button" class="btn btn-sm createRetour" data-order-id="'.$id_order.'">Retour aanmaken</button>';
-                }    
+                }
             } else {
                 return 'Geen retour mogelijk';
             }
@@ -253,7 +253,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 
         if(count($result) > 0){
             $orderList = '<ul class="list-unstyled">';
-            for ($i=0; $i < count($result); $i++) { 
+            for ($i=0; $i < count($result); $i++) {
                 $orderList .= '<li><strong>'.$result[$i]['reference'].'</strong> - <small data-order-id="'.(int)$result[$i]['id_order'].'">'.date_format(date_create($result[$i]['date_add']),'d M').'</small></li>';
             }
             $orderList .= '</ul>';
@@ -279,7 +279,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
         $email = Tools::getValue('customer_email');
         $customer = Tools::getValue('customer');
         $order = Tools::getValue('order');
-        
+
         $cust = new Customer;
         $customerObj = $cust->getCustomersByEmail($email);
         if(isset($customerObj[0])){
@@ -313,5 +313,38 @@ class AdminOrdersController extends AdminOrdersControllerCore
             }
             return die(json_encode(array('success'=>false,'msg'=>'U heeft geen datum geselecteerd, selecteer de gewenste leverdatum en probeer opnieuw')));
 
+    }
+
+    public function setMedia($isNewTheme = false)
+    {
+        parent::setMedia($isNewTheme);
+
+        $this->addJqueryUI('ui.datepicker');
+        $this->addJS(_PS_JS_DIR_ . 'vendor/d3.v3.min.js');
+        $this->addJS('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key='.Configuration::get('MODERNESMIDTHEMECONFIGURATOR_MAPS_KEY', null, null,  null, 'AIzaSyDv2qdzmbvRDXH-zzdqJY87K7y3W1iaMX8'));
+
+        if ($this->access('edit') && $this->display == 'view') {
+            $this->addJS(_PS_JS_DIR_ . 'admin/orders.js');
+            $this->addJS(_PS_JS_DIR_ . 'tools.js');
+            $this->addJqueryPlugin('autocomplete');
+        }
+    }
+
+    public function ajaxProcessSearchCustomer(){
+        $query = Tools::getValue("q");
+        $result = [];
+        if(!empty($query)){
+            $result =  Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                '
+            SELECT CONCAT(`email`, " # ", `firstname`, " ", `lastname`) AS name
+            FROM `' . _DB_PREFIX_ . 'customer`
+            WHERE 1 ' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) .
+                ($onlyActive ? ' AND `active` = 1' : '') . '
+            AND (`email` LIKE "%'.$query.'%" OR `firstname` LIKE "%'.$query.'%" OR `lastname` LIKE "%'.$query.'%")
+            ORDER BY `id_customer` ASC'
+            );
+        }
+        $list = implode("\n",array_map(function($row){ return $row['name']; }, $result));
+        die($list);
     }
 }

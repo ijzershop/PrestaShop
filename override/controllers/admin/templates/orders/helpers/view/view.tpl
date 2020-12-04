@@ -35,6 +35,9 @@
     overflow-x: hidden;
     z-index:99999999999;
   }
+  .ui-autocomplete-loading {
+    background: white url("") right center no-repeat;
+  }
   /* IE 6 doesn't support max-height
    * we use height instead, but this forces the menu to always be this tall
    */
@@ -79,11 +82,9 @@
 
 
   $(document).ready(function() {
-      var availableCustomers = {json_encode(Customer::getCustomers(true))};
-      var availableCustomersList = availableCustomers.map(function(elem, index) {
-        return elem.email+' # '+elem.firstname+' '+elem.lastname;
-      });
-      $("#selectCustomerToMigrate").autocomplete(availableCustomersList);
+    $("#selectCustomerToMigrate").autocomplete('index.php?ajax=1&controller=AdminOrders&action=searchCustomer&token='+token, {
+              "minChars":3
+            });
 
 
 
@@ -227,7 +228,7 @@
             <form class="form-inline">
               <label class="h6" for="desired_delivery_date">Gewenste leverdatum</label>
                 <div class="input-group input-group-sm">
-              <input style="min-width:120px;" type="date" min="{date("Y-m-d")}" name="desired_delivery_date" id="desired_delivery_date" value="{$order->desired_delivery_date}" class="form-control-sm input-sm mb-2 mr-sm-2">
+              <input style="min-width:120px;" type="date" min="{date("Y-m-d")}" name="desired_delivery_date" id="desired_delivery_date" value="{if $order->desired_delivery_date == '0000-00-00'}{date("Y-m-d")}{else}{$order->desired_delivery_date}{/if}" class="form-control-sm input-sm mb-2 mr-sm-2">
                   <div class="input-group-btn">
                     <button type="button" id="clearDesiredDeliveryDate" class="btn btn-primary mb-2">Clear</button>
                     <button type="button" id="submitDesiredDeliveryDate" class="btn btn-primary mb-2">Submit</button>
@@ -1469,7 +1470,7 @@
           var delivery_marker = new google.maps.Marker({
             map: delivery_map,
             position: results[0].geometry.location,
-            url: 'http://maps.google.com?q={$addresses.delivery->address1|urlencode},{$addresses.delivery->postcode|urlencode},{$addresses.delivery->city|urlencode}{if isset($addresses.deliveryState->name) && $addresses.delivery->id_state},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.delivery->country|urlencode}'
+            url: 'https://maps.google.com?key={Configuration::get('MODERNESMIDTHEMECONFIGURATOR_MAPS_KEY', null, null,  null, 'AIzaSyDv2qdzmbvRDXH-zzdqJY87K7y3W1iaMX8')}&q={$addresses.delivery->address1|urlencode},{$addresses.delivery->postcode|urlencode},{$addresses.delivery->city|urlencode}{if isset($addresses.deliveryState->name) && $addresses.delivery->id_state},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.delivery->country|urlencode}'
           });
           google.maps.event.addListener(delivery_marker, 'click', function() {
             window.open(delivery_marker.url);
@@ -1490,7 +1491,7 @@
           invoice_marker = new google.maps.Marker({
             map: invoice_map,
             position: results[0].geometry.location,
-            url: 'http://maps.google.com?q={$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode}{if isset($addresses.deliveryState->name) && $addresses.invoice->id_state},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.invoice->country|urlencode}'
+            url: 'https://maps.google.com?key={Configuration::get('MODERNESMIDTHEMECONFIGURATOR_MAPS_KEY', null, null,  null, 'AIzaSyDv2qdzmbvRDXH-zzdqJY87K7y3W1iaMX8')}&q={$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode}{if isset($addresses.deliveryState->name) && $addresses.invoice->id_state},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.invoice->country|urlencode}'
           });
           google.maps.event.addListener(invoice_marker, 'click', function() {
             window.open(invoice_marker.url);

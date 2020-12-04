@@ -816,7 +816,7 @@ class Mollie extends PaymentModule
             if ($isIdealMethod && $isIssuersOnClick) {
                 $newOption = new PrestaShop\PrestaShop\Core\Payment\PaymentOption();
                 $newOption
-                    ->setCallToActionText($this->lang($methodObj->method_name))
+                    ->setCallToActionText($this->trans(!empty($methodObj->title) ? $methodObj->title : $methodObj->method_name))
                     ->setModuleName($this->name)
                     ->setAction(Context::getContext()->link->getModuleLink(
                         $this->name,
@@ -834,6 +834,12 @@ class Mollie extends PaymentModule
                     ->setAdditionalInformation($this->display(__FILE__, 'ideal_dropdown.tpl'));
 
                 $image = $creditCardProvider->getMethodOptionLogo($methodObj);
+                if(empty($image)){
+                    $imagesObj = json_decode($methodObj->images_json);
+                    if(isset($imagesObj->svg)){
+                        $image = $imagesObj->svg;
+                    }
+                }
                 $newOption->setLogo($image);
 
                 if ($paymentFee) {
@@ -866,7 +872,7 @@ class Mollie extends PaymentModule
                 ]);
                 $newOption = new PrestaShop\PrestaShop\Core\Payment\PaymentOption();
                 $newOption
-                    ->setCallToActionText($this->lang($methodObj->method_name))
+                    ->setCallToActionText($this->trans(!empty($methodObj->title) ? $methodObj->title : $methodObj->method_name))
                     ->setModuleName($this->name)
                     ->setAdditionalInformation($this->display(__FILE__, 'mollie_iframe.tpl'))
                     ->setInputs(
@@ -886,6 +892,12 @@ class Mollie extends PaymentModule
                     ));
 
                 $image = $creditCardProvider->getMethodOptionLogo($methodObj);
+                if(empty($image)){
+                    $imagesObj = json_decode($methodObj->images_json);
+                    if(isset($imagesObj->svg)){
+                        $image = $imagesObj->svg;
+                    }
+                }
                 $newOption->setLogo($image);
 
                 if ($paymentFee) {
@@ -924,7 +936,7 @@ class Mollie extends PaymentModule
             } else {
                 $newOption = new PrestaShop\PrestaShop\Core\Payment\PaymentOption();
                 $newOption
-                    ->setCallToActionText($this->lang($methodObj->method_name))
+                    ->setCallToActionText($this->trans(!empty($methodObj->title) ? $methodObj->title : $methodObj->method_name))
                     ->setModuleName($this->name)
                     ->setAction(Context::getContext()->link->getModuleLink(
                         'mollie',
@@ -934,6 +946,13 @@ class Mollie extends PaymentModule
                     ));
 
                 $image = $creditCardProvider->getMethodOptionLogo($methodObj);
+                if(empty($image)){
+                    $imagesObj = json_decode($methodObj->images_json);
+                    if(isset($imagesObj->svg)){
+                        $image = $imagesObj->svg;
+                    }
+                }
+
                 $newOption->setLogo($image);
 
                 if ($paymentFee) {

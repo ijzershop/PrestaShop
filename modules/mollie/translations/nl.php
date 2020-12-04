@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 global $_MODULE;
 $_MODULE = array();
@@ -31,7 +31,7 @@ $_MODULE['<{mollie}prestashop>mollie_48fa0f621f79f451e58f200957da5b52'] = 'Kies 
 $_MODULE['<{mollie}prestashop>mollie_8953fb7da2299bf905b73720f611baa3'] = 'of betaal met iDEAL QR-code';
 $_MODULE['<{mollie}prestashop>mollie_961f2247a2070bedff9f9cd8d64e2650'] = 'Selecteren';
 $_MODULE['<{mollie}prestashop>mollie_ea4788705e6873b424c65e91c2846b19'] = 'Annuleren';
-$_MODULE['<{mollie}prestashop>mollie_0b135af05e690cf2fca288a143759716'] = 'Commissie: %1s';
+$_MODULE['<{mollie}prestashop>mollie_0b135af05e690cf2fca288a143759716'] = 'Toeslag: %1s';
 $_MODULE['<{mollie}prestashop>mollie_3602f6d5ece34fdbd4ffe0a47f1a2ba4'] = 'Dank je wel. Je betaling is ontvangen.';
 $_MODULE['<{mollie}prestashop>mollie_32c86f9a2a28a9fa544b97024393633e'] = 'Geen betaalmethodes gevonden';
 $_MODULE['<{mollie}prestashop>mollie_a34a6659bceae779f28185e757abfca5'] = 'AJAX';

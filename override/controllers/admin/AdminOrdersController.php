@@ -321,7 +321,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 
         $this->addJqueryUI('ui.datepicker');
         $this->addJS(_PS_JS_DIR_ . 'vendor/d3.v3.min.js');
-        $this->addJS('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key='.Configuration::get('MODERNESMIDTHEMECONFIGURATOR_MAPS_KEY', null, null,  null, 'AIzaSyDv2qdzmbvRDXH-zzdqJY87K7y3W1iaMX8'));
+        $this->addJS('https://maps.googleapis.com/maps/api/js?v=3.exp&key='.Configuration::get('MODERNESMIDTHEMECONFIGURATOR_MAPS_KEY', null, null,  null, 'AIzaSyDv2qdzmbvRDXH-zzdqJY87K7y3W1iaMX8'));
 
         if ($this->access('edit') && $this->display == 'view') {
             $this->addJS(_PS_JS_DIR_ . 'admin/orders.js');
@@ -350,6 +350,71 @@ class AdminOrdersController extends AdminOrdersControllerCore
 
     public function renderKpis()
     {
-        return '';
+                $time = time();
+        $kpis = array();
+
+        /* The data generation is located in AdminStatsControllerCore */
+
+        $helper = new HelperKpi();
+        $helper->id = 'box-conversion-rate';
+        $helper->icon = 'icon-sort-by-attributes-alt';
+        //$helper->chart = true;
+        $helper->color = 'color1';
+        $helper->title = $this->trans('Conversion Rate', array(), 'Admin.Global');
+        $helper->subtitle = $this->trans('30 days', array(), 'Admin.Global');
+        if (ConfigurationKPI::get('CONVERSION_RATE') !== false) {
+            $helper->value = ConfigurationKPI::get('CONVERSION_RATE');
+        }
+        if (ConfigurationKPI::get('CONVERSION_RATE_CHART') !== false) {
+            $helper->data = ConfigurationKPI::get('CONVERSION_RATE_CHART');
+        }
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=conversion_rate';
+        $helper->refresh = (bool) (ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < $time);
+        $kpis[] = $helper->generate();
+
+        $helper = new HelperKpi();
+        $helper->id = 'box-carts';
+        $helper->icon = 'icon-shopping-cart';
+        $helper->color = 'color2';
+        $helper->title = $this->trans('Abandoned Carts', array(), 'Admin.Global');
+        $helper->subtitle = $this->trans('Today', array(), 'Admin.Global');
+        $helper->href = $this->context->link->getAdminLink('AdminCarts') . '&action=filterOnlyAbandonedCarts';
+        if (ConfigurationKPI::get('ABANDONED_CARTS') !== false) {
+            $helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
+        }
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=abandoned_cart';
+        $helper->refresh = (bool) (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time);
+        $kpis[] = $helper->generate();
+
+        $helper = new HelperKpi();
+        $helper->id = 'box-average-order';
+        $helper->icon = 'icon-money';
+        $helper->color = 'color3';
+        $helper->title = $this->trans('Average Order Value', array(), 'Admin.Global');
+        $helper->subtitle = $this->trans('30 days', array(), 'Admin.Global');
+        if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false) {
+            $helper->value = $this->trans('%amount% tax excl.', array('%amount%' => ConfigurationKPI::get('AVG_ORDER_VALUE')), 'Admin.Orderscustomers.Feature');
+        }
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=average_order_value';
+        $helper->refresh = (bool) (ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time);
+        $kpis[] = $helper->generate();
+
+        $helper = new HelperKpi();
+        $helper->id = 'box-net-profit-visit';
+        $helper->icon = 'icon-user';
+        $helper->color = 'color4';
+        $helper->title = $this->trans('Net Profit per Visit', array(), 'Admin.Orderscustomers.Feature');
+        $helper->subtitle = $this->trans('30 days', array(), 'Admin.Orderscustomers.Feature');
+        if (ConfigurationKPI::get('NETPROFIT_VISIT') !== false) {
+            $helper->value = ConfigurationKPI::get('NETPROFIT_VISIT');
+        }
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=netprofit_visit';
+        $helper->refresh = (bool) (ConfigurationKPI::get('NETPROFIT_VISIT_EXPIRE') < $time);
+        $kpis[] = $helper->generate();
+
+        $helper = new HelperKpiRow();
+        $helper->kpis = $kpis;
+
+        return $helper->generate();
     }
 }

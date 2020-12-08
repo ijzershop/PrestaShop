@@ -347,4 +347,9 @@ class AdminOrdersController extends AdminOrdersControllerCore
         $list = implode("\n",array_map(function($row){ return $row['name']; }, $result));
         die($list);
     }
+
+    public function renderKpis()
+    {
+        return '';
+    }
 }

@@ -44,6 +44,9 @@
   * html .ui-autocomplete {
     height: 100px;
   }
+  .icon-AdminParentShipping::before, .icon-truck::before{
+    color:#fff;
+  }
 </style>
   <script type="text/javascript">
   var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')|addslashes}";
@@ -167,30 +170,30 @@
 
   <div class="panel kpi-container">
     <div class="row">
-      <div class="col-12 col-sm-9">
+      <div class="col-12">
         <div class="row">
-          <div class="col-xs-6 col-sm-3 box-stats color3" >
+          <div class="col-xs-6 col-sm-2 box-stats color3" >
             <div class="kpi-content">
               <i class="icon-calendar-empty"></i>
               <span class="title">{l s='Date' d='Admin.Global'}</span>
               <span class="value">{dateFormat date=$order->date_add full=false}</span>
             </div>
           </div>
-          <div class="col-xs-6 col-sm-3 box-stats color4" >
+          <div class="col-xs-6 col-sm-2 box-stats color4" >
             <div class="kpi-content">
               <i class="icon-money"></i>
               <span class="title">{l s='Total' d='Admin.Global'}</span>
               <span class="value">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
             </div>
           </div>
-          <div class="col-xs-6 col-sm-3 box-stats color2" >
+          <div class="col-xs-6 col-sm-2 box-stats color2" >
             <div class="kpi-content">
               <i class="icon-comments"></i>
               <span class="title">{l s='Messages' d='Admin.Global'}</span>
               <span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads', true, [], ['id_order' => $order->id|intval])|escape:'html':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
             </div>
           </div>
-          <div class="col-xs-6 col-sm-3 box-stats color1" >
+          <div class="col-xs-6 col-sm-1 box-stats color1" >
             <a href="#start_products">
               <div class="kpi-content">
                 <i class="icon-book"></i>
@@ -199,10 +202,10 @@
               </div>
             </a>
           </div>
+          <div class="col-xs-6 col-sm-2 box-stats color1" style="text-align: center;color:#fff;">
+              <button type="button" id="showShippingStatusBtn" class="btn btn-secondary btn-primary" data-history="{json_encode($history)}" data-order-reference="{$order->reference}"  data-toggle="modal" data-target="#showShippingStatusModal"> <i class="icon-truck"></i> Verzend Status</button>
         </div>
-
-      </div>
-      <div class="col-xs-12 col-sm-3">
+          <div class="col-xs-12 col-sm-3">
         <form id="migrateToCustomer" class="row">
           <div class="input-group ui-widget col-xs-12">
             <input type="text" class="form-control" style="width:80%" id="selectCustomerToMigrate" placeholder="Selecteer een klant">
@@ -213,7 +216,8 @@
           <span class="text-muted col-xs-12">Koppel de bestelling aan een andere gebruiker</span>
         </form>
       </div>
-    </div>
+        </div>
+      </div>
   </div>
   <div class="row">
     <div class="col-lg-7">
@@ -1449,12 +1453,135 @@
     </div>
   </div>
 
+    {*  ShippingStatusModal Start  *}
+    <!-- Modal -->
+    <div class="modal fade" id="showShippingStatus" tabindex="-1" role="dialog" aria-labelledby="showShippingStatus" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="showShippingStatusLabel">Verzending Status</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="w-100">
+              <div class="table-responsive">
+                <table class="table-sm table-hover">
+                  <tr id="showShippingStatusEstimateDelivery">
+                    <th class="text-nowrap">Geschat levermoment</th><td id="showShippingStatusDeliveryTimeEstimate"></td>
+                  </tr>
+                  <tr id="showShippingStatusDelivered" style="display:none;">
+                    <th class="text-nowrap">Geleverd op</th><td id="showShippingStatusDeliveredOn"></td>
+                  </tr>
+                  <tr>
+                    <th class="text-nowrap">Barcode</th><td id="showShippingStatusBarcode"></td>
+                  </tr>
+                  <tr>
+                    <th class="text-nowrap">Gewicht</th><td id="showShippingStatusWeight"></td>
+                  </tr>
+                  <tr>
+                    <th class="text-nowrap">Formaat</th><td id="showShippingStatusPackageSize"></td>
+                  </tr>
+                  <tr class="text-center" style="display:none;" id="showShippingStatusSignatureBox">
+                    <th>Ontvanger</th><td id="showShippingStatusSignature"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="w-100">
+              <br>
+              <br>
+              <div class="col-12" id="showShippingStatusMsg">
+
+              </div>
+            </div>
+            <ul id="showShippingStatusOrderHistory" class="mx-auto col-12">
+
+            </ul>
+            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {*  ShippingStatusModal End  *}
+
   <script type="text/javascript">
     var geocoder = new google.maps.Geocoder();
     var delivery_map, invoice_map;
 
     $(document).ready(function()
     {
+      $('#showShippingStatusBtn').on('click', function(event){
+        event.preventDefault();
+        var ref = $(this).attr('data-order-reference');
+        console.log(ref);
+        // var history = JSON.parse($(this).attr('data-history'));
+        $('#showShippingStatusLabel').text('Status informatie voor bestelling '+ ref);
+
+        if (typeof url === 'undefined') {
+          var url = '/index.php?fc=module&module=koopmanorderexport&controller=ajax&id_lang=1';
+        }
+
+        $.ajax({
+          url,
+          type: 'GET',
+          data: {
+            reference: ref,
+            method: 'orderstatus',
+            ajax: true,
+          },
+        }).done((e) => {
+          const data = JSON.parse(e);
+
+          var alertMsg = '<div class="alert alert-danger" role="alert"><h4 class="alert-heading">Fout!</h4><p>'+data.error+'</p></div>';
+          $('#showShippingStatusMsg').html(alertMsg);
+          if (data.hasOwnProperty('error')) {
+          } else {
+            $('#showShippingStatusMsg').html('');
+            $('#showShippingStatusBarcode').text(data.barcode);
+
+            if (data.package.weight !== '') {
+              $('#showShippingStatusWeight').html(data.package.weight+'<sub>Kg</sub>');
+            } else {
+              $('#showShippingStatusWeight').html('');
+            }
+
+            if (data.package.length !== '' && data.package.height !== '') {
+              $('#showShippingStatusPackageSize').html(data.package.length+'<small>cm</small>'+ ' x '+data.package.height+'<small>mm</small>');
+            } else {
+              $('#showShippingStatusPackageSize').html('');
+            }
+
+            if (data.delivered.signature_name === '') {
+              $('#showShippingStatusDeliveryTimeEstimate').text(data.scheduled_delivery_moment.planned_delivery_date+' tussen '+data.scheduled_delivery_moment.from+' - '+data.scheduled_delivery_moment.to);
+              $('#showShippingStatusDelivered').hide();
+
+              $('#showShippingStatusSignature').html('');
+              $('#showShippingStatusDeliveredOn').text('');
+            } else {
+              $('#showShippingStatusEstimateDelivery').hide();
+              $('#showShippingStatusDelivered').show();
+              $('#showShippingStatusSignatureBox').show();
+              $('#showShippingStatusSignature').html('<img src="data:image/jpeg;base64,'+data.delivered.signature+'" class="w-100 border" alt="De handtekening van de ontvanger"><br><strong class="w-100">'+data.delivered.signature_name+'</strong>');
+              $('#showShippingStatusDeliveredOn').text(data.delivered.delivered_at+' om '+data.delivered.delivered_on);
+
+              $('#showShippingStatusDeliveryTimeEstimate').text('');
+            }
+
+            const latestHistory = data.history[data.history.length - 1];
+            for (let i = 0, length = data.history.length; i < length; i++) {
+              console.log([latestHistory, data.history]);
+              $('#showShippingStatusOrderHistory').append('<li>'+data.history[i].state_id+''+data.history[i].name+'</li>')
+
+            }
+          }
+        });
+        $('#showShippingStatus').modal('show');
+      });
+
       $(".textarea-autosize").autosize();
 
       geocoder.geocode({

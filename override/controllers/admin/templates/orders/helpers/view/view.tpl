@@ -1571,7 +1571,6 @@
             $('#showShippingStatusOrderHistory').empty();
             const latestHistory = data.history[data.history.length - 1];
             for (let i = 0, length = data.history.length; i < length; i++) {
-              console.log([latestHistory, data.history]);
               $('#showShippingStatusOrderHistory').append('<li>'+data.history[i].name+'</li>')
 
             }

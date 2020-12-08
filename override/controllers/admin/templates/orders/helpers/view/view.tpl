@@ -1517,8 +1517,6 @@
       $('#showShippingStatusBtn').on('click', function(event){
         event.preventDefault();
         var ref = $(this).attr('data-order-reference');
-        console.log(ref);
-        // var history = JSON.parse($(this).attr('data-history'));
         $('#showShippingStatusLabel').text('Status informatie voor bestelling '+ ref);
 
         if (typeof url === 'undefined') {
@@ -1570,11 +1568,11 @@
 
               $('#showShippingStatusDeliveryTimeEstimate').text('');
             }
-
+            $('#showShippingStatusOrderHistory').empty();
             const latestHistory = data.history[data.history.length - 1];
             for (let i = 0, length = data.history.length; i < length; i++) {
               console.log([latestHistory, data.history]);
-              $('#showShippingStatusOrderHistory').append('<li>'+data.history[i].state_id+''+data.history[i].name+'</li>')
+              $('#showShippingStatusOrderHistory').append('<li>'+data.history[i].name+'</li>')
 
             }
           }

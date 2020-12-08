@@ -103,4 +103,3 @@
             filter: opacity(.7);
 }
   </style>
-</style>

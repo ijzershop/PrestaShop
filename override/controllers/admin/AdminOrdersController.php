@@ -321,7 +321,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 
         $this->addJqueryUI('ui.datepicker');
         $this->addJS(_PS_JS_DIR_ . 'vendor/d3.v3.min.js');
-        $this->addJS('https://maps.googleapis.com/maps/api/js?v=3.exp&key='.Configuration::get('MODERNESMIDTHEMECONFIGURATOR_MAPS_KEY', null, null,  null, 'AIzaSyDv2qdzmbvRDXH-zzdqJY87K7y3W1iaMX8'));
+        $this->addJS('https://maps.googleapis.com/maps/api/js?key='.Configuration::get('MODERNESMIDTHEMECONFIGURATOR_MAPS_KEY', null, null,  null, 'AIzaSyDv2qdzmbvRDXH-zzdqJY87K7y3W1iaMX8'));
 
         if ($this->access('edit') && $this->display == 'view') {
             $this->addJS(_PS_JS_DIR_ . 'admin/orders.js');

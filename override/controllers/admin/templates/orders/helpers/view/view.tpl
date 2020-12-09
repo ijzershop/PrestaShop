@@ -47,6 +47,27 @@
   .icon-AdminParentShipping::before, .icon-truck::before{
     color:#fff;
   }
+  .loading-icon {
+    height: 0;
+    width: 0;
+    padding: 15px;
+    border: 6px solid #ccc;
+    border-right-color: #888;
+    border-radius: 22px;
+    -webkit-animation: rotate 1s infinite linear;
+    /* left, top and position just for the demo! */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  }
+
+  @-webkit-keyframes rotate {
+    /* 100% keyframe for  clockwise.
+       use 0% instead for anticlockwise */
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
 </style>
   <script type="text/javascript">
   var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')|addslashes}";
@@ -1466,7 +1487,6 @@
           </div>
           <div class="modal-body">
             <div class="w-100">
-              <div class="table-responsive">
                 <table class="table-sm table-hover">
                   <tr id="showShippingStatusEstimateDelivery">
                     <th class="text-nowrap">Geschat levermoment</th><td id="showShippingStatusDeliveryTimeEstimate"></td>
@@ -1487,7 +1507,6 @@
                     <th>Ontvanger</th><td id="showShippingStatusSignature"></td>
                   </tr>
                 </table>
-              </div>
             </div>
             <div class="w-100">
               <br>
@@ -1496,6 +1515,7 @@
 
               </div>
             </div>
+            <div class="loading-icon" style="display:none;"></div>
             <ul id="showShippingStatusOrderHistory" class="mx-auto col-12">
 
             </ul>
@@ -1516,6 +1536,8 @@
     {
       $('#showShippingStatusBtn').on('click', function(event){
         event.preventDefault();
+        $('#showShippingStatusMsg').html('');
+        $('#showShippingStatus .loading-icon').show();
         var ref = $(this).attr('data-order-reference');
         $('#showShippingStatusLabel').text('Status informatie voor bestelling '+ ref);
 
@@ -1575,7 +1597,9 @@
 
             }
           }
+          $('#showShippingStatus .loading-icon').hide();
         });
+
         $('#showShippingStatus').modal('show');
       });
 

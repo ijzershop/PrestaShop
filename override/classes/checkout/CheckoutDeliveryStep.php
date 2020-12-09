@@ -26,7 +26,7 @@
 
 class CheckoutDeliveryStep extends CheckoutDeliveryStepCore
 {
- 
+
     public function handleRequest(array $requestParams = array())
     {
 
@@ -47,7 +47,7 @@ class CheckoutDeliveryStep extends CheckoutDeliveryStepCore
         }
 
         // Fetch new value to cart params
-        if( isset($requestParams['added_to_order'])){
+        if(isset($requestParams['added_to_order']) && ((int)Configuration::get('ADDTOORDER_DELIVERY_METHOD') == (int)$requestParams['delivery_option'])){
             $this->context->cart->added_to_order = $requestParams['added_to_order'];
             $this->context->cart->update();
         }

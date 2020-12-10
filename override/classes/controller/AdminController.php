@@ -84,31 +84,38 @@ class AdminController extends AdminControllerCore
             || Tools::getValue($this->list_id . 'Orderway')) {
             $this->filter = true;
         }
-        //Set default date filter to shorten tabel rows length, and remove filter when clicked on remove all filters button
-        switch (strval(Tools::getValue('submitFilterorder'))){
-            case '0':
-                $this->filter = false;
-                $this->context->cookie->__set('ordersorderFilter_a!date_add', '');
-                $this->context->cookie->write();
-                break;
-            case 'false':
-                $this->filter = true;
-                $this->context->cookie->__set('submitFilterorder', '1');
-                $this->context->cookie->__set('ordersorderFilter_a!date_add', '["'.date('Y-m-d', strtotime('-4 weeks')).'","'.date('Y-m-d', strtotime('now')).'"]');
-                $this->context->cookie->write();
-                break;
-            default:
-                $this->filter = true;
-                $current_date_filter = $this->context->cookie->__get('ordersorderFilter_a!date_add');
-                  if(strlen($current_date_filter) > 0){
-                      $this->context->cookie->__set('ordersorderFilter_a!date_add', $current_date_filter);
-                  } else {
-                      $this->context->cookie->__set('ordersorderFilter_a!date_add', '["'.date('Y-m-d', strtotime('-4 weeks')).'","'.date('Y-m-d', strtotime('now')).'"]');
-                  }
-                $this->context->cookie->write();
-                break;
-        }
 
+//        var_export([, $this->context->cookie]);
+//die();
+        if($this->context->controller->controller_name == 'AdminOrders') {
+            //Set default date filter to shorten tabel rows length, and remove filter when clicked on remove all filters button
+            switch (strval(Tools::getValue('submitFilterorder'))) {
+                case '0':
+                    $this->filter = false;
+                    $this->context->cookie->__set('ordersorderFilter_a!date_add', '');
+                    $this->context->cookie->write();
+                    break;
+                case 'false':
+                    $this->filter = true;
+                    $this->context->cookie->__set('submitFilterorder', '1');
+                    $this->context->cookie->__set('ordersorderFilter_a!date_add',
+                        '["' . date('Y-m-d', strtotime('-4 weeks')) . '","' . date('Y-m-d', strtotime('now')) . '"]');
+                    $this->context->cookie->write();
+                    break;
+                default:
+                    $this->filter = true;
+                    $current_date_filter = $this->context->cookie->__get('ordersorderFilter_a!date_add');
+                    if (strlen($current_date_filter) > 0) {
+                        $this->context->cookie->__set('ordersorderFilter_a!date_add', $current_date_filter);
+                    } else {
+                        $this->context->cookie->__set('ordersorderFilter_a!date_add',
+                            '["' . date('Y-m-d', strtotime('-4 weeks')) . '","' . date('Y-m-d',
+                                strtotime('now')) . '"]');
+                    }
+                    $this->context->cookie->write();
+                    break;
+            }
+        }
 
         $this->id_object = (int) Tools::getValue($this->identifier);
 

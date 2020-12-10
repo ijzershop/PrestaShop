@@ -84,12 +84,10 @@ class AdminController extends AdminControllerCore
             || Tools::getValue($this->list_id . 'Orderway')) {
             $this->filter = true;
         }
-
         //Set default date filter to shorten tabel rows length, and remove filter when clicked on remove all filters button
         switch (strval(Tools::getValue('submitFilterorder'))){
             case '0':
                 $this->filter = false;
-                $this->context->cookie->__set('submitFilterorder', '0');
                 $this->context->cookie->__set('ordersorderFilter_a!date_add', '');
                 $this->context->cookie->write();
                 break;
@@ -101,8 +99,12 @@ class AdminController extends AdminControllerCore
                 break;
             default:
                 $this->filter = true;
-                $this->context->cookie->__set('submitFilterorder', '1');
-                $this->context->cookie->__set('ordersorderFilter_a!date_add', '["'.date('Y-m-d', strtotime('-4 weeks')).'","'.date('Y-m-d', strtotime('now')).'"]');
+                $current_date_filter = $this->context->cookie->__get('ordersorderFilter_a!date_add');
+                  if(strlen($current_date_filter) > 0){
+                      $this->context->cookie->__set('ordersorderFilter_a!date_add', $current_date_filter);
+                  } else {
+                      $this->context->cookie->__set('ordersorderFilter_a!date_add', '["'.date('Y-m-d', strtotime('-4 weeks')).'","'.date('Y-m-d', strtotime('now')).'"]');
+                  }
                 $this->context->cookie->write();
                 break;
         }

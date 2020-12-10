@@ -96,13 +96,13 @@ class AdminController extends AdminControllerCore
             case 'false':
                 $this->filter = true;
                 $this->context->cookie->__set('submitFilterorder', '1');
-                $this->context->cookie->__set('ordersorderFilter_a!date_add', '["'.date('Y-m-d', strtotime('-6 weeks')).'","'.date('Y-m-d', strtotime('now')).'"]');
+                $this->context->cookie->__set('ordersorderFilter_a!date_add', '["'.date('Y-m-d', strtotime('-4 weeks')).'","'.date('Y-m-d', strtotime('now')).'"]');
                 $this->context->cookie->write();
                 break;
             default:
                 $this->filter = true;
                 $this->context->cookie->__set('submitFilterorder', '1');
-                $this->context->cookie->__set('ordersorderFilter_a!date_add', '["'.date('Y-m-d', strtotime('-6 weeks')).'","'.date('Y-m-d', strtotime('now')).'"]');
+                $this->context->cookie->__set('ordersorderFilter_a!date_add', '["'.date('Y-m-d', strtotime('-4 weeks')).'","'.date('Y-m-d', strtotime('now')).'"]');
                 $this->context->cookie->write();
                 break;
         }

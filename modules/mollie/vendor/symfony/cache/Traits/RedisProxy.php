@@ -20,7 +20,7 @@ class RedisProxy
     private $redis;
     private $initializer;
     private $ready = \false;
-    public function __construct(\MolliePrefix\Redis $redis, \Closure $initializer)
+    public function __construct(\Redis $redis, \Closure $initializer)
     {
         $this->redis = $redis;
         $this->initializer = $initializer;

@@ -21,7 +21,7 @@ trait ApcuTrait
 {
     public static function isSupported()
     {
-        return \function_exists('MolliePrefix\\apcu_fetch') && \filter_var(\ini_get('apc.enabled'), \FILTER_VALIDATE_BOOLEAN);
+        return \function_exists('apcu_fetch') && \filter_var(\ini_get('apc.enabled'), \FILTER_VALIDATE_BOOLEAN);
     }
     private function init($namespace, $defaultLifetime, $version)
     {
@@ -67,7 +67,7 @@ trait ApcuTrait
      */
     protected function doClear($namespace)
     {
-        return isset($namespace[0]) && \class_exists('MolliePrefix\\APCuIterator', \false) && ('cli' !== \PHP_SAPI || \filter_var(\ini_get('apc.enable_cli'), \FILTER_VALIDATE_BOOLEAN)) ? \apcu_delete(new \MolliePrefix\APCuIterator(\sprintf('/^%s/', \preg_quote($namespace, '/')), \APC_ITER_KEY)) : \apcu_clear_cache();
+        return isset($namespace[0]) && \class_exists('APCuIterator', \false) && ('cli' !== \PHP_SAPI || \filter_var(\ini_get('apc.enable_cli'), \FILTER_VALIDATE_BOOLEAN)) ? \apcu_delete(new \APCuIterator(\sprintf('/^%s/', \preg_quote($namespace, '/')), \APC_ITER_KEY)) : \apcu_clear_cache();
     }
     /**
      * {@inheritdoc}

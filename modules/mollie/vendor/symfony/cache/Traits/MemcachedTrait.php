@@ -20,24 +20,24 @@ use MolliePrefix\Symfony\Component\Cache\Exception\InvalidArgumentException;
  */
 trait MemcachedTrait
 {
-    private static $defaultClientOptions = ['persistent_id' => null, 'username' => null, 'password' => null, \MolliePrefix\Memcached::OPT_SERIALIZER => \MolliePrefix\Memcached::SERIALIZER_PHP];
+    private static $defaultClientOptions = ['persistent_id' => null, 'username' => null, 'password' => null, \Memcached::OPT_SERIALIZER => \Memcached::SERIALIZER_PHP];
     private $client;
     private $lazyClient;
     public static function isSupported()
     {
         return \extension_loaded('memcached') && \version_compare(\phpversion('memcached'), '2.2.0', '>=');
     }
-    private function init(\MolliePrefix\Memcached $client, $namespace, $defaultLifetime)
+    private function init(\Memcached $client, $namespace, $defaultLifetime)
     {
         if (!static::isSupported()) {
             throw new \MolliePrefix\Symfony\Component\Cache\Exception\CacheException('Memcached >= 2.2.0 is required.');
         }
         if ('Memcached' === \get_class($client)) {
-            $opt = $client->getOption(\MolliePrefix\Memcached::OPT_SERIALIZER);
-            if (\MolliePrefix\Memcached::SERIALIZER_PHP !== $opt && \MolliePrefix\Memcached::SERIALIZER_IGBINARY !== $opt) {
+            $opt = $client->getOption(\Memcached::OPT_SERIALIZER);
+            if (\Memcached::SERIALIZER_PHP !== $opt && \Memcached::SERIALIZER_IGBINARY !== $opt) {
                 throw new \MolliePrefix\Symfony\Component\Cache\Exception\CacheException('MemcachedAdapter: "serializer" option must be "php" or "igbinary".');
             }
-            $this->maxIdLength -= \strlen($client->getOption(\MolliePrefix\Memcached::OPT_PREFIX_KEY));
+            $this->maxIdLength -= \strlen($client->getOption(\Memcached::OPT_PREFIX_KEY));
             $this->client = $client;
         } else {
             $this->lazyClient = $client;
@@ -76,7 +76,7 @@ trait MemcachedTrait
         });
         try {
             $options += static::$defaultClientOptions;
-            $client = new \MolliePrefix\Memcached($options['persistent_id']);
+            $client = new \Memcached($options['persistent_id']);
             $username = $options['username'];
             $password = $options['password'];
             // parse any DSN in $servers
@@ -114,11 +114,11 @@ trait MemcachedTrait
             // set client's options
             unset($options['persistent_id'], $options['username'], $options['password'], $options['weight'], $options['lazy']);
             $options = \array_change_key_case($options, \CASE_UPPER);
-            $client->setOption(\MolliePrefix\Memcached::OPT_BINARY_PROTOCOL, \true);
-            $client->setOption(\MolliePrefix\Memcached::OPT_NO_BLOCK, \true);
-            $client->setOption(\MolliePrefix\Memcached::OPT_TCP_NODELAY, \true);
-            if (!\array_key_exists('LIBKETAMA_COMPATIBLE', $options) && !\array_key_exists(\MolliePrefix\Memcached::OPT_LIBKETAMA_COMPATIBLE, $options)) {
-                $client->setOption(\MolliePrefix\Memcached::OPT_LIBKETAMA_COMPATIBLE, \true);
+            $client->setOption(\Memcached::OPT_BINARY_PROTOCOL, \true);
+            $client->setOption(\Memcached::OPT_NO_BLOCK, \true);
+            $client->setOption(\Memcached::OPT_TCP_NODELAY, \true);
+            if (!\array_key_exists('LIBKETAMA_COMPATIBLE', $options) && !\array_key_exists(\Memcached::OPT_LIBKETAMA_COMPATIBLE, $options)) {
+                $client->setOption(\Memcached::OPT_LIBKETAMA_COMPATIBLE, \true);
             }
             foreach ($options as $name => $value) {
                 if (\is_int($name)) {
@@ -204,7 +204,7 @@ trait MemcachedTrait
      */
     protected function doHave($id)
     {
-        return \false !== $this->getClient()->get(\rawurlencode($id)) || $this->checkResultCode(\MolliePrefix\Memcached::RES_SUCCESS === $this->client->getResultCode());
+        return \false !== $this->getClient()->get(\rawurlencode($id)) || $this->checkResultCode(\Memcached::RES_SUCCESS === $this->client->getResultCode());
     }
     /**
      * {@inheritdoc}
@@ -214,7 +214,7 @@ trait MemcachedTrait
         $ok = \true;
         $encodedIds = \array_map('rawurlencode', $ids);
         foreach ($this->checkResultCode($this->getClient()->deleteMulti($encodedIds)) as $result) {
-            if (\MolliePrefix\Memcached::RES_SUCCESS !== $result && \MolliePrefix\Memcached::RES_NOTFOUND !== $result) {
+            if (\Memcached::RES_SUCCESS !== $result && \Memcached::RES_NOTFOUND !== $result) {
                 $ok = \false;
                 break;
             }
@@ -231,7 +231,7 @@ trait MemcachedTrait
     private function checkResultCode($result)
     {
         $code = $this->client->getResultCode();
-        if (\MolliePrefix\Memcached::RES_SUCCESS === $code || \MolliePrefix\Memcached::RES_NOTFOUND === $code) {
+        if (\Memcached::RES_SUCCESS === $code || \Memcached::RES_NOTFOUND === $code) {
             return $result;
         }
         throw new \MolliePrefix\Symfony\Component\Cache\Exception\CacheException('MemcachedAdapter client error: ' . \strtolower($this->client->getResultMessage()));
@@ -244,11 +244,11 @@ trait MemcachedTrait
         if ($this->client) {
             return $this->client;
         }
-        $opt = $this->lazyClient->getOption(\MolliePrefix\Memcached::OPT_SERIALIZER);
-        if (\MolliePrefix\Memcached::SERIALIZER_PHP !== $opt && \MolliePrefix\Memcached::SERIALIZER_IGBINARY !== $opt) {
+        $opt = $this->lazyClient->getOption(\Memcached::OPT_SERIALIZER);
+        if (\Memcached::SERIALIZER_PHP !== $opt && \Memcached::SERIALIZER_IGBINARY !== $opt) {
             throw new \MolliePrefix\Symfony\Component\Cache\Exception\CacheException('MemcachedAdapter: "serializer" option must be "php" or "igbinary".');
         }
-        if ('' !== ($prefix = (string) $this->lazyClient->getOption(\MolliePrefix\Memcached::OPT_PREFIX_KEY))) {
+        if ('' !== ($prefix = (string) $this->lazyClient->getOption(\Memcached::OPT_PREFIX_KEY))) {
             throw new \MolliePrefix\Symfony\Component\Cache\Exception\CacheException(\sprintf('MemcachedAdapter: "prefix_key" option must be empty when using proxified connections, "%s" given.', $prefix));
         }
         return $this->client = $this->lazyClient;

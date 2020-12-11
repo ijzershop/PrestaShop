@@ -24,7 +24,7 @@ class MemcachedCacheTest extends \MolliePrefix\Symfony\Component\Cache\Tests\Sim
         self::$client = \MolliePrefix\Symfony\Component\Cache\Adapter\AbstractAdapter::createConnection('memcached://' . \getenv('MEMCACHED_HOST'));
         self::$client->get('foo');
         $code = self::$client->getResultCode();
-        if (\MolliePrefix\Memcached::RES_SUCCESS !== $code && \MolliePrefix\Memcached::RES_NOTFOUND !== $code) {
+        if (\Memcached::RES_SUCCESS !== $code && \Memcached::RES_NOTFOUND !== $code) {
             self::markTestSkipped('Memcached error: ' . \strtolower(self::$client->getResultMessage()));
         }
     }
@@ -43,11 +43,11 @@ class MemcachedCacheTest extends \MolliePrefix\Symfony\Component\Cache\Tests\Sim
     public function testOptions()
     {
         $client = \MolliePrefix\Symfony\Component\Cache\Simple\MemcachedCache::createConnection([], ['libketama_compatible' => \false, 'distribution' => 'modula', 'compression' => \true, 'serializer' => 'php', 'hash' => 'md5']);
-        $this->assertSame(\MolliePrefix\Memcached::SERIALIZER_PHP, $client->getOption(\MolliePrefix\Memcached::OPT_SERIALIZER));
-        $this->assertSame(\MolliePrefix\Memcached::HASH_MD5, $client->getOption(\MolliePrefix\Memcached::OPT_HASH));
-        $this->assertTrue($client->getOption(\MolliePrefix\Memcached::OPT_COMPRESSION));
-        $this->assertSame(0, $client->getOption(\MolliePrefix\Memcached::OPT_LIBKETAMA_COMPATIBLE));
-        $this->assertSame(\MolliePrefix\Memcached::DISTRIBUTION_MODULA, $client->getOption(\MolliePrefix\Memcached::OPT_DISTRIBUTION));
+        $this->assertSame(\Memcached::SERIALIZER_PHP, $client->getOption(\Memcached::OPT_SERIALIZER));
+        $this->assertSame(\Memcached::HASH_MD5, $client->getOption(\Memcached::OPT_HASH));
+        $this->assertTrue($client->getOption(\Memcached::OPT_COMPRESSION));
+        $this->assertSame(0, $client->getOption(\Memcached::OPT_LIBKETAMA_COMPATIBLE));
+        $this->assertSame(\Memcached::DISTRIBUTION_MODULA, $client->getOption(\Memcached::OPT_DISTRIBUTION));
     }
     /**
      * @dataProvider provideBadOptions
@@ -71,15 +71,15 @@ class MemcachedCacheTest extends \MolliePrefix\Symfony\Component\Cache\Tests\Sim
     {
         $this->assertTrue(\MolliePrefix\Symfony\Component\Cache\Simple\MemcachedCache::isSupported());
         $client = \MolliePrefix\Symfony\Component\Cache\Simple\MemcachedCache::createConnection([]);
-        $this->assertTrue($client->getOption(\MolliePrefix\Memcached::OPT_COMPRESSION));
-        $this->assertSame(1, $client->getOption(\MolliePrefix\Memcached::OPT_BINARY_PROTOCOL));
-        $this->assertSame(1, $client->getOption(\MolliePrefix\Memcached::OPT_LIBKETAMA_COMPATIBLE));
+        $this->assertTrue($client->getOption(\Memcached::OPT_COMPRESSION));
+        $this->assertSame(1, $client->getOption(\Memcached::OPT_BINARY_PROTOCOL));
+        $this->assertSame(1, $client->getOption(\Memcached::OPT_LIBKETAMA_COMPATIBLE));
     }
     public function testOptionSerializer()
     {
         $this->expectException('MolliePrefix\\Symfony\\Component\\Cache\\Exception\\CacheException');
         $this->expectExceptionMessage('MemcachedAdapter: "serializer" option must be "php" or "igbinary".');
-        if (!\MolliePrefix\Memcached::HAVE_JSON) {
+        if (!\Memcached::HAVE_JSON) {
             $this->markTestSkipped('Memcached::HAVE_JSON required');
         }
         new \MolliePrefix\Symfony\Component\Cache\Simple\MemcachedCache(\MolliePrefix\Symfony\Component\Cache\Simple\MemcachedCache::createConnection([], ['serializer' => 'json']));

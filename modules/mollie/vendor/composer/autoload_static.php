@@ -22,8 +22,18 @@ class ComposerStaticInit5ff99363f3a94bfd1a9a51f90cf5ccfc
     );
 
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Symfony\\Component\\Yaml\\' => 23,
+            'Symfony\\Component\\Filesystem\\' => 29,
+            'Symfony\\Component\\ExpressionLanguage\\' => 37,
+            'Symfony\\Component\\DependencyInjection\\' => 38,
+            'Symfony\\Component\\Config\\' => 25,
+            'Symfony\\Component\\Cache\\' => 24,
+        ),
         'M' => 
         array (
+            'Mollie\\Api\\' => 11,
             'Mollie\\' => 7,
             'MolliePrefix\\MolliePrefix\\Symfony\\Polyfill\\Php72\\' => 49,
             'MolliePrefix\\MolliePrefix\\Symfony\\Polyfill\\Php70\\' => 49,
@@ -32,19 +42,12 @@ class ComposerStaticInit5ff99363f3a94bfd1a9a51f90cf5ccfc
             'MolliePrefix\\MolliePrefix\\Symfony\\Polyfill\\Intl\\Idn\\' => 52,
             'MolliePrefix\\MolliePrefix\\Symfony\\Polyfill\\Ctype\\' => 49,
             'MolliePrefix\\MolliePrefix\\Symfony\\Polyfill\\Apcu\\' => 48,
-            'MolliePrefix\\MolliePrefix\\Symfony\\Component\\Yaml\\' => 49,
-            'MolliePrefix\\MolliePrefix\\Symfony\\Component\\Filesystem\\' => 55,
-            'MolliePrefix\\MolliePrefix\\Symfony\\Component\\ExpressionLanguage\\' => 63,
-            'MolliePrefix\\MolliePrefix\\Symfony\\Component\\DependencyInjection\\' => 64,
-            'MolliePrefix\\MolliePrefix\\Symfony\\Component\\Config\\' => 51,
-            'MolliePrefix\\MolliePrefix\\Symfony\\Component\\Cache\\' => 50,
             'MolliePrefix\\MolliePrefix\\Psr\\SimpleCache\\' => 42,
             'MolliePrefix\\MolliePrefix\\Psr\\Log\\' => 34,
             'MolliePrefix\\MolliePrefix\\Psr\\Http\\Message\\' => 43,
             'MolliePrefix\\MolliePrefix\\Psr\\Container\\' => 40,
             'MolliePrefix\\MolliePrefix\\Psr\\Cache\\' => 36,
             'MolliePrefix\\MolliePrefix\\PrestaShop\\Decimal\\' => 45,
-            'MolliePrefix\\MolliePrefix\\Mollie\\Api\\' => 37,
             'MolliePrefix\\MolliePrefix\\GuzzleHttp\\Psr7\\' => 42,
             'MolliePrefix\\MolliePrefix\\GuzzleHttp\\Promise\\' => 45,
             'MolliePrefix\\MolliePrefix\\GuzzleHttp\\' => 37,
@@ -53,6 +56,34 @@ class ComposerStaticInit5ff99363f3a94bfd1a9a51f90cf5ccfc
     );
 
     public static $prefixDirsPsr4 = array (
+        'Symfony\\Component\\Yaml\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/yaml',
+        ),
+        'Symfony\\Component\\Filesystem\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/filesystem',
+        ),
+        'Symfony\\Component\\ExpressionLanguage\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/expression-language',
+        ),
+        'Symfony\\Component\\DependencyInjection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/dependency-injection',
+        ),
+        'Symfony\\Component\\Config\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/config',
+        ),
+        'Symfony\\Component\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/cache',
+        ),
+        'Mollie\\Api\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mollie/mollie-api-php/src',
+        ),
         'Mollie\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -85,30 +116,6 @@ class ComposerStaticInit5ff99363f3a94bfd1a9a51f90cf5ccfc
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-apcu',
         ),
-        'MolliePrefix\\MolliePrefix\\Symfony\\Component\\Yaml\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/yaml',
-        ),
-        'MolliePrefix\\MolliePrefix\\Symfony\\Component\\Filesystem\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/filesystem',
-        ),
-        'MolliePrefix\\MolliePrefix\\Symfony\\Component\\ExpressionLanguage\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/expression-language',
-        ),
-        'MolliePrefix\\MolliePrefix\\Symfony\\Component\\DependencyInjection\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/dependency-injection',
-        ),
-        'MolliePrefix\\MolliePrefix\\Symfony\\Component\\Config\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/config',
-        ),
-        'MolliePrefix\\MolliePrefix\\Symfony\\Component\\Cache\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/cache',
-        ),
         'MolliePrefix\\MolliePrefix\\Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
@@ -132,10 +139,6 @@ class ComposerStaticInit5ff99363f3a94bfd1a9a51f90cf5ccfc
         'MolliePrefix\\MolliePrefix\\PrestaShop\\Decimal\\' => 
         array (
             0 => __DIR__ . '/..' . '/prestashop/decimal/src',
-        ),
-        'MolliePrefix\\MolliePrefix\\Mollie\\Api\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/mollie/mollie-api-php/src',
         ),
         'MolliePrefix\\MolliePrefix\\GuzzleHttp\\Psr7\\' => 
         array (
@@ -178,7 +181,7 @@ class ComposerStaticInit5ff99363f3a94bfd1a9a51f90cf5ccfc
         'MolliePrefix\\Composer\\CaBundle\\CaBundle' => __DIR__ . '/..' . '/composer/ca-bundle/src/CaBundle.php',
         'MolliePrefix\\Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'MolliePrefix\\DivisionByZeroError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/DivisionByZeroError.php',
-        'MolliePrefix\\Error' => __DIR__ . '/..' . '/paragonie/random_compat/lib/error_polyfill.php',
+        'MolliePrefix\\Error' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/Error.php',
         'MolliePrefix\\GuzzleHttp\\Client' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Client.php',
         'MolliePrefix\\GuzzleHttp\\ClientInterface' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/ClientInterface.php',
         'MolliePrefix\\GuzzleHttp\\Cookie\\CookieJar' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Cookie/CookieJar.php',
@@ -734,7 +737,7 @@ class ComposerStaticInit5ff99363f3a94bfd1a9a51f90cf5ccfc
         'MolliePrefix\\Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
         'MolliePrefix\\Symfony\\Polyfill\\Php70\\Php70' => __DIR__ . '/..' . '/symfony/polyfill-php70/Php70.php',
         'MolliePrefix\\Symfony\\Polyfill\\Php72\\Php72' => __DIR__ . '/..' . '/symfony/polyfill-php72/Php72.php',
-        'MolliePrefix\\TypeError' => __DIR__ . '/..' . '/paragonie/random_compat/lib/error_polyfill.php',
+        'MolliePrefix\\TypeError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
         'MollieQrcodeModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/qrcode.php',
         'MollieReturnModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/return.php',
         'MollieSuccessModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/success.php',

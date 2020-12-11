@@ -85,8 +85,6 @@ class AdminController extends AdminControllerCore
             $this->filter = true;
         }
 
-//        var_export([, $this->context->cookie]);
-//die();
         if($this->context->controller->controller_name == 'AdminOrders') {
             //Set default date filter to shorten tabel rows length, and remove filter when clicked on remove all filters button
             switch (strval(Tools::getValue('submitFilterorder'))) {
@@ -99,7 +97,7 @@ class AdminController extends AdminControllerCore
                     $this->filter = true;
                     $this->context->cookie->__set('submitFilterorder', '1');
                     $this->context->cookie->__set('ordersorderFilter_a!date_add',
-                        '["' . date('Y-m-d', strtotime('-4 weeks')) . '","' . date('Y-m-d', strtotime('now')) . '"]');
+                        '["' . date('Y-m-d', strtotime(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_ORDERLIST_FILTER_TIME', null, null, null, '-4 weeks'))) . '","' . date('Y-m-d', strtotime('now')) . '"]');
                     $this->context->cookie->write();
                     break;
                 default:
@@ -109,7 +107,7 @@ class AdminController extends AdminControllerCore
                         $this->context->cookie->__set('ordersorderFilter_a!date_add', $current_date_filter);
                     } else {
                         $this->context->cookie->__set('ordersorderFilter_a!date_add',
-                            '["' . date('Y-m-d', strtotime('-4 weeks')) . '","' . date('Y-m-d',
+                            '["' . date('Y-m-d', strtotime(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_ORDERLIST_FILTER_TIME', null, null, null, '-4 weeks'))) . '","' . date('Y-m-d',
                                 strtotime('now')) . '"]');
                     }
                     $this->context->cookie->write();

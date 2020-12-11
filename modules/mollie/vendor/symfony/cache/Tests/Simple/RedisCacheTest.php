@@ -22,7 +22,7 @@ class RedisCacheTest extends \MolliePrefix\Symfony\Component\Cache\Tests\Simple\
     {
         $redisHost = \getenv('REDIS_HOST');
         $redis = \MolliePrefix\Symfony\Component\Cache\Simple\RedisCache::createConnection('redis://' . $redisHost);
-        $this->assertInstanceOf(\MolliePrefix\Redis::class, $redis);
+        $this->assertInstanceOf(\Redis::class, $redis);
         $this->assertTrue($redis->isConnected());
         $this->assertSame(0, $redis->getDbNum());
         $redis = \MolliePrefix\Symfony\Component\Cache\Simple\RedisCache::createConnection('redis://' . $redisHost . '/2');

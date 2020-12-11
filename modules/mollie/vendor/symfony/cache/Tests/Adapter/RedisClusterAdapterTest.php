@@ -14,12 +14,12 @@ class RedisClusterAdapterTest extends \MolliePrefix\Symfony\Component\Cache\Test
 {
     public static function setUpBeforeClass()
     {
-        if (!\class_exists('MolliePrefix\\RedisCluster')) {
+        if (!\class_exists('RedisCluster')) {
             self::markTestSkipped('The RedisCluster class is required.');
         }
         if (!($hosts = \getenv('REDIS_CLUSTER_HOSTS'))) {
             self::markTestSkipped('REDIS_CLUSTER_HOSTS env var is not defined.');
         }
-        self::$redis = new \MolliePrefix\RedisCluster(null, \explode(' ', $hosts));
+        self::$redis = new \RedisCluster(null, \explode(' ', $hosts));
     }
 }

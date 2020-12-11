@@ -21,7 +21,7 @@
   * @copyright 2007-2019 PrestaShop SA and Contributors
   * @license https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
   * International Registered Trademark & Property of PrestaShop SA
-  *}  
+  *}
   {assign var="workshopProfiles" value=Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_WORKSHOP_PROFILES')}
   {assign var="profiles" value=array()}
   {if !empty($workshopProfiles)}
@@ -55,7 +55,7 @@
 
   </style>
   {/if}
-  
+
 <style type="text/css">
   /*Koopman settings */
   .cc-koopman {
@@ -63,7 +63,7 @@
   }
 
   .cc-koopman input {
-    position: absolute;
+    display: none;
     z-index: 999;
   }
 

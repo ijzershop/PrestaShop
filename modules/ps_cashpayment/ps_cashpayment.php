@@ -99,7 +99,7 @@ public function addOrderState($name)
                 break;
             }
         }
- 
+
         if (!$state_exist) {
             // create new order state
             $order_state = new OrderState();
@@ -124,7 +124,7 @@ public function addOrderState($name)
     protected function _postProcess()
     {
         if (Tools::isSubmit('btnSubmit')) {
-           
+
             $custom_text = array();
             $languages = Language::getLanguages(false);
             foreach ($languages as $lang) {
@@ -138,7 +138,7 @@ public function addOrderState($name)
 
     public function getContent()
     {
-        if (Tools::isSubmit('btnSubmit')){ 
+        if (Tools::isSubmit('btnSubmit')){
             if (!count($this->_postErrors)) {
                 $this->_postProcess();
             } else {
@@ -201,10 +201,9 @@ public function addOrderState($name)
             $totalToPaid = $params['order']->getOrdersTotalPaid() - $params['order']->getTotalPaid();
             $this->smarty->assign(array(
                 'shop_name' => $this->context->shop->name,
-                'total' => Tools::displayPrice(
+                'total' => Context::getContext()->currentLocale->formatPrice(
                     $totalToPaid,
-                    new Currency($params['order']->id_currency),
-                    false
+                    'EUR'
                 ),
                 'status' => 'ok',
                 'reference' => $params['order']->reference,
@@ -302,7 +301,7 @@ public function addOrderState($name)
         $cart = $this->context->cart;
         $total = sprintf(
             $this->trans('%1$s (tax incl.)', array(), 'Modules.Cashpayment.Shop'),
-            Tools::displayPrice($cart->getOrderTotal(true, Cart::BOTH))
+            Context::getContext()->currentLocale->formatPrice($cart->getOrderTotal(true, Cart::BOTH), 'EUR')
         );
 
         $bankcashCustomText = Tools::nl2br(Configuration::get('BANK_CASH_CUSTOM_TEXT', $this->context->language->id));

@@ -201,10 +201,9 @@ public function addOrderState($name)
             $totalToPaid = $params['order']->getOrdersTotalPaid() - $params['order']->getTotalPaid();
             $this->smarty->assign(array(
                 'shop_name' => $this->context->shop->name,
-                'total' => Tools::displayPrice(
+                'total' => Context::getContext()->currentLocale->formatPrice(
                     $totalToPaid,
-                    new Currency($params['order']->id_currency),
-                    false
+                    'EUR'
                 ),
                 'status' => 'ok',
                 'reference' => $params['order']->reference,
@@ -302,7 +301,7 @@ public function addOrderState($name)
         $cart = $this->context->cart;
         $total = sprintf(
             $this->trans('%1$s (tax incl.)', array(), 'Modules.Pinpayment.Shop'),
-            Tools::displayPrice($cart->getOrderTotal(true, Cart::BOTH))
+            Context::getContext()->currentLocale->formatPrice($cart->getOrderTotal(true, Cart::BOTH), 'EUR')
         );
 
         $bankpinCustomText = Tools::nl2br(Configuration::get('BANK_PIN_CUSTOM_TEXT', $this->context->language->id));

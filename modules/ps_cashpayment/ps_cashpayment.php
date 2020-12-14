@@ -132,6 +132,10 @@ public function addOrderState($name)
                     $custom_text[$lang['id_lang']] = Tools::getValue('BANK_CASH_CUSTOM_TEXT_'.$lang['id_lang']);
                 }
             }
+            if (Tools::getIsset('BANK_CASH_COMPLETE_STATE')) {
+                $newState = Tools::getValue('BANK_CASH_COMPLETE_STATE');
+                Configuration::updateValue('BANK_CASH_COMPLETE_STATE', $newState);
+            }
         }
         $this->_html .= $this->displayConfirmation($this->trans('Settings updated', array(), 'Admin.Global'));
     }
@@ -184,11 +188,8 @@ public function addOrderState($name)
 
     public function hookPaymentReturn($params)
     {
-        if (!$this->active || !Configuration::get(self::FLAG_DISPLAY_PAYMENT_INVITE)) {
-            return;
-        }
-
         $state = $params['order']->getCurrentState();
+
         if (
             in_array(
                 $state,
@@ -199,6 +200,13 @@ public function addOrderState($name)
                 )
         )) {
             $totalToPaid = $params['order']->getOrdersTotalPaid() - $params['order']->getTotalPaid();
+
+            $newState = Configuration::get('BANK_CASH_COMPLETE_STATE');
+            $history = new OrderHistory();
+            $history->id_order = (int)$params['order']->id;
+            $history->changeIdOrderState($newState, (int)$params['order']->id);
+            $history->add();
+
             $this->smarty->assign(array(
                 'shop_name' => $this->context->shop->name,
                 'total' => Context::getContext()->currentLocale->formatPrice(
@@ -238,6 +246,9 @@ public function addOrderState($name)
 
     public function renderForm()
     {
+        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+        $orderStates = OrderState::getOrderStates($lang->id);
+
         $fields_form_customization = array(
             'form' => array(
                 'legend' => array(
@@ -252,6 +263,18 @@ public function addOrderState($name)
                         'desc' => $this->trans('Information on the cash transfer', array(), 'Modules.Cashpayment.Admin'),
                         'lang' => true
                     ),
+                    array(
+                        'type' => 'select',
+                        'label' => $this->trans('Order state for payment complete', array(), 'Modules.Pinpayment.Admin'),
+                        'name' => 'BANK_CASH_COMPLETE_STATE',
+                        'desc' => $this->trans('The state for when payment is complete', array(), 'Modules.Pinpayment.Admin'),
+                        'required' => false,
+                        'options' => [
+                            'query' => $orderStates,
+                            'id' => 'id_order_state',
+                            'name' => 'name',
+                        ]
+                    )
                 ),
                 'submit' => array(
                     'title' => $this->trans('Save', array(), 'Admin.Actions'),
@@ -262,7 +285,6 @@ public function addOrderState($name)
         $helper = new HelperForm();
         $helper->show_toolbar = false;
         $helper->table = $this->table;
-        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
         $helper->default_form_language = $lang->id;
         $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? : 0;
         $helper->id = (int)Tools::getValue('id_carrier');
@@ -291,8 +313,11 @@ public function addOrderState($name)
             );
         }
 
+        $newState = Tools::getValue('BANK_PIN_COMPLETE_STATE', Configuration::get('BANK_PIN_COMPLETE_STATE'));
+
         return array(
-            'BANK_CASH_CUSTOM_TEXT' => $custom_text
+            'BANK_CASH_CUSTOM_TEXT' => $custom_text,
+            'BANK_CASH_COMPLETE_STATE' => $newState
         );
     }
 

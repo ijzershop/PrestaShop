@@ -78,15 +78,15 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $carrier = $this->order->id_carrier;
         $carrierObj = new Carrier($carrier, 1);
 
-        $addedToOrder = '';
-        $addToOrderCarrier = Configuration::get('ADDTOORDER_DELIVERY_METHOD', 14);
-        if((int)$carrier == (int)$addToOrderCarrier){
-            $addedToOrder = $this->order->added_to_order;
-        }
 
         $this->smarty->assign(
-            array('header' => $carrierObj->name, 
-                  'reference'=> $this->order->reference, 'delivery_date' => $this->order->delivery_date, 'invoice_date' => $this->order->invoice_date, 'total_weight' => $total_weight, 'added_to_order' => $addedToOrder));
+            array('header' => $carrierObj->name,
+                'reference'=> $this->order->reference,
+                'delivery_date' => $this->order->delivery_date,
+                'invoice_date' => $this->order->invoice_date,
+                'total_weight' => $total_weight,
+                'added_to_order' => $this->order->added_to_order)
+        );
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
@@ -119,7 +119,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
         if ($this->order->id_address_delivery != $this->order->id_address_invoice) {
             $invoice_address = new Address((int) $this->order->id_address_invoice);
-            
+
             $formatted_invoice_address .= $invoice_address->firstname .' '. $invoice_address->lastname .'<br />';
             $formatted_invoice_address .= $invoice_address->company.'<br />';
             $formatted_invoice_address .= $invoice_address->address1.' '.$invoice_address->house_number.' '.$invoice_address->house_number_extension.'<br />';
@@ -128,7 +128,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             }
             $formatted_invoice_address .= ucwords($invoice_address->postcode). ' ' . $invoice_address->city .'<br />';
             $formatted_invoice_address .= $invoice_address->country .'<br />';
-            
+
             $customer_contact['phone'] = $invoice_address->phone;
             $customer_contact['mobile'] = $invoice_address->phone_mobile;
         }
@@ -155,7 +155,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                                     {
                                         $file = $customized['datas'][1][0]['technical_image'];
                                         if(!is_null($file) && !empty($file)){
-                                       
+
                                             $fileContents = file_get_contents(Context::getContext()->shop->getBaseURL(true).$file);
 
                                             if($fileContents != false){
@@ -168,25 +168,25 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                                                         $dom->parentNode->removeChild($dom);
                                                     }
                                                 }
-                                                
+
                                                 $im = new Imagick();
                                                 $im->readImageBlob($doc->asXml());
                                                 $im->setImageFormat('png24');
                                                 $im->writeImage(_PS_CORE_DIR_.'/'.$file . '.png');
                                                 $im->clear();
-                                                $im->destroy();  
+                                                $im->destroy();
                                             }
                                         }
-                          
+
                                     }
                                 }
                             }
                         }
-                        
+
                     }
                 }
             }
-                
+
 
         if (Configuration::get('PS_PDF_IMG_DELIVERY')) {
             foreach ($order_details as &$order_detail) {

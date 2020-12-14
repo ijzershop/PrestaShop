@@ -302,6 +302,7 @@ class MollieReturnModuleFrontController extends AbstractMollieController
                 break;
             case PaymentStatus::STATUS_AUTHORIZED:
             case PaymentStatus::STATUS_PAID:
+
                 $response = $paymentReturnService->handlePaidStatus(
                     $order,
                     $transaction,

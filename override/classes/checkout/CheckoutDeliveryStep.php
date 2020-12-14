@@ -45,9 +45,8 @@ class CheckoutDeliveryStep extends CheckoutDeliveryStepCore
                 ($useGift && isset($requestParams['gift_message'])) ? $requestParams['gift_message'] : ''
             );
         }
-
         // Fetch new value to cart params
-        if(isset($requestParams['added_to_order']) && ((int)Configuration::get('ADDTOORDER_DELIVERY_METHOD') == (int)$requestParams['delivery_option'])){
+        if(isset($requestParams['added_to_order']) && ((int)Configuration::get('ADDTOORDER_DELIVERY_METHOD') == (int)reset($requestParams['delivery_option']))){
             $this->context->cart->added_to_order = $requestParams['added_to_order'];
             $this->context->cart->update();
         }

@@ -132,7 +132,12 @@ public function addOrderState($name)
                     $custom_text[$lang['id_lang']] = Tools::getValue('BANK_PIN_CUSTOM_TEXT_'.$lang['id_lang']);
                 }
             }
+            if (Tools::getIsset('BANK_PIN_COMPLETE_STATE')) {
+                $newState = Tools::getValue('BANK_PIN_COMPLETE_STATE');
+                Configuration::updateValue('BANK_PIN_COMPLETE_STATE', $newState);
+            }
         }
+
         $this->_html .= $this->displayConfirmation($this->trans('Settings updated', array(), 'Admin.Global'));
     }
 
@@ -199,6 +204,13 @@ public function addOrderState($name)
                 )
         )) {
             $totalToPaid = $params['order']->getOrdersTotalPaid() - $params['order']->getTotalPaid();
+
+            $newState = Configuration::get('BANK_PIN_COMPLETE_STATE');
+            $history = new OrderHistory();
+            $history->id_order = (int)$params['order']->id;
+            $history->changeIdOrderState($newState, (int)$params['order']->id);
+            $history->add();
+
             $this->smarty->assign(array(
                 'shop_name' => $this->context->shop->name,
                 'total' => Context::getContext()->currentLocale->formatPrice(
@@ -238,6 +250,8 @@ public function addOrderState($name)
 
     public function renderForm()
     {
+        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+        $orderStates = OrderState::getOrderStates($lang->id);
         $fields_form_customization = array(
             'form' => array(
                 'legend' => array(
@@ -251,6 +265,18 @@ public function addOrderState($name)
                         'name' => 'BANK_PIN_CUSTOM_TEXT',
                         'desc' => $this->trans('Information on the pin transfer', array(), 'Modules.Pinpayment.Admin'),
                         'lang' => true
+                    ),
+                    array(
+                        'type' => 'select',
+                        'label' => $this->trans('Order state for payment complete', array(), 'Modules.Pinpayment.Admin'),
+                        'name' => 'BANK_PIN_COMPLETE_STATE',
+                        'desc' => $this->trans('The state for when payment is complete', array(), 'Modules.Pinpayment.Admin'),
+                        'required' => false,
+                        'options' => [
+                            'query' => $orderStates,
+                            'id' => 'id_order_state',
+                            'name' => 'name',
+                        ]
                     ),
                 ),
                 'submit' => array(
@@ -291,8 +317,11 @@ public function addOrderState($name)
             );
         }
 
+        $newState = Tools::getValue('BANK_PIN_COMPLETE_STATE', Configuration::get('BANK_PIN_COMPLETE_STATE'));
+
         return array(
-            'BANK_PIN_CUSTOM_TEXT' => $custom_text
+            'BANK_PIN_CUSTOM_TEXT' => $custom_text,
+            'BANK_PIN_COMPLETE_STATE' => $newState
         );
     }
 

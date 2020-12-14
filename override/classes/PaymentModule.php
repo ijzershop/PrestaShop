@@ -74,9 +74,10 @@ class PaymentModule extends PaymentModuleCore
         $order->id_lang = (int) $cart->id_lang;
         $order->id_cart = (int) $cart->id;
         $order->reference = $reference;
+
         //-------------------------------------------------------------------- Add value added to order
         $order->added_to_order = $cart->added_to_order;
-        
+
         $order->id_shop = (int) $context->shop->id;
         $order->id_shop_group = (int) $context->shop->id_shop_group;
 
@@ -102,7 +103,7 @@ class PaymentModule extends PaymentModuleCore
         $order->total_shipping_tax_excl = (float) $cart->getTotalShippingCost(null, false);
         $order->total_shipping_tax_incl = (float) $cart->getTotalShippingCost(null, true);
         $order->total_shipping = $order->total_shipping_tax_incl;
-        
+
         if (null !== $carrier && Validate::isLoadedObject($carrier)) {
             $order->carrier_tax_rate = $carrier->getTaxesRate(new Address((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
         }

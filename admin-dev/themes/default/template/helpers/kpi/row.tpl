@@ -86,13 +86,14 @@
   .meter-smaller-2 {
     background-image: url('../modules/koopmanorderexport/views/templates/img/2m-35_koopman.png');
   }
-
   .toegevoegd {
     background-image: url('../modules/koopmanorderexport/views/templates/img/toegevoegd.png');
   }
-
   .aftehalen {
     background-image: url('../modules/koopmanorderexport/views/templates/img/aftehalen.png');
+  }
+  .afgehaald {
+    background-image: url('../modules/koopmanorderexport/views/templates/img/afgehaald.png');
   }
 
   .type-cc {

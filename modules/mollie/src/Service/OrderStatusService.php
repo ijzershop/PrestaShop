@@ -92,7 +92,6 @@ class OrderStatusService
                 }
             }
         }
-
         if ((int) $statusId === 0) {
             return;
         }

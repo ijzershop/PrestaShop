@@ -166,4 +166,8 @@
 	.small {
 		font-size:small;
 	}
+  p{
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+  }
 </style>

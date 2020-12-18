@@ -96,7 +96,7 @@ class Mollie extends PaymentModule
     {
         $this->name = 'mollie';
         $this->tab = 'payments_gateways';
-        $this->version = '4.1.2';
+        $this->version = '4.1.3';
         $this->author = 'Mollie B.V.';
         $this->need_instance = 1;
         $this->bootstrap = true;
@@ -814,11 +814,10 @@ class Mollie extends PaymentModule
             $isIssuersOnClick = Configuration::get(Mollie\Config\Config::MOLLIE_ISSUERS) === Mollie\Config\Config::ISSUERS_ON_CLICK;
             $isCreditCardMethod = $methodObj->id_method === MolliePrefix\Mollie\Api\Types\PaymentMethod::CREDITCARD;
 
-
             if ($isIdealMethod && $isIssuersOnClick) {
                 $newOption = new PrestaShop\PrestaShop\Core\Payment\PaymentOption();
                 $newOption
-                    ->setCallToActionText(!empty($methodObj->title) ? $methodObj->title : $this->lang($methodObj->method_name))
+                    ->setCallToActionText($this->lang($methodObj->method_name))
                     ->setModuleName($this->name)
                     ->setAction(Context::getContext()->link->getModuleLink(
                         $this->name,
@@ -868,7 +867,7 @@ class Mollie extends PaymentModule
                 ]);
                 $newOption = new PrestaShop\PrestaShop\Core\Payment\PaymentOption();
                 $newOption
-                    ->setCallToActionText(!empty($methodObj->title) ? $methodObj->title : $this->lang($methodObj->method_name))
+                    ->setCallToActionText($this->lang($methodObj->method_name))
                     ->setModuleName($this->name)
                     ->setAdditionalInformation($this->display(__FILE__, 'mollie_iframe.tpl'))
                     ->setInputs(
@@ -926,7 +925,7 @@ class Mollie extends PaymentModule
             } else {
                 $newOption = new PrestaShop\PrestaShop\Core\Payment\PaymentOption();
                 $newOption
-                    ->setCallToActionText(!empty($methodObj->title) ? $methodObj->title : $this->lang($methodObj->method_name))
+                    ->setCallToActionText($this->lang($methodObj->method_name))
                     ->setModuleName($this->name)
                     ->setAction(Context::getContext()->link->getModuleLink(
                         'mollie',

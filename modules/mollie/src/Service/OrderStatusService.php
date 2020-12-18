@@ -53,7 +53,7 @@ class OrderStatusService
     /**
      * @var MailService
      */
-    private $mailService;
+    protected $mailService;
 
     public function __construct(MailService $mailService)
     {
@@ -92,6 +92,7 @@ class OrderStatusService
                 }
             }
         }
+
         if ((int) $statusId === 0) {
             return;
         }
@@ -116,7 +117,14 @@ class OrderStatusService
         if ($useExistingPayment === null) {
             $useExistingPayment = !$order->hasInvoice();
         }
-
+        $existingOrderStatesArray = $order->getHistory(Context::getContext()->cookie->id_lang);
+        if(isset($existingOrderStatesArray) && is_array($existingOrderStatesArray))
+        {
+            $existingOrderStates = array_column($existingOrderStatesArray, 'id_order_state');
+            if(in_array($statusId, $existingOrderStates)){
+                return;
+            }
+        }
         $history = new OrderHistory();
         $history->id_order = $order->id;
         $history->changeIdOrderState($statusId, $order, $useExistingPayment);
@@ -148,7 +156,7 @@ class OrderStatusService
         }
     }
 
-    private function checkIfOrderConfNeedsToBeSend($statusId)
+    protected function checkIfOrderConfNeedsToBeSend($statusId)
     {
         if ((int) Configuration::get(Config::MOLLIE_SEND_NEW_ORDER) !== Config::NEW_ORDER_MAIL_SEND_ON_PAID) {
             return false;
@@ -158,7 +166,7 @@ class OrderStatusService
             ((int) $statusId === (int) Configuration::get(Config::STATUS_PS_OS_OUTOFSTOCK_PAID));
     }
 
-    private function checkIfNewOrderMailNeedsToBeSend($statusId)
+    protected function checkIfNewOrderMailNeedsToBeSend($statusId)
     {
         if ((int) Configuration::get(Config::MOLLIE_SEND_NEW_ORDER) !== Config::NEW_ORDER_MAIL_SEND_ON_PAID) {
             return false;

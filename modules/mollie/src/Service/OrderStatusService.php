@@ -117,14 +117,20 @@ class OrderStatusService
         if ($useExistingPayment === null) {
             $useExistingPayment = !$order->hasInvoice();
         }
+
+
         $existingOrderStatesArray = $order->getHistory(Context::getContext()->cookie->id_lang);
         if(isset($existingOrderStatesArray) && is_array($existingOrderStatesArray))
         {
             $existingOrderStates = array_column($existingOrderStatesArray, 'id_order_state');
             if(in_array($statusId, $existingOrderStates)){
-                return;
+                if((int)$statusId == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_ORDERSTATE_PAID'))
+                {
+                    return;
+                }
             }
         }
+
         $history = new OrderHistory();
         $history->id_order = $order->id;
         $history->changeIdOrderState($statusId, $order, $useExistingPayment);

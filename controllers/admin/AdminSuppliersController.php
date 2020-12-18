@@ -185,6 +185,22 @@ class AdminSuppliersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
+                    'label' => $this->trans('Housenumber', array(), 'Admin.Global'),
+                    'name' => 'house_number',
+                    'maxlength' => 10,
+                    'col' => 6,
+                    'required' => true,
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->trans('Housenumber extension', array(), 'Admin.Global'),
+                    'name' => 'house_number_extension',
+                    'maxlength' => 10,
+                    'col' => 6,
+                    'required' => false,
+                ),
+                array(
+                    'type' => 'text',
                     'label' => $this->trans('Address (2)', array(), 'Admin.Global'),
                     'name' => 'address2',
                     'required' => in_array('address2', $required_fields),

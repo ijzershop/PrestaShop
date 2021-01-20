@@ -17,6 +17,8 @@ use PrestaShopDatabaseException;
 use PrestaShopException;
 use Shop;
 
+
+error_reporting(E_ALL); ini_set('display_errors', 'on');
 /**
  * Class OrderSlipGenerator.
  */
@@ -163,11 +165,8 @@ class OrderSlipGenerator
     public function generateBatchFile($object, $template) : void
     {
         $pdf_file = new PDF($object, $template, Context::getContext()->smarty);
-        ob_start();
-        $pdf_file->render(false);
-        $delivery_slip_pdf = ob_get_contents();
-        ob_end_clean();
-        file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/koopman/pakbonnen/pakbonnen_'.time().'.pdf', $delivery_slip_pdf);
+        $delivery_slip_pdf = $pdf_file->render(false);
+        file_put_contents(dirname(__FILE__, 4).'/upload/pakbonnen/pakbonnen_'.time().'.pdf', $delivery_slip_pdf);
     }
 }
 

@@ -18,8 +18,11 @@ use MolliePrefix\Symfony\Component\Process\PhpProcess;
  */
 class CaBundle
 {
+    /** @var string|null */
     private static $caPath;
+    /** @var array<string, bool> */
     private static $caFileValidity = array();
+    /** @var bool|null */
     private static $useOpensslParse;
     /**
      * Returns the system CA bundle path, or a path to the bundled one
@@ -102,10 +105,10 @@ class CaBundle
         }
         $caBundlePaths = \array_merge($caBundlePaths, $otherLocations);
         foreach ($caBundlePaths as $caBundle) {
-            if (self::caFileUsable($caBundle, $logger)) {
+            if ($caBundle && self::caFileUsable($caBundle, $logger)) {
                 return self::$caPath = $caBundle;
             }
-            if (self::caDirUsable($caBundle)) {
+            if ($caBundle && self::caDirUsable($caBundle)) {
                 return self::$caPath = $caBundle;
             }
         }
@@ -125,7 +128,11 @@ class CaBundle
         // cURL does not understand 'phar://' paths
         // see https://github.com/composer/ca-bundle/issues/10
         if (0 === \strpos($caBundleFile, 'phar://')) {
-            \file_put_contents($tempCaBundleFile = \tempnam(\sys_get_temp_dir(), 'openssl-ca-bundle-'), \file_get_contents($caBundleFile));
+            $tempCaBundleFile = \tempnam(\sys_get_temp_dir(), 'openssl-ca-bundle-');
+            if (\false === $tempCaBundleFile) {
+                throw new \RuntimeException('Could not create a temporary file to store the bundled CA file');
+            }
+            \file_put_contents($tempCaBundleFile, \file_get_contents($caBundleFile));
             \register_shutdown_function(function () use($tempCaBundleFile) {
                 @\unlink($tempCaBundleFile);
             });
@@ -156,9 +163,16 @@ class CaBundle
                 $warned = \true;
             }
             $isValid = !empty($contents);
-        } else {
+        } elseif (\is_string($contents) && \strlen($contents) > 0) {
             $contents = \preg_replace("/^(\\-+(?:BEGIN|END))\\s+TRUSTED\\s+(CERTIFICATE\\-+)\$/m", '$1 $2', $contents);
-            $isValid = (bool) \openssl_x509_parse($contents);
+            if (null === $contents) {
+                // regex extraction failed
+                $isValid = \false;
+            } else {
+                $isValid = (bool) \openssl_x509_parse($contents);
+            }
+        } else {
+            $isValid = \false;
         }
         if ($logger) {
             $logger->debug('Checked CA file ' . \realpath($filename) . ': ' . ($isValid ? 'valid' : 'invalid'));
@@ -185,7 +199,7 @@ class CaBundle
         // PHP 5.3.0 - PHP 5.3.27
         // PHP 5.4.0 - PHP 5.4.22
         // PHP 5.5.0 - PHP 5.5.6
-        if (\PHP_VERSION_ID < 50400 && \PHP_VERSION_ID >= 50328 || \PHP_VERSION_ID < 50500 && \PHP_VERSION_ID >= 50423 || \PHP_VERSION_ID < 50600 && \PHP_VERSION_ID >= 50507) {
+        if (\PHP_VERSION_ID < 50400 && \PHP_VERSION_ID >= 50328 || \PHP_VERSION_ID < 50500 && \PHP_VERSION_ID >= 50423 || \PHP_VERSION_ID >= 50507) {
             // This version of PHP has the fix for CVE-2013-6420 applied.
             return self::$useOpensslParse = \true;
         }
@@ -235,7 +249,7 @@ EOT;
         }
         $output = \preg_split('{\\r?\\n}', \trim($process->getOutput()));
         $errorOutput = \trim($process->getErrorOutput());
-        if (\count($output) === 3 && $output[0] === \sprintf('string(%d) "%s"', \strlen(\PHP_VERSION), \PHP_VERSION) && $output[1] === 'string(27) "stefan.esser@sektioneins.de"' && $output[2] === 'int(-1)' && \preg_match('{openssl_x509_parse\\(\\): illegal (?:ASN1 data type for|length in) timestamp in - on line \\d+}', $errorOutput)) {
+        if (\is_array($output) && \count($output) === 3 && $output[0] === \sprintf('string(%d) "%s"', \strlen(\PHP_VERSION), \PHP_VERSION) && $output[1] === 'string(27) "stefan.esser@sektioneins.de"' && $output[2] === 'int(-1)' && \preg_match('{openssl_x509_parse\\(\\): illegal (?:ASN1 data type for|length in) timestamp in - on line \\d+}', $errorOutput)) {
             // This PHP has the fix backported probably by a distro security team.
             return self::$useOpensslParse = \true;
         }
@@ -243,6 +257,7 @@ EOT;
     }
     /**
      * Resets the static caches
+     * @return void
      */
     public static function reset()
     {
@@ -250,6 +265,10 @@ EOT;
         self::$caPath = null;
         self::$useOpensslParse = null;
     }
+    /**
+     * @param  string $name
+     * @return string|false
+     */
     private static function getEnvVariable($name)
     {
         if (isset($_SERVER[$name])) {
@@ -260,10 +279,18 @@ EOT;
         }
         return \false;
     }
+    /**
+     * @param  string|false $certFile
+     * @return bool
+     */
     private static function caFileUsable($certFile, \MolliePrefix\Psr\Log\LoggerInterface $logger = null)
     {
         return $certFile && @\is_file($certFile) && @\is_readable($certFile) && static::validateCaFile($certFile, $logger);
     }
+    /**
+     * @param  string|false $certDir
+     * @return bool
+     */
     private static function caDirUsable($certDir)
     {
         return $certDir && @\is_dir($certDir) && @\is_readable($certDir) && \glob($certDir . '/*');

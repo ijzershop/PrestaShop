@@ -3123,7 +3123,6 @@ class CartCore extends ObjectModel
                 foreach ($options as $key => $option) {
                     if ($option['is_best_price']) {
                         $delivery_option[$id_address] = $key;
-
                         break;
                     }
                 }

@@ -30,7 +30,7 @@ class RedisAdapterTest extends \MolliePrefix\Symfony\Component\Cache\Tests\Adapt
     {
         $redisHost = \getenv('REDIS_HOST');
         $redis = \MolliePrefix\Symfony\Component\Cache\Adapter\RedisAdapter::createConnection('redis://' . $redisHost);
-        $this->assertInstanceOf(\Redis::class, $redis);
+        $this->assertInstanceOf(\MolliePrefix\Redis::class, $redis);
         $this->assertTrue($redis->isConnected());
         $this->assertSame(0, $redis->getDbNum());
         $redis = \MolliePrefix\Symfony\Component\Cache\Adapter\RedisAdapter::createConnection('redis://' . $redisHost . '/2');

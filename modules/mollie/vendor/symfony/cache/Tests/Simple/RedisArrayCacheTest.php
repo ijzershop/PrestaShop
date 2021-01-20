@@ -15,9 +15,9 @@ class RedisArrayCacheTest extends \MolliePrefix\Symfony\Component\Cache\Tests\Si
     public static function setUpBeforeClass()
     {
         parent::setupBeforeClass();
-        if (!\class_exists('RedisArray')) {
+        if (!\class_exists('MolliePrefix\\RedisArray')) {
             self::markTestSkipped('The RedisArray class is required.');
         }
-        self::$redis = new \RedisArray([\getenv('REDIS_HOST')], ['lazy_connect' => \true]);
+        self::$redis = new \MolliePrefix\RedisArray([\getenv('REDIS_HOST')], ['lazy_connect' => \true]);
     }
 }

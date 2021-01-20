@@ -167,7 +167,7 @@ class OrderSlipGenerator
         $pdf_file->render(false);
         $delivery_slip_pdf = ob_get_contents();
         ob_end_clean();
-        file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/koopman/pakbonnen/pakbonnen_'.time().'.pdf', $delivery_slip_pdf);
+        file_put_contents($_SERVER['DOCUMENT_ROOT'].'upload/koopman/pakbonnen/pakbonnen_'.time().'.pdf', $delivery_slip_pdf);
     }
 }
 

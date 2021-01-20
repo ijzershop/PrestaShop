@@ -57,7 +57,7 @@ class Payment extends \MolliePrefix\Mollie\Api\Resources\BaseResource
     public $amountRemaining;
     /**
      * The total amount that was charged back for this payment. Only available when the
-     * total charged back amount is not zero. This value is expected to be negative.
+     * total charged back amount is not zero.
      *
      * @var \stdClass|null
      */

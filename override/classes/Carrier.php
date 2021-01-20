@@ -51,12 +51,12 @@ class Carrier extends CarrierCore
                 $cart,
                 $error
             );
-            if($storeCustomerLoggedIn){
-                $paidShippingCarrier = unserialize(Configuration::get("koopmanOrderExport"));
-                if(!empty($paidShippingCarrier) && isset($paidShippingCarrier['select_carrier'])){
-                    unset($carrierList[(int)$paidShippingCarrier['select_carrier']]);
-                }
-            }
+//            if($storeCustomerLoggedIn){
+//                $paidShippingCarrier = unserialize(Configuration::get("koopmanOrderExport"));
+//                if(!empty($paidShippingCarrier) && isset($paidShippingCarrier['select_carrier'])){
+//                    unset($carrierList[(int)$paidShippingCarrier['select_carrier']]);
+//                }
+//            }
             return $carrierList;
         }
         if ($cart === null) {

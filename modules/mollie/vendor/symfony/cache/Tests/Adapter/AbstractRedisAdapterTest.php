@@ -25,7 +25,7 @@ abstract class AbstractRedisAdapterTest extends \MolliePrefix\Symfony\Component\
             self::markTestSkipped('Extension redis required.');
         }
         try {
-            (new \Redis())->connect(\getenv('REDIS_HOST'));
+            (new \MolliePrefix\Redis())->connect(\getenv('REDIS_HOST'));
         } catch (\Exception $e) {
             self::markTestSkipped($e->getMessage());
         }

@@ -1,0 +1,29 @@
+services:
+#  @deprecated - dont call repositories directly, use interface instead
+  Mollie\Repository\PaymentMethodRepository:
+
+  Mollie\Repository\PaymentMethodRepositoryInterface: '@Mollie\Repository\PaymentMethodRepository'
+
+  Mollie\Repository\OrderFeeRepository:
+
+  Mollie\Repository\CountryRepository:
+
+  Mollie\Repository\OrderShipmentRepository:
+
+  Mollie\Repository\MethodCountryRepository:
+
+  Mollie\Repository\MolCarrierInformationRepository:
+
+  Mollie\Repository\ModuleRepository:
+
+  Mollie\Repository\PendingOrderCartRepository:
+    arguments:
+      - 'MolPendingOrderCart'
+
+  Mollie\Repository\MolCustomerRepository:
+    arguments:
+      - 'MolCustomer'
+
+  Mollie\Repository\AttributeRepository:
+
+  Mollie\Repository\OrderStateRepository:

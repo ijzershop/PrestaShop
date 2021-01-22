@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>ps_mbo</name>
-    <displayName><![CDATA[PrestaShop Marketplace in your Back Office]]></displayName>
+    <displayName><![CDATA[Prestashop marktplaats in uw backoffice]]></displayName>
     <version><![CDATA[2.0.1]]></version>
-    <description><![CDATA[Discover the best PrestaShop modules to optimize your online store.]]></description>
+    <description><![CDATA[Vind de beste prestashop modules om uw winkel te optimaliseren]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[administration]]></tab>
     <is_configurable>0</is_configurable>

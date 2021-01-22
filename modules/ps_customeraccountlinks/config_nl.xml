@@ -2,8 +2,8 @@
 <module>
     <name>ps_customeraccountlinks</name>
     <displayName><![CDATA[Mijn account]]></displayName>
-    <version><![CDATA[3.1.0]]></version>
-    <description><![CDATA[Geeft een blok weer met links met betrekking tot het klantaccount.]]></description>
+    <version><![CDATA[3.1.1]]></version>
+    <description><![CDATA[Enrich your stats, add a registration progress tab to analyze your visitors&rsquo; behavior.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[]]></tab>
     <is_configurable>0</is_configurable>

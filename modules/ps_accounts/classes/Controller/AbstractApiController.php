@@ -3,18 +3,22 @@
 namespace PrestaShop\Module\PsAccounts\Controller;
 
 use DateTime;
-use Db;
+use Exception;
 use ModuleFrontController;
-use PrestaShop\Module\PsAccounts\Api\Client\EventBusSyncClient;
-use PrestaShop\Module\PsAccounts\Api\Client\SegmentClient;
-use PrestaShop\Module\PsAccounts\Formatter\JsonFormatter;
+use PrestaShop\AccountsAuth\Service\PsAccountsService;
+use PrestaShop\Module\PsAccounts\Config\Config;
+use PrestaShop\Module\PsAccounts\Exception\EnvVarException;
+use PrestaShop\Module\PsAccounts\Exception\FirebaseException;
+use PrestaShop\Module\PsAccounts\Provider\PaginatedApiDataProviderInterface;
 use PrestaShop\Module\PsAccounts\Repository\AccountsSyncRepository;
-use PrestaShop\Module\PsAccounts\Repository\PaginatedApiRepositoryInterface;
+use PrestaShop\Module\PsAccounts\Repository\IncrementalSyncRepository;
+use PrestaShop\Module\PsAccounts\Repository\LanguageRepository;
 use PrestaShop\Module\PsAccounts\Service\ApiAuthorizationService;
-use PrestaShop\Module\PsAccounts\Service\CompressionService;
-use PrestaShop\Module\PsAccounts\Service\SegmentService;
+use PrestaShop\Module\PsAccounts\Service\ProxyService;
+use PrestaShop\Module\PsAccounts\Service\SynchronizationService;
 use PrestaShopDatabaseException;
 use PrestaShopException;
+use Ps_accounts;
 use Tools;
 
 abstract class AbstractApiController extends ModuleFrontController
@@ -30,110 +34,147 @@ abstract class AbstractApiController extends ModuleFrontController
      */
     protected $authorizationService;
     /**
-     * @var SegmentService
+     * @var ProxyService
      */
-    protected $segmentService;
+    protected $proxyService;
     /**
      * @var AccountsSyncRepository
      */
     protected $accountsSyncRepository;
+    /**
+     * @var LanguageRepository
+     */
+    private $languageRepository;
+    /**
+     * @var PsAccountsService
+     */
+    private $psAccountsService;
+    /**
+     * @var IncrementalSyncRepository
+     */
+    protected $incrementalSyncRepository;
+    /**
+     * @var SynchronizationService
+     */
+    private $synchronizationService;
+    /**
+     * @var Ps_accounts
+     */
+    public $module;
 
     public function __construct()
     {
         parent::__construct();
 
-        $db = Db::getInstance();
-
         $this->controller_type = 'module';
-        $this->segmentService = new SegmentService(
-            new SegmentClient($this->context->link),
-            new CompressionService(
-                new JsonFormatter()
-            )
-        );
-        $this->authorizationService = new ApiAuthorizationService(
-            new AccountsSyncRepository($db),
-            new EventBusSyncClient($this->context->link)
-        );
-        $this->accountsSyncRepository = new AccountsSyncRepository(Db::getInstance());
+        $this->proxyService = $this->module->getService(ProxyService::class);
+        $this->authorizationService = $this->module->getService(ApiAuthorizationService::class);
+        $this->accountsSyncRepository = $this->module->getService(AccountsSyncRepository::class);
+        $this->languageRepository = $this->module->getService(LanguageRepository::class);
+        $this->psAccountsService = new PsAccountsService();
+        $this->incrementalSyncRepository = $this->module->getService(IncrementalSyncRepository::class);
+        $this->synchronizationService = $this->module->getService(SynchronizationService::class);
     }
 
     /**
      * @return void
-     *
-     * @throws PrestaShopDatabaseException
      */
     public function init()
     {
-//        $this->authorize();
+        try {
+            $this->authorize();
+        } catch (PrestaShopDatabaseException $exception) {
+            $this->exitWithExceptionMessage($exception);
+        } catch (EnvVarException $exception) {
+            $this->exitWithExceptionMessage($exception);
+        } catch (FirebaseException $exception) {
+            $this->exitWithExceptionMessage($exception);
+        }
     }
 
     /**
      * @return void
      *
-     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException|EnvVarException|FirebaseException
      */
     private function authorize()
     {
-        $jobId = Tools::getValue('job_id');
+        $jobId = Tools::getValue('job_id', 'empty_job_id');
 
-        if (!$jobId || !$this->authorizationService->authorizeCall($jobId)) {
-            $this->exitWithUnauthorizedStatus();
+        $authorizationResponse = $this->authorizationService->authorizeCall($jobId);
+
+        if (is_array($authorizationResponse)) {
+            $this->exitWithResponse($authorizationResponse);
+        } elseif (!$authorizationResponse) {
+            throw new PrestaShopDatabaseException('Failed saving job id to database');
+        }
+
+        try {
+            $token = $this->psAccountsService->getOrRefreshToken();
+        } catch (Exception $exception) {
+            throw new FirebaseException($exception->getMessage());
+        }
+
+        if (!$token) {
+            throw new FirebaseException('Invalid token');
         }
     }
 
     /**
-     * @param PaginatedApiRepositoryInterface $repository
+     * @param PaginatedApiDataProviderInterface $dataProvider
      *
      * @return array
-     *
-     * @throws PrestaShopDatabaseException
      */
-    protected function handleDataSync(PaginatedApiRepositoryInterface $repository)
+    protected function handleDataSync(PaginatedApiDataProviderInterface $dataProvider)
     {
-        if (!$jobId = Tools::getValue('job_id')) {
-            $this->exitWithErrorStatus();
-        }
-
+        $jobId = Tools::getValue('job_id');
+        $langIso = Tools::getValue('lang_iso', $this->languageRepository->getDefaultLanguageIsoCode());
         $limit = (int) Tools::getValue('limit', 50);
+        $initFullSync = (int) Tools::getValue('full', 0) == 1;
+
         $dateNow = (new DateTime())->format(DateTime::ATOM);
         $offset = 0;
+        $incrementalSync = false;
+        $response = [];
 
-        $typeSync = $this->accountsSyncRepository->findTypeSync($this->type);
+        try {
+            $typeSync = $this->accountsSyncRepository->findTypeSync($this->type, $langIso);
 
-        if ($typeSync !== false && is_array($typeSync)) {
-            $offset = (int) $typeSync['offset'];
-        } else {
-            $this->accountsSyncRepository->insertTypeSync($this->type, 0, $dateNow);
+            if ($typeSync !== false && is_array($typeSync)) {
+                $offset = (int) $typeSync['offset'];
+
+                if ((int) $typeSync['full_sync_finished'] === 1 && !$initFullSync) {
+                    $incrementalSync = true;
+                } elseif ($initFullSync) {
+                    $offset = 0;
+                    $this->accountsSyncRepository->updateTypeSync($this->type, $offset, $dateNow, false, $langIso);
+                }
+            } else {
+                $this->accountsSyncRepository->insertTypeSync($this->type, $offset, $dateNow, $langIso);
+            }
+
+            if ($incrementalSync) {
+                $response = $this->synchronizationService->handleIncrementalSync($dataProvider, $this->type, $jobId, $limit, $langIso);
+            } else {
+                $response = $this->synchronizationService->handleFullSync($dataProvider, $this->type, $jobId, $langIso, $offset, $limit, $dateNow);
+            }
+
+            return array_merge(
+                [
+                    'job_id' => $jobId,
+                    'object_type' => $this->type,
+                ],
+                $response
+            );
+        } catch (PrestaShopDatabaseException $exception) {
+            $this->exitWithExceptionMessage($exception);
+        } catch (EnvVarException $exception) {
+            $this->exitWithExceptionMessage($exception);
+        } catch (FirebaseException $exception) {
+            $this->exitWithExceptionMessage($exception);
         }
 
-        $data = $repository->getFormattedData($offset, $limit);
-
-        $response = $this->segmentService->upload($jobId, $data);
-
-        if ($response['httpCode'] == 201) {
-            $offset += $limit;
-        }
-
-        $remainingObjects = $repository->getRemainingObjectsCount($offset);
-
-        if ($remainingObjects <= 0) {
-            $remainingObjects = 0;
-            $offset = 0;
-        }
-
-        $this->accountsSyncRepository->updateTypeSync($this->type, $offset, $dateNow);
-
-        return array_merge(
-            [
-                'sync_id' => $jobId,
-                'total_objects' => count($data),
-                'object_type' => $this->type,
-                'has_remaining_objects' => $remainingObjects > 0,
-                'remaining_objects' => $remainingObjects,
-            ],
-            $response
-        );
+        return $response;
     }
 
     /**
@@ -141,9 +182,9 @@ abstract class AbstractApiController extends ModuleFrontController
      * @param string|null $controller
      * @param string|null $method
      *
-     * @throws PrestaShopException
-     *
      * @return void
+     *
+     * @throws PrestaShopException
      */
     public function ajaxDie($value = null, $controller = null, $method = null)
     {
@@ -151,20 +192,68 @@ abstract class AbstractApiController extends ModuleFrontController
     }
 
     /**
+     * @param array $response
+     *
      * @return void
      */
-    public function exitWithErrorStatus()
+    protected function exitWithResponse(array $response)
     {
-        header('HTTP/1.1 500 Retry later');
-        exit;
+        $httpCode = isset($response['httpCode']) ? (int) $response['httpCode'] : 200;
+
+        $this->dieWithResponse($response, $httpCode);
     }
 
     /**
+     * @param Exception $exception
+     *
      * @return void
      */
-    public function exitWithUnauthorizedStatus()
+    protected function exitWithExceptionMessage(Exception $exception)
     {
-        header('HTTP/1.1 401 Unauthorized');
+        $code = $exception->getCode() == 0 ? 500 : $exception->getCode();
+
+        if ($exception instanceof PrestaShopDatabaseException) {
+            $code = Config::DATABASE_QUERY_ERROR_CODE;
+        } elseif ($exception instanceof EnvVarException) {
+            $code = Config::ENV_MISCONFIGURED_ERROR_CODE;
+        } elseif ($exception instanceof FirebaseException) {
+            $code = Config::REFRESH_TOKEN_ERROR_CODE;
+        }
+
+        $response = [
+            'object_type' => $this->type,
+            'status' => false,
+            'httpCode' => $code,
+            'message' => $exception->getMessage(),
+        ];
+
+        $this->dieWithResponse($response, (int) $exception->getCode());
+    }
+
+    /**
+     * @param array $response
+     * @param int $code
+     *
+     * @return void
+     */
+    private function dieWithResponse(array $response, $code)
+    {
+        $httpStatusText = "HTTP/1.1 $code";
+
+        if (array_key_exists((int) $code, Config::HTTP_STATUS_MESSAGES)) {
+            $httpStatusText .= ' ' . Config::HTTP_STATUS_MESSAGES[(int) $code];
+        } elseif (isset($response['body']['statusText'])) {
+            $httpStatusText .= ' ' . $response['body']['statusText'];
+        }
+
+        $response['httpCode'] = (int) $code;
+
+        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        header('Content-Type: application/json;charset=utf-8');
+        header($httpStatusText);
+
+        echo json_encode($response, JSON_UNESCAPED_SLASHES);
+
         exit;
     }
 }

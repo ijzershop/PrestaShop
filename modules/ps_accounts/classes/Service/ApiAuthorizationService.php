@@ -2,8 +2,10 @@
 
 namespace PrestaShop\Module\PsAccounts\Service;
 
-use PrestaShop\Module\PsAccounts\Api\Client\EventBusSyncClient;
+use PrestaShop\Module\PsAccounts\Api\EventBusSyncClient;
+use PrestaShop\Module\PsAccounts\Exception\EnvVarException;
 use PrestaShop\Module\PsAccounts\Repository\AccountsSyncRepository;
+use PrestaShopDatabaseException;
 
 class ApiAuthorizationService
 {
@@ -29,22 +31,24 @@ class ApiAuthorizationService
      *
      * @param string $jobId
      *
-     * @return bool
+     * @return array|bool
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException|EnvVarException
      */
     public function authorizeCall($jobId)
     {
-        $syncState = $this->accountsSyncStateRepository->findSyncStateByJobId($jobId);
+        $job = $this->accountsSyncStateRepository->findJobById($jobId);
 
-        if ($syncState) {
+        if ($job) {
             return true;
         }
 
-        if ($this->eventBusSyncClient->validateJobId($jobId)) {
+        $jobValidationResponse = $this->eventBusSyncClient->validateJobId($jobId);
+
+        if (is_array($jobValidationResponse) && (int) $jobValidationResponse['httpCode'] === 201) {
             return $this->accountsSyncStateRepository->insertSync($jobId, date(DATE_ATOM));
         }
 
-        return false;
+        return $jobValidationResponse;
     }
 }

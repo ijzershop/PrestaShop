@@ -1,9 +1,8 @@
 <?php
 
 use PrestaShop\Module\PsAccounts\Controller\AbstractApiController;
-use PrestaShop\Module\PsAccounts\Repository\ConfigurationRepository;
-use PrestaShop\Module\PsAccounts\Repository\CurrencyRepository;
-use PrestaShop\Module\PsAccounts\Repository\LanguageRepository;
+use PrestaShop\Module\PsAccounts\Exception\EnvVarException;
+use PrestaShop\Module\PsAccounts\Exception\FirebaseException;
 use PrestaShop\Module\PsAccounts\Repository\ServerInformationRepository;
 
 class ps_AccountsApiInfoModuleFrontController extends AbstractApiController
@@ -17,20 +16,30 @@ class ps_AccountsApiInfoModuleFrontController extends AbstractApiController
      */
     public function postProcess()
     {
+        $response = [];
+
         $jobId = Tools::getValue('job_id');
 
-        $serverInformationRepository = new ServerInformationRepository(
-            new CurrencyRepository(),
-            new LanguageRepository(),
-            new ConfigurationRepository()
-        );
+        $serverInformationRepository = $this->module->getService(ServerInformationRepository::class);
 
-        $serverInfo = $serverInformationRepository->getServerInformation();
+        $serverInfo = $serverInformationRepository->getServerInformation(Tools::getValue('lang_iso', null));
 
-        $response = $this->segmentService->upload($jobId, $serverInfo);
+        try {
+            $response = $this->proxyService->upload($jobId, $serverInfo);
+        } catch (EnvVarException $exception) {
+            $this->exitWithExceptionMessage($exception);
+        } catch (FirebaseException $exception) {
+            $this->exitWithExceptionMessage($exception);
+        }
 
-        $this->ajaxDie(
-            array_merge(['remaining_objects' => '0'], $response)
+        $this->exitWithResponse(
+            array_merge(
+                [
+                    'remaining_objects' => 0,
+                    'total_objects' => 1,
+                ],
+                $response
+            )
         );
     }
 }

@@ -104,7 +104,7 @@ class TermsAndConditions
             }
 
             $replacement = sprintf(
-                '<a href="%s" id="%s">%s</a>',
+                '<a target="_blank" href="%s" id="%s">%s</a>',
                 $this->links[$index],
                 $this->createLinkId($index),
                 $textToReplace

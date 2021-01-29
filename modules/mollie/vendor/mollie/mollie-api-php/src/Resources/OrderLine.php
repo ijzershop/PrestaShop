@@ -59,6 +59,60 @@ class OrderLine extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      */
     public $quantity;
     /**
+     * The number of items that are shipped for this order line.
+     *
+     * @var int
+     */
+    public $quantityShipped;
+    /**
+     * The total amount that is shipped for this order line.
+     *
+     * @var \stdClass
+     */
+    public $amountShipped;
+    /**
+     * The number of items that are refunded for this order line.
+     *
+     * @var int
+     */
+    public $quantityRefunded;
+    /**
+     * The total amount that is refunded for this order line.
+     *
+     * @var \stdClass
+     */
+    public $amountRefunded;
+    /**
+     * The number of items that are canceled in this order line.
+     *
+     * @var int
+     */
+    public $quantityCanceled;
+    /**
+     * The total amount that is canceled in this order line.
+     *
+     * @var \stdClass
+     */
+    public $amountCanceled;
+    /**
+     * The number of items that can still be shipped for this order line.
+     *
+     * @var int
+     */
+    public $shippableQuantity;
+    /**
+     * The number of items that can still be refunded for this order line.
+     *
+     * @var int
+     */
+    public $refundableQuantity;
+    /**
+     * The number of items that can still be canceled for this order line.
+     *
+     * @var int
+     */
+    public $cancelableQuantity;
+    /**
      * The price of a single item in the order line.
      *
      * @var \stdClass
@@ -127,6 +181,30 @@ class OrderLine extends \MolliePrefix\Mollie\Api\Resources\BaseResource
      * @var \stdClass
      */
     public $_links;
+    /**
+     * Get the url pointing to the product page in your web shop of the product sold.
+     *
+     * @return string|null
+     */
+    public function getProductUrl()
+    {
+        if (empty($this->_links->productUrl)) {
+            return null;
+        }
+        return $this->_links->productUrl;
+    }
+    /**
+     * Get the image URL of the product sold.
+     *
+     * @return string|null
+     */
+    public function getImageUrl()
+    {
+        if (empty($this->_links->imageUrl)) {
+            return null;
+        }
+        return $this->_links->imageUrl;
+    }
     /**
      * Is this order line created?
      *

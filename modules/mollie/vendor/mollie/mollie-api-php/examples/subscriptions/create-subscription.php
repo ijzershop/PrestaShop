@@ -35,7 +35,7 @@ try {
         "value" => "10.00",
         // You must send the correct number of decimals, thus we enforce the use of strings
         "currency" => "EUR",
-    ], "times" => 12, "interval" => "1 month", "description" => "Subscription #{$subscriptionId}", "webhookUrl" => "{$protocol}://{$hostname}{$path}/subscriptions/webhook.php", "metadata" => ["subscription_id" => $subscriptionId]]);
+    ], "times" => 12, "interval" => "1 month", "description" => "Subscription #{$subscriptionId}", "webhookUrl" => "{$protocol}://{$hostname}{$path}/webhook.php", "metadata" => ["subscription_id" => $subscriptionId]]);
     /*
      * The subscription will be either pending or active depending on whether the customer has
      * a pending or valid mandate. If the customer has no mandates an error is returned. You

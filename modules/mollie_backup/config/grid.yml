@@ -1,3 +1,0 @@
-services:
-    Mollie\Grid\Row\AccessibilityChecker\SecondChanceAccessibilityChecker:
-        class: Mollie\Grid\Row\AccessibilityChecker\SecondChanceAccessibilityChecker

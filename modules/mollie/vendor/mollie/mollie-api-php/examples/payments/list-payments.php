@@ -36,7 +36,7 @@ try {
             echo "Payment has been charged back.<br />";
         }
         if ($payment->canBeRefunded() && $payment->amountRemaining->currency === 'EUR' && $payment->amountRemaining->value >= '2.00') {
-            echo " (<a href=\"{$protocol}://{$hostname}{$path}/payments/refund-payment.php?payment_id=" . \htmlspecialchars($payment->id) . "\">refund</a>)";
+            echo " (<a href=\"{$protocol}://{$hostname}{$path}/refund-payment.php?payment_id=" . \htmlspecialchars($payment->id) . "\">refund</a>)";
         }
         echo "</li>";
     }
@@ -60,7 +60,7 @@ try {
                 echo "Payment has been charged back.<br />";
             }
             if ($payment->canBeRefunded() && $payment->amountRemaining->currency === 'EUR' && $payment->amountRemaining->value >= '2.00') {
-                echo " (<a href=\"{$protocol}://{$hostname}{$path}/payments/refund-payment.php?payment_id=" . \htmlspecialchars($payment->id) . "\">refund</a>)";
+                echo " (<a href=\"{$protocol}://{$hostname}{$path}/refund-payment.php?payment_id=" . \htmlspecialchars($payment->id) . "\">refund</a>)";
             }
             echo "</li>";
         }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>statsorigin</name>
-    <displayName><![CDATA[Bezoekers herkomst]]></displayName>
+    <displayName><![CDATA[Visitors origin]]></displayName>
     <version><![CDATA[2.0.2]]></version>
-    <description><![CDATA[Toont een grafiek met de herkomst van bezoekers in het Statistieken Dashboard.]]></description>
+    <description><![CDATA[Adds a graph displaying the websites your visitors came from to the Stats dashboard.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

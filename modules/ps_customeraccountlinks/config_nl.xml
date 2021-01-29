@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>ps_customeraccountlinks</name>
-    <displayName><![CDATA[Mijn account]]></displayName>
+    <displayName><![CDATA[My Account block]]></displayName>
     <version><![CDATA[3.1.1]]></version>
     <description><![CDATA[Enrich your stats, add a registration progress tab to analyze your visitors&rsquo; behavior.]]></description>
     <author><![CDATA[PrestaShop]]></author>

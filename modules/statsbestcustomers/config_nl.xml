@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>statsbestcustomers</name>
-    <displayName><![CDATA[Beste klanten]]></displayName>
+    <displayName><![CDATA[Best customers]]></displayName>
     <version><![CDATA[2.0.2]]></version>
-    <description><![CDATA[Voeg een lijst met de beste klanten toe aan het statistieken dashboard.]]></description>
+    <description><![CDATA[Adds a list of the best customers to the Stats dashboard.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

@@ -94,7 +94,7 @@ class Product extends ProductCore {
     public static function getProductProperties($id_lang, $row, Context $context = null)
     {
         $result = parent::getProductProperties($id_lang, $row, $context);
-        
+
         $module = Module::getInstanceByName('dynamicproduct');
 
         if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
@@ -109,28 +109,28 @@ class Product extends ProductCore {
         }
         return $result;
    }
-    
-    
+
+
     /*
     * module: offerintegration
     * date: 2020-08-21 11:00:54
     * version: 1.0.9.1
     */
-    public $min_saw_size;    
+    public $min_saw_size;
 
         /*
     * module: offerintegration
     * date: 2020-08-21 11:00:54
     * version: 1.0.9.1
     */
-    public $min_cut_remainder;    
+    public $min_cut_remainder;
     /*
     * module: offerintegration
     * date: 2020-08-21 11:00:54
     * version: 1.0.9.1
     */
     public $saw_loss;
-    
+
     /*
     * module: offerintegration
     * date: 2020-08-21 11:00:54
@@ -143,7 +143,7 @@ class Product extends ProductCore {
     * version: 1.0.9.1
     */
     public $id_oi_offer;
-    
+
     /*
     * module: offerintegration
     * date: 2020-08-21 11:00:54
@@ -163,26 +163,26 @@ class Product extends ProductCore {
     */
     public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
     {
-        self::$definition['fields']['saw_loss'] = array('type' => self::TYPE_INT, 
-                                                                'shop' => 'true', 
-                                                                'validate' => 
-                                                                'isNullOrUnsignedId', 
+        self::$definition['fields']['saw_loss'] = array('type' => self::TYPE_INT,
+                                                                'shop' => 'true',
+                                                                'validate' =>
+                                                                'isNullOrUnsignedId',
                                                                 'required' => false);
-        self::$definition['fields']['default_cut_price'] = array('type' => null, 
-                                                                'shop' => 'true', 
-                                                                'validate' => 'isPrice', 
+        self::$definition['fields']['default_cut_price'] = array('type' => null,
+                                                                'shop' => 'true',
+                                                                'validate' => 'isPrice',
                                                                 'required' => false);
-        self::$definition['fields']['min_saw_size'] = array('type' => self::TYPE_INT, 
-                                                                'shop' => 'true', 
-                                                                'validate' => 
-                                                                'isNullOrUnsignedId', 
+        self::$definition['fields']['min_saw_size'] = array('type' => self::TYPE_INT,
+                                                                'shop' => 'true',
+                                                                'validate' =>
+                                                                'isNullOrUnsignedId',
                                                                 'required' => false);
-        self::$definition['fields']['min_cut_size'] = array('type' => self::TYPE_INT, 
-                                                                'shop' => 'true', 
-                                                                'validate' => 
-                                                                'isNullOrUnsignedId', 
+        self::$definition['fields']['min_cut_size'] = array('type' => self::TYPE_INT,
+                                                                'shop' => 'true',
+                                                                'validate' =>
+                                                                'isNullOrUnsignedId',
                                                                 'required' => false);
-        
+
         self::$definition['fields']['id_oi_offer'] = array('type' => ObjectModel::TYPE_INT,
                                                                  'shop' => 'true',
                                                                  'required' => false);
@@ -204,11 +204,11 @@ class Product extends ProductCore {
         if ($id_oi_offer == null || !is_numeric($id_oi_offer)) {
             return array();
         }
-        $query = 'SELECT p.*, product_shop.*, pl.* , m.`name` AS manufacturer_name, s.`name` AS supplier_name FROM `' . _DB_PREFIX_ . 'product` as `p` 
+        $query = 'SELECT p.*, product_shop.*, pl.* , m.`name` AS manufacturer_name, s.`name` AS supplier_name FROM `' . _DB_PREFIX_ . 'product` as `p`
                     '.Shop::addSqlAssociation('product', 'p').'
-                    LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` AS `pl` ON `p`.`id_product` = `pl`.`id_product` 
+                    LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` AS `pl` ON `p`.`id_product` = `pl`.`id_product`
                     LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-                    LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (s.`id_supplier` = p.`id_supplier`) 
+                    LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (s.`id_supplier` = p.`id_supplier`)
                     WHERE `p`.`id_oi_offer` = ' . $id_oi_offer . '
                     AND `pl`.`id_lang` = ' . $id_lang . ';';
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -304,4 +304,51 @@ class Product extends ProductCore {
         }
         return $return;
     }
+
+
+    /**
+     * Single Stock module overides
+     */
+    public function getAttributesGroups($id_lang)
+    {
+        $ssa = Module::getInstanceByName('singlestockattributespoco');
+        if (!$ssa || !$ssa->active || !$ssa->useSSA($this->id)) {
+            return parent::getAttributesGroups($id_lang);
+        }
+
+        if (!Combination::isFeatureActive()) {
+            return array();
+        }
+        $sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
+            a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, product_attribute_shop.`id_product_attribute`,
+            IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, product_attribute_shop.`weight`,
+            product_attribute_shop.`default_on`, pa.`reference`, product_attribute_shop.`unit_price_impact`,
+            product_attribute_shop.`minimal_quantity`, product_attribute_shop.`available_date`, ag.`group_type`
+        FROM `'._DB_PREFIX_.'product_attribute` pa
+        '.Shop::addSqlAssociation('product_attribute', 'pa').'
+        '.Product::sqlStock('pa', 'pa').'
+        LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
+        LEFT JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
+        LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON (ag.`id_attribute_group` = a.`id_attribute_group`)
+        LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute`)
+        LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group`)
+        '.Shop::addSqlAssociation('attribute', 'a').'
+        WHERE pa.`id_product` = '.(int)$this->id.'
+            AND al.`id_lang` = '.(int)$id_lang.'
+            AND agl.`id_lang` = '.(int)$id_lang.'
+        GROUP BY id_attribute_group, id_product_attribute
+        ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
+
+        $ret = Db::getInstance()->executeS($sql);
+        $stock = '';
+        foreach ($ret as &$row) {
+            if ($stock == '') {
+                $stock = $row['quantity'];
+            } else {
+                $row['quantity'] = $stock;
+            }
+        }
+        return $ret;
+    }
+
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>sekeywords</name>
-    <displayName><![CDATA[Zoekmachine sleutelwoorden]]></displayName>
+    <displayName><![CDATA[Search engine keywords]]></displayName>
     <version><![CDATA[2.0.0]]></version>
-    <description><![CDATA[Geef weer welke sleutelwoorden bezoekers naar uw website hebben geleid.]]></description>
+    <description><![CDATA[Displays which keywords have led visitors to your website.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

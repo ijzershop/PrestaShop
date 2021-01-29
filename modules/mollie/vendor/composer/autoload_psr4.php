@@ -6,6 +6,17 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Symfony\\Component\\Stopwatch\\' => array($vendorDir . '/symfony/stopwatch'),
+    'Symfony\\Component\\Process\\' => array($vendorDir . '/symfony/process'),
+    'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
+    'Symfony\\Component\\Finder\\' => array($vendorDir . '/symfony/finder'),
+    'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
+    'Symfony\\Component\\Debug\\' => array($vendorDir . '/symfony/debug'),
+    'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
+    'PrestaShop\\HeaderStamp\\' => array($vendorDir . '/prestashop/header-stamp/src'),
+    'PrestaShop\\CodingStandards\\' => array($vendorDir . '/prestashop/php-dev-tools/src'),
+    'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
+    'PhpCsFixer\\' => array($vendorDir . '/friendsofphp/php-cs-fixer/src'),
     'Mollie\\Tests\\' => array($baseDir . '/tests'),
     'Mollie\\' => array($baseDir . '/src'),
     'MolliePrefix\\Symfony\\Polyfill\\Php72\\' => array($vendorDir . '/symfony/polyfill-php72'),
@@ -34,4 +45,8 @@ return array(
     'MolliePrefix\\GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
     'MolliePrefix\\Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
     'MolliePrefix\\Composer\\CaBundle\\' => array($vendorDir . '/composer/ca-bundle/src'),
+    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib/Doctrine/Common/Lexer'),
+    'Doctrine\\Common\\Annotations\\' => array($vendorDir . '/doctrine/annotations/lib/Doctrine/Common/Annotations'),
+    'Composer\\XdebugHandler\\' => array($vendorDir . '/composer/xdebug-handler/src'),
+    'Composer\\Semver\\' => array($vendorDir . '/composer/semver/src'),
 );

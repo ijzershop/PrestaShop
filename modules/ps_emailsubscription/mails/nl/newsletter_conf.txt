@@ -1,9 +1,0 @@
-
-[{shop_url}] 
-
-Hallo, 
-
-Bedankt voor uw abonering op onze nieuwsbrief.
-
-{custom_footer}
-

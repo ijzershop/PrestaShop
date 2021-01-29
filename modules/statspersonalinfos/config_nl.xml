@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>statspersonalinfos</name>
-    <displayName><![CDATA[Geregistreerde klanten overzicht]]></displayName>
+    <displayName><![CDATA[Registered customer information]]></displayName>
     <version><![CDATA[2.0.3]]></version>
-    <description><![CDATA[Voegt informatie over geregistreerde klanten (zoals geslacht en leeftijd) toe aan het statistieken dashboard.]]></description>
+    <description><![CDATA[Adds information about your registered customers (such as gender and age) to the Stats dashboard.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

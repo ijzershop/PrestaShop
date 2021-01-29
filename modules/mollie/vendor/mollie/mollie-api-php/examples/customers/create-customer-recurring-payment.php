@@ -24,7 +24,6 @@ try {
      */
     $protocol = isset($_SERVER['HTTPS']) && \strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
     $hostname = $_SERVER['HTTP_HOST'];
-    $path = \dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
     /**
      * Customer Payment creation parameters.
      *
@@ -37,7 +36,7 @@ try {
             "currency" => "EUR",
         ],
         "description" => "On-demand payment - Order #{$orderId}",
-        "webhookUrl" => "{$protocol}://{$hostname}{$path}/payments/webhook.php",
+        "webhookUrl" => "{$protocol}://{$hostname}/payments/webhook.php",
         "metadata" => ["order_id" => $orderId],
         // Flag this payment as a recurring payment.
         "sequenceType" => \MolliePrefix\Mollie\Api\Types\SequenceType::SEQUENCETYPE_RECURRING,

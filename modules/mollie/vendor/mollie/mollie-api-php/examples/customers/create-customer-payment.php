@@ -25,7 +25,6 @@ try {
      */
     $protocol = isset($_SERVER['HTTPS']) && \strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
     $hostname = $_SERVER['HTTP_HOST'];
-    $path = \dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
     /**
      * Linking customers to payments has a few benefits
      *
@@ -35,7 +34,7 @@ try {
         "value" => "10.00",
         // You must send the correct number of decimals, thus we enforce the use of strings
         "currency" => "EUR",
-    ], "description" => "Order #{$orderId}", "redirectUrl" => "{$protocol}://{$hostname}{$path}/payments/return.php?order_id={$orderId}", "webhookUrl" => "{$protocol}://{$hostname}{$path}/payments/webhook.php", "metadata" => ["order_id" => $orderId]]);
+    ], "description" => "Order #{$orderId}", "redirectUrl" => "{$protocol}://{$hostname}/payments/return.php?order_id={$orderId}", "webhookUrl" => "{$protocol}://{$hostname}/payments/webhook.php", "metadata" => ["order_id" => $orderId]]);
     /*
      * In this example we store the order with its payment status in a database.
      */

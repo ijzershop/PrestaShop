@@ -1,9 +1,0 @@
-services:
-  Mollie\Provider\CreditCardLogoProvider:
-    arguments:
-      - '@=service("mollie.factory.module_factory").getLocalPath()'
-      - '@=service("mollie.factory.module_factory").getPathUri()'
-
-  Mollie\Service\PaymentMethod\PaymentMethodSortProvider:
-
-  Mollie\Provider\PhoneNumberProvider:

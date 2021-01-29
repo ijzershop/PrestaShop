@@ -32,7 +32,7 @@ try {
      *
      * @See https://docs.mollie.com/reference/v2/payments-api/create-payment
      */
-    $payment = $mollie->payments->create(["amount" => ["value" => "10.00", "currency" => "EUR"], "description" => "My first API payment", "redirectUrl" => "{$protocol}://{$hostname}{$path}/payments/return.php?order_id={$orderId}", "webhookUrl" => "{$protocol}://{$hostname}{$path}/payments/webhook.php", "metadata" => ["order_id" => $orderId], "profileId" => $profile->id]);
+    $payment = $mollie->payments->create(["amount" => ["value" => "10.00", "currency" => "EUR"], "description" => "My first API payment", "redirectUrl" => "{$protocol}://{$hostname}{$path}/return.php?order_id={$orderId}", "webhookUrl" => "{$protocol}://{$hostname}{$path}/webhook.php", "metadata" => ["order_id" => $orderId], "profileId" => $profile->id]);
     /*
      * In this example we store the order with its payment status in a database.
      */

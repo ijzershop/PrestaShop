@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>ps_currencyselector</name>
-    <displayName><![CDATA[Valuta blok]]></displayName>
+    <displayName><![CDATA[Currency block]]></displayName>
     <version><![CDATA[2.0.1]]></version>
-    <description><![CDATA[Voegt een blok toe waar de valuta gekozen kan worden]]></description>
+    <description><![CDATA[Adds a block allowing customers to choose their preferred shopping currency.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[]]></tab>
     <is_configurable>0</is_configurable>

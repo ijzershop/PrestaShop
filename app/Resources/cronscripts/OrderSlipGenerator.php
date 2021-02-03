@@ -102,7 +102,7 @@ class OrderSlipGenerator
      */
     private function fetchPaidAndReadyOrders() : array
     {
-        $date_from = date('Y-m-d H:i:s', strtotime('-20 day'));
+        $date_from = date('Y-m-d H:i:s', strtotime('-7 days'));
         $date_to = date('Y-m-d H:i:s', strtotime('-5 minutes'));
         $last_updated_date = date('Y-m-d H:i:s', strtotime('-1 minute'));
 
@@ -116,9 +116,9 @@ class OrderSlipGenerator
         $sql_query->where('o.date_upd <= \''.pSQL($last_updated_date).'\'');
         $sql_query->orderBy('oi.delivery_date ASC');
 
-        if($this->debug){
-            echo $sql_query->__toString();
-        }
+        // if($this->debug){
+        //     echo $sql_query->__toString();
+        // }
 
         $order_invoice_list = Db::getInstance()->executeS($sql_query);
 
@@ -143,6 +143,7 @@ class OrderSlipGenerator
                 try {
                     $order_object = new Order($order->id_order);
                     $order_object->setCurrentState((int)$this->processedStatus, 0);
+                    $order_object->save();
                 } catch (PrestaShopException $exception) {
                     array_push($this->errorRecords, ['id_order' => $order->id_order, 'reference' => $order_object->reference, 'time' => date('d-m-Y H:i:s')]);
                 }

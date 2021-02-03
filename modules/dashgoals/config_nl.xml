@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>dashgoals</name>
-    <displayName><![CDATA[Dashboard Doelen]]></displayName>
+    <displayName><![CDATA[Dashboard Goals]]></displayName>
     <version><![CDATA[2.0.2]]></version>
-    <description><![CDATA[Voegt een blok toe met een prognose van uw winkel.]]></description>
+    <description><![CDATA[Adds a block with your store&#039;s forecast.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[dashboard]]></tab>
     <is_configurable>0</is_configurable>

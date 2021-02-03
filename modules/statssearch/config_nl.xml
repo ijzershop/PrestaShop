@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>statssearch</name>
-    <displayName><![CDATA[Zoekopdrachten]]></displayName>
+    <displayName><![CDATA[Shop search]]></displayName>
     <version><![CDATA[2.0.1]]></version>
-    <description><![CDATA[Voegt een tab toe aan de statistieken pagina, die toont welke keywords zijn gezocht door uw bezoekers.]]></description>
+    <description><![CDATA[Adds a tab to the Stats dashboard, showing which keywords have been searched by your store&#039;s visitors.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

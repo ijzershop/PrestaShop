@@ -1,8 +1,0 @@
-
-[{shop_url}] 
-
-Hallo, 
-
-Naar aanleiding van uw abonering op onze nieuwsbrief willen wij u graag de volgende kortingscode: {discount} aanbieden.
-
-{custom_footer}

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>statsbestvouchers</name>
-    <displayName><![CDATA[Beste waardebonnen]]></displayName>
+    <displayName><![CDATA[Best vouchers]]></displayName>
     <version><![CDATA[2.0.0]]></version>
-    <description><![CDATA[Voegt een lijst met beste waardebonnen toe aan het statistieken dashboard.]]></description>
+    <description><![CDATA[Adds a list of the best vouchers to the Stats dashboard.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

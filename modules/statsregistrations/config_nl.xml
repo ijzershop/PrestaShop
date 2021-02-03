@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>statsregistrations</name>
-    <displayName><![CDATA[Klanten accounts]]></displayName>
+    <displayName><![CDATA[Customer accounts]]></displayName>
     <version><![CDATA[2.0.0]]></version>
-    <description><![CDATA[Voegt een registratievooruitgang tabblad toe aan het statistieken dashboard.]]></description>
+    <description><![CDATA[Adds a registration progress tab to the Stats dashboard.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

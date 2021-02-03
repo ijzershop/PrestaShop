@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>ps_crossselling</name>
-    <displayName><![CDATA[Kruisverkoop]]></displayName>
+    <displayName><![CDATA[Cross-selling]]></displayName>
     <version><![CDATA[2.0.1]]></version>
     <description><![CDATA[Offer your customers the possibility to buy matching items when on a product page.]]></description>
     <author><![CDATA[PrestaShop]]></author>

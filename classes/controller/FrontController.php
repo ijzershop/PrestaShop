@@ -327,7 +327,7 @@ class FrontControllerCore extends Controller
                 $this->context->country = $new_default;
             } else {
                 if(!in_array(Tools::getRemoteAddr(), array('localhost', '127.0.0.1', '::1'))){
-                    $this->context->smarty->assign('geoip_msg', 'Voor extra beveiliging van de webshop maken wij gebruik van geolocatie. Hiermee is de bestel optie alleen beschikbaar voor klanten uit Nederland. Krijgt u dit bericht te zien dan krijgen wij u locatie niet correct door. Maakt u gebruik van een VPN verbinding of iets dergelijks, schakel deze dan uit om te kunnen bestellen.'); 
+                    $this->context->smarty->assign('geoip_msg', 'Voor extra beveiliging van de webshop maken wij gebruik van geolocatie. Hiermee is de bestel optie alleen beschikbaar voor klanten uit Nederland. Krijgt u dit bericht te zien dan krijgen wij u locatie niet correct door. Maakt u gebruik van een VPN verbinding of iets dergelijks, schakel deze dan uit om te kunnen bestellen.');
                 }
             }
         } elseif (Configuration::get('PS_DETECT_COUNTRY')) {
@@ -766,7 +766,7 @@ class FrontControllerCore extends Controller
     protected function sslRedirection()
     {
         // If we call a SSL controller without SSL or a non SSL controller with SSL, we redirect with the right protocol
-        if (Configuration::get('PS_SSL_ENABLED') && $_SERVER['REQUEST_METHOD'] != 'POST' && $this->ssl != Tools::usingSecureMode()) {
+        if (isset($_SERVER['REQUEST_METHOD']) && Configuration::get('PS_SSL_ENABLED') && $_SERVER['REQUEST_METHOD'] != 'POST' && $this->ssl != Tools::usingSecureMode()) {
             $this->context->cookie->disallowWriting();
             header('HTTP/1.1 301 Moved Permanently');
             header('Cache-Control: no-cache');

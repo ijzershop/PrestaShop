@@ -143,6 +143,7 @@ class OrderSlipGenerator
                 try {
                     $order_object = new Order($order->id_order);
                     $order_object->setCurrentState((int)$this->processedStatus, 0);
+                    $order_object->save();
                 } catch (PrestaShopException $exception) {
                     array_push($this->errorRecords, ['id_order' => $order->id_order, 'reference' => $order_object->reference, 'time' => date('d-m-Y H:i:s')]);
                 }

@@ -87,10 +87,43 @@ class OrderSlipGenerator
                 true);
         }
 
-        if($this->debug){
-            echo "<pre>".print_r($this->completedSuccessRecords, true)."</pre>";
-        }
+//        if($this->debug == true){
+//            echo "<pre>".print_r($this->completedSuccessRecords, true)."</pre>";
+//        }
+//        $this->sendApiData($this->completedSuccessRecords, $this->errorRecords);
+
         return true;
+    }
+
+    /**
+     * Send data to online api to show on dashboard
+     *
+     * @param $completedSuccessRecords
+     * @param $errorRecords
+     */
+    private function sendApiData($completedSuccessRecords, $errorRecords){
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://dashboard.viho.nl/api",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_POSTFIELDS => "api_type=cron-job&success-records=".json_encode($completedSuccessRecords)."&error-records".json_encode($errorRecords)."&version=1.0.0",
+            CURLOPT_HTTPHEADER => array(
+                "content-type: application/x-www-form-urlencoded",
+                "x-api-key: your-api-key",
+          ),
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+//        if($err) {
+//            echo "Err" . $err;
+//        } else {
+//            echo $response;
+//        }
     }
 
     /**

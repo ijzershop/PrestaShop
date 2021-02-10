@@ -11,7 +11,7 @@ class PDFGenerator extends PDFGeneratorCore
         $_SERVER['DOCUMENT_ROOT'] = realpath(dirname(__FILE__).'/../');
         $this->writeHTML($this->header);
         if(strpos($this->header, 'TOEVOEGEN') !== false){
-            $img_file = file_get_contents(realpath(dirname(__FILE__).'/../../../') .'/../themes/modernesmid/assets/img/toevoegen_watermerk-min.png');
+            $img_file = file_get_contents(realpath(dirname(__FILE__).'/../../../') .'/themes/modernesmid/assets/img/toevoegen_watermerk-min.png');
             $this->Image('@'.$img_file, 30, 40, 210, 297, 'png', '', '', false, 300, '', false, false, 0);
         }
 

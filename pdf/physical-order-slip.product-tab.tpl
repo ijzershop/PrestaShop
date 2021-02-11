@@ -27,7 +27,8 @@
 
 	<thead>
 		<tr>
-			<th class="product header small" width="60%">{l s='Product / Reference' d='Shop.Pdf' pdf='true'}</th>
+			<th class="product header small" width="10%">Plaats</th>
+			<th class="product header small" width="50%">{l s='Product / Reference' d='Shop.Pdf' pdf='true'}</th>
 			<th class="product header small" width="10%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
 			<th class="product header-right small" width="15%">{l s='Unit price' d='Shop.Pdf' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}</th>
 			<th class="product header-right small" width="15%">{l s='Price' d='Shop.Pdf' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}</th>
@@ -36,7 +37,7 @@
 
 	<tbody>
 		{if !isset($order_details) || count($order_details) == 0}
-			<tr class="product" colspan="4">
+			<tr class="product" colspan="5">
 				<td class="product center">
 					{l s='No details' d='Shop.Pdf' pdf='true'}
 				</td>
@@ -45,7 +46,10 @@
 			{foreach $order_details as $order_detail}
 				{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
 				<tr class="product {$bgcolor_class}">
-					<td class="product left">
+          <td class="product left">
+            {$order_detail.reference}
+          </td>
+          <td class="product left">
 						{$order_detail.name}
 					</td>
 					<td class="product center">
@@ -66,8 +70,9 @@
 						{/if}
 					</td>
 				</tr>
+        {if is_array($order_detail['customizedDatas'])}
 						<tr class="customization_data {$bgcolor_class}">
-							<td>
+							<td colspan="2">
 								<table style="width: 100%;"><tr><td>
 									{foreach $order_detail['customizedDatas'][$order_detail['id_product']][$order_detail['id_product_attribute']][$order_detail['id_address_delivery']][$order_detail['id_customization']] as $customization}
 											{foreach $customization[1] as $customization_infos}
@@ -82,13 +87,14 @@
 							<td class="product"></td>
 							<td class="product"></td>
 						</tr>
+        {/if}
 			{/foreach}
 		{/if}
 
 		{if is_array($cart_rules) && count($cart_rules)}
 			{foreach $cart_rules as $cart_rule}
 				<tr class="discount">
-					<td class="white left" colspan="3">{$cart_rule.name}</td>
+					<td class="white left" colspan="4">{$cart_rule.name}</td>
 					<td class="white right">
 						{if $tax_excluded_display}
 							+ {$cart_rule.value_tax_excl}

@@ -24,7 +24,6 @@ class PDFGenerator extends PDFGeneratorCore
 
     public function writePage($reference = null)
     {
-
         $barcodeStyle = array(
             'border' => 2,
             'vpadding' => 'auto',

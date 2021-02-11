@@ -137,6 +137,13 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
 
         $order_details = $this->order_invoice->getProducts();
+        /**
+         * Sort the products by product_reference
+         */
+        uasort($order_details, function ($item1, $item2) {
+            return $item1['product_reference'] <=> $item2['product_reference'];
+        });
+
             foreach ($order_details as &$order_detail) {
                 if(!is_null($order_detail['id_oi_offer'])){
                     $descProduct = new Product($order_detail['product_id']);

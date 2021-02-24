@@ -5,9 +5,9 @@
  * @author      Mollie B.V. <info@mollie.nl>
  * @copyright   Mollie B.V.
  *
- * @see        https://github.com/mollie/PrestaShop
- *
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
+ *
+ * @see        https://github.com/mollie/PrestaShop
  * @codingStandardsIgnoreStart
  */
 if (!include_once (dirname(__FILE__) . '/vendor/autoload.php')) {
@@ -66,7 +66,7 @@ class Mollie extends PaymentModule
 	{
 		$this->name = 'mollie';
 		$this->tab = 'payments_gateways';
-		$this->version = '4.2.1';
+		$this->version = '4.2.2';
 		$this->author = 'Mollie B.V.';
 		$this->need_instance = 1;
 		$this->bootstrap = true;
@@ -302,17 +302,17 @@ class Mollie extends PaymentModule
 		}
 
 		Media::addJsDef([
-			'description_message' => $this->l('Description cannot be empty'),
-			'profile_id_message' => $this->l('Wrong profile ID'),
+			'description_message' => addslashes($this->l('Description cannot be empty')),
+			'profile_id_message' => addslashes($this->l('Wrong profile ID')),
 			'profile_id_message_empty' => addslashes($this->l('Profile ID cannot be empty')),
-			'payment_api' => Mollie\Config\Config::MOLLIE_PAYMENTS_API,
-			'ajaxUrl' => $this->context->link->getAdminLink('AdminMollieAjax'),
+			'payment_api' => addslashes(Mollie\Config\Config::MOLLIE_PAYMENTS_API),
+			'ajaxUrl' => addslashes($this->context->link->getAdminLink('AdminMollieAjax')),
 		]);
 
 		/* Custom logo JS vars*/
 		Media::addJsDef([
-			'image_size_message' => $this->l('Image size must be %s%x%s1%'),
-			'not_valid_file_message' => $this->l('not a valid file: %s%'),
+			'image_size_message' => addslashes($this->l('Image size must be %s%x%s1%')),
+			'not_valid_file_message' => addslashes($this->l('not a valid file: %s%')),
 		]);
 
 		$this->context->controller->addJS($this->getPathUri() . 'views/js/method_countries.js');
@@ -862,12 +862,30 @@ class Mollie extends PaymentModule
 			return;
 		}
 
+		$idOrder = $params['id_order'];
+		$order = new Order($idOrder);
+		$checkStatuses = [];
+		if (Configuration::get(Mollie\Config\Config::MOLLIE_AUTO_SHIP_STATUSES)) {
+			$checkStatuses = @json_decode(Configuration::get(Mollie\Config\Config::MOLLIE_AUTO_SHIP_STATUSES));
+		}
+		if (!is_array($checkStatuses)) {
+			$checkStatuses = [];
+		}
+		if (!(Configuration::get(Mollie\Config\Config::MOLLIE_AUTO_SHIP_MAIN) && in_array($orderStatus->id, $checkStatuses))
+		) {
+			return;
+		}
+
 		/** @var \Mollie\Handler\Shipment\ShipmentSenderHandlerInterface $shipmentSenderHandler */
 		$shipmentSenderHandler = $this->getMollieContainer(
 			Mollie\Handler\Shipment\ShipmentSenderHandlerInterface::class
 		);
 
-		$shipmentSenderHandler->handleShipmentSender($this->api, $order, $orderStatus);
+		try {
+			$shipmentSenderHandler->handleShipmentSender($this->api, $order, $orderStatus);
+		} catch (Exception $e) {
+			//todo: we logg error in handleShipment
+		}
 	}
 
 	/**
@@ -1001,12 +1019,16 @@ class Mollie extends PaymentModule
 
 	public function hookActionAdminOrdersListingFieldsModifier($params)
 	{
+//		if (\Configuration::get(\Mollie\Config\Config::MOLLIE_SHOW_RESEND_PAYMENT_LINK) === \Mollie\Config\Config::HIDE_RESENT_LINK) {
+//			return;
+//		}
+
 		if (isset($params['select'])) {
 			$params['select'] = rtrim($params['select'], ' ,') . ' ,mol.`transaction_id`';
 		}
 		if (isset($params['join'])) {
 			$params['join'] .= ' LEFT JOIN `' . _DB_PREFIX_ . 'mollie_payments` mol ON mol.`order_reference` = a.`reference` 
-			AND mol.`cart_id` = a.`id_cart`';
+			AND mol.`cart_id` = a.`id_cart` AND mol.order_id > 0';
 		}
 		$params['fields']['order_id'] = [
 			'title' => $this->l('Resend payment link'),
@@ -1022,6 +1044,10 @@ class Mollie extends PaymentModule
 
 	public function hookActionOrderGridDefinitionModifier(array $params)
 	{
+		if (\Configuration::get(\Mollie\Config\Config::MOLLIE_SHOW_RESEND_PAYMENT_LINK) === \Mollie\Config\Config::HIDE_RESENT_LINK) {
+			return;
+		}
+
 		/** @var \Mollie\Grid\Definition\Modifier\OrderGridDefinitionModifier $orderGridDefinitionModifier */
 		$orderGridDefinitionModifier = $this->getMollieContainer(\Mollie\Grid\Definition\Modifier\OrderGridDefinitionModifier::class);
 		$gridDefinition = $params['definition'];

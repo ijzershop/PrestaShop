@@ -5,12 +5,13 @@
  * @author      Mollie B.V. <info@mollie.nl>
  * @copyright   Mollie B.V.
  *
- * @see        https://github.com/mollie/PrestaShop
- *
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
+ *
+ * @see        https://github.com/mollie/PrestaShop
  */
+
 if (!defined('_PS_VERSION_')) {
-	exit;
+    exit;
 }
 
 /**
@@ -21,8 +22,8 @@ if (!defined('_PS_VERSION_')) {
  */
 function upgrade_module_2_0_0()
 {
-	Configuration::deleteByName('MOLLIE_VERSION');
-	Configuration::updateValue('MOLLIE_ISSUERS', 'payment-page');
+    Configuration::deleteByName('MOLLIE_VERSION');
+    Configuration::updateValue('MOLLIE_ISSUERS', 'payment-page');
 
-	return true;
+    return true;
 }

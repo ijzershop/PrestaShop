@@ -199,6 +199,7 @@
         "php-cs-fixer": "php-cs-fixer --config=./.php_cs"
     },
     "config": {
+    	"platform-check": false,
         "platform": {
             "php": "7.2"
         },

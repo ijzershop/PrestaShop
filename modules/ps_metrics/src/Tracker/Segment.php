@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2020 PrestaShop and Contributors
  *
@@ -20,7 +21,10 @@
 
 namespace PrestaShop\Module\Ps_metrics\Tracker;
 
+use PrestaShop\Module\Ps_metrics\Context\PrestaShopContext;
 use PrestaShop\Module\Ps_metrics\Environment\SegmentEnv;
+use PrestaShop\Module\Ps_metrics\Helper\SegmentHelper;
+use PrestaShop\Module\Ps_metrics\Helper\ShopHelper;
 
 class Segment implements TrackerInterface
 {
@@ -40,22 +44,49 @@ class Segment implements TrackerInterface
     private $segmentEnv;
 
     /**
+     * @var SegmentHelper
+     */
+    private $segmentHelper;
+
+    /**
+     * @var PrestaShopContext
+     */
+    private $prestaShopContext;
+
+    /**
+     * @var ShopHelper
+     */
+    private $shopHelper;
+
+    /**
      * Segment constructor.
      *
      * @param SegmentEnv $segmentEnv
+     * @param SegmentHelper $segmentHelper
+     * @param PrestaShopContext $prestaShopContext
+     * @param ShopHelper $shopHelper
      */
-    public function __construct(SegmentEnv $segmentEnv)
-    {
+    public function __construct(
+        SegmentEnv $segmentEnv,
+        SegmentHelper $segmentHelper,
+        PrestaShopContext $prestaShopContext,
+        ShopHelper $shopHelper
+    ) {
         $this->segmentEnv = $segmentEnv;
+        $this->segmentHelper = $segmentHelper;
+        $this->prestaShopContext = $prestaShopContext;
+        $this->shopHelper = $shopHelper;
         $this->init();
     }
 
     /**
      * Init segment client with the api key
+     *
+     * @return void
      */
     private function init()
     {
-        \Segment::init($this->segmentEnv->getSegmentApiKey());
+        $this->segmentHelper->init();
     }
 
     /**
@@ -77,23 +108,30 @@ class Segment implements TrackerInterface
         return true;
     }
 
+    /**
+     * Add track
+     *
+     * @param int $userId
+     *
+     * @return void
+     */
     private function segmentTrack($userId)
     {
-        $userAgent = $_SERVER['HTTP_USER_AGENT'];
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
         $path = strtok($_SERVER['REQUEST_URI'], '?');
-        $referer = $_SERVER['HTTP_REFERER'];
+        $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
         $queryString = '?' . $_SERVER['QUERY_STRING'];
         $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
-        \Segment::track([
+        $this->segmentHelper->track([
             'userId' => $userId,
             'event' => $this->message,
             'channel' => 'browser',
             'context' => [
                 'ip' => $ip,
                 'userAgent' => $userAgent,
-                'locale' => \Context::getContext()->currentLocale,
+                'locale' => \Context::getContext()->language->iso_code,
                 'page' => [
                     'referrer' => $referer,
                     'url' => $url,
@@ -104,47 +142,52 @@ class Segment implements TrackerInterface
             ], $this->options),
         ]);
 
-        \Segment::flush();
+        $this->segmentHelper->flush();
     }
 
     /**
      * Handle tracking differently depending on the shop context
      *
      * @return mixed
+     *
+     * @todo how to refacto dictionnary with helper ?
      */
     private function dispatchTrack()
     {
         $dictionary = [
             \Shop::CONTEXT_SHOP => function () {
-                return $this->trackShop();
+                $this->trackShop();
             },
             \Shop::CONTEXT_GROUP => function () {
-                return $this->trackShopGroup();
+                $this->trackShopGroup();
             },
             \Shop::CONTEXT_ALL => function () {
-                return $this->trackAllShops();
+                $this->trackAllShops();
             },
         ];
 
-        return call_user_func($dictionary[\Shop::getContext()]);
+        return call_user_func($dictionary[$this->shopHelper->getContext()]);
     }
 
     /**
      * Send track segment only for the current shop
+     *
+     * @return void
      */
     private function trackShop()
     {
-        $userId = \Context::getContext()->shop->domain;
-
+        $userId = $this->prestaShopContext->getShopDomain();
         $this->segmentTrack($userId);
     }
 
     /**
      * Send track segment for each shop in the current shop group
+     *
+     * @return void
      */
     private function trackShopGroup()
     {
-        $shops = \Shop::getShops(true, \Shop::getContextShopGroupID());
+        $shops = $this->shopHelper->getShops(true, $this->shopHelper->getContextShopGroupID());
         foreach ($shops as $shop) {
             $this->segmentTrack($shop['domain']);
         }
@@ -152,10 +195,12 @@ class Segment implements TrackerInterface
 
     /**
      * Send track segment for all shops
+     *
+     * @return void
      */
     private function trackAllShops()
     {
-        $shops = \Shop::getShops();
+        $shops = $this->shopHelper->getShops();
         foreach ($shops as $shop) {
             $this->segmentTrack($shop['domain']);
         }
@@ -171,6 +216,8 @@ class Segment implements TrackerInterface
 
     /**
      * @param string $message
+     *
+     * @return void
      */
     public function setMessage($message)
     {
@@ -187,6 +234,8 @@ class Segment implements TrackerInterface
 
     /**
      * @param array $options
+     *
+     * @return void
      */
     public function setOptions($options)
     {

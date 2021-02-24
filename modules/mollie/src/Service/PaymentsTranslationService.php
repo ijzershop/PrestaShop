@@ -5,9 +5,9 @@
  * @author      Mollie B.V. <info@mollie.nl>
  * @copyright   Mollie B.V.
  *
- * @see        https://github.com/mollie/PrestaShop
- *
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
+ *
+ * @see        https://github.com/mollie/PrestaShop
  * @codingStandardsIgnoreStart
  */
 
@@ -17,29 +17,30 @@ use Mollie;
 
 class PaymentsTranslationService
 {
-	/**
-	 * @var Mollie
-	 */
-	private $module;
-	/**
-	 * @var LanguageService
-	 */
-	private $languageService;
+    /**
+     * @var Mollie
+     */
+    private $module;
 
-	public function __construct(
-		Mollie $module,
-		LanguageService $languageService
-	) {
-		$this->module = $module;
-		$this->languageService = $languageService;
-	}
+    /**
+     * @var LanguageService
+     */
+    private $languageService;
 
-	public function getTranslatedPaymentMethods($paymentMethods)
-	{
-		foreach ($paymentMethods as $method) {
-			$method['method_name'] = $this->languageService->lang($method['method_name']);
-		}
+    public function __construct(
+        Mollie $module,
+        LanguageService $languageService
+    ) {
+        $this->module = $module;
+        $this->languageService = $languageService;
+    }
 
-		return $paymentMethods;
-	}
+    public function getTranslatedPaymentMethods($paymentMethods)
+    {
+        foreach ($paymentMethods as $method) {
+            $method['method_name'] = $this->languageService->lang($method['method_name']);
+        }
+
+        return $paymentMethods;
+    }
 }

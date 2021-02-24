@@ -356,6 +356,7 @@ return array(
     'PrestaShop\\Module\\PsAccounts\\Repository\\OrderRepository' => $baseDir . '/classes/Repository/OrderRepository.php',
     'PrestaShop\\Module\\PsAccounts\\Repository\\ProductRepository' => $baseDir . '/classes/Repository/ProductRepository.php',
     'PrestaShop\\Module\\PsAccounts\\Repository\\ServerInformationRepository' => $baseDir . '/classes/Repository/ServerInformationRepository.php',
+    'PrestaShop\\Module\\PsAccounts\\Repository\\ShopRepository' => $baseDir . '/classes/Repository/ShopRepository.php',
     'PrestaShop\\Module\\PsAccounts\\Repository\\ThemeRepository' => $baseDir . '/classes/Repository/ThemeRepository.php',
     'PrestaShop\\Module\\PsAccounts\\Service\\ApiAuthorizationService' => $baseDir . '/classes/Service/ApiAuthorizationService.php',
     'PrestaShop\\Module\\PsAccounts\\Service\\CompressionService' => $baseDir . '/classes/Service/CompressionService.php',

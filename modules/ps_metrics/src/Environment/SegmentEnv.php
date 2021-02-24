@@ -29,15 +29,21 @@ class SegmentEnv extends Env
      */
     private $segmentApiKey;
 
+    /**
+     * SegmentEnv constructor.
+     *
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
-
         $this->setSegmentApiKey($_ENV['SEGMENT_API_KEY']);
     }
 
     /**
      * getter for segmentApiKey
+     *
+     * @return string
      */
     public function getSegmentApiKey()
     {
@@ -48,6 +54,8 @@ class SegmentEnv extends Env
      * setter for segmentApiKey
      *
      * @param string $apiKey
+     *
+     * @return void
      */
     private function setSegmentApiKey($apiKey)
     {

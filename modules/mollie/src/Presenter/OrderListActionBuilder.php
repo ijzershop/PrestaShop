@@ -5,9 +5,9 @@
  * @author      Mollie B.V. <info@mollie.nl>
  * @copyright   Mollie B.V.
  *
- * @see        https://github.com/mollie/PrestaShop
- *
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
+ *
+ * @see        https://github.com/mollie/PrestaShop
  * @codingStandardsIgnoreStart
  */
 
@@ -18,30 +18,31 @@ use Smarty_Data;
 
 class OrderListActionBuilder
 {
-	const FILE_NAME = 'OrderListActionBuilder';
-	/**
-	 * @var Mollie
-	 */
-	private $mollie;
+    const FILE_NAME = 'OrderListActionBuilder';
 
-	public function __construct(Mollie $mollie)
-	{
-		$this->mollie = $mollie;
-	}
+    /**
+     * @var Mollie
+     */
+    private $mollie;
 
-	public function buildOrderPaymentResendButton(Smarty_Data $smarty, $orderId)
-	{
-		$smarty->assign([
-			'idOrder' => (int) $orderId,
-			'message' => $this->mollie->l(
-				'You will resend email with payment link to the customer',
-				self::FILE_NAME
-			),
-		]);
+    public function __construct(Mollie $mollie)
+    {
+        $this->mollie = $mollie;
+    }
 
-		return $this->mollie->display(
-			$this->mollie->getLocalPath(),
-			'views/templates/hook/admin/order-list-icon.tpl'
-		);
-	}
+    public function buildOrderPaymentResendButton(Smarty_Data $smarty, $orderId)
+    {
+        $smarty->assign([
+            'idOrder' => (int)$orderId,
+            'message' => $this->mollie->l(
+                'You will resend email with payment link to the customer',
+                self::FILE_NAME
+            ),
+        ]);
+
+        return $this->mollie->display(
+            $this->mollie->getLocalPath(),
+            'views/templates/hook/admin/order-list-icon.tpl'
+        );
+    }
 }

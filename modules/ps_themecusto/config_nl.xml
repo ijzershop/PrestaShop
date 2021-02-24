@@ -2,8 +2,8 @@
 <module>
     <name>ps_themecusto</name>
     <displayName><![CDATA[Theme Customization]]></displayName>
-    <version><![CDATA[1.2.0]]></version>
-    <description><![CDATA[Easily configure and customize your homepage&rsquo;s theme and main native modules. Feature available on Design &gt; Theme &amp; Logo page.]]></description>
+    <version><![CDATA[1.2.1]]></version>
+    <description><![CDATA[Easily build your homepage: access the main front office modules and quickly configure them. Feature available on Design &gt; Theme &amp; Logo page.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[]]></tab>
     <is_configurable>0</is_configurable>

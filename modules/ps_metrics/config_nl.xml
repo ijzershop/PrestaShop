@@ -2,7 +2,11 @@
 <module>
     <name>ps_metrics</name>
     <displayName><![CDATA[PrestaShop Metrics]]></displayName>
+<<<<<<< HEAD
     <version><![CDATA[1.2.1]]></version>
+=======
+    <version><![CDATA[1.2.2]]></version>
+>>>>>>> 0f7e91ca085b84d60ae6add90bdb23427562782f
     <description><![CDATA[Module voor PrestaShop Metrics.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[advertising_marketing]]></tab>

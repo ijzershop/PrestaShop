@@ -83,7 +83,11 @@ class Ps_accounts extends Module
     /**
      * @var string
      */
+<<<<<<< HEAD
     const VERSION = '3.2.0';
+=======
+    const VERSION = '3.2.2';
+>>>>>>> 0f7e91ca085b84d60ae6add90bdb23427562782f
 
     /**
      * @var array
@@ -139,7 +143,11 @@ class Ps_accounts extends Module
         $this->author = 'PrestaShop';
         $this->need_instance = 0;
         $this->bootstrap = true;
+<<<<<<< HEAD
         $this->version = '3.2.0';
+=======
+        $this->version = '3.2.2';
+>>>>>>> 0f7e91ca085b84d60ae6add90bdb23427562782f
         $this->module_key = 'abf2cd758b4d629b2944d3922ef9db73';
 
         parent::__construct();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2020 PrestaShop and Contributors
  *
@@ -18,16 +19,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\Module\Ps_metrics\Data\ConversionRateData;
-use PrestaShop\Module\Ps_metrics\Data\OrdersData;
-use PrestaShop\Module\Ps_metrics\Data\RevenuesData;
 use PrestaShop\Module\Ps_metrics\Data\TipsCardsData;
-use PrestaShop\Module\Ps_metrics\Data\VisitsData;
 use PrestaShop\Module\Ps_metrics\Helper\JsonHelper;
-use PrestaShop\Module\Ps_metrics\Helper\NumberHelper;
-use PrestaShop\Module\Ps_metrics\Module\Uninstall;
-use PrestaShop\Module\Ps_metrics\Repository\ConfigurationRepository;
-use PrestaShop\Module\Ps_metrics\Validation\AjaxRetrieveDataValidation;
+use PrestaShop\Module\Ps_metrics\Helper\ToolsHelper;
+use PrestaShop\Module\Ps_metrics\Kpi\ConversionKpi;
+use PrestaShop\Module\Ps_metrics\Kpi\KpiManager;
+use PrestaShop\Module\Ps_metrics\Kpi\KpiStrategyInterface;
+use PrestaShop\Module\Ps_metrics\Kpi\OrdersKpi;
+use PrestaShop\Module\Ps_metrics\Kpi\RevenuesKpi;
+use PrestaShop\Module\Ps_metrics\Kpi\TotalKpi;
+use PrestaShop\Module\Ps_metrics\Kpi\VisitsKpi;
+use PrestaShop\Module\Ps_metrics\Module\DashboardModules;
+use PrestaShop\Module\Ps_metrics\Validation\RetrieveData;
 
 class AdminAjaxDashboardController extends ModuleAdminController
 {
@@ -36,9 +39,9 @@ class AdminAjaxDashboardController extends ModuleAdminController
     const DEFAULT_GRANULARITY = 'days';
 
     /**
-     * @var JsonHelper
+     * @var Ps_metrics
      */
-    private $jsonHelper;
+    public $module;
 
     /**
      * Load JsonHelper to avoid jsonEncode issues on AjaxDie
@@ -48,7 +51,6 @@ class AdminAjaxDashboardController extends ModuleAdminController
     public function __construct()
     {
         parent::__construct();
-        $this->jsonHelper = new JsonHelper();
     }
 
     /**
@@ -58,79 +60,75 @@ class AdminAjaxDashboardController extends ModuleAdminController
      */
     public function ajaxProcessRetrieveData()
     {
-        $dataType = Tools::getValue('type', self::DEFAULT_DATA_TYPE);
-        $dateRange = $this->jsonHelper->jsonDecode(
-            Tools::getValue('dateRange', self::DEFAULT_DATE_RANGE)
+        /** @var ToolsHelper $toolsHelper */
+        $toolsHelper = $this->module->getService('ps_metrics.helper.tools');
+
+        /** @var JsonHelper $jsonHelper */
+        $jsonHelper = $this->module->getService('ps_metrics.helper.json');
+
+        /** @var KpiManager $kpiManager */
+        $kpiManager = $this->module->getService('ps_metrics.kpi.manager');
+
+        $dataType = $toolsHelper->getValue('type', self::DEFAULT_DATA_TYPE);
+        $kpi = $toolsHelper->getValue('type', self::DEFAULT_DATA_TYPE);
+        $dateRange = $jsonHelper->jsonDecode(
+            $toolsHelper->getValue('dateRange', self::DEFAULT_DATE_RANGE)
         );
-        $granularity = $this->getGranularityForSqlDates(
-            Tools::getValue('granularity', self::DEFAULT_GRANULARITY)
-        );
+        $granularity = $toolsHelper->getValue('granularity', self::DEFAULT_GRANULARITY);
 
-        $this->verifyRetrievedData($dataType, $dateRange, $granularity['type']);
+        $this->verifyRetrievedData($dataType, $dateRange, $granularity);
 
-        $configurationValues = new ConfigurationRepository();
-        $gaIsOnboarded = (bool) $configurationValues->getGoogleLinkedValue();
+        $kpiManager->setKpi($this->dictionaryKpi($kpi));
+        $kpiManager->getConfiguration()->setDateRange($dateRange);
+        $kpiManager->getConfiguration()->setGranularity($granularity);
+        $data = $kpiManager->present();
 
-        switch ($dataType) {
-            case 'total':
-                $this->ajaxDie($this->jsonHelper->jsonEncode([
-                    'revenuesTotal' => (new RevenuesData($dateRange, $granularity))->getTotal(),
-                    'ordersTotal' => (new OrdersData($dateRange, $granularity))->getTotal(),
-                    'visits' => (new VisitsData($dateRange, $granularity))->getAll(),
-                ]));
-                break;
+        $this->ajaxDie($jsonHelper->jsonEncode($data));
+    }
 
-            case 'revenues':
-                $revenues = (new RevenuesData($dateRange, $granularity))->getAll();
-                $this->ajaxDie($this->jsonHelper->jsonEncode([
-                    'revenues' => $revenues['revenues'],
-                    'revenuesTotal' => $revenues['total'],
-                    'revenuesCategory' => $revenues['categories'],
-                ]));
-                break;
+    /**
+     * Instantiate the correct KPI
+     *
+     * @param string $kpi
+     *
+     * @return KpiStrategyInterface
+     */
+    private function dictionaryKpi($kpi)
+    {
+        $dictionary = [
+            'total' => function () {
+                /** @var TotalKpi $totalKpi */
+                $totalKpi = $this->module->getService('ps_metrics.kpi.total');
 
-            case 'orders':
-                $orders = (new OrdersData($dateRange, $granularity))->getAll();
-                $revenuesTotal = (new RevenuesData($dateRange, $granularity))->getTotal();
-                $this->ajaxDie($this->jsonHelper->jsonEncode([
-                    'orders' => $orders['orders'],
-                    'ordersTotal' => $orders['total'],
-                    'orderCartAverage' => (new NumberHelper())->division($revenuesTotal, $orders['total']),
-                    'ordersAbandonedCarts' => $orders['abandonedCarts'],
-                ]));
-                break;
+                return $totalKpi;
+            },
+            'revenues' => function () {
+                /** @var RevenuesKpi $revenuesKpi */
+                $revenuesKpi = $this->module->getService('ps_metrics.kpi.revenues');
 
-            case 'visits':
-                if (!$gaIsOnboarded) {
-                    $this->ajaxDie($this->jsonHelper->jsonEncode([]));
-                }
-                $this->ajaxDie($this->jsonHelper->jsonEncode([
-                    'visits' => (new VisitsData($dateRange, $granularity))->getAll(),
-                ]));
-                break;
+                return $revenuesKpi;
+            },
+            'orders' => function () {
+                /** @var OrdersKpi $ordersKpi */
+                $ordersKpi = $this->module->getService('ps_metrics.kpi.orders');
 
-            case 'conversion':
-                if (!$gaIsOnboarded) {
-                    $this->ajaxDie($this->jsonHelper->jsonEncode([]));
-                }
-                $conversions = (new ConversionRateData(
-                    (new VisitsData($dateRange, $granularity))->getAll(),
-                    (new OrdersData($dateRange, $granularity))->getAll()
-                ))->getAll();
-                $this->ajaxDie($this->jsonHelper->jsonEncode([
-                    'conversionRate' => $conversions['conversionRate'],
-                    'conversionRateTotal' => $conversions['conversionRateTotal'],
-                    'revenuesCustomers' => (new RevenuesData($dateRange, $granularity))->getTotalCustomersRevenues(),
-                ]));
-                break;
+                return $ordersKpi;
+            },
+            'visits' => function () {
+                /** @var VisitsKpi $visitsKpi */
+                $visitsKpi = $this->module->getService('ps_metrics.kpi.visits');
 
-            default:
-                $this->ajaxDie($this->jsonHelper->jsonEncode([
-                    'value' => false,
-                    'message' => $this->module->l('Bad data type request'),
-                ]));
-                break;
-        }
+                return $visitsKpi;
+            },
+            'conversion' => function () {
+                /** @var ConversionKpi $conversionKpi */
+                $conversionKpi = $this->module->getService('ps_metrics.kpi.conversion');
+
+                return $conversionKpi;
+            },
+        ];
+
+        return call_user_func($dictionary[$kpi]);
     }
 
     /**
@@ -140,22 +138,37 @@ class AdminAjaxDashboardController extends ModuleAdminController
      */
     public function ajaxProcessRetrieveTipsCards()
     {
-        $this->ajaxDie($this->jsonHelper->jsonEncode([
-            'tipsCards' => (new TipsCardsData($this->context))->getAll(),
+        /** @var JsonHelper $jsonHelper */
+        $jsonHelper = $this->module->getService('ps_metrics.helper.json');
+
+        /** @var TipsCardsData $tipsCardsData */
+        $tipsCardsData = $this->module->getService('ps_metrics.data.tipscards');
+        $this->ajaxDie($jsonHelper->jsonEncode([
+            'tipsCards' => $tipsCardsData->getAll(),
         ]));
     }
 
     /**
-     * Enable back dashboard module that has been disable at the installation
+     * Toggle dashboard modules
      *
      * @return void
      */
-    public function ajaxProcessEnableDashboardModules()
+    public function ajaxProcessToggleDashboardModules()
     {
-        $uninstaller = new Uninstall($this->module);
+        /** @var DashboardModules $dashboardModule */
+        $dashboardModule = $this->module->getService('ps_metrics.module.dashboard.modules');
 
-        $this->ajaxDie($this->jsonHelper->jsonEncode([
-            'success' => $uninstaller->enableModules(),
+        if ($dashboardModule->modulesIsEnabled()) {
+            $dashboardModule->disableModules();
+        } else {
+            $dashboardModule->enableModules();
+        }
+
+        /** @var JsonHelper $jsonHelper */
+        $jsonHelper = $this->module->getService('ps_metrics.helper.json');
+
+        $this->ajaxDie($jsonHelper->jsonEncode([
+            'success' => true,
         ]));
     }
 
@@ -170,49 +183,22 @@ class AdminAjaxDashboardController extends ModuleAdminController
      */
     private function verifyRetrievedData($dataType, array $dateRange, $granularity)
     {
-        $dataValidation = new AjaxRetrieveDataValidation();
-        $dataTypeError = $dataValidation->dataType($dataType);
-        $dateRangeError = $dataValidation->dateRange($dateRange);
-        $granularityError = $dataValidation->granularity($granularity);
+        /** @var RetrieveData $serviceRetrieveData */
+        $serviceRetrieveData = $this->module->getService('ps_metrics.validation.retrievedata');
+
+        /** @var JsonHelper $jsonHelper */
+        $jsonHelper = $this->module->getService('ps_metrics.helper.json');
+
+        $dataTypeError = $serviceRetrieveData->dataType($dataType);
+        $dateRangeError = $serviceRetrieveData->dateRange($dateRange);
+        $granularityError = $serviceRetrieveData->granularity($granularity);
 
         if (false === $dataTypeError || false === $dateRangeError || false === $granularityError) {
-            $this->ajaxDie($this->jsonHelper->jsonEncode([
+            $this->ajaxDie($jsonHelper->jsonEncode([
                 'dataTypeError' => $dataTypeError,
                 'dateRangeError' => $dateRangeError,
                 'granularityError' => $granularityError,
             ]));
         }
-    }
-
-    /**
-     * getGranularityForSqlDates
-     *
-     * @param string $granularity
-     *
-     * @return array
-     */
-    private function getGranularityForSqlDates($granularity)
-    {
-        if ('weeks' === $granularity) {
-            // for day : 0000-00-00
-            return [
-                'type' => 'weeks',
-                'forSql' => 10,
-            ];
-        }
-
-        if ('months' === $granularity) {
-            // for month : 0000-00
-            return [
-                'type' => 'months',
-                'forSql' => 7,
-            ];
-        }
-
-        // for day : 0000-00-00
-        return [
-            'type' => 'days',
-            'forSql' => 10,
-        ];
     }
 }

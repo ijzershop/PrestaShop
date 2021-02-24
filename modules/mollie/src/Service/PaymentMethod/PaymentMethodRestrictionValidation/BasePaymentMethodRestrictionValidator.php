@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2020, Mollie B.V.
+ * Copyright (c) 2012-2021, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,131 +46,131 @@ use Tools;
 /** Validator to check all cases for every payment method */
 class BasePaymentMethodRestrictionValidator implements PaymentMethodRestrictionValidatorInterface
 {
-	/**
-	 * @var LegacyContext
-	 */
-	private $context;
+    /**
+     * @var LegacyContext
+     */
+    private $context;
 
-	/**
-	 * @var PaymentMethodCurrencyProviderInterface
-	 */
-	private $paymentMethodCurrenciesProvider;
+    /**
+     * @var PaymentMethodCurrencyProviderInterface
+     */
+    private $paymentMethodCurrenciesProvider;
 
-	/**
-	 * @var OrderTotalServiceInterface
-	 */
-	private $orderTotalService;
+    /**
+     * @var OrderTotalServiceInterface
+     */
+    private $orderTotalService;
 
-	/**
-	 * @var OrderTotalProviderInterface
-	 */
-	private $orderTotalProvider;
+    /**
+     * @var OrderTotalProviderInterface
+     */
+    private $orderTotalProvider;
 
-	public function __construct(
-		LegacyContext $context,
-		PaymentMethodCurrencyProviderInterface $paymentMethodCurrenciesProvider,
-		OrderTotalServiceInterface $orderTotalService,
-		OrderTotalProviderInterface $orderTotalProvider
-	) {
-		$this->context = $context;
-		$this->paymentMethodCurrenciesProvider = $paymentMethodCurrenciesProvider;
-		$this->orderTotalService = $orderTotalService;
-		$this->orderTotalProvider = $orderTotalProvider;
-	}
+    public function __construct(
+        LegacyContext $context,
+        PaymentMethodCurrencyProviderInterface $paymentMethodCurrenciesProvider,
+        OrderTotalServiceInterface $orderTotalService,
+        OrderTotalProviderInterface $orderTotalProvider
+    ) {
+        $this->context = $context;
+        $this->paymentMethodCurrenciesProvider = $paymentMethodCurrenciesProvider;
+        $this->orderTotalService = $orderTotalService;
+        $this->orderTotalProvider = $orderTotalProvider;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function isValid(MolPaymentMethod $paymentMethod)
-	{
-		if (!$this->isPaymentMethodEnabled($paymentMethod)) {
-			return false;
-		}
+    /**
+     * {@inheritDoc}
+     */
+    public function isValid(MolPaymentMethod $paymentMethod)
+    {
+        if (!$this->isPaymentMethodEnabled($paymentMethod)) {
+            return false;
+        }
 
-		if (!$this->isCurrencyOptionDefinedForPaymentMethod($paymentMethod)) {
-			return false;
-		}
+        if (!$this->isCurrencyOptionDefinedForPaymentMethod($paymentMethod)) {
+            return false;
+        }
 
-		if (!$this->isCurrencySupportedByPaymentMethod($paymentMethod)) {
-			return false;
-		}
+        if (!$this->isCurrencySupportedByPaymentMethod($paymentMethod)) {
+            return false;
+        }
 
-		if ($this->isOrderTotalLowerThanMinimumAllowed($paymentMethod)) {
-			return false;
-		}
+        if ($this->isOrderTotalLowerThanMinimumAllowed($paymentMethod)) {
+            return false;
+        }
 
-		if ($this->isOrderTotalHigherThanMaximumAllowed($paymentMethod)) {
-			return false;
-		}
+        if ($this->isOrderTotalHigherThanMaximumAllowed($paymentMethod)) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function supports(MolPaymentMethod $paymentMethod)
-	{
-		return true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function supports(MolPaymentMethod $paymentMethod)
+    {
+        return true;
+    }
 
-	/**
-	 * @param MolPaymentMethod $paymentMethod
-	 *
-	 * @return bool
-	 */
-	private function isCurrencyOptionDefinedForPaymentMethod($paymentMethod)
-	{
-		return !empty($this->paymentMethodCurrenciesProvider->provideAvailableCurrenciesByPaymentMethod($paymentMethod));
-	}
+    /**
+     * @param MolPaymentMethod $paymentMethod
+     *
+     * @return bool
+     */
+    private function isCurrencyOptionDefinedForPaymentMethod($paymentMethod)
+    {
+        return !empty($this->paymentMethodCurrenciesProvider->provideAvailableCurrenciesByPaymentMethod($paymentMethod));
+    }
 
-	/**
-	 * @param MolPaymentMethod $paymentMethod
-	 *
-	 * @return bool
-	 */
-	private function isPaymentMethodEnabled($paymentMethod)
-	{
-		return (bool) $paymentMethod->enabled;
-	}
+    /**
+     * @param MolPaymentMethod $paymentMethod
+     *
+     * @return bool
+     */
+    private function isPaymentMethodEnabled($paymentMethod)
+    {
+        return (bool)$paymentMethod->enabled;
+    }
 
-	/**
-	 * @param MolPaymentMethod $paymentMethod
-	 *
-	 * @return bool
-	 */
-	private function isCurrencySupportedByPaymentMethod($paymentMethod)
-	{
-		$supportedCurrencies = $this->paymentMethodCurrenciesProvider->provideAvailableCurrenciesByPaymentMethod($paymentMethod);
-		$currencyCode = Tools::strtolower($this->context->getCurrencyIsoCode());
+    /**
+     * @param MolPaymentMethod $paymentMethod
+     *
+     * @return bool
+     */
+    private function isCurrencySupportedByPaymentMethod($paymentMethod)
+    {
+        $supportedCurrencies = $this->paymentMethodCurrenciesProvider->provideAvailableCurrenciesByPaymentMethod($paymentMethod);
+        $currencyCode = Tools::strtolower($this->context->getCurrencyIsoCode());
 
-		return in_array(
-			strtolower($currencyCode),
-			array_map('strtolower', $supportedCurrencies)
-		);
-	}
+        return in_array(
+            strtolower($currencyCode),
+            array_map('strtolower', $supportedCurrencies)
+        );
+    }
 
-	/**
-	 * @param MolPaymentMethod $paymentMethod
-	 *
-	 * @return bool
-	 */
-	private function isOrderTotalLowerThanMinimumAllowed($paymentMethod)
-	{
-		$orderTotal = $this->orderTotalProvider->getOrderTotal();
+    /**
+     * @param MolPaymentMethod $paymentMethod
+     *
+     * @return bool
+     */
+    private function isOrderTotalLowerThanMinimumAllowed($paymentMethod)
+    {
+        $orderTotal = $this->orderTotalProvider->getOrderTotal();
 
-		return $this->orderTotalService->isOrderTotalLowerThanMinimumAllowed($paymentMethod, $orderTotal);
-	}
+        return $this->orderTotalService->isOrderTotalLowerThanMinimumAllowed($paymentMethod, $orderTotal);
+    }
 
-	/**
-	 * @param MolPaymentMethod $paymentMethod
-	 *
-	 * @return bool
-	 */
-	private function isOrderTotalHigherThanMaximumAllowed($paymentMethod)
-	{
-		$orderTotal = $this->orderTotalProvider->getOrderTotal();
+    /**
+     * @param MolPaymentMethod $paymentMethod
+     *
+     * @return bool
+     */
+    private function isOrderTotalHigherThanMaximumAllowed($paymentMethod)
+    {
+        $orderTotal = $this->orderTotalProvider->getOrderTotal();
 
-		return $this->orderTotalService->isOrderTotalHigherThanMaximumAllowed($paymentMethod, $orderTotal);
-	}
+        return $this->orderTotalService->isOrderTotalHigherThanMaximumAllowed($paymentMethod, $orderTotal);
+    }
 }

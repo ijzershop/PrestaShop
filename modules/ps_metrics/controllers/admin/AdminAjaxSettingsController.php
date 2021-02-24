@@ -21,20 +21,23 @@
 use PrestaShop\AccountsAuth\Service\PsBillingService;
 use PrestaShop\Module\Ps_metrics\Api\Analytics\Accounts;
 use PrestaShop\Module\Ps_metrics\Cache\DataCache;
+use PrestaShop\Module\Ps_metrics\Context\PrestaShopContext;
 use PrestaShop\Module\Ps_metrics\Helper\JsonHelper;
+use PrestaShop\Module\Ps_metrics\Helper\ToolsHelper;
+use PrestaShop\Module\Ps_metrics\Module\DashboardModules;
 use PrestaShop\Module\Ps_metrics\Module\Uninstall;
 use PrestaShop\Module\Ps_metrics\Provider\AnalyticsAccountsListProvider;
 use PrestaShop\Module\Ps_metrics\Provider\GoogleTagProvider;
 use PrestaShop\Module\Ps_metrics\Provider\ShopsProvider;
 use PrestaShop\Module\Ps_metrics\Repository\ConfigurationRepository;
-use PrestaShop\Module\Ps_metrics\Validation\AjaxProcessSelectAccountAnalytics;
+use PrestaShop\Module\Ps_metrics\Validation\SelectAccountAnalytics;
 
 class AdminAjaxSettingsController extends ModuleAdminController
 {
     /**
-     * @var JsonHelper
+     * @var Ps_metrics
      */
-    private $jsonHelper;
+    public $module;
 
     /**
      * Load JsonHelper to avoid jsonEncode issues on AjaxDie
@@ -44,7 +47,6 @@ class AdminAjaxSettingsController extends ModuleAdminController
     public function __construct()
     {
         parent::__construct();
-        $this->jsonHelper = new JsonHelper();
     }
 
     /**
@@ -54,20 +56,33 @@ class AdminAjaxSettingsController extends ModuleAdminController
      */
     public function ajaxProcessGetExistingGoogleTags()
     {
-        $configurationRepo = new ConfigurationRepository();
+        /** @var ConfigurationRepository $configurationRepository */
+        $configurationRepository = $this->module->getService('ps_metrics.repository.configuration');
+
+        /** @var ShopsProvider $shopsProvider */
+        $shopsProvider = $this->module->getService('ps_metrics.provider.shops');
+
+        /** @var PrestaShopContext $prestashopContext */
+        $prestashopContext = $this->module->getService('ps_metrics.context.prestashop');
+
+        /** @var JsonHelper $jsonHelper */
+        $jsonHelper = $this->module->getService('ps_metrics.helper.json');
+
+        /** @var GoogleTagProvider $googleTagProvider */
+        $googleTagProvider = $this->module->getService('ps_metrics.provider.googletag');
 
         // If google Tag is already set as linked, we avoid to retrieve the Google Tag
-        // Only the PSL will tell us if we sould retrieve TAGS again
-        if (true === $configurationRepo->getGoogleTagLinkedValue()) {
+        // Only the PSL will tell us if we should retrieve TAGS again
+        if (true === $configurationRepository->getGoogleTagLinkedValue()) {
             $this->ajaxDie('true');
         }
 
-        $currentShop = (new ShopsProvider())->getShopUrl($this->context->shop->id);
-        $findGoogleTag = new GoogleTagProvider($currentShop['url']);
+        $currentShop = $shopsProvider->getShopUrl($prestashopContext->getShopId());
+        $googleTagProvider->setBaseUrl($currentShop['url']);
 
-        $this->ajaxDie($this->jsonHelper->jsonEncode([
-            'analytics' => $findGoogleTag->findGoogleTagsAnalytics(),
-            'manager' => $findGoogleTag->findGoogleTagsManager(),
+        $this->ajaxDie($jsonHelper->jsonEncode([
+            'analytics' => $googleTagProvider->findGoogleTagsAnalytics(),
+            'manager' => $googleTagProvider->findGoogleTagsManager(),
         ]));
     }
 
@@ -79,38 +94,49 @@ class AdminAjaxSettingsController extends ModuleAdminController
      */
     public function ajaxProcessSelectAccountAnalytics()
     {
+        /** @var JsonHelper $jsonHelper */
+        $jsonHelper = $this->module->getService('ps_metrics.helper.json');
+
+        /** @var ToolsHelper $toolsHelper */
+        $toolsHelper = $this->module->getService('ps_metrics.helper.tools');
+
+        /** @var Accounts $analyticsAccount */
+        $analyticsAccount = $this->module->getService('ps_metrics.api.analytics.accounts');
+
+        /** @var SelectAccountAnalytics $serviceProcessSelectAccountAnalytics */
+        $serviceProcessSelectAccountAnalytics = $this->module->getService('ps_metrics.validation.processselectaccountanalytics');
+
         $this->deleteExistingCache();
-        $validateData = (new AjaxProcessSelectAccountAnalytics())->validate([
-            'webPropertyId' => Tools::getValue('webPropertyId'),
-            'viewId' => Tools::getValue('viewId'),
+        $validateData = $serviceProcessSelectAccountAnalytics->validate([
+            'webPropertyId' => $toolsHelper->getValue('webPropertyId'),
+            'viewId' => $toolsHelper->getValue('viewId'),
         ]);
 
         if (false === $validateData) {
-            $this->ajaxDie($this->jsonHelper->jsonEncode([
+            $this->ajaxDie($jsonHelper->jsonEncode([
                 'success' => false,
             ]));
         }
 
-        $analyticsAccount = new Accounts();
         $analyticsAccount->create();
         $serviceResult = $analyticsAccount->setAccountSelection([
-            'webPropertyId' => Tools::getValue('webPropertyId'),
-            'viewId' => Tools::getValue('viewId'),
+            'webPropertyId' => $toolsHelper->getValue('webPropertyId'),
+            'viewId' => $toolsHelper->getValue('viewId'),
         ]);
 
         if (201 !== $serviceResult['httpCode']) {
-            $this->ajaxDie($this->jsonHelper->jsonEncode([
+            $this->ajaxDie($jsonHelper->jsonEncode([
                 'success' => false,
                 'googleAccount' => [],
             ]));
         }
-        $this->ajaxDie($this->jsonHelper->jsonEncode([
+        $this->ajaxDie($jsonHelper->jsonEncode([
             'success' => true,
             'googleAccount' => [
-                'webPropertyId' => Tools::getValue('webPropertyId'),
-                'view_id' => Tools::getValue('viewId'),
-                'username' => Tools::getValue('username'),
-                'webPropertyName' => Tools::getValue('webPropertyName'),
+                'webPropertyId' => $toolsHelper->getValue('webPropertyId'),
+                'view_id' => $toolsHelper->getValue('viewId'),
+                'username' => $toolsHelper->getValue('username'),
+                'webPropertyName' => $toolsHelper->getValue('webPropertyName'),
             ],
         ]));
     }
@@ -123,31 +149,33 @@ class AdminAjaxSettingsController extends ModuleAdminController
      */
     public function ajaxProcessLogOut()
     {
+        /** @var JsonHelper $jsonHelper */
+        $jsonHelper = $this->module->getService('ps_metrics.helper.json');
+
         $this->deleteExistingCache();
-        $uninstallGoogleAccount = new Uninstall($this->module);
+
+        /** @var Uninstall $uninstallGoogleAccount */
+        $uninstallGoogleAccount = $this->module->getService('ps_metrics.module.uninstall');
 
         if (false === $uninstallGoogleAccount->unsubscribePsEssentials()) {
-            $this->ajaxDie($this->jsonHelper->jsonEncode([
-                'success' => false,
-                'googleLinked' => true,
-            ]));
-        }
-
-        if (false === $uninstallGoogleAccount->enableModules()) {
-            $this->ajaxDie($this->jsonHelper->jsonEncode([
+            $this->ajaxDie($jsonHelper->jsonEncode([
                 'success' => false,
                 'googleLinked' => true,
             ]));
         }
 
         if (false === $uninstallGoogleAccount->resetConfigurationValues()) {
-            $this->ajaxDie($this->jsonHelper->jsonEncode([
+            $this->ajaxDie($jsonHelper->jsonEncode([
                 'success' => false,
                 'googleLinked' => true,
             ]));
         }
 
-        $this->ajaxDie($this->jsonHelper->jsonEncode([
+        /** @var DashboardModules $dashboardModule */
+        $dashboardModule = $this->module->getService('ps_metrics.module.dashboard.modules');
+        $dashboardModule->enableModules();
+
+        $this->ajaxDie($jsonHelper->jsonEncode([
             'success' => true,
             'googleLinked' => false,
         ]));
@@ -161,16 +189,22 @@ class AdminAjaxSettingsController extends ModuleAdminController
      */
     public function ajaxProcessRefreshGA()
     {
-        $analyticsAccount = new Accounts();
+        /** @var JsonHelper $jsonHelper */
+        $jsonHelper = $this->module->getService('ps_metrics.helper.json');
+
+        /** @var Accounts $analyticsAccount */
+        $analyticsAccount = $this->module->getService('ps_metrics.api.analytics.accounts');
+
         $analyticsAccount->create();
         $serviceResult = $analyticsAccount->refreshGA();
+
         if (201 !== $serviceResult['httpCode']) {
-            $this->ajaxDie($this->jsonHelper->jsonEncode([
+            $this->ajaxDie($jsonHelper->jsonEncode([
                 'success' => false,
                 'message' => $serviceResult['body']['error'],
             ]));
         }
-        $this->ajaxDie($this->jsonHelper->jsonEncode([
+        $this->ajaxDie($jsonHelper->jsonEncode([
             'success' => true,
         ]));
     }
@@ -182,17 +216,22 @@ class AdminAjaxSettingsController extends ModuleAdminController
      */
     public function ajaxProcessListProperty()
     {
-        $analyticsAccount = new AnalyticsAccountsListProvider();
-        $serviceResult = $analyticsAccount->getAccountsList();
+        /** @var JsonHelper $jsonHelper */
+        $jsonHelper = $this->module->getService('ps_metrics.helper.json');
+
+        /** @var AnalyticsAccountsListProvider $analyticsAccountListProvider */
+        $analyticsAccountListProvider = $this->module->getService('ps_metrics.provider.analyticsaccountslist');
+
+        $serviceResult = $analyticsAccountListProvider->getAccountsList();
         if (empty($serviceResult)) {
-            $this->ajaxDie($this->jsonHelper->jsonEncode([
+            $this->ajaxDie($jsonHelper->jsonEncode([
                 'success' => false,
                 'listProperty' => [],
                 'error' => 'No property list on this account',
             ]));
         }
 
-        $this->ajaxDie($this->jsonHelper->jsonEncode([
+        $this->ajaxDie($jsonHelper->jsonEncode([
             'success' => true,
             'listProperty' => $serviceResult,
         ]));
@@ -205,6 +244,9 @@ class AdminAjaxSettingsController extends ModuleAdminController
      */
     public function ajaxProcessBillingFree()
     {
+        /** @var JsonHelper $jsonHelper */
+        $jsonHelper = $this->module->getService('ps_metrics.helper.json');
+
         $billingService = new PsBillingService();
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ip_address = $_SERVER['HTTP_CLIENT_IP'];
@@ -217,12 +259,12 @@ class AdminAjaxSettingsController extends ModuleAdminController
         $result = $billingService->subscribeToFreePlan('ps_analytics', 'metrics-free', false, $ip_address);
 
         if (empty($result)) {
-            $this->ajaxDie($this->jsonHelper->jsonEncode([
+            $this->ajaxDie($jsonHelper->jsonEncode([
                 'success' => false,
             ]));
         }
 
-        $this->ajaxDie($this->jsonHelper->jsonEncode([
+        $this->ajaxDie($jsonHelper->jsonEncode([
             'success' => true,
             'billing' => $result,
         ]));
@@ -235,8 +277,9 @@ class AdminAjaxSettingsController extends ModuleAdminController
      */
     private function deleteExistingCache()
     {
-        $cache = new DataCache();
+        /** @var DataCache $dataCache */
+        $dataCache = $this->module->getService('ps_metrics.cache.data');
 
-        return $cache->deleteAllCache();
+        return $dataCache->deleteAllCache();
     }
 }

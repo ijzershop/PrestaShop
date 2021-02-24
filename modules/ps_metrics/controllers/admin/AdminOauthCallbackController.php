@@ -22,6 +22,9 @@ use PrestaShop\AccountsAuth\Service\PsAccountsService;
 use PrestaShop\Module\Ps_metrics\Adapter\LinkAdapter;
 use PrestaShop\Module\Ps_metrics\Api\Analytics\Accounts;
 use PrestaShop\Module\Ps_metrics\Helper\JsonHelper;
+use PrestaShop\Module\Ps_metrics\Helper\ModuleHelper;
+use PrestaShop\Module\Ps_metrics\Helper\ToolsHelper;
+use PrestaShop\Module\Ps_metrics\Module\DashboardModules;
 use PrestaShop\Module\Ps_metrics\Repository\ConfigurationRepository;
 
 class AdminOauthCallbackController extends ModuleAdminController
@@ -30,15 +33,6 @@ class AdminOauthCallbackController extends ModuleAdminController
      * @var Ps_metrics
      */
     public $module;
-    /**
-     * @var LinkAdapter
-     */
-    public $linkAdapter;
-
-    /**
-     * @var JsonHelper
-     */
-    private $jsonHelper;
 
     /**
      * Load JsonHelper to avoid jsonEncode issues on AjaxDie
@@ -48,7 +42,6 @@ class AdminOauthCallbackController extends ModuleAdminController
     public function __construct()
     {
         parent::__construct();
-        $this->jsonHelper = new JsonHelper();
     }
 
     /**
@@ -58,32 +51,38 @@ class AdminOauthCallbackController extends ModuleAdminController
      */
     public function display()
     {
-        $this->linkAdapter = new LinkAdapter($this->module, $this->context->link);
+        /** @var ToolsHelper $toolsHelper */
+        $toolsHelper = $this->module->getService('ps_metrics.helper.tools');
 
-        if ('PS' === \Tools::getValue('from')) {
+        /** @var ConfigurationRepository $configurationRepository */
+        $configurationRepository = $this->module->getService('ps_metrics.repository.configuration');
+
+        /** @var LinkAdapter $linkAdapter */
+        $linkAdapter = $this->module->getService('ps_metrics.adapter.link');
+
+        if ('PS' === $toolsHelper->getValue('from')) {
             $this->redirectToGoogleAuthentication();
         }
 
-        $configurationRepo = new ConfigurationRepository();
-        $configurationRepo->saveActionGoogleLinked(true);
+        $configurationRepository->saveActionGoogleLinked(true);
 
         if (false === $this->isGoogleAuthenticationDone()) {
-            $configurationRepo->saveActionGoogleLinked(false);
+            $configurationRepository->saveActionGoogleLinked(false);
         }
 
-        $configurationRepo->saveModuleListState($this->getModuleListState());
+        /** @var DashboardModules $dashboardModule */
+        $dashboardModule = $this->module->getService('ps_metrics.module.dashboard.modules');
+        $dashboardModule->disableModules();
 
-        $this->disableDashboardModuleList();
-
-        \Tools::redirectAdmin(
-            $this->linkAdapter->getAdminLink(
+        $toolsHelper->redirectAdmin(
+            $linkAdapter->getAdminLink(
                 'AdminModules',
                 true,
                 [],
                 [
                     'configure' => $this->module->name,
-                    'google_message_error' => \Tools::getValue('message'),
-                    'countProperty' => \Tools::getValue('count'),
+                    'google_message_error' => $toolsHelper->getValue('message'),
+                    'countProperty' => $toolsHelper->getValue('count'),
                 ]
             )
         );
@@ -96,20 +95,32 @@ class AdminOauthCallbackController extends ModuleAdminController
      */
     private function redirectToGoogleAuthentication()
     {
-        $analyticsAccount = new Accounts();
+        /** @var Accounts $analyticsAccount */
+        $analyticsAccount = $this->module->getService('ps_metrics.api.analytics.accounts');
+
+        /** @var LinkAdapter $linkAdapter */
+        $linkAdapter = $this->module->getService('ps_metrics.adapter.link');
+
+        /** @var JsonHelper $jsonHelper */
+        $jsonHelper = $this->module->getService('ps_metrics.helper.json');
+
+        /** @var ToolsHelper $toolsHelper */
+        $toolsHelper = $this->module->getService('ps_metrics.helper.tools');
+
         $analyticsAccount->create();
         $serviceResult = $analyticsAccount->generateAuthUrl([
             'state' => $this->getGoogleApiState(
-                $this->linkAdapter->getAdminLink($this->module->oauthAdminController),
+                $linkAdapter->getAdminLink($this->module->oauthAdminController),
                 (new PsAccountsService())->getShopUuidV4()
             ),
         ]);
+
         if (201 !== $serviceResult['httpCode']) {
-            $this->ajaxDie($this->jsonHelper->jsonEncode([
+            $this->ajaxDie($jsonHelper->jsonEncode([
                 'success' => false,
             ]));
         }
-        Tools::redirect($serviceResult['body']['authorizeUrl']);
+        $toolsHelper->redirect($serviceResult['body']['authorizeUrl']);
     }
 
     /**
@@ -119,7 +130,10 @@ class AdminOauthCallbackController extends ModuleAdminController
      */
     private function isGoogleAuthenticationDone()
     {
-        if ('ok' === Tools::getValue('status')) {
+        /** @var ToolsHelper $toolsHelper */
+        $toolsHelper = $this->module->getService('ps_metrics.helper.tools');
+
+        if ('ok' === $toolsHelper->getValue('status')) {
             return true;
         }
 
@@ -151,8 +165,11 @@ class AdminOauthCallbackController extends ModuleAdminController
     {
         $moduleListState = [];
 
+        /** @var ModuleHelper $moduleHelper */
+        $moduleHelper = $this->module->getService('ps_metrics.helper.module');
+
         foreach ($this->module->moduleSubstitution as $moduleName) {
-            $isModuleEnabled = Module::isEnabled($moduleName);
+            $isModuleEnabled = $moduleHelper->isEnabled($moduleName);
             $moduleListState[$moduleName] = $isModuleEnabled;
         }
 
@@ -166,8 +183,11 @@ class AdminOauthCallbackController extends ModuleAdminController
      */
     private function disableDashboardModuleList()
     {
+        /** @var ModuleHelper $moduleHelper */
+        $moduleHelper = $this->module->getService('ps_metrics.helper.module');
+
         foreach ($this->module->moduleSubstitution as $moduleName) {
-            $module = Module::getInstanceByName($moduleName);
+            $module = $moduleHelper->getInstanceByName($moduleName);
             // $module returns false if module doesn't exist
             if (false !== $module) {
                 $module->disable();

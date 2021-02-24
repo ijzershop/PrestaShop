@@ -1027,7 +1027,7 @@ class Mollie extends PaymentModule
 			$params['select'] = rtrim($params['select'], ' ,') . ' ,mol.`transaction_id`';
 		}
 		if (isset($params['join'])) {
-			$params['join'] .= ' LEFT JOIN `' . _DB_PREFIX_ . 'mollie_payments` mol ON mol.`order_reference` = a.`reference` 
+			$params['join'] .= ' LEFT JOIN `' . _DB_PREFIX_ . 'mollie_payments` mol ON mol.`order_reference` = a.`reference`
 			AND mol.`cart_id` = a.`id_cart` AND mol.order_id > 0';
 		}
 		$params['fields']['order_id'] = [

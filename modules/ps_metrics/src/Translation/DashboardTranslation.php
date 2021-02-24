@@ -140,10 +140,10 @@ class DashboardTranslation
                     'soon' => $this->module->l('Soon', 'DashboardTranslation'),
                 ],
                 'revenues' => [
-                    'revenuePerCategory' => $this->module->l('Revenue per categories', 'DashboardTranslation'),
+                    'revenuePerCategory' => $this->module->l('Revenue per category', 'DashboardTranslation'),
                     'revenuePerCategoryTooltip' => $this->module->l('Sum of revenue, tax + shipping incl., generated within the date range by the orders considered as validated.', 'DashboardTranslation'),
                     'revenueAnalysis' => $this->module->l('Revenue Analysis', 'DashboardTranslation'),
-                    'revenueAnalysisTooltip' => $this->module->l('Sum of tax generated within the date range by the orders considered as validated', 'DasboardTranslations'),
+                    'revenueAnalysisTooltip' => $this->module->l('Sum of tax generated within the date range by the orders considered as validated', 'DasboardTranslation'),
                     'revenueNet' => $this->module->l('NET REVENUE', 'DashboardTranslation'),
                     'totalTaxes' => $this->module->l('Total Tax', 'DashboardTranslation'),
                 ],

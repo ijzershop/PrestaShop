@@ -30,11 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-<<<<<<< HEAD
-    'reference' => '4b3c925ff83f66b8ca0fa41519b8d53c288b8927',
-=======
     'reference' => 'c69f36e0930ab76b9cc4f4487cc5086d474a3a5d',
->>>>>>> 0f7e91ca085b84d60ae6add90bdb23427562782f
     'name' => 'prestashop/ps_metrics',
   ),
   'versions' => 
@@ -136,11 +132,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-<<<<<<< HEAD
-      'reference' => '4b3c925ff83f66b8ca0fa41519b8d53c288b8927',
-=======
       'reference' => 'c69f36e0930ab76b9cc4f4487cc5086d474a3a5d',
->>>>>>> 0f7e91ca085b84d60ae6add90bdb23427562782f
     ),
     'psr/cache' => 
     array (

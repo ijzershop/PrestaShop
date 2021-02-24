@@ -32,7 +32,7 @@ if (!defined('_PS_VERSION_')) {
 function upgradeIfIsShop1_7($module)
 {
     if (true === \Module::needUpgrade($module)) {
-        $moduleManagerBuilder = \ModuleManagerBuilder::getInstance();
+        $moduleManagerBuilder = \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
         return $moduleManager->upgrade('ps_accounts');

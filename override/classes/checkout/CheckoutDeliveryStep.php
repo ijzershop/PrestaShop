@@ -46,7 +46,7 @@ class CheckoutDeliveryStep extends CheckoutDeliveryStepCore
             );
         }
         $delivery_option = "";
-        if(!is_null($requestParams['delivery_option'])){
+        if(isset($requestParams['delivery_option']) && !is_null($requestParams['delivery_option'])){
             $delivery_option = (int)reset($requestParams['delivery_option']);
         }
         if((int)Configuration::get('ADDTOORDER_DELIVERY_METHOD') == $delivery_option || (int)Configuration::get('ADDTOORDER_DELIVERY_METHOD') == (int)$this->context->cart->id_carrier){

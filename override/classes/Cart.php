@@ -51,13 +51,12 @@ class Cart extends CartCore
 
         $cookie = new Cookie('psAdmin', '', (int)Configuration::get('PS_COOKIE_LIFETIME_BO'));
         if (isset($cookie->id_employee) && $cookie->id_employee) {
-            if(in_array($cookie->profile, explode(',',Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_SHOP_PROFILES')))){
+            if($cookie->profile == Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE')){
                 $shipping_config = unserialize(Configuration::get('koopmanOrderExport'));
                 $pickupCarrier = (int)$shipping_config['select_pickup_carrier'];
                 $id_carrier = $pickupCarrier;
             }
         }
-
 
         if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
             $type = Cart::ONLY_PRODUCTS;

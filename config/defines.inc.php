@@ -26,7 +26,11 @@
 
 /* Debug only */
 if (!defined('_PS_MODE_DEV_')) {
-    define('_PS_MODE_DEV_', false);
+    if ($_SERVER["REMOTE_ADDR"] == '213.93.172.135') {
+        define('_PS_MODE_DEV_', true);
+    } else {
+        define('_PS_MODE_DEV_', false);
+    }
 }
 /* Compatibility warning */
 define('_PS_DISPLAY_COMPATIBILITY_WARNING_', true);

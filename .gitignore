@@ -441,3 +441,4 @@ modules/ps_pinpayment.zip
 seoScript.php
 validScript.php
 override/controllers/admin/templates/orders/helpers/view/backup geo check
+modules/*.zip

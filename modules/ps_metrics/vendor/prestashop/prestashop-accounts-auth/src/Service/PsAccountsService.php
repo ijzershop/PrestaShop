@@ -31,6 +31,7 @@ use PrestaShop\AccountsAuth\DependencyInjection\PsAccountsServiceProvider;
 use PrestaShop\AccountsAuth\Environment\Env;
 use PrestaShop\AccountsAuth\Exception\EnvVarException;
 use PrestaShop\AccountsAuth\Exception\ServiceNotFoundException;
+use PrestaShop\AccountsAuth\Exception\SshKeysNotFoundException;
 use PrestaShop\AccountsAuth\Repository\ConfigurationRepository;
 use Tools;
 
@@ -215,7 +216,7 @@ class PsAccountsService
                         true,
                         [],
                         [
-                            'configure' => $this->module->name,
+                            'configure' => $this->psxName,
                             'setShopContext' => 's-' . $shopId,
                         ]
                     ),
@@ -450,6 +451,45 @@ class PsAccountsService
     }
 
     /**
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function unlinkShop()
+    {
+        $response = (new ServicesAccountsClient($this->getContext()->link))
+            ->deleteShop((string) $this->getShopUuidV4());
+
+        // Réponse: 200: Shop supprimé avec payload contenant un message de confirmation
+        // Réponse: 404: La shop n'existe pas (not found)
+        // Réponse: 401: L'utilisateur n'est pas autorisé à supprimer cette shop
+
+        if ($response['status'] && $response['httpCode'] === 200) {
+            $this->resetOnboardingData();
+        }
+
+        return $response;
+    }
+
+    /**
+     * Empty onboarding configuration values
+     *
+     * @return void
+     */
+    public function resetOnboardingData()
+    {
+        $this->configuration->updateAccountsRsaPrivateKey('');
+        $this->configuration->updateAccountsRsaPublicKey('');
+        $this->configuration->updateAccountsRsaSignData('');
+
+        $this->configuration->updateFirebaseIdAndRefreshTokens('', '');
+        $this->configuration->updateFirebaseEmail('');
+        $this->configuration->updateFirebaseEmailIsVerified(false);
+
+        $this->configuration->updateShopUuid('');
+    }
+
+    /**
      * @return void
      *
      * @throws \Exception
@@ -462,6 +502,8 @@ class PsAccountsService
 
     /**
      * @return void
+     *
+     * @throws SshKeysNotFoundException
      */
     public function generateSshKey()
     {
@@ -471,13 +513,15 @@ class PsAccountsService
             $key = $sshKey->generate();
             $this->configuration->updateAccountsRsaPrivateKey($key['privatekey']);
             $this->configuration->updateAccountsRsaPublicKey($key['publickey']);
-
             $this->configuration->updateAccountsRsaSignData(
                 $sshKey->signData(
                     $this->configuration->getAccountsRsaPrivateKey(),
                     self::STR_TO_SIGN
                 )
             );
+            if (empty($this->configuration->getAccountsRsaPrivateKey())) {
+                throw new SshKeysNotFoundException('SshKeys not found');
+            }
         }
     }
 
@@ -605,7 +649,7 @@ class PsAccountsService
 
         $token = (new Parser())->parse($this->configuration->getFirebaseIdToken());
 
-        return $token->isExpired();
+        return $token->isExpired(new \DateTime());
     }
 
     /**
@@ -617,5 +661,35 @@ class PsAccountsService
         $langIsoCode = $this->context->language->iso_code;
 
         return $url . '?lang=' . substr($langIsoCode, 0, 2);
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccountsRsaPublicKey()
+    {
+        return $this->configuration->getAccountsRsaPublicKey();
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccountsRsaSignData()
+    {
+        return $this->configuration->getAccountsRsaSignData();
+    }
+
+    /**
+     * Generate ajax admin link with token
+     * available via PsAccountsPresenter into page dom,
+     * ex :
+     * let url = window.contextPsAccounts.adminAjaxLink + '&action=unlinkShop'
+     *
+     * @return string
+     */
+    public function getAdminAjaxLink()
+    {
+//        Tools::getAdminTokenLite('AdminAjaxPsAccounts'));
+        return $this->linkAdapter->getAdminLink('AdminAjaxPsAccounts', true, [], ['ajax' => 1]);
     }
 }

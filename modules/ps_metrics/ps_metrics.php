@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2020 PrestaShop and Contributors
  *
@@ -49,14 +50,17 @@ class Ps_metrics extends Module
     /** @var string */
     public $confirmUninstall;
 
-    /** @var \PrestaShop\ModuleLibServiceContainer\DependencyInjection\ServiceContainer */
+    /** @var PrestaShop\ModuleLibServiceContainer\DependencyInjection\ServiceContainer */
     private $container;
+
+    /** @var string */
+    public $idPsAccounts;
 
     public function __construct()
     {
         $this->name = 'ps_metrics';
         $this->tab = 'advertising_marketing';
-        $this->version = '1.0.1';
+        $this->version = '1.2.1';
         $this->author = 'PrestaShop';
         $this->need_instance = 0;
         $this->module_key = '697657ffe038d20741105e95a10b12d1';
@@ -64,6 +68,7 @@ class Ps_metrics extends Module
         $this->oauthAdminController = 'AdminOauthCallback';
         $this->ajaxDashboardController = 'AdminAjaxDashboard';
         $this->ajaxSettingsController = 'AdminAjaxSettings';
+        $this->idPsAccounts = '49648';
         $this->controllers = [
             $this->oauthAdminController,
             $this->ajaxDashboardController,
@@ -96,7 +101,8 @@ class Ps_metrics extends Module
      */
     public function install()
     {
-        $installModule = new \PrestaShop\Module\Ps_metrics\Module\Install($this);
+        /** @var PrestaShop\Module\Ps_metrics\Module\Install $installModule */
+        $installModule = $this->getService('ps_metrics.module.install');
 
         /** @var PrestaShop\Module\Ps_metrics\Tracker\Segment $segment */
         $segment = $this->container->getService('ps_metrics.tracker.segment');
@@ -118,18 +124,22 @@ class Ps_metrics extends Module
      */
     public function uninstall()
     {
-        $uninstallModule = new \PrestaShop\Module\Ps_metrics\Module\Uninstall($this);
+        /** @var PrestaShop\Module\Ps_metrics\Module\Uninstall $uninstallModule */
+        $uninstallModule = $this->getService('ps_metrics.module.uninstall');
 
         /** @var PrestaShop\Module\Ps_metrics\Tracker\Segment $segment */
         $segment = $this->container->getService('ps_metrics.tracker.segment');
         $segment->setMessage('Uninstall module');
         $segment->track();
 
+        /** @var PrestaShop\Module\Ps_metrics\Module\DashboardModules $dashboardModules */
+        $dashboardModules = $this->container->getService('ps_metrics.module.dashboard.modules');
+
         return parent::uninstall() &&
             $uninstallModule->resetConfigurationValues() &&
             $uninstallModule->uninstallTabs() &&
-            $uninstallModule->enableModules() &&
-            $uninstallModule->unsubscribePsEssentials();
+            $uninstallModule->unsubscribePsEssentials() &&
+            $dashboardModules->enableModules();
     }
 
     /**
@@ -203,8 +213,13 @@ class Ps_metrics extends Module
     {
         $this->context->smarty->assign('pathVendor', $this->_path . 'views/js/chunk-vendors.js');
         $this->context->smarty->assign('pathApp', $this->_path . 'views/js/app.js');
+
+        /** @var PrestaShop\Module\Ps_metrics\Presenter\Store\StorePresenter $storePresenter */
+        $storePresenter = $this->getService('ps_metrics.presenter.store.store');
+        $storePresenter->setProperties(null, (string) $responseApiMessage, (int) $countProperty);
+
         Media::addJsDef([
-            'storePsMetrics' => (new PrestaShop\Module\Ps_metrics\Presenter\Store\StorePresenter($this, $this->context, null, (string) $responseApiMessage, (int) $countProperty))->present(),
+            'storePsMetrics' => $storePresenter->present(),
         ]);
     }
 
@@ -230,7 +245,10 @@ class Ps_metrics extends Module
     public function getService($serviceName)
     {
         if ($this->container === null) {
-            $this->container = new \PrestaShop\ModuleLibServiceContainer\DependencyInjection\ServiceContainer($this->name, $this->getLocalPath());
+            $this->container = new \PrestaShop\ModuleLibServiceContainer\DependencyInjection\ServiceContainer(
+                $this->name,
+                $this->getLocalPath()
+            );
         }
 
         return $this->container->getService($serviceName);

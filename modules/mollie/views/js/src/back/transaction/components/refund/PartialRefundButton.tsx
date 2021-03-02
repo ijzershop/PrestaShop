@@ -8,47 +8,47 @@
  * @codingStandardsIgnoreStart
  */
 
-import React, {ReactElement, useCallback} from 'react';
+import React, { ReactElement, useCallback } from 'react';
 import cx from 'classnames';
-import {useMappedState} from 'redux-react-hook';
+import { useMappedState } from 'redux-react-hook';
 
 interface IProps {
-    loading: boolean;
-    disabled: boolean;
-    refundPayment: any;
+  loading: boolean;
+  disabled: boolean;
+  refundPayment: any;
 }
 
-export default function PartialRefundButton({loading, disabled, refundPayment}: IProps): ReactElement<{}> {
-    const {translations, config: {legacy}}: Partial<IMollieOrderState> = useMappedState((state: IMollieOrderState): any => ({
-        translations: state.translations,
-        config: state.config,
-    }));
+export default function PartialRefundButton({ loading, disabled, refundPayment }: IProps): ReactElement<{}> {
+  const { translations, config: { legacy } }: Partial<IMollieOrderState> = useMappedState((state: IMollieOrderState): any => ({
+    translations: state.translations,
+    config: state.config,
+  }));
 
-    const content = (
-        <button
-            className="btn btn-default"
-            type="button"
-            disabled={loading || disabled}
-            onClick={() => refundPayment(true)}
-        >
-            {!legacy && (<i
-                className={cx({
-                    'icon': true,
-                    'icon-undo': !loading,
-                    'icon-circle-o-notch': loading,
-                    'icon-spin': loading,
-                })}
-            />)} {translations.partialRefund}
-        </button>
-    );
+  const content = (
+    <button
+      className="btn btn-default"
+      type="button"
+      disabled={loading || disabled}
+      onClick={() => refundPayment(true)}
+    >
+      {!legacy && (<i
+        className={cx({
+          'icon': true,
+          'icon-undo': !loading,
+          'icon-circle-o-notch': loading,
+          'icon-spin': loading,
+        })}
+      />)} {translations.partialRefund}
+    </button>
+  );
 
-    if (legacy) {
-        return content;
-    }
+  if (legacy) {
+    return content;
+  }
 
-    return (
-        <div className="input-group-btn">
-            {content}
-        </div>
-    );
+  return (
+    <div className="input-group-btn">
+      {content}
+    </div>
+  );
 }

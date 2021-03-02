@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '4adbefd5ed0b07db6da5de76d982a0f627b0fc19',
+    'reference' => 'c61173ee9915ffb44a218544a9e91c66ce93c423',
     'name' => 'mollie/prestashop',
   ),
   'versions' => 
@@ -108,7 +108,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '4adbefd5ed0b07db6da5de76d982a0f627b0fc19',
+      'reference' => 'c61173ee9915ffb44a218544a9e91c66ce93c423',
     ),
     'nikic/php-parser' => 
     array (

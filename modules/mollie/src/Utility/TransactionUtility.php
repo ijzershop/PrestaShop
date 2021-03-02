@@ -5,9 +5,9 @@
  * @author      Mollie B.V. <info@mollie.nl>
  * @copyright   Mollie B.V.
  *
- * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
- *
  * @see        https://github.com/mollie/PrestaShop
+ *
+ * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
  * @codingStandardsIgnoreStart
  */
 
@@ -17,8 +17,8 @@ use Tools;
 
 class TransactionUtility
 {
-    public static function isOrderTransaction($transactionId)
-    {
-        return 'ord' === Tools::substr($transactionId, 0, 3);
-    }
+	public static function isOrderTransaction($transactionId)
+	{
+		return 'ord' === Tools::substr($transactionId, 0, 3);
+	}
 }

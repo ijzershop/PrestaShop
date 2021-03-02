@@ -7,8 +7,8 @@
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
  * @codingStandardsIgnoreStart
  */
-import React, {ReactElement} from 'react';
-import styled, {keyframes} from 'styled-components';
+import React, { ReactElement } from 'react';
+import styled, { keyframes } from 'styled-components';
 
 const BounceAnimation = keyframes`
   0% { margin-bottom: 0; }
@@ -23,7 +23,7 @@ const DotWrapper = styled.div`
 ` as any;
 
 interface IDotProps {
-    delay: string;
+  delay: string;
 }
 
 const Dot = styled.div`
@@ -39,13 +39,13 @@ const Dot = styled.div`
 ` as any;
 
 function LoadingDots(): ReactElement<{}> {
-    return (
-        <DotWrapper>
-            <Dot delay="0s"/>
-            <Dot delay=".1s"/>
-            <Dot delay=".2s"/>
-        </DotWrapper>
-    );
+  return (
+    <DotWrapper>
+      <Dot delay="0s" />
+      <Dot delay=".1s" />
+      <Dot delay=".2s" />
+    </DotWrapper>
+  );
 }
 
 export default LoadingDots;

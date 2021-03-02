@@ -11,35 +11,17 @@
     "skipLibCheck": true,
     "noEmit": false,
     "pretty": true,
-    "lib": [
-      "esnext",
-      "dom",
-      "jsx"
-    ],
+    "lib": [ "esnext", "dom", "jsx" ],
     "suppressImplicitAnyIndexErrors": true,
     "baseUrl": "./src",
     "paths": {
-      "@carrierconfig/*": [
-        "back/carrierconfig/*"
-      ],
-      "@methodconfig/*": [
-        "back/methodconfig/*"
-      ],
-      "@transaction/*": [
-        "back/transaction/*"
-      ],
-      "@updater/*": [
-        "back/updater/*"
-      ],
-      "@banks/*": [
-        "front/banks/*"
-      ],
-      "@qrcode/*": [
-        "front/qrcode/*"
-      ],
-      "@shared/*": [
-        "shared/*"
-      ]
+      "@carrierconfig/*": ["back/carrierconfig/*"],
+      "@methodconfig/*": ["back/methodconfig/*"],
+      "@transaction/*": ["back/transaction/*"],
+      "@updater/*": ["back/updater/*"],
+      "@banks/*": ["front/banks/*"],
+      "@qrcode/*": ["front/qrcode/*"],
+      "@shared/*": ["shared/*"]
     }
   },
   "include": [

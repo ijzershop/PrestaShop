@@ -28,8 +28,8 @@ namespace Mollie\Install;
 
 interface UninstallerInterface
 {
-    /**
-     * @return bool
-     */
-    public function uninstall();
+	/**
+	 * @return bool
+	 */
+	public function uninstall();
 }

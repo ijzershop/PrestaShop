@@ -7,7 +7,7 @@
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
  * @codingStandardsIgnoreStart
  */
-$(document).ready(function () {
+$(document).ready(function() {
     document.cookie = 'isApplePayMethod = 0';
     if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
         document.cookie = 'isApplePayMethod = 1';

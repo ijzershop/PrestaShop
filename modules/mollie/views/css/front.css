@@ -112,18 +112,18 @@
 }
 
 .mollie_btn_primary {
-    font-size: 16px !important;
-    color: white !important;
+    font-size: 16px!important;
+    color: white!important;
     background-color: #2fb5d2;
     max-width: 200px;
     margin: 0 auto;
-    text-decoration: none !important;
-    font-weight: 700 !important;
+    text-decoration: none!important;
+    font-weight: 700!important;
     padding: 5px;
 }
 
 .mollie_btn_primary:hover {
-    background-color: #2592a9 !important;
+    background-color: #2592a9!important;
     cursor: pointer;
 }
 

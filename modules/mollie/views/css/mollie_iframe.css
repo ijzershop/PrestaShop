@@ -17,15 +17,15 @@ label.mollie-input-error {
   @see https://stackoverflow.com/questions/25324079/tab-throug-input-fields-when-displaynone
  */
 .mollie-credit-card-container__hide {
-    opacity: 0;
-    height: 0;
-    position: absolute;
+  opacity: 0;
+  height: 0;
+  position: absolute;
 }
 
 .mollie-credit-card-container__show {
-    opacity: 1;
-    height: inherit;
-    position: relative;
+  opacity: 1;
+  height: inherit;
+  position: relative;
 }
 
 .mollie-iframe-container .mollie-label {
@@ -46,7 +46,7 @@ label.mollie-input-error {
     height: 45px;
 }
 
-.mollie-input.card-number {
+.mollie-input.card-number{
     border-radius: 10px 10px 0 0;
 }
 
@@ -80,13 +80,11 @@ label.mollie-input-error {
     width: 100%;
     flex: 0 1 auto;
 }
-
 .inline-form-group {
     display: flex;
     flex-wrap: wrap;
     margin: 15px 0 0;
 }
-
 .mollie-iframe-container .form-group {
     position: relative;
     margin: 0;

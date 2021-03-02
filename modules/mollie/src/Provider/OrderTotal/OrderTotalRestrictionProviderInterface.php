@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2021, Mollie B.V.
+ * Copyright (c) 2012-2020, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,19 +40,19 @@ use MolPaymentMethod;
 
 interface OrderTotalRestrictionProviderInterface
 {
-    /**
-     * @param MolPaymentMethod $paymentMethod
-     * @param string $currencyIso
-     *
-     * @return float
-     */
-    public function getOrderTotalMinimumRestriction(MolPaymentMethod $paymentMethod, $currencyIso);
+	/**
+	 * @param MolPaymentMethod $paymentMethod
+	 * @param string $currencyIso
+	 *
+	 * @return float
+	 */
+	public function getOrderTotalMinimumRestriction(MolPaymentMethod $paymentMethod, $currencyIso);
 
-    /**
-     * @param MolPaymentMethod $paymentMethod
-     * @param string $currencyIso
-     *
-     * @return float
-     */
-    public function getOrderTotalMaximumRestriction(MolPaymentMethod $paymentMethod, $currencyIso);
+	/**
+	 * @param MolPaymentMethod $paymentMethod
+	 * @param string $currencyIso
+	 *
+	 * @return float
+	 */
+	public function getOrderTotalMaximumRestriction(MolPaymentMethod $paymentMethod, $currencyIso);
 }

@@ -46,7 +46,7 @@ $(document).ready(function () {
         $.fancybox({
             'padding': 0,
             'max-width': 200,
-            'width': 200,
+            'width' : 200,
             'height': 'auto',
             'fitToView': true,
             'autoSize': true,

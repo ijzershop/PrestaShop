@@ -8,19 +8,18 @@
  * @codingStandardsIgnoreStart
  */
 import React from 'react';
-import {render} from 'react-dom';
+import { render } from 'react-dom';
 
-import {IMollieMethodConfig, ITranslations} from '@shared/globals';
+import { IMollieMethodConfig, ITranslations } from '@shared/globals';
 
 export default (target: string, config: IMollieMethodConfig, translations: ITranslations): void => {
-    (async function () {
-        const [
-            {default: PaymentMethodConfig},
-        ] = await Promise.all([
-            import(/* webpackPrefetch: true, webpackChunkName: "methodconfig" */ '@methodconfig/components/PaymentMethodConfig'),
-        ]);
+  (async function () {
+    const [
+      { default: PaymentMethodConfig },
+    ] = await Promise.all([
+      import(/* webpackPrefetch: true, webpackChunkName: "methodconfig" */ '@methodconfig/components/PaymentMethodConfig'),
+    ]);
 
-        render(<PaymentMethodConfig target={target} config={config}
-                                    translations={translations}/>, document.getElementById(`${target}_container`));
-    }());
+    render(<PaymentMethodConfig target={target} config={config} translations={translations}/>, document.getElementById(`${target}_container`));
+  }());
 };

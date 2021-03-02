@@ -5,9 +5,9 @@
  * @author      Mollie B.V. <info@mollie.nl>
  * @copyright   Mollie B.V.
  *
- * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
- *
  * @see        https://github.com/mollie/PrestaShop
+ *
+ * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
  * @codingStandardsIgnoreStart
  */
 if (!include_once (dirname(__FILE__) . '/vendor/autoload.php')) {
@@ -1027,7 +1027,7 @@ class Mollie extends PaymentModule
 			$params['select'] = rtrim($params['select'], ' ,') . ' ,mol.`transaction_id`';
 		}
 		if (isset($params['join'])) {
-			$params['join'] .= ' LEFT JOIN `' . _DB_PREFIX_ . 'mollie_payments` mol ON mol.`order_reference` = a.`reference`
+			$params['join'] .= ' LEFT JOIN `' . _DB_PREFIX_ . 'mollie_payments` mol ON mol.`order_reference` = a.`reference` 
 			AND mol.`cart_id` = a.`id_cart` AND mol.order_id > 0';
 		}
 		$params['fields']['order_id'] = [

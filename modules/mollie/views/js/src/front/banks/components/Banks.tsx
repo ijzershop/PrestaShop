@@ -7,11 +7,11 @@
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
  * @codingStandardsIgnoreStart
  */
-import React, {ChangeEvent, ReactElement, Suspense, lazy} from 'react';
+import React, { ChangeEvent, ReactElement, Suspense, lazy } from 'react';
 import xss from 'xss';
 import styled from 'styled-components';
 
-import {IBanks, ITranslations} from '@shared/globals';
+import { IBanks, ITranslations } from '@shared/globals';
 import LoadingDotsCentered from '@shared/components/LoadingDotsCentered';
 
 const QrCode = lazy(() => import(/* webpackChunkName: "banks" */ '@qrcode/components/QrCode'));
@@ -112,46 +112,46 @@ const Radio = styled.div`
 declare let window: any;
 
 interface IProps {
-    banks: IBanks;
-    translations: ITranslations;
-    setIssuer: any;
+  banks: IBanks;
+  translations: ITranslations;
+  setIssuer: any;
 }
 
-export default function Banks({banks, translations, setIssuer}: IProps): ReactElement<{}> {
-    function _handleChange({target: {value}}: ChangeEvent<HTMLInputElement>): void {
-        setIssuer(value);
-    }
+export default function Banks({ banks, translations, setIssuer }: IProps): ReactElement<{}> {
+  function _handleChange({ target: { value } }: ChangeEvent<HTMLInputElement>): void {
+    setIssuer(value);
+  }
 
-    const firstBankId = (Object.values(banks))[0].id;
+  const firstBankId = (Object.values(banks))[0].id;
 
-    return (
-        <div>
-            <ul>
-                {Object.values(banks).map((bank) => (
-                    <Radio key={bank.id}>
-                        <input
-                            type="radio"
-                            defaultChecked={bank.id === firstBankId}
-                            id={bank.id}
-                            name="mollie-bank"
-                            value={bank.id}
-                            onChange={_handleChange}
-                        />
-                        <label htmlFor={bank.id} style={{lineHeight: '24px'}}>
-                            <img
-                                src={bank.image.size2x}
-                                alt={xss(bank.name)}
-                                style={{height: '24px', width: 'auto'}}
-                            /> {bank.name}
-                        </label>
-                    </Radio>
-                ))}
-            </ul>
-            {window.mollieQrEnabled && (
-                <Suspense fallback={<LoadingDotsCentered/>}>
-                    <QrCode title={translations.orPayByIdealQr} center/>
-                </Suspense>
-            )}
-        </div>
-    );
+  return (
+    <div>
+      <ul>
+        {Object.values(banks).map((bank) => (
+          <Radio key={bank.id}>
+            <input
+              type="radio"
+              defaultChecked={bank.id === firstBankId}
+              id={bank.id}
+              name="mollie-bank"
+              value={bank.id}
+              onChange={_handleChange}
+            />
+            <label htmlFor={bank.id} style={{ lineHeight: '24px' }}>
+              <img
+                src={bank.image.size2x}
+                alt={xss(bank.name)}
+                style={{ height: '24px', width: 'auto' }}
+              /> {bank.name}
+            </label>
+          </Radio>
+        ))}
+      </ul>
+      {window.mollieQrEnabled && (
+        <Suspense fallback={<LoadingDotsCentered/>}>
+          <QrCode title={translations.orPayByIdealQr} center/>
+        </Suspense>
+      )}
+    </div>
+  );
 }

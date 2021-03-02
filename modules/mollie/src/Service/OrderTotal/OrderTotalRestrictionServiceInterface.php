@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2021, Mollie B.V.
+ * Copyright (c) 2012-2020, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,13 +42,13 @@ use MolPaymentMethod;
 
 interface OrderTotalRestrictionServiceInterface
 {
-    /**
-     * @param Currency $currency
-     * @param MolPaymentMethod $paymentMethod
-     *
-     * @throws OrderTotalRestrictionException
-     */
-    public function updateOrderTotalRestrictions(Currency $currency, MolPaymentMethod $paymentMethod);
+	/**
+	 * @param Currency $currency
+	 * @param MolPaymentMethod $paymentMethod
+	 *
+	 * @throws OrderTotalRestrictionException
+	 */
+	public function updateOrderTotalRestrictions(Currency $currency, MolPaymentMethod $paymentMethod);
 
-    public function deleteOrderTotalRestrictions();
+	public function deleteOrderTotalRestrictions();
 }

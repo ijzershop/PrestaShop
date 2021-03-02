@@ -52,30 +52,30 @@ export default function OrderLinesInfo(): ReactElement<{}> {
     }
 
     return (
-        <Div className="col-md-9">
-            <div className="panel card">
-                <div className="panel-heading card-header">{translations.products}</div>
-                <div className="card-body">
-                    {/*todo: move to order warning component*/}
-                    {order.details.vouchers &&
-                    <>
-                        <div className="alert alert-warning" role="alert">
-                            {
-                                translations.refundWarning.replace(
-                                    '%1s',
-                                    formatCurrency(
-                                        parseFloat(order.availableRefundAmount.value),
-                                        get(currencies, order.availableRefundAmount.currency)
-                                    )
-                                )
-                            }
-                        </div>
-                    </>
-                    }
-                    {!order || (!order.lines.length && <EmptyOrderLinesTable/>)}
-                    {!!order && !!order.lines.length && <OrderLinesTable/>}
-                </div>
-            </div>
-        </Div>
+      <Div className="col-md-9">
+        <div className="panel card">
+          <div className="panel-heading card-header">{translations.products}</div>
+          <div className="card-body">
+            {/*todo: move to order warning component*/}
+            {order.details.vouchers &&
+            <>
+              <div className="alert alert-warning" role="alert">
+                {
+                  translations.refundWarning.replace(
+                    '%1s',
+                    formatCurrency(
+                      parseFloat(order.availableRefundAmount.value),
+                      get(currencies, order.availableRefundAmount.currency)
+                    )
+                  )
+                }
+              </div>
+            </>
+            }
+            {!order || (!order.lines.length && <EmptyOrderLinesTable/>)}
+            {!!order && !!order.lines.length && <OrderLinesTable/>}
+          </div>
+        </div>
+      </Div>
     );
 }

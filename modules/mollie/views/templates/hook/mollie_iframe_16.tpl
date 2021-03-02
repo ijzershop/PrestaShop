@@ -1,6 +1,6 @@
 {*
  *
- * Copyright (c) 2012-2021, Mollie B.V.
+ * Copyright (c) 2012-2020, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -125,8 +125,7 @@
                 </svg>
             </div>
             <div class="col-lg-3">
-                <form method="post"
-                      action="{$link->getModuleLink('mollie', 'payScreen', [], true)|escape:'html':'UTF-8'}">
+                <form method="post" action="{$link->getModuleLink('mollie', 'payScreen', [], true)|escape:'html':'UTF-8'}">
                     <input type="hidden" name="mollieCardToken">
                     <button type="submit" class="btn btn-primary pull-right">{l s='Order' mod='mollie'}</button>
                 </form>

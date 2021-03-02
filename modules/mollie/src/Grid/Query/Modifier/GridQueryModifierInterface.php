@@ -5,9 +5,9 @@
  * @author      Mollie B.V. <info@mollie.nl>
  * @copyright   Mollie B.V.
  *
- * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
- *
  * @see        https://github.com/mollie/PrestaShop
+ *
+ * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
  * @codingStandardsIgnoreStart
  */
 
@@ -17,10 +17,10 @@ use Doctrine\DBAL\Query\QueryBuilder;
 
 interface GridQueryModifierInterface
 {
-    /**
-     * Used to modify Grid Query Builder.
-     *
-     * @param QueryBuilder $queryBuilder
-     */
-    public function modify(QueryBuilder $queryBuilder);
+	/**
+	 * Used to modify Grid Query Builder.
+	 *
+	 * @param QueryBuilder $queryBuilder
+	 */
+	public function modify(QueryBuilder $queryBuilder);
 }

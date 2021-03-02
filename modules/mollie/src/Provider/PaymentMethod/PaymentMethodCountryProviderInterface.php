@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2021, Mollie B.V.
+ * Copyright (c) 2012-2020, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,10 +40,10 @@ use MolPaymentMethod;
 
 interface PaymentMethodCountryProviderInterface
 {
-    /**
-     * @param MolPaymentMethod $paymentMethod
-     *
-     * @return array|null
-     */
-    public function provideAvailableCountriesByPaymentMethod(MolPaymentMethod $paymentMethod);
+	/**
+	 * @param MolPaymentMethod $paymentMethod
+	 *
+	 * @return array|null
+	 */
+	public function provideAvailableCountriesByPaymentMethod(MolPaymentMethod $paymentMethod);
 }

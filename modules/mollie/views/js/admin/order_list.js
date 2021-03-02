@@ -27,7 +27,7 @@ $(document).ready(function () {
                 // })
 
                 if (response.success) {
-                    showSuccessMessage(response.message);
+                   showSuccessMessage(response.message);
                     return;
                 }
 
@@ -38,20 +38,21 @@ $(document).ready(function () {
 
 
             },
-            error: function (xhr, ajaxOptions, thrownError) {
+            error: function(xhr, ajaxOptions, thrownError) {
                 toggleMessageBoxResult(false, xhr.statusText);
             }
         });
         return false;
     });
 
-    function toggleMessageBoxPrinted() {
+    function toggleMessageBoxPrinted()
+    {
         messageBox = $('.message-text-box');
         messageBox.html(shipmentIsBeingPrintedMessage);
         messageBox.addClass('alert-warning');
         messageBox.removeClass('alert-danger');
         messageBox.removeClass('alert-success');
-        $("html, body").animate({scrollTop: 0}, "slow");
+        $("html, body").animate({ scrollTop: 0 }, "slow");
         $('.label-printing-message').show();
     }
 
@@ -68,7 +69,8 @@ $(document).ready(function () {
         }
     }
 
-    function replaceIcon(idOrder, iconReplacer) {
+    function replaceIcon(idOrder, iconReplacer)
+    {
         $('.dpd-icon-container[data-id-order="' + idOrder + '"]').html(iconReplacer);
     }
 
@@ -76,7 +78,8 @@ $(document).ready(function () {
         event.preventDefault();
         var selectedOrderIdArray = new Array();
 
-        $(".row-selector input:checked").each(function () {
+        $(".row-selector input:checked").each(function()
+        {
             selectedOrderIdArray.push($(this).val());
         });
 
@@ -107,7 +110,7 @@ $(document).ready(function () {
                     window.location = labelPrintUrl;
                 }
             },
-            error: function (xhr, ajaxOptions, thrownError) {
+            error: function(xhr, ajaxOptions, thrownError) {
                 toggleMessageBoxResult(false, xhr.statusText)
             }
         });

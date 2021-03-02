@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2021, Mollie B.V.
+ * Copyright (c) 2012-2020, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,23 +41,23 @@ use Mollie\Adapter\LegacyContext;
 
 class OrderTotalProvider implements OrderTotalProviderInterface
 {
-    /**
-     * @var LegacyContext
-     */
-    private $context;
+	/**
+	 * @var LegacyContext
+	 */
+	private $context;
 
-    public function __construct(LegacyContext $context)
-    {
-        $this->context = $context;
-    }
+	public function __construct(LegacyContext $context)
+	{
+		$this->context = $context;
+	}
 
-    /**
-     * @return float
-     *
-     * @throws Exception
-     */
-    public function getOrderTotal()
-    {
-        return (float)$this->context->getCart()->getOrderTotal();
-    }
+	/**
+	 * @return float
+	 *
+	 * @throws Exception
+	 */
+	public function getOrderTotal()
+	{
+		return (float) $this->context->getCart()->getOrderTotal();
+	}
 }

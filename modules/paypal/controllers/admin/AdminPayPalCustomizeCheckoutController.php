@@ -1,27 +1,26 @@
 <?php
 /**
- * 2007-2020 PayPal
+ * 2007-2021 PayPal
  *
- *  NOTICE OF LICENSE
+ * NOTICE OF LICENSE
  *
- *  This source file is subject to the Academic Free License (AFL 3.0)
- *  that is bundled with this package in the file LICENSE.txt.
- *  It is also available through the world-wide-web at this URL:
- *  http://opensource.org/licenses/afl-3.0.php
- *  If you did not receive a copy of the license and are unable to
- *  obtain it through the world-wide-web, please send an email
- *  to license@prestashop.com so we can send you a copy immediately.
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
  *
- *  DISCLAIMER
+ * DISCLAIMER
  *
- *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- *  versions in the future. If you wish to customize PrestaShop for your
- *  needs please refer to http://www.prestashop.com for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2020 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
- *  @copyright PayPal
- *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @author 2007-2021 PayPal
+ * @copyright PayPal
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
 require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
@@ -29,10 +28,10 @@ require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 use PaypalAddons\classes\AdminPayPalController;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\Shortcut\Form\Definition\CustomizeButtonStyleSectionDefinition;
-use PaypalAddons\classes\Shortcut\Form\Field\InputChain;
-use PaypalAddons\classes\Shortcut\Form\Field\Select;
-use PaypalAddons\classes\Shortcut\Form\Field\SelectOption;
-use PaypalAddons\classes\Shortcut\Form\Field\TextInput;
+use PaypalAddons\classes\Form\Field\InputChain;
+use PaypalAddons\classes\Form\Field\Select;
+use PaypalAddons\classes\Form\Field\SelectOption;
+use PaypalAddons\classes\Form\Field\TextInput;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPreview;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -190,7 +189,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'type' => 'html',
             'label' => '',
             'name' => 'testName',
-            'html_content' => $this->module->displayInformation($this->l('In-Context has shown better conversion rate'), true, false, 'message-context'),
+            'html_content' => $this->module->displayAlert($this->l('In-Context has shown better conversion rate'), 'info', true, false, 'message-context icon-lightbulb'),
         );
 
         $this->fields_form['form']['form']['input'][] = array(
@@ -220,12 +219,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
                     'label' => $this->l('Disabled'),
                 )
             ),
-        );
-
-        $this->fields_form['form']['form']['input'][] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->getLogoMessage()
         );
 
         $this->fields_form['form']['form']['input'][] = array(
@@ -316,12 +309,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $inputsMethod = $method->getAdvancedFormInputs();
 
         $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->module->displayInformation($this->l('You can customise your Checkout shortcut buttons in the PayPal module.'), false, false, 'shortcut-customize-style-info')
-        );
-
-        $inputs[] = array(
             'type' => 'switch',
             'label' => $this->l('Customize PayPal Express Checkout shortcut buttons'),
             'name' => ShortcutConfiguration::CUSTOMIZE_STYLE,
@@ -359,16 +346,11 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $inputs[] = array(
-            'type' => 'select',
+            'type' => 'html',
             'label' => $this->l('Display mode'),
-            'name' => ShortcutConfiguration::DISPLAY_MODE_CART,
             'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
-            'class' => 'pp-w-100',
-            'options' => array(
-                'query' => $this->getShortcutCustomizeModeOptions(),
-                'id' => 'id',
-                'name' => 'name'
-            )
+            'name' => '',
+            'html_content' => $this->getDisplayModeSection(ShortcutConfiguration::DISPLAY_MODE_CART)
         );
 
         $inputs[] = array(
@@ -404,16 +386,11 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $inputs[] = array(
-            'type' => 'select',
+            'type' => 'html',
             'label' => $this->l('Display mode'),
-            'name' => ShortcutConfiguration::DISPLAY_MODE_PRODUCT,
             'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
-            'class' => 'pp-w-100',
-            'options' => array(
-                'query' => $this->getShortcutCustomizeModeOptions(),
-                'id' => 'id',
-                'name' => 'name'
-            )
+            'name' => '',
+            'html_content' => $this->getDisplayModeSection(ShortcutConfiguration::DISPLAY_MODE_PRODUCT)
         );
 
         $inputs[] = array(
@@ -449,16 +426,11 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $inputs[] = array(
-            'type' => 'select',
+            'type' => 'html',
             'label' => $this->l('Display mode'),
-            'name' => ShortcutConfiguration::DISPLAY_MODE_SIGNUP,
             'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
-            'class' => 'pp-w-100',
-            'options' => array(
-                'query' => $this->getShortcutCustomizeModeOptions(),
-                'id' => 'id',
-                'name' => 'name'
-            )
+            'name' => '',
+            'html_content' => $this->getDisplayModeSection(ShortcutConfiguration::DISPLAY_MODE_SIGNUP)
         );
 
         $inputs[] = array(
@@ -473,12 +445,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'label' => $this->l('Current shortcut style'),
             'name' => '',
             'html_content' => $this->getCustomizeStyleSectionSignup()
-        );
-
-        $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->module->displayInformation($this->l('You can customize your orders\' status for each possible action in the PayPal module.'), false, false, 'pp__my-5')
         );
 
         $inputs[] = array(
@@ -499,12 +465,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
                     'label' => $this->l('Disabled'),
                 )
             ),
-        );
-
-        $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/formAdvancedHelpOne.tpl')
         );
 
         $inputs[] = array(
@@ -535,7 +495,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             );
         }
 
-        if ($this->method != 'PPP' && Configuration::get('PAYPAL_API_INTENT') == 'authorization') {
+        if ($this->method != 'PPP' && Configuration::get('PAYPAL_API_INTENT') == 'authorize') {
             $inputs[] = array(
                 'type' => 'select',
                 'label' => $this->l('Payment accepted via BO (call PayPal to get the payment)'),
@@ -562,12 +522,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
                 )
             );
         }
-
-        $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/formAdvancedHelpTwo.tpl')
-        );
 
         $inputs = array_merge($inputs, $inputsMethod);
 
@@ -709,17 +663,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
         return in_array($currency->iso_code, $this->module->currencyMB) == false;
     }
 
-    protected function getLogoMessage()
-    {
-        if ((bool)Configuration::get('PAYPAL_SANDBOX')) {
-            $settingLink = 'https://www.sandbox.paypal.com/businessprofile/settings/info/edit';
-        } else {
-            $settingLink = 'https://www.paypal.com/businessprofile/settings/info/edit';
-        }
-        $this->context->smarty->assign('settingLink', $settingLink);
-        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/logoMessage.tpl');
-    }
-
     protected function getShortcutCustomizeModeOptions()
     {
         return array(
@@ -738,6 +681,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
     {
         $this->context->smarty->assign('confName', 'productPageWidgetCode');
         $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' action=\'paymentshortcut\'}');
+        $this->context->smarty->assign('isShowDescription', true);
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/widgetCode.tpl');
     }
 
@@ -814,6 +758,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
     {
         $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' action=\'paymentshortcut\'}');
         $this->context->smarty->assign('confName', 'cartPageWidgetCode');
+        $this->context->smarty->assign('isShowDescription', true);
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/widgetCode.tpl');
     }
 
@@ -821,6 +766,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
     {
         $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' action=\'paymentshortcut\'}');
         $this->context->smarty->assign('confName', 'signupPageWidgetCode');
+        $this->context->smarty->assign('isShowDescription', true);
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/widgetCode.tpl');
     }
 
@@ -950,9 +896,11 @@ Shipping costs will be estimated on the base of the cart total and default carri
             $colorOptions,
             $this->l('Color'),
             $color,
-            ShortcutConfiguration::CONFIGURATION_TYPE_COLOR
+            ShortcutConfiguration::CONFIGURATION_TYPE_COLOR,
+            true
         );
-        $colorSelect->setAfterSelectContent(Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/admin/_partials/form/colorDescriptions.tpl'));
+        $colorSelect->setAfterSelectContent(Context::getContext()->smarty->fetch($this->getTemplatePath() . '_partials/form/colorDescriptions.tpl'));
+        $colorSelect->setCss('pp__my-5 pp__label');
 
         $configurations[] = $colorSelect;
 
@@ -975,6 +923,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             $shape,
             ShortcutConfiguration::CONFIGURATION_TYPE_SHAPE
         );
+        $shapeSelect->setCss('pp__my-5 pp__label');
 
         $configurations[] = $shapeSelect;
 
@@ -1029,6 +978,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             $label,
             ShortcutConfiguration::CONFIGURATION_TYPE_LABEL
         );
+        $labelSelect->setCss('pp__my-5 pp__label');
 
         $configurations[] = $labelSelect;
 
@@ -1067,5 +1017,33 @@ Shipping costs will be estimated on the base of the cart total and default carri
         if (Tools::isSubmit('saveAdvancedForm')) {
             Media::addJsDef(['sectionSelector' => '#pp_advanced_form']);
         }
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    public function getDisplayModeSection($name)
+    {
+        $options = [
+            new SelectOption(
+                ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK,
+                $this->l('PrestaShop native hook (recommended)')
+            ),
+            new SelectOption(
+                ShortcutConfiguration::DISPLAY_MODE_TYPE_WIDGET,
+                $this->l('PrestaShop widget')
+            ),
+        ];
+
+        $select = new Select(
+            $name,
+            $options
+        );
+
+        $select->setCss('displayModeSection');
+        $select->setValue(Configuration::get($name));
+
+        return $select->render();
     }
 }

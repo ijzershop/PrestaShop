@@ -1,27 +1,26 @@
 <?php
 /**
- * 2007-2020 PayPal
+ * 2007-2021 PayPal
  *
- *  NOTICE OF LICENSE
+ * NOTICE OF LICENSE
  *
- *  This source file is subject to the Academic Free License (AFL 3.0)
- *  that is bundled with this package in the file LICENSE.txt.
- *  It is also available through the world-wide-web at this URL:
- *  http://opensource.org/licenses/afl-3.0.php
- *  If you did not receive a copy of the license and are unable to
- *  obtain it through the world-wide-web, please send an email
- *  to license@prestashop.com so we can send you a copy immediately.
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
  *
- *  DISCLAIMER
+ * DISCLAIMER
  *
- *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- *  versions in the future. If you wish to customize PrestaShop for your
- *  needs please refer to http://www.prestashop.com for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2020 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
- *  @copyright PayPal
- *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @author 2007-2021 PayPal
+ * @copyright PayPal
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
 namespace PaypalAddons\classes;
@@ -160,7 +159,8 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         $total = $response->getTotalPaid();
         $paypal = Module::getInstanceByName($this->name);
         $order_state = $this->getOrderStatus();
-        $paypal->validateOrder($cart->id,
+        $paypal->validateOrder(
+            $cart->id,
             $order_state,
             $total,
             $this->getPaymentMethod(),
@@ -168,7 +168,8 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             $this->getDetailsTransaction(),
             (int)$currency->id,
             false,
-            $customer->secure_key);
+            $customer->secure_key
+        );
     }
 
     /**
@@ -256,13 +257,13 @@ abstract class AbstractMethodPaypal extends AbstractMethod
      * @param $price
      * @return float|int|string
      */
-    public function formatPrice($price, $isoCurrency = null)
+    public function formatPrice($price, $isoCurrency = null, $convert = true)
     {
         $context = Context::getContext();
         $context_currency = $context->currency;
         $paypal = Module::getInstanceByName($this->name);
 
-        if ($id_currency_to = $paypal->needConvert()) {
+        if ($convert && $id_currency_to = $paypal->needConvert()) {
             $currency_to_convert = new Currency($id_currency_to);
             $price = Tools::convertPriceFull($price, $context_currency, $currency_to_convert);
         }
@@ -291,8 +292,8 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     public function getCustomFieldInformation(\Cart $cart)
     {
         $module = \Module::getInstanceByName($this->name);
-        $return = $module->l('Cart ID: ',  get_class($this)) . $cart->id . '.';
-        $return .= $module->l('Shop name: ',  get_class($this)) . \Configuration::get('PS_SHOP_NAME', null, $cart->id_shop);
+        $return = $module->l('Cart ID: ', get_class($this)) . $cart->id . '.';
+        $return .= $module->l('Shop name: ', get_class($this)) . \Configuration::get('PS_SHOP_NAME', null, $cart->id_shop);
 
         return $return;
     }
@@ -352,7 +353,8 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             'client-id' => $this->getClientId(),
             'intent' => \Tools::strtolower($this->getIntent()),
             'currency' => $paypal->getPaymentCurrencyIso(),
-            'locale' => str_replace('-', '_', \Context::getContext()->language->locale)
+            'locale' => str_replace('-', '_', \Context::getContext()->language->locale),
+            'components' => 'messages,buttons'
         ];
 
         return 'https://www.paypal.com/sdk/js?' . http_build_query($params);
@@ -413,7 +415,8 @@ abstract class AbstractMethodPaypal extends AbstractMethod
                         $product['id_product'],
                         $product['id_product_attribute'],
                         $product['quantity']
-                    ]);
+                    ]
+                );
             }
         }
 

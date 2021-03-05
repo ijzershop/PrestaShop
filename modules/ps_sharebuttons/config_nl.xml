@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>ps_sharebuttons</name>
-    <displayName><![CDATA[Sociale media knoppen]]></displayName>
+    <displayName><![CDATA[Social media share buttons]]></displayName>
     <version><![CDATA[2.1.0]]></version>
     <description><![CDATA[Displays social media sharing buttons (Twitter, Facebook and Pinterest) on every product page.]]></description>
     <author><![CDATA[PrestaShop]]></author>

@@ -5,12 +5,13 @@
  * @author      Mollie B.V. <info@mollie.nl>
  * @copyright   Mollie B.V.
  *
- * @see        https://github.com/mollie/PrestaShop
- *
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
+ *
+ * @see        https://github.com/mollie/PrestaShop
  */
+
 if (!defined('_PS_VERSION_')) {
-	exit;
+    exit;
 }
 
 /**
@@ -18,7 +19,7 @@ if (!defined('_PS_VERSION_')) {
  */
 function upgrade_module_3_5_5(Mollie $module)
 {
-	$module->registerHook('actionFrontControllerSetMedia');
+    $module->registerHook('actionFrontControllerSetMedia');
 
-	return true;
+    return true;
 }

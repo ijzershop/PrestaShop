@@ -25,24 +25,24 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => 'v3.2.2',
-    'version' => '3.2.2.0',
+    'pretty_version' => 'v3.3.2',
+    'version' => '3.3.2.0',
     'aliases' => 
     array (
     ),
-    'reference' => '32485111ba610bbffc422479b7b6d3846e48a1fb',
+    'reference' => 'd28f053c8b4791c6b8e8703829305e985f9a9ba7',
     'name' => '__root__',
   ),
   'versions' => 
   array (
     '__root__' => 
     array (
-      'pretty_version' => 'v3.2.2',
-      'version' => '3.2.2.0',
+      'pretty_version' => 'v3.3.2',
+      'version' => '3.3.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '32485111ba610bbffc422479b7b6d3846e48a1fb',
+      'reference' => 'd28f053c8b4791c6b8e8703829305e985f9a9ba7',
     ),
     'guzzlehttp/guzzle' => 
     array (

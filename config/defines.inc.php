@@ -26,7 +26,7 @@
 
 /* Debug only */
 if (!defined('_PS_MODE_DEV_')) {
-    if (isset($_SERVER["REMOTE_ADDR"]) && ($_SERVER["REMOTE_ADDR"] == '213.93.172.135' || $_SERVER["REMOTE_ADDR"] == '127.0.0.1')) {
+    if (isset($_SERVER["REMOTE_ADDR"]) && ($_SERVER["REMOTE_ADDR"] == '213.93.172.135' || $_SERVER["REMOTE_ADDR"] == '62.195.191.68')) {
         define('_PS_MODE_DEV_', true);
     } else {
         define('_PS_MODE_DEV_', false);

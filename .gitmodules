@@ -6,7 +6,7 @@ url=git@github.com:ijzershop/modernesmid-theme.git
 url=git@github.com:ijzershop/sawandcutmodule.git
 [submodule "modules/ijzershopkiyoh"]
 	path = modules/ijzershopkiyoh
-	url = https://ijzershop@bitbucket.org/ijzershop/ijzershopkiyoh.git
+	url = git@ijzershop@bitbucket.org:ijzershop/ijzershopkiyoh.git
 [submodule "modules/offerintegration"]
 	path = modules/offerintegration
 url=git@github.com:ijzershop/offerintegration.git

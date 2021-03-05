@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PayPal
+* 2007-2021 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -17,8 +17,7 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author 2007-2020 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
+*  @author 2007-2021 PayPal
 *  @copyright PayPal
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
@@ -37,16 +36,19 @@
 
 {block name='js'}
     {if isset($JSscripts) && is_array($JSscripts) && false === empty($JSscripts)}
-        {foreach from=$JSscripts key=keyScript item=JSscript}
+        {foreach from=$JSscripts key=keyScript item=JSscriptAttributes}
           <script>
-            var script = document.querySelector('script[data-key="{$keyScript}"]');
+              var script = document.querySelector('script[data-key="{$keyScript}"]');
 
-            if (null == script) {
-                var newScript = document.createElement('script');
-                newScript.setAttribute('src', '{$JSscript nofilter}');
-                newScript.setAttribute('data-key', '{$keyScript}');
-                document.body.appendChild(newScript);
-            }
+              if (null == script) {
+                  var newScript = document.createElement('script');
+                  {foreach from=$JSscriptAttributes key=attrName item=attrVal}
+                  newScript.setAttribute('{$attrName}', '{$attrVal nofilter}');
+                  {/foreach}
+
+                  newScript.setAttribute('data-key', '{$keyScript}');
+                  document.body.appendChild(newScript);
+              }
           </script>
         {/foreach}
     {/if}
@@ -55,7 +57,7 @@
 {block name='init-button'}
   <script>
       function waitPaypalIsLoaded() {
-          if (typeof paypal === 'undefined' || typeof Shortcut === 'undefined') {
+          if (typeof totPaypalSdk === 'undefined' || typeof Shortcut === 'undefined') {
               setTimeout(waitPaypalIsLoaded, 200);
               return;
           }

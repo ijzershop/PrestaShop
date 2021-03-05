@@ -5,12 +5,13 @@
  * @author      Mollie B.V. <info@mollie.nl>
  * @copyright   Mollie B.V.
  *
- * @see        https://github.com/mollie/PrestaShop
- *
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
+ *
+ * @see        https://github.com/mollie/PrestaShop
  */
+
 if (!defined('_PS_VERSION_')) {
-	exit;
+    exit;
 }
 
 /**
@@ -21,7 +22,7 @@ if (!defined('_PS_VERSION_')) {
  */
 function upgrade_module_3_3_2()
 {
-	Configuration::deleteByName('MOLLIE_USE_PROFILE_WEBHOOK');
+    Configuration::deleteByName('MOLLIE_USE_PROFILE_WEBHOOK');
 
-	return true;
+    return true;
 }

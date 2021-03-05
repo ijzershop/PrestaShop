@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit4a89ed68d03e714b6c971caa88772a39
+class ComposerStaticInit2e762355a7899f3a702a147e7105d8d0
 {
     public static $files = array (
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
@@ -442,19 +442,28 @@ class ComposerStaticInit4a89ed68d03e714b6c971caa88772a39
         'PaypalAddons\\classes\\AdminPayPalController' => __DIR__ . '/../..' . '/classes/AdminPayPalController.php',
         'PaypalAddons\\classes\\Exception\\OrderFullyRefundedException' => __DIR__ . '/../..' . '/classes/Exception/OrderFullyRefundedException.php',
         'PaypalAddons\\classes\\Exception\\RefundCalculationException' => __DIR__ . '/../..' . '/classes/Exception/RefundCalculationException.php',
+        'PaypalAddons\\classes\\Form\\Controller\\AdminPayPalInstallment\\FormInstallment' => __DIR__ . '/../..' . '/classes/Form/Controller/AdminPayPalInstallment/FormInstallment.php',
+        'PaypalAddons\\classes\\Form\\Field\\FieldInteface' => __DIR__ . '/../..' . '/classes/Form/Field/FieldInteface.php',
+        'PaypalAddons\\classes\\Form\\Field\\InputChain' => __DIR__ . '/../..' . '/classes/Form/Field/InputChain.php',
+        'PaypalAddons\\classes\\Form\\Field\\Select' => __DIR__ . '/../..' . '/classes/Form/Field/Select.php',
+        'PaypalAddons\\classes\\Form\\Field\\SelectOption' => __DIR__ . '/../..' . '/classes/Form/Field/SelectOption.php',
+        'PaypalAddons\\classes\\Form\\Field\\TextInput' => __DIR__ . '/../..' . '/classes/Form/Field/TextInput.php',
+        'PaypalAddons\\classes\\Form\\FormInterface' => __DIR__ . '/../..' . '/classes/Form/FormInterface.php',
+        'PaypalAddons\\classes\\InstallmentBanner\\Banner' => __DIR__ . '/../..' . '/classes/InstallmentBanner/Banner.php',
+        'PaypalAddons\\classes\\InstallmentBanner\\BannerManager' => __DIR__ . '/../..' . '/classes/InstallmentBanner/BannerManager.php',
+        'PaypalAddons\\classes\\InstallmentBanner\\ConfigurationMap' => __DIR__ . '/../..' . '/classes/InstallmentBanner/ConfigurationMap.php',
         'PaypalAddons\\classes\\PaypalException' => __DIR__ . '/../..' . '/classes/PaypalException.php',
         'PaypalAddons\\classes\\Shortcut\\Form\\Definition\\CustomizeButtonStyleSectionDefinition' => __DIR__ . '/../..' . '/classes/Shortcut/Form/Definition/CustomizeButtonStyleSectionDefinition.php',
-        'PaypalAddons\\classes\\Shortcut\\Form\\Field\\FieldInteface' => __DIR__ . '/../..' . '/classes/Shortcut/Form/Field/FieldInteface.php',
-        'PaypalAddons\\classes\\Shortcut\\Form\\Field\\InputChain' => __DIR__ . '/../..' . '/classes/Shortcut/Form/Field/InputChain.php',
-        'PaypalAddons\\classes\\Shortcut\\Form\\Field\\Select' => __DIR__ . '/../..' . '/classes/Shortcut/Form/Field/Select.php',
-        'PaypalAddons\\classes\\Shortcut\\Form\\Field\\SelectOption' => __DIR__ . '/../..' . '/classes/Shortcut/Form/Field/SelectOption.php',
-        'PaypalAddons\\classes\\Shortcut\\Form\\Field\\TextInput' => __DIR__ . '/../..' . '/classes/Shortcut/Form/Field/TextInput.php',
         'PaypalAddons\\classes\\Shortcut\\ShortcutAbstract' => __DIR__ . '/../..' . '/classes/Shortcut/ShortcutAbstract.php',
         'PaypalAddons\\classes\\Shortcut\\ShortcutCart' => __DIR__ . '/../..' . '/classes/Shortcut/ShortcutCart.php',
         'PaypalAddons\\classes\\Shortcut\\ShortcutConfiguration' => __DIR__ . '/../..' . '/classes/Shortcut/ShortcutConfiguration.php',
         'PaypalAddons\\classes\\Shortcut\\ShortcutPreview' => __DIR__ . '/../..' . '/classes/Shortcut/ShortcutPreview.php',
         'PaypalAddons\\classes\\Shortcut\\ShortcutProduct' => __DIR__ . '/../..' . '/classes/Shortcut/ShortcutProduct.php',
         'PaypalAddons\\classes\\Shortcut\\ShortcutSignup' => __DIR__ . '/../..' . '/classes/Shortcut/ShortcutSignup.php',
+        'PaypalAddons\\classes\\Widget\\AbstractWidget' => __DIR__ . '/../..' . '/classes/Widget/AbstractWidget.php',
+        'PaypalAddons\\classes\\Widget\\DummyWidget' => __DIR__ . '/../..' . '/classes/Widget/DummyWidget.php',
+        'PaypalAddons\\classes\\Widget\\InstallmentWidget' => __DIR__ . '/../..' . '/classes/Widget/InstallmentWidget.php',
+        'PaypalAddons\\classes\\Widget\\ShortcutWidget' => __DIR__ . '/../..' . '/classes/Widget/ShortcutWidget.php',
         'PaypalAddons\\services\\ServicePaypalIpn' => __DIR__ . '/../..' . '/services/ServicePaypalIpn.php',
         'PaypalAddons\\services\\ServicePaypalLog' => __DIR__ . '/../..' . '/services/ServicePaypalLog.php',
         'PaypalAddons\\services\\ServicePaypalOrder' => __DIR__ . '/../..' . '/services/ServicePaypalOrder.php',
@@ -521,10 +530,10 @@ class ComposerStaticInit4a89ed68d03e714b6c971caa88772a39
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit4a89ed68d03e714b6c971caa88772a39::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit4a89ed68d03e714b6c971caa88772a39::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit4a89ed68d03e714b6c971caa88772a39::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit4a89ed68d03e714b6c971caa88772a39::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit2e762355a7899f3a702a147e7105d8d0::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit2e762355a7899f3a702a147e7105d8d0::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit2e762355a7899f3a702a147e7105d8d0::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit2e762355a7899f3a702a147e7105d8d0::$classMap;
 
         }, null, ClassLoader::class);
     }

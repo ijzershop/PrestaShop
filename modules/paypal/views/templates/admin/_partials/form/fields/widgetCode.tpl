@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PayPal
+* 2007-2021 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -23,7 +23,7 @@
 * International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div>
+<div widget-code-container>
   <div class="input-group pp__mb-5">
     <input
             type="text"
@@ -42,11 +42,14 @@
     </span>
   </div>
 
-  <div class="pp__mt-5">
-    <div class="alert alert-info">
-        {{l s='In order to display the PayPal button via [a @href1@]widget[/a] it will be necessary to add it to the template at the desired location.'}|paypalreplace:['@href1@' => 'https://devdocs.prestashop.com/1.7/modules/concepts/widgets/', '@target@' => {'target="blank"'}]}
+  {if isset($isShowDescription) && isShowDescription}
+    <div class="pp__mt-5">
+      <div class="alert alert-info">
+          {{l s='In order to display the PayPal button via [a @href1@]widget[/a] it will be necessary to add it to the template at the desired location.'}|paypalreplace:['@href1@' => 'https://devdocs.prestashop.com/1.7/modules/concepts/widgets/', '@target@' => {'target="blank"'}]}
+      </div>
     </div>
-  </div>
+  {/if}
+
 </div>
 
 

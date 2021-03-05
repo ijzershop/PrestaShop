@@ -39,8 +39,7 @@ $(document).ready(function () {
         });
     }
 
-    function toggleCustomLogo()
-    {
+    function toggleCustomLogo() {
         var $customLogoSelector = $('select[name="MOLLIE_SHOW_CUSTOM_LOGO"]');
         toggleCustomLogoVisibility($customLogoSelector.val());
         $customLogoSelector.on('change', function () {
@@ -48,8 +47,7 @@ $(document).ready(function () {
         });
     }
 
-    function toggleCustomLogoVisibility(showCustomLogo)
-    {
+    function toggleCustomLogoVisibility(showCustomLogo) {
         var $customLogoFormGroups = $('.js-form-group-custom-logo');
         $customLogoFormGroups.toggleClass('hidden', showCustomLogo === '0')
 

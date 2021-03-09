@@ -1,10 +1,7 @@
 <?php
-
 class Cart extends CartCore
 {
     public $added_to_order;
-
-
     public static $definition = array(
         'table' => 'cart',
         'primary' => 'id_cart',
@@ -30,9 +27,6 @@ class Cart extends CartCore
             'added_to_order' => array('type' => self::TYPE_STRING),
         ),
     );
-
-
-
     public function getOrderTotal(
         $withTaxes = true,
         $type = Cart::BOTH,
@@ -43,16 +37,12 @@ class Cart extends CartCore
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
         }
-
-
         if(!is_null(Context::getContext()->cart->id_carrier) && (int)Context::getContext()->cart->id_carrier > 0) {
             $id_carrier = Context::getContext()->cart->id_carrier;
         }
-
         if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
             $type = Cart::ONLY_PRODUCTS;
         }
-
         $type = (int) $type;
         $allowedTypes = array(
             Cart::ONLY_PRODUCTS,
@@ -79,7 +69,6 @@ class Cart extends CartCore
         if (null === $products) {
             $products = $this->getProducts();
         }
-
         if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
             foreach ($products as $key => $product) {
                 if ($product['is_virtual']) {
@@ -88,7 +77,6 @@ class Cart extends CartCore
             }
             $type = Cart::ONLY_PRODUCTS;
         }
-
         if (Tax::excludeTaxeOption()) {
             $withTaxes = false;
         }
@@ -96,11 +84,9 @@ class Cart extends CartCore
         if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
         }
-
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
         $computePrecision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
         $small_order_fee_addition = 0;
-
             switch ($type) {
                 case Cart::ONLY_SHIPPING:
                     $calculator->calculateRows();
@@ -145,44 +131,9 @@ class Cart extends CartCore
                     throw new \Exception('unknown cart calculation type : ' . $type);
                 }
         $value = $withTaxes ? $amount->getTaxIncluded() + $small_order_fee_addition : $amount->getTaxExcluded() + $small_order_fee_addition;
-
         $compute_precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
-
         return Tools::ps_round($value, $compute_precision);
     }
-
-
-
-    /*
-    * module: dynamicproduct
-    * date: 2020-08-14 11:59:27
-    * version: 2.3.4
-    */
-    public function duplicate()
-    {
-        $id_cart_old = (int)$this->id;
-        $result = parent::duplicate();
-        $id_cart_new = (int)$this->id;
-        if (Module::isEnabled('dynamicproduct')) {
-
-            $module = Module::getInstanceByName('dynamicproduct');
-            $module->hookCartDuplicated(array(
-                'id_cart_old' => $id_cart_old,
-                'id_cart_new' => $id_cart_new,
-            ));
-        }
-        return $result;
-    }
-
-    /**
-     * Return shipping total for the cart.
-     *
-     * @param array|null $delivery_option Array of the delivery option for each address
-     * @param bool $use_tax Use taxes
-     * @param Country|null $default_country Default Country
-     *
-     * @return float Shipping total
-     */
     public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
         if (isset(Context::getContext()->cookie->id_country)) {
@@ -191,7 +142,6 @@ class Cart extends CartCore
         if (null === $delivery_option) {
             $delivery_option = $this->getDeliveryOption($default_country, false, false);
         }
-
         $_total_shipping = array(
             'with_tax' => 0,
             'without_tax' => 0,
@@ -201,7 +151,6 @@ class Cart extends CartCore
             if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
                 continue;
             }
-
             $_total_shipping['with_tax'] += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
             $_total_shipping['without_tax'] += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
         }
@@ -217,21 +166,6 @@ class Cart extends CartCore
         }
         return ($use_tax) ? $_total_shipping['with_tax']+$extraShippingFee: $_total_shipping['without_tax']+$extraShippingFee;
     }
-
-
-
-
-
-    /**
-     * Delete a product from the cart.
-     *
-     * @param int $id_product Product ID
-     * @param int $id_product_attribute Attribute ID if needed
-     * @param int $id_customization Customization id
-     * @param int $id_address_delivery Delivery Address id
-     *
-     * @return bool Whether the product has been successfully deleted
-     */
     public function deleteProduct(
         $id_product,
         $id_product_attribute = 0,
@@ -241,24 +175,18 @@ class Cart extends CartCore
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
         }
-
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
         }
-
         if ((int) $id_customization) {
             if (!$this->_deleteCustomization((int) $id_customization, (int) $id_product, (int) $id_product_attribute, (int) $id_address_delivery)) {
                 return false;
             }
         }
-
         $productItem = new Product($id_product);
         if($productItem && $productItem->reference == Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_REFERENCE')){
-        // is an custom product remove product from database
             $productItem->delete();
         }
-
-        /* Get customization quantity */
         $result = Db::getInstance()->getRow('
             SELECT SUM(`quantity`) AS \'quantity\'
             FROM `' . _DB_PREFIX_ . 'customization`
@@ -266,12 +194,9 @@ class Cart extends CartCore
             AND `id_product` = ' . (int) $id_product . '
             AND `id_customization` = ' . (int) $id_customization . '
             AND `id_product_attribute` = ' . (int) $id_product_attribute);
-
         if ($result === false) {
             return false;
         }
-
-        /* If the product still possesses customization it does not have to be deleted */
         if (Db::getInstance()->numRows() && (int) $result['quantity']) {
             return Db::getInstance()->execute(
                 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
@@ -282,7 +207,6 @@ class Cart extends CartCore
                 ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
             );
         }
-
         $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
         if ($preservedGifts[(int) $id_product . '-' . (int) $id_product_attribute] > 0) {
             return Db::getInstance()->execute(
@@ -293,8 +217,6 @@ class Cart extends CartCore
                 ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
             );
         }
-
-        /* Product deletion */
         $result = Db::getInstance()->execute('
         DELETE FROM `' . _DB_PREFIX_ . 'cart_product`
         WHERE `id_product` = ' . (int) $id_product . '
@@ -302,34 +224,22 @@ class Cart extends CartCore
             (null !== $id_product_attribute ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '') . '
         AND `id_cart` = ' . (int) $this->id . '
         ' . ((int) $id_address_delivery ? 'AND `id_address_delivery` = ' . (int) $id_address_delivery : ''));
-
         if ($result) {
             $return = $this->update();
-            // refresh cache of self::_products
             $this->_products = $this->getProducts(true);
             CartRule::autoRemoveFromCart();
             CartRule::autoAddToCart();
-
             return $return;
         }
-
         return false;
     }
-
-
-/**
- * Single Stock module overides
- */
-
     public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
     {
         $ssa = Module::getInstanceByName('singlestockattributespoco');
         if (!$ssa || !$ssa->active || !$ssa->useSSA($id_product)) {
             return parent::containsProduct($id_product, $id_product_attribute, $id_customization, $id_address_delivery);
         }
-
         $sql = 'SELECT cp.`quantity` FROM `'._DB_PREFIX_.'cart_product` cp';
-
         if ($id_customization) {
             $sql .= '
                 LEFT JOIN `'._DB_PREFIX_.'customization` c ON (
@@ -337,7 +247,6 @@ class Cart extends CartCore
                     AND c.`id_product_attribute` = cp.`id_product_attribute`
                 )';
         }
-
         $sql .= '
             WHERE cp.`id_product` = '.(int)$id_product.'
             AND cp.`id_product_attribute` = '.(int)$id_product_attribute.'
@@ -346,15 +255,10 @@ class Cart extends CartCore
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
             $sql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
         }
-
         if ($id_customization) {
             $sql .= ' AND c.`id_customization` = '.(int)$id_customization;
         }
-        /*
-        * Modified to return the total products from the cart if the current attribute is already there.
-        * This is needed because if this function returns a result, then PS will try to update the quantity
-        * of the product in the cart, rather than add it to the cart.
-        */
+        
         $ret = Db::getInstance()->getRow($sql);
         if ($ret['quantity'] > 0) {
             $sql = 'SELECT sum(cp.`quantity`) as qty FROM `'._DB_PREFIX_.'cart_product` cp
@@ -367,17 +271,6 @@ class Cart extends CartCore
         }
         return $ret;
     }
-
-    /**
-     * Update Product quantity
-     *
-     * @param int    $quantity             Quantity to add (or substract)
-     * @param int    $id_product           Product ID
-     * @param int    $id_product_attribute Attribute ID if needed
-     * @param string $operator             Indicate if quantity must be increased or decreased
-     *
-     * @return bool Whether the quantity has been succesfully updated
-     */
     public function updateQty(
         $quantity,
         $id_product,
@@ -393,11 +286,9 @@ class Cart extends CartCore
         if (!$ssa || !$ssa->active || !$ssa->useSSA($id_product)) {
             return parent::updateQty($quantity, $id_product, $id_product_attribute, $id_customization, $operator, $id_address_delivery, $shop, $auto_add_cart_rule, $skipAvailabilityCheckOutOfStock);
         }
-
         if (!$shop) {
             $shop = Context::getContext()->shop;
         }
-
         if (Context::getContext()->customer->id) {
             if ($id_address_delivery == 0 && (int)$this->id_address_delivery) { // The $id_address_delivery is null, use the cart delivery address
                 $id_address_delivery = $this->id_address_delivery;
@@ -407,12 +298,10 @@ class Cart extends CartCore
                 $id_address_delivery = 0;
             }
         }
-
         $quantity = (int)$quantity;
         $id_product = (int)$id_product;
         $id_product_attribute = (int)$id_product_attribute;
         $product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $shop->id);
-
         if ($id_product_attribute) {
             $combination = new Combination((int)$id_product_attribute);
             if ($combination->id_product != $id_product) {
@@ -420,26 +309,20 @@ class Cart extends CartCore
             }
         }
         $id_product_attribute_default = Product::getDefaultAttribute($id_product);
-
-        /* If we have a product combination, the minimal quantity is set with the one of this combination */
         if (!empty($id_product_attribute)) {
             $minimal_quantity = (int)Attribute::getAttributeMinimalQty($id_product_attribute);
         } else {
             $minimal_quantity = (int)$product->minimal_quantity;
         }
-
         if (!Validate::isLoadedObject($product)) {
             die(Tools::displayError());
         }
-
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
         }
-
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
         }
-
         $data = array(
             'cart' => $this,
             'product' => $product,
@@ -451,36 +334,26 @@ class Cart extends CartCore
             'shop' => $shop,
             'auto_add_cart_rule' => $auto_add_cart_rule,
         );
-
-        /* @deprecated deprecated since 1.6.1.1 */
-        // Hook::exec('actionBeforeCartUpdateQty', $data);
         Hook::exec('actionCartUpdateQuantityBefore', $data);
-
         if ((int)$quantity <= 0) {
             return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
         } elseif (!$product->available_for_order || (Configuration::isCatalogMode() && !defined('_PS_ADMIN_DIR_'))) {
             return false;
         } else {
-            /* Check if the product is already in the cart */
             $result = $this->containsProduct($id_product, $id_product_attribute, (int)$id_customization, (int)$id_address_delivery);
-
-            /* Update quantity if product already exist */
             if ($result) {
                 if ($operator == 'up') {
                     $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
                             FROM '._DB_PREFIX_.'product p
                             '.Product::sqlStock('p', $id_product_attribute_default, true, $shop).'
                             WHERE p.id_product = '.$id_product;
-
                     $result2 = Db::getInstance()->getRow($sql);
                     $product_qty = (int)$result2['quantity'];
-                    // Quantity for product pack
                     if (Pack::isPack($id_product)) {
                         $product_qty = Pack::getQuantity($id_product, $id_product_attribute);
                     }
                     $new_qty = (int)$result['quantity'] + (int)$quantity;
                     $qty = '+ '.(int)$quantity;
-
                     if (!$skipAvailabilityCheckOutOfStock && !Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
                         if ($new_qty > $product_qty) {
                             return false;
@@ -495,8 +368,6 @@ class Cart extends CartCore
                 } else {
                     return false;
                 }
-
-                /* Delete product from cart */
                 if ($new_qty <= 0) {
                     return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
                 } elseif ($new_qty < $minimal_quantity) {
@@ -513,24 +384,14 @@ class Cart extends CartCore
                     );
                 }
             } elseif ($operator == 'up') {
-                /* Add product to the cart */
-
                 $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
                         FROM '._DB_PREFIX_.'product p
                         '.Product::sqlStock('p', $id_product_attribute_default, true, $shop).'
                         WHERE p.id_product = '.$id_product;
-
                 $result2 = Db::getInstance()->getRow($sql);
-
-                // Quantity for product pack
                 if (Pack::isPack($id_product)) {
                     $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute);
                 }
-
-                /*
-                * Added for checking product count in cart with different combinations.
-                * They must be not more than default combination count in stock.
-                */
                 $cart_items = $this->getWsCartRows();
                 $product_qty_by_id = 0;
                 foreach ($cart_items as $cart_item) {
@@ -538,17 +399,14 @@ class Cart extends CartCore
                         $product_qty_by_id += (int)$cart_item['quantity'];
                     }
                 }
-
                 if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
                     if (((int)$quantity+(int)$product_qty_by_id) > $result2['quantity']) {
                         return false;
                     }
                 }
-
                 if ((int)$quantity < $minimal_quantity) {
                     return -1;
                 }
-
                 $result_add = Db::getInstance()->insert('cart_product', array(
                     'id_product' =>            (int)$id_product,
                     'id_product_attribute' =>    (int)$id_product_attribute,
@@ -559,14 +417,11 @@ class Cart extends CartCore
                     'date_add' =>                date('Y-m-d H:i:s'),
                     'id_customization' =>       (int)$id_customization,
                 ));
-
                 if (!$result_add) {
                     return false;
                 }
             }
         }
-
-        // refresh cache of self::_products
         $this->_products = $this->getProducts(true);
         $this->update();
         $context = Context::getContext()->cloneContext();
@@ -575,21 +430,18 @@ class Cart extends CartCore
         if ($auto_add_cart_rule) {
             CartRule::autoAddToCart($context);
         }
-
         if ($product->customizable) {
             return $this->_updateCustomizationQuantity((int)$quantity, (int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery, $operator);
         } else {
             return true;
         }
     }
-
     public function checkQuantities($returnProductOnFailure = false)
     {
         $ssa = Module::getInstanceByName('singlestockattributespoco');
         if (Configuration::isCatalogMode() && !defined('_PS_ADMIN_DIR_')) {
             return false;
         }
-
         foreach ($this->getProducts() as $product) {
             if (
                 !$this->allow_seperated_package &&
@@ -606,7 +458,6 @@ class Cart extends CartCore
                     $delivery
                 );
             }
-
             if (
                 !$product['active'] ||
                 !$product['available_for_order'] ||
@@ -614,7 +465,6 @@ class Cart extends CartCore
             ) {
                 return $returnProductOnFailure ? $product : false;
             }
-
             if (!$product['allow_oosp']) {
                 if (!$ssa || !$ssa->active || !$ssa->useSSA($product['id_product'])) {
                     $productQuantity = Product::getQuantity(
@@ -645,8 +495,26 @@ class Cart extends CartCore
                 }
             }
         }
-
         return true;
     }
-
+    /*
+    * module: dynamicproduct
+    * date: 2021-03-08 12:46:15
+    * version: 2.8.3
+    */
+    public function duplicate()
+    {
+        $id_cart_old = (int)$this->id;
+        $result = parent::duplicate();
+        $id_cart_new = (int)$this->id;
+        if (Module::isEnabled('dynamicproduct')) {
+            
+            $module = Module::getInstanceByName('dynamicproduct');
+            $module->hookCartDuplicated(array(
+                'id_cart_old' => $id_cart_old,
+                'id_cart_new' => $id_cart_new,
+            ));
+        }
+        return $result;
+    }
 }

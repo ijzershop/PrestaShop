@@ -2,7 +2,6 @@
 use classes\models\DynamicConfig;
 use classes\models\DynamicEquation;
 class Product extends ProductCore {
-
     public static function isDynamicProduct($product){
         if(is_array($product)){
             $id_product = $product['id_product'];
@@ -15,15 +14,12 @@ class Product extends ProductCore {
         }
         return false;
     }
-
-
     /*
     * module: offerintegration
     * date: 2020-03-06 14:52:31
     * version: 1.0.9.1
     */
     public $default_cut_price;
-
     public static function getAllCustomizedDatas($id_cart, $id_lang = null, $only_in_cart = true, $id_shop = null, $id_customization = null)
     {
         if (!Customization::isFeatureActive()) {
@@ -84,40 +80,12 @@ class Product extends ProductCore {
         }
         return $customized_datas;
     }
-
-
-    /*
-    * module: dynamicproduct
-    * date: 2020-08-14 11:59:27
-    * version: 2.3.4
-    */
-    public static function getProductProperties($id_lang, $row, Context $context = null)
-    {
-        $result = parent::getProductProperties($id_lang, $row, $context);
-
-        $module = Module::getInstanceByName('dynamicproduct');
-
-        if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
-            $id_product = (int)$row['id_product'];
-            $is_active = DynamicConfig::isActive($id_product);
-            if ($is_active) {
-                $displayed_price = DynamicConfig::getDisplayedPrice($id_product);
-                if ($displayed_price) {
-                    $module->calculator->assignProductPrices($row, $displayed_price, $result);
-                }
-            }
-        }
-        return $result;
-   }
-
-
     /*
     * module: offerintegration
     * date: 2020-08-21 11:00:54
     * version: 1.0.9.1
     */
     public $min_saw_size;
-
         /*
     * module: offerintegration
     * date: 2020-08-21 11:00:54
@@ -130,7 +98,6 @@ class Product extends ProductCore {
     * version: 1.0.9.1
     */
     public $saw_loss;
-
     /*
     * module: offerintegration
     * date: 2020-08-21 11:00:54
@@ -143,7 +110,6 @@ class Product extends ProductCore {
     * version: 1.0.9.1
     */
     public $id_oi_offer;
-
     /*
     * module: offerintegration
     * date: 2020-08-21 11:00:54
@@ -182,7 +148,6 @@ class Product extends ProductCore {
                                                                 'validate' =>
                                                                 'isNullOrUnsignedId',
                                                                 'required' => false);
-
         self::$definition['fields']['id_oi_offer'] = array('type' => ObjectModel::TYPE_INT,
                                                                  'shop' => 'true',
                                                                  'required' => false);
@@ -219,9 +184,7 @@ class Product extends ProductCore {
             $results_array[] = $row;
         }
         return $results_array;
-
     }
-
      public static function getPriceStatic(
         $id_product,
         $usetax = true,
@@ -265,9 +228,7 @@ class Product extends ProductCore {
             $use_customer_price,
             $id_customization
         );
-
         $module = Module::getInstanceByName('dynamicproduct');
-
         if (!$module->active|| $only_reduc) {
             return $return;
         }
@@ -304,18 +265,12 @@ class Product extends ProductCore {
         }
         return $return;
     }
-
-
-    /**
-     * Single Stock module overides
-     */
     public function getAttributesGroups($id_lang)
     {
         $ssa = Module::getInstanceByName('singlestockattributespoco');
         if (!$ssa || !$ssa->active || !$ssa->useSSA($this->id)) {
             return parent::getAttributesGroups($id_lang);
         }
-
         if (!Combination::isFeatureActive()) {
             return array();
         }
@@ -338,7 +293,6 @@ class Product extends ProductCore {
             AND agl.`id_lang` = '.(int)$id_lang.'
         GROUP BY id_attribute_group, id_product_attribute
         ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
-
         $ret = Db::getInstance()->executeS($sql);
         $stock = '';
         foreach ($ret as &$row) {
@@ -350,5 +304,26 @@ class Product extends ProductCore {
         }
         return $ret;
     }
-
+    /*
+    * module: dynamicproduct
+    * date: 2021-03-08 12:46:15
+    * version: 2.8.3
+    */
+    public static function getProductProperties($id_lang, $row, Context $context = null)
+    {
+        $result = parent::getProductProperties($id_lang, $row, $context);
+        
+        $module = Module::getInstanceByName('dynamicproduct');
+        if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
+            $id_product = (int)$row['id_product'];
+            $dynamic_config = new classes\models\DynamicConfig($id_product);
+            if ($dynamic_config->active) {
+                $displayed_price = classes\models\DynamicConfig::getDisplayedPrice($id_product);
+                if ($displayed_price || $dynamic_config->display_dynamic_price) {
+                    $module->calculator->assignProductPrices($row, $displayed_price, $result);
+                }
+            }
+        }
+        return $result;
+    }
 }

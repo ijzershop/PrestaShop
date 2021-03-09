@@ -57,8 +57,9 @@ abstract class ProductListingFrontController extends ProductListingFrontControll
         //Fetch dynamic product price when product price amount is 0
         foreach ($search['products'] as $product) {
             if($product->price_amount == 0){
-                $dynModule = Module::getInstanceByName('modernesmiddynamicproduct');
-                $data = $dynModule::fetchDefaultDynamicProductPrice($product, $product->id_attribute);
+                $dynModule = new DynamicProductController();
+                $data = $dynModule->getDefaultDynamicProductPrices($product, $product->id_attribute);
+
                 if(array_key_exists('formatted_prices', $data) && array_key_exists('final_prices', $data) && array_key_exists('unit_prices', $data)){
                    $product->price = $data['formatted_prices']['price_ttc'];
                    $product->price_amount = $data['final_prices']['price_ttc'];

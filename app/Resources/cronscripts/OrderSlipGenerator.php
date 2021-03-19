@@ -48,6 +48,10 @@ class OrderSlipGenerator
      * @var string
      */
     private $pdfDeliverySlipTemplate;
+    /**
+     * @var int
+     */
+    private $slipTime;
 
     /**
      * OrderSlipGenerator constructor.
@@ -117,11 +121,11 @@ class OrderSlipGenerator
         $loginCall = $this->doApiCall('api-auth', ['email'=>Configuration::get('MODERNESMIDTHEMECONFIGURATOR_DASHBOARD_API_USER'), 'password'=>Configuration::get('MODERNESMIDTHEMECONFIGURATOR_DASHBOARD_API_PASS')]);
         if(!empty($loginCall)){
             $message = [];
-            $message['text'] = 'Pakbonnen klaar gezet op '. date('d-m-Y H:i');
+            $message['text'] = 'pakbonnen_'.$this->slipTime.'.pdf';
             $message['status'] = 'success';
             $message['error_records'] = $this->errorRecords;
             $message['success_records'] = $this->completedSuccessRecords;
-            $message['time'] = date("Y-m-d H:i:s");
+            $message['time'] = $this->slipTime;
 
            $this->doApiCall('log-message', [
                 'profile'     => Context::getContext()->shop->getUrls()[0]['domain'],
@@ -208,7 +212,8 @@ class OrderSlipGenerator
     {
         $pdf_file = new PDF($object, $template, Context::getContext()->smarty);
         $delivery_slip_pdf = $pdf_file->render(false);
-        file_put_contents(dirname(__FILE__, 4).'/upload/pakbonnen/pakbonnen_'.time().'.pdf', $delivery_slip_pdf);
+        $this->slipTime = time();
+        file_put_contents(dirname(__FILE__, 4).'/upload/pakbonnen/pakbonnen_'.$this->slipTime.'.pdf', $delivery_slip_pdf);
     }
 }
 

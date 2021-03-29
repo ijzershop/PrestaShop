@@ -1,24 +1,24 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => 'v3.3.2',
-    'version' => '3.3.2.0',
+    'pretty_version' => 'v3.3.3',
+    'version' => '3.3.3.0',
     'aliases' => 
     array (
     ),
-    'reference' => 'd28f053c8b4791c6b8e8703829305e985f9a9ba7',
+    'reference' => 'f4a8627b0cac9f1a80191b5e406769e03dcf7068',
     'name' => '__root__',
   ),
   'versions' => 
   array (
     '__root__' => 
     array (
-      'pretty_version' => 'v3.3.2',
-      'version' => '3.3.2.0',
+      'pretty_version' => 'v3.3.3',
+      'version' => '3.3.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd28f053c8b4791c6b8e8703829305e985f9a9ba7',
+      'reference' => 'f4a8627b0cac9f1a80191b5e406769e03dcf7068',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -49,12 +49,12 @@
     ),
     'lcobucci/jwt' => 
     array (
-      'pretty_version' => '3.4.2',
-      'version' => '3.4.2.0',
+      'pretty_version' => '3.4.5',
+      'version' => '3.4.5.0',
       'aliases' => 
       array (
       ),
-      'reference' => '17cb82dd625ccb17c74bf8f38563d3b260306483',
+      'reference' => '511629a54465e89a31d3d7e4cf0935feab8b14c1',
     ),
     'monolog/monolog' => 
     array (
@@ -103,12 +103,12 @@
     ),
     'prestashop/prestashop-accounts-auth' => 
     array (
-      'pretty_version' => '2.2.4',
-      'version' => '2.2.4.0',
+      'pretty_version' => 'v2.3.0',
+      'version' => '2.3.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b27f36f66f57832f854191f626fc89f5ce5ade73',
+      'reference' => '640f1ed35d0276cda7a96519bc6993a4a3ff35b6',
     ),
     'psr/cache' => 
     array (

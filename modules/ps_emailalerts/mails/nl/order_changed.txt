@@ -1,4 +1,3 @@
-
 [{shop_url}]
 
 Hallo {firstname} {lastname},

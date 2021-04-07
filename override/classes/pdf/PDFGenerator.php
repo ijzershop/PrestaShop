@@ -2,7 +2,7 @@
 class PDFGenerator extends PDFGeneratorCore
 {
     public $Image;
-
+    public $angle;
     /**
      * @see TCPDF::Header()
      */

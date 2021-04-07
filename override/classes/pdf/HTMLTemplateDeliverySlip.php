@@ -156,10 +156,12 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                     foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
                         if(!is_null($customization)){
                             foreach ($customization as $customizationId => $customized) {
+
                                 if(isset($customized['datas'])){
 
                                     if(class_exists("Imagick") )
                                     {
+
                                         $file = $customized['datas'][1][0]['technical_image'];
                                         if(!is_null($file) && !empty($file)){
 

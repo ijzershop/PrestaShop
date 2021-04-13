@@ -21,6 +21,43 @@ class PDFGenerator extends PDFGeneratorCore
         }
     }
 
+    /**
+     * Render HTML template.
+     *
+     * @param string $filename
+     * @param bool $display true:display to user, false:save, 'I','D','S' as fpdf display
+     *
+     * @throws PrestaShopException
+     *
+     * @return string HTML rendered
+     */
+    public function render($filename, $display = true)
+    {
+        if (empty($filename)) {
+            throw new PrestaShopException('Missing filename.');
+        }
+
+        $this->lastPage();
+
+        if ($display === true) {
+            $output = 'D';
+        } elseif ($display === false) {
+            $output = 'S';
+        } elseif ($display == 'D') {
+            $output = 'D';
+        } elseif ($display == 'S') {
+            $output = 'S';
+        } elseif ($display == 'F') {
+            $output = 'F';
+        } elseif ($display == 'E') {
+            $output = 'E';
+        } else {
+            $output = 'I';
+        }
+
+        return $this->output($filename, $output);
+    }
+
     //Rotate function to rotate text element
     function Rotate($angle,$x=-1,$y=-1)
     {

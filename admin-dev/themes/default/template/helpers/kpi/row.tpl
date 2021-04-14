@@ -61,6 +61,7 @@
 
   .label.color_field{
     padding:0.99rem;
+    line-height: 4rem;
   }
   .cc-koopman {
     margin-top: 10px;

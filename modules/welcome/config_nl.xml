@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>welcome</name>
-    <displayName><![CDATA[Welcome]]></displayName>
+    <displayName><![CDATA[Welkom]]></displayName>
     <version><![CDATA[6.0.4]]></version>
     <description><![CDATA[Sell your first product quicker than you would have wished with our nice onboarding process.]]></description>
     <author><![CDATA[PrestaShop]]></author>

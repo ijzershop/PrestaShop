@@ -2,6 +2,7 @@
 <div class="supercheckout-checkout-content"></div>
         <h2>{l s='Delivery Address' mod='supercheckout'} <span class="section-title-number">4</span></h2>
 
+{assign var='existing_address' value=[]}
 {if !isset($guest_information)}
     {if $customer.addresses}
       {assign var='existing_address' value=reset($customer.addresses)}

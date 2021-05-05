@@ -3,7 +3,7 @@
     <li>
         <h2>{l s='Invoice Address' mod='supercheckout'}</h2></li>
 </ul>
-
+{assign var='existing_address' value=[]}
 {if !isset($guest_information)}
   {if $customer.addresses}
     {assign var='existing_address' value=reset($customer.addresses)}

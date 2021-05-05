@@ -5,6 +5,7 @@
 </ul>
 
 {if !isset($guest_information)}
+  {assign var='existing_address' value=null}
   {if $customer.addresses}
     {assign var='existing_address' value=reset($customer.addresses)}
   {/if}

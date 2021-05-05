@@ -1029,6 +1029,7 @@ class Supercheckout extends Module
         }
 
         $payments = array();
+
         foreach (PaymentModule::getInstalledPaymentModules() as $pay_method) {
             if (file_exists(_PS_MODULE_DIR_ . $pay_method['name'] . '/' . $pay_method['name'] . '.php')) {
                 require_once(_PS_MODULE_DIR_ . $pay_method['name'] . '/' . $pay_method['name'] . '.php');

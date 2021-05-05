@@ -2,7 +2,7 @@
 
 ## About
 
-Displays social media sharing buttons (Twitter, Facebook, and Pinterest) on every product page.
+Instagram, YouTube, gather your community with social media sharing buttons on product pages.
 
 ## Multistore compatibility
 

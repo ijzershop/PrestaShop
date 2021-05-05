@@ -1,27 +1,31 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Endpoints;
+namespace Mollie\Api\Endpoints;
 
-use MolliePrefix\Mollie\Api\Resources\BaseCollection;
-use MolliePrefix\Mollie\Api\Resources\Payment;
-use MolliePrefix\Mollie\Api\Resources\PaymentCollection;
-class SettlementPaymentEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpointAbstract
+use Mollie\Api\Resources\BaseCollection;
+use Mollie\Api\Resources\Payment;
+use Mollie\Api\Resources\PaymentCollection;
+
+class SettlementPaymentEndpoint extends CollectionEndpointAbstract
 {
     protected $resourcePath = "settlements_payments";
+
     /**
      * @inheritDoc
      */
     protected function getResourceObject()
     {
-        return new \MolliePrefix\Mollie\Api\Resources\Payment($this->client);
+        return new Payment($this->client);
     }
+
     /**
      * @inheritDoc
      */
     protected function getResourceCollectionObject($count, $_links)
     {
-        return new \MolliePrefix\Mollie\Api\Resources\PaymentCollection($this->client, $count, $_links);
+        return new PaymentCollection($this->client, $count, $_links);
     }
+
     /**
      * Retrieves a collection of Payments from Mollie.
      *
@@ -36,6 +40,7 @@ class SettlementPaymentEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\Colle
     public function pageForId($settlementId, $from = null, $limit = null, array $parameters = [])
     {
         $this->parentId = $settlementId;
+
         return $this->rest_list($from, $limit, $parameters);
     }
 }

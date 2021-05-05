@@ -3117,7 +3117,6 @@ class CartCore extends ObjectModel
         }
         Cache::clean('getContextualValue_*');
         $delivery_option_list = $this->getDeliveryOptionList(null, true);
-
         foreach ($delivery_option_list as $id_address => $options) {
             if (!isset($delivery_option[$id_address])) {
                 foreach ($options as $key => $option) {

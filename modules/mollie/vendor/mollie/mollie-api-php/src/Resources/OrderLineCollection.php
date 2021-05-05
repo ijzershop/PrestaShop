@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Resources;
+namespace Mollie\Api\Resources;
 
-class OrderLineCollection extends \MolliePrefix\Mollie\Api\Resources\BaseCollection
+class OrderLineCollection extends BaseCollection
 {
     /**
      * @return string|null
@@ -11,6 +11,7 @@ class OrderLineCollection extends \MolliePrefix\Mollie\Api\Resources\BaseCollect
     {
         return null;
     }
+
     /**
      * Get a specific order line.
      * Returns null if the order line cannot be found.
@@ -25,6 +26,7 @@ class OrderLineCollection extends \MolliePrefix\Mollie\Api\Resources\BaseCollect
                 return $line;
             }
         }
+
         return null;
     }
 }

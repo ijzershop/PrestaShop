@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2021, Mollie B.V.
+ * Copyright (c) 2012-2020, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,10 +41,10 @@ use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 
 interface PaymentOptionProviderInterface
 {
-    /**
-     * @param MolPaymentMethod $paymentMethod
-     *
-     * @return PaymentOption
-     */
-    public function getPaymentOption(MolPaymentMethod $paymentMethod);
+	/**
+	 * @param MolPaymentMethod $paymentMethod
+	 *
+	 * @return PaymentOption
+	 */
+	public function getPaymentOption(MolPaymentMethod $paymentMethod);
 }

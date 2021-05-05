@@ -1,5 +1,5 @@
 {**
- * 2007-2021 PrestaShop and Contributors
+ * 2007-2020 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2021 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -60,7 +60,7 @@
                                                 </div>
                                                 <div class="col-sm-9 col-xs-8 value">
                                                     {if $field.type == 'text'}
-                                                        {$field.text|escape:'html':'UTF-8'}
+                                                      {$field.text|escape:'html':'UTF-8'}
                                                     {elseif $field.type == 'image'}
                                                         <img src="{$field.image.small.url|escape:'html':'UTF-8'}">
                                                     {/if}
@@ -101,9 +101,7 @@
 
         {if !$configuration.display_prices_tax_incl && $configuration.taxes_enabled}
             <tr>
-                <td>
-                    <span class="text-uppercase">{$totals.total.label|escape:'html':'UTF-8'}&nbsp;{$labels.tax_short|escape:'html':'UTF-8'}</span>
-                </td>
+                <td><span class="text-uppercase">{$totals.total.label|escape:'html':'UTF-8'}&nbsp;{$labels.tax_short|escape:'html':'UTF-8'}</span></td>
                 <td>{$totals.total.value|escape:'html':'UTF-8'}</td>
             </tr>
             <tr class="total-value font-weight-bold">

@@ -1,13 +1,15 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Endpoints;
+namespace Mollie\Api\Endpoints;
 
-use MolliePrefix\Mollie\Api\Exceptions\ApiException;
-use MolliePrefix\Mollie\Api\Resources\Refund;
-use MolliePrefix\Mollie\Api\Resources\RefundCollection;
-class RefundEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpointAbstract
+use Mollie\Api\Exceptions\ApiException;
+use Mollie\Api\Resources\Refund;
+use Mollie\Api\Resources\RefundCollection;
+
+class RefundEndpoint extends CollectionEndpointAbstract
 {
     protected $resourcePath = "refunds";
+
     /**
      * Get the object that is used by this API endpoint. Every API endpoint uses one type of object.
      *
@@ -15,8 +17,9 @@ class RefundEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpoi
      */
     protected function getResourceObject()
     {
-        return new \MolliePrefix\Mollie\Api\Resources\Refund($this->client);
+        return new Refund($this->client);
     }
+
     /**
      * Get the collection object that is used by this API endpoint. Every API endpoint uses one type of collection object.
      *
@@ -27,8 +30,9 @@ class RefundEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpoi
      */
     protected function getResourceCollectionObject($count, $_links)
     {
-        return new \MolliePrefix\Mollie\Api\Resources\RefundCollection($this->client, $count, $_links);
+        return new RefundCollection($this->client, $count, $_links);
     }
+
     /**
      * Retrieves a collection of Refunds from Mollie.
      *

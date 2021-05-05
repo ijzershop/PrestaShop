@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Resources;
+namespace Mollie\Api\Resources;
 
-class SettlementCollection extends \MolliePrefix\Mollie\Api\Resources\CursorCollection
+class SettlementCollection extends CursorCollection
 {
     /**
      * @return string
@@ -11,11 +11,12 @@ class SettlementCollection extends \MolliePrefix\Mollie\Api\Resources\CursorColl
     {
         return "settlements";
     }
+
     /**
      * @return BaseResource
      */
     protected function createResourceObject()
     {
-        return new \MolliePrefix\Mollie\Api\Resources\Settlement($this->client);
+        return new Settlement($this->client);
     }
 }

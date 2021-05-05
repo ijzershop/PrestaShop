@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2021, Mollie B.V.
+ * Copyright (c) 2012-2020, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,10 +38,10 @@ namespace Mollie\Repository;
 
 use MolPaymentMethodOrderTotalRestriction;
 
-final class MolPaymentMethodOrderTotalRestrictionRepository extends AbstractRepository implements MolPaymentMethodOrderTotalRestrictionRepositoryInterface
+class MolPaymentMethodOrderTotalRestrictionRepository extends AbstractRepository implements MolPaymentMethodOrderTotalRestrictionRepositoryInterface
 {
-    public function __construct()
-    {
-        parent::__construct(MolPaymentMethodOrderTotalRestriction::class);
-    }
+	public function __construct()
+	{
+		parent::__construct(MolPaymentMethodOrderTotalRestriction::class);
+	}
 }

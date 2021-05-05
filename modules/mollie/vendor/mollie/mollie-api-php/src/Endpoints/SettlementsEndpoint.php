@@ -1,13 +1,15 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Endpoints;
+namespace Mollie\Api\Endpoints;
 
-use MolliePrefix\Mollie\Api\Exceptions\ApiException;
-use MolliePrefix\Mollie\Api\Resources\Settlement;
-use MolliePrefix\Mollie\Api\Resources\SettlementCollection;
-class SettlementsEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpointAbstract
+use Mollie\Api\Exceptions\ApiException;
+use Mollie\Api\Resources\Settlement;
+use Mollie\Api\Resources\SettlementCollection;
+
+class SettlementsEndpoint extends CollectionEndpointAbstract
 {
     protected $resourcePath = "settlements";
+
     /**
      * Get the object that is used by this API. Every API uses one type of object.
      *
@@ -15,8 +17,9 @@ class SettlementsEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionE
      */
     protected function getResourceObject()
     {
-        return new \MolliePrefix\Mollie\Api\Resources\Settlement($this->client);
+        return new Settlement($this->client);
     }
+
     /**
      * Get the collection object that is used by this API. Every API uses one type of collection object.
      *
@@ -27,8 +30,9 @@ class SettlementsEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionE
      */
     protected function getResourceCollectionObject($count, $_links)
     {
-        return new \MolliePrefix\Mollie\Api\Resources\SettlementCollection($this->client, $count, $_links);
+        return new SettlementCollection($this->client, $count, $_links);
     }
+
     /**
      * Retrieve a single settlement from Mollie.
      *
@@ -43,6 +47,7 @@ class SettlementsEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionE
     {
         return parent::rest_read($settlementId, $parameters);
     }
+
     /**
      * Retrieve the details of the current settlement that has not yet been paid out.
      *
@@ -53,6 +58,7 @@ class SettlementsEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionE
     {
         return parent::rest_read("next", []);
     }
+
     /**
      * Retrieve the details of the open balance of the organization.
      *
@@ -63,6 +69,7 @@ class SettlementsEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionE
     {
         return parent::rest_read("open", []);
     }
+
     /**
      * Retrieves a collection of Settlements from Mollie.
      *

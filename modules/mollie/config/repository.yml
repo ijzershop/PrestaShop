@@ -1,5 +1,5 @@
 services:
-  #  @deprecated - dont call repositories directly, use interface instead
+#  @deprecated - dont call repositories directly, use interface instead
   Mollie\Repository\PaymentMethodRepository:
 
   Mollie\Repository\PaymentMethodRepositoryInterface: '@Mollie\Repository\PaymentMethodRepository'

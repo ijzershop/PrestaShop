@@ -7,5 +7,5 @@
 * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
 *}
 <h4 id="mollie-cancel">
-    {$cancelMessage|escape:'html':'UTF-8'}
+  {$cancelMessage|escape:'html':'UTF-8'}
 </h4>

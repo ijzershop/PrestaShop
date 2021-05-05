@@ -1,15 +1,18 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Endpoints;
+namespace Mollie\Api\Endpoints;
 
-use MolliePrefix\Mollie\Api\Exceptions\ApiException;
-use MolliePrefix\Mollie\Api\Resources\CurrentProfile;
-use MolliePrefix\Mollie\Api\Resources\Profile;
-use MolliePrefix\Mollie\Api\Resources\ProfileCollection;
-class ProfileEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpointAbstract
+use Mollie\Api\Exceptions\ApiException;
+use Mollie\Api\Resources\CurrentProfile;
+use Mollie\Api\Resources\Profile;
+use Mollie\Api\Resources\ProfileCollection;
+
+class ProfileEndpoint extends CollectionEndpointAbstract
 {
     protected $resourcePath = "profiles";
-    protected $resourceClass = \MolliePrefix\Mollie\Api\Resources\Profile::class;
+
+    protected $resourceClass = Profile::class;
+
     /**
      * Get the object that is used by this API endpoint. Every API endpoint uses one type of object.
      *
@@ -19,6 +22,7 @@ class ProfileEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpo
     {
         return new $this->resourceClass($this->client);
     }
+
     /**
      * Get the collection object that is used by this API endpoint. Every API endpoint uses one type of collection object.
      *
@@ -29,8 +33,9 @@ class ProfileEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpo
      */
     protected function getResourceCollectionObject($count, $_links)
     {
-        return new \MolliePrefix\Mollie\Api\Resources\ProfileCollection($this->client, $count, $_links);
+        return new ProfileCollection($this->client, $count, $_links);
     }
+
     /**
      * Creates a Profile in Mollie.
      *
@@ -44,6 +49,7 @@ class ProfileEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpo
     {
         return $this->rest_create($data, $filters);
     }
+
     /**
      * Retrieve a Profile from Mollie.
      *
@@ -60,8 +66,10 @@ class ProfileEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpo
         if ($profileId === 'me') {
             return $this->getCurrent($parameters);
         }
+
         return $this->rest_read($profileId, $parameters);
     }
+
     /**
      * Retrieve the current Profile from Mollie.
      *
@@ -72,9 +80,11 @@ class ProfileEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpo
      */
     public function getCurrent(array $parameters = [])
     {
-        $this->resourceClass = \MolliePrefix\Mollie\Api\Resources\CurrentProfile::class;
+        $this->resourceClass = CurrentProfile::class;
+
         return $this->rest_read('me', $parameters);
     }
+
     /**
      * Delete a Profile from Mollie.
      *
@@ -91,6 +101,7 @@ class ProfileEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpo
     {
         return $this->rest_delete($profileId, $data);
     }
+
     /**
      * Retrieves a collection of Profiles from Mollie.
      *

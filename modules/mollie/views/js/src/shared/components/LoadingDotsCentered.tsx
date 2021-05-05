@@ -7,7 +7,7 @@
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
  * @codingStandardsIgnoreStart
  */
-import React, {ReactElement} from 'react';
+import React, { ReactElement } from 'react';
 import styled from 'styled-components';
 
 const SpinnerDiv = styled.div`
@@ -55,11 +55,11 @@ const SpinnerDiv = styled.div`
 `;
 
 export default function LoadingDotsCentered(): ReactElement<{}> {
-    return (
-        <SpinnerDiv>
-            <div className="bounce1"/>
-            <div className="bounce2"/>
-            <div className="bounce3"/>
-        </SpinnerDiv>
-    );
+  return (
+    <SpinnerDiv>
+      <div className="bounce1"/>
+      <div className="bounce2"/>
+      <div className="bounce3"/>
+    </SpinnerDiv>
+  );
 }

@@ -838,23 +838,12 @@ font-size: 11px;
                                         </div>
 
                                         <div id="placeorderButton" style="text-align: center;margin-bottom: 10px;">
-                                            {* changes by rishabh jain *}
-                                            <div id="buttonWithProgres">
-                                                <div  id="supercheckout_continue_shopping" class="orangebutton btn btn-success" style="display:none;">
-                                                    <a href="{$index_page_link}" style = "color: #{$settings['customizer']['button_text_color']} !important;text-decoration: none !important;">
-                                                        {l s='Continue Shoppping' mod='supercheckout'}
-                                                    </a>
-                                                </div>
-                                            </div>
                                             {* changes over *}
                                             <div id="buttonWithProgres">
-                                                <div  id="supercheckout_confirm_order" class="orangebutton btn btn-success" >
+                                                <button  id="supercheckout_confirm_order" class="orangebutton btn btn-success" disabled="disabled">
                                                     {l s='Place Order' mod='supercheckout'}
                                                     <div id="progressbar" style="text-align:center;margin-top: 0px;"></div>
-                                                </div>
-                                                <div id="" style="display:none;">
-                                                    <input type="button"  id="supercheckout_confirm_order_kb" value="test button" class="orangebutton" >
-                                                </div>
+                                                </button>
                                             </div>
                                         </div>
                                         <input type="hidden" name="supercheckout_submission" value="" />

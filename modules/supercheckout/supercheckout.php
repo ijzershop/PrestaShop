@@ -751,6 +751,7 @@ class Supercheckout extends Module
             $payment_post_data = (Tools::getValue('velocity_supercheckout_payment'));
 
             $payment_error = '';
+
             foreach (PaymentModule::getInstalledPaymentModules() as $paymethod) {
                 $id = $paymethod['id_module'];
                 if ($_FILES['velocity_supercheckout_payment']['size']['payment_method'][$id]['logo']['name'] == 0) {

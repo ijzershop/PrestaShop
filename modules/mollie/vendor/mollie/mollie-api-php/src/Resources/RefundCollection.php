@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Resources;
+namespace Mollie\Api\Resources;
 
-class RefundCollection extends \MolliePrefix\Mollie\Api\Resources\CursorCollection
+class RefundCollection extends CursorCollection
 {
     /**
      * @return string
@@ -11,11 +11,12 @@ class RefundCollection extends \MolliePrefix\Mollie\Api\Resources\CursorCollecti
     {
         return "refunds";
     }
+
     /**
      * @return BaseResource
      */
     protected function createResourceObject()
     {
-        return new \MolliePrefix\Mollie\Api\Resources\Refund($this->client);
+        return new Refund($this->client);
     }
 }

@@ -1,13 +1,15 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Endpoints;
+namespace Mollie\Api\Endpoints;
 
-use MolliePrefix\Mollie\Api\Exceptions\ApiException;
-use MolliePrefix\Mollie\Api\Resources\Invoice;
-use MolliePrefix\Mollie\Api\Resources\InvoiceCollection;
-class InvoiceEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpointAbstract
+use Mollie\Api\Exceptions\ApiException;
+use Mollie\Api\Resources\Invoice;
+use Mollie\Api\Resources\InvoiceCollection;
+
+class InvoiceEndpoint extends CollectionEndpointAbstract
 {
     protected $resourcePath = "invoices";
+
     /**
      * Get the object that is used by this API. Every API uses one type of object.
      *
@@ -15,8 +17,9 @@ class InvoiceEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpo
      */
     protected function getResourceObject()
     {
-        return new \MolliePrefix\Mollie\Api\Resources\Invoice($this->client);
+        return new Invoice($this->client);
     }
+
     /**
      * Get the collection object that is used by this API. Every API uses one type of collection object.
      *
@@ -27,8 +30,9 @@ class InvoiceEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpo
      */
     protected function getResourceCollectionObject($count, $_links)
     {
-        return new \MolliePrefix\Mollie\Api\Resources\InvoiceCollection($this->client, $count, $_links);
+        return new InvoiceCollection($this->client, $count, $_links);
     }
+
     /**
      * Retrieve an Invoice from Mollie.
      *
@@ -44,6 +48,7 @@ class InvoiceEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpo
     {
         return $this->rest_read($invoiceId, $parameters);
     }
+
     /**
      * Retrieves a collection of Invoices from Mollie.
      *
@@ -58,6 +63,7 @@ class InvoiceEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpo
     {
         return $this->rest_list($from, $limit, $parameters);
     }
+
     /**
      * This is a wrapper method for page
      *

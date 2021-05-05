@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Resources;
+namespace Mollie\Api\Resources;
 
-class ProfileCollection extends \MolliePrefix\Mollie\Api\Resources\CursorCollection
+class ProfileCollection extends CursorCollection
 {
     /**
      * @return string
@@ -11,11 +11,12 @@ class ProfileCollection extends \MolliePrefix\Mollie\Api\Resources\CursorCollect
     {
         return "profiles";
     }
+
     /**
      * @return BaseResource
      */
     protected function createResourceObject()
     {
-        return new \MolliePrefix\Mollie\Api\Resources\Profile($this->client);
+        return new Profile($this->client);
     }
 }

@@ -1,24 +1,24 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => 'v3.3.3',
-    'version' => '3.3.3.0',
+    'pretty_version' => 'v3.3.6',
+    'version' => '3.3.6.0',
     'aliases' => 
     array (
     ),
-    'reference' => 'f4a8627b0cac9f1a80191b5e406769e03dcf7068',
+    'reference' => '75b99232af9908b0a09a9f501519826c1762d859',
     'name' => '__root__',
   ),
   'versions' => 
   array (
     '__root__' => 
     array (
-      'pretty_version' => 'v3.3.3',
-      'version' => '3.3.3.0',
+      'pretty_version' => 'v3.3.6',
+      'version' => '3.3.6.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'f4a8627b0cac9f1a80191b5e406769e03dcf7068',
+      'reference' => '75b99232af9908b0a09a9f501519826c1762d859',
     ),
     'guzzlehttp/guzzle' => 
     array (

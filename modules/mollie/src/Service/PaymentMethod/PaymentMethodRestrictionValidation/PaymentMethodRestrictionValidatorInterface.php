@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2021, Mollie B.V.
+ * Copyright (c) 2012-2020, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,21 +40,21 @@ use MolPaymentMethod;
 
 interface PaymentMethodRestrictionValidatorInterface
 {
-    /**
-     * Returns if payment is valid
-     *
-     * @param MolPaymentMethod $paymentMethod
-     *
-     * @return bool
-     */
-    public function isValid(MolPaymentMethod $paymentMethod);
+	/**
+	 * Returns if payment is valid
+	 *
+	 * @param MolPaymentMethod $paymentMethod
+	 *
+	 * @return bool
+	 */
+	public function isValid(MolPaymentMethod $paymentMethod);
 
-    /**
-     * Returns if payment restriction validator is supported by payment name
-     *
-     * @param MolPaymentMethod $paymentMethod
-     *
-     * @return bool
-     */
-    public function supports(MolPaymentMethod $paymentMethod);
+	/**
+	 * Returns if payment restriction validator is supported by payment name
+	 *
+	 * @param MolPaymentMethod $paymentMethod
+	 *
+	 * @return bool
+	 */
+	public function supports(MolPaymentMethod $paymentMethod);
 }

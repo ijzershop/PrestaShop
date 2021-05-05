@@ -10,7 +10,7 @@
 $(document).ready(function () {
     var hasHashTag = document.URL.indexOf('#');
     if (hasHashTag >= 0) {
-        var hashTag = document.URL.substr(document.URL.indexOf('#') + 1);
+        var hashTag = document.URL.substr(document.URL.indexOf('#')+1);
         parent.location.hash = '';
         $.ajax({
             url: ajaxUrl,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2021, Mollie B.V.
+ * Copyright (c) 2012-2020, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,9 +32,8 @@
  *
  * @see       https://www.mollie.nl
  */
-
 if (!defined('_PS_VERSION_')) {
-    exit;
+	exit;
 }
 
 /**
@@ -44,8 +43,8 @@ if (!defined('_PS_VERSION_')) {
  */
 function upgrade_module_4_1_2($module)
 {
-    $module->registerHook('actionOrderGridQueryBuilderModifier');
-    $module->registerHook('actionOrderGridDefinitionModifier');
+	$module->registerHook('actionOrderGridQueryBuilderModifier');
+	$module->registerHook('actionOrderGridDefinitionModifier');
 
-    return true;
+	return true;
 }

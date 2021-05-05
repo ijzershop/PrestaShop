@@ -2,7 +2,6 @@
 
 use PrestaShop\Module\PsAccounts\Controller\AbstractApiController;
 use PrestaShop\Module\PsAccounts\Exception\EnvVarException;
-use PrestaShop\Module\PsAccounts\Exception\FirebaseException;
 use PrestaShop\Module\PsAccounts\Repository\ThemeRepository;
 
 class ps_AccountsApiThemesModuleFrontController extends AbstractApiController
@@ -26,7 +25,7 @@ class ps_AccountsApiThemesModuleFrontController extends AbstractApiController
             $response = $this->proxyService->upload($jobId, $themeInfo);
         } catch (EnvVarException $exception) {
             $this->exitWithExceptionMessage($exception);
-        } catch (FirebaseException $exception) {
+        } catch (Exception $exception) {
             $this->exitWithExceptionMessage($exception);
         }
 

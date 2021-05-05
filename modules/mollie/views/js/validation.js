@@ -75,7 +75,6 @@ $(document).ready(function () {
             $elementToHide.closest('.form-group').hide();
         }
     }
-
     function hideElementIfChecked($switch, $elementToHide) {
         if ($switch.prop('checked')) {
             $elementToHide.closest('.form-group').hide();

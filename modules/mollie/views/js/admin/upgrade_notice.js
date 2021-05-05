@@ -12,7 +12,8 @@
 $(document).ready(function () {
     $(document).on('click', '.js-mollie-upgrade-tip-close', closeUpgradeNotice);
 
-    function closeUpgradeNotice() {
+    function closeUpgradeNotice()
+    {
         $.ajax(ajaxUrl, {
             data: {
                 action: 'closeUpgradeNotice',

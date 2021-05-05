@@ -668,6 +668,18 @@ function checkFormatAddressApiCheckout(){
     var useForInvoice = $('#use_for_invoice').is(':checked');
 
     if(useForInvoice) {
+      var postcode = $('[name="shipping_address[postcode]"]').val().replace(' ', '');
+      var houseNumber = $('[name="shipping_address[house_number]"]').val().replace(' ', '');
+      var extension = $('[name="shipping_address[house_number_extension]"]').val();
+      var street = '';
+      var id_country = $('[name="shipping_address[id_country]"]').val().replace(' ', '');
+      if (postcode.length > 3 || houseNumber.length > 0) {
+        validated = true;
+        validateAddressApiCheckout(postcode, street, houseNumber, extension, id_country, "shipping_address");
+      }
+    } else {
+      validatedPayment = true;
+
       var postcodePayment = $('[name="payment_address[postcode]"]').val().replace(' ', '');
       var houseNumberPayment = $('[name="payment_address[house_number]"]').val().replace(' ', '');
       var extensionPayment = $('[name="payment_address[house_number_extension]"]').val().replace(' ', '');
@@ -677,18 +689,8 @@ function checkFormatAddressApiCheckout(){
         validatedPayment = true;
         validateAddressApiCheckout(postcodePayment, streetPayment, houseNumberPayment, extensionPayment, id_countryPayment, "payment_address");
       }
-    } else {
-      validatedPayment = true;
     }
-    var postcode = $('[name="shipping_address[postcode]"]').val().replace(' ', '');
-    var houseNumber = $('[name="shipping_address[house_number]"]').val().replace(' ', '');
-    var extension = $('[name="shipping_address[house_number_extension]"]').val();
-    var street = '';
-    var id_country = $('[name="shipping_address[id_country]"]').val().replace(' ', '');
-    if (postcode.length > 3 || houseNumber.length > 0) {
-      validated = true;
-      validateAddressApiCheckout(postcode, street, houseNumber, extension, id_country, "shipping_address");
-    }
+
     if(validated && validatedPayment){
       return true;
     }
@@ -718,6 +720,7 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
     },
   })
     .done((e) => {
+      var isValidForConfirm = false;
       $('.address-error-msg').text(null);
 
       if (e.valid != false && e.address.length > 0 && e.address[0].hasOwnProperty('nl_sixpp')) { // is een nederlands adres
@@ -725,41 +728,53 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
         $('[name="'+type+'[id_country]"]').removeClass('error-form').addClass('was-validated is-valid');
         $('[name="'+type+'[postcode]"]').removeClass('error-form').addClass('was-validated is-valid');
 
+        if (e.address[0].city != 'undefined') {
+          $('[name="'+type+'[city]"]').val(e.address[0].city).removeClass('error-form').addClass('was-validated is-valid');
+          isValidForConfirm = true;
+        } else {
+          $('[name="'+type+'[city]"]').val('').removeClass('was-validated is-valid').addClass('error-form');
+          isValidForConfirm = false;
+        }
+        if (e.address[0].street != 'undefined') {
+          $('[name="'+type+'[address1]"]').val(e.address[0].street).removeClass('error-form').addClass('was-validated is-valid');
+          isValidForConfirm = true;
+        } else {
+          $('[name="'+type+'[address1]"]').val('').removeClass('was-validated is-valid').addClass('error-form');
+          isValidForConfirm = false;
+        }
+
         if ($('[name="'+type+'[house_number]"]').val().length > 0) {
           $('[name="'+type+'[house_number]"]').removeClass('error-form').addClass('was-validated is-valid');
           $('[name="'+type+'[house_number_extension]"]').removeClass('error-form').addClass('was-validated is-valid');
+          isValidForConfirm = true;
         } else {
           $('[name="'+type+'[house_number]"]').addClass('error-form');
           $('[name="'+type+'[house_number]"]').siblings('.errorsmall').remove();
           if(e.address[0].streetnumbers){
             $('[name="'+type+'[house_number]"]').parent().append('<span class="errorsmall">' + e.address[0].streetnumbers + '</span>');
           }
-
           $('[name="'+type+'[house_number_extension]"]').addClass('error-form');
+          isValidForConfirm = false;
         }
-        if (e.address[0].city != 'undefined') {
-          $('[name="'+type+'[city]"]').val(e.address[0].city).removeClass('error-form').addClass('was-validated is-valid');
-        } else {
-          $('[name="'+type+'[city]"]').val('').removeClass('was-validated is-valid').addClass('error-form');
-        }
-        if (e.address[0].street != 'undefined') {
-          $('[name="'+type+'[address1]"]').val(e.address[0].street).removeClass('error-form').addClass('was-validated is-valid');
-        } else {
-          $('[name="'+type+'[address1]"]').val('').removeClass('was-validated is-valid').addClass('error-form');
-        }
+
+
       } else if (e.valid != false && e.address.length > 0 && e.address[0].hasOwnProperty('be_fourpp')) {
-
-        // is een belgisch adres
-        $('[name="'+type+'[postcode]"]').removeClass('error-form').removeClass('was-validated is-valid');
-        $('[name="'+type+'[id_country]"]').removeClass('error-form').addClass('was-validated is-valid');
-
-        $('[name="'+type+'[house_number]"]').removeClass('error-form').removeClass('was-validated is-valid');
-        $('[name="'+type+'[house_number_extension]"]').removeClass('error-form').removeClass('was-validated is-valid');
 
         if (e.address[0].city_nl != undefined) {
           $('[name="'+type+'[city]"]').val(e.address[0].city_nl).removeClass('error-form').addClass('was-validated is-valid');
         }
         $('[name="'+type+'[address1]"]').val(e.address[0].street_nl).removeClass('error-form').removeClass('was-validated is-valid');
+        isValidForConfirm = true;
+
+        // is een belgisch adres
+        $('[name="'+type+'[postcode]"]').removeClass('error-form').removeClass('was-validated is-valid');
+
+        $('[name="'+type+'[id_country]"]').removeClass('error-form').addClass('was-validated is-valid');
+        $('[name="'+type+'[house_number]"]').removeClass('error-form').removeClass('was-validated is-valid');
+
+        $('[name="'+type+'[house_number_extension]"]').removeClass('error-form').removeClass('was-validated is-valid');
+
+
       }  else if (e.valid != false && e.address.length == 1 && e.address[0].hasOwnProperty('street_nl')) {
 
 
@@ -767,6 +782,7 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
         if ($('[name="'+type+'[house_number]"]').val().length > 0) {
           $('[name="'+type+'[house_number]"]').removeClass('error-form').addClass('was-validated is-valid');
           $('[name="'+type+'[house_number_extension]"]').removeClass('error-form').addClass('was-validated is-valid');
+          isValidForConfirm = true;
         } else {
           $('[name="'+type+'[house_number]"]').addClass('error-form');
           $('[name="'+type+'[house_number]"]').siblings('.errorsmall').remove();
@@ -775,9 +791,11 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
           }
 
           $('[name="'+type+'[house_number_extension]"]').addClass('error-form');
+          isValidForConfirm = false;
         }
         // is een belgisch adres
       } else if (e.valid != false && e.address.length > 1) {
+        isValidForConfirm = false;
         let htmlList = '<ul>';
         for (let i = 0; i < e.address.length; i++) {
           htmlList += `<li class="selectStreetAutoFill">${e.address[i].street_nl}</li>`;
@@ -788,11 +806,13 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
       } else {
         if (e.msg == 'Fetching address failed') {
           $('[name="'+type+'[address1]"]').val('').addClass('error-form').removeClass('was-validated is-valid');
+          isValidForConfirm = false;
         }
 
         if(e.msg.hasOwnProperty('field') && e.msg.field !== undefined){
           $('[name="'+type+'['+e.msg.field+']"]').siblings('.errorsmall').remove();
           $('[name="'+type+'['+e.msg.field+']"]').parent().append('<span class="errorsmall">' + e.msg.msg + '</span>');
+          isValidForConfirm = false;
         }
         $('[name="'+type+'[postcode]"]').removeClass('error-form').addClass('was-validated is-valid');
 
@@ -813,6 +833,7 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
             }
             $(`[name="'+type+'[$]{e.msg.field}"]`).removeClass('is-valid').addClass('error-form');
             $(`[name="'+type+'[$]{e.msg.field}"]`).siblings('.address-error-msg').text(null).text(e.msg.msg);
+            isValidForConfirm = false;
           }
         } else if (e.msg === 'ok' && e.valid) {
           $('[name="'+type+'[id_country]"]').removeClass('error-form').addClass('was-validated is-valid');
@@ -827,19 +848,32 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
           }
           $('[name="'+type+'[city]"]').removeClass('error-form').addClass('was-validated is-valid');
           $('[name="'+type+'[address1]"]').removeClass('error-form').addClass('was-validated is-valid');
+          isValidForConfirm = true;
         }
       }
 
       if (e.valid && e.address[0].streetnumbers === undefined) {
         $('[name="'+type+'[house_number]"]').parent().find('.errorsmall').remove();
       }
+      if(isValidForConfirm){
+        disEnConfirmButton(false);
+      } else {
+        disEnConfirmButton(true);
+      }
     })
     .fail((e) => {
+        disEnConfirmButton(true);
     });
 }
 
 
-
+function disEnConfirmButton(disable=false){
+  if(disable){
+    $('#supercheckout_confirm_order').attr('disabled',true);
+  } else {
+    $('#supercheckout_confirm_order').attr('disabled',false);
+  }
+}
 
 
 //Function created by Anshul to apply inline validation so that it can be called anywhere after AJAX success in order to re-bind the events

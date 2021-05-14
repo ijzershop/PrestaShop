@@ -917,7 +917,7 @@ $_MODULE['<{supercheckout}prestashop>supercheckout_f430bd2f85c4424dabd003de2ddf3
 $_MODULE['<{supercheckout}prestashop>supercheckout_9a8a03c93cd56fd0a3b78b199abd6e32'] = 'Speciale tekens;? = + @ # ° {} _ $% zijn niet toegestaan';
 $_MODULE['<{supercheckout}prestashop>supercheckout_cfcc117ef58f48e2a40f67f0d0add677'] = 'Speciale tekens? = + @ {} _ $% Zijn niet toegestaan';
 $_MODULE['<{supercheckout}prestashop>supercheckout_59390129fa27c090ab9277a7a014074f'] = 'Speciale tekens = {} zijn niet toegestaan';
-$_MODULE['<{supercheckout}prestashop>supercheckout_fc469871b4ee1ce46dec53b9458875b8'] = 'Alleen + .- () en nummers zijn toegestaan';
+$_MODULE['<{supercheckout}prestashop>supercheckout_fc469871b4ee1ce46dec53b9458875b8'] = 'Een telefoonnummer heeft minimaal 10 cijfers en mag Alleen + .- () en cijfers bevatten';
 $_MODULE['<{supercheckout}prestashop>supercheckout_a505cb1b6db149b0ad593b45c32241f1'] = 'Speciale karakters zijn niet toegestaan';
 $_MODULE['<{supercheckout}prestashop>supercheckout_9fe934ea1a5d2ffceadbe46c1391dad4'] = 'Ongeldige geboortedatum';
 $_MODULE['<{supercheckout}prestashop>supercheckout_f4e06f9319b3dd1236f80bd7c9a330da'] = 'ongeldig land';

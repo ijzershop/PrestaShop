@@ -430,114 +430,7 @@ $(document).ready(function() {
         loadPaymentAddtionalInfo();
     });
 
-    $("#supercheckout_confirm_order").click(function () {
-      var add_to_order_carrier = $('#add_to_order_method_radio').attr('data-carrier-id');
-      if($('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier || $('.supercheckout_shipping_option:checked').attr('value') == 7) {
-        //Is checkout without shipping address
-          var surname_field_value = $('input:text[name="no_shipping_surname"]').val();
-          if (surname_field_value == '') {
-            $('input:text[name="no_shipping_surname"]').parent().find('span.errorsmall').remove();
-            $('input:text[name="no_shipping_surname"]').removeClass('error-form');
-            $('input:text[name="no_shipping_surname"]').removeClass('ok-form');
-            $('input:text[name="no_shipping_surname"]').addClass('error-form');
-            $('input[name="no_shipping_surname"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
-            displayGeneralError(display_general_error_msg);
-            $("html, body").animate({
-              scrollTop: 0
-            }, "fast");
-            return false;
-          }
 
-          var lastname_field_value = $('input:text[name="no_shipping_lastname"]').val();
-          if (lastname_field_value == '') {
-            $('input:text[name="no_shipping_lastname"]').parent().find('span.errorsmall').remove();
-            $('input:text[name="no_shipping_lastname"]').removeClass('error-form');
-            $('input:text[name="no_shipping_lastname"]').removeClass('ok-form');
-            $('input:text[name="no_shipping_lastname"]').addClass('error-form');
-            $('input[name="no_shipping_lastname"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
-            displayGeneralError(display_general_error_msg);
-            $("html, body").animate({
-              scrollTop: 0
-            }, "fast");
-            return false;
-          }
-
-        var phone_field_value = $('input:text[name="no_shipping_phone"]').val();
-        if (phone_field_value == '') {
-          $('input:text[name="no_shipping_phone"]').parent().find('span.errorsmall').remove();
-          $('input:text[name="no_shipping_phone"]').removeClass('error-form');
-          $('input:text[name="no_shipping_phone"]').removeClass('ok-form');
-          $('input:text[name="no_shipping_phone"]').addClass('error-form');
-          $('input[name="no_shipping_phone"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
-          displayGeneralError(display_general_error_msg);
-          $("html, body").animate({
-            scrollTop: 0
-          }, "fast");
-          return false;
-        }
-
-        if($('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier) {
-          var added_to_order_field_value = $('input:text[name="added_to_order"]').val();
-          if (added_to_order_field_value == '') {
-            $('#desired_reference').parent().find('span.errorsmall').remove();
-            $('#desired_reference').removeClass('error-form');
-            $('#desired_reference').removeClass('ok-form');
-            $('#desired_reference').addClass('error-form');
-            $('#desired_reference').parent().append('<span class="errorsmall col-12">Selecteer a.u.b. de bestelling waaraan u deze aankoop aan toe wilt voegen</span>');
-            displayGeneralError(display_general_error_msg);
-            $("html, body").animate({
-              scrollTop: 800
-            }, "fast");
-            return false;
-          }
-        }
-
-
-        //No shipping so fill shipping address with custom data to prevent empty errors
-        var company_field_value = $('input:text[name="no_shipping_company"]').val();
-
-        $('input[name="shipping_address[company]"]').val(company_field_value);
-        $('input[name="shipping_address[firstname]"]').val(surname_field_value);
-        $('input[name="shipping_address[lastname]"]').val(lastname_field_value);
-        $('input[name="shipping_address[address1]"]').val("Ceresweg");
-        $('input[name="shipping_address[house_number]"]').val("1");
-        $('input[name="shipping_address[house_number_extension]"]').val("");
-        $('input[name="shipping_address[postcode]"]').val("8938 BC");
-        $('input[name="shipping_address[city]"]').val("Leeuwarden");
-        $('input[name="shipping_address[id_country]"]').val("13");
-        $('input[name="shipping_address[phone]"]').val(phone_field_value);
-        $('#use_for_invoice').prop('checked','checked');
-      }
-
-
-        if ($('input:text[name="supercheckout_email"]').length != 0) {
-            var email_field_value = $('input:text[name="supercheckout_email"]').val();
-            if (email_field_value == '') {
-                $('input:text[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
-                $('input:text[name="supercheckout_email"]').removeClass('error-form');
-                $('input:text[name="supercheckout_email"]').removeClass('ok-form');
-                $('input:text[name="supercheckout_email"]').addClass('error-form');
-                $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
-                displayGeneralError(display_general_error_msg);
-                $("html, body").animate({
-                    scrollTop: 0
-                }, "fast");
-                return false;
-            } else if (!validateEmail(email_field_value)) {
-                $('input:text[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
-                $('input:text[name="supercheckout_email"]').removeClass('error-form');
-                $('input:text[name="supercheckout_email"]').removeClass('ok-form');
-                $('input:text[name="supercheckout_email"]').addClass('error-form');
-                $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + invalid_email + '</span>');
-                displayGeneralError(display_general_error_msg);
-                $("html, body").animate({
-                    scrollTop: 0
-                }, "fast");
-                return false;
-            }
-        }
-        placeOrder();
-    });
 
   $('input:text[name="no_shipping_surname"], input:text[name="no_shipping_lastname"], #desired_reference, input:text[name="no_shipping_phone"]').on('focus', function() {
     $(this).removeClass('error-form');
@@ -721,12 +614,17 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
     .done((e) => {
       var isValidForConfirm = false;
       $('.address-error-msg').text(null);
+      $('.errorsmall').text(null);
 
       if (e.valid != false && e.address.length > 0 && e.address[0].hasOwnProperty('nl_sixpp')) { // is een nederlands adres
-
+console.log('nederlands sixxpp');
         $('[name="'+type+'[id_country]"]').removeClass('error-form').addClass('was-validated is-valid');
         $('[name="'+type+'[postcode]"]').removeClass('error-form').addClass('was-validated is-valid');
         $('[name="'+type+'[city]"]').removeClass('error-form').addClass('was-validated is-valid');
+
+        if (e.address[0].city != undefined) {
+          $('[name="'+type+'[city]"]').val(e.address[0].city).removeClass('error-form').addClass('was-validated is-valid');
+        }
 
         if (e.address[0].street != 'undefined') {
           $('[name="'+type+'[address1]"]').val(e.address[0].street).removeClass('error-form').addClass('was-validated is-valid');
@@ -752,7 +650,7 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
 
 
       } else if (e.valid != false && e.address.length > 0 && e.address[0].hasOwnProperty('be_fourpp')) {
-
+        console.log('Belgie fourpp');
         if (e.address[0].city_nl != undefined) {
           $('[name="'+type+'[city]"]').val(e.address[0].city_nl).removeClass('error-form').addClass('was-validated is-valid');
         }
@@ -769,7 +667,7 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
 
 
       }  else if (e.valid != false && e.address.length == 1 && e.address[0].hasOwnProperty('street_nl')) {
-
+        console.log('nederlands street_nl');
 
         $('[name="'+type+'[address1]"]').val(e.address[0].street_nl).removeClass('error-form').addClass('was-validated is-valid');
         if ($('[name="'+type+'[house_number]"]').val().length > 0) {
@@ -788,6 +686,7 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
         }
         // is een belgisch adres
       } else if (e.valid != false && e.address.length > 1) {
+        console.log('Begisch multiple');
         isValidForConfirm = false;
         let htmlList = '<ul>';
         for (let i = 0; i < e.address.length; i++) {
@@ -797,38 +696,45 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
         $('#suggesstion-box-street').html(htmlList);
         // is een belgisch adres
       } else {
+        console.log('Failed but has message');
         if (e.msg == 'Fetching address failed') {
           $('[name="'+type+'[address1]"]').val('').addClass('error-form').removeClass('was-validated is-valid');
           isValidForConfirm = false;
         }
 
-        if(e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field !== undefined){
-          $('[name="'+ e.msg.field + '"]').removeClass('is-valid').addClass('error-form');
-          $('[name="'+ e.msg.field + '"]').siblings('.address-error-msg').text(null).text(e.msg.msg);
-          isValidForConfirm = false;
+        if (e.valid && e.address[0].streetnumbers === undefined) {
+          $('[name="'+type+'[house_number]"]').parent().find('.errorsmall').remove();
         }
+
         $('[name="'+type+'[postcode]"]').removeClass('error-form').addClass('was-validated is-valid');
 
-        $('[name="'+type+'[house_number]"]').removeClass('error-form').removeClass('was-validated is-valid');
-        $('[name="'+type+'[house_number_extension]"]').removeClass('error-form').removeClass('was-validated is-valid');
-        $('[name="'+type+'[address1]"]').removeClass('error-form').removeClass('was-validated is-valid');
+        $('[name="'+type+'[house_number]"]').removeClass('error-form').addClass('was-validated is-valid');
+        $('[name="'+type+'[house_number_extension]"]').removeClass('error-form').addClass('was-validated is-valid');
+        $('[name="'+type+'[address1]"]').removeClass('error-form').addClass('was-validated is-valid');
 
         $('[name="'+type+'[id_country]"]').removeClass('error-form').addClass('was-validated is-valid');
+        $('[name="'+type+'[city]"]').removeClass('error-form').addClass('was-validated is-valid');
 
-        $('[name="'+type+'[city]"]').removeClass('error-form').addClass('is-valid');
+        if(e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field !== undefined){
+          $('[name="'+type+'['+ e.msg.field + ']"]').removeClass('is-valid').addClass('error-form');
+          $('[name="'+type+'['+ e.msg.field + ']"]').parent().append('<span class="errorsmall">' + e.msg.msg + '</span>');
+          isValidForConfirm = false;
+        }
 
-        if (e.msg !== 'ok') {
-          if (e.msg !== null && e.msg.hasOwnProperty('field') &&  e.msg.field) {
-            if (e.msg.field === 'house_number') {
-              $('[name="'+type+'[house_number_extension]"]').removeClass('is-valid').addClass('error-form');
-              $('[name="'+type+'[address1]"]').removeClass('is-valid').addClass('error-form');
-              $('[name="'+type+'[address1]"]').siblings('.address-error-msg').text(null).text('Het huisnummer kan niet gevonden worden mogelijk is de straat onjuist');
-            }
-            $(`[name="'+type+'[$]{e.msg.field}"]`).removeClass('is-valid').addClass('error-form');
-            $(`[name="'+type+'[$]{e.msg.field}"]`).siblings('.address-error-msg').text(null).text(e.msg.msg);
-            isValidForConfirm = false;
-          }
-        } else if (e.msg === 'ok' && e.valid) {
+
+        // if (e.msg !== 'ok') {
+        //   if (e.msg !== null && e.msg.hasOwnProperty('field') &&  e.msg.field) {
+        //     if (e.msg.field === 'house_number') {
+        //       $('[name="'+type+'[house_number_extension]"]').removeClass('is-valid').addClass('error-form');
+        //       $('[name="'+type+'[address1]"]').removeClass('is-valid').addClass('error-form');
+        //       $('[name="'+type+'[address1]"]').siblings('.address-error-msg').text(null).text('Het huisnummer kan niet gevonden worden mogelijk is de straat onjuist');
+        //     }
+        //     $(`[name="'+type+'[$]{e.msg.field}"]`).removeClass('is-valid').addClass('error-form');
+        //     $(`[name="'+type+'[$]{e.msg.field}"]`).siblings('.address-error-msg').text(null).text(e.msg.msg);
+        //     isValidForConfirm = false;
+        //   }
+        // } else
+        if (e.msg === 'ok' && e.valid) {
           $('[name="'+type+'[id_country]"]').removeClass('error-form').addClass('was-validated is-valid');
           $('[name="'+type+'[postcode]"]').removeClass('error-form').addClass('was-validated is-valid');
 
@@ -845,34 +751,15 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
         }
       }
 
-      if (e.valid && e.address[0].streetnumbers === undefined) {
-        $('[name="'+type+'[house_number]"]').parent().find('.errorsmall').remove();
-      }
+
       if(isValidForConfirm){
         disEnConfirmButton(false);
-
-        $('[name="'+type+'[id_country]"]').removeClass('error-form').addClass('was-validated is-valid');
-        $('[name="'+type+'[postcode]"]').removeClass('error-form').addClass('was-validated is-valid');
-        $('[name="'+type+'[city]"]').removeClass('error-form').addClass('was-validated is-valid');
-        $('[name="'+type+'[id_country]"]').removeClass('error-form').addClass('was-validated is-valid');
       } else {
         disEnConfirmButton(true);
-
-        $('[name="'+type+'[id_country]"]').addClass('error-form').removeClass('was-validated is-valid');
-        $('[name="'+type+'[postcode]"]').addClass('error-form').removeClass('was-validated is-valid');
-        $('[name="'+type+'[city]"]').addClass('error-form').removeClass('was-validated is-valid');
-        $('[name="'+type+'[id_country]"]').addClass('error-form').removeClass('was-validated is-valid');
       }
     })
     .fail((e) => {
         disEnConfirmButton(true);
-      $('[name="'+type+'[address1]"]').addClass('error-form').removeClass('was-validated is-valid');
-      $('[name="'+type+'[house_number]"]').addClass('error-form').removeClass('was-validated is-valid');
-      $('[name="'+type+'[house_number_extension]"]').addClass('error-form').removeClass('was-validated is-valid');
-      $('[name="'+type+'[id_country]"]').addClass('error-form').removeClass('was-validated is-valid');
-      $('[name="'+type+'[postcode]"]').addClass('error-form').removeClass('was-validated is-valid');
-      $('[name="'+type+'[city]"]').addClass('error-form').removeClass('was-validated is-valid');
-      $('[name="'+type+'[id_country]"]').addClass('error-form').removeClass('was-validated is-valid');
     });
 }
 
@@ -2862,20 +2749,21 @@ function addSupercheckoutOrderValidator(validator) {
 }
 /* End Code Added By Priyanshu on 11-Feb-2021 for the packetery ( Zasilkovna ) compatibility */
 
+$( document ).ready(function() {
 // This function is called when ajax request is made
-function placeOrder() {
+  function placeOrder() {
     /* Start Code Added By Priyanshu on 11-Feb-2021 for the packetery ( Zasilkovna ) compatibility */
     var isValid = true;
     $.each(validators, function (i, validator) {
-        try {
-            validator();
-        } catch (error) {
-            isValid = false;
-            displayGeneralError(error.message);
-        }
+      try {
+        validator();
+      } catch (error) {
+        isValid = false;
+        displayGeneralError(error.message);
+      }
     });
     if (!isValid) {
-        return;
+      return;
     }
     /* End Code Added By Priyanshu on 11-Feb-2021 for the packetery ( Zasilkovna ) compatibility */
 
@@ -2883,11 +2771,11 @@ function placeOrder() {
     if ($('#product_not_available .alert').length) {
 //            if (typeof product_not_available !== 'undefined') {
 //                if (product_not_available) {
-        displayGeneralError(zipcode_error);
-        $("html, body").animate({
-            scrollTop: 0
-        }, "fast");
-        return;
+      displayGeneralError(zipcode_error);
+      $("html, body").animate({
+        scrollTop: 0
+      }, "fast");
+      return;
 //                }
 //            }
     }
@@ -2897,442 +2785,507 @@ function placeOrder() {
      * Start: Added by Anshul to check if opened form is saved or not.
      */
     if ($('.shipping_update_form').length || ($('.payment_update_form').length && !$('#use_for_invoice').is(':checked'))) {
-        displayGeneralError(save_update_address);
-        $("html, body").animate({
-            scrollTop: 0
-        }, "fast");
-        return;
+      displayGeneralError(save_update_address);
+      $("html, body").animate({
+        scrollTop: 0
+      }, "fast");
+      return;
     }
-     /*
-     * End: Added by Anshul to check if opened form is saved or not.
-     */
+    /*
+    * End: Added by Anshul to check if opened form is saved or not.
+    */
 
 
     if ($('#supercheckout-agree').length) {
-        if ((typeof mandatory_tos != 'undefined') && mandatory_tos) {
-            var is_toc_checked = true;
-            $('#supercheckout-agree input[type="checkbox"]').each(function() {
-                if (!$(this).is(':checked')) {
-                    is_toc_checked = false;
-                }
-            });
-            if (!is_toc_checked) {
-                displayGeneralError(toc_error);
-                $("html, body").animate({
-                    scrollTop: 0
-                }, "fast");
-                return;
-            }
+      if ((typeof mandatory_tos != 'undefined') && mandatory_tos) {
+        var is_toc_checked = true;
+        $('#supercheckout-agree input[type="checkbox"]').each(function () {
+          if (!$(this).is(':checked')) {
+            is_toc_checked = false;
+          }
+        });
+        if (!is_toc_checked) {
+          displayGeneralError(toc_error);
+          $("html, body").animate({
+            scrollTop: 0
+          }, "fast");
+          return;
         }
+      }
     }
 
 
     // changes by rishabh jain for product availablility by zipcode
     if ($('#product_not_available .alert').length) {
-        displayGeneralError(zipcode_error);
-        $("html, body").animate({
-            scrollTop: 0
-        }, "fast");
-        return;
+      displayGeneralError(zipcode_error);
+      $("html, body").animate({
+        scrollTop: 0
+      }, "fast");
+      return;
     }
     // changes over
     var fd = new FormData();
     //Code added by Anshul to upload and save the files first
-    $('input[type="file"]').each(function() {
-        if ($(this).hasClass('kbfiletype')) {
-            if ($(this).prop('files').length != 0) {
-                fd.append($(this).attr('name'), $(this)[0].files[0]);
-            }
+    $('input[type="file"]').each(function () {
+      if ($(this).hasClass('kbfiletype')) {
+        if ($(this).prop('files').length != 0) {
+          fd.append($(this).attr('name'), $(this)[0].files[0]);
         }
+      }
     });
 
     if ($('.kbfiletype').length) {
-        display_progress(5);
-        if (validateFilesData()) {
-            upload(fd);
-        } else {
-            displayGeneralError(validationfailedMsg);
-            return false;
-        }
+      display_progress(5);
+      if (validateFilesData()) {
+        upload(fd);
+      } else {
+        displayGeneralError(validationfailedMsg);
+        return false;
+      }
     } else {
-        display_progress(10);
-        kbAfterPlaceOrder();
+      display_progress(10);
+      kbAfterPlaceOrder();
     }
-
+    return;
     //    if (!confirm(order_place_confirmation)) {
     //        return;
     //    }
 
-}
+  }
 
-/*
- * Added by Anshul for making it compatible with PayPlug
- */
+  /*
+   * Added by Anshul for making it compatible with PayPlug
+   */
 
-function loadPaymentsPayPlug() {
+  function loadPaymentsPayPlug() {
     var params = '';
     if ($('input:radio[name="payment_method"]').length) {
-        params = '&selected_payment_method_id=' + $('input:radio[name="payment_method"]:checked').val();
+      params = '&selected_payment_method_id=' + $('input:radio[name="payment_method"]:checked').val();
     }
     $.ajax({
-        type: 'POST',
-        headers: {
-            "cache-control": "no-cache"
-        },
-        url: getURLwithTime($('#module_url').val()),
-        async: true,
-        cache: false,
-        dataType: "json",
-        data: 'ajax=true' + params + '&method=loadPayment&token=' + prestashop.static_token + '&lightbox=1',
-        beforeSend: function() {
-            $('#payment_method_update_warning .permanent-warning').remove();
-            $('.kb_velsof_sc_overlay').show();$('.pay-loader').show();
-            $('#paymentMethodLoader').show();
-        },
-        complete: function() {
-            $('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
-            $('#paymentMethodLoader').hide();
-        },
-        success: function(jsonData) {
-            $('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
-            $('#paymentMethodLoader').hide();
-            $('#payment-method').html(jsonData['html']);
-            set_column_inside_height();
-            loadPaymentAddtionalInfo();
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-            $('#payment_method_update_warning').html('<div class="permanent-warning">' + errors + '</div>');
-            $('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
-        }
+      type: 'POST',
+      headers: {
+        "cache-control": "no-cache"
+      },
+      url: getURLwithTime($('#module_url').val()),
+      async: true,
+      cache: false,
+      dataType: "json",
+      data: 'ajax=true' + params + '&method=loadPayment&token=' + prestashop.static_token + '&lightbox=1',
+      beforeSend: function () {
+        $('#payment_method_update_warning .permanent-warning').remove();
+        $('.kb_velsof_sc_overlay').show();
+        $('.pay-loader').show();
+        $('#paymentMethodLoader').show();
+      },
+      complete: function () {
+        $('.kb_velsof_sc_overlay').hide();
+        $('.pay-loader').hide();
+        $('#paymentMethodLoader').hide();
+      },
+      success: function (jsonData) {
+        $('.kb_velsof_sc_overlay').hide();
+        $('.pay-loader').hide();
+        $('#paymentMethodLoader').hide();
+        $('#payment-method').html(jsonData['html']);
+        set_column_inside_height();
+        loadPaymentAddtionalInfo();
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
+        $('#payment_method_update_warning').html('<div class="permanent-warning">' + errors + '</div>');
+        $('.kb_velsof_sc_overlay').hide();
+        $('.pay-loader').hide();
+      }
     });
-}
+  }
 
-/*
- * Added by Anshul for calling the Place order after file upload
- */
+  /*
+   * Added by Anshul for calling the Place order after file upload
+   */
 
-function kbAfterPlaceOrder() {
+  function kbAfterPlaceOrder() {
     $('.errorsmall').remove();
     hideGeneralError();
     var payment_module_name = $('input:radio[name="payment_method"]:checked').attr('data-module-name');
     // Start: Added by Anshul for PayPlug
     if (payment_module_name == 'payplug') {
-        loadPaymentsPayPlug();
+      loadPaymentsPayPlug();
     }
 
     //enable country selectboxes for fetching with serialized
     $('select[name="shipping_address[id_country]"]').prop('disabled', false);
+    $('input[name="shipping_address[address1]"]').prop('disabled', false);
+    $('input[name="shipping_address[city]"]').prop('disabled', false);
     $('select[name="payment_address[id_country]"]').prop('disabled', false);
+    $('input[name="payment_address[address1]"]').prop('disabled', false);
+    $('input[name="payment_address[city]"]').prop('disabled', false);
     // End: Added by Anshul for PayPlug
     var errors = '';
     $.ajax({
-        type: 'POST',
-        headers: {
-            "cache-control": "no-cache"
-        },
-        url: getURLwithTime($('#module_url').val()) + '&ajax=true',
-        async: true,
-        cache: false,
-        dataType: "json",
-        data: $('#velsof_supercheckout_form').serialize(),
-        beforeSend: function() {
-            display_progress(20);
-            $('select[name="shipping_address[id_country]"]').prop('disabled', true);
-            $('select[name="payment_address[id_country]"]').prop('disabled', true);
-        },
-        complete: function() {
-          //disable country selectboxes when fetching is done with serialized
-          $('input[name="shipping_address[id_country]"]').prop('disabled', false);
-          $('input[name="payment_address[id_country]"]').prop('disabled', false);
-        },
-        success: function(jsonData) {
-
-            // Checking if jsonData is having property as custom_fields_errors
-            // If true it means that all other validations are correct and error occured in custom fields
-            if (jsonData.hasOwnProperty('custom_fields_errors')) {
-                $(".errorsmall_custom").hide();
-                $(".errorsmall_custom").parent().parent().css("border-color", "#CCCCCC");
-                $.each(jsonData.custom_fields_errors.error, function(key, data) {
-                    hide_progress();
-                    $("html, body").animate({
-                        scrollTop: 0
-                    }, "fast");
-                    $("#error_" + key).html(data);
-                    $("#error_" + key).show();
-                    $("#error_" + key).parent().parent().css("border-color", "#FF0000");
-                });
-            }
-
-            if (jsonData['error'] != undefined) {
-                var has_validation_error = false;
-                var i = 0;
-                if (jsonData['error']['checkout_option'] != undefined) {
-                    has_validation_error = true;
-                    for (i in jsonData['error']['checkout_option']) {
-                        $('input[name="' + jsonData['error']['checkout_option'][i]['key'] + '"]').parent().append('<span class="errorsmall">' + jsonData['error']['checkout_option'][i]['error'] + '</span>');
-                        if (inline_validation == 1)
-                            $('input[name="' + jsonData['error']['checkout_option'][i]['key'] + '"]').addClass('error-form').removeClass('ok-form');
-                    }
-                }
-
-                var i = 0;
-                var key = '';
-                if (jsonData['error']['customer_personal'] != undefined) {
-                    has_validation_error = true;
-                    for (i in jsonData['error']['customer_personal']) {
-                        key = jsonData['error']['customer_personal'][i]['key'];
-                        if (key == 'dob' || key == 'id_gender') {
-                            $('.supercheckout_personal_' + key).append('<span class="errorsmall">' + jsonData['error']['customer_personal'][i]['error'] + '</span>');
-                        } else if (key == 'password') {
-                            $('input[name="customer_personal[' + key + ']"]').parent().append('<span class="errorsmall">' + jsonData['error']['customer_personal'][i]['error'] + '</span>');
-                            if (inline_validation == 1)
-                                $('input[name="customer_personal[' + key + ']"]').addClass('error-form').removeClass('ok-form');
-                        } else {
-                            $('input[name="customer_personal[' + key + ']"]').parent().parent().parent().parent().append('<span class="errorsmall">' + jsonData['error']['customer_personal'][i]['error'] + '</span>');
-                            if (inline_validation == 1)
-                                $('input[name="customer_personal[' + key + ']"]').addClass('error-form').removeClass('ok-form');
-                        }
-                    }
-                }
-
-                var tmp_index;
-                if (jsonData['error']['shipping_address'] != undefined) {
-                    has_validation_error = true;
-                    for (tmp_index in jsonData['error']['shipping_address']) {
-                        var element_name = jsonData['error']['shipping_address'][tmp_index]['key'];
-                        $('input[name="shipping_address[' + element_name + ']"], select[name="shipping_address[' + element_name + ']"]').parent().append('<span class="errorsmall">' + jsonData['error']['shipping_address'][tmp_index]['error'] + '</span>');
-                        if (inline_validation == 1)
-                            $('input[name="shipping_address[' + element_name + ']"]').addClass('error-form').removeClass('ok-form');
-                        if (jsonData['error']['shipping_address'][tmp_index]['key'] == 'postcode')
-                            $('#shipping_post_code').css("display", "block");
-                        // helpful when postcode is hidden from our module but is equired for some country
-                        delete element_name;
-                    }
-                }
-
-                var tmp_index;
-                if (jsonData['error']['payment_address'] != undefined) {
-                    has_validation_error = true;
-                    for (tmp_index in jsonData['error']['payment_address']) {
-                        var element_name = jsonData['error']['payment_address'][tmp_index]['key'];
-                        $('input[name="payment_address[' + element_name + ']"], select[name="payment_address[' + element_name + ']"]').parent().append('<span class="errorsmall">' + jsonData['error']['payment_address'][tmp_index]['error'] + '</span>');
-                        if (inline_validation == 1)
-                            $('input[name="payment_address[' + element_name + ']"]').addClass('error-form').removeClass('ok-form');
-                        if (jsonData['error']['payment_address'][tmp_index]['key'] == 'postcode')
-                            $('#payment_post_code').css("display", "block");
-                        // helpful when postcode is hidden from our module but is equired for some country
-                        delete element_name;
-                    }
-                }
-                i = 0;
-                if (jsonData['error']['general'] != undefined) {
-                    errors = '';
-                    for (var i in jsonData['error']['general']) {
-                        errors += jsonData['error']['general'][i] + '<br>';
-                    }
-                } else if (has_validation_error) {
-                    errors = validationfailedMsg;
-                } else {
-                    errors = scOtherError;
-                }
-                displayGeneralError(errors);
-                hide_progress();
-                $("html, body").animate({
-                    scrollTop: 0
-                }, "fast");
-            } else {
-                if (jsonData['warning'] != undefined) {//handle warning here
-                }
-                display_progress(30);
-                var is_carrier_selected = true;
-
-                //validate Methods
-                $('#shipping-method .supercheckout-checkout-content .permanent-warning').remove();
-                if ($('#shipping-method .supercheckout_shipping_option').length) {
-                    if (!$('#shipping-method .supercheckout_shipping_option:checked').length) {
-                        is_carrier_selected = false;
-                    }
-                }
-
-                var is_payment_selected = true;
-                $('#payment-method .supercheckout-checkout-content .permanent-warning').remove();
-                if ($('#payment-method input[name="payment_method"]').length) {
-                    if (!$('#payment-method input[name="payment_method"]:checked').length) {
-                        is_payment_selected = false;
-                    }
-                }
-
-                if (is_virtual_cart) {
-                    is_carrier_selected = true;
-                }
-
-                if (!is_carrier_selected) {
-                    $('#shipping-method .supercheckout-checkout-content').html('<div class="permanent-warning">' + ShippingRequired + '</div>');
-                }
-                if (!is_payment_selected) {
-                    $('#payment-method .supercheckout-checkout-content').html('<div class="permanent-warning">' + paymentRequired + '</div>');
-                }
-
-                if (!is_carrier_selected || !is_payment_selected) {
-                    hide_progress();
-                    displayGeneralError('Please provide required Information');
-                    $("html, body").animate({
-                        scrollTop: 0
-                    }, "fast");
-                } else {
-                    display_progress(50);
-                    //Validate Order Extras
-                    var messagePattern = /[<>{}]/i;
-                    var message = '';
-                    var extrasError = false;
-                    if ($('#supercheckout-comment_order').length) {
-                        message = $('#supercheckout-comment_order').val();
-                        if (messagePattern.test(message)) {
-                            extrasError = true;
-                            $('#supercheckout-comment_order').parent().append('<span class="errorsmall">' + commentInvalid + '</span>');
-                        }
-                    }
-
-                    if ($('#gift').length && $('#gift').is(':checked')) {
-                        message = $('#gift_message').val();
-                        if (messagePattern.test(message)) {
-                            extrasError = true;
-                            $('#gift_message').parent().append('<span class="errorsmall">' + commentInvalid + '</span>');
-                        }
-                    }
-
-                    if (extrasError) {
-                        hide_progress();
-                    } else {
-                        display_progress(80);
-                        if (jsonData['is_free_order']) {
-                            createFreeOrder();
-                        } else {
-
-
-
-                            var selected_payment = $('input:radio[name="payment_method"]:checked').attr('id');
-
-                            /* Start Code added By Priyanshu on 9-Feb-2021 to fix the Mollie Payment Method Compaibility issue */
-                            if ($('input:radio[name="payment_method"]:checked').attr('data-module-name') == "mollie") {
-                                var pay_value = $('input:radio[name="payment_method"]:checked').val();
-                                $('#payment_methods_additional_container .' + pay_value + '_info_container #pay-with-form form').submit();
-                                return;
-                            }
-
-
-//
-//                             /* End Code added By Priyanshu on 9-Feb-2021 to fix the Mollie Payment Method Compaibility issue */
-//
-//                             // Start: Added by Anshul for making it compatible with a4ppaypalpro
-//                             if ($('#payment-method').find("input[data-module-name='a4ppaypalpro']").is(':checked'))
-//                             {
-//                                 $('#a4ppaypalpro_formblock').card({
-//                                     container: '.card-wrapper',
-//                                 });
-//                                 $('.jp-card').css('min-width', 'auto');
-//                             }
-//                             // End: Added by Anshul for making it compatible with a4ppaypalpro
-//
-//
-//                             // Start: Added by Anshul for making it compatible with Amazon Pay
-//                             if ($('input:radio[name="payment_method"]:checked').attr('data-module-name') == 'amzpayments') {
-//                                 $('span#pay_with_amazon_list_button #OffAmazonPaymentsWidgets0').trigger('click');
-//                                 return;
-//                             }
-//                             // End: Added by Anshul for making it compatible with Amazon Pay
-//
-//                             //Start: Added by Anshul for making it compatible with PayPlug
-//                             if (payment_module_name == 'payplug') {
-//                                 setTimeout(function(){ var url = $('#payplug_form_js').data('payment-url');
-//                                 Payplug.showPayment(url); hide_progress();}, 3000);
-//                                 return;
-//                             }
-//                             //End: Added by Anshul for making it compatible with PayPlug
-//
-//                             // Start: Changes made by Anshul Mittal for stripe v2.0.1 - v2.0.3
-//                             if ($('input:radio[name="payment_method"]:checked').attr('data-module-name') == 'stripe_official') {
-//                                 $('#supercheckout_confirm_order_kb').trigger('click');
-//                                 return;
-//                             }
-//                             // End: Changes made by Anshul Mittal for stripe v2.0.1 - v2.0.3
-//
-//                             // Start: Changes made by Anshul Mittal for PayPal Plus
-//                             if (payment_module_name == 'paypalplus') {
-// //                                if (isSelectedPPP()) {
-//                                 var disabled = $("#pppContinueButton").prop('disabled');
-//                                 if ((typeof disabled != 'undefined') && !disabled) {
-//                                     doPaypalPlusCheckout();
-//                                     return;
-//                                 }
-// //                                }
-//                             }
-//                             // Start: Changes made by Anshul Mittal for PayPal Plus
-//
-//                             // Start: Changes done by Anshul for KLARNA PAYMENT MODULE
-//                             if (payment_module_name == 'klarnapayments_pay_later_module' || payment_module_name == 'klarnapayments_pay_over_time_module') {
-//                                 let klarna_options = $('.klarna-container');
-//                                 for (let i = 0; i < klarna_options.length; i++) {
-//                                     let payment_category = klarna_options[i].id.substring(26, klarna_options[i].id.length);
-//                                     if ($('input[data-module-name=klarnapayments_' + payment_category + '_module]').is(':checked')) {
-// //                                        event.preventDefault();
-//                                         setupKlarnaAuthCallKb(payment_category);
-//                                         hide_progress();
-//                                         return;
-//                                     }
-//                                 }
-//                             }
-//                             // End: Changes done by Anshul for KLARNA PAYMENT MODULE
-
-                            if (payment_module_name == 'ps_checkout_hostedFields') {
-                                $('#hosted-fields-form').submit();
-                                hide_progress();
-                                $("html, body").animate({scrollTop: $("#hosted-fields-form").offset().top}, "fast");
-                                return;
-                            }
-
-                            if ($('input:radio[name="payment_method"]:checked').hasClass('binary')) {
-                                if ($('#payment_methods_binaries').length) {
-                                    $('#velsof_payment_dialog .velsof_content_section').html($('#payment_methods_binaries .js-payment-' + selected_payment).html());
-                                    $('#placeorderButton').hide();
-                                    if (payment_module_name == 'kbcodwithfee') {      // Code added by Priyanshu on 21-April-2018
-                                        $('#velsof_payment_dialog').hide();
-                                        $('#PayButton').trigger('click');
-                                    }
-                                    else {
-//                                        $('#velsof_payment_dialog').show();
-                                        $('#velsof_payment_dialog .velsof_content_section form').submit();
-                                    }
-                                } else {
-                                    alert('Error with selected Payment Method. Please contact with store.');
-                                }
-                            } else {
-                                if ($('.' + selected_payment + '_info_container #stripe-payment-form').length) {
-                                    $('#velsof_payment_dialog .velsof_content_section #pay-with-form').html('');
-                                    $('#stripe-payment-form').submit();
-                                    hide_progress();
-                                } else {
-                                    $('#velsof_payment_dialog .velsof_content_section form').submit();
-                                }
-                            }
-                        }
-                    }
-
-                }
-            }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-            displayGeneralError(errors);
+      type: 'POST',
+      headers: {
+        "cache-control": "no-cache"
+      },
+      url: getURLwithTime($('#module_url').val()),
+      async: true,
+      cache: false,
+      dataType: "json",
+      data: $('#velsof_supercheckout_form').serialize() + '&ajax=true',
+      beforeSend: function () {
+        display_progress(20);
+        $('select[name="shipping_address[id_country]"]').prop('disabled', true);
+        $('input[name="shipping_address[address1]"]').prop('disabled', true);
+        $('input[name="shipping_address[city]"]').prop('disabled', true);
+        $('select[name="payment_address[id_country]"]').prop('disabled', true);
+        $('input[name="payment_address[address1]"]').prop('disabled', true);
+        $('input[name="payment_address[city]"]').prop('disabled', true);
+      },
+      complete: function () {
+        //disable country selectboxes when fetching is done with serialized
+        $('select[name="shipping_address[id_country]"]').prop('disabled', true);
+        $('input[name="shipping_address[address1]"]').prop('disabled', true);
+        $('input[name="shipping_address[city]"]').prop('disabled', true);
+        $('select[name="payment_address[id_country]"]').prop('disabled', true);
+        $('input[name="payment_address[address1]"]').prop('disabled', true);
+        $('input[name="payment_address[city]"]').prop('disabled', true);
+      },
+      success: function (jsonData) {
+        // Checking if jsonData is having property as custom_fields_errors
+        // If true it means that all other validations are correct and error occured in custom fields
+        if (jsonData.hasOwnProperty('custom_fields_errors')) {
+          $(".errorsmall_custom").hide();
+          $(".errorsmall_custom").parent().parent().css("border-color", "#CCCCCC");
+          $.each(jsonData.custom_fields_errors.error, function (key, data) {
             hide_progress();
             $("html, body").animate({
-                scrollTop: 0
+              scrollTop: 0
             }, "fast");
-            $('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
+            $("#error_" + key).html(data);
+            $("#error_" + key).show();
+            $("#error_" + key).parent().parent().css("border-color", "#FF0000");
+          });
         }
+
+        if (jsonData['error'] != undefined) {
+          var has_validation_error = false;
+          var i = 0;
+          if (jsonData['error']['checkout_option'] != undefined) {
+            has_validation_error = true;
+            for (i in jsonData['error']['checkout_option']) {
+              $('input[name="' + jsonData['error']['checkout_option'][i]['key'] + '"]').parent().append('<span class="errorsmall">' + jsonData['error']['checkout_option'][i]['error'] + '</span>');
+              if (inline_validation == 1)
+                $('input[name="' + jsonData['error']['checkout_option'][i]['key'] + '"]').addClass('error-form').removeClass('ok-form');
+            }
+          }
+
+          var i = 0;
+          var key = '';
+          if (jsonData['error']['customer_personal'] != undefined) {
+            has_validation_error = true;
+            for (i in jsonData['error']['customer_personal']) {
+              key = jsonData['error']['customer_personal'][i]['key'];
+              if (key == 'dob' || key == 'id_gender') {
+                $('.supercheckout_personal_' + key).append('<span class="errorsmall">' + jsonData['error']['customer_personal'][i]['error'] + '</span>');
+              } else if (key == 'password') {
+                $('input[name="customer_personal[' + key + ']"]').parent().append('<span class="errorsmall">' + jsonData['error']['customer_personal'][i]['error'] + '</span>');
+                if (inline_validation == 1)
+                  $('input[name="customer_personal[' + key + ']"]').addClass('error-form').removeClass('ok-form');
+              } else {
+                $('input[name="customer_personal[' + key + ']"]').parent().parent().parent().parent().append('<span class="errorsmall">' + jsonData['error']['customer_personal'][i]['error'] + '</span>');
+                if (inline_validation == 1)
+                  $('input[name="customer_personal[' + key + ']"]').addClass('error-form').removeClass('ok-form');
+              }
+            }
+          }
+
+          var tmp_index;
+          if (jsonData['error']['shipping_address'] != undefined) {
+            has_validation_error = true;
+            for (tmp_index in jsonData['error']['shipping_address']) {
+              var element_name = jsonData['error']['shipping_address'][tmp_index]['key'];
+              $('input[name="shipping_address[' + element_name + ']"], select[name="shipping_address[' + element_name + ']"]').parent().append('<span class="errorsmall">' + jsonData['error']['shipping_address'][tmp_index]['error'] + '</span>');
+              if (inline_validation == 1)
+                $('input[name="shipping_address[' + element_name + ']"]').addClass('error-form').removeClass('ok-form');
+              if (jsonData['error']['shipping_address'][tmp_index]['key'] == 'postcode')
+                $('#shipping_post_code').css("display", "block");
+              // helpful when postcode is hidden from our module but is equired for some country
+              delete element_name;
+            }
+          }
+
+          var tmp_index;
+          if (jsonData['error']['payment_address'] != undefined) {
+            has_validation_error = true;
+            for (tmp_index in jsonData['error']['payment_address']) {
+              var element_name = jsonData['error']['payment_address'][tmp_index]['key'];
+              $('input[name="payment_address[' + element_name + ']"], select[name="payment_address[' + element_name + ']"]').parent().append('<span class="errorsmall">' + jsonData['error']['payment_address'][tmp_index]['error'] + '</span>');
+              if (inline_validation == 1)
+                $('input[name="payment_address[' + element_name + ']"]').addClass('error-form').removeClass('ok-form');
+              if (jsonData['error']['payment_address'][tmp_index]['key'] == 'postcode')
+                $('#payment_post_code').css("display", "block");
+              // helpful when postcode is hidden from our module but is equired for some country
+              delete element_name;
+            }
+          }
+          i = 0;
+          if (jsonData['error']['general'] != undefined) {
+            errors = '';
+            for (var i in jsonData['error']['general']) {
+              errors += jsonData['error']['general'][i] + '<br>';
+            }
+          } else if (has_validation_error) {
+            errors = validationfailedMsg;
+          } else {
+            errors = scOtherError;
+          }
+          displayGeneralError(errors);
+          hide_progress();
+          $("html, body").animate({
+            scrollTop: 0
+          }, "fast");
+        } else {
+          if (jsonData['warning'] != undefined) {//handle warning here
+          }
+          display_progress(30);
+          var is_carrier_selected = true;
+
+          //validate Methods
+          $('#shipping-method .supercheckout-checkout-content .permanent-warning').remove();
+          if ($('#shipping-method .supercheckout_shipping_option').length) {
+            if (!$('#shipping-method .supercheckout_shipping_option:checked').length) {
+              is_carrier_selected = false;
+            }
+          }
+
+          var is_payment_selected = true;
+          $('#payment-method .supercheckout-checkout-content .permanent-warning').remove();
+          if ($('#payment-method input[name="payment_method"]').length) {
+            if (!$('#payment-method input[name="payment_method"]:checked').length) {
+              is_payment_selected = false;
+            }
+          }
+
+          if (is_virtual_cart) {
+            is_carrier_selected = true;
+          }
+
+          if (!is_carrier_selected) {
+            $('#shipping-method .supercheckout-checkout-content').html('<div class="permanent-warning">' + ShippingRequired + '</div>');
+          }
+          if (!is_payment_selected) {
+            $('#payment-method .supercheckout-checkout-content').html('<div class="permanent-warning">' + paymentRequired + '</div>');
+          }
+
+          if (!is_carrier_selected || !is_payment_selected) {
+            hide_progress();
+            displayGeneralError('Please provide required Information');
+            $("html, body").animate({
+              scrollTop: 0
+            }, "fast");
+          } else {
+            display_progress(50);
+            //Validate Order Extras
+            var messagePattern = /[<>{}]/i;
+            var message = '';
+            var extrasError = false;
+            if ($('#supercheckout-comment_order').length) {
+              message = $('#supercheckout-comment_order').val();
+              if (messagePattern.test(message)) {
+                extrasError = true;
+                $('#supercheckout-comment_order').parent().append('<span class="errorsmall">' + commentInvalid + '</span>');
+              }
+            }
+
+            if ($('#gift').length && $('#gift').is(':checked')) {
+              message = $('#gift_message').val();
+              if (messagePattern.test(message)) {
+                extrasError = true;
+                $('#gift_message').parent().append('<span class="errorsmall">' + commentInvalid + '</span>');
+              }
+            }
+
+            if (extrasError) {
+              hide_progress();
+            } else {
+              display_progress(80);
+              if (jsonData['is_free_order']) {
+                createFreeOrder();
+              } else {
+
+
+                var selected_payment = $('input:radio[name="payment_method"]:checked').attr('id');
+
+                /* Start Code added By Priyanshu on 9-Feb-2021 to fix the Mollie Payment Method Compaibility issue */
+                if ($('input:radio[name="payment_method"]:checked').attr('data-module-name') == "mollie") {
+                  var pay_value = $('input:radio[name="payment_method"]:checked').val();
+                  $('#payment_methods_additional_container .' + pay_value + '_info_container #pay-with-form form').submit();
+                  return;
+                }
+
+
+                if (payment_module_name == 'ps_checkout_hostedFields') {
+                  $('#hosted-fields-form').submit();
+                  hide_progress();
+                  $("html, body").animate({scrollTop: $("#hosted-fields-form").offset().top}, "fast");
+                  return;
+                }
+
+                if ($('input:radio[name="payment_method"]:checked').hasClass('binary')) {
+                  if ($('#payment_methods_binaries').length) {
+                    $('#velsof_payment_dialog .velsof_content_section').html($('#payment_methods_binaries .js-payment-' + selected_payment).html());
+                    $('#placeorderButton').hide();
+                    if (payment_module_name == 'kbcodwithfee') {      // Code added by Priyanshu on 21-April-2018
+                      $('#velsof_payment_dialog').hide();
+                      $('#PayButton').trigger('click');
+                    } else {
+//                                        $('#velsof_payment_dialog').show();
+                      $('#velsof_payment_dialog .velsof_content_section form').submit();
+                    }
+                  } else {
+                    alert('Error with selected Payment Method. Please contact with store.');
+                  }
+                } else {
+                  if ($('.' + selected_payment + '_info_container #stripe-payment-form').length) {
+                    $('#velsof_payment_dialog .velsof_content_section #pay-with-form').html('');
+                    $('#stripe-payment-form').submit();
+                    hide_progress();
+                  } else {
+                    $('#velsof_payment_dialog .velsof_content_section form').submit();
+                  }
+                }
+              }
+            }
+
+          }
+        }
+
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        console.log([XMLHttpRequest, textStatus, errorThrown]);
+        errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
+        displayGeneralError(errors);
+        hide_progress();
+        $("html, body").animate({
+          scrollTop: 0
+        }, "fast");
+        $('.kb_velsof_sc_overlay').hide();
+        $('.pay-loader').hide();
+      }
     });
-}
+  }
+
+
+
+  $("#supercheckout_confirm_order").click(function (event) {
+    event.preventDefault();
+    var add_to_order_carrier = $('#add_to_order_method_radio').attr('data-carrier-id');
+    if($('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier || $('.supercheckout_shipping_option:checked').attr('value') == 7) {
+      //Is checkout without shipping address
+      var surname_field_value = $('input:text[name="no_shipping_surname"]').val();
+      if (surname_field_value == '') {
+        $('input:text[name="no_shipping_surname"]').parent().find('span.errorsmall').remove();
+        $('input:text[name="no_shipping_surname"]').removeClass('error-form');
+        $('input:text[name="no_shipping_surname"]').removeClass('ok-form');
+        $('input:text[name="no_shipping_surname"]').addClass('error-form');
+        $('input[name="no_shipping_surname"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
+        displayGeneralError(display_general_error_msg);
+        $("html, body").animate({
+          scrollTop: 0
+        }, "fast");
+        return false;
+      }
+
+      var lastname_field_value = $('input:text[name="no_shipping_lastname"]').val();
+      if (lastname_field_value == '') {
+        $('input:text[name="no_shipping_lastname"]').parent().find('span.errorsmall').remove();
+        $('input:text[name="no_shipping_lastname"]').removeClass('error-form');
+        $('input:text[name="no_shipping_lastname"]').removeClass('ok-form');
+        $('input:text[name="no_shipping_lastname"]').addClass('error-form');
+        $('input[name="no_shipping_lastname"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
+        displayGeneralError(display_general_error_msg);
+        $("html, body").animate({
+          scrollTop: 0
+        }, "fast");
+        return false;
+      }
+
+      var phone_field_value = $('input:text[name="no_shipping_phone"]').val();
+      if (phone_field_value == '') {
+        $('input:text[name="no_shipping_phone"]').parent().find('span.errorsmall').remove();
+        $('input:text[name="no_shipping_phone"]').removeClass('error-form');
+        $('input:text[name="no_shipping_phone"]').removeClass('ok-form');
+        $('input:text[name="no_shipping_phone"]').addClass('error-form');
+        $('input[name="no_shipping_phone"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
+        displayGeneralError(display_general_error_msg);
+        $("html, body").animate({
+          scrollTop: 0
+        }, "fast");
+        return false;
+      }
+
+      if($('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier) {
+        var added_to_order_field_value = $('input:text[name="added_to_order"]').val();
+        if (added_to_order_field_value == '') {
+          $('#desired_reference').parent().find('span.errorsmall').remove();
+          $('#desired_reference').removeClass('error-form');
+          $('#desired_reference').removeClass('ok-form');
+          $('#desired_reference').addClass('error-form');
+          $('#desired_reference').parent().append('<span class="errorsmall col-12">Selecteer a.u.b. de bestelling waaraan u deze aankoop aan toe wilt voegen</span>');
+          displayGeneralError(display_general_error_msg);
+          $("html, body").animate({
+            scrollTop: 800
+          }, "fast");
+          return false;
+        }
+      }
+
+
+      //No shipping so fill shipping address with custom data to prevent empty errors
+      var company_field_value = $('input:text[name="no_shipping_company"]').val();
+
+      $('input[name="shipping_address[company]"]').val(company_field_value);
+      $('input[name="shipping_address[firstname]"]').val(surname_field_value);
+      $('input[name="shipping_address[lastname]"]').val(lastname_field_value);
+      $('input[name="shipping_address[address1]"]').val("Ceresweg");
+      $('input[name="shipping_address[house_number]"]').val("1");
+      $('input[name="shipping_address[house_number_extension]"]').val("");
+      $('input[name="shipping_address[postcode]"]').val("8938 BC");
+      $('input[name="shipping_address[city]"]').val("Leeuwarden");
+      $('input[name="shipping_address[id_country]"]').val("13");
+      $('input[name="shipping_address[phone]"]').val(phone_field_value);
+      $('#use_for_invoice').prop('checked','checked');
+    }
+
+    if ($('input:text[name="supercheckout_email"]').length != 0) {
+      var email_field_value = $('input:text[name="supercheckout_email"]').val();
+      if (email_field_value == '') {
+        $('input:text[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
+        $('input:text[name="supercheckout_email"]').removeClass('error-form');
+        $('input:text[name="supercheckout_email"]').removeClass('ok-form');
+        $('input:text[name="supercheckout_email"]').addClass('error-form');
+        $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
+        displayGeneralError(display_general_error_msg);
+        $("html, body").animate({
+          scrollTop: 0
+        }, "fast");
+        return false;
+      } else if (!validateEmail(email_field_value)) {
+        $('input:text[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
+        $('input:text[name="supercheckout_email"]').removeClass('error-form');
+        $('input:text[name="supercheckout_email"]').removeClass('ok-form');
+        $('input:text[name="supercheckout_email"]').addClass('error-form');
+        $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + invalid_email + '</span>');
+        displayGeneralError(display_general_error_msg);
+        $("html, body").animate({
+          scrollTop: 0
+        }, "fast");
+        return false;
+      }
+    }
+    placeOrder();
+  });
+});
 
 function setupKlarnaAuthCallKb(category) {
    $('#velsof_supercheckout_form #placeorderButton #supercheckout_confirm_order').find('button').prop("disabled", true);
@@ -3777,12 +3730,13 @@ function validateMessage(s) {
 }
 
 function validatePhoneNumber(s) {
-    var reg = /^[+0-9. ()-]+$/;
+    var reg = /^[+0-9. ()-].{9,14}$/;
     return reg.test(s);
 }
 function validateEmail(s) {
     /*var reg = unicode_hack(/^[a-z\p{L}0-9!#$%&'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z\p{L}0-9]+$/i, false);*/
-    var reg = unicode_hack(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/i, false);
+    // var reg = unicode_hack(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/i, false);
+    var reg = unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false);
     return reg.test(s);
 }
 

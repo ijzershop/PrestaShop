@@ -113,6 +113,7 @@
   </div>
   <div class="no-shipping-names-row d-none">
     <div class="form-group">
+      {assign var='first_address_loggedin' value=null}
       {if !isset($guest_information)}
         {if $customer.addresses}
           {assign var='first_address_loggedin' value=reset($customer.addresses)}

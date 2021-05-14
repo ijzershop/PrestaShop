@@ -45,7 +45,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
 {
     public function postProcess()
     {
-        parent::postProcess();
+//        parent::postProcess();
 
         //Handle Ajax request
         if (Tools::isSubmit('ajax')) {

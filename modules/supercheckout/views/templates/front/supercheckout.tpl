@@ -840,7 +840,7 @@ font-size: 11px;
                                         <div id="placeorderButton" style="text-align: center;margin-bottom: 10px;">
                                             {* changes over *}
                                             <div id="buttonWithProgres">
-                                                <button  id="supercheckout_confirm_order" class="orangebutton btn btn-success" disabled="disabled">
+                                                <button  id="supercheckout_confirm_order" class="orangebutton btn btn-success">
                                                     {l s='Place Order' mod='supercheckout'}
                                                     <div id="progressbar" style="text-align:center;margin-top: 0px;"></div>
                                                 </button>

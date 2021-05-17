@@ -1573,7 +1573,6 @@ button.cart_quantity_down.qty-btn.decrease_button.quantity-right-plus.btn.btn-pr
 }
 @media(max-width:768px){
 .opc-container .opc_confirmcart #supercheckout_confirm_order.placeorderButton {
-    position: fixed;
     bottom: 0;
     width: 100% !important;
     left: 0;
@@ -1609,7 +1608,6 @@ span.cart-product-price span {
     text-align: revert;
 }
 #supercheckout_confirm_order {
-    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;

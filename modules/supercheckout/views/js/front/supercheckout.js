@@ -504,35 +504,6 @@ $(document).ready(function() {
     if (check_guest_checkout == 'guest')
         $('#guest_checkout').attr("checked", "checked");
 
-    $("#supercheckout_save_address").click(function() {
-        if ($('input:text[name="supercheckout_email"]').length != 0) {
-            var email_field_value = $('input:text[name="supercheckout_email"]').val();
-            if (email_field_value == '') {
-                $('input:text[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
-                $('input:text[name="supercheckout_email"]').removeClass('error-form');
-                $('input:text[name="supercheckout_email"]').removeClass('ok-form');
-                $('input:text[name="supercheckout_email"]').addClass('error-form');
-                $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
-                displayGeneralError(display_general_error_msg);
-                $("html, body").animate({
-                    scrollTop: 0
-                }, "fast");
-                return false;
-            } else if (!validateEmail(email_field_value)) {
-                $('input:text[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
-                $('input:text[name="supercheckout_email"]').removeClass('error-form');
-                $('input:text[name="supercheckout_email"]').removeClass('ok-form');
-                $('input:text[name="supercheckout_email"]').addClass('error-form');
-                $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + invalid_email + '</span>');
-                displayGeneralError(display_general_error_msg);
-                $("html, body").animate({
-                    scrollTop: 0
-                }, "fast");
-                return false;
-            }
-        }
-        saveAddress();
-    });
 
     if ((typeof show_on_supercheckout != 'undefined') && show_on_supercheckout == 'small_buttons') {
         $('#ivss_socialloginizer_buttons').after(loginizer_small);
@@ -866,18 +837,55 @@ function applyInlineValidation() {
                 $(this).addClass('ok-form');
             }
         });
-        $('input[name="supercheckout_email"]').on('blur', function() {
+        $('input[name="supercheckout_email"], input[name="supercheckout_email_validation"]').on('blur', function() {
             if ($(this).val() == '') {
                 $(this).removeClass('error-form');
                 $(this).removeClass('ok-form');
                 $(this).addClass('error-form');
                 $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
             } else if (!validateEmail($(this).val())) {
-                $(this).removeClass('error-form');
-                $(this).removeClass('ok-form');
-                $(this).addClass('error-form');
+              //validate email
+              if($('input:text[name="supercheckout_email_validation"]').val() === "" && unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false).test($(this).val())){
+                $('input:text[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
+                $('input:text[name="supercheckout_email_validation"]').removeClass('error-form');
+                $('input:text[name="supercheckout_email_validation"]').removeClass('ok-form');
+                $('input:text[name="supercheckout_email_validation"]').addClass('error-form');
+                $('input[name="supercheckout_email_validation"]').parent().append('<span class="errorsmall">Valideer a.u.b. uw email adres</span>');
+                displayGeneralError(display_general_error_msg);
+                $("html, body").animate({
+                  scrollTop: 0
+                }, "fast");
+                return false;
+                //please validate
+              } else if($('input:text[name="supercheckout_email"]').val() !== $('input:text[name="supercheckout_email_validation"]').val() && unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false).test($(this).val())) {
+                //not the same
+                $('input:text[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
+                $('input:text[name="supercheckout_email_validation"]').removeClass('error-form');
+                $('input:text[name="supercheckout_email_validation"]').removeClass('ok-form');
+                $('input:text[name="supercheckout_email_validation"]').addClass('error-form');
+                $('input[name="supercheckout_email_validation"]').parent().append('<span class="errorsmall">De email adressen komen niet overeen!</span>');
+                displayGeneralError(display_general_error_msg);
+                $("html, body").animate({
+                  scrollTop: 0
+                }, "fast");
+                return false;
+              } else {
+                $('input:text[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
+                $('input:text[name="supercheckout_email"]').removeClass('error-form');
+                $('input:text[name="supercheckout_email"]').removeClass('ok-form');
+                $('input:text[name="supercheckout_email"]').addClass('error-form');
                 $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + invalid_email + '</span>');
+                displayGeneralError(display_general_error_msg);
+                $("html, body").animate({
+                  scrollTop: 0
+                }, "fast");
+                return false;
+              }
             } else {
+                $('input:text[name="supercheckout_email_validation"]').removeClass('error-form');
+                $('input:text[name="supercheckout_email_validation"]').removeClass('ok-form');
+                $('input:text[name="supercheckout_email_validation"]').addClass('ok-form');
+                $('input:text[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
                 $(this).removeClass('error-form');
                 $(this).removeClass('ok-form');
                 $(this).addClass('ok-form');
@@ -1151,8 +1159,11 @@ function checkout_option(e) {
         $('#guest_checkout').attr('checked', 'checked');
         setGuestInformation();
     }
+
     if (show_delivery_add_for_virtualcart != true) {
         if ($(e).val() == 0) {
+            $('.validate-email').hide();
+            $('#supercheckout_confirm_order').text('Plaats bestelling');
             $('#supercheckout-login-box').show();
             $('#supercheckout-new-customer-form').hide();
             $('#social_login_block').show();
@@ -1172,6 +1183,8 @@ function checkout_option(e) {
             if (!$('#use_for_invoice').is(':checked')) {
                 // $('#checkoutBillingAddress').show();
             }
+            $('.validate-email').show();
+            $('#supercheckout_confirm_order').text('Plaats bestelling');
             $('#supercheckout-login-box').hide();
             $('#new_customer_password').hide();
             $('#social_login_block').hide();
@@ -1192,6 +1205,8 @@ function checkout_option(e) {
             if (!$('#use_for_invoice').is(':checked')) {
                 // $('#checkoutBillingAddress').show();
             }
+            $('.validate-email').show();
+            $('#supercheckout_confirm_order').text('Plaats bestelling & Registreer');
             $('#supercheckout-login-box').hide();
             $('#new_customer_password').show();
             $('#social_login_block').show();
@@ -1217,6 +1232,8 @@ function checkout_option(e) {
     } else // because in case of virtual cart we need to hide delivery address block
     if (show_delivery_add_for_virtualcart == true) {
         if ($(e).val() == 0) {
+            $('.validate-email').hide();
+            $('#supercheckout_confirm_order').text('Plaats bestelling');
             $('#supercheckout-login-box').show();
             $('#supercheckout-new-customer-form').hide();
             $('#social_login_block').show();
@@ -1232,6 +1249,8 @@ function checkout_option(e) {
                 }
             }
         } else if ($(e).val() == 1) {
+            $('.validate-email').show();
+            $('#supercheckout_confirm_order').text('Plaats bestelling');
             $('#supercheckout-login-box').hide();
             $('#new_customer_password').hide();
             $('#social_login_block').hide();
@@ -1248,6 +1267,8 @@ function checkout_option(e) {
                 }
             }
         } else {
+            $('.validate-email').show();
+            $('#supercheckout_confirm_order').text('Plaats bestelling & Registreer');
             $('#supercheckout-login-box').hide();
             $('#new_customer_password').show();
             $('#social_login_block').show();
@@ -3834,8 +3855,18 @@ function validatePhoneNumber(s) {
 function validateEmail(s) {
     /*var reg = unicode_hack(/^[a-z\p{L}0-9!#$%&'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z\p{L}0-9]+$/i, false);*/
     // var reg = unicode_hack(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/i, false);
-    var reg = unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false);
-    return reg.test(s);
+  var reg = unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false);
+    var validationEmail = document.getElementById('supercheckout_email_validation').value;
+    var checkoutOption = document.querySelector('input[name=checkout_option]:checked').value;
+    if(checkoutOption == "0"){
+      return reg.test(s);
+    } else {
+      if(s === validationEmail){
+        return reg.test(s);
+      } else {
+        return false;
+      }
+    }
 }
 
 function validatePasswd(s) {

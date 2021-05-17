@@ -167,12 +167,6 @@
 
 {*      Start extra names by no shipping *}
       <div class="no-shipping-names-row">
-          <div class="form-group">
-            <label class="control-label" for="input-no_shipping_company_name">Bedrijf:</label>
-            <input  type="text" class="form-control percheckout-large-field" name="no_shipping_company_name" id="input-no_shipping_company_name" value=""/>
-          </div>
-      </div>
-      <div class="no-shipping-names-row">
           <div class="row d-flex">
             <div class="form-group col-6 pr-0">
               <label class="control-label" for="input-no_shipping_surname">Voornaam:  <span style="display:inline;" class="supercheckout-required">*</span></label>
@@ -195,16 +189,23 @@
       {*      Start extra names by no shipping *}
 
         <div class="form-group supercheckout-extra-wrap">
-            <!--label class="control-label" for="input-email">E-Mail</label-->
-            <input type="text" name="supercheckout_email" value="" placeholder="{l s='E-Mail' mod='supercheckout'}" id="email" class="form-control supercheckout-large-field">
+            <label class="control-label" for="input-email">E-Mail *</label>
+            <input type="text" name="supercheckout_email" value="" id="email" class="form-control supercheckout-large-field">
         </div>
+
+      <div class="form-group supercheckout-extra-wrap validate-email" style="display:{if $settings['checkout_option'] eq 0}none{else}block{/if};">
+        <label class="control-label" for="input-email">Valideer E-Mail *</label>
+        <input type="text" name="supercheckout_email_validation" value="" id="supercheckout_email_validation" class="form-control supercheckout-large-field">
+      </div>
         <div id="supercheckout-login-box" class="form-group" style="display:{if $settings['checkout_option'] eq 0}block{else}none{/if};">
             <div id="supercheckout-login-password-box" class="supercheckout-extra-wrap">
-                <input type="password" name="supercheckout_password" value="" placeholder="{l s='Password' mod='supercheckout'}" onkeydown="checkAction(event)" id="password" class="form-control margin-b15 supercheckout-large-field">
+              <label class="control-label" for="input-email">Wachtwoord *</label>
+
+              <input type="password" name="supercheckout_password" value=""  onkeydown="checkAction(event)" id="password" class="form-control margin-b15 supercheckout-large-field">
             </div>
             <div id="forgotpasswordlink"><a href="{$forgotten_link}" class="label-link pull-right">{l s='Forgot Password' mod='supercheckout'}</a></div>
             <input type="hidden" name="SubmitLogin" value="SubmitLogin" />
-            <!---->
+
             <p class="loginBtn"><input type="button" value="{l s='Login' mod='supercheckout'}" id="button-login" data-loading-text="Loading..." class="btn btn-primary orangebuttonsmall w-100"><img src="{$module_image_path}loading12.gif" style="display:none;"/></p>
         </div>
 
@@ -308,7 +309,8 @@
           <tr id="new_customer_password" class="sort_data register_type"  data-percentage="0" style="display:{if $settings['checkout_option'] eq 2}block{else}none{/if};" >
                 <td style="display: block;">
                     <div class="form-group ">
-                        <input type="password" name="customer_personal[password]" value="" placeholder="{l s='Password' mod='supercheckout'}" id="password" class="form-control margin-b15">
+                      <label class="control-label" for="password">Wachtwoord *</label>
+                        <input type="password" name="customer_personal[password]" value="" id="password" class="form-control margin-b15">
                     </div>
                 </td>
             </tr>

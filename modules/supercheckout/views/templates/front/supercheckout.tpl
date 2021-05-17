@@ -830,7 +830,8 @@ font-size: 11px;
                                         <!--h2>Confirm Your Order</h2-->
                                         <div class="supercheckout-checkout-content"> </div>
                                         <div class="form-group" id="supercheckout-comments" style="{if $logged}{if $settings['confirm']['order_comment_box']['logged']['display'] eq 1}display:block{else}display:none{/if}{else}{if $settings['confirm']['order_comment_box']['guest']['display'] eq 1}display:block{else}display:none{/if}{/if};">
-                                            <textarea id="supercheckout-comment_order" class="form-control" name="comment" placeholder="{l s='Add Comments About Your Order' mod='supercheckout'}"></textarea>
+                                            <textarea id="supercheckout-comment_order" maxlength="70" class="form-control" name="comment" placeholder="{l s='Add Comments About Your Order' mod='supercheckout'}"></textarea>
+                                            <span id="order_comment_box_totals">0/70 tekens</span>
                                         </div>
 
                                         <div id='order-shipping-extra'>
@@ -840,8 +841,8 @@ font-size: 11px;
                                         <div id="placeorderButton" style="text-align: center;margin-bottom: 10px;">
                                             {* changes over *}
                                             <div id="buttonWithProgres">
-                                                <button  id="supercheckout_confirm_order" class="orangebutton btn btn-success">
-                                                    {l s='Place Order' mod='supercheckout'}
+                                                <button id="supercheckout_confirm_order" class="orangebutton btn btn-success">
+                                                  {if $settings['checkout_option'] eq 2}Plaats Bestelling & Registreer{else}{l s='Place Order' mod='supercheckout'}{/if}
                                                     <div id="progressbar" style="text-align:center;margin-top: 0px;"></div>
                                                 </button>
                                             </div>
@@ -929,6 +930,12 @@ font-size: 11px;
         {/if}
 
         <script>
+
+          document.getElementById('supercheckout-comment_order').onkeyup =  function() {
+              document.getElementById('order_comment_box_totals').innerText = this.value.length+'/70 tekens';
+            };
+
+
             var default_country = {$default_country};
             var js_countries = '{json_encode($countries)|addslashes nofilter}{*escape not required as contains html*}';
             var countries = JSON.parse(js_countries);

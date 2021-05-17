@@ -16,8 +16,7 @@
 
             <li>
                 <div class="radio ">
-                    <input type="radio" name="payment_method" data-module-name="{$option.module_name nofilter}{*escape not required as contains html*}" value="{$option.id}" id="{$option.id}" {if $option.id_module == $selected_payment_method}checked="checked" {elseif $option.id == $selected_payment_method} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>
-
+                    <input type="radio" name="payment_method" data-module-name="{$option.module_name nofilter}{*escape not required as contains html*}" value="{$option.id}" id="{$option.id}" {if $option.id == 'payment-option-2'}checked="checked" {elseif $option.id == $selected_payment_method} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>
                     <label id="payment_lbl_{$option.id_module|intval}" for="{$option.id}">
                         {if $display_payment_style neq 0}
                             {if $option.payment_image_url neq ''}

@@ -906,7 +906,7 @@ $_MODULE['<{supercheckout}prestashop>supercheckout_6d25f61b11ff3212a024f227021f3
 $_MODULE['<{supercheckout}prestashop>supercheckout_97248fb9b425332572811ffd0540ad41'] = 'Gelieve acccept onze algemene voorwaarden alvorens definitief te bestellen';
 $_MODULE['<{supercheckout}prestashop>supercheckout_fa0cd4fcf0b3cc45b6935ed0759f0ebc'] = 'Log alstublieft eerst in';
 $_MODULE['<{supercheckout}prestashop>supercheckout_3c890e96b01442c48e0381de3e301497'] = 'Technische fout opgetreden';
-$_MODULE['<{supercheckout}prestashop>supercheckout_252f538e225f583ea2dae0b46eb9114f'] = 'Gelieve verplicht Informatie';
+$_MODULE['<{supercheckout}prestashop>supercheckout_252f538e225f583ea2dae0b46eb9114f'] = 'Uw informatie is onjuist of niet compleet. Controleer a.u.b. alle velden van het formulier.';
 $_MODULE['<{supercheckout}prestashop>supercheckout_19abe6c02a26dcd93020396df8d0721c'] = 'Totaal Vouchers';
 $_MODULE['<{supercheckout}prestashop>supercheckout_f8c15b7bbb41e8c9b16542abfb1836c9'] = '(Incl. btw.)';
 $_MODULE['<{supercheckout}prestashop>supercheckout_9fec2102dd0b5b29d6cdf9d5614fabf7'] = '(Excl. BTW.)';

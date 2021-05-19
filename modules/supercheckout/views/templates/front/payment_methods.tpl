@@ -54,8 +54,6 @@
             </li>
         {/foreach}
     </ul>
-
-
     <div id="payment_methods_binaries" style="display:none;">
         {hook h='displayPaymentByBinaries'}
     </div>

@@ -1665,7 +1665,7 @@ function updateCarrierOnDeliveryChange() {
       } else {
         $('.no-shipping-names-row').show();
       }
-
+    $('#added_to_order').val($('#added_to_order').attr('data-latest'));
 
       $('#first_checkout_column').removeClass('col-lg-4').addClass('col-lg-6');
       $('#columnleft-3').removeClass('col-lg-4').addClass('col-lg-6');
@@ -1709,8 +1709,8 @@ function updateCarrierOnDeliveryChange() {
       disEnConfirmButton(true);
     }
       $('#order_number_validate').hide();
-      $('desired_reference').val('');
-      $('added_to_order').val('');
+      $('#desired_reference').val('');
+      $('#added_to_order').val('');
 
     }
 

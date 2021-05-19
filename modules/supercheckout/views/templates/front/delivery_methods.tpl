@@ -60,7 +60,7 @@
                         </li>
                       {else}
                         {*                      If is add2order   *}
-                        {if Context::getContext()->cookie->is_guest == ''}
+                        {if Context::getContext()->cookie->logged == '1'}
                           {* Custommer is loggedin *}
                           {assign var="acceptedOrderStatusIds" value=(explode(',',Configuration::get('ADDTOORDER_ORDER_STATUSES')))}
 
@@ -86,6 +86,7 @@
                           {/foreach}
 
                         {/if}
+
                         <li class="highlight">
                           <div class="radio " id="add_to_order_method_radio" data-carrier-id="{{Configuration::get('ADDTOORDER_DELIVERY_METHOD')}}">
                             {if !empty($delivery_option) && $delivery_option == $carrier.id  && $selected == 0}
@@ -112,10 +113,9 @@
                               {/if}
                               <span class="supercheckout-shipping-small-title shippingPrice">{if $carrier.price_without_tax > 0}{Context::getContext()->currentLocale->formatPrice($carrier.price_without_tax, 'EUR')}{else}Gratis{/if}</span></label>{*escape not required*}
                           </div>
-
-                          {if Context::getContext()->cookie->is_guest == ''}
+                          {if Context::getContext()->cookie->logged == '1'}
                             {if count($availableOrders) > 0}
-                              <input type="hidden" name="added_to_order" id="added_to_order" value="{if (int)$delivery_option == (int)$carrier.id}{$availableOrders[0].reference}{/if}">
+                              <input type="hidden" name="added_to_order" id="added_to_order" value="{if (int)$delivery_option == (int)$carrier.id}{$availableOrders[0].reference}{/if}" data-latest="{$availableOrders[0].reference}">
                               <a style="color:#777777;" target="_blank" href="/index.php?controller=order-detail&id_order={$availableOrders[0].id_order}">Bekijk de lopende bestelling {$availableOrders[0].reference} waar u de huidige bestelling aan wilt toevoegen.</a>
                               {if Context::getContext()->country->iso_code == 'BE'}<span style="color:blue;"><i data-id="shipping-info-be" class="icon-info shipping-info-icon"></i> <span id="shipping-info-be" style="display:none;">Klanten in België betalen {Context::getContext()->currentLocale->formatPrice(12.25, 'EUR')} transport</span></span>{/if}
                             {else}

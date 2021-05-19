@@ -28,6 +28,8 @@ use PrestaShop\PrestaShop\Core\MailTemplate\Layout\Layout;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilderInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -44,7 +46,7 @@ class ModerneSmidMailTheme extends Module
         $this->version = '1.0.0';
         $this->author = 'JB Stoker';
         $this->need_instance = 1;
-
+        $this->themeName = 'modernesmid';
         /**
          * Set $this->bootstrap to true if your module is compliant with bootstrap (PrestaShop 1.6)
          */
@@ -76,19 +78,19 @@ class ModerneSmidMailTheme extends Module
     {
         Configuration::deleteByName('MODERNESMIDMAILTHEME_LIVE_MODE');
 
-        return parent::uninstall() && $this->unregisterHook(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK);
+        return parent::uninstall() && $this->unregisterHook(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK) && $this->registerHook(LayoutVariablesBuilderInterface::BUILD_MAIL_LAYOUT_VARIABLES_HOOK);
     }
 
 
     public function enable() {
         return parent::enable()
-            && $this->registerHook(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK)
+            && $this->registerHook(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK) && $this->registerHook(LayoutVariablesBuilderInterface::BUILD_MAIL_LAYOUT_VARIABLES_HOOK)
             ;
     }
 
     public function disable() {
         return parent::disable()
-            && $this->unregisterHook(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK)
+            && $this->unregisterHook(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK) && $this->unregisterHook(LayoutVariablesBuilderInterface::BUILD_MAIL_LAYOUT_VARIABLES_HOOK)
             ;
     }
 
@@ -105,21 +107,31 @@ class ModerneSmidMailTheme extends Module
         /** @var ThemeCollectionInterface $themes */
         $themes = $hookParams['mailThemes'];
 
-        /** @var ThemeInterface $theme */
-        foreach ($themes as $theme) {
-            if (!in_array($theme->getName(), ['classic', 'modern'])) {
-                continue;
-            }
-
-            // Add a layout to each theme (don't forget to specify the module name)
-            $theme->getLayouts()->add(new Layout(
-                'custom_template',
-                __DIR__ . '/mails/layouts/custom_' . $theme->getName() . '_layout.html.twig',
-                '',
-                $this->name
-            ));
+        $scanner = new FolderThemeScanner();
+        $darkTheme = $scanner->scan(__DIR__.'/mails/themes/dark_modern');
+        if (null !== $darkTheme && $darkTheme->getLayouts()->count() > 0) {
+            $themes->add($darkTheme);
         }
     }
+
+    /**
+     * @param array $hookParams
+     */
+    public function hookActionBuildMailLayoutVariables(array $hookParams)
+    {
+        if (!isset($hookParams['mailLayout'])) {
+            return;
+        }
+
+        /** @var LayoutInterface $mailLayout */
+        $mailLayout = $hookParams['mailLayout'];
+        if ($mailLayout->getModuleName() != $this->name || $mailLayout->getName() != 'customizable_modern_layout') {
+            return;
+        }
+
+        $hookParams['mailLayoutVariables']['custom_footer'] = 'custom footer message';
+    }
+
 
     /**
      * Load the configuration form

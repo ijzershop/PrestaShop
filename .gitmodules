@@ -34,6 +34,6 @@ url=git@github.com:ijzershop/addtoorder.git
 [submodule "modules/modernesmiddynamicproduct"]
 	path = modules/modernesmiddynamicproduct
 	url = git@github.com:ijzershop/modernesmiddynamicproduct.git
-[submodule "mails/themes/modernesmid"]
-	path = mails/themes/modernesmid
+[submodule "modules/ModerneSmidMailTheme/mails"]
+	path = modules/ModerneSmidMailTheme/mails
 	url = git@github.com:ijzershop/modernesmid-email-theme.git

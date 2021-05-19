@@ -108,7 +108,7 @@ class ModerneSmidMailTheme extends Module
         $themes = $hookParams['mailThemes'];
 
         $scanner = new FolderThemeScanner();
-        $darkTheme = $scanner->scan(__DIR__.'/mails/themes/dark_modern');
+        $darkTheme = $scanner->scan(__DIR__.'/mails/modernesmid');
         if (null !== $darkTheme && $darkTheme->getLayouts()->count() > 0) {
             $themes->add($darkTheme);
         }

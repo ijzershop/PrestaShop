@@ -1182,7 +1182,8 @@ class SupercheckoutCore extends ModuleFrontController
         }
 
         $id_invoice_address = 0;
-        if (isset($posted_data['use_for_invoice'])) {
+
+        if (isset($posted_data['use_for_invoice']) && $posted_data['use_for_invoice'] == 'on') {
             $id_invoice_address = $id_delivery_address;
         } elseif (((isset($posted_data['payment_address_value']) && $posted_data['payment_address_value'] == 1)
             || !isset($posted_data['payment_address_value']))
@@ -1223,7 +1224,7 @@ class SupercheckoutCore extends ModuleFrontController
                     $this->context->cookie->supercheckout_temp_address_invoice = $id_invoice_address;
                 }
             }
-        } elseif (!isset($posted_data['use_for_invoice'])
+        } elseif ($posted_data['use_for_invoice'] == 'off'
             && isset($posted_data['payment_address_value'])
             && $posted_data['payment_address_value'] == 0
         ) {
@@ -1491,7 +1492,7 @@ class SupercheckoutCore extends ModuleFrontController
             $payment_address_value = $posted_data['payment_address_value'];
         }
 
-        if (!isset($posted_data['use_for_invoice'])) {
+        if ($posted_data['use_for_invoice'] == 'off') {
             $loop_index = 0;
             if (!$this->context->cart->isVirtualCart() && $payment_address_value == 1) {
                 foreach ($posted_data['payment_address'] as $key => $value) {
@@ -1732,20 +1733,20 @@ class SupercheckoutCore extends ModuleFrontController
             $id_delivery_address = $posted_data['shipping_address_id'];
         }
 
-        if (isset($posted_data['use_for_invoice'])
+        if (isset($posted_data['use_for_invoice']) && $posted_data['use_for_invoice'] == 'on'
             && ((isset($posted_data['shipping_address_value']) && $posted_data['shipping_address_value'] == 1)
             || !isset($posted_data['shipping_address_value']))
         ) {
             $invoice_address = $delivery_address;
             $id_invoice_address = $id_delivery_address;
-        } elseif (isset($posted_data['use_for_invoice'])
+        } elseif (isset($posted_data['use_for_invoice']) && $posted_data['use_for_invoice'] == 'on'
             && isset($posted_data['shipping_address_value'])
             && $posted_data['shipping_address_value'] == 0
         ) {
             $id_invoice_address = $id_delivery_address;
         }
 
-        if (!isset($posted_data['use_for_invoice'])
+        if ($posted_data['use_for_invoice'] == 'off'
             && ((isset($posted_data['payment_address_value'])
             && $posted_data['payment_address_value'] == 1)
             || !isset($posted_data['payment_address_id']))
@@ -1820,7 +1821,7 @@ class SupercheckoutCore extends ModuleFrontController
                     $id_invoice_address = $invoice_address->id;
                 }
             }
-        } elseif (!isset($posted_data['use_for_invoice'])
+        } elseif ($posted_data['use_for_invoice'] == 'off'
             && isset($posted_data['payment_address_value'])
             && $posted_data['payment_address_value'] == 0
         ) {

@@ -528,6 +528,29 @@ $(document).ready(function() {
 
 });
 
+function showNoShippingPhone(){
+  var shippingOption = $('input.supercheckout_shipping_option:checked').val();
+  if(shippingOption == "7"){
+    if($('[name="shipping_address[phone]"]').siblings('.errorsmall').length > 0 || $('[name="shipping_address[mobile]"]').siblings('.errorsmall').length > 0){
+      $('#input-no_shipping_phone').siblings('.errorsmall').remove();
+      $('.no-shipping-names-row.phone').removeClass('d-none').show();
+      $('#input-no_shipping_phone').removeClass('ok-form').addClass('error-form');
+      $('#input-no_shipping_phone').parent().append('<span class="errorsmall">Uw geregistreerd telefoonnummer heeft een onjuist formaat.</span>');
+
+      $('#input-no_shipping_phone').on('keyup', function(e){
+        var val = $(this).val();
+        $('input[name="shipping_address[phone]"]').val(val);
+        $('input[name="shipping_address[phone_mobile]"]').val(val);
+        $('input[name="payment_address[phone]"]').val(val);
+        $('input[name="payment_address[phone_mobile]"]').val(val);
+      });
+
+      return false;
+
+    }
+  }
+}
+
 function checkFormatAddressApiCheckout(){
     var validatedPayment = false;
     var validated = false;
@@ -542,7 +565,10 @@ function checkFormatAddressApiCheckout(){
       validateAddressApiCheckout(postcode, street, houseNumber, extension, id_country, "shipping_address");
     }
 
+
+
   $('input[name="shipping_address[phone]"]').each( function() {
+    $('input[name="shipping_address[phone]"]').siblings('.errorsmall').remove();
     if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
       validated = false;
       $(this).removeClass('ok-form error-form');
@@ -557,6 +583,7 @@ function checkFormatAddressApiCheckout(){
     } else if (validatePhoneNumber($(this).val())) {
       validated = true;
       $(this).removeClass('error-form').addClass('ok-form');
+      $('input[name="shipping_address[phone]"]').siblings('.errorsmall').remove();
     }
   });
 
@@ -574,6 +601,7 @@ function checkFormatAddressApiCheckout(){
       }
 
       $('input[name="payment_address[phone]"]').each(function() {
+        $('input[name="payment_address[phone]"]').siblings('.errorsmall').remove();
         if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
           validatedPayment = false;
           $(this).removeClass('ok-form error-form');
@@ -588,11 +616,15 @@ function checkFormatAddressApiCheckout(){
         } else if (validatePhoneNumber($(this).val())) {
           validatedPayment = true;
           $(this).removeClass('error-form').addClass('ok-form');
+          $('input[name="payment_address[phone]"]').siblings('.errorsmall').remove();
         }
       });
     }
 
+    showNoShippingPhone();
+
     if((validated && useForInvoice) || (validated && validatedPayment && !useForInvoice)){
+      $('input[name="no_shipping_phone"]').siblings('.errorsmall').remove();
       return true;
     }
   return false;
@@ -623,7 +655,6 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
     .done((e) => {
       var isValidForConfirm = false;
       $('.address-error-msg').text(null);
-      $('.errorsmall').text(null);
 
       if (e.valid != false && e.address.length > 0 && e.address[0].hasOwnProperty('nl_sixpp')) { // is een nederlands adres
         $('[name="'+type+'[id_country]"]').removeClass('error-form').addClass('was-validated is-valid');
@@ -722,6 +753,7 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
 
         if(e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field !== undefined){
           $('[name="'+type+'['+ e.msg.field + ']"]').removeClass('is-valid').addClass('error-form');
+          $('[name="'+type+'['+ e.msg.field + ']"]').siblings('.errorsmall').remove();
           $('[name="'+type+'['+ e.msg.field + ']"]').parent().append('<span class="errorsmall">' + e.msg.msg + '</span>');
           isValidForConfirm = false;
         }
@@ -782,8 +814,6 @@ function disEnConfirmButton(disable=false){
 
 //Function created by Anshul to apply inline validation so that it can be called anywhere after AJAXuse_for_invoice success in order to re-bind the events
 function applyInlineValidation() {
-  checkFormatAddressApiCheckout();
-
        if (inline_validation == 1) {
 
          $('input#input-no_shipping_phone').on('blur', function() {
@@ -797,7 +827,9 @@ function applyInlineValidation() {
              $(this).parent().append('<span class="errorsmall">' + invalid_number + '</span>');
            } else if (validatePhoneNumber($(this).val())) {
              $(this).removeClass('error-form').addClass('ok-form');
+             $('input[name="no_shipping_phone"]').siblings('.errorsmall').remove();
            }
+           showNoShippingPhone();
          });
 
          $('input#input-no_shipping_surname, input#input-no_shipping_lastname').on('blur', function() {
@@ -845,13 +877,13 @@ function applyInlineValidation() {
                 $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
             } else if (!validateEmail($(this).val())) {
               //validate email
-              if($('input:text[name="supercheckout_email_validation"]').val() === "" && unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false).test($(this).val())){
+              if($('input:text[name="supercheckout_email_validation"]').val() !== "" && unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false).test($(this).val())){
                 $('input:text[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
                 $('input:text[name="supercheckout_email_validation"]').removeClass('error-form');
                 $('input:text[name="supercheckout_email_validation"]').removeClass('ok-form');
                 $('input:text[name="supercheckout_email_validation"]').addClass('error-form');
                 $('input[name="supercheckout_email_validation"]').parent().append('<span class="errorsmall">Valideer a.u.b. uw email adres</span>');
-                displayGeneralError(display_general_error_msg);
+                // displayGeneralError(display_general_error_msg);
                 $("html, body").animate({
                   scrollTop: 0
                 }, "fast");
@@ -864,7 +896,7 @@ function applyInlineValidation() {
                 $('input:text[name="supercheckout_email_validation"]').removeClass('ok-form');
                 $('input:text[name="supercheckout_email_validation"]').addClass('error-form');
                 $('input[name="supercheckout_email_validation"]').parent().append('<span class="errorsmall">De email adressen komen niet overeen!</span>');
-                displayGeneralError(display_general_error_msg);
+                // displayGeneralError(display_general_error_msg);
                 $("html, body").animate({
                   scrollTop: 0
                 }, "fast");
@@ -875,7 +907,7 @@ function applyInlineValidation() {
                 $('input:text[name="supercheckout_email"]').removeClass('ok-form');
                 $('input:text[name="supercheckout_email"]').addClass('error-form');
                 $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + invalid_email + '</span>');
-                displayGeneralError(display_general_error_msg);
+                // displayGeneralError(display_general_error_msg);
                 $("html, body").animate({
                   scrollTop: 0
                 }, "fast");
@@ -889,8 +921,10 @@ function applyInlineValidation() {
                 $(this).removeClass('error-form');
                 $(this).removeClass('ok-form');
                 $(this).addClass('ok-form');
+              hideGeneralError();
             }
         });
+
         $('input[name="shipping_address[firstname]"], input[name="shipping_address[lastname]"], input[name="payment_address[firstname]"], input[name="payment_address[lastname]"] ').on('blur', function() {
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
@@ -1206,7 +1240,11 @@ function checkout_option(e) {
                 // $('#checkoutBillingAddress').show();
             }
             $('.validate-email').show();
-            $('#supercheckout_confirm_order').text('Plaats bestelling & Registreer');
+            if($(e).val() != undefined){
+              $('#supercheckout_confirm_order').text('Plaats bestelling & Registreer');
+            } else {
+              $('#supercheckout_confirm_order').text('Plaats bestelling');
+            }
             $('#supercheckout-login-box').hide();
             $('#new_customer_password').show();
             $('#social_login_block').show();
@@ -1268,7 +1306,11 @@ function checkout_option(e) {
             }
         } else {
             $('.validate-email').show();
-            $('#supercheckout_confirm_order').text('Plaats bestelling & Registreer');
+            if($(e).val() != undefined){
+              $('#supercheckout_confirm_order').text('Plaats bestelling & Registreer');
+            } else {
+              $('#supercheckout_confirm_order').text('Plaats bestelling');
+            }
             $('#supercheckout-login-box').hide();
             $('#new_customer_password').show();
             $('#social_login_block').show();
@@ -1777,7 +1819,7 @@ function updateDeliveryExtraChange() {
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-                displayGeneralError(errors);
+                // displayGeneralError(errors);
                 $('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
             }
         });
@@ -2033,7 +2075,7 @@ function isValidVatNumber(type) {
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-            displayGeneralError(errors);
+            // displayGeneralError(errors);
             $('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
         }
     });
@@ -2155,7 +2197,7 @@ function _loadInvoiceAddress() {
         success: function(jsonData) {},
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-            displayGeneralError(errors);
+            // displayGeneralError(errors);
             $('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
         }
     });
@@ -2791,7 +2833,7 @@ function upload(fd) {
                 if (json['error_occured'] == 1) {
                     hide_progress();
                     $("html, body").animate({scrollTop: 0}, "fast");
-                    displayGeneralError(json['msg']);
+                    // displayGeneralError(json['msg']);
                 } else {
                     display_progress(10);
                     kbAfterPlaceOrder();
@@ -2873,7 +2915,7 @@ $( document ).ready(function() {
         validator();
       } catch (error) {
         isValid = false;
-        displayGeneralError(error.message);
+        // displayGeneralError(error.message);
       }
     });
     if (!isValid) {
@@ -2885,7 +2927,7 @@ $( document ).ready(function() {
     if ($('#product_not_available .alert').length) {
 //            if (typeof product_not_available !== 'undefined') {
 //                if (product_not_available) {
-      displayGeneralError(zipcode_error);
+//       displayGeneralError(zipcode_error);
       $("html, body").animate({
         scrollTop: 0
       }, "fast");
@@ -2899,7 +2941,7 @@ $( document ).ready(function() {
      * Start: Added by Anshul to check if opened form is saved or not.
      */
     if ($('.shipping_update_form').length || ($('.payment_update_form').length && !$('#use_for_invoice').is(':checked'))) {
-      displayGeneralError(save_update_address);
+      // displayGeneralError(save_update_address);
       $("html, body").animate({
         scrollTop: 0
       }, "fast");
@@ -2919,7 +2961,7 @@ $( document ).ready(function() {
           }
         });
         if (!is_toc_checked) {
-          displayGeneralError(toc_error);
+          // displayGeneralError(toc_error);
           $("html, body").animate({
             scrollTop: 0
           }, "fast");
@@ -2931,7 +2973,7 @@ $( document ).ready(function() {
 
     // changes by rishabh jain for product availablility by zipcode
     if ($('#product_not_available .alert').length) {
-      displayGeneralError(zipcode_error);
+      // displayGeneralError(zipcode_error);
       $("html, body").animate({
         scrollTop: 0
       }, "fast");
@@ -2947,13 +2989,13 @@ $( document ).ready(function() {
         }
       }
     });
-
+    showNoShippingPhone();
     if ($('.kbfiletype').length) {
       display_progress(5);
       if (validateFilesData()) {
         upload(fd);
       } else {
-        displayGeneralError(validationfailedMsg);
+        // displayGeneralError(validationfailedMsg);
         return false;
       }
     } else {
@@ -3036,6 +3078,17 @@ $( document ).ready(function() {
     $('input[name="payment_address[city]"]').prop('disabled', false);
     // End: Added by Anshul for PayPlug
     var errors = '';
+
+    var data = $('#velsof_supercheckout_form').serializeArray();
+    // if(!$('#use_for_invoice').is(':checked')){
+    //   for (index = 0; index < data.length; ++index) {
+    //     if (data[index].name == "use_for_invoice") {
+    //       data[index].value = 0;
+    //       break;
+    //     }
+    //   }
+    // }
+
     $.ajax({
       type: 'POST',
       headers: {
@@ -3045,7 +3098,7 @@ $( document ).ready(function() {
       async: true,
       cache: false,
       dataType: "json",
-      data: $('#velsof_supercheckout_form').serialize() + '&ajax=true',
+      data: $.param(data) + '&ajax=true',
       beforeSend: function () {
         display_progress(20);
         $('select[name="shipping_address[id_country]"]').prop('disabled', true);
@@ -3087,9 +3140,16 @@ $( document ).ready(function() {
           if (jsonData['error']['checkout_option'] != undefined) {
             has_validation_error = true;
             for (i in jsonData['error']['checkout_option']) {
-              $('input[name="' + jsonData['error']['checkout_option'][i]['key'] + '"]').parent().append('<span class="errorsmall">' + jsonData['error']['checkout_option'][i]['error'] + '</span>');
-              if (inline_validation == 1)
-                $('input[name="' + jsonData['error']['checkout_option'][i]['key'] + '"]').addClass('error-form').removeClass('ok-form');
+              if (jsonData['error']['checkout_option'][i]['key'] === 'supercheckout_email' && $('input.supercheckout_shipping_option:checked').val() == 7) {
+                $('#logged_checkout').trigger('click');
+                $('input[name="supercheckout_password"]').focus();
+                $('input[name="' + jsonData['error']['checkout_option'][i]['key'] + '"]').parent().append('<span class="errorsmall">Dit email adres is al geregistreerd, meld u a.u.b. aan</span>');
+                  $('input[name="' + jsonData['error']['checkout_option'][i]['key'] + '"]').addClass('error-form').removeClass('ok-form');
+              } else {
+                $('input[name="' + jsonData['error']['checkout_option'][i]['key'] + '"]').parent().append('<span class="errorsmall">' + jsonData['error']['checkout_option'][i]['error'] + '</span>');
+                if (inline_validation == 1)
+                  $('input[name="' + jsonData['error']['checkout_option'][i]['key'] + '"]').addClass('error-form').removeClass('ok-form');
+              }
             }
           }
 
@@ -3153,7 +3213,7 @@ $( document ).ready(function() {
           } else {
             errors = scOtherError;
           }
-          displayGeneralError(errors);
+          // displayGeneralError(errors);
           hide_progress();
           $("html, body").animate({
             scrollTop: 0
@@ -3193,7 +3253,7 @@ $( document ).ready(function() {
 
           if (!is_carrier_selected || !is_payment_selected) {
             hide_progress();
-            displayGeneralError('Please provide required Information');
+            // displayGeneralError('Please provide required Information');
             $("html, body").animate({
               scrollTop: 0
             }, "fast");
@@ -3223,12 +3283,6 @@ $( document ).ready(function() {
               hide_progress();
             } else {
               display_progress(80);
-              if (jsonData['is_free_order']) {
-                createFreeOrder();
-              } else {
-
-
-                var selected_payment = $('input:radio[name="payment_method"]:checked').attr('id');
 
                 /* Start Code added By Priyanshu on 9-Feb-2021 to fix the Mollie Payment Method Compaibility issue */
                 if ($('input:radio[name="payment_method"]:checked').attr('data-module-name') == "mollie") {
@@ -3236,6 +3290,8 @@ $( document ).ready(function() {
                   $('#payment_methods_additional_container .' + pay_value + '_info_container #pay-with-form form').submit();
                   return;
                 }
+
+                var selected_payment = $('input:radio[name="payment_method"]:checked').attr('id');
 
 
                 if (payment_module_name == 'ps_checkout_hostedFields') {
@@ -3268,7 +3324,7 @@ $( document ).ready(function() {
                     $('#velsof_payment_dialog .velsof_content_section form').submit();
                   }
                 }
-              }
+
             }
 
           }
@@ -3277,7 +3333,7 @@ $( document ).ready(function() {
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
         errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-        displayGeneralError(errors);
+        // displayGeneralError(errors);
         hide_progress();
         $("html, body").animate({
           scrollTop: 0
@@ -3302,7 +3358,7 @@ $( document ).ready(function() {
         $('input:text[name="no_shipping_surname"]').removeClass('ok-form');
         $('input:text[name="no_shipping_surname"]').addClass('error-form');
         $('input[name="no_shipping_surname"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
-        displayGeneralError(display_general_error_msg);
+        // displayGeneralError(display_general_error_msg);
         $("html, body").animate({
           scrollTop: 0
         }, "fast");
@@ -3316,7 +3372,7 @@ $( document ).ready(function() {
         $('input:text[name="no_shipping_lastname"]').removeClass('ok-form');
         $('input:text[name="no_shipping_lastname"]').addClass('error-form');
         $('input[name="no_shipping_lastname"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
-        displayGeneralError(display_general_error_msg);
+        // displayGeneralError(display_general_error_msg);
         $("html, body").animate({
           scrollTop: 0
         }, "fast");
@@ -3330,7 +3386,7 @@ $( document ).ready(function() {
         $('input:text[name="no_shipping_phone"]').removeClass('ok-form');
         $('input:text[name="no_shipping_phone"]').addClass('error-form');
         $('input[name="no_shipping_phone"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
-        displayGeneralError(display_general_error_msg);
+        // displayGeneralError(display_general_error_msg);
         $("html, body").animate({
           scrollTop: 0
         }, "fast");
@@ -3345,7 +3401,7 @@ $( document ).ready(function() {
           $('#desired_reference').removeClass('ok-form');
           $('#desired_reference').addClass('error-form');
           $('#desired_reference').parent().append('<span class="errorsmall col-12">Selecteer a.u.b. de bestelling waaraan u deze aankoop aan toe wilt voegen</span>');
-          displayGeneralError(display_general_error_msg);
+          // displayGeneralError(display_general_error_msg);
           $("html, body").animate({
             scrollTop: 800
           }, "fast");
@@ -3378,7 +3434,7 @@ $( document ).ready(function() {
         $('input:text[name="supercheckout_email"]').removeClass('ok-form');
         $('input:text[name="supercheckout_email"]').addClass('error-form');
         $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
-        displayGeneralError(display_general_error_msg);
+        // displayGeneralError(display_general_error_msg);
         $("html, body").animate({
           scrollTop: 0
         }, "fast");
@@ -3389,7 +3445,7 @@ $( document ).ready(function() {
         $('input:text[name="supercheckout_email"]').removeClass('ok-form');
         $('input:text[name="supercheckout_email"]').addClass('error-form');
         $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + invalid_email + '</span>');
-        displayGeneralError(display_general_error_msg);
+        // displayGeneralError(display_general_error_msg);
         $("html, body").animate({
           scrollTop: 0
         }, "fast");
@@ -3397,7 +3453,7 @@ $( document ).ready(function() {
       }
     }
 
-    var a = checkFormatAddressApiCheckout();
+      var a = checkFormatAddressApiCheckout();
       if(a){
         placeOrder();
       } else {
@@ -3433,7 +3489,7 @@ function createFreeOrder() {
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-            displayGeneralError(errors);
+            // displayGeneralError(errors);
             hide_progress();
             $('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
         }
@@ -3538,7 +3594,7 @@ function saveAddress() {
                 } else {
                     errors = scOtherError;
                 }
-                displayGeneralError(errors);
+                // displayGeneralError(errors);
                 hide_progress();
                 $("html, body").animate({
                     scrollTop: 0
@@ -3568,7 +3624,7 @@ function saveAddress() {
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-            displayGeneralError(errors);
+            // displayGeneralError(errors);
             hide_progress();
             $('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
             $("html, body").animate({
@@ -3641,7 +3697,7 @@ function isValidDni(type) {
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-                displayGeneralError(errors);
+                // displayGeneralError(errors);
                 $('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
             }
         });

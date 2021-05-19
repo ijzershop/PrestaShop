@@ -300,16 +300,16 @@
         <ul class="list-unstyled">
             <li>
                 <div class="input-box input-different-shipping" {if !$settings['show_use_delivery_for_payment_add'][$user_type]} style="display:none;" {/if}>
-                  <input style="height:auto;" type="radio" name="use_for_invoice" id="use_for_invoice"
+                  <input style="height:auto;" type="radio" name="use_for_invoice" id="use_for_invoice" value="on"
                          {if $settings['use_delivery_for_payment_add'][$user_type]}checked="checked"{/if}
                   >
                   <label for="use_for_invoice"><b>Factuur adres is hetzelfde als het bezorg adres</b></label>
                   <br><br><br>
 
-                    <input style="height:auto;margin-top:40px" type="radio" name="use_for_invoice" id="use_for_invoice_none"
+                    <input style="height:auto;margin-top:40px" type="radio" name="use_for_invoice" id="use_for_invoice_none" value="off"
                            {if !$settings['use_delivery_for_payment_add'][$user_type]}checked="checked"{/if}
                            >
-                    <label for="use_for_invoice_none"><b>Bezorgen op ander adres (Werk, Kado, Buren)</b></label>
+                    <label for="use_for_invoice_none"><b>Ander factuur adres</b></label>
 
                 </div>
             </li>

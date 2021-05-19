@@ -530,7 +530,7 @@ $(document).ready(function() {
 
 function showNoShippingPhone(){
   var shippingOption = $('input.supercheckout_shipping_option:checked').val();
-  if(shippingOption == "7"){
+  if(shippingOption == "7" || shippingOption == "8"){
     if($('[name="shipping_address[phone]"]').siblings('.errorsmall').length > 0 || $('[name="shipping_address[mobile]"]').siblings('.errorsmall').length > 0){
       $('#input-no_shipping_phone').siblings('.errorsmall').remove();
       $('.no-shipping-names-row.phone').removeClass('d-none').show();

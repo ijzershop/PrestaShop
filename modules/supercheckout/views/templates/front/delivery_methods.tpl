@@ -60,9 +60,10 @@
                         </li>
                       {else}
                         {*                      If is add2order   *}
-                        {if Context::getContext()->cookie->is_guest != ''}
+                        {if Context::getContext()->cookie->is_guest == ''}
                           {* Custommer is loggedin *}
-                          {assign var="acceptedOrderStatusIds" value=explode(',',Configuration::get('ADDTOORDER_ORDER_STATUSES'))}
+                          {assign var="acceptedOrderStatusIds" value=(explode(',',Configuration::get('ADDTOORDER_ORDER_STATUSES')))}
+
                           {assign var="availableOrders" value=[]}
                           {assign var="availableOrdersLinks" value=[]}
                           {foreach from=Order::getCustomerOrders(Context::getContext()->customer->id, true, Context::getContext()) item=order}
@@ -85,7 +86,6 @@
                           {/foreach}
 
                         {/if}
-
                         <li class="highlight">
                           <div class="radio " id="add_to_order_method_radio" data-carrier-id="{{Configuration::get('ADDTOORDER_DELIVERY_METHOD')}}">
                             {if !empty($delivery_option) && $delivery_option == $carrier.id  && $selected == 0}
@@ -113,7 +113,7 @@
                               <span class="supercheckout-shipping-small-title shippingPrice">{if $carrier.price_without_tax > 0}{Context::getContext()->currentLocale->formatPrice($carrier.price_without_tax, 'EUR')}{else}Gratis{/if}</span></label>{*escape not required*}
                           </div>
 
-                          {if Context::getContext()->cookie->is_guest != ''}
+                          {if Context::getContext()->cookie->is_guest == ''}
                             {if count($availableOrders) > 0}
                               <input type="hidden" name="added_to_order" id="added_to_order" value="{if (int)$delivery_option == (int)$carrier.id}{$availableOrders[0].reference}{/if}">
                               <a style="color:#777777;" target="_blank" href="/index.php?controller=order-detail&id_order={$availableOrders[0].id_order}">Bekijk de lopende bestelling {$availableOrders[0].reference} waar u de huidige bestelling aan wilt toevoegen.</a>

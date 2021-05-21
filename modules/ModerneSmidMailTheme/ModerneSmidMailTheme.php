@@ -28,8 +28,12 @@ use PrestaShop\PrestaShop\Core\MailTemplate\Layout\Layout;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeScanner;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
+use PrestaShop\Module\ModerneSmidMailTheme\MailTheme;
+
+
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -58,6 +62,8 @@ class ModerneSmidMailTheme extends Module
         $this->description = $this->l('De module voor alle email templates van de Moderne Smid Theme');
 
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
+
+        $this->MailThemeClass = new MailTheme();
     }
 
     /**
@@ -82,18 +88,20 @@ class ModerneSmidMailTheme extends Module
     }
 
 
-    public function enable() {
-        return parent::enable()
+    public function enable($force_all = false) {
+        $result = $this->MailThemeClass->makeThemeSymlink();
+
+        return $result && parent::enable()
             && $this->registerHook(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK) && $this->registerHook(LayoutVariablesBuilderInterface::BUILD_MAIL_LAYOUT_VARIABLES_HOOK)
             ;
     }
 
-    public function disable() {
-        return parent::disable()
+    public function disable($force_all = false) {
+        $result = $this->MailThemeClass->removeThemeSymlink();
+        return $result && parent::disable()
             && $this->unregisterHook(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK) && $this->unregisterHook(LayoutVariablesBuilderInterface::BUILD_MAIL_LAYOUT_VARIABLES_HOOK)
             ;
     }
-
 
     /**
      * @param array $hookParams
@@ -107,11 +115,11 @@ class ModerneSmidMailTheme extends Module
         /** @var ThemeCollectionInterface $themes */
         $themes = $hookParams['mailThemes'];
 
-        $scanner = new FolderThemeScanner();
-        $darkTheme = $scanner->scan(__DIR__.'/mails/modernesmid');
-        if (null !== $darkTheme && $darkTheme->getLayouts()->count() > 0) {
-            $themes->add($darkTheme);
-        }
+//        $scanner = new FolderThemeScanner();
+//        $modernesmidTheme = $scanner->scan(__DIR__.'/mails/themes/modernesmid');
+//        if (null !== $modernesmidTheme && $modernesmidTheme->getLayouts()->count() > 0) {
+//            $themes->add($modernesmidTheme);
+//        }
     }
 
     /**
@@ -123,13 +131,13 @@ class ModerneSmidMailTheme extends Module
             return;
         }
 
-        /** @var LayoutInterface $mailLayout */
-        $mailLayout = $hookParams['mailLayout'];
-        if ($mailLayout->getModuleName() != $this->name || $mailLayout->getName() != 'customizable_modern_layout') {
-            return;
-        }
+        $hookParams['mailLayoutVariables']['order_name'] = 'YS-123456';
+        $hookParams['mailLayoutVariables']['custom_footer_html'] = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT');
+        $hookParams['mailLayoutVariables']['faq_page'] = Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ'),null,true, '','');
+        $hookParams['mailLayoutVariables']['add_to_order'] = '<span class="text-small"><strong><span class="font-arial"><span class="text-grey font-arial">Iets vergeten?</span></span></strong></span><br/><span class="text-small"><span class="font-arial"><span class="text-grey font-arial">Tot u bericht krijgt dat uw bestelling is verstuurd kunt u iets toevoegen aan uw bestelling zonder dat er extra verzendkosten in rekening worden gebracht. Maak hiervoor een nieuwe bestelling en kies bij verzending voor: "Toevoegen".</span></span></span>';
 
-        $hookParams['mailLayoutVariables']['custom_footer'] = 'custom footer message';
+//        var_export($hookParams);
+//die();
     }
 
 

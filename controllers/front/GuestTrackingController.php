@@ -53,6 +53,8 @@ class GuestTrackingControllerCore extends FrontController
      */
     public function postProcess()
     {
+
+
         $order_reference = current(explode('#', Tools::getValue('order_reference')));
         $email = Tools::getValue('email');
 
@@ -67,6 +69,8 @@ class GuestTrackingControllerCore extends FrontController
 
             return;
         }
+
+
 
         $isCustomer = Customer::customerExists($email, false, true);
         if ($isCustomer) {

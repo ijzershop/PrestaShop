@@ -524,9 +524,10 @@ class AddressCore extends ObjectModel
             // if an id_address has been specified retrieve the address
             if ($id_address) {
                 $address = new Address((int) $id_address);
-
+//var_export(new Address(42));
+//die();
                 if (!Validate::isLoadedObject($address)) {
-                    throw new PrestaShopException('Invalid address #' . (int) $id_address);
+//                    throw new PrestaShopException('Invalid address #' . (int) $id_address);
                 }
             } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
                 $address = new Address();
@@ -552,7 +553,6 @@ class AddressCore extends ObjectModel
                 $address->postcode = 0;
             }
             Cache::store($cache_id, $address);
-
             return $address;
         }
 

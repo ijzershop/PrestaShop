@@ -15,7 +15,10 @@
 
 var check_guest_checkout = "";
 
-function notifyAlert(title, message, type='success'){
+function notifyAlert(title, message, type){
+  if(type == undefined){
+    type='success';
+  }
   var alertBlock = '<div class="alertBlockItem alert alert-'+type+'" role="alert">\n';
 
   if(title !== ''){
@@ -57,7 +60,8 @@ $(document).ready(function() {
 
     //clear cart after removing the products from block cart.
     document.addEventListener('click', function (event) {
-        if (event.target.matches('.ajax_cart_block_remove_link')) {
+      matches = event.target.matches ? event.target.matches('.ajax_cart_block_remove_link') : event.target.msMatchesSelector('.ajax_cart_block_remove_link');
+      if ( matches) {
             setTimeout(function(){
                 location.reload();
             }, 1000);
@@ -644,15 +648,15 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
     type: 'GET',
     dataType: 'json',
     data: {
-      postcode,
-      houseNumber,
-      extension,
-      street,
+      postcode:postcode,
+      houseNumber:houseNumber,
+      extension:extension,
+      street:street,
       id_country: country,
       ajax: true,
     },
   })
-    .done((e) => {
+    .done(function(e){
       var isValidForConfirm = false;
       $('.address-error-msg').text(null);
 
@@ -727,7 +731,7 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
         isValidForConfirm = false;
         let htmlList = '<ul>';
         for (let i = 0; i < e.address.length; i++) {
-          htmlList += `<li class="selectStreetAutoFill">${e.address[i].street_nl}</li>`;
+          htmlList += '<li class="selectStreetAutoFill">'+e.address[i].street_nl+'</li>';
         }
         htmlList += '</ul>';
         $('#suggesstion-box-street').html(htmlList);
@@ -795,13 +799,13 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
         disEnConfirmButton(true);
       }
     })
-    .fail((e) => {
+    .fail(function(e){
         disEnConfirmButton(true);
     });
 }
 
 
-function disEnConfirmButton(disable=false){
+function disEnConfirmButton(disable){
   if(disable){
     return false;
     // $('#supercheckout_confirm_order').attr('disabled',true);

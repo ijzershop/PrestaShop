@@ -1,67 +1,43 @@
-[{shop_url}] 
+{shop_url}
 
 Hallo {firstname} {lastname},
 
-Bedankt voor het winkelen bij {shop_name}! 
+Bedankt voor het winkelen bij {shop_name}!
 
-BESTELLING: {order_name} Geplaatst op {date}
+Besteloverzicht
 
-BETALING: {payment} 		 
+Bestelling: {order_name} Geplaatst op {date}
 
-REFERENTIE
+Betaling: {payment}
 
-PRODUCT
+Vervoerder: {carrier}
 
-STUKPRIJS
+Betaling: {payment}
 
-AANTAL
+Referentie	Product	Stukprijs	Aantal	Totaalprijs  {products_txt} {discounts_txt}
+Producten	{total_products}
+Kortingen	{total_discounts}
+Cadeauverpakking	{total_wrapping}
+Verzending	{total_shipping}
+Totaal belasting inbegrepen	{total_tax_paid}
+Totaal betaald	{total_paid}
 
-TOTAALPRIJS
+Volg uw bestelling en download uw factuur via onze online shop, ga naar [Bestellingen en details]({history_url}) in uw klantenaccount.
 
-{products_txt} 
+Met een gast account kunt de bestelling volgen via ["Bestelling volgen"]({guest_tracking_url}) in onze online shop.
 
-{discounts} 
+Hoeveel sterren krijgen wij van u?,
+Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
+>  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
 
-PRODUCTEN 
+Heeft u een vraag?
+Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
+[> veel gestelde vragen]({faq_page})
 
-{total_products} 
+[Stuur een whatsapp naar: 0636.58.58.00](https://api.whatsapp.com/send?phone=31636585800)whatsapp: 0636 5858 00
 
-KORTINGEN 
+[Bel naar: 0900-2502500](tel://0900-2502500)telefoon: 058-2123138
 
-{total_discounts} 
+[stuur een mail naar info@v15.nl](mailto:info@v15.nl) email: info@v15.nl
 
-CADEAUVERPAKKING 
-
-{total_wrapping} 
-
-VERZENDING 
-
-{total_shipping} 
-
-TOTAAL BTW 
-
-{total_tax_paid} 
-
-TOTAAL BETAALD 
-
-{total_paid} 
-
-VERVOERDER: {carrier}
-
-BETALING: {payment} 		 
-
-{delivery_block_txt} 
-
-{invoice_block_txt} 
-
-U kunt uw bestelling bekijken en de factuur downloaden vanuit de
-sectie "Bestelgeschiedenis" [{history_url}] op de
-klantportal, door te klikken op de link "Mijn account"
-[{my_account_url}] in onze winkel. 
-
-Indien u hebt afgerekend zonder het aanmaken van een account, dan
-kunt u deze bestelling volgen via "deze link"
-[{guest_tracking_url}?id_order={order_name}]. 
-
-{custom_footer_txt}
-
+{custom_footer_html}

@@ -1,22 +1,31 @@
-[{shop_url}] 
+{shop_url}
 
 Hallo {firstname} {lastname},
 
-Bedankt voor uw bestelling {order_name} op {shop_name} 
+Bedankt voor uw bestelling met referentie {order_name} op {shop_name}
 
-{nbproducts} product(en) beschikbaar om te downloaden via de volgende
-link(s):
+Te downloaden product(en)
 
-{virtualproducts} 		 
+U heeft {nbProducts} product(en) beschikbaar om te downloaden via deze link(s):
 
-U kunt uw bestelling bekijken en de factuur downloaden vanuit de
-sectie "Bestelgeschiedenis" [{history_url}] op de
-klantportal, door te klikken op de link "Mijn account"
-[{my_account_url}] in onze winkel. 
+{virtualProducts}
 
-Indien u hebt afgerekend zonder het aanmaken van een account, dan
-kunt u deze bestelling volgen via "deze link"
-[{guest_tracking_url}?id_order={order_name}]. 
+Volg uw bestelling en download uw factuur via onze online shop, ga naar [Bestellingen en details]({history_url}) in uw klantenaccount.
 
-{custom_footer_txt}
+Met een gast account kunt de bestelling volgen via ["Bestelling volgen"]({guest_tracking_url}) in onze online shop.
 
+Hoeveel sterren krijgen wij van u?,
+Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
+>  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
+
+Heeft u een vraag?
+Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
+[> veel gestelde vragen]({faq_page})
+
+[Stuur een whatsapp naar: 0636.58.58.00](https://api.whatsapp.com/send?phone=31636585800)whatsapp: 0636 5858 00
+
+[Bel naar: 0900-2502500](tel://0900-2502500)telefoon: 058-2123138
+
+[stuur een mail naar info@v15.nl](mailto:info@v15.nl) email: info@v15.nl
+
+{custom_footer_html}

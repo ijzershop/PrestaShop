@@ -30,6 +30,18 @@ function notifyAlert(title, message, type){
   setTimeout(function(){  $(".alertBlockItem ").alert('close'); }, 3000);
 }
 
+function delayKeyUp(callback) {
+  var timer = 0;
+  var ms = 700;
+  return function() {
+    var context = this, args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      callback.apply(context, args);
+    }, ms || 0);
+  };
+}
+
 $(document).ready(function() {
     //Start:Changes done by Anshul Mittal on 09/01/2020 for adding event so that the data could be updated on DB on filling the fields on checkout page  (Feature: Checkout Behavior (Jan 2020))
     $('form#velsof_supercheckout_form select, form#velsof_supercheckout_form input, form#velsof_supercheckout_form textarea').on('blur', function () {
@@ -496,7 +508,7 @@ $(document).ready(function() {
 
     //on blur validation
     applyInlineValidation();
-
+    loadPayments();
     //Added for showing Social Loginizer buttons on SuperCheckout page
     if ((typeof loginizer_html != 'undefined')) {
         $('#ivss_socialloginizer_buttons').after(loginizer_html);
@@ -545,8 +557,10 @@ function showNoShippingPhone(){
         var val = $(this).val();
         $('input[name="shipping_address[phone]"]').val(val);
         $('input[name="shipping_address[phone_mobile]"]').val(val);
-        $('input[name="payment_address[phone]"]').val(val);
-        $('input[name="payment_address[phone_mobile]"]').val(val);
+        if(!$('#use_for_invoice').is(':checked')) {
+          $('input[name="payment_address[phone]"]').val(val);
+          $('input[name="payment_address[phone_mobile]"]').val(val);
+        }
       });
 
       return false;
@@ -820,7 +834,8 @@ function disEnConfirmButton(disable){
 function applyInlineValidation() {
        if (inline_validation == 1) {
 
-         $('input#input-no_shipping_phone').on('blur', function() {
+         $('input#input-no_shipping_phone').on('keyup', delayKeyUp(function() {
+           $('input[name="no_shipping_phone"]').siblings('.errorsmall').remove();
            if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
              $(this).removeClass('ok-form error-form');
            } else if ($(this).val() == '') {
@@ -834,9 +849,10 @@ function applyInlineValidation() {
              $('input[name="no_shipping_phone"]').siblings('.errorsmall').remove();
            }
            showNoShippingPhone();
-         });
+         }));
 
-         $('input#input-no_shipping_surname, input#input-no_shipping_lastname').on('blur', function() {
+         $('input#input-no_shipping_surname, input#input-no_shipping_lastname').on('keyup', delayKeyUp(function() {
+           $(this).siblings('.errorsmall').remove();
            if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
              $(this).removeClass('ok-form error-form');
            } else if ($(this).val() == '') {
@@ -853,10 +869,10 @@ function applyInlineValidation() {
            } else if (validateName($(this).val())) {
              $(this).removeClass('error-form').addClass('ok-form');
            }
-         });
+         }));
 
 
-        $('input[name="supercheckout_password"], input[name="customer_personal[password]"]').on('blur', function() {
+        $('input[name="supercheckout_password"], input[name="customer_personal[password]"]').on('keyup', delayKeyUp(function() {
             if ($(this).val() == '') {
                 $(this).removeClass('error-form');
                 $(this).removeClass('ok-form');
@@ -872,64 +888,90 @@ function applyInlineValidation() {
                 $(this).removeClass('ok-form');
                 $(this).addClass('ok-form');
             }
-        });
-        $('input[name="supercheckout_email"], input[name="supercheckout_email_validation"]').on('blur', function() {
+        }));
+         $('input[name="supercheckout_email_validation"]').on('keyup', delayKeyUp(function() {
+           if ($(this).val() == '') {
+             $(this).removeClass('error-form');
+             $(this).removeClass('ok-form');
+             $(this).addClass('error-form');
+             $(this).parent().append('<span class="errorsmall">' + required_error + '</span>');
+           } else if (!validateEmail($(this).val())) {
+               $(this).parent().find('span.errorsmall').remove();
+               $(this).removeClass('error-form');
+               $(this).removeClass('ok-form');
+               $(this).addClass('error-form');
+               $(this).parent().append('<span class="errorsmall">' + invalid_email + '</span>');
+               // displayGeneralError(display_general_error_msg);
+               $("html, body").animate({
+                 scrollTop: 0
+               }, "fast");
+               return false;
+
+           } else {
+             //validate email
+             if($(this).val() !== "" && !unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false).test($(this).val())){
+               $(this).parent().find('span.errorsmall').remove();
+               $(this).removeClass('error-form');
+               $(this).removeClass('ok-form');
+               $(this).addClass('error-form');
+               $(this).parent().append('<span class="errorsmall">Valideer a.u.b. uw email adres</span>');
+               // displayGeneralError(display_general_error_msg);
+               $("html, body").animate({
+                 scrollTop: 0
+               }, "fast");
+               return false;
+               //please validate
+             } else if($('input:text[name="supercheckout_email"]').val() !== $(this).val() && unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false).test($(this).val())) {
+               //not the same
+               $(this).parent().find('span.errorsmall').remove();
+               $(this).removeClass('error-form');
+               $(this).removeClass('ok-form');
+               $(this).addClass('error-form');
+               $('input[name="supercheckout_email_validation"]').parent().append('<span class="errorsmall">De email adressen komen niet overeen!</span>');
+               // displayGeneralError(display_general_error_msg);
+               $("html, body").animate({
+                 scrollTop: 0
+               }, "fast");
+               return false;
+             } else {
+
+               $(this).removeClass('error-form');
+               $(this).removeClass('ok-form');
+               $(this).addClass('ok-form');
+               $(this).parent().find('span.errorsmall').remove();
+               hideGeneralError();
+             }
+             }
+         }));
+
+        $('input[name="supercheckout_email"]').on('keyup', delayKeyUp(function() {
             if ($(this).val() == '') {
                 $(this).removeClass('error-form');
                 $(this).removeClass('ok-form');
                 $(this).addClass('error-form');
-                $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
+                $(this).parent().append('<span class="errorsmall">' + required_error + '</span>');
             } else if (!validateEmail($(this).val())) {
-              //validate email
-              if($('input:text[name="supercheckout_email_validation"]').val() !== "" && unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false).test($(this).val())){
-                $('input:text[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
-                $('input:text[name="supercheckout_email_validation"]').removeClass('error-form');
-                $('input:text[name="supercheckout_email_validation"]').removeClass('ok-form');
-                $('input:text[name="supercheckout_email_validation"]').addClass('error-form');
-                $('input[name="supercheckout_email_validation"]').parent().append('<span class="errorsmall">Valideer a.u.b. uw email adres</span>');
+                $(this).parent().find('span.errorsmall').remove();
+                $(this).removeClass('error-form');
+                $(this).removeClass('ok-form');
+                $(this).addClass('error-form');
+                $(this).parent().append('<span class="errorsmall">' + invalid_email + '</span>');
                 // displayGeneralError(display_general_error_msg);
                 $("html, body").animate({
                   scrollTop: 0
                 }, "fast");
                 return false;
-                //please validate
-              } else if($('input:text[name="supercheckout_email"]').val() !== $('input:text[name="supercheckout_email_validation"]').val() && unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false).test($(this).val())) {
-                //not the same
-                $('input:text[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
-                $('input:text[name="supercheckout_email_validation"]').removeClass('error-form');
-                $('input:text[name="supercheckout_email_validation"]').removeClass('ok-form');
-                $('input:text[name="supercheckout_email_validation"]').addClass('error-form');
-                $('input[name="supercheckout_email_validation"]').parent().append('<span class="errorsmall">De email adressen komen niet overeen!</span>');
-                // displayGeneralError(display_general_error_msg);
-                $("html, body").animate({
-                  scrollTop: 0
-                }, "fast");
-                return false;
-              } else {
-                $('input:text[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
-                $('input:text[name="supercheckout_email"]').removeClass('error-form');
-                $('input:text[name="supercheckout_email"]').removeClass('ok-form');
-                $('input:text[name="supercheckout_email"]').addClass('error-form');
-                $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">' + invalid_email + '</span>');
-                // displayGeneralError(display_general_error_msg);
-                $("html, body").animate({
-                  scrollTop: 0
-                }, "fast");
-                return false;
-              }
+
             } else {
-                $('input:text[name="supercheckout_email_validation"]').removeClass('error-form');
-                $('input:text[name="supercheckout_email_validation"]').removeClass('ok-form');
-                $('input:text[name="supercheckout_email_validation"]').addClass('ok-form');
-                $('input:text[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
+                $(this).parent().find('span.errorsmall').remove();
                 $(this).removeClass('error-form');
                 $(this).removeClass('ok-form');
                 $(this).addClass('ok-form');
               hideGeneralError();
             }
-        });
+        }));
 
-        $('input[name="shipping_address[firstname]"], input[name="shipping_address[lastname]"], input[name="payment_address[firstname]"], input[name="payment_address[lastname]"] ').on('blur', function() {
+        $('input[name="shipping_address[firstname]"], input[name="shipping_address[lastname]"], input[name="payment_address[firstname]"], input[name="payment_address[lastname]"] ').on('keyup', delayKeyUp(function() {
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).val() == '') {
@@ -946,8 +988,8 @@ function applyInlineValidation() {
             } else if (validateName($(this).val())) {
                 $(this).removeClass('error-form').addClass('ok-form');
             }
-        });
-         $('input[name="shipping_address[postcode]"], input[name="payment_address[postcode]"]').on('blur keyup', function() {
+        }));
+         $('input[name="shipping_address[postcode]"], input[name="payment_address[postcode]"]').on('keyup', delayKeyUp(function() {
            $(this).removeClass('ok-form error-form');
            if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
              $(this).removeClass('ok-form error-form');
@@ -961,9 +1003,9 @@ function applyInlineValidation() {
              $(this).removeClass('error-form').addClass('ok-form');
            }
            checkFormatAddressApiCheckout();
-         });
+         }));
 
-        $('input[name="shipping_address[address1]"], input[name="payment_address[address1]"]').on('blur keyup', function() {
+        $('input[name="shipping_address[address1]"], input[name="payment_address[address1]"]').on('keyup', delayKeyUp(function() {
           $(this).removeClass('ok-form error-form');
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
@@ -978,9 +1020,9 @@ function applyInlineValidation() {
                 $(this).removeClass('error-form').addClass('ok-form');
             }
           checkFormatAddressApiCheckout();
-        });
+        }));
 
-         $('input[name="shipping_address[house_number]"], input[name="payment_address[house_number]"]').on('blur keyup', function() {
+         $('input[name="shipping_address[house_number]"], input[name="payment_address[house_number]"]').on('keyup', delayKeyUp(function() {
            $(this).removeClass('ok-form error-form');
            if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
              $(this).removeClass('ok-form error-form');
@@ -1000,13 +1042,13 @@ function applyInlineValidation() {
              $(this).removeClass('error-form').addClass('ok-form');
            }
            checkFormatAddressApiCheckout();
-         });
+         }));
 
-         $('input[name="shipping_address[house_number_extension]"], input[name="payment_address[house_number_extension]"]').on('blur keyup', function() {
+         $('input[name="shipping_address[house_number_extension]"], input[name="payment_address[house_number_extension]"]').on('keyup', delayKeyUp(function() {
            checkFormatAddressApiCheckout();
-         });
+         }));
 
-        $('input[name="shipping_address[address2]"], input[name="payment_address[address2]"]').on('blur keyup', function() {
+        $('input[name="shipping_address[address2]"], input[name="payment_address[address2]"]').on('keyup', delayKeyUp(function() {
           if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).val() == '') {
@@ -1019,9 +1061,9 @@ function applyInlineValidation() {
                 $(this).removeClass('error-form').addClass('ok-form');
             }
           checkFormatAddressApiCheckout();
-        });
+        }));
 
-        $('input[name="shipping_address[city]"], input[name="payment_address[city]"]').on('blur', function() {
+        $('input[name="shipping_address[city]"], input[name="payment_address[city]"]').on('keyup', delayKeyUp(function() {
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).val() == '') {
@@ -1033,8 +1075,8 @@ function applyInlineValidation() {
             } else if (validateCityName($(this).val())) {
                 $(this).removeClass('error-form').addClass('ok-form');
             }
-        });
-        $('input[name="payment_address[alias]"], input[name="shipping_address[alias]"]').on('blur', function() {
+        }));
+        $('input[name="payment_address[alias]"], input[name="shipping_address[alias]"]').on('keyup', delayKeyUp(function() {
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).val() == '') {
@@ -1046,8 +1088,8 @@ function applyInlineValidation() {
             } else if (validateAddressApiTitle($(this).val())) {
                 $(this).removeClass('error-form').addClass('ok-form');
             }
-        });
-        $('input[name="shipping_address[company]"], input[name="payment_address[company]"]').on('blur', function() {
+        }));
+        $('input[name="shipping_address[company]"], input[name="payment_address[company]"]').on('keyup', delayKeyUp(function() {
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).parent().find('.supercheckout-required').css('display') != "none" && $(this).val() == '') {
@@ -1057,9 +1099,9 @@ function applyInlineValidation() {
                 $(this).removeClass('error-form').addClass('ok-form');
             }
 
-        });
+        }));
 
-        $('input[name="shipping_address[phone]"], input[name="shipping_address[phone_mobile]"], input[name="payment_address[phone]"], input[name="payment_address[phone_mobile]').on('blur', function() {
+        $('input[name="shipping_address[phone]"], input[name="shipping_address[phone_mobile]"], input[name="payment_address[phone]"], input[name="payment_address[phone_mobile]').on('keyup', delayKeyUp(function() {
 
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
@@ -1072,8 +1114,8 @@ function applyInlineValidation() {
             } else if (validatePhoneNumber($(this).val())) {
                 $(this).removeClass('error-form').addClass('ok-form');
             }
-        });
-        $('textarea[name="payment_address[other]"], textarea[name="shipping_address[other]"]').on('blur', function() {
+        }));
+        $('textarea[name="payment_address[other]"], textarea[name="shipping_address[other]"]').on('keyup', delayKeyUp(function() {
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).val() == '') {
@@ -1085,7 +1127,7 @@ function applyInlineValidation() {
             } else if (validateMessage($(this).val())) {
                 $(this).removeClass('error-form').addClass('ok-form');
             }
-        });
+        }));
         $('.supercheckout_personal_dob > div > select').on('change', function() {
             var flag = 0;
             $('.supercheckout_personal_dob > div > select').each(function() {
@@ -1145,33 +1187,7 @@ function applyInlineValidation() {
     }
 }
 
-//function validateDniInline(dni) {
-//    $.ajax({
-//        type: 'POST',
-//        headers: {
-//            "cache-control": "no-cache"
-//        },
-//        url: getURLwithTime($('#module_url').val()),
-//        async: true,
-//        cache: false,
-//        dataType: "json",
-//        data: 'ajax=true' + '&method=validateDni' + '&dni=' + dni + '&token=' + prestashop.static_token,
-//        beforeSend: function () {
-//            hideGeneralError();
-//        },
-//        complete: function () {},
-//        success: function (jsonData) {
-//            if (jsonData['error']) {
-//                this_obj.parent().append('<span class="errorsmall">' + jsonData['error'] + '</span>');
-//            }
-//        },
-//        error: function (XMLHttpRequest, textStatus, errorThrown) {
-//            var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-//            $('.kb_velsof_sc_overlay').hide();
-//            $('.pay-loader').hide();
-//        }
-//    });
-//}
+
 
 function getURLwithTime(url) {
     return url + ((url.indexOf('?') < 0) ? '?' : '&') + 'rand=' + new Date().getTime()
@@ -1895,7 +1911,6 @@ function loadCart() {
 
                 });
             }
-                loadPayments();
 
             }
             checkCustomFieldBlocks();
@@ -3918,15 +3933,16 @@ function validateEmail(s) {
   var reg = unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false);
     var validationEmail = document.getElementById('supercheckout_email_validation').value;
     var checkoutOption = document.querySelector('input[name=checkout_option]:checked').value;
-    if(checkoutOption == "0"){
-      return reg.test(s);
-    } else {
-      if(s === validationEmail){
-        return reg.test(s);
-      } else {
-        return false;
-      }
-    }
+    // if(checkoutOption == "0"){
+    //   return reg.test(s);
+    // } else {
+    //   if((s !== validationEmail && validationEmail.length == 0) || (s == validationEmail && validationEmail.length > 0)){
+    //     return reg.test(s);
+    //   } else {
+    //     return false;
+    //   }
+    // }
+  return reg.test(s);
 }
 
 function validatePasswd(s) {

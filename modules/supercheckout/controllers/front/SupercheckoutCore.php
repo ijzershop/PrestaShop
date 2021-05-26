@@ -1928,7 +1928,6 @@ class SupercheckoutCore extends ModuleFrontController
                     ? $posted_data['customer_personal']['dob_years'] : '';
             }
 
-            Hook::exec('actionBeforeSubmitAccount');
 
             $flag = false;
             if ($this->is_logged && $this->context->cookie->is_guest) {

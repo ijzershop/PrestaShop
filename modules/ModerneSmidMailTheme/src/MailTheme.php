@@ -1,15 +1,10 @@
 <?php
-namespace PrestaShop\Module\ModerneSmidMailTheme;
-
 use Symfony\Component\Filesystem\Exception\ExceptionInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class MailTheme
 {
-
-
-
     public function makeThemeSymlink(){
         $module_mails_path = $_SERVER['DOCUMENT_ROOT'] . "/modules/ModerneSmidMailTheme/mails/themes/modernesmid";
         $prestashop_mails_path = $_SERVER['DOCUMENT_ROOT'] . '/mails/themes/modernesmid';

@@ -923,7 +923,7 @@ $_MODULE['<{supercheckout}prestashop>supercheckout_9fe934ea1a5d2ffceadbe46c1391d
 $_MODULE['<{supercheckout}prestashop>supercheckout_f4e06f9319b3dd1236f80bd7c9a330da'] = 'ongeldig land';
 $_MODULE['<{supercheckout}prestashop>supercheckout_68e8b4c235b0995ac8bc61f692071f0d'] = 'ongeldige status';
 $_MODULE['<{supercheckout}prestashop>supercheckout_2893cf40944a869d6c3c424e859ddd92'] = 'Is ongeldig';
-$_MODULE['<{supercheckout}prestashop>supercheckout_3e4d9d7be63be08984c236acf481fea6'] = 'Numbers niet toegestaan';
+$_MODULE['<{supercheckout}prestashop>supercheckout_3e4d9d7be63be08984c236acf481fea6'] = 'Nummers zijn niet toegestaan';
 $_MODULE['<{supercheckout}prestashop>supercheckout_b57eb7a3fe742a1e4d49c8d202b9169d'] = 'Sommige producten in uw winkelwagentje kan niet worden geleverd aan de geselecteerde address.Kindly verwijderen hetzelfde of wijzigen van uw adres.';
 $_MODULE['<{supercheckout}prestashop>supercheckout_ab37c261739f2bb4eb4311d0fc85facc'] = 'Al de door u verstrekte informatie juist zijn?';
 $_MODULE['<{supercheckout}prestashop>supercheckout_70923fcc76c89f09953e5232b8e0991c'] = '? Speciale tekens,; = + () @ # ° {} _ $%: zijn niet toegestaan';

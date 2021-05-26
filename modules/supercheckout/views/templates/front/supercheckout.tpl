@@ -529,6 +529,7 @@ font-size: 11px;
                     {/foreach}</div>
                 {/if}
         </div>
+
         {hook h='displayPaymentTop'}
         {hook h="displayContentWrapperTop"}
         <form id="velsof_supercheckout_form" class="mt-3 container opc-container" action="{$supercheckout_url}" method="POST" onsubmit=" return isPressedEnter(this)" enctype="multipart/form-data">
@@ -740,7 +741,6 @@ font-size: 11px;
                                 {assign var='layout_name' value='1_column'}
                                 {assign var='multiplier' value=1}
                             {/if}
-
                             <div class="col-lg-4 col-md-12 col-sm-12 kb_mobile_sc_respo" id="first_checkout_column">
                                 <div class="supercheckout-column-left columnleftsort checkout-section section-login custom-panel" id="columnleft-1"> {*Need to change later*}
                                     <div  class="supercheckout-blocks" data-column="{$settings['design']['login'][$layout_name]['column']|intval}" data-row="{$settings['design']['login'][$layout_name]['row']|intval}" data-column-inside="{$settings['design']['login'][$layout_name]['column-inside']|intval}"  >
@@ -885,6 +885,7 @@ font-size: 11px;
                     <input type="hidden" id="analytic_url" value="{$analytic_url|escape:'quotes'}" />    {*escape not required as contains html*}
                 </fieldset>
             </div>
+
         </form>
         {* changes by rishabh jain *}
         <!-- The Modal -->

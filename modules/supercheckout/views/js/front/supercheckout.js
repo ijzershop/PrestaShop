@@ -2949,6 +2949,12 @@ $( document ).ready(function() {
     if (!isValid) {
       return;
     }
+
+
+    validatePhoneNumber($('input[name="shipping_address[phone]"]').val());
+    if(!$('#use_for_invoice').is(':checked')){
+      validatePhoneNumber($('input[name="payment_address[phone]"]').val());
+    }
     /* End Code Added By Priyanshu on 11-Feb-2021 for the packetery ( Zasilkovna ) compatibility */
 
     // changes by rishabh jain for product availablility by zipcode

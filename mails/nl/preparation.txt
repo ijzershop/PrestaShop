@@ -1,23 +1,27 @@
-[{shop_url}] 
+{shop_url}
 
-Hallo,, 
+Hallo {firstname} {lastname},
 
-Een medewerker van de IJzerShop heeft uw bestelling ingepakt en voorzien van een verzendlabel.
-Indien uw bestelling uit meerdere pakketten bestaat zult u deze mail meerdere keren ontvangen.
+Bestelling {order_name} - Verwerken bestelling
 
-Uw bestelling zal aan het eind van de dag worden opgehaald en op de eerstvolgende werkdag door onze expediteur worden afgeleverd, u ontvangt op de dag van levering nog een mail met informatie over het tijdstip waarop de levering zal plaatsvinden en een trackingcode.
+Wij verwerken op dit ogenblik uw bestelling met referentie {order_name} bij {shop_name}.
 
-We zouden graag van u willen horen of alles naar wens is afgehandeld.
-U kunt een recensie plaatsen op onze website.
+Volg uw bestelling en download uw factuur via onze online shop, ga naar [Bestellingen en details]({history_url}) in uw klantenaccount.
 
-Met vriendelijke groet,
+Met een gast account kunt de bestelling volgen via ["Bestelling volgen"]({guest_tracking_url}) in onze online shop.
 
+Hoeveel sterren krijgen wij van u?,
+Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
+>  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
 
-IJZERSHOP.NL
-Venusweg 15,
-8938bc Leeuwarden
+Heeft u een vraag?
+Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
+[> veel gestelde vragen]({faq_page})
 
+[Stuur een whatsapp naar: 0636.58.58.00](https://api.whatsapp.com/send?phone=31636585800)whatsapp: 0636 5858 00
 
+[Bel naar: 0900-2502500](tel://0900-2502500)telefoon: 058-2123138
 
+[stuur een mail naar info@v15.nl](mailto:info@v15.nl) email: info@v15.nl
 
-
+{custom_footer_html}

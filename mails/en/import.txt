@@ -1,9 +1,0 @@
-[{shop_url}] 
-
-Hallo {firstname} {lastname}, 
-
-Het bestand {filename} is succesvol geïmporteerd naar uw
-webwinkel. 
-
-{custom_footer_txt}
-

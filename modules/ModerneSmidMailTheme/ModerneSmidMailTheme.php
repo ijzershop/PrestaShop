@@ -31,7 +31,8 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeScanner;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
-use PrestaShop\Module\ModerneSmidMailTheme\MailTheme;
+
+require_once('src/MailTheme.php');
 
 
 

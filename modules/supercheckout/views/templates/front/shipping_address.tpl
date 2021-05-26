@@ -14,7 +14,7 @@
 <div class="opc_shipping_address custom-panel">
 
     <div id="shipping-new" style="display: block;">
-        {*            <div class="supercheckout-form billing-form" id="shipping_address_table" >*}  {*Need to change later*}
+
         {assign var='display_row' value=''}
         {assign var='google_region_type' value=''}
         {foreach from=$settings['shipping_address'] key='p_address_key' item='p_address_field'}
@@ -98,11 +98,7 @@
                             </div>
 
                         {elseif $settings['shipping_address'][$p_address_key]['html_format'] == 2}
-                            {*{if $p_address_key eq 'postcode'}
-                            <tr class="sort_data" id="shipping_post_code" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']}" style="{$display_row}" >
-                            {else}
-                            <tr class="sort_data" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']}" style="{$display_row}" >
-                            {/if}*}
+
                             <div class="{if $p_address_key == 'id_country' || $p_address_key == 'city' }col-12{else}col-12 col-sm-6{/if} {if $p_address_key == 'postcode' ||  $p_address_key == 'firstname'}pr-sm-1 pr-sm-0{elseif $p_address_key == 'city' || $p_address_key == 'lastname'}pl-sm-1 {if $p_address_key == 'lastname'}pr-sm-0 float-right p-0{/if}{/if}">
                                 <div class="form-group ">
                                     <label class="control-label" for="shipping_address[{$p_address_key}]">{l s={$settings['shipping_address'][$p_address_key]['title']} mod='supercheckout'}
@@ -148,8 +144,8 @@
                             <div class="sort_data col-12 col-sm-6 p-0 float-left" id="shipping_post_code" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']}" style="{$display_row}">
                             {else}
                               {if $p_address_key == 'address1'}
-                              <div class="row d-flex">
-                                <div class="sort_data col-12" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
+                              <div class="row">
+                                <div class="sort_data col-12 " data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']|intval}" style="display: flow-root;">
                                   {elseif $p_address_key == 'house_number'}
                                   <div class="sort_data col-8 col-sm-3 pl-sm-1 pr-sm-0 pr-0 pl-0 float-left" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                                     {elseif $p_address_key == 'house_number_extension'}
@@ -203,99 +199,8 @@
                     {/if}
                 {/foreach}
             </div>
-            {*                </div>*}
         </div>
-        <!-- INSERT INTO #SHIPPING ADDRESS FORM -->
-        <!-- Start - Code to insert custom fields in shipping address form block -->
-          <div class="div_custom_fields">
-                        {foreach from=$array_fields item=field}
-                            {if $field['position'] eq 'shipping_address_form'}
-                                <div class="supercheckout-blocks form-group">
-                                    {if $field['type'] eq "textbox"}
-                                        <label class="cursor_help" title="{$field['field_help_text']}">{$field['field_label']}{if $field['required'] eq "1"}<span style="display:inline;" class="supercheckout-required">*</span>{/if}</label>
-                                        <input type="text" name="custom_fields[field_{$field['id_velsof_supercheckout_custom_fields']}]" value="{$field['default_value']}" class="supercheckout-large-field width_100 form-control">
-                                        <span id="error_field_{$field['id_velsof_supercheckout_custom_fields']}" class="errorsmall_custom hidden_custom"></span>
-                                    {/if}
 
-                                    {if $field['type'] eq "textarea"}
-                                        <label class="cursor_help" title="{$field['field_help_text']}">{$field['field_label']}{if $field['required'] eq "1"}<span style="display:inline;" class="supercheckout-required">*</span>{/if}</label>
-                                        <textarea name="custom_fields[field_{$field['id_velsof_supercheckout_custom_fields']}]" class="supercheckout-large-field width_100 form-control" style="width: 100%; height: 100px;">{$field['default_value']}</textarea>
-                                        <span id="error_field_{$field['id_velsof_supercheckout_custom_fields']}" class="errorsmall_custom hidden_custom"></span>
-                                    {/if}
-
-                                    {if $field['type'] eq "selectbox"}
-                                        <label class="cursor_help" title="{$field['field_help_text']}">{$field['field_label']}{if $field['required'] eq "1"}<span style="display:inline;" class="supercheckout-required">*</span>{/if}</label>
-                                        <select name="custom_fields[field_{$field['id_velsof_supercheckout_custom_fields']}]" class="supercheckout-large-field width_100 form-control">
-                                            <option value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}">{l s='Select Option' mod='supercheckout'}</option>
-                                            {foreach from=$field['options'] item=field_options}
-                                                <option {if $field_options['default_value'] eq $field_options['option_value']}selected{/if} value="{$field_options['option_value']}">{$field_options['option_label']}</option>
-                                            {/foreach}
-                                        </select>
-                                        <span id="error_field_{$field['id_velsof_supercheckout_custom_fields']}" class="errorsmall_custom hidden_custom"></span>
-                                    {/if}
-
-                                    {if $field['type'] eq "radio"}
-                                        <label class="cursor_help" title="{$field['field_help_text']}">{$field['field_label']}{if $field['required'] eq "1"}<span style="display:inline;" class="supercheckout-required">*</span>{/if}</label>
-                                        {assign var=radio_counter value=1}
-                                        {foreach from=$field['options'] item=field_options}
-                                            <div class="supercheckout-extra-wrap">
-                                                <div class="radio" id="uniform-field_{$field['id_velsof_supercheckout_custom_fields']}"><span>
-                                                        <input type="radio" name="custom_fields[field_{$field['id_velsof_supercheckout_custom_fields']}]" value="{$field_options['option_value']}" {if $field_options['default_value'] eq $field_options['option_value']}checked{/if}>
-                                                        <label for="field_{$field['id_velsof_supercheckout_custom_fields']}">{$field_options['option_label']}</label>
-                                                    </span></div>
-
-                                            </div>
-                                            {assign var=radio_counter value=$radio_counter+1}
-                                        {/foreach}
-                                        <span id="error_field_{$field['id_velsof_supercheckout_custom_fields']}" class="errorsmall_custom hidden_custom"></span>
-                                    {/if}
-
-                                    {if $field['type'] eq "checkbox"}
-                                        <label class="cursor_help" title="{$field['field_help_text']}">{$field['field_label']}{if $field['required'] eq "1"}<span style="display:inline;" class="supercheckout-required">*</span>{/if}</label>
-                                        {foreach from=$field['options'] item=field_options}
-                                            <div class="input-box input-field_{$field['id_velsof_supercheckout_custom_fields']}">
-                                                <div class="checker checkbox" id="uniform-field_{$field['id_velsof_supercheckout_custom_fields']}">
-                                                    <span class="checked">
-                                                        <input {if $field_options['default_value'] eq $field_options['option_value']}checked{/if} type="checkbox" name="custom_fields[field_{$field['id_velsof_supercheckout_custom_fields']}][]" value="{$field_options['option_value']}">
-                                                        <label for="field_{$field['id_velsof_supercheckout_custom_fields']}"><b>{$field_options['option_label']}</b></label>
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        {/foreach}
-                                        <span id="error_field_{$field['id_velsof_supercheckout_custom_fields']}" class="errorsmall_custom hidden_custom"></span>
-                                    {/if}
-
-                                    {* Start: Code added by Anshul for date field *}
-                                    {if $field['type'] eq "date"}
-                                        <label class="cursor_help" title="{$field['field_help_text']}">{$field['field_label']}{if $field['required'] eq "1"}<span style="display:inline;" class="supercheckout-required">*</span>{/if}</label>
-                                        <input style="position: relative;" type="text" id="" name="custom_fields[field_{$field['id_velsof_supercheckout_custom_fields']}]" value="{$field['default_value']}" class="supercheckout-large-field width_100 kb_sc_custom_field_date form-control" readonly disabled >
-                                        <span id="error_field_{$field['id_velsof_supercheckout_custom_fields']}" class="errorsmall_custom hidden_custom"></span>
-                                        {if isset($field['validation_type']) && $field['validation_type'] == 'isDate'}
-                                            <span style="color:#999999">
-                                                {l s='Date format is Y-m-d' mod='supercheckout'}
-                                            </span>
-                                        {/if}
-                                    {/if}
-                                    {* Code added by Anshul for date field *}
-
-                                    {* Start: Code added by Anshul for file field *}
-                                    {if $field['type'] eq "file"}
-                                        <label class="cursor_help" title="{$field['field_help_text']}">{$field['field_label']}{if $field['required'] eq "1"}<span style="display:inline;" class="supercheckout-required">*</span>{/if}</label>
-                                        <input type="file" data-buttonText="{l s='Choose file' mod='supercheckout'}" id="kb_sc_custom_field_file_{$field['id_velsof_supercheckout_custom_fields']}" name="custom_fields[field_{$field['id_velsof_supercheckout_custom_fields']}]" value="{$field['default_value']}" class="supercheckout-large-field width_100 kbfiletype form-control">
-                                        <span id="error_field_{$field['id_velsof_supercheckout_custom_fields']}" class="errorsmall_custom hidden_custom"></span>
-                                        {if isset($field['validation_type']) && $field['validation_type'] == 'isFile'}
-                                            <span style="color:#999999">
-                                                {l s='Supported file formats are PDF, JPEG, PNG, DOCX, CSV & GIF.' mod='supercheckout'}
-                                            </span>
-                                        {/if}
-                                    {/if}
-                                    {* Code added by Anshul for file field *}
-                                </div>
-                            {/if}
-                        {/foreach}
-                    </div>
-        <!-- End - Code to insert custom fields in shipping address form block -->
 
         <ul class="list-unstyled">
             <li>

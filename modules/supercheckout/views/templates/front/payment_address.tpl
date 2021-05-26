@@ -186,8 +186,8 @@
                                 <div class="sort_data col-12 col-sm-6 pl-0 pr-0 float-left" id="payment_post_code" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                                 {else}
                                     {if $p_address_key == 'address1'}
-                                    <div class="row d-flex">
-                                        <div class="sort_data col-12" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
+                                    <div class="row">
+                                        <div class="sort_data col-12" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="display: flow-root;">
                                     {elseif $p_address_key == 'house_number'}
                                         <div class="sort_data col-8 col-sm-3 pl-sm-1 pr-sm-0 pr-0 pl-0 float-left" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                                     {elseif $p_address_key == 'house_number_extension'}

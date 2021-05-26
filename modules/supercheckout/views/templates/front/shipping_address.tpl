@@ -57,9 +57,9 @@
                     {if $p_address_key eq 'postcode'}
                         <div class="row sort_data d-flex" id="shipping_post_code" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']}" style="{$display_row}">
                         {else}
-                            <div class="sort_data col-12 pl-sm-0 pr-sm-0" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']}" style="{$display_row}">
+                            <div class="sort_data col-12 p-0" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']}" style="{$display_row}">
                             {/if}
-                            <div class="{if $p_address_key == 'id_country' || $p_address_key == 'city'}col-12{else}col-12 col-sm-6{/if} {if $p_address_key == 'postcode' || $p_address_key == 'phone' ||  $p_address_key == 'firstname'}{if $p_address_key == 'firstname'}pl-sm-0{/if} pr-sm-0{elseif $p_address_key == 'phone_mobile' || $p_address_key == 'lastname'}pl-sm-1 {if $p_address_key == 'lastname'}pr-sm-0{/if}{/if}">
+                            <div class="{if $p_address_key == 'id_country' || $p_address_key == 'city'}col-12{else}col-12 col-sm-6{/if} {if $p_address_key == 'postcode' || $p_address_key == 'phone' ||  $p_address_key == 'firstname'}{if $p_address_key == 'firstname'}pl-sm-0 float-left p-0 {/if} pr-sm-0{elseif $p_address_key == 'phone_mobile' || $p_address_key == 'lastname'}pl-sm-1 {if $p_address_key == 'lastname'}pr-sm-0 float-right{/if}{/if}">
                                 <div class="form-group ">
                                     <label class="control-label" for="shipping_address[{$p_address_key}]" >{l s={$settings['shipping_address'][$p_address_key]['title']} mod='supercheckout'}
                                         {if $p_address_key eq 'vat_number'}
@@ -103,7 +103,7 @@
                             {else}
                             <tr class="sort_data" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']}" style="{$display_row}" >
                             {/if}*}
-                            <div class="{if $p_address_key == 'id_country' || $p_address_key == 'city' }col-12{else}col-sm-6{/if} {if $p_address_key == 'postcode' || $p_address_key == 'phone' ||  $p_address_key == 'firstname'}pr-sm-1 pr-sm-0{elseif $p_address_key == 'city' || $p_address_key == 'phone_mobile' || $p_address_key == 'lastname'}pl-sm-1 {if $p_address_key == 'lastname'}pr-sm-0{/if}{/if}">
+                            <div class="{if $p_address_key == 'id_country' || $p_address_key == 'city' }col-12{else}col-12 col-sm-6{/if} {if $p_address_key == 'postcode' ||  $p_address_key == 'firstname'}pr-sm-1 pr-sm-0{elseif $p_address_key == 'city' || $p_address_key == 'lastname'}pl-sm-1 {if $p_address_key == 'lastname'}pr-sm-0 float-right p-0{/if}{/if}">
                                 <div class="form-group ">
                                     <label class="control-label" for="shipping_address[{$p_address_key}]">{l s={$settings['shipping_address'][$p_address_key]['title']} mod='supercheckout'}
                                         {if $p_address_key eq 'vat_number'}
@@ -145,22 +145,22 @@
 
                     {else}
                         {if $p_address_key eq 'postcode'}
-                            <div class="sort_data col-12 col-sm-6 pl-0 pr-0" id="shipping_post_code" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']}" style="{$display_row}">
+                            <div class="sort_data col-12 col-sm-6 p-0 float-left" id="shipping_post_code" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']}" style="{$display_row}">
                             {else}
                               {if $p_address_key == 'address1'}
                               <div class="row d-flex">
                                 <div class="sort_data col-12" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                                   {elseif $p_address_key == 'house_number'}
-                                  <div class="sort_data col-8 col-sm-3 pl-sm-1 pr-sm-0 pr-0" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
+                                  <div class="sort_data col-8 col-sm-3 pl-sm-1 pr-sm-0 pr-0 pl-0 float-left" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                                     {elseif $p_address_key == 'house_number_extension'}
-                                    <div class="sort_data col-4 col-sm-3 pl-sm-1 pl-1 pr-0" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
+                                    <div class="sort_data col-4 col-sm-3 pl-sm-1 pl-1 pr-0 float-right" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                                       {else}
-                                      <div class="sort_data" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
+                                      <div class="sort_data col-12 p-0" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                                         {/if}
 
 {*                                <div class="sort_data" data-percentage="{$settings['shipping_address'][$p_address_key]['sort_order']}" style="{$display_row}">*}
                                 {/if}
-                                <div class="form-group ">
+                                <div class="form-group {if $p_address_key == 'phone'}col-12{/if}">
                                     <label class="control-label" for="shipping_address[{$p_address_key}]">{l s={$settings['shipping_address'][$p_address_key]['title']} mod='supercheckout'}
                                         {if $p_address_key eq 'vat_number'}
                                             <span style="display:{if $need_vat}inline{else}none{/if};" class="supercheckout-required">*</span>

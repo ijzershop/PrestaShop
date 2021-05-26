@@ -32,7 +32,7 @@ function notifyAlert(title, message, type){
 
 function delayKeyUp(callback) {
   var timer = 0;
-  var ms = 600;
+  var ms = 500;
   return function() {
     var context = this, args = arguments;
     clearTimeout(timer);

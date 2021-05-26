@@ -965,6 +965,13 @@ function applyInlineValidation() {
                 return false;
 
             } else {
+                if($('input[name="supercheckout_email"]').val() === $('input[name="supercheckout_email_validation"]').val()){
+                  $('input[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
+                  $('input[name="supercheckout_email_validation"]').removeClass('error-form');
+                  $('input[name="supercheckout_email_validation"]').removeClass('ok-form');
+                  $('input[name="supercheckout_email_validation"]').addClass('ok-form');
+                }
+
                 $(this).parent().find('span.errorsmall').remove();
                 $(this).removeClass('error-form');
                 $(this).removeClass('ok-form');

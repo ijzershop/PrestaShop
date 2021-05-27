@@ -553,7 +553,7 @@ function showNoShippingPhone(){
       $('#input-no_shipping_phone').removeClass('ok-form').addClass('error-form');
       $('#input-no_shipping_phone').parent().append('<span class="errorsmall">Uw geregistreerd telefoonnummer heeft een onjuist formaat.</span>');
 
-      $('#input-no_shipping_phone').on('keyup', function(e){
+      $('#input-no_shipping_phone').on('keyup', delayKeyUp(function(e){
         var val = $(this).val();
         $('input[name="shipping_address[phone]"]').val(val);
         $('input[name="shipping_address[phone_mobile]"]').val(val);
@@ -561,7 +561,7 @@ function showNoShippingPhone(){
           $('input[name="payment_address[phone]"]').val(val);
           $('input[name="payment_address[phone_mobile]"]').val(val);
         }
-      });
+      }));
 
       return false;
 
@@ -2951,12 +2951,45 @@ $( document ).ready(function() {
     }
 
 
-    validatePhoneNumber($('input[name="shipping_address[phone]"]').val());
-    if(!$('#use_for_invoice').is(':checked')){
-      validatePhoneNumber($('input[name="payment_address[phone]"]').val());
-    }
-    /* End Code Added By Priyanshu on 11-Feb-2021 for the packetery ( Zasilkovna ) compatibility */
 
+    $('input[name="shipping_address[phone]"]').siblings('.errorsmall').remove();
+    if ($('input[name="shipping_address[phone]"]').val() == '') {
+      $('input[name="shipping_address[phone]"]').removeClass('ok-form').addClass('error-form');
+      $('input[name="shipping_address[phone]"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
+      return;
+    } else if (!validatePhoneNumber($('input[name="shipping_address[phone]"]').val())) {
+      $('input[name="shipping_address[phone]"]').removeClass('ok-form').addClass('error-form');
+      $('input[name="shipping_address[phone]"]').parent().append('<span class="errorsmall">' + invalid_number + '</span>');
+      return;
+    } else if (validatePhoneNumber($('input[name="shipping_address[phone]"]').val())) {
+      $('input[name="shipping_address[phone]"]').removeClass('error-form').addClass('ok-form');
+      $('input[name="shipping_address[phone]"]').siblings('.errorsmall').remove();
+    }
+    $('input[name="payment_address[phone]"]').siblings('.errorsmall').remove();
+    if(!$('#use_for_invoice').is(':checked')){
+      if ($('input[name="payment_address[phone]"]').val() == '') {
+        $('input[name="payment_address[phone]"]').removeClass('ok-form').addClass('error-form');
+        $('input[name="payment_address[phone]"]').parent().append('<span class="errorsmall">' + required_error + '</span>');
+        return;
+      } else if (!validatePhoneNumber($('input[name="payment_address[phone]"]').val())) {
+        $('input[name="payment_address[phone]"]').removeClass('ok-form').addClass('error-form');
+        $('input[name="payment_address[phone]"]').parent().append('<span class="errorsmall">' + invalid_number + '</span>');
+        return;
+      } else if (validatePhoneNumber($('input[name="payment_address[phone]"]').val())) {
+        $('input[name="payment_address[phone]"]').removeClass('error-form').addClass('ok-form');
+        $('input[name="payment_address[phone]"]').siblings('.errorsmall').remove();
+      }
+    }
+
+    $('input[name="conditions_to_approve[terms-and-conditions]"]').siblings('.errorsmall').remove();
+    if(!$('input[name="conditions_to_approve[terms-and-conditions]"]').is(':checked')) {
+      $('input[name="conditions_to_approve[terms-and-conditions]"]').removeClass('ok-form').addClass('error-form');
+      $('input[name="conditions_to_approve[terms-and-conditions]"]').parent().append('<span class="errorsmall">Accepteer a.u.b. onze algemene voorwaarden om uw bestelling af te ronden.</span>');
+      return;
+    } else{
+      $('input[name="conditions_to_approve[terms-and-conditions]"]').removeClass('error-form').addClass('ok-form');
+      $('input[name="conditions_to_approve[terms-and-conditions]"]').siblings('.errorsmall').remove();
+    }
     // changes by rishabh jain for product availablility by zipcode
     if ($('#product_not_available .alert').length) {
 //            if (typeof product_not_available !== 'undefined') {

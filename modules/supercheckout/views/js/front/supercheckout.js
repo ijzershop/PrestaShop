@@ -1122,7 +1122,7 @@ function applyInlineValidation() {
         }));
 
         $('input[name="shipping_address[phone]"], input[name="shipping_address[phone_mobile]"], input[name="payment_address[phone]"], input[name="payment_address[phone_mobile]').on('keyup', delayKeyUp(function() {
-
+          $(this).siblings('.errorsmall').remove();
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).val() == '') {

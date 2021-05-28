@@ -554,17 +554,7 @@ function showNoShippingPhone(){
       $('.no-shipping-names-row.phone').removeClass('d-none').show();
       $('#input-no_shipping_phone').removeClass('ok-form').addClass('error-form');
       $('#input-no_shipping_phone').parent().append('<span class="errorsmall">Uw geregistreerd telefoonnummer heeft een onjuist formaat.</span>');
-
-      $('#input-no_shipping_phone').on('keyup', delayKeyUp(function(e){
-        var val = $(this).val();
-        $('input[name="shipping_address[phone]"]').val(val);
-        $('input[name="shipping_address[phone_mobile]"]').val(val);
-        if(!$('#use_for_invoice').is(':checked')) {
-          $('input[name="payment_address[phone]"]').val(val);
-          $('input[name="payment_address[phone_mobile]"]').val(val);
-        }
-      }));
-
+      
       return false;
 
     } else {
@@ -808,7 +798,6 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
           isValidForConfirm = true;
         }
       }
-// console.log(isValidForConfirm);
 
       resolve(isValidForConfirm);
     })
@@ -847,8 +836,14 @@ function applyInlineValidation() {
        if (inline_validation == 1) {
 
          $('input#input-no_shipping_phone').on('keyup', delayKeyUp(function() {
-            $(this).siblings('.errorsmall').remove();
-           $('input[name="no_shipping_phone"]').siblings('.errorsmall').remove();
+            var val = $(this).val();
+            $('input[name="shipping_address[phone]"]').val(val);
+            $('input[name="payment_address[phone]"]').val(val);
+
+            $('input[name="shipping_address[phone]"]').siblings('.errorsmall').remove();
+            $('input[name="payment_address[phone]"]').siblings('.errorsmall').remove();
+            $('input[name="no_shipping_phone"]').siblings('.errorsmall').remove();
+
            if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
              $(this).removeClass('ok-form error-form');
            } else if ($(this).val() == '') {
@@ -886,6 +881,7 @@ function applyInlineValidation() {
 
 
         $('input[name="supercheckout_password"], input[name="customer_personal[password]"]').on('keyup', delayKeyUp(function() {
+            $(this).parent().find('.errorsmall').remove();
             if ($(this).val() == '') {
                 $(this).removeClass('error-form');
                 $(this).removeClass('ok-form');
@@ -903,6 +899,7 @@ function applyInlineValidation() {
             }
         }));
          $('input[name="supercheckout_email_validation"]').on('keyup', delayKeyUp(function() {
+            $(this).parent().find('.errorsmall').remove();
            if ($(this).val() == '') {
              $(this).removeClass('error-form');
              $(this).removeClass('ok-form');
@@ -958,6 +955,7 @@ function applyInlineValidation() {
          }));
 
         $('input[name="supercheckout_email"]').on('keyup', delayKeyUp(function() {
+            $(this).parent().find('.errorsmall').remove();
             if ($(this).val() == '') {
                 $(this).removeClass('error-form');
                 $(this).removeClass('ok-form');
@@ -992,6 +990,7 @@ function applyInlineValidation() {
         }));
 
         $('input[name="shipping_address[firstname]"], input[name="shipping_address[lastname]"], input[name="payment_address[firstname]"], input[name="payment_address[lastname]"] ').on('keyup', delayKeyUp(function() {
+            $(this).parent().find('.errorsmall').remove();
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).val() == '') {
@@ -1010,6 +1009,7 @@ function applyInlineValidation() {
             }
         }));
          $('input[name="shipping_address[postcode]"], input[name="payment_address[postcode]"]').on('keyup', delayKeyUp(function() {
+            $(this).parent().find('.errorsmall').remove();
            $(this).removeClass('ok-form error-form');
            if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
              $(this).removeClass('ok-form error-form');
@@ -1026,6 +1026,7 @@ function applyInlineValidation() {
          }));
 
         $('input[name="shipping_address[address1]"], input[name="payment_address[address1]"]').on('keyup', delayKeyUp(function() {
+            $(this).parent().find('.errorsmall').remove();
           $(this).removeClass('ok-form error-form');
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
@@ -1043,6 +1044,7 @@ function applyInlineValidation() {
         }));
 
          $('input[name="shipping_address[house_number]"], input[name="payment_address[house_number]"]').on('keyup', delayKeyUp(function() {
+            $(this).parent().find('.errorsmall').remove();
            $(this).removeClass('ok-form error-form');
            if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
              $(this).removeClass('ok-form error-form');
@@ -1069,6 +1071,7 @@ function applyInlineValidation() {
          }));
 
         $('input[name="shipping_address[address2]"], input[name="payment_address[address2]"]').on('keyup', delayKeyUp(function() {
+            $(this).parent().find('.errorsmall').remove();
           if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).val() == '') {
@@ -1084,6 +1087,7 @@ function applyInlineValidation() {
         }));
 
         $('input[name="shipping_address[city]"], input[name="payment_address[city]"]').on('keyup', delayKeyUp(function() {
+            $(this).parent().find('.errorsmall').remove();
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).val() == '') {
@@ -1097,6 +1101,7 @@ function applyInlineValidation() {
             }
         }));
         $('input[name="payment_address[alias]"], input[name="shipping_address[alias]"]').on('keyup', delayKeyUp(function() {
+            $(this).parent().find('.errorsmall').remove();
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).val() == '') {
@@ -1110,6 +1115,7 @@ function applyInlineValidation() {
             }
         }));
         $('input[name="shipping_address[company]"], input[name="payment_address[company]"]').on('keyup', delayKeyUp(function() {
+            $(this).parent().find('.errorsmall').remove();
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).parent().find('.supercheckout-required').css('display') != "none" && $(this).val() == '') {
@@ -1136,6 +1142,7 @@ function applyInlineValidation() {
             }
         }));
         $('textarea[name="payment_address[other]"], textarea[name="shipping_address[other]"]').on('keyup', delayKeyUp(function() {
+            $(this).parent().find('.errorsmall').remove();
             if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
                 $(this).removeClass('ok-form error-form');
             } else if ($(this).val() == '') {
@@ -3390,6 +3397,8 @@ $( document ).ready(function() {
   $("#supercheckout_confirm_order").click(function (event) {
     event.preventDefault();
     var add_to_order_carrier = $('#add_to_order_method_radio').attr('data-carrier-id');
+    showNoShippingPhone();
+
     if($('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier || $('.supercheckout_shipping_option:checked').attr('value') == 7) {
       //Is checkout without shipping address
       var surname_field_value = $('input:text[name="no_shipping_surname"]').val();
@@ -3686,6 +3695,7 @@ function saveAddress() {
             } else {
                 display_progress(80);
 
+                console.log(['1',$('input:radio[name=checkout_option]:checked').val(), ])
                 if ($('input:radio[name=checkout_option]:checked').val() == 1) {
                     /* Start - Code Added by Raghu on 21-Aug-2017 for fixing 'URL Append Issue in case of Guest Checkout Save Address' issue */
                     var supercheckout_page = window.location.href.replace("?checkout_option=guest", "");
@@ -3701,9 +3711,11 @@ function saveAddress() {
                         supercheckout_page_wparam = supercheckout_page + "?checkout_option=guest";
                     }
 
+                    console.log(['2',supercheckout_page_wparam]);
                     // Redirect to next page
                     // window.location = supercheckout_page_wparam;
                 } else {
+                  console.log(['3', window.location]);
                     // location.reload();
                 }
             }
@@ -3991,7 +4003,8 @@ function validateMessage(s) {
 }
 
 function validatePhoneNumber(s) {
-    var reg = /^[+0-9. ()-].{9,14}$/;
+    // var reg = /^[+0-9. ()-].{9,14}$/;
+    var reg = /^((\+|00(\s|\s?\-\s?)?)31(\s|\s?\-\s?)?(\(0\)[\-\s]?)?|0)[1-9]((\s|\s?\-\s?)?[0-9])((\s|\s?-\s?)?[0-9])((\s|\s?-\s?)?[0-9])\s?[0-9]\s?[0-9]\s?[0-9]\s?[0-9]\s?[0-9]$/;
     return reg.test(s);
 }
 function validateEmail(s) {

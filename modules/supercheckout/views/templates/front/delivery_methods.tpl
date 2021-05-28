@@ -116,7 +116,7 @@
                           {if Context::getContext()->cookie->logged == '1'}
                             {if count($availableOrders) > 0}
                               <input type="hidden" name="added_to_order" id="added_to_order" value="{if (int)$delivery_option == (int)$carrier.id}{$availableOrders[0].reference}{/if}" data-latest="{$availableOrders[0].reference}">
-                              <a style="color:#777777;" target="_blank" href="/index.php?controller=order-detail&id_order={$availableOrders[0].id_order}">Bekijk de lopende bestelling {$availableOrders[0].reference} waar u de huidige bestelling aan wilt toevoegen.</a>
+                              <a style="color:#777777;" target="_blank" href="/index.php?controller=order-detail&id_order={$availableOrders[0].id_order}">Bekijk de lopende bestelling {$availableOrders[0].reference} waar u de huidige bestelling aan kunt toevoegen.</a>
                               {if Context::getContext()->country->iso_code == 'BE'}<span style="color:blue;"><i data-id="shipping-info-be" class="icon-info shipping-info-icon"></i> <span id="shipping-info-be" style="display:none;">Klanten in België betalen {Context::getContext()->currentLocale->formatPrice(12.25, 'EUR')} transport</span></span>{/if}
                             {else}
                               <a style="color:#777777;">Er is momenteel geen bestaande bestelling beschikbaar waar u deze aan toe kunt voegen.</a>

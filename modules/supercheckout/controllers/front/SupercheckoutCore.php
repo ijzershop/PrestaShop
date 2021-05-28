@@ -1130,7 +1130,7 @@ class SupercheckoutCore extends ModuleFrontController
             $id_customer = 0;
         }
 
-        if($posted_data['added_to_order'] != ''){
+        if(isset($posted_data['added_to_order']) && $posted_data['added_to_order'] != ''){
             $this->context->cart->added_to_order = $posted_data['added_to_order'];
         }
 

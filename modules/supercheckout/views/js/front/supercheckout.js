@@ -554,7 +554,7 @@ function showNoShippingPhone(){
       $('.no-shipping-names-row.phone').removeClass('d-none').show();
       $('#input-no_shipping_phone').removeClass('ok-form').addClass('error-form');
       $('#input-no_shipping_phone').parent().append('<span class="errorsmall">Uw geregistreerd telefoonnummer heeft een onjuist formaat.</span>');
-      
+
       return false;
 
     } else {

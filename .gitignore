@@ -443,3 +443,4 @@ seoScript.php
 validScript.php
 override/controllers/admin/templates/orders/helpers/view/backup geo check
 modules/singlestockattributespoco.zip
+!modules/ps_emailalerts/mails/nl/*

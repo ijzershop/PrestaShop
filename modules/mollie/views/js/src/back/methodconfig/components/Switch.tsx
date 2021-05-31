@@ -7,18 +7,18 @@
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
  * @codingStandardsIgnoreStart
  */
-import React, {ReactElement} from 'react';
+import React, { ReactElement } from 'react';
 import styled from 'styled-components';
-import {lighten, rgba} from 'polished';
+import { lighten, rgba } from 'polished';
 
-import {ITranslations} from '@shared/globals';
+import { ITranslations } from '@shared/globals';
 
 interface IProps {
-    enabled: boolean;
-    onChange: any;
-    id: string;
-    translations: ITranslations;
-    legacy: boolean;
+  enabled: boolean;
+  onChange: any;
+  id: string;
+  translations: ITranslations;
+  legacy: boolean;
 }
 
 const Span = styled.span`
@@ -54,7 +54,7 @@ label {
   z-index: 2;
   width: 50%;
   height: 100%;
-  margin: ${({legacy}: IProps) => legacy ? '-2px' : '0'} 0 0 0;
+  margin: ${({ legacy }: IProps) => legacy ? '-2px' : '0'} 0 0 0;
   text-align: center;
   float: left;
 }
@@ -86,7 +86,7 @@ input:disabled ~ a {
   // box-shadow: ${lighten(0.2, 'gray')} 0 -1px 0 inset !important;
 }
 
-margin-top: ${({legacy}: IProps) => legacy ? '0' : '3px'};
+margin-top: ${({ legacy }: IProps) => legacy ? '0' : '3px'};
 background-color: #eee;
 border-radius: 3px!important;
 color: #555;
@@ -113,39 +113,39 @@ input:checked + label {
 ` as any;
 
 export default function Switch(props: IProps): ReactElement<{}> {
-    const {enabled, onChange, id, translations} = props;
+  const { enabled, onChange, id, translations } = props;
 
-    return (
-        <Span {...props}>
-            <input
-                type="radio"
-                data-mollie-check=""
-                name={`MOLLIE_METHOD_ENABLED_${id}`}
-                id={`MOLLIE_METHOD_ENABLED_on_${id}`}
-                value="1"
-                checked={enabled}
-                onChange={onChange}
-            />
-            <label
-                htmlFor={`MOLLIE_METHOD_ENABLED_on_${id}`}
-            >
-                {translations.yes.toUpperCase()}
-            </label>
-            <input
-                type="radio"
-                name={`MOLLIE_METHOD_ENABLED_${id}`}
-                id={`MOLLIE_METHOD_ENABLED_off_${id}`}
-                value=""
-                checked={!enabled}
-                onChange={onChange}
-            />
-            <label
-                htmlFor={`MOLLIE_METHOD_ENABLED_off_${id}`}
-            >
-                {translations.no.toUpperCase()}
-            </label> {
-            // eslint-disable-next-line jsx-a11y/anchor-has-content
-        } <a className="slide-button btn"/>
-        </Span>
-    );
+  return (
+    <Span {...props}>
+      <input
+        type="radio"
+        data-mollie-check=""
+        name={`MOLLIE_METHOD_ENABLED_${id}`}
+        id={`MOLLIE_METHOD_ENABLED_on_${id}`}
+        value="1"
+        checked={enabled}
+        onChange={onChange}
+      />
+      <label
+        htmlFor={`MOLLIE_METHOD_ENABLED_on_${id}`}
+      >
+        {translations.yes.toUpperCase()}
+      </label>
+      <input
+        type="radio"
+        name={`MOLLIE_METHOD_ENABLED_${id}`}
+        id={`MOLLIE_METHOD_ENABLED_off_${id}`}
+        value=""
+        checked={!enabled}
+        onChange={onChange}
+      />
+      <label
+        htmlFor={`MOLLIE_METHOD_ENABLED_off_${id}`}
+      >
+        {translations.no.toUpperCase()}
+      </label> {
+      // eslint-disable-next-line jsx-a11y/anchor-has-content
+      } <a className="slide-button btn"/>
+    </Span>
+  );
 }

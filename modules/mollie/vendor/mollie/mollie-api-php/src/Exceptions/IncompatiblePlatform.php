@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Exceptions;
+namespace Mollie\Api\Exceptions;
 
-class IncompatiblePlatform extends \MolliePrefix\Mollie\Api\Exceptions\ApiException
+class IncompatiblePlatform extends ApiException
 {
     const INCOMPATIBLE_PHP_VERSION = 1000;
     const INCOMPATIBLE_CURL_EXTENSION = 2000;

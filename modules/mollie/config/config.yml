@@ -19,7 +19,7 @@ imports:
 services:
   mollie:
     class: 'Mollie'
-    factory: [ 'Module', 'getInstanceByName' ]
+    factory: ['Module', 'getInstanceByName']
     arguments:
       - 'mollie'
 

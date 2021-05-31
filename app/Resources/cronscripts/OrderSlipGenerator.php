@@ -48,6 +48,10 @@ class OrderSlipGenerator
      * @var string
      */
     private $pdfDeliverySlipTemplate;
+    /**
+     * @var int
+     */
+    private $slipTime;
 
     /**
      * OrderSlipGenerator constructor.
@@ -63,6 +67,32 @@ class OrderSlipGenerator
         $this->processedStatus = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_ORDERSTATE_PROCESSED', null, null, null, '3');
     }
 
+
+    public function doApiCall($route, $params, $headerParams = []){
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => Configuration::get('MODERNESMIDTHEMECONFIGURATOR_DASHBOARD_API_URL').'/api/'.$route,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $params,
+            CURLOPT_HTTPHEADER => $headerParams,
+        ));
+        $response = curl_exec($curl);
+        // Check if any error occurred
+        if(!curl_errno($curl))
+        {
+            $returnData = json_decode($response);
+        } else {
+            $returnData = [];
+        }
+        curl_close($curl);
+        return $returnData;
+    }
     /**
      * Main Generate function to fetch and generate an batch delivery slip pdf.
      *
@@ -87,44 +117,26 @@ class OrderSlipGenerator
                 true);
         }
 
-//        if($this->debug == true){
-//            echo "<pre>".print_r($this->completedSuccessRecords, true)."</pre>";
-//        }
-//        $this->sendApiData($this->completedSuccessRecords, $this->errorRecords);
 
+        $loginCall = $this->doApiCall('api-auth', ['email'=>Configuration::get('MODERNESMIDTHEMECONFIGURATOR_DASHBOARD_API_USER'), 'password'=>Configuration::get('MODERNESMIDTHEMECONFIGURATOR_DASHBOARD_API_PASS')]);
+        if(!empty($loginCall)){
+            $message = [];
+            $message['text'] = 'pakbonnen_'.$this->slipTime.'.pdf';
+            $message['status'] = 'success';
+            $message['error_records'] = $this->errorRecords;
+            $message['success_records'] = $this->completedSuccessRecords;
+            $message['time'] = $this->slipTime;
+
+           $this->doApiCall('log-message', [
+                'profile'     => Context::getContext()->shop->getUrls()[0]['domain'],
+                'type'        =>  'cron-job',
+                'version'     => _PS_VERSION_,
+                'message'     => json_encode($message),
+            ], ['Content-Type' => 'application/x-www-form-urlencoded', 'Authorization: Bearer '.$loginCall->access_token]);
+        }
         return true;
     }
 
-    /**
-     * Send data to online api to show on dashboard
-     *
-     * @param $completedSuccessRecords
-     * @param $errorRecords
-     */
-    private function sendApiData($completedSuccessRecords, $errorRecords){
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://dashboard.viho.nl/api",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_POSTFIELDS => "api_type=cron-job&success-records=".json_encode($completedSuccessRecords)."&error-records".json_encode($errorRecords)."&version=1.0.0",
-            CURLOPT_HTTPHEADER => array(
-                "content-type: application/x-www-form-urlencoded",
-                "x-api-key: your-api-key",
-          ),
-        ));
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-//        if($err) {
-//            echo "Err" . $err;
-//        } else {
-//            echo $response;
-//        }
-    }
 
     /**
      * Fetch all orders ready for printing.
@@ -149,9 +161,9 @@ class OrderSlipGenerator
         $sql_query->where('o.date_upd <= \''.pSQL($last_updated_date).'\'');
         $sql_query->orderBy('oi.delivery_date ASC');
 
-        // if($this->debug){
-        //     echo $sql_query->__toString();
-        // }
+         if($this->debug){
+             echo $sql_query->__toString();
+         }
 
         $order_invoice_list = Db::getInstance()->executeS($sql_query);
 
@@ -200,7 +212,8 @@ class OrderSlipGenerator
     {
         $pdf_file = new PDF($object, $template, Context::getContext()->smarty);
         $delivery_slip_pdf = $pdf_file->render(false);
-        file_put_contents(dirname(__FILE__, 4).'/upload/pakbonnen/pakbonnen_'.time().'.pdf', $delivery_slip_pdf);
+        $this->slipTime = time();
+        file_put_contents(dirname(__FILE__, 4).'/upload/pakbonnen/pakbonnen_'.$this->slipTime.'.pdf', $delivery_slip_pdf);
     }
 }
 

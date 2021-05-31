@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2021, Mollie B.V.
+ * Copyright (c) 2012-2020, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,9 +38,9 @@ namespace Mollie\Exception;
 
 class OrderTotalRestrictionException extends \Exception
 {
-    const NO_AVAILABLE_PAYMENT_METHODS_FOUND = 1;
+	const NO_AVAILABLE_PAYMENT_METHODS_FOUND = 1;
 
-    const NO_AVAILABLE_CURRENCIES_FOUND = 2;
+	const NO_AVAILABLE_CURRENCIES_FOUND = 2;
 
-    const ORDER_TOTAL_RESTRICTION_SAVE_FAILED = 3;
+	const ORDER_TOTAL_RESTRICTION_SAVE_FAILED = 3;
 }

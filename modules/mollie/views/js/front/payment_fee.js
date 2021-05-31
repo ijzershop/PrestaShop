@@ -9,7 +9,6 @@
  */
 $(document).ready(function () {
     displayPaymentFee();
-
     function displayPaymentFee() {
         var paymentFees = $('input[name="payment-fee-price-display"]');
         paymentFees.each(function () {

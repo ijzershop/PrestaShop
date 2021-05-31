@@ -8,20 +8,20 @@
  * @codingStandardsIgnoreStart
  */
 import React from 'react';
-import {render} from 'react-dom';
+import { render } from 'react-dom';
 
-export default function (target: string | HTMLElement, title: string, center: boolean): void {
-    const elem = (typeof target === 'string' ? document.getElementById(target) : target);
-    (async function () {
-        const [
-            {default: QrCode},
-        ] = await Promise.all([
-            import(/* webpackChunkName: "banks" */ '@qrcode/components/QrCode'),
-        ]);
-        render(
-            <QrCode title={title} center={center}/>,
-            elem
-        );
-    }());
+export default function (target: string|HTMLElement, title: string, center: boolean): void {
+  const elem = (typeof target === 'string' ? document.getElementById(target) : target);
+  (async function () {
+    const [
+      { default: QrCode },
+    ] = await Promise.all([
+      import(/* webpackChunkName: "banks" */ '@qrcode/components/QrCode'),
+    ]);
+    render(
+      <QrCode title={title} center={center}/>,
+      elem
+    );
+  }());
 
 }

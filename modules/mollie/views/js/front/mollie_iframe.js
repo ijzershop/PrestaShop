@@ -15,42 +15,42 @@ $(document).ready(function () {
     }
 
     var overridePrestaShopsAdditionalInformationHideFunctionality = function ($mollieContainer) {
-        var $additionalInformationContainer = $mollieContainer.closest('.additional-information');
+      var $additionalInformationContainer = $mollieContainer.closest('.additional-information');
 
-        // this allows for us to have our custom hide functionality
-        $additionalInformationContainer.addClass('mollie-credit-card-container__hide')
+      // this allows for us to have our custom hide functionality
+      $additionalInformationContainer.addClass('mollie-credit-card-container__hide')
 
-        // making the container visible
-        $additionalInformationContainer.css('display', 'block')
-        // removing any additional classes that might also set element to be hidden
-        $additionalInformationContainer.removeClass('ps-hidden')
+      // making the container visible
+      $additionalInformationContainer.css('display', 'block')
+      // removing any additional classes that might also set element to be hidden
+      $additionalInformationContainer.removeClass('ps-hidden')
     }
 
     var showAdditionalInformation = function ($additionalInformation) {
-        $additionalInformation.removeClass('mollie-credit-card-container__hide')
-        $additionalInformation.addClass('mollie-credit-card-container__show')
+      $additionalInformation.removeClass('mollie-credit-card-container__hide')
+      $additionalInformation.addClass('mollie-credit-card-container__show')
     }
 
     var hideAdditionalInformation = function ($additionalInformation) {
-        $additionalInformation.addClass('mollie-credit-card-container__hide')
-        $additionalInformation.removeClass('mollie-credit-card-container__show')
+      $additionalInformation.addClass('mollie-credit-card-container__hide')
+      $additionalInformation.removeClass('mollie-credit-card-container__show')
     }
 
     overridePrestaShopsAdditionalInformationHideFunctionality($mollieContainers)
 
     // if credit card is somehow preselected its hidden content will be displayed
     var isMollieCreditCardPreselected = function ($iframeContainer) {
-        var $additionalInformation = $iframeContainer.closest('.additional-information')
-        var id = $additionalInformation.attr('id')
+      var $additionalInformation = $iframeContainer.closest('.additional-information')
+      var id = $additionalInformation.attr('id')
 
-        var paymentOptionPrefix = id.replace('-additional-information', '')
-        var $paymentOption = $('#' + paymentOptionPrefix)
+      var paymentOptionPrefix = id.replace('-additional-information', '')
+      var $paymentOption = $('#' + paymentOptionPrefix)
 
-        return $paymentOption.is(':checked')
+      return $paymentOption.is(':checked')
     }
 
     if (isMollieCreditCardPreselected($mollieContainers)) {
-        showAdditionalInformation($mollieContainers.closest('.additional-information'))
+      showAdditionalInformation($mollieContainers.closest('.additional-information'))
     }
 
 
@@ -106,15 +106,15 @@ $(document).ready(function () {
     });
 
     $(document).on('change', 'input[name="payment-option"]', function () {
-        var isMollie = $(this).attr('data-module-name') === 'mollie'
+      var isMollie = $(this).attr('data-module-name') === 'mollie'
 
-        if (isMollie) {
-            return;
-        }
+      if (isMollie) {
+        return;
+      }
 
-        var $additionalInformation = $mollieContainers.closest('.additional-information')
+      var $additionalInformation = $mollieContainers.closest('.additional-information')
 
-        hideAdditionalInformation($additionalInformation)
+      hideAdditionalInformation($additionalInformation)
     })
 
     function mountMollieComponents(methodId) {
@@ -163,13 +163,13 @@ $(document).ready(function () {
         });
 
         inputHolder.addEventListener("focus", function () {
-            var $formGroup = $('.form-group-' + methodName + '.' + methodId)
+            var $formGroup =   $('.form-group-' + methodName + '.' + methodId)
 
             var $additionalInformation = $formGroup.closest('.additional-information')
 
             if ($additionalInformation.hasClass('mollie-credit-card-container__hide')) {
-                // if mollie is hidden do nothing with focus
-                return
+              // if mollie is hidden do nothing with focus
+              return
             }
 
             $formGroup.toggleClass('is-focused', true);

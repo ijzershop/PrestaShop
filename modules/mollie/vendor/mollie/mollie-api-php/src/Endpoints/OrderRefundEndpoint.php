@@ -1,13 +1,15 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Endpoints;
+namespace Mollie\Api\Endpoints;
 
-use MolliePrefix\Mollie\Api\Resources\Order;
-use MolliePrefix\Mollie\Api\Resources\Refund;
-use MolliePrefix\Mollie\Api\Resources\RefundCollection;
-class OrderRefundEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionEndpointAbstract
+use Mollie\Api\Resources\Order;
+use Mollie\Api\Resources\Refund;
+use Mollie\Api\Resources\RefundCollection;
+
+class OrderRefundEndpoint extends CollectionEndpointAbstract
 {
     protected $resourcePath = "orders_refunds";
+
     /**
      * Get the object that is used by this API endpoint. Every API endpoint uses one type of object.
      *
@@ -15,8 +17,9 @@ class OrderRefundEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionE
      */
     protected function getResourceObject()
     {
-        return new \MolliePrefix\Mollie\Api\Resources\Refund($this->client);
+        return new Refund($this->client);
     }
+
     /**
      * Get the collection object that is used by this API endpoint. Every API endpoint uses one type of collection object.
      *
@@ -27,8 +30,9 @@ class OrderRefundEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionE
      */
     protected function getResourceCollectionObject($count, $_links)
     {
-        return new \MolliePrefix\Mollie\Api\Resources\RefundCollection($this->client, $count, $_links);
+        return new RefundCollection($this->client, $count, $_links);
     }
+
     /**
      * Refund some order lines. You can provide an empty array for the
      * "lines" data to refund all eligible lines for this order.
@@ -40,10 +44,11 @@ class OrderRefundEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionE
      * @return Refund
      * @throws \Mollie\Api\Exceptions\ApiException
      */
-    public function createFor(\MolliePrefix\Mollie\Api\Resources\Order $order, array $data, array $filters = [])
+    public function createFor(Order $order, array $data, array $filters = [])
     {
         return $this->createForId($order->id, $data, $filters);
     }
+
     /**
      * Refund some order lines. You can provide an empty array for the
      * "lines" data to refund all eligible lines for this order.
@@ -58,6 +63,7 @@ class OrderRefundEndpoint extends \MolliePrefix\Mollie\Api\Endpoints\CollectionE
     public function createForId($orderId, array $data, array $filters = [])
     {
         $this->parentId = $orderId;
+
         return parent::rest_create($data, $filters);
     }
 }

@@ -1,8 +1,0 @@
-[{shop_url}] 
-
-Hallo {firstname} {lastname}, 
-
-{message} 
-
-{custom_footer_txt}
-

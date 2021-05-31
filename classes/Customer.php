@@ -685,6 +685,8 @@ class CustomerCore extends ObjectModel
                       a.`lastname`,
                       a.`company`,
                       a.`address1`,
+                      a.`house_number`,
+                      a.`house_number_extension`,
                       a.`address2`,
                       a.`postcode`,
                       a.`city`,

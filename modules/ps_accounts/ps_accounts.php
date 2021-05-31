@@ -31,59 +31,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 class Ps_accounts extends Module
 {
     /**
-     * @var array
-     */
-    public $adminControllers;
-
-    /**
      * @var string
      */
-    public $author;
-
-    /**
-     * @var bool
-     */
-    public $bootstrap;
-
-    /**
-     * @var int
-     */
-    public $need_instance;
-
-    /**
-     * @var string
-     */
-    public $description;
-
-    /**
-     * @var string
-     */
-    public $confirmUninstall;
-
-    /**
-     * @var string
-     */
-    public $displayName;
-
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var array
-     */
-    public $ps_versions_compliancy;
-
-    /**
-     * @var string
-     */
-    public $tab;
-
-    /**
-     * @var string
-     */
-    const VERSION = '3.3.2';
+    const VERSION = '3.3.6';
 
     /**
      * @var array
@@ -96,9 +46,9 @@ class Ps_accounts extends Module
     ];
 
     /**
-     * @var string
+     * @var array
      */
-    public $version;
+    public $adminControllers;
 
     /**
      * @var \Monolog\Logger
@@ -139,7 +89,7 @@ class Ps_accounts extends Module
         $this->author = 'PrestaShop';
         $this->need_instance = 0;
         $this->bootstrap = true;
-        $this->version = '3.3.2';
+        $this->version = '3.3.6';
         $this->module_key = 'abf2cd758b4d629b2944d3922ef9db73';
 
         parent::__construct();

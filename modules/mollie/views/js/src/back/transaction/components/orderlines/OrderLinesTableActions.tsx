@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCircleNotch, faTimes, faTruck, faUndo} from '@fortawesome/free-solid-svg-icons';
 import {useMappedState} from 'redux-react-hook';
 
-import {IMollieAmount, IMollieOrderLine} from '@shared/globals';
+import { IMollieAmount, IMollieOrderLine } from '@shared/globals';
 
 interface IProps {
     line: IMollieOrderLine;
@@ -15,8 +15,8 @@ interface IProps {
     availableRefundAmount: IMollieAmount;
 }
 
-export default function OrderLinesTableActions({line, loading, shipLine, cancelLine, refundLine, availableRefundAmount}: IProps): ReactElement<{}> {
-    const {config: {legacy}, translations}: Partial<IMollieOrderState> = useCallback(useMappedState((state: IMollieOrderState): any => ({
+export default function OrderLinesTableActions({line, loading, shipLine, cancelLine, refundLine, availableRefundAmount }: IProps): ReactElement<{}> {
+    const {config: {legacy}, translations }: Partial<IMollieOrderState> = useCallback(useMappedState((state: IMollieOrderState): any => ({
         translations: state.translations,
         config: state.config
     })), []);

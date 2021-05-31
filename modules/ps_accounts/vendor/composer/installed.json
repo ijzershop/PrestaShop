@@ -167,17 +167,17 @@
         },
         {
             "name": "lcobucci/jwt",
-            "version": "3.4.2",
-            "version_normalized": "3.4.2.0",
+            "version": "3.4.5",
+            "version_normalized": "3.4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lcobucci/jwt.git",
-                "reference": "17cb82dd625ccb17c74bf8f38563d3b260306483"
+                "reference": "511629a54465e89a31d3d7e4cf0935feab8b14c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/17cb82dd625ccb17c74bf8f38563d3b260306483",
-                "reference": "17cb82dd625ccb17c74bf8f38563d3b260306483",
+                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/511629a54465e89a31d3d7e4cf0935feab8b14c1",
+                "reference": "511629a54465e89a31d3d7e4cf0935feab8b14c1",
                 "shasum": ""
             },
             "require": {
@@ -195,7 +195,7 @@
             "suggest": {
                 "lcobucci/clock": "*"
             },
-            "time": "2020-12-03T13:43:45+00:00",
+            "time": "2021-02-16T09:40:01+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -561,17 +561,17 @@
         },
         {
             "name": "prestashop/prestashop-accounts-auth",
-            "version": "2.2.4",
-            "version_normalized": "2.2.4.0",
+            "version": "v2.3.0",
+            "version_normalized": "2.3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShopCorp/prestashop_accounts_auth.git",
-                "reference": "b27f36f66f57832f854191f626fc89f5ce5ade73"
+                "reference": "640f1ed35d0276cda7a96519bc6993a4a3ff35b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShopCorp/prestashop_accounts_auth/zipball/b27f36f66f57832f854191f626fc89f5ce5ade73",
-                "reference": "b27f36f66f57832f854191f626fc89f5ce5ade73",
+                "url": "https://api.github.com/repos/PrestaShopCorp/prestashop_accounts_auth/zipball/640f1ed35d0276cda7a96519bc6993a4a3ff35b6",
+                "reference": "640f1ed35d0276cda7a96519bc6993a4a3ff35b6",
                 "shasum": ""
             },
             "require": {
@@ -589,7 +589,7 @@
                 "phpunit/phpunit": "^5.7",
                 "prestashop/php-dev-tools": "3.*"
             },
-            "time": "2021-01-05T09:31:13+00:00",
+            "time": "2021-03-11T15:19:17+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {

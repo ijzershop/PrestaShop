@@ -119,7 +119,7 @@ class PDFCore
                     $this->filename = $template->getBulkFilename();
                 }
             }
-            
+
             $template->assignHookData($object);
             $this->pdf_renderer->createHeader($template->getHeader());
             $this->pdf_renderer->createFooter($template->getFooter());

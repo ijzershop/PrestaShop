@@ -1,13 +1,27 @@
-[{shop_url}] 
+{shop_url}
 
-Hallo, 
+Hallo {firstname} {lastname},
 
-U heeft een bericht ontvangen betreffende een bestelling met de
-referentie: {order_name}.
+Bericht van een klant
 
-KLANT: {firstname} {lastname} ({email})
+U heeft een bericht ontvangen betreffende een bestelling met de referentie: {order_name}.
 
-{message} 		 
+Klant: {firstname} {lastname} ({email})
 
-{custom_footer_txt}
+Klantbericht: {message}
 
+Hoeveel sterren krijgen wij van u?,
+Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
+>  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
+
+Heeft u een vraag?
+Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
+[> veel gestelde vragen]({faq_page})
+
+[Stuur een whatsapp naar: 0636.58.58.00](https://api.whatsapp.com/send?phone=31636585800)whatsapp: 0636 5858 00
+
+[Bel naar: 0900-2502500](tel://0900-2502500)telefoon: 058-2123138
+
+[stuur een mail naar info@v15.nl](mailto:info@v15.nl) email: info@v15.nl
+
+{custom_footer_html}

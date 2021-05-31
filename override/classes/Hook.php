@@ -30,7 +30,7 @@ class Hook extends HookCore
 {
     /*
     * module: litespeedcache
-    * date: 2021-03-05 13:34:47
+    * date: 2021-05-21 16:21:14
     * version: 1.4.0
     */
     public static function coreCallHook($module, $method, $params)
@@ -56,7 +56,7 @@ class Hook extends HookCore
     }
     /*
     * module: litespeedcache
-    * date: 2021-03-05 13:34:47
+    * date: 2021-05-21 16:21:14
     * version: 1.4.0
     */
     public static function coreRenderWidget($module, $hook_name, $params)

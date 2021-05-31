@@ -1,0 +1,10 @@
+[{shop_url}] 
+
+Hallo, 
+
+De voorraad is nu minder dan de aangegeven minimale hoeveelheid van:
+{warning_coverage}.
+
+HUIDIGE VOORRAAD: {current_coverage} 		 
+
+{custom_footer}

@@ -8,7 +8,8 @@
  * @codingStandardsIgnoreStart
  */
 
-function toggleCountries(showCountries, countriesEnabledSwitch) {
+function toggleCountries(showCountries, countriesEnabledSwitch)
+{
     if (showCountries.attr('checked') && countriesEnabledSwitch.attr('checked')) {
         $('div.js-country').closest('.form-group').show();
     } else {
@@ -16,7 +17,7 @@ function toggleCountries(showCountries, countriesEnabledSwitch) {
     }
 }
 
-$(document).ready(function () {
+$(document).ready(function() {
     jQuery('.chosen').chosen("destroy");
     jQuery('.chosen').chosen({inherit_select_classes: true});
 

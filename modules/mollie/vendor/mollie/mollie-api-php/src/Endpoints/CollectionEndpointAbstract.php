@@ -1,9 +1,10 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Endpoints;
+namespace Mollie\Api\Endpoints;
 
-use MolliePrefix\Mollie\Api\Resources\BaseCollection;
-abstract class CollectionEndpointAbstract extends \MolliePrefix\Mollie\Api\Endpoints\EndpointAbstract
+use Mollie\Api\Resources\BaseCollection;
+
+abstract class CollectionEndpointAbstract extends EndpointAbstract
 {
     /**
      * Get the collection object that is used by this API endpoint. Every API endpoint uses one type of collection object.
@@ -13,5 +14,5 @@ abstract class CollectionEndpointAbstract extends \MolliePrefix\Mollie\Api\Endpo
      *
      * @return BaseCollection
      */
-    protected abstract function getResourceCollectionObject($count, $_links);
+    abstract protected function getResourceCollectionObject($count, $_links);
 }

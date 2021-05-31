@@ -58,6 +58,11 @@
 
 <style type="text/css">
   /*Koopman settings */
+
+  .label.color_field{
+    padding:0.99rem;
+    line-height: 4rem;
+  }
   .cc-koopman {
     margin-top: 10px;
   }
@@ -65,6 +70,10 @@
   .cc-koopman input {
     display: none;
     z-index: 999;
+  }
+
+  .cc-koopman label {
+    cursor: pointer;
   }
 
   .envelope {
@@ -118,3 +127,40 @@
     filter: opacity(.7);
   }
   </style>
+
+<!-- Modal Trello Api Card create-->
+<div class="modal fade" id="trelloModal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="trelloModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="trelloModalLabel">Nieuwe trello kaart aanmaken voor werkplaats werkzaamheid?</h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="trello_type" value=""/>
+        <input type="hidden" id="trello_order" value=""/>
+        <div class="form-group">
+          Titel van de kaart
+          <input type="text" name="trello_card_title" id="trello_card_title" class="form-control"/>
+        </div>
+        <div class="form-group">
+          Beschrijving van de kaart
+          <textarea name="trello_card_descr" id="trello_card_descr" class="form-control" rows="10"></textarea>
+        </div>
+        <div class="form-group">
+          Kaart laan op werkplaats bord op trello
+          <select name="trello_card_lane" id="trello_card_lane" class="form-control">
+            <option value="605614064ff5a60d98104cdc" selected>Werkzaamheden Venusweg</option>
+            <option value="6056142466bcab423fe5be3d">Werkzaamheden Ceresweg</option>
+            <option value="6056143bc967238904c8c195">Uitvoering</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="trelloActionClose" class="btn btn-danger" data-dismiss="modal">Anuleren</button>
+        <button type="button" id="trelloActionOnlyStatus" class="btn btn-primary">Nee, alleen status omzetten</button>
+        <button type="button" id="trelloActionStatusAndCard" class="btn btn-primary">Ja, status omzetten en kaart aanmaken</button>
+      </div>
+    </div>
+  </div>
+</div>

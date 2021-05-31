@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Resources;
+namespace Mollie\Api\Resources;
 
-class OrderCollection extends \MolliePrefix\Mollie\Api\Resources\CursorCollection
+class OrderCollection extends CursorCollection
 {
     /**
      * @return string
@@ -11,11 +11,12 @@ class OrderCollection extends \MolliePrefix\Mollie\Api\Resources\CursorCollectio
     {
         return "orders";
     }
+
     /**
      * @return BaseResource
      */
     protected function createResourceObject()
     {
-        return new \MolliePrefix\Mollie\Api\Resources\Order($this->client);
+        return new Order($this->client);
     }
 }

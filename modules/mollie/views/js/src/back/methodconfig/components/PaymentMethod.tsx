@@ -7,29 +7,29 @@
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
  * @codingStandardsIgnoreStart
  */
-import React, {ReactElement, useEffect} from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import styled from 'styled-components';
-import {SortableElement} from 'react-sortable-hoc';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faChevronDown, faChevronUp, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
+import { SortableElement } from 'react-sortable-hoc';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faChevronUp, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 import Switch from '@methodconfig/components/Switch';
-import {IMollieMethodConfig, ITranslations} from '@shared/globals';
+import { IMollieMethodConfig, ITranslations } from '@shared/globals';
 
 interface IProps {
-    position: number;
-    max: number;
-    enabled: boolean;
-    available: boolean;
-    tipEnableSSL: boolean;
-    name: string;
-    code: string;
-    imageUrl: string;
-    translations: ITranslations;
-    config: IMollieMethodConfig;
+  position: number;
+  max: number;
+  enabled: boolean;
+  available: boolean;
+  tipEnableSSL: boolean;
+  name: string;
+  code: string;
+  imageUrl: string;
+  translations: ITranslations;
+  config: IMollieMethodConfig;
 
-    moveMethod: Function;
-    onToggle: Function;
+  moveMethod: Function;
+  onToggle: Function;
 }
 
 declare let $: any;
@@ -51,7 +51,7 @@ display: table;
 width: 100%;
 padding: 5px 0;
 margin-bottom: -1px;
-${({legacy}: any) => legacy ? 'width: calc(100% - 2px);' : ''}
+${({ legacy }: any) => legacy ? 'width: calc(100% - 2px);' : ''}
 ` as any;
 
 const PositionColumn = styled.div`
@@ -91,7 +91,7 @@ display: block;
 width: 40px;
 text-align: center;
 margin: 0 auto;
-${({legacy}: any) => legacy ? 'height: 24px;line-height: 24px;' : ''}
+${({ legacy }: any) => legacy ? 'height: 24px;line-height: 24px;' : ''}
 ` as any;
 
 const ArrowButton = styled.button`
@@ -129,7 +129,7 @@ margin-right: 2px!important;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-${({legacy}: any) => legacy ? 'height: 20px;line-height: 20px;' : ''}
+${({ legacy }: any) => legacy ? 'height: 20px;line-height: 20px;' : ''}
 ` as any;
 
 const ButtonBox = styled.div`
@@ -138,115 +138,115 @@ text-align: center;
 ` as any;
 
 function PaymentMethod({
-                           enabled,
-                           onToggle,
-                           code,
-                           translations,
-                           position,
-                           max,
-                           name,
-                           imageUrl,
-                           moveMethod,
-                           available,
-                           tipEnableSSL,
-                           config: {legacy}
-                       }: IProps
+  enabled,
+  onToggle,
+  code,
+  translations,
+  position,
+  max,
+  name,
+  imageUrl,
+  moveMethod,
+  available,
+                         tipEnableSSL,
+  config: { legacy }
+}: IProps
 ): ReactElement<{}> {
-    function _toggleMethod(enabled: boolean): void {
-        onToggle(code, enabled);
+  function _toggleMethod(enabled: boolean): void {
+    onToggle(code, enabled);
+  }
+
+  useEffect(() => {
+    if (typeof $ !== 'undefined' && typeof $.prototype.tooltip === 'function') {
+      $('[data-toggle=tooltip]').tooltip();
     }
+  });
 
-    useEffect(() => {
-        if (typeof $ !== 'undefined' && typeof $.prototype.tooltip === 'function') {
-            $('[data-toggle=tooltip]').tooltip();
-        }
-    });
-
-    return (
-        <Li last={position >= max} legacy={legacy}>
-            <PositionColumn>
-                <PositionIndicator legacy={legacy}>{position + 1}</PositionIndicator>
-                <ButtonBox>
-                    <ArrowButton
-                        legacy={legacy}
-                        disabled={position <= 0}
-                        onClick={(e: any) => {
-                            e.preventDefault();
-                            moveMethod({
-                                oldIndex: position - 1,
-                                newIndex: position,
-                            });
-                        }}
-                    >
-                        <FontAwesomeIcon icon={faChevronUp} style={{color: 'white', pointerEvents: 'none'}}/>
-                    </ArrowButton>
-                    <ArrowButton
-                        legacy={legacy}
-                        disabled={position >= max}
-                        onClick={(e: any) => {
-                            e.preventDefault();
-                            moveMethod({
-                                oldIndex: position + 1,
-                                newIndex: position,
-                            });
-                        }}
-                    >
-                        <FontAwesomeIcon icon={faChevronDown} style={{color: 'white', pointerEvents: 'none'}}/>
-                    </ArrowButton>
-                </ButtonBox>
-            </PositionColumn>
-            <IconColumn>
-                <img
-                    width="57"
-                    src={imageUrl}
-                    alt={name}
-                    style={{
-                        width: '57px',
-                    }}
-                />
-            </IconColumn>
-            <InfoColumn>
-                <div style={{display: 'inline-block', marginTop: '5px'}}>
+  return (
+    <Li last={position >= max} legacy={legacy}>
+      <PositionColumn>
+        <PositionIndicator legacy={legacy}>{position + 1}</PositionIndicator>
+        <ButtonBox>
+          <ArrowButton
+            legacy={legacy}
+            disabled={position <= 0}
+            onClick={(e: any) => {
+              e.preventDefault();
+              moveMethod({
+                oldIndex: position - 1,
+                newIndex: position,
+              });
+            }}
+          >
+            <FontAwesomeIcon icon={faChevronUp} style={{ color: 'white', pointerEvents: 'none' }}/>
+          </ArrowButton>
+          <ArrowButton
+            legacy={legacy}
+            disabled={position >= max}
+            onClick={(e: any) => {
+              e.preventDefault();
+              moveMethod({
+                oldIndex: position + 1,
+                newIndex: position,
+              });
+            }}
+          >
+            <FontAwesomeIcon icon={faChevronDown} style={{ color: 'white', pointerEvents: 'none' }}/>
+          </ArrowButton>
+        </ButtonBox>
+      </PositionColumn>
+      <IconColumn>
+        <img
+          width="57"
+          src={imageUrl}
+          alt={name}
+          style={{
+            width: '57px',
+          }}
+        />
+      </IconColumn>
+      <InfoColumn>
+        <div style={{ display: 'inline-block', marginTop: '5px' }}>
           <span>
             {name}
           </span>
-                </div>
-                {!available && tipEnableSSL && (
-                    <p
-                        style={{
-                            float: 'right',
-                            marginRight: '20px'
-                        }}
-                        title={translations.thisPaymentMethodNeedsSSLEnabled}
-                        data-toggle="tooltip"
-                    >
-                        <FontAwesomeIcon icon={faExclamationTriangle}/> {translations.notAvailable}
-                    </p>
-                )}
-                {!available && !tipEnableSSL && (
-                    <p
-                        style={{
-                            float: 'right',
-                            marginRight: '20px'
-                        }}
-                        title={translations.thisPaymentMethodIsNotAvailableOnPaymentsApi}
-                        data-toggle="tooltip"
-                    >
-                        <FontAwesomeIcon icon={faExclamationTriangle}/> {translations.notAvailable}
-                    </p>
-                )}
-                {available &&
-                <Switch
-                    id={code}
-                    translations={translations}
-                    enabled={enabled}
-                    onChange={({target: {value}}: any) => _toggleMethod(!!value)}
-                    legacy={legacy}
-                />
-                }
-            </InfoColumn>
-        </Li>
-    );
+        </div>
+        {!available && tipEnableSSL &&(
+          <p
+            style={{
+              float: 'right',
+              marginRight: '20px'
+            }}
+            title={translations.thisPaymentMethodNeedsSSLEnabled}
+            data-toggle="tooltip"
+          >
+            <FontAwesomeIcon icon={faExclamationTriangle}/> {translations.notAvailable}
+          </p>
+        )}
+        {!available && !tipEnableSSL &&(
+          <p
+            style={{
+              float: 'right',
+              marginRight: '20px'
+            }}
+            title={translations.thisPaymentMethodIsNotAvailableOnPaymentsApi}
+            data-toggle="tooltip"
+          >
+            <FontAwesomeIcon icon={faExclamationTriangle}/> {translations.notAvailable}
+          </p>
+        )}
+        {available &&
+        <Switch
+          id={code}
+          translations={translations}
+          enabled={enabled}
+          onChange={({ target: { value } }: any) => _toggleMethod(!!value)}
+          legacy={legacy}
+        />
+        }
+      </InfoColumn>
+    </Li>
+  );
 }
 
 export default SortableElement(PaymentMethod);

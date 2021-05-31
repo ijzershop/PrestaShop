@@ -25,24 +25,24 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => 'v3.3.2',
-    'version' => '3.3.2.0',
+    'pretty_version' => 'v3.3.6',
+    'version' => '3.3.6.0',
     'aliases' => 
     array (
     ),
-    'reference' => 'd28f053c8b4791c6b8e8703829305e985f9a9ba7',
+    'reference' => '75b99232af9908b0a09a9f501519826c1762d859',
     'name' => '__root__',
   ),
   'versions' => 
   array (
     '__root__' => 
     array (
-      'pretty_version' => 'v3.3.2',
-      'version' => '3.3.2.0',
+      'pretty_version' => 'v3.3.6',
+      'version' => '3.3.6.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd28f053c8b4791c6b8e8703829305e985f9a9ba7',
+      'reference' => '75b99232af9908b0a09a9f501519826c1762d859',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -73,12 +73,12 @@ private static $installed = array (
     ),
     'lcobucci/jwt' => 
     array (
-      'pretty_version' => '3.4.2',
-      'version' => '3.4.2.0',
+      'pretty_version' => '3.4.5',
+      'version' => '3.4.5.0',
       'aliases' => 
       array (
       ),
-      'reference' => '17cb82dd625ccb17c74bf8f38563d3b260306483',
+      'reference' => '511629a54465e89a31d3d7e4cf0935feab8b14c1',
     ),
     'monolog/monolog' => 
     array (
@@ -127,12 +127,12 @@ private static $installed = array (
     ),
     'prestashop/prestashop-accounts-auth' => 
     array (
-      'pretty_version' => '2.2.4',
-      'version' => '2.2.4.0',
+      'pretty_version' => 'v2.3.0',
+      'version' => '2.3.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b27f36f66f57832f854191f626fc89f5ce5ade73',
+      'reference' => '640f1ed35d0276cda7a96519bc6993a4a3ff35b6',
     ),
     'psr/cache' => 
     array (
@@ -529,7 +529,6 @@ self::$canGetVendors = method_exists('Composer\Autoload\ClassLoader', 'getRegist
 $installed = array();
 
 if (self::$canGetVendors) {
-
 foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) {
 if (isset(self::$installedByVendor[$vendorDir])) {
 $installed[] = self::$installedByVendor[$vendorDir];

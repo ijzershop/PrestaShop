@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Resources;
+namespace Mollie\Api\Resources;
 
-class IssuerCollection extends \MolliePrefix\Mollie\Api\Resources\BaseCollection
+class IssuerCollection extends BaseCollection
 {
     /**
      * @return string|null

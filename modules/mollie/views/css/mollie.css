@@ -58,10 +58,10 @@
 }
 
 .sortable-helper {
-    border-width: 2px !important;
-    -webkit-box-shadow: 2px 2px 16px -2px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 2px 2px 16px -2px rgba(0, 0, 0, 0.75);
-    box-shadow: 2px 2px 16px -2px rgba(0, 0, 0, 0.75);
+    border-width: 2px!important;
+    -webkit-box-shadow: 2px 2px 16px -2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px 2px 16px -2px rgba(0,0,0,0.75);
+    box-shadow: 2px 2px 16px -2px rgba(0,0,0,0.75);
 }
 
 .form-group.form-separator {
@@ -83,11 +83,9 @@
 .mollie_button {
     width: 100%;
 }
-
 .payment-method a.text {
     color: #0a0a0a;
 }
-
 .payment-method a.text.collapsed svg {
     color: #0a0a0a;
     -webkit-transform: rotate(180deg);
@@ -96,7 +94,6 @@
     -o-transform: rotate(180deg);
     transform: rotate(180deg);
 }
-
 .payment-method {
     padding: 10px;
     border-color: #999798;
@@ -110,7 +107,7 @@ svg.mollie-svg {
 }
 
 .payment-method .payment-check-link {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {

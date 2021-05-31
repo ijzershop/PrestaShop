@@ -1,11 +1,11 @@
-<?php 
+<?php
 /**
  * Overide to add housenumber to address form
  */
 
 class Address extends AddressCore
 {
- 
+
     public $house_number;
     public $house_number_extension;
 

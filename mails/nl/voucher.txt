@@ -1,14 +1,27 @@
-[{shop_url}] 
+{shop_url}
 
-Hallo {firstname} {lastname}, 
+Hallo {firstname} {lastname},
 
-Een waardebon werd op uw naam aangemaakt als gevolg op uw bestelling
-met referentie {order_name}.
+Bestelling {order_name} - Waardebon code aangemaakt
 
-WAARDEBONCODE: {voucher_num} ter waarde van {voucher_amount}
+We willen jouw graag informeren over een kortingscode die is aangemaakt op uw naam voor bestelling met referentie {order_name}.
 
-Plaats bij uw volgende bestelling de code in uw winkelwagen voordat u
-de bestelling gaat betalen. 		 
+KORTINGSCODE: {voucher_num} voor een bedrag van {voucher_amount}
 
-{custom_footer_txt}
+Om deze te gebruiken, knip/plak deze code tijdens het bestellen.
 
+Hoeveel sterren krijgen wij van u?,
+Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
+>  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
+
+Heeft u een vraag?
+Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
+[> veel gestelde vragen]({faq_page})
+
+[Stuur een whatsapp naar: 0636.58.58.00](https://api.whatsapp.com/send?phone=31636585800)whatsapp: 0636 5858 00
+
+[Bel naar: 0900-2502500](tel://0900-2502500)telefoon: 058-2123138
+
+[stuur een mail naar info@v15.nl](mailto:info@v15.nl) email: info@v15.nl
+
+{custom_footer_html}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2021, Mollie B.V.
+ * Copyright (c) 2012-2020, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,15 +36,15 @@
 
 namespace Mollie\Provider\PaymentMethod;
 
-use MolliePrefix\Mollie\Api\Resources\Method;
+use Mollie\Api\Resources\Method;
 
 interface PaymentMethodOrderTotalRestrictionProviderInterface
 {
-    /**
-     * @param string $paymentMethodName
-     * @param string $currencyIso
-     *
-     * @return Method|null
-     */
-    public function providePaymentMethodOrderTotalRestriction($paymentMethodName, $currencyIso);
+	/**
+	 * @param string $paymentMethodName
+	 * @param string $currencyIso
+	 *
+	 * @return Method|null
+	 */
+	public function providePaymentMethodOrderTotalRestriction($paymentMethodName, $currencyIso);
 }

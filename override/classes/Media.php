@@ -31,7 +31,7 @@ class Media extends MediaCore
 {
     /*
     * module: litespeedcache
-    * date: 2021-03-05 13:34:48
+    * date: 2021-05-21 16:21:14
     * version: 1.4.0
     */
     public static function addJsDef($jsDef)

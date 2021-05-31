@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Resources;
+namespace Mollie\Api\Resources;
 
-class PermissionCollection extends \MolliePrefix\Mollie\Api\Resources\BaseCollection
+class PermissionCollection extends BaseCollection
 {
     /**
      * @return string

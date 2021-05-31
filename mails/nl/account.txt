@@ -1,26 +1,37 @@
-[{shop_url}] 
+{shop_url}
 
 Hallo {firstname} {lastname},
 
-Bedankt voor het aanmaken van uw klantaccount bij {shop_name}. 
+Bedankt voor het aanmaken van uw klantaccount bij {shop_name}.
+
+Uw login gegevens op {shop_name}
 
 Hier zijn uw aanmeldgegevens
 
-E-MAILADRES: {email} 		 
+E-mailadres: {email}
 
 Belangrijke veiligheidstips
 
-* Bewaar uw accountgegevens op een veilige plaats.
+• Bewaar uw accountgegevens op een veilige plaats.
 
-* Verstrek uw aanmeldgegevens nooit aan derden.
+• Verstrek uw aanmeldgegevens nooit aan derden.
 
-* Wijzig uw wachtwoord regelmatig.
+• Wijzig uw wachtwoord regelmatig.
 
-* Als u vermoedt dat iemand anders uw account zonder uw toestemming
-gebruikt, neem dan onmiddellijk contact met ons op.
+• Als u vermoedt dat iemand anders uw account zonder uw toestemming gebruikt, neem dan onmiddellijk contact met ons op.
 
-U kunt nu bestellingen op onze website plaatsen: {shop_name}
-[{shop_url}] 
+Hoeveel sterren krijgen wij van u?,
+Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
+>  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
 
-{custom_footer_txt}
+Heeft u een vraag?
+Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
+[> veel gestelde vragen]({faq_page})
 
+[Stuur een whatsapp naar: 0636.58.58.00](https://api.whatsapp.com/send?phone=31636585800)whatsapp: 0636 5858 00
+
+[Bel naar: 0900-2502500](tel://0900-2502500)telefoon: 058-2123138
+
+[stuur een mail naar info@v15.nl](mailto:info@v15.nl) email: info@v15.nl
+
+{custom_footer_html}

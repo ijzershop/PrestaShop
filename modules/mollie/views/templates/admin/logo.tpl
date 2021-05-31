@@ -8,6 +8,6 @@
 * @codingStandardsIgnoreStart
 *}
 <div style="width: 263px; align-content: center; text-align: left; padding-bottom: 12px;">
-    <img src="{$logo_url|escape:'htmlall':'UTF-8'}" style="max-width:100%; height:auto; margin: 0 auto">
+  <img src="{$logo_url|escape:'htmlall':'UTF-8'}" style="max-width:100%; height:auto; margin: 0 auto">
 </div>
 

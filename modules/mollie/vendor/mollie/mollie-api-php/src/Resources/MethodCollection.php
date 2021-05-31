@@ -1,8 +1,8 @@
 <?php
 
-namespace MolliePrefix\Mollie\Api\Resources;
+namespace Mollie\Api\Resources;
 
-class MethodCollection extends \MolliePrefix\Mollie\Api\Resources\BaseCollection
+class MethodCollection extends BaseCollection
 {
     /**
      * @return string

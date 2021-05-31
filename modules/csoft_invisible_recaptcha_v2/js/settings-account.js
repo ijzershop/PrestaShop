@@ -22,16 +22,20 @@ var onSubmit = function(token) {
 
 var onloadCallback = function() {
     if($('form button[data-link-action=save-customer]').attr('disabled') == 'disabled'){
-        grecaptcha.render('submitCreate', {
-            'sitekey' : recaptchaKey,
-            'callback' : onSubmit
-        });
+        if($('#submitCreate').length) {
+          grecaptcha.render('submitCreate', {
+            'sitekey': recaptchaKey,
+            'callback': onSubmit
+          });
+        }
         $('form button[data-link-action=save-customer]').attr('disabled','disabled');
     }else{
+      if($('#submitCreate').length) {
         grecaptcha.render('submitCreate', {
-            'sitekey' : recaptchaKey,
-            'callback' : onSubmit
+          'sitekey': recaptchaKey,
+          'callback': onSubmit
         });
+      }
     }
 
 

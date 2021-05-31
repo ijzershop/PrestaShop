@@ -1,0 +1,12 @@
+[{shop_url}] 
+
+Hallo, 
+
+{product} is weer beschikbaar.
+
+Dit product is weer op voorraad. 
+U kunt het product bekijken door op de volgende link te klikken: {product}[{product_link}]
+
+U kunt het direct bestellen in onze webshop.
+
+{custom_footer}

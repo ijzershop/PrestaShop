@@ -2,11 +2,15 @@
 
 ## About
 
-Sends e-mail notifications to customers and merchants regarding stock and order modifications.
+Make your everyday life easier, handle mail alerts about stock and orders, addressed to you as well as your customers.
 
 ## Multistore compatibility
 
 This module is partially compatible with the multistore feature. Some of its options might not be available.
+
+## Reporting issues
+
+You can report issues with this module in the main PrestaShop repository. [Click here to report an issue][report-issue]. 
 
 ## Contributing
 

@@ -1311,6 +1311,7 @@ function checkout_option(e) {
     }
 
     if (show_delivery_add_for_virtualcart != true) {
+      $('#email').trigger('keydown');
         if ($(e).val() == 0) {
             $('.validate-email').hide();
             $('#supercheckout_confirm_order').text('Plaats bestelling');
@@ -1328,7 +1329,6 @@ function checkout_option(e) {
                 $('#html_element_login').show();
                 }
             }
-            $('#email').trigger('keydown');
             $('.no-shipping-names-row').hide();
         } else if ($(e).val() == 1) {
             if (!$('#use_for_invoice').is(':checked')) {
@@ -1403,7 +1403,6 @@ function checkout_option(e) {
                 $('#html_element_login').show();
                 }
             }
-            $('#email').trigger('keydown');
         } else if ($(e).val() == 1) {
             $('.validate-email').show();
             $('#supercheckout_confirm_order').text('Plaats bestelling');

@@ -1,0 +1,56 @@
+
+[{shop_url}] 
+
+Gefeliciteerd! 
+
+Een nieuwe bestelling is door de volgende klant: {firstname} {lastname} - {email} geplaatst op {shop_name}
+
+Bestelling: {order_name} besteld op {date}
+
+Betaalwijze: {payment} 		 
+
+Referentie
+
+Product
+
+Prijs
+
+Aantal
+
+Totaal prijs
+
+{items} 
+
+Producten
+
+{total_products} 
+
+Korting 
+
+{total_discounts} 
+
+Cadeau verpakking 
+
+{total_wrapping} 
+
+Verzending 
+
+{total_shipping} 
+
+Totaal Btw 
+
+{total_tax_paid} 
+
+Totaal 
+
+{total_paid} 
+
+{carrier} 
+
+{delivery_block_html} 
+
+{invoice_block_html} 
+
+{message} 
+
+{custom_footer}

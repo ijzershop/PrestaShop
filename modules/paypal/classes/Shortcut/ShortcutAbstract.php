@@ -61,6 +61,7 @@ abstract class ShortcutAbstract
         $this->context->smarty->assign($this->getTplVars());
         $this->context->smarty->assign('JSvars', $this->getJSvars());
         $this->context->smarty->assign('JSscripts', $this->getJS());
+        $this->context->smarty->assign('psPaypalDir', _PS_MODULE_DIR_ . 'paypal');
         return $this->context->smarty->fetch($this->getTemplatePath());
     }
 
@@ -90,7 +91,7 @@ abstract class ShortcutAbstract
 
         $JSscripts['tot-paypal-sdk'] = [
             'src' => $this->method->getUrlJsSdkLib(),
-            'data-namespace' => 'totPaypalSdk'
+            'data-namespace' => 'totPaypalSdkButtons'
         ];
         $JSscripts['shortcut'] = [
             'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/shortcut.js?v=' . $this->module->version

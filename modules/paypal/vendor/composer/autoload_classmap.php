@@ -357,6 +357,7 @@ return array(
     'PaypalAddons\\classes\\Widget\\DummyWidget' => $baseDir . '/classes/Widget/DummyWidget.php',
     'PaypalAddons\\classes\\Widget\\InstallmentWidget' => $baseDir . '/classes/Widget/InstallmentWidget.php',
     'PaypalAddons\\classes\\Widget\\ShortcutWidget' => $baseDir . '/classes/Widget/ShortcutWidget.php',
+    'PaypalAddons\\services\\FormatterPaypal' => $baseDir . '/services/FormatterPaypal.php',
     'PaypalAddons\\services\\ServicePaypalIpn' => $baseDir . '/services/ServicePaypalIpn.php',
     'PaypalAddons\\services\\ServicePaypalLog' => $baseDir . '/services/ServicePaypalLog.php',
     'PaypalAddons\\services\\ServicePaypalOrder' => $baseDir . '/services/ServicePaypalOrder.php',

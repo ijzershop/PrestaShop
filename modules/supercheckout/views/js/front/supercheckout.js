@@ -945,39 +945,45 @@ function applyInlineValidation() {
                }, "fast");
                return false;
              } else {
-
-               $.ajax({
-                 type: 'POST',
-                 url: '/index.php?fc=module&module=modernesmidthemeconfigurator&controller=ajax',
-                 async: true,
-                 cache: false,
-                 dataType: "json",
-                 data: 'ajax=true' + '&email='+$(this).val()+'&action=check_for_existing_email_address&token=' + prestashop.static_token,
-                 success: function(resp) {
-                   if(resp == 'false'){
-                     $(this).removeClass('error-form');
-                     $(this).removeClass('ok-form');
-                     $(this).addClass('ok-form');
-                     $(this).parent().find('span.errorsmall').remove();
-                     hideGeneralError();
-                   } else{
-                     $(this).parent().find('span.errorsmall').remove();
-                     $(this).removeClass('error-form');
-                     $(this).removeClass('ok-form');
-                     $(this).addClass('error-form');
-                     $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">Dit email adres is al geregistreerd, meld u a.u.b. aan!</span>');
-                     return false;
-                   }
-                 },
-                 error: function(XMLHttpRequest, textStatus, errorThrown) {
-                   $(this).removeClass('error-form');
-                   $(this).removeClass('ok-form');
-                   $(this).addClass('ok-form');
-                   $(this).parent().find('span.errorsmall').remove();
-                   hideGeneralError();
-                 }
-               });
-
+                if($('input[name="checkout_option"]:checked').val() !== "0"){
+                  $.ajax({
+                    type: 'POST',
+                    url: '/index.php?fc=module&module=modernesmidthemeconfigurator&controller=ajax',
+                    async: true,
+                    cache: false,
+                    dataType: "json",
+                    data: 'ajax=true' + '&email='+$(this).val()+'&action=check_for_existing_email_address&token=' + prestashop.static_token,
+                    success: function(resp) {
+                      if(resp == 'false'){
+                        $(this).removeClass('error-form');
+                        $(this).removeClass('ok-form');
+                        $(this).addClass('ok-form');
+                        $(this).parent().find('span.errorsmall').remove();
+                        hideGeneralError();
+                      } else{
+                        $(this).parent().find('span.errorsmall').remove();
+                        $(this).removeClass('error-form');
+                        $(this).removeClass('ok-form');
+                        $(this).addClass('error-form');
+                        $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">Dit email adres is al geregistreerd, meld u a.u.b. aan!</span>');
+                        return false;
+                      }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                      $(this).removeClass('error-form');
+                      $(this).removeClass('ok-form');
+                      $(this).addClass('ok-form');
+                      $(this).parent().find('span.errorsmall').remove();
+                      hideGeneralError();
+                    }
+                  });
+                } else {
+                  $(this).removeClass('error-form');
+                  $(this).removeClass('ok-form');
+                  $(this).addClass('ok-form');
+                  $(this).parent().find('span.errorsmall').remove();
+                  hideGeneralError();
+                }
              }
              }
          }));
@@ -1009,37 +1015,45 @@ function applyInlineValidation() {
                   $('input[name="supercheckout_email_validation"]').addClass('ok-form');
                 }
 
-              $.ajax({
-                type: 'POST',
-                url: '/index.php?fc=module&module=modernesmidthemeconfigurator&controller=ajax',
-                async: true,
-                cache: false,
-                dataType: "json",
-                data: 'ajax=true' + '&email='+$(this).val()+'&action=check_for_existing_email_address&token=' + prestashop.static_token,
-                success: function(resp) {
-                  if(resp == 'false'){
+              if($('input[name="checkout_option"]:checked').val() !== "0"){
+                $.ajax({
+                  type: 'POST',
+                  url: '/index.php?fc=module&module=modernesmidthemeconfigurator&controller=ajax',
+                  async: true,
+                  cache: false,
+                  dataType: "json",
+                  data: 'ajax=true' + '&email='+$(this).val()+'&action=check_for_existing_email_address&token=' + prestashop.static_token,
+                  success: function(resp) {
+                    if(resp == 'false'){
+                      $(this).removeClass('error-form');
+                      $(this).removeClass('ok-form');
+                      $(this).addClass('ok-form');
+                      $(this).parent().find('span.errorsmall').remove();
+                      hideGeneralError();
+                    } else{
+                      $(this).parent().find('span.errorsmall').remove();
+                      $(this).removeClass('error-form');
+                      $(this).removeClass('ok-form');
+                      $(this).addClass('error-form');
+                      $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">Dit email adres is al geregistreerd, meld u a.u.b. aan!</span>');
+                      return false;
+                    }
+                  },
+                  error: function(XMLHttpRequest, textStatus, errorThrown) {
                     $(this).removeClass('error-form');
                     $(this).removeClass('ok-form');
                     $(this).addClass('ok-form');
                     $(this).parent().find('span.errorsmall').remove();
                     hideGeneralError();
-                  } else{
-                    $(this).parent().find('span.errorsmall').remove();
-                    $(this).removeClass('error-form');
-                    $(this).removeClass('ok-form');
-                    $(this).addClass('error-form');
-                    $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">Dit email adres is al geregistreerd, meld u a.u.b. aan!</span>');
-                    return false;
                   }
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                  $(this).removeClass('error-form');
-                  $(this).removeClass('ok-form');
-                  $(this).addClass('ok-form');
-                  $(this).parent().find('span.errorsmall').remove();
-                  hideGeneralError();
-                }
-              });
+                });
+              } else {
+                $(this).removeClass('error-form');
+                $(this).removeClass('ok-form');
+                $(this).addClass('ok-form');
+                $(this).parent().find('span.errorsmall').remove();
+                hideGeneralError();
+              }
             }
         }));
 
@@ -1314,6 +1328,7 @@ function checkout_option(e) {
                 $('#html_element_login').show();
                 }
             }
+            $('#email').trigger('keydown');
             $('.no-shipping-names-row').hide();
         } else if ($(e).val() == 1) {
             if (!$('#use_for_invoice').is(':checked')) {
@@ -1388,6 +1403,7 @@ function checkout_option(e) {
                 $('#html_element_login').show();
                 }
             }
+            $('#email').trigger('keydown');
         } else if ($(e).val() == 1) {
             $('.validate-email').show();
             $('#supercheckout_confirm_order').text('Plaats bestelling');

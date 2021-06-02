@@ -117,11 +117,13 @@ class DynamicProductSettingsController extends ModuleAdminController
             1,
             false
         );
+
         foreach ($products as $product) {
             $id_destination_product = (int)$product['id_product'];
+
             if ($id_destination_product !== $this->id_product) {
-                $this->module->handler->copyConfig($id_destination_product, $this->id_product);
-            }
+                    $this->module->handler->copyConfig($id_destination_product, $this->id_product);
+                }
         }
 
         $this->respond();

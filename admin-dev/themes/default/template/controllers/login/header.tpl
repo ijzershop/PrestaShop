@@ -34,7 +34,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
-		<link rel="apple-touch-icon" href="{$img_dir}app_icon.png" />
+		<link rel="apple-touch-icon" href="/themes/modernesmid/assets/favicons/{Configuration::get('MODERNESMIDTHEMECONFIGURATOR_FAVICON_SHOP')}_favicons/apple-icon-60x60.png" />
 
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="robots" content="NOFOLLOW, NOINDEX">

@@ -94,6 +94,7 @@ class DynamicProductFieldFormulasController extends ModuleAdminController
     {
         $id_field_formula = (int)Tools::getValue('id_field_formula');
         $formula = Tools::getValue('formula');
+
         $fields = Tools::getValue('fields');
         $validation = DynamicEquation::checkFormula($this->id_product, $formula, $fields);
         if ($validation !== true) {

@@ -73,7 +73,7 @@ class DynamicCommonField extends DynamicObject
      * @param $id_product
      * @return DynamicCommonField[]
      */
-    public static function getByIdProduct($id_product)
+    public static function getByIdProduct($id_product, $order=false)
     {
         $common_fields = array();
         $sql = new DbQuery();

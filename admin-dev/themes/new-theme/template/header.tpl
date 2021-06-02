@@ -28,7 +28,7 @@
 <meta name="robots" content="NOFOLLOW, NOINDEX">
 
 <link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
-<link rel="apple-touch-icon" href="{$img_dir}app_icon.png" />
+<link rel="apple-touch-icon" href="/themes/modernesmid/assets/favicons/{Configuration::get('MODERNESMIDTHEMECONFIGURATOR_FAVICON_SHOP')}_favicons/apple-icon-60x60.png" />
 
 <title>{if $meta_title != ''}{$meta_title} • {/if}{$shop_name}</title>
 

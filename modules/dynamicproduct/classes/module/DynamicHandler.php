@@ -563,7 +563,7 @@ class DynamicHandler
                 $new_value = '|' . $id_custom_product_new . '|';
                 $old_value = '|' . (int)$dynamic_input->id . '|';
                 $sql = '
-                UPDATE  `' . _DB_PREFIX_ . 'customized_data` cd 
+                UPDATE  `' . _DB_PREFIX_ . 'customized_data` cd
                 JOIN    `' . _DB_PREFIX_ . 'customization` c ON cd.id_customization = c.id_customization
                 SET     cd.value = "' . pSQL($new_value) . '"
                 WHERE   cd.value = "' . pSQL($old_value) . '" AND c.id_cart = ' . (int)$id_cart_new . ';';

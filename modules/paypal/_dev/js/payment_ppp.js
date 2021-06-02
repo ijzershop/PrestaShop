@@ -59,16 +59,22 @@ $(document).ready( () => {
 const doPatchPPP = () => {
   if (exec_ppp_payment) {
     exec_ppp_payment = false;
-    $.fancybox.open({
-      content: `<div id="popup-ppp-waiting"><p>${waitingRedirectionMsg}</p></div>`,
-      closeClick: false,
-      height: 'auto',
-      helpers: {
-        overlay: {
-          closeClick: false
-        }
-      },
-    });
+
+    try {
+      $.fancybox.open({
+        content: `<div id="popup-ppp-waiting"><p>${waitingRedirectionMsg}</p></div>`,
+        closeClick: false,
+        height: 'auto',
+        helpers: {
+          overlay: {
+            closeClick: false
+          }
+        },
+      });
+    } catch (e) {
+      document.querySelector('#payment-confirmation button').disabled = true;
+    }
+
     $.ajax({
       type: 'POST',
       url: ajaxPatchUrl,

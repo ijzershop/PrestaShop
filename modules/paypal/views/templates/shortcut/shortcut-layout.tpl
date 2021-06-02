@@ -24,40 +24,19 @@
 *}
 
 <!-- Start shortcut. Module Paypal -->
+{include file = "{$psPaypalDir}/views/templates/_partials/javascript.tpl" assign=javascriptBlock}
 {block name='head'}
-  <script>
-     {foreach from=$JSvars key=varName item=varValue}
-        var {$varName} = {$varValue|json_encode nofilter};
-     {/foreach}
-  </script>
+  {$javascriptBlock nofilter}
 {/block}
 
 {block name='content'}{/block}
 
-{block name='js'}
-    {if isset($JSscripts) && is_array($JSscripts) && false === empty($JSscripts)}
-        {foreach from=$JSscripts key=keyScript item=JSscriptAttributes}
-          <script>
-              var script = document.querySelector('script[data-key="{$keyScript}"]');
-
-              if (null == script) {
-                  var newScript = document.createElement('script');
-                  {foreach from=$JSscriptAttributes key=attrName item=attrVal}
-                  newScript.setAttribute('{$attrName}', '{$attrVal nofilter}');
-                  {/foreach}
-
-                  newScript.setAttribute('data-key', '{$keyScript}');
-                  document.body.appendChild(newScript);
-              }
-          </script>
-        {/foreach}
-    {/if}
-{/block}
+{block name='js'}{/block}
 
 {block name='init-button'}
   <script>
       function waitPaypalIsLoaded() {
-          if (typeof totPaypalSdk === 'undefined' || typeof Shortcut === 'undefined') {
+          if (typeof totPaypalSdkButtons === 'undefined' || typeof Shortcut === 'undefined') {
               setTimeout(waitPaypalIsLoaded, 200);
               return;
           }

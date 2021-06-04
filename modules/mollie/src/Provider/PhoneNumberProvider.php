@@ -19,8 +19,6 @@ final class PhoneNumberProvider implements PhoneNumberProviderInterface
 {
 	public function getFromAddress(Address $address)
 	{
-
-
 		$phoneNumber = $this->getMobileOrPhone($address);
 
 		if (empty($phoneNumber)) {
@@ -51,6 +49,6 @@ final class PhoneNumberProvider implements PhoneNumberProviderInterface
 
 	private function getMobileOrPhone(Address $address)
 	{
-		return $address->phone ?: $address->phone_mobile;
+		return $address->phone_mobile ?: $address->phone;
 	}
 }

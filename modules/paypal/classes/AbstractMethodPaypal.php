@@ -214,11 +214,16 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         $amount = 0;
 
         foreach ($params['productList'] as $product) {
-            $amount += $product['amount'];
+            $amount += \Tools::ps_round($product['amount'], PayPal::getPrecision());
         }
 
         if (\Tools::getValue('partialRefundShippingCost')) {
             $amount += \Tools::getValue('partialRefundShippingCost');
+        }
+
+        // For prestashop version > 1.7.7
+        if  ($refundData = \Tools::getValue('cancel_product')) {
+            $amount += floatval(str_replace(',', '.', $refundData['shipping_amount']));
         }
 
         return $response = $this->paypalApiManager->getOrderPartialRefundRequest($paypalOrder, $amount)->execute();
@@ -354,7 +359,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             'intent' => \Tools::strtolower($this->getIntent()),
             'currency' => $paypal->getPaymentCurrencyIso(),
             'locale' => str_replace('-', '_', \Context::getContext()->language->locale),
-            'components' => 'messages,buttons'
+            'components' => 'buttons'
         ];
 
         return 'https://www.paypal.com/sdk/js?' . http_build_query($params);

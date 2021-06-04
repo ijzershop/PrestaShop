@@ -2,7 +2,7 @@
 <module>
     <name>paypal</name>
     <displayName><![CDATA[PayPal]]></displayName>
-    <version><![CDATA[5.4.0]]></version>
+    <version><![CDATA[5.4.3]]></version>
     <description><![CDATA[Maak gebruik van het complete betaalplatform van PayPal en laat uw bedrijf groeien  online, op mobiel en internationaal. Accepteer creditcard-, betaalpas- en PayPal-betalingen.]]></description>
     <author><![CDATA[202 ecommerce]]></author>
     <tab><![CDATA[payments_gateways]]></tab>

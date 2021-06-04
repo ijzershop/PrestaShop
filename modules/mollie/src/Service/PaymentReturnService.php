@@ -86,7 +86,6 @@ class PaymentReturnService
 
 		/* @phpstan-ignore-next-line */
 		$cartRules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
-
 		$this->cartRuleQuantityChangeHandlerInterface->handle($cart, $cartRules);
 
 		return $this->getStatusResponse($transaction, $status, $cart->id, $cart->secure_key);

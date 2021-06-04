@@ -560,51 +560,6 @@
             "install-path": "../prestashop/module-lib-service-container"
         },
         {
-            "name": "prestashop/prestashop-accounts-auth",
-            "version": "v2.3.0",
-            "version_normalized": "2.3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShopCorp/prestashop_accounts_auth.git",
-                "reference": "640f1ed35d0276cda7a96519bc6993a4a3ff35b6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShopCorp/prestashop_accounts_auth/zipball/640f1ed35d0276cda7a96519bc6993a4a3ff35b6",
-                "reference": "640f1ed35d0276cda7a96519bc6993a4a3ff35b6",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "guzzlehttp/guzzle": "~5.0",
-                "lcobucci/jwt": "^3.3",
-                "php": ">=5.6",
-                "phpseclib/phpseclib": "^2.0",
-                "sentry/sentry": "^1.0",
-                "symfony/dotenv": "^3.4"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.16",
-                "fzaninotto/faker": "^1.9",
-                "phpunit/phpunit": "^5.7",
-                "prestashop/php-dev-tools": "3.*"
-            },
-            "time": "2021-03-11T15:19:17+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "PrestaShop\\AccountsAuth\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "PrestaShop Accounts composer library",
-            "install-path": "../prestashop/prestashop-accounts-auth"
-        },
-        {
             "name": "psr/cache",
             "version": "1.0.1",
             "version_normalized": "1.0.1.0",
@@ -1120,61 +1075,6 @@
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
             "install-path": "../symfony/dependency-injection"
-        },
-        {
-            "name": "symfony/dotenv",
-            "version": "v3.4.47",
-            "version_normalized": "3.4.47.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/dotenv.git",
-                "reference": "1022723ac4f56b001d99691d96c6025dbf1404f1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dotenv/zipball/1022723ac4f56b001d99691d96c6025dbf1404f1",
-                "reference": "1022723ac4f56b001d99691d96c6025dbf1404f1",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.5.9|>=7.0.8"
-            },
-            "require-dev": {
-                "symfony/process": "^3.4.2|^4.0"
-            },
-            "time": "2020-10-24T10:57:07+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Dotenv\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Registers environment variables from a .env file",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "dotenv",
-                "env",
-                "environment"
-            ],
-            "install-path": "../symfony/dotenv"
         },
         {
             "name": "symfony/expression-language",

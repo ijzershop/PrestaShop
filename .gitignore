@@ -4,7 +4,7 @@
 *.log
 npm-debug.log.*
 .sass-cache/
-
+.well-known/*
 # Cache
 /cache/*
 !/cache/.htaccess

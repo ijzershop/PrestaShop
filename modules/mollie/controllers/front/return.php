@@ -235,7 +235,7 @@ class MollieReturnModuleFrontController extends AbstractMollieController
 			$transaction = $this->module->api->payments->get($transactionId);
 		}
 
-        $orderStatus = $transaction->status;
+		$orderStatus = $transaction->status;
 
 		if ('order' === $transaction->resource) {
 			$payments = ArrayUtility::getLastElement($transaction->_embedded->payments);
@@ -263,6 +263,7 @@ class MollieReturnModuleFrontController extends AbstractMollieController
 					$transaction,
 					$paymentReturnService::DONE
 				);
+
 				/** @var MemorizeCartService $memorizeCart */
 				$memorizeCart = $this->module->getMollieContainer(MemorizeCartService::class);
 				$memorizeCart->removeMemorizedCart($order);

@@ -55,10 +55,17 @@ class Banner
     /** @var array*/
     protected $tplVars;
 
+    /** @var AbstractMethodPaypal*/
+    protected $method;
+
+    /** @var string*/
+    protected $pageTypeAttribute;
+
     public function __construct()
     {
         $this->module = Module::getInstanceByName('paypal');
         $this->setTemplate(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/installmentBanner/banner.tpl');
+        $this->method = AbstractMethodPaypal::load();
     }
 
     public function render()
@@ -98,14 +105,18 @@ class Banner
 
     protected function getJS()
     {
-        $method = AbstractMethodPaypal::load();
-
         $js = [
-            'tot-paypal-sdk' => [
-                'src' => $method->getUrlJsSdkLib(),
-                'data-namespace' => 'totPaypalSdk'
+            'tot-paypal-sdk-messages' => [
+                'src' => $this->getPaypalSdkLib(),
+                'data-namespace' => 'totPaypalSdk',
+                'data-page-type' => $this->getPageTypeAttribute(),
+                'enable-funding' => 'paylater'
             ]
         ];
+
+        if (false === defined('_PS_ADMIN_DIR_')) {
+            $js['tot-paypal-sdk-messages']['data-partner-attribution-id'] = $this->method->getPaypalPartnerId();
+        }
 
         return $js;
     }
@@ -220,6 +231,39 @@ class Banner
         }
 
         $this->tplVars[$name] = $value;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPaypalSdkLib()
+    {
+        $params = [
+            'client-id' => $this->method->getClientId(),
+            'components' => 'messages'
+        ];
+
+        return 'https://www.paypal.com/sdk/js?' . http_build_query($params);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPageTypeAttribute()
+    {
+        return (string) $this->pageTypeAttribute;
+    }
+
+    /**
+     * @return Banner
+     */
+    public function setPageTypeAttribute($pageTypeAttribute)
+    {
+        if (is_string($pageTypeAttribute)) {
+            $this->pageTypeAttribute = $pageTypeAttribute;
+        }
+
         return $this;
     }
 }

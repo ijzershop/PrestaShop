@@ -248,7 +248,8 @@ app/config/config.php
 # !modules/offerintegration
 # !modules/smallorderfee
 # !modules/koopmanorderexport
-# !modules/productcomments
+modules/ps_metrics
+modules/ps_eventbus
 # override/*
 themes/*/
 !themes/classic
@@ -310,6 +311,7 @@ themes/default-bootstrap/modules/*/mails/*
 /vendor/
 /web/bundles/
 
+/dynamicproduct/cache/*
 
 # Created by https://www.gitignore.io/api/linux,osx,windows,sublimetext,phpstorm
 

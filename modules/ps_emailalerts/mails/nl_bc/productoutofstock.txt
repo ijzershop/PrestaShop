@@ -1,0 +1,13 @@
+
+[{shop_url}] 
+
+Hallo, 
+
+De huidige voorraad is minder dan de aangegeven hoeveelheid van {last_qty}.
+
+NOG OP VOORRAAD: {qty}
+
+U word geadvisseerd om de product voorraad in de backoffice bij te werken.
+
+{custom_footer}
+

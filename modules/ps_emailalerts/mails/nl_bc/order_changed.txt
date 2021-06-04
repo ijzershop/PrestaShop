@@ -1,0 +1,10 @@
+
+[{shop_url}]
+
+Hallo {firstname} {lastname},
+
+Uw bestelling met referentie {order_name} van {shop_name is gewijzigd
+
+U kunt de bestelling bekijken en uw factuur downloaden in het "Bestel overzicht" [{history_url}] van uw klant account. Uw klant account kunt u vinden onder "Mijn account" [{my_account_url}] op onze webshop.
+
+{custom_footer}

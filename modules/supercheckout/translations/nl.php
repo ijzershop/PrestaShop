@@ -46,7 +46,7 @@ $_MODULE['<{supercheckout}prestashop>supercheckout_802bac64b56b42bb50002b3d46cf0
 $_MODULE['<{supercheckout}prestashop>supercheckout_4df1af04f7e2c3b8ec52979cd5e036b5'] = 'Is een fout opgetreden tijdens het maken van nieuw adres';
 $_MODULE['<{supercheckout}prestashop>supercheckout_96550f206ccd1c321be787e4f1875ed4'] = 'Een e-mailadres vereist.';
 $_MODULE['<{supercheckout}prestashop>supercheckout_e267e2be02cf3e29f4ba53b5d97cf78a'] = 'Ongeldig e-mailadres.';
-$_MODULE['<{supercheckout}prestashop>supercheckout_7e7fef12c74a036f5d8e3a49d0822e1b'] = 'Deze klant is al bestaan';
+$_MODULE['<{supercheckout}prestashop>supercheckout_7e7fef12c74a036f5d8e3a49d0822e1b'] = 'Dit email adres is al geregistreerd, meld u a.u.b. aan';
 $_MODULE['<{supercheckout}prestashop>supercheckout_20aedd1e6de4dcf8d115b5a7424c58d7'] = 'Een wachtwoord is verplicht.';
 $_MODULE['<{supercheckout}prestashop>supercheckout_626295ee4555407394df3e9998e1fc19'] = 'ongeldig wachtwoord';
 $_MODULE['<{supercheckout}prestashop>supercheckout_09737938747269600702609ab170f2f5'] = 'Verplicht veld';
@@ -118,7 +118,7 @@ $_MODULE['<{supercheckout}prestashop>supercheckoutcore_00ba947b39d384945391e0c47
 $_MODULE['<{supercheckout}prestashop>supercheckoutcore_b611a94d8e64465c85651c67fec3c429'] = 'Een minimum aankoop totaal% 1s (BTW excl.) Is vereist om uw bestelling te bevestigen, de huidige aankoop% 2s (BTW excl.).';
 $_MODULE['<{supercheckout}prestashop>supercheckoutcore_96550f206ccd1c321be787e4f1875ed4'] = 'Een e-mailadres vereist.';
 $_MODULE['<{supercheckout}prestashop>supercheckoutcore_e267e2be02cf3e29f4ba53b5d97cf78a'] = 'Ongeldig e-mailadres.';
-$_MODULE['<{supercheckout}prestashop>supercheckoutcore_7e7fef12c74a036f5d8e3a49d0822e1b'] = 'Deze klant is al bestaan';
+$_MODULE['<{supercheckout}prestashop>supercheckoutcore_7e7fef12c74a036f5d8e3a49d0822e1b'] = 'Deze klant bestaat al, meld u a.u.b. aan';
 $_MODULE['<{supercheckout}prestashop>supercheckoutcore_20aedd1e6de4dcf8d115b5a7424c58d7'] = 'Een wachtwoord is verplicht.';
 $_MODULE['<{supercheckout}prestashop>supercheckoutcore_626295ee4555407394df3e9998e1fc19'] = 'ongeldig wachtwoord';
 $_MODULE['<{supercheckout}prestashop>supercheckoutcore_918eafd2a5ffd2824a394ce7bf1c4df4'] = 'Ongeldige geboortedatum';

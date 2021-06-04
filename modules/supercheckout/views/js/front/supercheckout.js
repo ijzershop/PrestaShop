@@ -1376,7 +1376,7 @@ function checkout_option(e) {
                     $('#html_element_login').show();
                 }
             }
-          if($('.supercheckout_shipping_option:checked').attr('value') == 7 || $('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier){
+          if($('.supercheckout_shipping_option:checked').attr('value') == 7 || $('.supercheckout_shipping_option:checked').attr('value') == 15 || $('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier){
             $('.no-shipping-names-row').show();
           }
         } else {
@@ -1407,7 +1407,7 @@ function checkout_option(e) {
                 }
             }
 
-          if($('.supercheckout_shipping_option:checked').attr('value') == 7 || $('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier){
+          if($('.supercheckout_shipping_option:checked').attr('value') == 7 || $('.supercheckout_shipping_option:checked').attr('value') == 15 || $('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier){
             $('.no-shipping-names-row').show();
           }
         }
@@ -1819,7 +1819,7 @@ function updateCarrierOnDeliveryChange() {
       disEnConfirmButton(false);
   } else {
 
-    if($('.supercheckout_shipping_option:checked').attr('value') == 7) {
+    if($('.supercheckout_shipping_option:checked').attr('value') == 7  || $('.supercheckout_shipping_option:checked').attr('value') == 15) {
       $('#checkoutShippingAddress').hide();
       $('#checkoutBillingAddress').hide();
 
@@ -3263,7 +3263,7 @@ $( document ).ready(function() {
           if (jsonData['error']['checkout_option'] != undefined) {
             has_validation_error = true;
             for (i in jsonData['error']['checkout_option']) {
-              if (jsonData['error']['checkout_option'][i]['key'] === 'supercheckout_email' && $('input.supercheckout_shipping_option:checked').val() == 7) {
+              if (jsonData['error']['checkout_option'][i]['key'] === 'supercheckout_email' && ($('input.supercheckout_shipping_option:checked').val() == 7  || $('.supercheckout_shipping_option:checked').attr('value') == 15)) {
                 $('#logged_checkout').trigger('click');
                 $('input[name="supercheckout_password"]').focus();
                 $('input[name="' + jsonData['error']['checkout_option'][i]['key'] + '"]').parent().append('<span class="errorsmall">Dit email adres is al geregistreerd, meld u a.u.b. aan</span>');
@@ -3464,7 +3464,7 @@ $( document ).ready(function() {
     var add_to_order_carrier = $('#add_to_order_method_radio').attr('data-carrier-id');
     showNoShippingPhone();
 
-    if($('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier || $('.supercheckout_shipping_option:checked').attr('value') == 7) {
+    if($('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier || $('.supercheckout_shipping_option:checked').attr('value') == 7  || $('.supercheckout_shipping_option:checked').attr('value') == 15) {
       //Is checkout without shipping address
       var surname_field_value = $('input:text[name="no_shipping_surname"]').val();
       if (surname_field_value == '') {

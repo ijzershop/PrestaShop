@@ -496,7 +496,7 @@ class Ps_EmailAlerts extends Module
                     $mail_id_lang,
                     'new_order',
                     $this->trans(
-                        'New order : #%d - %s',
+                        '{order_name} | {total_paid} | {payment} | {carrier}',
                         [
                             $order->id,
                             $order->reference,

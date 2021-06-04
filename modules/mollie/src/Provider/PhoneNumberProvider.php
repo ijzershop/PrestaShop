@@ -27,7 +27,7 @@ final class PhoneNumberProvider implements PhoneNumberProviderInterface
 		$phoneNumber = str_replace(' ', '', $phoneNumber);
 		$phoneNumber = str_replace('+', '', $phoneNumber);
 
-		while ('0' === $phoneNumber[0]) {
+		while (isset($phoneNumber[0]) && '0' === $phoneNumber[0]) {
 			$phoneNumber = substr($phoneNumber, 1);
 
 			if (empty($phoneNumber) && $phoneNumber !== '0') {
@@ -35,7 +35,7 @@ final class PhoneNumberProvider implements PhoneNumberProviderInterface
 			}
 		}
 
-		if ('+' !== $phoneNumber[0]) {
+		if (isset($phoneNumber[0]) && '+' !== $phoneNumber[0]) {
 			$phoneNumber = '+' . $phoneNumber;
 		}
 

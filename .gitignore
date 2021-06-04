@@ -311,6 +311,7 @@ themes/default-bootstrap/modules/*/mails/*
 /vendor/
 /web/bundles/
 
+/dynamicproduct/cache/*
 
 # Created by https://www.gitignore.io/api/linux,osx,windows,sublimetext,phpstorm
 

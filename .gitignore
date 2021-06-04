@@ -250,6 +250,8 @@ app/config/config.php
 # !modules/koopmanorderexport
 modules/ps_metrics
 modules/ps_eventbus
+modules/mollie/vendor/*
+modules/psaddonsconnect/vendor/*
 # override/*
 themes/*/
 !themes/classic

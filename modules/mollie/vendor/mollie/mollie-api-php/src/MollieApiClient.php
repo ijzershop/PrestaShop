@@ -36,7 +36,7 @@ class MollieApiClient
     /**
      * Version of our client.
      */
-    const CLIENT_VERSION = "2.31.1-alpha";
+    const CLIENT_VERSION = "2.32.0";
 
     /**
      * Endpoint of the remote API.
@@ -57,7 +57,7 @@ class MollieApiClient
     const HTTP_PATCH = "PATCH";
 
     /**
-     * @var MollieHttpAdapter
+     * @var \Mollie\Api\HttpAdapter\MollieHttpAdapterInterface
      */
     protected $httpClient;
 

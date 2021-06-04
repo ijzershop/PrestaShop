@@ -959,11 +959,15 @@ function applyInlineValidation() {
                     data: 'ajax=true' + '&email='+$(this).val()+'&action=check_for_existing_email_address&token=' + prestashop.static_token,
                     success: function(resp) {
                       if(resp === false){
-                        $('input[name="supercheckout_email"]').removeClass('error-form');
-                        $('input[name="supercheckout_email"]').removeClass('ok-form');
-                        $('input[name="supercheckout_email"]').addClass('ok-form');
-                        $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
-                        $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
+                        $('input[name="supercheckout_email_validation"]').removeClass('error-form');
+                $('input[name="supercheckout_email_validation"]').removeClass('ok-form');
+                $('input[name="supercheckout_email_validation"]').addClass('ok-form');
+                $('input[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
+
+                $('input[name="supercheckout_email"]').removeClass('error-form');
+                $('input[name="supercheckout_email"]').removeClass('ok-form');
+                $('input[name="supercheckout_email"]').addClass('ok-form');
+                $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
                         hideGeneralError();
                       } else{
                         $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
@@ -984,10 +988,15 @@ function applyInlineValidation() {
                     }
                   });
                 } else {
-                  $(this).removeClass('error-form');
-                  $(this).removeClass('ok-form');
-                  $(this).addClass('ok-form');
-                  $(this).parent().find('span.errorsmall').remove();
+                  $('input[name="supercheckout_email_validation"]').removeClass('error-form');
+                $('input[name="supercheckout_email_validation"]').removeClass('ok-form');
+                $('input[name="supercheckout_email_validation"]').addClass('ok-form');
+                $('input[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
+
+                $('input[name="supercheckout_email"]').removeClass('error-form');
+                $('input[name="supercheckout_email"]').removeClass('ok-form');
+                $('input[name="supercheckout_email"]').addClass('ok-form');
+                $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
                   hideGeneralError();
                 }
              }
@@ -1030,10 +1039,15 @@ function applyInlineValidation() {
                   data: 'ajax=true' + '&email='+$(this).val()+'&action=check_for_existing_email_address&token=' + prestashop.static_token,
                   success: function(resp) {
                     if(resp === false){
-                      $('input[name="supercheckout_email"]').removeClass('error-form');
-                      $('input[name="supercheckout_email"]').removeClass('ok-form');
-                      $('input[name="supercheckout_email"]').addClass('ok-form');
-                      $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
+                      $('input[name="supercheckout_email_validation"]').removeClass('error-form');
+                        $('input[name="supercheckout_email_validation"]').removeClass('ok-form');
+                        $('input[name="supercheckout_email_validation"]').addClass('ok-form');
+                        $('input[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
+
+                        $('input[name="supercheckout_email"]').removeClass('error-form');
+                        $('input[name="supercheckout_email"]').removeClass('ok-form');
+                        $('input[name="supercheckout_email"]').addClass('ok-form');
+                        $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
                       hideGeneralError();
                     } else{
                       $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
@@ -1054,10 +1068,15 @@ function applyInlineValidation() {
                   }
                 });
               } else {
-                $(this).removeClass('error-form');
-                $(this).removeClass('ok-form');
-                $(this).addClass('ok-form');
-                $(this).parent().find('span.errorsmall').remove();
+                $('input[name="supercheckout_email_validation"]').removeClass('error-form');
+                $('input[name="supercheckout_email_validation"]').removeClass('ok-form');
+                $('input[name="supercheckout_email_validation"]').addClass('ok-form');
+                $('input[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
+
+                $('input[name="supercheckout_email"]').removeClass('error-form');
+                $('input[name="supercheckout_email"]').removeClass('ok-form');
+                $('input[name="supercheckout_email"]').addClass('ok-form');
+                $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
                 hideGeneralError();
               }
             }

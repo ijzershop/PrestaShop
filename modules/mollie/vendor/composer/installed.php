@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '9b12a5a87e2a40dd929232c84e8435cd583124cb',
+    'reference' => '7088269ca9ef76aee86f10ef8b2e229259b6ea44',
     'name' => 'mollie/prestashop',
   ),
   'versions' => 
@@ -67,12 +67,12 @@
     ),
     'mollie/mollie-api-php' => 
     array (
-      'pretty_version' => 'dev-http_adapters',
-      'version' => 'dev-http_adapters',
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
       'aliases' => 
       array (
       ),
-      'reference' => '773837f7f33c2f8c43384d7ce38c4a53c4aa94cc',
+      'reference' => '8bbb42e09a2860e9b48a38d57a337df9cced18ec',
     ),
     'mollie/prestashop' => 
     array (
@@ -81,7 +81,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '9b12a5a87e2a40dd929232c84e8435cd583124cb',
+      'reference' => '7088269ca9ef76aee86f10ef8b2e229259b6ea44',
     ),
     'nikic/php-parser' => 
     array (
@@ -212,12 +212,12 @@
     ),
     'segmentio/analytics-php' => 
     array (
-      'pretty_version' => '1.7.0',
-      'version' => '1.7.0.0',
+      'pretty_version' => '1.8.0',
+      'version' => '1.8.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'e0aef0001b6d3a375341888b7bb98e34de62ecae',
+      'reference' => '7e25b2f6094632bbfb79e33ca024d533899a2ffe',
     ),
     'sentry/sentry' => 
     array (

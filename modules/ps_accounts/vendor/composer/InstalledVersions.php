@@ -25,24 +25,24 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => 'v3.3.6',
-    'version' => '3.3.6.0',
+    'pretty_version' => 'v4.0.0',
+    'version' => '4.0.0.0',
     'aliases' => 
     array (
     ),
-    'reference' => '75b99232af9908b0a09a9f501519826c1762d859',
+    'reference' => '0e4ca9f27a3b2ccac47789389ad3d95802bb27c9',
     'name' => '__root__',
   ),
   'versions' => 
   array (
     '__root__' => 
     array (
-      'pretty_version' => 'v3.3.6',
-      'version' => '3.3.6.0',
+      'pretty_version' => 'v4.0.0',
+      'version' => '4.0.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '75b99232af9908b0a09a9f501519826c1762d859',
+      'reference' => '0e4ca9f27a3b2ccac47789389ad3d95802bb27c9',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -124,15 +124,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '8a64bd83c71fdb077fbd05fbf2677b16ec2d8e53',
-    ),
-    'prestashop/prestashop-accounts-auth' => 
-    array (
-      'pretty_version' => 'v2.3.0',
-      'version' => '2.3.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '640f1ed35d0276cda7a96519bc6993a4a3ff35b6',
     ),
     'psr/cache' => 
     array (
@@ -242,15 +233,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '51d2a2708c6ceadad84393f8581df1dcf9e5e84b',
-    ),
-    'symfony/dotenv' => 
-    array (
-      'pretty_version' => 'v3.4.47',
-      'version' => '3.4.47.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '1022723ac4f56b001d99691d96c6025dbf1404f1',
     ),
     'symfony/expression-language' => 
     array (

@@ -137,8 +137,6 @@ class TransactionService
 			$cart->id,
 			$this->module->name
 		);
-
-
 		switch ($transaction->resource) {
 			case Mollie\Config\Config::MOLLIE_API_STATUS_PAYMENT:
 				if ($apiPayment->metadata->cart_id) {
@@ -212,6 +210,7 @@ class TransactionService
 		}
 
 		// Store status in database
+
 		if (!$this->savePaymentStatus($transaction->id, $apiPayment->status, $orderId)) {
 			if (Configuration::get(Mollie\Config\Config::MOLLIE_DEBUG_LOG) >= Mollie\Config\Config::DEBUG_LOG_ERRORS) {
 				PrestaShopLogger::addLog(__METHOD__ . ' said: Could not save Mollie payment status for transaction "' . $transaction->id . '". Reason: ' . Db::getInstance()->getMsgError(), Mollie\Config\Config::WARNING);
@@ -228,11 +227,8 @@ class TransactionService
 
 	public function updateOrderTransaction($transactionId, $orderReference)
 	{
-
 		$transactionInfos = [];
 		$isOrder = TransactionUtility::isOrderTransaction($transactionId);
-
-
 		if ($isOrder) {
 			$transaction = $this->module->api->orders->get($transactionId, ['embed' => 'payments']);
 			/** @var PaymentCollection|null $payments */

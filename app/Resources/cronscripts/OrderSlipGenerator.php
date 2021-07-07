@@ -147,7 +147,7 @@ class OrderSlipGenerator
      */
     private function fetchPaidAndReadyOrders() : array
     {
-        $date_from = date('Y-m-d H:i:s', strtotime('-7 days'));
+        $date_from = date('Y-m-d H:i:s', strtotime('-14 days'));
         $date_to = date('Y-m-d H:i:s', strtotime('-5 minutes'));
         $last_updated_date = date('Y-m-d H:i:s', strtotime('-1 minute'));
 

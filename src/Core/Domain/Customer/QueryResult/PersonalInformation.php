@@ -146,7 +146,7 @@ class PersonalInformation
         $this->shopName = $shopName;
         $this->languageName = $languageName;
         $this->subscriptions = $subscriptions;
-        $this->isActive = $isActive;
+        $this->isActive = $isActive;;
     }
 
     /**

@@ -455,6 +455,8 @@ class Ps_EmailAlerts extends Module
             '{gift}' => (bool) $order->gift,
             '{gift_message}' => $order->gift_message,
             '{message}' => $message,
+            '{custom_footer_html}' => Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', '')),
+            '{custom_footer_txt}' => Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT_TXT', '')),
         ];
 
         // Shop iso

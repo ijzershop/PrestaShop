@@ -90,26 +90,30 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         //     $delivery_address = new Address((int) $this->order->id_address_delivery);
         //     $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
         // }
-        // 
+        //
         $invoice_address = new Address((int) $this->order->id_address_invoice);
-            $formatted_invoice_address = $invoice_address->firstname .' '. $invoice_address->lastname.'<br />';
+        $formatted_invoice_address = $invoice_address->firstname .' '. $invoice_address->lastname.'<br />';
+        if(!empty($invoice_address->company) && $invoice_address->company != ' '){
             $formatted_invoice_address .= $invoice_address->company.'<br />';
-            $formatted_invoice_address .= $invoice_address->address1.' '.$invoice_address->house_number.' '.$invoice_address->house_number_extension.'<br />';
-            if(!empty($invoice_address->address2)){
-                $formatted_invoice_address .= $invoice_address->address2.'<br />';
-            }
-            $formatted_invoice_address .= ucwords($invoice_address->postcode). ' ' . $invoice_address->city .'<br />';
-            $formatted_invoice_address .= $invoice_address->country .'<br />';
+        }
+        $formatted_invoice_address .= $invoice_address->address1.' '.$invoice_address->house_number.' '.$invoice_address->house_number_extension.'<br />';
+        if(!empty($invoice_address->address2) && $invoice_address->address2 != ' '){
+            $formatted_invoice_address .= $invoice_address->address2.'<br />';
+        }
+        $formatted_invoice_address .= ucwords($invoice_address->postcode). ' ' . $invoice_address->city .'<br />';
+        $formatted_invoice_address .= $invoice_address->country .'<br />';
 
         $formatted_delivery_address = '';
-
+        $delivery_address = '';
         if ($this->order->id_address_invoice != $this->order->id_address_delivery) {
             $delivery_address = new Address((int) $this->order->id_address_delivery);
-            
+
             $formatted_delivery_address .= $delivery_address->firstname .' '. $delivery_address->lastname .'<br />';
-            $formatted_delivery_address .= $delivery_address->company.'<br />';
+            if(!empty($delivery_address->company) && $delivery_address->company != ' '){
+                $formatted_delivery_address .= $delivery_address->company.'<br />';
+            }
             $formatted_delivery_address .= $delivery_address->address1.' '.$delivery_address->house_number.' '.$delivery_address->house_number_extension.'<br />';
-            if(!empty($delivery_address->address2)){
+            if(!empty($delivery_address->address2) && $delivery_address->address2 != ' '){
                 $formatted_delivery_address .= $delivery_address->address2.'<br />';
             }
             $formatted_delivery_address .= ucwords($delivery_address->postcode). ' ' . $delivery_address->city .'<br />';

@@ -126,6 +126,10 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                     case 'loadPaymentAdditionalInfo':
                         $this->json = $this->loadPaymentAdditionalInfo();
                         break;
+                    case 'fetchCustomerCreditInfo':
+                        $id_customer = Tools::getValue('customer');
+                        $this->json = $this->fetchCustomerCreditInfo($id_customer);
+                        break;
                     case 'checkZipCode':
                         $this->json = $this->checkZipCode(Tools::getValue('id_country'), Tools::getValue('postcode'));
                         break;
@@ -3183,7 +3187,6 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
             $finder = new PaymentOptionsFinder();
             $available_payments = $finder->present();
         }
-
         if ($available_payments) {
             $payment_settings_data = unserialize(Configuration::get('VELOCITY_SUPERCHECKOUT_DATA'));
 
@@ -3433,6 +3436,13 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
         );
         return in_array($currency, $zeroDecimalCurrencies);
     }
+
+    public function fetchCustomerCreditInfo($id_customer){
+        $customer = new Customer($id_customer);
+        $customerAddresses = $customer->getAddresses(Context::getContext()->language->id);
+        return $customerAddresses;
+    }
+
 
     public function loadPaymentAdditionalInfo()
     {

@@ -113,6 +113,7 @@ class CustomerType extends AbstractType
                 'required' => false,
                 'placeholder' => null,
             ])
+            ->add('informer_identification', TextType::class, [])
             ->add('first_name', TextType::class, [
                 'constraints' => [
                     new NotBlank([

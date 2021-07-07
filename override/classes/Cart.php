@@ -134,6 +134,8 @@ class Cart extends CartCore
         $compute_precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
         return Tools::ps_round($value, $compute_precision);
     }
+
+
     public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
         if (isset(Context::getContext()->cookie->id_country)) {
@@ -258,7 +260,7 @@ class Cart extends CartCore
         if ($id_customization) {
             $sql .= ' AND c.`id_customization` = '.(int)$id_customization;
         }
-        
+
         $ret = Db::getInstance()->getRow($sql);
         if ($ret['quantity'] > 0) {
             $sql = 'SELECT sum(cp.`quantity`) as qty FROM `'._DB_PREFIX_.'cart_product` cp
@@ -508,7 +510,7 @@ class Cart extends CartCore
         $result = parent::duplicate();
         $id_cart_new = (int)$this->id;
         if (Module::isEnabled('dynamicproduct')) {
-            
+
             $module = Module::getInstanceByName('dynamicproduct');
             $module->hookCartDuplicated(array(
                 'id_cart_old' => $id_cart_old,

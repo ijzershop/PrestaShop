@@ -3,6 +3,7 @@
     <li>
         <h2>{l s='Invoice Address' mod='supercheckout'}</h2></li>
 </ul>
+
 {assign var='existing_address' value=[]}
 {if !isset($guest_information)}
   {assign var='existing_address' value=null}
@@ -10,11 +11,30 @@
     {assign var='existing_address' value=reset($customer.addresses)}
   {/if}
 {/if}
-
 <div class="supercheckout-checkout-content"></div>
+<input type="hidden" name="payment_address[payment_address_id]" value="{if !isset($guest_information) && $existing_address}{$existing_address['id']}{/if}">
     <div class="opc_billing_address custom-panel">
-
         <div id="payment-new" style="display: block;">
+          <div class="form-group" id="on-credit-customer-payment-address-selection" style="{if isset($guest_information) && !$existing_address}display: none;{/if}">
+            <label class="control-label" for="payment_address[id_customer_address]" >Selecteer opgeslagen adres
+            </label>
+            <select name="payment_address[id_customer_address]" class="supercheckout-large-field form-control"  onchange="AutofillCustomerPaymentAddress(this)" tabindex="-1">
+              <option value="new">Nieuw adres</option>
+              {if !isset($guest_information) && $existing_address}
+              {foreach from=$customer.addresses key='customer_address_key' item='caddress'}
+                <option data-company="{$caddress['company']}"
+                        data-firstname="{$caddress['firstname']}"
+                        data-lastname="{$caddress['lastname']}"
+                        data-phone="{$caddress['phone']}"
+                        data-postcode="{$caddress['postcode']}"
+                        data-house_number="{$caddress['house_number']}"
+                        data-houser_number_extension="{$caddress['house_number_extension']}" value="{$caddress['id']}" {if (int)$existing_address['id'] == (int)$caddress['id']}selected="selected"{/if}>
+                  {$caddress['company']} {$caddress['firstname']} {$caddress['lastname']} -  {$caddress['address1']} {$caddress['postcode']} {$caddress['house_number']} {$caddress['house_number_extension']}
+                </option>
+              {/foreach}
+              {/if}
+            </select>
+          </div>
             {*    <div id="payment_address_table" class="supercheckout-form"> *} {*Need to change later*}
             {assign var='display_row' value=''}
             {assign var='google_region_type' value=''}

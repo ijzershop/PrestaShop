@@ -62,9 +62,17 @@ class OrderConfirmationControllerCore extends FrontController
             Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
         }
         $this->reference = $order->reference;
-        if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key) {
-            Tools::redirect($redirectLink);
+
+        if(isset($this->context->cookie->selected_customer_id_customer) && !empty($this->context->cookie->selected_customer_id_customer)){
+            if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->cookie->selected_customer_id_customer || $this->context->cookie->selected_customer_secure_key != $order->secure_key) {
+                Tools::redirect($redirectLink);
+            }
+        } else {
+            if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key) {
+                Tools::redirect($redirectLink);
+            }
         }
+
         $module = Module::getInstanceById((int) ($this->id_module));
         if ($order->module != $module->name) {
             Tools::redirect($redirectLink);
@@ -114,7 +122,6 @@ class OrderConfirmationControllerCore extends FrontController
         if (!Validate::isUnsignedId($this->id_module)) {
             return false;
         }
-
         return Hook::exec('displayPaymentReturn', array('order' => $order), $this->id_module);
     }
 

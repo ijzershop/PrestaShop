@@ -954,7 +954,6 @@ class SupercheckoutCore extends ModuleFrontController
         } else {
             $error[] = $this->module->l('Please select delivery option.', 'SupercheckoutCore');
         }
-
         Hook::exec('actionCarrierProcess', array('cart' => $this->checkout_session->getCart()));
 
         return array('hasError' => !empty($error), 'errors' => $error);
@@ -1115,7 +1114,6 @@ class SupercheckoutCore extends ModuleFrontController
         }
 
         // </editor-fold>
-
         $order_total = $this->context->cart->getOrderTotal(false, Cart::BOTH);
         if (!isset($posted_data['payment_method']) && $order_total != 0) {
             $response['error']['general'][] = $this->module->l('No payment method is selected.', 'SupercheckoutCore');
@@ -1163,6 +1161,12 @@ class SupercheckoutCore extends ModuleFrontController
 
         $delivery_address = null;
         $invoice_address = null;
+        if(isset($posted_data['shipping_address']['shipping_address_id'])){
+            $this->context->cookie->supercheckout_temp_address_delivery = $posted_data['shipping_address']['shipping_address_id'];
+        }
+        if(isset($posted_data['payment_address']['payment_address_id'])){
+            $this->context->cookie->supercheckout_temp_address_invoice = $posted_data['payment_address']['payment_address_id'];
+        }
 
         $id_delivery_address = 0;
         if ((isset($posted_data['shipping_address_value'])
@@ -1176,9 +1180,9 @@ class SupercheckoutCore extends ModuleFrontController
             }
         } elseif (isset($posted_data['shipping_address_value'])
             && $posted_data['shipping_address_value'] == 0
-            && isset($posted_data['shipping_address_id'])
+            && isset($posted_data['shipping_address']['shipping_address_id'])
         ) {
-            $id_delivery_address = $posted_data['shipping_address_id'];
+            $id_delivery_address = $posted_data['shipping_address']['shipping_address_id'];
         }
 
         $id_invoice_address = 0;
@@ -1192,7 +1196,7 @@ class SupercheckoutCore extends ModuleFrontController
                 && $this->context->cookie->supercheckout_temp_address_invoice > 0) {
                 $id_invoice_address = $this->context->cookie->supercheckout_temp_address_invoice;
             } else {
-                if (!isset($posted_data['payment_address_id'])) {
+                if (!isset($posted_data['payment_address']['payment_address_id'])) {
                     $temp_invoice_address = new Address();
                     $temp_country_var = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
                     if ($temp_country_var->need_identification_number) {
@@ -1228,7 +1232,7 @@ class SupercheckoutCore extends ModuleFrontController
             && isset($posted_data['payment_address_value'])
             && $posted_data['payment_address_value'] == 0
         ) {
-            $id_invoice_address = $posted_data['payment_address_id'];
+            $id_invoice_address = $posted_data['payment_address']['payment_address_id'];
         }
 
         //////////////////////////Start - Plugin Validations //////////////////////////
@@ -1338,6 +1342,9 @@ class SupercheckoutCore extends ModuleFrontController
         $loop_index = 0;
         if (!$this->context->cart->isVirtualCart() && $shipping_address_value == 1) {
             foreach ($posted_data['shipping_address'] as $key => $value) {
+                if($key == 'id_customer_address' || $key = 'shipping_address_id'){
+                    continue;
+                }
                 $add_plugin_config = $this->supercheckout_settings['shipping_address'][$key];
                 if ($add_plugin_config[$user_type]['require'] == 1
                     && $posted_data['shipping_address'][$key] == ''
@@ -1496,6 +1503,9 @@ class SupercheckoutCore extends ModuleFrontController
             $loop_index = 0;
             if (!$this->context->cart->isVirtualCart() && $payment_address_value == 1) {
                 foreach ($posted_data['payment_address'] as $key => $value) {
+                    if($key == 'id_customer_address' || $key == 'payment_address_id'){
+                        continue;
+                    }
                     $add_plugin_config = $this->supercheckout_settings['payment_address'][$key];
                     if ($add_plugin_config[$user_type]['require'] == 1
                         && $posted_data['payment_address'][$key] == ''
@@ -1649,6 +1659,9 @@ class SupercheckoutCore extends ModuleFrontController
             return $response;
         }
 
+
+
+
         //////////////////////////End - Plugin Validations //////////////////////////
 
         if ((isset($posted_data['shipping_address_value']) && $posted_data['shipping_address_value'] == 1)
@@ -1707,7 +1720,13 @@ class SupercheckoutCore extends ModuleFrontController
             $delivery_address->other = (!empty($posted_data['shipping_address']['other']))
                 ? $posted_data['shipping_address']['other'] : ' ';
 
-            $delivery_address->id_customer = $id_customer;
+            if(isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0){
+                $delivery_address->id_customer = (int)$posted_data['on_credit_customer_select'];
+            } else {
+                $delivery_address->id_customer = $id_customer;
+            }
+
+
 
             $validate_address = $delivery_address->validateController();
             if ($validate_address && count($validate_address) > 0) {
@@ -1728,9 +1747,9 @@ class SupercheckoutCore extends ModuleFrontController
             }
         } elseif (isset($posted_data['shipping_address_value'])
             && $posted_data['shipping_address_value'] == 0
-            && isset($posted_data['shipping_address_id'])
+            && isset($posted_data['shipping_address']['shipping_address_id'])
         ) {
-            $id_delivery_address = $posted_data['shipping_address_id'];
+            $id_delivery_address = $posted_data['shipping_address']['shipping_address_id'];
         }
 
         if (isset($posted_data['use_for_invoice']) && $posted_data['use_for_invoice'] == 'on'
@@ -1747,9 +1766,7 @@ class SupercheckoutCore extends ModuleFrontController
         }
 
         if ($posted_data['use_for_invoice'] == 'off'
-            && ((isset($posted_data['payment_address_value'])
-            && $posted_data['payment_address_value'] == 1)
-            || !isset($posted_data['payment_address_id']))
+            || !isset($posted_data['payment_address']['payment_address_id'])
         ) {
             $invoice_address = new Address($id_invoice_address);
             $invoice_address->firstname = (!empty($posted_data['payment_address']['firstname']))
@@ -1802,7 +1819,13 @@ class SupercheckoutCore extends ModuleFrontController
 
             $invoice_address->other = (!empty($posted_data['payment_address']['other']))
                 ? $posted_data['payment_address']['other'] : ' ';
-            $invoice_address->id_customer = $id_customer;
+            if(isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0){
+                $invoice_address->id_customer = (int)$posted_data['on_credit_customer_select'];
+            } else {
+                $invoice_address->id_customer = $id_customer;
+            }
+
+
 
             $validate_address = $invoice_address->validateController();
             if ($validate_address && count($validate_address) > 0) {
@@ -1821,11 +1844,12 @@ class SupercheckoutCore extends ModuleFrontController
                     $id_invoice_address = $invoice_address->id;
                 }
             }
+
         } elseif ($posted_data['use_for_invoice'] == 'off'
             && isset($posted_data['payment_address_value'])
             && $posted_data['payment_address_value'] == 0
         ) {
-            $id_invoice_address = $posted_data['payment_address_id'];
+            $id_invoice_address = $posted_data['payment_address']['payment_address_id'];
         }
 
         //If any Error return
@@ -1834,8 +1858,8 @@ class SupercheckoutCore extends ModuleFrontController
         }
 
         $customer = null;
-
         $isloggedkb = (bool) ($this->context->customer->id && Customer::customerIdExistsStatic((int) $this->context->cookie->id_customer));
+
         if (!$isloggedkb) {
             $original_password = '';
             if ($posted_data['checkout_option'] == 2) {
@@ -2040,7 +2064,13 @@ class SupercheckoutCore extends ModuleFrontController
 
         if (!isset($response['error'])) {
             if (Validate::isLoadedObject($delivery_address) && $delivery_address != null) {
-                $delivery_address->id_customer = $id_customer;
+                if(isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0){
+                    $delivery_address->id_customer = (int)$posted_data['on_credit_customer_select'];
+                } else {
+                    $delivery_address->id_customer = $id_customer;
+                }
+
+
                 if (!$delivery_address->save()) {
                     $response['error']['general'][] = $this->module->l('Error occurred while updating address', 'SupercheckoutCore');
                 } else {
@@ -2049,7 +2079,13 @@ class SupercheckoutCore extends ModuleFrontController
             }
 
             if (Validate::isLoadedObject($invoice_address) && $invoice_address != null) {
-                $invoice_address->id_customer = $id_customer;
+                if(isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0){
+                    $invoice_address->id_customer = (int)$posted_data['on_credit_customer_select'];
+                } else {
+                    $invoice_address->id_customer = $id_customer;
+                }
+
+
                 if (!$invoice_address->save()) {
                     $response['error']['general'][] = $this->module->l('Error occurred while updating address', 'SupercheckoutCore');
                 } else {
@@ -2057,6 +2093,8 @@ class SupercheckoutCore extends ModuleFrontController
                 }
             }
         }
+
+
 
         if (isset($response['error'])) {
             return $response;
@@ -2105,10 +2143,23 @@ class SupercheckoutCore extends ModuleFrontController
             }
 
             $this->updateCartDeliveryAddress($id_current_address_delivery, $id_delivery_address);
-            $this->context->cart->id_customer = (int) $id_customer;
+            if(isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0){
+                $selectedCreditCustomer = (int)$posted_data['on_credit_customer_select'];
+
+                $creditCustomer = new Customer($selectedCreditCustomer);
+                $this->context->cart->id_customer = $selectedCreditCustomer;
+                $this->context->cart->secure_key = $creditCustomer->secure_key;
+                $this->context->cookie->selected_customer_secure_key = $creditCustomer->secure_key;
+                $this->context->cookie->selected_customer_customer_firstname = $creditCustomer->firstname;
+                $this->context->cookie->selected_customer_customer_lastname = $creditCustomer->lastname;
+                $this->context->cookie->selected_customer_id_customer = $selectedCreditCustomer;
+                $this->context->cookie->selected_customer_email = $creditCustomer->email;
+            } else {
+                $this->context->cart->id_customer = (int) $id_customer;
+                $this->context->cart->secure_key = $this->context->customer->secure_key;
+            }
             $this->context->cart->id_address_delivery = $id_delivery_address;
             $this->context->cart->id_address_invoice = $id_invoice_address;
-            $this->context->cart->secure_key = $this->context->customer->secure_key;
 
             $this->context->cart->save();
             $this->context->cookie->id_cart = (int) $this->context->cart->id;
@@ -2134,7 +2185,6 @@ class SupercheckoutCore extends ModuleFrontController
             $response['is_free_order'] = ((float) $order_total <= 0) ? true : false;
             $response['success'] = true;
         }
-
         return $response;
     }
 

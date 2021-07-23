@@ -15,7 +15,7 @@
 <input type="hidden" name="payment_address[payment_address_id]" value="{if !isset($guest_information) && $existing_address}{$existing_address['id']}{/if}">
     <div class="opc_billing_address custom-panel">
         <div id="payment-new" style="display: block;">
-          <div class="form-group" id="on-credit-customer-payment-address-selection" style="{if isset($guest_information) && !$existing_address}display: none;{/if}">
+          <div class="form-group" id="on-credit-customer-payment-address-selection" style="{if !Context::getContext()->customer->logged}display: none;{/if}">
             <label class="control-label" for="payment_address[id_customer_address]" >Selecteer opgeslagen adres
             </label>
             <select name="payment_address[id_customer_address]" class="supercheckout-large-field form-control"  onchange="AutofillCustomerPaymentAddress(this)" tabindex="-1">
@@ -94,7 +94,7 @@
                                         </label>
                                         {if $p_address_key eq 'id_country' || $p_address_key eq 'id_state'}
                                             <input type='hidden' class="{$google_region_type|escape:'htmlall':'UTF-8'}"/>
-                                            <select name="payment_address[{$p_address_key}]" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} class="form-control supercheckout-large-field" disabled tabindex="-1">
+                                            <select name="payment_address[{$p_address_key}]" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} class="form-control supercheckout-large-field"  tabindex="-1">
                                                 {if $p_address_key eq 'id_country'}
                                                     <option value="0">--</option>
                                                     {foreach from=$countries item='country'}
@@ -133,7 +133,7 @@
                                                 <input autocomplete="off" {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'} placeholder="{l s='Enter a location' mod='supercheckout'}" id='payment_address_{$p_address_key|escape:'htmlall':'UTF-8'}' onFocus="geolocate()"{/if} type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="form-control supercheckout-large-field {$google_region_type|escape:'htmlall':'UTF-8'} {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'}autocomplete{/if}" />
                                             {else}
                                               {if $p_address_key == 'city' ||  $p_address_key == 'address1'}
-                                                <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" readonly disabled tabindex="-1"/>
+                                                <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
                                               {else}
                                                 <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
                                               {/if}
@@ -153,7 +153,7 @@
                                         </label>
                                         {if $p_address_key eq 'id_country' || $p_address_key eq 'id_state'}
                                             <input type='hidden' class="{$google_region_type|escape:'htmlall':'UTF-8'}"/>
-                                            <select name="payment_address[{$p_address_key}]" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} class="form-control supercheckout-large-field" disabled tabindex="-1">
+                                            <select name="payment_address[{$p_address_key}]" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} class="form-control supercheckout-large-field"  tabindex="-1">
                                                 {if $p_address_key eq 'id_country'}
                                                     <option value="0">--</option>
                                                     {foreach from=$countries item='country'}
@@ -192,7 +192,7 @@
                                                 <input autocomplete="off" {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'} placeholder="{l s='Enter a location' mod='supercheckout'}" id='payment_address_{$p_address_key|escape:'htmlall':'UTF-8'}' onFocus="geolocate()"{/if} type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="form-control supercheckout-large-field {$google_region_type|escape:'htmlall':'UTF-8'} {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'}autocomplete{/if}" />
                                             {else}
                                               {if $p_address_key == 'city' ||  $p_address_key == 'address1'}
-                                                <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" readonly disabled tabindex="-1"/>
+                                                <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
                                                 {else}
                                                 <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
                                             {/if}
@@ -227,7 +227,7 @@
                                         </label>
                                         {if $p_address_key eq 'id_country' || $p_address_key eq 'id_state'}
                                             <input type='hidden' class="{$google_region_type|escape:'htmlall':'UTF-8'}"/>
-                                            <select name="payment_address[{$p_address_key}]" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} class="form-control supercheckout-large-field" disabled tabindex="-1">
+                                            <select name="payment_address[{$p_address_key}]" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} class="form-control supercheckout-large-field"  tabindex="-1">
                                                 {if $p_address_key eq 'id_country'}
                                                     <option value="0">--</option>
                                                     {foreach from=$countries item='country'}
@@ -266,13 +266,13 @@
                                             {else}
 
                                               {if $p_address_key == 'address1'}
-                                                <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" readonly disabled tabindex="-1"/>
+                                                <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
                                               {elseif $p_address_key == 'house_number'}
                                                 <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
                                               {elseif $p_address_key == 'house_number_extension'}
                                                 <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
                                               {elseif $p_address_key == 'city'}
-                                                <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" readonly disabled tabindex="-1"/>
+                                                <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
                                               {else}
                                                 <input autocomplete="off" type="text" name="payment_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
                                               {/if}
@@ -354,7 +354,7 @@
                                     {* Start: Code added by Anshul for date field *}
                                     {if $field['type'] eq "date"}
                                         <label class="cursor_help" title="{$field['field_help_text']}">{$field['field_label']}{if $field['required'] eq "1"}<span style="display:inline;" class="supercheckout-required">*</span>{/if}</label>
-                                        <input style="position: relative;" type="text" id="" name="custom_fields[field_{$field['id_velsof_supercheckout_custom_fields']}]" value="{$field['default_value']}" class="supercheckout-large-field width_100 kb_sc_custom_field_date form-control" readonly disabled>
+                                        <input style="position: relative;" type="text" id="" name="custom_fields[field_{$field['id_velsof_supercheckout_custom_fields']}]" value="{$field['default_value']}" class="supercheckout-large-field width_100 kb_sc_custom_field_date form-control" >
                                         <span id="error_field_{$field['id_velsof_supercheckout_custom_fields']}" class="errorsmall_custom hidden_custom"></span>
                                         {if isset($field['validation_type']) && $field['validation_type'] == 'isDate'}
                                             <span style="color:#999999">

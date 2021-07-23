@@ -847,6 +847,11 @@ font-size: 11px;
                                                 </button>
                                             </div>
                                         </div>
+                                      <div id="bottomloginButton" style="text-align: center;margin-bottom: 10px;display:none;">
+                                          <button id="supercheckout_bottom_login" type="button" class="btn btn-primary w-100">
+                                            LOG IN
+                                          </button>
+                                      </div>
                                         <input type="hidden" name="supercheckout_submission" value="" />
                                     </div>
 
@@ -860,7 +865,7 @@ font-size: 11px;
                                 </div>
                             </div>
                             <div class="{if $layout_name == '2_column' || $layout_name == '1_column'}col-lg-8 col-md-8 col-sm-12 {else}parent-three-column{/if} custom-panel kb_mobile_sc_respo">
-                       {if $layout_name != '3_column'}         <div class="row"> {/if}
+                       {if $layout_name != '3_column'} <div class="row"> {/if}
                                     <div class="supercheckout-column-middle columnleftsort col-lg-4 col-md-6 col-sm-12 col-12 pl-lg-0 pr-lg-0 pr-md-0 kb_mobile_sc_respo" id="columnleft-2"> {*Need to change later*}
                                         <div class="supercheckout-column-left columnleftsort col-lg-6 col-md-6 col-sm-12 col-12" id="column-2-upper">
                                         </div>
@@ -875,7 +880,7 @@ font-size: 11px;
                                     </div>
                                     <div class="supercheckout-column-right columnleftsort col-lg-4 col-md-6 col-sm-12 col-12 kb_mobile_sc_respo" id="columnleft-3">
                                     </div>
-                            {if $layout_name != '3_column'}      </div>{/if}
+                            {if $layout_name != '3_column'} </div> {/if}
 
                             </div>
                         </div>

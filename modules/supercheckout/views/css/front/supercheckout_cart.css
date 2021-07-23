@@ -861,7 +861,7 @@ ul.accountOptions li {
 
 #supercheckout-fieldset .errorsmall {
     display: block;
-    color: #FF0000 !important;
+    color: #FF0000;
     font-size:85% !important;
 }
 
@@ -1250,6 +1250,13 @@ div#social_login_block ul li a{
   background-size: 8px 8px!important;
   padding-right: 0px!important;
 
+}
+#velsof_supercheckout_form #supercheckout-fieldset .supercheckout-threecolumns .warning-form {
+  border: 1px solid #fd7e14 !important;
+  color: #fd7e14 !important;
+  background: url(../../img/front/form-warning.png) 97% 9px no-repeat #fff1f2 !important;
+  background-size: 10px 10px!important;
+  padding-right: 0px!important;
 }
 .was-validated .form-control:valid, .form-control.is-valid {
   background-size: 8px 8px!important;

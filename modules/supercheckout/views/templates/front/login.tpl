@@ -153,14 +153,14 @@
                 <label for="guest_checkout">{l s='Guest' mod='supercheckout'}</label>
             </div>
         {/if}
-        <div class="radio-inline">
-            {if $settings['checkout_option'] eq 2 || ($settings['enable_guest_checkout'] eq 0 && $settings['checkout_option'] eq 1)}
-                <input type="radio" name="checkout_option" value="2" id="register_checkout" checked>
-            {else}
-                <input type="radio" name="checkout_option" value="2" id="register_checkout">
-            {/if}
-            <label for="register_checkout">{l s='Register' mod='supercheckout'}</label>
-        </div>
+{*        <div class="radio-inline">*}
+{*            {if $settings['checkout_option'] eq 2 || ($settings['enable_guest_checkout'] eq 0 && $settings['checkout_option'] eq 1)}*}
+{*                <input type="radio" name="checkout_option" value="2" id="register_checkout" checked>*}
+{*            {else}*}
+{*                <input type="radio" name="checkout_option" value="2" id="register_checkout">*}
+{*            {/if}*}
+{*            <label for="register_checkout">{l s='Register' mod='supercheckout'}</label>*}
+{*        </div>*}
     </div>
 
     <div class="login-form">
@@ -193,10 +193,6 @@
             <input type="text" name="supercheckout_email" value="" id="email" class="form-control supercheckout-large-field">
         </div>
 
-      <div class="form-group supercheckout-extra-wrap validate-email" style="display:{if $settings['checkout_option'] eq 0}none{else}block{/if};">
-        <label class="control-label" for="input-email">Valideer E-Mail *</label>
-        <input type="text" name="supercheckout_email_validation" value="" id="supercheckout_email_validation" class="form-control supercheckout-large-field">
-      </div>
         <div id="supercheckout-login-box" class="form-group" style="display:{if $settings['checkout_option'] eq 0}block{else}none{/if};">
             <div id="supercheckout-login-password-box" class="supercheckout-extra-wrap">
               <label class="control-label" for="input-email">Wachtwoord *</label>
@@ -206,7 +202,7 @@
             <div id="forgotpasswordlink"><a href="{$forgotten_link}" class="label-link pull-right">{l s='Forgot Password' mod='supercheckout'}</a></div>
             <input type="hidden" name="SubmitLogin" value="SubmitLogin" />
 
-            <p class="loginBtn"><input type="button" value="{l s='Login' mod='supercheckout'}" id="button-login" data-loading-text="Loading..." class="btn btn-primary orangebuttonsmall w-100"><img src="{$module_image_path}loading12.gif" style="display:none;"/></p>
+            <p class="loginBtn"><input type="button" value="{l s='Login' mod='supercheckout'}" id="button-login" data-loading-text="Loading..." class="btn btn-primary w-100"><img src="{$module_image_path}loading12.gif" style="display:none;"/></p>
         </div>
 
     </div>
@@ -304,84 +300,84 @@
     <!-- End - Code to insert custom fields in registration form block -->
 
 
-    <div class="register-section" id="supercheckout-new-customer-form" style="display:{if $settings['checkout_option'] neq 0}block{else}none{/if};">
-        <table id="customer_person_information_table" class="supercheckout-form" style="margin-bottom:0 !important;width:100%;">
-          <tr id="new_customer_password" class="sort_data register_type"  data-percentage="0" style="display:{if $settings['checkout_option'] eq 2}block{else}none{/if};" >
-                <td style="display: block;">
-                    <div class="form-group ">
-                      <label class="control-label" for="password">Wachtwoord *</label>
-                        <input type="password" name="customer_personal[password]" value="" id="password" class="form-control margin-b15">
-                    </div>
-                </td>
-            </tr>
-            {assign var="counter" value="0"}
-            {foreach from=$settings['customer_personal'] key='cus_per_info' item='cus_info_field'}
-                {if $settings['customer_personal'][$cus_per_info][$user_type]['display'] eq 1}
-                    {assign var=counter value=$counter+1}
-                    <tr class="sort_data"  data-percentage="{$settings['customer_personal'][$cus_per_info]['sort_order']|intval}" >
-                        <td>
-                            {if $cus_per_info eq 'id_gender'}
-                                <div>{l s={$settings['customer_personal'][$cus_per_info]['title']} mod='supercheckout'}:<span style="display:{if $settings['customer_personal'][$cus_per_info][$user_type]['require'] eq 1}inline{else}none{/if};" class="supercheckout-required">*</span></div>
-                                <div class="supercheckout_personal_id_gender inline-fields supercheckout-large-field">
-                                    <div class="">
-                                        {foreach from=$genders key=k item=gender}
-                                            <div class="radio-inline">
-                                                <div class="radio"><input type="radio" name="customer_personal[id_gender]" value="{$gender->id|intval}" id="customer_gender_{$gender->id|intval}" checked="checked"/>
-                                                    <label for="customer_gender_{$gender->id|intval}">{$gender->name|escape:'htmlall':'UTF-8'}</label>
-                                                </div>
-                                            </div>
-                                        {/foreach}
-                                    </div>
-                                </div>
-                            {else if $cus_per_info eq 'dob'}
-                                <div style="margin-right: 18px;">{l s={$settings['customer_personal'][$cus_per_info]['title']} mod='supercheckout'}:<span style="display:{if $settings['customer_personal'][$cus_per_info][$user_type]['require'] eq 1}inline{else}none{/if};" class="supercheckout-required">*</span></div>
-                                <div class="supercheckout_personal_dob inline-fields supercheckout-large-field">
-                                    <div class="" style="display: inline-block;width: 100%;">
-                                        <div class="" style="display: inline-block;">
-                                            <select name="customer_personal[dob_days]">
-                                                <option value="">--</option>
-                                                {foreach from=$days item='day'}
-                                                    <option value="{$day|intval}">{$day|intval}</option>
-                                                {/foreach}
-                                            </select>
-                                        </div>
-                                            <div class="" style="display: inline-block;">
-                                            <select name="customer_personal[dob_months]">
-                                                <option value="">--</option>
-                                                {foreach from=$months key=month_value item=month_name}
-                                                    <option value="{$month_value}">{$month_name}</option>
-                                                {/foreach}
-                                            </select>
-                                        </div>
-                                            <div class="" style="display: inline-block;">
-                                            <select name="customer_personal[dob_years]">
-                                                <option value="">--</option>
-                                                {foreach from=$years item='year'}
-                                                    <option value="{$year}">{$year}</option>
-                                                {/foreach}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            {/if}
-                        </td>
-                    </tr>
-                {/if}
-            {/foreach}
-            {foreach from=$settings['customer_subscription'] key='cus_subs_info' item='cus_info_field'}
-                {if $settings['customer_subscription'][$cus_subs_info]['guest']['display'] eq 1}
-                    <tr class="sort_data"  data-percentage="{$settings['customer_subscription'][$cus_subs_info]['sort_order'] + {$counter}|intval}" >
-                        <td>
-                            <div class="input-box" >
-                                <input type="checkbox" class="supercheckout_offers_option" name="customer_personal[{$cus_subs_info}]" id="customer_personal_{$cus_subs_info}"  {if $settings['customer_subscription'][$cus_subs_info]['guest']['checked'] eq 1}checked="checked"{/if} >
-                                <label for="customer_personal_{$cus_subs_info}">{l s=$settings['customer_subscription'][$cus_subs_info]['title'] mod='supercheckout'}</label>
-                            </div>
-                        </td>
-                    </tr>
-                {/if}
-            {/foreach}
-        </table>
-    </div>
+{*    <div class="register-section" id="supercheckout-new-customer-form" style="display:{if $settings['checkout_option'] neq 0}block{else}none{/if};">*}
+{*        <table id="customer_person_information_table" class="supercheckout-form" style="margin-bottom:0 !important;width:100%;">*}
+{*          <tr id="new_customer_password" class="sort_data register_type"  data-percentage="0" style="display:{if $settings['checkout_option'] eq 2}block{else}none{/if};" >*}
+{*                <td style="display: block;">*}
+{*                    <div class="form-group ">*}
+{*                      <label class="control-label" for="password">Wachtwoord *</label>*}
+{*                        <input type="password" name="customer_personal[password]" value="" id="password" class="form-control margin-b15">*}
+{*                    </div>*}
+{*                </td>*}
+{*            </tr>*}
+{*            {assign var="counter" value="0"}*}
+{*            {foreach from=$settings['customer_personal'] key='cus_per_info' item='cus_info_field'}*}
+{*                {if $settings['customer_personal'][$cus_per_info][$user_type]['display'] eq 1}*}
+{*                    {assign var=counter value=$counter+1}*}
+{*                    <tr class="sort_data"  data-percentage="{$settings['customer_personal'][$cus_per_info]['sort_order']|intval}" >*}
+{*                        <td>*}
+{*                            {if $cus_per_info eq 'id_gender'}*}
+{*                                <div>{l s={$settings['customer_personal'][$cus_per_info]['title']} mod='supercheckout'}:<span style="display:{if $settings['customer_personal'][$cus_per_info][$user_type]['require'] eq 1}inline{else}none{/if};" class="supercheckout-required">*</span></div>*}
+{*                                <div class="supercheckout_personal_id_gender inline-fields supercheckout-large-field">*}
+{*                                    <div class="">*}
+{*                                        {foreach from=$genders key=k item=gender}*}
+{*                                            <div class="radio-inline">*}
+{*                                                <div class="radio"><input type="radio" name="customer_personal[id_gender]" value="{$gender->id|intval}" id="customer_gender_{$gender->id|intval}" checked="checked"/>*}
+{*                                                    <label for="customer_gender_{$gender->id|intval}">{$gender->name|escape:'htmlall':'UTF-8'}</label>*}
+{*                                                </div>*}
+{*                                            </div>*}
+{*                                        {/foreach}*}
+{*                                    </div>*}
+{*                                </div>*}
+{*                            {else if $cus_per_info eq 'dob'}*}
+{*                                <div style="margin-right: 18px;">{l s={$settings['customer_personal'][$cus_per_info]['title']} mod='supercheckout'}:<span style="display:{if $settings['customer_personal'][$cus_per_info][$user_type]['require'] eq 1}inline{else}none{/if};" class="supercheckout-required">*</span></div>*}
+{*                                <div class="supercheckout_personal_dob inline-fields supercheckout-large-field">*}
+{*                                    <div class="" style="display: inline-block;width: 100%;">*}
+{*                                        <div class="" style="display: inline-block;">*}
+{*                                            <select name="customer_personal[dob_days]">*}
+{*                                                <option value="">--</option>*}
+{*                                                {foreach from=$days item='day'}*}
+{*                                                    <option value="{$day|intval}">{$day|intval}</option>*}
+{*                                                {/foreach}*}
+{*                                            </select>*}
+{*                                        </div>*}
+{*                                            <div class="" style="display: inline-block;">*}
+{*                                            <select name="customer_personal[dob_months]">*}
+{*                                                <option value="">--</option>*}
+{*                                                {foreach from=$months key=month_value item=month_name}*}
+{*                                                    <option value="{$month_value}">{$month_name}</option>*}
+{*                                                {/foreach}*}
+{*                                            </select>*}
+{*                                        </div>*}
+{*                                            <div class="" style="display: inline-block;">*}
+{*                                            <select name="customer_personal[dob_years]">*}
+{*                                                <option value="">--</option>*}
+{*                                                {foreach from=$years item='year'}*}
+{*                                                    <option value="{$year}">{$year}</option>*}
+{*                                                {/foreach}*}
+{*                                            </select>*}
+{*                                        </div>*}
+{*                                    </div>*}
+{*                                </div>*}
+{*                            {/if}*}
+{*                        </td>*}
+{*                    </tr>*}
+{*                {/if}*}
+{*            {/foreach}*}
+{*            {foreach from=$settings['customer_subscription'] key='cus_subs_info' item='cus_info_field'}*}
+{*                {if $settings['customer_subscription'][$cus_subs_info]['guest']['display'] eq 1}*}
+{*                    <tr class="sort_data"  data-percentage="{$settings['customer_subscription'][$cus_subs_info]['sort_order'] + {$counter}|intval}" >*}
+{*                        <td>*}
+{*                            <div class="input-box" >*}
+{*                                <input type="checkbox" class="supercheckout_offers_option" name="customer_personal[{$cus_subs_info}]" id="customer_personal_{$cus_subs_info}"  {if $settings['customer_subscription'][$cus_subs_info]['guest']['checked'] eq 1}checked="checked"{/if} >*}
+{*                                <label for="customer_personal_{$cus_subs_info}">{l s=$settings['customer_subscription'][$cus_subs_info]['title'] mod='supercheckout'}</label>*}
+{*                            </div>*}
+{*                        </td>*}
+{*                    </tr>*}
+{*                {/if}*}
+{*            {/foreach}*}
+{*        </table>*}
+{*    </div>*}
     <div id="social_login_block" style="display: none;">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         {if $settings['fb_login']['enable'] neq 1 && $settings['google_login']['enable'] neq 1 && $settings['paypal_login']['enable'] neq 1}

@@ -1269,67 +1269,6 @@ class SupercheckoutCore extends ModuleFrontController
                 );
             }
 
-            //Customer Personal Information
-            foreach ($posted_data['customer_personal'] as $key => $value) {
-                if ($key != 'dob_days' && $key != 'dob_months' && $key != 'dob_years') {
-                    if ($key == 'password') {
-                        if ($check_new_password == 2) {
-                            $new_password = $posted_data['customer_personal'][$key];
-                            if ($new_password == '') {
-                                $response['error']['customer_personal'][] = array(
-                                    'key' => $key,
-                                    'error' => $this->module->l('Password is required.', 'SupercheckoutCore')
-                                );
-                            } elseif (!(Tools::strlen($new_password) >= $this->password_length
-                                && Tools::strlen($new_password) < 255)
-                            ) {
-                                $response['error']['customer_personal'][] = array(
-                                    'key' => $key,
-                                    'error' => sprintf($this->module->l('Invalid Password', 'SupercheckoutCore'), Validate::PASSWORD_LENGTH)
-                                );
-                            }
-                        }
-                    } else {
-                        if (isset($this->supercheckout_settings['customer_personal'][$key][$user_type]['require'])
-                            && $this->supercheckout_settings['customer_personal'][$key][$user_type]['require'] == 1
-                            && !isset($posted_data['customer_personal'][$key])
-                        ) {
-                            $response['error']['customer_personal'][] = array(
-                                'key' => $key,
-                                'error' => $this->module->l('Required Field', 'SupercheckoutCore')
-                            );
-                        }
-                    }
-                }
-            }
-            $check_dob = false;
-            if (isset($posted_data['customer_personal']['dob_days'])
-                && isset($posted_data['customer_personal']['dob_months'])
-                && isset($posted_data['customer_personal']['dob_years'])
-            ) {
-                if ($this->supercheckout_settings['customer_personal']['dob'][$user_type]['require'] == 1
-                    && $checkout_option == 1
-                ) {
-                    $check_dob = true;
-                    $birthday = (((empty($posted_data['customer_personal']['dob_years']))
-                        ? '' : (int) $posted_data['customer_personal']['dob_years'])
-                        . '-' . ((empty($posted_data['customer_personal']['dob_months']))
-                        ? '' : (int) $posted_data['customer_personal']['dob_months'])
-                        . '-' . ((empty($posted_data['customer_personal']['dob_days']))
-                        ? '' : (int) $posted_data['customer_personal']['dob_days']));
-                    if (empty($birthday)) {
-                        $response['error']['customer_personal'][] = array(
-                            'key' => 'dob',
-                            'error' => $this->module->l('Required Field', 'SupercheckoutCore')
-                        );
-                    } elseif (!Validate::isBirthDate($birthday)) {
-                        $response['error']['customer_personal'][] = array(
-                            'key' => 'dob',
-                            'error' => $this->module->l('Invalid date of birth', 'SupercheckoutCore')
-                        );
-                    }
-                }
-            }
         } else {
             $checkout_option = 0;
         }
@@ -1943,15 +1882,6 @@ class SupercheckoutCore extends ModuleFrontController
 
             $newsletter = (isset($posted_data['customer_personal']['newsletter'])) ? 1 : 0;
             $_POST['optin'] = (isset($posted_data['customer_personal']['optin'])) ? 1 : 0;
-            if ($check_dob) {
-                $_POST['days'] = (isset($posted_data['customer_personal']['dob_days']))
-                    ? $posted_data['customer_personal']['dob_days'] : '';
-                $_POST['months'] = (isset($posted_data['customer_personal']['dob_months']))
-                    ? $posted_data['customer_personal']['dob_months'] : '';
-                $_POST['years'] = (isset($posted_data['customer_personal']['dob_years']))
-                    ? $posted_data['customer_personal']['dob_years'] : '';
-            }
-
 
             $flag = false;
             if ($this->is_logged && $this->context->cookie->is_guest) {
@@ -2017,13 +1947,8 @@ class SupercheckoutCore extends ModuleFrontController
                 }
             }
 
-            if ($check_dob) {
-                $customer->birthday = (int) Tools::getValue('years') . '-'
-                    . (int) Tools::getValue('months') . '-' . Tools::getValue('days');
-            } else {
-                $customer->birthday = '';
-            }
 
+            $customer->birthday = '';
             $customer->active = 1;
 
             if ($flag) {

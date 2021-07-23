@@ -17,10 +17,10 @@
 
     <div id="shipping-new" style="display: block;">
 
-      <div class="form-group" id="on-credit-customer-shipping-address-selection" style="{if isset($guest_information) && !$existing_address}display: none;{/if}">
+      <div class="form-group" id="on-credit-customer-shipping-address-selection" style="{if !Context::getContext()->customer->logged}display: none;{/if}">
         <label class="control-label" for="shipping_address[id_customer_address]" >Selecteer opgeslagen adres
         </label>
-        <select name="shipping_address[id_customer_address]" class="supercheckout-large-field form-control"  onchange="AutofillCustomerShippingAddress(this)" tabindex="-1">
+        <select name="shipping_address[id_customer_address]" class="supercheckout-large-field form-control"  onchange="AutofillCustomerShippingAddress(this)" tabindex="-1" style="">
           <option value="new">Nieuw adres</option>
           {if !isset($guest_information) && $existing_address}
             {foreach from=$customer.addresses key='customer_address_key' item='caddress'}
@@ -93,7 +93,7 @@
                                     </label>
                                     {if $p_address_key eq 'id_country' || $p_address_key eq 'id_state'}
                                         <input type='hidden' class="{$google_region_type|escape:'htmlall':'UTF-8'}"/>
-                                        <select name="shipping_address[{$p_address_key}]" class="supercheckout-large-field form-control" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} disabled tabindex="-1">
+                                        <select name="shipping_address[{$p_address_key}]" class="supercheckout-large-field form-control" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} tabindex="-1">
                                             {if $p_address_key eq 'id_country'}
                                                 <option value="0">--</option>
                                                 {foreach from=$countries item='country'}
@@ -111,7 +111,7 @@
                                             <input autocomplete="off" type="text"  {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'} placeholder="{l s='Enter a location' mod='supercheckout'}" id='shipping_address_{$p_address_key|escape:'htmlall':'UTF-8'}'onFocus="geolocate()"{/if} name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="form-control supercheckout-large-field {$google_region_type|escape:'htmlall':'UTF-8'} {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'}autocomplete{/if}" />
                                         {else}
                                           {if $p_address_key == 'city' || $p_address_key == 'address1'}
-                                            <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" readonly disabled tabindex="-1"/>
+                                            <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
                                           {else}
                                             <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
                                           {/if}
@@ -133,7 +133,7 @@
                                     </label>
                                     {if $p_address_key eq 'id_country' || $p_address_key eq 'id_state'}
                                         <input type='hidden' class="{$google_region_type|escape:'htmlall':'UTF-8'}"/>
-                                        <select name="shipping_address[{$p_address_key}]" class="supercheckout-large-field form-control" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} disabled tabindex="-1">
+                                        <select name="shipping_address[{$p_address_key}]" class="supercheckout-large-field form-control" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} tabindex="-1">
                                             {if $p_address_key eq 'id_country'}
                                                 <option value="0">--</option>
                                                 {foreach from=$countries item='country'}
@@ -151,7 +151,7 @@
                                             <input autocomplete="off" type="text"  {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'} placeholder="{l s='Enter a location' mod='supercheckout'}" id='shipping_address_{$p_address_key|escape:'htmlall':'UTF-8'}'onFocus="geolocate()"{/if} name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="form-control supercheckout-large-field {$google_region_type|escape:'htmlall':'UTF-8'} {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'}autocomplete{/if}" />
                                         {else}
                                           {if $p_address_key == 'city' || $p_address_key == 'address1'}
-                                            <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" readonly disabled tabindex="-1"/>
+                                            <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
                                           {else}
                                             <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
                                           {/if}
@@ -189,7 +189,7 @@
                                     </label>
                                     {if $p_address_key eq 'id_country' || $p_address_key eq 'id_state'}
                                         <input type='hidden' class="{$google_region_type|escape:'htmlall':'UTF-8'}"/>
-                                        <select name="shipping_address[{$p_address_key}]" class="supercheckout-large-field form-control" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} disabled>
+                                        <select name="shipping_address[{$p_address_key}]" class="supercheckout-large-field form-control" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if}>
                                             {if $p_address_key eq 'id_country'}
                                                 <option value="0">--</option>
                                                 {foreach from=$countries item='country'}
@@ -207,7 +207,7 @@
                                             <input autocomplete="off" type="text"  {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'} placeholder="{l s='Enter a location' mod='supercheckout'}" id='shipping_address_{$p_address_key|escape:'htmlall':'UTF-8'}'onFocus="geolocate()"{/if} name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="form-control supercheckout-large-field {$google_region_type|escape:'htmlall':'UTF-8'} {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'}autocomplete{/if}" />
                                         {else}
                                           {if $p_address_key == 'city' || $p_address_key == 'address1'}
-                                            <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" readonly disabled tabindex="-1"/>
+                                            <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
                                           {else}
                                             <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
                                           {/if}

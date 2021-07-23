@@ -93,8 +93,13 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                 ];
 
         foreach ($products as $product){
+            $productName = $product['product_name'];
+            if(!is_null($product['customizedDatas'])){
+                $productName .= ' - '.$product['customizedDatas'][$product['id_address_delivery']][$product['id_customization']]['datas'][1][0]['value'];
+            }
+
             $query["lines"][] = ["qty" => $product['product_quantity'],
-                "description" => $product['product_name'],
+                "description" => $productName,
                 "amount" => $product['unit_price_tax_incl'],
                 "discount" => $product['reduction_amount_tax_incl'],
                 "vat_id" => $line_vat_id,
@@ -131,11 +136,9 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_POSTFIELDS => $query,
+            CURLOPT_POSTFIELDS => json_encode($query),
         ));
-
         $info = curl_getinfo($curlCard);
-
         $response = curl_exec($curlCard);
 
         if (!curl_errno($curlCard)) {
@@ -143,8 +146,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         } else {
             $returnData = [];
         }
-        var_export($response);
-        die();
         curl_close($curlCard);
     }
 

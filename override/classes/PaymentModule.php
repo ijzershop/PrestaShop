@@ -46,6 +46,8 @@ class PaymentModule extends PaymentModuleCore
         $id_order_state,
         $carrierId = null
     ) {
+
+
         $order = new Order();
         $order->product_list = $productList;
 
@@ -57,9 +59,19 @@ class PaymentModule extends PaymentModuleCore
             }
         }
 
+//        $carrier = null;
+//        if (!$cart->isVirtualCart() && isset($carrierId)) {
+//            $carrier = new Carrier((int) $carrierId, (int) $cart->id_lang);
+//            $order->id_carrier = (int) $carrier->id;
+//            $carrierId = (int) $carrier->id;
+//        } else {
+//            $order->id_carrier = 0;
+//            $carrierId = 0;
+//        }
+
         $carrier = null;
-        if (!$cart->isVirtualCart() && isset($carrierId)) {
-            $carrier = new Carrier((int) $carrierId, (int) $cart->id_lang);
+        if (!$cart->isVirtualCart() && isset($cart->id_carrier)) {
+            $carrier = new Carrier((int) $cart->id_carrier, (int) $cart->id_lang);
             $order->id_carrier = (int) $carrier->id;
             $carrierId = (int) $carrier->id;
         } else {

@@ -220,9 +220,9 @@ public function addOrderState($name)
         $creditGroup = new Group(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_CREDIT_GROUP'), Context::getContext()->language->id, Context::getContext()->shop->id);
         $customersWithGroup = $creditGroup->getCustomers();
         $is_balie_employee = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id;
-
+        $add_to_list = false;
         if($is_balie_employee){
-
+            $add_to_list = true;
             for ($i = 0; $i <= count($customersWithGroup); $i++){
                 if(isset($customersWithGroup[$i])){
                     array_push($customers, array('id_customer' => $customersWithGroup[$i]['id_customer'],
@@ -232,36 +232,43 @@ public function addOrderState($name)
                         'email' => $customersWithGroup[$i]['email']));
                 }
             }
-        } else {
-            for ($i = 0; $i <= count($customersWithGroup); $i++){
-                if(isset($customersWithGroup[$i]) && (int)$customersWithGroup[$i]['id_customer'] == (int)Context::getContext()->customer->id){
-                    array_push($customers, array('id_customer'=> $customerWithGroup[$i]['id_customer'],
-                                         'company'=> $customerWithGroup[$i]['company'],
-                                         'firstname'=> $customerWithGroup[$i]['firstname'],
-                                         'lastname'=> $customerWithGroup[$i]['lastname'],
-                                         'email'=> $customerWithGroup[$i]['email']));
-                }
+        }
+//        else {
+//
+//            var_export(!Configuration::get('MODERNESMIDTHEMECONFIGURATOR_SHOW_ONCREDIT_CUSTOMER'));
+//
+//
+//            for ($i = 0; $i <= count($customersWithGroup); $i++){
+//                if(isset($customersWithGroup[$i]) && (int)$customersWithGroup[$i]['id_customer'] == (int)Context::getContext()->customer->id && !Configuration::get('MODERNESMIDTHEMECONFIGURATOR_SHOW_ONCREDIT_CUSTOMER')){
+//                    array_push($customers, array('id_customer'=> $customerWithGroup[$i]['id_customer'],
+//                                         'company'=> $customerWithGroup[$i]['company'],
+//                                         'firstname'=> $customerWithGroup[$i]['firstname'],
+//                                         'lastname'=> $customerWithGroup[$i]['lastname'],
+//                                         'email'=> $customerWithGroup[$i]['email']));
+//                }
+//
+//            }
+//        }
+
+            if($add_to_list) {
+                $this->smarty->assign(
+                    [
+                        'customers' => $customers
+                    ]
+                );
+                $newOption = new PaymentOption();
+                $newOption->setModuleName($this->name)
+                    ->setCallToActionText($this->trans('Betalen met credit', array(), 'Modules.Creditpayment.Shop'))
+                    ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
+                    ->setLogo(_MODULE_DIR_ . '/ps_creditpayment/ps_creditpayment.png')
+                    ->setAdditionalInformation($this->fetch('module:ps_creditpayment/views/templates/hook/ps_creditpayment_intro.tpl'));
+
+                $payment_options = [
+                    $newOption,
+                ];
+                return $payment_options;
             }
         }
-
-        $this->smarty->assign(
-            [
-                'customers' => $customers
-            ]
-        );
-        $newOption = new PaymentOption();
-        $newOption->setModuleName($this->name)
-                ->setCallToActionText($this->trans('Betalen met credit', array(), 'Modules.Creditpayment.Shop'))
-                ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
-                ->setLogo(_MODULE_DIR_ .'/ps_creditpayment/ps_creditpayment.png')
-                ->setAdditionalInformation($this->fetch('module:ps_creditpayment/views/templates/hook/ps_creditpayment_intro.tpl'));
-
-        $payment_options = [
-            $newOption,
-        ];
-
-        return $payment_options;
-    }
 
     public function hookPaymentReturn($params)
     {

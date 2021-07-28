@@ -3109,6 +3109,8 @@ class CartCore extends ObjectModel
      */
     public function setDeliveryOption($delivery_option = null)
     {
+
+
         if (empty($delivery_option) || count($delivery_option) == 0) {
             $this->delivery_option = '';
             $this->id_carrier = 0;
@@ -3148,8 +3150,15 @@ class CartCore extends ObjectModel
      */
     protected function getIdCarrierFromDeliveryOption($delivery_option)
     {
+
         $delivery_option_list = $this->getDeliveryOptionList();
+
         foreach ($delivery_option as $key => $value) {
+
+            if (strpos($value, ',') === false) {
+                $value = $value.',';
+            }
+
             if (isset($delivery_option_list[$key][$value])) {
                 if (count($delivery_option_list[$key][$value]['carrier_list']) == 1) {
                     return current(array_keys($delivery_option_list[$key][$value]['carrier_list']));

@@ -4825,6 +4825,7 @@ function AutofillCustomerShippingAddress(e){
     $('input[name="shipping_address[postcode]"]').removeClass('error-form is-valid').val($('#on-credit-customer-shipping-address-selection select').find(':selected').attr('data-postcode')).trigger('keydown');
     $('input[name="shipping_address[house_number]"]').removeClass('error-form is-valid').val($('#on-credit-customer-shipping-address-selection select').find(':selected').attr('data-house_number')).trigger('keydown');
   }
+  checkFormatAddressApiCheckout();
 }
 
 function AutofillCustomerPaymentAddress(e){
@@ -4853,6 +4854,7 @@ function AutofillCustomerPaymentAddress(e){
     $('input[name="payment_address[postcode]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-postcode')).trigger('keydown');
     $('input[name="payment_address[house_number]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-house_number')).trigger('keydown');
   }
+  checkFormatAddressApiCheckout();
 }
 
 $(document).on('change load', '#on_credit_customer_select', function(e){

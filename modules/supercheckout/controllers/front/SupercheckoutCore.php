@@ -954,6 +954,7 @@ class SupercheckoutCore extends ModuleFrontController
         } else {
             $error[] = $this->module->l('Please select delivery option.', 'SupercheckoutCore');
         }
+
         Hook::exec('actionCarrierProcess', array('cart' => $this->checkout_session->getCart()));
 
         return array('hasError' => !empty($error), 'errors' => $error);
@@ -1069,7 +1070,7 @@ class SupercheckoutCore extends ModuleFrontController
         } else {
             $use_for_invoice = 'off';
         }
-        unset($_POST);
+//        unset($_POST);
 
         if (isset($posted_data['checkout_option']) && $posted_data['checkout_option'] == 0) {
             if (!$this->is_logged) {
@@ -2103,10 +2104,12 @@ class SupercheckoutCore extends ModuleFrontController
             $response['custom_fields_errors'] = $custom_fields_response;
             return $response;
         }
-
         if (!isset($response['error'])) {
+            $this->context->cookie->supercheckout_temp_address_shipping = $id_delivery_address;
+            $this->context->cookie->supercheckout_perm_address_shipping = $id_delivery_address;
             $this->context->cookie->supercheckout_perm_address_delivery = $id_delivery_address;
             $this->context->cookie->supercheckout_perm_address_invoice = $id_invoice_address;
+
             $response['is_free_order'] = ((float) $order_total <= 0) ? true : false;
             $response['success'] = true;
         }

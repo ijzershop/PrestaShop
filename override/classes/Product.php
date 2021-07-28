@@ -1,85 +1,9 @@
 <?php
 use classes\models\DynamicConfig;
 use classes\models\DynamicEquation;
+
+
 class Product extends ProductCore {
-    public static function isDynamicProduct($product){
-        if(is_array($product)){
-            $id_product = $product['id_product'];
-        } else {
-            $id_product = $product->id;
-        }
-        $equation =   DynamicEquation::getEquationsByIdProduct($id_product);
-        if(array_key_exists(0, $equation) && !empty($equation[0]->formula)){
-            return true;
-        }
-        return false;
-    }
-    /*
-    * module: offerintegration
-    * date: 2020-03-06 14:52:31
-    * version: 1.0.9.1
-    */
-    public $default_cut_price;
-    public static function getAllCustomizedDatas($id_cart, $id_lang = null, $only_in_cart = true, $id_shop = null, $id_customization = null)
-    {
-        if (!Customization::isFeatureActive()) {
-            return false;
-        }
-        if (!$id_cart) {
-            return false;
-        }
-        if ($id_customization === 0) {
-            $product_customizations = (int) Db::getInstance()->getValue('
-                SELECT COUNT(`id_customization`) FROM `' . _DB_PREFIX_ . 'cart_product`
-                WHERE `id_cart` = ' . (int) $id_cart .
-                ' AND `id_customization` != 0');
-            if ($product_customizations) {
-                return false;
-            }
-        }
-        if (!$id_lang) {
-            $id_lang = Context::getContext()->language->id;
-        }
-        if (Shop::isFeatureActive() && !$id_shop) {
-            $id_shop = (int) Context::getContext()->shop->id;
-        }
-        if (!$result = Db::getInstance()->executeS('
-            SELECT cd.`id_customization`, c.`id_address_delivery`, c.`id_product`, cfl.`id_customization_field`, c.`id_product_attribute`,
-                cd.`type`, cd.`index`, cd.`value`, cd.`id_module`, cd.`technical_reference`, cd.`technical_image`, cfl.`name`
-            FROM `' . _DB_PREFIX_ . 'customized_data` cd
-            NATURAL JOIN `' . _DB_PREFIX_ . 'customization` c
-            LEFT JOIN `' . _DB_PREFIX_ . 'customization_field_lang` cfl ON (cfl.id_customization_field = cd.`index` AND id_lang = ' . (int) $id_lang .
-                ($id_shop ? ' AND cfl.`id_shop` = ' . (int) $id_shop : '') . ')
-            WHERE c.`id_cart` = ' . (int) $id_cart .
-            ($only_in_cart ? ' AND c.`in_cart` = 1' : '') .
-            ((int) $id_customization ? ' AND cd.`id_customization` = ' . (int) $id_customization : '') . '
-            ORDER BY `id_product`, `id_product_attribute`, `type`, `index`')) {
-            return false;
-        }
-        $customized_datas = array();
-        foreach ($result as $row) {
-            if ((int) $row['id_module'] && (int) $row['type'] == Product::CUSTOMIZE_TEXTFIELD) {
-                $row['value'] = Hook::exec('displayCustomization', array('customization' => $row), (int) $row['id_module']);
-            }
-            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['datas'][(int) $row['type']][] = $row;
-        }
-        if (!$result = Db::getInstance()->executeS(
-            'SELECT `id_product`, `id_product_attribute`, `id_customization`, `id_address_delivery`, `quantity`, `quantity_refunded`, `quantity_returned`
-            FROM `' . _DB_PREFIX_ . 'customization`
-            WHERE `id_cart` = ' . (int) $id_cart .
-            ((int) $id_customization ? ' AND `id_customization` = ' . (int) $id_customization : '') .
-            ($only_in_cart ? ' AND `in_cart` = 1' : '')
-        )) {
-            return false;
-        }
-        foreach ($result as $row) {
-            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['quantity'] = (int) $row['quantity'];
-            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['quantity_refunded'] = (int) $row['quantity_refunded'];
-            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['quantity_returned'] = (int) $row['quantity_returned'];
-            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['id_customization'] = (int) $row['id_customization'];
-        }
-        return $customized_datas;
-    }
     /*
     * module: offerintegration
     * date: 2020-08-21 11:00:54
@@ -127,6 +51,8 @@ class Product extends ProductCore {
     * date: 2020-08-21 11:00:54
     * version: 1.0.9.1
     */
+    public $link_rewrite;
+
     public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
     {
         self::$definition['fields']['saw_loss'] = array('type' => self::TYPE_INT,
@@ -148,16 +74,22 @@ class Product extends ProductCore {
                                                                 'validate' =>
                                                                 'isNullOrUnsignedId',
                                                                 'required' => false);
-        self::$definition['fields']['id_oi_offer'] = array('type' => ObjectModel::TYPE_INT,
+        self::$definition['fields']['id_oi_offer'] = array('type' => self::TYPE_INT,
                                                                  'shop' => 'true',
                                                                  'required' => false);
-        self::$definition['fields']['oi_offer_extra_shipping'] = array('type' => ObjectModel::TYPE_INT,
+        self::$definition['fields']['oi_offer_extra_shipping'] = array('type' => self::TYPE_INT,
                                                                  'shop' => 'true',
                                                                  'required' => false);
-        self::$definition['fields']['name'] = array('type' => ObjectModel::TYPE_STRING,
+        self::$definition['fields']['name'] = array('type' => self::TYPE_STRING,
                                                                  'lang' => true,
                                                                  'validate' => 'isCatalogName',
                                                                  'required' => true, 'size' => 255);
+
+        self::$definition['fields']['link_rewrite'] = array('type' => self::TYPE_STRING,
+            'lang' => true,
+            'validate' => 'isString',
+            'required' => false, 'size' => 255);
+
         parent::__construct($id_product, $full, $id_lang, $id_shop);
     }
     /*
@@ -312,7 +244,7 @@ class Product extends ProductCore {
     public static function getProductProperties($id_lang, $row, Context $context = null)
     {
         $result = parent::getProductProperties($id_lang, $row, $context);
-        
+
         $module = Module::getInstanceByName('dynamicproduct');
         if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
             $id_product = (int)$row['id_product'];
@@ -325,5 +257,84 @@ class Product extends ProductCore {
             }
         }
         return $result;
+    }
+
+    public static function isDynamicProduct($product){
+        if(is_array($product)){
+            $id_product = $product['id_product'];
+        } else {
+            $id_product = $product->id;
+        }
+        $equation =   DynamicEquation::getEquationsByIdProduct($id_product);
+        if(array_key_exists(0, $equation) && !empty($equation[0]->formula)){
+            return true;
+        }
+        return false;
+    }
+    /*
+    * module: offerintegration
+    * date: 2020-03-06 14:52:31
+    * version: 1.0.9.1
+    */
+    public $default_cut_price;
+    public static function getAllCustomizedDatas($id_cart, $id_lang = null, $only_in_cart = true, $id_shop = null, $id_customization = null)
+    {
+        if (!Customization::isFeatureActive()) {
+            return false;
+        }
+        if (!$id_cart) {
+            return false;
+        }
+        if ($id_customization === 0) {
+            $product_customizations = (int) Db::getInstance()->getValue('
+                SELECT COUNT(`id_customization`) FROM `' . _DB_PREFIX_ . 'cart_product`
+                WHERE `id_cart` = ' . (int) $id_cart .
+                ' AND `id_customization` != 0');
+            if ($product_customizations) {
+                return false;
+            }
+        }
+        if (!$id_lang) {
+            $id_lang = Context::getContext()->language->id;
+        }
+        if (Shop::isFeatureActive() && !$id_shop) {
+            $id_shop = (int) Context::getContext()->shop->id;
+        }
+        if (!$result = Db::getInstance()->executeS('
+            SELECT cd.`id_customization`, c.`id_address_delivery`, c.`id_product`, cfl.`id_customization_field`, c.`id_product_attribute`,
+                cd.`type`, cd.`index`, cd.`value`, cd.`id_module`, cd.`technical_reference`, cd.`technical_image`, cfl.`name`
+            FROM `' . _DB_PREFIX_ . 'customized_data` cd
+            NATURAL JOIN `' . _DB_PREFIX_ . 'customization` c
+            LEFT JOIN `' . _DB_PREFIX_ . 'customization_field_lang` cfl ON (cfl.id_customization_field = cd.`index` AND id_lang = ' . (int) $id_lang .
+            ($id_shop ? ' AND cfl.`id_shop` = ' . (int) $id_shop : '') . ')
+            WHERE c.`id_cart` = ' . (int) $id_cart .
+            ($only_in_cart ? ' AND c.`in_cart` = 1' : '') .
+            ((int) $id_customization ? ' AND cd.`id_customization` = ' . (int) $id_customization : '') . '
+            ORDER BY `id_product`, `id_product_attribute`, `type`, `index`')) {
+            return false;
+        }
+        $customized_datas = array();
+        foreach ($result as $row) {
+            if ((int) $row['id_module'] && (int) $row['type'] == Product::CUSTOMIZE_TEXTFIELD) {
+                $row['value'] = Hook::exec('displayCustomization', array('customization' => $row), (int) $row['id_module']);
+            }
+            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['datas'][(int) $row['type']][] = $row;
+        }
+        if (!$result = Db::getInstance()->executeS(
+            'SELECT `id_product`, `id_product_attribute`, `id_customization`, `id_address_delivery`, `quantity`, `quantity_refunded`, `quantity_returned`
+            FROM `' . _DB_PREFIX_ . 'customization`
+            WHERE `id_cart` = ' . (int) $id_cart .
+            ((int) $id_customization ? ' AND `id_customization` = ' . (int) $id_customization : '') .
+            ($only_in_cart ? ' AND `in_cart` = 1' : '')
+        )) {
+            return false;
+        }
+        foreach ($result as $row) {
+            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['quantity'] = (int) $row['quantity'];
+            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['quantity_refunded'] = (int) $row['quantity_refunded'];
+            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['quantity_returned'] = (int) $row['quantity_returned'];
+            $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['id_customization'] = (int) $row['id_customization'];
+        }
+        return $customized_datas;
     }
 }

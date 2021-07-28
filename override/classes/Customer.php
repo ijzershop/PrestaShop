@@ -23,7 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
+use PrestaShop\PrestaShop\Adapter\CoreException;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 /***
  * Class CustomerCore
  */
@@ -33,9 +34,7 @@ class Customer extends CustomerCore
 
     public $psgdpr_remove;
     public $informer_identification;
-    /**
-     * @see ObjectModel::$definition
-     */
+
     public static $definition = array(
         'table' => 'customer',
         'primary' => 'id_customer',
@@ -73,7 +72,7 @@ class Customer extends CustomerCore
             'reset_password_token' => array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false),
             'reset_password_validity' => array('type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false),
             'psgdpr_remove' => array('type' => self::TYPE_INT, 'copy_post' => false),
-            'informer_identification' => array('type' => self::TYPE_STRING, 'copy_post' => false)
+            'informer_identification' => array('type' => self::TYPE_STRING)
         )
     );
 

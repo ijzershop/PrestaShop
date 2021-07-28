@@ -1843,7 +1843,7 @@ function updateCarrierOnDeliveryChange() {
           }
         });
         /*End Code Added By Priyanshu on 11-Feb-2021 to fix the issue of Extra Content not displaying for delivery Methods*/
-        // loadCart();
+        loadCart();
       }
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -1990,8 +1990,8 @@ function loadCart() {
       }
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) {
-      var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-      $('#cart_update_warning').html('<div class="permanent-warning">' + errors + '</div>');
+      // var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
+      // $('#cart_update_warning').html('<div class="permanent-warning">' + errors + '</div>');
       //$('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
     }
   });
@@ -4822,7 +4822,7 @@ function AutofillCustomerShippingAddress(e){
     $('input[name="shipping_address[lastname]"]').removeClass('error-form is-valid').val($('#on-credit-customer-shipping-address-selection select').find(':selected').attr('data-lastname')).trigger('keydown');
     $('input[name="shipping_address[phone]"]').removeClass('error-form is-valid').val($('#on-credit-customer-shipping-address-selection select').find(':selected').attr('data-phone'));
     $('input[name="shipping_address[house_number_extension]"]').removeClass('error-form is-valid').val($('#on-credit-customer-shipping-address-selection select').find(':selected').attr('data-house_number_extension'));
-    $('input[name="shipping_address[postcode]"]').removeClass('error-form is-valid').val($('#on-credit-customer-shipping-address-selection select').find(':selected').attr('data-postcode'));
+    $('input[name="shipping_address[postcode]"]').removeClass('error-form is-valid').val($('#on-credit-customer-shipping-address-selection select').find(':selected').attr('data-postcode')).trigger('keydown');
     $('input[name="shipping_address[house_number]"]').removeClass('error-form is-valid').val($('#on-credit-customer-shipping-address-selection select').find(':selected').attr('data-house_number')).trigger('keydown');
   }
 }
@@ -4850,7 +4850,7 @@ function AutofillCustomerPaymentAddress(e){
     $('input[name="payment_address[lastname]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-lastname')).trigger('keydown');
     $('input[name="payment_address[phone]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-phone'));
     $('input[name="payment_address[house_number_extension]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-house_number_extension'));
-    $('input[name="payment_address[postcode]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-postcode'));
+    $('input[name="payment_address[postcode]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-postcode')).trigger('keydown');
     $('input[name="payment_address[house_number]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-house_number')).trigger('keydown');
   }
 }

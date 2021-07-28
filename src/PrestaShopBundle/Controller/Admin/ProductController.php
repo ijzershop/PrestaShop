@@ -404,8 +404,8 @@ class ProductController extends FrameworkBundleAdminController
 
         //set name and link_rewrite in each lang
         foreach ($languages as $lang) {
-            $product->name[$lang['id_lang']] = '';
-            $product->link_rewrite[$lang['id_lang']] = '';
+            $product->name[$lang['id_lang']] = ' ';
+            $product->link_rewrite[$lang['id_lang']] = ' ';
         }
 
         $product->save();

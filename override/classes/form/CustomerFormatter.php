@@ -179,19 +179,19 @@ class CustomerFormatter extends CustomerFormatterCore implements FormFormatterIn
                 );
         }
 
-        if ($this->ask_for_partner_optin) {
-            $format['optin'] = (new FormField())
-                ->setName('optin')
-                ->setType('checkbox')
-                ->setLabel(
-                    $this->translator->trans(
-                        'Receive offers from our partners',
-                        [],
-                        'Shop.Theme.Customeraccount'
-                    )
-                )
-                ->setRequired($this->partner_optin_is_required);
-        }
+//        if ($this->ask_for_partner_optin) {
+//            $format['optin'] = (new FormField())
+//                ->setName('optin')
+//                ->setType('checkbox')
+//                ->setLabel(
+//                    $this->translator->trans(
+//                        'Receive offers from our partners',
+//                        [],
+//                        'Shop.Theme.Customeraccount'
+//                    )
+//                )
+//                ->setRequired($this->partner_optin_is_required);
+//        }
 
         // ToDo, replace the hook exec with HookFinder when the associated PR will be merged
         $additionalCustomerFormFields = Hook::exec('additionalCustomerFormFields', array(), null, true);

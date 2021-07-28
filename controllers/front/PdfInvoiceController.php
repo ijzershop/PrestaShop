@@ -36,9 +36,9 @@ class PdfInvoiceControllerCore extends FrontController
 
     public function postProcess()
     {
-        if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key')) {
-            Tools::redirect('index.php?controller=authentication&back=pdf-invoice');
-        }
+//        if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key')) {
+//            Tools::redirect('index.php?controller=authentication&back=pdf-invoice');
+//        }
 
         if (!(int) Configuration::get('PS_INVOICE')) {
             die($this->trans('Invoices are disabled in this shop.', array(), 'Shop.Notifications.Error'));

@@ -150,11 +150,11 @@ class Cart extends CartCore
         );
         $delivery_option_list = $this->getDeliveryOptionList($default_country);
         foreach ($delivery_option as $id_address => $key) {
-            if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
+            if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][Context::getContext()->cart->id_carrier.','])) {
                 continue;
             }
-            $_total_shipping['with_tax'] += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
-            $_total_shipping['without_tax'] += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
+            $_total_shipping['with_tax'] += $delivery_option_list[$id_address][Context::getContext()->cart->id_carrier.',']['total_price_with_tax'];
+            $_total_shipping['without_tax'] += $delivery_option_list[$id_address][Context::getContext()->cart->id_carrier.',']['total_price_without_tax'];
         }
         $extraShippingFee = 0;
         foreach (Context::getContext()->cart->getProducts() as $key => $prod) {
@@ -166,6 +166,7 @@ class Cart extends CartCore
                 }
             }
         }
+
         return ($use_tax) ? $_total_shipping['with_tax']+$extraShippingFee: $_total_shipping['without_tax']+$extraShippingFee;
     }
     public function deleteProduct(

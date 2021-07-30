@@ -3427,7 +3427,7 @@ $( document ).ready(function() {
       $('input[name="shipping_address[address1]"]').val("Ceresweg");
       $('input[name="shipping_address[house_number]"]').val("1");
       $('input[name="shipping_address[house_number_extension]"]').val("");
-      $('input[name="shipping_address[postcode]"]').val("8938 BC");
+      $('input[name="shipping_address[postcode]"]').val("8938 BG");
       $('input[name="shipping_address[city]"]').val("Leeuwarden");
       $('input[name="shipping_address[id_country]"]').val("13");
       $('input[name="shipping_address[phone]"]').val(phone_field_value);
@@ -3650,26 +3650,6 @@ $( document ).ready(function() {
         }
       });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 

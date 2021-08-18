@@ -127,7 +127,7 @@
                             <div id="order_number_validate" {if $delivery_option == $carrier.id}style="display:block;"{else}style="display:none;"{/if}>
                               Wilt u uw bestelling graag toevoegen aan een bestaande bestelling, zoek hieronder naar de gewenste bestelling.
                               <div class="input-group">
-                                <input type="text" class="form-control" id="desired_reference" placeholder="YS-000000">
+                                <input type="text" class="form-control" id="desired_reference" placeholder="YS-000000" autocomplete="des-reference">
                                 <input type="hidden" name="added_to_order" id="added_to_order" value="">
                                 <div class="input-group-append">
                                   <button id="search_order_for_shipping" class="btn btn-sm btn-success"><i class="fas fa-search"></i></button>

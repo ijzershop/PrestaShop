@@ -1026,7 +1026,6 @@ function applyInlineValidation() {
       }
     }));
     $('input[name="shipping_address[postcode]"], input[name="payment_address[postcode]"]').on('keydown blur input change', delayKeyUp(function(e) {
-      console.log('changed postcode');
       $(this).parent().find('.errorsmall').remove();
       $(this).removeClass('ok-form error-form');
       if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
@@ -1062,8 +1061,6 @@ function applyInlineValidation() {
     }));
 
     $('input[name="shipping_address[house_number]"], input[name="payment_address[house_number]"]').on('keydown blur change', delayKeyUp(function(e) {
-
-      console.log('changed number');
       $(this).parent().find('.errorsmall').remove();
       $(this).removeClass('ok-form error-form warning-form');
       if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
@@ -1801,6 +1798,9 @@ function updateCarrierOnDeliveryChange() {
     $('#order_number_validate').hide();
     $('#desired_reference').val('');
     $('#added_to_order').val('');
+    $('#desired_reference_error').hide();
+    $('#order_number_validate').find('.errorsmall').remove();
+    $('#order_number_show_block').html("");
 
   }
 
@@ -3363,7 +3363,18 @@ $( document ).ready(function() {
   $("#supercheckout_confirm_order").click(function (event) {
     event.preventDefault();
     var add_to_order_carrier = $('#add_to_order_method_radio').attr('data-carrier-id');
+    $('#desired_reference').parent().find('.errorsmall').remove();
+    if($('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier){
+      if($('#added_to_order').val() === ""){
+        $('#desired_reference').parent().append('<span class="mt-1 errorsmall alert alert-danger text-white w-100">U heeft nog geen bestelling gezocht en geselecteerd, om uw huidige bestelling aan toe te voegen? Of de door u ingevoerde<br/> Vul het gewenste bestelnummer in en druk op de zoekknop ( <button type="button" class="btn btn-sm btn-success" style="width:14px;height:14px;padding:0.2rem 0.2rem;font-size:0.5rem;line-height:0.5;border-radius:0;"><i class="fas fa-sm fa-search" style="font-size"></i></button> ) om te bevestigen. Is de bestelling beschikbaar dan word de postcode van het aflever adres getoond.</span>');
+        $('#desired_reference').removeClass('ok-form').addClass('error-form');
+        return false;
+      } else {
+        $('#desired_reference').removeClass('error-form warning-form').addClass('ok-form');
+      }
+    }
     showNoShippingPhone();
+
 
     if($('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier || $('.supercheckout_shipping_option:checked').attr('value') == 7  || $('.supercheckout_shipping_option:checked').attr('value') == 15) {
       //Is checkout without shipping address
@@ -3402,23 +3413,23 @@ $( document ).ready(function() {
         // displayGeneralError(display_general_error_msg);
         return false;
       }
-
-      if($('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier) {
-        var added_to_order_field_value = $('input:text[name="added_to_order"]').val();
-        if (added_to_order_field_value == '') {
-          $('#desired_reference').parent().find('span.errorsmall').remove();
-          $('#desired_reference').removeClass('error-form warning-form');
-          $('#desired_reference').removeClass('ok-form');
-          $('#desired_reference').addClass('error-form');
-          $('#desired_reference').parent().append('<span class="errorsmall col-12">Selecteer a.u.b. de bestelling waaraan u deze aankoop aan toe wilt voegen</span>');
-          // $("html, body").animate({scrollTop: $("span.errorsmall").offset().top-80}, "fast");
-          // displayGeneralError(display_general_error_msg);
-          // $("html, body").animate({
-          //   scrollTop: 800
-          // }, "fast");
-          return false;
-        }
-      }
+      //
+      // if($('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier) {
+      //   var added_to_order_field_value = $('input:text[name="added_to_order"]').val();
+      //   if (added_to_order_field_value == '') {
+      //     $('#desired_reference').parent().find('span.errorsmall').remove();
+      //     $('#desired_reference').removeClass('error-form warning-form');
+      //     $('#desired_reference').removeClass('ok-form');
+      //     $('#desired_reference').addClass('error-form');
+      //     $('#desired_reference').parent().append('<span class="errorsmall col-12">Selecteer a.u.b. de bestelling waaraan u deze aankoop aan toe wilt voegen</span>');
+      //     // $("html, body").animate({scrollTop: $("span.errorsmall").offset().top-80}, "fast");
+      //     // displayGeneralError(display_general_error_msg);
+      //     // $("html, body").animate({
+      //     //   scrollTop: 800
+      //     // }, "fast");
+      //     return false;
+      //   }
+      // }
 
 
       //No shipping so fill shipping address with custom data to prevent empty errors

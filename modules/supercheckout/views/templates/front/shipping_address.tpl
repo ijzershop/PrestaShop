@@ -108,12 +108,12 @@
                                     {else}
 
                                         {if $settings['google_auto_address']['enable'] eq 1}
-                                            <input autocomplete="off" type="text"  {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'} placeholder="{l s='Enter a location' mod='supercheckout'}" id='shipping_address_{$p_address_key|escape:'htmlall':'UTF-8'}'onFocus="geolocate()"{/if} name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="form-control supercheckout-large-field {$google_region_type|escape:'htmlall':'UTF-8'} {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'}autocomplete{/if}" />
+                                            <input autocomplete="off_{$p_address_key}" type="text"  {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'} placeholder="{l s='Enter a location' mod='supercheckout'}" id='shipping_address_{$p_address_key|escape:'htmlall':'UTF-8'}'onFocus="geolocate()"{/if} name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="form-control supercheckout-large-field {$google_region_type|escape:'htmlall':'UTF-8'} {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'}autocomplete{/if}" />
                                         {else}
                                           {if $p_address_key == 'city' || $p_address_key == 'address1'}
-                                            <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
+                                            <input autocomplete="off_{$p_address_key}" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
                                           {else}
-                                            <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
+                                            <input autocomplete="off_{$p_address_key}" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
                                           {/if}
                                         {/if}
                                     {/if}
@@ -148,12 +148,12 @@
                                     {else}
 
                                         {if $settings['google_auto_address']['enable'] eq 1}
-                                            <input autocomplete="off" type="text"  {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'} placeholder="{l s='Enter a location' mod='supercheckout'}" id='shipping_address_{$p_address_key|escape:'htmlall':'UTF-8'}'onFocus="geolocate()"{/if} name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="form-control supercheckout-large-field {$google_region_type|escape:'htmlall':'UTF-8'} {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'}autocomplete{/if}" />
+                                            <input autocomplete="off_{$p_address_key}" type="text"  {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'} placeholder="{l s='Enter a location' mod='supercheckout'}" id='shipping_address_{$p_address_key|escape:'htmlall':'UTF-8'}'onFocus="geolocate()"{/if} name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="form-control supercheckout-large-field {$google_region_type|escape:'htmlall':'UTF-8'} {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'}autocomplete{/if}" />
                                         {else}
                                           {if $p_address_key == 'city' || $p_address_key == 'address1'}
-                                            <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
+                                            <input autocomplete="off_{$p_address_key}" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
                                           {else}
-                                            <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
+                                            <input autocomplete="off_{$p_address_key}" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
                                           {/if}
                                         {/if}
                                     {/if}
@@ -204,12 +204,12 @@
                                     {else}
 
                                         {if $settings['google_auto_address']['enable'] eq 1}
-                                            <input autocomplete="off" type="text"  {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'} placeholder="{l s='Enter a location' mod='supercheckout'}" id='shipping_address_{$p_address_key|escape:'htmlall':'UTF-8'}'onFocus="geolocate()"{/if} name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="form-control supercheckout-large-field {$google_region_type|escape:'htmlall':'UTF-8'} {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'}autocomplete{/if}" />
+                                            <input autocomplete="off_{$p_address_key}" type="text"  {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'} placeholder="{l s='Enter a location' mod='supercheckout'}" id='shipping_address_{$p_address_key|escape:'htmlall':'UTF-8'}'onFocus="geolocate()"{/if} name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="form-control supercheckout-large-field {$google_region_type|escape:'htmlall':'UTF-8'} {if $p_address_key eq 'address1'|| $p_address_key eq 'address2'}autocomplete{/if}" />
                                         {else}
                                           {if $p_address_key == 'city' || $p_address_key == 'address1'}
-                                            <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
+                                            <input autocomplete="off_{$p_address_key}" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control"  tabindex="-1"/>
                                           {else}
-                                            <input autocomplete="off" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
+                                            <input autocomplete="off_{$p_address_key}" type="text" name="shipping_address[{$p_address_key|escape:'htmlall':'UTF-8'}]" value="{if !isset($guest_information) && $existing_address}{$existing_address[$p_address_key]}{/if}" class="supercheckout-large-field form-control" />
                                           {/if}
                                         {/if}
                                     {/if}

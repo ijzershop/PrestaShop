@@ -532,7 +532,7 @@ font-size: 11px;
 
         {hook h='displayPaymentTop'}
         {hook h="displayContentWrapperTop"}
-        <form id="velsof_supercheckout_form" class="mt-3 container opc-container" action="{$supercheckout_url}" method="POST" onsubmit=" return isPressedEnter(this)" enctype="multipart/form-data">
+        <form id="velsof_supercheckout_form" autocomplete="form-none" class="mt-3 container opc-container" action="{$supercheckout_url}" method="POST" onsubmit=" return isPressedEnter(this)" enctype="multipart/form-data">
             {*Added by Anshul to change the progressive loader*}
 
             <div class="kb_velsof_sc_overlay" style="display: none;"></div>

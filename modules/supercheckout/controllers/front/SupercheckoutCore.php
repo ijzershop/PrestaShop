@@ -404,6 +404,7 @@ class SupercheckoutCore extends ModuleFrontController
         $this->context->smarty->assign('PS_STOCK_MANAGEMENT', Configuration::get('PS_STOCK_MANAGEMENT'));
         $this->context->smarty->assign('module_image_path', _PS_BASE_URL_SSL_ . _MODULE_DIR_ . 'supercheckout/views/img/front/');
 
+
         //Start: Changes added by Anshul
         if (isset($this->supercheckout_settings['free_shipping_amount']) && !empty($this->supercheckout_settings['free_shipping_amount'])) {
             $this->showFreeShippingBannerCalculations();
@@ -414,6 +415,9 @@ class SupercheckoutCore extends ModuleFrontController
         $total_price_display_method = $this->default_total_price_method_selected;
         $this->context->smarty->assign('total_price_display_method', $total_price_display_method);
         /* End Code Added By Priyanshu on 11-Feb-2021 to implement the Total Price Display functionality */
+
+
+
 
         $temp_vars = array(
             'redirect' => false,

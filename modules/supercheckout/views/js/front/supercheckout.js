@@ -1025,7 +1025,8 @@ function applyInlineValidation() {
         $(this).removeClass('error-form warning-form').addClass('ok-form');
       }
     }));
-    $('input[name="shipping_address[postcode]"], input[name="payment_address[postcode]"]').on('keydown', delayKeyUp(function(e) {
+    $('input[name="shipping_address[postcode]"], input[name="payment_address[postcode]"]').on('keydown blur input change', delayKeyUp(function(e) {
+      console.log('changed postcode');
       $(this).parent().find('.errorsmall').remove();
       $(this).removeClass('ok-form error-form');
       if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
@@ -1060,7 +1061,9 @@ function applyInlineValidation() {
       }
     }));
 
-    $('input[name="shipping_address[house_number]"], input[name="payment_address[house_number]"]').on('keydown', delayKeyUp(function(e) {
+    $('input[name="shipping_address[house_number]"], input[name="payment_address[house_number]"]').on('keydown blur change', delayKeyUp(function(e) {
+
+      console.log('changed number');
       $(this).parent().find('.errorsmall').remove();
       $(this).removeClass('ok-form error-form warning-form');
       if ($(this).parent().find('.supercheckout-required').css('display') == "none" && $(this).val() == '') {
@@ -3500,13 +3503,16 @@ $( document ).ready(function() {
         } else if ($(this).val() == '') {
           $(this).parent().append('<span class="errorsmall">' + required_error + '</span>');
           $(this).removeClass('ok-form').addClass('error-form');
+          return false;
         } else if (!validateAddressApi($(this).val())) {
           $(this).parent().append('<span class="errorsmall text-warning">' + invalid_address + '</span>');
           $(this).removeClass('ok-form error-form').addClass('warning-form');
+          return false;
         } else if (validateAddressApi($(this).val())) {
           if (!$(this).val().match(/\d+/)) {
             if (!$(this).parent().find('.errorsmall').length)
               $(this).parent().append('<span class="errorsmall text-warning">' + street_number_warning + '</span>');
+          return false;
           } else {
             $(this).parent().find('.errorsmall').remove();
           }
@@ -3610,13 +3616,16 @@ $( document ).ready(function() {
         } else if ($(this).val() == '') {
           $(this).parent().append('<span class="errorsmall">' + required_error + '</span>');
           $(this).removeClass('ok-form').addClass('error-form');
+          return false;
         } else if (!validateAddressApi($(this).val())) {
           $(this).parent().append('<span class="errorsmall text-warning">' + invalid_address + '</span>');
           $(this).removeClass('ok-form error-form').addClass('warning-form');
+          return false;
         } else if (validateAddressApi($(this).val())) {
           if (!$(this).val().match(/\d+/)) {
             if (!$(this).parent().find('.errorsmall').length)
               $(this).parent().append('<span class="errorsmall text-warning">' + street_number_warning + '</span>');
+            return false;
           } else {
             $(this).parent().find('.errorsmall').remove();
           }

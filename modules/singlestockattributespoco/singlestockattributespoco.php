@@ -168,7 +168,7 @@ class SingleStockAttributesPoco extends Module
                 $displayUpgradeCheck = $upgradeCheck;
             }
         }
-        
+
         $getModuleRecommendations = '';
         if (file_exists(dirname(__FILE__) . '/PrestoChangeoClasses/PrestoChangeoUpgrade.php')) {
             if (!in_array('PrestoChangeoUpgrade', get_declared_classes())) {
@@ -344,7 +344,7 @@ class SingleStockAttributesPoco extends Module
             if (Configuration::get('PS_STOCK_MANAGEMENT') != 1) {
                 continue;
             }
-            
+
             if (!$this->useSSA($product['id_product'])) {
                 continue;
             }
@@ -655,6 +655,15 @@ class SingleStockAttributesPoco extends Module
             $id_product_attribute = $product['product_attribute_id'];
 
             $this->updateStock($product['product_id'], $product['product_attribute_id'], $product['product_quantity']);
+        }
+    }
+
+    private function categoryHasProduct($id_category, $id_product)
+    {
+        if(in_array($id_category, Product::getProductCategories($id_product))){
+            return true;
+        } else {
+            return false;
         }
     }
 }

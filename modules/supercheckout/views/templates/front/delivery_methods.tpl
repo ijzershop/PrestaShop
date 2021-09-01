@@ -115,6 +115,21 @@
                           </div>
                           {if Context::getContext()->cookie->logged == '1'}
                             {if count($availableOrders) > 0}
+                            {assign var="addToOrderAddress" value=Address::initialize((int)$availableOrders[0].id_address_delivery)}
+                            <script type="text/javascript">
+                              var addToOrderAddress = {};
+                              addToOrderAddress.city = "{$addToOrderAddress->city}";
+                              addToOrderAddress.country = "{$addToOrderAddress->id_country}";
+                              addToOrderAddress.postcode = "{$addToOrderAddress->postcode}";
+                              addToOrderAddress.address1 = "{$addToOrderAddress->address1}";
+                              addToOrderAddress.house_number = "{$addToOrderAddress->house_number}";
+                              addToOrderAddress.house_number_extension = "{$addToOrderAddress->house_number_extension}";
+                              addToOrderAddress.company = "{$addToOrderAddress->company}";
+                              addToOrderAddress.firstname = "{$addToOrderAddress->firstname}";
+                              addToOrderAddress.lastname = "{$addToOrderAddress->lastname}";
+                              addToOrderAddress.phone = "{$addToOrderAddress->phone}";
+                            </script>
+
                               <input type="hidden" name="added_to_order" id="added_to_order" value="{if (int)$delivery_option == (int)$carrier.id}{$availableOrders[0].reference}{/if}" data-latest="{$availableOrders[0].reference}">
                               <a style="color:#777777;" target="_blank" href="/index.php?controller=order-detail&id_order={$availableOrders[0].id_order}">Bekijk de lopende bestelling {$availableOrders[0].reference} waar u de huidige bestelling aan kunt toevoegen.</a>
                               {if Context::getContext()->country->iso_code == 'BE'}<span style="color:blue;"><i data-id="shipping-info-be" class="icon-info shipping-info-icon"></i> <span id="shipping-info-be" style="display:none;">Klanten in België betalen {Context::getContext()->currentLocale->formatPrice(12.25, 'EUR')} transport</span></span>{/if}
@@ -126,6 +141,20 @@
 {* Is guest *}
                             <div id="order_number_validate" {if $delivery_option == $carrier.id}style="display:block;"{else}style="display:none;"{/if}>
                               Wilt u uw bestelling graag toevoegen aan een bestaande bestelling, zoek hieronder naar de gewenste bestelling.
+
+                              <script type="text/javascript">
+                                var addToOrderAddress = {};
+                                addToOrderAddress.city = "";
+                                addToOrderAddress.country = "";
+                                addToOrderAddress.postcode = "";
+                                addToOrderAddress.address1 = "";
+                                addToOrderAddress.house_number = "";
+                                addToOrderAddress.house_number_extension = "";
+                                addToOrderAddress.company = "";
+                                addToOrderAddress.firstname = "";
+                                addToOrderAddress.lastname = "";
+                                addToOrderAddress.phone = "";
+                              </script>
                               <div class="input-group">
                                 <input type="text" class="form-control" id="desired_reference" placeholder="YS-000000" autocomplete="des-reference">
                                 <input type="hidden" name="added_to_order" id="added_to_order" value="">

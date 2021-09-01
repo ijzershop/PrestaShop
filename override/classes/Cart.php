@@ -486,6 +486,8 @@ class Cart extends CartCore
                 if ($prodObj->oi_offer_extra_shipping > 0 && $extraShippingFee == 0) {
                     $offerConf = unserialize(Configuration::get('OFFER_INTEGRATION'));
                     if ($offerConf) {
+//                        var_export([$shipping_cost , 100 , $offerConf['extra_shipping'] , $shipping_cost]);
+
                         $extraShippingFee = $shipping_cost / 100 * $offerConf['extra_shipping'] - $shipping_cost;
                     }
                 }

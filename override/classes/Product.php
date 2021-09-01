@@ -17,6 +17,18 @@ class Product extends ProductCore {
     */
     public $link_rewrite;
 
+    public $saw_loss;
+
+    public $min_saw_size;
+
+    public $min_cut_size;
+
+    public $id_oi_offer;
+
+    public $oi_offer_extra_shipping;
+
+    public $name;
+
     public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
     {
         self::$definition['fields']['saw_loss'] = array('type' => self::TYPE_INT,

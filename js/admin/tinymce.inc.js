@@ -51,6 +51,7 @@ function fetchKey(hostname) {
 
   }
 
+
 function tinySetup(config) {
   if (typeof tinyMCE === 'undefined') {
     setTimeout(function() {
@@ -76,9 +77,24 @@ function tinySetup(config) {
 
   var default_config = {
     selector: 'textarea.rte',
-    plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
+    plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager','paste', 'lists'],
     browser_spellcheck: true,
-    toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
+    toolbar: "undo redo code | bold italic underline strikethrough | numlist bullist checklist | fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
+    paste_data_images: true,
+    paste_preprocess: function(plugin, args) {
+      let m;
+      const content = args.content;
+      const regex = new RegExp('^<img.*?src=\"(.*?)\"');
+      if(regex.test(content))
+      {
+        //is an image do nothing
+        return false;
+      } else {
+        //is text strip all
+        m = content.replace(/(<([^>]+)>)/gi, "");
+        args.content = m;
+      }
+    },
     contextmenu: "bootstrap",
     image_advtab: true ,
     external_filemanager_path:"/js/filemanager/",
@@ -117,33 +133,40 @@ function tinySetup(config) {
       title: 'nofollow',
       value: 'nofollow'
     }],
-  images_upload_handler: function (blobInfo, success, failure) {
-  var xhr, formData;
-  xhr = new XMLHttpRequest();
-  xhr.withCredentials = false;
-  xhr.open('POST', '/custom_uploader/upload.php');
+    images_upload_handler: function (blobInfo, success, failure, progress) {
+      let xhr, formData;
+      const url = '/index.php?fc=module&module=modernesmidthemeconfigurator&controller=ajax&id_lang=1';
+      xhr = new XMLHttpRequest();
+      xhr.withCredentials = false;
+      xhr.open('POST', url);
 
-  var file = document.querySelectorAll('.tox-form input')[0].files[0];
-    formData = new FormData();
-    formData.append('path','');
-    formData.append('path_thumb','');
-    formData.append('file', file, file.name);
-    xhr.send(formData);
-    xhr.onload = function() {
-      var json;
+      formData = new FormData();
+      formData.append('action','upload_files');
+      formData.append('path','/editor_uploads');
+      formData.append('file', blobInfo.blob(), blobInfo.filename());
 
-      if (xhr.status != 200) {
-      failure('HTTP Error: ' + xhr.status);
-      return;
-      }
-      json = JSON.parse(xhr.responseText);
+      xhr.upload.onprogress = function (e) {
+        progress(e.loaded / e.total * 100);
+      };
 
-      if (!json || typeof json.location != 'string') {
-      failure('Invalid JSON: ' + xhr.responseText);
-      return;
-      }
-      success(json.location);
-    };
+      xhr.onload = function() {
+        let json;
+
+        if (xhr.status !== 200) {
+          failure('HTTP Error: ' + xhr.status);
+          return;
+        }
+        json = JSON.parse(xhr.responseText);
+
+        if (!json || typeof json.location != 'string') {
+          failure('Invalid JSON: ' + xhr.responseText);
+          return;
+        }
+        success('/upload'+json.location);
+        top.tinymce.activeEditor.notificationManager.close();
+      };
+      xhr.send(formData);
+      return false;
     }
   };
   $.each(default_config, function(index, el) {

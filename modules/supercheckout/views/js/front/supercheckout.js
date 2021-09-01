@@ -1299,7 +1299,7 @@ function checkout_option(e) {
           $('#html_element_login').show();
         }
       }
-      $('.no-shipping-names-row').hide();
+      $('.no-shipping-names-row').removeClass('d-block').addClass('d-none');
     } else if ($(e).val() == 1) {
       if (!$('#use_for_invoice').is(':checked')) {
         // $('#checkoutBillingAddress').show();
@@ -1320,7 +1320,7 @@ function checkout_option(e) {
         }
       }
       if($('.supercheckout_shipping_option:checked').attr('value') == 7 || $('.supercheckout_shipping_option:checked').attr('value') == 15 || $('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier){
-        $('.no-shipping-names-row').show();
+        $('.no-shipping-names-row').removeClass('d-none').addClass('d-block');
       }
     } else {
       if (!$('#use_for_invoice').is(':checked')) {
@@ -1351,7 +1351,7 @@ function checkout_option(e) {
       }
 
       if($('.supercheckout_shipping_option:checked').attr('value') == 7 || $('.supercheckout_shipping_option:checked').attr('value') == 15 || $('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier){
-        $('.no-shipping-names-row').show();
+        $('.no-shipping-names-row').removeClass('d-none').addClass('d-block');
       }
     }
   } else // because in case of virtual cart we need to hide delivery address block
@@ -1748,9 +1748,9 @@ function updateCarrierOnDeliveryChange() {
     $('#checkoutBillingAddress').hide();
 
     if(checkoutOption == "0"){
-      $('.no-shipping-names-row').hide();
+      $('.no-shipping-names-row').removeClass('d-block').addClass('d-none');
     } else {
-      $('.no-shipping-names-row').show();
+      $('.no-shipping-names-row').removeClass('d-none').addClass('d-block');
     }
     $('#added_to_order').val($('#added_to_order').attr('data-latest'));
 
@@ -1767,9 +1767,9 @@ function updateCarrierOnDeliveryChange() {
       $('#checkoutBillingAddress').hide();
 
       if(checkoutOption == "0"){
-        $('.no-shipping-names-row').hide();
+        $('.no-shipping-names-row').removeClass('d-block').addClass('d-none');
       } else {
-        $('.no-shipping-names-row').show();
+        $('.no-shipping-names-row').removeClass('d-none').addClass('d-block');
       }
 
 
@@ -1781,7 +1781,7 @@ function updateCarrierOnDeliveryChange() {
       disEnConfirmButton(false);
     } else {
 
-      $('.no-shipping-names-row').hide();
+      $('.no-shipping-names-row').removeClass('d-block').addClass('d-none');
 
       $('#checkoutShippingAddress').show();
 

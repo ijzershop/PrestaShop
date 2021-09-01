@@ -3434,18 +3434,32 @@ $( document ).ready(function() {
 
       //No shipping so fill shipping address with custom data to prevent empty errors
       var company_field_value = $('input:text[name="no_shipping_company"]').val();
+      if($('.supercheckout_shipping_option:checked').attr('value') == add_to_order_carrier && addToOrderAddress !== undefined) {
+        $('input[name="shipping_address[company]"]').val(addToOrderAddress.company);
+        $('input[name="shipping_address[firstname]"]').val(addToOrderAddress.firstname);
+        $('input[name="shipping_address[lastname]"]').val(addToOrderAddress.lastname);
+        $('input[name="shipping_address[address1]"]').val(addToOrderAddress.address1);
+        $('input[name="shipping_address[house_number]"]').val(addToOrderAddress.house_number);
+        $('input[name="shipping_address[house_number_extension]"]').val(addToOrderAddress.house_number_extension);
+        $('input[name="shipping_address[postcode]"]').val(addToOrderAddress.postcode);
+        $('input[name="shipping_address[city]"]').val(addToOrderAddress.city);
+        $('input[name="shipping_address[id_country]"]').val(addToOrderAddress.country);
+        $('input[name="shipping_address[phone]"]').val(addToOrderAddress.phone);
+        $('#use_for_invoice').prop('checked', 'checked');
+      } else {
 
-      $('input[name="shipping_address[company]"]').val(company_field_value);
-      $('input[name="shipping_address[firstname]"]').val(surname_field_value);
-      $('input[name="shipping_address[lastname]"]').val(lastname_field_value);
-      $('input[name="shipping_address[address1]"]').val("Ceresweg");
-      $('input[name="shipping_address[house_number]"]').val("1");
-      $('input[name="shipping_address[house_number_extension]"]').val("");
-      $('input[name="shipping_address[postcode]"]').val("8938 BG");
-      $('input[name="shipping_address[city]"]').val("Leeuwarden");
-      $('input[name="shipping_address[id_country]"]').val("13");
-      $('input[name="shipping_address[phone]"]').val(phone_field_value);
-      $('#use_for_invoice').prop('checked','checked');
+        $('input[name="shipping_address[company]"]').val(company_field_value);
+        $('input[name="shipping_address[firstname]"]').val(surname_field_value);
+        $('input[name="shipping_address[lastname]"]').val(lastname_field_value);
+        $('input[name="shipping_address[address1]"]').val("Ceresweg");
+        $('input[name="shipping_address[house_number]"]').val("1");
+        $('input[name="shipping_address[house_number_extension]"]').val("");
+        $('input[name="shipping_address[postcode]"]').val("8938 BG");
+        $('input[name="shipping_address[city]"]').val("Leeuwarden");
+        $('input[name="shipping_address[id_country]"]').val("13");
+        $('input[name="shipping_address[phone]"]').val(phone_field_value);
+        $('#use_for_invoice').prop('checked', 'checked');
+      }
     } else {
 
       $('input[name="shipping_address[firstname]"], input[name="shipping_address[lastname]"]').each(function() {

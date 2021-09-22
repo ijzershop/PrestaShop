@@ -152,13 +152,16 @@
 	{foreach from=$cart_rules item=cart_rule name="cart_rules_loop"}
 		{if $smarty.foreach.cart_rules_loop.first}
 		<tr class="discount">
-			<th class="header" colspan="{$layout._colCount}">
-				{l s='Discounts' d='Shop.Pdf' pdf='true'}
+			<th class="header" colspan="5">
+				{l s='Coupon' d='Shop.Pdf' pdf='true'}
 			</th>
+      <th>
+        Korting bedrag
+      </th>
 		</tr>
 		{/if}
 		<tr class="discount">
-			<td class="white right" colspan="{$layout._colCount - 1}">
+			<td class="white right" colspan="5">
 				{$cart_rule.name}
 			</td>
 			<td class="right white">

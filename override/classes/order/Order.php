@@ -126,4 +126,12 @@ class Order extends OrderCore
 
         $history->addWithemail();
     }
+
+
+    public function getDiscountRuleFromOrder($id_order){
+        $order = new Order($id_order);
+        foreach ($order->getCartRules() as $cartRule){
+            return $cartRule['value_tax_excl'];
+        }
+    }
 }

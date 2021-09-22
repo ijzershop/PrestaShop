@@ -37,6 +37,7 @@ class GetCustomerForEditing
      * @var CustomerId
      */
     private $customerId;
+    private $informer_identification;
 
     /**
      * @param int $customerId
@@ -53,4 +54,12 @@ class GetCustomerForEditing
     {
         return $this->customerId;
     }
+
+    /**
+     */
+    public function informer_identification()
+    {
+        return $this->informer_identification;
+    }
+
 }

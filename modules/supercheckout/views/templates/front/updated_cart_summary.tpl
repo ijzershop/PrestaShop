@@ -7,7 +7,7 @@
 <div class="table-responsive">
     <table class="supercheckout-summary table table-bordered shoppingTable">
         <!-- <thead>
-             <tr>                                
+             <tr>
                  <th style="{if $logged}{if $settings['cart_options']['product_name']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['cart_options']['product_name']['guest']['display'] eq 1}{else}none{/if}{/if};" class="supercheckout-name">{l s='Description' mod='supercheckout'}</th>
                  <th style="{if $logged}{if $settings['cart_options']['product_model']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['cart_options']['product_model']['guest']['display'] eq 1}{else}none{/if}{/if};" class="supercheckout-model">{l s='Model' mod='supercheckout'}</th>
         {*start-MK made changes to display availability column*}
@@ -98,7 +98,7 @@
                                             {/if}
                                         {elseif $field.type == 'image'}
                                             <img src="{$field.image.large.url}" onclick="showEnlargedImage(this)" style="width: 29%;height: auto;">
-                                        {/if}    
+                                        {/if}
                                     </p>
                                 {/foreach}
                             {/foreach}
@@ -115,27 +115,27 @@
                                     <button type="button" class="cart_quantity_down qty-btn increase_button quantity-left-minus btn btn-primary btn-number" onclick="upQty('quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}')"  data-type="minus" data-field="">
                                         <span class="fas fa-chevron-up"></span>
                                     </button>
-                                </span>                                
+                                </span>
                                 <input min="1" max="100" autocomplete="off" type="text" id="quantity" class="form-control input-number quantitybox" name="quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}" value="{$product.quantity|intval}">
                                 <span class="input-group-btn">
                                     <button type="button" class="cart_quantity_down qty-btn decrease_button quantity-right-plus btn btn-primary btn-number" data-type="plus" data-field="" onclick="downQty('quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}')">
                                         <span class="fas fa-chevron-down"></span>
                                     </button>
                                 </span>
-                                
+
                             {else}
                                 <input min="1" max="100" autocomplete="off" type="text" id="quantity" class="form-control input-number quantitybox" name="quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}" value="{$product.quantity|intval}">
-                                <a href="javascript:void(0)" id="demo_2_s" title="{l s='update quantity' mod='supercheckout'}" onclick="updateQtyByBtn('quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}')" ><small>{l s='Update' mod='supercheckout'}</small></a>    
+                                <a href="javascript:void(0)" id="demo_2_s" title="{l s='update quantity' mod='supercheckout'}" onclick="updateQtyByBtn('quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}')" ><small>{l s='Update' mod='supercheckout'}</small></a>
                                     {/if}
                         </div>
-                    </td>											
+                    </td>
                     <td style="{if $logged}{if $settings['cart_options']['product_price']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['cart_options']['product_price']['guest']['display'] eq 1}{else}none{/if}{/if};" class="supercheckout-unit-total text-right td-price">
                         <span class="price">{$product.price nofilter}{*escape not required as contains html*}</span>
                         {if $product.unit_price_full}
                             <div class="unit-price-cart">{$product.unit_price_full nofilter}{*escape not required as contains html*}</div>
                         {/if}</td>
                     <td id="total_product_price_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}" style="{if $logged}{if $settings['cart_options']['product_total']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['cart_options']['product_total']['guest']['display'] eq 1}{else}none{/if}{/if};" class="supercheckout-total text-right td-total">
-                        {$product.total nofilter}{*escape not required as contains html*}</td>	
+                        {$product.total nofilter}{*escape not required as contains html*}</td>
 
 
                     <td class="supercheckout-qty" style="{if $logged}{if $settings['cart_options']['product_name']['logged']['display'] eq 1 || $settings['cart_options']['product_model']['logged']['display'] eq 1 || $settings['cart_options']['product_qty']['logged']['display'] eq 1 || $settings['cart_options']['product_price']['logged']['display'] eq 1 || $settings['cart_options']['product_total']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['cart_options']['product_name']['guest']['display'] eq 1 || $settings['cart_options']['product_model']['guest']['display'] eq 1 || $settings['cart_options']['product_qty']['guest']['display'] eq 1 || $settings['cart_options']['product_price']['guest']['display'] eq 1 || $settings['cart_options']['product_total']['guest']['display'] eq 1}{else}none{/if}{/if};">
@@ -174,8 +174,8 @@
         {foreach $vouchers.added as $voucher}
             <div style="margin-bottom: 1%;" id="cart_discount_{$voucher.id_cart_rule}" class="cart_discount text-right" style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}none{/if}{/if};">
 
-                <span style="float:left;"><b>{$voucher.name}</b></span><a href="javascript:void(0)" style="float: left;margin-left: 2%;" onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><div title="{l s='Redeem' mod='supercheckout'}" class="removeProduct"><i class="fas fa-trash"></i></div></a>
-                <span class="price text-right">{$voucher.reduction_formatted nofilter}{*escape not required as contains html*}</span>                            
+                <span style="float:left;color:#4862A3;font-size:initial;><b>{$voucher.name}</b></span><a href="javascript:void(0)" style="float: left;margin-left: 2%;" onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><div title="{l s='Redeem' mod='supercheckout'}" class="removeProduct"><i class="fas fa-trash"></i></div></a>
+                <span class="price text-right">{$voucher.reduction_formatted nofilter}{*escape not required as contains html*}</span>
             </div>
         {/foreach}
         <div class="rewardHeader" style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}none{/if}{/if};">
@@ -187,10 +187,10 @@
                 <!--label for="input-coupon" class="control-label">Enter your coupon here</label-->
                 <div class="input-group" id="voucher-form">
                     <input type="hidden" value="1" name="submitDiscount">
-                    <input name="discount_name" id="discount_name" type="text" placeholder="{l s='Enter your coupon here' mod='supercheckout'}" class="voucherText form-control"> 
+                    <input name="discount_name" id="discount_name" type="text" placeholder="{l s='Enter your coupon here' mod='supercheckout'}" class="voucherText form-control">
                     <span class="input-group-btn"><button id="button-coupon" onClick="callCoupon();" type="button" data-loading-text="Loading..." class="btn btn-primary orangebuttonapply" style="min-height: 33px;">{l s='Apply' mod='supercheckout'}</button>
                     </span>
-                </div>								
+                </div>
             </div>
         </div>
     {else}
@@ -262,7 +262,7 @@
                                                         <input type="radio" name="custom_fields[field_{$field['id_velsof_supercheckout_custom_fields']}]" value="{$field_options['option_value']}" {if $field_options['default_value'] eq $field_options['option_value']}checked{/if}>
                                                         <label for="field_{$field['id_velsof_supercheckout_custom_fields']}">{$field_options['option_label']}</label>
                                                     </span></div>
-                                                
+
                                             </div>
                                             {assign var=radio_counter value=$radio_counter+1}
                                         {/foreach}
@@ -279,14 +279,14 @@
                                                         <label for="field_{$field['id_velsof_supercheckout_custom_fields']}"><b>{$field_options['option_label']}</b></label>
                                                     </span>
                                                 </div>
-                                                
+
                                             </div>
                                         {/foreach}
                                         <span id="error_field_{$field['id_velsof_supercheckout_custom_fields']}" class="errorsmall_custom hidden_custom"></span>
                                     {/if}
 
                                     {* Start: Code added by Anshul for date field *}
-                                    {if $field['type'] eq "date"}                         
+                                    {if $field['type'] eq "date"}
                                         <label class="cursor_help" title="{$field['field_help_text']}">{$field['field_label']}{if $field['required'] eq "1"}<span style="display:inline;" class="supercheckout-required">*</span>{/if}</label>
                                         <input style="position: relative;" type="text" id="" name="custom_fields[field_{$field['id_velsof_supercheckout_custom_fields']}]" value="{$field['default_value']}" class="supercheckout-large-field width_100 kb_sc_custom_field_date form-control" readonly="true">
                                         <span id="error_field_{$field['id_velsof_supercheckout_custom_fields']}" class="errorsmall_custom hidden_custom"></span>
@@ -299,7 +299,7 @@
                                     {* Code added by Anshul for date field *}
 
                                     {* Start: Code added by Anshul for file field *}
-                                    {if $field['type'] eq "file"}                         
+                                    {if $field['type'] eq "file"}
                                         <label class="cursor_help" title="{$field['field_help_text']}">{$field['field_label']}{if $field['required'] eq "1"}<span style="display:inline;" class="supercheckout-required">*</span>{/if}</label>
                                         <input type="file" data-buttonText="{l s='Choose file' mod='supercheckout'}" id="kb_sc_custom_field_file_{$field['id_velsof_supercheckout_custom_fields']}" name="custom_fields[field_{$field['id_velsof_supercheckout_custom_fields']}]" value="{$field['default_value']}" class="supercheckout-large-field width_100 kbfiletype form-control">
                                         <span id="error_field_{$field['id_velsof_supercheckout_custom_fields']}" class="errorsmall_custom hidden_custom"></span>

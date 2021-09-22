@@ -754,8 +754,10 @@ class Supercheckout extends Module
 
             foreach (PaymentModule::getInstalledPaymentModules() as $paymethod) {
                 $id = $paymethod['id_module'];
-                if ($_FILES['velocity_supercheckout_payment']['size']['payment_method'][$id]['logo']['name'] == 0) {
-                    $payment_post_data['payment_method'][$id]['logo']['title'] == '';
+                if (isset($_FILES['velocity_supercheckout_payment']['size']['payment_method'][$id]) && $_FILES['velocity_supercheckout_payment']['size']['payment_method'][$id]['logo']['name'] == 0) {
+                    if(isset($payment_post_data['payment_method'][$id])){
+                        $payment_post_data['payment_method'][$id]['logo']['title'] == '';
+                    }
                 } else {
                     $method_file = $_FILES['velocity_supercheckout_payment'];
                     $allowed_exts = array('gif', 'jpeg', 'jpg', 'png', 'JPG', 'PNG', 'GIF', 'JPEG');

@@ -128,7 +128,7 @@ class OrderSlipGenerator
             $message['time'] = $this->slipTime;
 
            $this->doApiCall('log-message', [
-                'profile'     => Context::getContext()->shop->getUrls()[0]['domain'],
+                'profile'     => 'ijzershop.nl',
                 'type'        =>  'cron-job',
                 'version'     => _PS_VERSION_,
                 'message'     => json_encode($message),

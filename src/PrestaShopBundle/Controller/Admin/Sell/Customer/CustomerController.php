@@ -66,7 +66,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use Address;
+use Customer;
+use Tools;
 /**
  * Class CustomerController manages "Sell > Customers" page.
  */
@@ -204,6 +206,8 @@ class CustomerController extends AbstractAdminController
             $customerFormOptions = [
                 'is_password_required' => false,
             ];
+
+
             $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
                 ->getFormFor((int) $customerId, [], $customerFormOptions);
             $customerForm->handleRequest($request);
@@ -221,9 +225,17 @@ class CustomerController extends AbstractAdminController
             }
         }
 
+        $customerInformerData = [];
+        $customerInformerData['address'] = new Address(Address::getFirstCustomerAddressId($customerId));
+        $customerInformerData['customer'] = new Customer($customerId);
+        $customerInformerData['token'] = Tools::getAdminTokenLite('AdminThemeConf');
+
+
+
         return $this->render('@PrestaShop/Admin/Sell/Customer/edit.html.twig', [
             'customerForm' => $customerForm->createView(),
             'customerInformation' => $customerInformation,
+            'customerInformerData' => $customerInformerData,
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
             'minPasswordLength' => Password::MIN_LENGTH,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -270,15 +282,22 @@ class CustomerController extends AbstractAdminController
             $this->manageLegacyFlashes($request->query->get('conf'));
         }
 
+        $customerInformerData = [];
+        $customerInformerData['address'] = new Address(Address::getFirstCustomerAddressId($customerId));
+        $customerInformerData['customer'] = new Customer($customerId);
+        $customerInformerData['token'] = Tools::getAdminTokenLite('AdminThemeConf');
+
         return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerInformation' => $customerInformation,
+            'customerInformerData' => $customerInformerData,
             'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
             'transferGuestAccountForm' => $transferGuestAccountForm,
             'privateNoteForm' => $privateNoteForm->createView(),
         ]);
     }
+
 
     /**
      * Set private note about customer.

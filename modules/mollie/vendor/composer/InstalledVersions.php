@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '7088269ca9ef76aee86f10ef8b2e229259b6ea44',
+    'reference' => '9bd53292579cdb20727fd6cafca037c03f1f8f5d',
     'name' => 'mollie/prestashop',
   ),
   'versions' => 
@@ -105,7 +105,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '7088269ca9ef76aee86f10ef8b2e229259b6ea44',
+      'reference' => '9bd53292579cdb20727fd6cafca037c03f1f8f5d',
     ),
     'nikic/php-parser' => 
     array (
@@ -655,6 +655,7 @@ self::$canGetVendors = method_exists('Composer\Autoload\ClassLoader', 'getRegist
 $installed = array();
 
 if (self::$canGetVendors) {
+
 foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) {
 if (isset(self::$installedByVendor[$vendorDir])) {
 $installed[] = self::$installedByVendor[$vendorDir];

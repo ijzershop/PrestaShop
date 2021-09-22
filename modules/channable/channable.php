@@ -55,7 +55,7 @@ class Channable extends Module
         $this->confirmUninstall = $this->l('Are you sure to uninstall this module?');
 
         $this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
-        
+
         require_once(dirname(__FILE__) . '/classes/ChannableWebhook.php');
         require_once(dirname(__FILE__) . '/classes/ChannableFeedfield.php');
         require_once(dirname(__FILE__) . '/classes/ChannableOrdersAdditionalData.php');
@@ -74,8 +74,8 @@ class Channable extends Module
         Configuration::updateValue('CHANNABLE_MULTIQUERY_MODE', 1);
         Configuration::updateValue('CHANNABLE_DEFAULT_PAGE_SIZE', 100);
         Configuration::updateValue('CHANNABLE_COMMENT_AS_NOTE', 1);
-        Configuration::updateValue('CHANNABLE_COMMENT_AS_CUSTOMER_THREAD', 1);        
-        
+        Configuration::updateValue('CHANNABLE_COMMENT_AS_CUSTOMER_THREAD', 1);
+
         Db::getInstance()->execute('CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'channable_webhooks` (
     `id_channable_webhook` int(11) NOT NULL AUTO_INCREMENT,
 	`active` int(11) NOT NULL,
@@ -84,7 +84,7 @@ class Channable extends Module
     `date_add` DATETIME,
     PRIMARY KEY  (`id_channable_webhook`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;');
-        
+
         Db::getInstance()->execute('CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'channable_feedfields` (
     `id_channable_feedfields` int(11) NOT NULL AUTO_INCREMENT,
     `tablename` VARCHAR(255) NOT NULL,
@@ -123,7 +123,7 @@ class Channable extends Module
         Configuration::deleteByName('CHANNABLE_MULTIQUERY_MODE');
         Configuration::deleteByName('CHANNABLE_DEFAULT_PAGE_SIZE');
         Configuration::deleteByName('CHANNABLE_COMMENT_AS_NOTE');
-        Configuration::deleteByName('CHANNABLE_COMMENT_AS_CUSTOMER_THREAD');        
+        Configuration::deleteByName('CHANNABLE_COMMENT_AS_CUSTOMER_THREAD');
         return parent::uninstall();
     }
 
@@ -139,7 +139,7 @@ class Channable extends Module
             $this->postProcess();
         }
         $this->context->smarty->assign('module_dir', $this->_path);
-        
+
         if (Tools::getValue('submitChannableModule') == '1') {
             if ($osData = Tools::getValue('os')) {
                 if (isset($osData['shipped'])) {
@@ -160,7 +160,7 @@ class Channable extends Module
                 Configuration::updateValue('CHANNABLE_ORDER_CARRIER_ID_IMPORT', (int)Tools::getValue('carrier_import'));
             }
             if (Tools::getValue('order_warehouse') != '') {
-                Configuration::updateValue('CHANNABLE_ORDER_WAREHOUSE', (int)Tools::getValue('order_warehouse'));                
+                Configuration::updateValue('CHANNABLE_ORDER_WAREHOUSE', (int)Tools::getValue('order_warehouse'));
             }
             if (Tools::getValue('comment_as_note') != '') {
                 Configuration::updateValue('CHANNABLE_COMMENT_AS_NOTE', (int)Tools::getValue('comment_as_note'));
@@ -168,7 +168,7 @@ class Channable extends Module
             if (Tools::getValue('comment_as_customer_thread') != '') {
                 Configuration::updateValue('CHANNABLE_COMMENT_AS_CUSTOMER_THREAD', (int)Tools::getValue('comment_as_customer_thread'));
             }
-            
+
             $this->context->smarty->assign('success_message', $this->l('Settings updated'));
         }
         if (Tools::getValue('submitChannableAssignmentModule') == '1') {
@@ -183,10 +183,10 @@ class Channable extends Module
                 }
             }
             $this->context->smarty->assign('success_message', $this->l('Assigned fields in feed updated'));
-        }        
-        
+        }
+
         $webservice = new WebserviceKey((int)Configuration::get('CHANNABLE_API_ID'));
-        
+
         $this->context->smarty->assign('feed_url', $this->context->link->getModuleLink('channable', 'feed', array('key' => $webservice->key, 'limit' => '0,100')));
         $this->context->smarty->assign('auto_connect_feed_url', $this->context->link->getModuleLink('channable', 'feed'));
         $this->context->smarty->assign('webhook_url', $this->context->link->getModuleLink('channable', 'webhooks'));
@@ -201,20 +201,20 @@ class Channable extends Module
         $this->context->smarty->assign('order_states_cancelled', $this->getOrderStates('cancelled'));
         $this->context->smarty->assign('order_state_import', Configuration::get('CHANNABLE_ORDER_STATE_IMPORT'));
         $this->context->smarty->assign('order_carrier_import', Configuration::get('CHANNABLE_ORDER_CARRIER_ID_IMPORT'));
-        $this->context->smarty->assign('order_warehouse', Configuration::get('CHANNABLE_ORDER_WAREHOUSE'));       
+        $this->context->smarty->assign('order_warehouse', Configuration::get('CHANNABLE_ORDER_WAREHOUSE'));
         $this->context->smarty->assign('feedfields_available', ChannableFeedfield::getAvailableFieldsFiltered());
         $this->context->smarty->assign('feedfields_assigned', ChannableFeedfield::getAllFeedfields());
         $this->context->smarty->assign('carriers', Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'), false, false, false, null, Carrier::ALL_CARRIERS));
-        
+
         if ((int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == '1') {
             $this->context->smarty->assign('warehouses', Warehouse::getWarehouses());
         }
-        
+
         $basicform = $this->renderForm();
         $this->context->smarty->assign('mainform', $basicform);
-        
+
         $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
-                
+
         return $output;
     }
 
@@ -225,25 +225,25 @@ class Channable extends Module
     protected function renderForm()
     {
         $helper = new HelperForm();
-    
+
         $helper->show_toolbar = false;
         $helper->table = $this->table;
         $helper->module = $this;
         $helper->default_form_language = $this->context->language->id;
         $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG', 0);
-    
+
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'submitChannableModule';
         $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
         .'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-    
+
         $helper->tpl_vars = array(
             'fields_value' => $this->getConfigFormValues(),
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id,
         );
-    
+
         return $helper->generateForm(array($this->getConfigForm()));
     }
 
@@ -258,7 +258,7 @@ class Channable extends Module
                     'title' => $this->l('Feed Settings'),
                     'icon' => 'icon-cogs',
                 ),
-                'input' => array(                    
+                'input' => array(
                     array(
                         'type' => 'switch',
                         'desc' => $this->l('Only change this if you have a high powered server.'),
@@ -315,7 +315,7 @@ class Channable extends Module
                                 'label' => $this->l('Disabled')
                             )
                         ),
-                    ),                    
+                    ),
                     array(
                         'type' => 'switch',
                         'desc' => $this->l(''),
@@ -377,7 +377,7 @@ class Channable extends Module
                         'type' => 'text',
                         'desc' => $this->l('Customer and corresponding default address used for shipping cost calculation in feed.'),
                         'name' => 'CHANNABLE_CUSTOMER_ID',
-                        'label' => $this->l('Default Customer-ID'),     
+                        'label' => $this->l('Default Customer-ID'),
                         'col' => 3,
                     ),
                     array(
@@ -404,7 +404,7 @@ class Channable extends Module
                                 'label' => $this->l('Disabled')
                             )
                         ),
-                    ),                  
+                    ),
                 ),
                 'submit' => array(
                     'title' => $this->l('Save'),
@@ -422,9 +422,9 @@ class Channable extends Module
             'CHANNABLE_FEEDMODE_ALTERNATIVE' => Tools::getValue('CHANNABLE_FEEDMODE_ALTERNATIVE', Configuration::get('CHANNABLE_FEEDMODE_ALTERNATIVE') == '1' ? 1 : 0),
             'CHANNABLE_MULTIQUERY_MODE' => Tools::getValue('CHANNABLE_MULTIQUERY_MODE', Configuration::get('CHANNABLE_MULTIQUERY_MODE') == '1' ? 1 : 0),
             'CHANNABLE_SQL_OPTIMIZATION_MODE' => Tools::getValue('CHANNABLE_SQL_OPTIMIZATION_MODE', Configuration::get('CHANNABLE_SQL_OPTIMIZATION_MODE') == '1' ? 1 : 0),
-            'CHANNABLE_DISABLE_OUT_OF_STOCK' => Tools::getValue('CHANNABLE_DISABLE_OUT_OF_STOCK', Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? 1 : 0),            
+            'CHANNABLE_DISABLE_OUT_OF_STOCK' => Tools::getValue('CHANNABLE_DISABLE_OUT_OF_STOCK', Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? 1 : 0),
             'CHANNABLE_DISABLE_INACTIVE' => Tools::getValue('CHANNABLE_DISABLE_INACTIVE', Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? 1 : 0),
-            'CHANNABLE_FEEDMODE_SKIP_SHIPPING' => Tools::getValue('CHANNABLE_FEEDMODE_SKIP_SHIPPING', Configuration::get('CHANNABLE_FEEDMODE_SKIP_SHIPPING') == '1' ? 1 : 0),            
+            'CHANNABLE_FEEDMODE_SKIP_SHIPPING' => Tools::getValue('CHANNABLE_FEEDMODE_SKIP_SHIPPING', Configuration::get('CHANNABLE_FEEDMODE_SKIP_SHIPPING') == '1' ? 1 : 0),
             'CHANNABLE_CUSTOMER_ID' => Tools::getValue('CHANNABLE_CUSTOMER_ID', Configuration::get('CHANNABLE_CUSTOMER_ID')),
             'CHANNABLE_DEFAULT_PAGE_SIZE' => Tools::getValue('CHANNABLE_DEFAULT_PAGE_SIZE', Configuration::get('CHANNABLE_DEFAULT_PAGE_SIZE')),
             'CHANNABLE_USE_GUEST_CHECKOUT' => Tools::getValue('CHANNABLE_USE_GUEST_CHECKOUT', Configuration::get('CHANNABLE_USE_GUEST_CHECKOUT') == '1' ? 1 : 0),
@@ -437,7 +437,7 @@ class Channable extends Module
     protected function postProcess()
     {
         $form_values = $this->getConfigFormValues();
-    
+
         foreach (array_keys($form_values) as $key) {
             Configuration::updateValue($key, Tools::getValue($key));
         }
@@ -484,7 +484,7 @@ class Channable extends Module
      * @throws PrestaShopException
      */
     public function hookActionProductUpdate($params)
-    {   
+    {
         $sql = 'SELECT product_attribute_shop.id_product_attribute
 				FROM '._DB_PREFIX_.'product_attribute pa
 				'.Shop::addSqlAssociation('product_attribute', 'pa').'
@@ -494,7 +494,7 @@ class Channable extends Module
             foreach ($combinations as $c) {
                 $params['id_product_attribute'] = $c['id_product_attribute'];
                 $this->sendProductUpdate($params);
-            }            
+            }
         } else {
             $this->sendProductUpdate($params);
         }
@@ -518,7 +518,7 @@ class Channable extends Module
     protected function sendProductUpdate($params)
     {
         $webHookData = ChannableWebhook::getAllWebhooks();
-        if (sizeof($webHookData) > 0) {             
+        if (sizeof($webHookData) > 0) {
             $jsonData = array(
                 'id' => '',
                 'created' => '',
@@ -560,7 +560,7 @@ class Channable extends Module
             $jsonData['title'] = $product->name[Context::getContext()->language->id];
             if ($jsonData['stock'] !== null) {
                 $curlJson = Tools::jsonEncode($jsonData);
-            
+
                 if (!isset(self::$sent_update_ids[$jsonData['id']])) {
                     foreach ($webHookData as $webHook) {
                         if ($webHook['active'] == '1') {
@@ -572,8 +572,8 @@ class Channable extends Module
                             $result = curl_exec($ch);
                         }
                     }
-                }                
-                self::$sent_update_ids[$jsonData['id']] = true; 
+                }
+                self::$sent_update_ids[$jsonData['id']] = true;
             }
             /*
             error_log('fired event');
@@ -592,16 +592,16 @@ class Channable extends Module
     protected function enableApi()
     {
         Configuration::updateValue('PS_WEBSERVICE', 1);
-    
+
         $webserviceKey = new WebserviceKey();
         $webserviceKey->active = true;
         $webserviceKey->key = Tools::substr('CHANNABLE' . md5(time()), 0, 32);
         $webserviceKey->description = $this->l('Webservice API Key for channable created by plugin');
         $webserviceKey->save();
-    
+
         $permissions_to_set = array();
         $ressources = WebserviceRequest::getResources();
-    
+
         $methods = array('GET' => 'GET', 'PUT' => 'PUT', 'POST' => 'POST', 'DELETE' => 'DELETE', 'HEAD' => 'HEAD');
         foreach ($ressources as $resource_name => $data) {
             if (isset($data['forbidden_method'])) {
@@ -615,7 +615,7 @@ class Channable extends Module
                 $permissions_to_set[$resource_name] = $methods;
             }
         }
-    
+
         WebserviceKey::setPermissionForAccount($webserviceKey->id, $permissions_to_set);
         Configuration::updateValue('CHANNABLE_API_ID', (int)$webserviceKey->id);
         return true;

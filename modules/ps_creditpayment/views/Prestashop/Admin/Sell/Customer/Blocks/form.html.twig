@@ -88,8 +88,10 @@
           }) }}
 
           {{ ps.form_group_row(customerForm.informer_identification, {}, {
-            'label': 'Informer Identification'|trans({}, 'Admin.Global')
+            'label': 'Informer Identification'|trans({}, 'Admin.Global'),
+            'help': 'Here is the informer id placed to connect customers to informer online.'|trans({}, 'Admin.Orderscustomers.Help')
           }) }}
+
           {% if isB2bFeatureActive %}
             {{ ps.form_group_row(customerForm.company_name, {}, {
               'label': 'Company'|trans({}, 'Admin.Global')

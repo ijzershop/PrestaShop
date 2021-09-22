@@ -152,6 +152,14 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                     }
                 }
 
+
+                if($order_detail['product_reference'] == Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_REFERENCE')){
+                    $descProduct = new Product($order_detail['product_id']);
+                    if($descProduct){
+                        $order_detail['product_desc_short'] = reset($descProduct->description);
+                    }
+                }
+
                 if(!is_null($order_detail['customizedDatas'])){
                     foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
                         if(!is_null($customization)){

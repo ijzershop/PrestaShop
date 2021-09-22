@@ -30,8 +30,8 @@
 			<th class="product header small" width="10%">Plaats</th>
 			<th class="product header small" width="50%">{l s='Product / Reference' d='Shop.Pdf' pdf='true'}</th>
 			<th class="product header small" width="10%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
-			<th class="product header-right small" width="15%">{l s='Unit price' d='Shop.Pdf' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}</th>
-			<th class="product header-right small" width="15%">{l s='Price' d='Shop.Pdf' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}</th>
+			<th class="product header-right small" width="15%">{l s='Price Excl.' d='Shop.Pdf' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}</th>
+			<th class="product header-right small" width="15%">{l s='Price Incl.' d='Shop.Pdf' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}</th>
 		</tr>
 	</thead>
 
@@ -57,9 +57,9 @@
 					</td>
 					<td class="product right">
 						{if $tax_excluded_display}
-							{displayPrice currency=$order->id_currency price=$order_detail.price_with_reduction_without_tax}
+							{displayPrice currency=$order->id_currency price=$order_detail.total}
 						{else}
-							{displayPrice currency=$order->id_currency price=$order_detail.price_with_reduction}
+							{displayPrice currency=$order->id_currency price=$order_detail.total}
 						{/if}
 					</td>
 					<td class="product right">

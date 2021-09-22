@@ -3302,6 +3302,12 @@ $( document ).ready(function() {
             } else {
               display_progress(80);
 
+              if(jsonData.hasOwnProperty( 'is_free_order') && jsonData['is_free_order']){
+                createFreeOrder();
+              }
+
+
+
               /* Start Code added By Priyanshu on 9-Feb-2021 to fix the Mollie Payment Method Compaibility issue */
               if ($('input:radio[name="payment_method"]:checked').attr('data-module-name') == "mollie") {
                 var pay_value = $('input:radio[name="payment_method"]:checked').val();

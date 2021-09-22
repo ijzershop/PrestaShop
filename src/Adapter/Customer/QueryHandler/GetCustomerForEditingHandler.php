@@ -58,6 +58,8 @@ final class GetCustomerForEditingHandler implements GetCustomerForEditingHandler
             );
         }
 
+        $informerId = $customer->informer_identification;
+
         $birthday = null === $customer->birthday ?
             Birthday::createEmpty() :
             new Birthday($customer->birthday)
@@ -81,7 +83,8 @@ final class GetCustomerForEditingHandler implements GetCustomerForEditingHandler
             (string) $customer->website,
             (float) $customer->outstanding_allow_amount,
             (int) $customer->max_payment_days,
-            (int) $customer->id_risk
+            (int) $customer->id_risk,
+            (string) $informerId
         );
     }
 }

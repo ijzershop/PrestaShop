@@ -184,7 +184,6 @@
 <table class="supercheckout-totals table table-bordered totalTable">
 
     <tfoot>
-{*    {var_dump($subtotals)}*}
         {foreach from=$subtotals item="subtotal"}
 
             {if isset($subtotal.value) && $subtotal.value}
@@ -197,7 +196,7 @@
                       {else if $subtotal.type == 'shipping'}
                     <tr id="supercheckout_summary_total_{$subtotal.type}" style="{if $logged}{if $settings['order_total_option']['shipping_price']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['shipping_price']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
                     <td colspan="5" class="text-right title"><strong>{l s=$subtotal.label mod='supercheckout'} </strong></td>
-                  <td class="value text-right"><span id="supercheckout_total_{$subtotal.type}_value" class="price">{if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) != '0.00'}{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING),'EUR')}{else}Gratis{/if}{*escape not required as contains html*}</span></td>
+                  <td class="value text-right"><span id="supercheckout_total_{$subtotal.type}_value" class="price">{if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) != '0.00'}{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING),'EUR')}{else}{Context::getContext()->currentLocale->formatPrice("0.00",'EUR')}{/if}{*escape not required as contains html*}</span></td>
 
                     {else if $subtotal.type == 'tax'}
                     <tr id="supercheckout_summary_total_{$subtotal.type}" style="{if $logged}{if $settings['order_total_option']['total_tax']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['total_tax']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
@@ -207,7 +206,7 @@
                     {else}
                     <tr id="supercheckout_summary_total_{$subtotal.type}">
                   <td colspan="5" class="text-right title"><strong>{l s=$subtotal.label mod='supercheckout'} </strong></td>
-                  <td class="value text-right"><span id="supercheckout_total_{$subtotal.type}_value" class="price">{$subtotal.value nofilter}{*escape not required as contains html*}</span></td>
+                  <td class="value text-right"><span id="supercheckout_total_{$subtotal.type}_value" class="price">-{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS),'EUR')}{*escape not required as contains html*}</span></td>
 
                 {/if}
                 </tr>
@@ -219,12 +218,13 @@
 <div class="custom-panel rewardsection">
     {if $vouchers.allowed}
         {foreach $vouchers.added as $voucher}
-            <div style="margin-bottom: 1%;" id="cart_discount_{$voucher.id_cart_rule}" class="cart_discount text-right" style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
-
-                <span style="float:left;"><b>{$voucher.name}</b></span><a href="javascript:void(0)" style="float: left;margin-left: 2%;" onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><div title="{l s='Redeem' mod='supercheckout'}" class="removeProduct"><i class="fas fa-trash"></i></div></a>
-                <span class="price text-right">{$voucher.reduction_formatted nofilter}{*escape not required as contains html*}</span>
+            <div style="margin-bottom: 1%;" id="cart_discount_{$voucher.id_cart_rule}" class="cart_discount text-right p-1" style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
+                <div style="float:left;line-height: 2.2em;margin-right:5px;" title="{l s='Redeem' mod='supercheckout'}" class="removeProduct"><i class="fas fa-trash"></i></div>
+                <span style="float:left;color:#4862A3;font-size:initial;">{$voucher.name}</span><a href="javascript:void(0)" style="float: left;margin-left: 2%;" onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"></a>
+                <span class="price text-right">{Context::getContext()->currentLocale->formatPrice($voucher.reduction_amount, 'EUR')}{*escape not required as contains html*}</span>
             </div>
         {/foreach}
+      {if count($vouchers.added) == 0}
         <div class="rewardHeader" style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
             <a href="javascript:void(0)" onclick="$('.rewardBody').toggle();">{l s='Have a promo code?' mod='supercheckout'} </a>
         </div>
@@ -240,6 +240,7 @@
                 </div>
             </div>
         </div>
+        {/if}
     {else}
         <div id="supercheckout_voucher_input_row" style="display:none;"></div>
     {/if}
@@ -257,7 +258,7 @@
 
 
 <div id="highlighted_cart_rules">
-    {if count($other_available_vouchers) > 0}
+    {if count($other_available_vouchers) == 0}
         <p id="title" class="title-offers" style="font-weight: 600;color: black!important;">{l s='Take advantage of our exclusive offers' mod='supercheckout'}:</p>
         <div id="display_cart_vouchers">
             {foreach $other_available_vouchers as $voucher}

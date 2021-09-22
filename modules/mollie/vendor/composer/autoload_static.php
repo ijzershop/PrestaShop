@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit601ee8dbc6ac234402831dac7772d593
+class ComposerStaticInit32b8064ee386563196acbb78add2b670
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -245,7 +245,6 @@ class ComposerStaticInit601ee8dbc6ac234402831dac7772d593
         'MolOrderFee' => __DIR__ . '/../..' . '/src/Entity/MolOrderFee.php',
         'MolPaymentMethod' => __DIR__ . '/../..' . '/src/Entity/MolPaymentMethod.php',
         'MolPaymentMethodIssuer' => __DIR__ . '/../..' . '/src/Entity/MolPaymentMethodIssuer.php',
-        'MolPaymentMethodOrderTotalRestriction' => __DIR__ . '/../..' . '/src/Entity/MolPaymentMethodOrderTotalRestriction.php',
         'MolPendingOrderCart' => __DIR__ . '/../..' . '/src/Entity/MolPendingOrderCart.php',
         'MolPendingOrderCartRule' => __DIR__ . '/../..' . '/src/Entity/MolPendingOrderCartRule.php',
         'Mollie' => __DIR__ . '/../..' . '/mollie.php',
@@ -286,7 +285,6 @@ class ComposerStaticInit601ee8dbc6ac234402831dac7772d593
         'Mollie\\Exception\\MollieException' => __DIR__ . '/../..' . '/src/Exception/MollieException.php',
         'Mollie\\Exception\\NotImplementedException' => __DIR__ . '/../..' . '/src/Exception/NotImplementedException.php',
         'Mollie\\Exception\\OrderCreationException' => __DIR__ . '/../..' . '/src/Exception/OrderCreationException.php',
-        'Mollie\\Exception\\OrderTotalRestrictionException' => __DIR__ . '/../..' . '/src/Exception/OrderTotalRestrictionException.php',
         'Mollie\\Exception\\ShipmentCannotBeSentException' => __DIR__ . '/../..' . '/src/Exception/ShipmentCannotBeSentException.php',
         'Mollie\\Factory\\ContextFactory' => __DIR__ . '/../..' . '/src/Factory/ContextFactory.php',
         'Mollie\\Factory\\CustomerFactory' => __DIR__ . '/../..' . '/src/Factory/CustomerFactory.php',
@@ -304,10 +302,9 @@ class ComposerStaticInit601ee8dbc6ac234402831dac7772d593
         'Mollie\\Handler\\CartRule\\CartRuleQuantityResetHandler' => __DIR__ . '/../..' . '/src/Handler/CartRule/CartRuleQuantityResetHandler.php',
         'Mollie\\Handler\\CartRule\\CartRuleQuantityResetHandlerInterface' => __DIR__ . '/../..' . '/src/Handler/CartRule/CartRuleQuantityResetHandlerInterface.php',
         'Mollie\\Handler\\ErrorHandler\\ErrorHandler' => __DIR__ . '/../..' . '/src/Handler/ErrorHandler/ErrorHandler.php',
+        'Mollie\\Handler\\ErrorHandler\\ModuleFilteredRavenClient' => __DIR__ . '/../..' . '/src/Handler/ErrorHandler/ModuleFilteredRavenClient.php',
         'Mollie\\Handler\\Exception\\ExceptionHandlerInterface' => __DIR__ . '/../..' . '/src/Handler/Exception/ExceptionHandlerInterface.php',
         'Mollie\\Handler\\Exception\\OrderExceptionHandler' => __DIR__ . '/../..' . '/src/Handler/Exception/OrderExceptionHandler.php',
-        'Mollie\\Handler\\OrderTotal\\OrderTotalUpdaterHandler' => __DIR__ . '/../..' . '/src/Handler/OrderTotal/OrderTotalUpdaterHandler.php',
-        'Mollie\\Handler\\OrderTotal\\OrderTotalUpdaterHandlerInterface' => __DIR__ . '/../..' . '/src/Handler/OrderTotal/OrderTotalUpdaterHandlerInterface.php',
         'Mollie\\Handler\\PaymentOption\\PaymentOptionHandler' => __DIR__ . '/../..' . '/src/Handler/PaymentOption/PaymentOptionHandler.php',
         'Mollie\\Handler\\PaymentOption\\PaymentOptionHandlerInterface' => __DIR__ . '/../..' . '/src/Handler/PaymentOption/PaymentOptionHandlerInterface.php',
         'Mollie\\Handler\\Settings\\PaymentMethodPositionHandler' => __DIR__ . '/../..' . '/src/Handler/Settings/PaymentMethodPositionHandler.php',
@@ -329,12 +326,8 @@ class ComposerStaticInit601ee8dbc6ac234402831dac7772d593
         'Mollie\\Provider\\EnvironmentVersionProviderInterface' => __DIR__ . '/../..' . '/src/Provider/EnvironmentVersionProviderInterface.php',
         'Mollie\\Provider\\OrderTotalProvider' => __DIR__ . '/../..' . '/src/Provider/OrderTotal/OrderTotalProvider.php',
         'Mollie\\Provider\\OrderTotalProviderInterface' => __DIR__ . '/../..' . '/src/Provider/OrderTotal/OrderTotalProviderInterface.php',
-        'Mollie\\Provider\\OrderTotalRestrictionProvider' => __DIR__ . '/../..' . '/src/Provider/OrderTotal/OrderTotalRestrictionProvider.php',
-        'Mollie\\Provider\\OrderTotalRestrictionProviderInterface' => __DIR__ . '/../..' . '/src/Provider/OrderTotal/OrderTotalRestrictionProviderInterface.php',
         'Mollie\\Provider\\PaymentFeeProvider' => __DIR__ . '/../..' . '/src/Provider/PaymentFeeProvider.php',
         'Mollie\\Provider\\PaymentFeeProviderInterface' => __DIR__ . '/../..' . '/src/Provider/PaymentFeeProviderInterface.php',
-        'Mollie\\Provider\\PaymentMethod\\PaymentMethodOrderTotalRestrictionProvider' => __DIR__ . '/../..' . '/src/Provider/PaymentMethod/PaymentMethodOrderTotalRestrictionProvider.php',
-        'Mollie\\Provider\\PaymentMethod\\PaymentMethodOrderTotalRestrictionProviderInterface' => __DIR__ . '/../..' . '/src/Provider/PaymentMethod/PaymentMethodOrderTotalRestrictionProviderInterface.php',
         'Mollie\\Provider\\PaymentOption\\BasePaymentOptionProvider' => __DIR__ . '/../..' . '/src/Provider/PaymentOption/BasePaymentOptionProvider.php',
         'Mollie\\Provider\\PaymentOption\\CreditCardPaymentOptionProvider' => __DIR__ . '/../..' . '/src/Provider/PaymentOption/CreditCardPaymentOptionProvider.php',
         'Mollie\\Provider\\PaymentOption\\IdealPaymentOptionProvider' => __DIR__ . '/../..' . '/src/Provider/PaymentOption/IdealPaymentOptionProvider.php',
@@ -358,8 +351,6 @@ class ComposerStaticInit601ee8dbc6ac234402831dac7772d593
         'Mollie\\Repository\\ModuleRepository' => __DIR__ . '/../..' . '/src/Repository/ModuleRepository.php',
         'Mollie\\Repository\\MolCarrierInformationRepository' => __DIR__ . '/../..' . '/src/Repository/MolCarrierInformationRepository.php',
         'Mollie\\Repository\\MolCustomerRepository' => __DIR__ . '/../..' . '/src/Repository/MolCustomerRepository.php',
-        'Mollie\\Repository\\MolPaymentMethodOrderTotalRestrictionRepository' => __DIR__ . '/../..' . '/src/Repository/MolPaymentMethodOrderTotalRestrictionRepository.php',
-        'Mollie\\Repository\\MolPaymentMethodOrderTotalRestrictionRepositoryInterface' => __DIR__ . '/../..' . '/src/Repository/MolPaymentMethodOrderTotalRestrictionRepositoryInterface.php',
         'Mollie\\Repository\\OrderCartRuleRepository' => __DIR__ . '/../..' . '/src/Repository/OrderCartRuleRepository.php',
         'Mollie\\Repository\\OrderCartRuleRepositoryInterface' => __DIR__ . '/../..' . '/src/Repository/OrderCartRuleRepositoryInterface.php',
         'Mollie\\Repository\\OrderFeeRepository' => __DIR__ . '/../..' . '/src/Repository/OrderFeeRepository.php',
@@ -377,9 +368,7 @@ class ComposerStaticInit601ee8dbc6ac234402831dac7772d593
         'Mollie\\Service\\ApiService' => __DIR__ . '/../..' . '/src/Service/ApiService.php',
         'Mollie\\Service\\CancelService' => __DIR__ . '/../..' . '/src/Service/CancelService.php',
         'Mollie\\Service\\CarrierService' => __DIR__ . '/../..' . '/src/Service/CarrierService.php',
-        'Mollie\\Service\\CartDuplicationService' => __DIR__ . '/../..' . '/src/Service/CartDuplicationService.php',
         'Mollie\\Service\\CartLinesService' => __DIR__ . '/../..' . '/src/Service/CartLinesService.php',
-        'Mollie\\Service\\CartRuleDuplicationService' => __DIR__ . '/../..' . '/src/Service/CartRuleDuplicationService.php',
         'Mollie\\Service\\ConfigFieldService' => __DIR__ . '/../..' . '/src/Service/ConfigFieldService.php',
         'Mollie\\Service\\Content\\SmartyTemplateParser' => __DIR__ . '/../..' . '/src/Service/Content/SmartyTemplateParser.php',
         'Mollie\\Service\\Content\\TemplateParserInterface' => __DIR__ . '/../..' . '/src/Service/Content/TemplateParserInterface.php',
@@ -392,21 +381,13 @@ class ComposerStaticInit601ee8dbc6ac234402831dac7772d593
         'Mollie\\Service\\IssuerService' => __DIR__ . '/../..' . '/src/Service/IssuerService.php',
         'Mollie\\Service\\LanguageService' => __DIR__ . '/../..' . '/src/Service/LanguageService.php',
         'Mollie\\Service\\MailService' => __DIR__ . '/../..' . '/src/Service/MailService.php',
-        'Mollie\\Service\\MemorizeCartService' => __DIR__ . '/../..' . '/src/Service/MemorizeCartService.php',
         'Mollie\\Service\\MolCarrierInformationService' => __DIR__ . '/../..' . '/src/Service/MolCarrierInformationService.php',
         'Mollie\\Service\\MollieOrderInfoService' => __DIR__ . '/../..' . '/src/Service/MollieOrderInfoService.php',
         'Mollie\\Service\\MolliePaymentMailService' => __DIR__ . '/../..' . '/src/Service/MolliePaymentMailService.php',
-        'Mollie\\Service\\OrderCartAssociationService' => __DIR__ . '/../..' . '/src/Service/OrderCartAssociationService.php',
         'Mollie\\Service\\OrderFeeService' => __DIR__ . '/../..' . '/src/Service/OrderFeeService.php',
         'Mollie\\Service\\OrderStateImageService' => __DIR__ . '/../..' . '/src/Service/OrderStateImageService.php',
         'Mollie\\Service\\OrderStatusService' => __DIR__ . '/../..' . '/src/Service/OrderStatusService.php',
-        'Mollie\\Service\\OrderTotal\\OrderTotalRestrictionService' => __DIR__ . '/../..' . '/src/Service/OrderTotal/OrderTotalRestrictionService.php',
-        'Mollie\\Service\\OrderTotal\\OrderTotalRestrictionServiceInterface' => __DIR__ . '/../..' . '/src/Service/OrderTotal/OrderTotalRestrictionServiceInterface.php',
-        'Mollie\\Service\\OrderTotal\\OrderTotalService' => __DIR__ . '/../..' . '/src/Service/OrderTotal/OrderTotalService.php',
-        'Mollie\\Service\\OrderTotal\\OrderTotalServiceInterface' => __DIR__ . '/../..' . '/src/Service/OrderTotal/OrderTotalServiceInterface.php',
         'Mollie\\Service\\PaymentMethodService' => __DIR__ . '/../..' . '/src/Service/PaymentMethodService.php',
-        'Mollie\\Service\\PaymentMethod\\PaymentMethodOrderRestrictionUpdater' => __DIR__ . '/../..' . '/src/Service/PaymentMethod/PaymentMethodOrderRestrictionUpdater.php',
-        'Mollie\\Service\\PaymentMethod\\PaymentMethodOrderRestrictionUpdaterInterface' => __DIR__ . '/../..' . '/src/Service/PaymentMethod/PaymentMethodOrderRestrictionUpdaterInterface.php',
         'Mollie\\Service\\PaymentMethod\\PaymentMethodRestrictionValidation' => __DIR__ . '/../..' . '/src/Service/PaymentMethod/PaymentMethodRestrictionValidation.php',
         'Mollie\\Service\\PaymentMethod\\PaymentMethodRestrictionValidationInterface' => __DIR__ . '/../..' . '/src/Service/PaymentMethod/PaymentMethodRestrictionValidationInterface.php',
         'Mollie\\Service\\PaymentMethod\\PaymentMethodRestrictionValidation\\ApplePayPaymentMethodRestrictionValidator' => __DIR__ . '/../..' . '/src/Service/PaymentMethod/PaymentMethodRestrictionValidation/ApplePayPaymentMethodRestrictionValidator.php',
@@ -420,7 +401,6 @@ class ComposerStaticInit601ee8dbc6ac234402831dac7772d593
         'Mollie\\Service\\PaymentsTranslationService' => __DIR__ . '/../..' . '/src/Service/PaymentsTranslationService.php',
         'Mollie\\Service\\RefundService' => __DIR__ . '/../..' . '/src/Service/RefundService.php',
         'Mollie\\Service\\RepeatOrderLinkFactory' => __DIR__ . '/../..' . '/src/Service/RepeatOrderLinkFactory.php',
-        'Mollie\\Service\\RestorePendingCartService' => __DIR__ . '/../..' . '/src/Service/RestorePendingCartService.php',
         'Mollie\\Service\\SettingsSaveService' => __DIR__ . '/../..' . '/src/Service/SettingsSaveService.php',
         'Mollie\\Service\\ShipService' => __DIR__ . '/../..' . '/src/Service/ShipService.php',
         'Mollie\\Service\\ShipmentService' => __DIR__ . '/../..' . '/src/Service/ShipmentService.php',
@@ -448,6 +428,7 @@ class ComposerStaticInit601ee8dbc6ac234402831dac7772d593
         'Mollie\\Utility\\MollieStatusUtility' => __DIR__ . '/../..' . '/src/Utility/MollieStatusUtility.php',
         'Mollie\\Utility\\MultiLangUtility' => __DIR__ . '/../..' . '/src/Utility/MultiLangUtility.php',
         'Mollie\\Utility\\NumberUtility' => __DIR__ . '/../..' . '/src/Utility/NumberUtility.php',
+        'Mollie\\Utility\\OrderNumberUtility' => __DIR__ . '/../..' . '/src/Utility/OrderNumberUtility.php',
         'Mollie\\Utility\\OrderStatusUtility' => __DIR__ . '/../..' . '/src/Utility/OrderStatusUtility.php',
         'Mollie\\Utility\\PaymentFeeUtility' => __DIR__ . '/../..' . '/src/Utility/PaymentFeeUtility.php',
         'Mollie\\Utility\\PaymentMethodUtility' => __DIR__ . '/../..' . '/src/Utility/PaymentMethodUtility.php',
@@ -464,8 +445,6 @@ class ComposerStaticInit601ee8dbc6ac234402831dac7772d593
         'Mollie\\Validator\\OrderCallBackValidator' => __DIR__ . '/../..' . '/src/Validator/OrderCallBackValidator.php',
         'Mollie\\Validator\\OrderConfMailValidator' => __DIR__ . '/../..' . '/src/Validator/OrderConfMailValidator.php',
         'Mollie\\Validator\\VoucherValidator' => __DIR__ . '/../..' . '/src/Validator/VoucherValidator.php',
-        'Mollie\\Verification\\OrderTotal\\CanOrderTotalBeUpdated' => __DIR__ . '/../..' . '/src/Verification/OrderTotal/CanOrderTotalBeUpdated.php',
-        'Mollie\\Verification\\OrderTotal\\OrderTotalVerificationInterface' => __DIR__ . '/../..' . '/src/Verification/OrderTotal/OrderTotalVerificationInterface.php',
         'Mollie\\Verification\\PaymentType\\CanBeRegularPaymentType' => __DIR__ . '/../..' . '/src/Verification/PaymentType/CanBeRegularPaymentType.php',
         'Mollie\\Verification\\PaymentType\\PaymentTypeVerificationInterface' => __DIR__ . '/../..' . '/src/Verification/PaymentType/PaymentTypeVerificationInterface.php',
         'Mollie\\Verification\\Shipment\\CanSendShipment' => __DIR__ . '/../..' . '/src/Verification/Shipment/CanSendShipment.php',
@@ -530,10 +509,10 @@ class ComposerStaticInit601ee8dbc6ac234402831dac7772d593
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit601ee8dbc6ac234402831dac7772d593::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit601ee8dbc6ac234402831dac7772d593::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit601ee8dbc6ac234402831dac7772d593::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit601ee8dbc6ac234402831dac7772d593::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit32b8064ee386563196acbb78add2b670::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit32b8064ee386563196acbb78add2b670::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit32b8064ee386563196acbb78add2b670::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit32b8064ee386563196acbb78add2b670::$classMap;
 
         }, null, ClassLoader::class);
     }

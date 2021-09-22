@@ -126,7 +126,10 @@ class EditableCustomer
      * @var int
      */
     private $riskId;
-
+    /**
+     * @var string
+     */
+    private $informer_identification;
     /**
      * @param CustomerId $customerId
      * @param int $genderId
@@ -146,6 +149,7 @@ class EditableCustomer
      * @param float $allowedOutstandingAmount
      * @param int $maxPaymentDays
      * @param int $riskId
+     * @param string $informer_identification
      */
     public function __construct(
         CustomerId $customerId,
@@ -165,7 +169,8 @@ class EditableCustomer
         $website,
         $allowedOutstandingAmount,
         $maxPaymentDays,
-        $riskId
+        $riskId,
+        $informer_identification
     ) {
         $this->customerId = $customerId;
         $this->genderId = $genderId;
@@ -185,6 +190,7 @@ class EditableCustomer
         $this->allowedOutstandingAmount = $allowedOutstandingAmount;
         $this->maxPaymentDays = $maxPaymentDays;
         $this->riskId = $riskId;
+        $this->informer_identification = $informer_identification;
     }
 
     /**
@@ -329,5 +335,13 @@ class EditableCustomer
     public function isNewsletterSubscribed()
     {
         return $this->isNewsletterSubscribed;
+    }
+
+    /**
+     * @return string
+     */
+    public function getinformer_identification()
+    {
+        return $this->informer_identification;
     }
 }

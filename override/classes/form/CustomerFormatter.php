@@ -67,18 +67,6 @@ class CustomerFormatter extends CustomerFormatterCore implements FormFormatterIn
             }
             $format[$genderField->getName()] = $genderField;
         }
-//Added Informer Identification to connect specific customers to the informer online backoffice
-        $format['informer_identification'] = (new FormField())
-            ->setName('informer_identification')
-            ->setLabel(
-                $this->translator->trans(
-                    'Informer Id',
-                    [],
-                    'Shop.Forms.Labels'
-                )
-            )
-            ->setRequired(false);
-//End added
 
         $format['firstname'] = (new FormField())
             ->setName('firstname')
@@ -178,7 +166,7 @@ class CustomerFormatter extends CustomerFormatterCore implements FormFormatterIn
                     $this->translator->trans('(E.g.: %date_format%)', array('%date_format%' => Tools::formatDateStr('31 May 1970')), 'Shop.Forms.Help')
                 );
         }
-
+//End added
 //        if ($this->ask_for_partner_optin) {
 //            $format['optin'] = (new FormField())
 //                ->setName('optin')

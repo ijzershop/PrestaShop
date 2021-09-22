@@ -100,7 +100,10 @@ class PersonalInformation
      * @var bool
      */
     private $isActive;
-
+    /**
+     * @var string
+     */
+    private $informer_identification;
     /**
      * @param string $firstName
      * @param string $lastName
@@ -116,6 +119,7 @@ class PersonalInformation
      * @param string $languageName
      * @param Subscriptions $subscriptions
      * @param bool $isActive
+     * @param string $informer_identification
      */
     public function __construct(
         $firstName,
@@ -131,7 +135,8 @@ class PersonalInformation
         $shopName,
         $languageName,
         Subscriptions $subscriptions,
-        $isActive
+        $isActive,
+        $informer_identification
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -146,7 +151,8 @@ class PersonalInformation
         $this->shopName = $shopName;
         $this->languageName = $languageName;
         $this->subscriptions = $subscriptions;
-        $this->isActive = $isActive;;
+        $this->isActive = $isActive;
+        $this->informer_identification = $informer_identification;
     }
 
     /**
@@ -244,7 +250,6 @@ class PersonalInformation
     {
         return $this->languageName;
     }
-
     /**
      * @return Subscriptions
      */
@@ -259,5 +264,13 @@ class PersonalInformation
     public function isActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * @return string
+     */
+    public function informer_identification()
+    {
+        return $this->informer_identification;
     }
 }

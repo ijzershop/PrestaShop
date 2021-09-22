@@ -72,7 +72,7 @@ class Customer extends CustomerCore
             'reset_password_token' => array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false),
             'reset_password_validity' => array('type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false),
             'psgdpr_remove' => array('type' => self::TYPE_INT, 'copy_post' => false),
-            'informer_identification' => array('type' => self::TYPE_STRING)
+            'informer_identification' => array('type' => self::TYPE_STRING,'validate' => 'isGenericName', 'required' => false, 'size' => 40)
         )
     );
 
@@ -101,6 +101,8 @@ class Customer extends CustomerCore
         $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years . '-' . (int) $this->months . '-' . (int) $this->days);
         $this->secure_key = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_FRONT') . 'minutes'));
+        $this->informer_identification = Tools::getAllValues('customer')['customer']['informer_identification'];
+
 
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
@@ -123,6 +125,53 @@ class Customer extends CustomerCore
 
         return $success;
     }
+
+    /**
+     * Updates the current Customer in the database.
+     *
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
+     *
+     * @return bool Indicates whether the Customer has been successfully updated
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function update($nullValues = false)
+    {
+
+        $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years . '-' . (int) $this->months . '-' . (int) $this->days);
+
+        if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
+            $this->newsletter_date_add = date('Y-m-d H:i:s');
+        }
+        if (isset(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin') {
+            $this->updateGroup($this->groupBox);
+        }
+
+        if ($this->deleted) {
+            $addresses = $this->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
+            foreach ($addresses as $address) {
+                $obj = new Address((int) $address['id_address']);
+                $obj->deleted = true;
+                $obj->save();
+            }
+        }
+
+        if(isset(Tools::getAllValues('customer')['customer']['informer_identification'])){
+            $this->informer_identification = Tools::getAllValues('customer')['customer']['informer_identification'];
+        }
+
+        try {
+            return parent::update(true);
+        } catch (\PrestaShopException $exception) {
+            $message = $exception->getMessage();
+            error_log($message);
+
+            return false;
+        }
+    }
+
+
     /**
      * Get Address as array.
      *

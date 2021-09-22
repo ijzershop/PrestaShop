@@ -27,6 +27,42 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 
 class CartController extends CartControllerCore
 {
+
+    /**
+     * @see FrontController::initContent()
+     */
+    public function initContent()
+    {
+        if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show') {
+            Tools::redirect('index.php');
+        }
+
+        $presenter = new CartPresenter();
+        $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true);
+
+        //add tinyMCE for text editing
+        $this->context->controller->registerJavascript('tinyMCE',__PS_BASE_URI__.'js/tiny_mce/tinymce.min.js');
+//        $this->context->controller->registerJavascript('tinyMCE_2',__PS_BASE_URI__.'js/tinymce.inc.js');
+
+
+        $this->context->smarty->assign([
+            'cart' => $presented_cart,
+            'static_token' => Tools::getToken(false),
+        ]);
+
+        if (count($presented_cart['products']) > 0) {
+            $this->setTemplate('checkout/cart');
+        } else {
+            $this->context->smarty->assign([
+                'allProductsLink' => $this->context->link->getCategoryLink(Configuration::get('PS_HOME_CATEGORY')),
+            ]);
+            $this->setTemplate('checkout/cart-empty');
+        }
+        parent::initContent();
+    }
+
+
+
     protected function updateCart()
     {
         // Update the cart ONLY if $this->cookies are available, in order to avoid ghost carts created by bots

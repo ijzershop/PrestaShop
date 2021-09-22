@@ -170,7 +170,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         if ($this->order->id_address_invoice != $this->order->id_address_delivery) {
             $delivery_address = new Address((int) $this->order->id_address_delivery);
-            
+
             $formatted_delivery_address .= $delivery_address->firstname .' '. $delivery_address->lastname .'<br />';
             $formatted_delivery_address .= $delivery_address->company.'<br />';
             $formatted_delivery_address .= $delivery_address->address1.' '.$delivery_address->house_number.' '.$delivery_address->house_number_extension.'<br />';
@@ -188,6 +188,22 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $has_discount = false;
         foreach ($order_details as $id => &$order_detail) {
+
+            if(!is_null($order_detail['id_oi_offer'])){
+                $descProduct = new Product($order_detail['product_id']);
+                if($descProduct){
+                    $order_detail['product_desc_short'] = reset($descProduct->description_short);
+                }
+            }
+
+            if($order_detail['product_reference'] == Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_REFERENCE')){
+                $descProduct = new Product($order_detail['product_id']);
+                if($descProduct){
+                    $order_detail['product_desc_short'] = reset($descProduct->description);
+                }
+            }
+
+
             // Find out if column 'price before discount' is required
             if ($order_detail['reduction_amount_tax_excl'] > 0) {
                 $has_discount = true;

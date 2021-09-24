@@ -47,7 +47,7 @@ class Mollie extends PaymentModule
     {
         $this->name = 'mollie';
         $this->tab = 'payments_gateways';
-        $this->version = '4.4.0';
+        $this->version = '4.3.3';
         $this->author = 'Mollie B.V.';
         $this->need_instance = 1;
         $this->bootstrap = true;
@@ -897,6 +897,10 @@ class Mollie extends PaymentModule
 
     public function hookActionAdminOrdersListingFieldsModifier($params)
     {
+        //		if (\Configuration::get(\Mollie\Config\Config::MOLLIE_SHOW_RESEND_PAYMENT_LINK) === \Mollie\Config\Config::HIDE_RESENT_LINK) {
+        //			return;
+        //		}
+
         if (isset($params['select'])) {
             $params['select'] = rtrim($params['select'], ' ,') . ' ,mol.`transaction_id`';
         }
@@ -1069,16 +1073,5 @@ class Mollie extends PaymentModule
             $errorHandler->handle($e, $e->getCode(), false);
             PrestaShopLogger::addLog(__METHOD__ . ' - System incompatible: ' . $e->getMessage(), Mollie\Config\Config::CRASH);
         }
-    }
-
-    public function runUpgradeModule()
-    {
-        /** @var Mollie\Tracker\Segment $segment */
-        $segment = $this->getMollieContainer(Mollie\Tracker\Segment::class);
-
-        $segment->setMessage('Mollie module upgrade');
-        $segment->track();
-
-        return parent::runUpgradeModule();
     }
 }

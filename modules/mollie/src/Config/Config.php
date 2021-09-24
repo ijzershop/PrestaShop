@@ -240,9 +240,6 @@ class Config
 
     const ROUTE_RESEND_SECOND_CHANCE_PAYMENT_MESSAGE = 'mollie_module_admin_resend_payment_message';
 
-    const PAYMENT_FEE_SKU = 'payment-fee-sku';
-    const WRONG_AMOUNT_REASON = 'wrong amount';
-
     /** @var array */
     public static $methods = [
         'banktransfer' => 'Bank',

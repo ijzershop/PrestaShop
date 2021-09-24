@@ -16,12 +16,12 @@ use Shop;
 
 class ConfigurationAdapter
 {
-    public function get($key, $idShop = null, $idLang = null, $idShopGroup = null)
+    public function get($id)
     {
-        return \Configuration::get($key, $idLang, $idShopGroup, $idShop);
+        return \Configuration::get($id);
     }
 
-    public function updateValue($key, $values, $idShop = null, $html = false, $idShopGroup = null)
+    public function updateValue($key, $values, $html = false, $idShopGroup = null, $idShop = null)
     {
         if ($idShop === null) {
             $shops = Shop::getShops(true);

@@ -13,24 +13,11 @@
 * @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
 * International Registered Trademark & Property of PrestaShop SA
 */
-
 if (defined('_PS_VERSION_') === false) {
     exit;
 }
 
-if (version_compare((float)phpversion(), ' 5.1.2', '<')) {
-    if (!class_exists('TinyCache')) {
-        require_once(dirname(__FILE__).'/classes/TinyCache.php');
-    }
-    if (!class_exists('Pattern')) {
-        require_once(dirname(__FILE__).'/classes/Pattern.php');
-    }
-    if (!class_exists('SeoTools')) {
-        require_once(dirname(__FILE__).'/classes/SeoTools.php');
-    }
-} else {
-    require_once(dirname(__FILE__).'/autoload.php');
-}
+require_once dirname(__FILE__) . '/autoload.php';
 
 class SeoExpert extends Module
 {
@@ -41,15 +28,15 @@ class SeoExpert extends Module
     public $history = null;
 
     /**
-    * @var string Admin Module template path
-    * (eg. '/home/prestashop/modules/module_name/views/templates/admin/')
-    */
+     * @var string Admin Module template path
+     *             (eg. '/home/prestashop/modules/module_name/views/templates/admin/')
+     */
     protected $admin_tpl_path = null;
 
     /**
-    * @var string Admin Module template path
-    * (eg. '/home/prestashop/modules/module_name/views/templates/hook/')
-    */
+     * @var string Admin Module template path
+     *             (eg. '/home/prestashop/modules/module_name/views/templates/hook/')
+     */
     protected $hooks_tpl_path = null;
 
     /** @var string Module js path (eg. '/shop/modules/module_name/js/') */
@@ -84,7 +71,7 @@ class SeoExpert extends Module
     {
         $this->name = 'seoexpert';
         $this->tab = 'seo';
-        $this->version = '3.2.9';
+        $this->version = '4.0.0';
         $this->author = 'PrestaShop';
 
         $this->need_instance = '0';
@@ -101,28 +88,28 @@ class SeoExpert extends Module
         $this->displayName = $this->l('SEO Expert');
         $this->description = $this->l('Increase your SEO and your visibility in search engines such as Google');
 
-        $this->js_path = $this->_path.'views/js/';
-        $this->css_path = $this->_path.'views/css/';
-        $this->sql_path = dirname(__FILE__).'/sql/';
-        $this->cache_path = $this->local_path.'cache/';
+        $this->js_path = $this->_path . 'views/js/';
+        $this->css_path = $this->_path . 'views/css/';
+        $this->sql_path = dirname(__FILE__) . '/sql/';
+        $this->cache_path = $this->local_path . 'cache/';
 
-        $this->admin_tpl_path = $this->local_path.'views/templates/admin/';
-        $this->hooks_tpl_path = $this->local_path.'views/templates/hook/';
+        $this->admin_tpl_path = $this->local_path . 'views/templates/admin/';
+        $this->hooks_tpl_path = $this->local_path . 'views/templates/hook/';
 
         $this->front_url = SeoTools::getFrontUrl();
 
         TinyCache::setPath($this->cache_path);
         $this->getLang();
 
-        $this->history = array(
-            'product' => array(),
-            'category' => array(),
-            'cms' => array(),
-            'cmscategory' => array(),
-            'supplier' => array(),
-            'manufacturer' => array(),
-            'static' => array(),
-        );
+        $this->history = [
+            'product' => [],
+            'category' => [],
+            'cms' => [],
+            'cmscategory' => [],
+            'supplier' => [],
+            'manufacturer' => [],
+            'static' => [],
+        ];
 
         if ($this->increase_memory === true) {
             @ignore_user_abort(true);
@@ -134,78 +121,78 @@ class SeoExpert extends Module
     public function cronProcessGenerateRule($id_rule)
     {
         $db = Db::getInstance(_PS_USE_SQL_SLAVE_);
-        $id_rule = (int)trim($id_rule);
+        $id_rule = (int) trim($id_rule);
 
-        self::$rc = TinyCache::getCache('rule_cache_'.$id_rule);
+        self::$rc = TinyCache::getCache('rule_cache_' . $id_rule);
         if (self::$rc === null || empty(self::$rc)) {
             /* Get all rules informations */
             self::$rc = SeoTools::mergeRecursive($this->getPatternsRule($id_rule));
-            TinyCache::setCache('rule_cache_'.$id_rule, self::$rc);
+            TinyCache::setCache('rule_cache_' . $id_rule, self::$rc);
         }
 
         if (self::$rc) {
-            $id_lang = (int)self::$rc['id_lang'];
-            $id_shop = isset(self::$rc['id_shop']) ? (int)self::$rc['id_shop'] : $this->context->shop->id;
+            $id_lang = (int) self::$rc['id_lang'];
+            $id_shop = isset(self::$rc['id_shop']) ? (int) self::$rc['id_shop'] : $this->context->shop->id;
             $id_employee = isset($this->context->employee) ? $this->context->employee->id : '';
-            Cache::store('hook_module_exec_list_'.$id_shop.$id_employee, array());
+            Cache::store('hook_module_exec_list_' . $id_shop . $id_employee, []);
 
-            self::$static_products[$id_rule] = TinyCache::getCache('prod_cache_'.$id_rule, 20, 'minutes');
+            self::$static_products[$id_rule] = TinyCache::getCache('prod_cache_' . $id_rule, 20, 'minutes');
             if (self::$static_products[$id_rule] === null || empty(self::$static_products[$id_rule])) {
                 $id_category = '';
                 $get_obj = $this->getObjectsRule($id_rule);
                 foreach ($get_obj as &$obj) {
-                    $id_category .= (int)$obj['id_obj'].', ';
+                    $id_category .= (int) $obj['id_obj'] . ', ';
                 }
                 unset($get_obj, $obj);
                 $id_category = Tools::substr($id_category, 0, -2);
 
-                if ((int)$id_category === 0) {
-                    $products = array();
+                if ((int) $id_category === 0) {
+                    $products = [];
                     $prods = SeoTools::getProducts($id_lang, 0, 0, 'id_product', 'ASC');
                     while ($prod = $db->nextRow($prods)) {
                         $products[]['id_product'] = $prod['id_product'];
                     }
                     unset($prod, $prods);
                     self::$static_products[$id_rule] = $products;
-                    TinyCache::setCache('prod_cache_'.$id_rule, self::$static_products[$id_rule]);
+                    TinyCache::setCache('prod_cache_' . $id_rule, self::$static_products[$id_rule]);
                 } else {
                     $products = $db->executeS(
                         'SELECT SQL_BIG_RESULT ps.id_product
-						FROM '._DB_PREFIX_.'product_shop ps
-						WHERE ps.id_category_default IN ('.$id_category.') AND ps.id_shop = '.(int)$id_shop
+						FROM ' . _DB_PREFIX_ . 'product_shop ps
+						WHERE ps.id_category_default IN (' . $id_category . ') AND ps.id_shop = ' . (int) $id_shop
                     );
                     self::$static_products[$id_rule] = $products;
-                    TinyCache::setCache('prod_cache_'.$id_rule, self::$static_products[$id_rule]);
+                    TinyCache::setCache('prod_cache_' . $id_rule, self::$static_products[$id_rule]);
                 }
             }
 
-            $error = array();
+            $error = [];
             $count = count(self::$static_products[$id_rule]);
             echo str_pad('', 1024, ' ');
             $nb_prod = 0;
 
-            echo $this->l('Rule').': '.$this->getRuleName($id_rule)."\n";
+            echo $this->l('Rule') . ': ' . $this->getRuleName($id_rule) . "\n";
             if (!empty(self::$static_products[$id_rule])) {
-                echo $this->l('The rule has been applied to the products')."\n";
+                echo $this->l('The rule has been applied to the products') . "\n";
                 foreach (self::$static_products[$id_rule] as &$row) {
-                    $generate = $this->generate((int)$row['id_product'], self::$rc['pattern'], (int)$id_shop, $id_lang);
+                    $generate = $this->generate((int) $row['id_product'], self::$rc['pattern'], (int) $id_shop, $id_lang);
                     ++$nb_prod;
                     if (!empty($generate)) {
                         --$nb_prod;
-                        $error[(int)$row['id_product']] = $generate;
+                        $error[(int) $row['id_product']] = $generate;
                     }
                     unset($generate);
                 }
                 unset($row);
-                echo $nb_prod.'/'.$count.' '.$this->l('product(s) have been updated')."\n";
+                echo $nb_prod . '/' . $count . ' ' . $this->l('product(s) have been updated') . "\n";
             } else {
-                echo $this->l('This rule does not impact any product')."\n";
+                echo $this->l('This rule does not impact any product') . "\n";
             }
 
             if (!empty($error)) {
-                echo '<br />'.count($error).' '.$this->l('error(s) encountered:')."\n";
+                echo '<br />' . count($error) . ' ' . $this->l('error(s) encountered:') . "\n";
                 foreach ($error as $key => $value) {
-                    echo $value.' ('.$key.')'."\n";
+                    echo $value . ' (' . $key . ')' . "\n";
                 }
                 unset($error, $key, $value);
             }
@@ -217,26 +204,27 @@ class SeoExpert extends Module
     }
 
     /**
-    * Get Language
-    * @return array Lang
-    */
+     * Get Language
+     *
+     * @return array Lang
+     */
     private function getLang()
     {
-        self::$lang_cache = TinyCache::getCache('language_'.(int)$this->context->shop->id);
+        self::$lang_cache = TinyCache::getCache('language_' . (int) $this->context->shop->id);
 
         if (self::$lang_cache === null || empty(self::$lang_cache)) {
             if ($languages = Language::getLanguages()) {
                 foreach ($languages as &$row) {
                     $exprow = explode(' (', $row['name']);
                     $subtitle = (isset($exprow[1]) ? trim(Tools::substr($exprow[1], 0, -1)) : '');
-                    self::$lang_cache[$row['iso_code']] = array(
-                        'id' => (int)$row['id_lang'],
+                    self::$lang_cache[$row['iso_code']] = [
+                        'id' => (int) $row['id_lang'],
                         'title' => trim($exprow[0]),
-                        'subtitle' => $subtitle
-                    );
+                        'subtitle' => $subtitle,
+                    ];
                 }
                 // Cache Data
-                TinyCache::setCache('language_'.(int)$this->context->shop->id, self::$lang_cache);
+                TinyCache::setCache('language_' . (int) $this->context->shop->id, self::$lang_cache);
                 // Clean memory
                 unset($row, $exprow, $subtitle, $languages);
             }
@@ -244,24 +232,25 @@ class SeoExpert extends Module
     }
 
     /**
-    * Install SQL
-    * @return boolean
-    */
+     * Install SQL
+     *
+     * @return bool
+     */
     private function installSQL()
     {
         // Create database tables from install.sql
-        if (!Tools::file_exists_cache($this->sql_path.self::INSTALL_SQL_FILE)) {
+        if (!Tools::file_exists_cache($this->sql_path . self::INSTALL_SQL_FILE)) {
             return false;
         }
 
-        if (!$sql = Tools::file_get_contents($this->sql_path.self::INSTALL_SQL_FILE)) {
+        if (!$sql = Tools::file_get_contents($this->sql_path . self::INSTALL_SQL_FILE)) {
             return false;
         }
 
-        $replace = array(
+        $replace = [
             'PREFIX' => _DB_PREFIX_,
-            'ENGINE_DEFAULT' => _MYSQL_ENGINE_
-        );
+            'ENGINE_DEFAULT' => _MYSQL_ENGINE_,
+        ];
         $sql = strtr($sql, $replace);
         $sql = preg_split("/;\s*[\r\n]+/", $sql);
 
@@ -278,24 +267,25 @@ class SeoExpert extends Module
     }
 
     /**
-    * Uninstall SQL
-    * @return boolean
-    */
+     * Uninstall SQL
+     *
+     * @return bool
+     */
     private function uninstallSQL()
     {
         // Create database tables from uninstall.sql
-        if (!Tools::file_exists_cache($this->sql_path.self::UNINSTALL_SQL_FILE)) {
+        if (!Tools::file_exists_cache($this->sql_path . self::UNINSTALL_SQL_FILE)) {
             return false;
         }
 
-        if (!$sql = Tools::file_get_contents($this->sql_path.self::UNINSTALL_SQL_FILE)) {
+        if (!$sql = Tools::file_get_contents($this->sql_path . self::UNINSTALL_SQL_FILE)) {
             return false;
         }
 
-        $replace = array(
+        $replace = [
             'PREFIX' => _DB_PREFIX_,
-            'ENGINE_DEFAULT' => _MYSQL_ENGINE_
-        );
+            'ENGINE_DEFAULT' => _MYSQL_ENGINE_,
+        ];
         $sql = strtr($sql, $replace);
         $sql = preg_split("/;\s*[\r\n]+/", $sql);
 
@@ -311,34 +301,42 @@ class SeoExpert extends Module
     }
 
     /**
-    * Install Tab
-    * @return boolean
-    */
+     * Install Tab
+     *
+     * @return bool
+     */
     private function installTab()
     {
         // Check hide host mode
         $this->checkCloud();
 
+        // Do not create if already existing
+        $idTab = (int) Tab::getIdFromClassName('AdminSeohelping');
+        if ($idTab) {
+            return true;
+        }
+
         $tab = new Tab();
         $tab->active = 1;
         $tab->class_name = 'AdminSeohelping';
-        $tab->name = array();
+        $tab->name = [];
         foreach (Language::getLanguages(true) as $lang) {
             $tab->name[$lang['id_lang']] = 'SEO (Search Engine Optimization)';
         }
-        unset($lang);
         $tab->id_parent = -1;
         $tab->module = $this->name;
+
         return $tab->add();
     }
 
     /**
-    * Uninstall Tab
-    * @return boolean
-    */
+     * Uninstall Tab
+     *
+     * @return bool
+     */
     private function uninstallTab()
     {
-        $id_tab = (int)Tab::getIdFromClassName('AdminSeohelping');
+        $id_tab = (int) Tab::getIdFromClassName('AdminSeohelping');
         if ($id_tab) {
             $tab = new Tab($id_tab);
             if ($tab instanceof Tab) {
@@ -352,41 +350,45 @@ class SeoExpert extends Module
     }
 
     /**
-    * Check MySQL Engine
-    * @return boolean
-    */
+     * Check MySQL Engine
+     *
+     * @return bool
+     */
     public function isMyisam()
     {
         if (_MYSQL_ENGINE_ === 'MyISAM') {
             return true;
         }
+
         return false;
     }
 
     /**
-    * Check if column exist in Tab
-    * @return void
-    */
+     * Check if column exist in Tab
+     *
+     * @return void
+     */
     public function checkCloud()
     {
         $status = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(1)
 		FROM information_schema.COLUMNS
-		WHERE TABLE_SCHEMA = "'.pSQL(_DB_NAME_).'"
-		AND TABLE_NAME = "'.pSQL(_DB_PREFIX_).'tab"
+		WHERE TABLE_SCHEMA = "' . pSQL(_DB_NAME_) . '"
+		AND TABLE_NAME = "' . pSQL(_DB_PREFIX_) . 'tab"
 		AND COLUMN_NAME = "hide_host_mode"');
         // Maybe a deficient Update: We add the column to avoid bugs
-        if ((int)$status !== 1) {
+        if ((int) $status !== 1) {
             Db::getInstance(_PS_USE_SQL_SLAVE_)->execute(
-                'ALTER TABLE '.pSQL(_DB_PREFIX_).'tab
+                'ALTER TABLE ' . pSQL(_DB_PREFIX_) . 'tab
                 ADD hide_host_mode TINYINT(1) UNSIGNED NOT NULL DEFAULT "0" AFTER active'
             );
         }
     }
 
     /**
-    * Insert module into datable
-    * @return boolean result
-    */
+     * Insert module into datable
+     *
+     * @return bool result
+     */
     public function install()
     {
         if (Shop::isFeatureActive()) {
@@ -396,7 +398,9 @@ class SeoExpert extends Module
         // Clean up cache
         TinyCache::clearAllCache();
 
-        if (parent::install() === false
+        if ($this->installSQL() === false
+            || $this->installTab() === false
+            || parent::install() === false
             || $this->registerHook('actionObjectCategoryAddAfter') === false
             || $this->registerHook('actionObjectCategoryUpdateAfter') === false
             || $this->registerHook('actionObjectCategoryDeleteAfter') === false
@@ -414,18 +418,21 @@ class SeoExpert extends Module
 
             || $this->registerHook('displayHeader') === false
             || $this->registerHook('displayBackOfficeHeader') === false
-            // || $this->registerHook('displayAdminProductsExtra') === false
-            || $this->installSQL() === false
-            || $this->installTab() === false) {
+        ) {
             return false;
         }
+
+        $now = new \DateTime('now');
+        \Configuration::updateValue('PS_SEO_EXPERT_DATE_INSTALL', $now->format('Y-m-d H:i:s'));
+
         return true;
     }
 
     /**
-    * Delete module from datable
-    * @return boolean result
-    */
+     * Delete module from datable
+     *
+     * @return bool result
+     */
     public function uninstall()
     {
         if (parent::uninstall() === false
@@ -433,34 +440,37 @@ class SeoExpert extends Module
             || $this->uninstallTab() === false) {
             return false;
         }
+
+        \Configuration::deleteByName('PS_SEO_EXPERT_DATE_INSTALL');
+
         return true;
     }
 
     /**
-    * Loads asset resources
-    */
+     * Loads asset resources
+     */
     public function loadAsset()
     {
-        $css_compatibility = $js_compatibility = array();
+        $css_compatibility = $js_compatibility = [];
 
         // Load CSS
-        $css = array(
-            $this->css_path.'font-awesome.min.css',
-            $this->css_path.'bootstrap-select.min.css',
-            $this->css_path.'bootstrap-dialog.min.css',
-            $this->css_path.'bootstrap.vertical-tabs.min.css',
-            $this->css_path.'bootstrap-responsive.min.css',
-            $this->css_path.'DT_bootstrap.css',
-            $this->css_path.'jstree.min.css',
-            $this->css_path.'faq.css',
-            $this->css_path.$this->name.'.css',
-        );
+        $css = [
+            $this->css_path . 'font-awesome.min.css',
+            $this->css_path . 'bootstrap-select.min.css',
+            $this->css_path . 'bootstrap-dialog.min.css',
+            $this->css_path . 'bootstrap.vertical-tabs.min.css',
+            $this->css_path . 'bootstrap-responsive.min.css',
+            $this->css_path . 'DT_bootstrap.css',
+            $this->css_path . 'jstree.min.css',
+            $this->css_path . 'faq.css',
+            $this->css_path . $this->name . '.css',
+        ];
         if (version_compare(_PS_VERSION_, '1.6', '<')) {
-            $css_compatibility = array(
-                $this->css_path.'bootstrap.min.css',
-                $this->css_path.'bootstrap.extend.css',
-                $this->css_path.'font-awesome.min.css',
-            );
+            $css_compatibility = [
+                $this->css_path . 'bootstrap.min.css',
+                $this->css_path . 'bootstrap.extend.css',
+                $this->css_path . 'font-awesome.min.css',
+            ];
             $css = array_merge($css_compatibility, $css);
         }
         $this->context->controller->addCSS($css, 'all');
@@ -470,26 +480,26 @@ class SeoExpert extends Module
         }
 
         // Load JS
-        $jss = array(
-            $this->js_path.'jquery-2.1.0.min.js',
-            $this->js_path.'jquery-migrate-1.2.1.min',
-            $this->js_path.'mynoConflict.js',
-            $this->js_path.'bootstrap-select.min.js',
-            $this->js_path.'bootstrap-dialog.js',
-            $this->js_path.'jquery.autosize.min.js',
-            $this->js_path.'jquery.dataTables.js',
-            $this->js_path.'jquery.smartWizard.js',
-            $this->js_path.'DT_bootstrap.js',
-            $this->js_path.'dynamic_table_init.js',
-            $this->js_path.'jstree.min.js',
-            $this->js_path.'faq.js',
-            $this->js_path.$this->name.'.js'
-        );
+        $jss = [
+            $this->js_path . 'jquery-2.1.0.min.js',
+            $this->js_path . 'jquery-migrate-1.2.1.min',
+            $this->js_path . 'mynoConflict.js',
+            $this->js_path . 'bootstrap-select.min.js',
+            $this->js_path . 'bootstrap-dialog.js',
+            $this->js_path . 'jquery.autosize.min.js',
+            $this->js_path . 'jquery.dataTables.js',
+            $this->js_path . 'jquery.smartWizard.js',
+            $this->js_path . 'DT_bootstrap.js',
+            $this->js_path . 'dynamic_table_init.js',
+            $this->js_path . 'jstree.min.js',
+            $this->js_path . 'faq.js',
+            $this->js_path . $this->name . '.js',
+        ];
 
         if (version_compare(_PS_VERSION_, '1.6', '<')) {
-            $js_compatibility = array(
-                $this->js_path.'bootstrap.min.js'
-            );
+            $js_compatibility = [
+                $this->js_path . 'bootstrap.min.js',
+            ];
             $jss = array_merge($jss, $js_compatibility);
         }
         $this->context->controller->addJS($jss);
@@ -498,8 +508,8 @@ class SeoExpert extends Module
     }
 
     /**
-    * Show the configuration module
-    */
+     * Show the configuration module
+     */
     public function getContent()
     {
         // We load asset
@@ -507,29 +517,29 @@ class SeoExpert extends Module
 
         if (version_compare(_PS_VERSION_, '1.6', '<')) {
             // Clean the code use tpl file for html
-            $tab = '&tab_module='.$this->tab;
-            $token_mod = '&token='.Tools::getAdminTokenLite('AdminModules');
-            $token_pos = '&token='.Tools::getAdminTokenLite('AdminModulesPositions');
-            $token_trad = '&token='.Tools::getAdminTokenLite('AdminTranslations');
+            $tab = '&tab_module=' . $this->tab;
+            $token_mod = '&token=' . Tools::getAdminTokenLite('AdminModules');
+            $token_pos = '&token=' . Tools::getAdminTokenLite('AdminModulesPositions');
+            $token_trad = '&token=' . Tools::getAdminTokenLite('AdminTranslations');
 
             $mod_url = 'index.php?controller=AdminModules';
 
-            $this->context->smarty->assign(array(
-                'module_active' => (bool)$this->active,
-                'module_trad' => 'index.php?controller=AdminTranslations'.$token_trad.'&type=modules&lang=',
-                'module_hook' => 'index.php?controller=AdminModulesPositions'.$token_pos.'&show_modules='.$this->id,
-                'module_back' => $mod_url.$token_mod.$tab.'&module_name='.$this->name,
-                'module_form' => $mod_url.'&configure='.$this->name.$token_mod.$tab.'&module_name='.$this->name,
-                'module_reset' => $mod_url.$token_mod.'&module_name='.$this->name.'&reset'.$tab,
-            ));
+            $this->context->smarty->assign([
+                'module_active' => (bool) $this->active,
+                'module_trad' => 'index.php?controller=AdminTranslations' . $token_trad . '&type=modules&lang=',
+                'module_hook' => 'index.php?controller=AdminModulesPositions' . $token_pos . '&show_modules=' . $this->id,
+                'module_back' => $mod_url . $token_mod . $tab . '&module_name=' . $this->name,
+                'module_form' => $mod_url . '&configure=' . $this->name . $token_mod . $tab . '&module_name=' . $this->name,
+                'module_reset' => $mod_url . $token_mod . '&module_name=' . $this->name . '&reset' . $tab,
+            ]);
             // Clean memory
             unset($tab, $token_mod, $token_pos, $token_trad);
         }
 
         $controller_name = 'AdminSeohelping';
-        $current_id_tab = (int)$this->context->controller->id;
+        $current_id_tab = (int) $this->context->controller->id;
         $controller_url = $this->context->link->getAdminLink($controller_name);
-        $token_seo = '&token='.Tools::getAdminTokenLite('AdminMeta');
+        $token_seo = '&token=' . Tools::getAdminTokenLite('AdminMeta');
 
         /* Language for documentation in back-office */
         $iso_code = Context::getContext()->language->iso_code;
@@ -586,31 +596,37 @@ class SeoExpert extends Module
             $lang = 'EN';
         }
 
+        $showRateModule = \DateTime::createFromFormat('Y-m-d H:i:s', \Configuration::get('PS_SEO_EXPERT_DATE_INSTALL'));
+        $now = new \DateTime('now');
+        $showRateModule = (int) $now->diff($showRateModule)->format('%a') > 7 && (int) $now->diff($showRateModule)->format('%a') < 92;
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'apifaq' => $this->loadFaq(),
             'module_name' => $this->name,
             'module_version' => $this->version,
-            'module_enabled' => (int)$this->active,
+            'module_enabled' => (int) $this->active,
             'module_display_name' => $this->name,
             'rule_history' => $this->history,
-            'debug_mode' => (int)_PS_MODE_DEV_,
+            'debug_mode' => (int) _PS_MODE_DEV_,
             'lang_select' => self::$lang_cache,
             'current_id_tab' => $current_id_tab,
             'controller_url' => $controller_url,
             'controller_name' => $controller_name,
             'module_display' => $this->displayName,
-            'multishop' => (int)Shop::isFeatureActive(),
-            'guide_link' => 'docs/seo_pro_guide_'.$lang.'.pdf',
+            'multishop' => (int) Shop::isFeatureActive(),
+            'guide_link' => 'docs/seo_pro_guide_' . $lang . '.pdf',
             'white_seo' => $white_seo,
-            'admin_seo' => 'index.php?controller=AdminMeta'.$token_seo,
-            'table_tpl_path' => $this->admin_tpl_path.'table/table.tpl',
-            'actions_tpl_path' => $this->admin_tpl_path.'table/actions.tpl',
-            'ps_version' => (bool)version_compare(_PS_VERSION_, '1.6', '>'),
+            'admin_seo' => 'index.php?controller=AdminMeta' . $token_seo,
+            'table_tpl_path' => $this->admin_tpl_path . 'table/table.tpl',
+            'actions_tpl_path' => $this->admin_tpl_path . 'table/actions.tpl',
+            'ps_version' => (bool) version_compare(_PS_VERSION_, '1.6', '>'),
             'version' => _PS_VERSION_,
-            'rewriting_allow' => (int)Configuration::get('PS_REWRITING_SETTINGS'),
-            'cross_link' => 'http://addons.prestashop.com/'.$cross_link,
-        ));
+            'rewriting_allow' => (int) Configuration::get('PS_REWRITING_SETTINGS'),
+            'cross_link' => 'http://addons.prestashop.com/' . $cross_link,
+            'showRateModule' => $showRateModule,
+            'currentLangIsoCode' => $this->context->language->iso_code,
+            'img_path' => $this->_path . 'views/img/',
+        ]);
 
         return $this->display(__FILE__, 'views/templates/admin/configuration.tpl');
     }
@@ -620,7 +636,7 @@ class SeoExpert extends Module
      */
     public function loadFaq()
     {
-        include_once('classes/APIFAQClass.php');
+        include_once 'classes/APIFAQClass.php';
         $api = new APIFAQ();
         $faq = $api->getData($this->module_key, $this->version);
 
@@ -628,71 +644,76 @@ class SeoExpert extends Module
     }
 
     /**
-    * Switch the status of one rule
-    */
+     * Switch the status of one rule
+     */
     public function switchAction($id_rule)
     {
         $status = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT SQL_SMALL_RESULT msr.active
-            FROM `'._DB_PREFIX_.pSQL(self::$rules_table).'` msr
-            WHERE msr.id_rule = '.(int)$id_rule
+            FROM `' . _DB_PREFIX_ . pSQL(self::$rules_table) . '` msr
+            WHERE msr.id_rule = ' . (int) $id_rule
         );
-        if ((int)$status === 1) {
-            $data = array('active' => 0);
+        if ((int) $status === 1) {
+            $data = ['active' => 0];
         } else {
-            $data = array('active' => 1);
+            $data = ['active' => 1];
         }
 
-        $data['id_rule'] = (int)$id_rule;
-        return ($this->update(pSQL(self::$rules_table), $data));
+        $data['id_rule'] = (int) $id_rule;
+
+        return $this->update(pSQL(self::$rules_table), $data);
     }
 
     /**
-    * Update the date of last apply of a rule
-    */
+     * Update the date of last apply of a rule
+     */
     public function updateApply($id_rule)
     {
-        $data = array(
+        $data = [
             'date_upd' => date('Y-m-d H:i:s'),
-            'id_rule' => (int)$id_rule
-        );
+            'id_rule' => (int) $id_rule,
+        ];
 
-        return ($this->update(pSQL(self::$rules_table), $data));
+        return $this->update(pSQL(self::$rules_table), $data);
     }
 
     /**
-    * Counts the number of object with respect to the previous query
-    * See DataTables (http://goo.gl/C5ho60)
-    * @return int
-    */
+     * Counts the number of object with respect to the previous query
+     * See DataTables (http://goo.gl/C5ho60)
+     *
+     * @return int
+     */
     public function countRules($type = 'product')
     {
-        return ((int)Db::getInstance()->getValue('SELECT SQL_SMALL_RESULT FOUND_ROWS() `'.trim(bqSQL($type)).'`'));
+        return (int) Db::getInstance()->getValue('SELECT SQL_SMALL_RESULT FOUND_ROWS() `' . trim(bqSQL($type)) . '`');
     }
 
     /**
-    * Get Image
-    * @return array Lang
-    */
+     * Get Image
+     *
+     * @return array Lang
+     */
     public function getTwitterImage($type)
     {
         $images = ImageType::getImagesTypes($type);
         if (!empty($images)) {
-            $name = array();
+            $name = [];
             foreach ($images as $key => $image) {
                 if ($images[$key]['width'] >= 120) {
-                    $name[$image['name']] = $image['width'].' x '.$image['height'];
+                    $name[$image['name']] = $image['width'] . ' x ' . $image['height'];
                 }
             }
             unset($key, $image, $images);
+
             return $name;
         }
     }
 
     /**
-    * Get all categories with childs
-    * @return array
-    */
+     * Get all categories with childs
+     *
+     * @return array
+     */
     public function getSimpleCategories($type)
     {
         if ($type === 'category') {
@@ -700,38 +721,38 @@ class SeoExpert extends Module
             $root = '';
             $storecommander = Module::getInstanceByName('storecommander');
             if (empty($storecommander)
-              || !Tools::file_exists_cache(_PS_MODULE_DIR_.'storecommander/storecommander.php')) {
-                $root = 'AND c.`id_category` != '.(int)Configuration::get('PS_ROOT_CATEGORY');
+              || !Tools::file_exists_cache(_PS_MODULE_DIR_ . 'storecommander/storecommander.php')) {
+                $root = 'AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY');
             }
 
             $restult = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT c.*, cl.*
-				FROM `'._DB_PREFIX_.'category` c
-				INNER JOIN '._DB_PREFIX_.'category_shop category_shop ON (
-					category_shop.id_category = c.id_category AND category_shop.id_shop =  '.(int)$this->context->shop->id.'
+				FROM `' . _DB_PREFIX_ . 'category` c
+				INNER JOIN ' . _DB_PREFIX_ . 'category_shop category_shop ON (
+					category_shop.id_category = c.id_category AND category_shop.id_shop =  ' . (int) $this->context->shop->id . '
 				)
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (
+				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (
 					c.`id_category` = cl.`id_category` AND cl.id_shop = 1
 				)
-				RIGHT JOIN `'._DB_PREFIX_.'category` c2 ON (
-					c2.`id_category` = '.(int)Configuration::get('PS_ROOT_CATEGORY').'
+				RIGHT JOIN `' . _DB_PREFIX_ . 'category` c2 ON (
+					c2.`id_category` = ' . (int) Configuration::get('PS_ROOT_CATEGORY') . '
           AND c.`nleft` >= c2.`nleft`
           AND c.`nright` <= c2.`nright`
 				)
-				WHERE 1 AND `id_lang` = '.(int)$this->context->language->id.'
+				WHERE 1 AND `id_lang` = ' . (int) $this->context->language->id . '
 			');
 
             if (empty($restult)) {
                 $restult = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT SQL_BIG_RESULT c.`id_parent`, c.`id_category`, cl.`name`
-				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (
+				FROM `' . _DB_PREFIX_ . 'category` c
+				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (
           c.`id_category` = cl.`id_category`
-          '.Shop::addSqlRestrictionOnLang('cl').'
+          ' . Shop::addSqlRestrictionOnLang('cl') . '
         )
-				'.Shop::addSqlAssociation('category', 'c').'
-				WHERE cl.`id_lang` = '.(int)$this->context->language->id.'
-				'.$root.'
+				' . Shop::addSqlAssociation('category', 'c') . '
+				WHERE cl.`id_lang` = ' . (int) $this->context->language->id . '
+				' . $root . '
 				GROUP BY c.id_category
 				ORDER BY c.`id_category`, category_shop.`position`');
             }
@@ -740,30 +761,30 @@ class SeoExpert extends Module
         } else {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT SQL_BIG_RESULT c.`id_parent`, c.`id_cms_category` id_category , cl.`name`
-			FROM `'._DB_PREFIX_.'cms_category` c
-			LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category`)
-			WHERE cl.`id_lang` = '.(int)$this->context->language->id.'
+			FROM `' . _DB_PREFIX_ . 'cms_category` c
+			LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category`)
+			WHERE cl.`id_lang` = ' . (int) $this->context->language->id . '
 			GROUP BY c.id_cms_category
 			ORDER BY c.`id_cms_category`');
         }
     }
 
-
     /**
-    * Make tree with the categories
-    * @return array
-    */
+     * Make tree with the categories
+     *
+     * @return array
+     */
     public function getTree($type, $res_par, $ids, $max_depth, $id_cat = null, $cur_depth = 0)
     {
         if (is_null($id_cat)) {
             if ($type === 'cmscategory') {
-                $id_cat = (int)Configuration::get('PS_ROOT_CATEGORY');
+                $id_cat = (int) Configuration::get('PS_ROOT_CATEGORY');
             } else {
-                $id_cat = (int)$this->context->shop->getCategory();
+                $id_cat = (int) $this->context->shop->getCategory();
             }
         }
 
-        $children = array();
+        $children = [];
         if (isset($res_par[$id_cat]) && count($res_par[$id_cat]) && ($max_depth == 0 || $cur_depth < $max_depth)) {
             foreach ($res_par[$id_cat] as &$subcat) {
                 $children[] = $this->getTree($type, $res_par, $ids, $max_depth, $subcat['id_category'], $cur_depth + 1);
@@ -775,123 +796,132 @@ class SeoExpert extends Module
             return false;
         }
 
-        $return = array(
-            'id' => (int)$id_cat,
+        $return = [
+            'id' => (int) $id_cat,
             'name' => $ids[$id_cat]['name'],
-            'children' => $children
-        );
+            'children' => $children,
+        ];
+
         return $return;
     }
 
     /**
-    * Get all objects of a rule
-    *
-    * @param int $id_rule
-    * @return array
-    */
+     * Get all objects of a rule
+     *
+     * @param int $id_rule
+     *
+     * @return array
+     */
     public function getObjectsRule($id_rule)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT SQL_BIG_RESULT id_obj
-		FROM `'._DB_PREFIX_.bqSQL(self::$objects_table).'`
-		WHERE `id_rule` = '.(int)$id_rule);
+		FROM `' . _DB_PREFIX_ . bqSQL(self::$objects_table) . '`
+		WHERE `id_rule` = ' . (int) $id_rule);
     }
 
     /**
-    * Get all objects of a rule
-    *
-    * @param int $id_rule
-    * @return array
-    */
+     * Get all objects of a rule
+     *
+     * @param int $id_rule
+     *
+     * @return array
+     */
     public function getPatternsRule($id_rule)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT SQL_BIG_RESULT msr.id_rule, msr.id_lang, msr.id_shop, msr.active, msp.field, msp.pattern
-		FROM  `'._DB_PREFIX_.bqSQL(self::$rules_table).'` msr
-		LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$patterns_table).'` msp ON ( msr.id_rule = msp.id_rule )
-		WHERE msp.`id_rule` = '.(int)$id_rule.'
+		FROM  `' . _DB_PREFIX_ . bqSQL(self::$rules_table) . '` msr
+		LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$patterns_table) . '` msp ON ( msr.id_rule = msp.id_rule )
+		WHERE msp.`id_rule` = ' . (int) $id_rule . '
 		AND msp.field NOT LIKE "fb_%"
 		AND msp.field NOT LIKE "tw_%"
 		AND msr.active = 1');
     }
 
     /**
-    * Get all objects of a rule
-    *
-    * @param int $id_rule
-    * @return array
-    */
+     * Get all objects of a rule
+     *
+     * @param int $id_rule
+     *
+     * @return array
+     */
     public function getSocialPatternsRule($id_rule)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT SQL_BIG_RESULT msr.id_rule, msr.id_lang, msr.id_shop, msr.active, msp.field, msp.pattern
-		FROM  `'._DB_PREFIX_.bqSQL(self::$rules_table).'` msr
-		LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$patterns_table).'` msp ON ( msr.id_rule = msp.id_rule )
-		WHERE msp.`id_rule` = '.(int)$id_rule.'
+		FROM  `' . _DB_PREFIX_ . bqSQL(self::$rules_table) . '` msr
+		LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$patterns_table) . '` msp ON ( msr.id_rule = msp.id_rule )
+		WHERE msp.`id_rule` = ' . (int) $id_rule . '
 		AND (msp.field LIKE "fb_%" OR msp.field LIKE "tw_%")
 		AND msr.active = 1');
     }
 
     /**
-    * Get all social objects of a rule
-    *
-    * @param int $id_rule
-    * @return array
-    */
+     * Get all social objects of a rule
+     *
+     * @param int $id_rule
+     *
+     * @return array
+     */
     public function getSocialsRule($type, $default = false)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT SQL_BIG_RESULT msr.id_rule, msr.id_lang, msr.id_shop, msr.active, mso.id_obj, msp.field, msp.pattern
-		FROM `'._DB_PREFIX_.bqSQL(self::$rules_table).'` msr
-		LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$objects_table).'` mso ON (msr.id_rule = mso.id_rule)
-		LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$patterns_table).'` msp ON (msr.id_rule = msp.id_rule)
-		WHERE msr.type = "'.pSQL($type).'"
+		FROM `' . _DB_PREFIX_ . bqSQL(self::$rules_table) . '` msr
+		LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$objects_table) . '` mso ON (msr.id_rule = mso.id_rule)
+		LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$patterns_table) . '` msp ON (msr.id_rule = msp.id_rule)
+		WHERE msr.type = "' . pSQL($type) . '"
 		AND msr.active = 1
 		AND (msp.field like "fb_%" OR msp.field like "tw_%")
-		AND mso.id_obj  = '.(($default === false) ? '0' : (int)$default).'
-		AND msr.id_shop = '.(int)$this->context->shop->id.'
-		AND msr.id_lang = '.(int)$this->context->language->id);
+		AND mso.id_obj  = ' . (($default === false) ? '0' : (int) $default) . '
+		AND msr.id_shop = ' . (int) $this->context->shop->id . '
+		AND msr.id_lang = ' . (int) $this->context->language->id);
     }
 
     /**
-    * Get all objects of a rule
-    *
-    * @param int $id_rule
-    * @return array
-    */
+     * Get all objects of a rule
+     *
+     * @param int $id_rule
+     *
+     * @return array
+     */
     public function getLangRule($id_rule)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT SQL_SMALL_RESULT msr.id_lang
-		FROM `'._DB_PREFIX_.pSQL(self::$rules_table).'` msr
-		WHERE msr.id_rule = '.(int)$id_rule.'
-		AND msr.id_shop = '.(int)$this->context->shop->id);
+		FROM `' . _DB_PREFIX_ . pSQL(self::$rules_table) . '` msr
+		WHERE msr.id_rule = ' . (int) $id_rule . '
+		AND msr.id_shop = ' . (int) $this->context->shop->id);
     }
 
     /**
-    * Get all objects of a rule
-    *
-    * @param int $id_rule
-    * @return array
-    */
+     * Get all objects of a rule
+     *
+     * @param int $id_rule
+     *
+     * @return array
+     */
     public function getRules($type, $default = false)
     {
-        $def = (is_array($default) ? (int)$default['id_category_default'] : (int)$default);
+        $def = (is_array($default) ? (int) $default['id_category_default'] : (int) $default);
+
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
     		SELECT SQL_BIG_RESULT msr.id_rule, msr.id_lang, msr.id_shop, msr.active, mso.id_obj, msp.field, msp.pattern
-    		FROM `'._DB_PREFIX_.bqSQL(self::$rules_table).'` msr
-    		LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$objects_table).'` mso ON (msr.id_rule = mso.id_rule)
-    		LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$patterns_table).'` msp ON (msr.id_rule = msp.id_rule)
-    		WHERE msr.type = "'.pSQL($type).'"
+    		FROM `' . _DB_PREFIX_ . bqSQL(self::$rules_table) . '` msr
+    		LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$objects_table) . '` mso ON (msr.id_rule = mso.id_rule)
+    		LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$patterns_table) . '` msp ON (msr.id_rule = msp.id_rule)
+    		WHERE msr.type = "' . pSQL($type) . '"
     		AND msr.active = 1
     		AND (msp.field NOT LIKE "fb_%" AND msp.field NOT LIKE "tw_%")
-    		AND mso.id_obj  = '.(($default === false) ? '0' : $def).'
-    		AND msr.id_shop = '.(int)$this->context->shop->id);
+    		AND mso.id_obj  = ' . (($default === false) ? '0' : $def) . '
+    		AND msr.id_shop = ' . (int) $this->context->shop->id);
     }
 
     /**
-    * Get all rules already create
-    * @return array
-    */
+     * Get all rules already create
+     *
+     * @return array
+     */
     public function getHistory($type = 'product', $role = 'meta', $filter = '', $order = '', $limit = '')
     {
         $calc = '';
@@ -900,89 +930,94 @@ class SeoExpert extends Module
             $calc = 'SQL_BIG_RESULT SQL_CALC_FOUND_ROWS';
         }
 
-        $sql = 'SELECT '.$calc.' msr.id_rule, msr.name, msr.id_lang, l.name lang, s.name shop,
+        $sql = 'SELECT ' . $calc . ' msr.id_rule, msr.name, msr.id_lang, l.name lang, s.name shop,
 		IF (mso.id_obj>0,COUNT(id_obj),"All") nb_obj, msr.active, msr.date_upd
-		FROM `'._DB_PREFIX_.bqSQL(self::$rules_table).'` msr
-		LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$objects_table).'` mso ON (msr.id_rule = mso.id_rule)
-		LEFT JOIN '._DB_PREFIX_.'lang l ON (msr.id_lang = l.id_lang)
-		LEFT JOIN '._DB_PREFIX_.'shop s ON (msr.id_shop = s.id_shop)
-		WHERE msr.type = "'.pSQL($type).'"
-		AND msr.role = "'.pSQL($role).'"
-		AND msr.id_shop = "'.(int)$this->context->shop->id.'"
-		'.$filter.'
+		FROM `' . _DB_PREFIX_ . bqSQL(self::$rules_table) . '` msr
+		LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$objects_table) . '` mso ON (msr.id_rule = mso.id_rule)
+		LEFT JOIN ' . _DB_PREFIX_ . 'lang l ON (msr.id_lang = l.id_lang)
+		LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON (msr.id_shop = s.id_shop)
+		WHERE msr.type = "' . pSQL($type) . '"
+		AND msr.role = "' . pSQL($role) . '"
+		AND msr.id_shop = "' . (int) $this->context->shop->id . '"
+		' . $filter . '
 		GROUP BY msr.id_rule
-		'.(!empty($order)? pSQL($order) : 'ORDER BY msr.id_rule ASC').pSQL($limit);
+		' . (!empty($order) ? pSQL($order) : 'ORDER BY msr.id_rule ASC') . pSQL($limit);
 
         if (!empty($sql)) {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
         } else {
-            return (array());
+            return [];
         }
     }
 
     /**
-    * Get icon
-    * @return html
-    */
+     * Get icon
+     *
+     * @return html
+     */
     public function getIcon($type, $obj = null)
     {
         if ($type === 'flag') {
-            $this->context->smarty->assign(array(
+            $this->context->smarty->assign([
                 'obj' => $obj,
-                'lang_img' => _PS_IMG_.'/l/'.$obj.'.jpg',
-            ));
+                'lang_img' => _PS_IMG_ . '/l/' . $obj . '.jpg',
+            ]);
         }
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'type' => $type,
-        ));
+        ]);
+
         return $this->display(__FILE__, 'views/templates/admin/table/icons.tpl');
     }
 
     /**
-    * Get the name of the rule
-    *
-    * @param int $id_rule
-    * @return string
-    */
+     * Get the name of the rule
+     *
+     * @param int $id_rule
+     *
+     * @return string
+     */
     public function getRuleName($id_rule)
     {
-        return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT SQL_SMALL_RESULT name
-			       FROM `'._DB_PREFIX_.bqSQL(self::$rules_table).'`
-             WHERE id_rule = '.(int)$id_rule
-        ));
+			       FROM `' . _DB_PREFIX_ . bqSQL(self::$rules_table) . '`
+             WHERE id_rule = ' . (int) $id_rule
+        );
     }
 
     /**
-    * Check if the rule is the default rule
-    *
-    * @param int $id_lang
-    * @param int $id_rule
-    * @return bool
-    */
+     * Check if the rule is the default rule
+     *
+     * @param int $id_lang
+     * @param int $id_rule
+     *
+     * @return bool
+     */
     public function isDefaultRule($id_lang, $id_rule, $role, $type)
     {
-        return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SQL_SMALL_RESULT msr.id_rule
-		FROM  '._DB_PREFIX_.pSQL(self::$rules_table).' msr
-		LEFT JOIN '._DB_PREFIX_.pSQL(self::$objects_table).' mso ON (msr.id_rule = mso.id_rule)
-		WHERE msr.id_lang = '.(int)$id_lang.'
-		AND msr.type = "'.pSQL($type).'"
-		AND msr.role = "'.pSQL($role).'"
-		'.(!empty($id_rule) ? ' AND msr.id_rule = '.(int)$id_rule : '').'
-		AND id_obj = 0'));
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SQL_SMALL_RESULT msr.id_rule
+		FROM  ' . _DB_PREFIX_ . pSQL(self::$rules_table) . ' msr
+		LEFT JOIN ' . _DB_PREFIX_ . pSQL(self::$objects_table) . ' mso ON (msr.id_rule = mso.id_rule)
+		WHERE msr.id_lang = ' . (int) $id_lang . '
+		AND msr.type = "' . pSQL($type) . '"
+		AND msr.role = "' . pSQL($role) . '"
+		' . (!empty($id_rule) ? ' AND msr.id_rule = ' . (int) $id_rule : '') . '
+		AND id_obj = 0');
     }
 
     /**
-    * Load the form template file
-    * @return html
-    */
+     * Load the form template file
+     *
+     * @return html
+     */
     public function loadForm($id_object, $role, $type = 'product')
     {
         $img_type = '';
-        $id_object = (int)$id_object;
+        $id_object = (int) $id_object;
         if ($type == 'product' || $type == 'category') {
             if ($type == 'product') {
-                $img_type = $type.'s';
+                $img_type = $type . 's';
             } else {
                 $img_type = 'categories';
             }
@@ -996,14 +1031,14 @@ class SeoExpert extends Module
 
         $category_select = false;
         if ($cache_type !== false) {
-            $category_select = TinyCache::getCache($cache_type.'_'.(int)$this->context->shop->id);
+            $category_select = TinyCache::getCache($cache_type . '_' . (int) $this->context->shop->id);
             if (empty($category_select)) {
                 if (!$result = $this->getSimpleCategories($cache_type)) {
                     return;
                 }
 
-                $result_ids = array();
-                $result_parents = array();
+                $result_ids = [];
+                $result_parents = [];
                 foreach ($result as &$row) {
                     $result_parents[$row['id_parent']][] = &$row;
                     $result_ids[$row['id_category']] = &$row;
@@ -1011,7 +1046,7 @@ class SeoExpert extends Module
 
                 $category_select = $this->getTree($cache_type, $result_parents, $result_ids, 0);
                 unset($result, $row, $result_parents, $result_ids);
-                TinyCache::setCache($cache_type.'_'.(int)$this->context->shop->id, $category_select, 6);
+                TinyCache::setCache($cache_type . '_' . (int) $this->context->shop->id, $category_select, 6);
             }
         }
 
@@ -1020,9 +1055,9 @@ class SeoExpert extends Module
             $histories = $this->loadRuleDetails($id_object, $type, false);
             if (!empty($histories)) {
                 foreach ($histories as &$history) {
-                    $this->context->smarty->assign(array(
+                    $this->context->smarty->assign([
                         $history['field'] => $history['pattern'],
-                    ));
+                    ]);
                 }
                 unset($histories, $history);
             }
@@ -1031,7 +1066,7 @@ class SeoExpert extends Module
 
         $tw_img = '';
         if (!empty($img_type)) {
-            $tw_img = $this->getTwitterImage($type.'s');
+            $tw_img = $this->getTwitterImage($type . 's');
         }
 
         $iso_code = Context::getContext()->language->iso_code;
@@ -1040,84 +1075,90 @@ class SeoExpert extends Module
             $lang = 'FR';
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'tw_img' => $tw_img,
             'object' => $id_object,
             'lang_select' => self::$lang_cache,
             'blockCategTree' => $category_select,
             'default_category' => $default_category,
             'rule_name' => $this->getRuleName($id_object),
-            'guide_link' => 'docs/seo_pro_guide_'.$lang.'.pdf',
-            'rule_lang' => (int)$this->getLangRule($id_object),
-            'default_lang' => (int)$this->context->language->id,
-            'branche_tpl_path' => $this->admin_tpl_path.'tree/category-tree-branch.tpl',
+            'guide_link' => 'docs/seo_pro_guide_' . $lang . '.pdf',
+            'rule_lang' => (int) $this->getLangRule($id_object),
+            'default_lang' => (int) $this->context->language->id,
+            'branche_tpl_path' => $this->admin_tpl_path . 'tree/category-tree-branch.tpl',
             'shop_name' => sprintf($this->l('You are on the %s shop'), $this->context->shop->name),
-        ));
+        ]);
 
-        return $this->display(__FILE__, 'views/templates/admin/forms/forms_'.$role.'.tpl');
+        return $this->display(__FILE__, 'views/templates/admin/forms/forms_' . $role . '.tpl');
     }
 
     /**
-    * Load all objects of a rule in details
-    *
-    * @param int $id_obj
-    * @param string $type
-    * @param bool $smarty
-    * @return array|html
-    */
+     * Load all objects of a rule in details
+     *
+     * @param int $id_obj
+     * @param string $type
+     * @param bool $smarty
+     *
+     * @return array|html
+     */
     public function loadRuleDetails($id_obj, $type = 'product', $smarty = true)
     {
         $sql = 'SELECT SQL_BIG_RESULT msp.field, msp.pattern
-		FROM `'._DB_PREFIX_.bqSQL(self::$rules_table).'` msr
-		LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$patterns_table).'` msp ON (msr.id_rule = msp.id_rule)
-		WHERE msr.type = "'.pSQL($type).'"
-		AND msr.`id_rule` = '.(int)$id_obj;
+		FROM `' . _DB_PREFIX_ . bqSQL(self::$rules_table) . '` msr
+		LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$patterns_table) . '` msp ON (msr.id_rule = msp.id_rule)
+		WHERE msr.type = "' . pSQL($type) . '"
+		AND msr.`id_rule` = ' . (int) $id_obj;
         $history = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
         if (!empty($history)) {
             if ($smarty === false) {
                 return $history;
             } else {
-                $this->context->smarty->assign(array(
+                $this->context->smarty->assign([
                     'history' => $history,
-                ));
+                ]);
+
                 return $this->display(__FILE__, 'views/templates/admin/history/history.tpl');
             }
         }
     }
 
     /**
-    * Load the status of a rule with an icon
-    *
-    * @param int $status
-    * @return html
-    */
+     * Load the status of a rule with an icon
+     *
+     * @param int $status
+     *
+     * @return html
+     */
     public function loadStatus($status)
     {
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'status' => $status,
-        ));
+        ]);
+
         return $this->display(__FILE__, 'views/templates/admin/table/status.tpl');
     }
 
     /**
-    * Load action buttons that apply, modify or delete the rule
-    *
-    * @param array $actions
-    * @param string $type
-    * @param string $role
-    * @return html
-    */
+     * Load action buttons that apply, modify or delete the rule
+     *
+     * @param array $actions
+     * @param string $type
+     * @param string $role
+     *
+     * @return html
+     */
     public function loadActions($actions, $type, $role)
     {
         $type = array_keys($this->history);
-        $count_rule = (int)array_search($type, $this->history) + 1;
+        $count_rule = (int) array_search($type, $this->history) + 1;
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'role' => $role,
             'type' => $type,
             'prod' => $actions,
             'count_rule' => $count_rule,
-        ));
+        ]);
+
         return $this->display(__FILE__, 'views/templates/admin/table/actions.tpl');
     }
 
@@ -1126,24 +1167,25 @@ class SeoExpert extends Module
     /****************************/
 
     /**
-    * Save current object to database (add or update)
-    *
-    * @param string $table
-    * @param int $id_obj
-    * @param array $data
-    */
+     * Save current object to database (add or update)
+     *
+     * @param string $table
+     * @param int $id_obj
+     * @param array $data
+     */
     public function saveObj($table, $data)
     {
         $this->save($table, $data);
     }
 
     /**
-    * Save current object to database
-    *
-    * @param string $table
-    * @param array $data
-    * @return boolean Insertion result
-    */
+     * Save current object to database
+     *
+     * @param string $table
+     * @param array $data
+     *
+     * @return bool Insertion result
+     */
     public function save($table, $data)
     {
         $keys = array_keys($data);
@@ -1151,14 +1193,14 @@ class SeoExpert extends Module
         $vals = array_values($data);
         $vals = array_map('pSQL', $vals);
 
-        $sql = 'INSERT INTO `'._DB_PREFIX_.bqSQL($table).'`';
+        $sql = 'INSERT INTO `' . _DB_PREFIX_ . bqSQL($table) . '`';
         $counter_meta = 0;
         if ($counter_meta === 0) {
-            $sql .= ' (`'.implode('`, `', $keys).'`) VALUES';
+            $sql .= ' (`' . implode('`, `', $keys) . '`) VALUES';
         }
-        $sql .= " ('".implode("', '", array_values($vals))."'),";
-        $counter_meta++;
-        $sql = rtrim($sql, ',').';';
+        $sql .= " ('" . implode("', '", array_values($vals)) . "'),";
+        ++$counter_meta;
+        $sql = rtrim($sql, ',') . ';';
 
         unset($data, $keys, $vals);
         if (Db::getInstance()->execute($sql)) {
@@ -1167,49 +1209,52 @@ class SeoExpert extends Module
     }
 
     /**
-    * Update current object to database
-    *
-    * @param string $table
-    * @param array $data
-    * @return boolean Insertion result
-    */
+     * Update current object to database
+     *
+     * @param string $table
+     * @param array $data
+     *
+     * @return bool Insertion result
+     */
     public function update($table, $data)
     {
         $set = $where = '';
-        $sql = 'UPDATE `'._DB_PREFIX_.bqSQL($table).'` SET ';
+        $sql = 'UPDATE `' . _DB_PREFIX_ . bqSQL($table) . '` SET ';
         $counter_meta = 0;
 
         foreach ($data as $key => $value) {
             if ($key === 'pattern') {
-                $set = '`'.bqSQL($key).'` = "'.pSQL($value).'"';
+                $set = '`' . bqSQL($key) . '` = "' . pSQL($value) . '"';
             } elseif ($key === 'date_upd' || $key === 'name') {
                 $counter_meta = -1;
-                $set = '`'.bqSQL($key).'` = "'.pSQL($value).'"';
+                $set = '`' . bqSQL($key) . '` = "' . pSQL($value) . '"';
             } elseif ($key === 'active') {
                 $counter_meta = -1;
-                $set = '`'.bqSQL($key).'` = '.(int)$value;
+                $set = '`' . bqSQL($key) . '` = ' . (int) $value;
             } elseif ($key !== 'field') {
                 if ($counter_meta === 0) {
-                    $where .= ' WHERE `'.bqSQL($key).'` = '.(int)$value;
+                    $where .= ' WHERE `' . bqSQL($key) . '` = ' . (int) $value;
                 } else {
-                    $where .= ' AND `'.bqSQL($key).'` = '.(int)$value;
+                    $where .= ' AND `' . bqSQL($key) . '` = ' . (int) $value;
                 }
             } else {
-                $where .= ' AND `'.bqSQL($key).'` = "'.pSQL($value).'"';
+                $where .= ' AND `' . bqSQL($key) . '` = "' . pSQL($value) . '"';
             }
-            $counter_meta++;
+            ++$counter_meta;
         }
         unset($key, $value, $data);
-        return Db::getInstance()->execute($sql.$set.$where);
+
+        return Db::getInstance()->execute($sql . $set . $where);
     }
 
     /**
-    * Delete current object from database
-    *
-    * @param int $id_obj
-    * @param string $table
-    * @return boolean Insertion result
-    */
+     * Delete current object from database
+     *
+     * @param int $id_obj
+     * @param string $table
+     *
+     * @return bool Insertion result
+     */
     public function delete($id_object, $table = '')
     {
         $quick = '';
@@ -1219,32 +1264,32 @@ class SeoExpert extends Module
         }
 
         if (!empty($table)) {
-            $tables = array('`'._DB_PREFIX_.bqSQL($table).'`');
+            $tables = ['`' . _DB_PREFIX_ . bqSQL($table) . '`'];
         } else {
-            $tables = array(
-                '`'._DB_PREFIX_.bqSQL(self::$rules_table).'`',
-                '`'._DB_PREFIX_.bqSQL(self::$rules_table).'`',
-                '`'._DB_PREFIX_.bqSQL(self::$objects_table).'`'
-            );
+            $tables = [
+                '`' . _DB_PREFIX_ . bqSQL(self::$rules_table) . '`',
+                '`' . _DB_PREFIX_ . bqSQL(self::$rules_table) . '`',
+                '`' . _DB_PREFIX_ . bqSQL(self::$objects_table) . '`',
+            ];
         }
 
         foreach ($tables as &$table) {
-            $sql = 'DELETE '.$quick.' FROM '.$table.' WHERE id_rule = '.(int)$id_object;
+            $sql = 'DELETE ' . $quick . ' FROM ' . $table . ' WHERE id_rule = ' . (int) $id_object;
             $result += Db::getInstance()->execute($sql);
         }
         unset($tables, $table);
+
         return $result;
     }
 
-
     /**
-    * Delete current object from database
-    *
-    * @param int $id_product
-    * @param array $rules
-    * @param int $id_shop
-    * @param int $id_lang
-    */
+     * Delete current object from database
+     *
+     * @param int $id_product
+     * @param array $rules
+     * @param int $id_shop
+     * @param int $id_lang
+     */
     public function generate($id_product, $rules, $id_shop = false, $id_lang = false)
     {
         if (!empty($rules)) {
@@ -1254,7 +1299,7 @@ class SeoExpert extends Module
                 $product = $id_product;
             } else {
                 if ($id_shop !== false && Shop::isFeatureActive()) {
-                    Shop::setContext(Shop::CONTEXT_SHOP, (int)$id_shop);
+                    Shop::setContext(Shop::CONTEXT_SHOP, (int) $id_shop);
                 }
 
                 $product = new Product($id_product, false, null, $id_shop);
@@ -1262,28 +1307,28 @@ class SeoExpert extends Module
 
             if ($product instanceof Product) {
                 $field = '';
-                $iso_code =  Language::getIsoById($id_lang);
+                $iso_code = Language::getIsoById($id_lang);
                 foreach ($rules as $keys => &$value) {
                     foreach ($value as $pkey => &$pval) {
                         $pattern = trim(pSQL(Pattern::compilePattern($product, $pval, $id_lang)));
                         $pattern = str_replace("\'", "'", $pattern);
-                        $pattern = preg_replace("~\\\\+([\"\'\\x00\\\\])~", "$1", $pattern);
+                        $pattern = preg_replace("~\\\\+([\"\'\\x00\\\\])~", '$1', $pattern);
                         $pattern = html_entity_decode($pattern);
 
                         if ($pkey == 'link_rewrite') {
                             setlocale(LC_ALL, 'en_US.UTF8');
-                            $field .= '`'.bqSQL($pkey).'` = "'.strip_tags(SeoTools::toAscii($pattern, $iso_code)).'", ';
+                            $field .= '`' . bqSQL($pkey) . '` = "' . strip_tags(SeoTools::toAscii($pattern, $iso_code)) . '", ';
                         } elseif ($pkey == 'meta_title') {
                             $string = SeoTools::truncateString(strip_tags($pattern), 70);
-                            $field .= '`'.bqSQL($pkey).'` = "'.pSQL($string).'", ';
+                            $field .= '`' . bqSQL($pkey) . '` = "' . pSQL($string) . '", ';
                         } elseif ($pkey == 'meta_description') {
                             $string = SeoTools::truncateString(strip_tags($pattern), 160);
-                            $field .= '`'.bqSQL($pkey).'` = "'.pSQL($string).'", ';
+                            $field .= '`' . bqSQL($pkey) . '` = "' . pSQL($string) . '", ';
                         } elseif ($pkey == 'meta_keywords') {
                             $string = SeoTools::truncateString(strip_tags($pattern), 255);
-                            $field .= '`'.bqSQL($pkey).'` = "'.pSQL($string).'", ';
+                            $field .= '`' . bqSQL($pkey) . '` = "' . pSQL($string) . '", ';
                         } else {
-                            $field .= '`'.bqSQL($pkey).'` = "'.pSQL(strip_tags($pattern)).'", ';
+                            $field .= '`' . bqSQL($pkey) . '` = "' . pSQL(strip_tags($pattern)) . '", ';
                         }
                     }
                     unset($value, $pkey, $pval);
@@ -1291,13 +1336,13 @@ class SeoExpert extends Module
                 unset($rules, $keys, $value);
                 $field = Tools::substr($field, 0, -2);
 
-                $update = 'UPDATE '._DB_PREFIX_.'product_lang SET '.Tools::stripslashes($field).'
-                WHERE id_product = '.(int)$product->id.'
-                AND id_shop = '.(int)$id_shop.'
-                AND id_lang ='.(int)$id_lang;
+                $update = 'UPDATE ' . _DB_PREFIX_ . 'product_lang SET ' . Tools::stripslashes($field) . '
+                WHERE id_product = ' . (int) $product->id . '
+                AND id_shop = ' . (int) $id_shop . '
+                AND id_lang =' . (int) $id_lang;
 
                 if (!Db::getInstance()->execute($update)) {
-                    return $this->l('An error occurred while updating the product').' ID#'.(int)$product->id;
+                    return $this->l('An error occurred while updating the product') . ' ID#' . (int) $product->id;
                 }
                 unset($id_product, $product, $field, $update, $type, $rules);
             } else {
@@ -1317,18 +1362,18 @@ class SeoExpert extends Module
         }
 
         $rules = '';
-        $id_shop = (int)$this->context->shop->id;
-        $id_lang = (int)$this->context->language->id;
+        $id_shop = (int) $this->context->shop->id;
+        $id_lang = (int) $this->context->language->id;
         $controller = trim(pSQL(Tools::getValue('controller')));
 
         if ($controller === 'product') {
-            $id_obj = (int)trim(Tools::getValue('id_product'));
+            $id_obj = (int) trim(Tools::getValue('id_product'));
             $obj = new Product($id_obj, false, $id_lang);
             if ($obj instanceof Product) {
                 $default_cat = $obj->getDefaultCategory();
                 $rules = $this->getSocialsRule($controller);
                 $a = isset($default_cat['id_category_default']) ? $default_cat['id_category_default'] : $default_cat;
-                $social_rules = $this->getSocialsRule($controller, (int)$a);
+                $social_rules = $this->getSocialsRule($controller, (int) $a);
                 $rules = SeoTools::mergeRecursiveArray($rules, $social_rules);
             }
         }
@@ -1345,33 +1390,33 @@ class SeoExpert extends Module
                     $tw_card_type = trim($rule);
                     $field = trim($rule);
                 } elseif ($key == 'fb_image' || $key == 'tw_img_size') {
-                    if ((int)$rule === 1 || ($key == 'tw_img_size' && $tw_card_type !== 'gallery')) {
+                    if ((int) $rule === 1 || ($key == 'tw_img_size' && $tw_card_type !== 'gallery')) {
                         $cover = Product::getCover($id_obj);
                         if (!empty($cover)) {
-                            $id_cover = $id_obj.'-'.(int)$cover['id_image'];
+                            $id_cover = $id_obj . '-' . (int) $cover['id_image'];
                             $field = $link->getImageLink($obj->link_rewrite, $id_cover, trim($rule));
                             if ($key == 'tw_img_size') {
                                 $tw_image = ImageType::getByNameNType($rule);
-                                $this->context->smarty->assign(array(
-                                    'tw_img_width' => (int)$tw_image['width'],
-                                    'tw_img_height' => (int)$tw_image['height'],
-                                ));
+                                $this->context->smarty->assign([
+                                    'tw_img_width' => (int) $tw_image['width'],
+                                    'tw_img_height' => (int) $tw_image['height'],
+                                ]);
                                 unset($tw_image);
                             }
                             unset($cover);
                         }
                     } else {
-                        $fields = array();
+                        $fields = [];
                         $images = $obj->getImages($id_lang);
                         if (!empty($images)) {
                             $count = 1;
                             foreach ($images as $k => $image) {
-                                $id_cover = $id_obj.'-'.(int)$image['id_image'];
+                                $id_cover = $id_obj . '-' . (int) $image['id_image'];
                                 $fields[] = $link->getImageLink($obj->link_rewrite, $id_cover, trim($rule));
                                 if ($key == 'tw_img_size' && $count === 4) {
                                     break;
                                 }
-                                $count++;
+                                ++$count;
                             }
                             $field = $fields;
                             unset($images, $image, $fields, $k);
@@ -1423,20 +1468,21 @@ class SeoExpert extends Module
                             break;
                     }
 
-                    $field = array(
+                    $field = [
                         'label' => $label,
                         'value' => Tools::displayPrice($pattern, $this->context->currency, false),
-                    );
+                    ];
                 } else {
                     $field = $pattern;
                 }
 
-                $this->context->smarty->assign(array(
+                $this->context->smarty->assign([
                     $key => $field,
                     'domain' => Tools::getShopDomain(false),
-                ));
+                ]);
             }
             unset($rules, $rule, $obj, $pattern);
+
             return $this->display(__FILE__, 'views/templates/hook/displayHeader.tpl');
         }
     }
@@ -1450,28 +1496,20 @@ class SeoExpert extends Module
         $module = pSQL(trim(Tools::getValue('configure')));
         $controller_name = pSQL(trim(Tools::getValue('controller')));
 
-        if ($controller_name === 'AdminModules' && $module === $this->name) {
-            // $js = array($this->js_path.'google.js');
-            // $this->context->controller->addJs($js, 'all');
-
-            // $css = array($this->css_path.'google.css');
-            // $this->context->controller->addCSS($css, 'all');
-            $this->loadAsset();
-        }
-
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'domain' => Tools::getShopDomain(false),
-        ));
+        ]);
+
         return $this->display(__FILE__, 'views/templates/hook/displayBackOfficeHeader.tpl');
     }
 
-/*
-    public function hookdisplayAdminProductsExtra()
-    {
-        if (!$this->active)
-            return;
-    }
-*/
+    /*
+        public function hookdisplayAdminProductsExtra()
+        {
+            if (!$this->active)
+                return;
+        }
+    */
 
     /****************************/
     /*		 HOOK Action 		*/
@@ -1492,12 +1530,12 @@ class SeoExpert extends Module
             $rules = SeoTools::mergeRecursiveArray($rules, $get_rules);
             if (!empty($rules)) {
                 foreach ($rules as $idlang => $rule) {
-                    $id_lang = (int)$idlang;
+                    $id_lang = (int) $idlang;
                     foreach ($rule as $idshop => $patterns) {
-                        $myrule = array();
-                        $id_shop = (int)$idshop;
+                        $myrule = [];
+                        $id_shop = (int) $idshop;
                         foreach ($patterns as $field => $pattern) {
-                            $myrule[] = array($field => $pattern);
+                            $myrule[] = [$field => $pattern];
                         }
                         unset($field, $pattern);
                     }
@@ -1524,12 +1562,12 @@ class SeoExpert extends Module
             $rules = SeoTools::mergeRecursiveArray($rules, $get_rules);
             if (!empty($rules)) {
                 foreach ($rules as $idlang => $rule) {
-                    $id_lang = (int)$idlang;
+                    $id_lang = (int) $idlang;
                     foreach ($rule as $idshop => $patterns) {
-                        $myrule = array();
-                        $id_shop = (int)$idshop;
+                        $myrule = [];
+                        $id_shop = (int) $idshop;
                         foreach ($patterns as $field => $pattern) {
-                            $myrule[] = array($field => $pattern);
+                            $myrule[] = [$field => $pattern];
                         }
                         unset($field, $pattern);
                     }
@@ -1621,6 +1659,6 @@ class SeoExpert extends Module
 
     public function cleanerObj($obj)
     {
-        TinyCache::clearCache(Tools::strtolower(get_class($obj)).'_'.$this->context->shop->id);
+        TinyCache::clearCache(Tools::strtolower(get_class($obj)) . '_' . $this->context->shop->id);
     }
 }

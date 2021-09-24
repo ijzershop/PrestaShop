@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1f7441557b348dfa7bb0221084f52fe6
+class ComposerStaticInitcf0f35007141acd1ec4070120b10ecaa
 {
     public static $classMap = array (
         'AdminGanalyticsAjaxController' => __DIR__ . '/../..' . '/controllers/admin/AdminGanalyticsAjax.php',
@@ -17,6 +17,7 @@ class ComposerStaticInit1f7441557b348dfa7bb0221084f52fe6
         'PrestaShop\\Module\\Ps_Googleanalytics\\Handler\\ModuleHandler' => __DIR__ . '/../..' . '/classes/Handler/ModuleHandler.php',
         'PrestaShop\\Module\\Ps_Googleanalytics\\Hooks\\HookActionCarrierProcess' => __DIR__ . '/../..' . '/classes/Hook/HookActionCarrierProcess.php',
         'PrestaShop\\Module\\Ps_Googleanalytics\\Hooks\\HookActionCartSave' => __DIR__ . '/../..' . '/classes/Hook/HookActionCartSave.php',
+        'PrestaShop\\Module\\Ps_Googleanalytics\\Hooks\\HookActionOrderStatusPostUpdate' => __DIR__ . '/../..' . '/classes/Hook/HookActionOrderStatusPostUpdate.php',
         'PrestaShop\\Module\\Ps_Googleanalytics\\Hooks\\HookActionProductCancel' => __DIR__ . '/../..' . '/classes/Hook/HookActionProductCancel.php',
         'PrestaShop\\Module\\Ps_Googleanalytics\\Hooks\\HookDisplayBackOfficeHeader' => __DIR__ . '/../..' . '/classes/Hook/HookDisplayBackOfficeHeader.php',
         'PrestaShop\\Module\\Ps_Googleanalytics\\Hooks\\HookDisplayFooter' => __DIR__ . '/../..' . '/classes/Hook/HookDisplayFooter.php',
@@ -38,7 +39,7 @@ class ComposerStaticInit1f7441557b348dfa7bb0221084f52fe6
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit1f7441557b348dfa7bb0221084f52fe6::$classMap;
+            $loader->classMap = ComposerStaticInitcf0f35007141acd1ec4070120b10ecaa::$classMap;
 
         }, null, ClassLoader::class);
     }

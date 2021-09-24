@@ -39,15 +39,18 @@
 	<!-- Beautiful header -->
 	{include file="./header.tpl"}
 {/if}
+
 	<!-- Module content -->
 	<div id="modulecontent" class="clearfix">
 
-{if $module_enabled|intval == 0}<div class="alert alert-warning">
-			<h4>{l s='There is 1 warning' mod='seoexpert'}</h4>
-			<ul class="list-unstyled">
-				<li><a href="{$admin_seo|escape:'htmlall':'UTF-8'}">{l s='The module is not enabled, no rules will be applied' mod='seoexpert'}</a></li>
-			</ul>
-		</div>{/if}
+		{if $module_enabled|intval == 0}
+			<div class="alert alert-warning">
+				<h4>{l s='There is 1 warning' mod='seoexpert'}</h4>
+				<ul class="list-unstyled">
+					<li><a href="{$admin_seo|escape:'htmlall':'UTF-8'}">{l s='The module is not enabled, no rules will be applied' mod='seoexpert'}</a></li>
+				</ul>
+			</div>
+		{/if}
 
 		<!-- Nav tabs -->
 		<div class="col-lg-2">
@@ -91,7 +94,20 @@
 			{/if}
 			{include file="./tabs/contact.tpl"}
 		</div>
+
+		{if $showRateModule == true }
+			<div id="rateThisModule">
+				<p>
+					<img src="{$img_path}star_img.png" alt="Shining Star">
+					{l s='Enjoy this module ?' mod='seoexpert'}
+					<a target="_blank" href="https://addons.prestashop.com/{$currentLangIsoCode}/ratings.php">
+						{l s='Leave a review on Addons Marketplace' mod='seoexpert'}
+					</a>
+				</p>
+			</div>
+		{/if}
 	</div>
+
 {if $ps_version == 0}
 	<!-- Manage translations -->
 	{include file="./translations.tpl"}

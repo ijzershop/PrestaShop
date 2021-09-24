@@ -21,7 +21,7 @@ var Main = function () {
 	*/
 	var runEvent = function () {
 		$seo_link = $('#link-Seo');
-		$seo_link.live('click', function (e) {
+		$seo_link.on('click', function (e) {
 			e.preventDefault();
 			$seo = $('#product-seo');
 			$ggpreview = $('#ggpreview');
@@ -40,6 +40,6 @@ var Main = function () {
 }();
 
 // Load functions
-$(function() {
+$(window).on('load', function() {
 	Main.init();
 });

@@ -50,13 +50,11 @@ class HookDisplayOrderConfirmation implements HookInterface
      */
     public function run()
     {
-        $order = '';
-        if (true === $this->module->psVersionIs17 && isset($this->params['order'])) {
+        if (true === $this->module->psVersionIs17) {
             $order = $this->params['order'];
-        } elseif(isset($this->params['objOrder'])) {
+        } else {
             $order = $this->params['objOrder'];
         }
-
 
         if (Validate::isLoadedObject($order) && $order->getCurrentState() != (int) Configuration::get('PS_OS_ERROR')) {
             $ganalyticsRepository = new GanalyticsRepository();
@@ -68,7 +66,7 @@ class HookDisplayOrderConfirmation implements HookInterface
                         'id_order' => (int) $order->id,
                         'id_shop' => (int) $this->context->shop->id,
                         'sent' => 0,
-                        'date_add' => 'NOW()',
+                        'date_add' => ['value' => 'NOW()', 'type' => 'sql'],
                     ]
                 );
 

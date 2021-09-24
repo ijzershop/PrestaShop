@@ -17,33 +17,34 @@
 * Description :
 *   This is a PHP class for some shortcuts of SEO module.
 */
-
 class SeoTools
 {
     /**
-    * Properly clean URL's better than currently in PrestaShop
-    *
-    * @param string $datas
-    * @param array $replace
-    * @param string $delimiter
-    * @return string merge array
-    */
-    public static function toAscii($str, $iso_code, $replace = array(), $delimiter = '-')
+     * Properly clean URL's better than currently in PrestaShop
+     *
+     * @param string $datas
+     * @param array $replace
+     * @param string $delimiter
+     *
+     * @return string merge array
+     */
+    public static function toAscii($str, $iso_code, $replace = [], $delimiter = '-')
     {
-        $except = array('el', 'ja', 'ko', 'he', 'fa', 'ru', 'tr');
-        if (extension_loaded('iconv') && !in_array((string)$iso_code, $except)) {
+        $except = ['el', 'ja', 'ko', 'he', 'fa', 'ru', 'tr'];
+        if (extension_loaded('iconv') && !in_array((string) $iso_code, $except)) {
             if (!empty($replace)) {
-                $str = str_replace((array)$replace, ' ', $str);
+                $str = str_replace((array) $replace, ' ', $str);
             }
             $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
             $clean = preg_replace('/[^a-zA-Z0-9\/_|+ -]/', '', $clean);
             $clean = Tools::strtolower(trim($clean, '-'));
             $clean = preg_replace('/[\/_|+ -]+/', $delimiter, $clean);
             $clean = Tools::strtolower(trim($clean, '-'));
-            return ($clean);
+
+            return $clean;
         } else {
-            if (version_compare((float)_PS_VERSION_, '1.6', '>=')) {
-                return (Tools::link_rewrite($str));
+            if (version_compare((float) _PS_VERSION_, '1.6', '>=')) {
+                return Tools::link_rewrite($str);
             } else {
                 return SeoTools::str2url($str);
             }
@@ -52,7 +53,7 @@ class SeoTools
 
     public static function str2url($str)
     {
-        static $array_str = array();
+        static $array_str = [];
         static $allow_accented_chars = null;
         static $has_mb_strtolower = null;
 
@@ -93,7 +94,7 @@ class SeoTools
         }
 
         $return_str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $return_str);
-        $return_str = str_replace(array(' ', '/'), '-', $return_str);
+        $return_str = str_replace([' ', '/'], '-', $return_str);
 
         // If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
         // This way we lose fewer special chars.
@@ -102,66 +103,69 @@ class SeoTools
         }
 
         $array_str[$str] = $return_str;
+
         return $return_str;
     }
 
-
     /**
-    * Merge two or more arrays recursively
-    *
-    * @param array $datas
-    * @return array merge array
-    */
+     * Merge two or more arrays recursively
+     *
+     * @param array $datas
+     *
+     * @return array merge array
+     */
     public static function mergeRecursive($datas)
     {
-        $merge = array();
+        $merge = [];
         if (!empty($datas)) {
             foreach ($datas as &$data) {
                 $merge['id_rule'] = $data['id_rule'];
                 $merge['id_lang'] = $data['id_lang'];
                 $merge['id_shop'] = $data['id_shop'];
                 $merge['active'] = $data['active'];
-                $merge['pattern'][] = array($data['field'] => $data['pattern']);
+                $merge['pattern'][] = [$data['field'] => $data['pattern']];
             }
             unset($datas, $data);
         }
-        return ($merge);
+
+        return $merge;
     }
 
     /**
-    * Push data in SEO Rule
-    *
-    * @param array $rules
-    * @param array $rule
-    */
+     * Push data in SEO Rule
+     *
+     * @param array $rules
+     * @param array $rule
+     */
     public static function pushOnSeoArray(array &$rules, array $rule)
     {
         if (!is_array($rules)) {
-            $rules = array();
+            $rules = [];
         }
 
         if (!isset($rules[$rule['id_lang']]) || !is_array($rules[$rule['id_lang']])) {
-            $rules[$rule['id_lang']] = array();
+            $rules[$rule['id_lang']] = [];
         }
 
         if (!isset($rules[$rule['id_lang']][$rule['id_shop']])
         || !is_array($rules[$rule['id_lang']][$rule['id_shop']])) {
-            $rules[$rule['id_lang']][$rule['id_shop']] = array();
+            $rules[$rule['id_lang']][$rule['id_shop']] = [];
         }
 
         $rules[$rule['id_lang']][$rule['id_shop']][$rule['field']] = $rule['pattern'];
     }
 
     /**
-    * Merge two or more arrays recursively and distinctly
-    *
-    * @param array $array1
-    * @param array $array2
-    * @return array merge array
-    */
+     * Merge two or more arrays recursively and distinctly
+     *
+     * @param array $array1
+     * @param array $array2
+     *
+     * @return array merge array
+     */
     public static function mergeRecursiveArray(array &$array1, array &$array2)
     {
-        $rules = array();
+        $rules = [];
         foreach ($array1 as &$rule) {
             self::pushOnSeoArray($rules, $rule);
         }
@@ -172,35 +176,36 @@ class SeoTools
         }
         unset($rule, $array2);
 
-        return ($rules);
+        return $rules;
     }
 
     /**
-    * truncating the length of a string
-    *
-    * @param string $text
-    * @param int $length
-    * @return string truncate string
-    */
+     * truncating the length of a string
+     *
+     * @param string $text
+     * @param int $length
+     *
+     * @return string truncate string
+     */
     public static function truncateString($text, $length = 120)
     {
-        $options = array(
-            'ellipsis' => '...', 'exact' => true, 'html' => false
-        );
-        if (version_compare((float)_PS_VERSION_, '1.5.6.1', '>=')) {
-            return (Tools::truncateString($text, $length, $options));
+        $options = [
+            'ellipsis' => '...', 'exact' => true, 'html' => false,
+        ];
+        if (version_compare((float) _PS_VERSION_, '1.5.6.1', '>=')) {
+            return Tools::truncateString($text, $length, $options);
         } else {
-            return (SeoTools::truncateStrings($text, $length, $options));
+            return SeoTools::truncateStrings($text, $length, $options);
         }
     }
 
-    public static function truncateStrings($text, $length = 120, $options = array())
+    public static function truncateStrings($text, $length = 120, $options = [])
     {
         $html = $ellipsis = $exact = '';
 
-        $default = array(
-            'ellipsis' => '...', 'exact' => true, 'html' => true
-        );
+        $default = [
+            'ellipsis' => '...', 'exact' => true, 'html' => true,
+        ];
 
         $options = array_merge($default, $options);
         extract($options);
@@ -211,7 +216,7 @@ class SeoTools
             }
 
             $total_length = Tools::strlen(strip_tags($ellipsis));
-            $open_tags = array();
+            $open_tags = [];
             $truncate = '';
             preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
 
@@ -237,7 +242,7 @@ class SeoTools
                     if (preg_match_all($reg_pattern, $tag[3], $entities, PREG_OFFSET_CAPTURE)) {
                         foreach ($entities[0] as &$entity) {
                             if ($entity[1] + 1 - $entities_length <= $left) {
-                                $left--;
+                                --$left;
                                 $entities_length += Tools::strlen($entity[0]);
                             } else {
                                 break;
@@ -305,7 +310,7 @@ class SeoTools
 
         if ($html) {
             foreach ($open_tags as &$tag) {
-                $truncate .= '</'.$tag.'>';
+                $truncate .= '</' . $tag . '>';
             }
         }
 
@@ -317,15 +322,16 @@ class SeoTools
         if (function_exists('mb_strrpos')) {
             return mb_strrpos($str, $find, $offset, $encoding);
         }
+
         return strrpos($str, $find, $offset);
     }
 
     public static function displayDate($value, $id_lang)
     {
-        if (version_compare((float)_PS_VERSION_, (float)'1.5.5.0', '>=')) {
-            return (Tools::displayDate($value));
+        if (version_compare((float) _PS_VERSION_, (float) '1.5.5.0', '>=')) {
+            return Tools::displayDate($value);
         } else {
-            return (Tools::displayDate($value, $id_lang));
+            return Tools::displayDate($value, $id_lang);
         }
     }
 
@@ -347,17 +353,17 @@ class SeoTools
         }
 
         $sql = 'SELECT SQL_BIG_RESULT SQL_CALC_FOUND_ROWS p.id_product
-		FROM `'._DB_PREFIX_.'product` p
-		'.Shop::addSqlAssociation('product', 'p').'
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
-      p.`id_product` = pl.`id_product` '.Shop::addSqlRestrictionOnLang('pl').'
+		FROM `' . _DB_PREFIX_ . 'product` p
+		' . Shop::addSqlAssociation('product', 'p') . '
+		LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
+      p.`id_product` = pl.`id_product` ' . Shop::addSqlRestrictionOnLang('pl') . '
     )
-		WHERE pl.`id_lang` = '.(int)$id_lang.'
-		'.(((int)$id_category !== 0) ? 'AND product_shop.id_category_default IN ('.$id_category.')': '').'
-		ORDER BY '.(isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
-		LIMIT '.(($page > 1) ? (($page-1)*$nb_results_page).','.(int)$nb_results_page : '0,'.(int)$nb_results_page);
+		WHERE pl.`id_lang` = ' . (int) $id_lang . '
+		' . (((int) $id_category !== 0) ? 'AND product_shop.id_category_default IN (' . $id_category . ')' : '') . '
+		ORDER BY ' . (isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . '`' . pSQL($order_by) . '` ' . pSQL($order_way) . '
+		LIMIT ' . (($page > 1) ? (($page - 1) * $nb_results_page) . ',' . (int) $nb_results_page : '0,' . (int) $nb_results_page);
 
-        return (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql));
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
     /*
@@ -387,7 +393,8 @@ class SeoTools
             if (!$curl_err) {
                 $info = curl_getinfo($ch);
                 curl_close($ch);
-                return ((int)$info['http_code']);
+
+                return (int) $info['http_code'];
             }
         }
     }
@@ -396,6 +403,7 @@ class SeoTools
     {
         $ps_url = Tools::usingSecureMode() ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
         $ps_url .= __PS_BASE_URI__;
+
         return $ps_url;
     }
 
@@ -403,8 +411,8 @@ class SeoTools
     public static function getMaxPages($nb_results_page)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-            'SELECT CEILING(IF(FOUND_ROWS() / '.(int)$nb_results_page.' = 0, 1,
-             FOUND_ROWS() / '.(int)$nb_results_page.')) as count,
+            'SELECT CEILING(IF(FOUND_ROWS() / ' . (int) $nb_results_page . ' = 0, 1,
+             FOUND_ROWS() / ' . (int) $nb_results_page . ')) as count,
              FOUND_ROWS() as max_result'
         );
     }

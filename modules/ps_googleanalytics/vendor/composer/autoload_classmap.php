@@ -16,6 +16,7 @@ return array(
     'PrestaShop\\Module\\Ps_Googleanalytics\\Handler\\ModuleHandler' => $baseDir . '/classes/Handler/ModuleHandler.php',
     'PrestaShop\\Module\\Ps_Googleanalytics\\Hooks\\HookActionCarrierProcess' => $baseDir . '/classes/Hook/HookActionCarrierProcess.php',
     'PrestaShop\\Module\\Ps_Googleanalytics\\Hooks\\HookActionCartSave' => $baseDir . '/classes/Hook/HookActionCartSave.php',
+    'PrestaShop\\Module\\Ps_Googleanalytics\\Hooks\\HookActionOrderStatusPostUpdate' => $baseDir . '/classes/Hook/HookActionOrderStatusPostUpdate.php',
     'PrestaShop\\Module\\Ps_Googleanalytics\\Hooks\\HookActionProductCancel' => $baseDir . '/classes/Hook/HookActionProductCancel.php',
     'PrestaShop\\Module\\Ps_Googleanalytics\\Hooks\\HookDisplayBackOfficeHeader' => $baseDir . '/classes/Hook/HookDisplayBackOfficeHeader.php',
     'PrestaShop\\Module\\Ps_Googleanalytics\\Hooks\\HookDisplayFooter' => $baseDir . '/classes/Hook/HookDisplayFooter.php',

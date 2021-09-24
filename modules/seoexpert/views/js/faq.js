@@ -25,7 +25,7 @@
 * Don't forget to prefix your containers with your own identifier
 * to avoid any conflicts with others containers.
 */
-$(window).load(function() {
+$(window).on('load', function() {
     $('#faq .faq-h2').on('click', function() {
         $('#faq .faq-h2').removeClass('faq-open');
         if (!$(this).next().hasClass('hide')) {

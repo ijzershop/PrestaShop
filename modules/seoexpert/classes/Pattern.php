@@ -17,19 +17,19 @@
 * Description :
 *   This is a PHP class for replace SEO tags.
 */
-
 class Pattern
 {
     protected static $html;
     protected static $categories;
 
     /**
-    * Replace price Tags
-    *
-    * @param obj $obj
-    * @param string $pattern
-    * @return string
-    */
+     * Replace price Tags
+     *
+     * @param obj $obj
+     * @param string $pattern
+     *
+     * @return string
+     */
     public static function replacePrices(&$obj, $pat)
     {
         $context = Context::getContext();
@@ -37,9 +37,9 @@ class Pattern
             $context->employee = new Employee(1);
         }
 
-        $currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+        $currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
         if (isset($context->cookie->id_currency)) {
-            $currency = (int)$context->cookie->id_currency;
+            $currency = (int) $context->cookie->id_currency;
         }
 
         $format = 'number_format';
@@ -64,27 +64,30 @@ class Pattern
     }
 
     /**
-    * Replace reference Tags
-    *
-    * @param obj $obj
-    * @param string $pattern
-    * @return string
-    */
+     * Replace reference Tags
+     *
+     * @param obj $obj
+     * @param string $pattern
+     *
+     * @return string
+     */
     public static function replaceReference(&$obj, $pattern)
     {
         if (preg_match('{product_reference}', $pattern)) {
             $pattern = str_replace('{product_reference}', $obj->reference, $pattern);
         }
+
         return $pattern;
     }
 
     /**
-    * Replace discounts Tags
-    *
-    * @param obj $obj
-    * @param string $pattern
-    * @return string
-    */
+     * Replace discounts Tags
+     *
+     * @param obj $obj
+     * @param string $pattern
+     *
+     * @return string
+     */
     public static function replaceDiscounts(&$obj, $pattern)
     {
         if (preg_match('{product_reduction_percent}', $pattern)) {
@@ -92,7 +95,7 @@ class Pattern
             if ($discounts) {
                 foreach ($discounts as $reduction) {
                     if ($reduction['id_currency'] == 0 && $reduction['reduction_type'] == 'percentage') {
-                        $percent = '-'.($reduction['reduction'] * 100).'%';
+                        $percent = '-' . ($reduction['reduction'] * 100) . '%';
                         $pattern = str_replace('{product_reduction_percent}', $percent, $pattern);
                         break;
                     }
@@ -102,20 +105,22 @@ class Pattern
                 $pattern = str_replace('{product_reduction_percent}', '', $pattern);
             }
         }
+
         return $pattern;
     }
 
     /**
-    * Replace names Tags
-    *
-    * @param obj $obj
-    * @param string $pattern
-    * @param int $id_lang
-    * @return string
-    */
+     * Replace names Tags
+     *
+     * @param obj $obj
+     * @param string $pattern
+     * @param int $id_lang
+     *
+     * @return string
+     */
     public static function replaceName(&$obj, $pattern, $id_lang)
     {
-        $spattern = array('<br>', '<br />', '=','{', '}','<', '>', '^');
+        $spattern = ['<br>', '<br />', '=', '{', '}', '<', '>', '^'];
         if (preg_match('{product_name}', $pattern)) {
             $name = (is_array($obj->name)) ? $obj->name[$id_lang] : $obj->name;
             $name = str_replace($spattern, ' ', $name);
@@ -142,17 +147,19 @@ class Pattern
                 $pattern = str_replace('{suppliers_name}', '', $pattern);
             }
         }
-        return ($pattern);
+
+        return $pattern;
     }
 
     /**
-    * Replace features Tags
-    *
-    * @param obj $obj
-    * @param string $pattern
-    * @param int $id_lang
-    * @return string
-    */
+     * Replace features Tags
+     *
+     * @param obj $obj
+     * @param string $pattern
+     * @param int $id_lang
+     *
+     * @return string
+     */
     public static function replaceFeatures(&$obj, $pattern, $id_lang)
     {
         if (preg_match('{product_features}', $pattern)) {
@@ -160,11 +167,11 @@ class Pattern
             if ($features) {
                 self::$html = '';
                 foreach ($features as $feature) {
-                    $feat = new Feature((int)$feature['id_feature'], (int)$id_lang);
+                    $feat = new Feature((int) $feature['id_feature'], (int) $id_lang);
                     if ($feat instanceof Feature) {
-                        $feat_value = new FeatureValue((int)$feature['id_feature_value'], (int)$id_lang);
+                        $feat_value = new FeatureValue((int) $feature['id_feature_value'], (int) $id_lang);
                         if ($feat_value instanceof FeatureValue) {
-                            self::$html .= $feat->name.': '.$feat_value->value.' -';
+                            self::$html .= $feat->name . ': ' . $feat_value->value . ' -';
                         }
                     }
                 }
@@ -180,17 +187,18 @@ class Pattern
     }
 
     /**
-    * Replace categories Tags
-    *
-    * @param obj $obj
-    * @param string $pattern
-    * @param int $id_lang
-    * @return string
-    */
+     * Replace categories Tags
+     *
+     * @param obj $obj
+     * @param string $pattern
+     * @param int $id_lang
+     *
+     * @return string
+     */
     public static function replaceCategory(&$obj, $pattern, $id_lang)
     {
         if (preg_match('{default_cat_name}', $pattern) || preg_match('{parent_cat_name}', $pattern)) {
-            $cache_key = 'cat_cache_'.$obj->id_category_default.'_'.$id_lang;
+            $cache_key = 'cat_cache_' . $obj->id_category_default . '_' . $id_lang;
             self::$categories[$obj->id_category_default] = TinyCache::getCache($cache_key, 20, 'minutes');
             if (self::$categories[$obj->id_category_default] === null
                 || empty(self::$categories[$obj->id_category_default])) {
@@ -198,7 +206,7 @@ class Pattern
                 TinyCache::setCache($cache_key, self::$categories[$obj->id_category_default]);
             }
 
-            $spattern = array('<br>', '<br />', '=','{', '}','<', '>', '^');
+            $spattern = ['<br>', '<br />', '=', '{', '}', '<', '>', '^'];
 
             if (Validate::isLoadedObject(self::$categories[$obj->id_category_default])) {
                 $default_cat_name = str_replace($spattern, ' ', self::$categories[$obj->id_category_default]->name);
@@ -212,7 +220,7 @@ class Pattern
 
                 unset($parent, $parent_cat_name, $default_cat_name);
             } else {
-                $pattern = str_replace(array('{default_cat_name}', '{parent_cat_name}'), '', $pattern);
+                $pattern = str_replace(['{default_cat_name}', '{parent_cat_name}'], '', $pattern);
             }
         }
 
@@ -220,16 +228,17 @@ class Pattern
     }
 
     /**
-    * Replace descriptions Tags
-    *
-    * @param obj $obj
-    * @param string $pattern
-    * @param int $id_lang
-    * @return string
-    */
+     * Replace descriptions Tags
+     *
+     * @param obj $obj
+     * @param string $pattern
+     * @param int $id_lang
+     *
+     * @return string
+     */
     public static function replaceDescriptions(&$obj, $pattern, $id_lang)
     {
-        $spattern = array('<br>', '<br />', '=','{', '}','<', '>', '^');
+        $spattern = ['<br>', '<br />', '=', '{', '}', '<', '>', '^'];
         if (preg_match('{product_description}', $pattern)) {
             $description = (is_array($obj->description)) ? $obj->description[$id_lang] : $obj->description;
             $desc = strip_tags($description);
@@ -257,13 +266,14 @@ class Pattern
     }
 
     /**
-    * Replace all tags for Products
-    *
-    * @param obj $product
-    * @param int $id_lang
-    * @param string $pattern
-    * @return string
-    */
+     * Replace all tags for Products
+     *
+     * @param obj $product
+     * @param int $id_lang
+     * @param string $pattern
+     *
+     * @return string
+     */
     public static function productPattern(&$product, $id_lang, $pattern)
     {
         $pattern = self::replacePrices($product, $pattern);
@@ -276,23 +286,25 @@ class Pattern
         $pattern = self::replaceDescriptions($product, $pattern, $id_lang);
 
         unset($product);
-        return str_replace(array('{', '}'), '', $pattern);
+
+        return str_replace(['{', '}'], '', $pattern);
     }
 
     /**
-    * Compile the patterns according to the object
-    *
-    * @param obj $product
-    * @param int $id_lang
-    * @param string $pattern
-    * @return string
-    */
+     * Compile the patterns according to the object
+     *
+     * @param obj $product
+     * @param int $id_lang
+     * @param string $pattern
+     *
+     * @return string
+     */
     public static function compilePattern($obj, $pattern, $id_lang)
     {
         $type = Tools::strtolower(get_class($obj));
-        $func = $type.'Pattern';
+        $func = $type . 'Pattern';
         if (method_exists('Pattern', $func)) {
-            return (self::$func($obj, $id_lang, $pattern));
+            return self::$func($obj, $id_lang, $pattern);
         }
     }
 }

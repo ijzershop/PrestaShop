@@ -164,7 +164,7 @@ var Main = function () {
 
 			checkInputsExtra(body.find('#category_id'), btn);
 
-		}).live("ready.jstree", function (event, data) {
+		}).on("ready.jstree", function (event, data) {
 			tree.jstree("open_node", parent);
 		}).jstree({
 			"checkbox" : {
@@ -776,7 +776,8 @@ var Main = function () {
 	*/
 	var runEvent = function () {
 		// Click on Edit button
-		$('.edit').live('click', function (e) {
+		$(document).on('click','.edit', function (e) {
+			console.log('hello');
 			e.preventDefault();
 			var id = $(this).attr('role-id');
 			var role = $(this).attr('data-role');
@@ -786,7 +787,7 @@ var Main = function () {
 		});
 
 		// Click on Delete button
-		$('.delete').live('click', function (e) {
+		$(document).on('click','.delete', function (e) {
 			e.preventDefault();
 			var id = $(this).attr('role-id');
 			var table = $(this).closest("table").attr('id');
@@ -794,7 +795,7 @@ var Main = function () {
 		});
 
 		// Click on Generate button
-		$('.generate').live('click', function (e) {
+		$(document).on('click','.generate', function (e) {
 			e.preventDefault();
 			var id = $(this).attr('role-id');
 			var table_id = $(this).parents("table").attr('id');
@@ -802,7 +803,7 @@ var Main = function () {
 		});
 
 		// Click on State button
-		$('.action-enabled, .action-disabled').live('click', function (e) {
+		$(document).on('click','.action-enabled, .action-disabled', function (e) {
 			e.preventDefault();
 			var table_id = $(this).parents("table").attr('id');
 			var cat_id = $(this).parents("tr").attr('id');
@@ -825,7 +826,7 @@ var Main = function () {
 		});
 
 		// Click on ToolsBar button
-		$('.list-toolbar-btn').live('click', function (e) {
+		$(document).on('click','.list-toolbar-btn', function (e) {
 			e.preventDefault();
 			var table = '';
 			var role = $(this).attr('data-role');
@@ -854,7 +855,7 @@ var Main = function () {
 		});
 
 		// Click on Add or Apply button
-		$('.panel-footer a').live('click', function (e) {
+		$(document).on('click','.panel-footer a', function (e) {
 			e.preventDefault();
 			var role = $(this).attr('data-role');
 			var type = $(this).attr('data-type');
@@ -879,7 +880,7 @@ var Main = function () {
 		});
 
 		// Click on Panel
-		$('#modulecontent .tab-content h3 a').live('click', function (e) {
+		$(document).on('click','#modulecontent .tab-content h3 a', function (e) {
 			e.preventDefault();
 			var collapse = $(this).attr('data-toggle');
 			if (typeof(collapse) !== "undefined" && collapse === 'collapse') {
@@ -908,7 +909,7 @@ var Main = function () {
 		});
 
 
-		$(".contactus").on('click', function() {
+		$(document).on('click',".contactus", function() {
 			$href = $.trim($(this).attr('href'));
 			$(".list-group a.active").each(function() {
 				$(this).removeClass("active");
@@ -918,7 +919,7 @@ var Main = function () {
 		});
 
 		// Tab panel active
-		$(".list-group-item").on('click', function() {
+		$(document).on('click',".list-group-item", function() {
 			var $el = $(this).parent().closest(".list-group").children(".active");
 			var tab_id = $(this).attr('id');
 			if (tab_id === 'drop') {
@@ -993,7 +994,7 @@ var Main = function () {
 }();
 
 // Load functions
-$(window).load(function() {
+$(window).on('load', function() {
 	Main.init();
 });
 

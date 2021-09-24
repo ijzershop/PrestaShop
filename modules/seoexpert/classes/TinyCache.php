@@ -17,7 +17,6 @@
 * Description :
 *   This is a PHP class for generating cache file.
 */
-
 class TinyCache
 {
     protected static $path;
@@ -26,100 +25,108 @@ class TinyCache
     const TIMEEXPIRE_LANG = 24;
 
     /**
-    * Set cache path
-    *
-    * @param string $path
-    * @return void
-    */
+     * Set cache path
+     *
+     * @param string $path
+     *
+     * @return void
+     */
     public static function setPath($path)
     {
         self::$path = $path;
     }
 
     /**
-    * Get cache path
-    *
-    * @return sting
-    */
+     * Get cache path
+     *
+     * @return sting
+     */
     public static function getPath()
     {
         return self::$path;
     }
 
     /**
-    * Get TTL
-    *
-    * @param string $name
-    * @param int $ttl
-    * @param string $type
-    * @return sting
-    */
+     * Get TTL
+     *
+     * @param string $name
+     * @param int $ttl
+     * @param string $type
+     *
+     * @return sting
+     */
     public static function getTTL($name, $ttl = 0, $type = '')
     {
         if ($ttl == 0) {
             $ttl = self::TIMEEXPIRE_LANG;
         }
-        if (empty($type) || in_array($type, array('h', 'hour', 'hours'))) {
+        if (empty($type) || in_array($type, ['h', 'hour', 'hours'])) {
             $type = 'hours';
         } else {
             $type = 'minutes';
         }
 
-        $d = strtotime('+ '.(int)$ttl.' '.$type, @filemtime(self::$path.$name));
-        return ($name.' '.date('j/m/Y H:m:s', $d));
+        $d = strtotime('+ ' . (int) $ttl . ' ' . $type, @filemtime(self::$path . $name));
+
+        return $name . ' ' . date('j/m/Y H:m:s', $d);
     }
 
     /**
-    * Retrieve a data from cache
-    *
-    * @param string $name
-    * @param int $ttl
-    * @param string $type
-    * @return array
-    */
+     * Retrieve a data from cache
+     *
+     * @param string $name
+     * @param int $ttl
+     * @param string $type
+     *
+     * @return array
+     */
     public static function getCache($name, $ttl = 0, $type = '')
     {
         if ($ttl == 0) {
             $ttl = self::TIMEEXPIRE_LANG;
         }
-        if (empty($type) || in_array($type, array('h', 'hour', 'hours'))) {
+        if (empty($type) || in_array($type, ['h', 'hour', 'hours'])) {
             $type = 'hours';
         } else {
             $type = 'minutes';
         }
 
-        if (Tools::file_exists_cache(self::$path.$name)) {
+        if (Tools::file_exists_cache(self::$path . $name)) {
             @clearstatcache();
-            $d = strtotime('+ '.(int)$ttl.' '.$type, @filemtime(self::$path.$name));
+            $d = strtotime('+ ' . (int) $ttl . ' ' . $type, @filemtime(self::$path . $name));
             if (time() > $d) {
                 self::clearCache($name);
+
                 return false;
             }
-            return (self::uncompressObject(Tools::file_get_contents(self::$path.$name)));
+
+            return self::uncompressObject(Tools::file_get_contents(self::$path . $name));
         }
+
         return false;
     }
 
     /**
-    * Store a data in cache
-    *
-    * @param string $name
-    * @param mixed $data
-    * @return bool
-    */
+     * Store a data in cache
+     *
+     * @param string $name
+     * @param mixed $data
+     *
+     * @return bool
+     */
     public static function setCache($name, $data)
     {
-        return @file_put_contents(self::$path.$name, self::compressObject($data));
+        return @file_put_contents(self::$path . $name, self::compressObject($data));
     }
 
     /**
-    * Delete all cache
-    */
+     * Delete all cache
+     */
     public static function clearAllCache()
     {
-        $is_dot = array('.', '..');
+        $is_dot = ['.', '..'];
         if (is_dir(self::$path)) {
-            if (version_compare((float)phpversion(), '5.3', '<')) {
+            if (version_compare((float) phpversion(), '5.3', '<')) {
                 $iterator = new RecursiveIteratorIterator(
                     new RecursiveDirectoryIterator(self::$path),
                     RecursiveIteratorIterator::SELF_FIRST
@@ -132,11 +139,11 @@ class TinyCache
             }
 
             foreach ($iterator as $file) {
-                if (version_compare((float)phpversion(), '5.2.17', '<=')) {
+                if (version_compare((float) phpversion(), '5.2.17', '<=')) {
                     if (in_array($file->getBasename(), $is_dot)) {
                         continue;
                     }
-                } elseif (version_compare((float)phpversion(), '5.3', '<')) {
+                } elseif (version_compare((float) phpversion(), '5.3', '<')) {
                     if ($file->isDot()) {
                         continue;
                     }
@@ -150,40 +157,45 @@ class TinyCache
     }
 
     /**
-    * Delete a data in cache
-    *
-    * @param string $name
-    * @return bool
-    */
+     * Delete a data in cache
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
     public static function clearCache($name)
     {
-        if (Tools::file_exists_cache(self::$path.$name)) {
-            return @unlink(self::$path.$name);
+        if (Tools::file_exists_cache(self::$path . $name)) {
+            return @unlink(self::$path . $name);
         }
     }
 
     /**
-    * Compress a data in cache
-    *
-    * @param mixed $string_array
-    * @return mixed
-    */
+     * Compress a data in cache
+     *
+     * @param mixed $string_array
+     *
+     * @return mixed
+     */
     public static function compressObject($string_array)
     {
         $base_encode = 'base64_encode';
-        return (strtr($base_encode(addslashes(gzcompress(serialize($string_array), 9))), '+/=', '-_,'));
+
+        return strtr($base_encode(addslashes(gzcompress(serialize($string_array), 9))), '+/=', '-_,');
     }
 
     /**
-    * Uncompress a data in cache
-    *
-    * @param mixed $string_array
-    * @return mixed
-    */
+     * Uncompress a data in cache
+     *
+     * @param mixed $string_array
+     *
+     * @return mixed
+     */
     public static function uncompressObject($string_array)
     {
         $base_decode = 'base64_decode';
         $strip_slashes = 'stripslashes';
-        return (unserialize(@gzuncompress($strip_slashes($base_decode(strtr($string_array, '-_,', '+/='))))));
+
+        return unserialize(@gzuncompress($strip_slashes($base_decode(strtr($string_array, '-_,', '+/=')))));
     }
 }

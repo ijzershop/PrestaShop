@@ -13,14 +13,13 @@
 * @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
 * International Registered Trademark & Property of PrestaShop SA
 */
-
 function classLoader($class_name)
 {
-    $phpEx = '.'.Tools::substr(strrchr(__FILE__, '.'), 1);
+    $phpEx = '.' . Tools::substr(strrchr(__FILE__, '.'), 1);
     $class_name = trim(ucwords($class_name));
 
-    if (Tools::file_exists_cache(dirname(__FILE__).'/classes/'.$class_name.$phpEx)) {
-        include_once(dirname(__FILE__).'/classes/'.$class_name.$phpEx);
+    if (Tools::file_exists_cache(dirname(__FILE__) . '/classes/' . $class_name . $phpEx)) {
+        include_once dirname(__FILE__) . '/classes/' . $class_name . $phpEx;
     }
 }
 

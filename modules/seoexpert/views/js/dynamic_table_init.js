@@ -264,7 +264,7 @@ function overrideIcon(id) {
 	});
 }
 
-$(window).load(function() {
+$(window).on('load', function() {
 
 	overrideColumn();
 

@@ -635,6 +635,7 @@ class Cart extends CartCore
         $auto_add_cart_rule = true,
         $skipAvailabilityCheckOutOfStock = false
     ) {
+
         $ssa = Module::getInstanceByName('singlestockattributespoco');
         if (!$ssa || !$ssa->active || !$ssa->useSSA($id_product)) {
             return parent::updateQty($quantity, $id_product, $id_product_attribute, $id_customization, $operator, $id_address_delivery, $shop, $auto_add_cart_rule, $skipAvailabilityCheckOutOfStock);
@@ -697,6 +698,7 @@ class Cart extends CartCore
             'shop' => $shop,
             'auto_add_cart_rule' => $auto_add_cart_rule,
         );
+
 
         /* @deprecated deprecated since 1.6.1.1 */
         // Hook::exec('actionBeforeCartUpdateQty', $data);
@@ -811,6 +813,8 @@ class Cart extends CartCore
                 }
             }
         }
+
+
 
         // refresh cache of self::_products
         $this->_products = $this->getProducts(true);

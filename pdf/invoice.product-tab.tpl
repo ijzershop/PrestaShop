@@ -153,10 +153,10 @@
 		{if $smarty.foreach.cart_rules_loop.first}
 		<tr class="discount">
 			<th class="header" colspan="5">
-				{l s='Coupon' d='Shop.Pdf' pdf='true'}
+				{l s='Korting' d='Shop.Pdf' pdf='true'}
 			</th>
       <th>
-        Korting bedrag
+        Totaal
       </th>
 		</tr>
 		{/if}

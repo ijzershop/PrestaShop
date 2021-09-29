@@ -1,7 +1,7 @@
-<br>
+
 <ul class="list-unstyled">
     <li>
-        <h2>{l s='Invoice Address' mod='supercheckout'}</h2></li>
+        <h2>{l s='Invoice Address' mod='supercheckout'}<span class="section-title-number"></span></h2></li>
 </ul>
 
 {assign var='existing_address' value=[]}

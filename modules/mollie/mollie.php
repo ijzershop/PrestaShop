@@ -47,7 +47,7 @@ class Mollie extends PaymentModule
     {
         $this->name = 'mollie';
         $this->tab = 'payments_gateways';
-        $this->version = '4.4.0';
+        $this->version = '4.4.1';
         $this->author = 'Mollie B.V.';
         $this->need_instance = 1;
         $this->bootstrap = true;
@@ -62,8 +62,8 @@ class Mollie extends PaymentModule
             return;
         }
 
-        $this->loadEnv();
         $this->compile();
+        $this->loadEnv();
         $this->setApiKey();
 
         new \Mollie\Handler\ErrorHandler\ErrorHandler($this);
@@ -1053,6 +1053,9 @@ class Mollie extends PaymentModule
 
         $apiKey = Configuration::get($apiKeyConfig, null, null, $shopId);
 
+        if (!$apiKey) {
+            return;
+        }
         try {
             $this->api = $apiKeyService->setApiKey($apiKey, $this->version);
         } catch (\Mollie\Api\Exceptions\IncompatiblePlatform $e) {

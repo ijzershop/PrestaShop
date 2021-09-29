@@ -265,7 +265,7 @@
           <div style="margin-bottom: 1%;" id="cart_discount_{$voucher.id_cart_rule}"
                class="cart_discount text-right p-1"
                style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
-            <div style="float:left;line-height: 14px;margin-right:5px;"
+            <div style="float:left;line-height: 20px;margin-right:5px;"
                  title="{l s='Korting toevoegen' mod='supercheckout'}" class="removeProduct"><i
                       class="fas fa-trash"></i></div>
             <span style="float:left;color:#4862A3;font-size:14px;">Kortingscode: {$voucher.name}</span><a href="javascript:void(0)"

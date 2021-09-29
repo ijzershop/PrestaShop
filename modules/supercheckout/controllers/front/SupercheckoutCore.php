@@ -631,10 +631,10 @@ class SupercheckoutCore extends ModuleFrontController
 //        }
         $order = new FreeOrder();
         $order->free_order_class = true;
-        $free_order_error = 'Free order';
+        $free_order_error = 'Geen online betaling';
         $order->validateOrder(
             $this->context->cart->id,
-            Configuration::get('PS_OS_PAYMENT'),
+            (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_ORDERSTATE_FREE_ORDER', null, null, null, 33),
             0,
             $free_order_error,
             null,

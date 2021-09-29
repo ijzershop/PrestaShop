@@ -719,8 +719,6 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
           }
           // is een belgisch adres
         } else if (e.valid != false && e.address.length > 1) {
-
-          console.log(['multiple', e.address]);
           isValidForConfirm = false;
           let htmlList = '<ul>';
           for (let i = 0; i < e.address.length; i++) {
@@ -731,7 +729,6 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
           // is een belgisch adres
         } else {
 
-          console.log(['Failed', e.address[0]]);
           if (e.msg == 'Fetching address failed') {
             $('[name="' + type + '[address1]"]').val('').addClass('warning-form').removeClass('was-validated is-valid');
             isValidForConfirm = false;
@@ -1798,6 +1795,7 @@ function updateCarrierOnDeliveryChange() {
       $('#section-title-number-last').text('5');
       disEnConfirmButton(true);
     }
+    checkFormatAddressApiCheckout();
     $('#order_number_validate').hide();
     $('#desired_reference').val('');
     $('#added_to_order').val('');

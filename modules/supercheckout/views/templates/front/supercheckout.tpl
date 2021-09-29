@@ -4,114 +4,121 @@
         {l s='SuperCheckout' mod='supercheckout'}
     {/capture}
     {if !isset($empty)}
+      <script>
+        var postcodeApiUrl= "{url entity='module' name='modernesmidthemeconfigurator' controller='ajax'}";
+        var check_dni_valid = "{$check_dni_valid|escape:'javascript':'UTF-8'}"; {*Feature:Spain DNI Check (Jan 2020)*}
+        {if $ps_checkout_enabled}
+        var paypalOrderId = "{$paypalOrderId|escape:'javascript':'UTF-8'}";
+        var validateOrderLinkByCard = "{$validateOrderLinkByCard|escape:'javascript':'UTF-8'}";
+        var validateOrderLinkByPaypal = "{$validateOrderLinkByPaypal|escape:'javascript':'UTF-8'}";
+        {/if}
+        {if (isset($mobileLoginActive) && ($mobileLoginActive eq 1))}
+        var kbmobile_front_url = '{$kbmobile_front_url nofilter}';{*escape not required as contains url*}
+        var login_by_mobile = "{$mobile_login_setting['login_by_mobile']}";
+        var login_by_otp = "{$mobile_login_setting['login_by_otp']}";
+        var kb_input_error_msg = "{l s='Kindly input valid values in all required fields' mod='supercheckout'}";
+        {/if}
+        var cartRefreshURL = '{$cartRefreshURL}';
+        var supercheckoutLayout = {$settings['layout']|intval};
+        var hideShippingMethod = {$settings['hide_ship_pay']};
+        var supercheckout_image_path = "{$module_image_path nofilter}"; {*escape not required as contains url*}
+        var empty_cart_warning = "{l s='Your cart is empty' mod='supercheckout'}";
+        var google_auto_fill_warning = "{l s='There is some issue with Google Auto Address feature. Please contact support.' mod='supercheckout'}";
+        var notification_title = "{l s='Notification' mod='supercheckout'}";
+        var warning = "{$warning}";
+        var product_remove_success = "{$product_remove_success}";
+        var product_qty_update_success = "{$product_qty_update_success}";
+        var freeShippingTranslation = "{l s='Free Shipping' mod='supercheckout'}";
+        var display_general_error_msg = "{l s='Please provide required information.' mod='supercheckout'}";
+        var noShippingRequired = "{l s='No Delivery Method Required' mod='supercheckout'}";
+        var ShippingRequired = "{l s='Delivery Method Required' mod='supercheckout'}";
+        var paymentRequired = "{l s='Payment Method Required' mod='supercheckout'}";
+        var updateSameQty = "{l s='No change found in quantity' mod='supercheckout'}";
+        var scInvalidQty = "{l s='Invalid Quantity' mod='supercheckout'}";
+        var scOtherError = "{l s='Technical Error Occured. Please contact to support.' mod='supercheckout'}";
+        var commentInvalid = "{l s='Message is in invalid format' mod='supercheckout'}";
+        var tosRequire = "{l s='Please acccept our terms & conditions before confirming your order' mod='supercheckout'}";
+        var requestToLogin = "{l s='Please login first' mod='supercheckout'}";
+        var ajaxRequestFailedMsg = "{l s='TECHNICAL ERROR- Request Failed' mod='supercheckout'}";
+        var validationfailedMsg = "{l s='Please provide required Information' mod='supercheckout'}";
+        var totalVoucherText = "{l s='Total Vouchers' mod='supercheckout'}";
+        var tax_incl_text = "{l s='(Tax incl.)' mod='supercheckout'}";
+        var tax_excl_text = "{l s='(Tax excl.)' mod='supercheckout'}";
+        var update_text = "{l s='Update' mod='supercheckout'}";
+        var kb_input_error_msg = "{l s='Kindly input valid values in all required fields' mod='supercheckout'}";
+        var idAddress_delivery = {$id_address_delivery|intval};
+        var scp_use_taxes = 1;
+        var nanvalidqty = "{l s='Please enter a valid quanity.' mod='supercheckout'}";
 
-        <script>
-            var postcodeApiUrl= "{url entity='module' name='modernesmidthemeconfigurator' controller='ajax'}";
-            var check_dni_valid = "{$check_dni_valid|escape:'javascript':'UTF-8'}"; {*Feature:Spain DNI Check (Jan 2020)*}
-            {if $ps_checkout_enabled}
-            var paypalOrderId = "{$paypalOrderId|escape:'javascript':'UTF-8'}";
-            var validateOrderLinkByCard = "{$validateOrderLinkByCard|escape:'javascript':'UTF-8'}";
-            var validateOrderLinkByPaypal = "{$validateOrderLinkByPaypal|escape:'javascript':'UTF-8'}";
-            {/if}
-            {if (isset($mobileLoginActive) && ($mobileLoginActive eq 1))}
-            var kbmobile_front_url = '{$kbmobile_front_url nofilter}';{*escape not required as contains url*}
-            var login_by_mobile = "{$mobile_login_setting['login_by_mobile']}";
-            var login_by_otp = "{$mobile_login_setting['login_by_otp']}";
-            var kb_input_error_msg = "{l s='Kindly input valid values in all required fields' mod='supercheckout'}";
-            {/if}
-            var cartRefreshURL = '{$cartRefreshURL}';
-            var supercheckoutLayout = {$settings['layout']|intval};
-            var hideShippingMethod = {$settings['hide_ship_pay']};
-            var supercheckout_image_path = "{$module_image_path nofilter}"; {*escape not required as contains url*}
-            var empty_cart_warning = "{l s='Your cart is empty' mod='supercheckout'}";
-            var google_auto_fill_warning = "{l s='There is some issue with Google Auto Address feature. Please contact support.' mod='supercheckout'}";
-            var notification_title = "{l s='Notification' mod='supercheckout'}";
-            var warning = "{$warning}";
-            var product_remove_success = "{$product_remove_success}";
-            var product_qty_update_success = "{$product_qty_update_success}";
-            var freeShippingTranslation = "{l s='Free Shipping' mod='supercheckout'}";
-            var display_general_error_msg = "{l s='Please provide required information.' mod='supercheckout'}";
-            var noShippingRequired = "{l s='No Delivery Method Required' mod='supercheckout'}";
-            var ShippingRequired = "{l s='Delivery Method Required' mod='supercheckout'}";
-            var paymentRequired = "{l s='Payment Method Required' mod='supercheckout'}";
-            var updateSameQty = "{l s='No change found in quantity' mod='supercheckout'}";
-            var scInvalidQty = "{l s='Invalid Quantity' mod='supercheckout'}";
-            var scOtherError = "{l s='Technical Error Occured. Please contact to support.' mod='supercheckout'}";
-            var commentInvalid = "{l s='Message is in invalid format' mod='supercheckout'}";
-            var tosRequire = "{l s='Please acccept our terms & conditions before confirming your order' mod='supercheckout'}";
-            var requestToLogin = "{l s='Please login first' mod='supercheckout'}";
-            var ajaxRequestFailedMsg = "{l s='TECHNICAL ERROR- Request Failed' mod='supercheckout'}";
-            var validationfailedMsg = "{l s='Please provide required Information' mod='supercheckout'}";
-            var totalVoucherText = "{l s='Total Vouchers' mod='supercheckout'}";
-            var tax_incl_text = "{l s='(Tax incl.)' mod='supercheckout'}";
-            var tax_excl_text = "{l s='(Tax excl.)' mod='supercheckout'}";
-            var update_text = "{l s='Update' mod='supercheckout'}";
-            var kb_input_error_msg = "{l s='Kindly input valid values in all required fields' mod='supercheckout'}";
-            var idAddress_delivery = {$id_address_delivery|intval};
-            var scp_use_taxes = 1;
-            var nanvalidqty = "{l s='Please enter a valid quanity.' mod='supercheckout'}";
+        var scp_guest_tracking_url = "{$link->getPageLink("guest-tracking", true)|addslashes nofilter}{*escape not required as contains url*}";
+        var scp_history_url = "{$link->getPageLink("history", true)|addslashes nofilter}{*escape not required as contains url*}";
+        var payment_content_id = 'center_column';
+        var scp_required_tos = {$settings['confirm']['term_condition'][$user_type]['require']|intval};
+        var show_delivery_add_for_virtualcart = false;
+        {if $show_delivery_add_for_virtualcart eq true}
+        show_delivery_add_for_virtualcart = true;
+        {/if}
+        var is_virtual_cart = false;
+        {if $is_virtual_cart eq true}
+        is_virtual_cart = true;
+        {/if}
+        var cart_update_url = "{$link->getPageLink('cart')|escape:'quotes'}"; {*escape not required as contains html*}
+        var enable_save_address_front = "{$settings['enable_save_address']}";
+        var orderOpcUrl = "{$link->getPageLink("order-opc", true)|escape:'quotes'}";{*escape not required as contains html*}
+        var button_background = "{$settings['customizer']['button_color']}";
+        var required_error = "{l s='Required Field' mod='supercheckout'}";
+        var invalid_email = "{l s='Email is invalid' mod='supercheckout'}";
+        var pwd_error = "{l s='(Five characters minimum)' mod='supercheckout'}";
+        var invalid_city = "{l s='Special Characters !<>;?=+@#°{}_$% are not allowed' mod='supercheckout'}";
+        var invalid_address = "{l s='Special Characters !<>?=+@{}_$% are not allowed' mod='supercheckout'}";
+        var invalid_title = "{l s='Special Characters <>={} are not allowed' mod='supercheckout'}";
+        var invalid_number = "{l s='Only +.-() and numbers are allowed' mod='supercheckout'}";
+        var invalid_other_info = "{l s='Special Characters <>{} are not allowed' mod='supercheckout'}";
+        var invalid_dob = "{l s='Invalid Date of Birth' mod='supercheckout'}";
+        var invalid_country_msg = "{l s='Invalid Country' mod='supercheckout'}";
+        var invalid_state_msg = "{l s='Invalid State' mod='supercheckout'}";
+        var invalid_name = "{l s='Name is invalid' mod='supercheckout'}";
+        var number_error = "{l s='Numbers not allowed' mod='supercheckout'}";
+        var toc_error = "{l s='Please acccept our terms & conditions before confirming your order' mod='supercheckout'}";
+        var zipcode_error = "{l s='Some Products in your cart can not be delivered to the selected address.Kindly remove the same or change your address.' mod='supercheckout'}";
+        var order_place_confirmation = "{l s='All the information provided by you are correct?' mod='supercheckout'}";
+        var splchar_error = "{l s='Special Characters !<>,;?=+()@#°{}_$%: are not allowed' mod='supercheckout'}";
+        var inline_validation = {$settings['inline_validation']['enable']|intval};
+        var street_number_warning = "{l s='Street Number in address is missing, are you sure you don\'t have one?' mod='supercheckout'}";
 
-            var scp_guest_tracking_url = "{$link->getPageLink("guest-tracking", true)|addslashes nofilter}{*escape not required as contains url*}";
-            var scp_history_url = "{$link->getPageLink("history", true)|addslashes nofilter}{*escape not required as contains url*}";
-            var payment_content_id = 'center_column';
-            var scp_required_tos = {$settings['confirm']['term_condition'][$user_type]['require']|intval};
-            var show_delivery_add_for_virtualcart = false;
-            {if $show_delivery_add_for_virtualcart eq true}
-            show_delivery_add_for_virtualcart = true;
-            {/if}
-            var is_virtual_cart = false;
-            {if $is_virtual_cart eq true}
-            is_virtual_cart = true;
-            {/if}
-            var cart_update_url = "{$link->getPageLink('cart')|escape:'quotes'}"; {*escape not required as contains html*}
-            var enable_save_address_front = "{$settings['enable_save_address']}";
-            var orderOpcUrl = "{$link->getPageLink("order-opc", true)|escape:'quotes'}";{*escape not required as contains html*}
-            var button_background = "{$settings['customizer']['button_color']}";
-            var required_error = "{l s='Required Field' mod='supercheckout'}";
-            var invalid_email = "{l s='Email is invalid' mod='supercheckout'}";
-            var pwd_error = "{l s='(Five characters minimum)' mod='supercheckout'}";
-            var invalid_city = "{l s='Special Characters !<>;?=+@#°{}_$% are not allowed' mod='supercheckout'}";
-            var invalid_address = "{l s='Special Characters !<>?=+@{}_$% are not allowed' mod='supercheckout'}";
-            var invalid_title = "{l s='Special Characters <>={} are not allowed' mod='supercheckout'}";
-            var invalid_number = "{l s='Only +.-() and numbers are allowed' mod='supercheckout'}";
-            var invalid_other_info = "{l s='Special Characters <>{} are not allowed' mod='supercheckout'}";
-            var invalid_dob = "{l s='Invalid Date of Birth' mod='supercheckout'}";
-            var invalid_country_msg = "{l s='Invalid Country' mod='supercheckout'}";
-            var invalid_state_msg = "{l s='Invalid State' mod='supercheckout'}";
-            var invalid_name = "{l s='Name is invalid' mod='supercheckout'}";
-            var number_error = "{l s='Numbers not allowed' mod='supercheckout'}";
-            var toc_error = "{l s='Please acccept our terms & conditions before confirming your order' mod='supercheckout'}";
-            var zipcode_error = "{l s='Some Products in your cart can not be delivered to the selected address.Kindly remove the same or change your address.' mod='supercheckout'}";
-            var order_place_confirmation = "{l s='All the information provided by you are correct?' mod='supercheckout'}";
-            var splchar_error = "{l s='Special Characters !<>,;?=+()@#°{}_$%: are not allowed' mod='supercheckout'}";
-            var inline_validation = {$settings['inline_validation']['enable']|intval};
-            var street_number_warning = "{l s='Street Number in address is missing, are you sure you don\'t have one?' mod='supercheckout'}";
-
-            /*
-             * Added by Anshul Mittal
-             */
-            var save_update_address = "{l s='You might forgot to update the address. Please save the address first or cancel it.' mod='supercheckout'}";
-            var upload_file_text = "{l s='Please upload a file.' mod='supercheckout'}";
-            var valid_format_file_text = "{l s='Please upload a file with a valid format.' mod='supercheckout'}";
+        /*
+         * Added by Anshul Mittal
+         */
+        var save_update_address = "{l s='You might forgot to update the address. Please save the address first or cancel it.' mod='supercheckout'}";
+        var upload_file_text = "{l s='Please upload a file.' mod='supercheckout'}";
+        var valid_format_file_text = "{l s='Please upload a file with a valid format.' mod='supercheckout'}";
 
 
-            {if isset($settings['qty_update_option']) && $settings['qty_update_option'] eq 0 }
-            var update_qty_button = 1;
-            {else}
-            var update_qty_button = 0;
-            {/if}
-            {*Below code added by Nimish for google auto address feature*}
-            {if $settings['google_auto_address']['enable'] eq 1}
-                {if isset($settings['google_auto_address']['api_key']) && $settings['google_auto_address']['api_key'] neq ''}
-            var google_auto_address_api_key = "{$settings['google_auto_address']['api_key']|escape:'htmlall':'UTF-8'}";
-                {/if}
-            {/if}
-            {*Above code added by Nimish for google auto address feature*}
-            {if isset($guest_information) && $guest_information != ''}
-            var guest_information = JSON.parse('{$guest_information nofilter}'); {*escape not required as contains JS*}
-            {/if}
-            {urldecode($settings['custom_js']) nofilter}  {*escape not required as contains JS*}
-        </script>
+        {if isset($settings['qty_update_option']) && $settings['qty_update_option'] eq 0 }
+        var update_qty_button = 1;
+        {else}
+        var update_qty_button = 0;
+        {/if}
+        {*Below code added by Nimish for google auto address feature*}
+        {if $settings['google_auto_address']['enable'] eq 1}
+        {if isset($settings['google_auto_address']['api_key']) && $settings['google_auto_address']['api_key'] neq ''}
+        var google_auto_address_api_key = "{$settings['google_auto_address']['api_key']|escape:'htmlall':'UTF-8'}";
+        {/if}
+        {/if}
+        {*Above code added by Nimish for google auto address feature*}
+        {if isset($guest_information) && $guest_information != ''}
+        var guest_information = JSON.parse('{$guest_information nofilter}'); {*escape not required as contains JS*}
+        {/if}
+        {urldecode($settings['custom_js']) nofilter}  {*escape not required as contains JS*}
+        {*      Custom added variables by ijzershop      *}
+
+        var shippingCarrier = parseInt("{Configuration::get('MODERNESMIDTHEMECONFIGURATOR_SHIPPING_CARRIER')}");
+        var pickupCarrier = parseInt("{Configuration::get('MODERNESMIDTHEMECONFIGURATOR_PICKUP_CARRIER')}");
+        var add2OrderCarrier = parseInt("{Configuration::get('MODERNESMIDTHEMECONFIGURATOR_ADD2ORDER_CARRIER')}");
+
+        {*      Custom added variables by ijzershop      *}
+      </script>
+
         {if $ps_checkout_enabled}
          <script id="paypalSdk"
                 src="https://www.paypal.com/sdk/js?components=hosted-fields,buttons&amp;client-id={$paypalClientId|escape:'htmlall':'UTF-8'}&amp;merchant-id={$merchantId|escape:'htmlall':'UTF-8'}&amp;intent={$intent|escape:'htmlall':'UTF-8'}&amp;currency={$currencyIsoCode|escape:'htmlall':'UTF-8'}"

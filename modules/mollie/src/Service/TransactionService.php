@@ -152,6 +152,8 @@ class TransactionService
                         $payment = $this->module->api->payments->get($apiPayment->id);
                         $payment->description = $order->reference;
                         $payment->update();
+                    } else {
+                        $this->orderStatusService->setOrderStatus($orderId, $apiPayment->status);
                     }
                     $orderId = Order::getOrderByCartId((int) $apiPayment->metadata->cart_id);
                 }
@@ -178,7 +180,10 @@ class TransactionService
                         $payment->update();
                     }
                     $apiPayment->update();
+                } else {
+                    $this->orderStatusService->setOrderStatus($orderId, $apiPayment->status);
                 }
+
                 $orderId = Order::getOrderByCartId((int) $apiPayment->metadata->cart_id);
         }
 
@@ -254,7 +259,12 @@ class TransactionService
             (int) $cartId,
             (int) Configuration::get(Mollie\Config\Config::MOLLIE_STATUS_AWAITING),
             (float) $originalAmount,
-            isset(Config::$methods[$apiPayment->method]) ? Config::$methods[$apiPayment->method] : $this->module->name
+            isset(Config::$methods[$apiPayment->method]) ? Config::$methods[$apiPayment->method] : $this->module->name,
+            null,
+            null,
+            null,
+            null,
+            $cart->secure_key
         );
 
         /* @phpstan-ignore-next-line */

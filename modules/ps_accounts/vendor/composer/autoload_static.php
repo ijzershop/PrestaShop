@@ -4,12 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc50b40b048157bf10cde1369621ff841
+class ComposerStaticInit80f9d2a288a888019b4b6d0b723cb386
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '32dcc8afd4335739640db7d200c1971d' => __DIR__ . '/..' . '/symfony/polyfill-apcu/bootstrap.php',
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         '256c1545158fc915c75e51a931bdba60' => __DIR__ . '/..' . '/lcobucci/jwt/compat/class-aliases.php',
@@ -172,7 +172,6 @@ class ComposerStaticInitc50b40b048157bf10cde1369621ff841
 
     public static $classMap = array (
         'AdminAjaxPsAccountsController' => __DIR__ . '/../..' . '/controllers/admin/AdminAjaxPsAccountsController.php',
-        'AdminConfigureHmacPsAccountsController' => __DIR__ . '/../..' . '/controllers/admin/AdminConfigureHmacPsAccountsController.php',
         'AdminDebugPsAccountsController' => __DIR__ . '/../..' . '/controllers/admin/AdminDebugPsAccountsController.php',
         'ArithmeticError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/ArithmeticError.php',
         'AssertionError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/AssertionError.php',
@@ -455,19 +454,27 @@ class ComposerStaticInitc50b40b048157bf10cde1369621ff841
         'PrestaShop\\ModuleLibServiceContainer\\DependencyInjection\\ServiceContainer' => __DIR__ . '/..' . '/prestashop/module-lib-service-container/src/DependencyInjection/ServiceContainer.php',
         'PrestaShop\\Module\\PsAccounts\\Adapter\\Configuration' => __DIR__ . '/../..' . '/classes/Adapter/Configuration.php',
         'PrestaShop\\Module\\PsAccounts\\Adapter\\Link' => __DIR__ . '/../..' . '/classes/Adapter/Link.php',
-        'PrestaShop\\Module\\PsAccounts\\Api\\Client\\FirebaseClient' => __DIR__ . '/../..' . '/classes/Api/Client/FirebaseClient.php',
+        'PrestaShop\\Module\\PsAccounts\\Api\\Client\\AccountsClient' => __DIR__ . '/../..' . '/classes/Api/Client/AccountsClient.php',
         'PrestaShop\\Module\\PsAccounts\\Api\\Client\\GenericClient' => __DIR__ . '/../..' . '/classes/Api/Client/GenericClient.php',
-        'PrestaShop\\Module\\PsAccounts\\Api\\Client\\ServicesAccountsClient' => __DIR__ . '/../..' . '/classes/Api/Client/ServicesAccountsClient.php',
         'PrestaShop\\Module\\PsAccounts\\Api\\Client\\ServicesBillingClient' => __DIR__ . '/../..' . '/classes/Api/Client/ServicesBillingClient.php',
+        'PrestaShop\\Module\\PsAccounts\\Api\\Client\\SsoClient' => __DIR__ . '/../..' . '/classes/Api/Client/SsoClient.php',
         'PrestaShop\\Module\\PsAccounts\\Configuration\\ConfigOptionsResolver' => __DIR__ . '/../..' . '/classes/Configuration/ConfigOptionsResolver.php',
         'PrestaShop\\Module\\PsAccounts\\Configuration\\Configurable' => __DIR__ . '/../..' . '/classes/Configuration/Configurable.php',
         'PrestaShop\\Module\\PsAccounts\\Context\\ShopContext' => __DIR__ . '/../..' . '/classes/Context/ShopContext.php',
+        'PrestaShop\\Module\\PsAccounts\\Controller\\AbstractRestChildController' => __DIR__ . '/../..' . '/classes/Controller/AbstractRestChildController.php',
+        'PrestaShop\\Module\\PsAccounts\\Controller\\AbstractRestController' => __DIR__ . '/../..' . '/classes/Controller/AbstractRestController.php',
+        'PrestaShop\\Module\\PsAccounts\\Controller\\AbstractShopRestController' => __DIR__ . '/../..' . '/classes/Controller/AbstractShopRestController.php',
+        'PrestaShop\\Module\\PsAccounts\\Controller\\RestControllerInterface' => __DIR__ . '/../..' . '/classes/Controller/RestControllerInterface.php',
         'PrestaShop\\Module\\PsAccounts\\DependencyInjection\\ContainerProvider' => __DIR__ . '/../..' . '/classes/DependencyInjection/ContainerProvider.php',
         'PrestaShop\\Module\\PsAccounts\\DependencyInjection\\ServiceContainer' => __DIR__ . '/../..' . '/classes/DependencyInjection/ServiceContainer.php',
         'PrestaShop\\Module\\PsAccounts\\Exception\\BillingException' => __DIR__ . '/../..' . '/classes/Exception/BillingException.php',
         'PrestaShop\\Module\\PsAccounts\\Exception\\HmacException' => __DIR__ . '/../..' . '/classes/Exception/HmacException.php',
+        'PrestaShop\\Module\\PsAccounts\\Exception\\Http\\HttpException' => __DIR__ . '/../..' . '/classes/Exception/Http/HttpException.php',
+        'PrestaShop\\Module\\PsAccounts\\Exception\\Http\\NotFoundException' => __DIR__ . '/../..' . '/classes/Exception/Http/NotFoundException.php',
+        'PrestaShop\\Module\\PsAccounts\\Exception\\Http\\UnauthorizedException' => __DIR__ . '/../..' . '/classes/Exception/Http/UnauthorizedException.php',
         'PrestaShop\\Module\\PsAccounts\\Exception\\OptionResolutionException' => __DIR__ . '/../..' . '/classes/Exception/OptionResolutionException.php',
         'PrestaShop\\Module\\PsAccounts\\Exception\\QueryParamsException' => __DIR__ . '/../..' . '/classes/Exception/QueryParamsException.php',
+        'PrestaShop\\Module\\PsAccounts\\Exception\\RefreshTokenException' => __DIR__ . '/../..' . '/classes/Exception/RefreshTokenException.php',
         'PrestaShop\\Module\\PsAccounts\\Exception\\RsaSignedDataNotFoundException' => __DIR__ . '/../..' . '/classes/Exception/RsaSignedDataNotFoundException.php',
         'PrestaShop\\Module\\PsAccounts\\Exception\\SshKeysNotFoundException' => __DIR__ . '/../..' . '/classes/Exception/SshKeysNotFoundException.php',
         'PrestaShop\\Module\\PsAccounts\\Exception\\TokenNotFoundException' => __DIR__ . '/../..' . '/classes/Exception/TokenNotFoundException.php',
@@ -483,17 +490,15 @@ class ComposerStaticInitc50b40b048157bf10cde1369621ff841
         'PrestaShop\\Module\\PsAccounts\\Presenter\\PsAccountsPresenter' => __DIR__ . '/../..' . '/classes/Presenter/PsAccountsPresenter.php',
         'PrestaShop\\Module\\PsAccounts\\Presenter\\Store\\Context\\ContextPresenter' => __DIR__ . '/../..' . '/classes/Presenter/Store/Context/ContextPresenter.php',
         'PrestaShop\\Module\\PsAccounts\\Presenter\\Store\\StorePresenter' => __DIR__ . '/../..' . '/classes/Presenter/Store/StorePresenter.php',
+        'PrestaShop\\Module\\PsAccounts\\Provider\\RsaKeysProvider' => __DIR__ . '/../..' . '/classes/Provider/RsaKeysProvider.php',
         'PrestaShop\\Module\\PsAccounts\\Provider\\ShopProvider' => __DIR__ . '/../..' . '/classes/Provider/ShopProvider.php',
         'PrestaShop\\Module\\PsAccounts\\Repository\\ConfigurationRepository' => __DIR__ . '/../..' . '/classes/Repository/ConfigurationRepository.php',
-        'PrestaShop\\Module\\PsAccounts\\Repository\\ShopRepository' => __DIR__ . '/../..' . '/classes/Repository/ShopRepository.php',
+        'PrestaShop\\Module\\PsAccounts\\Repository\\ShopTokenRepository' => __DIR__ . '/../..' . '/classes/Repository/ShopTokenRepository.php',
+        'PrestaShop\\Module\\PsAccounts\\Repository\\UserTokenRepository' => __DIR__ . '/../..' . '/classes/Repository/UserTokenRepository.php',
         'PrestaShop\\Module\\PsAccounts\\Service\\PsAccountsService' => __DIR__ . '/../..' . '/classes/Service/PsAccountsService.php',
         'PrestaShop\\Module\\PsAccounts\\Service\\PsBillingService' => __DIR__ . '/../..' . '/classes/Service/PsBillingService.php',
-        'PrestaShop\\Module\\PsAccounts\\Service\\ShopKeysService' => __DIR__ . '/../..' . '/classes/Service/ShopKeysService.php',
         'PrestaShop\\Module\\PsAccounts\\Service\\ShopLinkAccountService' => __DIR__ . '/../..' . '/classes/Service/ShopLinkAccountService.php',
-        'PrestaShop\\Module\\PsAccounts\\Service\\ShopTokenService' => __DIR__ . '/../..' . '/classes/Service/ShopTokenService.php',
-        'PrestaShop\\Module\\PsAccounts\\Service\\SsoService' => __DIR__ . '/../..' . '/classes/Service/SsoService.php',
         'PrestaShop\\Module\\PsAccounts\\Translations\\SettingsTranslations' => __DIR__ . '/../..' . '/classes/Translations/SettingsTranslations.php',
-        'PrestaShop\\Module\\PsAccounts\\WebHook\\Validator' => __DIR__ . '/../..' . '/classes/WebHook/Validator.php',
         'Ps_accounts' => __DIR__ . '/../..' . '/ps_accounts.php',
         'Psr\\Cache\\CacheException' => __DIR__ . '/..' . '/psr/cache/src/CacheException.php',
         'Psr\\Cache\\CacheItemInterface' => __DIR__ . '/..' . '/psr/cache/src/CacheItemInterface.php',
@@ -907,17 +912,20 @@ class ComposerStaticInitc50b40b048157bf10cde1369621ff841
         'ps_AccountsApiModulesModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiModules.php',
         'ps_AccountsApiOrdersModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiOrders.php',
         'ps_AccountsApiThemesModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiThemes.php',
+        'ps_AccountsApiV1ShopHmacModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopHmac.php',
+        'ps_AccountsApiV1ShopLinkAccountModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopLinkAccount.php',
+        'ps_AccountsApiV1ShopTokenModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopToken.php',
+        'ps_AccountsApiV1ShopUrlModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopUrl.php',
         'ps_accountsApiProductsModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiProducts.php',
-        'ps_accountsDispatchWebHookModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/DispatchWebHook.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc50b40b048157bf10cde1369621ff841::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc50b40b048157bf10cde1369621ff841::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitc50b40b048157bf10cde1369621ff841::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitc50b40b048157bf10cde1369621ff841::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit80f9d2a288a888019b4b6d0b723cb386::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit80f9d2a288a888019b4b6d0b723cb386::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit80f9d2a288a888019b4b6d0b723cb386::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit80f9d2a288a888019b4b6d0b723cb386::$classMap;
 
         }, null, ClassLoader::class);
     }

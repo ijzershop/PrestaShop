@@ -101,7 +101,11 @@ class Customer extends CustomerCore
         $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years . '-' . (int) $this->months . '-' . (int) $this->days);
         $this->secure_key = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_FRONT') . 'minutes'));
-        $this->informer_identification = Tools::getAllValues('customer')['customer']['informer_identification'];
+        if(isset(Tools::getAllValues('customer')['customer']['informer_identification'])){
+            $this->informer_identification = Tools::getAllValues('customer')['customer']['informer_identification'];
+        } else {
+            $this->informer_identification = 0;
+        }
 
 
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {

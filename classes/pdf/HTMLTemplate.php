@@ -125,8 +125,6 @@ abstract class HTMLTemplateCore
         $width = 0;
         $height = 0;
         if (!empty($logo)) {
-            // var_export($logo);
-            // die();
             list($width, $height) = getimagesize(_PS_IMG_DIR_ . $logo);
         }
 
@@ -140,6 +138,7 @@ abstract class HTMLTemplateCore
 
         $this->smarty->assign(array(
             'logo_path' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_ . $logo,
+            'logo_path_absolute' => _PS_IMG_DIR_ . $logo,
             'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'date' => $this->date,

@@ -190,6 +190,8 @@ npm-debug.log.*
 
 
 /vendor/*
+!/vendor/swiftmailer/swiftmailer/lib/classes/Swift/Transport/StreamBuffer.php
+!/vendor/tecnickcom/tcpdf/include/tcpdf_static.php
 /docs/phpdoc-sf/
 /composer.lock
 *.hot-update.js

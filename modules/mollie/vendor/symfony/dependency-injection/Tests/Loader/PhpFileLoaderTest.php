@@ -33,14 +33,14 @@ class PhpFileLoaderTest extends TestCase
     {
         $loader = new PhpFileLoader($container = new ContainerBuilder(), new FileLocator());
 
-        $loader->load(__DIR__.'/../Fixtures/php/simple.php');
+        $loader->load(__DIR__ . '/../Fixtures/php/simple.php');
 
         $this->assertEquals('foo', $container->getParameter('foo'), '->load() loads a PHP file resource');
     }
 
     public function testConfigServices()
     {
-        $fixtures = realpath(__DIR__.'/../Fixtures');
+        $fixtures = realpath(__DIR__ . '/../Fixtures');
         $loader = new PhpFileLoader($container = new ContainerBuilder(), new FileLocator());
         $loader->load($fixtures.'/config/services9.php');
 
@@ -54,7 +54,7 @@ class PhpFileLoaderTest extends TestCase
      */
     public function testConfig($file)
     {
-        $fixtures = realpath(__DIR__.'/../Fixtures');
+        $fixtures = realpath(__DIR__ . '/../Fixtures');
         $loader = new PhpFileLoader($container = new ContainerBuilder(), new FileLocator());
         $loader->load($fixtures.'/config/'.$file.'.php');
 
@@ -81,7 +81,7 @@ class PhpFileLoaderTest extends TestCase
     {
         $this->expectException('Symfony\Component\DependencyInjection\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('The service "child_service" cannot have a "parent" and also have "autoconfigure". Try disabling autoconfiguration for the service.');
-        $fixtures = realpath(__DIR__.'/../Fixtures');
+        $fixtures = realpath(__DIR__ . '/../Fixtures');
         $container = new ContainerBuilder();
         $loader = new PhpFileLoader($container, new FileLocator());
         $loader->load($fixtures.'/config/services_autoconfigure_with_parent.php');
@@ -92,7 +92,7 @@ class PhpFileLoaderTest extends TestCase
     {
         $this->expectException('Symfony\Component\DependencyInjection\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('Invalid factory "factory:method": the `service:method` notation is not available when using PHP-based DI configuration. Use "[ref(\'factory\'), \'method\']" instead.');
-        $fixtures = realpath(__DIR__.'/../Fixtures');
+        $fixtures = realpath(__DIR__ . '/../Fixtures');
         $container = new ContainerBuilder();
         $loader = new PhpFileLoader($container, new FileLocator());
         $loader->load($fixtures.'/config/factory_short_notation.php');

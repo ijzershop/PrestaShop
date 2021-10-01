@@ -23,7 +23,7 @@ class GraphvizDumperTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$fixturesPath = __DIR__.'/../Fixtures/';
+        self::$fixturesPath = __DIR__ . '/../Fixtures/';
     }
 
     public function testDump()

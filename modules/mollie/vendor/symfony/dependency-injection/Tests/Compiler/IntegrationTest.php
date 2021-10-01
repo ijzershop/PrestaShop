@@ -141,7 +141,7 @@ class IntegrationTest extends TestCase
         // allow a container to be passed in, which might have autoconfigure settings
         $container = $mainContainer ?: new ContainerBuilder();
         $container->setResourceTracking(false);
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Fixtures/yaml/integration/'.$directory));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Fixtures/yaml/integration/' .$directory));
         $loader->load('main.yml');
         $container->compile();
         $actualService = $container->getDefinition($actualServiceId);
@@ -149,7 +149,7 @@ class IntegrationTest extends TestCase
         // create a fresh ContainerBuilder, to avoid autoconfigure stuff
         $container = new ContainerBuilder();
         $container->setResourceTracking(false);
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Fixtures/yaml/integration/'.$directory));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Fixtures/yaml/integration/' .$directory));
         $loader->load('expected.yml');
         $container->compile();
         $expectedService = $container->getDefinition($expectedServiceId);

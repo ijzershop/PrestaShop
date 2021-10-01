@@ -41,7 +41,7 @@ class Segment_Consumer_ForkCurl extends Segment_QueueConsumer {
     } else {
       $host = "api.segment.io";
     }
-    $path = "/v1/batch";
+    $path = "/v1/import";
     $url = $protocol . $host . $path;
 
     $cmd = "curl -u ${secret}: -X POST -H 'Content-Type: application/json'";

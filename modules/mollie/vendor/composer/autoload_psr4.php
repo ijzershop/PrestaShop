@@ -22,6 +22,7 @@ return array(
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'PrestaShop\\Decimal\\' => array($vendorDir . '/prestashop/decimal/src'),
     'PhpOption\\' => array($vendorDir . '/phpoption/phpoption/src/PhpOption'),
+    'Mollie\\Tests\\' => array($baseDir . '/tests'),
     'Mollie\\Api\\' => array($vendorDir . '/mollie/mollie-api-php/src'),
     'Mollie\\' => array($baseDir . '/src'),
     'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),

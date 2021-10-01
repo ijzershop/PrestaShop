@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Compiler\AutowireRequiredMethodsPass;
 use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-require_once __DIR__.'/../Fixtures/includes/autowiring_classes.php';
+require_once __DIR__ . '/../Fixtures/includes/autowiring_classes.php';
 
 class AutowireRequiredMethodsPassTest extends TestCase
 {

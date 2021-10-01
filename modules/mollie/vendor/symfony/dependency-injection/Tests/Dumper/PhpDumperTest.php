@@ -37,7 +37,7 @@ use Symfony\Component\DependencyInjection\TypedReference;
 use Symfony\Component\DependencyInjection\Variable;
 use Symfony\Component\ExpressionLanguage\Expression;
 
-require_once __DIR__.'/../Fixtures/includes/classes.php';
+require_once __DIR__ . '/../Fixtures/includes/classes.php';
 
 class PhpDumperTest extends TestCase
 {
@@ -45,7 +45,7 @@ class PhpDumperTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$fixturesPath = realpath(__DIR__.'/../Fixtures/');
+        self::$fixturesPath = realpath(__DIR__ . '/../Fixtures/');
     }
 
     public function testDump()

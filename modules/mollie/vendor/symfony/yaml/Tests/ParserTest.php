@@ -30,7 +30,7 @@ class ParserTest extends TestCase
     {
         $this->parser = null;
 
-        chmod(__DIR__.'/Fixtures/not_readable.yml', 0644);
+        chmod(__DIR__ . '/Fixtures/not_readable.yml', 0644);
     }
 
     /**
@@ -1892,9 +1892,9 @@ INI;
         $parser = new Parser();
 
         $tests = [];
-        $files = $parser->parseFile(__DIR__.'/Fixtures/'.$testsFile);
+        $files = $parser->parseFile(__DIR__ . '/Fixtures/' .$testsFile);
         foreach ($files as $file) {
-            $yamls = file_get_contents(__DIR__.'/Fixtures/'.$file.'.yml');
+            $yamls = file_get_contents(__DIR__ . '/Fixtures/' .$file.'.yml');
 
             // split YAMLs documents
             foreach (preg_split('/^---( %YAML\:1\.0)?/m', $yamls) as $yaml) {
@@ -2092,14 +2092,14 @@ YAML;
 
     public function testFilenamesAreParsedAsStringsWithoutFlag()
     {
-        $file = __DIR__.'/Fixtures/index.yml';
+        $file = __DIR__ . '/Fixtures/index.yml';
 
         $this->assertSame($file, $this->parser->parse($file));
     }
 
     public function testParseFile()
     {
-        $this->assertIsArray($this->parser->parseFile(__DIR__.'/Fixtures/index.yml'));
+        $this->assertIsArray($this->parser->parseFile(__DIR__ . '/Fixtures/index.yml'));
     }
 
     public function testParsingNonExistentFilesThrowsException()
@@ -2121,7 +2121,7 @@ YAML;
             $this->markTestSkipped('This test will fail if run under superuser');
         }
 
-        $file = __DIR__.'/Fixtures/not_readable.yml';
+        $file = __DIR__ . '/Fixtures/not_readable.yml';
         chmod($file, 0200);
 
         $this->parser->parseFile($file);

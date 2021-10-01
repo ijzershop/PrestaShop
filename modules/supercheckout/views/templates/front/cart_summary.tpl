@@ -338,9 +338,6 @@
 
   <div id="highlighted_cart_rules">
     {if count($other_available_vouchers) == 0}
-      <p id="title" class="title-offers"
-         style="font-weight: 600;color: black!important;">{l s='Take advantage of our exclusive offers' mod='supercheckout'}
-        :</p>
       <div id="display_cart_vouchers">
         {foreach $other_available_vouchers as $voucher}
           {if $voucher.code != ''}<span onclick="$('#discount_name').val('{$voucher.code}');

@@ -33,8 +33,8 @@ function cmd_test($dsn)
     $client = new Raven_Client($dsn, array(
         'trace' => true,
         'curl_method' => 'sync',
-        'app_path' => realpath(__DIR__ . '/..'),
-        'base_path' => realpath(__DIR__ . '/..'),
+        'app_path' => realpath(__DIR__ . '/sentry'),
+        'base_path' => realpath(__DIR__ . '/sentry'),
     ));
 
     $config = get_object_vars($client);

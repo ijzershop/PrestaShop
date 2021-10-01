@@ -334,7 +334,7 @@ class ContainerTest extends TestCase
     {
         $this->expectException('Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException');
         $this->expectExceptionMessage('The "request" service is synthetic, it needs to be set at boot time before it can be used.');
-        require_once __DIR__.'/Fixtures/php/services9_compiled.php';
+        require_once __DIR__ . '/Fixtures/php/services9_compiled.php';
 
         $container = new \ProjectServiceContainer();
         $container->get('request');
@@ -344,7 +344,7 @@ class ContainerTest extends TestCase
     {
         $this->expectException('Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException');
         $this->expectExceptionMessage('The "inlined" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.');
-        require_once __DIR__.'/Fixtures/php/services9_compiled.php';
+        require_once __DIR__ . '/Fixtures/php/services9_compiled.php';
 
         $container = new \ProjectServiceContainer();
         $container->get('inlined');

@@ -30,7 +30,7 @@ class LoaderResolverTest extends TestCase
 
     protected function setUp()
     {
-        self::$fixturesPath = realpath(__DIR__.'/../Fixtures/');
+        self::$fixturesPath = realpath(__DIR__ . '/../Fixtures/');
 
         $container = new ContainerBuilder();
         $this->resolver = new LoaderResolver([

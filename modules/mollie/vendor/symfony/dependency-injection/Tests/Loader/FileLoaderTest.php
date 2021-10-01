@@ -39,7 +39,7 @@ class FileLoaderTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$fixturesPath = realpath(__DIR__.'/../');
+        self::$fixturesPath = realpath(__DIR__ . '/Tests/');
     }
 
     public function testImportWithGlobPattern()

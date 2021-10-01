@@ -42,7 +42,7 @@ class DumperTest extends TestCase
     {
         $this->parser = new Parser();
         $this->dumper = new Dumper();
-        $this->path = __DIR__.'/Fixtures';
+        $this->path = __DIR__ . '/Fixtures';
     }
 
     protected function tearDown()
@@ -300,7 +300,7 @@ EOF;
 
     public function testBinaryDataIsDumpedBase64Encoded()
     {
-        $binaryData = file_get_contents(__DIR__.'/Fixtures/arrow.gif');
+        $binaryData = file_get_contents(__DIR__ . '/Fixtures/arrow.gif');
         $expected = '{ data: !!binary '.base64_encode($binaryData).' }';
 
         $this->assertSame($expected, $this->dumper->dump(['data' => $binaryData]));
@@ -563,12 +563,12 @@ YAML;
 foo: !bar |
     foo
     line with trailing spaces:
-      
+
     bar
     integer like line:
     123456789
     empty line:
-    
+
     baz
 
 YAML;
@@ -584,7 +584,7 @@ YAML;
             ],
         ];
 
-        $this->assertSame(file_get_contents(__DIR__.'/Fixtures/multiple_lines_as_literal_block_for_tagged_values.yml'), $this->dumper->dump($data, 2, 0, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK));
+        $this->assertSame(file_get_contents(__DIR__ . '/Fixtures/multiple_lines_as_literal_block_for_tagged_values.yml'), $this->dumper->dump($data, 2, 0, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK));
     }
 
     public function testDumpMultiLineStringAsScalarBlock()
@@ -600,7 +600,7 @@ YAML;
             ],
         ];
 
-        $this->assertSame(file_get_contents(__DIR__.'/Fixtures/multiple_lines_as_literal_block.yml'), $this->dumper->dump($data, 2, 0, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK));
+        $this->assertSame(file_get_contents(__DIR__ . '/Fixtures/multiple_lines_as_literal_block.yml'), $this->dumper->dump($data, 2, 0, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK));
     }
 
     public function testDumpMultiLineStringAsScalarBlockWhenFirstLineHasLeadingSpace()
@@ -611,7 +611,7 @@ YAML;
             ],
         ];
 
-        $this->assertSame(file_get_contents(__DIR__.'/Fixtures/multiple_lines_as_literal_block_leading_space_in_first_line.yml'), $this->dumper->dump($data, 2, 0, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK));
+        $this->assertSame(file_get_contents(__DIR__ . '/Fixtures/multiple_lines_as_literal_block_leading_space_in_first_line.yml'), $this->dumper->dump($data, 2, 0, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK));
     }
 
     public function testCarriageReturnFollowedByNewlineIsMaintainedWhenDumpingAsMultiLineLiteralBlock()

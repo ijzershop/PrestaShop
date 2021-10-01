@@ -96,11 +96,19 @@
 				<tr class="discount">
 					<td class="white left" colspan="4">{$cart_rule.name}</td>
 					<td class="white right">
-						{if $tax_excluded_display}
-							+ {$cart_rule.value_tax_excl}
-						{else}
-							+ {$cart_rule.value}
-						{/if}
+            {if isset($cart_rule.value)}
+              {if $tax_excluded_display}
+                - {$cart_rule.value_tax_excl}
+              {else}
+                - {$cart_rule.value}
+              {/if}
+            {else}
+              {if $tax_excluded_display}
+                - {$cart_rule.value_tax_excl}
+              {else}
+                - {$cart_rule.value_real}
+              {/if}
+            {/if}
 					</td>
 				</tr>
 			{/foreach}

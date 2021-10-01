@@ -128,10 +128,18 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplateInvoice
         $total_cart_rule = 0;
         if (is_array($cart_rules = $this->cart->getCartRules())) {
             foreach ($cart_rules as $cart_rule) {
-                if ($tax_excluded_display) {
-                    $total_cart_rule += $cart_rule['value_tax_excl'];
+                if(isset($cart_rule['value'])) {
+                    if ($tax_excluded_display) {
+                        $total_cart_rule += $cart_rule['value_tax_excl'];
+                    } else {
+                        $total_cart_rule += $cart_rule['value'];
+                    }
                 } else {
-                    $total_cart_rule += $cart_rule['value'];
+                    if ($tax_excluded_display) {
+                        $total_cart_rule += $cart_rule['value_tax_excl'];
+                    } else {
+                        $total_cart_rule += $cart_rule['value_real'];
+                    }
                 }
             }
         }

@@ -125,6 +125,8 @@ abstract class HTMLTemplateCore
         $width = 0;
         $height = 0;
         if (!empty($logo)) {
+            // var_export($logo);
+            // die();
             list($width, $height) = getimagesize(_PS_IMG_DIR_ . $logo);
         }
 

@@ -1582,21 +1582,22 @@
               $('#showShippingStatusSignature').html('');
               $('#showShippingStatusDeliveredOn').text('');
             } else {
+              $('#showShippingStatusDeliveryTimeEstimate').text(data.scheduled_delivery_moment.planned_delivery_date+' tussen '+data.scheduled_delivery_moment.from+' - '+data.scheduled_delivery_moment.to);
+              $('#showShippingStatusDeliveredOn').text(data.delivered.delivered_at+' om '+data.delivered.delivered_on);
+
               $('#showShippingStatusEstimateDelivery').show();
               $('#showShippingStatusDelivered').show();
               $('#showShippingStatusSignatureBox').show();
               $('#showShippingStatusSignature').html('<img src="data:image/jpeg;base64,'+data.delivered.signature+'" class="w-100 border" alt="De handtekening van de ontvanger"><br><strong class="w-100">'+data.delivered.signature_name+'</strong>');
-              $('#showShippingStatusDeliveredOn').text(data.delivered.delivered_at+' om '+data.delivered.delivered_on);
 
-              $('#showShippingStatusDeliveryTimeEstimate').text('');
             }
             $('#showShippingStatusOrderHistory').empty();
             const latestHistory = data.history[data.history.length - 1];
             for (let i = 0, length = data.history.length; i < length; i++) {
               if(data.history[i].from == 'api'){
-                $('#showShippingStatusOrderHistory').append('<li>'+data.history[i].date+' om '+data.history[i].time+' op depot:'+data.history[i].depot+' - '+data.history[i].name+'</li>')
+                $('#showShippingStatusOrderHistory').append('<li>'+data.history[i].date+' '+data.history[i].time+' op depot:'+data.history[i].depot+' - '+data.history[i].name+'</li>')
               } else {
-                $('#showShippingStatusOrderHistory').append('<li>'+data.history[i].name+'</li>')
+                $('#showShippingStatusOrderHistory').append('<li>'+data.history[i].date+' - '+data.history[i].name+'</li>')
               }
 
             }

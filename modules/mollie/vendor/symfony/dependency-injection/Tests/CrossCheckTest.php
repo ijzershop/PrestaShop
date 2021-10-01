@@ -21,7 +21,7 @@ class CrossCheckTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$fixturesPath = __DIR__.'/Fixtures/';
+        self::$fixturesPath = __DIR__ . '/Fixtures/';
 
         require_once self::$fixturesPath.'/includes/classes.php';
         require_once self::$fixturesPath.'/includes/foo.php';

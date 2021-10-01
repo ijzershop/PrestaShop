@@ -18,7 +18,7 @@ class XmlUtilsTest extends TestCase
 {
     public function testLoadFile()
     {
-        $fixtures = __DIR__.'/../Fixtures/Util/';
+        $fixtures = __DIR__ . '/../Fixtures/Util/';
 
         try {
             XmlUtils::loadFile($fixtures);
@@ -92,7 +92,7 @@ class XmlUtilsTest extends TestCase
     {
         $this->expectException('Symfony\Component\Config\Util\Exception\InvalidXmlException');
         $this->expectExceptionMessage('The XML is not valid');
-        $fixtures = __DIR__.'/../Fixtures/Util/';
+        $fixtures = __DIR__ . '/../Fixtures/Util/';
 
         $mock = $this->getMockBuilder(Validator::class)->getMock();
         $mock->expects($this->once())->method('validate')->willReturn(false);
@@ -105,7 +105,7 @@ class XmlUtilsTest extends TestCase
         $internalErrors = libxml_use_internal_errors(true);
 
         $this->assertSame([], libxml_get_errors());
-        $this->assertInstanceOf('DOMDocument', XmlUtils::loadFile(__DIR__.'/../Fixtures/Util/invalid_schema.xml'));
+        $this->assertInstanceOf('DOMDocument', XmlUtils::loadFile(__DIR__ . '/../Fixtures/Util/invalid_schema.xml'));
         $this->assertSame([], libxml_get_errors());
 
         libxml_clear_errors();
@@ -188,7 +188,7 @@ class XmlUtilsTest extends TestCase
 
     public function testLoadEmptyXmlFile()
     {
-        $file = __DIR__.'/../Fixtures/foo.xml';
+        $file = __DIR__ . '/../Fixtures/foo.xml';
 
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage(sprintf('File "%s" does not contain valid XML, it is empty.', $file));
@@ -208,7 +208,7 @@ class XmlUtilsTest extends TestCase
             throw new \Exception($errstr, $errno);
         });
 
-        $file = __DIR__.'/../Fixtures/foo.xml';
+        $file = __DIR__ . '/../Fixtures/foo.xml';
         try {
             try {
                 XmlUtils::loadFile($file);
@@ -230,7 +230,7 @@ class XmlUtilsTest extends TestCase
         }
 
         // should not throw an exception
-        XmlUtils::loadFile(__DIR__.'/../Fixtures/Util/valid.xml', __DIR__.'/../Fixtures/Util/schema.xsd');
+        XmlUtils::loadFile(__DIR__ . '/../Fixtures/Util/valid.xml', __DIR__.'/../Fixtures/Util/schema.xsd');
     }
 }
 

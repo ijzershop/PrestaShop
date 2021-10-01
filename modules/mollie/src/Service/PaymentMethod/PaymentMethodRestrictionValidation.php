@@ -41,56 +41,57 @@ use Mollie\Config\Config;
 use Mollie\Service\PaymentMethod\PaymentMethodRestrictionValidation\PaymentMethodRestrictionValidatorInterface;
 use MolPaymentMethod;
 use PrestaShopLogger;
+use Traversable;
 
 class PaymentMethodRestrictionValidation implements PaymentMethodRestrictionValidationInterface
 {
-    /**
-     * @var PaymentMethodRestrictionValidatorInterface[]
-     */
-    private $paymentRestrictionValidators;
+	/**
+	 * @var Traversable
+	 */
+	private $paymentRestrictionValidators;
 
-    public function __construct(array $paymentRestrictionValidators)
-    {
-        $this->paymentRestrictionValidators = $paymentRestrictionValidators;
-    }
+	public function __construct(Traversable $paymentRestrictionValidators)
+	{
+		$this->paymentRestrictionValidators = $paymentRestrictionValidators;
+	}
 
-    /**
-     * At least one payment restriction validator is present at all times (BasePaymentRestrictionValidation)
-     *
-     * @param MolPaymentMethod $paymentMethod
-     *
-     * @return bool
-     */
-    public function isPaymentMethodValid(MolPaymentMethod $paymentMethod)
-    {
-        $success = false;
+	/**
+	 * At least one payment restriction validator is present at all times (BasePaymentRestrictionValidation)
+	 *
+	 * @param MolPaymentMethod $paymentMethod
+	 *
+	 * @return bool
+	 */
+	public function isPaymentMethodValid(MolPaymentMethod $paymentMethod)
+	{
+		$success = false;
 
-        /**
-         * @var PaymentMethodRestrictionValidatorInterface $paymentRestrictionValidator
-         */
-        foreach ($this->paymentRestrictionValidators as $paymentRestrictionValidator) {
-            try {
-                if ($paymentRestrictionValidator->supports($paymentMethod)) {
-                    $success = $paymentRestrictionValidator->isValid($paymentMethod);
+		/**
+		 * @var PaymentMethodRestrictionValidatorInterface $paymentRestrictionValidator
+		 */
+		foreach ($this->paymentRestrictionValidators as $paymentRestrictionValidator) {
+			try {
+				if ($paymentRestrictionValidator->supports($paymentMethod)) {
+					$success = $paymentRestrictionValidator->isValid($paymentMethod);
 
-                    if (!$success) {
-                        return false;
-                    }
-                }
-            } catch (Exception $exception) {
-                PrestaShopLogger::addLog(
-                    sprintf('%s has caught error: %s', __METHOD__, $exception->getMessage()),
-                    Config::ERROR,
-                    null,
-                    null,
-                    null,
-                    true
-                );
+					if (!$success) {
+						return false;
+					}
+				}
+			} catch (Exception $exception) {
+				PrestaShopLogger::addLog(
+					sprintf('%s has caught error: %s', __METHOD__, $exception->getMessage()),
+					Config::ERROR,
+					null,
+					null,
+					null,
+					true
+				);
 
-                return false;
-            }
-        }
+				return false;
+			}
+		}
 
-        return $success;
-    }
+		return $success;
+	}
 }

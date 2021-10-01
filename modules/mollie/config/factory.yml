@@ -1,6 +1,5 @@
 services:
   Mollie\Factory\CustomerFactory:
-    class: Mollie\Factory\CustomerFactory
 
 #  Mollie\Factory\ModuleFactory:
 

@@ -11,8 +11,8 @@
 
 namespace Symfony\Component\DependencyInjection\Tests;
 
-require_once __DIR__.'/Fixtures/includes/classes.php';
-require_once __DIR__.'/Fixtures/includes/ProjectExtension.php';
+require_once __DIR__ . '/Fixtures/includes/classes.php';
+require_once __DIR__ . '/Fixtures/includes/ProjectExtension.php';
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
@@ -368,7 +368,7 @@ class ContainerBuilderTest extends TestCase
     public function testCreateService()
     {
         $builder = new ContainerBuilder();
-        $builder->register('foo1', 'Bar\FooClass')->setFile(__DIR__.'/Fixtures/includes/foo.php');
+        $builder->register('foo1', 'Bar\FooClass')->setFile(__DIR__ . '/Fixtures/includes/foo.php');
         $builder->register('foo2', 'Bar\FooClass')->setFile(__DIR__.'/Fixtures/includes/%file%.php');
         $builder->setParameter('file', 'foo');
         $this->assertInstanceOf('\Bar\FooClass', $builder->get('foo1'), '->createService() requires the file defined by the service definition');
@@ -379,7 +379,7 @@ class ContainerBuilderTest extends TestCase
     {
         $builder = new ContainerBuilder();
 
-        $builder->register('foo1', 'Bar\FooClass')->setFile(__DIR__.'/Fixtures/includes/foo.php');
+        $builder->register('foo1', 'Bar\FooClass')->setFile(__DIR__ . '/Fixtures/includes/foo.php');
         $builder->getDefinition('foo1')->setLazy(true);
 
         $foo1 = $builder->get('foo1');
@@ -789,7 +789,7 @@ class ContainerBuilderTest extends TestCase
 
     public function testEnvInId()
     {
-        $container = include __DIR__.'/Fixtures/containers/container_env_in_id.php';
+        $container = include __DIR__ . '/Fixtures/containers/container_env_in_id.php';
         $container->compile(true);
 
         $expected = [
@@ -896,7 +896,7 @@ class ContainerBuilderTest extends TestCase
         $resource = end($resources);
 
         $this->assertInstanceOf('Symfony\Component\Config\Resource\FileResource', $resource);
-        $this->assertSame(realpath(__DIR__.'/Fixtures/includes/classes.php'), realpath($resource->getResource()));
+        $this->assertSame(realpath(__DIR__ . '/Fixtures/includes/classes.php'), realpath($resource->getResource()));
     }
 
     /**
@@ -922,7 +922,7 @@ class ContainerBuilderTest extends TestCase
         $resource = end($resources);
 
         $this->assertInstanceOf('Symfony\Component\Config\Resource\FileResource', $resource);
-        $this->assertSame(realpath(__DIR__.'/Fixtures/includes/classes.php'), realpath($resource->getResource()));
+        $this->assertSame(realpath(__DIR__ . '/Fixtures/includes/classes.php'), realpath($resource->getResource()));
     }
 
     public function testGetReflectionClass()
@@ -992,8 +992,8 @@ class ContainerBuilderTest extends TestCase
     public function testResources()
     {
         $container = new ContainerBuilder();
-        $container->addResource($a = new FileResource(__DIR__.'/Fixtures/xml/services1.xml'));
-        $container->addResource($b = new FileResource(__DIR__.'/Fixtures/xml/services2.xml'));
+        $container->addResource($a = new FileResource(__DIR__ . '/Fixtures/xml/services1.xml'));
+        $container->addResource($b = new FileResource(__DIR__ . '/Fixtures/xml/services2.xml'));
         $resources = [];
         foreach ($container->getResources() as $resource) {
             if (false === strpos($resource, '.php')) {
@@ -1009,8 +1009,8 @@ class ContainerBuilderTest extends TestCase
     {
         $container = new ContainerBuilder();
         $A = new ComposerResource();
-        $a = new FileResource(__DIR__.'/Fixtures/xml/services1.xml');
-        $b = new FileResource(__DIR__.'/Fixtures/xml/services2.xml');
+        $a = new FileResource(__DIR__ . '/Fixtures/xml/services1.xml');
+        $b = new FileResource(__DIR__ . '/Fixtures/xml/services2.xml');
         $c = new DirectoryResource($dir = \dirname($b));
 
         $this->assertTrue($container->fileExists((string) $a) && $container->fileExists((string) $b) && $container->fileExists($dir));
@@ -1329,7 +1329,7 @@ class ContainerBuilderTest extends TestCase
 
     public function testUninitializedReference()
     {
-        $container = include __DIR__.'/Fixtures/containers/container_uninitialized_ref.php';
+        $container = include __DIR__ . '/Fixtures/containers/container_uninitialized_ref.php';
         $container->compile();
 
         $bar = $container->get('bar');
@@ -1342,7 +1342,7 @@ class ContainerBuilderTest extends TestCase
         $this->assertNull($bar->closures[2]());
         $this->assertSame([], iterator_to_array($bar->iter));
 
-        $container = include __DIR__.'/Fixtures/containers/container_uninitialized_ref.php';
+        $container = include __DIR__ . '/Fixtures/containers/container_uninitialized_ref.php';
         $container->compile();
 
         $container->get('foo1');
@@ -1364,7 +1364,7 @@ class ContainerBuilderTest extends TestCase
      */
     public function testAlmostCircular($visibility)
     {
-        $container = include __DIR__.'/Fixtures/containers/container_almost_circular.php';
+        $container = include __DIR__ . '/Fixtures/containers/container_almost_circular.php';
 
         $foo = $container->get('foo');
         $this->assertSame($foo, $foo->bar->foobar->foo);

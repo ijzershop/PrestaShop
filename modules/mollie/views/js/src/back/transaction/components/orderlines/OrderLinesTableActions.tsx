@@ -22,7 +22,6 @@ export default function OrderLinesTableActions({line, loading, shipLine, cancelL
     })), []);
 
     const isRefundable = (): boolean => line.refundableQuantity >= 1 && parseFloat(availableRefundAmount.value) > 0.0
-    const isCancelable = (): boolean => line.cancelableQuantity >= 1
 
     let shipButton = (
         <button
@@ -110,7 +109,7 @@ export default function OrderLinesTableActions({line, loading, shipLine, cancelL
                 cursor: (loading || line.cancelableQuantity < 1 || line.type === 'discount') ? 'not-allowed' : 'pointer',
                 opacity: (loading || line.cancelableQuantity < 1 || line.type === 'discount') ? 0.8 : 1,
             }}
-            onClick={() => isCancelable() && cancelLine([line])}
+            onClick={() => isRefundable() && cancelLine([line])}
             role="button"
         >
             <FontAwesomeIcon icon={!loading ? faTimes : faCircleNotch} spin={loading}/> {translations.cancel}

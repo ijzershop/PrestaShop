@@ -112,7 +112,7 @@ if (!function_exists('mb_http_input')) {
 }
 
 if (PHP_VERSION_ID >= 80000) {
-    require_once __DIR__.'/Resources/mb_convert_variables.php8';
+    require_once __DIR__ . '/Resources/mb_convert_variables.php8';
 } elseif (!function_exists('mb_convert_variables')) {
     function mb_convert_variables($toEncoding, $fromEncoding, &$a = null, &$b = null, &$c = null, &$d = null, &$e = null, &$f = null) { return p\Mbstring::mb_convert_variables($toEncoding, $fromEncoding, $a, $b, $c, $d, $e, $f); }
 }

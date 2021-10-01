@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\Tests\Fixtures\CustomDefinition;
 use Symfony\Component\DependencyInjection\Tests\Fixtures\TestServiceSubscriber;
 use Symfony\Component\DependencyInjection\TypedReference;
 
-require_once __DIR__.'/../Fixtures/includes/classes.php';
+require_once __DIR__ . '/../Fixtures/includes/classes.php';
 
 class RegisterServiceSubscribersPassTest extends TestCase
 {

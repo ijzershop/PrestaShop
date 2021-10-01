@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\Tests\Fixtures\NamedArgumentsDummy;
 use Symfony\Component\DependencyInjection\Tests\Fixtures\ParentNotExists;
 use Symfony\Component\DependencyInjection\TypedReference;
 
-require_once __DIR__.'/../Fixtures/includes/autowiring_classes.php';
+require_once __DIR__ . '/../Fixtures/includes/autowiring_classes.php';
 
 class ResolveBindingsPassTest extends TestCase
 {

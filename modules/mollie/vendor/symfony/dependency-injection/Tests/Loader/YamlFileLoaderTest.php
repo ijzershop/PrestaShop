@@ -37,7 +37,7 @@ class YamlFileLoaderTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$fixturesPath = realpath(__DIR__.'/../Fixtures/');
+        self::$fixturesPath = realpath(__DIR__ . '/../Fixtures/');
         require_once self::$fixturesPath.'/includes/foo.php';
         require_once self::$fixturesPath.'/includes/ProjectExtension.php';
     }

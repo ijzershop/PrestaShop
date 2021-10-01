@@ -5,8 +5,8 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Bar\FooClass;
 use Symfony\Component\DependencyInjection\Parameter;
 
-require_once __DIR__.'/../includes/classes.php';
-require_once __DIR__.'/../includes/foo.php';
+require_once __DIR__ . '/../includes/classes.php';
+require_once __DIR__ . '/../includes/foo.php';
 
 return function (ContainerConfigurator $c) {
     $p = $c->parameters();
@@ -41,7 +41,7 @@ return function (ContainerConfigurator $c) {
         ->share(false);
 
     $s->set('method_call1', 'Bar\FooClass')
-        ->file(realpath(__DIR__.'/../includes/foo.php'))
+        ->file(realpath(__DIR__ . '/../includes/foo.php'))
         ->call('setBar', [ref('foo')])
         ->call('setBar', [ref('foo2')->nullOnInvalid()])
         ->call('setBar', [ref('foo3')->ignoreOnInvalid()])

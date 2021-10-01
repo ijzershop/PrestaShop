@@ -112,22 +112,22 @@ svg.mollie-svg {
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .mm-block-mollie .icon1 {
-        background: url(../../views/img/icon/icons@x2.png) no-repeat scroll 0px -7px;
+        background: url(../img/icon/icons@x2.png) no-repeat scroll 0px -7px;
         background-size: 55px;
     }
 
     .mm-block-mollie .icon2 {
-        background: url(../../views/img/icon/icons@x2.png) no-repeat scroll -4px -32px;
+        background: url(../img/icon/icons@x2.png) no-repeat scroll -4px -32px;
         background-size: 45px;
     }
 
     .mm-block-mollie .icon3 {
-        background: url(../../views/img/icon/icons@x2.png) no-repeat scroll 0px -75px;
+        background: url(../img/icon/icons@x2.png) no-repeat scroll 0px -75px;
         background-size: 52px;
     }
 
     .mm-block-mollie .helpbutton {
-        background: url(../../views/img/icon/icons@x2.png) no-repeat scroll 0px -260px #F8F8F8;
+        background: url(../img/icon/icons@x2.png) no-repeat scroll 0px -260px #F8F8F8;
         background-size: 130px;
     }
 }
@@ -137,25 +137,25 @@ svg.mollie-svg {
     width: 100px;
     height: 44px;
     float: right;
-    background: url(../../views/img/icon/icons.png) no-repeat scroll 0px -175px #F8F8F8;
+    background: url(../img/icon/icons.png) no-repeat scroll 0px -175px #F8F8F8;
 }
 
 .mm-block-mollie .icon1 {
-    background: url(../../views/img/icon/icons.png) no-repeat scroll -20px -14px;
+    background: url(../img/icon/icons.png) no-repeat scroll -20px -14px;
     width: 45px;
     height: 25px;
     float: left;
 }
 
 .mm-block-mollie .icon2 {
-    background: url(../../views/img/icon/icons.png) no-repeat scroll -30px -70px;
+    background: url(../img/icon/icons.png) no-repeat scroll -30px -70px;
     width: 36px;
     height: 25px;
     float: left;
 }
 
 .mm-block-mollie .icon3 {
-    background: url(../../views/img/icon/icons.png) no-repeat scroll -20px -129px;
+    background: url(../img/icon/icons.png) no-repeat scroll -20px -129px;
     width: 47px;
     height: 25px;
     float: left;

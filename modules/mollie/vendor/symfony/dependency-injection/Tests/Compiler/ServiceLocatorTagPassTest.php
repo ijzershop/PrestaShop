@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Tests\Fixtures\CustomDefinition;
 use Symfony\Component\DependencyInjection\Tests\Fixtures\TestDefinition1;
 use Symfony\Component\DependencyInjection\Tests\Fixtures\TestDefinition2;
 
-require_once __DIR__.'/../Fixtures/includes/classes.php';
+require_once __DIR__ . '/../Fixtures/includes/classes.php';
 
 class ServiceLocatorTagPassTest extends TestCase
 {

@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\Tests\Fixtures\includes\FooVariadic;
 use Symfony\Component\DependencyInjection\Tests\Fixtures\includes\MultipleArgumentsOptionalScalarNotReallyOptional;
 use Symfony\Component\DependencyInjection\TypedReference;
 
-require_once __DIR__.'/../Fixtures/includes/autowiring_classes.php';
+require_once __DIR__ . '/../Fixtures/includes/autowiring_classes.php';
 
 /**
  * @author Kévin Dunglas <dunglas@gmail.com>
@@ -977,7 +977,7 @@ class AutowirePassTest extends TestCase
     public function testInlineServicesAreNotCandidates()
     {
         $container = new ContainerBuilder();
-        $loader = new XmlFileLoader($container, new FileLocator(realpath(__DIR__.'/../Fixtures/xml')));
+        $loader = new XmlFileLoader($container, new FileLocator(realpath(__DIR__ . '/../Fixtures/xml')));
         $loader->load('services_inline_not_candidate.xml');
 
         $pass = new AutowirePass();

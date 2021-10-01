@@ -20,7 +20,9 @@
     },
     "autoload": {
         "psr-4": { "Symfony\\Polyfill\\Apcu\\": "" },
-        "files": [ "bootstrap.php" ]
+        "files": [
+          "bootstrap.php"
+        ]
     },
     "minimum-stability": "dev",
     "extra": {

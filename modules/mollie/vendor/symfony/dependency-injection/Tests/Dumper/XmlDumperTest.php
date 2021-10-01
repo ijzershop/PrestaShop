@@ -25,7 +25,7 @@ class XmlDumperTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$fixturesPath = realpath(__DIR__.'/../Fixtures/');
+        self::$fixturesPath = realpath(__DIR__ . '/../Fixtures/');
     }
 
     public function testDump()
@@ -121,7 +121,7 @@ class XmlDumperTest extends TestCase
 
     public function provideDecoratedServicesData()
     {
-        $fixturesPath = realpath(__DIR__.'/../Fixtures/');
+        $fixturesPath = realpath(__DIR__ . '/../Fixtures/');
 
         return [
             ["<?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -133,7 +133,9 @@ class XmlDumperTest extends TestCase
     <service id=\"Symfony\Component\DependencyInjection\ContainerInterface\" alias=\"service_container\" public=\"false\"/>
   </services>
 </container>
-", include $fixturesPath.'/containers/container15.php'],
+",
+                include $fixturesPath . '/containers/container15.php'
+            ],
             ["<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <container xmlns=\"http://symfony.com/schema/dic/services\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd\">
   <services>
@@ -143,7 +145,9 @@ class XmlDumperTest extends TestCase
     <service id=\"Symfony\Component\DependencyInjection\ContainerInterface\" alias=\"service_container\" public=\"false\"/>
   </services>
 </container>
-", include $fixturesPath.'/containers/container16.php'],
+",
+                include $fixturesPath . '/containers/container16.php'
+            ],
         ];
     }
 
@@ -152,7 +156,7 @@ class XmlDumperTest extends TestCase
      */
     public function testCompiledContainerCanBeDumped($containerFile)
     {
-        $fixturesPath = __DIR__.'/../Fixtures';
+        $fixturesPath = __DIR__ . '/../Fixtures';
         $container = require $fixturesPath.'/containers/'.$containerFile.'.php';
         $container->compile();
         $dumper = new XmlDumper($container);

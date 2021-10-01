@@ -125,7 +125,7 @@ class CaBundle
      */
     public static function getBundledCaBundlePath()
     {
-        $caBundleFile = __DIR__.'/../res/cacert.pem';
+        $caBundleFile = __DIR__ . '/../res/cacert.pem';
 
         // cURL does not understand 'phar://' paths
         // see https://github.com/composer/ca-bundle/issues/10

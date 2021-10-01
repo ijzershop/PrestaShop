@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c03522b7e5715b412211a5a7d6596ea",
+    "content-hash": "625d111041dbd383e2b9ec6ca8496c6b",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -79,16 +79,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "dev-master",
+            "version": "dev-http_adapters",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "8bbb42e09a2860e9b48a38d57a337df9cced18ec"
+                "reference": "773837f7f33c2f8c43384d7ce38c4a53c4aa94cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/8bbb42e09a2860e9b48a38d57a337df9cced18ec",
-                "reference": "8bbb42e09a2860e9b48a38d57a337df9cced18ec",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/773837f7f33c2f8c43384d7ce38c4a53c4aa94cc",
+                "reference": "773837f7f33c2f8c43384d7ce38c4a53c4aa94cc",
                 "shasum": ""
             },
             "require": {
@@ -100,7 +100,7 @@
             },
             "require-dev": {
                 "eloquent/liberator": "^2.0",
-                "friendsofphp/php-cs-fixer": "^3.0",
+                "friendsofphp/php-cs-fixer": "^v2.17",
                 "guzzlehttp/guzzle": "^6.3 || ^7.0",
                 "phpunit/phpunit": "^5.7 || ^6.5 || ^7.1 || ^8.5"
             },
@@ -162,20 +162,20 @@
                 "sofortbanking",
                 "subscriptions"
             ],
-            "time": "2021-06-03T09:07:40+00:00"
+            "time": "2021-04-07T15:24:36+00:00"
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.20",
+            "version": "v2.0.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "0f1f60250fccffeaf5dda91eea1c018aed1adc2a"
+                "reference": "446fc9faa5c2a9ddf65eb7121c0af7e857295241"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/0f1f60250fccffeaf5dda91eea1c018aed1adc2a",
-                "reference": "0f1f60250fccffeaf5dda91eea1c018aed1adc2a",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/446fc9faa5c2a9ddf65eb7121c0af7e857295241",
+                "reference": "446fc9faa5c2a9ddf65eb7121c0af7e857295241",
                 "shasum": ""
             },
             "require": {
@@ -211,7 +211,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2021-04-17T09:33:01+00:00"
+            "time": "2020-10-15T10:06:57+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -427,16 +427,16 @@
         },
         {
             "name": "psr/log",
-            "version": "1.1.4",
+            "version": "1.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
+                "reference": "0f73288fd15629204f9d42b7055f72dacbe811fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/0f73288fd15629204f9d42b7055f72dacbe811fc",
+                "reference": "0f73288fd15629204f9d42b7055f72dacbe811fc",
                 "shasum": ""
             },
             "require": {
@@ -460,7 +460,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
+                    "homepage": "http://www.php-fig.org/"
                 }
             ],
             "description": "Common interface for logging libraries",
@@ -470,7 +470,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2021-05-03T11:20:27+00:00"
+            "time": "2020-03-23T09:12:05+00:00"
         },
         {
             "name": "psr/simple-cache",
@@ -522,16 +522,16 @@
         },
         {
             "name": "segmentio/analytics-php",
-            "version": "1.8.0",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/segmentio/analytics-php.git",
-                "reference": "7e25b2f6094632bbfb79e33ca024d533899a2ffe"
+                "reference": "e0aef0001b6d3a375341888b7bb98e34de62ecae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/segmentio/analytics-php/zipball/7e25b2f6094632bbfb79e33ca024d533899a2ffe",
-                "reference": "7e25b2f6094632bbfb79e33ca024d533899a2ffe",
+                "url": "https://api.github.com/repos/segmentio/analytics-php/zipball/e0aef0001b6d3a375341888b7bb98e34de62ecae",
+                "reference": "e0aef0001b6d3a375341888b7bb98e34de62ecae",
                 "shasum": ""
             },
             "require": {
@@ -569,7 +569,7 @@
                 "segment",
                 "segmentio"
             ],
-            "time": "2021-05-31T22:44:22+00:00"
+            "time": "2021-03-11T21:29:11+00:00"
         },
         {
             "name": "sentry/sentry",
@@ -1414,16 +1414,16 @@
     "packages-dev": [
         {
             "name": "composer/semver",
-            "version": "3.2.5",
+            "version": "3.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "31f3ea725711245195f62e54ffa402d8ef2fdba9"
+                "reference": "a02fdf930a3c1c3ed3a49b5f63859c0c20e10464"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/31f3ea725711245195f62e54ffa402d8ef2fdba9",
-                "reference": "31f3ea725711245195f62e54ffa402d8ef2fdba9",
+                "url": "https://api.github.com/repos/composer/semver/zipball/a02fdf930a3c1c3ed3a49b5f63859c0c20e10464",
+                "reference": "a02fdf930a3c1c3ed3a49b5f63859c0c20e10464",
                 "shasum": ""
             },
             "require": {
@@ -1486,20 +1486,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-24T12:41:47+00:00"
+            "time": "2020-11-13T08:59:24+00:00"
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "2.0.1",
+            "version": "1.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "964adcdd3a28bf9ed5d9ac6450064e0d71ed7496"
+                "reference": "f27e06cd9675801df441b3656569b328e04aa37c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/964adcdd3a28bf9ed5d9ac6450064e0d71ed7496",
-                "reference": "964adcdd3a28bf9ed5d9ac6450064e0d71ed7496",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/f27e06cd9675801df441b3656569b328e04aa37c",
+                "reference": "f27e06cd9675801df441b3656569b328e04aa37c",
                 "shasum": ""
             },
             "require": {
@@ -1545,7 +1545,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-05T19:37:51+00:00"
+            "time": "2021-03-25T17:01:18+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -1677,21 +1677,21 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.19.0",
+            "version": "v2.18.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "d5b8a9d852b292c2f8a035200fa6844b1f82300b"
+                "reference": "e0f6d05c8b157f50029ca6c65c19ed2694f475bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/d5b8a9d852b292c2f8a035200fa6844b1f82300b",
-                "reference": "d5b8a9d852b292c2f8a035200fa6844b1f82300b",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/e0f6d05c8b157f50029ca6c65c19ed2694f475bf",
+                "reference": "e0f6d05c8b157f50029ca6c65c19ed2694f475bf",
                 "shasum": ""
             },
             "require": {
                 "composer/semver": "^1.4 || ^2.0 || ^3.0",
-                "composer/xdebug-handler": "^1.2 || ^2.0",
+                "composer/xdebug-handler": "^1.2",
                 "doctrine/annotations": "^1.2",
                 "ext-json": "*",
                 "ext-tokenizer": "*",
@@ -1734,11 +1734,6 @@
                 "php-cs-fixer"
             ],
             "type": "application",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.19-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "PhpCsFixer\\": "src/"
@@ -1778,7 +1773,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-05-03T21:43:24+00:00"
+            "time": "2021-04-06T18:37:33+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -1930,16 +1925,16 @@
         },
         {
             "name": "prestashop/php-dev-tools",
-            "version": "v3.15.1",
+            "version": "v3.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/php-dev-tools.git",
-                "reference": "ed7af694ddd0c7d0f712c3e7c07757c80d042755"
+                "reference": "1570fd43b0f5a8cfa105e6f2211c818c902951f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/php-dev-tools/zipball/ed7af694ddd0c7d0f712c3e7c07757c80d042755",
-                "reference": "ed7af694ddd0c7d0f712c3e7c07757c80d042755",
+                "url": "https://api.github.com/repos/PrestaShop/php-dev-tools/zipball/1570fd43b0f5a8cfa105e6f2211c818c902951f0",
+                "reference": "1570fd43b0f5a8cfa105e6f2211c818c902951f0",
                 "shasum": ""
             },
             "require": {
@@ -1967,7 +1962,7 @@
                 "MIT"
             ],
             "description": "PrestaShop coding standards",
-            "time": "2021-05-12T08:40:17+00:00"
+            "time": "2021-03-11T15:36:18+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",

@@ -50,9 +50,10 @@ class HookDisplayOrderConfirmation implements HookInterface
      */
     public function run()
     {
-        if (true === $this->module->psVersionIs17) {
+        $order = '';
+        if (true === $this->module->psVersionIs17 && isset($this->params['order'])) {
             $order = $this->params['order'];
-        } else {
+        } elseif(isset($this->params['objOrder'])) {
             $order = $this->params['objOrder'];
         }
 

@@ -1,36 +1,6 @@
 ![Mollie](https://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 
 # Changelog #
-## Changes in release 4.4.1 ##
-+ Fixed order status change issue where order would change status to completed or shipped.
-+ Fixed issue with order refund where order couldn't be refunded if there are some products already refunded.
-+ Fixed issue where order was created without cart security key and because of that it would give warning in some cases.
-+ When testing module pending status now returns to check out with a new message.
-+ Fixed the issue with Bank Transfer. When selecting Bank transfer method, and waiting for bank payment to complete the method, cart will be cleared, so that the customer would not use the same cart until Bank Transfer is finished.
-
-## Changes in release 4.4.0 ##
-+ Changed when Prestashop order is created. Now order is only created after transaction is paid.
-+ Fixed issue with backorder when last product is bought. It no longer changes status to backorder.
-+ Mollie no longer kills other payment methods if mollie API breaks down on checkout page.
-
-## Changes in release 4.3.1 ##
-+ Fixed issue when returning to payment methods status of the backorder (not paid) was changed to backorder (paid) instead of canceled. https://github.com/mollie/PrestaShop/issues/349
-+ Fixed issue with second chance email sending when form multi shop context
-+ Fixed issue with payment country restrictions https://github.com/mollie/PrestaShop/issues/350
-+ Fixed issue with mollie order not being created with manual creation in backoffice on PS 1.7.7.* https://github.com/mollie/PrestaShop/issues/361
-+ Improved sentry to log all module issues
-+ Removed Cartes Bancaires that was never used
-
-# Changelog #
-## Changes in release 4.3.0 ##
-+ Added PrestaShop multistore compatability - different module configuration settings for each shop configured with multistore. 
-+ Added double check for Apple Pay cookie to see if its created - https://github.com/mollie/PrestaShop/issues/324
-+ Fixed custom url for carriers when no tracking number is provided 
-+ Fixed order "Cancel" button functionality in back office  
-+ Fixed duplicated discount rules issue - https://github.com/mollie/PrestaShop/issues/305
-+ Fixed mail alert fix with Klarna order - https://github.com/mollie/PrestaShop/issues/316
-+ Fixed payment fee calculations in the checkout - https://github.com/mollie/PrestaShop/issues/332
-
 ## Changes in release 4.2.4 ##
 + Added optional custom order status for open bank transfer 
 + Added the billing address parameter from Mollie API

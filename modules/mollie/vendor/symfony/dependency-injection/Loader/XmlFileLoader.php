@@ -563,7 +563,8 @@ class XmlFileLoader extends FileLoader
      */
     public function validateSchema(\DOMDocument $dom)
     {
-        $schemaLocations = ['http://symfony.com/schema/dic/services' => str_replace('\\', '/', __DIR__.'/schema/dic/services/services-1.0.xsd')];
+        $schemaLocations = ['http://symfony.com/schema/dic/services' => str_replace('\\', '/',
+            __DIR__ . '/schema/dic/services/services-1.0.xsd')];
 
         if ($element = $dom->documentElement->getAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'schemaLocation')) {
             $items = preg_split('/\s+/', $element);

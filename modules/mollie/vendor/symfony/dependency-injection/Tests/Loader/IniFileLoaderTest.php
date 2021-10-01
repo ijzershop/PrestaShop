@@ -24,7 +24,7 @@ class IniFileLoaderTest extends TestCase
     protected function setUp()
     {
         $this->container = new ContainerBuilder();
-        $this->loader = new IniFileLoader($this->container, new FileLocator(realpath(__DIR__.'/../Fixtures/').'/ini'));
+        $this->loader = new IniFileLoader($this->container, new FileLocator(__DIR__ . '/../Fixtures/'));
     }
 
     public function testIniFileCanBeLoaded()
@@ -58,7 +58,7 @@ class IniFileLoaderTest extends TestCase
             $this->markTestSkipped(sprintf('Converting the value "%s" to "%s" is not supported by the IniFileLoader.', $key, $value));
         }
 
-        $expected = parse_ini_file(__DIR__.'/../Fixtures/ini/types.ini', true, \INI_SCANNER_TYPED);
+        $expected = parse_ini_file(__DIR__ . '/../Fixtures/ini/types.ini', true, \INI_SCANNER_TYPED);
         $this->assertSame($value, $expected['parameters'][$key], '->load() converts values to PHP types');
     }
 

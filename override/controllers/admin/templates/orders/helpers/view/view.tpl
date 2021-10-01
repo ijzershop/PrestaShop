@@ -1582,7 +1582,7 @@
               $('#showShippingStatusSignature').html('');
               $('#showShippingStatusDeliveredOn').text('');
             } else {
-              $('#showShippingStatusEstimateDelivery').hide();
+              $('#showShippingStatusEstimateDelivery').show();
               $('#showShippingStatusDelivered').show();
               $('#showShippingStatusSignatureBox').show();
               $('#showShippingStatusSignature').html('<img src="data:image/jpeg;base64,'+data.delivered.signature+'" class="w-100 border" alt="De handtekening van de ontvanger"><br><strong class="w-100">'+data.delivered.signature_name+'</strong>');
@@ -1593,7 +1593,11 @@
             $('#showShippingStatusOrderHistory').empty();
             const latestHistory = data.history[data.history.length - 1];
             for (let i = 0, length = data.history.length; i < length; i++) {
-              $('#showShippingStatusOrderHistory').append('<li>'+data.history[i].name+'</li>')
+              if(data.history[i].from == 'api'){
+                $('#showShippingStatusOrderHistory').append('<li>'+data.history[i].date+' om '+data.history[i].time+' op depot:'+data.history[i].depot+' - '+data.history[i].name+'</li>')
+              } else {
+                $('#showShippingStatusOrderHistory').append('<li>'+data.history[i].name+'</li>')
+              }
 
             }
           }

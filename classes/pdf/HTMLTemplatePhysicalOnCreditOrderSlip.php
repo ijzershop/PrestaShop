@@ -159,11 +159,16 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplateInvoice
                 if ($tax_excluded_display) {
                     $total_cart_rule += $cart_rule['value_tax_excl'];
                 } else {
-                    $total_cart_rule += $cart_rule['value'];
+                    if(isset($cart_rule['value'])){
+                        $total_cart_rule += $cart_rule['value'];
+                    }
+                    if(isset($cart_rule['value_real'])){
+                        $total_cart_rule += $cart_rule['value_real'];
+                    }
                 }
             }
         }
-var_export($this->order->products);
+
         $this->smarty->assign(array(
             'order' => $this->order,
             'order_details' => $this->order->products,

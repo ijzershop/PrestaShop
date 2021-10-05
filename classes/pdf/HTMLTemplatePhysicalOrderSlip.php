@@ -43,7 +43,7 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplateInvoice
 
         $this->cart = $cart;
         $this->id_cart = $this->cart->id;
-        
+
         if(is_null($this->cart->id)){
             $this->order = new Order((int)Tools::getValue('id_order'));
             $this->cart = new Cart($this->order->id_cart);
@@ -110,7 +110,7 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplateInvoice
             }
 
         unset($product); // remove reference
-        
+
         $this->order->total_shipping_tax_incl = $this->order->total_shipping_tax_excl = 0;
 
         $tax = new Tax();
@@ -131,11 +131,16 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplateInvoice
                 if ($tax_excluded_display) {
                     $total_cart_rule += $cart_rule['value_tax_excl'];
                 } else {
-                    $total_cart_rule += $cart_rule['value'];
+                    if(isset($cart_rule['value'])){
+                        $total_cart_rule += $cart_rule['value'];
+                    }
+                    if(isset($cart_rule['value_real'])){
+                        $total_cart_rule += $cart_rule['value_real'];
+                    }
                 }
             }
         }
-var_export($this->order->products);
+
         $this->smarty->assign(array(
             'order' => $this->order,
             'order_details' => $this->order->products,

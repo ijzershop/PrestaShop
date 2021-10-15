@@ -233,6 +233,7 @@ themes/*/cache/*
 
 # Config
 
+config/defines_custom.inc.php
 config/settings.inc.php
 config/defines.inc.php
 config/settings.old.php
@@ -278,6 +279,7 @@ mails/*
 !mails/en/
 !mails/nl/
 !mails/themes/
+!mails/_partials/
 themes/default-bootstrap/lang/*
 themes/default-bootstrap/modules/*/translations/*.php
 themes/default-bootstrap/mails/*
@@ -450,3 +452,5 @@ validScript.php
 override/controllers/admin/templates/orders/helpers/view/backup geo check
 modules/singlestockattributespoco.zip
 !modules/ps_emailalerts/mails/nl/*
+## Docker configuration
+install.lock

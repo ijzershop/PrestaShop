@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,13 +20,14 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 namespace classes\models;
 
 use classes\DynamicTools;
+use Configuration;
 use Context;
 use Db;
 use DbQuery;
@@ -45,9 +46,9 @@ class DynamicObject extends ObjectModel
     /** @var Context $context */
     protected $context;
     public $position;
-    public $dir;
-    public $thumb_suffix = '-thumb.jpg';
-    public $ext = '.jpg';
+    protected $dir;
+    protected $thumb_suffix = '-thumb.jpg';
+    protected $ext = '.jpg';
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
@@ -95,6 +96,11 @@ class DynamicObject extends ObjectModel
         return json_decode(json_encode($object), true);
     }
 
+    public function getObjectValues($fill_lang_values = false)
+    {
+        return static::getValues($this, $fill_lang_values);
+    }
+
     /**
      * @param DynamicObject $object
      * @return DynamicObject
@@ -116,7 +122,7 @@ class DynamicObject extends ObjectModel
         return $object;
     }
 
-    protected static function getLangFields($object)
+    public static function getLangFields($object)
     {
         $lang_fields = array();
         $definition = ObjectModel::getDefinition($object);
@@ -168,6 +174,11 @@ class DynamicObject extends ObjectModel
         return $this->module->getUrl() . 'views/img/pixel.png';
     }
 
+    public static function deleteByProduct($id_product)
+    {
+        return Db::getInstance()->delete(static::$definition['table'], 'id_product = ' . (int)$id_product);
+    }
+
     public function delete()
     {
         $path = $this->getPath();
@@ -194,12 +205,16 @@ class DynamicObject extends ObjectModel
                     $this->$field = $value;
                 }
             } else {
+                $id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
                 $translations = Tools::getValue($field);
                 if (!is_array($translations)) {
                     $translations = self::getTranslationsFromArray($field, $_POST);
                 }
                 if (is_array($translations) && count($translations)) {
                     foreach ($translations as $id_lang => $translation) {
+                        if (empty($translation)) {
+                            $translation = $translations[$id_default_lang] ?? null;
+                        }
                         $translations[$id_lang] = $translation;
                     }
                     $this->$field = $translations;
@@ -207,7 +222,7 @@ class DynamicObject extends ObjectModel
             }
         }
 
-        if (!$this->position && isset($fields['position'])) {
+        if (!(int)$this->id && !(int)$this->position && isset($fields['position'])) {
             $this->position = self::getHighestPosition($this);
         }
 
@@ -257,16 +272,25 @@ class DynamicObject extends ObjectModel
         }
     }
 
-    public function copyFromArray($values = false)
+    public static function copyFromArray($values, $obj = null, $remove_id = true)
     {
+        if ($remove_id && isset($values['id'])) {
+            unset($values['id']);
+        }
+        if (!$obj) {
+            $obj = new static();
+        }
         $fields = static::$definition['fields'];
-        foreach ($fields as $field => $info) {
-            $type = $info['type'];
+        $field_names = array_keys($fields);
+        foreach ($field_names as $field) {
             if (isset($values[$field])) {
-                $value = self::formatValue($values[$field], $type);
-                $this->$field = $value;
+                $obj->$field = $values[$field];
             }
         }
+        if (isset($values['id'])) {
+            $obj->id = (int)$values['id'];
+        }
+        return $obj;
     }
 
     public static function getHighestPosition($object)
@@ -282,6 +306,10 @@ class DynamicObject extends ObjectModel
         return (int)$max + 1;
     }
 
+    /**
+     * @param null $id_lang
+     * @return static[]
+     */
     public static function getAll($id_lang = null)
     {
         $class_definition = static::$definition;
@@ -307,9 +335,9 @@ class DynamicObject extends ObjectModel
 
     /**
      * @param $id_product
-     * @return self[]
+     * @return static[]
      */
-    public static function getByIdProduct($id_product, $order = false)
+    public static function getByIdProduct($id_product, $order = false, $id_lang = null)
     {
         $objects = array();
         $sql = new DbQuery();
@@ -321,7 +349,7 @@ class DynamicObject extends ObjectModel
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id = $row[static::$definition['primary']];
-            $object = new static($id);
+            $object = new static($id, $id_lang);
             if (Validate::isLoadedObject($object)) {
                 $objects[$id] = $object;
             }

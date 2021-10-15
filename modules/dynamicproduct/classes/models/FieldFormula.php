@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -38,15 +38,21 @@ class FieldFormula extends DynamicObject
     public $position;
 
     public static $definition = array(
-        'table'   => 'dynamicproduct_field_formula',
-        'primary' => 'id_field_formula',
-        'fields'  => array(
+        'table'    => 'dynamicproduct_field_formula',
+        'primary'  => 'id_field_formula',
+        'fields'   => array(
             'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'formula'    => array('type' => self::TYPE_STRING),
-            'position'    => array('type' => self::TYPE_INT),
+            'formula'    => array('type' => self::TYPE_HTML),
+            'position'   => array('type' => self::TYPE_INT),
         ),
         'group_by' => 'id_product'
     );
+
+    public static function getByIdProduct($id_product, $order = false, $id_lang = null)
+    {
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        return parent::getByIdProduct($id_source_product, $order, $id_lang);
+    }
 
     /**
      * @param $id_product
@@ -54,10 +60,11 @@ class FieldFormula extends DynamicObject
      */
     public static function getByProduct($id_product)
     {
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
         $field_formulas = array();
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_product);
+        $sql->where('id_product = ' . (int)$id_source_product);
         $sql->orderBy('position ASC');
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {

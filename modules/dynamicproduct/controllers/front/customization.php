@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,13 +20,14 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
 use classes\controllers\front\DynamicFrontController;
+use classes\DynamicTools;
 use classes\helpers\DynamicCalculatorHelper;
 use classes\helpers\DynamicCustomizationHelper;
 use classes\helpers\FieldsVisibilityHelper;
@@ -40,7 +41,14 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
     /** @noinspection PhpUnused */
     protected function processSaveCustomization()
     {
-        $id_customization = (int)Tools::getValue('id_customization');
+        $quantity = (int)Tools::getValue('quantity');
+
+        $add_to_cart = (int)Tools::getValue('add_to_cart');
+
+        $id_customizations = Tools::getValue('id_customizations');
+        if (!is_array($id_customizations)) {
+            $id_customizations = array($this->id_attribute => 0);
+        }
 
         $dp_input = (int)Tools::getValue('dp_id_input');
         DynamicInput::deleteCustomization($dp_input);
@@ -60,7 +68,7 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
         } catch (Exception $e) {
             $this->respond(array(
                 'error'   => 1,
-                'message' => $e->getMessage()
+                'message' => DynamicTools::reportException($e)
             ));
         }
 
@@ -75,7 +83,7 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
         } catch (Exception $e) {
             $this->respond(array(
                 'error'   => 1,
-                'message' => $e->getMessage()
+                'message' => DynamicTools::reportException($e)
             ));
         }
         $visibility_helper->setExcludedFields($input_fields, $fields_visibility);
@@ -88,52 +96,75 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
 
         $customization_helper = new DynamicCustomizationHelper($this->module, $this->context);
 
-        if (!$id_customization) {
-            $id_customization = $customization_helper->saveCustomization(
+        $attributes_errors = array();
+
+        foreach ($id_customizations as $id_product_attribute => $id_customization) {
+            if (!$id_customization) {
+                $id_customization = $customization_helper->saveCustomization(
+                    $this->id_product,
+                    $id_product_attribute,
+                    $id_address_delivery,
+                    $id_cart
+                );
+                $id_customizations[$id_product_attribute] = $id_customization;
+            }
+
+            $price_equation_result = $calculator_helper->getPriceEquationResult(
                 $this->id_product,
-                $this->id_attribute,
-                $id_address_delivery,
-                $id_cart
+                $id_product_attribute,
+                $input_fields
             );
+
+            $weight_equation_result = $calculator_helper->getWeightEquationResult(
+                $this->id_product,
+                $id_product_attribute,
+                $input_fields
+            );
+
+            $dynamic_input = $customization_helper->saveDynamicInput(
+                $this->id_product,
+                $id_product_attribute,
+                $id_cart,
+                $id_customization,
+                $quantity,
+                $price_equation_result,
+                $weight_equation_result,
+                $input_fields
+            );
+
+            $customization_helper->saveCustomizationData(
+                $this->id_product,
+                $this->module->id,
+                $id_customization,
+                $id_customization_field,
+                $dynamic_input
+            );
+
+            $customization_helper->saveInputFields($input_fields, $dynamic_input->id);
+
+            $cart = $this->context->cart;
+            if ($add_to_cart) {
+                $added = $cart->updateQty(
+                    (int)$dynamic_input->cart_quantity,
+                    (int)$dynamic_input->id_product,
+                    (int)$dynamic_input->id_attribute,
+                    $id_customization,
+                    'up',
+                    (int)$cart->id_address_delivery,
+                    new Shop((int)$this->context->shop->id),
+                    false,
+                    false
+                );
+                if (!$added) {
+                    $attributes_errors[] = $id_product_attribute;
+                }
+            }
         }
 
-        $price_equation_result = $calculator_helper->getPriceEquationResult(
-            $this->id_product,
-            $this->id_attribute,
-            $input_fields
-        );
-
-        $weight_equation_result = $calculator_helper->getWeightEquationResult(
-            $this->id_product,
-            $this->id_attribute,
-            $input_fields
-        );
-
-        $dynamic_input = $customization_helper->saveDynamicInput(
-            $this->id_product,
-            $this->id_attribute,
-            $id_cart,
-            $id_customization,
-            $price_equation_result,
-            $weight_equation_result,
-            $input_fields
-        );
-
-        $customization_helper->saveCustomizationData(
-            $this->id_product,
-            $this->module->id,
-            $id_customization,
-            $id_customization_field,
-            $dynamic_input
-        );
-
-        $customization_helper->saveInputFields($input_fields, $dynamic_input->id);
-
         $this->respond(array(
-            'id_input'         => (int)$dynamic_input->id,
-            'id_attribute'     => $this->id_attribute,
-            'id_module'        => $this->module->id,
-            'id_customization' => $id_customization,
+            'id_module'         => $this->module->id,
+            'id_customizations' => $id_customizations,
+            'attributes_errors' => $attributes_errors,
         ));
     }
 
@@ -169,7 +200,7 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
         } catch (Exception $e) {
             $this->respond(array(
                 'error'   => 1,
-                'message' => $e->getMessage()
+                'message' => DynamicTools::reportException($e)
             ));
         }
         $visibility_helper->setExcludedFields($input_fields, $fields_visibility);

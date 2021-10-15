@@ -1,5 +1,5 @@
 {**
-* 2010-2020 Tuni-Soft
+* 2010-2021 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -18,26 +18,23 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author
-*  @copyright 2014-2020
+*  @copyright 2014-2021
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
 {if isset($dp_config) && $dp_config->hide_qty}
-    <style type="text/css">
-        .product-add-to-cart > .control-label {
-            display: none !important;
-        }
+  <style type="text/css">
+    .product-add-to-cart > .control-label {
+      display: none !important;
+    }
 
-        .product-quantity .qty {
-            display: none !important;
-        }
-    </style>
-{/if}
-
-{if isset($dp_config) && !$dp_config->multiply_price}
-    <style type="text/css">
-        .dp-unit-cost {
-            display: none;
-        }
-    </style>
+    .product-quantity .qty {
+      display: none !important;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.add("dp-hide-qty");
+    });
+  </script>
 {/if}

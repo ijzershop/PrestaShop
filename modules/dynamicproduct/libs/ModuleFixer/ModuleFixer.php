@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -57,6 +57,7 @@ class ModuleFixer
             'module_hooks'       => $module_hooks,
             'unregistered_hooks' => $unregistered_hooks,
             'errors'             => $this->errors,
+            'templates_fixed'    => $this->areTemplatesFixed(),
         ));
         return $this->context->smarty->fetch(dirname(__FILE__) . '/ModuleFixer.tpl');
     }
@@ -102,6 +103,9 @@ class ModuleFixer
         if (Tools::isSubmit('restore_hooks')) {
             $this->restoreHooks();
         }
+        if (Tools::isSubmit('fix_templates')) {
+            $this->fixTemplates();
+        }
     }
 
     private function restoreHooks()
@@ -115,6 +119,65 @@ class ModuleFixer
                 }
             }
         }
+    }
+
+    public function fixTemplates()
+    {
+        $fixes = $this->getFixes();
+
+        foreach ($fixes as $fix) {
+            if (is_file($fix['path'])) {
+                $contents = Tools::file_get_contents($fix['path']);
+                if ($contents) {
+                    $new_contents = str_replace($fix['search'], $fix['replace'], $contents);
+                    file_put_contents($fix['path'], $new_contents);
+                }
+            }
+        }
+    }
+
+    private function areTemplatesFixed()
+    {
+        $fixes = $this->getFixes();
+        foreach ($fixes as $fix) {
+            if (is_file($fix['path'])) {
+                $contents = Tools::file_get_contents($fix['path']);
+                if (strpos($contents, $fix['replace']) === false) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private function getFixes(): array
+    {
+        return array(
+            array(
+                'path'    => _PS_ROOT_DIR_ .
+                    "/src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig",
+                "search"  => "{{ customizationField.value }}",
+                "replace" => "{{ customizationField.value | raw }}",
+            ),
+            array(
+                'path'    => _PS_ROOT_DIR_ .
+                    "/src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig",
+                "search"  => "{{ customization.value }}",
+                "replace" => "{{ customization.value | raw }}",
+            ),
+            array(
+                'path'    => _PS_ROOT_DIR_ .
+                    "/mails/_partials/order_conf_product_list.tpl",
+                "search"  => "{\$customization['customization_text']}",
+                "replace" => "{\$customization['customization_text'] nofilter}",
+            ),
+            array(
+                'path'    => _PS_ROOT_DIR_ .
+                    "/mails/en/order_conf_product_list.tpl",
+                "search"  => "{\$customization['customization_text']}",
+                "replace" => "{\$customization['customization_text'] nofilter}",
+            ),
+        );
     }
 
     private function getModuleLink()

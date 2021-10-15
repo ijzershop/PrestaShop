@@ -89,55 +89,6 @@ class Ps_Creditpayment extends PaymentModule
         return true;
     }
 
-    /**
-     * Add fields in Customer Form
-     *
-     * @param array $params parameters (@see CustomerFormatter->getFormat())
-     *
-     * @return array of extra FormField
-     */
-    public function hookAdditionalCustomerFormFields($params)
-    {
-//        $module_fields = $this->readModuleValues();
-//var_export($module_fields);
-//die();
-        $informer_identitfication_value = Tools::getValue('informer_identitfication');
-//        if (isset($module_fields['informer_identitfication'])) {
-//            $informer_identitfication_value = $module_fields['informer_identitfication'];
-//        }
-
-        $extra_fields = array();
-        $extra_fields['informer_identitfication'] = (new FormField)
-            ->setName('informer_identitfication')
-            ->setType('text')
-            ->setValue($informer_identitfication_value)
-            ->setLabel($this->l('Informer Indentification'));
-
-        return $extra_fields;
-    }
-//
-//    /**
-//     * Validate fields in Customer form
-//     *
-//     * @param array $params hook call parameters (@see CustomerForm->validateByModules())
-//     *
-//     * @return array of extra FormField
-//     */
-//    public function hookvalidateCustomerFormFields($params)
-//    {
-//        $module_fields = $params['fields'];
-//        if ('Dance' != $module_fields[0]->getValue()
-//            && 'Shopping' != $module_fields[0]->getValue()
-//            && 'Yoga' != $module_fields[0]->getValue()
-//        ) {
-//            $module_fields[0]->addError(
-//                $this->l('Only "Dance", "Shopping" or "Yoga"')
-//            );
-//        }
-//        return array(
-//            $module_fields
-//        );
-//    }
 
 
 public function addOrderState($name)

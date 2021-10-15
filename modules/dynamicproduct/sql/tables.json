@@ -5,6 +5,7 @@
   "_field_lang",
   "_common_field",
   "_unit_value",
+  "_unit_value_lang",
   "_equation",
   "_config",
   "_customization_field",
@@ -22,6 +23,9 @@
   "_proportions",
   "_condition",
   "_condition_visibility",
+  "_condition_group_visibility",
+  "_condition_step_visibility",
+  "_condition_option_visibility",
   "_field_formula",
   "_interval",
   "_interval_field",
@@ -30,5 +34,10 @@
   "_interval_condition_value",
   "_interval_formula",
   "_exec_order",
-  "_field_group"
+  "_field_group",
+  "_product_field_group",
+  "_product_config_link",
+  "_step",
+  "_step_lang",
+  "_product_step"
 ]

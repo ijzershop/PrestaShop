@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -52,11 +52,13 @@ class DynamicInstaller
         'displayPaymentTop',
         'displayBeforeShoppingCartBlock',
         'displayShoppingCart',
+        'actionCartSave',
+        'addWebserviceResources',
     );
     private $hooks_admin = array(
         'displayBackOfficeHeader',
         'displayAdminProductsExtra',
-        'actionObjectProductAddAfter',
+        'actionProductAdd',
         'actionAdminControllerSetMedia',
         'actionOrderStatusPostUpdate',
         'actionClearCompileCache',
@@ -127,6 +129,10 @@ class DynamicInstaller
         array(
             'name'  => 'Dynamic Product Field Groups',
             'class' => 'DynamicProductFieldGroups'
+        ),
+        array(
+            'name'  => 'Dynamic Product Steps',
+            'class' => 'DynamicProductSteps'
         ),
         array(
             'name'  => 'Dynamic Product Dev',
@@ -218,7 +224,9 @@ class DynamicInstaller
             'calculator',
             'declarations',
             'scripts',
+            'databases',
             'upload',
+            'upload_keep',
             'cache',
             'images',
             'images/field',
@@ -244,7 +252,12 @@ class DynamicInstaller
 
             'install/declarations/.htaccess' => 'declarations/.htaccess',
 
-            'install/cache/.htaccess' => 'cache/.htaccess'
+            'install/databases/.htaccess'  => 'databases/.htaccess',
+            'install/databases/readme.txt' => 'databases/readme.txt',
+
+            'install/cache/.htaccess' => 'cache/.htaccess',
+
+            'install/upload_keep/readme.txt' => 'upload_keep/readme.txt',
         );
 
         foreach ($files as $src => $dest) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -42,11 +42,13 @@ class DynamicDropdownOption extends DynamicObject
     public $position;
     public $color;
     public $label;
-    public $image;
 
-    public $image_full;
-    public $has_image;
-    public $has_color;
+    public $deleted = 0;
+
+    public $image_url;
+    public $thumb_url;
+
+    public $displayed_price;
 
     private static $dropdown_options;
 
@@ -63,6 +65,7 @@ class DynamicDropdownOption extends DynamicObject
             'color'           => array('type' => self::TYPE_STRING),
             'is_default'      => array('type' => self::TYPE_INT),
             'position'        => array('type' => self::TYPE_INT),
+            'deleted'         => array('type' => self::TYPE_INT),
             /* Lang fields */
             'label'           => array(
                 'type'     => self::TYPE_STRING,
@@ -73,6 +76,12 @@ class DynamicDropdownOption extends DynamicObject
             )
         )
     );
+
+    public function __construct($id = null, $id_lang = null, $id_shop = null)
+    {
+        parent::__construct($id, $id_lang, $id_shop);
+        $this->initImage();
+    }
 
     /**
      * @param $id_field
@@ -86,6 +95,7 @@ class DynamicDropdownOption extends DynamicObject
         $sql->from(self::$definition['table']);
         $sql->select('id_dropdown_option');
         $sql->where('id_field = ' . (int)$id_field);
+        $sql->where('!deleted');
         $sql->orderBy('`position` ASC');
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
@@ -105,6 +115,14 @@ class DynamicDropdownOption extends DynamicObject
             return self::$dropdown_options[$key];
         }
         return self::$dropdown_options[$key] = new self($id_dropdown_option, $id_lang);
+    }
+
+    private function initImage()
+    {
+        if ($this->hasImage()) {
+            $this->image_url = $this->getImageUrl();
+            $this->thumb_url = $this->getThumbUrl();
+        }
     }
 
     public function hasImage()
@@ -173,6 +191,9 @@ class DynamicDropdownOption extends DynamicObject
         if (is_file($thumb)) {
             unlink($thumb);
         }
-        parent::delete();
+
+        // parent::delete();
+        $this->deleted = true;
+        $this->save();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -243,11 +243,24 @@ class DynamicProvider
         return DynamicTools::organizeBy('id_field', $result, 'visible');
     }
 
+    public function hasRequiredField($id_product)
+    {
+        $sql = new DbQuery();
+        $sql->select('id_customization_field');
+        $sql->from('customization_field');
+        $sql->where('id_product = ' . (int)$id_product);
+        $sql->where('required = 1');
+        return (int)Db::getInstance()->getRow($sql);
+    }
+
     public function getDynamicInputIdFromString($value)
     {
         $matched = preg_match('@\|(\d+)\|@', $value, $match);
         if ($matched) {
             return (int)$match[1];
+        }
+        if (is_numeric($value)) {
+            return (int)$value;
         }
         return false;
     }
@@ -281,19 +294,14 @@ class DynamicProvider
         return defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ === true;
     }
 
-    public function isModuleDevMode()
-    {
-        return defined('_PS_MODULE_DEV_') && _PS_MODULE_DEV_ === true;
-    }
-
     public function isModuleDebugMode()
     {
         return (int)DynamicMainConfig::getConfig()->debug_mode;
     }
 
-    public function getOldField($fields_new, $id_field)
+    public function getNewID($new_ids, $id_old)
     {
-        return isset($fields_new[$id_field]) ? $fields_new[$id_field] : $id_field;
+        return isset($new_ids[$id_old]) ? $new_ids[$id_old] : $id_old;
     }
 
     public function getOldOption($options_new, $id_field, $id_option)
@@ -354,6 +362,36 @@ class DynamicProvider
             strpos($PATH_INFO, '/product/unit/duplicate/') !== false;
     }
 
+    public function getCurrentProductID()
+    {
+        $id_product = 0;
+
+        $path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : null;
+        if (!$path) {
+            $path = isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : null;
+        }
+        if (!$path) {
+            $path = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
+        }
+
+        $matched = preg_match("/\/products\/(\d+)/", $path, $matches);
+        if ($matched) {
+            $id_product = (int)$matches[1];
+        }
+
+        if (!$id_product) {
+            $id_product = (int)str_replace('/product/form/', '', $path);
+        }
+
+        if (!$id_product) {
+            $matched = preg_match("/id_product=(\d+)/", $path, $matches);
+            if ($matched) {
+                $id_product = (int)$matches[1];
+            }
+        }
+        return $id_product;
+    }
+
     public function getProductIdFromDuplicateRequest()
     {
         $id_product = (int)Tools::getValue('id_product');
@@ -375,5 +413,44 @@ class DynamicProvider
             return true;
         }
         return false;
+    }
+
+    public function getCurrentAttribute(int $id_product)
+    {
+        return (int)Tools::getValue('id_product_attribute', Product::getDefaultAttribute($id_product));
+    }
+
+    public function convertPrice($price, Currency $currency = null, Context $context = null): float
+    {
+        if (!$context) {
+            $context = Context::getContext();
+        }
+
+        if (!$currency) {
+            $currency = $context->currency;
+        }
+
+        $currency_from = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+        return Tools::convertPriceFull($price, $currency_from, $currency);
+    }
+
+    public function formatPrice($price)
+    {
+        $locale = null;
+        if (method_exists($this->context, 'getCurrentLocale')) {
+            $locale = $this->context->getCurrentLocale();
+        } elseif (method_exists('Tools', 'getContextLocale')) {
+            $locale = Tools::getContextLocale($this->context);
+        }
+        if ($locale) {
+            return $locale->formatPrice($price, $this->context->currency->iso_code);
+        }
+        return Tools::displayPrice($price);
+    }
+
+    public function convertAndFormatPrice($price)
+    {
+        return $this->formatPrice($this->convertPrice($price));
     }
 }

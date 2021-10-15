@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>statsbestmanufacturers</name>
-    <displayName><![CDATA[Best brands]]></displayName>
+    <displayName><![CDATA[Beste merken]]></displayName>
     <version><![CDATA[2.0.0]]></version>
-    <description><![CDATA[Adds a list of the best brands to the Stats dashboard.]]></description>
+    <description><![CDATA[Voegt een lijst van beste merken aan het statistiekendashboard toe.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

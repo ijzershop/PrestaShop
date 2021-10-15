@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PrestaShop
+* 2007-2021 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2020 PrestaShop SA
+*  @copyright 2007-2021 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -56,6 +56,30 @@
       {/foreach}
       </ul>
     {/if}
+  </div>
+
+  <div class="panel-footer">
+    <a href="{$module_link|escape:'htmlall':'UTF-8'}" class="btn btn-default pull-left"><i class="process-icon-back"></i> {l s='Back' mod='dynamicproduct'}</a>
+  </div>
+</div>
+
+<div class="panel">
+  <h3><i class="icon icon-credit-card"></i> {$module->displayName|escape:'htmlall':'UTF-8'}</h3>
+
+  <div class="well">
+    <h4>{l s='Fix templates' mod='dynamicproduct'}</h4>
+    <p class="help-block">{l s='Fix the backoffice order template to display the html summary correctly' mod='dynamicproduct'}</p>
+
+    {if $templates_fixed}
+      <div class="alert alert-success">{l s='The fix was correctly applied to the order templates' mod='dynamicproduct'}</div>
+    {else}
+      <form action="" method="post">
+        <button type="submit" name="fix_templates" class="btn btn-primary">{l s='Apply template fix' mod='dynamicproduct'}</button>
+      </form>
+    {/if}
+    <p>
+      <div class="alert alert-info">{l s='Please clear the PrestaShop cache after applying the fix' mod='dynamicproduct'}</div>
+    </p>
   </div>
 
   <div class="panel-footer">

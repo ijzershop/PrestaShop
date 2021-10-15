@@ -1,5 +1,5 @@
 {*
-* 2010-2020 Tuni-Soft
+* 2010-2021 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    Tuni-Soft
-*  @copyright 2010-2020 Tuni-Soft
+*  @copyright 2010-2021 Tuni-Soft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
@@ -37,7 +37,7 @@
 							{foreach from=$dp_languages item=lang}
 							<div class="dp_lang">
 								<input type="text" name="name[{$lang.id_lang|intval}]" value="{if isset($unit->name[$lang.id_lang])}{$unit->name[$lang.id_lang]|escape:'htmlall':'UTF-8'}{/if}" class="dp_lang_input">
-								<img class="dp_flag" title="{$lang.name|escape:'htmlall':'UTF-8'}" src="{$ps_base_url|escape:'htmlall':'UTF-8'}img/l/{$lang.id_lang|intval}.jpg" />
+								<img class="dp_flag" width="16" title="{$lang.name|escape:'htmlall':'UTF-8'}" src="{$ps_base_url|escape:'htmlall':'UTF-8'}img/l/{$lang.id_lang|intval}.jpg" />
 							</div>
 							{/foreach}
 						</div>

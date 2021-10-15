@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,13 +20,14 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 namespace classes\helpers;
 
 use classes\DynamicTools;
+use classes\models\DynamicProductConfigLink;
 use classes\models\grids\Grid;
 use classes\models\grids\GridColumn;
 use classes\models\grids\GridRow;
@@ -51,6 +52,7 @@ class GridHelper
 
     public function importCSVData($id_product, $csv_data)
     {
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
         $source = DynamicTools::getSource();
         $columns = $csv_data[0] ?: null;
         if (!$columns) {
@@ -58,7 +60,7 @@ class GridHelper
         }
 
         $grid = new Grid();
-        $grid->id_product = (int)$id_product;
+        $grid->id_product = (int)$id_source_product;
         $grid->save();
         $id_grid = $grid->id;
 

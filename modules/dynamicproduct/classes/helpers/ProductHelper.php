@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -80,6 +80,23 @@ class ProductHelper
             }
         }
         return $attribute_fields;
+    }
+
+    public static function getProductDatabaseFields()
+    {
+        $module = DynamicTools::getModule();
+        $database_fields = array();
+        $csv_files = Tools::scandir($module->provider->getDataDir('databases'), 'csv');
+
+        foreach ($csv_files as $csv_file) {
+            $label = pathinfo($csv_file, PATHINFO_FILENAME);
+            $name = $label;
+            $database_fields[] = array(
+                'name'  => $name,
+                'label' => $label
+            );
+        }
+        return $database_fields;
     }
 
     public static function getCleanAttributeName($label)

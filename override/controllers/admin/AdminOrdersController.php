@@ -189,7 +189,6 @@ class AdminOrdersController extends AdminOrdersControllerCore
         if(!empty($workshopProfiles)){
             $profiles = explode(',', $workshopProfiles);
         }
-
         if(in_array($this->context->cookie->__get('profile'), $profiles)){
             //disabled array
             $disabledArray = ['cname','new','total_paid_tax_incl','payment','osorderstate','id_pdf'];
@@ -353,7 +352,6 @@ class AdminOrdersController extends AdminOrdersControllerCore
         $kpis = array('');
         $helper = new HelperKpiRow();
         $helper->kpis = $kpis;
-
         return $helper->generate();
     }
 

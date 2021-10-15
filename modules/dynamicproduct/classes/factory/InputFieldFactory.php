@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -30,7 +30,9 @@ use classes\models\DynamicInputField;
 use classes\models\input_fields\CheckboxInputField;
 use classes\models\input_fields\ColorPickerInputField;
 use classes\models\input_fields\DateInputField;
+use classes\models\input_fields\DividerInputField;
 use classes\models\input_fields\DropdownInputField;
+use classes\models\input_fields\ErrorInputField;
 use classes\models\input_fields\FeatureInputField;
 use classes\models\input_fields\FileInputField;
 use classes\models\input_fields\FixedInputField;
@@ -41,6 +43,7 @@ use classes\models\input_fields\PhpVariableInputField;
 use classes\models\input_fields\PriceInputField;
 use classes\models\input_fields\RadioInputField;
 use classes\models\input_fields\SliderInputField;
+use classes\models\input_fields\SwitchInputField;
 use classes\models\input_fields\TextAreaInputField;
 use classes\models\input_fields\TextInputField;
 use classes\models\input_fields\ThumbnailsInputField;
@@ -64,6 +67,7 @@ class InputFieldFactory
         _DP_PHP_         => PhpVariableInputField::class,
         _DP_DROPDOWN_    => DropdownInputField::class,
         _DP_CHECKBOX_    => CheckboxInputField::class,
+        _DP_SWITCH_      => SwitchInputField::class,
         _DP_FILE_        => FileInputField::class,
         _DP_SLIDER_      => SliderInputField::class,
         _DP_THUMBNAILS_  => ThumbnailsInputField::class,
@@ -72,6 +76,8 @@ class InputFieldFactory
         _DP_RADIO_       => RadioInputField::class,
         _DP_COLORPICKER_ => ColorPickerInputField::class,
         _DP_HTML_        => HtmlInputField::class,
+        _DP_ERROR_       => ErrorInputField::class,
+        _DP_DIVIDER_     => DividerInputField::class,
     );
 
     public function __construct($module, $context)

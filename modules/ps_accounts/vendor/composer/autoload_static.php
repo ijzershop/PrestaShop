@@ -4,12 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit80f9d2a288a888019b4b6d0b723cb386
+class ComposerStaticInitba58643a7aa978fe08d4b07207387c8d
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-        '32dcc8afd4335739640db7d200c1971d' => __DIR__ . '/..' . '/symfony/polyfill-apcu/bootstrap.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+        '32dcc8afd4335739640db7d200c1971d' => __DIR__ . '/..' . '/symfony/polyfill-apcu/bootstrap.php',
         '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         '256c1545158fc915c75e51a931bdba60' => __DIR__ . '/..' . '/lcobucci/jwt/compat/class-aliases.php',
@@ -483,6 +483,7 @@ class ComposerStaticInit80f9d2a288a888019b4b6d0b723cb386
         'PrestaShop\\Module\\PsAccounts\\Handler\\Error\\Sentry' => __DIR__ . '/../..' . '/classes/Handler/Error/Sentry.php',
         'PrestaShop\\Module\\PsAccounts\\Handler\\Response\\ApiResponseHandler' => __DIR__ . '/../..' . '/classes/Handler/Response/ApiResponseHandler.php',
         'PrestaShop\\Module\\PsAccounts\\Installer\\Installer' => __DIR__ . '/../..' . '/classes/Installer/Installer.php',
+        'PrestaShop\\Module\\PsAccounts\\Log\\Logger' => __DIR__ . '/../..' . '/classes/Log/Logger.php',
         'PrestaShop\\Module\\PsAccounts\\Module\\Install' => __DIR__ . '/../..' . '/classes/Module/Install.php',
         'PrestaShop\\Module\\PsAccounts\\Module\\Uninstall' => __DIR__ . '/../..' . '/classes/Module/Uninstall.php',
         'PrestaShop\\Module\\PsAccounts\\Presenter\\DependenciesPresenter' => __DIR__ . '/../..' . '/classes/Presenter/DependenciesPresenter.php',
@@ -922,10 +923,10 @@ class ComposerStaticInit80f9d2a288a888019b4b6d0b723cb386
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit80f9d2a288a888019b4b6d0b723cb386::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit80f9d2a288a888019b4b6d0b723cb386::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit80f9d2a288a888019b4b6d0b723cb386::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit80f9d2a288a888019b4b6d0b723cb386::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitba58643a7aa978fe08d4b07207387c8d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitba58643a7aa978fe08d4b07207387c8d::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitba58643a7aa978fe08d4b07207387c8d::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitba58643a7aa978fe08d4b07207387c8d::$classMap;
 
         }, null, ClassLoader::class);
     }

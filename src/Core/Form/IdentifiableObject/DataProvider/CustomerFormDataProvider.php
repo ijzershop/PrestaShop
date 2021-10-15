@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,20 +17,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 
 /**
@@ -93,8 +93,7 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
             'is_enabled' => $editableCustomer->isEnabled(),
             'is_partner_offers_subscribed' => $editableCustomer->isPartnerOffersSubscribed(),
             'group_ids' => $editableCustomer->getGroupIds(),
-            'default_group_id' => $editableCustomer->getDefaultGroupId(),
-            'informer_identification' => $editableCustomer->getinformer_identification(),
+            'default_group_id' => $editableCustomer->getDefaultGroupId()
         ];
 
         if ($this->isB2bFeatureEnabled) {
@@ -122,7 +121,6 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
         $data = [
             'is_enabled' => true,
             'is_partner_offers_subscribed' => false,
-            'informer_identification' => 0,
             'group_ids' => [
                 $defaultGroups->getVisitorsGroup()->getId(),
                 $defaultGroups->getGuestsGroup()->getId(),

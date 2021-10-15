@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -90,13 +90,18 @@ class DynamicCustomizationHelper
             'id_module'        => (int)$id_module,
             'type'             => (int)Product::CUSTOMIZE_TEXTFIELD,
             'index'            => (int)$id_customization_field,
-            'value'            => '|' . (int)$dynamic_input->id . '|',
+            'value'            => (int)$dynamic_input->id,
             'price'            => (float)$dynamic_input->price,
             'weight'           => (float)$dynamic_input->weight,
         );
 
         Db::getInstance()->insert('customized_data', $data, false, true, Db::REPLACE);
-        Db::getInstance()->update('product', array('customizable' => 1), 'id_product = ' . (int)$id_product);
+        $customizable = $this->module->provider->hasRequiredField($id_product) ? 2 : 1;
+        Db::getInstance()->update(
+            'product',
+            array('customizable' => $customizable),
+            'id_product = ' . (int)$id_product
+        );
     }
 
     public function saveDynamicInput(
@@ -104,6 +109,7 @@ class DynamicCustomizationHelper
         $id_attribute,
         $id_cart,
         $id_customization,
+        $quantity,
         $price_equation_result,
         $weight_equation_result,
         $input_fields
@@ -112,6 +118,7 @@ class DynamicCustomizationHelper
         $dynamic_input->id_product = (int)$id_product;
         $dynamic_input->id_attribute = (int)$id_attribute;
         $dynamic_input->id_cart = (int)$id_cart;
+        $dynamic_input->cart_quantity = (int)$quantity;
         $dynamic_input->id_customer = (int)$this->module->provider->getCustomer();
         $dynamic_input->id_guest = (int)$this->module->provider->getGuest();
         $dynamic_input->hash = Tools::getValue('hash');
@@ -131,6 +138,7 @@ class DynamicCustomizationHelper
     public function saveInputFields($input_fields, $id_input)
     {
         foreach ($input_fields as $input_field) {
+            $input_field->id = null;
             $input_field->id_input = (int)$id_input;
             $input_field->save();
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -32,6 +32,8 @@ use Tools;
 
 class PriceInputField extends DynamicInputField
 {
+    public $type = _DP_PRICE_;
+
     public function displayValue()
     {
         $converted = (float)Tools::convertPriceFull($this->value, null, $this->context->currency);

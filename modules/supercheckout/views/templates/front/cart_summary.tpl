@@ -41,13 +41,13 @@
        id="product_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}">
     <table class="col-12">
       <tr class="row">
-        <td class="d-flex float-none float-sm-left mb-0 col-12 col-sm-3 pr-0 text-center">
-          <div class="Cart-product-Image">
-            <img class="product_img img-responsive" src="{$product.cover.bySize.large_default.url|escape:'quotes'}"
-                 alt='{$product.name|escape:'quotes'}' onclick="showEnlargedImage(this)"/>
-          </div>
-        </td>
-        <td class="d-flex w-sm-auto text-center text-sm-left float-left mb-0 col-12 col-sm-9 shopping-cart-description">
+{*        <td class="d-flex float-none float-sm-left mb-0 col-12 col-sm-3 pr-0 text-center">*}
+{*          <div class="Cart-product-Image">*}
+{*            <img class="product_img img-responsive" src="{$product.cover.bySize.large_default.url|escape:'quotes'}"*}
+{*                 alt='{$product.name|escape:'quotes'}' onclick="showEnlargedImage(this)"/>*}
+{*          </div>*}
+{*        </td>*}
+        <td class="d-flex w-sm-auto text-center text-sm-left float-left mb-0 col-12 shopping-cart-description">
           <div class="product-title text-center text-sm-left  w-100">
             <a href="{$product_url|escape:'quotes'}">{$product.name|escape:'quotes'}</a>
             {if isset($product.attributes) && count($product.attributes) > 0}
@@ -115,7 +115,7 @@
       <tr>
         <td width="30%">
                         <span class="cart-product-price text-right">
-                          <span class="price special-price d-block text-right"
+                          <span class="price special-price d-block text-left"
                                 style="font-size: 14px;"><b>{Context::getContext()->currentLocale->formatPrice($product.price_with_reduction_without_tax, 'EUR')}</b></span> {*escape not required as contains html*}
                           {if $product.price != $product.regular_price}
                             <span class="price regular-price d-block text-right">{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax, 'EUR')}</span>
@@ -266,11 +266,11 @@
                class="cart_discount text-right p-1"
                style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
             <div style="float:left;line-height: 20px;margin-right:5px;"
-                 title="{l s='Korting toevoegen' mod='supercheckout'}" class="removeProduct"><i
-                      class="fas fa-trash"></i></div>
+                 title="{l s='Korting toevoegen' mod='supercheckout'}"></div>
             <span style="float:left;color:#4862A3;font-size:14px;">Kortingscode: {$voucher.name}</span><a href="javascript:void(0)"
                                                                                                style="float: left;margin-left: 2%;"
-                                                                                               onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"></a>
+                                                                                               onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><i
+                      class="fas fa-trash"></i></a>
             <span class="price text-right">{Context::getContext()->currentLocale->formatPrice($voucher.reduction_amount/1.21, 'EUR')}</span>
           </div>
           {assign var="total_discount" value=$total_discount+($voucher.reduction_amount/1.21)}

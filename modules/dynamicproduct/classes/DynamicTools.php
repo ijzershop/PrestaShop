@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -83,6 +83,35 @@ class DynamicTools
     public static function isModuleDevMode()
     {
         return \defined('_PS_MODULE_DEV_') && _PS_MODULE_DEV_;
+    }
+
+    public static function isCacheEnabled()
+    {
+        return !defined('_PS_MODULE_CACHE_') || _PS_MODULE_CACHE_;
+    }
+
+    public static function getHotPort()
+    {
+        $context = self::getContext();
+        $port = _FRONT_DEV_PORT_;
+        if ($context->controller) {
+            $port = $context->controller->controller_type === 'front' ?
+                _FRONT_DEV_PORT_ :
+                _ADMIN_DEV_PORT_;
+        }
+        return $port;
+    }
+
+    public static function isHotMode($port)
+    {
+        if (!self::isModuleDevMode()) {
+            return false;
+        }
+        if (Tools::getIsset('hot')) {
+            return true;
+        }
+        $fsock = @fsockopen(_PS_SOCK_IP_, $port, $errno, $errstr, 1);
+        return (bool)$fsock;
     }
 
     public static function isSuperAdmin()
@@ -262,12 +291,23 @@ class DynamicTools
     public static function formatPrice($price)
     {
         $context = self::getContext();
+        $locale = null;
         if (method_exists($context, 'getCurrentLocale')) {
             $locale = $context->getCurrentLocale();
+        } elseif (method_exists('Tools', 'getContextLocale')) {
+            $locale = Tools::getContextLocale($context);
+        }
+        if ($locale) {
             return $locale->formatPrice($price, $context->currency->iso_code);
         }
-
         return Tools::displayPrice($price);
+    }
+
+    public static function capitalizeFilename($name)
+    {
+        $filename = pathinfo($name, PATHINFO_FILENAME);
+        $filename = str_replace(array('-', '_'), ' ', $filename);
+        return Tools::ucfirst($filename);
     }
 
     /**
@@ -295,5 +335,29 @@ class DynamicTools
         $content = Tools::file_get_contents($url);
         file_put_contents($cache, $content);
         return $content;
+    }
+
+    public static function encodeFile($path)
+    {
+        $content = Tools::file_get_contents($path);
+        return base64_encode($content);
+    }
+
+    public static function decodeData($data)
+    {
+        return base64_decode($data);
+    }
+
+    public function isString($value)
+    {
+        return is_string($value) && !is_numeric($value);
+    }
+
+    public static function reportException($e, $short = false): string
+    {
+        if ($short) {
+            return $e->getMessage();
+        }
+        return "{$e->getMessage()} ({$e->getFile()}:{$e->getLine()})";
     }
 }

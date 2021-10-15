@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,14 +20,14 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
 use classes\DynamicTools;
-use classes\helpers\TranslationHelper;
+use classes\factory\DynamicFieldFactory;
 use classes\models\DynamicCommonField;
 use classes\models\DynamicField;
 
@@ -85,86 +85,27 @@ class DynamicProductFieldsController extends ModuleAdminController
         ));
     }
 
-    private function processSaveFieldName()
+    private function processSaveField()
     {
-        $name = Tools::getValue('name');
-
-        $dynamic_field = new DynamicField($this->id_field);
-        $dynamic_field->name = $name;
-        $dynamic_field->save();
-
+        $id_field = (int)Tools::getValue('id');
+        $dynamic_field = new DynamicField($id_field);
+        $id_product_original = (int)$dynamic_field->id_product;
+        $dynamic_field->saveFromPost();
+        if ($id_product_original !== $this->id_product) {
+            $dynamic_field->id_product = $id_product_original;
+            $dynamic_field->save();
+        }
         $this->respond(array(
-            'field' => $dynamic_field
+            'field' => DynamicFieldFactory::create($dynamic_field->type, $dynamic_field->id),
         ));
-    }
-
-    private function processSaveFieldLabels()
-    {
-        $labels = Tools::getValue('labels');
-
-        $field = new DynamicField($this->id_field);
-
-        $translation_helper = new TranslationHelper($this->module, $this->context);
-        $translation_helper->fillEmpty($labels);
-
-        $field->label = $labels;
-        $field->save();
-
-        $this->respond();
-    }
-
-    private function processSaveFieldType()
-    {
-        $type = (int)Tools::getValue('type');
-
-        $dynamic_field = new DynamicField($this->id_field);
-        $dynamic_field->type = $type;
-        $dynamic_field->save();
-
-        $this->respond(array(
-            'field' => $dynamic_field
-        ));
-    }
-
-    private function processSaveFieldInit()
-    {
-        $init = (float)Tools::getValue('init');
-
-        $dynamic_field = new DynamicField($this->id_field);
-        $dynamic_field->init = $init;
-        $dynamic_field->save();
-
-        $this->respond(array(
-            'field' => $dynamic_field
-        ));
-    }
-
-    private function processSaveFieldUnit()
-    {
-        $id_unit = (int)Tools::getValue('id_unit');
-
-        $dynamic_field = new DynamicField($this->id_field);
-        $dynamic_field->id_unit = $id_unit;
-        $dynamic_field->save();
-
-        $this->respond();
-    }
-
-    private function processSaveFieldActive()
-    {
-        $active = (int)Tools::getValue('active');
-
-        $dynamic_field = new DynamicField($this->id_field);
-        $dynamic_field->active = $active;
-        $dynamic_field->save();
-
-        $this->respond();
     }
 
     private function processDuplicateField()
     {
         $this->module->handler->copyField($this->id_field, $this->id_product);
-        $this->respond();
+        $this->respond(array(
+            'fields' => DynamicField::getFieldsByIdProduct($this->id_product),
+        ));
     }
 
     private function processDeleteField()
@@ -202,20 +143,18 @@ class DynamicProductFieldsController extends ModuleAdminController
         $upload = $file[0];
 
         if ($upload['error']) {
-            $this->respond(array('error' => $upload['error']));
+            $this->respond(array(
+                'error'   => true,
+                'message' => $upload['error']
+            ));
         }
 
         $save_path = $upload['save_path'];
         ImageManager::resize($save_path, $img_dir . $this->id_field . '.jpg');
         ImageManager::resize($save_path, $img_dir . $this->id_field . '-thumb.jpg', 35, 35);
 
-        $folder_url = $this->module->provider->getDataDirUrl('images/field');
-        $image_url = $folder_url . $this->id_field . '.jpg?' . uniqid('', true);
-        $thumb_url = $folder_url . $this->id_field . '-thumb.jpg?' . uniqid('', true);
-
         $this->respond(array(
-            'url'       => $image_url,
-            'thumb_url' => $thumb_url
+            'field' => new DynamicField($this->id_field),
         ));
     }
 
@@ -231,10 +170,8 @@ class DynamicProductFieldsController extends ModuleAdminController
             unlink($thumb);
         }
 
-        $folder_url = $this->module->getFolderUrl('views/img/');
-
         $this->respond(array(
-            'empty' => $folder_url . 'empty.png',
+            'field' => new DynamicField($this->id_field),
         ));
     }
 
@@ -257,43 +194,10 @@ class DynamicProductFieldsController extends ModuleAdminController
         $this->respond();
     }
 
-    private function processAddToFavorites()
-    {
-        $field = new DynamicField($this->id_field);
-        $field->favorite = true;
-        $field->save();
-        $this->respond();
-    }
-
-    private function processRemoveFromFavorites()
-    {
-        $field = new DynamicField($this->id_field);
-        $field->favorite = false;
-        $field->save();
-        $this->respond();
-    }
-
-    private function processAddToCommonFields()
-    {
-        $field = new DynamicField($this->id_field);
-        $field->id_product = $this->id_product;
-        $field->common = true;
-        $field->save();
-        $this->respond();
-    }
-
-    private function processRemoveFromCommonFields()
-    {
-        $field = new DynamicField($this->id_field);
-        $field->common = false;
-        $field->save();
-        $this->respond();
-    }
-
     private function processLoadFavoriteField()
     {
-        $id_favorite_field = (int)Tools::getValue('id_favorite_field');
-        $field = new DynamicField($id_favorite_field);
+        $id_field = (int)Tools::getValue('id_field');
+        $field = new DynamicField($id_field);
         $new_field = $this->module->handler->copyField($field->id, $this->id_product);
         $id_new_field = $new_field['id_field'];
 
@@ -309,26 +213,33 @@ class DynamicProductFieldsController extends ModuleAdminController
 
     private function processLoadCommonField()
     {
-        $id_common_field = (int)Tools::getValue('id_common_field');
-        $dynamic_field = new DynamicField($id_common_field);
+        $id_field = (int)Tools::getValue('id_field');
+        $dynamic_field = new DynamicField($id_field);
 
-        if ((int)$dynamic_field->id_product === (int)$this->id_product) {
+        $common_field = DynamicCommonField::getByFieldAndProduct($id_field, $this->id_product);
+        if (Validate::isLoadedObject($common_field)) {
             $this->respond(array(
-                'error' => $this->module->l('A common field can only be included once in the same product')
+                'error'   => true,
+                'message' => $this->module->l('A common field can only be included once in the same product')
             ));
         }
+        $common_field->position = 1;
 
-        $common_field = DynamicCommonField::getByFieldAndProduct($id_common_field, $this->id_product);
+        $product_fields = array_values(DynamicField::getByIdProduct($this->id_product));
+        if (!empty($product_fields)) {
+            $common_field->position = DynamicField::getHighestPosition($product_fields[0]);
+        }
+
         $common_field->save();
+
+        // modify original field for display only
+        $dynamic_field->position = $common_field->position;
+        $dynamic_field->common = true;
+        $dynamic_field->linked = true;
 
         $this->respond(array(
             'field' => $dynamic_field
         ));
-    }
-
-    private function processReloadList()
-    {
-        exit($this->module->hookDisplayFieldsList($this->id_product));
     }
 
     public function respond($data = array(), $success = 1)

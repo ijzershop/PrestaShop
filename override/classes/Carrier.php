@@ -1,8 +1,14 @@
 <?php
-use classes\models\DynamicInput;
+declare(strict_types=1);
+use PrestaShop\PrestaShop\Adapter\Entity\Module;
+use PrestaShop\PrestaShop\Adapter\Entity\Context;
 class Carrier extends CarrierCore
 {
-
+    /*
+    * module: dynamicproduct
+    * date: 2021-10-15 10:43:05
+    * version: 2.30.0
+    */
     public static function getAvailableCarrierList(
         Product $product,
         $id_warehouse,
@@ -11,16 +17,8 @@ class Carrier extends CarrierCore
         $cart = null,
         &$error = array()
     ) {
-
-        $storeCustomer = (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE');
-        $storeCustomerLoggedIn = false;
-
-        if(!is_null(Context::getContext()->customer) && $storeCustomer == Context::getContext()->customer->id){
-            $storeCustomerLoggedIn = true;
-        }
-
         if (!Module::isEnabled('dynamicproduct')) {
-            $carrierList = parent::getAvailableCarrierList(
+            return parent::getAvailableCarrierList(
                 $product,
                 $id_warehouse,
                 $id_address_delivery,
@@ -28,22 +26,21 @@ class Carrier extends CarrierCore
                 $cart,
                 $error
             );
-            return $carrierList;
         }
         if ($cart === null) {
             $cart = Context::getContext()->cart;
         }
-        $sizes = DynamicInput::getMaxSizes($cart->id);
-        $product->width = $sizes['width'];
-        $product->height = $sizes['height'];
-        $product->depth = $sizes['depth'];
-        $carrierList = parent::getAvailableCarrierList($product, $id_warehouse, $id_address_delivery, $id_shop, $cart, $error);
-        if($storeCustomerLoggedIn){
-            $paidShippingCarrier = unserialize(Configuration::get("koopmanOrderExport"));
-            if(!empty($paidShippingCarrier) && isset($paidShippingCarrier['select_carrier'])){
-                unset($carrierList[(int)$paidShippingCarrier['select_carrier']]);
-            }
+        Module::getInstanceByName('dynamicproduct');
+        $sizes = classes\models\DynamicInput::getMaxSizes($product);
+        if ((float)$sizes['width']) {
+            $product->width = $sizes['width'];
         }
-        return $carrierList;
+        if ((float)$sizes['height']) {
+            $product->height = $sizes['height'];
+        }
+        if ((float)$sizes['depth']) {
+            $product->depth = $sizes['depth'];
+        }
+        return parent::getAvailableCarrierList($product, $id_warehouse, $id_address_delivery, $id_shop, $cart, $error);
     }
 }

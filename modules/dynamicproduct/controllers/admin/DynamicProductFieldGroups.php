@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,13 +20,14 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
 use classes\DynamicTools;
+use classes\models\DynamicCommonField;
 use classes\models\DynamicField;
 use classes\models\DynamicFieldGroup;
 use classes\models\DynamicProductFieldGroup;
@@ -70,8 +71,7 @@ class DynamicProductFieldGroupsController extends ModuleAdminController
         exit();
     }
 
-    /** @noinspection PhpUnused */
-    public function processGetFieldGroups()
+    private function processGetFieldGroups()
     {
         $this->respond(array(
             'product_field_groups' => DynamicProductFieldGroup::getByIdProduct($this->id_product, true),
@@ -79,8 +79,7 @@ class DynamicProductFieldGroupsController extends ModuleAdminController
         ));
     }
 
-    /** @noinspection PhpUnused */
-    public function processInsertGroup()
+    private function processInsertGroup()
     {
         $id_group = (int)Tools::getValue('id_group');
         $product_field_group = new DynamicProductFieldGroup();
@@ -93,19 +92,39 @@ class DynamicProductFieldGroupsController extends ModuleAdminController
         ));
     }
 
-    /** @noinspection PhpUnused */
-    public function processDeleteGroup()
+    private function processSaveGroupSettings()
+    {
+        $product_group = (array)Tools::getValue('product_group');
+        $id_product_group = (int)$product_group['id'];
+        $product_field_group = new DynamicProductFieldGroup($id_product_group);
+        $product_field_group->collapsible = (int)$product_group['collapsible'];
+        $product_field_group->start_collapsed = (int)$product_group['start_collapsed'];
+        $product_field_group->save();
+        $this->respond();
+    }
+
+    private function processDeleteGroup()
     {
         $id_group = (int)Tools::getValue('id_group');
         $product_field_group = new DynamicProductFieldGroup($id_group);
         $product_field_group->delete();
+        Db::getInstance()->update(
+            $this->module->name . '_field',
+            array('id_group' => 0),
+            'id_group = ' . (int)$product_field_group->id
+        );
+        Db::getInstance()->update(
+            $this->module->name . '_common_field',
+            array('id_group' => 0),
+            'id_group = ' . (int)$product_field_group->id
+        );
         $this->respond(array(
+            'fields'               => DynamicField::getFieldsByIdProduct($this->id_product),
             'product_field_groups' => DynamicProductFieldGroup::getByIdProduct($this->id_product, true),
         ));
     }
 
-    /** @noinspection PhpUnused */
-    public function processReorderGroups()
+    private function processReorderGroups()
     {
         $order = (array)Tools::getValue('order');
         foreach ($order as $position => $id_product_group) {
@@ -116,18 +135,23 @@ class DynamicProductFieldGroupsController extends ModuleAdminController
         $this->respond();
     }
 
-    /** @noinspection PhpUnused */
-    public function processSaveFieldGroup()
+    private function processSaveFieldGroup()
     {
         $id_field = (int)Tools::getValue('id_field');
         $id_group = (int)Tools::getValue('id_group');
         $dynamic_field = new DynamicField($id_field);
-        $dynamic_field->id_group = $id_group;
-        $dynamic_field->save();
+        if ((int)$dynamic_field->id_product !== $this->id_product) {
+            $common_field = DynamicCommonField::getByFieldAndProduct($id_field, $this->id_product);
+            $common_field->id_group = $id_group;
+            $common_field->save();
+        } else {
+            $dynamic_field->id_group = $id_group;
+            $dynamic_field->save();
+        }
         $this->respond();
     }
 
-    public function respond($data = array(), $success = 1)
+    private function respond($data = array(), $success = 1)
     {
         /** @noinspection CallableParameterUseCaseInTypeContextInspection */
         $success = $success && (int)!array_key_exists('error', $data);

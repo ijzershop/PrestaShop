@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Cache;
 use Context;
 use Tax;
 use TaxRule;
@@ -82,7 +83,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a tax rule named "(.+)"in country "(.+)" and state "(.+)" where tax "(.+)" is applied$/
+     * @Given /^there is a tax rule named "(.+)" in country "([^\"]+)" and state "(.+)" where tax "(.+)" is applied$/
      */
     public function createTaxRule($taxRuleName, $countryName, $stateName, $taxName)
     {
@@ -99,6 +100,32 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
         $taxRule = new TaxRule();
         $taxRule->id_country = $this->carrierFeatureContext->getCountryWithName($countryName)->id;
         $taxRule->id_state = $this->carrierFeatureContext->getStateWithName($stateName)->id;
+        $taxRule->id_tax_rules_group = $taxRuleGroup->id;
+        $taxRule->id_tax = $this->taxes[$taxName]->id;
+        $taxRule->zipcode_from = 0;
+        $taxRule->zipcode_to = 0;
+        $taxRule->behavior = 1;
+        $taxRule->add();
+        $this->taxRules[$taxRuleName] = $taxRule;
+    }
+
+    /**
+     * @Given /^there is a tax rule named "(.+)" in country "([^\"]+)" where tax "(.+)" is applied$/
+     */
+    public function createTaxRuleWithoutState(string $taxRuleName, string $countryName, string $taxName): void
+    {
+        $this->carrierFeatureContext->checkCountryWithNameExists($countryName);
+        $this->checkTaxWithNameExists($taxName);
+
+        $taxRuleGroup = new TaxRulesGroup();
+        $taxRuleGroup->active = 1;
+        $taxRuleGroup->name = 'fake';
+        $taxRuleGroup->add();
+        $this->taxRuleGroups[$taxRuleName] = $taxRuleGroup;
+
+        $taxRule = new TaxRule();
+        $taxRule->id_country = $this->carrierFeatureContext->getCountryWithName($countryName)->id;
+        $taxRule->id_state = 0;
         $taxRule->id_tax_rules_group = $taxRuleGroup->id;
         $taxRule->id_tax = $this->taxes[$taxName]->id;
         $taxRule->zipcode_from = 0;
@@ -144,14 +171,6 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I set the delivery address in my cart to address id (\d+)$/
-     */
-    public function setIdAddress($addressId)
-    {
-        $this->getCurrentCart()->id_address_delivery = $addressId;
-    }
-
-    /**
      * @Given /^product "(.+)" belongs to tax group "(.+)"$/
      */
     public function setProductTaxRuleGroup($productName, $taxName)
@@ -161,6 +180,9 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
         $product = $this->productFeatureContext->getProductWithName($productName);
         $product->id_tax_rules_group = $this->taxRuleGroups[$taxName]->id;
         $product->save();
+
+        // Clean cache after changing tax of product
+        Cache::clean('product_id_tax_rules_group_*');
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -49,11 +49,6 @@ class FieldsVisibilityHelper
     {
         $conditions_visibility = DynamicEquation::getConditionsVisibility($id_product, $input_fields);
         $attribute_visibility = $this->module->provider->getVisibilityValues($id_product, $id_attribute);
-        return $this->mergeVisibility($attribute_visibility, $conditions_visibility);
-    }
-
-    private function mergeVisibility($attribute_visibility, array $conditions_visibility)
-    {
         return $attribute_visibility + $conditions_visibility;
     }
 
@@ -70,13 +65,17 @@ class FieldsVisibilityHelper
      */
     public function setExcludedFields(&$input_fields, $fields_visibility)
     {
-        foreach ($input_fields as $input_field) {
-            if ($this->isHidden($fields_visibility, $input_field->id_field)) {
+        foreach ($input_fields as &$input_field) {
+            if ($this->isHidden($fields_visibility, $input_field->id_field)
+                || $this->belongsToHiddenGroup($fields_visibility, $input_field->getDynamicField()->id_group)) {
                 $input_field->setExcluded();
             }
             if ($this->hasHiddenOptions($fields_visibility, $input_field->id_field)) {
                 $input_field->setExcludedOptions($fields_visibility[$input_field->id_field]);
                 if ($input_field->type === _DP_DROPDOWN_ && $input_field->isSelectedOptionExcluded()) {
+                    $input_field->selectFirstVisibleOption();
+                }
+                if ($input_field->type === _DP_RADIO_ && $input_field->isSelectedOptionExcluded()) {
                     $input_field->selectFirstVisibleOption();
                 }
             }
@@ -91,5 +90,12 @@ class FieldsVisibilityHelper
     private function hasHiddenOptions($visibility, $id_field)
     {
         return isset($visibility[$id_field]) && is_array($visibility[$id_field]);
+    }
+
+    private function belongsToHiddenGroup($visibility, $id_group)
+    {
+        return isset($visibility['groups'])
+            && isset($visibility['groups'][$id_group])
+            && (int)$visibility['groups'][$id_group] === 0;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -33,10 +33,16 @@ class UploadInputField extends DynamicInputField
 {
     public $dir = 'upload';
 
+    public function __construct($id = null, $id_lang = null, $id_shop = null)
+    {
+        parent::__construct($id, $id_lang, $id_shop);
+        $this->dir = $this->getKeepFilePath() ? 'upload_keep' : 'upload';
+    }
+
     /** @noinspection PhpUnused */
     public function getFileUrl()
     {
-        $folder_url = $this->module->provider->getDataDirUrl('upload/');
+        $folder_url = $this->module->provider->getDataDirUrl($this->dir);
         return $folder_url . $this->value;
     }
 
@@ -48,22 +54,35 @@ class UploadInputField extends DynamicInputField
         return !$this->fileExists();
     }
 
+    public function getKeepFilePath()
+    {
+        $keep_path = $this->module->provider->getDataDir('upload_keep') . $this->value;
+        return is_file($keep_path) ? $keep_path : false;
+    }
+
     private function fileExists()
     {
         return is_file($this->getFilePath());
     }
 
-    private function getFilePath()
+    public function getFilePath()
     {
-        return $this->module->provider->getDataDir('upload') . $this->value;
+        return $this->module->provider->getDataDir($this->dir) . $this->value;
+    }
+
+    public function getThumbPath($name = 'file')
+    {
+        $extension = pathinfo($this->value, PATHINFO_EXTENSION);
+        $upload_dir = $this->module->provider->getDataDir($this->dir);
+        return $upload_dir . str_replace('.' . $extension, $this->thumb_suffix, $this->value);
     }
 
     /** @noinspection PhpUnused */
     public function getThumbUrl()
     {
-        $folder_url = $this->module->provider->getDataDirUrl('upload/');
+        $folder_url = $this->module->provider->getDataDirUrl($this->dir);
         $extension = pathinfo($this->value, PATHINFO_EXTENSION);
-        return $folder_url . str_replace('.'.$extension, $this->thumb_suffix, $this->value);
+        return $folder_url . str_replace('.' . $extension, $this->thumb_suffix, $this->value);
     }
 
     /** @noinspection PhpUnused */
@@ -71,5 +90,14 @@ class UploadInputField extends DynamicInputField
     {
         $file_helper = new FileHelper($this->module, $this->context);
         return $file_helper->isImage($this->getFilePath());
+    }
+
+    public function setData($id_lang)
+    {
+        parent::setData($id_lang);
+        if ($this->value && $this->isImage()) {
+            $this->image_url = $this->getFileUrl();
+            $this->thumb_url = $this->getThumbUrl();
+        }
     }
 }

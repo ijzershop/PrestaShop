@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,9 +20,11 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
+
+/** @noinspection PhpUnusedPrivateMethodInspection */
 
 use classes\DynamicTools;
 use classes\models\DynamicEquation;
@@ -69,36 +71,28 @@ class DynamicProductFieldFormulasController extends ModuleAdminController
         exit();
     }
 
-    /** @noinspection PhpUnused */
-    public function processAddFieldFormula()
+    private function processAddFieldFormula()
     {
         $field_formula = new FieldFormula();
         $field_formula->id_product = $this->id_product;
         $field_formula->position = FieldFormula::getHighestPosition($field_formula);
         $field_formula->save();
-        $this->respond();
+        $this->respond(array(
+            'field_formula' => $field_formula,
+        ));
     }
 
-    /** @noinspection PhpUnused */
-    public function processSaveFieldFormula()
-    {
-        $id_field_formula = (int)Tools::getValue('id_field_formula');
-        $field_formula = new FieldFormula($id_field_formula);
-        $field_formula->formula = Tools::getValue('formula');
-        $field_formula->save();
-        $this->respond();
-    }
-
-    /** @noinspection PhpUnusedPrivateMethodInspection */
     private function processSaveFormula()
     {
         $id_field_formula = (int)Tools::getValue('id_field_formula');
         $formula = Tools::getValue('formula');
-
         $fields = Tools::getValue('fields');
         $validation = DynamicEquation::checkFormula($this->id_product, $formula, $fields);
         if ($validation !== true) {
-            $this->respond(array('error' => $validation));
+            $this->respond(array(
+                'error'   => true,
+                'message' => $validation
+            ));
         }
         $field_formula = new FieldFormula($id_field_formula);
         $field_formula->formula = $formula;
@@ -107,16 +101,18 @@ class DynamicProductFieldFormulasController extends ModuleAdminController
         $target_formula = $field_formula->getTargetFormula();
         if (empty($target_field) || empty($target_formula)) {
             $this->respond(array(
-                'error' => $this->module->l('The formula must have the format [field] = formula...')
+                'error'   => true,
+                'message' => $this->module->l('The formula must have the format [field] = formula...')
             ));
         }
 
         $field_formula->save();
-        $this->respond();
+        $this->respond(array(
+            'field_formula' => $field_formula,
+        ));
     }
 
-    /** @noinspection PhpUnused */
-    public function processDeleteFieldFormula()
+    private function processDeleteFieldFormula()
     {
         $id_field_formula = (int)Tools::getValue('id_field_formula');
         $field_formula = new FieldFormula($id_field_formula);
@@ -124,8 +120,7 @@ class DynamicProductFieldFormulasController extends ModuleAdminController
         $this->respond();
     }
 
-    /** @noinspection PhpUnused */
-    public function processSaveOrder()
+    private function processSaveOrder()
     {
         $order = Tools::getValue('order');
         foreach ($order as $index => $id_field_formula) {
@@ -133,13 +128,9 @@ class DynamicProductFieldFormulasController extends ModuleAdminController
             $field_formula->position = $index + 1;
             $field_formula->save();
         }
-        $this->respond();
-    }
-
-    /** @noinspection PhpUnusedPrivateMethodInspection */
-    private function processReloadList()
-    {
-        exit($this->module->hookDisplayFieldFormulasList($this->id_product));
+        $this->respond(array(
+            'field_formulas' => FieldFormula::getByProduct($this->id_product),
+        ));
     }
 
     public function respond($data = array(), $success = 1)

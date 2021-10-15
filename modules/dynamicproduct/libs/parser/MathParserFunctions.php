@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,10 +20,12 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
+use classes\DynamicTools;
+use classes\helpers\DynamicEquationHelper;
 use libs\parser\MathParser;
 use libs\parser\MathParserParserException;
 
@@ -132,6 +134,16 @@ function mpOr($p1, $p2)
     return (($p1 == 0 ? false : true) || ($p2 == 0 ? false : true)) ? 1 : 0;
 }
 
+function mpBitwiseAnd($p1, $p2)
+{
+    return $p1 & $p2;
+}
+
+function mpBitwiseOr($p1, $p2)
+{
+    return $p1 | $p2;
+}
+
 function sumFunc()
 {
     $p = func_get_args();
@@ -181,6 +193,11 @@ function checkFunc($val)
     return (int)(Tools::strlen($val) > 0);
 }
 
+function mpContains($val, $partial)
+{
+    return (int)(strpos($val, $partial) !== false);
+}
+
 function strLength($val)
 {
     return (int)Tools::strlen($val);
@@ -189,6 +206,16 @@ function strLength($val)
 function mpSubstr($str, $start, $length = false)
 {
     return Tools::substr($str, $start, $length);
+}
+
+function mpReplace($original, $replaced, $replacement)
+{
+    return str_replace($replaced, $replacement, $original);
+}
+
+function mpGrid($filename, $row_value, $column_value, $default = 0)
+{
+    return DynamicEquationHelper::getGridValue($filename, $row_value, $column_value, $default);
 }
 
 function mpSquare($val)
@@ -239,17 +266,17 @@ function mpRand()
     return rand(0, $max) / $max;
 }
 
-function mpRound($val, $precision)
+function mpRound($val, $precision = 0)
 {
     return Tools::ps_round($val, (int)$precision);
 }
 
-function mpRoundUp($val, $precision)
+function mpRoundUp($val, $precision = 0)
 {
     return Tools::ps_round($val, (int)$precision, PS_ROUND_UP);
 }
 
-function mpRoundDown($val, $precision)
+function mpRoundDown($val, $precision = 0)
 {
     return Tools::ps_round($val, (int)$precision, PS_ROUND_DOWN);
 }
@@ -262,4 +289,9 @@ function mpConcat()
         $s .= $val;
     }
     return $s;
+}
+
+function mpPrice($val)
+{
+    return DynamicTools::formatPrice($val);
 }

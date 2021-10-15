@@ -1,10 +1,11 @@
 /**
- * 2007-2020 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
@@ -85,6 +85,20 @@ function getProductUpdateUrl() {
 }
 
 /**
+ * @param {string} errorMessage
+ */
+function showErrorNextToAddtoCartButton(errorMessage) {
+  if (errorMessage === undefined) {
+    errorMessage = 'An error occurred while processing your request';
+  }
+
+  showError(
+      $('.quickview #product-availability, .page-product:not(.modal-open) .row #product-availability, .page-product:not(.modal-open) .product-container #product-availability'),
+      errorMessage
+  );
+}
+
+/**
  * Update the product html
  *
  * @param {string} event
@@ -105,7 +119,7 @@ function updateProduct(event, eventType, updateUrl) {
 
   // Can not get product ajax url
   if (updateUrl === null) {
-    showError($('#product-availability'), 'An error occurred while processing your request');
+    showErrorNextToAddtoCartButton();
 
     return;
   }
@@ -140,6 +154,7 @@ function updateProduct(event, eventType, updateUrl) {
       url: updateUrl + ((updateUrl.indexOf('?') === -1) ? '?' : '&') + formSerialized + preview,
       method: 'POST',
       data: {
+        quickview: $('.modal.quickview.in').length,
         ajax: 1,
         action: 'refresh',
         quantity_wanted: eventType === 'updatedProductCombination' ? $quantityWantedInput.attr('min') : $quantityWantedInput.val()
@@ -154,7 +169,7 @@ function updateProduct(event, eventType, updateUrl) {
         if (textStatus !== 'abort'
             && $('section#main > .ajax-error').length === 0
         ) {
-          showError($('.quickview #product-availability, .page-product:not(.modal-open) .row #product-availability'), 'An error occurred while processing your request');
+          showErrorNextToAddtoCartButton();
         }
       },
       success(data, textStatus, errorThrown) {
@@ -163,8 +178,8 @@ function updateProduct(event, eventType, updateUrl) {
         const $newImagesContainer = $('<div>').append(data.product_cover_thumbnails);
 
         // Used to avoid image blinking if same image = epileptic friendly
-        if ($('.images-container').html() !== $newImagesContainer.find('.images-container').html()) {
-          $('.images-container').replaceWith(data.product_cover_thumbnails);
+        if ($('.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container').html() !== $newImagesContainer.find('.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container').html()) {
+          $('.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container').replaceWith(data.product_cover_thumbnails);
         }
 
         $(
@@ -236,7 +251,7 @@ function replaceAddToCartSections(data) {
   });
 
   if ($productAddToCart === null) {
-    showError($('.quickview #product-availability, .page-product:not(.modal-open) .row #product-availability, .page-product:not(.modal-open) .product-container #product-availability'), 'An error occurred while processing your request');
+    showErrorNextToAddtoCartButton();
   }
   const $addProductToCart = $('.product-add-to-cart');
   const productAvailabilitySelector = '.add';
@@ -344,7 +359,7 @@ $(document).ready(() => {
       productUpdateUrl => updateProduct(event, eventType, productUpdateUrl)
     ).fail(() => {
       if ($('section#main > .ajax-error').length === 0) {
-        showError($('#product-availability'), 'An error occurred while processing your request');
+        showErrorNextToAddtoCartButton();
       }
     });
   });
@@ -385,5 +400,13 @@ $(document).ready(() => {
     const $quantityWantedInput = $('#quantity_wanted');
     //Force value to 1, it will automatically trigger updateProduct and reset the appropriate min value if needed
     $quantityWantedInput.val(1);
+  });
+
+  prestashop.on('showErrorNextToAddtoCartButton', (event) => {
+    if (!event || !event.errorMessage) {
+      return;
+    }
+
+    showErrorNextToAddtoCartButton(event.errorMessage);
   });
 });

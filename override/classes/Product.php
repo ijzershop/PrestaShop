@@ -1,8 +1,6 @@
 <?php
 use classes\models\DynamicConfig;
 use classes\models\DynamicEquation;
-
-
 class Product extends ProductCore {
         /*
     * module: offerintegration
@@ -16,19 +14,12 @@ class Product extends ProductCore {
     * version: 1.0.9.1
     */
     public $link_rewrite;
-
     public $saw_loss;
-
     public $min_saw_size;
-
     public $min_cut_size;
-
     public $id_oi_offer;
-
     public $oi_offer_extra_shipping;
-
     public $name;
-
     public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
     {
         self::$definition['fields']['saw_loss'] = array('type' => self::TYPE_INT,
@@ -60,12 +51,10 @@ class Product extends ProductCore {
                                                                  'lang' => true,
                                                                  'validate' => 'isCatalogName',
                                                                  'required' => true, 'size' => 255);
-
         self::$definition['fields']['link_rewrite'] = array('type' => self::TYPE_STRING,
             'lang' => true,
             'validate' => 'isString',
             'required' => false, 'size' => 255);
-
         parent::__construct($id_product, $full, $id_lang, $id_shop);
     }
      public static function getPriceStatic(
@@ -187,29 +176,6 @@ class Product extends ProductCore {
         }
         return $ret;
     }
-    /*
-    * module: dynamicproduct
-    * date: 2021-03-08 12:46:15
-    * version: 2.8.3
-    */
-    public static function getProductProperties($id_lang, $row, Context $context = null)
-    {
-        $result = parent::getProductProperties($id_lang, $row, $context);
-
-        $module = Module::getInstanceByName('dynamicproduct');
-        if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
-            $id_product = (int)$row['id_product'];
-            $dynamic_config = new classes\models\DynamicConfig($id_product);
-            if ($dynamic_config->active) {
-                $displayed_price = classes\models\DynamicConfig::getDisplayedPrice($id_product);
-                if ($displayed_price || $dynamic_config->display_dynamic_price) {
-                    $module->calculator->assignProductPrices($row, $displayed_price, $result);
-                }
-            }
-        }
-        return $result;
-    }
-
     public static function isDynamicProduct($product){
         if(is_array($product)){
             $id_product = $product['id_product'];
@@ -288,12 +254,10 @@ class Product extends ProductCore {
         }
         return $customized_datas;
     }
-
     public static function getOfferRows($id_oi_offer = null, $id_lang = 1) {
         if ($id_oi_offer == null || !is_numeric($id_oi_offer)) {
             return array();
         }
-
         $query = 'SELECT p.*, product_shop.*, pl.* , m.`name` AS manufacturer_name, s.`name` AS supplier_name FROM `' . _DB_PREFIX_ . 'product` as `p`
                     '.Shop::addSqlAssociation('product', 'p').'
                     LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` AS `pl` ON `p`.`id_product` = `pl`.`id_product`
@@ -301,18 +265,35 @@ class Product extends ProductCore {
                     LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (s.`id_supplier` = p.`id_supplier`)
                     WHERE `p`.`id_oi_offer` = ' . $id_oi_offer . '
                     AND `pl`.`id_lang` = ' . $id_lang . ';';
-
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-
         $results_array = array();
-
         foreach ($result as $row) {
             $row['price_tax_inc'] = Product::getPriceStatic($row['id_product'], true, null, 2);
             $row['price_tax_exc'] = Product::getPriceStatic($row['id_product'], false, null, 2);
             $results_array[] = $row;
         }
-
-
         return $results_array;
+    }
+    /*
+    * module: dynamicproduct
+    * date: 2021-10-15 10:43:05
+    * version: 2.30.0
+    */
+    public static function getProductProperties($id_lang, $row, Context $context = null)
+    {
+        $result = parent::getProductProperties($id_lang, $row, $context);
+        
+        $module = Module::getInstanceByName('dynamicproduct');
+        if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
+            $id_product = (int)$row['id_product'];
+            $dynamic_config = new classes\models\DynamicConfig($id_product);
+            if ($dynamic_config->active) {
+                $displayed_price = classes\models\DynamicConfig::getDisplayedPrice($id_product);
+                if ($displayed_price || $dynamic_config->display_dynamic_price) {
+                    $module->calculator->assignProductPrices($row, $displayed_price, $result);
+                }
+            }
+        }
+        return $result;
     }
 }

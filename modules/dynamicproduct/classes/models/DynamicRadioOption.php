@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -43,11 +43,15 @@ class DynamicRadioOption extends DynamicObject
     public $label;
     public $image;
 
+    public $deleted = 0;
+
     public $image_full;
     public $has_image;
     public $has_color;
 
     private static $radio_options;
+
+    public $displayed_price;
 
     public static $definition = array(
         'table'      => 'dynamicproduct_radio_option',
@@ -62,6 +66,7 @@ class DynamicRadioOption extends DynamicObject
             'color'           => array('type' => self::TYPE_STRING),
             'is_default'      => array('type' => self::TYPE_INT),
             'position'        => array('type' => self::TYPE_INT),
+            'deleted'         => array('type' => self::TYPE_INT),
             /* Lang fields */
             'label'           => array(
                 'type'     => self::TYPE_STRING,
@@ -85,6 +90,7 @@ class DynamicRadioOption extends DynamicObject
         $sql->from(self::$definition['table']);
         $sql->select('id_radio_option');
         $sql->where('id_field = ' . (int)$id_field);
+        $sql->where('!deleted');
         $sql->orderBy('`position` ASC');
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
@@ -159,6 +165,9 @@ class DynamicRadioOption extends DynamicObject
         if (is_file($thumb)) {
             unlink($thumb);
         }
-        parent::delete();
+
+        // parent::delete();
+        $this->deleted = true;
+        $this->save();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -29,6 +29,7 @@ namespace classes\module;
 use classes\DynamicTools;
 use classes\models\DynamicField;
 use classes\models\DynamicFieldGroup;
+use classes\models\DynamicStep;
 use classes\models\DynamicUnit;
 use Context;
 use DynamicProduct;
@@ -104,11 +105,26 @@ class DynamicProcessor
         DynamicTools::redirect();
     }
 
+    public function processEditStep()
+    {
+        $id_step = (int)Tools::getValue('id_step');
+        $step = new DynamicStep($id_step);
+        $step->saveFromPost();
+        DynamicTools::redirect();
+    }
+
     public function processDeleteFieldGroup()
     {
         $id_field_group = (int)Tools::getValue('id_field_group');
         $field_group = new DynamicFieldGroup($id_field_group);
         $field_group->delete();
+    }
+
+    public function processDeleteStep()
+    {
+        $id_step = (int)Tools::getValue('id_step');
+        $step = new DynamicStep($id_step);
+        $step->delete();
     }
 
     public function processRemoveFavoriteField()

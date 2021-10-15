@@ -1,5 +1,5 @@
 {*
-* 2010-2020 Tuni-Soft
+* 2010-2021 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -18,13 +18,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    Tuni-Soft
-*  @copyright 2010-2020 Tuni-Soft
+*  @copyright 2010-2021 Tuni-Soft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
 {include file="./units/unit-list.tpl"}
 
 {include file="./field-groups/field-group-list.tpl"}
+
+{include file="./steps/step-list.tpl"}
 
 {include file="./fields/common-fields-list.tpl"}
 

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
  * Stores editable data for customer
@@ -127,10 +127,6 @@ class EditableCustomer
      */
     private $riskId;
     /**
-     * @var string
-     */
-    private $informer_identification;
-    /**
      * @param CustomerId $customerId
      * @param int $genderId
      * @param FirstName $firstName
@@ -149,7 +145,6 @@ class EditableCustomer
      * @param float $allowedOutstandingAmount
      * @param int $maxPaymentDays
      * @param int $riskId
-     * @param string $informer_identification
      */
     public function __construct(
         CustomerId $customerId,
@@ -169,8 +164,7 @@ class EditableCustomer
         $website,
         $allowedOutstandingAmount,
         $maxPaymentDays,
-        $riskId,
-        $informer_identification
+        $riskId
     ) {
         $this->customerId = $customerId;
         $this->genderId = $genderId;
@@ -190,7 +184,6 @@ class EditableCustomer
         $this->allowedOutstandingAmount = $allowedOutstandingAmount;
         $this->maxPaymentDays = $maxPaymentDays;
         $this->riskId = $riskId;
-        $this->informer_identification = $informer_identification;
     }
 
     /**
@@ -337,11 +330,4 @@ class EditableCustomer
         return $this->isNewsletterSubscribed;
     }
 
-    /**
-     * @return string
-     */
-    public function getinformer_identification()
-    {
-        return $this->informer_identification;
-    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -28,6 +28,7 @@
 
 use classes\DynamicTools;
 use classes\models\DynamicConfig;
+use classes\models\DynamicProductConfigLink;
 
 class DynamicProductSettingsController extends ModuleAdminController
 {
@@ -89,8 +90,19 @@ class DynamicProductSettingsController extends ModuleAdminController
 
     private function processCopyProductConfig()
     {
-        $id_product_load = (int)Tools::getValue('id_source_product');
-        $this->module->handler->copyConfig($this->id_product, $id_product_load);
+        $link = (int)Tools::getValue('link');
+        $clear = (int)Tools::getValue('clear');
+        $id_target_product = (int)Tools::getValue('id_target_product');
+        $id_source_product = (int)Tools::getValue('id_source_product');
+        if ($link) {
+            if ($clear) {
+                $this->module->handler->clearConfig($id_target_product);
+            }
+            DynamicProductConfigLink::createLink($id_target_product, $id_source_product);
+        } else {
+            DynamicProductConfigLink::removeLink($id_target_product);
+            $this->module->handler->copyConfig($id_target_product, $id_source_product);
+        }
         $this->respond();
     }
 
@@ -117,15 +129,107 @@ class DynamicProductSettingsController extends ModuleAdminController
             1,
             false
         );
-
         foreach ($products as $product) {
             $id_destination_product = (int)$product['id_product'];
-
             if ($id_destination_product !== $this->id_product) {
-                    $this->module->handler->copyConfig($id_destination_product, $this->id_product);
-                }
+                $this->module->handler->copyConfig($id_destination_product, $this->id_product);
+            }
         }
 
+        $this->respond();
+    }
+
+    private function processGetCategoryProducts()
+    {
+        $id_category = (int)Tools::getValue('id_target_category');
+
+        $category = new Category($id_category);
+        $products = $category->getProducts(
+            $this->context->language->id,
+            0,
+            100000000,
+            null,
+            null,
+            false,
+            false,
+            false,
+            1,
+            false
+        );
+        $this->respond(array(
+            'products' => array_map(function ($product) {
+                return (int)$product['id_product'];
+            }, $products)
+        ));
+    }
+
+    private function processExportConfig()
+    {
+        $data = $this->module->handler->exportConfig($this->id_product);
+        $this->respond(array(
+            'data' => $data
+        ));
+    }
+
+    private function processImportConfig()
+    {
+        $uploader = new Uploader();
+        $uploader->setName('file');
+        $uploader->setAcceptTypes(array('json'));
+        $file = $uploader->process();
+        $upload = $file[0];
+
+        if ($upload['error']) {
+            $this->respond(array(
+                'error'   => true,
+                'message' => $upload['error']
+            ));
+        }
+
+        $save_path = $upload['save_path'];
+        $contents = Tools::file_get_contents($save_path);
+        $data = json_decode($contents, true);
+        if (!$data) {
+            $source = DynamicTools::getSource();
+            $this->respond(array(
+                'error'   => true,
+                'message' =>
+                    $this->module->l('Could not import data, please check your file then try again', $source)
+            ));
+        }
+
+        $this->module->handler->importConfig($this->id_product, $data);
+
+        $this->respond();
+    }
+
+    private function processImportJsonData()
+    {
+        $json = Tools::getValue('json');
+        $data = json_decode($json, true);
+        if (!$data) {
+            $source = DynamicTools::getSource();
+            $this->respond(array(
+                'error'   => true,
+                'message' =>
+                    $this->module->l('Could not import data, please check your file then try again', $source)
+            ));
+        }
+
+        $this->module->handler->importConfig($this->id_product, $data);
+
+        $this->respond();
+    }
+
+    private function processUnlinkConfig()
+    {
+        DynamicProductConfigLink::removeLink($this->id_product);
+        $this->respond();
+    }
+
+    private function processUnlinkConfigs()
+    {
+        DynamicProductConfigLink::removeLinks($this->id_product);
         $this->respond();
     }
 

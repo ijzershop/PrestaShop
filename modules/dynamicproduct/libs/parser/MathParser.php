@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -59,6 +59,8 @@ class MathParser
     protected static $gtequals_func;
     protected static $and_func;
     protected static $or_func;
+    protected static $bitwise_and_func;
+    protected static $bitwise_or_func;
     protected $add_op;
     protected $and_op;
 
@@ -388,14 +390,22 @@ class MathParser
         $this->createFunc('STR', 'str', 1);
         $this->createFunc('CHECK', 'checkFunc', 1);
         $this->createFunc('SUBSTR', 'mpSubstr', 3);
+        $this->createFunc('REPLACE', 'mpReplace', 3);
         $this->createFunc('CONCAT', 'mpConcat', -1);
         $this->createFunc('TRIM', 'trim', 1);
         $this->createFunc('RTRIM', 'rtrim', 1);
         $this->createFunc('LTRIM', 'ltrim', 1);
         $this->createFunc('CHR', 'chr', 1);
         $this->createFunc('NUM', 'mpNum', 1);
-
         $this->createFunc('SUM', 'sumFunc', -1);
+
+        $this->createFunc('GRID', 'mpGrid', -1);
+
+        $this->createFunc('BINARY_AND', 'mpBitwiseAnd', 2);
+        $this->createFunc('BINARY_OR', 'mpBitwiseOr', 2);
+        $this->createFunc('CONTAINS', 'mpContains', 2);
+
+        $this->createFunc('PRICE', 'mpPrice', 1);
     }
 
     public function createDefaultVars()

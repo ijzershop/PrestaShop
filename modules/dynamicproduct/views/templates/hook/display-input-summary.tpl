@@ -1,5 +1,5 @@
 {**
-* 2010-2020 Tuni-Soft
+* 2010-2021 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -18,35 +18,41 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author
-*  @copyright 2014-2020
+*  @copyright 2014-2021
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
-<div class="dp_cart dp_seven_cart">
-    <div class="dp_input_div dp_input_{$input->id|intval}">
-        {if count($input->input_fields)}
-            {foreach from=$input->input_fields item=input_field}
-                {if $input_field->isSkipped()}{continue}{/if}
-                <strong>{$input_field->label|escape:'htmlall':'UTF-8'}:</strong>
+<div class="dp_cart dp_seven_cart" data-id_customization="{$input->id_customization|intval}">
+  <div class="dp_input_div dp_input_{$input->id|intval}">
+      {if count($input->input_fields)}
+          {foreach from=$input->input_fields item=input_field}
+              {if $input_field->isSkippedName()}{continue}{/if}
+              {if $input_field->isSkipped()}{continue}{/if}
+            <div class="dp-input-field-{$input_field->name}">
+                {if $input_field->label}
+                  <strong>{$input_field->label|escape:'htmlall':'UTF-8'}:</strong>
+                {/if}
                 {if $input_field->getTemplatePath()}
                     {include file=$input_field->getTemplatePath()}
                 {else}
                     {$input_field->displayValue()|escape:'htmlall':'UTF-8'}
                 {/if}
-                <br>
-            {/foreach}
-        {/if}
+            </div>
+          {/foreach}
+      {/if}
 
-        {if $input->canDisplayWeight()}
-            <strong>{l s='Weight' mod='dynamicproduct'}:</strong>
+      {if $input->canDisplayWeight()}
+        <div>
+          <strong>{l s='Weight' mod='dynamicproduct'}:</strong>
             {$input->weight|floatval} {Configuration::get('PS_WEIGHT_UNIT')|escape:'htmlall':'UTF-8'}
-            <br>
-        {/if}
+        </div>
+      {/if}
 
-        {if !$is_pdf}
-            <br>
-            <a class="dp_url"
-               href="{$input->getEditLink()|escape:'htmlall':'UTF-8'}">{l s='Edit this customization' mod='dynamicproduct'}</a>
-        {/if}
-    </div>
+      {if !$is_pdf && !$is_order_detail}
+        <div>
+          <a class="dp_url"
+             href="{$input->getEditLink()|escape:'htmlall':'UTF-8'}">{l s='Edit this customization' mod='dynamicproduct'}</a>
+        </div>
+      {/if}
+  </div>
 </div>

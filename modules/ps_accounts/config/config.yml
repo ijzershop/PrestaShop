@@ -1,6 +1,7 @@
 imports:
   - { resource: common.yml }
 parameters:
+  ps_accounts.environment: 'production'
   ps_accounts.accounts_api_url: 'https://accounts-api.distribution.prestashop.net/v1/'
   ps_accounts.accounts_ui_url: 'https://accounts.distribution.prestashop.net/en'
   ps_accounts.sso_api_url: 'https://auth.prestashop.com/api/v1/'
@@ -13,3 +14,4 @@ parameters:
   ps_accounts.verify_account_tokens: true
   ps_accounts.accounts_vue_cdn_url: 'https://unpkg.com/prestashop_accounts_vue_components@2/dist/psaccountsVue.umd.min.js'
   ps_accounts.svc_accounts_ui_url: 'https://accounts.psessentials.net'
+

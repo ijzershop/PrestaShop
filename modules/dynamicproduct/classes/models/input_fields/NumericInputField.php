@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -30,8 +30,20 @@ use classes\models\DynamicInputField;
 
 class NumericInputField extends DynamicInputField
 {
+    public $type = _DP_INPUT_;
+
+    public function isSkipped()
+    {
+        return parent::isSkipped() || $this->skipIfEmpty();
+    }
+
+    private function skipIfEmpty()
+    {
+        return $this->field->settings->hide_when_empty && (float)$this->value === (float)0;
+    }
+
     public function displayValue()
     {
-        return $this->value . ' ' . $this->getDynamicField()->getUnitSymbol();
+        return $this->value . ' ' . $this->getDynamicField()->getUnitSymbolOrName();
     }
 }

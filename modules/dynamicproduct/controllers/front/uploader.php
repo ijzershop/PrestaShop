@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -29,6 +29,8 @@
 use classes\controllers\front\DynamicFrontController;
 use classes\helpers\FileHelper;
 use classes\models\DynamicField;
+use classes\models\input_fields\FileInputField;
+use classes\models\input_fields\ImageInputField;
 
 /** @noinspection PhpUnused */
 
@@ -43,8 +45,8 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
 
         if ((int)$field->type !== _DP_IMAGE_) {
             $this->respond(array(
-                'id_field' => $id_field,
-                'error' => $this->module->l('The upload could not be completed')
+                'error'   => true,
+                'message' => $this->module->l('The upload could not be completed')
             ));
         }
 
@@ -64,15 +66,18 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
 
         if ($size && $upload['size'] > $size) {
             $this->respond(array(
-                'id_field' => $id_field,
-                'error' =>
+                'error'   => true,
+                'message' =>
                     $this->module->l('This image is too big, the maximum allowed size is') .
                     ' ' . $options->max_size . ' ' . $this->module->l('MB')
             ));
         }
 
         if ($upload['error']) {
-            $this->respond(array('id_field' => $id_field, 'error' => $upload['error']));
+            $this->respond(array(
+                'error'   => true,
+                'message' => $upload['error']
+            ));
         }
 
         $save_path = $upload['save_path'];
@@ -81,8 +86,8 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
 
         if ($options->min_width && (int)$info[0] < $options->min_width) {
             $this->respond(array(
-                'id_field' => $id_field,
-                'error' =>
+                'error'   => true,
+                'message' =>
                     $this->module->l('The minmium required width is')
                     . ' ' . $options->min_width . ' ' . $this->module->l('pixels')
                     . ' (' . $this->module->l('The uploaded image has a width of')
@@ -93,8 +98,8 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
 
         if ($options->min_height && (int)$info[1] < $options->min_height) {
             $this->respond(array(
-                'id_field' => $id_field,
-                'error' =>
+                'error'   => true,
+                'message' =>
                     $this->module->l('The minmium required height is')
                     . ' ' . $options->min_height . ' ' . $this->module->l('pixels')
                     . ' (' . $this->module->l('The uploaded image has a height of')
@@ -104,21 +109,25 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
         }
 
         $extension = pathinfo($upload['name'], PATHINFO_EXTENSION);
-        $filename = time() . '_' . rand();
+        $filename = time() . '_' . mt_rand();
 
         $image = $img_dir . $filename . '.' . $extension;
         $thumb = $img_dir . $filename . '-thumb.jpg';
-        $folder_url = $this->module->provider->getDataDirUrl('upload/');
+        $folder_url = $this->module->provider->getDataDirUrl('upload');
 
         ImageManager::resize($save_path, $image, null, null, $extension);
         ImageManager::resize($save_path, $thumb, 256, 256, $extension);
 
+        $input_field = new ImageInputField();
+        $input_field->id_field = $id_field;
+        $input_field->name = $field->name;
+        $input_field->value = basename($image);
+        $input_field->image_url = $folder_url . basename($image);
+        $input_field->thumb_url = $folder_url . basename($thumb);
+        $input_field->visible = 1;
+
         $this->respond(array(
-            'id_field' => $id_field,
-            'type' => 'image',
-            'value' => basename($image),
-            'image_url' => $folder_url . basename($image),
-            'thumb_url' => $folder_url . basename($thumb)
+            'input_field' => $input_field,
         ));
     }
 
@@ -131,8 +140,8 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
 
         if ((int)$field->type !== _DP_FILE_) {
             $this->respond(array(
-                'id_field' => $id_field,
-                'error' => $this->module->l('The upload could not be completed')
+                'error'   => true,
+                'message' => $this->module->l('The upload could not be completed')
             ));
         }
 
@@ -160,42 +169,50 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
 
         if ($size && $upload['size'] > $size) {
             $this->respond(array(
-                'id_field' => $id_field,
-                'error' =>
+                'error'   => true,
+                'message' =>
                     $this->module->l('This file is too big, the maximum allowed size is')
                     . ' ' . $options->max_size . ' ' . $this->module->l('MB')
             ));
         }
 
         if ($upload['error']) {
-            $this->respond(array('id_field' => $id_field, 'error' => $upload['error']));
+            $this->respond(array(
+                'error'   => true,
+                'message' => $upload['error']
+            ));
         }
 
         $extension = pathinfo($upload['name'], PATHINFO_EXTENSION);
-        $filename = time() . '_' . rand();
+        $filename = time() . '_' . mt_rand();
 
         $file = $file_dir . $filename . '.' . $extension;
 
         if (rename($upload['save_path'], $file)) {
-            $data = array(
-                'id_field' => $id_field,
-                'type'     => 'file',
-                'value'    => basename($file),
-                'size'     => filesize($file)
-            );
+            $input_field = new FileInputField();
+            $input_field->id_field = $id_field;
+            $input_field->name = $field->name;
+            $input_field->value = basename($file);
+            $input_field->visible = 1;
+
             $file_helper = new FileHelper($this->module, $this->context);
             if ($file_helper->isImage($file)) {
-                $folder_url = $this->module->provider->getDataDirUrl('upload/');
+                $folder_url = $this->module->provider->getDataDirUrl('upload');
                 $thumb = $file_dir . $filename . '-thumb.jpg';
                 ImageManager::resize($file, $thumb, 256, 256, $extension);
-                $data['thumb_url'] = $folder_url . basename($thumb);
-                $data['image_url'] = $folder_url . basename($file);
+                $input_field->thumb_url = $folder_url . basename($thumb);
+                $input_field->image_url = $folder_url . basename($file);
+            } else {
+                $input_field->thumb_url = null;
+                $input_field->image_url = null;
             }
-            $this->respond($data);
+            $this->respond(array(
+                'input_field' => $input_field,
+            ));
         } else {
             $this->respond(array(
-                'id_field' => $id_field,
-                'error' => $this->module->l('The upload could not be completed')
+                'error'   => true,
+                'message' => $this->module->l('The upload could not be completed')
             ));
         }
     }

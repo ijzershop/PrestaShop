@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,12 +20,13 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 namespace classes\helpers;
 
+use classes\DynamicTools;
 use Context;
 use DynamicProduct;
 use Tools;
@@ -43,18 +44,21 @@ class SummaryHelper
         $this->context = $context;
     }
 
-    public function getCachedSummary($summary_name, $id_input, $id_lang, $is_pdf)
+    public function getCachedSummary($summary_name, $id_input, $id_lang, $is_pdf, $is_order_detail)
     {
-        $cache_file = $this->getCacheFile($summary_name, $id_input, $id_lang, $is_pdf);
+        if (!DynamicTools::isCacheEnabled()) {
+            return false;
+        }
+        $cache_file = $this->getCacheFile($summary_name, $id_input, $id_lang, $is_pdf, $is_order_detail);
         if (is_file($cache_file)) {
             return Tools::file_get_contents($cache_file);
         }
         return false;
     }
 
-    public function cacheSummary($summary_name, $id_input, $id_lang, $is_pdf, $summary)
+    public function cacheSummary($summary_name, $id_input, $id_lang, $is_pdf, $is_order_detail, $summary)
     {
-        $cache_file = $this->getCacheFile($summary_name, $id_input, $id_lang, $is_pdf);
+        $cache_file = $this->getCacheFile($summary_name, $id_input, $id_lang, $is_pdf, $is_order_detail);
         return file_put_contents($cache_file, $summary);
     }
 
@@ -63,8 +67,10 @@ class SummaryHelper
      * @param $id_input
      * @param $id_lang
      */
-    private function getCacheFile($summary_name, $id_input, $id_lang, $is_pdf)
+    private function getCacheFile($summary_name, $id_input, $id_lang, $is_pdf, $is_order_detail)
     {
-        return $this->module->provider->getDataFile("cache/$summary_name-$id_input-$id_lang-$is_pdf.html");
+        return $this->module->provider->getDataFile(
+            "cache/$summary_name-$id_input-$id_lang-$is_pdf-$is_order_detail.html"
+        );
     }
 }

@@ -1,35 +1,13 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ * Class CheckoutDeliveryStep Overide fixed for 1.7.7.8
  */
 
 class CheckoutDeliveryStep extends CheckoutDeliveryStepCore
 {
 
-    public function handleRequest(array $requestParams = array())
+    public function handleRequest(array $requestParams = [])
     {
-
         if (isset($requestParams['delivery_option'])) {
             $this->setComplete(false);
             $this->getCheckoutSession()->setDeliveryOption(
@@ -45,6 +23,9 @@ class CheckoutDeliveryStep extends CheckoutDeliveryStepCore
                 ($useGift && isset($requestParams['gift_message'])) ? $requestParams['gift_message'] : ''
             );
         }
+        /**
+         * Start module update added2order
+         */
         $delivery_option = "";
         if(isset($requestParams['delivery_option']) && !is_null($requestParams['delivery_option'])){
             $delivery_option = (int)reset($requestParams['delivery_option']);
@@ -59,6 +40,11 @@ class CheckoutDeliveryStep extends CheckoutDeliveryStepCore
             $this->context->cart->added_to_order = null;
             $this->context->cart->update();
         }
+
+        /**
+         * End module update added2order
+         */
+
 
         if (isset($requestParams['delivery_message'])) {
             $this->getCheckoutSession()->setMessage($requestParams['delivery_message']);
@@ -79,8 +65,9 @@ class CheckoutDeliveryStep extends CheckoutDeliveryStepCore
                 && $this->isModuleComplete($requestParams)
             );
         }
-        $this->setTitle($this->getTranslator()->trans('Shipping Method', array(), 'Shop.Theme.Checkout'));
 
-        Hook::exec('actionCarrierProcess', array('cart' => $this->getCheckoutSession()->getCart()));
+        $this->setTitle($this->getTranslator()->trans('Shipping Method', [], 'Shop.Theme.Checkout'));
+
+        Hook::exec('actionCarrierProcess', ['cart' => $this->getCheckoutSession()->getCart()]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,16 +20,18 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 namespace classes\factory;
 
 use classes\DynamicTools;
+use classes\models\dynamic_fields\CheckboxField;
 use classes\models\dynamic_fields\ColorPickerField;
 use classes\models\dynamic_fields\DateField;
 use classes\models\dynamic_fields\DropDownField;
+use classes\models\dynamic_fields\ErrorField;
 use classes\models\dynamic_fields\FeatureField;
 use classes\models\dynamic_fields\FileField;
 use classes\models\dynamic_fields\HtmlField;
@@ -38,6 +40,7 @@ use classes\models\dynamic_fields\NumericField;
 use classes\models\dynamic_fields\PHPField;
 use classes\models\dynamic_fields\RadioField;
 use classes\models\dynamic_fields\SliderField;
+use classes\models\dynamic_fields\SwitchField;
 use classes\models\dynamic_fields\TextAreaField;
 use classes\models\dynamic_fields\TextField;
 use classes\models\dynamic_fields\ThumbnailsField;
@@ -61,6 +64,8 @@ class DynamicFieldFactory
         _DP_IMAGE_       => ImageField::class,
         _DP_PHP_         => PHPField::class,
         _DP_DROPDOWN_    => DropDownField::class,
+        _DP_CHECKBOX_    => CheckboxField::class,
+        _DP_SWITCH_      => SwitchField::class,
         _DP_FILE_        => FileField::class,
         _DP_SLIDER_      => SliderField::class,
         _DP_THUMBNAILS_  => ThumbnailsField::class,
@@ -69,6 +74,7 @@ class DynamicFieldFactory
         _DP_RADIO_       => RadioField::class,
         _DP_COLORPICKER_ => ColorPickerField::class,
         _DP_HTML_        => HtmlField::class,
+        _DP_ERROR_       => ErrorField::class,
     );
 
     public function __construct($module, $context)

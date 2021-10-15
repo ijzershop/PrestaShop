@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -31,16 +31,27 @@ class DynamicProductFieldGroup extends DynamicObject
 
     public $id_field_group;
     public $id_product;
+    public $id_step;
+    public $collapsible;
+    public $start_collapsed;
     public $position;
-
 
     public static $definition = array(
         'table'   => 'dynamicproduct_product_field_group',
         'primary' => 'id_product_field_group',
         'fields'  => array(
-            'id_product'     => array('type' => self::TYPE_INT),
-            'id_field_group' => array('type' => self::TYPE_INT),
-            'position'       => array('type' => self::TYPE_INT),
+            'id_product'      => array('type' => self::TYPE_INT),
+            'id_step'         => array('type' => self::TYPE_INT),
+            'id_field_group'  => array('type' => self::TYPE_INT),
+            'collapsible'     => array('type' => self::TYPE_INT),
+            'start_collapsed' => array('type' => self::TYPE_INT),
+            'position'        => array('type' => self::TYPE_INT),
         )
     );
+
+    public static function getByIdProduct($id_product, $order = false, $id_lang = null)
+    {
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        return parent::getByIdProduct($id_source_product, $order, $id_lang);
+    }
 }

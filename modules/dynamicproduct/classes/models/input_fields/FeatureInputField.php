@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -30,10 +30,13 @@ use classes\models\DynamicInputField;
 
 class FeatureInputField extends DynamicInputField
 {
-    public function setFormattedValue()
+    public $type = _DP_FEATURE_;
+
+    public function setData($id_lang)
     {
+        $this->setDynamicField($id_lang);
         $this->value = $this->getDynamicField()->value;
-        $this->value_formatted = $this->value;
+        parent::setData($id_lang);
     }
 
     public function isSkipped()

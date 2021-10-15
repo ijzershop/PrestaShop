@@ -366,17 +366,17 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.31",
-            "version_normalized": "2.0.31.0",
+            "version": "2.0.33",
+            "version_normalized": "2.0.33.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "233a920cb38636a43b18d428f9a8db1f0a1a08f4"
+                "reference": "fb53b7889497ec7c1362c94e61d8127ac67ea094"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/233a920cb38636a43b18d428f9a8db1f0a1a08f4",
-                "reference": "233a920cb38636a43b18d428f9a8db1f0a1a08f4",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/fb53b7889497ec7c1362c94e61d8127ac67ea094",
+                "reference": "fb53b7889497ec7c1362c94e61d8127ac67ea094",
                 "shasum": ""
             },
             "require": {
@@ -393,7 +393,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2021-04-06T13:56:45+00:00",
+            "time": "2021-08-16T04:20:12+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -508,17 +508,17 @@
         },
         {
             "name": "prestashop/module-lib-service-container",
-            "version": "1.3.1",
-            "version_normalized": "1.3.1.0",
+            "version": "1.4.0",
+            "version_normalized": "1.4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShopCorp/module-lib-service-container.git",
-                "reference": "8a64bd83c71fdb077fbd05fbf2677b16ec2d8e53"
+                "reference": "96f4f551b96cffb1f78462cd4722f0d2b057abda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShopCorp/module-lib-service-container/zipball/8a64bd83c71fdb077fbd05fbf2677b16ec2d8e53",
-                "reference": "8a64bd83c71fdb077fbd05fbf2677b16ec2d8e53",
+                "url": "https://api.github.com/repos/PrestaShopCorp/module-lib-service-container/zipball/96f4f551b96cffb1f78462cd4722f0d2b057abda",
+                "reference": "96f4f551b96cffb1f78462cd4722f0d2b057abda",
                 "shasum": ""
             },
             "require": {
@@ -532,7 +532,7 @@
             "require-dev": {
                 "phpunit/phpunit": "~5.7"
             },
-            "time": "2020-10-21T08:35:58+00:00",
+            "time": "2021-06-01T15:21:20+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {

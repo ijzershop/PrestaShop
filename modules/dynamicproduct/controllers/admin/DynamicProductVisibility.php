@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -91,12 +91,22 @@ class DynamicProductVisibilityController extends ModuleAdminController
             );
         }
 
-        $this->respond();
+        $this->respond($this->getNewData());
     }
 
-    private function processReloadList()
+    private function getNewData()
     {
-        exit($this->module->hookDisplayVisibilityList($this->id_product));
+        //get product combinations
+        $combinations = $this->module->provider->getProductCombinations($this->id_product);
+        $visibility_values = false;
+        if (is_array($combinations) && count($combinations)) {
+            $visibility_values = $this->module->provider->getVisibilityValues($this->id_product);
+        }
+        return array(
+            'combinations' => array(
+                'visibility' => $visibility_values,
+            ),
+        );
     }
 
     public function respond($data = array(), $success = 1)

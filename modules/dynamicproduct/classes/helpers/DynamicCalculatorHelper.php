@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -29,6 +29,7 @@ namespace classes\helpers;
 use classes\DynamicTools;
 use classes\models\DynamicConfig;
 use classes\models\DynamicEquation;
+use classes\models\DynamicField;
 use classes\models\DynamicInput;
 use classes\models\DynamicInputField;
 use classes\models\DynamicProportion;
@@ -38,6 +39,7 @@ use DynamicProduct;
 use Exception;
 use Product;
 use RuntimeException;
+use SpecificPrice;
 use Tools;
 use Validate;
 
@@ -70,19 +72,22 @@ class DynamicCalculatorHelper
         try {
             DynamicEquation::evaluateFormula($price_equation->formula, $input_fields);
         } catch (Exception $e) {
-            throw new RuntimeException($this->module->l('Price Equation', $source) . ': ' . $e->getMessage());
+            throw new RuntimeException($this->module->l('Price Equation', $source) . ': ' .
+                DynamicTools::reportException($e, true));
         }
 
         try {
             DynamicEquation::evaluateFormula($weight_equation->formula, $input_fields);
         } catch (Exception $e) {
-            throw new RuntimeException($this->module->l('Weight Equation', $source) . ': ' . $e->getMessage());
+            throw new RuntimeException($this->module->l('Weight Equation', $source) . ': ' .
+                DynamicTools::reportException($e, true));
         }
 
         try {
             DynamicEquation::evaluateFormula($quantity_equation->formula, $input_fields);
         } catch (Exception $e) {
-            throw new RuntimeException($this->module->l('Quantity Equation', $source) . $e->getMessage());
+            throw new RuntimeException($this->module->l('Quantity Equation', $source) .
+                DynamicTools::reportException($e, true));
         }
     }
 
@@ -116,8 +121,15 @@ class DynamicCalculatorHelper
         );
     }
 
-    private function getAdapterPrices($adapter_data)
+    private function getAdapterPrices($adapter_data, $id_product, $id_attribute, $quantity, $id_cart)
     {
+        $specific_price = $this->module->calculator->getReduction(array(
+            'id_product'           => $id_product,
+            'id_product_attribute' => $id_attribute,
+            'quantity'             => $quantity,
+            'id_cart'              => $id_cart
+        ));
+
         $customization_prices = array(
             'price_ht'     => 0,
             'price_ht_nr'  => 0,
@@ -132,6 +144,8 @@ class DynamicCalculatorHelper
         $current_id_module = (int)$this->module->id;
         foreach ($adapter_data['prices'] as $id_module => $prices) {
             if ((int)$id_module !== $current_id_module) {
+                $prices['price_ht'] = $this->applyReductions($prices['price_ht_nr'], $id_product, $specific_price);
+                $prices['price_ttc'] = $this->applyReductions($prices['price_ttc_nr'], $id_product, $specific_price);
                 $customization_prices = $this->combinePrices($customization_prices, $prices);
             }
         }
@@ -141,8 +155,6 @@ class DynamicCalculatorHelper
 
     public function getProductPrices($id_product, $id_attribute, $quantity)
     {
-        $use_taxes = !Product::getTaxCalculationMethod();
-
         $price_ht = Product::getPriceStatic(
             $id_product,
             false,
@@ -167,7 +179,7 @@ class DynamicCalculatorHelper
 
         $price_ttc = Product::getPriceStatic(
             $id_product,
-            $use_taxes,
+            true,
             $id_attribute,
             6,
             null,
@@ -178,7 +190,7 @@ class DynamicCalculatorHelper
 
         $price_ttc_nr = Product::getPriceStatic(
             $id_product,
-            !Product::getTaxCalculationMethod(),
+            true,
             $id_attribute,
             6,
             null,
@@ -198,6 +210,15 @@ class DynamicCalculatorHelper
     public function calculateDisplayPrice($id_product, $id_attribute)
     {
         $input_fields = DynamicInputField::getInputFieldsFromData($id_product, $id_attribute, array(), true);
+
+        $visibility_helper = new FieldsVisibilityHelper($this->module, $this->context);
+        $fields_visibility = $visibility_helper->getFieldsVisibility(
+            $id_product,
+            $id_attribute,
+            $input_fields
+        );
+        $visibility_helper->setExcludedFields($input_fields, $fields_visibility);
+
         return $this->getPriceEquationResult($id_product, $id_attribute, $input_fields);
     }
 
@@ -210,12 +231,13 @@ class DynamicCalculatorHelper
     public function getPriceEquationResult($id_product, $id_attribute, $input_fields)
     {
         $price_equation = DynamicEquation::getPriceEquation($id_product);
-        return DynamicEquation::calculatePriceFormula(
+        // 6 decimals is the database float precision in this case
+        return Tools::ps_round(DynamicEquation::calculatePriceFormula(
             $id_product,
             $id_attribute,
             $price_equation,
             $input_fields
-        );
+        ), 6);
     }
 
     /**
@@ -227,12 +249,13 @@ class DynamicCalculatorHelper
     public function getWeightEquationResult($id_product, $id_attribute, $input_fields)
     {
         $weight_equation = DynamicEquation::getWeightEquation($id_product);
-        return DynamicEquation::calculateWeightFormula(
+        // 6 decimals is the database float precision in this case
+        return Tools::ps_round(DynamicEquation::calculateWeightFormula(
             $id_product,
             $id_attribute,
             $weight_equation,
             $input_fields
-        );
+        ), 6);
     }
 
     /**
@@ -249,7 +272,7 @@ class DynamicCalculatorHelper
             return;
         }
         $proportions = DynamicProportion::getDataByProduct($id_product);
-        $changed_field_value = (int)$input_fields[$changed_field]->value;
+        $changed_field_value = (float)$input_fields[$changed_field]->value;
         foreach ($proportions as $field_name => $proportion) {
             if ($field_name === $input_fields["changed"]->value) {
                 $target_field_name = $proportion['target'];
@@ -260,16 +283,42 @@ class DynamicCalculatorHelper
         }
     }
 
-    private function applyReductions($price, $id_product, $specific_price)
+    public function getValueFromProportion($id_field)
     {
-        $price = $this->module->calculator->applyGroupReduction($price);
-        $price = $this->module->calculator->applyGroupCategoryReduction($price, $id_product);
+        $dynamic_proportions = DynamicProportion::getWithIdField($id_field);
+
+        foreach ($dynamic_proportions as $dynamic_proportion) {
+            if ((int)$dynamic_proportion->id_field_src === (int)$id_field) {
+                $field = new DynamicField($dynamic_proportion->id_field);
+                if ((float)$field->init && (float)$dynamic_proportion->value) {
+                    return $field->init / $dynamic_proportion->value;
+                }
+            }
+            if ((int)$dynamic_proportion->id_field === (int)$id_field) {
+                $field = new DynamicField($dynamic_proportion->id_field_src);
+                if ((float)$field->init && (float)$dynamic_proportion->value) {
+                    return $field->init * $dynamic_proportion->value;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    public function applyReductions($price, $id_product, $specific_price)
+    {
+        list($price, $category_reduction) = $this->module->calculator->applyGroupCategoryReduction($price, $id_product);
+        if ($category_reduction === false) {
+            $price = $this->module->calculator->applyGroupReduction($price);
+        }
         return $this->module->calculator->applyReduction($price, $specific_price);
     }
 
     public function convertPrices($prices)
     {
-        if (Validate::isLoadedObject($this->context->currency)) {
+        $id_default_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+        if (Validate::isLoadedObject($this->context->currency) &&
+            (int)$this->context->currency->id !== $id_default_currency) {
             return $this->multiplyPrices($prices, (float)$this->context->currency->conversion_rate);
         }
         return $prices;
@@ -282,6 +331,16 @@ class DynamicCalculatorHelper
             'price_ht_nr'  => $prices['price_ht_nr'] + $product_prices['price_ht_nr'],
             'price_ttc'    => $prices['price_ttc'] + $product_prices['price_ttc'],
             'price_ttc_nr' => $prices['price_ttc_nr'] + $product_prices['price_ttc_nr'],
+        );
+    }
+
+    public function roundPrices($prices, $precision)
+    {
+        return array(
+            'price_ht'     => Tools::ps_round($prices['price_ht'], $precision),
+            'price_ht_nr'  => Tools::ps_round($prices['price_ht_nr'], $precision),
+            'price_ttc'    => Tools::ps_round($prices['price_ttc'], $precision),
+            'price_ttc_nr' => Tools::ps_round($prices['price_ttc_nr'], $precision),
         );
     }
 
@@ -309,22 +368,34 @@ class DynamicCalculatorHelper
      * @param DynamicInputField[] $input_fields
      * @return array
      */
-    public function getCalculatedPrices($id_product, $id_attribute, $input_fields, $adapter_data)
+    public function getCalculatedPrices($id_product, $id_attribute, $input_fields, $adapter_data, $is_container_hidden)
     {
-        $dynamic_config = new DynamicConfig($id_product);
+        $dynamic_config = DynamicConfig::getByProduct($id_product);
         $quantity = (int)$input_fields['quantity']->value;
 
-        $price_ht = Tools::convertPriceFull($this->getPriceEquationResult($id_product, $id_attribute, $input_fields));
+        $price_equation_result = $this->getPriceEquationResult($id_product, $id_attribute, $input_fields);
 
-        $prices = $this->getCustomizationPrices(
-            $id_product,
-            $id_attribute,
-            $price_ht,
-            $quantity,
-            $this->module->provider->getCart()
-        );
+        $id_cart = $this->module->provider->getCart();
 
-        $modules_prices = $this->combinePrices($prices, $this->getAdapterPrices($adapter_data));
+        if ($is_container_hidden) {
+            $prices = array(
+                'price_ht'     => 0,
+                'price_ht_nr'  => 0,
+                'price_ttc'    => 0,
+                'price_ttc_nr' => 0,
+            );
+        } else {
+            $prices = $this->getCustomizationPrices(
+                $id_product,
+                $id_attribute,
+                $price_equation_result,
+                $quantity,
+                $id_cart
+            );
+        }
+
+        $adapter_prices = $this->getAdapterPrices($adapter_data, $id_product, $id_attribute, $quantity, $id_cart);
+        $modules_prices = $this->combinePrices($prices, $adapter_prices);
 
         $modules_prices = $this->convertPrices($modules_prices);
 
@@ -341,15 +412,23 @@ class DynamicCalculatorHelper
             'price_ttc'    => $final_prices['price_ttc'],
             'price_ttc_nr' => $final_prices['price_ttc_nr'],
         );
+
+        $unit_prices = $this->roundPrices($unit_prices, 6);
+        $unit_prices = $this->roundPrices($unit_prices, _PS_PRICE_COMPUTE_PRECISION_);
+
         if ($dynamic_config->multiply_price) {
             $final_prices = $this->multiplyPrices($final_prices, $quantity);
         }
+
+        $final_prices = $this->roundPrices($final_prices, 6);
+        $final_prices = $this->roundPrices($final_prices, _PS_PRICE_COMPUTE_PRECISION_);
 
         $formatted_unit_prices = $this->formatPrices($unit_prices);
         $formatted_prices = $this->formatPrices($final_prices);
 
         return array(
             'customization_prices'  => $prices,
+            'product_prices'        => $product_prices,
             'unit_prices'           => $unit_prices,
             'final_prices'          => $final_prices,
             'formatted_unit_prices' => $formatted_unit_prices,
@@ -364,9 +443,12 @@ class DynamicCalculatorHelper
      * @param DynamicInputField[] $input_fields
      * @return array
      */
-    public function getCalculatedWeight($id_product, $id_attribute, $input_fields)
+    public function getCalculatedWeight($id_product, $id_attribute, $input_fields, $is_container_hidden)
     {
-        $weight = $this->getWeightEquationResult($id_product, $id_attribute, $input_fields);
+        $weight = 0;
+        if (!$is_container_hidden) {
+            $weight = $this->getWeightEquationResult($id_product, $id_attribute, $input_fields);
+        }
         $product_weight = $this->module->provider->getProductWeight($id_product, $id_attribute);
         $total_weight = $weight + $product_weight;
         if (DynamicConfig::getMultiplyPrice($id_product)) {
@@ -399,7 +481,7 @@ class DynamicCalculatorHelper
         $dynamic_input->id_attribute = $id_attribute;
         $dynamic_input->cart_quantity = $input_fields['quantity']->value;
         return array(
-            'in_stock' => DynamicEquation::checkProductStock($dynamic_input)
+            'oos' => !DynamicEquation::checkProductStock($dynamic_input)
         );
     }
 
@@ -420,5 +502,68 @@ class DynamicCalculatorHelper
                 )
             )
         );
+    }
+
+    public function getQuantityDiscounts($id_product, $id_attribute, $calculated_prices)
+    {
+        $discounts = array();
+
+        $quantity_discounts = SpecificPrice::getQuantityDiscounts(
+            $id_product,
+            $this->context->shop->id,
+            $this->context->currency->id,
+            $this->context->country->id,
+            $this->context->customer->id_default_group,
+            $id_attribute,
+            false,
+            (int)$this->context->customer->id
+        );
+
+        $price_ht_nr = (float)$calculated_prices['customization_prices']['price_ht_nr'];
+
+        foreach ($quantity_discounts as $quantity_discount) {
+            $quantity = (int)$quantity_discount['from_quantity'];
+
+            $product_prices = $this->getProductPrices(
+                $id_product,
+                $id_attribute,
+                $quantity
+            );
+
+            $price_ht = $this->module->calculator->applyReduction($price_ht_nr, $quantity_discount);
+            $price_ttc = $this->module->calculator->applyTax($price_ht, $this->context->cart, false, $id_product);
+            $price_ttc_nr = $this->module->calculator->applyTax($price_ht_nr, $this->context->cart, false, $id_product);
+
+            $discounted_prices = array(
+                'price_ht'     => $price_ht,
+                'price_ht_nr'  => $price_ht_nr,
+                'price_ttc'    => $price_ttc,
+                'price_ttc_nr' => $price_ttc_nr,
+            );
+
+            $combined_prices = $this->combinePrices($product_prices, $discounted_prices);
+            $formatted_unit_prices = $this->formatPrices($combined_prices);
+            $total_prices = $this->multiplyPrices($combined_prices, $quantity);
+            $formatted_prices = $this->formatPrices($total_prices);
+
+            $savings = array(
+                'price_ht'     => $total_prices['price_ht_nr'] - $total_prices['price_ht'],
+                'price_ht_nr'  => 0,
+                'price_ttc'    => $total_prices['price_ttc_nr'] - $total_prices['price_ttc'],
+                'price_ttc_nr' => 0
+            );
+            $savings_formatted = $this->formatPrices($savings);
+
+            $discounts[$quantity] = array(
+                'unit_prices'           => $combined_prices,
+                'unit_prices_formatted' => $formatted_unit_prices,
+                'totals'                => $total_prices,
+                'totals_formatted'      => $formatted_prices,
+                'savings'               => $savings,
+                'savings_formatted'     => $savings_formatted,
+            );
+        }
+
+        return $discounts;
     }
 }

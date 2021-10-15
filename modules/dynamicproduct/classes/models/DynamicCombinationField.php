@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -46,15 +46,22 @@ class DynamicCombinationField extends DynamicObject
 
     public static function getByProductAndField($id_product, $id_field)
     {
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
         $sql = new DbQuery();
         $sql->select(self::$definition['primary']);
         $sql->from(self::$definition['table']);
         $sql->where('id_field = ' . (int)$id_field);
-        $sql->where('id_product = ' . (int)$id_product);
+        $sql->where('id_product = ' . (int)$id_source_product);
         $id_combination_field = (int)Db::getInstance()->getValue($sql);
         $combination_field = new self($id_combination_field);
         $combination_field->id_field = (int)$id_field;
-        $combination_field->id_product = (int)$id_product;
+        $combination_field->id_product = (int)$id_source_product;
         return $combination_field;
+    }
+
+    public static function getByIdProduct($id_product, $order = false, $id_lang = null)
+    {
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        return parent::getByIdProduct($id_source_product, $order, $id_lang);
     }
 }

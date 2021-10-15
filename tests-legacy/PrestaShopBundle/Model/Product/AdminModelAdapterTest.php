@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace LegacyTests\PrestaShopBundle\Model\Product;
 
-use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use Product;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -119,6 +118,7 @@ class AdminModelAdapterTest extends KernelTestCase
                 "tags" => [],
                 "display_options" => [],
                 "upc" => '',
+                "mpn" => '',
                 "ean13" => '',
                 "isbn" => '',
                 "reference" => '',
@@ -143,9 +143,12 @@ class AdminModelAdapterTest extends KernelTestCase
             "ean13" => "",
             "isbn" => "",
             "upc" => "",
+            "mpn" => "",
             "wholesale_price" => "0.000000",
             "price" => "0.000000",
             "ecotax" => "0.000000",
+            "ecotax_tax_excluded" => "0.000000",
+            "ecotax_tax_included" => "0.000000",
             "quantity" => 300,
             "weight" => "0.000000",
             "unit_price_impact" => "0.000000",
@@ -192,7 +195,8 @@ class AdminModelAdapterTest extends KernelTestCase
             $this->container->get('prestashop.adapter.data_provider.pack'),
             $this->container->get('prestashop.adapter.shop.context'),
             $this->container->get('prestashop.adapter.data_provider.tax'),
-            $this->container->get('router')
+            $this->container->get('router'),
+            $this->container->get('prestashop.utils.float_parser')
         );
     }
 
@@ -234,30 +238,36 @@ class AdminModelAdapterTest extends KernelTestCase
      */
     public function testGetFormCombination()
     {
-        $expectedStructureReturn = array(
-            "id_product_attribute" => "6",
-            "attribute_reference" => "",
-            "attribute_ean13" => "",
-            "attribute_isbn" => "",
-            "attribute_upc" => "",
-            "attribute_wholesale_price" => "0.000000",
-            "attribute_price_impact" => 0,
-            "attribute_price" => "0.000000",
-            "final_price" => 0,
-            "attribute_priceTI" => "",
-            "attribute_ecotax" => "0.000000",
-            "attribute_weight_impact" => 0,
-            "attribute_weight" => "0.000000",
-            "attribute_unit_impact" => 0,
-            "attribute_unity" => "0.000000",
-            "attribute_minimal_quantity" => "1",
-            "attribute_low_stock_threshold" => "2",
-            "attribute_low_stock_alert" => "1",
-            "available_date_attribute" => "0000-00-00",
-            "attribute_default" => false,
-            "attribute_quantity" => 300,
-            "name" => "Taille - L",
-        );
+        $expectedStructureReturn = [
+            'id_product_attribute' => '6',
+            'attribute_reference' => '',
+            'attribute_ean13' => '',
+            'attribute_isbn' => '',
+            'attribute_upc' => '',
+            'attribute_mpn' => '',
+            'attribute_wholesale_price' => '0.000000',
+            'attribute_price_impact' => 0,
+            'attribute_price' => '0.000000',
+            'attribute_price_display' => '$0.00',
+            'final_price' => '0.000000',
+            'final_price_tax_included' => '0.000000',
+            'attribute_priceTI' => '',
+            'product_ecotax' => '0.000000',
+            'attribute_ecotax' => '0.000000',
+            'attribute_weight_impact' => 0,
+            'attribute_weight' => '0.000000',
+            'attribute_unit_impact' => 0,
+            'attribute_unity' => '0.000000',
+            'attribute_minimal_quantity' => '1',
+            'attribute_low_stock_threshold' => '2',
+            'attribute_low_stock_alert' => '1',
+            'available_date_attribute' => '0000-00-00',
+            'attribute_default' => false,
+            'attribute_location' => false,
+            'attribute_quantity' => 300,
+            'name' => 'Taille - L',
+            'id_product' => null,
+        ];
         $combinationDataProvider = $this->container->get('prestashop.adapter.data_provider.combination');
         $actualReturn = $combinationDataProvider->completeCombination($this->fakeCombination(), $this->product);
 
@@ -269,5 +279,8 @@ class AdminModelAdapterTest extends KernelTestCase
                 sprintf('The expected value for property %s is wrong', $property)
             );
         }
+
+        // Test full equals to check if there are additional unexpected fields
+        $this->assertEquals($expectedStructureReturn, $actualReturn);
     }
 }

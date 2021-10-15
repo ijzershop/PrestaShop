@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,13 +20,14 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 namespace classes\models\grids;
 
 use classes\models\DynamicObject;
+use classes\models\DynamicProductConfigLink;
 
 class Grid extends DynamicObject
 {
@@ -61,6 +62,12 @@ class Grid extends DynamicObject
         $this->assignColumns();
         $this->assignRows();
         $this->assignValues();
+    }
+
+    public static function getByIdProduct($id_product, $order = false, $id_lang = null)
+    {
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        return parent::getByIdProduct($id_source_product, $order, $id_lang);
     }
 
     private function assignColumns()
@@ -101,13 +108,13 @@ class Grid extends DynamicObject
         /** @var GridColumn[]|GridRow[] $item_values */
         $item_values = array_values($items);
         $count = count($item_values);
-        if (isset($item_values[0]) && $value <= $item_values[0]->value) {
-            return $item_values[0]->id;
-        }
         for ($i = 0; $i < $count - 1; $i++) {
-            if ($value > $item_values[$i]->value && $value <= $item_values[$i + 1]->value) {
-                return $item_values[$i + 1]->id;
+            if ($value >= $item_values[$i]->value && $value < $item_values[$i + 1]->value) {
+                return $item_values[$i]->id;
             }
+        }
+        if ($value >= $item_values[$count - 1]->value) {
+            return $item_values[$count - 1]->id;
         }
         return null;
     }

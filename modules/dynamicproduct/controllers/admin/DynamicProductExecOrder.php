@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -68,16 +68,7 @@ class DynamicProductExecOrderController extends ModuleAdminController
         exit();
     }
 
-    /** @noinspection PhpUnused */
-    public function processGetExecOrders()
-    {
-        $this->respond(array(
-            'exec_order' => ExecOrder::getByIdProduct($this->id_product)
-        ));
-    }
-
-    /** @noinspection PhpUnused */
-    public function processAddItem()
+    private function processAddItem()
     {
         $id_exec = (int)Tools::getValue('id_exec');
         $exec_order = new ExecOrder();
@@ -90,8 +81,7 @@ class DynamicProductExecOrderController extends ModuleAdminController
         ));
     }
 
-    /** @noinspection PhpUnused */
-    public function processDeleteItem()
+    private function processDeleteItem()
     {
         $id_item = (int)Tools::getValue('id_item');
         $exec_order = new ExecOrder($id_item);
@@ -99,8 +89,7 @@ class DynamicProductExecOrderController extends ModuleAdminController
         $this->respond();
     }
 
-    /** @noinspection PhpUnused */
-    public function processReorderExecOrder()
+    private function processReorderExecOrder()
     {
         $order = (array)Tools::getValue('order');
         foreach ($order as $position => $id_exec_order) {
@@ -111,10 +100,8 @@ class DynamicProductExecOrderController extends ModuleAdminController
         $this->respond();
     }
 
-    /** @noinspection PhpUnused */
-    public function processResetToDefault()
+    private function processResetToDefault()
     {
-        /** @var ExecOrder[] $exec_order */
         $exec_order = ExecOrder::getByIdProduct($this->id_product);
         foreach ($exec_order as $item) {
             $item->delete();
@@ -122,7 +109,7 @@ class DynamicProductExecOrderController extends ModuleAdminController
         $this->respond();
     }
 
-    public function respond($data = array(), $success = 1)
+    private function respond($data = array(), $success = 1)
     {
         /** @noinspection CallableParameterUseCaseInTypeContextInspection */
         $success = $success && (int)!array_key_exists('error', $data);

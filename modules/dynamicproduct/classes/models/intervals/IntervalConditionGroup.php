@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -39,6 +39,9 @@ class IntervalConditionGroup extends DynamicObject
     /** @var IntervalCondition[] */
     public $intervalConditions;
 
+    /** @var $intervalFormula [] */
+    public $intervalFormulas;
+
     public static $definition = array(
         'table'     => 'dynamicproduct_interval_condition_group',
         'primary'   => 'id_interval_condition_group',
@@ -52,6 +55,7 @@ class IntervalConditionGroup extends DynamicObject
     {
         parent::__construct($id, $id_lang, $id_shop);
         $this->assignConditions();
+        $this->assignFormulas();
     }
 
     /**
@@ -94,6 +98,11 @@ class IntervalConditionGroup extends DynamicObject
     private function assignConditions()
     {
         $this->intervalConditions = IntervalCondition::getByIntervalConditionGroup($this->id);
+    }
+
+    private function assignFormulas()
+    {
+        $this->intervalFormulas = IntervalFormula::getByConditionGroup($this->id);
     }
 
     public function delete()

@@ -105,77 +105,7 @@
   var errorRefund = "{l s='Error. You cannot refund a negative amount.' d='Admin.Orderscustomers.Notification'}";
 
 
-  $(document).ready(function() {
-    $("#selectCustomerToMigrate").autocomplete('index.php?ajax=1&controller=AdminOrders&action=searchCustomer&token='+token, {
-              "minChars":3
-            });
 
-
-
-      $('#migrateOrder').on('click', function(event) {
-        event.preventDefault();
-        var customerEmail = $('#selectCustomerToMigrate').val().split(' # ');
-
-        var postdata = {
-                    customer_email:customerEmail[0],
-                    customer:customerEmail[1],
-                    order: id_order
-                    };
-          $.ajax({
-            type: 'GET',
-            url: 'index.php?ajax=1&controller=AdminOrders&action=migrateOrderToCustomer&token='+token,
-            data: postdata,
-            success: function(r){
-              r = JSON.parse(r);
-              if(r.success){
-                $.growl({ title: "Geslaagd!", message: r.msg });
-                window.location.reload(true);
-              } else {
-                $.growl.error({ title: "Fout!", message: r.msg});
-              }
-            }
-          });
-      });
-
-
-      $('#submitDesiredDeliveryDate').on('click', function(event) {
-        event.preventDefault();
-        var date = $('#desired_delivery_date').val();
-        $.ajax({
-            type: 'GET',
-            url: 'index.php?ajax=1&controller=AdminOrders&action=setDesiredDeliveryDate&token='+token,
-            data: { date:date, id_order:id_order},
-            success: function(r){
-              r = JSON.parse(r);
-              if(r.success){
-                $.growl({ title: "Gewenste leverdatum ingesteld!", message: r.msg });
-                window.location.reload(true);
-              } else {
-                $.growl.error({ title: "Fout bij instellen gewenste leverdatum!", message: r.msg});
-              }
-            }
-          });
-      });
-
-      $('#clearDesiredDeliveryDate').on('click', function(event) {
-        event.preventDefault();
-        $('#desired_delivery_date').val(null);
-          $.ajax({
-            type: 'GET',
-            url: 'index.php?ajax=1&controller=AdminOrders&action=setDesiredDeliveryDate&token='+token,
-            data: { date:null, id_order:id_order},
-            success: function(r){
-              r = JSON.parse(r);
-              if(r.success){
-                $.growl({ title: "Gewenste leverdatum gewijzigd!", message: 'Leverdatum is geleegd, deze word niet meer op de pakbon getoond'});
-                window.location.reload(true);
-              } else {
-                $.growl.error({ title: "Fout bij legen van leverdatum!", message: r.msg});
-              }
-            }
-          });
-      });
-  });
   </script>
 
   {assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}

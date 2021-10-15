@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -68,27 +68,29 @@ class DynamicProductProportionsController extends ModuleAdminController
         exit();
     }
 
-    public function processAddProportion()
+    private function processAddProportion()
     {
         $dynamic_proportion = new DynamicProportion();
         $dynamic_proportion->id_product = $this->id_product;
         $dynamic_proportion->value = 1;
         $dynamic_proportion->save();
-        $this->respond();
+        $this->respond(array(
+            'proportion' => $dynamic_proportion,
+        ));
     }
 
-    public function processSaveProportion()
+    private function processSaveProportion()
     {
-        $id_proportion = (int)Tools::getValue('id_proportion');
-        $dynamic_proportion = new DynamicProportion($id_proportion);
-        $dynamic_proportion->id_field = (int)Tools::getValue('id_field');
-        $dynamic_proportion->id_field_src = (int)Tools::getValue('id_field_src');
-        $dynamic_proportion->value = (float)Tools::getValue('value');
+        $proportion = Tools::getValue('proportion');
+        $dynamic_proportion = new DynamicProportion((int)$proportion['id']);
+        $dynamic_proportion->id_field = (int)$proportion['id_field'];
+        $dynamic_proportion->id_field_src = (int)$proportion['id_field_src'];
+        $dynamic_proportion->value = (float)$proportion['value'];
         $dynamic_proportion->save();
         $this->respond();
     }
 
-    public function processDeleteProportion()
+    private function processDeleteProportion()
     {
         $id_proportion = (int)Tools::getValue('id_proportion');
         $dynamic_proportion = new DynamicProportion($id_proportion);

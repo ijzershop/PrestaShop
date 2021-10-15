@@ -1,4 +1,7 @@
 <?php
+/**
+ * Class Order Overide fixed for 1.7.7.8
+ */
 
 class Order extends OrderCore
 {
@@ -60,13 +63,22 @@ class Order extends OrderCore
 
     public function getProductsDetail()
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT *
-        FROM `'._DB_PREFIX_.'order_detail` od
-        LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = od.product_id)
-        LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.id_product = od.product_id)
-        LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
-        WHERE od.`id_order` = '.(int) $this->id);
+        // The `od.ecotax` is a newly added at end as ecotax is used in multiples columns but it's the ecotax value we need
+        $sql = 'SELECT p.*, ps.*, od.*, pl.*';
+        $sql .= ' FROM `%sorder_detail` od';
+        $sql .= ' LEFT JOIN `%sproduct` p ON (p.id_product = od.product_id)';
+        $sql .= ' LEFT JOIN `%sproduct_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)';
+        /**
+         * Start add relation product language
+         */
+        $sql .= ' LEFT JOIN `%sproduct_lang` pl ON (pl.id_product = od.product_id)';
+        /**
+         * End add relation product language
+         */
+        $sql .= ' WHERE od.`id_order` = %d';
+        $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id);
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
     public static function generateReference()
@@ -80,7 +92,7 @@ class Order extends OrderCore
         $restLength = 9 - $prefixLength;
 
         if ($isRandom) {
-            $reference = Tools::passwdGen($restLength, 'NUMERIC');
+            $reference = Tools::passwdGen($restLength, 'NO_NUMERIC');
         } else {
             $query = 'SELECT `reference` FROM '._DB_PREFIX_.'orders ORDER BY `id_order` DESC';
 
@@ -97,7 +109,7 @@ class Order extends OrderCore
             }
         }
 
-        return $prefix.$reference;
+        return strtoupper($prefix.$reference);
     }
 
 
@@ -113,7 +125,8 @@ class Order extends OrderCore
         $history = new OrderHistory();
         $history->id_order = (int) $this->id;
         $history->id_employee = (int) $id_employee;
-        $history->changeIdOrderState((int) $id_order_state, $this);
+        $use_existings_payment = !$this->hasInvoice();
+        $history->changeIdOrderState((int) $id_order_state, $this, $use_existings_payment);
         $res = Db::getInstance()->getRow('
             SELECT `invoice_number`, `invoice_date`, `delivery_number`, `delivery_date`
             FROM `' . _DB_PREFIX_ . 'orders`
@@ -127,7 +140,14 @@ class Order extends OrderCore
         $history->addWithemail();
     }
 
-
+    /**
+     * Depricated in Order Class
+     *
+     * @param $id_order
+     * @return mixed
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function getDiscountRuleFromOrder($id_order){
         $order = new Order($id_order);
         foreach ($order->getCartRules() as $cartRule){

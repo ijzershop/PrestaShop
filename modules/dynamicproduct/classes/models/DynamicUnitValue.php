@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -47,29 +47,50 @@ class DynamicUnitValue extends DynamicObject
     public $max_date;
     public $multiselect;
     public $color;
+    public $display_value_price;
+    public $display_secondary_value_price;
+    public $display_in_popup;
+    public $hide_when_empty = 1;
+    public $show_in_summary = 0;
+    public $price_unit;
+    public $ps_style;
 
     private static $unit_values = array();
 
     public static $definition = array(
-        'table'   => 'dynamicproduct_unit_value',
-        'primary' => 'id_unit_value',
-        'fields'  => array(
-            'id_field'    => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_unit'     => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'min'         => array('type' => self::TYPE_FLOAT),
-            'max'         => array('type' => self::TYPE_FLOAT),
-            'step'        => array('type' => self::TYPE_FLOAT),
-            'init'        => array('type' => self::TYPE_FLOAT),
-            'extra'       => array('type' => self::TYPE_STRING),
-            'required'    => array('type' => self::TYPE_INT),
-            'min_width'   => array('type' => self::TYPE_INT),
-            'min_height'  => array('type' => self::TYPE_INT),
-            'max_size'    => array('type' => self::TYPE_INT),
-            'extensions'  => array('type' => self::TYPE_STRING),
-            'min_date'    => array('type' => self::TYPE_STRING),
-            'max_date'    => array('type' => self::TYPE_STRING),
-            'multiselect' => array('type' => self::TYPE_INT),
-            'color'       => array('type' => self::TYPE_STRING),
+        'table'     => 'dynamicproduct_unit_value',
+        'primary'   => 'id_unit_value',
+        'multilang' => true,
+        'fields'    => array(
+            'id_field'                      => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'id_unit'                       => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'min'                           => array('type' => self::TYPE_FLOAT),
+            'max'                           => array('type' => self::TYPE_FLOAT),
+            'step'                          => array('type' => self::TYPE_FLOAT),
+            'init'                          => array('type' => self::TYPE_FLOAT),
+            'extra'                         => array('type' => self::TYPE_STRING),
+            'required'                      => array('type' => self::TYPE_INT),
+            'min_width'                     => array('type' => self::TYPE_INT),
+            'min_height'                    => array('type' => self::TYPE_INT),
+            'max_size'                      => array('type' => self::TYPE_INT),
+            'extensions'                    => array('type' => self::TYPE_STRING),
+            'min_date'                      => array('type' => self::TYPE_STRING),
+            'max_date'                      => array('type' => self::TYPE_STRING),
+            'multiselect'                   => array('type' => self::TYPE_INT),
+            'color'                         => array('type' => self::TYPE_STRING),
+            'display_value_price'           => array('type' => self::TYPE_INT),
+            'display_secondary_value_price' => array('type' => self::TYPE_INT),
+            'display_in_popup'              => array('type' => self::TYPE_INT),
+            'hide_when_empty'               => array('type' => self::TYPE_INT),
+            'show_in_summary'               => array('type' => self::TYPE_INT),
+            /* Lang fields */
+            'price_unit'                    => array(
+                'type'     => self::TYPE_STRING,
+                'lang'     => true,
+                'required' => false,
+                'size'     => 256
+            ),
+            'ps_style'                      => array('type' => self::TYPE_INT),
         )
     );
 
@@ -88,7 +109,9 @@ class DynamicUnitValue extends DynamicObject
         $sql->from(self::$definition['table']);
         $sql->where('id_field = ' . (int)$id_field);
         $id_unit_value = Db::getInstance()->getValue($sql);
-        return self::$unit_values[$key] = new self($id_unit_value, $id_lang);
+        $dynamic_unit_value = new self($id_unit_value, $id_lang);
+        $dynamic_unit_value->id_field = (int)$id_field;
+        return self::$unit_values[$key] = $dynamic_unit_value;
     }
 
     /**

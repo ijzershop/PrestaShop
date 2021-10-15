@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -33,17 +33,22 @@ use Validate;
 class DynamicCommonField extends DynamicObject
 {
 
-    public $id_field;
     public $id_product;
+    public $id_group;
+    public $id_field;
+    public $id_step;
     public $position;
 
     public static $definition = array(
         'table'     => 'dynamicproduct_common_field',
         'primary'   => 'id_common_field',
+        'group_by'  => 'id_product',
         'multilang' => false,
         'fields'    => array(
-            'id_field'   => array('type' => self::TYPE_INT),
             'id_product' => array('type' => self::TYPE_INT),
+            'id_group'   => array('type' => self::TYPE_INT),
+            'id_field'   => array('type' => self::TYPE_INT),
+            'id_step'    => array('type' => self::TYPE_INT),
             'position'   => array('type' => self::TYPE_INT),
         )
     );
@@ -73,16 +78,17 @@ class DynamicCommonField extends DynamicObject
      * @param $id_product
      * @return DynamicCommonField[]
      */
-    public static function getByIdProduct($id_product, $order=false)
+    public static function getByIdProduct($id_product, $order = false, $id_lang = null)
     {
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
         $common_fields = array();
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_product);
+        $sql->where('id_product = ' . (int)$id_source_product);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id_field = $row['id_common_field'];
-            $common_field = new self($id_field);
+            $common_field = new self($id_field, $id_lang);
             if (Validate::isLoadedObject($common_field)) {
                 $common_fields[$id_field] = $common_field;
             }

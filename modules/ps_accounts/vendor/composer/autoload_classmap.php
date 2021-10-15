@@ -318,6 +318,7 @@ return array(
     'PrestaShop\\Module\\PsAccounts\\Handler\\Error\\Sentry' => $baseDir . '/classes/Handler/Error/Sentry.php',
     'PrestaShop\\Module\\PsAccounts\\Handler\\Response\\ApiResponseHandler' => $baseDir . '/classes/Handler/Response/ApiResponseHandler.php',
     'PrestaShop\\Module\\PsAccounts\\Installer\\Installer' => $baseDir . '/classes/Installer/Installer.php',
+    'PrestaShop\\Module\\PsAccounts\\Log\\Logger' => $baseDir . '/classes/Log/Logger.php',
     'PrestaShop\\Module\\PsAccounts\\Module\\Install' => $baseDir . '/classes/Module/Install.php',
     'PrestaShop\\Module\\PsAccounts\\Module\\Uninstall' => $baseDir . '/classes/Module/Uninstall.php',
     'PrestaShop\\Module\\PsAccounts\\Presenter\\DependenciesPresenter' => $baseDir . '/classes/Presenter/DependenciesPresenter.php',

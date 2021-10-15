@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -37,6 +37,7 @@ class ExecOrder extends DynamicObject
     const EXEC_INTERVAL = 0;
     const EXEC_FIELD_FORMULAS = 1;
     const EXEC_GRIDS = 2;
+    const EXEC_CONDITIONS = 3;
 
     public static $definition = array(
         'table'     => 'dynamicproduct_exec_order',
@@ -58,6 +59,13 @@ class ExecOrder extends DynamicObject
             self::EXEC_INTERVAL       => $module->l('Intervals', $source),
             self::EXEC_FIELD_FORMULAS => $module->l('Field Formulas', $source),
             self::EXEC_GRIDS          => $module->l('Grids', $source),
+            self::EXEC_CONDITIONS     => $module->l('Conditions', $source),
         );
+    }
+
+    public static function getByIdProduct($id_product, $order = false, $id_lang = null)
+    {
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        return parent::getByIdProduct($id_source_product, $order, $id_lang);
     }
 }

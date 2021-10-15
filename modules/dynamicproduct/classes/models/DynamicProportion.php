@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -49,16 +49,23 @@ class DynamicProportion extends DynamicObject
         )
     );
 
+    public static function getByIdProduct($id_product, $order = false, $id_lang = null)
+    {
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        return parent::getByIdProduct($id_source_product, $order, $id_lang);
+    }
+
     /**
      * @param $id_product
      * @return DynamicProportion[]
      */
     public static function getByProduct($id_product)
     {
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
         $dynamic_proportions = array();
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_product);
+        $sql->where('id_product = ' . (int)$id_source_product);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id_proportion = $row['id_proportion'];
@@ -97,5 +104,26 @@ class DynamicProportion extends DynamicObject
             }
         }
         return $data;
+    }
+
+    /**
+     * @param $id_field
+     * @return DynamicProportion[]
+     */
+    public static function getWithIdField($id_field)
+    {
+        $dynamic_proportions = array();
+        $sql = new DbQuery();
+        $sql->from(self::$definition['table']);
+        $sql->where('id_field = ' . (int)$id_field . ' OR id_field_src = ' . (int)$id_field);
+        $rows = Db::getInstance()->executeS($sql, false);
+        while ($row = Db::getInstance()->nextRow($rows)) {
+            $id_proportion = $row['id_proportion'];
+            $dynamic_proportion = new self($id_proportion);
+            if (Validate::isLoadedObject($dynamic_proportion)) {
+                $dynamic_proportions[$id_proportion] = $dynamic_proportion;
+            }
+        }
+        return $dynamic_proportions;
     }
 }

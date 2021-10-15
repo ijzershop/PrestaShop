@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -43,6 +43,8 @@ if (!defined('_DP_PRICE_')) {
     define('_DP_RADIO_', 16);
     define('_DP_COLORPICKER_', 17);
     define('_DP_HTML_', 18);
+    define('_DP_ERROR_', 19);
+    define('_DP_SWITCH_', 20);
 
     define('_DP_PRICE_EQ_', 0);
     define('_DP_WEIGHT_EQ_', 1);

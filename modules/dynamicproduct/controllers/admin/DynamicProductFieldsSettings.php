@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,14 +20,13 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
 use classes\DynamicTools;
-use classes\factory\DynamicFieldFactory;
 use classes\helpers\TranslationHelper;
 use classes\models\DynamicField;
 use classes\models\DynamicUnitValue;
@@ -44,23 +43,6 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
     public $id_field;
     public $id_product;
     public $id_default_lang;
-
-    private static $types = array(
-        1  => 'Input',
-        4  => 'Text',
-        5  => 'Date',
-        6  => 'Image',
-        8  => 'Dropdown',
-        9  => 'Checkbox',
-        10 => 'File',
-        11 => 'Slider',
-        12 => 'Thumbnails',
-        13 => 'TextArea',
-        14 => 'Feature',
-        16 => 'Radio',
-        17 => 'ColorPicker',
-        18 => 'Html'
-    );
 
     public function __construct()
     {
@@ -90,56 +72,28 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
         exit();
     }
 
-    private function processGetDialogContent()
+    private function processSaveFieldSettings()
     {
-        $dynamic_field = DynamicFieldFactory::create(0, $this->id_field);
-        $type = (int)$dynamic_field->type;
-        if (isset(self::$types[$type])) {
-            $type_name = self::$types[$type];
-            $method = 'hookDisplay' . $type_name . 'Settings';
-            exit($this->module->{$method}($this->id_field));
+        $id_field = (int)Tools::getValue('id');
+        $dynamic_field = new DynamicField($id_field);
+        $id_product_original = (int)$dynamic_field->id_product;
+        $dynamic_field->saveFromPost();
+        if ($id_product_original !== $this->id_product) {
+            $dynamic_field->id_product = $id_product_original;
+            $dynamic_field->save();
         }
-    }
-
-    private function processSaveInputSettings()
-    {
-        $options = Tools::getValue('options');
-
-        $unit_value = DynamicUnitValue::getUnitValue($this->id_field);
-        $unit_value->id_field = $this->id_field;
-        $unit_value->min = (float)$options['min'];
-        $unit_value->max = (float)$options['max'];
-        $unit_value->step = (float)$options['step'];
-        $unit_value->save();
-
-        $field_options = Tools::getValue('field_options');
-        $descriptions = $field_options['description'];
 
         $translation_helper = new TranslationHelper($this->module, $this->context);
-        $translation_helper->fillEmpty($descriptions);
 
-        $field = new DynamicField($this->id_field);
-        $field->description = $descriptions;
-        $field->save();
-
-        $this->respond();
-    }
-
-    private function processSaveSliderSettings()
-    {
-        $options = Tools::getValue('options');
-
-        $unit_value = DynamicUnitValue::getUnitValue($this->id_field);
-        $unit_value->id_field = $this->id_field;
-        $unit_value->min = (float)$options['min'];
-        $unit_value->max = (float)$options['max'];
-        $unit_value->step = (float)$options['step'];
+        $unit_value = DynamicUnitValue::getUnitValue($id_field);
+        $settings = Tools::getValue('settings');
+        $unit_value = DynamicUnitValue::copyFromArray($settings, $unit_value);
+        $translation_helper->fillEmpty($settings['price_unit']);
+        $unit_value->price_unit = $settings['price_unit'];
+        $unit_value->id_field = $id_field;
         $unit_value->save();
 
-        $field_options = Tools::getValue('field_options');
-        $descriptions = $field_options['description'];
-
-        $translation_helper = new TranslationHelper($this->module, $this->context);
+        $descriptions = Tools::getValue('description');
         $translation_helper->fillEmpty($descriptions);
 
         $field = new DynamicField($this->id_field);

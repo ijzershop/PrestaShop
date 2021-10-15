@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,13 +20,14 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
 use classes\DynamicTools;
+use classes\models\DynamicEquation;
 use classes\models\intervals\Interval;
 use classes\models\intervals\IntervalCondition;
 use classes\models\intervals\IntervalConditionGroup;
@@ -72,13 +73,6 @@ class DynamicProductIntervalsController extends ModuleAdminController
         }
 
         exit();
-    }
-
-    public function processGetIntervals()
-    {
-        $this->respond(array(
-            'intervals' => Interval::getByIdProduct($this->id_product)
-        ));
     }
 
     public function processAddInterval()
@@ -163,40 +157,22 @@ class DynamicProductIntervalsController extends ModuleAdminController
     public function processAddIntervalCondition()
     {
         $id_interval_condition_group = (int)Tools::getValue('id_interval_condition_group');
-        $interval_condition_data = Tools::getValue('interval_condition');
-        $type = $interval_condition_data['type'];
 
         $interval_condition = new IntervalCondition();
         $interval_condition->id_interval_condition_group = $id_interval_condition_group;
-        $interval_condition->id_field = $interval_condition_data['id_field'];
-        $interval_condition->type = $type;
+        $interval_condition->id_field = 0;
+        $interval_condition->type = IntervalCondition::$TYPE_RANGE;
         $interval_condition->save();
 
         $id_interval_condition = $interval_condition->id;
 
-        if ($type === 'range') {
-            $condition_range = IntervalConditionRange::getByIntervalCondition($id_interval_condition);
-            $condition_range->min = $interval_condition_data['min'];
-            $condition_range->max = $interval_condition_data['max'];
-            $condition_range->save();
-        }
-
-        if ($type === 'values') {
-            $condition_values = IntervalConditionValue::getByIntervalCondition($id_interval_condition);
-            foreach ($condition_values as $condition_value) {
-                $condition_value->delete();
-            }
-            $values = explode(',', $interval_condition_data['values']);
-            foreach ($values as $value) {
-                $condition_value = new IntervalConditionValue();
-                $condition_value->id_interval_condition = $id_interval_condition;
-                $condition_value->value = $value;
-                $condition_value->save();
-            }
-        }
+        $condition_range = IntervalConditionRange::getByIntervalCondition($id_interval_condition);
+        $condition_range->min = 0;
+        $condition_range->max = 100;
+        $condition_range->save();
 
         $this->respond(array(
-            'interval_conditions' => IntervalCondition::getByIntervalConditionGroup($id_interval_condition_group)
+            'interval_condition' => new IntervalCondition($id_interval_condition),
         ));
     }
 
@@ -206,7 +182,13 @@ class DynamicProductIntervalsController extends ModuleAdminController
         $id_field = (int)Tools::getValue('id_field');
         $type = Tools::getValue('type');
         $min = (float)Tools::getValue('min');
-        $max = (float)Tools::getValue('max');
+        $max = Tools::getValue('max');
+        if ($max === '∞') {
+            // 0 as the max is alias for +inf
+            $max = 0;
+        } else {
+            $max = (float)$max;
+        }
         $values = Tools::getValue('values');
 
         $interval_condition = new IntervalCondition($id_interval_condition);
@@ -282,7 +264,17 @@ class DynamicProductIntervalsController extends ModuleAdminController
     {
         $id_interval_condition_group = (int)Tools::getValue('id_interval_condition_group');
         $id_interval_field = (int)Tools::getValue('id_interval_field');
+
         $formula = Tools::getValue('formula');
+        $fields = Tools::getValue('fields');
+        $validation = DynamicEquation::checkFormula($this->id_product, $formula, $fields);
+        if ($validation !== true) {
+            $this->respond(array(
+                'error'   => true,
+                'message' => $validation
+            ));
+        }
+
         $interval_formula = IntervalFormula::getIntervalFormula($id_interval_condition_group, $id_interval_field);
         $interval_formula->formula = $formula;
         $interval_formula->save();

@@ -64,7 +64,7 @@
     padding-top: 0.625rem;
   }
 }
-.products-sort-order {
+.products-sort-order, .brands-sort, .suppliers-sort {
   color: $gray;
   .select-title {
     display: inline-block;
@@ -483,5 +483,14 @@
     box-shadow: none;
     background-color: inherit;
     border: none;
+  }
+}
+
+
+@include media-breakpoint-down(md) {
+  #products {
+    .products {
+      justify-content: center;
+    }
   }
 }

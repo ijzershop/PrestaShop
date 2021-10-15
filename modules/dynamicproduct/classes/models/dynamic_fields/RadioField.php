@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,12 +20,13 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 namespace classes\models\dynamic_fields;
 
+use classes\helpers\OptionPriceHelper;
 use classes\models\DynamicField;
 use classes\models\DynamicRadioOption;
 
@@ -36,7 +37,15 @@ class RadioField extends DynamicField
 
     public function getOptions()
     {
-        return DynamicRadioOption::getRadioOptionsByIdField($this->id, $this->id_lang);
+        $options = DynamicRadioOption::getRadioOptionsByIdField($this->id, $this->id_lang);
+        $option_price_helper = new OptionPriceHelper($this->module, $this->context);
+        if ((int)$this->settings->display_value_price) {
+            $options = $option_price_helper->addPriceFromValue($options, $this->id_product);
+        }
+        if ((int)$this->settings->display_secondary_value_price) {
+            $options = $option_price_helper->addPriceFromSecondaryValue($options, $this->id_product);
+        }
+        return $options;
     }
 
     public function getInitialValue()
@@ -47,5 +56,15 @@ class RadioField extends DynamicField
             }
         }
         return 0;
+    }
+
+    public function getInitialOptions()
+    {
+        foreach ($this->options as $option) {
+            if ($option->is_default) {
+                return array($option->id);
+            }
+        }
+        return array();
     }
 }

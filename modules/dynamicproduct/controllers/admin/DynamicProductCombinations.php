@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -88,21 +88,7 @@ class DynamicProductCombinationsController extends ModuleAdminController
         $combination_value->value = $value;
         $combination_value->save();
 
-        $this->respond();
-    }
-
-    private function processDeleteColumn()
-    {
-        $id_field = (int)Tools::getValue('id_field');
-        $combination_field = DynamicCombinationField::getByProductAndField($this->id_product, $id_field);
-        $combination_field->delete();
-
-        Db::getInstance()->delete(
-            DynamicCombinationValue::$definition['table'],
-            'id_product = ' . (int)$this->id_product . ' AND id_field = ' . (int)$id_field
-        );
-
-        $this->respond();
+        $this->respond($this->getNewData());
     }
 
     private function processAddColumn()
@@ -116,12 +102,35 @@ class DynamicProductCombinationsController extends ModuleAdminController
             ));
         }
         $combination_field->save();
-        $this->respond();
+        $this->respond($this->getNewData());
     }
 
-    private function processReloadList()
+    private function processDeleteColumn()
     {
-        exit($this->module->hookDisplayCombinationsList($this->id_product));
+        $id_field = (int)Tools::getValue('id_field');
+        $combination_field = DynamicCombinationField::getByProductAndField($this->id_product, $id_field);
+        $combination_field->delete();
+
+        Db::getInstance()->delete(
+            DynamicCombinationValue::$definition['table'],
+            'id_product = ' . (int)$this->id_product . ' AND id_field = ' . (int)$id_field
+        );
+
+        $this->respond($this->getNewData());
+    }
+
+    private function getNewData()
+    {
+        //get product combinations
+        $combination_fields = DynamicCombinationField::getByIdProduct($this->id_product);
+        $combination_values = DynamicCombinationValue::getValuesByIdProduct($this->id_product);
+        $combination_values = DynamicCombinationValue::organizeByAttributesAndFields($combination_values);
+        return array(
+            'combinations' => array(
+                'combination_fields' => $combination_fields,
+                'combination_values' => $combination_values,
+            ),
+        );
     }
 
     public function respond($data = array(), $success = 1)

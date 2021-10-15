@@ -259,17 +259,37 @@ services:
               'webservice_configuration': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceConfigurationType'
             - 'WebservicePage'
 
-    prestashop.admin.translations_settings.form_handler:
+    prestashop.admin.translations_settings.modify_translations.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\TranslationsSettingsFormHandler'
         arguments:
-            - '@=service("form.factory").createBuilder()'
+            - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
-            -
-              'modify_translations': 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType'
-              'add_update_language': 'PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType'
-              'export_language': 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType'
-              'copy_language': 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType'
-            - 'TranslationSettingsPage'
+            - 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType'
+            - 'TranslationSettingsPageModifyTranslations'
+
+    prestashop.admin.translations_settings.add_update_language.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\TranslationsSettingsFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - 'PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType'
+            - 'TranslationSettingsPageAddUpdateLanguage'
+
+    prestashop.admin.translations_settings.export_language.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\TranslationsSettingsFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType'
+            - 'TranslationSettingsPageExportLanguage'
+
+    prestashop.admin.translations_settings.copy_language.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\TranslationsSettingsFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType'
+            - 'TranslationSettingsPageCopyLanguage'
 
     prestashop.admin.meta_settings.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
@@ -315,19 +335,21 @@ services:
               'shop_logos': 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType'
             - 'ShopLogo'
 
-  # Entity form handler
+    # Entity form handler
     prestashop.admin.request_sql.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler'
         arguments:
             - '@form.factory'
             - '@prestashop.adapter.sql_manager.request_sql_form_data_validator'
             - '@prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider'
+        deprecated: 'The "%service_id% service is deprecated. Use "prestashop.core.form.identifiable_object.sql_request_form_data_handler" instead'
 
     prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormDataProvider'
         arguments:
             - '@prestashop.core.command_bus'
             - '@prestashop.core.query_bus'
+        deprecated: 'The "%service_id% service is deprecated. Use "prestashop.core.form.identifiable_object.data_provider.sql_request_form_data_provider" instead'
 
     prestashop.admin.tax_options.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
@@ -348,3 +370,23 @@ services:
             -
               'configuration': 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeConfigurationType'
             - 'MailTheme'
+
+    prestashop.admin.merchandise_return_options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.merchandise_return_options.form_data_provider'
+            -
+              'options': 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsType'
+            - 'MerchandiseReturn'
+
+    prestashop.admin.credit_slip_options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.sell.order.credit_slip.credit_slip_options_form_data_provider'
+            -
+              'options': 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType'
+            - 'CreditSlip'

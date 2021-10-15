@@ -5,7 +5,6 @@
 * @copyright   Mollie B.V.
 * @link        https://github.com/mollie/PrestaShop
 * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
-* @codingStandardsIgnoreStart
 *}
 {extends file="helpers/form/form.tpl"}
 
@@ -218,7 +217,7 @@
                                        target="_blank">{l s='Translations.' mod='mollie'}</a>
                                 </p>
                                 <p class="help-block">
-                                    {l s="The total surcharge fee should have taxes included." mod='mollie'}
+                                    {l s='The total surcharge fee should have taxes included.' mod='mollie'}
                                 </p>
                             </div>
                         </div>
@@ -331,7 +330,7 @@
                                         </option>
                                     </select>
                                     <p class="help-block">
-                                        {l s="The category selected here will be used for all products in your webshop." mod='mollie'}
+                                        {l s='The category selected here will be used for all products in your webshop.' mod='mollie'}
                                     </p>
                                 </div>
                             </div>
@@ -694,7 +693,7 @@
                       data-text-show="{l s='Show' mod='mollie'}"
                       data-text-hide="{l s='Hide' mod='mollie'}"
               >
-                {l s='Show' d='Shop.Theme.Actions'}
+                {l s='Show' d='Shop.Theme.Actions' mod='mollie'}
               </button>
         </div>
     {elseif $input.type === 'mollie-button'}

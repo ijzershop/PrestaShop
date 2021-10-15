@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -28,7 +28,6 @@ namespace classes\module;
 
 use Context;
 use DynamicProduct;
-use Tools;
 
 class DynamicMedia
 {
@@ -49,8 +48,6 @@ class DynamicMedia
 
     public function addJS($js_uri)
     {
-        $protocol = Tools::getCurrentUrlProtocolPrefix();
-        $base_URI = $this->context->shop->getBaseURI();
         $controller = Context::getContext()->controller;
         if (!is_array($js_uri)) {
             $js_uri = array($js_uri);
@@ -61,17 +58,11 @@ class DynamicMedia
                     $js_file = 'modules/dynamicproduct/' . $js_file;
                 }
 
-                $separator = $js_file[0] !== DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : null;
-                $path = _PS_ROOT_DIR_ . $separator . $js_file;
-                if (is_file($path)) {
-                    $js_file = $base_URI . $js_file . '?' . $this->hash;
-
-                    $controller->registerJavascript(
-                        md5($js_file),
-                        $protocol . Tools::getMediaServer($js_file) . $js_file,
-                        array('priority' => 100, 'position' => 'bottom', 'server' => 'remote')
-                    );
-                }
+                $controller->registerJavascript(
+                    md5($js_file),
+                    $js_file,
+                    array('priority' => 100, 'position' => 'bottom')
+                );
             }
         } else {
             foreach ($js_uri as $key => $js_file) {

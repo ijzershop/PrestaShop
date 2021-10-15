@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -76,9 +76,9 @@ class DynamicCalculator
         }
 
         if ($id_customer) {
-            $tax_calculation_method = Group::getPriceDisplayMethod(Customer::getDefaultGroupId($id_customer));
+            $tax_calculation_method = (int)Group::getPriceDisplayMethod(Customer::getDefaultGroupId($id_customer));
         } else {
-            $tax_calculation_method = Group::getPriceDisplayMethod((int)Group::getCurrent()->id);
+            $tax_calculation_method = (int)Group::getPriceDisplayMethod((int)Group::getCurrent()->id);
         }
 
         if ($tax_calculation_method === PS_TAX_EXC && !$force_tax) {
@@ -90,12 +90,11 @@ class DynamicCalculator
         } else {
             $address = new Address(0);
         }
-        $product_tax_rate = (float)Tax::getProductTaxRate(
+        return (float)Tax::getProductTaxRate(
             (int)$id_product,
             (int)$address->id,
             DynamicTools::getContext()
         );
-        return $product_tax_rate;
     }
 
     public function applyTax($result, $cart = false, $force_tax = false, $id_product = false)
@@ -176,8 +175,8 @@ class DynamicCalculator
         }
         $id_group = $id_customer ? Customer::getDefaultGroupId($id_customer) : (int)Group::getCurrent()->id;
         $reduction = GroupReductionCore::getValueForProduct($id_product, $id_group);
-        $price -= $price * $reduction;
-        return $price;
+        $price -= $price * (float)$reduction;
+        return array($price, $reduction);
     }
 
     public function getAddress($id_address)
@@ -194,9 +193,13 @@ class DynamicCalculator
         if ($with_tax) {
             $result = $this->module->calculator->applyTax($result, false, false, $id_product);
         }
+        $calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
         if ($use_reduc) {
-            $result = $this->applyReduction($result, $this->getProductReduction($id_product));
-            $result = $this->applyGroupReduction($result, $this->module->provider->getCart());
+            $result = $calculator_helper->applyReductions(
+                $result,
+                $id_product,
+                $this->getProductReduction($id_product)
+            );
         }
         return $result;
     }
@@ -205,9 +208,11 @@ class DynamicCalculator
     {
         $id_product = (int)$product['id_product'];
 
-        $dynamic_config = new DynamicConfig($id_product);
+        $dynamic_config = DynamicConfig::getByProduct($id_product);
 
-        $id_attribute = isset($product['id_product_attribute']) ? (int)$product['id_product_attribute'] : 0;
+        $id_attribute = isset($product['id_product_attribute']) ?
+            (int)$product['id_product_attribute'] :
+            (int)Product::getDefaultAttribute($id_product);
         $product_price_ttc = Product::getPriceStatic(
             $id_product,
             !Product::getTaxCalculationMethod(),
@@ -233,10 +238,13 @@ class DynamicCalculator
         if ($dynamic_config->display_dynamic_price) {
             $dynamic_calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
             try {
-                $display_price = $dynamic_calculator_helper->calculateDisplayPrice($id_product, $id_attribute);
+                $display_price = $dynamic_calculator_helper->calculateDisplayPrice(
+                    $id_product,
+                    $id_attribute
+                );
             } catch (Exception $e) {
                 PrestaShopLogger::addLog(
-                    sprintf('Error in formula: %s', $e->getMessage()),
+                    sprintf('Error in formula: %s', DynamicTools::reportException($e, true)),
                     3,
                     1,
                     'Product',

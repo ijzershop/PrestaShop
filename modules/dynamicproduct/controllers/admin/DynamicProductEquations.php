@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,13 +20,14 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
 use classes\DynamicTools;
+use classes\helpers\ProductHelper;
 use classes\models\DynamicEquation;
 
 class DynamicProductEquationsController extends ModuleAdminController
@@ -72,12 +73,14 @@ class DynamicProductEquationsController extends ModuleAdminController
     {
         $id_formula = (int)Tools::getValue('id_formula');
 
-        $formula = str_replace('&nbsp','', Tools::getValue('formula'));
-
+        $formula = Tools::getValue('formula');
         $fields = Tools::getValue('fields');
         $validation = DynamicEquation::checkFormula($this->id_product, $formula, $fields);
         if ($validation !== true) {
-            $this->respond(array('error' => $validation));
+            $this->respond(array(
+                'error'   => true,
+                'message' => $validation
+            ));
         }
         $dynamic_equation = DynamicEquation::getEquationByIdFormula($this->id_product, $id_formula);
         $dynamic_equation->id_product = (int)$this->id_product;
@@ -93,9 +96,19 @@ class DynamicProductEquationsController extends ModuleAdminController
         $fields = Tools::getValue('fields');
         $validation = DynamicEquation::checkFormula($this->id_product, $formula, $fields);
         if ($validation !== true) {
-            $this->respond(array('error' => $validation));
+            $this->respond(array(
+                'error'   => true,
+                'message' => $validation
+            ));
         }
         $this->respond();
+    }
+
+    private function processRefreshDatabases()
+    {
+        $this->respond(array(
+            'databases' => ProductHelper::getProductDatabaseFields(),
+        ));
     }
 
     public function respond($data = array(), $success = 1)

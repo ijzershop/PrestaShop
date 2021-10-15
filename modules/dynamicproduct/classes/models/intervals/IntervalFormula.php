@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -46,7 +46,7 @@ class IntervalFormula extends DynamicObject
         'fields'    => array(
             'id_interval_condition_group' => array('type' => self::TYPE_INT),
             'id_interval_field'           => array('type' => self::TYPE_INT),
-            'formula'                     => array('type' => self::TYPE_STRING),
+            'formula'                     => array('type' => self::TYPE_HTML),
         )
     );
 

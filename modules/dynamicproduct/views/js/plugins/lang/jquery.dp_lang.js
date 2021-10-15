@@ -1,5 +1,5 @@
 /*
-* 2010-2020 Tuni-Soft
+* 2010-2021 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -19,8 +19,8 @@
 * for more information.
 *
 * @author    Tuni-Soft
-* @copyright 2010-2020 Tuni-Soft
+* @copyright 2010-2021 Tuni-Soft
 * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 */
 
-!function(e){e.fn.dpLang=function(){function n(n){if("focusin"==n.type){e(this).find(".dp_lang").length;e(this).addClass("expanded"),e(".dp_lang_container.expanded").not(this).removeClass("expanded")}else e(n.currentTarget).is("html")&&e(".dp_lang_container.expanded").removeClass("expanded")}e("html").data("dp_handled")||(e(document).on("focus",".dp_lang_container",n).on("click",".dp_lang_container",function(n){n.stopPropagation()}).on("keyup",".dp_lang input",function(n){27==n.keyCode&&e(this).closest(".dp_lang_container").removeClass("expanded")}),e("html").click(n).data("dp_handled",!0)),e(".dp_lang_container").on("click",function(){event.stopPropagation()})}}(jQuery);
+!function(e){e.fn.dpLang=function(){function n(n){"focusin"==n.type?(e(this).find(".dp_lang").length,e(this).addClass("expanded"),e(".dp_lang_container.expanded").not(this).removeClass("expanded")):e(n.currentTarget).is("html")&&e(".dp_lang_container.expanded").removeClass("expanded")}e("html").data("dp_handled")||(e(document).on("focus",".dp_lang_container",n).on("click",".dp_lang_container",function(n){n.stopPropagation()}).on("keyup",".dp_lang input",function(n){27==n.keyCode&&e(this).closest(".dp_lang_container").removeClass("expanded")}),e("html").click(n).data("dp_handled",!0)),e(".dp_lang_container").on("click",function(){event.stopPropagation()})}}(jQuery);

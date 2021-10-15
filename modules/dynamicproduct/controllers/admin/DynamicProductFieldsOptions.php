@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2020 Tuni-Soft
+ * 2010-2021 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,18 +20,19 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2020 Tuni-Soft
+ * @copyright 2010-2021 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
 
 use classes\DynamicTools;
-use classes\helpers\TranslationHelper;
+use classes\factory\DynamicFieldFactory;
 use classes\models\DynamicDropdownOption;
 use classes\models\DynamicField;
 use classes\models\DynamicRadioOption;
 use classes\models\DynamicThumbnailsOption;
+use Eventviva\ImageResize;
 
 class DynamicProductFieldsOptionsController extends ModuleAdminController
 {
@@ -84,8 +85,11 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         if (method_exists($this, $method)) {
             return $this->{$method}();
         }
-
-        exit('hello');
+        $this->respond(array(
+            'error'   => true,
+            'message' => 'Invalid action!',
+        ));
+        exit();
     }
 
     private function processAddOption()
@@ -95,51 +99,34 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         $new_option->id_field = $this->id_field;
         $new_option->position = $new_option::getHighestPosition($new_option);
         $new_option->save();
+
         $this->respond(array(
-            'id_option' => (int)$new_option->id
+            'field' => DynamicFieldFactory::create(null, $this->id_field),
         ));
     }
 
-    private function processSaveValue()
+    private function processSaveOption()
     {
-        $value = Tools::getValue('value');
-        $option = $this->getOptionClass($this->id_field, $this->id_option);
-        $option->value = $value;
-        $option->save();
-        $this->respond();
-    }
+        $id_option = (int)Tools::getValue('id');
+        /** @var DynamicDropdownOption $dynamic_option */
+        $dynamic_option = $this->getOptionClass($this->id_field, $id_option);
+        $dynamic_option->saveFromPost();
 
-    private function processSaveSecondaryValue()
-    {
-        $secondary_value = Tools::getValue('secondary_value');
-        $option = $this->getOptionClass($this->id_field, $this->id_option);
-        $option->secondary_value = $secondary_value;
-        $option->save();
-        $this->respond();
-    }
+        if ($dynamic_option->is_default) {
+            /** @noinspection PhpUndefinedVariableInspection */
+            $table = $dynamic_option::$definition['table'];
+            $primary = $dynamic_option::$definition['primary'];
+            Db::getInstance()->update(
+                $table,
+                array('is_default' => 0),
+                'id_field = ' . (int)$this->id_field .
+                ' AND `' . bqSQL($primary) . '` != ' . $id_option
+            );
+        }
 
-    private function processSaveLabel()
-    {
-        $labels = Tools::getValue('labels');
-
-        $option = $this->getOptionClass($this->id_field, $this->id_option);
-
-        $translation_helper = new TranslationHelper($this->module, $this->context);
-        $translation_helper->fillEmpty($labels);
-
-        $option->label = $labels;
-        $option->save();
-
-        $this->respond();
-    }
-
-    private function processSaveDefault()
-    {
-        $is_default = (int)Tools::getValue('is_default');
-        $option = $this->getOptionClass($this->id_field, $this->id_option);
-        $option->is_default = $is_default;
-        $option->save();
-        $this->respond();
+        $this->respond(array(
+            'field' => DynamicFieldFactory::create(null, $this->id_field),
+        ));
     }
 
     private function processSaveColor()
@@ -149,7 +136,9 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         $option->color = $color;
         $option->save();
 
-        $this->respond();
+        $this->respond(array(
+            'field' => DynamicFieldFactory::create(null, $this->id_field),
+        ));
     }
 
     private function processSaveOptionsOrder()
@@ -169,7 +158,9 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
     {
         $option = $this->getOptionClass($this->id_field, $this->id_option);
         $option->delete();
-        $this->respond();
+        $this->respond(array(
+            'field' => DynamicFieldFactory::create(null, $this->id_field),
+        ));
     }
 
     private function processSaveImage()
@@ -185,20 +176,65 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         $upload = $file[0];
 
         if ($upload['error']) {
-            $this->respond(array('error' => $upload['error']));
+            $this->respond(array(
+                'error'   => true,
+                'message' => $upload['error']
+            ));
         }
 
         $save_path = $upload['save_path'];
-        ImageManager::resize($save_path, $img_dir . $this->id_option . '.jpg');
-        ImageManager::resize($save_path, $img_dir . $this->id_option . '-thumb.jpg', _DP_THUMB_, _DP_THUMB_);
 
-        $folder_url = $this->module->provider->getDataDirUrl('images/' . $image_folder);
-        $image_url = $folder_url . $this->id_option . '.jpg?' . uniqid('', true);
-        $thumb_url = $folder_url . $this->id_option . '-thumb.jpg?' . uniqid('', true);
+        ImageManager::resize($save_path, $img_dir . $this->id_option . '.jpg');
+
+        $image = new ImageResize($save_path);
+        $image->resizeToHeight(_DP_THUMB_);
+        $image->save($img_dir . $this->id_option . '-thumb.jpg', null, 100);
 
         $this->respond(array(
-            'url'       => $image_url,
-            'thumb_url' => $thumb_url
+            'field' => DynamicFieldFactory::create(null, $this->id_field),
+        ));
+    }
+
+    private function processImportImages()
+    {
+        $dynamic_field = new DynamicField($this->id_field);
+        $type = (int)$dynamic_field->type;
+        $image_folder = self::$image_folders[$type];
+        $img_dir = $this->module->provider->getDataDir('images/' . $image_folder);
+
+        $languages = Language::getLanguages();
+
+        $uploader = new Uploader();
+        $uploader->setName('files');
+        $uploader->setAcceptTypes(array('jpeg', 'gif', 'png', 'jpg'));
+        $files = $uploader->process();
+
+        foreach ($files as $file) {
+            if ($file['error'] === 0) {
+                $path = $file['save_path'];
+
+                /** @var DynamicDropdownOption | DynamicThumbnailsOption | DynamicRadioOption $class_name */
+                $class_name = self::$types[$type];
+                /** @var DynamicDropdownOption | DynamicThumbnailsOption | DynamicRadioOption $option */
+                $option = new $class_name();
+                $option->value = 0;
+                $option->id_field = $this->id_field;
+                $option->position = $class_name::getHighestPosition($option);
+                foreach ($languages as $language) {
+                    $option->label[$language['id_lang']] = DynamicTools::capitalizeFilename(basename($path));
+                }
+                $option->save();
+
+                ImageManager::resize($path, $img_dir . $option->id . '.jpg');
+
+                $image = new ImageResize($path);
+                $image->resizeToHeight(_DP_THUMB_);
+                $image->save($img_dir . $option->id . '-thumb.jpg', null, 100);
+            }
+        }
+
+        $this->respond(array(
+            'field' => DynamicFieldFactory::create(null, $this->id_field),
         ));
     }
 
@@ -214,10 +250,19 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
             unlink($thumb);
         }
 
-        $folder_url = $this->module->getFolderUrl('views/img/');
+        $this->respond(array(
+            'field' => DynamicFieldFactory::create(null, $this->id_field),
+        ));
+    }
+
+    private function processDeleteOptionColor()
+    {
+        $option = $this->getOptionClass($this->id_field, $this->id_option);
+        $option->color = null;
+        $option->save();
 
         $this->respond(array(
-            'empty' => $folder_url . 'pixel.png',
+            'field' => DynamicFieldFactory::create(null, $this->id_field),
         ));
     }
 
@@ -235,6 +280,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
 
     public function respond($data = array(), $success = 1)
     {
+        /** @noinspection CallableParameterUseCaseInTypeContextInspection */
         $success = $success && (int)!array_key_exists('error', $data);
         $arr = array(
             'success' => $success,

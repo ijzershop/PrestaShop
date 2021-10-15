@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PrestaShop
+* 2007-2021 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,19 +18,9 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2020 PrestaShop SA
+*  @copyright 2007-2021 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if !$is_pdf}
-    <a href="{$input_field->getFileUrl()|escape:'htmlall':'UTF-8'}" target="_blank">
-        {if $input_field->isImage()}
-            <img src="{$input_field->getThumbUrl()|escape:'htmlall':'UTF-8'}" width="29" alt="preview">
-        {else}
-            {l s='attachment' mod='dynamicproduct'}
-        {/if}
-    </a>
-{else}
-    {l s='attachment' mod='dynamicproduct'}
-{/if}
+<a target="_blank" href="{$input_field->getFileUrl()}">{$input_field->value|escape:'htmlall':'UTF-8'}</a>

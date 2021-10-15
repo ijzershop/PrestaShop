@@ -1,5 +1,5 @@
-{**
-* 2010-2020 Tuni-Soft
+{*
+* 2007-2021 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -17,17 +17,19 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author
-*  @copyright 2014-2020
+*  @author    PrestaShop SA <contact@prestashop.com>
+*  @copyright 2007-2021 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if !$is_pdf}
-    <ul style="display: inline-block;vertical-align: top;">
-        {foreach $input_field->getDisplayedValues() as $displayed_value}
-            <li>{$displayed_value|escape:'htmlall':'UTF-8'}</li>
-        {/foreach}
-    </ul>
+{$values = $input_field->getDisplayedValues()}
+{if count($values) === 1}
+    {$values[0]}
 {else}
-    {implode($input_field->getDisplayedValues(), ', ')|escape:'htmlall':'UTF-8'}
+  <ul>
+      {foreach $values as $value}
+        <li>{$value}</li>
+      {/foreach}
+  </ul>
 {/if}

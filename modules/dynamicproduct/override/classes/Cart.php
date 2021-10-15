@@ -1,6 +1,6 @@
 <?php
 /**
-* 2010-2020 Tuni-Soft
+* 2010-2021 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -20,7 +20,7 @@
 * for more information.
 *
 * @author    Tuni-Soft
-* @copyright 2010-2020 Tuni-Soft
+* @copyright 2010-2021 Tuni-Soft
 * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 */
 
@@ -30,7 +30,8 @@ class Cart extends CartCore
     {
         $id_cart_old = (int)$this->id;
         $result = parent::duplicate();
-        $id_cart_new = (int)$this->id;
+        $id_cart_new = (int)$result['cart']->id;
+        Module::getInstanceByName('dynamicproduct');
         if (Module::isEnabled('dynamicproduct')) {
             /** @var DynamicProduct $module */
             $module = Module::getInstanceByName('dynamicproduct');

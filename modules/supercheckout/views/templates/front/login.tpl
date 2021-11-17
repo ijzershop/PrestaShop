@@ -113,14 +113,16 @@
   </div>
   <div class="no-shipping-names-row d-none phone">
     <div class="form-group">
-      {assign var='first_address_loggedin' value=null}
-      {if !isset($guest_information)}
-        {if $customer.addresses}
-          {assign var='first_address_loggedin' value=reset($customer.addresses)}
-        {/if}
-      {/if}
       <label class="control-label" for="input-no_shipping_phone">Telefoonnummer: <span style="display:inline;" class="supercheckout-required">*</span></label>
-      <input  type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value="{$first_address_loggedin['phone']}"/>
+        {assign var='first_address_loggedin' value=null}
+          {if !isset($guest_information)}
+            {if $customer.addresses}
+              {assign var='first_address_loggedin' value=reset($customer.addresses)}
+              <input type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value="{$first_address_loggedin['phone']}"/>
+            {else}
+              <input type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value=""/>
+            {/if}
+          {/if}
     </div>
   </div>
 

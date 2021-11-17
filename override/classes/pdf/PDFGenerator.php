@@ -116,6 +116,7 @@ class PDFGenerator extends PDFGeneratorCore
 
             $this->write2DBarcode('FOL/'.Configuration::get('MODERNESMIDTHEMECONFIGURATOR_TOKEN').'/'.$reference, 'QRCODE,H', 160, 39, 40, 40, $barcodeStyle, 'R');
         }
+
         $this->writeHTML($this->content, true, false, true, false, '');
     }
 }

@@ -86,7 +86,7 @@ class ModerneSmidMailTheme extends Module
     {
         Configuration::deleteByName('MODERNESMIDMAILTHEME_LIVE_MODE');
 
-        return parent::uninstall() && $this->unregisterHook(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK) && $this->registerHook(LayoutVariablesBuilderInterface::BUILD_MAIL_LAYOUT_VARIABLES_HOOK);
+        return parent::uninstall() && $this->unregisterHook(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK) && $this->unregisterHook(LayoutVariablesBuilderInterface::BUILD_MAIL_LAYOUT_VARIABLES_HOOK);
     }
 
 
@@ -116,12 +116,11 @@ class ModerneSmidMailTheme extends Module
 
         /** @var ThemeCollectionInterface $themes */
         $themes = $hookParams['mailThemes'];
-
-//        $scanner = new FolderThemeScanner();
-//        $modernesmidTheme = $scanner->scan(__DIR__.'/mails/themes/modernesmid');
-//        if (null !== $modernesmidTheme && $modernesmidTheme->getLayouts()->count() > 0) {
-//            $themes->add($modernesmidTheme);
-//        }
+        $scanner = new FolderThemeScanner();
+        $moderneSmidTheme = $scanner->scan(__DIR__.'/mails/themes/modernesmid');
+        if (null !== $moderneSmidTheme && $moderneSmidTheme->getLayouts()->count() > 0) {
+            $themes->add($moderneSmidTheme);
+        }
     }
 
     /**
@@ -129,17 +128,21 @@ class ModerneSmidMailTheme extends Module
      */
     public function hookActionBuildMailLayoutVariables(array $hookParams)
     {
+
         if (!isset($hookParams['mailLayout'])) {
             return;
         }
 
-        $hookParams['mailLayoutVariables']['order_name'] = 'YS-123456';
-        $hookParams['mailLayoutVariables']['custom_footer_html'] = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT');
-        $hookParams['mailLayoutVariables']['faq_page'] = Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ'),null,true, '','');
-        $hookParams['mailLayoutVariables']['add_to_order'] = '<span class="text-small"><strong><span class="font-arial"><span class="text-grey font-arial">Iets vergeten?</span></span></strong></span><br/><span class="text-small"><span class="font-arial"><span class="text-grey font-arial">Tot u bericht krijgt dat uw bestelling is verstuurd kunt u iets toevoegen aan uw bestelling zonder dat er extra verzendkosten in rekening worden gebracht. Maak hiervoor een nieuwe bestelling en kies bij verzending voor: "Toevoegen".</span></span></span>';
+        /** @var LayoutInterface $mailLayout */
+        $mailLayout = $hookParams['mailLayout'];
+        if ($this->name !== 'ModerneSmidMailTheme') {
+            return;
+        }
 
-//        var_export($hookParams);
-//die();
+        $hookParams['mailLayoutVariables']['order_name'] = 'TEST-123456';
+        $hookParams['mailLayoutVariables']['custom_footer_html'] = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '');
+        $hookParams['mailLayoutVariables']['faq_page'] = Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '','');
+        $hookParams['mailLayoutVariables']['add_to_order'] = '<span class="text-small"><strong><span class="font-arial"><span class="text-grey font-arial">Iets vergeten?</span></span></strong></span><br/><span class="text-small"><span class="font-arial"><span class="text-grey font-arial">Tot u bericht krijgt dat uw bestelling is verstuurd kunt u iets toevoegen aan uw bestelling zonder dat er extra verzendkosten in rekening worden gebracht. Maak hiervoor een nieuwe bestelling en kies bij verzending voor: "Toevoegen".</span></span></span>';
     }
 
 

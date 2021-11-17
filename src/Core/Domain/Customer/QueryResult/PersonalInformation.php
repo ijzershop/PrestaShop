@@ -100,6 +100,7 @@ class PersonalInformation
      * @var bool
      */
     private $isActive;
+
     /**
      * @param string $firstName
      * @param string $lastName
@@ -243,6 +244,7 @@ class PersonalInformation
     {
         return $this->languageName;
     }
+
     /**
      * @return Subscriptions
      */
@@ -258,5 +260,4 @@ class PersonalInformation
     {
         return $this->isActive;
     }
-
 }

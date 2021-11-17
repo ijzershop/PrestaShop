@@ -48,6 +48,6 @@ final class PhoneNumberProvider implements PhoneNumberProviderInterface
 
     private function getMobileOrPhone(Address $address)
     {
-        return $address->phone_mobile ?: $address->phone;
+        return $address->phone ?: $address->phone_mobile;
     }
 }

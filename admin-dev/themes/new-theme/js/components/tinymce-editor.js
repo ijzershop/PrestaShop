@@ -25,6 +25,7 @@
 import {EventEmitter} from './event-emitter';
 
 const {$} = window;
+
 /**
  * This class init TinyMCE instances in the back-office. It is wildly inspired by
  * the scripts from js/admin And it actually loads TinyMCE from the js/tiny_mce
@@ -33,16 +34,16 @@ const {$} = window;
  */
 class TinyMCEEditor {
   constructor(options) {
-    options = options || {};
+    const opts = options || {};
     this.tinyMCELoaded = false;
-    if (typeof options.baseAdminUrl === 'undefined') {
+    if (typeof opts.baseAdminUrl === 'undefined') {
       if (typeof window.baseAdminDir !== 'undefined') {
-        options.baseAdminUrl = window.baseAdminDir;
+        opts.baseAdminUrl = window.baseAdminDir;
       } else {
         const pathParts = window.location.pathname.split('/');
-        pathParts.every(pathPart => {
+        pathParts.every((pathPart) => {
           if (pathPart !== '') {
-            options.baseAdminUrl = `/${pathPart}/`;
+            opts.baseAdminUrl = `/${pathPart}/`;
 
             return false;
           }
@@ -51,10 +52,10 @@ class TinyMCEEditor {
         });
       }
     }
-    if (typeof options.langIsRtl === 'undefined') {
-      options.langIsRtl = typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
+    if (typeof opts.langIsRtl === 'undefined') {
+      opts.langIsRtl = typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
     }
-    this.setupTinyMCE(options);
+    this.setupTinyMCE(opts);
   }
 
   /**
@@ -83,12 +84,17 @@ class TinyMCEEditor {
         keys["gerofitness.viho.nl"] =  "";
         keys["ijzershop.frl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=";//Set
         keys["ijzershop.nl"] =  "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY="; //Set
+        keys["ijzershop.eu"] =  "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY="; //Set
         keys["ijzershop176.local"] =  "cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpmftIOvjnss+mhviBjMWYpzfTD8gujkxPFveiunw80iXmfbHphHun6k0qBPJyPtFC8=";
         keys["paneelhek.nl"] =  "";
         keys["paneelhek.viho.nl"] =  "";
         keys["viho.nl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4="; //Set
 
-    return keys[hostname];
+    if(keys.hasOwnProperty(hostname)){
+      return keys[hostname];
+    } else {
+      return "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY=";
+    }
 
   }
   /**
@@ -105,8 +111,8 @@ class TinyMCEEditor {
     }
     var tbpKey = this.fetchKey(window.location.hostname);
 
-    config = Object.assign({
-    selector: 'textarea.rte',
+    const cfg = {
+    selector: 'textarea.autoload_rte',
     plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
     browser_spellcheck: true,
     toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
@@ -132,7 +138,7 @@ class TinyMCEEditor {
             },
 
     style_formats_autohide: true,
-    language: iso_user,
+    language: window.iso_user,
     content_style: (lang_is_rtl === '1' ? "body {direction:rtl;}" : ""),
     skin: "oxide",
     theme: "silver",
@@ -179,48 +185,9 @@ class TinyMCEEditor {
       editor_selector :'autoload_rte',
       init_instance_callback: () => {  },
       setup : (editor) => { this.setupEditor(editor); },
-    }, config);
+    };
 
     if (typeof config.editor_selector != 'undefined') {
-// =======
-//     config = Object.assign(
-//       {
-//         selector: '.rte',
-//         plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
-//         browser_spellcheck: true,
-//         toolbar1:
-//           'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
-//         toolbar2: '',
-//         external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
-//         filemanager_title: 'File manager',
-//         external_plugins: {
-//           filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`
-//         },
-//         language: iso_user,
-//         content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
-//         skin: 'prestashop',
-//         menubar: false,
-//         statusbar: false,
-//         relative_urls: false,
-//         convert_urls: false,
-//         entity_encoding: 'raw',
-//         extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
-//         valid_children: '+*[*]',
-//         valid_elements: '*[*]',
-//         rel_list: [{title: 'nofollow', value: 'nofollow'}],
-//         editor_selector: 'autoload_rte',
-//         init_instance_callback: () => {
-//           this.changeToMaterial();
-//         },
-//         setup: editor => {
-//           this.setupEditor(editor);
-//         }
-//       },
-//       config
-//     );
-//
-//     if (typeof config.editor_selector !== 'undefined') {
-// >>>>>>> 14cb6a4c6e72c55c16a95cfbe4aeb8e44fe73ab5
       config.selector = '.' + config.editor_selector;
     }
 
@@ -230,9 +197,8 @@ class TinyMCEEditor {
       this.changeToMaterial();
     });
 
-
-    tinyMCE.init(config);
-    this.watchTabChanges(config);
+    window.tinyMCE.init(cfg);
+    this.watchTabChanges(cfg);
   }
 
   /**
@@ -244,12 +210,15 @@ class TinyMCEEditor {
     editor.on('loadContent', event => {
       this.handleCounterTiny(event.target.id);
     });
-    editor.on('change', event => {
-      tinyMCE.triggerSave();
+    editor.on('change', (event) => {
+      window.tinyMCE.triggerSave();
       this.handleCounterTiny(event.target.id);
     });
     editor.on('blur', () => {
-      tinyMCE.triggerSave();
+      window.tinyMCE.triggerSave();
+    });
+    EventEmitter.emit('tinymceEditorSetup', {
+      editor,
     });
   }
 
@@ -271,13 +240,25 @@ class TinyMCEEditor {
 
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
           const form = $(textarea).closest('form');
-          const editor = tinyMCE.get(textarea.id);
+          const editor = window.tinyMCE.get(textarea.id);
+
           if (editor) {
             // Reset content to force refresh of editor
             editor.setContent(editor.getContent());
           }
+
+          EventEmitter.emit('languageSelected', {
+            selectedLocale: textareaLocale,
+            form,
+          });
         });
       }
+    });
+
+    EventEmitter.on('languageSelected', (data) => {
+      const textareaLinkSelector = `.nav-item a[data-locale="${data.selectedLocale}"]`;
+
+      $(textareaLinkSelector).click();
     });
   }
 
@@ -335,7 +316,9 @@ class TinyMCEEditor {
   }
 
   /**
-   * Updates the characters counter
+   * Updates the characters counter. This counter is used for front but if you don't want to encounter Validation
+   * problems you should be in sync with the TinyMceMaxLengthValidator PHP class. Both codes must behave the same
+   * way.
    *
    * @param id
    */
@@ -343,13 +326,14 @@ class TinyMCEEditor {
     const textarea = $(`#${id}`);
     const counter = textarea.attr('counter');
     const counterType = textarea.attr('counter_type');
-    const max = tinyMCE.activeEditor.getContent().textContent;
+    const editor = window.tinyMCE.get(id);
+    const max = editor.getBody() ? editor.getBody().textContent.length : 0;
 
     textarea
       .parent()
       .find('span.currentLength')
       .text(max);
-    if ('recommended' !== counterType && max > counter) {
+    if (counterType !== 'recommended' && max > counter) {
       textarea
         .parent()
         .find('span.maxLength')

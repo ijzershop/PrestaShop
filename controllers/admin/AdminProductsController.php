@@ -2071,7 +2071,18 @@ class AdminProductsControllerCore extends AdminController
         }
         foreach ($languages as $language) {
             if ($this->isProductFieldUpdated('description_short', $language['id_lang']) && ($value = Tools::getValue('description_short_' . $language['id_lang']))) {
-                if (Tools::strlen(strip_tags($value)) > $limit) {
+                // This validation computation actually comes from TinyMceMaxLengthValidator if you modify it here you
+                // should keep the validator in sync (along with other parts of the code, more info in the
+                // TinyMceMaxLengthValidator comments).
+                $replaceArray = [
+                    "\n",
+                    "\r",
+                    "\n\r",
+                    "\r\n",
+                ];
+                $str = str_replace($replaceArray, [''], strip_tags($value));
+                $shortDescriptionLength = iconv_strlen($str);
+                if ($shortDescriptionLength > $limit) {
                     $this->errors[] = $this->trans(
                         'This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).',
                         [
@@ -2609,7 +2620,7 @@ class AdminProductsControllerCore extends AdminController
 
             $elements_to_manage = [];
 
-            // get form inforamtion
+            // get form information
             foreach ($attributes as $attribute) {
                 foreach ($warehouses as $warehouse) {
                     $key = $warehouse['id_warehouse'] . '_' . $product->id . '_' . $attribute['id_product_attribute'];
@@ -2791,7 +2802,6 @@ class AdminProductsControllerCore extends AdminController
     {
         $idProduct = $idProduct ? $idProduct : Tools::getValue('id_product');
 
-
         self::$currentIndex = 'index.php?tab=AdminProducts';
         $product = new Product((int) $idProduct);
         $legends = Tools::getValue('legend');
@@ -2813,10 +2823,6 @@ class AdminProductsControllerCore extends AdminController
             $image = new Image();
             $image->id_product = (int) ($product->id);
             $image->position = Image::getHighestPosition($product->id) + 1;
-
-            if(strrpos($file['name'], 'techntabel') != false){
-                $image->legend = $file['name'];
-            }
 
             foreach ($legends as $key => $legend) {
                 if (!empty($legend)) {

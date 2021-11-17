@@ -56,6 +56,7 @@ class Order extends OrderCore
             'reference' => ['type' => self::TYPE_STRING],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'note' => ['type' => self::TYPE_HTML],
             'added_to_order' => ['type' => self::TYPE_STRING],
             'desired_delivery_date' => ['type' => self::TYPE_DATE],
         ],
@@ -112,35 +113,24 @@ class Order extends OrderCore
         return strtoupper($prefix.$reference);
     }
 
-
-    /** Set current order status
-     * @param int $id_order_state
-     * @param int $id_employee (/!\ not optional except for Webservice
-     */
-    public function setCurrentState($id_order_state, $id_employee = 0)
-    {
-        if (empty($id_order_state)) {
-            return false;
-        }
-        $history = new OrderHistory();
-        $history->id_order = (int) $this->id;
-        $history->id_employee = (int) $id_employee;
-        $use_existings_payment = !$this->hasInvoice();
-        $history->changeIdOrderState((int) $id_order_state, $this, $use_existings_payment);
-        $res = Db::getInstance()->getRow('
-            SELECT `invoice_number`, `invoice_date`, `delivery_number`, `delivery_date`
-            FROM `' . _DB_PREFIX_ . 'orders`
-            WHERE `id_order` = ' . (int) $this->id);
-        $this->invoice_date = $res['invoice_date'];
-        $this->invoice_number = $res['invoice_number'];
-        $this->delivery_date = $res['delivery_date'];
-        $this->delivery_number = $res['delivery_number'];
-        $this->update();
-
-        $history->addWithemail();
-    }
-
     /**
+     * @since 1.5.0.4
+     *
+     * @return OrderState|null null if Order haven't a state
+     */
+    public function getCurrentOrderState()
+    {
+        if ($this->current_state && $this->current_state != 0) {
+            return new OrderState($this->current_state);
+        } elseif ($this->current_state && $this->current_state != 0){
+            return new OrderState();
+        }
+
+        return null;
+    }
+    /**
+     *
+     *
      * Depricated in Order Class
      *
      * @param $id_order
@@ -153,5 +143,62 @@ class Order extends OrderCore
         foreach ($order->getCartRules() as $cartRule){
             return $cartRule['value_tax_excl'];
         }
+    }
+
+
+    /**
+     * Get customer orders.
+     *
+     * @param int $id_customer Customer id
+     * @param bool $show_hidden_status Display or not hidden order statuses
+     *
+     * @return array Customer orders
+     */
+    public static function getCustomerOrders($id_customer, $show_hidden_status = false, Context $context = null)
+    {
+
+        if (!$context) {
+            $context = Context::getContext();
+        }
+
+        $orderStates = OrderState::getOrderStates((int) $context->language->id, false);
+        $indexedOrderStates = [];
+        foreach ($orderStates as $orderState) {
+            $indexedOrderStates[$orderState['id_order_state']] = $orderState;
+        }
+
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        SELECT o.*,
+          (SELECT SUM(od.`product_quantity`) FROM `' . _DB_PREFIX_ . 'order_detail` od WHERE od.`id_order` = o.`id_order`) nb_products,
+          (SELECT oh.`id_order_state` FROM `' . _DB_PREFIX_ . 'order_history` oh
+           LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
+           WHERE oh.`id_order` = o.`id_order` ' .
+            (!$show_hidden_status ? ' AND os.`hidden` != 1' : '') .
+            ' ORDER BY oh.`date_add` DESC, oh.`id_order_history` DESC LIMIT 1) id_order_state
+        FROM `' . _DB_PREFIX_ . 'orders` o
+        WHERE o.`id_customer` = ' . (int) $id_customer .
+            Shop::addSqlRestriction(Shop::SHARE_ORDER) . '
+        GROUP BY o.`id_order`
+        ORDER BY o.`date_add` DESC');
+
+        if (!$res) {
+            return [];
+        }
+
+
+        foreach ($res as $key => $val) {
+            // In case order creation crashed midway some data might be absent
+            $orderState = !empty($val['id_order_state']) ? $indexedOrderStates[$val['id_order_state']] : null;
+            //Small fix for orders with empty status code
+            if($orderState == null){
+                continue;
+            }
+            //End small fix orders with empty status code
+            $res[$key]['order_state'] = $orderState['name'] ?: null;
+            $res[$key]['invoice'] = $orderState['invoice'] ?: null;
+            $res[$key]['order_state_color'] = $orderState['color'] ?: null;
+        }
+
+        return $res;
     }
 }

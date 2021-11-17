@@ -2,8 +2,8 @@
 <module>
     <name>statscatalog</name>
     <displayName><![CDATA[Winkel statistieken]]></displayName>
-    <version><![CDATA[2.0.1]]></version>
-    <description><![CDATA[Voegt een tabblad met algemene statistieken over de catalogus toe aan het Statistieken Dashboard.]]></description>
+    <version><![CDATA[2.0.2]]></version>
+    <description><![CDATA[Enrich your stats, have a look at your catalog&rsquo;s general statistics.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

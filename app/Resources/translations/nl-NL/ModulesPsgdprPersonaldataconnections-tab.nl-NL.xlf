@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
+    <body>
+      <trans-unit id="93bd48ecb9c4d5c4eec7fefffbb2070f">
+        <source>Last connections</source>
+        <target>Laatste bezoeken</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="33e29c1d042c0923008f78b46af94984">
+        <source>Origin request</source>
+        <target>Locatie aanvraag</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="57f32d7d0e6672cc2b60bc7a49f91453">
+        <source>Page viewed</source>
+        <target>Pagina bekeken</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="fae6aba9bc4e69842be0ac98e15c4c99">
+        <source>Time on the page</source>
+        <target>Tijdsduur op de pagina</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="75ba8d70e3692ba200f0e0df37b4d2ae">
+        <source>IP address</source>
+        <target>IP adres</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="44749712dbec183e983dcd78a7736c41">
+        <source>Date</source>
+        <target>Datum</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="c51e6bdf66e5d601e85d055301014410">
+        <source>No connections</source>
+        <target>Geen verbindingen</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

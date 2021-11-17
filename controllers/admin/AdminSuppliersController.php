@@ -185,22 +185,6 @@ class AdminSuppliersControllerCore extends AdminController
                 ],
                 [
                     'type' => 'text',
-                    'label' => $this->trans('Housenumber', array(), 'Admin.Global'),
-                    'name' => 'house_number',
-                    'maxlength' => 10,
-                    'col' => 6,
-                    'required' => true,
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->trans('Housenumber extension', array(), 'Admin.Global'),
-                    'name' => 'house_number_extension',
-                    'maxlength' => 10,
-                    'col' => 6,
-                    'required' => false,
-                ),
-                array(
-                    'type' => 'text',
                     'label' => $this->trans('Address (2)', [], 'Admin.Global'),
                     'name' => 'address2',
                     'required' => in_array('address2', $required_fields),
@@ -209,7 +193,7 @@ class AdminSuppliersControllerCore extends AdminController
                 ],
                 [
                     'type' => 'text',
-                    'label' => $this->trans('Zip/postal code', [], 'Admin.Global'),
+                    'label' => $this->trans('Zip/Postal code', [], 'Admin.Global'),
                     'name' => 'postcode',
                     'required' => in_array('postcode', $required_fields),
                     'maxlength' => 12,
@@ -302,12 +286,12 @@ class AdminSuppliersControllerCore extends AdminController
                         [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],
@@ -555,7 +539,7 @@ class AdminSuppliersControllerCore extends AdminController
                 $id_address = Address::getAddressIdBySupplierId($obj->id);
                 $address = new Address($id_address);
                 if (Validate::isLoadedObject($address)) {
-                    $address->deleted = 1;
+                    $address->deleted = true;
                     $address->save();
                 }
 

@@ -10,14 +10,19 @@ class Link extends LinkCore
      * Create a link to a product.
      *
      * @param mixed $product Product object (can be an ID product, but deprecated)
-     * @param string $alias
-     * @param string $category
-     * @param string $ean13
-     * @param int $idLang
-     * @param int $idShop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
-     * @param int $ipa ID product attribute
-     *
+     * @param null $alias
+     * @param null $category
+     * @param null $ean13
+     * @param null $idLang
+     * @param null $idShop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
+     * @param null $ipa ID product attribute
+     * @param bool $force_routes
+     * @param bool $relativeProtocol
+     * @param bool $withIdInAnchor
+     * @param bool[] $extraParams
+     * @param bool $addAnchor
      * @return string
+     * @throws PrestaShopException
      */
     public function getProductLink(
         $product,
@@ -29,8 +34,9 @@ class Link extends LinkCore
         $ipa = null,
         $force_routes = false,
         $relativeProtocol = false,
-        $addAnchor = false,
-        $extraParams = array()
+        $withIdInAnchor = false,
+        $extraParams = [],
+        $addAnchor = true
     ) {
         $dispatcher = Dispatcher::getInstance();
 

@@ -34,7 +34,7 @@ require_once dirname(__FILE__) . '/../../mollie.php';
 /**
  * Class MolliePaymentModuleFrontController.
  *
- * @property Context $context
+// * @property Context $context
  * @property Mollie  $module
  */
 class MolliePaymentModuleFrontController extends ModuleFrontController
@@ -78,10 +78,8 @@ class MolliePaymentModuleFrontController extends ModuleFrontController
         }
         $issuer = Tools::getValue('issuer') ?: null;
 
-        $originalAmount = $cart->getOrderTotal(
-            true,
-            Cart::BOTH
-        );
+        $originalAmount = $cart->getOrderTotal(true, Cart::BOTH, null, $cart->id_carrier);
+
         $amount = $originalAmount;
         if (!$amount) {
             Tools::redirectLink('index.php');

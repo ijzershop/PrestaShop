@@ -213,7 +213,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
             $customerShop->name,
             $customerLanguage->name,
             $customerSubscriptions,
-            (bool) $customer->active,
+            (bool) $customer->active
         );
     }
 
@@ -250,10 +250,12 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      */
     private function getCustomerOrders(Customer $customer)
     {
+
         $validOrders = [];
         $invalidOrders = [];
 
         $orders = Order::getCustomerOrders($customer->id, true);
+
         $totalSpent = 0;
 
         foreach ($orders as $order) {

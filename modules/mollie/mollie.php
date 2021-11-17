@@ -47,7 +47,7 @@ class Mollie extends PaymentModule
     {
         $this->name = 'mollie';
         $this->tab = 'payments_gateways';
-        $this->version = '4.4.1';
+        $this->version = '4.4.2';
         $this->author = 'Mollie B.V.';
         $this->need_instance = 1;
         $this->bootstrap = true;
@@ -242,36 +242,6 @@ class Mollie extends PaymentModule
         /** @var \Mollie\Service\Content\TemplateParserInterface $templateParser */
         $templateParser = $this->getMollieContainer(\Mollie\Service\Content\TemplateParserInterface::class);
 
-        if (!Configuration::get('PS_SMARTY_FORCE_COMPILE')) {
-            $this->context->controller->errors[] = $templateParser->parseTemplate(
-                $this->context->smarty,
-                $this->getMollieContainer(\Mollie\Builder\Content\SmartyForceCompileInfoBlock::class),
-                $this->getLocalPath() . 'views/templates/hook/smarty_error.tpl'
-            );
-
-            $this->context->controller->warnings[] = $templateParser->parseTemplate(
-                $this->context->smarty,
-                $this->getMollieContainer(\Mollie\Builder\Content\SmartyForceCompileInfoBlock::class),
-                $this->getLocalPath() . 'views/templates/hook/smarty_warning.tpl'
-            );
-        }
-
-        if (Configuration::get('PS_SMARTY_CACHE') && 'never' === Configuration::get('PS_SMARTY_CLEAR_CACHE')) {
-            $this->context->controller->errors[] = $templateParser->parseTemplate(
-                $this->context->smarty,
-                $this->getMollieContainer(\Mollie\Builder\Content\SmartyCacheInfoBlock::class),
-                $this->getLocalPath() . 'views/templates/hook/smarty_error.tpl'
-            );
-        }
-
-        if (\Mollie\Utility\CartPriceUtility::checkRoundingMode()) {
-            $this->context->controller->errors[] = $templateParser->parseTemplate(
-                $this->context->smarty,
-                $this->getMollieContainer(\Mollie\Builder\Content\RoundingModeInfoBlock::class),
-                $this->getLocalPath() . 'views/templates/hook/rounding_error.tpl'
-            );
-        }
-
         $isSubmitted = (bool) Tools::isSubmit("submit{$this->name}");
 
         /* @phpstan-ignore-next-line */
@@ -381,7 +351,6 @@ class Mollie extends PaymentModule
         if ($isCartController) {
             $errorDisplayService->showCookieError('mollie_payment_canceled_error');
         }
-        $errorDisplayService->showCookieError('mollie_payment_canceled_error');
 
         Media::addJsDef([
             'profileId' => Configuration::get(Mollie\Config\Config::MOLLIE_PROFILE_ID),
@@ -681,6 +650,10 @@ class Mollie extends PaymentModule
         /** @var \Mollie\Repository\PaymentMethodRepository $paymentMethodRepo */
         $paymentMethodRepo = $this->getMollieContainer(\Mollie\Repository\PaymentMethodRepository::class);
         $payment = $paymentMethodRepo->getPaymentBy('cart_id', (string) Tools::getValue('id_cart'));
+        if(!$payment){
+            return '';
+        }
+
         $isPaid = \Mollie\Api\Types\PaymentStatus::STATUS_PAID == $payment['bank_status'];
         $isAuthorized = \Mollie\Api\Types\PaymentStatus::STATUS_AUTHORIZED == $payment['bank_status'];
         if ($payment && ($isPaid || $isAuthorized)) {
@@ -782,7 +755,7 @@ class Mollie extends PaymentModule
         }
 
         $cart = new Cart($params['cart']->id);
-        $orderId = Order::getOrderByCartId($cart->id);
+        $orderId = Order::getIdByCartId($cart->id);
         $order = new Order($orderId);
         if ($order->module !== $this->name) {
             return true;
@@ -814,7 +787,7 @@ class Mollie extends PaymentModule
             'outofstock' === $template ||
             'bankwire' === $template ||
             'refund' === $template) {
-            $orderId = Order::getOrderByCartId($cart->id);
+            $orderId = Order::getIdByCartId($cart->id);
             $order = new Order($orderId);
             if (!Validate::isLoadedObject($order)) {
                 return true;

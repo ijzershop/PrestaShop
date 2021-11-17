@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/front/GuestTrackingController.php" source-language="en" target-language="nl" datatype="plaintext">
+  <file original="admin-dev" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
     <body>
-      <trans-unit id="37c90b2d3eaec03973059cb01c3fea06" approved="yes">
+      <trans-unit id="37c90b2d3eaec03973059cb01c3fea06">
         <source>Please log in to your customer account to view the order</source>
-        <target state="final">Logt u alstublieft in op uw klantenaccount om de bestelling te bekijken</target>
-        <note>Line: 74</note>
+        <target>Logt u alstublieft in op uw klantenaccount om de bestelling te bekijken</target>
+        <note>Line: </note>
       </trans-unit>
     </body>
   </file>

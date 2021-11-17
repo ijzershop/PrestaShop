@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>singlestockattributespoco</name>
-    <displayName><![CDATA[Single Stock Attributes]]></displayName>
+    <displayName><![CDATA[Enkel vooraad Attributen]]></displayName>
     <version><![CDATA[2.1.0]]></version>
-    <description><![CDATA[Use a single stock system for products with multiple attributes]]></description>
+    <description><![CDATA[Gebruik een enkel vooraad beheer voor producten met meerdere combinaties]]></description>
     <author><![CDATA[Presto-changeo]]></author>
     <tab><![CDATA[front_office_features]]></tab>
     <is_configurable>1</is_configurable>

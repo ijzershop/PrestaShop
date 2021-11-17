@@ -6072,9 +6072,10 @@
         if (this.enableTemplateEdition === true) {
           tinymce.dom.DomQuery(this.editor.dom.select('body')).addClass('templatesEnabled');
         }
-        if (this.key.match(/key-here$/g) !== null) {
-          this.throwRegistrationAlert();
-        }
+        //DELETED KEY CHECK
+        // if (this.key.match(/key-here$/g) !== null) {
+        //   this.throwRegistrationAlert();
+        // }
         this.editor.ui.registry.addContextMenu('bootstrap', {
           update: function (element) {
             var ctxElements = 'addParagraphBefore addParagraphAfter | addParagraphAtBeginning addParagraphAtEnd';
@@ -6109,10 +6110,11 @@
         this.enableUiButtonsToggle();
         this.loadHtmlTemplates();
         this.enableContextToolbarsEvents();
-        var u = new URLSearchParams({ data: this.key }).toString();
-        var request = new XMLHttpRequest();
-        request.open('GET', 'https://www.registration.miglisoft.com/verify.json?' + u, true);
-        request.send();
+        //DELETED KEY CHECK
+        // var u = new URLSearchParams({ data: this.key }).toString();
+        // var request = new XMLHttpRequest();
+        // request.open('GET', 'https://www.registration.miglisoft.com/verify.json?' + u, true);
+        // request.send();
       };
       BootstrapPlugin.prototype.activate = function (element, elementSelector) {
         var $target;
@@ -6836,9 +6838,9 @@
         this.htmlTemplates.col = '<div class="col">' + tinymce.util.I18n.translate('New column') + '</div>';
         this.htmlTemplates.row = '<div class="row"></div>';
       };
-      BootstrapPlugin.prototype.throwRegistrationAlert = function () {
-        this.editor.setContent('<div class="alert alert-danger mx-5 my-5"><p>Your <a href="https://www.tinymce-bootstrap-plugin.com">Bootstrap plugin</a> is <strong>not registered</strong>.</p><p class="mb-0">Open your registration file and enter your purchase code, then paste the key in <em>tinymce.init({bootstrapConfig {key}})</em> to make it work properly.</p></div>');
-      };
+      // BootstrapPlugin.prototype.throwRegistrationAlert = function () {
+      //   this.editor.setContent('<div class="alert alert-danger mx-5 my-5"><p>Your <a href="https://www.tinymce-bootstrap-plugin.com">Bootstrap plugin</a> is <strong>not registered</strong>.</p><p class="mb-0">Open your registration file and enter your purchase code, then paste the key in <em>tinymce.init({bootstrapConfig {key}})</em> to make it work properly.</p></div>');
+      // };
       return BootstrapPlugin;
     }();
 

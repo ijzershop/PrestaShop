@@ -465,7 +465,7 @@ class SingleStockAttributesPoco extends Module
         * of the product in the cart, rather than add it to the cart.
         */
         $ret = Db::getInstance()->getRow($sql);
-        if ($ret['quantity'] > 0) {
+        if (isset($ret['quantity']) && $ret['quantity'] > 0) {
             $sql = 'SELECT sum(cp.`quantity`) as qty FROM `'._DB_PREFIX_.'cart_product` cp
                 WHERE cp.`id_product` = '.(int)$id_product.'
                 AND cp.`id_cart` = '. (int)$this->context->cart->id;

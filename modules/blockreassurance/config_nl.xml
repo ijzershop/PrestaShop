@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>blockreassurance</name>
-    <displayName><![CDATA[Customer Reassurance]]></displayName>
+    <displayName><![CDATA[Klantvertrouwen]]></displayName>
     <version><![CDATA[5.0.0]]></version>
     <description><![CDATA[Overtuig uw klanten door uw services te benadrukken: veilige betaling, gratis verzending, retouren, enz.]]></description>
     <author><![CDATA[PrestaShop]]></author>

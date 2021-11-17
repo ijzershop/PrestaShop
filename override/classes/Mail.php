@@ -30,14 +30,31 @@
 class Mail extends MailCore
 {
     /**
+     * Mail content type.
+     */
+    const TYPE_HTML = 1;
+    const TYPE_TEXT = 2;
+    const TYPE_BOTH = 3;
+
+    /**
+     * Send mail under SMTP server.
+     */
+    const METHOD_SMTP = 2;
+
+    /**
+     * Disable mail, will return immediately after calling send method.
+     */
+    const METHOD_DISABLE = 3;
+
+    /**
      * Send Email.
      *
      * @param int $idLang Language ID of the email (to translate the template)
      * @param string $template Template: the name of template not be a var but a string !
      * @param string $subject Subject of the email
-     * @param string $templateVars Template variables for the email
-     * @param string $to To email
-     * @param string $toName To name
+     * @param array $templateVars Template variables for the email
+     * @param string|array<string> $to To email
+     * @param string|array<string> $toName To name
      * @param string $from From email
      * @param string $fromName To email
      * @param array $fileAttachment array with three parameters (content, mime and name).
@@ -74,22 +91,6 @@ class Mail extends MailCore
             $idShop = Context::getContext()->shop->id;
         }
 
-        $templateType = Tools::getValue('template_type');
-
-        if($template == 'contact' && $templateType == 'information'){
-            $template = 'contact_information';
-            $templateVars['{postcode}'] = Tools::getValue('postalcode');
-            $templateVars['{phonenumber}'] = Tools::getValue('phonenumber');
-        }
-
-        if($template == 'contact' && $templateType == 'offer'){
-            $template = 'contact_offer';
-            $templateVars['{postcode}'] = Tools::getValue('postalcode');
-            $templateVars['{phonenumber}'] = Tools::getValue('phonenumber');
-        }
-
-
-
         $hookBeforeEmailResult = Hook::exec(
             'actionEmailSendBefore',
             [
@@ -112,6 +113,26 @@ class Mail extends MailCore
             null,
             true
         );
+
+        /**
+         * Start add template type vars
+         */
+        $templateType = Tools::getValue('template_type');
+
+        if($template == 'contact' && $templateType == 'information'){
+            $template = 'contact_information';
+            $templateVars['{postcode}'] = Tools::getValue('postalcode');
+            $templateVars['{phonenumber}'] = Tools::getValue('phonenumber');
+        }
+
+        if($template == 'contact' && $templateType == 'offer') {
+            $template = 'contact_offer';
+            $templateVars['{postcode}'] = Tools::getValue('postalcode');
+            $templateVars['{phonenumber}'] = Tools::getValue('phonenumber');
+        }
+        /**
+         * End add template type vars
+         */
 
         if ($hookBeforeEmailResult === null) {
             $keepGoing = false;
@@ -233,7 +254,8 @@ class Mail extends MailCore
         }
 
         /* Construct multiple recipients list if needed */
-        $message = \Swift_Message::newInstance();
+        $message = new Swift_Message();
+
         if (is_array($to) && isset($to)) {
             foreach ($to as $key => $addr) {
                 $addr = trim($addr);
@@ -250,8 +272,8 @@ class Mail extends MailCore
                 }
 
                 $addrName = ($addrName == null || $addrName == $addr || !Validate::isGenericName($addrName)) ?
-                          '' :
-                          self::mimeEncode($addrName);
+                    '' :
+                    self::mimeEncode($addrName);
                 $message->addTo(self::toPunycode($addr), $addrName);
             }
             $toPlugin = $to[0];
@@ -286,22 +308,29 @@ class Mail extends MailCore
                     return false;
                 }
 
-                $connection = \Swift_SmtpTransport::newInstance(
+                $connection = (new Swift_SmtpTransport(
                     $configuration['PS_MAIL_SERVER'],
                     $configuration['PS_MAIL_SMTP_PORT'],
                     $configuration['PS_MAIL_SMTP_ENCRYPTION']
-                )
+                ))
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD']);
             } else {
-                $connection = \Swift_MailTransport::newInstance();
+                /**
+                 * mail() support was removed from SwiftMailer for security reasons
+                 * previously => $connection = \Swift_MailTransport::newInstance();
+                 * Use Swift_SendmailTransport instead
+                 *
+                 * @see https://github.com/swiftmailer/swiftmailer/issues/866
+                 */
+                $connection = new Swift_SendmailTransport();
             }
 
             if (!$connection) {
                 return false;
             }
 
-            $swift = \Swift_Mailer::newInstance($connection);
+            $swift = new Swift_Mailer($connection);
             /* Get templates content */
             $iso = Language::getIsoById((int) $idLang);
             $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -345,10 +374,10 @@ class Mail extends MailCore
                         )
                     );
                 } elseif (!file_exists($templatePath . $isoTemplate . '.html') &&
-                          (
-                              $configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
-                              $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
-                          )
+                    (
+                        $configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
+                        $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
+                    )
                 ) {
                     PrestaShopLogger::addLog(
                         Context::getContext()->getTranslator()->trans(
@@ -420,9 +449,6 @@ class Mail extends MailCore
                 $message->setReplyTo($replyTo, ($replyToName !== '' ? $replyToName : null));
             }
 
-            $templateVars = array_map(['Tools', 'htmlentitiesDecodeUTF8'], $templateVars);
-            $templateVars = array_map(['Tools', 'stripslashes'], $templateVars);
-
             if (false !== Configuration::get('PS_LOGO_MAIL') &&
                 file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
             ) {
@@ -444,6 +470,10 @@ class Mail extends MailCore
                 Context::getContext()->link = new Link();
             }
 
+
+            /**
+             * Start adding template vars
+             */
             $templateVars['{add_to_order}'] = '';
             $carrierCheck = new Carrier(Configuration::get('ADDTOORDER_DELIVERY_METHOD'));
             if(Module::isEnabled('addtoorder') && $carrierCheck->active){
@@ -467,8 +497,6 @@ class Mail extends MailCore
                                                     </td>
                                                   </tr>';
             }
-
-            $templateVars['{shop_name}'] = Tools::safeOutput($configuration['PS_SHOP_NAME']);
             $templateVars['{custom_footer_html}'] = Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', ''));
             $templateVars['{custom_footer_txt}'] = Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT_TXT', ''));
             $templateVars['{faq_page}'] = Tools::safeOutput(Context::getContext()->link->getCMSLink(
@@ -478,6 +506,13 @@ class Mail extends MailCore
                 $idLang,
                 $idShop
             ));
+            /**
+             * End added template vars
+             */
+
+
+
+            $templateVars['{shop_name}'] = Tools::safeOutput($configuration['PS_SHOP_NAME']);
             $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink(
                 'index',
                 true,
@@ -510,6 +545,14 @@ class Mail extends MailCore
                 false,
                 $idShop
             );
+            $templateVars['{order_slip_url}'] = Context::getContext()->link->getPageLink(
+                'order-slip',
+                true,
+                $idLang,
+                null,
+                false,
+                $idShop
+            );
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
             // Get extra template_vars
             $extraTemplateVars = [];
@@ -525,8 +568,7 @@ class Mail extends MailCore
                 true
             );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
-
-            $swift->registerPlugin(new \Swift_Plugins_DecoratorPlugin(array($toPlugin => $templateVars)));
+            $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin([self::toPunycode($toPlugin) => $templateVars]));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
             ) {
@@ -541,23 +583,22 @@ class Mail extends MailCore
             if ($fileAttachment && !empty($fileAttachment)) {
                 // Multiple attachments?
                 if (!is_array(current($fileAttachment))) {
-                    $fileAttachment = array($fileAttachment);
+                    $fileAttachment = [$fileAttachment];
                 }
 
                 foreach ($fileAttachment as $attachment) {
                     if (isset($attachment['content'], $attachment['name'], $attachment['mime'])) {
                         $message->attach(
-                            \Swift_Attachment::newInstance()->setFilename(
+                            (new Swift_Attachment())->setFilename(
                                 $attachment['name']
                             )->setContentType($attachment['mime'])
-                            ->setBody($attachment['content'])
+                                ->setBody($attachment['content'])
                         );
                     }
                 }
             }
-
             /* Send mail */
-            $message->setFrom(array($from => $fromName));
+            $message->setFrom([$from => $fromName]);
 
             // Hook to alter Swift Message before sending mail
             Hook::exec('actionMailAlterMessageBeforeSend', [
@@ -571,7 +612,7 @@ class Mail extends MailCore
             if ($send && Configuration::get('PS_LOG_EMAILS')) {
                 $mail = new Mail();
                 $mail->template = Tools::substr($template, 0, 62);
-                $mail->subject = Tools::substr($subject, 0, 255);
+                $mail->subject = Tools::substr($message->getSubject(), 0, 255);
                 $mail->id_lang = (int) $idLang;
                 $recipientsTo = $message->getTo();
                 $recipientsCc = $message->getCc();
@@ -594,7 +635,7 @@ class Mail extends MailCore
             }
 
             return $send;
-        } catch (\Swift_SwiftException $e) {
+        } catch (Swift_SwiftException $e) {
             PrestaShopLogger::addLog(
                 'Swift Error: ' . $e->getMessage(),
                 3,
@@ -606,3 +647,7 @@ class Mail extends MailCore
         }
     }
 }
+
+
+
+

@@ -34,6 +34,8 @@ class SupercheckoutCore extends ModuleFrontController
     // Variable for 1.7
     protected $checkout_session = null;
 
+
+
     public function init()
     {
         parent::init();
@@ -1118,7 +1120,7 @@ class SupercheckoutCore extends ModuleFrontController
             }
         }
 
-        // </editor-fold>
+
         $order_total = $this->context->cart->getOrderTotal(false, Cart::BOTH);
         if (!isset($posted_data['payment_method']) && $order_total != 0) {
             $response['error']['general'][] = $this->module->l('No payment method is selected.', 'SupercheckoutCore');
@@ -1605,7 +1607,6 @@ class SupercheckoutCore extends ModuleFrontController
 
 
 
-
         //////////////////////////End - Plugin Validations //////////////////////////
 
         if ((isset($posted_data['shipping_address_value']) && $posted_data['shipping_address_value'] == 1)
@@ -2060,6 +2061,9 @@ class SupercheckoutCore extends ModuleFrontController
                 $this->supercheckoutUpdateMsg($posted_data['comment']);
             }
 
+
+
+
             if (Configuration::get('PS_CART_FOLLOWING')
                 && (empty($this->context->cookie->id_cart)
                 || Cart::getNbProducts($this->context->cookie->id_cart) == 0)
@@ -2067,10 +2071,11 @@ class SupercheckoutCore extends ModuleFrontController
                 $this->context->cookie->id_cart = (int) Cart::lastNoneOrderedCart($this->context->customer->id);
             }
 
-            if (Tools::getIsset('delivery_option')) {
-                $_POST['delivery_option'] = Tools::getValue('delivery_option');
-                $this->updateCarrier();
-            }
+                //Disable carrier update because it breaks carrier and shoppingcart
+//            if (Tools::getIsset('delivery_option')) {
+//                $_POST['delivery_option'] = Tools::getValue('delivery_option');
+//                $this->updateCarrier();
+//            }
 
             $this->updateCartDeliveryAddress($id_current_address_delivery, $id_delivery_address);
             if(isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0){

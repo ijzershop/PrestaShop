@@ -32,5 +32,5 @@ class PaymentFree extends PaymentModule
 {
     public $active = 1;
     public $name = 'free_order';
-    public $displayName = 'Geen online betaling';
+    public $displayName = 'Free order';
 }

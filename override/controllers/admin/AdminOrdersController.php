@@ -1213,7 +1213,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
                     $old_currency = new Currency($order->id_currency);
                     $currency = new Currency(Tools::getValue('new_currency'));
                     if (!Validate::isLoadedObject($currency)) {
-                        throw new PrestaShopException('Can\'t load Currency object');
+                        throw new Exception('Can\'t load Currency object');
                     }
 
                     // Update order detail amount
@@ -1337,7 +1337,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
                     if ($order_cart_rule->id_order_invoice) {
                         $order_invoice = new OrderInvoice($order_cart_rule->id_order_invoice);
                         if (!Validate::isLoadedObject($order_invoice)) {
-                            throw new PrestaShopException('Can\'t load Order Invoice object');
+                            throw new Exception('Can\'t load Order Invoice object');
                         }
 
                         // Update amounts of Order Invoice
@@ -1380,7 +1380,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
                         if (!Tools::isSubmit('discount_all_invoices')) {
                             $order_invoice = new OrderInvoice(Tools::getValue('discount_invoice'));
                             if (!Validate::isLoadedObject($order_invoice)) {
-                                throw new PrestaShopException('Can\'t load Order Invoice object');
+                                throw new Exception('Can\'t load Order Invoice object');
                             }
                         }
                     }

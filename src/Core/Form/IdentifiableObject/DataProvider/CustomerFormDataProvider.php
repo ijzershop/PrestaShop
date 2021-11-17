@@ -93,7 +93,7 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
             'is_enabled' => $editableCustomer->isEnabled(),
             'is_partner_offers_subscribed' => $editableCustomer->isPartnerOffersSubscribed(),
             'group_ids' => $editableCustomer->getGroupIds(),
-            'default_group_id' => $editableCustomer->getDefaultGroupId()
+            'default_group_id' => $editableCustomer->getDefaultGroupId(),
         ];
 
         if ($this->isB2bFeatureEnabled) {

@@ -55,7 +55,6 @@ final class GetCustomerForEditingHandler implements GetCustomerForEditingHandler
             throw new CustomerNotFoundException($customerId, sprintf('Customer with id "%s" was not found', $customerId->getValue()));
         }
 
-
         $birthday = null === $customer->birthday ?
             Birthday::createEmpty() :
             new Birthday($customer->birthday)

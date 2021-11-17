@@ -3,7 +3,7 @@
     <name>statsvisits</name>
     <displayName><![CDATA[Bezoeken en bezoekers]]></displayName>
     <version><![CDATA[2.0.3]]></version>
-    <description><![CDATA[Enrich your stats, add statistics about your visits and visitors.]]></description>
+    <description><![CDATA[Verrijk uw statistieken, voeg statistieken toe over uw bezoeken en bezoekers.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

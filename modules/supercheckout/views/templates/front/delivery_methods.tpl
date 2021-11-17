@@ -45,12 +45,12 @@
 
                                 <label for="shipping_method_{$id_address|intval}_{$carrier.id|intval}">
                                     {if $display_carrier_style neq 0}
-                                        <img src="{$carrier.logo nofilter}{*escape not required as contains url*}" alt="{$carrier.name}" {if isset($carrier.logo_width) && $carrier.logo_width != "" && $carrier.logo_width != 'auto'}width="{$carrier.logo_width}"{else}width='50'{/if} {if isset($carrier.logo_height) && $carrier.logo_height != "" && $carrier.logo_height != "auto"}height="{$carrier.logo_height}"{/if}/>{if $display_carrier_style neq 2}{/if}
+                                        <img src="{$carrier.logo nofilter}{*escape not required as contains url*}" alt="{$carrier.name}" width='30' {if isset($carrier.logo_height) && $carrier.logo_height != "" && $carrier.logo_height != "auto"}height="{$carrier.logo_height}"{/if}/>{if $display_carrier_style neq 2}{/if}
                                     {/if}
                                     {if $display_carrier_style neq 2}
-                                        {$carrier.name}
+                                        {$carrier.delay}
                                     {/if}
-                                    <span class="supercheckout-shipping-small-title shippingPrice">{if $carrier.price_without_tax > 0}{Context::getContext()->currentLocale->formatPrice($carrier.price_without_tax, 'EUR')}{else}Gratis{/if}</span></label>{*escape not required*}
+                                    <span class="supercheckout-shipping-small-title shippingPrice">{if $carrier.price_without_tax > 0}{Context::getContext()->currentLocale->formatPrice($carrier.price_without_tax, 'EUR')}{else}€ 0,00{/if}</span></label>{*escape not required*}
                             </div>
                             {*Start Code Added By Priyanshu on 11-Feb-2021 to fix the issue of Extra Content not displaying for delivery Methods*}
                             <div class="kbshippingparceloption shipping_method_{$id_address|intval}_{$carrier.id|intval}">
@@ -66,7 +66,7 @@
 
                           {assign var="availableOrders" value=[]}
                           {assign var="availableOrdersLinks" value=[]}
-                          {foreach from=Order::getCustomerOrders(Context::getContext()->customer->id, true, Context::getContext()) item=order}
+                          {foreach from=Order::getCustomerOrders(Context::getContext()->customer->id, false, Context::getContext()) item=order}
                             {if in_array($order.id_order_state, $acceptedOrderStatusIds)}
                               {* $acceptedOrderStatusIds options are
                                 2 - [Betaling ontvangen]
@@ -106,12 +106,12 @@
 
                             <label for="shipping_method_{$id_address|intval}_{$carrier.id|intval}">
                               {if $display_carrier_style neq 0}
-                                <img src="{$carrier.logo nofilter}{*escape not required as contains url*}" alt="{$carrier.name}" {if isset($carrier.logo_width) && $carrier.logo_width != "" && $carrier.logo_width != 'auto'}width="{$carrier.logo_width}"{else}width='50'{/if} {if isset($carrier.logo_height) && $carrier.logo_height != "" && $carrier.logo_height != "auto"}height="{$carrier.logo_height}"{/if}/>{if $display_carrier_style neq 2}{/if}
+                                <img src="{$carrier.logo nofilter}{*escape not required as contains url*}" alt="{$carrier.name}" width='30' {if isset($carrier.logo_height) && $carrier.logo_height != "" && $carrier.logo_height != "auto"}height="{$carrier.logo_height}"{/if}/>{if $display_carrier_style neq 2}{/if}
                               {/if}
                               {if $display_carrier_style neq 2}
-                                {$carrier.name}
+                                  {$carrier.delay}
                               {/if}
-                              <span class="supercheckout-shipping-small-title shippingPrice">{if $carrier.price_without_tax > 0}{Context::getContext()->currentLocale->formatPrice($carrier.price_without_tax, 'EUR')}{else}Gratis{/if}</span></label>{*escape not required*}
+                              <span class="supercheckout-shipping-small-title shippingPrice">{if $carrier.price_without_tax > 0}{Context::getContext()->currentLocale->formatPrice($carrier.price_without_tax, 'EUR')}{else}€ 0,00{/if}</span></label>{*escape not required*}
                           </div>
                           {if Context::getContext()->cookie->logged == '1'}
                             {if count($availableOrders) > 0}

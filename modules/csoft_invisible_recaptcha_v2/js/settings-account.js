@@ -21,21 +21,18 @@ var onSubmit = function(token) {
 };
 
 var onloadCallback = function() {
+    $('form button[data-link-action=save-customer]').attr('id','submitCreate');
     if($('form button[data-link-action=save-customer]').attr('disabled') == 'disabled'){
-        if($('#submitCreate').length) {
-          grecaptcha.render('submitCreate', {
-            'sitekey': recaptchaKey,
-            'callback': onSubmit
-          });
-        }
+        grecaptcha.render('submitCreate', {
+            'sitekey' : recaptchaKey,
+            'callback' : onSubmit
+        });
         $('form button[data-link-action=save-customer]').attr('disabled','disabled');
     }else{
-      if($('#submitCreate').length) {
         grecaptcha.render('submitCreate', {
-          'sitekey': recaptchaKey,
-          'callback': onSubmit
+            'sitekey' : recaptchaKey,
+            'callback' : onSubmit
         });
-      }
     }
 
 

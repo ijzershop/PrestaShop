@@ -160,7 +160,7 @@ ALTER TABLE `PREFIX_image_type` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4
 ALTER TABLE `PREFIX_import_match` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_lang_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_log` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+# ALTER TABLE `PREFIX_log` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 # ALTER TABLE `PREFIX_mail` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_manufacturer` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_manufacturer_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -639,7 +639,8 @@ VALUES (NULL, 'actionOrderMessageFormBuilderModifier', 'Modify order message ide
        (NULL, 'actionAddressGridPresenterModifier', 'Modify address grid template data',
         'This hook allows to modify data which is about to be used in template for address grid', '1'),
        (NULL, 'actionCreditSlipGridPresenterModifier', 'Modify credit slip grid template data',
-        'This hook allows to modify data which is about to be used in template for credit slip grid', '1')
+        'This hook allows to modify data which is about to be used in template for credit slip grid', '1'),
+       (NULL, 'displayAfterTitleTag', 'After title tag', 'Use this hook to add content after title tag', '1')
 ;
 
 /* Update wrong hook names */

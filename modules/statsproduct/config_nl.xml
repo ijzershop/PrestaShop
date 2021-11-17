@@ -2,8 +2,8 @@
 <module>
     <name>statsproduct</name>
     <displayName><![CDATA[Productdetails]]></displayName>
-    <version><![CDATA[2.0.3]]></version>
-    <description><![CDATA[Toont een statistieken rapport voor elk product in het Statistieken Dashboard.]]></description>
+    <version><![CDATA[2.1.0]]></version>
+    <description><![CDATA[Enrich your stats, add detailed statistics for each product of your catalog.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

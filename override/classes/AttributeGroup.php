@@ -62,10 +62,9 @@ class AttributeGroup extends AttributeGroupCore
     {
         $attributes_list = AttributeGroup::getSawCutModuleAttributeGroupNames($idLang);
         $filtered_name = $productName;
-
         if(is_array($attributes_list)){
             $attributes = implode('|',$attributes_list);
-            $filtered_name = preg_replace('/\((('.$attributes.'):\s*[a-zA-Z])\)/', '', $productName);
+            $filtered_name = preg_replace('/(- ('.$attributes.'):\s*[a-zA-Z])/m', '', $productName);
         }
         return $filtered_name;
     }

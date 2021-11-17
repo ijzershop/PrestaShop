@@ -14,11 +14,12 @@
  * @package   csoft_invisible_recaptcha_v2
  * @author    Com'onSoft (http://www.comonsoft.com/)
  * @copyright 2016-2020. Com'onSoft and contributors
- * @version   1.1.2
+ * @version   1.1.3
  */
 
 if (!defined('_PS_VERSION_'))
 	exit;
+
 
 class Csoft_invisible_recaptcha_v2 extends Module
 {
@@ -30,7 +31,7 @@ class Csoft_invisible_recaptcha_v2 extends Module
 		$this->author = 'ComonSoft';
 		$this->name = 'csoft_invisible_recaptcha_v2';
 		$this->tab = 'front_office_features';
-		$this->version = '1.1.2';
+		$this->version = '1.1.4';
 		$this->need_instance = 1;
 		$this->bootstrap = true;
 		$this->ps_versions_compliancy = array('min' => '1.7.1', 'max' => _PS_VERSION_);
@@ -44,29 +45,29 @@ class Csoft_invisible_recaptcha_v2 extends Module
 
 	public function install()
 	{
-		// $contactFormTplChild = file_get_contents(_PS_THEME_DIR_.'modules/contactform/views/templates/widget/contactform.tpl');
-		// $contactFormTplParent = file_get_contents(_PS_PARENT_THEME_DIR_.'modules/contactform/views/templates/widget/contactform.tpl');
 
-		// if($contactFormTplChild){
-		// 	$pos = strpos($contactFormTplChild, 'name="submitMessage"');
-		// 	if(!$pos){
-		// 		$this->_errors[] = $this->l('HTML tag input type="submit" name="submitMessage" not found in "contactform.tpl"');
-		// 	}
-		// }elseif($contactFormTplParent){
-		// 	$pos = strpos($contactFormTplParent, 'name="submitMessage"');
-		// 	if(!$pos){
-		// 		$this->_errors[] = $this->l('HTML tag input type="submit" name="submitMessage" not found in "contactform.tpl"');
-		// 	}
-		// }else{
-		// 	$this->_errors[] = $this->l('Template "contactform.tpl" was not found in your theme!');
-		// }
+//        var_export([_PS_THEME_DIR_,_PS_PARENT_THEME_DIR_]);
+//        die();
+		$contactFormTplChild = file_get_contents(_PS_ALL_THEMES_DIR_.'modernesmid/modules/contactform/views/templates/widget/contactform.tpl');
+		$contactFormTplParent = file_get_contents(_PS_ALL_THEMES_DIR_.'classic/modules/contactform/views/templates/widget/contactform.tpl');
 
-		// if(count($this->_errors)){
-		// 	return false;
-		// }else
+		if($contactFormTplChild){
+			$pos = strpos($contactFormTplChild, 'name="submitMessage"');
+			if(!$pos){
+				$this->_errors[] = $this->l('HTML tag input type="submit" name="submitMessage" not found in "contactform.tpl"');
+			}
+		}elseif($contactFormTplParent){
+			$pos = strpos($contactFormTplParent, 'name="submitMessage"');
+			if(!$pos){
+				$this->_errors[] = $this->l('HTML tag input type="submit" name="submitMessage" not found in "contactform.tpl"');
+			}
+		}else{
+			$this->_errors[] = $this->l('Template "contactform.tpl" was not found in your theme!');
+		}
 
-
-		if (!parent::install() || !$this->registerHook('header') || !$this->registerHook('actionSubmitAccountBefore') || !$this->registerHook('actionBeforeSubmitAccount') || !Configuration::updateValue('RECAPTCHA_BADGE', 1) || !Configuration::updateValue('RECAPTCHA_ACCOUNT', 1)){
+		if(count($this->_errors)){
+			return false;
+		}elseif (!parent::install() || !$this->registerHook('header')|| !$this->registerHook('actionSubmitAccountBefore') || !$this->registerHook('actionBeforeSubmitAccount') || !Configuration::updateValue('RECAPTCHA_BADGE', 1) || !Configuration::updateValue('RECAPTCHA_ACCOUNT', 1)){
 			return false;
 		}else{
 			return true;
@@ -125,7 +126,7 @@ class Csoft_invisible_recaptcha_v2 extends Module
 		$this->_html .=$this->_displayInfos();
 		$this->_html .=$this->postProcess();
 		$this->_html .= $this->renderForm();
-		
+
 		return $this->_html;
 	}
 
@@ -133,7 +134,7 @@ class Csoft_invisible_recaptcha_v2 extends Module
 	 * Viewing the Admin Configuration Form
 	 */
 	public function renderForm(){
-		
+
 		$fields_form = array(
 			'form' => array(
 				'legend' => array(
@@ -203,7 +204,7 @@ class Csoft_invisible_recaptcha_v2 extends Module
 				)
 			),
 			);
-		
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
@@ -221,11 +222,11 @@ class Csoft_invisible_recaptcha_v2 extends Module
 			'languages' => $this->context->controller->getLanguages(),
 			'id_language' => $this->context->language->id
 		);
-		
+
 		return $helper->generateForm(array($fields_form));
-		
+
 	}
-	
+
 	public function getConfigFieldsValues()
 	{
 		return array(
@@ -235,14 +236,19 @@ class Csoft_invisible_recaptcha_v2 extends Module
 			'RECAPTCHA_ACCOUNT' => Tools::getValue('RECAPTCHA_ACCOUNT', Configuration::get('RECAPTCHA_ACCOUNT')),
 		);
 	}
-	
+
 	/**
 	 * Hook Header for the contact form
 	 */
 	public function hookHeader($params)
 	{
 		// Display on the contact form
-		if ($this->context->controller instanceof ContactController || $this->context->controller instanceof ContactInformationController || $this->context->controller instanceof ContactOfferController || $this->context->controller instanceof CategoryController || $this->context->controller instanceof SearchController){
+		if ($this->context->controller instanceof ContactController ||
+            $this->context->controller instanceof ContactOfferController ||
+            $this->context->controller instanceof ContactInformationController ||
+            $this->context->controller instanceof CategoryController ||
+            $this->context->controller instanceof PageNotFoundController ||
+            $this->context->controller instanceof SearchController){
 
 			$this->context->controller->registerJavascript(
 				'recaptcha',
@@ -340,7 +346,7 @@ class Csoft_invisible_recaptcha_v2 extends Module
 				return false;
 			}
 		}
-
+		return true;
 	}
 
 	public function hookactionBeforeSubmitAccount(){

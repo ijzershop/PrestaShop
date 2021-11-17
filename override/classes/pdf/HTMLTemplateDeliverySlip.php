@@ -91,6 +91,16 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         return $this->smarty->fetch($this->getTemplate('header'));
     }
 
+    private function get_contents($URL){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_URL, $URL);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
+    }
+
     /**
      * Returns the template's HTML content.
      *
@@ -166,14 +176,12 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                             foreach ($customization as $customizationId => $customized) {
 
                                 if(isset($customized['datas'])){
-
                                     if(class_exists("Imagick") )
                                     {
-
                                         $file = $customized['datas'][1][0]['technical_image'];
                                         if(!is_null($file) && !empty($file)){
 
-                                            $fileContents = file_get_contents(Context::getContext()->shop->getBaseURL(true).$file);
+                                            $fileContents = $this->get_contents(Context::getContext()->shop->getBaseURL(true).$file);
 
                                             if($fileContents != false){
 
@@ -226,7 +234,6 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                 }
             }
         }
-
 
         $this->smarty->assign(array(
             'order' => $this->order,

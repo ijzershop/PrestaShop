@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
+    <body>
+      <trans-unit id="cf23ee279844016288ea1c076638f3be">
+        <source>About us</source>
+        <target>Over ons</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
+        <source>Read more</source>
+        <target>Lees verder</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
+        <source>Information</source>
+        <target>Informatie</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="80a11d2a54a677f6fadd9c041c0d6b98">
+        <source>Store Information</source>
+        <target>Winkel informatie</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="fe57fec6b4c10dfe228d34f39a148aaf">
+        <source>Daily opened from %s</source>
+        <target>Dagelijks geopend van %s</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="1300caaefd15b839f37952dc7cc75d82">
+        <source>Call us:</source>
+        <target>Bel ons:</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="3fe484d24103b251082197419a849419">
+        <source>Mail us: contactform:</source>
+        <target>Mail ons: contactform:</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -51,6 +51,8 @@ class PaymentModule extends PaymentModuleCore
         $order = new Order();
         $order->product_list = $productList;
 
+        $computingPrecision = Context::getContext()->getComputingPrecision();
+
         if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery') {
             $address = new Address((int) $addressId);
             $context->country = new Country((int) $address->id_country, (int) $cart->id_lang);
@@ -59,15 +61,6 @@ class PaymentModule extends PaymentModuleCore
             }
         }
 
-//        $carrier = null;
-//        if (!$cart->isVirtualCart() && isset($carrierId)) {
-//            $carrier = new Carrier((int) $carrierId, (int) $cart->id_lang);
-//            $order->id_carrier = (int) $carrier->id;
-//            $carrierId = (int) $carrier->id;
-//        } else {
-//            $order->id_carrier = 0;
-//            $carrierId = 0;
-//        }
 
         $carrier = null;
         if (!$cart->isVirtualCart() && isset($cart->id_carrier)) {
@@ -78,6 +71,14 @@ class PaymentModule extends PaymentModuleCore
             $order->id_carrier = 0;
             $carrierId = 0;
         }
+        //Fetch carrier id from delivery option
+        if($carrierId == 0 && !empty($cart->delivery_option)){
+            $deliveryOption = json_decode($cart->delivery_option);
+
+            $carrierId = reset($deliveryOption);
+            $cart->id_carrier = $carrierId;
+            $order->id_carrier = $carrierId;
+        }
 
         $order->id_customer = (int) $cart->id_customer;
         $order->id_address_invoice = (int) $cart->id_address_invoice;
@@ -86,6 +87,8 @@ class PaymentModule extends PaymentModuleCore
         $order->id_lang = (int) $cart->id_lang;
         $order->id_cart = (int) $cart->id;
         $order->reference = $reference;
+        $order->id_shop = (int) $context->shop->id;
+        $order->id_shop_group = (int) $context->shop->id_shop_group;
 
         //-------------------------------------------------------------------- Add value added to order
         $order->added_to_order = $cart->added_to_order;
@@ -106,26 +109,56 @@ class PaymentModule extends PaymentModuleCore
         $amount_paid = !$dont_touch_amount ? Tools::ps_round((float) $amount_paid, _PS_PRICE_COMPUTE_PRECISION_) : $amount_paid;
         $order->total_paid_real = 0;
 
-        $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $order->product_list, $carrierId);
-        $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $order->product_list, $carrierId);
-        $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $order->product_list, $carrierId));
-        $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $order->product_list, $carrierId));
+        $order->total_products = Tools::ps_round(
+            (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $order->product_list, $carrierId),
+            $computingPrecision
+        );
+        $order->total_products_wt = Tools::ps_round(
+            (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $order->product_list, $carrierId),
+            $computingPrecision
+        );
+        $order->total_discounts_tax_excl = Tools::ps_round(
+            (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $order->product_list, $carrierId)),
+            $computingPrecision
+        );
+        $order->total_discounts_tax_incl = Tools::ps_round(
+            (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $order->product_list, $carrierId)),
+            $computingPrecision
+        );
         $order->total_discounts = $order->total_discounts_tax_incl;
 
-        $order->total_shipping_tax_excl = (float) $cart->getTotalShippingCost(null, false);
-        $order->total_shipping_tax_incl = (float) $cart->getTotalShippingCost(null, true);
+        $order->total_shipping_tax_excl = Tools::ps_round(
+            (float) $cart->getPackageShippingCost($carrierId, false, null, $order->product_list),
+            $computingPrecision
+        );
+        $order->total_shipping_tax_incl = Tools::ps_round(
+            (float) $cart->getPackageShippingCost($carrierId, true, null, $order->product_list),
+            $computingPrecision
+        );
         $order->total_shipping = $order->total_shipping_tax_incl;
 
         if (null !== $carrier && Validate::isLoadedObject($carrier)) {
             $order->carrier_tax_rate = $carrier->getTaxesRate(new Address((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
         }
 
-        $order->total_wrapping_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $order->product_list, $carrierId));
-        $order->total_wrapping_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $order->product_list, $carrierId));
+        $order->total_wrapping_tax_excl = Tools::ps_round(
+            (float) abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $order->product_list, $carrierId)),
+            $computingPrecision
+        );
+        $order->total_wrapping_tax_incl = Tools::ps_round(
+            (float) abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $order->product_list, $carrierId)),
+            $computingPrecision
+        );
         $order->total_wrapping = $order->total_wrapping_tax_incl;
 
-        $order->total_paid_tax_excl = (float) Tools::ps_round((float) $cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $carrierId), _PS_PRICE_COMPUTE_PRECISION_);
-        $order->total_paid_tax_incl = (float) Tools::ps_round((float) $cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $carrierId), _PS_PRICE_COMPUTE_PRECISION_);
+        $order->total_paid_tax_excl = Tools::ps_round(
+            (float) $cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $carrierId),
+            $computingPrecision
+        );
+        $order->total_paid_tax_incl = Tools::ps_round(
+            (float) $cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $carrierId),
+            $computingPrecision
+        );
         $order->total_paid = $order->total_paid_tax_incl;
         $order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
         $order->round_type = Configuration::get('PS_ROUND_TYPE');
@@ -171,21 +204,4 @@ class PaymentModule extends PaymentModuleCore
 
         return ['order' => $order, 'orderDetail' => $order_detail];
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

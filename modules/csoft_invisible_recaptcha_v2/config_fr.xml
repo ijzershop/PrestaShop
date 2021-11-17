@@ -20,7 +20,7 @@
 <module>
     <name>csoft_invisible_recaptcha_v2</name>
     <displayName><![CDATA[Invisible reCaptcha]]></displayName>
-    <version><![CDATA[1.1.0]]></version>
+    <version><![CDATA[1.1.3]]></version>
     <description><![CDATA[Ajouter un reCaptcha Invisible &agrave; votre formulaire de contact et page d'inscription]]></description>
     <author><![CDATA[comonsoft]]></author>
     <tab><![CDATA[front_office_features]]></tab>

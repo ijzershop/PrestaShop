@@ -82,7 +82,7 @@
 								{l s='Stay logged in' d='Admin.Login.Feature'}
 							</label>
 						</div>
-						<a href="#" class="show-forgot-password pull-right" >
+						<a href="#" id="forgot-password-link" class="show-forgot-password pull-right" >
 							{l s='I forgot my password' d='Admin.Login.Feature'}
 						</a>
 					</div>
@@ -134,7 +134,7 @@
 							<i class="icon-caret-left"></i>
 							{l s='Cancel' d='Admin.Actions'}
 						</button>
-						<button class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
+						<button id="reset-password-button" class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
 							<i class="icon-ok text-success"></i>
 							{l s='Send reset link' d='Admin.Login.Feature'}
 						</button>
@@ -165,10 +165,11 @@
 		</div>
 		{/if}
 	</div>
+    <p class='text-center'><i class="icon-caret-left"></i> {l s='Back to' d='Admin.Actions'} <a href='{$homeUrl}'>{$shop_name}</a></p>
 	{hook h="displayAdminLogin"}
 {* 	<div id="login-footer">
 		<p class="text-center text-muted">
-			<a href="http://www.prestashop.com/" onclick="return !window.open(this.href);">
+			<a href="https://www.prestashop.com/" onclick="return !window.open(this.href);">
 				&copy; PrestaShop&#8482; 2007-{$smarty.now|date_format:"%Y"} - All rights reserved
 			</a>
 		</p>

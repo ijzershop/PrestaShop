@@ -56,7 +56,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $contextShop;
     /** @var AdminProductWrapper */
     private $adminProductWrapper;
-    /** @var array */
+    /** @var array<int|array> */
     private $locales;
     /** @var string */
     private $defaultLocale;
@@ -766,21 +766,18 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         }
 
         foreach ($customizationFields as $customizationField) {
-            if(array_key_exists($this->locales[0]['id_lang'], $customizationField)){
-                
-                $baseObject = [
-                    'id_customization_field' => $customizationField[$this->locales[0]['id_lang']]['id_customization_field'],
-                    'label' => [],
-                    'type' => $customizationField[$this->locales[0]['id_lang']]['type'],
-                    'require' => $customizationField[$this->locales[0]['id_lang']]['required'] == 1 ? true : false,
-                ];
+            $baseObject = [
+                'id_customization_field' => $customizationField[$this->locales[0]['id_lang']]['id_customization_field'],
+                'label' => [],
+                'type' => $customizationField[$this->locales[0]['id_lang']]['type'],
+                'require' => $customizationField[$this->locales[0]['id_lang']]['required'] == 1 ? true : false,
+            ];
 
-                //add translation name
-                foreach ($this->locales as $locale) {
-                    $baseObject['label'][$locale['id_lang']] = $customizationField[$locale['id_lang']]['name'];
-                }
-                $finalCustomFields[] = $baseObject;
+            //add translation name
+            foreach ($this->locales as $locale) {
+                $baseObject['label'][$locale['id_lang']] = $customizationField[$locale['id_lang']]['name'];
             }
+            $finalCustomFields[] = $baseObject;
         }
 
         return $finalCustomFields;

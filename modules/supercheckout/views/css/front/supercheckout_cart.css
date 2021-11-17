@@ -33,7 +33,7 @@
 .opc-container [type="radio"]:not(:checked) + label
 {
     position: relative;
-    padding-left: 28px;
+    padding-left: 22px;
     cursor: pointer;
     line-height: 20px;
     display: inline-block;
@@ -59,6 +59,7 @@
     border: 1px solid #3b56ad;
     border-radius: 100%;
     background: #fff;
+    margin: 2.5px 0px;
 }
 .opc_shipping_method li.alert-info label, .opc_payment_method li.alert-info label {
     color: #000!important;
@@ -75,6 +76,7 @@
     border-radius: 100%;
     -webkit-transition: all 0.2s ease;
     transition: all 0.2s ease;
+    margin: 2.5px 0px;
 }
 .opc-container [type="radio"]:not(:checked) + label:after {
     opacity: 0;
@@ -223,7 +225,7 @@
 .opc_shipping_method li, .opc_payment_method li {
     clear: both !important;
     background: #ffffff;
-    padding: 3px 10px;
+    padding: 3px 5px;
     margin-bottom: 5px;
     border: 1px solid transparent;
 }
@@ -552,13 +554,16 @@ table.table.table-bordered.shoppingTable {
     float: right;
 }
 .custom-panel label img {
-    margin-right: 10px;
+    margin-right: 2px;
 }
 .shippingPrice {
     float: right;
-    margin-top: 0.8rem;
+    font-weight: bold;
+    margin-top: 0.14rem;
 }
-
+.product-cart-delete-button:hover{
+  opacity: .7;
+}
 .form-group.login-options .radio-inline label{
     background: #f4fef8;
     border: 1px solid #c2d0c8;

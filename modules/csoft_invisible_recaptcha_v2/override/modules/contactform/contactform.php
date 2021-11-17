@@ -27,7 +27,7 @@ class ContactformOverride extends Contactform {
     public function sendMessage()
     {
         $data = array(
-            'secret' => Tools::getValue('RECAPTCHA_PRIVATE_KEY', Configuration::get('RECAPTCHA_PRIVATE_KEY')),
+            'secret' => Tools::getValue('RECAPTCHA_PRIVATE_KEY', Configuration::get('RECAPTCHA_PRIVATE_KEY', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')),
             'response' => $_POST['g-recaptcha-response']
         );
         $verify = curl_init();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Mollie       https://www.mollie.nl
+ * Mollie       https://www.mollie.nl.
  *
  * @author      Mollie B.V. <info@mollie.nl>
  * @copyright   Mollie B.V.
@@ -21,11 +21,11 @@ use Mollie\Utility\ArrayUtility;
 use Mollie\Utility\TransactionUtility;
 use Mollie\Validator\OrderCallBackValidator;
 
-if (!defined('_PS_VERSION_')) {
+if (! defined('_PS_VERSION_')) {
     exit;
 }
 
-require_once dirname(__FILE__) . '/../../mollie.php';
+require_once dirname(__FILE__).'/../../mollie.php';
 
 class MollieReturnModuleFrontController extends AbstractMollieController
 {
@@ -53,7 +53,7 @@ class MollieReturnModuleFrontController extends AbstractMollieController
         /** @var OrderCallBackValidator $orderCallBackValidator */
         $orderCallBackValidator = $this->module->getMollieContainer(OrderCallBackValidator::class);
 
-        if (!$orderCallBackValidator->validate($key, $idCart)) {
+        if (! $orderCallBackValidator->validate($key, $idCart)) {
             Tools::redirectLink('index.php');
         }
 
@@ -106,7 +106,7 @@ class MollieReturnModuleFrontController extends AbstractMollieController
         $this->context->smarty->assign($data);
         $this->context->smarty->assign('link', $this->context->link);
 
-        if (!empty($data['wait'])) {
+        if (! empty($data['wait'])) {
             $this->context->smarty->assign(
                 'checkStatusEndpoint',
                 $this->context->link->getModuleLink(
@@ -123,6 +123,7 @@ class MollieReturnModuleFrontController extends AbstractMollieController
                     true
                 )
             );
+
             $this->setTemplate('mollie_wait.tpl');
         } else {
             $this->setTemplate('mollie_return.tpl');
@@ -181,18 +182,20 @@ class MollieReturnModuleFrontController extends AbstractMollieController
 
         $transactionId = Tools::getValue('transaction_id');
         $dbPayment = $paymentMethodRepo->getPaymentBy('transaction_id', $transactionId);
+
         $cart = new Cart($dbPayment['cart_id']);
-        if (!Validate::isLoadedObject($cart)) {
+
+        if (! Validate::isLoadedObject($cart)) {
             exit(json_encode([
                 'success' => false,
             ]));
         }
         /* @phpstan-ignore-next-line */
-        $orderId = (int) Order::getOrderByCartId((int) $cart->id);
+        $orderId = (int) Order::getIdByCartId((int) $cart->id);
         /** @phpstan-ignore-line */
         $order = new Order((int) $orderId);
 
-        if (!Validate::isLoadedObject($cart)) {
+        if (! Validate::isLoadedObject($cart)) {
             exit(json_encode([
                 'success' => false,
             ]));
@@ -204,11 +207,12 @@ class MollieReturnModuleFrontController extends AbstractMollieController
             ]));
         }
 
-        if (!Tools::isSubmit('module')) {
+        if (! Tools::isSubmit('module')) {
             $_GET['module'] = $this->module->name;
         }
 
         $isOrder = TransactionUtility::isOrderTransaction($transactionId);
+
         if ($isOrder) {
             $transaction = $this->module->api->orders->get($transactionId, ['embed' => 'payments']);
         } else {
@@ -230,7 +234,7 @@ class MollieReturnModuleFrontController extends AbstractMollieController
         switch ($orderStatus) {
             case PaymentStatus::STATUS_OPEN:
             case PaymentStatus::STATUS_PENDING:
-                if ($transaction->mode === "test") {
+                if ($transaction->mode === 'test') {
                     $this->setWarning($this->module->l('We have not received a definite payment status. You will be notified as soon as we receive a confirmation of the bank/merchant.'));
                     $response = $paymentReturnService->handleTestPendingStatus();
                     break;
@@ -243,21 +247,30 @@ class MollieReturnModuleFrontController extends AbstractMollieController
                 break;
             case PaymentStatus::STATUS_PAID:
             case PaymentStatus::STATUS_AUTHORIZED:
-                if ($transaction->resource === Config::MOLLIE_API_STATUS_PAYMENT && $transaction->hasRefunds()) {
-                    $transactionInfo = $paymentMethodRepo->getPaymentBy('transaction_id', $transaction->id);
-                    if ($transactionInfo['reason'] === Config::WRONG_AMOUNT_REASON) {
-                        $this->setWarning($wrongAmountMessage);
-                    } else {
-                        $this->setWarning($notSuccessfulPaymentMessage);
-                    }
-                    $response = $paymentReturnService->handleFailedStatus($transaction);
-                    break;
+                $transactionInfo = $paymentMethodRepo->getPaymentBy('transaction_id', $transaction->id);
+            if ($transaction->resource === Config::MOLLIE_API_STATUS_PAYMENT && $transaction->hasRefunds()) {
+                if ($transactionInfo['reason'] === Config::WRONG_AMOUNT_REASON) {
+                    $this->setWarning($wrongAmountMessage);
+                } else {
+                    $this->setWarning($notSuccessfulPaymentMessage);
                 }
-                $response = $paymentReturnService->handleStatus(
-                    $order,
-                    $transaction,
-                    $paymentReturnService::DONE
-                );
+                $response = $paymentReturnService->handleFailedStatus($transaction);
+                break;
+            }
+
+            if ($transactionInfo['reason'] === Config::WRONG_AMOUNT_REASON) {
+                $this->setWarning($wrongAmountMessage);
+                $response = $paymentReturnService->handleFailedStatus($transaction);
+                break;
+            }
+
+            $order = $this->createNewOrderFromPaidTransaction($transaction, $cart);
+
+            $response = $paymentReturnService->handleStatus(
+                $order,
+                $transaction,
+                $paymentReturnService::DONE
+            );
                 break;
             case PaymentStatus::STATUS_EXPIRED:
             case PaymentStatus::STATUS_CANCELED:
@@ -274,7 +287,6 @@ class MollieReturnModuleFrontController extends AbstractMollieController
             default:
                 exit();
         }
-
         exit(json_encode($response));
     }
 
@@ -284,5 +296,42 @@ class MollieReturnModuleFrontController extends AbstractMollieController
         $this->warning[] = $message;
 
         $this->context->cookie->__set('mollie_payment_canceled_error', json_encode($this->warning));
+    }
+
+    private function createNewOrderFromPaidTransaction($transaction, $cart)
+    {
+        $id_cart = $cart->id;
+        $id_order_state = Configuration::get('MOLLIE_STATUS_PAID');
+        $amount_paid = (float)$transaction->amount->value;
+        $payment_method = $transaction->method;
+        $message = Message::getMessageByCartId($cart->id);
+        $extra_vars = ['transaction_id' => $transaction->id];
+        $currency_special = null;
+        $dont_touch_amount = false;
+        $secure_key = $cart->secure_key;
+        $shop_entity = new \PrestaShop\PrestaShop\Adapter\Entity\Shop($this->context->shop->id);
+
+        $payment_module = new PaymentModule();
+        $payment_module->active = true;
+        $payment_module->name = $this->module->name;
+
+        try {
+            $payment_module->validateOrder(
+                $id_cart,
+                $id_order_state,
+                $amount_paid,
+                $payment_method,
+                $message,
+                $extra_vars,
+                $currency_special,
+                $dont_touch_amount,
+                $secure_key,
+                $shop_entity
+            );
+        } catch (PrestaShopException $e) {
+            return false;
+        }
+
+        return Order::getByCartId($cart->id);
     }
 }

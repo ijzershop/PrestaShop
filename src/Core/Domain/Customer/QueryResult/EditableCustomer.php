@@ -48,17 +48,17 @@ class EditableCustomer
     private $genderId;
 
     /**
-     * @var string
+     * @var FirstName
      */
     private $firstName;
 
     /**
-     * @var string
+     * @var LastName
      */
     private $lastName;
 
     /**
-     * @var string
+     * @var Email
      */
     private $email;
 
@@ -126,6 +126,7 @@ class EditableCustomer
      * @var int
      */
     private $riskId;
+
     /**
      * @param CustomerId $customerId
      * @param int $genderId
@@ -329,5 +330,4 @@ class EditableCustomer
     {
         return $this->isNewsletterSubscribed;
     }
-
 }

@@ -432,7 +432,7 @@ class AdminImportControllerCore extends AdminController
                     'firstname' => ['label' => $this->trans('First name', [], 'Admin.Global') . '*'],
                     'address1' => ['label' => $this->trans('Address', [], 'Admin.Global') . '*'],
                     'address2' => ['label' => $this->trans('Address (2)', [], 'Admin.Global')],
-                    'postcode' => ['label' => $this->trans('Zip/postal code', [], 'Admin.Global') . '*'],
+                    'postcode' => ['label' => $this->trans('Zip/Postal code', [], 'Admin.Global') . '*'],
                     'city' => ['label' => $this->trans('City', [], 'Admin.Global') . '*'],
                     'country' => ['label' => $this->trans('Country', [], 'Admin.Global') . '*'],
                     'state' => ['label' => $this->trans('State', [], 'Admin.Global')],
@@ -519,7 +519,7 @@ class AdminImportControllerCore extends AdminController
                     'name' => ['label' => $this->trans('Name', [], 'Admin.Global')],
                     'address1' => ['label' => $this->trans('Address', [], 'Admin.Global') . '*'],
                     'address2' => ['label' => $this->trans('Address (2)', [], 'Admin.Advparameters.Feature')],
-                    'postcode' => ['label' => $this->trans('Zip/postal code', [], 'Admin.Global')],
+                    'postcode' => ['label' => $this->trans('Zip/Postal code', [], 'Admin.Global')],
                     'state' => ['label' => $this->trans('State', [], 'Admin.Global')],
                     'city' => ['label' => $this->trans('City', [], 'Admin.Global') . '*'],
                     'country' => ['label' => $this->trans('Country', [], 'Admin.Global') . '*'],
@@ -1175,7 +1175,7 @@ class AdminImportControllerCore extends AdminController
      *
      * @return bool
      */
-    public static function copyImg($id_entity, $id_image = null, $url = '', $entity = 'products', $regenerate = true)
+    protected static function copyImg($id_entity, $id_image = null, $url = '', $entity = 'products', $regenerate = true)
     {
         $tmpfile = tempnam(_PS_TMP_IMG_DIR_, 'ps_import');
         $watermark_types = explode(',', Configuration::get('WATERMARK_TYPES'));

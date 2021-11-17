@@ -12,6 +12,5 @@ parameters:
   ps_accounts.segment_api_key: 'Ga1Oof7CdN9FJJaXkeZHflErYKd0lHgD'
   ps_accounts.check_api_ssl_cert: true
   ps_accounts.verify_account_tokens: true
-  ps_accounts.accounts_vue_cdn_url: 'https://unpkg.com/prestashop_accounts_vue_components@2/dist/psaccountsVue.umd.min.js'
+  ps_accounts.accounts_vue_cdn_url: 'https://unpkg.com/prestashop_accounts_vue_components@3/dist/psaccountsVue.umd.min.js'
   ps_accounts.svc_accounts_ui_url: 'https://accounts.psessentials.net'
-

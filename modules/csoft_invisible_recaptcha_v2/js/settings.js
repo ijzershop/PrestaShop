@@ -21,6 +21,9 @@ var onSubmit = function(token) {
 };
 
 var onloadCallback = function() {
+  if ($('form input[name=submitMessage]').length > 0) {
+
+    $('form input[name=submitMessage]').attr('id','submitMessage');
     if($('form input[name=submitMessage]').attr('disabled') == 'disabled'){
         grecaptcha.render('submitMessage', {
             'sitekey' : recaptchaKey,
@@ -28,18 +31,16 @@ var onloadCallback = function() {
         });
         $('form input[name=submitMessage]').attr('disabled','disabled');
         $('form').append('<input type="hidden" name="submitMessage">');
-    }else{
-       if($('form input[name=submitMessage]').length > 0){
-        
+    }else {
+
+
         grecaptcha.render('submitMessage', {
-            'sitekey' : recaptchaKey,
-            'callback' : onSubmit
+          'sitekey': recaptchaKey,
+          'callback': onSubmit
         });
         $('form').append('<input type="hidden" name="submitMessage">');
-       }
+      }
     }
-
-
 };
 
 $(document).ready(function() {

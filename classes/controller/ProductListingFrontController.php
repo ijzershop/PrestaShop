@@ -300,6 +300,10 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         $query->setEncodedFacets($encodedFacets);
 
+        Hook::exec('actionProductSearchProviderRunQueryBefore', [
+            'query' => $query,
+        ]);
+
         // We're ready to run the actual query!
 
         /** @var ProductSearchResult $result */
@@ -307,6 +311,11 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $context,
             $query
         );
+
+        Hook::exec('actionProductSearchProviderRunQueryAfter', [
+            'query' => $query,
+            'result' => $result,
+        ]);
 
         if (Configuration::get('PS_CATALOG_MODE') && !Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) {
             $this->disablePriceControls($result);
@@ -523,26 +532,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     protected function getAjaxProductSearchVariables()
     {
         $search = $this->getProductSearchVariables();
-        /**
-         * Start add module dynamic prices
-         */
-        foreach ($search['products'] as $product) {
-            if($product->price_amount == 0){
-                $dynModule = new DynamicProductController();
-                $data = $dynModule->getDefaultDynamicProductPrices($product, $product->id_attribute);
 
-                if(array_key_exists('formatted_prices', $data) && array_key_exists('final_prices', $data) && array_key_exists('unit_prices', $data)){
-                    $product->price = $data['formatted_prices']['price_ttc'];
-                    $product->price_amount = $data['final_prices']['price_ttc'];
-                    $product->regular_price = $data['formatted_prices']['price_ttc'];
-                    $product->regular_price_amount = $data['unit_prices']['price_ttc_nr'];
-                    $product->unit_price = $data['unit_prices']['price_ttc'];
-                }
-            }
-        }
-        /**
-         * End add module dynamic prices
-         */
         $rendered_products_top = $this->render('catalog/_partials/products-top', ['listing' => $search]);
         $rendered_products = $this->render('catalog/_partials/products', ['listing' => $search]);
         $rendered_products_bottom = $this->render('catalog/_partials/products-bottom', ['listing' => $search]);

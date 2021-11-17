@@ -29,14 +29,29 @@
  */
 abstract class HTMLTemplateCore
 {
+    /**
+     * @var string
+     */
     public $title;
+
+    /**
+     * @var string
+     */
     public $date;
+
+    /**
+     * @var bool
+     */
     public $available_in_your_account = true;
 
-    /** @var Smarty */
+    /**
+     * @var Smarty
+     */
     public $smarty;
 
-    /** @var Shop */
+    /**
+     * @var Shop
+     */
     public $shop;
 
     /**
@@ -93,6 +108,8 @@ abstract class HTMLTemplateCore
 
     /**
      * Returns the invoice logo.
+     *
+     * @return string|null
      */
     protected function getLogo()
     {
@@ -138,7 +155,6 @@ abstract class HTMLTemplateCore
 
         $this->smarty->assign([
             'logo_path' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_ . $logo,
-            'logo_path_absolute' => _PS_IMG_DIR_ . $logo,
             'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'date' => $this->date,
@@ -161,7 +177,14 @@ abstract class HTMLTemplateCore
         $hook_name = 'displayPDF' . $template;
 
         $this->smarty->assign([
-            'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, ['object' => $object]),
+            'HOOK_DISPLAY_PDF' => Hook::exec(
+                $hook_name,
+                [
+                    'object' => $object,
+                    // The smarty instance is a clone that does NOT escape HTML
+                    'smarty' => $this->smarty,
+                ]
+            ),
         ]);
     }
 

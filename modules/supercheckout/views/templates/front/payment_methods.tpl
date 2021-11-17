@@ -20,10 +20,10 @@
                     <label id="payment_lbl_{$option.id_module|intval}" for="{$option.id}">
                         {if $display_payment_style neq 0}
                             {if $option.payment_image_url neq ''}
-                                <img src='{$option.payment_image_url}' alt='{$option.call_to_action_text}' {if isset($option.width) && $option.width !="" && $option.width !="auto"}width='{$option.width}'{else} width="50"{/if} {if isset($option.height) && $option.height !="" && $option.height !="auto"}height='{$option.height}'{/if}/>{if $display_payment_style neq 2}{/if}
+                                <img src='{$option.payment_image_url}' alt='{$option.call_to_action_text}' width="30" {if isset($option.height) && $option.height !="" && $option.height !="auto"}height='{$option.height}'{/if}/>{if $display_payment_style neq 2}{/if}
                             {* Start Code Added By Priyanshu on 3-June-2020 to fix the Payment method logo issue*}
                             {else if $option.logo neq '' }
-                                <img src='{$option.logo}' alt='{$option.call_to_action_text}' {if isset($option.width) && $option.width !="" && $option.width !="auto"}width='{$option.width}'{else} width="50"{/if} {if isset($option.height) && $option.height !="" && $option.height !="auto"}height='{$option.height}'{/if}/>{if $display_payment_style neq 2}{/if}
+                                <img src='{$option.logo}' alt='{$option.call_to_action_text}' width="30" {if isset($option.height) && $option.height !="" && $option.height !="auto"}height='{$option.height}'{/if}/>{if $display_payment_style neq 2}{/if}
                             {* End of Code Added By Priyanshu on 3-June-2020 to fix the Payment method logo issue*}
                             {/if}
                         {/if}

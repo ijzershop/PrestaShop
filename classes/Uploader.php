@@ -92,6 +92,7 @@ class UploaderCore
         if (!isset($fileName)) {
             return tempnam($this->getSavePath(), $this->getUniqueFileName());
         }
+
         $pathInfo = pathinfo($fileName);
         if (isset($pathInfo['extension'])) {
             $fileName = $pathInfo['filename'] . '.' . Tools::strtolower($pathInfo['extension']);
@@ -262,13 +263,13 @@ class UploaderCore
      */
     public function upload($file, $dest = null)
     {
-
         if ($this->validate($file)) {
             if (isset($dest) && is_dir($dest)) {
                 $filePath = $dest;
             } else {
                 $filePath = $this->getFilePath(isset($dest) ? $dest : $file['name']);
             }
+
             if ($file['tmp_name'] && is_uploaded_file($file['tmp_name'])) {
                 move_uploaded_file($file['tmp_name'], $filePath);
             } else {

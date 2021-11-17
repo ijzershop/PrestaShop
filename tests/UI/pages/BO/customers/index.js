@@ -153,6 +153,20 @@ class Customers extends BOBasePage {
   }
 
   /**
+   * Filter customer by registration date from and date to
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Date from to filter with
+   * @param dateTo {string} Date to to filter with
+   * @returns {Promise<void>}
+   */
+  async filterCustomersByRegistration(page, dateFrom, dateTo) {
+    await page.type(this.customerFilterColumnInput('date_add_from'), dateFrom);
+    await page.type(this.customerFilterColumnInput('date_add_to'), dateTo);
+    // click on search
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+  }
+
+  /**
    * Get Value of columns Enabled, Newsletter or Partner Offers
    * @param page {Page} Browser tab
    * @param row {number} Row on table
@@ -287,7 +301,7 @@ class Customers extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column name to get all rows content
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -295,7 +309,7 @@ class Customers extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableCustomers(page, i, column);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

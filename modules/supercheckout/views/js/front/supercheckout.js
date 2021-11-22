@@ -1154,6 +1154,8 @@ function applyInlineValidation() {
         $(this).parent().append('<span class="errorsmall">' + required_error + '</span>');
         // $("html, body").animate({scrollTop: $("span.errorsmall").offset().top-80}, "fast");
         $(this).removeClass('ok-form').addClass('error-form');
+      } else {
+        $(this).removeClass('ok-form error-form');
       }
     }));
     $('textarea[name="payment_address[other]"], textarea[name="shipping_address[other]"]').on('keydown blur input change paste', delayKeyUp(function (e) {

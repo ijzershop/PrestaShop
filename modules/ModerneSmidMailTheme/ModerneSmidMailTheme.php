@@ -118,9 +118,9 @@ class ModerneSmidMailTheme extends Module
         $themes = $hookParams['mailThemes'];
         $scanner = new FolderThemeScanner();
         $moderneSmidTheme = $scanner->scan(__DIR__.'/mails/themes/modernesmid');
-        if (null !== $moderneSmidTheme && $moderneSmidTheme->getLayouts()->count() > 0) {
-            $themes->add($moderneSmidTheme);
-        }
+//        if (null !== $moderneSmidTheme && $moderneSmidTheme->getLayouts()->count() > 0) {
+//            $themes->add($moderneSmidTheme);
+//        }
     }
 
     /**

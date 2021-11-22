@@ -139,10 +139,9 @@ class ModerneSmidMailTheme extends Module
             return;
         }
 
-        $hookParams['mailLayoutVariables']['order_name'] = 'TEST-123456';
         $hookParams['mailLayoutVariables']['custom_footer_html'] = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '');
         $hookParams['mailLayoutVariables']['faq_page'] = Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '','');
-        $hookParams['mailLayoutVariables']['add_to_order'] = '<span class="text-small"><strong><span class="font-arial"><span class="text-grey font-arial">Iets vergeten?</span></span></strong></span><br/><span class="text-small"><span class="font-arial"><span class="text-grey font-arial">Tot u bericht krijgt dat uw bestelling is verstuurd kunt u iets toevoegen aan uw bestelling zonder dat er extra verzendkosten in rekening worden gebracht. Maak hiervoor een nieuwe bestelling en kies bij verzending voor: "Toevoegen".</span></span></span>';
+        $hookParams['mailLayoutVariables']['add_to_order'] = '<span class="text-small"><strong><span class=""><span class="text-grey ">Iets vergeten?</span></span></strong></span><br/><span class="text-small"><span class=""><span class="text-grey " style="line-height:25px;">Tot u bericht krijgt dat uw bestelling is verstuurd kunt u iets toevoegen aan uw bestelling zonder dat er extra verzendkosten in rekening worden gebracht. Maak hiervoor een nieuwe bestelling en kies bij verzending voor: "Toevoegen".</span></span></span>';
     }
 
 

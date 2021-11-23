@@ -53,10 +53,12 @@ class Product extends ProductCore {
                                                                  'lang' => true,
                                                                  'validate' => 'isCatalogName',
                                                                  'required' => true, 'size' => 255);
+        self::$definition['fields']['jsonld'] = array('type' => self::TYPE_STRING, 'required' => false);
         self::$definition['fields']['link_rewrite'] = array('type' => self::TYPE_STRING,
             'lang' => true,
             'validate' => 'isString',
             'required' => false, 'size' => 255);
+
         parent::__construct($id_product, $full, $id_lang, $id_shop);
     }
 

@@ -19,9 +19,6 @@ url=git@github.com:ijzershop/smallorderfee.git
 [submodule "modules/koopmanorderexport"]
 	path = modules/koopmanorderexport
 url=git@github.com:ijzershop/koopmanorderexport.git
-[submodule "modules/productcomments"]
-	path = modules/productcomments
-url=git@github.com:ijzershop/productcomments
 [submodule "modules/customdeliveryslipsexport"]
 	path = modules/customdeliveryslipsexport
 url=git@github.com:ijzershop/customdeliveryslipsexport.git

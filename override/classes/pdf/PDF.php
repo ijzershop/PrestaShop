@@ -125,7 +125,12 @@ class PDFCore
             $this->pdf_renderer->createFooter($template->getFooter());
             $this->pdf_renderer->createPagination($template->getPagination());
             $this->pdf_renderer->createContent($template->getContent());
-            $this->pdf_renderer->writePage($template->order->reference);
+
+            if(isset($template->order)){
+                $this->pdf_renderer->writePage($template->order->reference);
+            } else {
+                $this->pdf_renderer->writePage();
+            }
             $render = true;
 
             unset($template);

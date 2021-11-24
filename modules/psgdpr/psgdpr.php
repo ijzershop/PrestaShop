@@ -789,20 +789,27 @@ class Psgdpr extends Module
         // get orders
         $orders = [];
         $orderList = Order::getCustomerOrders($customer->id);
-
         if (count($orderList) >= 1) {
             foreach ($orderList as $index => $order) {
                 $orderObject = new Order($order['id_order']);
                 $productsOrder = $orderObject->getProducts();
                 $currency = Currency::getCurrency($order['id_currency']);
 
+                $orderState = '';
+                $orderStateColor = '';
+
+                if(isset($order['order_state'])){
+                    $orderState = $order['order_state'];
+                    $orderStateColor = $order['order_state_color'];
+                }
+
                 array_push($orders, [
                     'id_order' => $order['id_order'],
                     'reference' => $order['reference'],
                     'payment' => $order['payment'],
                     'date_add' => $order['date_add'],
-                    'order_state' => $order['order_state'],
-                    'order_state_color' => $order['order_state_color'],
+                    'order_state' => $orderState,
+                    'order_state_color' => $orderStateColor,
                     'total_paid_tax_incl' => number_format($order['total_paid_tax_incl'], 2) . ' ' . $currency['iso_code'],
                     'nb_products' => $order['nb_products'],
                     'products' => [],

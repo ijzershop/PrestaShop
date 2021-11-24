@@ -91,6 +91,30 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     }
 
     /**
+     * Returns the template's HTML footer.
+     *
+     * @return string HTML footer
+     */
+    public function getFooter()
+    {
+        $shop_address = $this->getShopAddress();
+
+        $id_shop = (int) $this->shop->id;
+
+        $this->smarty->assign([
+            'available_in_your_account' => $this->available_in_your_account,
+            'shop_address' => $shop_address,
+            'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, $id_shop),
+            'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, $id_shop),
+            'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, $id_shop),
+            'free_text' => Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', (int) Context::getContext()->language->id, null, $id_shop),
+        ]);
+
+        return $this->smarty->fetch($this->getTemplate('footer'));
+    }
+
+
+    /**
      * Compute layout elements size.
      *
      * @param $params Array Layout elements
@@ -389,7 +413,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         if (!$legal_free_text) {
             $legal_free_text = Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int) Context::getContext()->language->id, null, (int) $this->order->id_shop);
         }
-
         $data = array(
             'order' => $this->order,
             'order_invoice' => $this->order_invoice,
@@ -409,6 +432,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'round_type' => $round_type,
             'legal_free_text' => $legal_free_text,
         );
+
 
         if (Tools::getValue('debug')) {
             die(json_encode($data));

@@ -114,7 +114,7 @@
                                                         <span class="fas fa-minus"></span>
                                                 </button>
                                         </span>
-                    <input min="1" max="100" autocomplete="off" type="text" id="quantity"
+                    <input min="1" onclick="this.select()" autocomplete="off" type="text" id="quantity"
                            class="form-control input-number quantitybox"
                            name="quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}"
                            value="{$product.quantity|intval}">
@@ -127,7 +127,7 @@
                                                 </button>
                                         </span>
                   {else}
-                    <input min="1" max="100" autocomplete="off" type="text" id="quantity"
+                    <input min="1" onclick="this.select()" autocomplete="off" type="text" id="quantity"
                            class="form-control input-number quantitybox kb_text_update_qty"
                            name="quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}"
                            value="{$product.quantity|intval}">

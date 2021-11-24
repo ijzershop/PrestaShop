@@ -1,0 +1,355 @@
+7f310536ef5fab949d60ee73a382ce7b11f96f39 961308689420f36d9b4edda486e868871f57f375 JB Stoker <jelmer@ijzershop.nl> 1594231711 +0200	commit: Pagination and header fixes
+961308689420f36d9b4edda486e868871f57f375 961308689420f36d9b4edda486e868871f57f375 JB Stoker <jelmer@ijzershop.nl> 1594631478 +0200	reset: moving to HEAD
+961308689420f36d9b4edda486e868871f57f375 a41b5d0539dbb4024b4667ed8158e8b7887ee5ff JB Stoker <jelmer@ijzershop.nl> 1594631486 +0200	pull origin master: Fast-forward
+a41b5d0539dbb4024b4667ed8158e8b7887ee5ff defdf9c273022a3f59c55303f67cff854912b3b6 JB Stoker <jelmer@ijzershop.nl> 1594637012 +0200	commit: fix cart
+defdf9c273022a3f59c55303f67cff854912b3b6 5e7306e6fa94449c714bb3f5c6bb3e369db56bf2 JB Stoker <jelmer@ijzershop.nl> 1594708498 +0200	commit: small order fee bugfixes
+5e7306e6fa94449c714bb3f5c6bb3e369db56bf2 a5848f7a2fe9fcd1ec38c1517e3b835fc707072c JB Stoker <jelmer@ijzershop.nl> 1594715448 +0200	commit: npm update and build + bugfixes shoppingcart and flyImage
+a5848f7a2fe9fcd1ec38c1517e3b835fc707072c e493dfec66bc0a9f817362f453a7da26203b0cf8 JB Stoker <jelmer@ijzershop.nl> 1594716431 +0200	commit: js shoppingcart update
+e493dfec66bc0a9f817362f453a7da26203b0cf8 aa839e801261d63a332d152a5682be8ba6eca5e6 JB Stoker <jelmer@ijzershop.nl> 1594976296 +0200	commit: theme update
+aa839e801261d63a332d152a5682be8ba6eca5e6 7e9a99815b4cfee8ebe00adc227093bc02443a32 JB Stoker <jelmer@ijzershop.nl> 1595323507 +0200	commit: platecut updates and small product page fixes
+7e9a99815b4cfee8ebe00adc227093bc02443a32 e9988ed3eba02b2cd5e74f484250318c6afec3b7 JB Stoker <jelmer@ijzershop.nl> 1595338352 +0200	commit: theme update twee cat naast elkaar
+e9988ed3eba02b2cd5e74f484250318c6afec3b7 540c02b62a790b462a6ece07e92d7cc6d96ba870 JB Stoker <jelmer@ijzershop.nl> 1595338673 +0200	commit: css fix small devixe
+540c02b62a790b462a6ece07e92d7cc6d96ba870 17b62386bfe4fb8431313dd8cbdc24e0e85bbfc5 JB Stoker <jelmer@ijzershop.nl> 1595339004 +0200	commit: fontsize fix small devixce cat
+17b62386bfe4fb8431313dd8cbdc24e0e85bbfc5 da3a41d6af90e7c29b7f6738cedb492b5ec1373a JB Stoker <jelmer@ijzershop.nl> 1595586014 +0200	commit: theme update
+da3a41d6af90e7c29b7f6738cedb492b5ec1373a 75019545530f61dec995c9d5f90b9a0ced153f2a JB Stoker <jelmer@ijzershop.nl> 1595593387 +0200	commit: theme update
+75019545530f61dec995c9d5f90b9a0ced153f2a a1a39d46cf387df9291a69ac9aea9398b7a6d675 JB Stoker <jelmer@ijzershop.nl> 1595593696 +0200	commit: bugfix
+a1a39d46cf387df9291a69ac9aea9398b7a6d675 1dfe7f75d9611b26cc984e05c3b59c71a9ac8ad8 JB Stoker <jelmer@ijzershop.nl> 1595593819 +0200	commit: border bugfix
+1dfe7f75d9611b26cc984e05c3b59c71a9ac8ad8 54861e015bf6efd3b645ede6331cf552ef255c27 JB Stoker <jelmer@ijzershop.nl> 1595596258 +0200	commit: template update
+54861e015bf6efd3b645ede6331cf552ef255c27 020d1a3f89906b17a82dd308c35a6897208a1c69 JB Stoker <jelmer@ijzershop.nl> 1595596447 +0200	commit: theme update
+020d1a3f89906b17a82dd308c35a6897208a1c69 940145452920875776642684ef2c5658b758ab2b JB Stoker <jelmer@ijzershop.nl> 1595597969 +0200	commit: technische gegevens title update
+940145452920875776642684ef2c5658b758ab2b 1852c5a35608d08afd2ec8696eb030d4c628c542 JB Stoker <jelmer@ijzershop.nl> 1595598193 +0200	commit: accessoires tekst update
+1852c5a35608d08afd2ec8696eb030d4c628c542 52944cf4d132cf05fa87ebe975e6f313fc1f417d JB Stoker <jelmer@ijzershop.nl> 1595600738 +0200	commit: fontaweseom pro
+52944cf4d132cf05fa87ebe975e6f313fc1f417d 56ef893355907d1c671f6b9016129ba2a3ce91a6 JB Stoker <jelmer@ijzershop.nl> 1596452051 +0200	commit: theme update
+56ef893355907d1c671f6b9016129ba2a3ce91a6 c340ddfb1f938c6e5d7b921b73b5bacdff10c7b8 JB Stoker <jelmer@ijzershop.nl> 1596535048 +0200	commit: theme update
+c340ddfb1f938c6e5d7b921b73b5bacdff10c7b8 e8f3ea4d0378c5f9cbb28459be262195432e32ab JB Stoker <jelmer@ijzershop.nl> 1596535991 +0200	commit: header fix
+e8f3ea4d0378c5f9cbb28459be262195432e32ab 17bc6ddcdeb9e5e5c2f49840b540e0f3bdcbead9 JB Stoker <jelmer@ijzershop.nl> 1596545293 +0200	commit: mobile menu op desktop en mobile
+17bc6ddcdeb9e5e5c2f49840b540e0f3bdcbead9 54d8fbd1c1ca9e2f69329dfce0013c07edf5fab3 JB Stoker <jelmer@ijzershop.nl> 1596550990 +0200	commit: fontawesome subsetter implementatie
+54d8fbd1c1ca9e2f69329dfce0013c07edf5fab3 b0e6ca26df9a17fe2d5ee42b3cca4c7cd9e25c74 JB Stoker <jelmer@ijzershop.nl> 1596552236 +0200	commit: product page technical image fix
+b0e6ca26df9a17fe2d5ee42b3cca4c7cd9e25c74 2fc4104d41f74964d389a554c96e9590d7e8eb9a JB Stoker <jelmer@ijzershop.nl> 1596789107 +0200	commit: Update theme
+2fc4104d41f74964d389a554c96e9590d7e8eb9a 6069c423d2f936ebc7430476aabe0a4d98efe905 JB Stoker <jelmer@ijzershop.nl> 1596789543 +0200	commit: bufix product page
+6069c423d2f936ebc7430476aabe0a4d98efe905 1f4bdb7ac4149d448e5c86719db3f9d7b135627c JB Stoker <jelmer@ijzershop.nl> 1596791384 +0200	commit: theme bugfix side panel sticky menu
+1f4bdb7ac4149d448e5c86719db3f9d7b135627c 7a079aff504b8e96c30a0236220c4a20cbb49092 JB Stoker <jelmer@ijzershop.nl> 1596800775 +0200	commit: customer contact form missing product
+7a079aff504b8e96c30a0236220c4a20cbb49092 885dfe3adca1d07cd353d73f76900905cca924e8 JB Stoker <jelmer@ijzershop.nl> 1596802983 +0200	commit: contact form missing product bugfixes
+885dfe3adca1d07cd353d73f76900905cca924e8 301421f13efbefc760ab1e5c5959fbeeee14f22a JB Stoker <jelmer@ijzershop.nl> 1596803090 +0200	commit: bugfix
+301421f13efbefc760ab1e5c5959fbeeee14f22a 1f0429471684dcf9847905579afb00017efd9b20 JB Stoker <jelmer@ijzershop.nl> 1597058805 +0200	commit: slider and carousel fixes
+1f0429471684dcf9847905579afb00017efd9b20 edb1b0fc41476aa179093d86fe99bb416b4ec2dc JB Stoker <jelmer@ijzershop.nl> 1597135224 +0200	commit: afbeelding bugfix
+edb1b0fc41476aa179093d86fe99bb416b4ec2dc 63f9ca540d98d400c6fb81c6dd6ce40f18213fec JB Stoker <jelmer@ijzershop.nl> 1597139931 +0200	commit: geo location price shipping bugfix
+63f9ca540d98d400c6fb81c6dd6ce40f18213fec 5a9954e3dfac6d565adf18b270d98a8c18213b39 JB Stoker <jelmer@ijzershop.nl> 1597151619 +0200	commit: gcaptcha
+5a9954e3dfac6d565adf18b270d98a8c18213b39 061316b58a5e304bd7b256c320699211fbf2899d JB Stoker <jelmer@ijzershop.nl> 1597157139 +0200	commit: bugfix
+061316b58a5e304bd7b256c320699211fbf2899d 6c249c8a73ef38b86225103690441991800111b5 JB Stoker <jelmer@ijzershop.nl> 1597392161 +0200	commit: theme update, header and cart bugfixes
+6c249c8a73ef38b86225103690441991800111b5 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597406454 +0200	commit: shop logo fix
+37b011c61d7843982a061f0df87d4047f2b50eba 6c249c8a73ef38b86225103690441991800111b5 JB Stoker <jelmer@ijzershop.nl> 1597406507 +0200	checkout: moving from master to 6c249c8a73ef38b86225103690441991800111b5
+6c249c8a73ef38b86225103690441991800111b5 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597406535 +0200	checkout: moving from 6c249c8a73ef38b86225103690441991800111b5 to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 6c249c8a73ef38b86225103690441991800111b5 JB Stoker <jelmer@ijzershop.nl> 1597406564 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to 6c249c8a73ef38b86225103690441991800111b5
+6c249c8a73ef38b86225103690441991800111b5 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597406577 +0200	checkout: moving from 6c249c8a73ef38b86225103690441991800111b5 to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 6c249c8a73ef38b86225103690441991800111b5 JB Stoker <jelmer@ijzershop.nl> 1597406589 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to 6c249c8a73ef38b86225103690441991800111b5
+6c249c8a73ef38b86225103690441991800111b5 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597406601 +0200	checkout: moving from 6c249c8a73ef38b86225103690441991800111b5 to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 6c249c8a73ef38b86225103690441991800111b5 JB Stoker <jelmer@ijzershop.nl> 1597406626 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to 6c249c8a73ef38b86225103690441991800111b5
+6c249c8a73ef38b86225103690441991800111b5 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597406640 +0200	checkout: moving from 6c249c8a73ef38b86225103690441991800111b5 to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597412146 +0200	pull origin master: Fast-forward
+81aca935bb05e4305101a6e89efb2233f6c3fec2 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597412181 +0200	checkout: moving from 81aca935bb05e4305101a6e89efb2233f6c3fec2 to hhh
+81aca935bb05e4305101a6e89efb2233f6c3fec2 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597412184 +0200	checkout: moving from hhh to master
+37b011c61d7843982a061f0df87d4047f2b50eba 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597412191 +0200	merge hhh: Fast-forward
+81aca935bb05e4305101a6e89efb2233f6c3fec2 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597412297 +0200	checkout: moving from master to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597650764 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to master
+81aca935bb05e4305101a6e89efb2233f6c3fec2 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597650831 +0200	checkout: moving from master to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597650845 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to 81aca935bb05e4305101a6e89efb2233f6c3fec2
+81aca935bb05e4305101a6e89efb2233f6c3fec2 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597650857 +0200	checkout: moving from 81aca935bb05e4305101a6e89efb2233f6c3fec2 to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597650869 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to 81aca935bb05e4305101a6e89efb2233f6c3fec2
+81aca935bb05e4305101a6e89efb2233f6c3fec2 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597650882 +0200	checkout: moving from 81aca935bb05e4305101a6e89efb2233f6c3fec2 to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597650925 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to 81aca935bb05e4305101a6e89efb2233f6c3fec2
+81aca935bb05e4305101a6e89efb2233f6c3fec2 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597650939 +0200	checkout: moving from 81aca935bb05e4305101a6e89efb2233f6c3fec2 to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597650962 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to 81aca935bb05e4305101a6e89efb2233f6c3fec2
+81aca935bb05e4305101a6e89efb2233f6c3fec2 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597650973 +0200	checkout: moving from 81aca935bb05e4305101a6e89efb2233f6c3fec2 to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597650986 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to 81aca935bb05e4305101a6e89efb2233f6c3fec2
+81aca935bb05e4305101a6e89efb2233f6c3fec2 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597651009 +0200	checkout: moving from 81aca935bb05e4305101a6e89efb2233f6c3fec2 to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597651023 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to 81aca935bb05e4305101a6e89efb2233f6c3fec2
+81aca935bb05e4305101a6e89efb2233f6c3fec2 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597651042 +0200	checkout: moving from 81aca935bb05e4305101a6e89efb2233f6c3fec2 to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597651057 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to 81aca935bb05e4305101a6e89efb2233f6c3fec2
+81aca935bb05e4305101a6e89efb2233f6c3fec2 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1597651082 +0200	checkout: moving from 81aca935bb05e4305101a6e89efb2233f6c3fec2 to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597651097 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to 81aca935bb05e4305101a6e89efb2233f6c3fec2
+81aca935bb05e4305101a6e89efb2233f6c3fec2 9d046efa59b6aac0c8af55cc10ad56d3674c85d5 JB Stoker <jelmer@ijzershop.nl> 1597741119 +0200	commit: theme update home and cat listing
+9d046efa59b6aac0c8af55cc10ad56d3674c85d5 9d046efa59b6aac0c8af55cc10ad56d3674c85d5 JB Stoker <jelmer@ijzershop.nl> 1597741125 +0200	checkout: moving from 9d046efa59b6aac0c8af55cc10ad56d3674c85d5 to tt
+9d046efa59b6aac0c8af55cc10ad56d3674c85d5 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1597741128 +0200	checkout: moving from tt to master
+81aca935bb05e4305101a6e89efb2233f6c3fec2 9d046efa59b6aac0c8af55cc10ad56d3674c85d5 JB Stoker <jelmer@ijzershop.nl> 1597741133 +0200	merge tt: Fast-forward
+9d046efa59b6aac0c8af55cc10ad56d3674c85d5 6b18a37fc2291154655ee681b52741ef4004c947 JB Stoker <jelmer@ijzershop.nl> 1597750319 +0200	commit: theme bugfixes
+6b18a37fc2291154655ee681b52741ef4004c947 adbf7421c5e0575b6eade9a286321c4ff346c703 JB Stoker <jelmer@ijzershop.nl> 1597761183 +0200	commit: fix sawcutmodule strip attributegroup from name
+adbf7421c5e0575b6eade9a286321c4ff346c703 42042ad48b60ea1f341f8f489dd46f4992b2dde6 JB Stoker <jelmer@ijzershop.nl> 1598021120 +0200	commit: theme update bugfix and remove smallorderfee
+42042ad48b60ea1f341f8f489dd46f4992b2dde6 9c40b4c04a2014023e95d41d897d692a77e2c8e6 JB Stoker <jelmer@ijzershop.nl> 1598021508 +0200	commit: f
+9c40b4c04a2014023e95d41d897d692a77e2c8e6 5db4b81be5185acdb9437a504fe2d884e0f54b2d JB Stoker <jelmer@ijzershop.nl> 1598365700 +0200	commit: theme update
+5db4b81be5185acdb9437a504fe2d884e0f54b2d 10ad2a05853b9d5916a40cf0ffa7a6e6a6a3c033 JB Stoker <jelmer@ijzershop.nl> 1598518970 +0200	commit: thema updates filter bugfixes
+10ad2a05853b9d5916a40cf0ffa7a6e6a6a3c033 494d17063966668091baa6e41fe76df3081a2858 JB Stoker <jelmer@ijzershop.nl> 1598948734 +0200	commit: theme updates
+494d17063966668091baa6e41fe76df3081a2858 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1598948848 +0200	checkout: moving from master to 81aca935bb05e4305101a6e89efb2233f6c3fec2
+81aca935bb05e4305101a6e89efb2233f6c3fec2 494d17063966668091baa6e41fe76df3081a2858 JB Stoker <jelmer@ijzershop.nl> 1598949908 +0200	checkout: moving from 81aca935bb05e4305101a6e89efb2233f6c3fec2 to 494d17063966668091baa6e41fe76df3081a2858
+494d17063966668091baa6e41fe76df3081a2858 494d17063966668091baa6e41fe76df3081a2858 JB Stoker <jelmer@ijzershop.nl> 1598949966 +0200	checkout: moving from 494d17063966668091baa6e41fe76df3081a2858 to master
+494d17063966668091baa6e41fe76df3081a2858 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1598950014 +0200	checkout: moving from master to 81aca935bb05e4305101a6e89efb2233f6c3fec2
+81aca935bb05e4305101a6e89efb2233f6c3fec2 494d17063966668091baa6e41fe76df3081a2858 JB Stoker <jelmer@ijzershop.nl> 1598950061 +0200	checkout: moving from 81aca935bb05e4305101a6e89efb2233f6c3fec2 to master
+494d17063966668091baa6e41fe76df3081a2858 a267bed755329a01b7644c5a4e003ad51866fb72 JB Stoker <jelmer@ijzershop.nl> 1598950126 +0200	commit: ignore update
+a267bed755329a01b7644c5a4e003ad51866fb72 494d17063966668091baa6e41fe76df3081a2858 JB Stoker <jelmer@ijzershop.nl> 1599462323 +0200	checkout: moving from master to 494d17063966668091baa6e41fe76df3081a2858
+494d17063966668091baa6e41fe76df3081a2858 e17e5bbcab3b5618946206d8f081564b074296de JB Stoker <jelmer@ijzershop.nl> 1599647706 +0200	pull origin master: Fast-forward
+e17e5bbcab3b5618946206d8f081564b074296de 6e9d895b28d14f88dc88d0dc1f1a9222a7f5cf3d JB Stoker <jelmer@ijzershop.nl> 1599647756 +0200	commit: cache
+6e9d895b28d14f88dc88d0dc1f1a9222a7f5cf3d 6e9d895b28d14f88dc88d0dc1f1a9222a7f5cf3d JB Stoker <jelmer@ijzershop.nl> 1599647767 +0200	checkout: moving from 6e9d895b28d14f88dc88d0dc1f1a9222a7f5cf3d to h
+6e9d895b28d14f88dc88d0dc1f1a9222a7f5cf3d a267bed755329a01b7644c5a4e003ad51866fb72 JB Stoker <jelmer@ijzershop.nl> 1599647770 +0200	checkout: moving from h to master
+a267bed755329a01b7644c5a4e003ad51866fb72 6e9d895b28d14f88dc88d0dc1f1a9222a7f5cf3d JB Stoker <jelmer@ijzershop.nl> 1599647776 +0200	merge h: Fast-forward
+6e9d895b28d14f88dc88d0dc1f1a9222a7f5cf3d 34429990c6c05258ab74fe587c4381317870d010 JB Stoker <jelmer@ijzershop.nl> 1599650052 +0200	commit: theme updates
+34429990c6c05258ab74fe587c4381317870d010 8755e2d95c166cd13d61127d88ddc6cd508eb00c JB Stoker <jelmer@ijzershop.nl> 1599731075 +0200	commit: bugfixes and updates
+8755e2d95c166cd13d61127d88ddc6cd508eb00c 57c95898ca8ce765daf07ff649f265b5b58ca724 JB Stoker <jelmer@ijzershop.nl> 1599732267 +0200	commit: form update
+57c95898ca8ce765daf07ff649f265b5b58ca724 0373c648b28666935bffc0046f59664ecbd6bb53 JB Stoker <jelmer@ijzershop.nl> 1599732514 +0200	commit: template update
+0373c648b28666935bffc0046f59664ecbd6bb53 a267bed755329a01b7644c5a4e003ad51866fb72 JB Stoker <jelmer@ijzershop.nl> 1599732762 +0200	checkout: moving from master to a267bed755329a01b7644c5a4e003ad51866fb72
+a267bed755329a01b7644c5a4e003ad51866fb72 0373c648b28666935bffc0046f59664ecbd6bb53 JB Stoker <jelmer@ijzershop.nl> 1599732796 +0200	checkout: moving from a267bed755329a01b7644c5a4e003ad51866fb72 to 0373c648b28666935bffc0046f59664ecbd6bb53
+0373c648b28666935bffc0046f59664ecbd6bb53 663c9bb05de0a849fe70ca49abbb87fde4b93fb4 JB Stoker <jelmer@ijzershop.nl> 1599825906 +0200	checkout: moving from 0373c648b28666935bffc0046f59664ecbd6bb53 to 663c9bb05de0a849fe70ca49abbb87fde4b93fb4
+663c9bb05de0a849fe70ca49abbb87fde4b93fb4 663c9bb05de0a849fe70ca49abbb87fde4b93fb4 JB Stoker <jelmer@ijzershop.nl> 1599825986 +0200	checkout: moving from 663c9bb05de0a849fe70ca49abbb87fde4b93fb4 to dd
+663c9bb05de0a849fe70ca49abbb87fde4b93fb4 0373c648b28666935bffc0046f59664ecbd6bb53 JB Stoker <jelmer@ijzershop.nl> 1599825989 +0200	checkout: moving from dd to master
+0373c648b28666935bffc0046f59664ecbd6bb53 663c9bb05de0a849fe70ca49abbb87fde4b93fb4 JB Stoker <jelmer@ijzershop.nl> 1599825995 +0200	pull origin master: Fast-forward
+663c9bb05de0a849fe70ca49abbb87fde4b93fb4 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1599826138 +0200	checkout: moving from master to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba 0373c648b28666935bffc0046f59664ecbd6bb53 JB Stoker <jelmer@ijzershop.nl> 1599826156 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to 0373c648b28666935bffc0046f59664ecbd6bb53
+0373c648b28666935bffc0046f59664ecbd6bb53 663c9bb05de0a849fe70ca49abbb87fde4b93fb4 JB Stoker <jelmer@ijzershop.nl> 1599826188 +0200	checkout: moving from 0373c648b28666935bffc0046f59664ecbd6bb53 to 663c9bb05de0a849fe70ca49abbb87fde4b93fb4
+663c9bb05de0a849fe70ca49abbb87fde4b93fb4 663c9bb05de0a849fe70ca49abbb87fde4b93fb4 JB Stoker <jelmer@ijzershop.nl> 1600077677 +0200	checkout: moving from 663c9bb05de0a849fe70ca49abbb87fde4b93fb4 to ddaass
+663c9bb05de0a849fe70ca49abbb87fde4b93fb4 2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c JB Stoker <jelmer@ijzershop.nl> 1600077687 +0200	commit: update
+2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c 663c9bb05de0a849fe70ca49abbb87fde4b93fb4 JB Stoker <jelmer@ijzershop.nl> 1600077691 +0200	checkout: moving from ddaass to master
+663c9bb05de0a849fe70ca49abbb87fde4b93fb4 2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c JB Stoker <jelmer@ijzershop.nl> 1600077696 +0200	merge ddaass: Fast-forward
+2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c 663c9bb05de0a849fe70ca49abbb87fde4b93fb4 JB Stoker <jelmer@ijzershop.nl> 1600077767 +0200	checkout: moving from master to 663c9bb05de0a849fe70ca49abbb87fde4b93fb4
+663c9bb05de0a849fe70ca49abbb87fde4b93fb4 2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c JB Stoker <jelmer@ijzershop.nl> 1600077780 +0200	checkout: moving from 663c9bb05de0a849fe70ca49abbb87fde4b93fb4 to 2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c
+2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c 663c9bb05de0a849fe70ca49abbb87fde4b93fb4 JB Stoker <jelmer@ijzershop.nl> 1600077790 +0200	checkout: moving from 2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c to 663c9bb05de0a849fe70ca49abbb87fde4b93fb4
+663c9bb05de0a849fe70ca49abbb87fde4b93fb4 2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c JB Stoker <jelmer@ijzershop.nl> 1600077807 +0200	checkout: moving from 663c9bb05de0a849fe70ca49abbb87fde4b93fb4 to 2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c
+2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c 6ae8978e2f764e7f63bc3465942fd1271d26734d JB Stoker <jelmer@ijzershop.nl> 1600163733 +0200	pull origin master: Fast-forward
+6ae8978e2f764e7f63bc3465942fd1271d26734d 1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 JB Stoker <jelmer@ijzershop.nl> 1600171048 +0200	commit: theme and schema update
+1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 JB Stoker <jelmer@ijzershop.nl> 1600171063 +0200	checkout: moving from 1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 to ddd
+1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c JB Stoker <jelmer@ijzershop.nl> 1600171067 +0200	checkout: moving from ddd to master
+2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c 6ae8978e2f764e7f63bc3465942fd1271d26734d JB Stoker <jelmer@ijzershop.nl> 1600171075 +0200	pull origin master: Fast-forward
+6ae8978e2f764e7f63bc3465942fd1271d26734d 1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 JB Stoker <jelmer@ijzershop.nl> 1600171085 +0200	merge ddd: Fast-forward
+1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c JB Stoker <jelmer@ijzershop.nl> 1600171129 +0200	checkout: moving from master to 2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c
+2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c 1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 JB Stoker <jelmer@ijzershop.nl> 1600171152 +0200	checkout: moving from 2f05111b6ecf9f7b0854d8c66f2cbab6c2dc907c to 1649da75f0ea1edd55d276bd7cdc7f6b9ac11555
+1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca JB Stoker <jelmer@ijzershop.nl> 1600427529 +0200	pull origin master: Fast-forward
+7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca 1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 JB Stoker <jelmer@ijzershop.nl> 1600427573 +0200	checkout: moving from 7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca to master
+1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca JB Stoker <jelmer@ijzershop.nl> 1600427639 +0200	pull origin master: Fast-forward
+7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca 1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 JB Stoker <jelmer@ijzershop.nl> 1600427763 +0200	checkout: moving from master to 1649da75f0ea1edd55d276bd7cdc7f6b9ac11555
+1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca JB Stoker <jelmer@ijzershop.nl> 1600427774 +0200	checkout: moving from 1649da75f0ea1edd55d276bd7cdc7f6b9ac11555 to 7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca
+7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca 7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca JB Stoker <jelmer@ijzershop.nl> 1600427819 +0200	checkout: moving from 7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca to master
+7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca 3a620fe446136fe8d4d83b4b25c9836468d758ab JB Stoker <jelmer@ijzershop.nl> 1600436446 +0200	commit: schema.org updates
+3a620fe446136fe8d4d83b4b25c9836468d758ab 7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca JB Stoker <jelmer@ijzershop.nl> 1600436562 +0200	checkout: moving from master to 7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca
+7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca 3a620fe446136fe8d4d83b4b25c9836468d758ab JB Stoker <jelmer@ijzershop.nl> 1600436580 +0200	checkout: moving from 7fcfd7da32dc17a17280da9b3719f7f4f2ade7ca to 3a620fe446136fe8d4d83b4b25c9836468d758ab
+3a620fe446136fe8d4d83b4b25c9836468d758ab 3a620fe446136fe8d4d83b4b25c9836468d758ab JB Stoker <jelmer@ijzershop.nl> 1600670862 +0200	checkout: moving from 3a620fe446136fe8d4d83b4b25c9836468d758ab to master
+3a620fe446136fe8d4d83b4b25c9836468d758ab 0a52ee3c12e4bc451191315c32f674bfe1a29e0d JB Stoker <jelmer@ijzershop.nl> 1600684132 +0200	commit: cookie and remove custommer update
+0a52ee3c12e4bc451191315c32f674bfe1a29e0d 3a620fe446136fe8d4d83b4b25c9836468d758ab JB Stoker <jelmer@ijzershop.nl> 1600684181 +0200	checkout: moving from master to 3a620fe446136fe8d4d83b4b25c9836468d758ab
+3a620fe446136fe8d4d83b4b25c9836468d758ab 0a52ee3c12e4bc451191315c32f674bfe1a29e0d JB Stoker <jelmer@ijzershop.nl> 1600684196 +0200	checkout: moving from 3a620fe446136fe8d4d83b4b25c9836468d758ab to 0a52ee3c12e4bc451191315c32f674bfe1a29e0d
+0a52ee3c12e4bc451191315c32f674bfe1a29e0d 0a52ee3c12e4bc451191315c32f674bfe1a29e0d JB Stoker <jelmer@ijzershop.nl> 1600684235 +0200	checkout: moving from 0a52ee3c12e4bc451191315c32f674bfe1a29e0d to master
+0a52ee3c12e4bc451191315c32f674bfe1a29e0d f4bd7d6083d7398a321987f0822a57085f32dc14 JB Stoker <jelmer@ijzershop.nl> 1600684926 +0200	commit: added avg page selection
+f4bd7d6083d7398a321987f0822a57085f32dc14 0a52ee3c12e4bc451191315c32f674bfe1a29e0d JB Stoker <jelmer@ijzershop.nl> 1600684975 +0200	checkout: moving from master to 0a52ee3c12e4bc451191315c32f674bfe1a29e0d
+0a52ee3c12e4bc451191315c32f674bfe1a29e0d f4bd7d6083d7398a321987f0822a57085f32dc14 JB Stoker <jelmer@ijzershop.nl> 1600684990 +0200	checkout: moving from 0a52ee3c12e4bc451191315c32f674bfe1a29e0d to f4bd7d6083d7398a321987f0822a57085f32dc14
+f4bd7d6083d7398a321987f0822a57085f32dc14 6013bfd72c585816ad091d562424b5012ad8d766 JB Stoker <jelmer@ijzershop.nl> 1600686004 +0200	commit: added schema.org faq
+6013bfd72c585816ad091d562424b5012ad8d766 6013bfd72c585816ad091d562424b5012ad8d766 JB Stoker <jelmer@ijzershop.nl> 1600686017 +0200	checkout: moving from 6013bfd72c585816ad091d562424b5012ad8d766 to sss
+6013bfd72c585816ad091d562424b5012ad8d766 f4bd7d6083d7398a321987f0822a57085f32dc14 JB Stoker <jelmer@ijzershop.nl> 1600686020 +0200	checkout: moving from sss to master
+f4bd7d6083d7398a321987f0822a57085f32dc14 6013bfd72c585816ad091d562424b5012ad8d766 JB Stoker <jelmer@ijzershop.nl> 1600686026 +0200	merge sss: Fast-forward
+6013bfd72c585816ad091d562424b5012ad8d766 3679fb23a8c7e62f5a66ae603935e52740bd4edf JB Stoker <jelmer@ijzershop.nl> 1600764887 +0200	commit: theme updates
+3679fb23a8c7e62f5a66ae603935e52740bd4edf f4bd7d6083d7398a321987f0822a57085f32dc14 JB Stoker <jelmer@ijzershop.nl> 1600764943 +0200	checkout: moving from master to f4bd7d6083d7398a321987f0822a57085f32dc14
+f4bd7d6083d7398a321987f0822a57085f32dc14 3679fb23a8c7e62f5a66ae603935e52740bd4edf JB Stoker <jelmer@ijzershop.nl> 1600764960 +0200	checkout: moving from f4bd7d6083d7398a321987f0822a57085f32dc14 to 3679fb23a8c7e62f5a66ae603935e52740bd4edf
+3679fb23a8c7e62f5a66ae603935e52740bd4edf 307354904ebd4b3ffec65ee21c07630c82115095 JB Stoker <jelmer@ijzershop.nl> 1600769794 +0200	commit: schema.org updates
+307354904ebd4b3ffec65ee21c07630c82115095 916e2ebbc35d60657d1665a400fcef90f046c30a JB Stoker <jelmer@ijzershop.nl> 1601017483 +0200	commit: pdf updates
+916e2ebbc35d60657d1665a400fcef90f046c30a 916e2ebbc35d60657d1665a400fcef90f046c30a JB Stoker <jelmer@ijzershop.nl> 1601017493 +0200	checkout: moving from 916e2ebbc35d60657d1665a400fcef90f046c30a to ssddsds
+916e2ebbc35d60657d1665a400fcef90f046c30a 3679fb23a8c7e62f5a66ae603935e52740bd4edf JB Stoker <jelmer@ijzershop.nl> 1601017498 +0200	checkout: moving from ssddsds to master
+3679fb23a8c7e62f5a66ae603935e52740bd4edf 916e2ebbc35d60657d1665a400fcef90f046c30a JB Stoker <jelmer@ijzershop.nl> 1601017505 +0200	merge ssddsds: Fast-forward
+916e2ebbc35d60657d1665a400fcef90f046c30a 3679fb23a8c7e62f5a66ae603935e52740bd4edf JB Stoker <jelmer@ijzershop.nl> 1601017587 +0200	checkout: moving from master to 3679fb23a8c7e62f5a66ae603935e52740bd4edf
+3679fb23a8c7e62f5a66ae603935e52740bd4edf 916e2ebbc35d60657d1665a400fcef90f046c30a JB Stoker <jelmer@ijzershop.nl> 1601017603 +0200	checkout: moving from 3679fb23a8c7e62f5a66ae603935e52740bd4edf to 916e2ebbc35d60657d1665a400fcef90f046c30a
+916e2ebbc35d60657d1665a400fcef90f046c30a 916e2ebbc35d60657d1665a400fcef90f046c30a JB Stoker <jelmer@ijzershop.nl> 1601019280 +0200	checkout: moving from 916e2ebbc35d60657d1665a400fcef90f046c30a to master
+916e2ebbc35d60657d1665a400fcef90f046c30a 99f2588f7b983a48190c17b8d368f581e5253c1b JB Stoker <jelmer@ijzershop.nl> 1601019294 +0200	commit: bugfix
+99f2588f7b983a48190c17b8d368f581e5253c1b 916e2ebbc35d60657d1665a400fcef90f046c30a JB Stoker <jelmer@ijzershop.nl> 1601022232 +0200	checkout: moving from master to 916e2ebbc35d60657d1665a400fcef90f046c30a
+916e2ebbc35d60657d1665a400fcef90f046c30a 99f2588f7b983a48190c17b8d368f581e5253c1b JB Stoker <jelmer@ijzershop.nl> 1601022253 +0200	checkout: moving from 916e2ebbc35d60657d1665a400fcef90f046c30a to 99f2588f7b983a48190c17b8d368f581e5253c1b
+99f2588f7b983a48190c17b8d368f581e5253c1b a3745ba27475879f09799ea339ffab71ee513087 JB Stoker <jelmer@ijzershop.nl> 1601023696 +0200	commit: template bugfixes
+a3745ba27475879f09799ea339ffab71ee513087 a3745ba27475879f09799ea339ffab71ee513087 JB Stoker <jelmer@ijzershop.nl> 1601023708 +0200	checkout: moving from a3745ba27475879f09799ea339ffab71ee513087 to sdfs
+a3745ba27475879f09799ea339ffab71ee513087 99f2588f7b983a48190c17b8d368f581e5253c1b JB Stoker <jelmer@ijzershop.nl> 1601023711 +0200	checkout: moving from sdfs to master
+99f2588f7b983a48190c17b8d368f581e5253c1b a3745ba27475879f09799ea339ffab71ee513087 JB Stoker <jelmer@ijzershop.nl> 1601023715 +0200	merge sdfs: Fast-forward
+a3745ba27475879f09799ea339ffab71ee513087 99f2588f7b983a48190c17b8d368f581e5253c1b JB Stoker <jelmer@ijzershop.nl> 1601023757 +0200	checkout: moving from master to 99f2588f7b983a48190c17b8d368f581e5253c1b
+99f2588f7b983a48190c17b8d368f581e5253c1b a3745ba27475879f09799ea339ffab71ee513087 JB Stoker <jelmer@ijzershop.nl> 1601023768 +0200	checkout: moving from 99f2588f7b983a48190c17b8d368f581e5253c1b to a3745ba27475879f09799ea339ffab71ee513087
+a3745ba27475879f09799ea339ffab71ee513087 a3745ba27475879f09799ea339ffab71ee513087 JB Stoker <jelmer@ijzershop.nl> 1601024322 +0200	checkout: moving from a3745ba27475879f09799ea339ffab71ee513087 to master
+a3745ba27475879f09799ea339ffab71ee513087 4522bb6abd775e55ffea115fb86dee60584e1b9b JB Stoker <jelmer@ijzershop.nl> 1601024341 +0200	commit: vertaling fix
+4522bb6abd775e55ffea115fb86dee60584e1b9b d64f111a2703e71862091f02af43742276366aa0 JB Stoker <jelmer@ijzershop.nl> 1601024995 +0200	commit: bugfiix vertalingen
+d64f111a2703e71862091f02af43742276366aa0 a3745ba27475879f09799ea339ffab71ee513087 JB Stoker <jelmer@ijzershop.nl> 1601025053 +0200	checkout: moving from master to a3745ba27475879f09799ea339ffab71ee513087
+a3745ba27475879f09799ea339ffab71ee513087 d64f111a2703e71862091f02af43742276366aa0 JB Stoker <jelmer@ijzershop.nl> 1601025180 +0200	checkout: moving from a3745ba27475879f09799ea339ffab71ee513087 to master
+d64f111a2703e71862091f02af43742276366aa0 971e6b2c7f53d659c6d532d87963852d80c1057f JB Stoker <jelmer@ijzershop.nl> 1601025201 +0200	commit: fix height icons certaintybar
+971e6b2c7f53d659c6d532d87963852d80c1057f d64f111a2703e71862091f02af43742276366aa0 JB Stoker <jelmer@ijzershop.nl> 1601025240 +0200	checkout: moving from master to d64f111a2703e71862091f02af43742276366aa0
+d64f111a2703e71862091f02af43742276366aa0 971e6b2c7f53d659c6d532d87963852d80c1057f JB Stoker <jelmer@ijzershop.nl> 1601025255 +0200	checkout: moving from d64f111a2703e71862091f02af43742276366aa0 to 971e6b2c7f53d659c6d532d87963852d80c1057f
+971e6b2c7f53d659c6d532d87963852d80c1057f 971e6b2c7f53d659c6d532d87963852d80c1057f JB Stoker <jelmer@ijzershop.nl> 1601028473 +0200	checkout: moving from 971e6b2c7f53d659c6d532d87963852d80c1057f to master
+971e6b2c7f53d659c6d532d87963852d80c1057f 27e3f2be97f9ad8f727c7fa581730aa9e012563a JB Stoker <jelmer@ijzershop.nl> 1601028492 +0200	commit: vertaling mail ons footer
+27e3f2be97f9ad8f727c7fa581730aa9e012563a 971e6b2c7f53d659c6d532d87963852d80c1057f JB Stoker <jelmer@ijzershop.nl> 1601028550 +0200	checkout: moving from master to 971e6b2c7f53d659c6d532d87963852d80c1057f
+971e6b2c7f53d659c6d532d87963852d80c1057f 27e3f2be97f9ad8f727c7fa581730aa9e012563a JB Stoker <jelmer@ijzershop.nl> 1601028563 +0200	checkout: moving from 971e6b2c7f53d659c6d532d87963852d80c1057f to 27e3f2be97f9ad8f727c7fa581730aa9e012563a
+27e3f2be97f9ad8f727c7fa581730aa9e012563a 92bf159a6ff9880d97618e6bf6a702c9ca10f8d2 JB Stoker <jelmer@ijzershop.nl> 1601030417 +0200	commit: footer fix
+92bf159a6ff9880d97618e6bf6a702c9ca10f8d2 92bf159a6ff9880d97618e6bf6a702c9ca10f8d2 JB Stoker <jelmer@ijzershop.nl> 1601030697 +0200	checkout: moving from 92bf159a6ff9880d97618e6bf6a702c9ca10f8d2 to asdasda
+92bf159a6ff9880d97618e6bf6a702c9ca10f8d2 27e3f2be97f9ad8f727c7fa581730aa9e012563a JB Stoker <jelmer@ijzershop.nl> 1601030701 +0200	checkout: moving from asdasda to master
+27e3f2be97f9ad8f727c7fa581730aa9e012563a 92bf159a6ff9880d97618e6bf6a702c9ca10f8d2 JB Stoker <jelmer@ijzershop.nl> 1601030705 +0200	merge asdasda: Fast-forward
+92bf159a6ff9880d97618e6bf6a702c9ca10f8d2 8ec2044efd341649f8d830bfabe3caa3d807ac58 JB Stoker <jelmer@ijzershop.nl> 1601041487 +0200	commit: bugfixes
+8ec2044efd341649f8d830bfabe3caa3d807ac58 27e3f2be97f9ad8f727c7fa581730aa9e012563a JB Stoker <jelmer@ijzershop.nl> 1601041522 +0200	checkout: moving from master to 27e3f2be97f9ad8f727c7fa581730aa9e012563a
+27e3f2be97f9ad8f727c7fa581730aa9e012563a 8ec2044efd341649f8d830bfabe3caa3d807ac58 JB Stoker <jelmer@ijzershop.nl> 1601041537 +0200	checkout: moving from 27e3f2be97f9ad8f727c7fa581730aa9e012563a to 8ec2044efd341649f8d830bfabe3caa3d807ac58
+8ec2044efd341649f8d830bfabe3caa3d807ac58 e86ff6e542653e809d5d93fcf64b328147399336 JB Stoker <jelmer@ijzershop.nl> 1601284921 +0200	commit: delivery address fix
+e86ff6e542653e809d5d93fcf64b328147399336 e86ff6e542653e809d5d93fcf64b328147399336 JB Stoker <jelmer@ijzershop.nl> 1601284940 +0200	checkout: moving from e86ff6e542653e809d5d93fcf64b328147399336 to eeee
+e86ff6e542653e809d5d93fcf64b328147399336 8ec2044efd341649f8d830bfabe3caa3d807ac58 JB Stoker <jelmer@ijzershop.nl> 1601284943 +0200	checkout: moving from eeee to master
+8ec2044efd341649f8d830bfabe3caa3d807ac58 e86ff6e542653e809d5d93fcf64b328147399336 JB Stoker <jelmer@ijzershop.nl> 1601284948 +0200	merge eeee: Fast-forward
+e86ff6e542653e809d5d93fcf64b328147399336 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1601285002 +0200	checkout: moving from master to 81aca935bb05e4305101a6e89efb2233f6c3fec2
+81aca935bb05e4305101a6e89efb2233f6c3fec2 e86ff6e542653e809d5d93fcf64b328147399336 JB Stoker <jelmer@ijzershop.nl> 1601285037 +0200	checkout: moving from 81aca935bb05e4305101a6e89efb2233f6c3fec2 to e86ff6e542653e809d5d93fcf64b328147399336
+e86ff6e542653e809d5d93fcf64b328147399336 81aca935bb05e4305101a6e89efb2233f6c3fec2 JB Stoker <jelmer@ijzershop.nl> 1601285078 +0200	checkout: moving from e86ff6e542653e809d5d93fcf64b328147399336 to 81aca935bb05e4305101a6e89efb2233f6c3fec2
+81aca935bb05e4305101a6e89efb2233f6c3fec2 e86ff6e542653e809d5d93fcf64b328147399336 JB Stoker <jelmer@ijzershop.nl> 1601285107 +0200	checkout: moving from 81aca935bb05e4305101a6e89efb2233f6c3fec2 to e86ff6e542653e809d5d93fcf64b328147399336
+e86ff6e542653e809d5d93fcf64b328147399336 8ec2044efd341649f8d830bfabe3caa3d807ac58 JB Stoker <jelmer@ijzershop.nl> 1601361889 +0200	checkout: moving from e86ff6e542653e809d5d93fcf64b328147399336 to 8ec2044efd341649f8d830bfabe3caa3d807ac58
+8ec2044efd341649f8d830bfabe3caa3d807ac58 e86ff6e542653e809d5d93fcf64b328147399336 JB Stoker <jelmer@ijzershop.nl> 1601361986 +0200	checkout: moving from 8ec2044efd341649f8d830bfabe3caa3d807ac58 to e86ff6e542653e809d5d93fcf64b328147399336
+e86ff6e542653e809d5d93fcf64b328147399336 e86ff6e542653e809d5d93fcf64b328147399336 JB Stoker <jelmer@ijzershop.nl> 1601362145 +0200	checkout: moving from e86ff6e542653e809d5d93fcf64b328147399336 to master
+e86ff6e542653e809d5d93fcf64b328147399336 b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 JB Stoker <jelmer@ijzershop.nl> 1601362151 +0200	pull origin master: Fast-forward
+b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 d9ed76459557b97a1050d06ed3dd508f86c7bf55 JB Stoker <jelmer@ijzershop.nl> 1601379174 +0200	checkout: moving from master to d9ed76459557b97a1050d06ed3dd508f86c7bf55
+d9ed76459557b97a1050d06ed3dd508f86c7bf55 b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 JB Stoker <jelmer@ijzershop.nl> 1601379453 +0200	checkout: moving from d9ed76459557b97a1050d06ed3dd508f86c7bf55 to b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0
+b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 8ec2044efd341649f8d830bfabe3caa3d807ac58 JB Stoker <jelmer@ijzershop.nl> 1601379908 +0200	checkout: moving from b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 to 8ec2044efd341649f8d830bfabe3caa3d807ac58
+8ec2044efd341649f8d830bfabe3caa3d807ac58 b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 JB Stoker <jelmer@ijzershop.nl> 1601379929 +0200	checkout: moving from 8ec2044efd341649f8d830bfabe3caa3d807ac58 to b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0
+b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 JB Stoker <jelmer@ijzershop.nl> 1601634996 +0200	checkout: moving from b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 to master
+b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 fc744787abbe3793b5d6465fdf15b84068171def JB Stoker <jelmer@ijzershop.nl> 1601635003 +0200	pull origin master: Fast-forward
+fc744787abbe3793b5d6465fdf15b84068171def 4c533cdde548985b56f1cfcc642f4f31dfcbcd02 JB Stoker <jelmer@ijzershop.nl> 1601885118 +0200	pull origin master: Fast-forward
+4c533cdde548985b56f1cfcc642f4f31dfcbcd02 a713eeaf924234b4548c5f2bc01277a990c97063 JB Stoker <jelmer@ijzershop.nl> 1601895783 +0200	pull origin master: Fast-forward
+a713eeaf924234b4548c5f2bc01277a990c97063 e86ff6e542653e809d5d93fcf64b328147399336 JB Stoker <jelmer@ijzershop.nl> 1601896144 +0200	checkout: moving from master to e86ff6e542653e809d5d93fcf64b328147399336
+e86ff6e542653e809d5d93fcf64b328147399336 a713eeaf924234b4548c5f2bc01277a990c97063 JB Stoker <jelmer@ijzershop.nl> 1601896175 +0200	checkout: moving from e86ff6e542653e809d5d93fcf64b328147399336 to a713eeaf924234b4548c5f2bc01277a990c97063
+a713eeaf924234b4548c5f2bc01277a990c97063 37b011c61d7843982a061f0df87d4047f2b50eba JB Stoker <jelmer@ijzershop.nl> 1602568506 +0200	checkout: moving from a713eeaf924234b4548c5f2bc01277a990c97063 to 37b011c61d7843982a061f0df87d4047f2b50eba
+37b011c61d7843982a061f0df87d4047f2b50eba b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 JB Stoker <jelmer@ijzershop.nl> 1602568544 +0200	checkout: moving from 37b011c61d7843982a061f0df87d4047f2b50eba to b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0
+b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 a713eeaf924234b4548c5f2bc01277a990c97063 JB Stoker <jelmer@ijzershop.nl> 1602569013 +0200	checkout: moving from b211434b8d4940239ec57ed9c6f6cd2ed0bf8ea0 to master
+a713eeaf924234b4548c5f2bc01277a990c97063 1177afe34312f27b11982c299f27a483126de801 JB Stoker <jelmer@ijzershop.nl> 1602569020 +0200	pull origin master: Fast-forward
+1177afe34312f27b11982c299f27a483126de801 45118cf40dbdf03a83830200a246b9312d7bfe9c JB Stoker <jelmer@ijzershop.nl> 1602830252 +0200	commit: theme updates and bugfixes stock managemnet
+45118cf40dbdf03a83830200a246b9312d7bfe9c df8e31e4d847dac3bce4edaecfed4ac0c9da28d8 JB Stoker <jelmer@ijzershop.nl> 1602834538 +0200	commit: filters css fixes, bugfix show all products
+df8e31e4d847dac3bce4edaecfed4ac0c9da28d8 043a4a82cfb99f03fc1fb73b1e8d178cf9c722a1 JB Stoker <jelmer@ijzershop.nl> 1602837292 +0200	commit: added flag to staffel button
+043a4a82cfb99f03fc1fb73b1e8d178cf9c722a1 ec19db37f16ff0603d69986977080993962f0636 JB Stoker <jelmer@ijzershop.nl> 1602837689 +0200	commit: small column bugfix
+ec19db37f16ff0603d69986977080993962f0636 65b67904c8bec6aea335c5a589bb2e051b1f7ebd JB Stoker <jelmer@ijzershop.nl> 1602854255 +0200	commit: theme updates and bugfixes
+65b67904c8bec6aea335c5a589bb2e051b1f7ebd 83400e1b5b7112956ed964ae563e42e1f12bd047 JB Stoker <jelmer@ijzershop.nl> 1602854435 +0200	commit: bugfix
+83400e1b5b7112956ed964ae563e42e1f12bd047 ada0bc80116225e48ce6c79ed091f1be8e9dfdd1 JB Stoker <jelmer@ijzershop.nl> 1602858113 +0200	commit: no shipping on loggedin prfile
+ada0bc80116225e48ce6c79ed091f1be8e9dfdd1 baf85fabe06c0e3992ef9dc53c3fd65e7350597b JB Stoker <jelmer@ijzershop.nl> 1603176044 +0200	commit: customer email validation fix
+baf85fabe06c0e3992ef9dc53c3fd65e7350597b 0e8526e2d008f2594ede1fcfd1b0948d26710467 JB Stoker <jelmer@ijzershop.nl> 1603197578 +0200	commit: template fixes
+0e8526e2d008f2594ede1fcfd1b0948d26710467 bce9642b397fb0ba72a4f0f0fca8f1b2ed406831 JB Stoker <jelmer@ijzershop.nl> 1603202413 +0200	commit: bugfixes and stock usage updates
+bce9642b397fb0ba72a4f0f0fca8f1b2ed406831 ada0bc80116225e48ce6c79ed091f1be8e9dfdd1 JB Stoker <jelmer@ijzershop.nl> 1603202720 +0200	checkout: moving from master to ada0bc80116225e48ce6c79ed091f1be8e9dfdd1
+ada0bc80116225e48ce6c79ed091f1be8e9dfdd1 bce9642b397fb0ba72a4f0f0fca8f1b2ed406831 JB Stoker <jelmer@ijzershop.nl> 1603202747 +0200	checkout: moving from ada0bc80116225e48ce6c79ed091f1be8e9dfdd1 to bce9642b397fb0ba72a4f0f0fca8f1b2ed406831
+bce9642b397fb0ba72a4f0f0fca8f1b2ed406831 d2a4f2bbc61104e9c0966e0587b7ede877f5848c JB Stoker <jelmer@ijzershop.nl> 1603366806 +0200	commit: file upload show upload image bugfix
+d2a4f2bbc61104e9c0966e0587b7ede877f5848c d2a4f2bbc61104e9c0966e0587b7ede877f5848c JB Stoker <jelmer@ijzershop.nl> 1603366819 +0200	checkout: moving from d2a4f2bbc61104e9c0966e0587b7ede877f5848c to ededee
+d2a4f2bbc61104e9c0966e0587b7ede877f5848c bce9642b397fb0ba72a4f0f0fca8f1b2ed406831 JB Stoker <jelmer@ijzershop.nl> 1603366822 +0200	checkout: moving from ededee to master
+bce9642b397fb0ba72a4f0f0fca8f1b2ed406831 d2a4f2bbc61104e9c0966e0587b7ede877f5848c JB Stoker <jelmer@ijzershop.nl> 1603366834 +0200	merge ededee: Fast-forward
+d2a4f2bbc61104e9c0966e0587b7ede877f5848c bce9642b397fb0ba72a4f0f0fca8f1b2ed406831 JB Stoker <jelmer@ijzershop.nl> 1603366902 +0200	checkout: moving from master to bce9642b397fb0ba72a4f0f0fca8f1b2ed406831
+bce9642b397fb0ba72a4f0f0fca8f1b2ed406831 d2a4f2bbc61104e9c0966e0587b7ede877f5848c JB Stoker <jelmer@ijzershop.nl> 1603366917 +0200	checkout: moving from bce9642b397fb0ba72a4f0f0fca8f1b2ed406831 to d2a4f2bbc61104e9c0966e0587b7ede877f5848c
+d2a4f2bbc61104e9c0966e0587b7ede877f5848c d2a4f2bbc61104e9c0966e0587b7ede877f5848c JB Stoker <jelmer@ijzershop.nl> 1603441304 +0200	checkout: moving from d2a4f2bbc61104e9c0966e0587b7ede877f5848c to master
+d2a4f2bbc61104e9c0966e0587b7ede877f5848c 98e6bae316aa5473aaa8abe4ea9bd87118a9eee2 JB Stoker <jelmer@ijzershop.nl> 1603536747 +0200	commit: added start searchbar button
+98e6bae316aa5473aaa8abe4ea9bd87118a9eee2 452cc4fcd0e57dab8182ecb76dad9edb51b586c4 JB Stoker <jelmer@ijzershop.nl> 1603707602 +0100	commit: searchbar update
+452cc4fcd0e57dab8182ecb76dad9edb51b586c4 bce119003b5a1fe717ea8d54d5bd875b244c9c41 JB Stoker <jelmer@ijzershop.nl> 1603715277 +0100	commit: update op email templates
+bce119003b5a1fe717ea8d54d5bd875b244c9c41 138ade1ea62c2f575fc557fc621142623a00b761 JB Stoker <jelmer@ijzershop.nl> 1604064130 +0100	commit: added order print after checkout
+138ade1ea62c2f575fc557fc621142623a00b761 bce119003b5a1fe717ea8d54d5bd875b244c9c41 JB Stoker <jelmer@ijzershop.nl> 1604064177 +0100	checkout: moving from master to bce119003b5a1fe717ea8d54d5bd875b244c9c41
+bce119003b5a1fe717ea8d54d5bd875b244c9c41 138ade1ea62c2f575fc557fc621142623a00b761 JB Stoker <jelmer@ijzershop.nl> 1604064192 +0100	checkout: moving from bce119003b5a1fe717ea8d54d5bd875b244c9c41 to 138ade1ea62c2f575fc557fc621142623a00b761
+138ade1ea62c2f575fc557fc621142623a00b761 439f592d3f7ba1db2412ea82aead9d5260d90d5e JB Stoker <jelmer@ijzershop.nl> 1604327224 +0100	pull origin master: Fast-forward
+439f592d3f7ba1db2412ea82aead9d5260d90d5e bda5d6596db0d79e99b72caa0ca8e79a1bc4791f JB Stoker <jelmer@ijzershop.nl> 1604327260 +0100	commit: head fix
+bda5d6596db0d79e99b72caa0ca8e79a1bc4791f bda5d6596db0d79e99b72caa0ca8e79a1bc4791f JB Stoker <jelmer@ijzershop.nl> 1604327269 +0100	checkout: moving from bda5d6596db0d79e99b72caa0ca8e79a1bc4791f to hhhh
+bda5d6596db0d79e99b72caa0ca8e79a1bc4791f 138ade1ea62c2f575fc557fc621142623a00b761 JB Stoker <jelmer@ijzershop.nl> 1604327272 +0100	checkout: moving from hhhh to master
+138ade1ea62c2f575fc557fc621142623a00b761 bda5d6596db0d79e99b72caa0ca8e79a1bc4791f JB Stoker <jelmer@ijzershop.nl> 1604327276 +0100	merge hhhh: Fast-forward
+bda5d6596db0d79e99b72caa0ca8e79a1bc4791f fffb498b5150cc4aad60c71f430c93d3267721cf JB Stoker <jelmer@ijzershop.nl> 1604487690 +0100	pull origin master: Fast-forward
+fffb498b5150cc4aad60c71f430c93d3267721cf 4458df9fc0afbe7bbe01d7167fa7ff8143ee716d JB Stoker <jelmer@ijzershop.nl> 1604501436 +0100	commit: theme update when modules are disabled
+4458df9fc0afbe7bbe01d7167fa7ff8143ee716d f10171897d34a5a5f38751c0590760ca6a2f5605 JB Stoker <jelmer@ijzershop.nl> 1604501730 +0100	commit: bugfix
+f10171897d34a5a5f38751c0590760ca6a2f5605 caeed5eeb76b1304de3da130e3c74f47db69c457 JB Stoker <jelmer@ijzershop.nl> 1604501922 +0100	commit: bugfix
+caeed5eeb76b1304de3da130e3c74f47db69c457 c7c3788ef3a1b56a0e48d386ee06bd36cb412dbf JB Stoker <jelmer@ijzershop.nl> 1604504434 +0100	commit: added custom product
+c7c3788ef3a1b56a0e48d386ee06bd36cb412dbf d378d4124ed667097d2d4d01a092d93ca006bcfb JB Stoker <jelmer@ijzershop.nl> 1604669299 +0100	commit: theme updates
+d378d4124ed667097d2d4d01a092d93ca006bcfb 1dfb0495903920e3386265bc0308e655fbd1676d JB Stoker <jelmer@ijzershop.nl> 1604910400 +0100	commit: Category image fix
+1dfb0495903920e3386265bc0308e655fbd1676d 6e3b571dafc67e095191b49cc256b18abef528e2 JB Stoker <jelmer@ijzershop.nl> 1605007434 +0100	commit: module update
+6e3b571dafc67e095191b49cc256b18abef528e2 da64cf0427001d15bdbea30ef90a924b6de78015 JB Stoker <jelmer@ijzershop.nl> 1605251563 +0100	commit: added maxlength shipping text
+da64cf0427001d15bdbea30ef90a924b6de78015 ea10b6e50a4da7fc3fe4d1ec5e10244ab0864b5c JB Stoker <jelmer@ijzershop.nl> 1605251729 +0100	commit (merge): Merge branch 'master' of github.com:ijzershop/modernesmid-theme
+ea10b6e50a4da7fc3fe4d1ec5e10244ab0864b5c 7019906f532d88db470e61e6b31542145612e299 JB Stoker <jelmer@ijzershop.nl> 1605274139 +0100	pull origin master: Fast-forward
+7019906f532d88db470e61e6b31542145612e299 4a662bf3924a81b40fa2dfcd557f9ff62f37433f JB Stoker <jelmer@ijzershop.nl> 1605275211 +0100	commit: email template updates
+4a662bf3924a81b40fa2dfcd557f9ff62f37433f 5b8cf8daf98a528cca2914f93abb14355d3c0c4c JB Stoker <jelmer@ijzershop.nl> 1605704281 +0100	commit: bugfixes schema.org & added responsive filemanager to tinyMce
+5b8cf8daf98a528cca2914f93abb14355d3c0c4c a61abdf164b45ef2d7efd8f9bed0d353507f7b2b JB Stoker <jelmer@ijzershop.nl> 1605712298 +0100	commit: contact fom fixes
+a61abdf164b45ef2d7efd8f9bed0d353507f7b2b 99f98343e935a4be47212fb13868fb0bec7069df JB Stoker <jelmer@ijzershop.nl> 1605855011 +0100	commit: theme update
+99f98343e935a4be47212fb13868fb0bec7069df d9ed76459557b97a1050d06ed3dd508f86c7bf55 JB Stoker <jelmer@ijzershop.nl> 1605859523 +0100	checkout: moving from master to d9ed76459557b97a1050d06ed3dd508f86c7bf55
+d9ed76459557b97a1050d06ed3dd508f86c7bf55 99f98343e935a4be47212fb13868fb0bec7069df JB Stoker <jelmer@ijzershop.nl> 1605859897 +0100	checkout: moving from d9ed76459557b97a1050d06ed3dd508f86c7bf55 to 99f98343e935a4be47212fb13868fb0bec7069df
+99f98343e935a4be47212fb13868fb0bec7069df 99f98343e935a4be47212fb13868fb0bec7069df JB Stoker <jelmer@ijzershop.nl> 1606123248 +0100	checkout: moving from 99f98343e935a4be47212fb13868fb0bec7069df to master
+99f98343e935a4be47212fb13868fb0bec7069df 13bc23c5951426b6adc5bcab81f104702dc75294 JB Stoker <jelmer@ijzershop.nl> 1606123276 +0100	commit: bugfixes shopping cart
+13bc23c5951426b6adc5bcab81f104702dc75294 daad965fa4c4f46f1872c655ae52783fbff06397 JB Stoker <jelmer@ijzershop.nl> 1606127942 +0100	commit: bugfix
+daad965fa4c4f46f1872c655ae52783fbff06397 6e03b2bec7f8c4ef59e578c8d9ac6e3b29f0f4bd JB Stoker <jelmer@ijzershop.nl> 1606298400 +0100	commit: theme bugfixes
+6e03b2bec7f8c4ef59e578c8d9ac6e3b29f0f4bd 65953987f0510c155c31b7e79520eba3049f6870 JB Stoker <jelmer@ijzershop.nl> 1606309457 +0100	commit: preload images
+65953987f0510c155c31b7e79520eba3049f6870 182e0ab2a27673633fd8486c877c52fe4acf21bc JB Stoker <jelmer@ijzershop.nl> 1606311829 +0100	commit: theme bugfix
+182e0ab2a27673633fd8486c877c52fe4acf21bc c7203b3ff5210138358d5b51b6217dbb2ec5e920 JB Stoker <jelmer@ijzershop.nl> 1606316963 +0100	commit: added local analitics with crnojob
+c7203b3ff5210138358d5b51b6217dbb2ec5e920 788ed2c0088bbd01277a5882cc309482d215adeb JB Stoker <jelmer@ijzershop.nl> 1606317503 +0100	commit: analitycs path bugfix
+788ed2c0088bbd01277a5882cc309482d215adeb f8477a25bd8cb623d97987d04cb0754254e34b96 JB Stoker <jelmer@ijzershop.nl> 1606476628 +0100	commit: change technical description to features list
+f8477a25bd8cb623d97987d04cb0754254e34b96 e54455adca5382713e7bba7000aef3dfa6393e8a JB Stoker <jelmer@ijzershop.nl> 1606913228 +0100	commit: bugfixes and theme update
+e54455adca5382713e7bba7000aef3dfa6393e8a ca83e57169480789959e8cd4b5c03484deb7faae JB Stoker <jelmer@ijzershop.nl> 1606924030 +0100	commit: theme update
+ca83e57169480789959e8cd4b5c03484deb7faae b436cb21ea6baaa192cc3981f4938e0a9e078709 JB Stoker <jelmer@ijzershop.nl> 1607086918 +0100	commit: theme update payment fixes
+b436cb21ea6baaa192cc3981f4938e0a9e078709 3e0da889f2638e3128cc789791019acf015fb868 JB Stoker <jelmer@ijzershop.nl> 1607422018 +0100	commit: filterbar update
+3e0da889f2638e3128cc789791019acf015fb868 b242b5a0101350f9d542685ce29b57414fb0b9ff JB Stoker <jelmer@ijzershop.nl> 1607497709 +0100	commit: theme update
+b242b5a0101350f9d542685ce29b57414fb0b9ff 992e6d8cf22b091f0d22018e3830576a377eebe6 JB Stoker <jelmer@ijzershop.nl> 1607506483 +0100	commit: sawcut attribute removed from order validation
+992e6d8cf22b091f0d22018e3830576a377eebe6 124e0eed3f24cba5053725fe468ea1b85a6fa9bb JB Stoker <jelmer@ijzershop.nl> 1607506962 +0100	commit: Theme update
+124e0eed3f24cba5053725fe468ea1b85a6fa9bb ecb5ea03896cd7590e7cd62b7a64bb90b884d4a3 JB Stoker <jelmer@ijzershop.nl> 1607507179 +0100	commit: bugdix
+ecb5ea03896cd7590e7cd62b7a64bb90b884d4a3 a3690f8917c894e00a4b0b1fb3f033de6a87562a JB Stoker <jelmer@ijzershop.nl> 1607678377 +0100	commit: updated small image to medium
+a3690f8917c894e00a4b0b1fb3f033de6a87562a 09bd84221b7008e13d45950c8fface858efa1981 JB Stoker <jelmer@ijzershop.nl> 1607681826 +0100	commit: removed voucher inlcude checkout
+09bd84221b7008e13d45950c8fface858efa1981 27d97a6314c9802e2e0122d79ef3b175339f02ad JB Stoker <jelmer@ijzershop.nl> 1607943374 +0100	commit: bugfix koopmanss
+27d97a6314c9802e2e0122d79ef3b175339f02ad e302ee5a5fef91e13a303465b66cfa06ebfa2eb2 JB Stoker <jelmer@ijzershop.nl> 1607968887 +0100	commit: delivery pdf bugfixes
+e302ee5a5fef91e13a303465b66cfa06ebfa2eb2 d294352f1b770b19b3391b058160caa5c9d7fdf5 JB Stoker <jelmer@ijzershop.nl> 1608104883 +0100	commit: delivery slip pdf update
+d294352f1b770b19b3391b058160caa5c9d7fdf5 952d215587d89aafdfe04159f12cb36b682178cc JB Stoker <jelmer@ijzershop.nl> 1608112572 +0100	commit: bugfix customization
+952d215587d89aafdfe04159f12cb36b682178cc 5e4a27ef69724c5112e96fa27874ed2496d0ca23 JB Stoker <jelmer@ijzershop.nl> 1608282762 +0100	commit: no message
+5e4a27ef69724c5112e96fa27874ed2496d0ca23 b313fa3674c865895e0ccb799a1f71c101c4ce83 JB Stoker <jelmer@ijzershop.nl> 1608299258 +0100	commit: bugfix new addtrress validation in my-account
+b313fa3674c865895e0ccb799a1f71c101c4ce83 77f74d159d637275c276af551b737dc95d620b88 JB Stoker <jelmer@ijzershop.nl> 1610107964 +0100	commit: order detail bugfix
+77f74d159d637275c276af551b737dc95d620b88 020678464dfa6c4dca6cf39117ae3a38a45cbc63 JB Stoker <jelmer@ijzershop.nl> 1611135542 +0100	commit: template update
+020678464dfa6c4dca6cf39117ae3a38a45cbc63 f784ef01ff84f18117688e91257591517d39cff5 JB Stoker <jelmer@ijzershop.nl> 1611137064 +0100	commit: bugfix shipping/pickup switch missing $ sign @ variable
+f784ef01ff84f18117688e91257591517d39cff5 def37d573eecc6ff9443af5c0bb0d2537169fcfd JB Stoker <jelmer@ijzershop.nl> 1611144802 +0100	commit: shoppingcart jquery bugfix wrong selector
+def37d573eecc6ff9443af5c0bb0d2537169fcfd b1bef6b8da64d87d1e2fc0ffb066aacda880f702 JB Stoker <jelmer@ijzershop.nl> 1611306148 +0100	commit: template updates
+b1bef6b8da64d87d1e2fc0ffb066aacda880f702 a207806855d0f16a999633d9b26a5609dbcb13dc JB Stoker <jelmer@ijzershop.nl> 1611308738 +0100	commit: theme update shoppingcart module
+a207806855d0f16a999633d9b26a5609dbcb13dc 49ccd86aed81fe9208f3f50159b6a7d20639ec0a JB Stoker <jelmer@ijzershop.nl> 1611736453 +0100	commit: module updates
+49ccd86aed81fe9208f3f50159b6a7d20639ec0a 8245893a66d2ab1a5d810ca72555cf6c4dff7b5b JB Stoker <jelmer@ijzershop.nl> 1611905081 +0100	commit: staffel change input bugfix
+8245893a66d2ab1a5d810ca72555cf6c4dff7b5b 8a31f1f50b9fd7aed07e5f129f6a27919f94514f JB Stoker <jelmer@ijzershop.nl> 1611924954 +0100	commit: bugfix product aantal in -
+8a31f1f50b9fd7aed07e5f129f6a27919f94514f 1283013b3f2151c2c3f11c2d0daf8d345e8e17db JB Stoker <jelmer@ijzershop.nl> 1611925233 +0100	commit: max qty bugfix
+1283013b3f2151c2c3f11c2d0daf8d345e8e17db f0a7bc0b2a81569de6228bb9cfb20d63a951874a JB Stoker <jelmer@ijzershop.nl> 1612352559 +0100	commit: added array check
+f0a7bc0b2a81569de6228bb9cfb20d63a951874a 1de3af2938d0a1f7273ebaef4036ad04ba5c84a5 JB Stoker <jelmer@ijzershop.nl> 1612959751 +0100	commit: bugfix add2order in shoppingcart
+1de3af2938d0a1f7273ebaef4036ad04ba5c84a5 7a08836ecf61439dbde954c3a08c63a47574172e JB Stoker <jelmer@ijzershop.nl> 1612960050 +0100	commit: Afhaal adres op bon gewijzigd naar ceresweg 1
+7a08836ecf61439dbde954c3a08c63a47574172e 30241eb33dbc87bc5846c59202063f696e626afc JB Stoker <jelmer@ijzershop.nl> 1614153457 +0100	commit: small bugfix
+30241eb33dbc87bc5846c59202063f696e626afc 99fa411dd29e3f8b60d4576b478084c3fae70cdf JB Stoker <jelmer@ijzershop.nl> 1614157582 +0100	commit: Module overide update
+99fa411dd29e3f8b60d4576b478084c3fae70cdf 6af622629794ea5d0938e62ba93116a9832d592b JB Stoker <jelmer@ijzershop.nl> 1614159985 +0100	commit: bufix location template files mollie
+6af622629794ea5d0938e62ba93116a9832d592b 943b5b98a6cbabb50bd4325222cf4fe39cebd5f0 JB Stoker <jelmer@ijzershop.nl> 1614675560 +0100	commit: bugfix temp for email invoice
+943b5b98a6cbabb50bd4325222cf4fe39cebd5f0 45bef85d1f2c51ebb3a5c1c3acbc4f280809c793 JB Stoker <jelmer@ijzershop.nl> 1614675573 +0100	pull origin master: Merge made by the 'recursive' strategy.
+45bef85d1f2c51ebb3a5c1c3acbc4f280809c793 601d50f4508ebd40f4b0cc7d162f68da96a3f411 JB Stoker <jelmer@ijzershop.nl> 1615291000 +0100	commit: bigfix onlick event searchbar in firefox
+601d50f4508ebd40f4b0cc7d162f68da96a3f411 a579a28fd51cadd6cf8677c1472b22b71a2c3f1f JB Stoker <jelmer@ijzershop.nl> 1615292072 +0100	commit: breadcrumb microdata bugfix
+a579a28fd51cadd6cf8677c1472b22b71a2c3f1f 39fcb86ed9a94addd2511ed60c5e9bdfd059e6d0 JB Stoker <jelmer@ijzershop.nl> 1615292083 +0100	commit (amend): breadcrumb microdata bugfix
+39fcb86ed9a94addd2511ed60c5e9bdfd059e6d0 4404e4c8c31375e297b1fe8276281879be76e7ea JB Stoker <jelmer@ijzershop.nl> 1615366412 +0100	commit: schema.org updates
+4404e4c8c31375e297b1fe8276281879be76e7ea 0fde27f8414b6260aa26c658c13724a7e5aed679 JB Stoker <jelmer@ijzershop.nl> 1615366418 +0100	pull origin master: Merge made by the 'recursive' strategy.
+0fde27f8414b6260aa26c658c13724a7e5aed679 6db7a4c421c5ea20729875a26c230253fdd1f63f JB Stoker <jelmer@ijzershop.nl> 1615367130 +0100	commit: schema.org price bugfix
+6db7a4c421c5ea20729875a26c230253fdd1f63f 79f7b357b578befc3f219b99af4d0ebe9f48325f JB Stoker <jelmer@ijzershop.nl> 1617699876 +0200	pull origin master: Fast-forward
+79f7b357b578befc3f219b99af4d0ebe9f48325f d930309dd1c523f807db41417738930e4c1d6efe JB Stoker <jelmer@ijzershop.nl> 1617709096 +0200	commit: small updates and bugfixes shoppingcart and product list
+d930309dd1c523f807db41417738930e4c1d6efe f6073b74537921af6e81f799e4876a47446b62fb JB Stoker <jelmer@ijzershop.nl> 1617713105 +0200	commit: small bugfixes
+f6073b74537921af6e81f799e4876a47446b62fb 4de4b3a0ec8a201b33a56502ba2ff318247f8a6a JB Stoker <jelmer@ijzershop.nl> 1617798172 +0200	commit: bugfix dinamic product and customization in shoppingcart
+4de4b3a0ec8a201b33a56502ba2ff318247f8a6a bc7f5526ef03a1a24f03a7a86cb881354191b478 JB Stoker <jelmer@ijzershop.nl> 1617801372 +0200	pull origin master: Fast-forward
+bc7f5526ef03a1a24f03a7a86cb881354191b478 28a2353e14bc77cdbaecfb78abf671c251316c83 JB Stoker <jelmer@ijzershop.nl> 1618312044 +0200	commit: Thema vakken zekerheden en footer optie voor de-/activeren toegevoegd
+28a2353e14bc77cdbaecfb78abf671c251316c83 28a2353e14bc77cdbaecfb78abf671c251316c83 JB Stoker <jelmer@ijzershop.nl> 1618383531 +0200	checkout: moving from master to one_page_checkout_1
+28a2353e14bc77cdbaecfb78abf671c251316c83 28a2353e14bc77cdbaecfb78abf671c251316c83 JB Stoker <jelmer@ijzershop.nl> 1618410588 +0200	checkout: moving from one_page_checkout_1 to master
+28a2353e14bc77cdbaecfb78abf671c251316c83 79d74570a6f291f023579855e3973104ce72a82f JB Stoker <jelmer@ijzershop.nl> 1620203327 +0200	commit: thme update and shoppingcart edit
+79d74570a6f291f023579855e3973104ce72a82f d37dc866799388e93e28ac3079cb6483a9c5bb5d JB Stoker <jelmer@ijzershop.nl> 1620218714 +0200	commit: small thme updates
+d37dc866799388e93e28ac3079cb6483a9c5bb5d a4402975f7d45b19a9da4927c82307ff2f542739 JB Stoker <jelmer@ijzershop.nl> 1620375687 +0200	commit: small updates checkout
+a4402975f7d45b19a9da4927c82307ff2f542739 10563b75cc0bfa00ea2c198e8fc6bcc654d9b221 JB Stoker <jelmer@ijzershop.nl> 1621242921 +0200	commit: one page checkout bugfixes and updates
+10563b75cc0bfa00ea2c198e8fc6bcc654d9b221 06b700146e13c94bd0d6328d9d7e98ce46da2074 JB Stoker <jelmer@ijzershop.nl> 1621423547 +0200	commit: update theme
+06b700146e13c94bd0d6328d9d7e98ce46da2074 58945e72b90fe28ab302557c910127ff5e4e8c3c JB Stoker <jelmer@ijzershop.nl> 1621589357 +0200	commit: .ie bugfixes
+58945e72b90fe28ab302557c910127ff5e4e8c3c ba33bc61208a6c2cbf304507d06a1e79c2a89dbd JB Stoker <jelmer@ijzershop.nl> 1621602711 +0200	commit: guest order checking show notifications
+ba33bc61208a6c2cbf304507d06a1e79c2a89dbd c42a8669f2b87db0dfcfd3aa1c2b1e1667302391 JB Stoker <jelmer@ijzershop.nl> 1622010255 +0200	commit: mails update
+c42a8669f2b87db0dfcfd3aa1c2b1e1667302391 a28e0e75578ef1899928ea6394b16f0ca1624fa6 JB Stoker <jelmer@ijzershop.nl> 1622029222 +0200	commit: bugfix mijn account
+a28e0e75578ef1899928ea6394b16f0ca1624fa6 7b0b73693fb8e1fa03c278a4b8b059fa2a3a0dd3 JB Stoker <jelmer@ijzershop.nl> 1622105500 +0200	commit: bugfix address validatie
+7b0b73693fb8e1fa03c278a4b8b059fa2a3a0dd3 9d4072f749f693a40ec48b062fe7bacc177893e7 JB Stoker <jelmer@ijzershop.nl> 1622451957 +0200	commit: Added notification to checkout
+9d4072f749f693a40ec48b062fe7bacc177893e7 a3ea26d4c7f573bb03d145febcbb91f71e9731de JB Stoker <jelmer@ijzershop.nl> 1622795737 +0200	commit: manifest link added to header.
+a3ea26d4c7f573bb03d145febcbb91f71e9731de 7a19c8cb77d23dbbec3ed861c1be987d3bc9c990 JB Stoker <jelmer@ijzershop.nl> 1622807076 +0200	pull origin master: Fast-forward
+7a19c8cb77d23dbbec3ed861c1be987d3bc9c990 9a6b4a5439b772650b55296e4ae50f42fa510c5b JB Stoker <jelmer@ijzershop.nl> 1625644330 +0200	commit: big update
+9a6b4a5439b772650b55296e4ae50f42fa510c5b 5818ddeca5973d74eab972f9397f8bfe48f65b92 JB Stoker <jelmer@ijzershop.nl> 1627027819 +0200	commit: small bugfixes, schema.org updates and checkout modification
+5818ddeca5973d74eab972f9397f8bfe48f65b92 026bb590ee4e4979f3ad31fde40cca6aec468c62 JB Stoker <jelmer@ijzershop.nl> 1627452011 +0200	commit: update
+026bb590ee4e4979f3ad31fde40cca6aec468c62 6133846c38a0fd667942fa6b67f525d6fa81181a JB Stoker <jelmer@ijzershop.nl> 1627465756 +0200	commit: bugfix customer form
+6133846c38a0fd667942fa6b67f525d6fa81181a 23e7ff8306f8c0ea2433d8897a0bb97ea7e47bfa JB Stoker <jelmer@ijzershop.nl> 1627542646 +0200	commit: Added shipping to order confirmation
+23e7ff8306f8c0ea2433d8897a0bb97ea7e47bfa 2c9eac7f16da3e6f204c564c8c850e5c328a44ed JB Stoker <jelmer@ijzershop.nl> 1627626851 +0200	commit: bugfixes product template
+2c9eac7f16da3e6f204c564c8c850e5c328a44ed f7e3a2a42733754d4e7a977c418d15d0ed3ffc5e JB Stoker <jelmer@ijzershop.nl> 1627630993 +0200	commit: added button register to order confirmation screen
+f7e3a2a42733754d4e7a977c418d15d0ed3ffc5e d9ac17c21d487508bcff067eb8c47939d30d9009 JB Stoker <jelmer@ijzershop.nl> 1629275016 +0200	commit: bugfixes and updates
+d9ac17c21d487508bcff067eb8c47939d30d9009 40c055c42284fbfe6459889d16c7db02a312afb2 JB Stoker <jelmer@ijzershop.nl> 1629276932 +0200	commit: remove description title
+40c055c42284fbfe6459889d16c7db02a312afb2 ce66adb1184e0a8df8d6026003ab6eea24435cfc JB Stoker <jelmer@ijzershop.nl> 1629295568 +0200	commit: toeveogen bugfix
+ce66adb1184e0a8df8d6026003ab6eea24435cfc cce54bd6be7302b3e5e0ad7b5463f8a4c5d9ca83 JB Stoker <jelmer@ijzershop.nl> 1629448060 +0200	commit: bugfix vooraad beheer
+cce54bd6be7302b3e5e0ad7b5463f8a4c5d9ca83 adbdbcd31c081d74984fb185769f8ca2938d5f58 JB Stoker <jelmer@ijzershop.nl> 1629466631 +0200	commit: offer template update
+adbdbcd31c081d74984fb185769f8ca2938d5f58 41d2adccb440941d8b2036a25d4cba6dd3e1c2be JB Stoker <jelmer@ijzershop.nl> 1629883545 +0200	commit: main bugfix
+41d2adccb440941d8b2036a25d4cba6dd3e1c2be 600976b8e369cde421b7bb2043ced6d88edcbe9b JB Stoker <jelmer@ijzershop.nl> 1630044757 +0200	commit: udate
+600976b8e369cde421b7bb2043ced6d88edcbe9b eed10dcfaf4bb21adaf62376bd8dda3e68ea5362 JB Stoker <jelmer@ijzershop.nl> 1630474597 +0200	commit: notification update || nofilter + editor
+eed10dcfaf4bb21adaf62376bd8dda3e68ea5362 acfaae812a166e0582c223e749ff535df022b59a JB Stoker <jelmer@ijzershop.nl> 1630498858 +0200	commit: theme update
+acfaae812a166e0582c223e749ff535df022b59a 724eb567573e7f8672e001b161e1f89e3578d1e4 JB Stoker <jelmer@ijzershop.nl> 1631266828 +0200	commit: removed no follow
+724eb567573e7f8672e001b161e1f89e3578d1e4 ae14b614ee21fb649af9f6acee89cb681551e217 JB Stoker <jelmer@ijzershop.nl> 1632311279 +0200	commit: updates on cart custom product and several bgfixes
+ae14b614ee21fb649af9f6acee89cb681551e217 6eb343f3958336c5d53a76312d970850b1b8a963 JB Stoker <jelmer@ijzershop.nl> 1632317670 +0200	commit: tinymce frontend url bugfix
+6eb343f3958336c5d53a76312d970850b1b8a963 48579fbcc2f2368731fa6eb7a63d95d4d16818b7 JB Stoker <jelmer@ijzershop.nl> 1632320794 +0200	commit: pdf updates
+48579fbcc2f2368731fa6eb7a63d95d4d16818b7 37777068f110b16958a472446e2ff089a808d366 JB Stoker <jelmer@ijzershop.nl> 1632483699 +0200	commit: update contact forms added text to conf module
+37777068f110b16958a472446e2ff089a808d366 2c8db1999f6dba347ae0a0f9f7bb49785b5ff096 JB Stoker <jelmer@ijzershop.nl> 1632826722 +0200	commit: order-detail update
+2c8db1999f6dba347ae0a0f9f7bb49785b5ff096 a5922355771a7c0aac9b4705ff00a595229d8d8b JB Stoker <jelmer@ijzershop.nl> 1632915472 +0200	commit: free order state bugfixes
+a5922355771a7c0aac9b4705ff00a595229d8d8b e1b91d0ce83a0a31ce139866d273fca74bdaae89 JB Stoker <jelmer@ijzershop.nl> 1632919034 +0200	commit: update
+e1b91d0ce83a0a31ce139866d273fca74bdaae89 2d26b2f2abea66d40f39a24d952b44dbb529ac9e JB Stoker <jelmer@ijzershop.nl> 1633075969 +0200	commit: start adding discounts to invoice
+2d26b2f2abea66d40f39a24d952b44dbb529ac9e afda45bfb8900de2eac540033db0724a6fbc47ea JB Stoker <jelmer@ijzershop.nl> 1633082513 +0200	commit: .
+afda45bfb8900de2eac540033db0724a6fbc47ea 42541f6c34cd7f161bc29df45762a0a770296028 JB Stoker <jelmer@ijzershop.nl> 1633091796 +0200	commit: bugfix flyimage on mobile
+42541f6c34cd7f161bc29df45762a0a770296028 69799caeecbfec1f795f8fc6d9564e683a067227 JB Stoker <jelmer@ijzershop.nl> 1633093169 +0200	commit: remove html filter product descriptioon
+69799caeecbfec1f795f8fc6d9564e683a067227 57af0f387d1984a31cab1b22eee3c4138cf142e9 JB Stoker <jelmer@ijzershop.nl> 1633418986 +0200	commit: small updates
+57af0f387d1984a31cab1b22eee3c4138cf142e9 772339c34d489a0af2432612eea4175ff87eb36f JB Stoker <jelmer@ijzershop.nl> 1634293231 +0200	commit: Upgrade to 1.7.7

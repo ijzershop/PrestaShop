@@ -1,0 +1,32 @@
+{
+  "$id": "1",
+  "AutoRefresh": true,
+  "AutoRefreshRemotes": true,
+  "CommitTextLinks": null,
+  "DraftCommitMsg": "",
+  "IncomingSavedCount": 0,
+  "LastCheckedRemotes": "2020-10-30T11:48:20.8098861+01:00",
+  "LastUsedView": 1,
+  "LogBranchFilterIndex": 0,
+  "OutgoingSavedCount": 0,
+  "SidebarExpandedItems": [
+    "Branches"
+  ],
+  "SidebarWidth": 210.0,
+  "SubtreeLinks": [],
+  "RemoteProjectLinks": [
+    {
+      "$id": "2",
+      "BaseUrl": "https://github.com",
+      "Identifier": "ijzershop/modernesmiddynamicproduct",
+      "RemoteName": "origin",
+      "Type": 0,
+      "Username": "ijzershop",
+      "CloneUrl": null,
+      "ProjectUrl": null,
+      "AccountId": "ijzershop@github.com",
+      "AvatarUrl": null,
+      "DisplayName": "origin: https://github.com"
+    }
+  ]
+}

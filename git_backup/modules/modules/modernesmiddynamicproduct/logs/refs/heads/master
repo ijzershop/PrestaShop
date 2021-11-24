@@ -1,0 +1,9 @@
+0000000000000000000000000000000000000000 0b4fd999ac1bc7ea0406646ff99068d2d2ffc517 JB Stoker <jelmer@ijzershop.nl> 1599732787 +0200	clone: from git@github.com:ijzershop/modernesmiddynamicproduct.git
+0b4fd999ac1bc7ea0406646ff99068d2d2ffc517 87027846346a8ee28c6f258dce9257aa44f1565d JB Stoker <jelmer@ijzershop.nl> 1599733734 +0200	merge h: Fast-forward
+87027846346a8ee28c6f258dce9257aa44f1565d 329a150ca0d9ee60b43e1761569af1d72816fb81 JB Stoker <jelmer@ijzershop.nl> 1599825943 +0200	pull origin master: Fast-forward
+329a150ca0d9ee60b43e1761569af1d72816fb81 163d74111719b833f585c5718ffb219d806f7243 JB Stoker <jelmer@ijzershop.nl> 1600077655 +0200	commit: update button dynamic product
+163d74111719b833f585c5718ffb219d806f7243 9ab6a427fb9a70b4fa7bf04385a118fc2dc82d1a JB Stoker <jelmer@ijzershop.nl> 1600427669 +0200	pull origin master: Fast-forward
+9ab6a427fb9a70b4fa7bf04385a118fc2dc82d1a baf547c4c369580942d1b545cb4fde6c880282c2 JB Stoker <jelmer@ijzershop.nl> 1600764838 +0200	merge ss: Fast-forward
+baf547c4c369580942d1b545cb4fde6c880282c2 ec72e1e2f9bb8cf1509261250b53608b4bd228f9 JB Stoker <jelmer@ijzershop.nl> 1602569132 +0200	fetch origin master:master: fast-forward
+ec72e1e2f9bb8cf1509261250b53608b4bd228f9 9524f2d0e703c8958918e19d5a4b113bee6e6d40 JB Stoker <jelmer@ijzershop.nl> 1602860214 +0200	commit: fix behandeling
+9524f2d0e703c8958918e19d5a4b113bee6e6d40 55aa2f713be801f786195bb849bb39e189ec6e6a JB Stoker <jelmer@ijzershop.nl> 1603535479 +0200	commit: remove console msg

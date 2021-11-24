@@ -1,0 +1,35 @@
+{
+  "$id": "1",
+  "AutoRefresh": true,
+  "AutoRefreshRemotes": true,
+  "CommitTextLinks": null,
+  "DraftCommitMsg": "",
+  "IncomingSavedCount": 0,
+  "LastCheckedRemotes": "2021-10-19T12:20:52.6930518+02:00",
+  "LastUsedView": 1,
+  "LogBranchFilterIndex": 1,
+  "OutgoingSavedCount": 0,
+  "SidebarExpandedItems": [
+    "Branches",
+    "Remotes",
+    "Remotes/origin",
+    "Remotes/upstream"
+  ],
+  "SidebarWidth": 210.0,
+  "SubtreeLinks": [],
+  "RemoteProjectLinks": [
+    {
+      "$id": "2",
+      "BaseUrl": "https://github.com",
+      "Identifier": "ijzershop/ps_shoppingcart",
+      "RemoteName": "origin",
+      "Type": 0,
+      "Username": "ijzershop",
+      "CloneUrl": null,
+      "ProjectUrl": null,
+      "AccountId": "ijzershop@github.com",
+      "AvatarUrl": null,
+      "DisplayName": "origin: https://github.com"
+    }
+  ]
+}

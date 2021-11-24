@@ -1,0 +1,7 @@
+0000000000000000000000000000000000000000 33b4fd582493a62987481b8db5268b9d3cd48aa8 JB Stoker <jelmer@ijzershop.nl> 1590142860 +0200	clone: from https://github.com/ijzershop/customdeliveryslipsexport.git
+33b4fd582493a62987481b8db5268b9d3cd48aa8 0892cb44aebe1077211d34ed97ff5e0a4dc7b0ab JB Stoker <jelmer@ijzershop.nl> 1591109720 +0200	commit: update customdeliveryexport
+0892cb44aebe1077211d34ed97ff5e0a4dc7b0ab 474134ba7c1b16be67599a2ef96be3ac278f1991 JB Stoker <jelmer@ijzershop.nl> 1592825718 +0200	commit: config update
+474134ba7c1b16be67599a2ef96be3ac278f1991 7cd68ebe34e05375bcc1775a394f0ad11a66eb15 JB Stoker <jelmer@ijzershop.nl> 1608102932 +0100	commit: bugfix fetch all orders older than 3 minutes to print in the workshop
+7cd68ebe34e05375bcc1775a394f0ad11a66eb15 99d5df72ba91e9c402e0c53ccfa046300371f4e4 JB Stoker <jelmer@ijzershop.nl> 1608112617 +0100	commit: module update fetch orders older than 3 minutes ago
+99d5df72ba91e9c402e0c53ccfa046300371f4e4 5a0bb136684cb1323461184d8b4a02b33c7e35cb JB Stoker <jelmer@ijzershop.nl> 1608305481 +0100	commit: added 3 seconds delay for order status change
+5a0bb136684cb1323461184d8b4a02b33c7e35cb 2f938ff143750ab819e00f28d3f6655833739684 JB Stoker <jelmer@ijzershop.nl> 1610108215 +0100	commit: bugfixes and update

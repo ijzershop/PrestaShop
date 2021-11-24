@@ -1,0 +1,50 @@
+{
+  "$id": "1",
+  "AutoRefresh": true,
+  "AutoRefreshRemotes": true,
+  "CommitTextLinks": null,
+  "DraftCommitMsg": "",
+  "IncomingSavedCount": 0,
+  "LastCheckedRemotes": "2021-05-28T07:43:27.9645584+02:00",
+  "LastUsedView": 0,
+  "LogBranchFilterIndex": 0,
+  "OutgoingSavedCount": 0,
+  "SidebarExpandedItems": [
+    "File Status",
+    "Branches",
+    "File Status",
+    "Branches",
+    "File Status",
+    "Branches",
+    "File Status",
+    "Branches",
+    "File Status",
+    "Branches",
+    "File Status",
+    "Branches",
+    "File Status",
+    "Branches",
+    "File Status",
+    "Branches",
+    "File Status",
+    "Branches",
+    "Branches"
+  ],
+  "SidebarWidth": 210.0,
+  "SubtreeLinks": [],
+  "RemoteProjectLinks": [
+    {
+      "$id": "2",
+      "BaseUrl": "https://github.com",
+      "Identifier": "ijzershop/customdeliveryslipsexport",
+      "RemoteName": "origin",
+      "Type": 0,
+      "Username": "jelmerstoker@gmail.com",
+      "CloneUrl": null,
+      "ProjectUrl": null,
+      "AccountId": "",
+      "AvatarUrl": null,
+      "DisplayName": "origin: https://github.com"
+    }
+  ]
+}

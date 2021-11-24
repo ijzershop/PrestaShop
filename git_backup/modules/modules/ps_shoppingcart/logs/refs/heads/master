@@ -1,0 +1,11 @@
+0000000000000000000000000000000000000000 b7f197a8776950a8e70c992ce39fe4b94f5023a1 JB Stoker <jelmer@ijzershop.nl> 1594634804 +0200	clone: from git@github.com:ijzershop/ps_shoppingcart.git
+b7f197a8776950a8e70c992ce39fe4b94f5023a1 35a52ce139936597a7981c7f4d4e0fdd60d69270 JB Stoker <jelmer@ijzershop.nl> 1594634940 +0200	commit: Added previous updates
+35a52ce139936597a7981c7f4d4e0fdd60d69270 e156a5bc77aa983a00b730f5abc018cce5de3c82 JB Stoker <jelmer@ijzershop.nl> 1594636978 +0200	commit: controller bugfix
+e156a5bc77aa983a00b730f5abc018cce5de3c82 9dc6c70bfe18536955961863c7b24b03a2d105b5 JB Stoker <jelmer@ijzershop.nl> 1598948693 +0200	commit: shopping cart remove unused functions
+9dc6c70bfe18536955961863c7b24b03a2d105b5 48780c3207aea75a75b822d397deb98bb24ceaa9 JB Stoker <jelmer@ijzershop.nl> 1611135523 +0100	commit: shopping cart update
+48780c3207aea75a75b822d397deb98bb24ceaa9 93e6ee7ce7a41f290413c837aecaf6fb05015759 JB Stoker <jelmer@ijzershop.nl> 1611306113 +0100	commit: added toggle setting to cookie to keep opened price details open on refresh
+93e6ee7ce7a41f290413c837aecaf6fb05015759 962e120525e0614ad30d88d197e256271b2ed094 JB Stoker <jelmer@ijzershop.nl> 1611307298 +0100	commit: composer update git url
+962e120525e0614ad30d88d197e256271b2ed094 140c58ffd49457155cf387143453e4a7e1b52a7d JB Stoker <jelmer@ijzershop.nl> 1611309230 +0100	merge pull-request: Fast-forward
+140c58ffd49457155cf387143453e4a7e1b52a7d 2be7cc72b49c8ba0f5c293b4684e0657c73d6bd5 JB Stoker <jelmer@ijzershop.nl> 1611919381 +0100	commit: module update 2.0.4
+2be7cc72b49c8ba0f5c293b4684e0657c73d6bd5 94b97181598ade63282c90c643256f8f8c94051e JB Stoker <jelmer@ijzershop.nl> 1611923541 +0100	commit: bugfix
+94b97181598ade63282c90c643256f8f8c94051e ce5fb35c9a6126eb357fcf4381511234037e33a4 JB Stoker <jelmer@ijzershop.nl> 1611924130 +0100	commit: composer update

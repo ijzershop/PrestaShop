@@ -1,0 +1,32 @@
+{
+  "$id": "21",
+  "AutoRefresh": true,
+  "AutoRefreshRemotes": true,
+  "CommitTextLinks": null,
+  "DraftCommitMsg": "",
+  "IncomingSavedCount": 0,
+  "LastCheckedRemotes": "2020-05-15T11:50:12.4952323+02:00",
+  "LastUsedView": 1,
+  "LogBranchFilterIndex": 0,
+  "OutgoingSavedCount": 0,
+  "SidebarExpandedItems": [
+    "Branches"
+  ],
+  "SidebarWidth": 210.0,
+  "SubtreeLinks": [],
+  "RemoteProjectLinks": [
+    {
+      "$id": "22",
+      "BaseUrl": "https://github.com",
+      "Identifier": "ijzershop/customercomments",
+      "RemoteName": "origin",
+      "Type": 0,
+      "Username": "ijzershop",
+      "CloneUrl": null,
+      "ProjectUrl": null,
+      "AccountId": "ijzershop@github.com",
+      "AvatarUrl": null,
+      "DisplayName": "origin: https://github.com"
+    }
+  ]
+}

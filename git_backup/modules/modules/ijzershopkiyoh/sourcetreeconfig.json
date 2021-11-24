@@ -1,0 +1,33 @@
+{
+  "$id": "5",
+  "AutoRefresh": true,
+  "AutoRefreshRemotes": true,
+  "CommitTextLinks": null,
+  "DraftCommitMsg": "",
+  "IncomingSavedCount": 0,
+  "LastCheckedRemotes": "2021-10-15T13:59:22.2053405+02:00",
+  "LastUsedView": 1,
+  "LogBranchFilterIndex": 0,
+  "OutgoingSavedCount": 0,
+  "SidebarExpandedItems": [
+    "Branches",
+    "Stashes"
+  ],
+  "SidebarWidth": 210.0,
+  "SubtreeLinks": [],
+  "RemoteProjectLinks": [
+    {
+      "$id": "6",
+      "BaseUrl": "https://bitbucket.org",
+      "Identifier": "ijzershop/ijzershopkiyoh",
+      "RemoteName": "origin",
+      "Type": 1,
+      "Username": "ijzershop",
+      "CloneUrl": null,
+      "ProjectUrl": null,
+      "AccountId": "ijzershop@bitbucket.org",
+      "AvatarUrl": null,
+      "DisplayName": "origin: https://bitbucket.org"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "$id": "41",
+  "AutoRefresh": true,
+  "AutoRefreshRemotes": true,
+  "CommitTextLinks": null,
+  "DraftCommitMsg": "",
+  "IncomingSavedCount": 0,
+  "LastCheckedRemotes": "2021-09-01T16:28:45.3296904+02:00",
+  "LastUsedView": 0,
+  "LogBranchFilterIndex": 0,
+  "OutgoingSavedCount": 0,
+  "SidebarExpandedItems": [
+    "Branches"
+  ],
+  "SidebarWidth": 210.0,
+  "SubtreeLinks": [],
+  "RemoteProjectLinks": [
+    {
+      "$id": "42",
+      "BaseUrl": "https://bitbucket.org",
+      "Identifier": "ijzershop/offerintegration",
+      "RemoteName": "origin",
+      "Type": 1,
+      "Username": "ijzershop",
+      "CloneUrl": null,
+      "ProjectUrl": null,
+      "AccountId": "ijzershop@bitbucket.org",
+      "AvatarUrl": null,
+      "DisplayName": "origin: https://bitbucket.org"
+    }
+  ]
+}

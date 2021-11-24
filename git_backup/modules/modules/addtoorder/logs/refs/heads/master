@@ -1,0 +1,5 @@
+0000000000000000000000000000000000000000 9c84ba73790ec0093f197f5b91e1b1b2edc2cd88 JB Stoker <jelmer@ijzershop.nl> 1590142925 +0200	clone: from https://github.com/ijzershop/addtoorder.git
+9c84ba73790ec0093f197f5b91e1b1b2edc2cd88 56323cca935b97fc4fed488d5b86587dc5476168 JB Stoker <jelmer@ijzershop.nl> 1607968942 +0100	commit: bugfix
+56323cca935b97fc4fed488d5b86587dc5476168 e5586f7795a83bff263b2eb7c19717bf64501e26 JB Stoker <jelmer@ijzershop.nl> 1612524585 +0100	commit: Replace hardcoded status array to configuration get
+e5586f7795a83bff263b2eb7c19717bf64501e26 65a8e63c5b7fadbe7bbbff4eacd785452b1c667f JB Stoker <jelmer@ijzershop.nl> 1614675617 +0100	commit: bugfix found orders explode instead of decode
+65a8e63c5b7fadbe7bbbff4eacd785452b1c667f e74816d7dcc67bc9be8f438070b69f4eeaf065b7 JB Stoker <jelmer@ijzershop.nl> 1630498899 +0200	commit: added address values of first order add to order

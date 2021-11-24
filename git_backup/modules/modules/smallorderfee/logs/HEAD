@@ -1,0 +1,7 @@
+0000000000000000000000000000000000000000 a3951c42df1bc555fdc0b03d2f5dcc95465be80a jbstoker <jelmerstoker@gmail.com> 1585316063 +0100	clone: from https://github.com/ijzershop/smallorderfee.git
+a3951c42df1bc555fdc0b03d2f5dcc95465be80a ee57647fac5925527434a6e3bec4fb78ea6b5fe8 JB Stoker <jelmer@ijzershop.nl> 1585553092 +0200	commit: init small order fee
+ee57647fac5925527434a6e3bec4fb78ea6b5fe8 7b10d55488004bce1faf7e698e248fa19d9b9425 JB Stoker <jelmer@ijzershop.nl> 1585566902 +0200	commit: Added hook for shoppingcart
+7b10d55488004bce1faf7e698e248fa19d9b9425 157207cd05f60d7489c8eb40b6e87fd38a9318ad JB Stoker <jelmer@ijzershop.nl> 1586270325 +0200	commit: Start small order fee
+157207cd05f60d7489c8eb40b6e87fd38a9318ad 08765102e7796aed90e407022b0098d9e334f2f6 JB Stoker <jelmer@ijzershop.nl> 1587730900 +0200	commit: config update
+08765102e7796aed90e407022b0098d9e334f2f6 923ca690b4bdeb1e9c28aa7f23a278d4d8304146 JB Stoker <jelmer@ijzershop.nl> 1589263140 +0200	commit: updated language file
+923ca690b4bdeb1e9c28aa7f23a278d4d8304146 3da0fcaaf7025ec608cbc7e21f573d11fd4801ba JB Stoker <jelmer@ijzershop.nl> 1590754519 +0200	commit: Added small shoppiing cart updates and hooks

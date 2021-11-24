@@ -1,0 +1,8 @@
+0000000000000000000000000000000000000000 9920bafd25fc07070078a7f0f9e103a847e19c3d jbstoker <jelmerstoker@gmail.com> 1584948599 +0100	branch: Created from Start_Compat_1.7.6-1.7.7
+9920bafd25fc07070078a7f0f9e103a847e19c3d 5b2e60ca0c4db0122858456a5d34552fd0965c51 jbstoker <jelmerstoker@gmail.com> 1584969144 +0100	commit: start nieuwe knipmodule
+5b2e60ca0c4db0122858456a5d34552fd0965c51 ee508fbad879db3b1c9d68ff6d75224f620500c3 jbstoker <jelmerstoker@gmail.com> 1585057538 +0100	commit: canvas implementatie
+ee508fbad879db3b1c9d68ff6d75224f620500c3 cf245b91fa2b80d49e5404d996f3a8f07c50ceec jbstoker <jelmerstoker@gmail.com> 1585305839 +0100	commit: Basis knipmodule updates
+cf245b91fa2b80d49e5404d996f3a8f07c50ceec 8a5fb62fab05a258d82b4181984793f04f98779c JB Stoker <jelmer@ijzershop.nl> 1585553114 +0200	commit: Knipmodule update
+8a5fb62fab05a258d82b4181984793f04f98779c 0d0ee1861c376932cffe2716d76e7dec8a926b6c JB Stoker <jelmer@ijzershop.nl> 1586270291 +0200	merge dirty: Fast-forward
+0d0ee1861c376932cffe2716d76e7dec8a926b6c 0425c378c56f4f0a0164688d0acea4d10bfe47fd JB Stoker <jelmer@ijzershop.nl> 1587122942 +0200	commit: Added cut and saw info page selection config, updated styling
+0425c378c56f4f0a0164688d0acea4d10bfe47fd bf9554cbaaae4b9eb24e010a76370ce501f1bea9 JB Stoker <jelmer@ijzershop.nl> 1587730974 +0200	commit: zaag deel cart implementatie

@@ -789,12 +789,17 @@ class Psgdpr extends Module
         // get orders
         $orders = [];
         $orderList = Order::getCustomerOrders($customer->id);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6798a3cc6a66a37dd8e08dff3eedc528357fb0b0
         if (count($orderList) >= 1) {
             foreach ($orderList as $index => $order) {
                 $orderObject = new Order($order['id_order']);
                 $productsOrder = $orderObject->getProducts();
                 $currency = Currency::getCurrency($order['id_currency']);
 
+<<<<<<< HEAD
                 $orderState = ''; 
 				$orderStateColor = '';
 
@@ -803,13 +808,20 @@ class Psgdpr extends Module
 	                $orderStateColor = $order['order_state_color'];
                 }
 
+=======
+>>>>>>> 6798a3cc6a66a37dd8e08dff3eedc528357fb0b0
                 array_push($orders, [
                     'id_order' => $order['id_order'],
                     'reference' => $order['reference'],
                     'payment' => $order['payment'],
                     'date_add' => $order['date_add'],
+<<<<<<< HEAD
                     'order_state' => $orderState,
                     'order_state_color' => $orderStateColor,
+=======
+                    'order_state' => $order['order_state'],
+                    'order_state_color' => $order['order_state_color'],
+>>>>>>> 6798a3cc6a66a37dd8e08dff3eedc528357fb0b0
                     'total_paid_tax_incl' => number_format($order['total_paid_tax_incl'], 2) . ' ' . $currency['iso_code'],
                     'nb_products' => $order['nb_products'],
                     'products' => [],

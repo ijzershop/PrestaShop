@@ -1,6 +1,0 @@
-0000000000000000000000000000000000000000 5b787dd6b99431e0832d08768a9e3f6157fbdb10 JB Stoker <jelmer@ijzershop.nl> 1621432649 +0200	clone: from git@github.com:ijzershop/modernesmid-email-theme.git
-5b787dd6b99431e0832d08768a9e3f6157fbdb10 38c313980a4da5f303397a5a5b698394e13a0621 JB Stoker <jelmer@ijzershop.nl> 1621602835 +0200	commit: email theme update
-38c313980a4da5f303397a5a5b698394e13a0621 bea85a5cd601ff253f0e05c33e9bb94e42a91766 JB Stoker <jelmer@ijzershop.nl> 1622010232 +0200	commit: update
-bea85a5cd601ff253f0e05c33e9bb94e42a91766 d4c87084e313dbdaf49b3447625997f178cee281 JB Stoker <jelmer@ijzershop.nl> 1622793769 +0200	checkout: moving from master to d4c87084e313dbdaf49b3447625997f178cee281
-d4c87084e313dbdaf49b3447625997f178cee281 bea85a5cd601ff253f0e05c33e9bb94e42a91766 JB Stoker <jelmer@ijzershop.nl> 1622794095 +0200	checkout: moving from d4c87084e313dbdaf49b3447625997f178cee281 to master
-bea85a5cd601ff253f0e05c33e9bb94e42a91766 d4c87084e313dbdaf49b3447625997f178cee281 JB Stoker <jelmer@ijzershop.nl> 1622794102 +0200	pull origin master: Fast-forward

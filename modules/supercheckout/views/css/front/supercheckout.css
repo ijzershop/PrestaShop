@@ -1,65 +1,3 @@
-/*#supercheckout-fieldset li *,
-#supercheckout-fieldset input *, 
-#supercheckout-fieldset select *,
-#supercheckout-fieldset textarea *,
-#supercheckout-fieldset h1 *,
-#supercheckout-fieldset h2 *,
-#supercheckout-fieldset ul *,
-#supercheckout-fieldset ul li *,
-#supercheckout-fieldset label *,
-#supercheckout-fieldset span *,
-#supercheckout-fieldset b *,
-#supercheckout-fieldset tr *,
-#supercheckout-fieldset td *,
-#supercheckout-fieldset td span *,
-#supercheckout-fieldset table.radio td label * 
-#supercheckout-fieldset .special-price *,
-#supercheckout-fieldset .price-old *,
-#supercheckout-fieldset .price *,
-#supercheckout-fieldset small *,
-#supercheckout-fieldset div *,
-#supercheckout-fieldset style *,
-#supercheckout-fieldset option *,
-#supercheckout-fieldset .warning *,
-#supercheckout-fieldset th *,
-#supercheckout-fieldset input[type*="radio"],
-#supercheckout-fieldset input[type*="checkbox"],
-#supercheckout-fieldset input[type*="text"],
-#supercheckout-fieldset input[type*="password"],
-#supercheckout-fieldset input[name="postcode"] {
-    color :#000000;
-    line-height: none;
-    text-decoration: none;
-    text-indent: 0px;
-    text-transform : none;
-    hanging-punctuation: none;
-    text-align-last: none;
-    text-justify: none;
-    text-overflow: none;
-    text-shadow: none;
-    text-wrap: none;
-    margin: 0px;
-    padding: 0px;
-    list-style :none;
-    font-family :Arial,Helvetica,sans-serif;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: normal;
-    border: none;
-    border-image: none;
-    border-radius: 0px;
-    max-width:none;
-    min-width:0px;
-    box-shadow: none;
-    background :none;
-    background-image: none;
-    background-color: none;
-    opacity: 1;
-    -moz-box-sizing: content-box;
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-
-}*/
 
 
 /* Added for Prestshop 1.5*/
@@ -553,7 +491,7 @@
     margin-top: -11px !important;
     border-left-color: #999999 !important;
     border-left-color: rgba(0, 0, 0, 0.25) !important;
-    border-right-width: 0 !important; 
+    border-right-width: 0 !important;
 }
 
 #supercheckout-fieldset .popover.left .arrow:after {
@@ -606,7 +544,7 @@
     border: 1px solid #EC6723 !important;*/
     font-size: 17px !important;
 /*    padding: 8px 0px!important;*/
-    width: auto !important;  
+    width: auto !important;
     border-radius: 2px !important;
 /*    color: #F9F9F9 !important;*/
     cursor: pointer !important;
@@ -619,7 +557,7 @@
     font-weight: bold;
 /*    border-bottom:3px solid #C52F2F !important;*/
     height: 35px;
-    border-bottom-left-radius:2px !important; 
+    border-bottom-left-radius:2px !important;
     border-bottom-right-radius: 2px !important;
 }
 
@@ -795,7 +733,7 @@
     width: 25% !important;
     text-align: right !important;
     padding: 0 5px !important;
-    font-weight: bold !important;    
+    font-weight: bold !important;
 }
 
 #supercheckout-fieldset table.supercheckout-summary td.supercheckout-unit-total,
@@ -1185,7 +1123,7 @@
 
 #supercheckout-fieldset .btn-close {
     margin-bottom: -9px !important;
-    padding: 6px 6px 0 !important; 
+    padding: 6px 6px 0 !important;
     text-align: right;
 }
 
@@ -1213,7 +1151,7 @@
 }
 
 #supercheckout-fieldset select {
-    
+
 }
 
 #supercheckout-fieldset .supercheckout-threecolumns select {
@@ -1266,7 +1204,7 @@
 }
 
 #supercheckout-fieldset .loader {
-    background:url(../../img/front/loading12.gif) no-repeat !important; 
+    background:url(../../img/front/loading12.gif) no-repeat !important;
     height:20px;
     width:20px;
     float:right;
@@ -1412,7 +1350,7 @@
 }
 
 #supercheckout-fieldset select.supercheckout-large-field {
-    width: 98%;    
+    width: 98%;
     border-radius:3px !important;
 }
 
@@ -1432,7 +1370,7 @@
 
 #supercheckout-fieldset .success {
     width:100%;
-    padding: 10px 20px 10px 33px !important; 
+    padding: 10px 20px 10px 33px !important;
 }
 
 #supercheckout-fieldset table.supercheckout-form input[type*="text"], table.supercheckout-form input[type*="email"]{
@@ -1504,12 +1442,12 @@
         float: none !important;
         width:94% !important;
     }
-     
+
 
     #supercheckout-fieldset #supercheckout-columnleft {
         width: 100% !important;
     }
-    
+
     #supercheckout-fieldset div.onestepcheckout-threecolumns div.onestepcheckout-column-left,
     #supercheckout-fieldset div.onestepcheckout-threecolumns div.onestepcheckout-column-middle,
     #supercheckout-fieldset div.onestepcheckout-threecolumns div.onestepcheckout-column-right,
@@ -1534,7 +1472,7 @@
     #supercheckout-fieldset .supercheckout-blocks ,.blocks {
         width: 95%;
     }
-    #supercheckout-fieldset .supercheckout_top_boxes{    
+    #supercheckout-fieldset .supercheckout_top_boxes{
         width: 100%;
         float:none !important;
     }
@@ -1718,7 +1656,7 @@
 #supercheckout-fieldset .ui-widget {
     font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif !important;
     font-size: 1.1em !important;
-}   
+}
 #supercheckout-fieldset .ui-widget-header {
     background:  repeat-x scroll 50% 50% #F6A828 !important;
     border: 1px solid #D08204 !important;
@@ -1728,16 +1666,16 @@
 #supercheckout-fieldset #buttonWithProgres{
     margin:auto !important;
     display:inline-block;
-    
+
 }
-#supercheckout-fieldset .supercheckout_top_boxes {    
+#supercheckout-fieldset .supercheckout_top_boxes {
     float:left;
     padding-left: 2%;
 /*    border-left:1px solid #F2F2F2 !important;*/
     border-right:1px solid #F2F2F2 !important;
     border-top:1px solid #F2F2F2 !important;
     padding-bottom:1%;
-    
+
 }
 #supercheckout-fieldset .supercheckout_login_option_box {
     background-color:rgba(7, 8, 5, 0.02) !important;
@@ -1757,7 +1695,7 @@
     width:94%;
     padding:2% 0px;
 }
-#supercheckout-fieldset .supercheckout-small-field { 
+#supercheckout-fieldset .supercheckout-small-field {
     width: 45%;
     border-radius:3px !important;
 }
@@ -1770,18 +1708,18 @@
 }
 #supercheckout-fieldset .orangebuttonapply {
     text-decoration: none;
-/*    background-color:#F77219; 
+/*    background-color:#F77219;
     background: linear-gradient(to bottom, #F77219 1%, #FEC6A7 3%, #F77219 7%, #F75B16 100%) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;*/
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F77219', endColorstr='#F75B16') !important;
 /*    border: 1px solid #EC6723 !important;*/
-    font-size: 11px !important;    
+    font-size: 11px !important;
     width: auto !important;
     border-radius: 2px !important;
 /*    color: #F9F9F9 !important;*/
     cursor: pointer !important;
     display: inline-block !important;
     padding: 5px !important;
-    text-align: center !important;    
+    text-align: center !important;
     font-weight: bold;
 }
 
@@ -1792,7 +1730,7 @@
     border: 1px solid #EE3A39 !important;
 }*/
 #supercheckout-fieldset .panel {
-  
+
   background-color: #ffffff;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -1960,7 +1898,7 @@ div.radio span{
     width:100%;
     top: 40%;
     z-index: 9999;
-    
+
     left: 0;
     max-width: 600px;
     right: 0;
@@ -1995,7 +1933,7 @@ div.radio span{
     padding: 3px;
     font-size: 12px;
     line-height: 15px;
-        
+
 }
 
 .supercheckout_address_detail span{
@@ -2021,11 +1959,11 @@ white-space: nowrap;
 }
 .ui-dialog[aria-describedby="divKbgiftMessage"] {
 	min-width:363px;
-	
+
 }
 .ui-dialog[aria-describedby="divKbgiftMessage"] .ui-widget-header .ui-dialog-title {
 		font-size: 14px;
-	}	
+	}
 @media(max-width:360px)
 {
 	.ui-dialog[aria-describedby="divKbgiftMessage"] {
@@ -2044,7 +1982,7 @@ white-space: nowrap;
 	.ui-dialog[aria-describedby="divKbgiftMessage"] .ui-widget-header {
 		padding-left: 10px;
 	}
-	
+
 	.ui-dialog[aria-describedby="divKbgiftMessage"] .ui-widget-header .ui-dialog-title {
 		font-size: 14px;
 		white-space: normal;
@@ -2057,7 +1995,7 @@ white-space: nowrap;
 		max-width:370px;
 		min-width:100%;
 	}
-} 
+}
 #column-2-lower{
     padding:0 !important;
 }
@@ -2079,7 +2017,7 @@ white-space: nowrap;
 #velsof_payment_dialog #velsof_dialog_content{
     position:relative;
     width:100%;
-    height:100%    
+    height:100%
 }
 
 #velsof_payment_dialog #velsof_dialog_content .velsof_payment_dialog_overlay{
@@ -2165,25 +2103,25 @@ white-space: nowrap;
         width: 90%;
         padding: 10px;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_dialog_close{
         margin-top: -8px;
         margin-right: -7px;
         font-size: 15px;
         font-weight:bold;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_title_section{
         font-size: 15px;
         margin-bottom: 5px;
         padding-bottom: 2px;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_dialog_action{
         font-size: 14px;
         padding: 6px 7px;
     }
-    
+
 }
 
 @media (min-width: 320px) and  (max-width:480px) {
@@ -2193,109 +2131,109 @@ white-space: nowrap;
         width: 90%;
         padding: 10px;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_dialog_close{
         margin-top: -6px;
         margin-right: -2px;
         font-size: 15px;
         font-weight:bold;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_title_section{
         font-size: 20px;
         margin-bottom: 5px;
         padding-bottom: 2px;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_dialog_action{
         font-size: 14px;
         padding: 6px 7px;
     }
-    
+
 }
 
-@media (min-width: 480px) and  (max-width:768px) { 
+@media (min-width: 480px) and  (max-width:768px) {
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container{
         left: 5%;
         top: 5%;
         width: 90%;
         padding: 10px;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_dialog_close{
         margin-top: -4px;
         margin-right: -3px;
         font-size: 15px;
         font-weight: bold;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_title_section{
         font-size: 20px;
         margin-bottom: 10px;
         padding-bottom: 7px;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_dialog_action{
         font-size: 14px;
         padding: 6px 7px;
     }
-    
+
 }
 
-@media (min-width: 768px) and  (max-width:1024px) { 
+@media (min-width: 768px) and  (max-width:1024px) {
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container{
         left: 10%;
         top: 10%;
         width: 80%;
         padding: 10px;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_dialog_close{
         margin-top: -11px;
         margin-right: -9px;
         font-size: 16px;
         font-weight: bold;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_title_section{
         font-size: 20px;
         margin-bottom: 10px;
         padding-bottom: 7px;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_dialog_action{
         font-size: 14px;
         padding: 6px 7px;
     }
-    
+
 }
 
 @media (min-width: 1024px){
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container{
         left: 15%;
         top: 15%;
-        /*width: 66%; Modified for Prestshop 1.5 (Moved to seperate file)*/ 
+        /*width: 66%; Modified for Prestshop 1.5 (Moved to seperate file)*/
         padding: 25px;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_dialog_close{
         margin-top: -15px;
         margin-right: -13px;
         font-size: 17px;
         font-weight: bold;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_title_section{
         font-size: 20px;
         margin-bottom: 10px;
         padding-bottom: 7px;
     }
-    
+
     #velsof_payment_dialog #velsof_dialog_content #velsof_payment_container .velsof_dialog_action{
         font-size: 16px;
         padding: 8px 15px;
     }
-    
+
 }
 .voucher_name
 {
@@ -2508,13 +2446,13 @@ body#module-supercheckout-supercheckout #search_widget {
 }
 
 /* Add Animation - Zoom in the Modal */
-.modal-content_supercheckout, #caption_supercheckout { 
+.modal-content_supercheckout, #caption_supercheckout {
   animation-name: zoom;
   animation-duration: 0.6s;
 }
 
 @keyframes zoom {
-  from {transform:scale(0)} 
+  from {transform:scale(0)}
   to {transform:scale(1)}
 }
 
@@ -2581,7 +2519,7 @@ white-space: nowrap;
 #velsof_supercheckout_form .progress-bar-striped, .progress-striped .progress-bar{
     background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
     -webkit-background-size: 40px 40px;
-    background-size: 40px 40px;    
+    background-size: 40px 40px;
     height: 100%;
     background-color: #d9534f;
 }

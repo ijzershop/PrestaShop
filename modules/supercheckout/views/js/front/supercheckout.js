@@ -49,7 +49,9 @@ function delayKeyUp(callback) {
 }
 
 $(document).ready(function () {
-  checkFormatAddressApiCheckout();
+  if($('#cart-postcode-check-toggle').prop('checked') === true){
+    checkFormatAddressApiCheckout();
+  }
   //clear cart after removing the products from block cart.
   document.addEventListener('click', function (event) {
     matches = event.target.matches ? event.target.matches('.ajax_cart_block_remove_link') : event.target.msMatchesSelector('.ajax_cart_block_remove_link');
@@ -240,7 +242,9 @@ $(document).ready(function () {
       $("#supercheckout_save_address_button").hide();
     } else {
       $("#supercheckout_save_address_button").show();
-      checkFormatAddressApiCheckout();
+      if($('#cart-postcode-check-toggle').prop('checked') === true){
+        checkFormatAddressApiCheckout();
+      }
     }
   });
 
@@ -879,100 +883,6 @@ function applyInlineValidation() {
       }
     }));
 
-    // $('input[name="supercheckout_email_validation"]').on('keydown', delayKeyUp(functione() {
-    //   $(this).parent().find('.errorsmall').remove();
-    //   $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
-    //   if ($(this).val() == '') {
-    //     $(this).removeClass('error-form warning-form');
-    //     $(this).removeClass('ok-form');
-    //     $(this).parent().append('<span class="errorsmall">' + required_error + '</span>');
-    //     // $("html, body").animate({scrollTop: $("span.errorsmall").offset().top-80}, "fast");
-    //     $(this).addClass('error-form');
-    //
-    //   } else if (!validateEmail($(this).val())) {
-    //     $(this).parent().find('span.errorsmall').remove();
-    //     $(this).removeClass('error-form warning-form');
-    //     $(this).removeClass('ok-form');
-    //     $(this).parent().append('<span class="errorsmall">' + invalid_email + '</span>');
-    //     // $("html, body").animate({scrollTop: $("span.errorsmall").offset().top-80}, "fast");
-    //     $(this).addClass('error-form');
-    //     // displayGeneralError(display_general_error_msg);
-    //     return false;
-    //
-    //   } else {
-    //     //validate email
-    //     if($(this).val() !== "" && !unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false).test($(this).val())){
-    //       $(this).parent().find('span.errorsmall').remove();
-    //       $(this).removeClass('error-form warning-form');
-    //       $(this).removeClass('ok-form');
-    //       $(this).addClass('error-form');
-    //       $(this).parent().append('<span class="errorsmall">Valideer a.u.b. uw email adres</span>');
-    //       // displayGeneralError(display_general_error_msg);
-    //       return false;
-    //       //please validate
-    //     } else if($('input:text[name="supercheckout_email"]').val() !== $(this).val() && unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false).test($(this).val())) {
-    //       //not the same
-    //       $(this).parent().find('span.errorsmall').remove();
-    //       $(this).removeClass('error-form warning-form');
-    //       $(this).removeClass('ok-form');
-    //       $(this).addClass('error-form');
-    //       $('input[name="supercheckout_email_validation"]').parent().append('<span class="errorsmall">De email adressen komen niet overeen!</span>');
-    //       // displayGeneralError(display_general_error_msg);
-    //       return false;
-    //     } else {
-    //       if($('input[name="checkout_option"]:checked').val() !== "0"){
-    //         $.ajax({
-    //           type: 'POST',
-    //           url: '/index.php?fc=module&module=modernesmidthemeconfigurator&controller=ajax',
-    //           async: true,
-    //           cache: false,
-    //           dataType: "json",
-    //           data: 'ajax=true' + '&email='+$(this).val()+'&action=check_for_existing_email_address&token=' + prestashop.static_token,
-    //           success: function(resp) {
-    //             if(resp === false){
-    //               $('input[name="supercheckout_email_validation"]').removeClass('error-form warning-form');
-    //               $('input[name="supercheckout_email_validation"]').removeClass('ok-form');
-    //               $('input[name="supercheckout_email_validation"]').addClass('ok-form');
-    //               $('input[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
-    //
-    //               $('input[name="supercheckout_email"]').removeClass('error-form warning-form');
-    //               $('input[name="supercheckout_email"]').removeClass('ok-form');
-    //               $('input[name="supercheckout_email"]').addClass('ok-form');
-    //               $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
-    //               hideGeneralError();
-    //             } else{
-    //               $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
-    //               $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
-    //               $('input[name="supercheckout_email"]').removeClass('error-form warning-form');
-    //               $('input[name="supercheckout_email"]').removeClass('ok-form');
-    //               $('input[name="supercheckout_email"]').addClass('error-form');
-    //               $('input[name="supercheckout_email"]').parent().append('<span class="errorsmall">Dit email adres is al geregistreerd, meld u a.u.b. aan!</span>');
-    //               return false;
-    //             }
-    //           },
-    //           error: function(XMLHttpRequest, textStatus, errorThrown) {
-    //             $(this).removeClass('error-form warning-form');
-    //             $(this).removeClass('ok-form');
-    //             $(this).addClass('ok-form');
-    //             $(this).parent().find('span.errorsmall').remove();
-    //             hideGeneralError();
-    //           }
-    //         });
-    //       } else {
-    //         $('input[name="supercheckout_email_validation"]').removeClass('error-form warning-form');
-    //         $('input[name="supercheckout_email_validation"]').removeClass('ok-form');
-    //         $('input[name="supercheckout_email_validation"]').addClass('ok-form');
-    //         $('input[name="supercheckout_email_validation"]').parent().find('span.errorsmall').remove();
-    //
-    //         $('input[name="supercheckout_email"]').removeClass('error-form warning-form');
-    //         $('input[name="supercheckout_email"]').removeClass('ok-form');
-    //         $('input[name="supercheckout_email"]').addClass('ok-form');
-    //         $('input[name="supercheckout_email"]').parent().find('span.errorsmall').remove();
-    //         hideGeneralError();
-    //       }
-    //     }
-    //   }
-    // }));
 
     $('input[name="supercheckout_email"]').on('keydown blur input change paste', delayKeyUp(function (e) {
       $(this).parent().find('.errorsmall').remove();
@@ -1033,7 +943,9 @@ function applyInlineValidation() {
       } else if (validatePostCode($(this).val())) {
         $(this).parent().find('.errorsmall').remove();
         $(this).removeClass('error-form warning-form').addClass('ok-form');
-        checkFormatAddressApiCheckout();
+        if($('#cart-postcode-check-toggle').prop('checked') === true){
+          checkFormatAddressApiCheckout();
+        }
       }
     }));
 
@@ -1075,12 +987,16 @@ function applyInlineValidation() {
           $(this).parent().find('.errorsmall').remove();
         }
         $(this).removeClass('error-form  warning-form').addClass('ok-form');
-        checkFormatAddressApiCheckout();
+        if($('#cart-postcode-check-toggle').prop('checked') === true){
+          checkFormatAddressApiCheckout();
+        }
       }
     }));
 
     $('input[name="shipping_address[house_number_extension]"], input[name="payment_address[house_number_extension]"]').on('keydown blur input change paste', delayKeyUp(function (e) {
-      checkFormatAddressApiCheckout();
+      if($('#cart-postcode-check-toggle').prop('checked') === true){
+        checkFormatAddressApiCheckout();
+      }
     }));
 
     $('input[name="shipping_address[address2]"], input[name="payment_address[address2]"]').on('keydown blur input change paste', delayKeyUp(function (e) {
@@ -1798,7 +1714,9 @@ function updateCarrierOnDeliveryChange() {
       $('#section-title-number-last').text('5');
       disEnConfirmButton(true);
     }
-    checkFormatAddressApiCheckout();
+    if($('#cart-postcode-check-toggle').prop('checked') === true){
+      checkFormatAddressApiCheckout();
+    }
     $('#order_number_validate').hide();
     $('#desired_reference').val('');
     $('#added_to_order').val('');
@@ -2091,7 +2009,7 @@ function checkDniandVatNumber(type) {
     error: function (XMLHttpRequest, textStatus, errorThrown) {
       var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
       $('#checkoutShippingAddress .supercheckout-checkout-content .permanent-warning').html(errors);
-      //$('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
+
     }
   });
 }
@@ -2166,75 +2084,9 @@ function isValidVatNumber(type) {
     },
     error: function (XMLHttpRequest, textStatus, errorThrown) {
       var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-      // displayGeneralError(errors);
-      //$('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
     }
   });
 }
-
-//
-// function checkZipCode(e, isCarrierLoad) {
-//   var checkZip = false;
-//   if($(e).attr('name') == undefined){
-//     return false;
-//   }
-//   var address_type = $(e).attr('name').split('[');
-//   address_type = address_type[0];
-//   var container = 'checkoutShippingAddress';
-//   if (address_type == 'payment_address') {
-//     container = 'checkoutBillingAddress';
-//   }
-//
-//   if ($('#' + container + ' input[name="' + address_type + '[postcode]"]').length) {
-//     checkZip = true;
-//   }
-//   // if (checkZip) {
-//   //   var checkData = {
-//   //     'ajax': true,
-//   //     'method': 'checkZipCode',
-//   //     'id_country': ($('select[name="' + address_type + '[id_country]"]').length > 0) ? $('select[name="' + address_type + '[id_country]"] option:selected').val() : '',
-//   //     'postcode': ($('input[name="' + address_type + '[postcode]"]').length > 0) ? $('input[name="' + address_type + '[postcode]"]').val() : '',
-//   //   }
-//   //   $.ajax({
-//   //     type: 'POST',
-//   //     headers: {
-//   //       "cache-control": "no-cache"
-//   //     },
-//   //     url: getURLwithTime($('#module_url').val()),
-//   //     async: true,
-//   //     cache: false,
-//   //     dataType: "json",
-//   //     data: checkData,
-//   //     beforeSend: function() {
-//   //       $('#' + container + ' input[name="' + address_type + '[postcode]"]').parent().find('span.errorsmall').remove();
-//   //       if (inline_validation == 1) {
-//   //         $('#' + container + ' input[name="' + address_type + '[postcode]"]').removeClass('error-form warning-form');
-//   //         $('#' + container + ' input[name="' + address_type + '[postcode]"]').removeClass('ok-form');
-//   //       }
-//   //
-//   //     },
-//   //     complete: function() {},
-//   //     success: function(jsonData) {
-//   //       if (jsonData['error'] != undefined) {
-//   //         $('#' + container + ' input[name="' + address_type + '[postcode]"]').parent().append('<span class="errorsmall">' + jsonData['error'] + '</span>');
-//   //         if (inline_validation == 1)
-//   //           $('#' + container + ' input[name="' + address_type + '[postcode]"]').addClass('error-form');
-//   //       } else {
-//   //         if (inline_validation == 1)
-//   //           $('#' + container + ' input[name="' + address_type + '[postcode]"]').addClass('ok-form');
-//   //       }
-//   //       if (isCarrierLoad) {
-//   //         loadCarriers();
-//   //       }
-//   //     },
-//   //     error: function(XMLHttpRequest, textStatus, errorThrown) {
-//   //       var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
-//   //       $('#' + container + ' .supercheckout-checkout-content').html('<div class="permanent-warning">' + errors + '</div>');
-//   //       //$('.kb_velsof_sc_overlay').hide();$('.pay-loader').hide();
-//   //     }
-//   //   });
-//   // }
-// }
 
 function updateInvoiceStatus(element) {
   $.ajax({
@@ -4916,7 +4768,9 @@ function AutofillCustomerShippingAddress(e) {
     $('input[name="shipping_address[postcode]"]').removeClass('error-form is-valid').val($('#on-credit-customer-shipping-address-selection select').find(':selected').attr('data-postcode')).trigger('keydown');
     $('input[name="shipping_address[house_number]"]').removeClass('error-form is-valid').val($('#on-credit-customer-shipping-address-selection select').find(':selected').attr('data-house_number')).trigger('keydown');
   }
-  checkFormatAddressApiCheckout();
+  if($('#cart-postcode-check-toggle').prop('checked') === true){
+    checkFormatAddressApiCheckout();
+  }
 }
 
 function AutofillCustomerPaymentAddress(e) {
@@ -4945,7 +4799,9 @@ function AutofillCustomerPaymentAddress(e) {
     $('input[name="payment_address[postcode]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-postcode')).trigger('keydown');
     $('input[name="payment_address[house_number]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-house_number')).trigger('keydown');
   }
-  checkFormatAddressApiCheckout();
+  if($('#cart-postcode-check-toggle').prop('checked') === true){
+    checkFormatAddressApiCheckout();
+  }
 }
 
 $(document).on('change load', '#on_credit_customer_select', function (e) {
@@ -5025,4 +4881,17 @@ $(document).on('change load', '#on_credit_customer_select', function (e) {
       // $('#shipping_method_update_warning').html('<div class="permanent-warning">' + errors + '</div>');
     }
   });
+})
+
+
+$('#toggle-postcode-check').on('click', function(elem){
+  if(elem.originalEvent.target.classList.contains('icon-info') || elem.originalEvent.target.classList.contains('info-icon-with-showhid'))
+    return;
+  if($('#cart-postcode-check-toggle').prop('checked') === true){
+    $('#postcode-check-switch-label').html('Postcode check <b class="text-danger">uit</b>');
+    $('#cart-postcode-check-toggle').prop('checked', false);
+  } else {
+    $('#cart-postcode-check-toggle').prop('checked', true);
+    $('#postcode-check-switch-label').html('Postcode check <b class="text-success">aan</b>');
+  }
 })

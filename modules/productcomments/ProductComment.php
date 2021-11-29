@@ -108,8 +108,8 @@ class ProductComment extends ObjectModel
 			SELECT pc.`id_product_comment`,
 			(SELECT count(*) FROM `' . _DB_PREFIX_ . 'product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment` AND pcu.`usefulness` = 1) as total_useful,
 			(SELECT count(*) FROM `' . _DB_PREFIX_ . 'product_comment_usefulness` pcu WHERE pcu.`id_product_comment` = pc.`id_product_comment`) as total_advice, ' .
-                ((int) $id_customer ? '(SELECT count(*) FROM `' . _DB_PREFIX_ . 'product_comment_usefulness` pcuc WHERE pcuc.`id_product_comment` = pc.`id_product_comment` AND pcuc.id_customer = ' . (int) $id_customer . ') as customer_advice, ' : '') .
-                ((int) $id_customer ? '(SELECT count(*) FROM `' . _DB_PREFIX_ . 'product_comment_report` pcrc WHERE pcrc.`id_product_comment` = pc.`id_product_comment` AND pcrc.id_customer = ' . (int) $id_customer . ') as customer_report, ' : '') . '
+            ((int) $id_customer ? '(SELECT count(*) FROM `' . _DB_PREFIX_ . 'product_comment_usefulness` pcuc WHERE pcuc.`id_product_comment` = pc.`id_product_comment` AND pcuc.id_customer = ' . (int) $id_customer . ') as customer_advice, ' : '') .
+            ((int) $id_customer ? '(SELECT count(*) FROM `' . _DB_PREFIX_ . 'product_comment_report` pcrc WHERE pcrc.`id_product_comment` = pc.`id_product_comment` AND pcrc.id_customer = ' . (int) $id_customer . ') as customer_report, ' : '') . '
 			IF(c.id_customer, CONCAT(c.`firstname`, \' \',  LEFT(c.`lastname`, 1)), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pc.title
 			  FROM `' . _DB_PREFIX_ . 'product_comment` pc
 			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON c.`id_customer` = pc.`id_customer`
@@ -171,7 +171,7 @@ class ProductComment extends ObjectModel
 		LEFT JOIN `' . _DB_PREFIX_ . 'product_comment_criterion_lang` pccl ON (pccl.`id_product_comment_criterion` = pcg.`id_product_comment_criterion`)
 		WHERE pc.`id_product` = ' . (int) $id_product . '
 		AND pccl.`id_lang` = ' . (int) $id_lang .
-            ($validate ? ' AND pc.`validate` = 1' : ''));
+        ($validate ? ' AND pc.`validate` = 1' : ''));
     }
 
     public static function getRatings($id_product)
@@ -198,7 +198,7 @@ class ProductComment extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'product_comment` pc
 		WHERE pc.`id_product` = ' . (int) $id_product . '
 		AND pc.`deleted` = 0' .
-            ($validate == '1' ? ' AND pc.`validate` = 1' : ''));
+        ($validate == '1' ? ' AND pc.`validate` = 1' : ''));
     }
 
     public static function getAveragesByProduct($id_product, $id_lang)

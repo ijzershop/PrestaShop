@@ -9,14 +9,30 @@
     {/if}
 {/if}
 
-
-
 <div class="opc_shipping_address custom-panel">
 
 
 
     <div id="shipping-new" style="display: block;">
 
+        {*Switch for en/dis-able the postcode check*}
+      <div class="form-group" id="toggle-postcode-check">
+        <label class="col-7 p-0">
+          <span class="info-icon-with-showhide" data-id="postcode-check-info">
+            <i class="icon-info cart-info-btn"></i>
+          </span>
+          <span id="postcode-check-switch-label">Postcode check <b class="text-success">aan</b></span>
+        </label>
+        <label class="switch col-5 float-right mt-1 mr-2">
+          <input type="checkbox" id="cart-postcode-check-toggle" checked>
+          <span class="slider round"></span>
+        </label>
+        <div id="postcode-check-info" class="col-12 mt-2 p-0"">
+          <p class="card p-2">Bij het invullen van uw postcode en bijhorende huisnummer word uw adres automatisch aangevuld en gevalideerd.
+            Zo helpen we u fouten in uw adres voorkomen. <br/>Mocht u hiervan hinder ondervinden, dan kunt u deze Postcode check uitzetten.<br/>
+            <span class="mt-1"><b>Let op!</b> het adres word niet gevalideerd als de postcode check <b>uit</b> staat, dus kijk uw adres goed na voordat u de bestelling afrekend.</span</p>
+        </div>
+      </div>
       <div class="form-group" id="on-credit-customer-shipping-address-selection" style="{if !Context::getContext()->customer->logged}display: none;{/if}">
         <label class="control-label" for="shipping_address[id_customer_address]" >Selecteer opgeslagen adres
         </label>

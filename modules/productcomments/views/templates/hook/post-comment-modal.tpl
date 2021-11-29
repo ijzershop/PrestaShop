@@ -1,10 +1,11 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 
 <script type="text/javascript">
@@ -90,27 +90,15 @@
             {if !$logged}
               <div class="col-md-8 col-sm-8">
                 <label class="form-label" for="comment_title">{l s='Title' d='Modules.Productcomments.Shop'}<sup class="required">*</sup></label>
-              </div>
-              <div class="col-md-4 col-sm-4">
-                <label class="form-label" for="customer_name">{l s='Your name' d='Modules.Productcomments.Shop'}<sup class="required">*</sup></label>
-              </div>
-            {else}
-              <div class="col-md-12 col-sm-12">
-                <label class="form-label" for="comment_title">{l s='Title' d='Modules.Productcomments.Shop'}<sup class="required">*</sup></label>
-              </div>
-            {/if}
-          </div>
-
-          <div class="row">
-            {if !$logged}
-              <div class="col-md-8 col-sm-8">
                 <input name="comment_title" type="text" value=""/>
               </div>
               <div class="col-md-4 col-sm-4">
+                <label class="form-label" for="customer_name">{l s='Your name' d='Modules.Productcomments.Shop'}<sup class="required">*</sup></label>
                 <input name="customer_name" type="text" value=""/>
               </div>
             {else}
               <div class="col-md-12 col-sm-12">
+                <label class="form-label" for="comment_title">{l s='Title' d='Modules.Productcomments.Shop'}<sup class="required">*</sup></label>
                 <input name="comment_title" type="text" value=""/>
               </div>
             {/if}
@@ -118,7 +106,7 @@
 
           <div class="row">
             <div class="col-md-12 col-sm-12">
-              <label class="form-label" for="comment_content">{l s='Review' d='Modules.Productcomments.Shop'}</label>
+              <label class="form-label" for="comment_content">{l s='Review' d='Modules.Productcomments.Shop'}<sup class="required">*</sup></label>
             </div>
           </div>
           <div class="row">
@@ -132,10 +120,10 @@
               <p class="required"><sup>*</sup> {l s='Required fields' d='Modules.Productcomments.Shop'}</p>
             </div>
             <div class="col-md-6 col-sm-6 post-comment-buttons">
-              <button type="button" class="btn btn-dark btn-comment-inverse btn-comment-big" data-dismiss="modal" aria-label="{l s='Cancel' d='Modules.Productcomments.Shop'}">
+              <button type="button" class="btn btn-comment-inverse btn-comment-big" data-dismiss="modal" aria-label="{l s='Cancel' d='Modules.Productcomments.Shop'}">
                 {l s='Cancel' d='Modules.Productcomments.Shop'}
               </button>
-              <button type="submit" class="btn btn-dark btn-comment btn-comment-big">
+              <button type="submit" class="btn btn-comment btn-comment-big">
                 {l s='Send' d='Modules.Productcomments.Shop'}
               </button>
             </div>
@@ -147,7 +135,7 @@
 </div>
 
 {* Comment posted modal *}
-{if true}
+{if $moderation_active}
   {assign var='comment_posted_message' value={l s='Your comment has been submitted and will be available once approved by a moderator.' d='Modules.Productcomments.Shop'}}
 {else}
   {assign var='comment_posted_message' value={l s='Your comment has been added!' d='Modules.Productcomments.Shop'}}

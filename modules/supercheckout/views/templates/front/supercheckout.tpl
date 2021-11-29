@@ -436,71 +436,6 @@ font-size: 11px;
             }
 
 
-            {* #velsof_supercheckout_form .kb_lds-ripple {
-            width: 50px;
-            height: 80px;
-            text-align: center;
-            font-size: 10px;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            margin: auto;
-            z-index: 1;
-            }
-
-            #velsof_supercheckout_form .kb_lds-ripple > div {
-            background-color: #696969;
-            height: 100%;
-            width: 3px;
-            display: inline-block;
-
-            -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
-            animation: sk-stretchdelay 1.2s infinite ease-in-out;
-            }
-
-            #velsof_supercheckout_form .kb_lds-ripple .rect2 {
-            -webkit-animation-delay: -1.1s;
-            animation-delay: -1.1s;
-            }
-
-            #velsof_supercheckout_form
-            .kb_lds-ripple .rect3 {
-            -webkit-animation-delay: -1.0s;
-            animation-delay: -1.0s;
-
-            }
-
-            #velsof_supercheckout_form
-            .kb_lds-ripple .rect4 {
-            -webkit-animation-delay: -0.9s;
-            animation-delay: -0.9s;
-            }
-
-
-            #velsof_supercheckout_form
-            .kb_lds-ripple .rect5 {
-            -webkit-animation-delay: -0.8s;
-            animation-delay: -0.8s;
-
-            }
-
-            @-webkit-keyframes sk-stretchdelay {
-            0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
-            20% { -webkit-transform: scaleY(1.0) }
-            }
-
-            @keyframes sk-stretchdelay {
-            0%, 40%, 100% {
-            transform: scaleY(0.4);
-            -webkit-transform: scaleY(0.4);
-            } 20% {
-            transform: scaleY(1.0);
-            -webkit-transform: scaleY(1.0);
-            }
-            }*}
-            {*Added by Anshul to change the progressive loader*}
 
 
         </style>
@@ -521,9 +456,7 @@ font-size: 11px;
                 }
             </style>
         {/if}
-        {*{if isset($HOOK_EXTRACARRIER)}*}
-        {*{$HOOK_EXTRACARRIER}{*Variable contains html content, escape not required*}
-        {*{/if}*}
+
         <a style="display:none;" href="javascript:void(0)" id="bancasella_process_payment" ></a>
         {capture name=path}<span class="navigation_page">{l s='Your shopping cart' mod='supercheckout'}</span>{/capture}
         <div id="fb-root"></div>
@@ -751,11 +684,7 @@ font-size: 11px;
                             <div class="col-lg-4 col-md-12 col-sm-12 kb_mobile_sc_respo" id="first_checkout_column">
                                 <div class="supercheckout-column-left columnleftsort checkout-section section-login custom-panel" id="columnleft-1"> {*Need to change later*}
                                     <div  class="supercheckout-blocks" data-column="{$settings['design']['login'][$layout_name]['column']|intval}" data-row="{$settings['design']['login'][$layout_name]['row']|intval}" data-column-inside="{$settings['design']['login'][$layout_name]['column-inside']|intval}"  >
-{*                                        {if $logged}*}
-{*                                            <h2 class="title section-title">{l s='Welcome' mod='supercheckout'} {$customer_name} <span class="section-title-number">1</span></h2>*}
-{*                                            {else}*}
                                             <h2 class="title section-title">{l s='Login Options' mod='supercheckout'} <span class="section-title-number">1</span></h2>
-{*                                            {/if}*}
                                         <div id="checkoutLogin" class="section-body">
                                             <div class="supercheckout-checkout-content"></div>
                                             {include file='module:supercheckout/views/templates/front/login.tpl'}
@@ -764,11 +693,9 @@ font-size: 11px;
                                     <div class="supercheckout-blocks col-12 p-0 " data-column="{$settings['design']['shipping_address'][$layout_name]['column']|intval}" data-row="{$settings['design']['shipping_address'][$layout_name]['row']|intval}" data-column-inside="{$settings['design']['shipping_address'][$layout_name]['column-inside']|intval}">
                                         {if $show_delivery_add_for_virtualcart eq true}
                                             <div id="checkoutShippingAddress" style="display:none;">
-                                                {*                            <div class="velsof_sc_overlay"></div>*}
                                             </div>
                                         {else}
                                             <div id="checkoutShippingAddress">
-                                                {*                            <div class="velsof_sc_overlay"></div>*}
                                                 {include file='module:supercheckout/views/templates/front/shipping_address.tpl'}
                                             </div>
                                         {/if}

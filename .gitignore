@@ -503,3 +503,4 @@ modules/singlestockattributespoco.zip
 !modules/ps_emailalerts/mails/nl/*
 ## Docker configuration
 install.lock
+modules/productcomments.zip

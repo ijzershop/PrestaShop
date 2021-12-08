@@ -32,8 +32,12 @@ let updateTableValue = function (input) {
   var blockName = name.substring(name.lastIndexOf('_') + 1);
   var template = name.substring(0, name.lastIndexOf('_'));
 
-  emailTemplateBlocks[template][blockName] = input.checked;
-
+  if(emailTemplateBlocks.hasOwnProperty(template)) {
+    emailTemplateBlocks[template][blockName] = input.checked;
+  } else {
+    emailTemplateBlocks[template] = {};
+    emailTemplateBlocks[template][blockName] = input.checked;
+  }
   configInput.value = JSON.stringify(emailTemplateBlocks);
 }
 
@@ -46,7 +50,9 @@ let fillTableValues = function (){
     var blockName = name.substring(name.lastIndexOf('_') + 1);
     var template = name.substring(0 ,name.lastIndexOf('_'));
 
-    input.checked = emailTemplateBlocks[template][blockName];
+    if(emailTemplateBlocks.hasOwnProperty(template)){
+      input.checked = emailTemplateBlocks[template][blockName];
+    }
 
     input.addEventListener('change', function(elem){
       updateTableValue(elem.target);

@@ -344,6 +344,10 @@ class ModerneSmidMailTheme extends Module
              */
             'offernotification' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
             /**
+             * gauthenticator Module
+             */
+            'recovery' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            /**
              * Follow Up Module
              */
             'followup_1' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],

@@ -220,6 +220,14 @@
       <td><input type="checkbox" data-name="log_alert_contact"/></td>
     </tr>
     <tr>
+      <td><a href="http://ijzershop176-upgrade.local/admin-dev/index.php/improve/design/mail_theme/preview/nl-NL/modernesmid/mollie/mollie_payment.html?_token={{Tools::getAdminToken('AdminModules')}}" target="_blank"/> mollie_payment</td>
+      <td><input type="checkbox" data-name="mollie_payment_trace"/></td>
+      <td><input type="checkbox" data-name="mollie_payment_add2order"/></td>
+      <td><input type="checkbox" data-name="mollie_payment_faq"/></td>
+      <td><input type="checkbox" data-name="mollie_payment_review"/></td>
+      <td><input type="checkbox" data-name="mollie_payment_contact"/></td>
+    </tr>
+    <tr>
       <td><a href="http://ijzershop176-upgrade.local/admin-dev/index.php/improve/design/mail_theme/preview/nl-NL/modernesmid/ps_emailalerts/new_order.html?_token={{Tools::getAdminToken('AdminModules')}}" target="_blank"/> new_order</td>
       <td><input type="checkbox" data-name="new_order_trace"/></td>
       <td><input type="checkbox" data-name="new_order_add2order"/></td>
@@ -298,6 +306,14 @@
       <td><input type="checkbox" data-name="order_customer_comment_faq"/></td>
       <td><input type="checkbox" data-name="order_customer_comment_review"/></td>
       <td><input type="checkbox" data-name="order_customer_comment_contact"/></td>
+    </tr>
+    <tr>
+      <td><a href="http://ijzershop176-upgrade.local/admin-dev/index.php/improve/design/mail_theme/preview/nl-NL/modernesmid/ordersexport/notification.html?_token={{Tools::getAdminToken('AdminModules')}}" target="_blank"/> notification</td>
+      <td><input type="checkbox" data-name="notification_trace"/></td>
+      <td><input type="checkbox" data-name="notification_add2order"/></td>
+      <td><input type="checkbox" data-name="notification_faq"/></td>
+      <td><input type="checkbox" data-name="notification_review"/></td>
+      <td><input type="checkbox" data-name="notification_contact"/></td>
     </tr>
     <tr>
       <td><a href="http://ijzershop176-upgrade.local/admin-dev/index.php/improve/design/mail_theme/preview/nl-NL/modernesmid/order_merchant_comment.html?_token={{Tools::getAdminToken('AdminModules')}}" target="_blank"/> order_merchant_comment</td>
@@ -386,6 +402,14 @@
       <td><input type="checkbox" data-name="productoutofstock_faq"/></td>
       <td><input type="checkbox" data-name="productoutofstock_review"/></td>
       <td><input type="checkbox" data-name="productoutofstock_contact"/></td>
+    </tr>
+    <tr>
+      <td><a href="http://ijzershop176-upgrade.local/admin-dev/index.php/improve/design/mail_theme/preview/nl-NL/modernesmid/gauthenticator/recovery.html?_token={{Tools::getAdminToken('AdminModules')}}" target="_blank"/> recovery</td>
+      <td><input type="checkbox" data-name="recovery_trace"/></td>
+      <td><input type="checkbox" data-name="recovery_add2order"/></td>
+      <td><input type="checkbox" data-name="recovery_faq"/></td>
+      <td><input type="checkbox" data-name="recovery_review"/></td>
+      <td><input type="checkbox" data-name="recovery_contact"/></td>
     </tr>
     <tr>
       <td><a href="http://ijzershop176-upgrade.local/admin-dev/index.php/improve/design/mail_theme/preview/nl-NL/modernesmid/referralprogram/referralprogram-congratulations.html?_token={{Tools::getAdminToken('AdminModules')}}" target="_blank"/> referralprogram-congratulations</td>

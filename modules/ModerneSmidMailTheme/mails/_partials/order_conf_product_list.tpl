@@ -43,7 +43,7 @@
 				<td width="5">&nbsp;</td>
 				<td>
 					<font size="2" face="Open-sans, sans-serif" color="#555454">
-						<strong>{$product['name']}</strong>
+						<strong>{AttributeGroup::stripSawCutModuleAttributeGroupName($product['name'])}</strong>
 						{if count($product['customization']) == 1}
 							<br>
 							{foreach $product['customization'] as $customization}

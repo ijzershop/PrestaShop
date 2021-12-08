@@ -118,9 +118,10 @@ class ModerneSmidMailTheme extends Module
         $themes = $hookParams['mailThemes'];
         $scanner = new FolderThemeScanner();
         $moderneSmidTheme = $scanner->scan(__DIR__.'/mails/themes/modernesmid');
-//        if (null !== $moderneSmidTheme && $moderneSmidTheme->getLayouts()->count() > 0) {
-//            $themes->add($moderneSmidTheme);
-//        }
+
+        if (null !== $moderneSmidTheme &&  $moderneSmidTheme->getName() !== 'modernesmid' && $moderneSmidTheme->getLayouts()->count() > 0) {
+            $themes->add($moderneSmidTheme);
+        }
     }
 
     /**
@@ -141,10 +142,68 @@ class ModerneSmidMailTheme extends Module
 
         $hookParams['mailLayoutVariables']['custom_footer_html'] = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '');
         $hookParams['mailLayoutVariables']['faq_page'] = Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '','');
-        $hookParams['mailLayoutVariables']['add_to_order'] = '<span class="text-small"><strong><span class=""><span class="text-grey ">Iets vergeten?</span></span></strong></span><br/><span class="text-small"><span class=""><span class="text-grey " style="line-height:25px;">Tot u bericht krijgt dat uw bestelling is verstuurd kunt u iets toevoegen aan uw bestelling zonder dat er extra verzendkosten in rekening worden gebracht. Maak hiervoor een nieuwe bestelling en kies bij verzending voor: "Toevoegen".</span></span></span>';
+        $hookParams['mailLayoutVariables']['add_to_order'] = '<span class="text-small"><strong><span class=""><span class="text-grey ">Iets vergeten te bestellen?</span></span></strong></span><br/><span class="text-small"><span class=""><span class="text-grey " style="line-height:25px;">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.</span></span></span>';
+        $hookParams['mailLayoutVariables']['footer_visibles'] = $this->filterFooterBlocks($mailLayout);
+
+
+        $hookParams['mailLayoutVariables']['shop_name'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME'));
+        $hookParams['mailLayoutVariables']['shop_url'] = Context::getContext()->link->getPageLink(
+            'index',
+            true,
+            Context::getContext()->language->id,
+            null,
+            false,
+            Context::getContext()->shop->id
+        );
+        $hookParams['mailLayoutVariables']['my_account_url'] = Context::getContext()->link->getPageLink(
+            'my-account',
+            true,
+            Context::getContext()->language->id,
+            null,
+            false,
+            Context::getContext()->shop->id
+        );
+        $hookParams['mailLayoutVariables']['guest_tracking_url'] = Context::getContext()->link->getPageLink(
+            'guest-tracking',
+            true,
+            Context::getContext()->language->id,
+            null,
+            false,
+            Context::getContext()->shop->id
+        );
+        $hookParams['mailLayoutVariables']['history_url'] = Context::getContext()->link->getPageLink(
+            'history',
+            true,
+            Context::getContext()->language->id,
+            null,
+            false,
+            Context::getContext()->shop->id
+        );
+        $hookParams['mailLayoutVariables']['order_slip_url'] = Context::getContext()->link->getPageLink(
+            'order-slip',
+            true,
+            Context::getContext()->language->id,
+            null,
+            false,
+            Context::getContext()->shop->id
+        );
+        $hookParams['mailLayoutVariables']['color'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, Context::getContext()->shop->id));
+
+        $hookParams['mailLayoutVariables']['order_name'] = 'YS-T3ST';
     }
 
+    /**
+     * Return array with boolean values show different blocks in footer
+     * Array contains: traceOrder, add2Order, faq, review, contact
+     *
+     * @param $templateName
+     */
+    public function filterFooterBlocks($templateName){
+        $templateBlocks = json_decode(Configuration::get('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS', Context::getContext()->language->id, null, Context::getContext()->shop->id, true));
+        $templateBlocksData = $templateBlocks->{$templateName->getName()};
 
+        return (array)$templateBlocksData;
+    }
     /**
      * Load the configuration form
      */
@@ -224,6 +283,12 @@ class ModerneSmidMailTheme extends Module
                         ),
                     )
                 ),
+                'input' => array(
+                    array(
+                        'type' => 'hidden',
+                        'name' => 'MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS',
+                    ),
+                ),
                 'submit' => array(
                     'title' => $this->l('Save'),
                 ),
@@ -236,8 +301,78 @@ class ModerneSmidMailTheme extends Module
      */
     protected function getConfigFormValues()
     {
+        $defaultBlocksData = json_encode([
+            'account' => ['trace' => false, 'add2order' => false, 'faq' => true, 'review' => false, 'contact' => true],
+            'backoffice_order' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'bankwire' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'cheque' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'contact' => ['trace' => false, 'add2order' => false, 'faq' => false, 'review' => false, 'contact' => false],
+            'contact_form' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'contact_information' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'contact_offer' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'credit_slip' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'download_product' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'employee_password' => ['trace' => false, 'add2order' => false, 'faq' => false, 'review' => false, 'contact' => false],
+            'forward_msg' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'guest_to_customer' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'import' => ['trace' => false, 'add2order' => false, 'faq' => false, 'review' => false, 'contact' => false],
+            'in_transit' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'log_alert' => ['trace' => false, 'add2order' => false, 'faq' => false, 'review' => false, 'contact' => false],
+            'newsletter' => ['trace' => false, 'add2order' => false, 'faq' => false, 'review' => false, 'contact' => false],
+            'order_canceled' => ['trace' => true, 'add2order' => false, 'faq' => true, 'review' => false, 'contact' => true],
+            'order_changed' => ['trace' => true, 'add2order' => false, 'faq' => true, 'review' => false, 'contact' => true],
+            'order_conf' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'order_customer_comment' => ['trace' => false, 'add2order' => false, 'faq' => false, 'review' => false, 'contact' => false],
+            'order_merchant_comment' => ['trace' => false, 'add2order' => false, 'faq' => true, 'review' => false, 'contact' => true],
+            'order_return_state' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'outofstock' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'password' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'password_query' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'payment' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'payment_error' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'pickup2' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'preparation' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'productoutofstock' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'refund' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'reply_msg' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'shipped' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'test' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'voucher' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'voucher_new' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            /**
+             * Offer Integration Module
+             */
+            'offernotification' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            /**
+             * Follow Up Module
+             */
+            'followup_1' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'followup_2' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'followup_3' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'followup_4' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            /**
+             * Email alerts module
+             */
+            'customer_qty' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'order_changed' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'new_order' => ['trace' => false, 'add2order' => false, 'faq' => false, 'review' => false, 'contact' => false],
+            'return_slip' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'productoutofstock' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'productcoverage' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            /**
+             * Email subscription Module
+             */
+            'newsletter_conf' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'newsletter_verif' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'newsletter_voucher' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'referralprogram-congratulations' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'referralprogram-invitation' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
+            'referralprogram-voucher' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true]
+        ]);
+
         return array(
-            'MODERNESMIDMAILTHEME_LIVE_MODE' => Configuration::get('MODERNESMIDMAILTHEME_LIVE_MODE', true),
+            'MODERNESMIDMAILTHEME_LIVE_MODE' => Configuration::get('MODERNESMIDMAILTHEME_LIVE_MODE', Context::getContext()->language->id, null, Context::getContext()->shop->id, true),
+            'MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS' => Configuration::get('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS', Context::getContext()->language->id, null, Context::getContext()->shop->id, $defaultBlocksData),
         );
     }
 
@@ -258,7 +393,7 @@ class ModerneSmidMailTheme extends Module
     */
     public function hookBackOfficeHeader()
     {
-        if (Tools::getValue('module_name') == $this->name) {
+        if (Tools::getValue('configure') == $this->name) {
             $this->context->controller->addJS($this->_path.'views/js/back.js');
             $this->context->controller->addCSS($this->_path.'views/css/back.css');
         }

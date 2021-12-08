@@ -25,3 +25,35 @@
 * Don't forget to prefix your containers with your own identifier
 * to avoid any conflicts with others containers.
 */
+let updateTableValue = function (input) {
+  let configInput = document.getElementById('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS');
+  var emailTemplateBlocks = JSON.parse(configInput.value);
+  var name = input.getAttribute('data-name');
+  var blockName = name.substring(name.lastIndexOf('_') + 1);
+  var template = name.substring(0, name.lastIndexOf('_'));
+
+  emailTemplateBlocks[template][blockName] = input.checked;
+
+  configInput.value = JSON.stringify(emailTemplateBlocks);
+}
+
+let fillTableValues = function (){
+  let configInput = document.getElementById('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS');
+  var emailTemplateBlocks = JSON.parse(configInput.value);
+  document.querySelectorAll('table#email-blocks td input[type="checkbox"]').forEach((input) => {
+
+    var name = input.getAttribute('data-name');
+    var blockName = name.substring(name.lastIndexOf('_') + 1);
+    var template = name.substring(0 ,name.lastIndexOf('_'));
+
+    input.checked = emailTemplateBlocks[template][blockName];
+
+    input.addEventListener('change', function(elem){
+      updateTableValue(elem.target);
+    });
+  });
+}
+
+$(function() {
+  fillTableValues();
+});

@@ -123,12 +123,14 @@ class Mail extends MailCore
             $template = 'contact_information';
             $templateVars['{postcode}'] = Tools::getValue('postalcode');
             $templateVars['{phonenumber}'] = Tools::getValue('phonenumber');
+            $templateVars['{name}'] = Tools::getValue('name');
         }
 
         if($template == 'contact' && $templateType == 'offer') {
             $template = 'contact_offer';
             $templateVars['{postcode}'] = Tools::getValue('postalcode');
             $templateVars['{phonenumber}'] = Tools::getValue('phonenumber');
+            $templateVars['{name}'] = Tools::getValue('name');
         }
         /**
          * End add template type vars
@@ -483,20 +485,23 @@ class Mail extends MailCore
                                                       <span class="text-small">
                                                         <strong>
                                                           <span class="font-arial">
-                                                            <span class="text-grey font-arial">Iets vergeten? </span>
+                                                            <span class="text-grey font-arial">Iets vergeten te bestellen?</span>
                                                           </span>
                                                         </strong>
                                                       </span>
                                                       <br />
                                                       <span class="text-small">
                                                         <span class="font-arial">
-                                                          <span class="text-grey font-arial">Tot u bericht krijgt dat uw bestelling is verstuurd kunt u iets toevoegen aan uw bestelling zonder dat er extra verzendkosten in rekening worden gebracht. Maak hiervoor een nieuwe bestelling en kies bij verzending voor: "Toevoegen".
+                                                          <span class="text-grey font-arial">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.
                                                           </span>
                                                         </span>
                                                       </span>
                                                     </td>
                                                   </tr>';
             }
+
+
+
             $templateVars['{custom_footer_html}'] = Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', ''));
             $templateVars['{custom_footer_txt}'] = Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT_TXT', ''));
             $templateVars['{faq_page}'] = Tools::safeOutput(Context::getContext()->link->getCMSLink(
@@ -554,6 +559,9 @@ class Mail extends MailCore
                 $idShop
             );
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
+
+            $templateVars['{footer_visibles}'] = $this->filterFooterBlocks($template);
+
             // Get extra template_vars
             $extraTemplateVars = [];
             Hook::exec(
@@ -645,6 +653,20 @@ class Mail extends MailCore
 
             return false;
         }
+    }
+
+
+    /**
+     * Return array with boolean values show different blocks in footer
+     * Array contains: traceOrder, add2Order, faq, review, contact
+     *
+     * @param $templateName
+     */
+    public function filterFooterBlocks($templateName){
+        $templateBlocks = json_decode(Configuration::get('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS', Context::getContext()->language->id, null, Context::getContext()->shop->id, null));
+        $templateBlocksData = $templateBlocks->{$templateName->getName()};
+
+        return (array)$templateBlocksData;
     }
 }
 

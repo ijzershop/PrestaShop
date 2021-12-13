@@ -1,0 +1,19 @@
+{shop_url}
+
+Information request from {shop_name} by {name}
+
+E-mailadres van de klant: {email}
+
+Postcode:  {postcode}
+
+Phone number:  {phonenumber}
+
+Order reference:  {order_reference}
+
+Bijlage: {attached_file}
+
+Klantbericht:
+
+{message}
+
+eerwrewreweew rre wer werewwer ewrwe ewr ewr e

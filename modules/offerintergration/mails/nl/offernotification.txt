@@ -1,0 +1,43 @@
+{shop_url}
+
+Beste {customer_name},
+
+Wij hebben uw offerte aanvraag ontvangen.
+
+Om de aanbieding die wij voor u hebben samengesteld te bekijken klikt u op de volgende link:
+{url}
+
+Let op! deze aanbieding verloopt op {date_exp}, daarna wordt de aanbieding verwijderd uit ons systeem.
+
+U krijgt dan een overzicht van de producten die zijn aangevraagd en kunt u het gewenste aantal invullen en toevoegen aan uw winkelwagen.
+Vervolgens kunt u de winkelwagen nog aanvullen met andere producten van [www.IjzerShop.nl]({shop_url}) en afrekenen via Ideal, Paypal of een bankoverschrijving.
+Na ontvangst van de bestelling ontvangt u direct een bevestiging van uw order inclusief factuur in uw mailbox.
+
+Mocht u naar aanleiding van onze offerte nog vragen hebben horen wij deze graag.
+
+Met vriendelijke groet,
+
+Verkoop {shop_name}
+
+Iets vergeten te bestellen?
+Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.
+
+What is the state of your order?
+Volg de status en details in uw eigen    [> klantaccount](http://ijzershop176-upgrade.local/mijn-account)
+Geen account? Volg dan uw bestelling via    [> bestelling volgen](http://ijzershop176-upgrade.local/bestelling-volgen-als-gast)
+
+Heeft u een vraag?
+Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
+[> veel gestelde vragen](http://ijzershop176-upgrade.local/content/51-veelgestelde-vragen)
+
+Hoeveel sterren krijgen wij van u?,
+Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
+>  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
+
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
+
+[telefoon: 058-2123138](tel://0900-2502500)
+
+[email: info@v15.nl](mailto:info@v15.nl)
+
+eerwrewreweew rre wer werewwer ewrwe ewr ewr e

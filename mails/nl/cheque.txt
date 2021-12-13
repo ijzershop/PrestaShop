@@ -8,8 +8,6 @@ Bestelling {order_name} - Wachtende op betaling met cheque
 
 Uw bestelling met referentie {order_name}  is succesvol geplaatst en zal  verstuurd worden zodra wij uw betaling ontvangen hebben .
 
-Betaalmethode: Cheque
-
 U hebt ervoor gekozen om te betalen via cheque. Hier is de informatie die u nodig heeft om te betalen via cheque:
 
 Bedrag:   {total_paid}
@@ -18,22 +16,25 @@ Totaalbedrag bestelling:   {check_name}
 
 Verschuldigd i.v.m. een bestelling aan:   {check_address_html}
 
-Follow your order and download your invoice on our shop, go to the [Order history and details]({history_url}) section of your customer account.
+Iets vergeten te bestellen?
+Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.
 
-If you have a guest account, you can follow your order via the [Guest Tracking]({guest_tracking_url}) section on our shop.
+What is the state of your order?
+Volg de status en details in uw eigen    [> klantaccount](http://ijzershop176-upgrade.local/mijn-account)
+Geen account? Volg dan uw bestelling via    [> bestelling volgen](http://ijzershop176-upgrade.local/bestelling-volgen-als-gast)
+
+Heeft u een vraag?
+Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
+[> veel gestelde vragen](http://ijzershop176-upgrade.local/content/51-veelgestelde-vragen)
 
 Hoeveel sterren krijgen wij van u?,
 Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
 >  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
 
-Heeft u een vraag?
-Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
-[> veel gestelde vragen]({faq_page})
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 
-[Stuur een whatsapp naar: 0636.58.58.00](https://api.whatsapp.com/send?phone=31636585800)whatsapp: 0636 5858 00
+[telefoon: 058-2123138](tel://0900-2502500)
 
-[Bel naar: 0900-2502500](tel://0900-2502500)telefoon: 058-2123138
+[email: info@v15.nl](mailto:info@v15.nl)
 
-[stuur een mail naar info@v15.nl](mailto:info@v15.nl) email: info@v15.nl
-
-{custom_footer_html}
+eerwrewreweew rre wer werewwer ewrwe ewr ewr e

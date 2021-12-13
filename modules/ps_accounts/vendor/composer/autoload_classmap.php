@@ -300,6 +300,8 @@ return array(
     'PrestaShop\\Module\\PsAccounts\\Controller\\AbstractRestController' => $baseDir . '/classes/Controller/AbstractRestController.php',
     'PrestaShop\\Module\\PsAccounts\\Controller\\AbstractShopRestController' => $baseDir . '/classes/Controller/AbstractShopRestController.php',
     'PrestaShop\\Module\\PsAccounts\\Controller\\RestControllerInterface' => $baseDir . '/classes/Controller/RestControllerInterface.php',
+    'PrestaShop\\Module\\PsAccounts\\DTO\\AbstractDto' => $baseDir . '/classes/DTO/AbstractDto.php',
+    'PrestaShop\\Module\\PsAccounts\\DTO\\UpdateShop' => $baseDir . '/classes/DTO/UpdateShop.php',
     'PrestaShop\\Module\\PsAccounts\\DependencyInjection\\ContainerProvider' => $baseDir . '/classes/DependencyInjection/ContainerProvider.php',
     'PrestaShop\\Module\\PsAccounts\\DependencyInjection\\ServiceContainer' => $baseDir . '/classes/DependencyInjection/ServiceContainer.php',
     'PrestaShop\\Module\\PsAccounts\\Exception\\BillingException' => $baseDir . '/classes/Exception/BillingException.php',

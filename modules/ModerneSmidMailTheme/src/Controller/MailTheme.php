@@ -1,4 +1,7 @@
 <?php
+
+namespace ModerneSmidMailTheme\Controller;
+
 use Symfony\Component\Filesystem\Exception\ExceptionInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;

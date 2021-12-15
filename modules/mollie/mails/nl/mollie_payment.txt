@@ -6,25 +6,4 @@ Bedankt voor het winkelen bij {shop_name}!
 
 You can now finish your order by clicking on [> pay now.]({checkoutUrl})
 
-Iets vergeten te bestellen?
-Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.
-
-What is the state of your order?
-Volg de status en details in uw eigen    [> klantaccount](http://ijzershop176-upgrade.local/mijn-account)
-Geen account? Volg dan uw bestelling via    [> bestelling volgen](http://ijzershop176-upgrade.local/bestelling-volgen-als-gast)
-
-Heeft u een vraag?
-Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
-[> veel gestelde vragen](http://ijzershop176-upgrade.local/content/51-veelgestelde-vragen)
-
-Hoeveel sterren krijgen wij van u?,
-Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
->  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
-
-[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
-
-[telefoon: 058-2123138](tel://0900-2502500)
-
-[email: info@v15.nl](mailto:info@v15.nl)
-
 eerwrewreweew rre wer werewwer ewrwe ewr ewr e

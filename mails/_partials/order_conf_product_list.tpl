@@ -28,7 +28,7 @@
 		<table class="table" width="100%">
 			<tr>
 				<td width="5">&nbsp;</td>
-				<td>
+				<td style="text-align: center;">
 					<font size="2" face="Open-sans, sans-serif" color="#353943">
 						{$product['reference']}
 					</font>
@@ -75,7 +75,7 @@
 		<table class="table" width="100%">
 			<tr>
 				<td width="5">&nbsp;</td>
-				<td style="text-align:right;">
+				<td style="text-align:center;">
 					<font size="2" face="Open-sans, sans-serif" color="#353943">
 						{$product['quantity']}
 					</font>

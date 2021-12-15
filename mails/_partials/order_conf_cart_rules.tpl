@@ -24,18 +24,18 @@
  *}
 {foreach $list as $cart_rule}
 	<tr class="conf_body">
-		<td bgcolor="#f8f8f8" colspan="3" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+		<td colspan="3" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
 			<table class="table" style="width:100%;border-collapse:collapse">
 				<tr>
 					<td width="5" style="color:#333;padding:0"></td>
-					<td style="text-align:right;color: #353943;font-size: 14px;">
+					<td style="text-align:right;color: #353943;font-size: 16px;">
 							<strong>{$cart_rule['voucher_name']}</strong>
 					</td>
 					<td width="5" style="color:#333;padding:0"></td>
 				</tr>
 			</table>
 		</td>
-		<td bgcolor="#f8f8f8" colspan="3" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+		<td colspan="3" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
 			<table class="table" style="width:100%;border-collapse:collapse">
 				<tr>
 					<td width="5" style="color:#333;padding:0"></td>

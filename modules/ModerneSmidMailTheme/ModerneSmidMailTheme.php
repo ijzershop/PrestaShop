@@ -25,6 +25,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
+use PrestaShop\PrestaShop\Adapter\Entity\Context;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\Layout;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollectionInterface;
@@ -32,17 +34,21 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeScanner;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
-
-require_once('src/MailTheme.php');
-
-
+use ModerneSmidMailTheme\Controller\MailTheme;
+use ModerneSmidMailTheme\Controller\DmsMailThemeController;
+use ModerneSmidMailTheme\Controller\TwigTemplateRendererController;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+
+// Needed for installing process
+require_once __DIR__ . '/vendor/autoload.php';
+
 class ModerneSmidMailTheme extends Module
 {
+
     protected $config_form = false;
 
     public function __construct()
@@ -140,10 +146,11 @@ class ModerneSmidMailTheme extends Module
             return;
         }
 
-        $hookParams['mailLayoutVariables']['custom_footer_html'] = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '');
-        $hookParams['mailLayoutVariables']['faq_page'] = Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '','');
-        $hookParams['mailLayoutVariables']['add_to_order'] = '<span class="text-small"><strong><span class=""><span class="text-grey ">Iets vergeten te bestellen?</span></span></strong></span><br/><span class="text-small"><span class=""><span class="text-grey " style="line-height:25px;">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.</span></span></span>';
-        $hookParams['mailLayoutVariables']['footer_visibles'] = $this->filterFooterBlocks($mailLayout);
+//        $hookParams['mailLayoutVariables']['custom_footer_html'] = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '');
+//        $hookParams['mailLayoutVariables']['faq_page'] = Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '','');
+//        $hookParams['mailLayoutVariables']['add_to_order'] = '<span class="text-small"><strong><span class=""><span class="text-grey ">Iets vergeten te bestellen?</span></span></strong></span><br/><span class="text-small"><span class=""><span class="text-grey " style="line-height:25px;">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.</span></span></span>';
+
+        $hookParams['mailLayoutVariables']['footer_blocks'] = DmsMailThemeController::filterFooterBlocks($mailLayout);
 
 
         $hookParams['mailLayoutVariables']['shop_name'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME'));
@@ -188,21 +195,6 @@ class ModerneSmidMailTheme extends Module
             Context::getContext()->shop->id
         );
         $hookParams['mailLayoutVariables']['color'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, Context::getContext()->shop->id));
-
-        $hookParams['mailLayoutVariables']['order_name'] = 'YS-T3ST';
-    }
-
-    /**
-     * Return array with boolean values show different blocks in footer
-     * Array contains: traceOrder, add2Order, faq, review, contact
-     *
-     * @param $templateName
-     */
-    public function filterFooterBlocks($templateName){
-        $templateBlocks = json_decode(Configuration::get('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS', Context::getContext()->language->id, null, Context::getContext()->shop->id, true));
-        $templateBlocksData = $templateBlocks->{$templateName->getName()};
-
-        return (array)$templateBlocksData;
     }
     /**
      * Load the configuration form

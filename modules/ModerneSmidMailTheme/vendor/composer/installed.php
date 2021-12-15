@@ -1,42 +1,68 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => '1.7.6.x-dev',
-    'version' => '1.7.6.9999999-dev',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'pretty_version' => 'dev-develop',
+        'version' => 'dev-develop',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'reference' => '7ca69306344472861e21c83cc6ccf9de33595a42',
+        'name' => 'ijzershop/modernesmidmailtheme',
+        'dev' => true,
     ),
-    'reference' => '68fa8682dca1e4c157e739ad5e326de8064c21a5',
-    'name' => 'ijzershop/modernesmidmailtheme',
-  ),
-  'versions' => 
-  array (
-    'ijzershop/modernesmidmailtheme' => 
-    array (
-      'pretty_version' => '1.7.6.x-dev',
-      'version' => '1.7.6.9999999-dev',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '68fa8682dca1e4c157e739ad5e326de8064c21a5',
+    'versions' => array(
+        'ijzershop/modernesmidmailtheme' => array(
+            'pretty_version' => 'dev-develop',
+            'version' => 'dev-develop',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => '7ca69306344472861e21c83cc6ccf9de33595a42',
+            'dev_requirement' => false,
+        ),
+        'symfony/filesystem' => array(
+            'pretty_version' => 'v5.4.0',
+            'version' => '5.4.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/filesystem',
+            'aliases' => array(),
+            'reference' => '731f917dc31edcffec2c6a777f3698c33bea8f01',
+            'dev_requirement' => false,
+        ),
+        'symfony/polyfill-ctype' => array(
+            'pretty_version' => 'v1.23.0',
+            'version' => '1.23.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-ctype',
+            'aliases' => array(),
+            'reference' => '46cd95797e9df938fdd2b03693b5fca5e64b01ce',
+            'dev_requirement' => false,
+        ),
+        'symfony/polyfill-mbstring' => array(
+            'pretty_version' => 'v1.23.1',
+            'version' => '1.23.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
+            'aliases' => array(),
+            'reference' => '9174a3d80210dca8daa7f31fec659150bbeabfc6',
+            'dev_requirement' => false,
+        ),
+        'symfony/polyfill-php80' => array(
+            'pretty_version' => 'v1.23.1',
+            'version' => '1.23.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-php80',
+            'aliases' => array(),
+            'reference' => '1100343ed1a92e3a38f9ae122fc0eb21602547be',
+            'dev_requirement' => false,
+        ),
+        'symfony/templating' => array(
+            'pretty_version' => 'v5.4.0',
+            'version' => '5.4.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/templating',
+            'aliases' => array(),
+            'reference' => '5951210f5628417a9a0b39ad10d6b0cd39746435',
+            'dev_requirement' => false,
+        ),
     ),
-    'symfony/filesystem' => 
-    array (
-      'pretty_version' => 'v5.2.7',
-      'version' => '5.2.7.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '056e92acc21d977c37e6ea8e97374b2a6c8551b0',
-    ),
-    'symfony/polyfill-ctype' => 
-    array (
-      'pretty_version' => 'v1.22.1',
-      'version' => '1.22.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'c6c942b1ac76c82448322025e084cadc56048b4e',
-    ),
-  ),
 );

@@ -24,27 +24,23 @@
  *}
 {foreach $list as $cart_rule}
 	<tr class="conf_body">
-		<td bgcolor="#f8f8f8" colspan="3" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+		<td colspan="3" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
 			<table class="table" style="width:100%;border-collapse:collapse">
 				<tr>
 					<td width="5" style="color:#333;padding:0"></td>
-					<td align="right" style="color:#333;padding:0">
-						<font size="2" face="Open-sans, sans-serif" color="#555454">
+					<td style="text-align:right;color: #353943;font-size: 16px;">
 							<strong>{$cart_rule['voucher_name']}</strong>
-						</font>
 					</td>
 					<td width="5" style="color:#333;padding:0"></td>
 				</tr>
 			</table>
 		</td>
-		<td bgcolor="#f8f8f8" colspan="3" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+		<td colspan="3" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
 			<table class="table" style="width:100%;border-collapse:collapse">
 				<tr>
 					<td width="5" style="color:#333;padding:0"></td>
-					<td align="right" style="color:#333;padding:0">
-						<font size="2" face="Open-sans, sans-serif" color="#555454">
+					<td align="right" style="text-align:right;color: #353943;font-size: 14px;font-weight:bold;">
 							{$cart_rule['voucher_reduction']}
-						</font>
 					</td>
 					<td width="5" style="color:#333;padding:0"></td>
 				</tr>

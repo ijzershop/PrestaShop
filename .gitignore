@@ -504,3 +504,5 @@ modules/singlestockattributespoco.zip
 ## Docker configuration
 install.lock
 modules/productcomments.zip
+!/validScript.php
+!/OrderSlipGenerator.php

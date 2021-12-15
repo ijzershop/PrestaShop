@@ -560,7 +560,11 @@ class Mail extends MailCore
             );
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
 
-            $templateVars['{footer_visibles}'] = $this->filterFooterBlocks($template);
+
+            $templateBlocks = json_decode(Configuration::get('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS', Context::getContext()->language->id, null, Context::getContext()->shop->id, null));
+            $templateBlocksData = $templateBlocks->{$template};
+
+            $templateVars['{footer_visibles}'] = json_encode((array)$templateBlocksData);
 
             // Get extra template_vars
             $extraTemplateVars = [];
@@ -655,19 +659,6 @@ class Mail extends MailCore
         }
     }
 
-
-    /**
-     * Return array with boolean values show different blocks in footer
-     * Array contains: traceOrder, add2Order, faq, review, contact
-     *
-     * @param $templateName
-     */
-    public function filterFooterBlocks($templateName){
-        $templateBlocks = json_decode(Configuration::get('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS', Context::getContext()->language->id, null, Context::getContext()->shop->id, null));
-        $templateBlocksData = $templateBlocks->{$templateName->getName()};
-
-        return (array)$templateBlocksData;
-    }
 }
 
 

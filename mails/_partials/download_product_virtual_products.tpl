@@ -24,6 +24,6 @@
  *}
 <ul>
 {foreach $list as $product}
-  <li><a href="{$product.url}">{$product.text}</a> {$product.complementary_text}</li>
+  <li><a style="color:#ffffff;text-decoration:none;" href="{$product.url}">{$product.text}</a> {$product.complementary_text}</li>
 {/foreach}
 </ul>

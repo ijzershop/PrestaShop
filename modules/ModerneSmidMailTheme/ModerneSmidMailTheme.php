@@ -146,10 +146,6 @@ class ModerneSmidMailTheme extends Module
             return;
         }
 
-//        $hookParams['mailLayoutVariables']['custom_footer_html'] = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '');
-//        $hookParams['mailLayoutVariables']['faq_page'] = Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '','');
-//        $hookParams['mailLayoutVariables']['add_to_order'] = '<span class="text-small"><strong><span class=""><span class="text-grey ">Iets vergeten te bestellen?</span></span></strong></span><br/><span class="text-small"><span class=""><span class="text-grey " style="line-height:25px;">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.</span></span></span>';
-
         $hookParams['mailLayoutVariables']['footer_blocks'] = DmsMailThemeController::filterFooterBlocks($mailLayout);
 
 
@@ -295,6 +291,7 @@ class ModerneSmidMailTheme extends Module
     {
         $defaultBlocksData = json_encode([
             'account' => ['trace' => false, 'add2order' => false, 'faq' => true, 'review' => false, 'contact' => true],
+            'account_kb' => ['trace' => false, 'add2order' => false, 'faq' => true, 'review' => false, 'contact' => true],
             'backoffice_order' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
             'bankwire' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],
             'cheque' => ['trace' => true, 'add2order' => true, 'faq' => true, 'review' => true, 'contact' => true],

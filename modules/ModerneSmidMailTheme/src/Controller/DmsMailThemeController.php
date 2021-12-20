@@ -190,7 +190,7 @@ class DmsMailThemeController extends FrameworkBundleAdminController
      *
      * @param $templateName
      */
-    public function filterFooterBlocks($templateName){
+    public static function filterFooterBlocks($templateName){
         $templateBlocks = json_decode(Configuration::get('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS', Context::getContext()->language->id, null, Context::getContext()->shop->id, true));
         $templateBlocksData = $templateBlocks->{$templateName->getName()};
 
@@ -200,17 +200,18 @@ class DmsMailThemeController extends FrameworkBundleAdminController
             'footer_visibles' => (array)$templateBlocksData,
             'locale' => Context::getContext()->language->locale,
             'faq_page' => Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '',''),
-            'add_to_order' => '<span class="text-small"><strong><span class=""><span class="text-grey ">Iets vergeten te bestellen?</span></span></strong></span><br/><span class="text-small"><span class=""><span class="text-grey " style="line-height:25px;">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.</span></span></span>',
+            'add_to_order' => '<b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;">Iets vergeten te bestellen?<br/></span></b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;line-height: 25px;">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.</span>',
             'custom_footer_html' => Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),
             'shop_name' => Context::getContext()->shop->name,
             'shop_url' => Context::getContext()->link->getPageLink('index', true),
             'my_account_url' => Context::getContext()->link->getPageLink('my-account', true),
             'guest_tracking_url' => Context::getContext()->link->getPageLink('guest-tracking', true),
-            'history_url' => Context::getContext()->link->getPageLink('history', true)
+            'history_url' => Context::getContext()->link->getPageLink('history', true),
         ]);
 
         return $contents;
     }
+
 
     /**
      * @param string $themeName

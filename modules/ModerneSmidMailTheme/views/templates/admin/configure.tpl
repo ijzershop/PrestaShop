@@ -60,6 +60,14 @@
       <td><input type="checkbox" data-name="account_contact"/></td>
     </tr>
     <tr>
+      <td><a href="/admin-dev/index.php/improve/design/mail_theme/preview/nl-NL/modernesmid/supercheckout/account_kb.html?_token={{Tools::getAdminToken('AdminModules')}}" target="_blank"/> account kb (supercheckout)</td>
+      <td><input type="checkbox" data-name="account_kb_trace"/></td>
+      <td><input type="checkbox" data-name="account_kb_add2order"/></td>
+      <td><input type="checkbox" data-name="account_kb_faq"/></td>
+      <td><input type="checkbox" data-name="account_kb_review"/></td>
+      <td><input type="checkbox" data-name="account_kb_contact"/></td>
+    </tr>
+    <tr>
       <td><a href="/admin-dev/index.php/improve/design/mail_theme/preview/nl-NL/modernesmid/backoffice_order.html?_token={{Tools::getAdminToken('AdminModules')}}" target="_blank"/> backoffice_order</td>
       <td><input type="checkbox" data-name="backoffice_order_trace"/></td>
       <td><input type="checkbox" data-name="backoffice_order_add2order"/></td>

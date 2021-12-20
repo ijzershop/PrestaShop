@@ -10,11 +10,7 @@ Uw bestelling met referentie {order_name} is onderweg.
 
 U kunt uw pakket volgen door op de volgende link te klikken: {followup}
 
-Follow your order and download your invoice on our shop, go to the [> order history and details]({history_url}) section of your customer account.
-
-If you have a guest account, you can follow your order via the [> guest tracking]({guest_tracking_url}) section on our shop.
-
-What is the state of your order?
+Wat is de status van uw bestelling?
 Volg de status en details in uw eigen    [> klantaccount](http://ijzershop176-upgrade.local/mijn-account)
 Geen account? Volg dan uw bestelling via    [> bestelling volgen](http://ijzershop176-upgrade.local/bestelling-volgen-als-gast)
 
@@ -32,4 +28,4 @@ Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
 
 [email: info@v15.nl](mailto:info@v15.nl)
 
-eerwrewreweew rre wer werewwer ewrwe ewr ewr e
+IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

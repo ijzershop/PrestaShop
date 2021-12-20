@@ -476,32 +476,6 @@ class Mail extends MailCore
             /**
              * Start adding template vars
              */
-            $templateVars['{add_to_order}'] = '';
-            $carrierCheck = new Carrier(Configuration::get('ADDTOORDER_DELIVERY_METHOD'));
-            if(Module::isEnabled('addtoorder') && $carrierCheck->active){
-                $templateVars['{add_to_order}'] = '<tr>
-                                                    <td class="footer padding1020 bg-white">
-                                                      <br/>
-                                                      <span class="text-small">
-                                                        <strong>
-                                                          <span class="font-arial">
-                                                            <span class="text-grey font-arial">Iets vergeten te bestellen?</span>
-                                                          </span>
-                                                        </strong>
-                                                      </span>
-                                                      <br />
-                                                      <span class="text-small">
-                                                        <span class="font-arial">
-                                                          <span class="text-grey font-arial">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.
-                                                          </span>
-                                                        </span>
-                                                      </span>
-                                                    </td>
-                                                  </tr>';
-            }
-
-
-
             $templateVars['{custom_footer_html}'] = Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', ''));
             $templateVars['{custom_footer_txt}'] = Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT_TXT', ''));
             $templateVars['{faq_page}'] = Tools::safeOutput(Context::getContext()->link->getCMSLink(

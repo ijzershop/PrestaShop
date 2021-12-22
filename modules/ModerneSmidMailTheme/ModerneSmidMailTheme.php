@@ -135,7 +135,6 @@ class ModerneSmidMailTheme extends Module
      */
     public function hookActionBuildMailLayoutVariables(array $hookParams)
     {
-
         if (!isset($hookParams['mailLayout'])) {
             return;
         }
@@ -146,8 +145,12 @@ class ModerneSmidMailTheme extends Module
             return;
         }
 
-        $hookParams['mailLayoutVariables']['footer_blocks'] = DmsMailThemeController::filterFooterBlocks($mailLayout);
+        $route = '';
+        if(array_key_exists('request', $hookParams) && isset($hookParams['request']->attributes->all()['_route']) && $hookParams['request']->attributes->all()['_route'] == 'admin_mail_theme_generate'){
+            $route = $hookParams['request']->attributes->all()['_route'];
+        }
 
+        $hookParams['mailLayoutVariables']['footer_blocks'] = DmsMailThemeController::filterFooterBlocks($mailLayout, $route);
 
         $hookParams['mailLayoutVariables']['shop_name'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME'));
         $hookParams['mailLayoutVariables']['shop_url'] = Context::getContext()->link->getPageLink(
@@ -191,6 +194,7 @@ class ModerneSmidMailTheme extends Module
             Context::getContext()->shop->id
         );
         $hookParams['mailLayoutVariables']['color'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, Context::getContext()->shop->id));
+
     }
     /**
      * Load the configuration form

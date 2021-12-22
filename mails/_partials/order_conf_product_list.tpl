@@ -24,7 +24,7 @@
  *}
 {foreach $list as $product}
 <tr>
-	<td style="border:1px solid #D6D4D4;">
+	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
 		<table class="table" width="100%">
 			<tr>
 				<td width="5">&nbsp;</td>
@@ -37,20 +37,19 @@
 			</tr>
 		</table>
 	</td>
-	<td style="border:1px solid #D6D4D4;">
+	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
 		<table class="table" width="100%">
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td>
 					<font size="2" face="Open-sans, sans-serif" color="#353943">
-						<strong>{AttributeGroup::stripSawCutModuleAttributeGroupName($product['name'])}</strong>
+						<strong>{$product['name']}</strong>
 						{if count($product['customization']) == 1}
 							<br>
 							{foreach $product['customization'] as $customization}
 								{$customization['customization_text']}
 							{/foreach}
 						{/if}
-
 						{hook h='displayProductPriceBlock' product=$product type="unit_price"}
 					</font>
 				</td>
@@ -58,7 +57,7 @@
 			</tr>
 		</table>
 	</td>
-	<td style="border:1px solid #D6D4D4;">
+	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
 		<table class="table" width="100%">
 			<tr>
 				<td width="5">&nbsp;</td>
@@ -71,7 +70,7 @@
 			</tr>
 		</table>
 	</td>
-	<td style="border:1px solid #D6D4D4;">
+	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
 		<table class="table" width="100%">
 			<tr>
 				<td width="5">&nbsp;</td>
@@ -84,7 +83,7 @@
 			</tr>
 		</table>
 	</td>
-	<td style="border:1px solid #D6D4D4;">
+	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
 		<table class="table" width="100%">
 			<tr>
 				<td width="5">&nbsp;</td>
@@ -101,7 +100,7 @@
   {if count($product['customization']) > 1}
   	{foreach $product['customization'] as $customization}
   		<tr>
-  		<td colspan="3" style="border:1px solid #D6D4D4;">
+  		<td colspan="3" style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
   			<table class="table" width="100%">
   				<tr>
   					<td width="5">&nbsp;</td>
@@ -114,7 +113,7 @@
   				</tr>
   			</table>
   		</td>
-  		<td style="border:1px solid #D6D4D4;">
+  		<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
   			<table class="table" width="100%">
   				<tr>
   					<td width="5">&nbsp;</td>
@@ -129,7 +128,7 @@
   				</tr>
   			</table>
   		</td>
-  		<td style="border:1px solid #D6D4D4;"></td>
+  		<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;"></td>
   	</tr>
   	{/foreach}
   {/if}

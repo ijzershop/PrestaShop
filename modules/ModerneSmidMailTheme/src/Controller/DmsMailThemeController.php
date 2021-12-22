@@ -33,6 +33,7 @@ use Mail;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\Context;
 use PrestaShop\PrestaShop\Adapter\Entity\Order;
+use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
@@ -142,6 +143,23 @@ class DmsMailThemeController extends FrameworkBundleAdminController
         $mailVariables = $variablesBuilder->buildTemplateVariables($mailLayout);
         $mailVariables['{footer_blocks}'] = $this->filterFooterBlocks($mailLayout);
 
+
+        if(array_key_exists('{id_order}', $mailVariables) && !is_null($mailVariables['{id_order}'])){
+            $order = new Order($mailVariables['{id_order}']);
+            $address = new Address($order->id_address_delivery);
+
+            $newAddressBlock = '<span>'.$address->address1 .' '. $address->house_number.$address->house_number_extension.'<br/>';
+            $newAddressBlock .= $address->postcode.' '. $address->city .'<br/>';
+            $newAddressBlock .= $address->country .'<br/>';
+            $newAddressBlock .= $address->phone .'<br/>';
+            if(!is_null($address->phone_mobile)){
+                $newAddressBlock .= $address->phone_mobile .'<br/>';
+            }
+
+            $mailVariables['{delivery_block_html}'] = $newAddressBlock;
+
+        }
+
         $mailSent = Mail::send(
             $language->getId(),
             $layout,
@@ -190,24 +208,57 @@ class DmsMailThemeController extends FrameworkBundleAdminController
      *
      * @param $templateName
      */
-    public static function filterFooterBlocks($templateName){
+    public static function filterFooterBlocks($templateName, $route = '') {
         $templateBlocks = json_decode(Configuration::get('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS', Context::getContext()->language->id, null, Context::getContext()->shop->id, true));
         $templateBlocksData = $templateBlocks->{$templateName->getName()};
 
-            $instance = SymfonyContainer::getInstance();
+        $instance = SymfonyContainer::getInstance();
 
-            $contents = $instance->get('twig')->render(_PS_MODULE_DIR_.'ModerneSmidMailTheme/mails/themes/modernesmid/components/footer_blocks.html.twig', [
-            'footer_visibles' => (array)$templateBlocksData,
-            'locale' => Context::getContext()->language->locale,
-            'faq_page' => Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '',''),
-            'add_to_order' => '<b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;">Iets vergeten te bestellen?<br/></span></b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;line-height: 25px;">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.</span>',
-            'custom_footer_html' => Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),
-            'shop_name' => Context::getContext()->shop->name,
-            'shop_url' => Context::getContext()->link->getPageLink('index', true),
-            'my_account_url' => Context::getContext()->link->getPageLink('my-account', true),
-            'guest_tracking_url' => Context::getContext()->link->getPageLink('guest-tracking', true),
-            'history_url' => Context::getContext()->link->getPageLink('history', true),
-        ]);
+        switch ($route){
+            case 'admin_mail_theme_generate':
+                $contents = $instance->get('twig')->render(_PS_MODULE_DIR_.'ModerneSmidMailTheme/mails/themes/modernesmid/components/footer_blocks.html.twig', [
+                    'footer_visibles' => (array)$templateBlocksData,
+                    'locale' => Context::getContext()->language->locale,
+                    'faq_page' => "{faq_page}",
+                    'add_to_order' => '<b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;">Iets vergeten te bestellen?<br/></span></b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;line-height: 25px;">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.</span>',
+                    'custom_footer_html' => "{custom_footer_html}",
+                    'shop_name' => "{shop_name}",
+                    'shop_url' => "{shop_url}",
+                    'my_account_url' => "{my_account_url}",
+                    'guest_tracking_url' => "{guest_tracking_url}",
+                    'history_url' => "{history_url}"
+                ]);
+                break;
+            case 'admin_mail_theme_preview_layout ':
+                $contents = $instance->get('twig')->render(_PS_MODULE_DIR_.'ModerneSmidMailTheme/mails/themes/modernesmid/components/footer_blocks.html.twig', [
+                    'footer_visibles' => (array)$templateBlocksData,
+                    'locale' => Context::getContext()->language->locale,
+                    'faq_page' => Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '',''),
+                    'add_to_order' => '<b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;">Iets vergeten te bestellen?<br/></span></b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;line-height: 25px;">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.</span>',
+                    'custom_footer_html' => Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),
+                    'shop_name' => Context::getContext()->shop->name,
+                    'shop_url' => Context::getContext()->link->getPageLink('index', true),
+                    'my_account_url' => Context::getContext()->link->getPageLink('my-account', true),
+                    'guest_tracking_url' => Context::getContext()->link->getPageLink('guest-tracking', true),
+                    'history_url' => Context::getContext()->link->getPageLink('history', true),
+                ]);
+                break;
+            default:
+                $contents = $instance->get('twig')->render(_PS_MODULE_DIR_.'ModerneSmidMailTheme/mails/themes/modernesmid/components/footer_blocks.html.twig', [
+                    'footer_visibles' => (array)$templateBlocksData,
+                    'locale' => Context::getContext()->language->locale,
+                    'faq_page' => Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '',''),
+                    'add_to_order' => '<b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;">Iets vergeten te bestellen?<br/></span></b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;line-height: 25px;">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.</span>',
+                    'custom_footer_html' => Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),
+                    'shop_name' => Context::getContext()->shop->name,
+                    'shop_url' => Context::getContext()->link->getPageLink('index', true),
+                    'my_account_url' => Context::getContext()->link->getPageLink('my-account', true),
+                    'guest_tracking_url' => Context::getContext()->link->getPageLink('guest-tracking', true),
+                    'history_url' => Context::getContext()->link->getPageLink('history', true),
+                ]);
+                break;
+        }
+
 
         return $contents;
     }
@@ -249,4 +300,5 @@ class DmsMailThemeController extends FrameworkBundleAdminController
 
         return $layout;
     }
+
 }

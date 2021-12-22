@@ -1,16 +1,17 @@
 {shop_url}
 
-Beste {customer_name},
+Uw aanbieding
 
-Wij hebben uw offerte aanvraag ontvangen.
+Om de aanbieding die wij voor u hebben samengesteld te bekijken klikt dan op  [Uw offerte]({url})
 
-Om de aanbieding die wij voor u hebben samengesteld te bekijken klikt u op de volgende link:
+Werkt de knop niet kopieëer dan de onderstaande link en plak deze in uw browser..
 {url}
 
 Let op! deze aanbieding verloopt op {date_exp}, daarna wordt de aanbieding verwijderd uit ons systeem.
 
 U krijgt dan een overzicht van de producten die zijn aangevraagd en kunt u het gewenste aantal invullen en toevoegen aan uw winkelwagen.
 Vervolgens kunt u de winkelwagen nog aanvullen met andere producten van [www.IjzerShop.nl]({shop_url}) en afrekenen via Ideal, Paypal of een bankoverschrijving.
+
 Na ontvangst van de bestelling ontvangt u direct een bevestiging van uw order inclusief factuur in uw mailbox.
 
 Mocht u naar aanleiding van onze offerte nog vragen hebben horen wij deze graag.
@@ -29,4 +30,4 @@ Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
 
 [email: info@v15.nl](mailto:info@v15.nl)
 
-{custom_footer_txt}
+IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

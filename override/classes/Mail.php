@@ -540,6 +540,26 @@ class Mail extends MailCore
 
             $templateVars['{footer_visibles}'] = json_encode((array)$templateBlocksData);
 
+            if(array_key_exists('{id_order}', $templateVars) && !is_null($templateVars['{id_order}'])){
+                    $order = new Order($templateVars['{id_order}']);
+                    $address = new Address($order->id_address_delivery);
+
+                    $newAddressBlock = '<span>'.$address->address1 .' '. $address->house_number.$address->house_number_extension.'<br/>';
+                    $newAddressBlock .= $address->postcode.' '. $address->city .'<br/>';
+                    $newAddressBlock .= $address->country .'<br/>';
+                    $newAddressBlock .= $address->phone .'<br/>';
+                    if(!is_null($address->phone_mobile)){
+                        $newAddressBlock .= $address->phone_mobile .'<br/>';
+                    }
+
+                $templateVars['{delivery_block_html}'] = $newAddressBlock;
+
+            }
+
+
+
+
+
             // Get extra template_vars
             $extraTemplateVars = [];
             Hook::exec(

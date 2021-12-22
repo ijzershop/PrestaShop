@@ -14,5 +14,3 @@ admin_mail_theme_send_test_module_mail:
     _controller: 'ModerneSmidMailTheme\Controller\DmsMailThemeController::sendTestMailAction'
     _legacy_link: AdminMailTheme:rawModuleLayout
     _legacy_controller: AdminMailTheme
-
-

@@ -7,7 +7,7 @@ class AttributeGroup extends AttributeGroupCore
      * @param integer $idLang language id
      * @return array list of attribute group names
      */
-    static public function getSawCutModuleAttributeGroupNames($idLang = 1)
+    public static function getSawCutModuleAttributeGroupNames($idLang = 1)
     {
         $sawCutConf = unserialize(Configuration::get('SAWANDCUTMODULE'));
 
@@ -37,7 +37,7 @@ class AttributeGroup extends AttributeGroupCore
      * @param string $column specifies the column name or public_name
      * @return string attribute group name
      */
-    static public function getSawCutModuleAttributeGroupName($cutting = true, $idLang = 1, $column = 'public_name')
+    public static function getSawCutModuleAttributeGroupName($cutting = true, $idLang = 1, $column = 'public_name')
     {
         $sawCutConf = unserialize(Configuration::get('SAWANDCUTMODULE'));
 

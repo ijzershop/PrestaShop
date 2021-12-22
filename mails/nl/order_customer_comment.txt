@@ -1,9 +1,5 @@
 {shop_url}
 
-Hallo {firstname} {lastname},
-
-Bericht van een klant
-
 U heeft een bericht ontvangen betreffende een bestelling met de referentie: {order_name}.
 
 Klant: {firstname} {lastname} ({email})
@@ -16,4 +12,4 @@ Klantbericht: {message}
 
 [email: info@v15.nl](mailto:info@v15.nl)
 
-{custom_footer_txt}
+IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

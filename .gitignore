@@ -507,3 +507,4 @@ modules/productcomments.zip
 !/validScript.php
 !/OrderSlipGenerator.php
 !/mails/themes/modernesmid
+mails/nl/*

@@ -500,7 +500,7 @@ class Ps_EmailAlerts extends Module
                         [
                             $order->reference,
                             Tools::displayPrice($order->total_paid, $currency),
-                            strtr(Tools::substr($order->payment, 0, 32)),
+                            strtoupper(Tools::substr($order->payment, 0, 32)),
                             (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name)
                         ],
                         'Emails.Subject',

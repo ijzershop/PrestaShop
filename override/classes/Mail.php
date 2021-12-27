@@ -557,9 +557,6 @@ class Mail extends MailCore
             }
 
 
-
-
-
             // Get extra template_vars
             $extraTemplateVars = [];
             Hook::exec(
@@ -610,6 +607,7 @@ class Mail extends MailCore
             Hook::exec('actionMailAlterMessageBeforeSend', [
                 'message' => &$message,
             ]);
+
 
             $send = $swift->send($message);
 

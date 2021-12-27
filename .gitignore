@@ -507,4 +507,3 @@ modules/productcomments.zip
 !/validScript.php
 !/OrderSlipGenerator.php
 !/mails/themes/modernesmid/
-!/translations/nl-NL/EmailsBody.nl-NL.xlf

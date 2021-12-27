@@ -43,11 +43,11 @@
 				<td width="5">&nbsp;</td>
 				<td>
 					<font size="2" face="Open-sans, sans-serif" color="#353943">
-						<strong>{$product['name']}</strong>
+						<strong>{AttributeGroup::stripSawCutModuleAttributeGroupName($product['name'])}</strong>
 						{if count($product['customization']) == 1}
 							<br>
 							{foreach $product['customization'] as $customization}
-								{$customization['customization_text']}
+								{$customization['customization_text']|raw}
 							{/foreach}
 						{/if}
 						{hook h='displayProductPriceBlock' product=$product type="unit_price"}
@@ -106,7 +106,7 @@
   					<td width="5">&nbsp;</td>
   					<td>
   						<font size="2" face="Open-sans, sans-serif" color="#353943">
-  							{$customization['customization_text']}
+  							{$customization['customization_text']|raw}
   						</font>
   					</td>
   					<td width="5">&nbsp;</td>

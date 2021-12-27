@@ -17,7 +17,7 @@
     </div>
     <label class="mollie-information-label">{l s='Enter your card information' mod='mollie'}</label>
     <div class="form-group form-group-card-holder {$methodId|escape:'html':'UTF-8'}">
-        <label class="mollie-label" for="card-holder-{$methodId|escape:'html':'UTF-8'}">{l s='Card holder' mod='mollie'}</label>
+        <label class="mollie-label" for="card-holder-{$methodId|escape:'html':'UTF-8'}">{l s='Name on card' mod='mollie'}</label>
         <div id="card-holder-{$methodId|escape:'html':'UTF-8'}" class="mollie-input card-holder">
         </div>
     </div>
@@ -29,10 +29,11 @@
         </div>
         <div class="form-group form-group-expiry-date {$methodId|escape:'html':'UTF-8'}">
             <div id="expiry-date-{$methodId|escape:'html':'UTF-8'}" class="mollie-input expiry-date">
+              <label class="mollie-label mollie-expiry-date-label" for="expiry-date-{$methodId}">{l s='Expiry date' mod='mollie'}</label>
             </div>
         </div>
         <div class="form-group form-group-verification-code {$methodId|escape:'html':'UTF-8'}">
-            <label class="mollie-label" for="verification-code-{$methodId|escape:'html':'UTF-8'}">{l s='CVC' mod='mollie'}</label>
+            <label class="mollie-label" for="verification-code-{$methodId|escape:'html':'UTF-8'}">{l s='CVC/CVV' mod='mollie'}</label>
             <div id="verification-code-{$methodId|escape:'html':'UTF-8'}" class="mollie-input verification-code">
             </div>
         </div>

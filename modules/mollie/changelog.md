@@ -1,6 +1,29 @@
 ![Mollie](https://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 
 # Changelog #
+## Changes in release 4.4.3 ##
++ Bank transfer now creates order on open status.
++ Fixed issue with klarna shipping status where it was set as completed.
++ Mollie no longer validates new order email to merchant that is sent by another module.
++ Fixed issue where custom payment description wasn't working and always used order reference.
++ Added custom payment number for order API.
++ Added Klarna Pay now.
++ Improved uninstall by deleting all tables except for mollie_payments
++ Fixed few small warning that kept getting sent to sentry
++ Fixed order API all products refund functionality
++ Status is no longer updated again to paid if it already has paid status and webhook is called again.
++ Added max address restriction for mollie. (Max 100 chars)
++ Added more validations for missing API token to handle errors.
++ Fixed open status logic to use selected open status and not awaiting.
++ Removed mail switch for awaiting and open order statuses.
++ Fixed issue where creating mollie order from back office had issues
++ Fixed issue where on some payment methods refund status would not be changed after refund webhook is called
+
+## Changes in release 4.4.2 ##
++ Fixed payment methods translations using API in checkout
++ Updated credit card components input labels
++ Added Klarna Pay Now check to only use Order API
+
 ## Changes in release 4.4.2 ##
 + Fixed issue where order would get cancelled after payment was successful if customer had created another payment for the same cart.
 + Fixed rounding issue when creating mollie payment and there is -0.01 cent difference.

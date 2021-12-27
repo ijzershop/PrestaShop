@@ -508,3 +508,4 @@ modules/productcomments.zip
 !/OrderSlipGenerator.php
 !/mails/themes/modernesmid
 mails/nl/*
+modules/mollie_backup/

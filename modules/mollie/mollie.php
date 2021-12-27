@@ -24,9 +24,6 @@ class Mollie extends PaymentModule
     public $api = null;
 
     /** @var string */
-    public $currentOrderReference;
-
-    /** @var string */
     public static $selectedApi;
 
     /** @var bool Indicates whether the Smarty cache has been cleared during updates */
@@ -47,7 +44,7 @@ class Mollie extends PaymentModule
     {
         $this->name = 'mollie';
         $this->tab = 'payments_gateways';
-        $this->version = '4.4.2';
+        $this->version = '4.4.3';
         $this->author = 'Mollie B.V.';
         $this->need_instance = 1;
         $this->bootstrap = true;
@@ -633,6 +630,7 @@ class Mollie extends PaymentModule
             if (!$paymentMethod) {
                 continue;
             }
+            $paymentMethod->method_name = $method['method_name'];
             $paymentOptions[] = $paymentOptionsHandler->handle($paymentMethod);
         }
 
@@ -650,13 +648,12 @@ class Mollie extends PaymentModule
         /** @var \Mollie\Repository\PaymentMethodRepository $paymentMethodRepo */
         $paymentMethodRepo = $this->getMollieContainer(\Mollie\Repository\PaymentMethodRepository::class);
         $payment = $paymentMethodRepo->getPaymentBy('cart_id', (string) Tools::getValue('id_cart'));
-        if(!$payment){
+        if (!$payment) {
             return '';
         }
-
         $isPaid = \Mollie\Api\Types\PaymentStatus::STATUS_PAID == $payment['bank_status'];
         $isAuthorized = \Mollie\Api\Types\PaymentStatus::STATUS_AUTHORIZED == $payment['bank_status'];
-        if ($payment && ($isPaid || $isAuthorized)) {
+        if (($isPaid || $isAuthorized)) {
             $this->context->smarty->assign('okMessage', $this->l('Thank you. Your payment has been received.'));
 
             return $this->display(__FILE__, 'ok.tpl');
@@ -755,16 +752,13 @@ class Mollie extends PaymentModule
         }
 
         $cart = new Cart($params['cart']->id);
-        $orderId = Order::getIdByCartId($cart->id);
+        $orderId = Order::getOrderByCartId($cart->id);
         $order = new Order($orderId);
         if ($order->module !== $this->name) {
             return true;
         }
         /** @var \Mollie\Validator\OrderConfMailValidator $orderConfMailValidator */
         $orderConfMailValidator = $this->getMollieContainer(\Mollie\Validator\OrderConfMailValidator::class);
-
-        /** @var \Mollie\Validator\NewOrderMailValidator $newOrderMailValidator */
-        $newOrderMailValidator = $this->getMollieContainer(\Mollie\Validator\NewOrderMailValidator::class);
 
         /** @var string $template */
         $template = $params['template'];
@@ -787,7 +781,7 @@ class Mollie extends PaymentModule
             'outofstock' === $template ||
             'bankwire' === $template ||
             'refund' === $template) {
-            $orderId = Order::getIdByCartId($cart->id);
+            $orderId = Order::getOrderByCartId($cart->id);
             $order = new Order($orderId);
             if (!Validate::isLoadedObject($order)) {
                 return true;
@@ -811,10 +805,6 @@ class Mollie extends PaymentModule
 
         if ('order_conf' === $template) {
             return $orderConfMailValidator->validate((int) $order->current_state);
-        }
-
-        if ('new_order' === $template) {
-            return $newOrderMailValidator->validate((int) $order->current_state);
         }
 
         return true;
@@ -913,7 +903,7 @@ class Mollie extends PaymentModule
 
     public function hookActionValidateOrder($params)
     {
-        if ('admin' !== $this->context->controller->controller_type) {
+        if (!isset($this->context->controller) || 'admin' !== $this->context->controller->controller_type) {
             return;
         }
 
@@ -940,7 +930,6 @@ class Mollie extends PaymentModule
                 $cartId,
                 $customerKey,
                 $paymentMethodObj,
-                false,
                 $orderReference
             );
 

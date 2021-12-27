@@ -6,7 +6,7 @@
 * @link        https://github.com/mollie/PrestaShop
 * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
 *}
-<h2>{l s='Wachtend op betaling verificatie' mod='mollie'}</h2>
+<h2>{l s='Awaiting payment status' mod='mollie'}</h2>
 <div class="mollie-spinner">
   <div class="rect1"></div>
   <div class="rect2"></div>
@@ -77,13 +77,10 @@
   (function awaitMolliePaymentStatus() {
     var timeout = 3000;
     var request = new XMLHttpRequest();
-    console.log("{$checkStatusEndpoint}");
     // nofilter is needed for url with variables
     request.open('GET', '{$checkStatusEndpoint|escape:'javascript':'UTF-8' nofilter}', true);
 
     request.onload = function() {
-      console.log(request.status);
-      console.log(request.responseText);
       if (request.status >= 200 && request.status < 400) {
         try {
           var data = JSON.parse(request.responseText);

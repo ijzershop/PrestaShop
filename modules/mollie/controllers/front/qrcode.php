@@ -172,7 +172,7 @@ class MollieQrcodeModuleFrontController extends ModuleFrontController
                 [
                     'id_cart' => (int) $cart->id,
                     'id_module' => (int) $this->module->id,
-                    'id_order' => Order::getIdByCartId((int) $cart->id),
+                    'id_order' => Order::getOrderByCartId((int) $cart->id),
                     'key' => $cart->secure_key,
                 ]
             ),

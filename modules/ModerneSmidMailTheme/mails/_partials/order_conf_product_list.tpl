@@ -47,7 +47,7 @@
 						{if count($product['customization']) == 1}
 							<br>
 							{foreach $product['customization'] as $customization}
-								{$customization['customization_text']|raw}
+								{$customization['customization_text'] nofilter}
 							{/foreach}
 						{/if}
 
@@ -107,7 +107,7 @@
   					<td width="5">&nbsp;</td>
   					<td>
   						<font size="2" face="Open-sans, sans-serif" color="#353943">
-  							{$customization['customization_text']|raw}
+  							{$customization['customization_text'] nofilter}
   						</font>
   					</td>
   					<td width="5">&nbsp;</td>

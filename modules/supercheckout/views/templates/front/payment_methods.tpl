@@ -13,7 +13,6 @@
 {else}
     <ul>
         {foreach from=$payment_methods item="option"}
-
             <li>
                 <div class="radio ">
                     <input type="radio" name="payment_method" data-module-name="{$option.module_name nofilter}{*escape not required as contains html*}" value="{$option.id}" id="{$option.id}" {if $option.id == 'payment-option-2'}checked="checked" {elseif $option.id == $selected_payment_method} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>

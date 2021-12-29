@@ -182,6 +182,7 @@ class MollieReturnModuleFrontController extends AbstractMollieController
         $transactionId = Tools::getValue('transaction_id');
         $dbPayment = $paymentMethodRepo->getPaymentBy('transaction_id', $transactionId);
         $cart = new Cart($dbPayment['cart_id']);
+
         if (!Validate::isLoadedObject($cart)) {
             exit(json_encode([
                 'success' => false,
@@ -260,7 +261,10 @@ class MollieReturnModuleFrontController extends AbstractMollieController
                 break;
             }
 
-            $order = $this->createNewOrderFromPaidTransaction($transaction, $cart);
+
+            if(!$order->hasBeenPaid()){
+                $order = $this->createNewOrderFromPaidTransaction($transaction, $cart);
+            }
 
             $response = $paymentReturnService->handleStatus(
                     $order,

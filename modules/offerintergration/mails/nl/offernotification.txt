@@ -2,7 +2,7 @@
 
 Bekijk de door u aangevraagde offerte via de onderstaande link:
 
-[Uw offerte]({url})
+[Your offer]({url})
 Werkt de knop niet kopieëer dan de onderstaande link en plak deze in uw browser..
 {url}
 

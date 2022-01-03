@@ -96,10 +96,10 @@ class PaymentModule extends PaymentModuleCore
         // Does order already exists ?
         if (Validate::isLoadedObject($this->context->cart) && $this->context->cart->orderExists() == false) {
 
-            if ($secure_key !== false && $secure_key != $this->context->cart->secure_key) {
-                PrestaShopLogger::addLog('PaymentModule::validateOrder - Secure key does not match', 3, null, 'Cart', (int) $id_cart, true);
-                die(Tools::displayError());
-            }
+            // if ($secure_key !== false && $secure_key != $this->context->cart->secure_key) {
+            //     PrestaShopLogger::addLog('PaymentModule::validateOrder - Secure key does not match', 3, null, 'Cart', (int) $id_cart, true);
+            //     die(Tools::displayError());
+            // }
 
             // For each package, generate an order
             $delivery_option_list = $this->context->cart->getDeliveryOptionList();

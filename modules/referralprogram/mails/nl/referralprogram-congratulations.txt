@@ -1,6 +1,6 @@
 {shop_url}
 
-Uw verwezen vriend {sponsored_firstname} {sponsored_lastname} heeft zijn/haar eerste bestelling geplaatst op [> {shop_name}]({shop_url})!
+Your referred friend {sponsored_firstname} {sponsored_lastname} has placed his/her first order on [> {shop_name}]({shop_url})!
 
 We bieden u graag een waardebon aan ter waarde van {discount_display} (WAARDEBON# {discount_name}) die u bij uw volgende bestelling kunt gebruiken.
 

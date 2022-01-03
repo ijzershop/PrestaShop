@@ -1,6 +1,6 @@
 {shop_url}
 
-Uw vriend {firstname} {lastname} wil u verwijzen naar [> {shop_name}]({shop_url})!
+Your friend {firstname} {lastname} wants to refer you on [> {shop_name}]({shop_url})!
 
 We bieden u graag een waardebon aan ter waarde van {discount} die u bij uw volgende bestelling kunt gebruiken. Deel onze online shop en verdien een waardebon ter waarde van {discount}!!
 

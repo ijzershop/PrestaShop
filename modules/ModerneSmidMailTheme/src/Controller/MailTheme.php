@@ -10,7 +10,7 @@ class MailTheme
 {
     public function makeThemeSymlink(){
         $module_mails_path = $_SERVER['DOCUMENT_ROOT'] . "/modules/ModerneSmidMailTheme/mails/themes/modernesmid";
-        $prestashop_mails_path = $_SERVER['DOCUMENT_ROOT'] . '/mails/themes/modernesmid';
+        $prestashop_mails_path = $_SERVER['DOCUMENT_ROOT'] . 'mails/themes/modernesmid';
 
         try {
             $fileSystem = new Filesystem();
@@ -23,7 +23,7 @@ class MailTheme
 
     public function removeThemeSymlink(){
         $module_mails_path = $_SERVER['DOCUMENT_ROOT'] . "/modules/ModerneSmidMailTheme/mails/themes/modernesmid";
-        $prestashop_mails_path = $_SERVER['DOCUMENT_ROOT'] . '/mails/themes/modernesmid';
+        $prestashop_mails_path = $_SERVER['DOCUMENT_ROOT'] . 'mails/themes/modernesmid';
         try {
             $fileSystem = new Filesystem();
             $fileSystem->remove($prestashop_mails_path);

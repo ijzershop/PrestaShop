@@ -4,7 +4,7 @@ Proficiat, uw gastaccount voor {shop_name} is omgezet naar een klantaccount!
 
 E-mailadres: {email}
 
-Wees a.u.b. voorzichtig met het delen van uw aanmeld gegevens [> U kunt uw klant accoutn bekijken op onze webshop]({shop_url})
+Please be carefull with sharing your login information [> You can access your customer account on our shop]({shop_url})
 
 [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 

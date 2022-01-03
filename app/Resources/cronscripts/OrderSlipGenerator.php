@@ -8,6 +8,7 @@ require_once dirname(__DIR__).'./../../vendor/autoload.php';
 
 use Configuration;
 use Context;
+use Currency;
 use DB;
 use DbQuery;
 use ObjectModel;
@@ -210,7 +211,10 @@ class OrderSlipGenerator
      */
     public function generateBatchFile($object, $template) : void
     {
-        $pdf_file = new PDF($object, $template, Context::getContext()->smarty);
+
+    	$context = Context::getContext();
+    	$context->currency = new Currency(1, 1, 1);
+        $pdf_file = new PDF($object, $template, $context->smarty);
         $delivery_slip_pdf = $pdf_file->render(false);
         $this->slipTime = time();
         file_put_contents(dirname(__FILE__, 4).'/upload/pakbonnen/pakbonnen_'.$this->slipTime.'.pdf', $delivery_slip_pdf);

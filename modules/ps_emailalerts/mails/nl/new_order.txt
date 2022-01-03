@@ -4,7 +4,7 @@ Besteloverzicht
 
 Klant: {firstname} {lastname} - ({email})
 
-Adres:
+Address:
 {delivery_block_html}
 
 Bestelling: {order_name} Geplaatst op {date}

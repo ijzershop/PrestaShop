@@ -104,6 +104,7 @@ class OrderSlipGenerator
      */
     public function generateOrderSlips() : bool
     {
+
         $order_invoice_collection = $this->fetchPaidAndReadyOrders();
 
         if (! count($order_invoice_collection)) {

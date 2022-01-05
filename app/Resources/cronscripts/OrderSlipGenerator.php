@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace app\Resources\cronscripts;
 
 require_once dirname(__DIR__).'./../../config/config.inc.php';
+$_SERVER['REQUEST_METHOD'] = 'POST';
 require_once dirname(__DIR__).'./../../vendor/autoload.php';
 
 use Configuration;
@@ -103,6 +104,7 @@ class OrderSlipGenerator
      */
     public function generateOrderSlips() : bool
     {
+
         $order_invoice_collection = $this->fetchPaidAndReadyOrders();
 
         if (! count($order_invoice_collection)) {

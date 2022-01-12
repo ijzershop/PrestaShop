@@ -1,6 +1,6 @@
 {shop_url}
 
-Request a CallBack
+Terugbel verzoek
 
 {content}
 

@@ -764,7 +764,7 @@ font-size: 11px;
                                         <!--h2>Confirm Your Order</h2-->
                                         <div class="supercheckout-checkout-content"> </div>
                                         <div class="form-group" id="supercheckout-comments" style="{if $logged}{if $settings['confirm']['order_comment_box']['logged']['display'] eq 1}display:block{else}display:none{/if}{else}{if $settings['confirm']['order_comment_box']['guest']['display'] eq 1}display:block{else}display:none{/if}{/if};">
-                                            <textarea id="supercheckout-comment_order" maxlength="70" class="form-control" name="comment" placeholder="{l s='Add Comments About Your Order' mod='supercheckout'}"></textarea>
+                                            <textarea id="supercheckout-comment_order" maxlength="70" class="form-control" name="comment" placeholder="{l s='Voeg instructie voor expediteur toe (max. 70 tekens)' mod='supercheckout'}"></textarea>
                                             <span id="order_comment_box_totals">0/70 tekens</span>
                                         </div>
 

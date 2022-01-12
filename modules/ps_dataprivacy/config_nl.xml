@@ -2,8 +2,8 @@
 <module>
     <name>ps_dataprivacy</name>
     <displayName><![CDATA[Klantgegevens privacyblok]]></displayName>
-    <version><![CDATA[2.0.1]]></version>
-    <description><![CDATA[Reassure your customers, display a short notice to let them know you care about privacy.]]></description>
+    <version><![CDATA[2.1.0]]></version>
+    <description><![CDATA[Stel uw klanten gerust, geef een korte mededeling weer om hen te laten weten dat u om privacy geeft.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[]]></tab>
     <is_configurable>1</is_configurable>

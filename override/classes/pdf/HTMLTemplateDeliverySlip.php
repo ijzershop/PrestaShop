@@ -174,46 +174,48 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                     }
                 }
 
-                // if(!is_null($order_detail['customizedDatas'])){
-                //     foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
-                //         if(!is_null($customization)){
-                //             foreach ($customization as $customizationId => $customized) {
+                 if(!is_null($order_detail['customizedDatas'])){
+                     foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
+                         if(!is_null($customization)){
 
-                //                 if(isset($customized['datas'])){
-                //                     if(class_exists("Imagick") )
-                //                     {
-                //                         $file = $customized['datas'][1][0]['technical_image'];
-                //                         if(!is_null($file) && !empty($file)){
+                             foreach ($customization as $customizationId => $customized) {
 
-                //                             $fileContents = $this->get_contents(Context::getContext()->shop->getBaseURL(true).$file);
+                                 if(isset($customized['datas'])){
+                                     if(extension_loaded('imagick') || class_exists("Imagick"))
+                                     {
+                                         if(isset($customized['datas'][1][0]['technical_image'])){
+                                             $file = $customized['datas'][1][0]['technical_image'];
+                                             if(!is_null($file) && !empty($file)){
 
-                //                             if($fileContents != false){
+                                                 $fileContents = $this->get_contents(Context::getContext()->shop->getBaseURL(true).$file);
 
-                //                                 $doc = new SimpleXMLElement($fileContents);
-                //                                 foreach($doc->g as $seg)
-                //                                 {
-                //                                     if($seg->attributes()->id[0] == 'cutline') {
-                //                                         $dom=dom_import_simplexml($seg);
-                //                                         $dom->parentNode->removeChild($dom);
-                //                                     }
-                //                                 }
+                                                 if($fileContents != false){
 
-                //                                 $im = new Imagick();
-                //                                 $im->readImageBlob($doc->asXml());
-                //                                 $im->setImageFormat('png24');
-                //                                 $im->writeImage(_PS_CORE_DIR_.'/'.$file . '.png');
-                //                                 $im->clear();
-                //                                 $im->destroy();
-                //                             }
-                //                         }
+                                                     $doc = new SimpleXMLElement($fileContents);
+                                                     foreach($doc->g as $seg)
+                                                     {
+                                                         if($seg->attributes()->id[0] == 'cutline') {
+                                                             $dom=dom_import_simplexml($seg);
+                                                             $dom->parentNode->removeChild($dom);
+                                                         }
+                                                     }
 
-                //                     }
-                //                 }
-                //             }
-                //         }
+                                                     $im = new Imagick();
+                                                     $im->readImageBlob($doc->asXml());
+                                                     $im->setImageFormat('png24');
+                                                     $im->writeImage(_PS_CORE_DIR_.'/'.$file . '.png');
+                                                     $im->clear();
+                                                     $im->destroy();
+                                                 }
+                                             }
+                                         }
 
-                //     }
-                // }
+                                     }
+                                 }
+                             }
+                         }
+                     }
+                 }
             }
 
 

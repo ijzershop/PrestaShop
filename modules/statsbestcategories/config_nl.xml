@@ -2,8 +2,8 @@
 <module>
     <name>statsbestcategories</name>
     <displayName><![CDATA[Beste categorie&euml;n]]></displayName>
-    <version><![CDATA[2.0.0]]></version>
-    <description><![CDATA[Hiermee voegt u een lijst toe van de beste categorie&euml;n in de statistieken dashboard.]]></description>
+    <version><![CDATA[2.0.1]]></version>
+    <description><![CDATA[Enrich your stats, add a list of the best selling categories to the dashboard.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

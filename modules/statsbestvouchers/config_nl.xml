@@ -2,8 +2,8 @@
 <module>
     <name>statsbestvouchers</name>
     <displayName><![CDATA[Beste waardebonnen]]></displayName>
-    <version><![CDATA[2.0.0]]></version>
-    <description><![CDATA[Voegt een lijst met beste waardebonnen toe aan het statistieken dashboard.]]></description>
+    <version><![CDATA[2.0.1]]></version>
+    <description><![CDATA[Enrich your stats, add a list of the most used vouchers to the dashboard.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

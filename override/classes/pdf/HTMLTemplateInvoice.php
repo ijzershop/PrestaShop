@@ -101,13 +101,15 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $id_shop = (int) $this->shop->id;
 
+        $free_text = Configuration::get('PS_INVOICE_FREE_TEXT', (int) Context::getContext()->language->id, null, $id_shop);
+
         $this->smarty->assign([
             'available_in_your_account' => $this->available_in_your_account,
             'shop_address' => $shop_address,
             'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, $id_shop),
             'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, $id_shop),
             'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, $id_shop),
-            'free_text' => Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', (int) Context::getContext()->language->id, null, $id_shop),
+            'free_text' => $free_text,
         ]);
 
         return $this->smarty->fetch($this->getTemplate('footer'));

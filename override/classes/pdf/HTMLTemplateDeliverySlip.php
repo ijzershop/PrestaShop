@@ -191,21 +191,32 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
                                                  if($fileContents != false){
 
-                                                     $doc = new SimpleXMLElement($fileContents);
-                                                     foreach($doc->g as $seg)
-                                                     {
-                                                         if($seg->attributes()->id[0] == 'cutline') {
-                                                             $dom=dom_import_simplexml($seg);
-                                                             $dom->parentNode->removeChild($dom);
+
+                                                     try {
+                                                         $doc = new SimpleXMLElement($fileContents);
+                                                         foreach($doc->g as $seg)
+                                                         {
+                                                             if($seg->attributes()->id[0] == 'cutline') {
+                                                                 $dom=dom_import_simplexml($seg);
+                                                                 $dom->parentNode->removeChild($dom);
+                                                             }
                                                          }
+
+                                                         try {
+                                                             $im = new Imagick();
+                                                             $im->readImageBlob($doc->asXml());
+                                                             $im->setImageFormat('png24');
+                                                             $im->writeImage(_PS_CORE_DIR_.'/'.$file . '.png');
+                                                             $im->clear();
+                                                             $im->destroy();
+                                                         } catch (Exception $e){
+
+                                                         }
+
+                                                     } catch(Exception $e){
+
                                                      }
 
-                                                     $im = new Imagick();
-                                                     $im->readImageBlob($doc->asXml());
-                                                     $im->setImageFormat('png24');
-                                                     $im->writeImage(_PS_CORE_DIR_.'/'.$file . '.png');
-                                                     $im->clear();
-                                                     $im->destroy();
                                                  }
                                              }
                                          }

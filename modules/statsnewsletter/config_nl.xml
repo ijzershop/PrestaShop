@@ -2,8 +2,8 @@
 <module>
     <name>statsnewsletter</name>
     <displayName><![CDATA[Nieuwsbrief]]></displayName>
-    <version><![CDATA[2.0.2]]></version>
-    <description><![CDATA[Voegt een tabblad, die een grafiek toont over nieuwsbriefregistraties, toe aan het statistieken dashboard.]]></description>
+    <version><![CDATA[2.0.3]]></version>
+    <description><![CDATA[Enrich your stats, display a graph showing newsletter registrations.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

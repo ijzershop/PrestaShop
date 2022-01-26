@@ -31,9 +31,6 @@ class Ps_Pinpayment extends PaymentModule
     protected $_html = '';
     protected $_postErrors = array();
 
-    public $details;
-    public $owner;
-    public $address;
     public $extra_mail_vars;
 
     public function __construct()
@@ -42,7 +39,7 @@ class Ps_Pinpayment extends PaymentModule
         $this->tab = 'payments_gateways';
         $this->version = '2.1.0';
         $this->ps_versions_compliancy = array('min' => '1.7.1.0', 'max' => _PS_VERSION_);
-        $this->author = 'PrestaShop';
+        $this->author = 'JB Stoker';
         $this->controllers = array('payment', 'validation');
         $this->is_eu_compatible = 1;
 
@@ -55,12 +52,6 @@ class Ps_Pinpayment extends PaymentModule
         $this->displayName = $this->trans('Pin payment', array(), 'Modules.Pinpayment.Admin');
         $this->description = $this->trans('Accept pin payments by displaying your account details during the checkout and make it easy for your customers to purchase on your store.', array(), 'Modules.Pinpayment.Admin');
         $this->confirmUninstall = $this->trans('Are you sure about removing these details?', array(), 'Modules.Pinpayment.Admin');
-        if (!isset($this->owner) || !isset($this->details) || !isset($this->address)) {
-            $this->warning = $this->trans('Account owner and account details must be configured before using this module.', array(), 'Modules.Pinpayment.Admin');
-        }
-        if (!count(Currency::checkPaymentCurrencies($this->id))) {
-            $this->warning = $this->trans('No currency has been set for this module.', array(), 'Modules.Pinpayment.Admin');
-        }
     }
 
     public function install()

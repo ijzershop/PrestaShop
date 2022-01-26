@@ -653,8 +653,6 @@ class PaymentModule extends PaymentModuleCore
         $order->id_lang = (int) $cart->id_lang;
         $order->id_cart = (int) $cart->id;
         $order->reference = $reference;
-        $order->id_shop = (int) $context->shop->id;
-        $order->id_shop_group = (int) $context->shop->id_shop_group;
 
         //-------------------------------------------------------------------- Add value added to order
         $order->added_to_order = $cart->added_to_order;
@@ -729,7 +727,7 @@ class PaymentModule extends PaymentModuleCore
         $order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
         $order->round_type = Configuration::get('PS_ROUND_TYPE');
 
-        $order->invoice_date = '0000-00-00 00:00:00';
+        $order->invoice_date = date("Y-m-d H:i:s");
         $order->delivery_date = '0000-00-00 00:00:00';
         $order->desired_delivery_date = '0000-00-00 00:00:00';
 
@@ -743,6 +741,22 @@ class PaymentModule extends PaymentModuleCore
         if (!$result) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order cannot be created', 3, null, 'Cart', (int) $cart->id, true);
             throw new PrestaShopException('Can\'t save Order');
+        }
+
+        // Amount paid by customer is not the right one -> Status = payment error
+        // We don't use the following condition to avoid the float precision issues : https://www.php.net/manual/en/language.types.float.php
+        // if ($order->total_paid != $order->total_paid_real)
+        // We use number_format in order to compare two string
+        if ($order_status->logable
+            && number_format(
+                $cart_total_paid,
+                $computingPrecision
+            ) != number_format(
+                $amount_paid,
+                $computingPrecision
+            )
+        ) {
+            $id_order_state = Configuration::get('PS_OS_ERROR');
         }
 
         if ($debug) {

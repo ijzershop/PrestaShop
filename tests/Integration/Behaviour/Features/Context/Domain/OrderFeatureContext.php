@@ -718,10 +718,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateOrdersToStatuses(string $orderReferencesString, string $status)
     {
-        /** @var string[] $orderReferencesString */
-        $orderReferencesString = explode(',', $orderReferencesString);
+        $orderReferences = explode(',', $orderReferencesString);
         $ordersIds = [];
-        foreach ($orderReferencesString as $orderReference) {
+        foreach ($orderReferences as $orderReference) {
             $ordersIds[] = SharedStorage::getStorage()->get($orderReference);
         }
 
@@ -845,6 +844,28 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $discount = $this->getOrderDiscountByName($orderId, self::ORDER_CART_RULE_FREE_SHIPPING);
         if (null === $discount) {
             throw new RuntimeException('Order should have free shipping.');
+        }
+    }
+
+    /**
+     * @Then order :reference should have a cart rule with name :cartRuleName
+     *
+     * @param string $reference
+     * @param string $cartRuleName
+     *
+     * @throws RuntimeException
+     */
+    public function createdOrderShouldHaveNamedCartRule(string $reference, string $cartRuleName): void
+    {
+        $orderId = SharedStorage::getStorage()->get($reference);
+
+        /** @var OrderDiscountForViewing $discount */
+        $discount = $this->getOrderDiscountByName($orderId, $cartRuleName);
+        if (null === $discount) {
+            throw new RuntimeException(sprintf(
+                'Order should have a cart rule with name "%s"',
+                $cartRuleName
+            ));
         }
     }
 

@@ -209,6 +209,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $taxCalculationMethod = $this->getOrderTaxCalculationMethod($order);
 
         foreach ($order->getProductsDetail() as $detail) {
+
+
             $unitPrice = $detail['unit_price_tax_excl'];
             $totalPrice = $detail['total_price_tax_excl'];
 

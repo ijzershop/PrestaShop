@@ -577,15 +577,15 @@ class PaymentModule extends PaymentModuleCore
 
             return true;
         } else {
-            // Set the order status
-            $order = Order::getByCartId($this->context->cart->id);
-            if((int)$order->current_state == 0){
-                $new_history = new OrderHistory();
-                $new_history->id_order = (int) $order->id;
-                $new_history->changeIdOrderState((int) $id_order_state, $order, true);
-                $new_history->addWithemail(true, $extra_vars);
-                return true;
-            }
+            // // Set the order status
+            // $order = Order::getByCartId($this->context->cart->id);
+            // if((int)$order->current_state == 0){
+            //     $new_history = new OrderHistory();
+            //     $new_history->id_order = (int) $order->id;
+            //     $new_history->changeIdOrderState((int) $id_order_state, $order, true);
+            //     $new_history->addWithemail(true, $extra_vars);
+            //     return true;
+            // }
 
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', [], 'Admin.Payment.Notification');
             PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));

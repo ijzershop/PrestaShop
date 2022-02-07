@@ -105,6 +105,8 @@ class Product extends ProductCore {
         $use_customer_price = true,
         $id_customization = null
     ) {
+
+
         if (!$context) {
             $context = Context::getContext();
         }

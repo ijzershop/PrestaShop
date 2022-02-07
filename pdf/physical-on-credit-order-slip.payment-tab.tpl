@@ -29,4 +29,10 @@
 			Op rekening
 		</td>
 	</tr>
+    {assign var="messages" value=Message::getMessagesByOrderId($order->id, false)}
+  {if count($messages) > 0}
+  <tr>
+    <td class="payment center small grey bold" width="44%">Opmerking</td>
+    <td class="payment left white" width="56%">{foreach from=$messages item='message'}{$message.message}{/foreach}<br/></td></tr>
+  {/if}
 </table>

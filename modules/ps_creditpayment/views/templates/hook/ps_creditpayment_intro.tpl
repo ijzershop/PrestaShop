@@ -18,32 +18,50 @@
  *}
 
 
-
-
 <section>
   <p>
-    {if count($customers) > 1}
-      Selecteer de gewenste klant om de bestelling aan de lopende rekening toe te voegen.
-    {/if}
-    <div class="input-group mb-3">
-    <select type="text" class="form-control " name="on_credit_customer_select" id="on_credit_customer_select" placeholder="Klant" aria-label="Klant" aria-describedby="customer-selection">
-      <option readonly="true">Selecteer een klant</option>
-      {foreach from=$customers item=customer key=index}
-        <option value="{$customer.id_customer}" {if $index == 0}selected{/if}>{if !empty($customer.company)}{$customer.company} - {/if} {$customer.firstname} {$customer.lastname} - {$customer.email}</option>
-      {/foreach}
-    </select>
-    <div class="input-group-append">
+      {if count($customers) > 1}
+        Selecteer de gewenste klant om de bestelling aan de lopende rekening toe te voegen.
+      {/if}
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
       <span class="input-group-text" id="customer-selection"><i class="fas fa-user"></i></span>
     </div>
+    <select type="text" class="form-control " name="on_credit_customer_select" id="on_credit_customer_select"
+            placeholder="Klant" aria-label="Klant" aria-describedby="customer-selection">
+      <option readonly="true">Selecteer een klant</option>
+        {foreach from=$customers item=customer key=index}
+          <option value="{$customer.id_customer}"
+                  {if $index == 0}selected{/if}>{if !empty($customer.company)}{$customer.company} - {/if} {$customer.firstname} {$customer.lastname}
+            - {$customer.email}</option>
+        {/foreach}
+    </select>
+  </div>
+
+    {* Referentie of project code voor op rekening betalen *}
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" for="on_credit_reference"><i class="fas fa-barcode"></i></span>
+    </div>
+    <input class="form-control" id="on_credit_reference" name="on_credit_reference" placeholder="Referentie of Project">
+  </div>
+    {* Ophalen of werknemer van op rekening *}
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" for="on_credit_buyer"><i class="fas fa-user-hard-hat"></i></span>
+    </div>
+    <input class="form-control" id="on_credit_buyer" name="on_credit_buyer" placeholder="Afhaler of werknemer">
   </div>
   </p>
   <p>
-    {if $bankcreditCustomText }
-        <a data-toggle="modal" data-target="#bankcredit-modal">{l s='More information' d='Modules.Creditpayment.Shop'}</a>
-    {/if}
+      {if $bankcreditCustomText }
+        <a data-toggle="modal"
+           data-target="#bankcredit-modal">{l s='More information' d='Modules.Creditpayment.Shop'}</a>
+      {/if}
   </p>
 
-  <div class="modal fade" id="bankcredit-modal" tabindex="-1" role="dialog" aria-labelledby="Bankcredit information" aria-hidden="true">
+  <div class="modal fade" id="bankcredit-modal" tabindex="-1" role="dialog" aria-labelledby="Bankcredit information"
+       aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -54,8 +72,8 @@
         </div>
         <div class="modal-body">
           <p>{l s='Payment is made by transfer of the invoice amount to the following account:' d='Modules.Creditpayment.Shop'}</p>
-          {include file='module:ps_creditpayment/views/templates/hook/_partials/payment_infos.tpl'}
-          {$bankcreditCustomText nofilter}
+            {include file='module:ps_creditpayment/views/templates/hook/_partials/payment_infos.tpl'}
+            {$bankcreditCustomText nofilter}
         </div>
       </div>
     </div>

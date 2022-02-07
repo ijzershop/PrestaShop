@@ -61,6 +61,22 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 
 
 	public function addToInformerApi($order){
+        if(!empty($this->context->cookie->on_credit_reference)){
+            $reference = $this->context->cookie->on_credit_reference;
+            $this->context->cookie->on_credit_reference = '';
+        } else {
+            $reference  = $order->reference;
+        }
+
+        if(!empty($this->context->cookie->on_credit_buyer)){
+            $customer_comment = 'Opgehaald door '.$this->context->cookie->on_credit_buyer . '<br>';
+            $this->context->cookie->on_credit_buyer = '';
+        }
+
+        foreach (Message::getMessagesByOrderId($order->id, false) as $message) {
+            $customer_comment .= $message['message'].'<br>';
+        }
+
         $customer = new Customer($order->id_customer);
         $products = $order->getCartProducts();
 
@@ -75,13 +91,12 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         $api_key = Configuration::get('CREDITPAYMENT_INFORMER_API_KEY', null, null, null, "MEUGbrj3nT8Z4orUVznSQRMCYFxP6SySePckp0tVfJPrcB1DjO2");
 
         $footer = Configuration::get('CREDITPAYMENT_INFORMER_FOOTER_TEXT', null, null, null, 'Op rekening bestelling van ijzershop.nl');
-        $customer_comment = $order->gift_message;
 
         //Create Card
         $query = [
               "relation_id" => $customer->informer_identification,
               "contact_name" => $customer->firstname . ' ' . $customer->lastname,
-              "reference" => $order->reference,
+              "reference" => $reference,
               "invoice_date" => date('Y-m-d'),
               "payment_condition_id" => $payment_condition_id,
               "currency_id" => $currency_id,
@@ -190,6 +205,9 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         }
 
         $this->context->cart = new Cart((int) $id_cart);
+
+
+
 
         if(isset($this->context->cookie->selected_customer_id_customer) && !empty($this->context->cookie->selected_customer_id_customer)){
             $this->context->customer = new Customer((int) $this->context->cookie->selected_customer_id_customer);

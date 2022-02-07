@@ -2089,9 +2089,20 @@ class SupercheckoutCore extends ModuleFrontController
                 $this->context->cookie->selected_customer_customer_lastname = $creditCustomer->lastname;
                 $this->context->cookie->selected_customer_id_customer = $selectedCreditCustomer;
                 $this->context->cookie->selected_customer_email = $creditCustomer->email;
+
+                $this->context->cookie->on_credit_reference = $posted_data['on_credit_reference'];
+                $this->context->cookie->on_credit_buyer = $posted_data['on_credit_buyer'];
             } else {
                 $this->context->cart->id_customer = (int) $id_customer;
                 $this->context->cart->secure_key = $this->context->customer->secure_key;
+
+                $this->context->cookie->selected_customer_secure_key = '';
+                $this->context->cookie->selected_customer_customer_firstname = '';
+                $this->context->cookie->selected_customer_customer_lastname = '';
+                $this->context->cookie->selected_customer_id_customer = '';
+                $this->context->cookie->selected_customer_email = '';
+                $this->context->cookie->on_credit_reference = '';
+                $this->context->cookie->on_credit_buyer = '';
             }
             $this->context->cart->id_address_delivery = $id_delivery_address;
             $this->context->cart->id_address_invoice = $id_invoice_address;

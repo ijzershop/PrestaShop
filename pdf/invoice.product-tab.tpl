@@ -111,7 +111,14 @@
         {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl_including_ecotax}
       </td>
     </tr>
-
+      {if $order_detail.id_category_default == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_CATEGORY') && $order_detail.description_short != ""}
+        <tr>
+          <td colspan="4">
+              {$order_detail.description_short nofilter}
+          </td>
+          <td></td>
+        </tr>
+      {/if}
     {foreach $order_detail.customizedDatas as $customizationPerAddress}
       {foreach $customizationPerAddress as $customizationId => $customization}
         <tr class="customization_data {$bgcolor_class}">

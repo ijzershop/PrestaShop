@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -60,8 +60,8 @@ class DynamicProductConfigLink extends DynamicObject
     {
         self::removeLink($id_product);
         $config_link = new self();
-        $config_link->id_product = (int)$id_product;
-        $config_link->id_product_source = (int)$id_product_source;
+        $config_link->id_product = (int) $id_product;
+        $config_link->id_product_source = (int) $id_product_source;
         $config_link->save();
         return $config_link;
     }
@@ -74,9 +74,9 @@ class DynamicProductConfigLink extends DynamicObject
         $sql = new DbQuery();
         $sql->select('id_product_source');
         $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_product);
-        $id_source_product = (int)Db::getInstance()->getValue($sql);
-        $result = $id_source_product ?: (int)$id_product;
+        $sql->where('id_product = ' . (int) $id_product);
+        $id_source_product = (int) Db::getInstance()->getValue($sql);
+        $result = $id_source_product ?: (int) $id_product;
         self::$cache[$id_product] = $result;
         return $result;
     }
@@ -86,19 +86,19 @@ class DynamicProductConfigLink extends DynamicObject
         $sql = new DbQuery();
         $sql->select('COUNT(id_product)');
         $sql->from(self::$definition['table']);
-        $sql->where('id_product_source = ' . (int)$id_source_product);
+        $sql->where('id_product_source = ' . (int) $id_source_product);
         $sql->groupBy('id_product_source');
-        return (int)Db::getInstance()->getValue($sql);
+        return (int) Db::getInstance()->getValue($sql);
     }
 
     public static function removeLink($id_product)
     {
-        return Db::getInstance()->delete(self::$definition['table'], 'id_product = ' . (int)$id_product);
+        return Db::getInstance()->delete(self::$definition['table'], 'id_product = ' . (int) $id_product);
     }
 
     public static function removeLinks($id_source_product)
     {
-        return Db::getInstance()->delete(self::$definition['table'], 'id_product_source = ' . (int)$id_source_product);
+        return Db::getInstance()->delete(self::$definition['table'], 'id_product_source = ' . (int) $id_source_product);
     }
 
     public static function getLinkedConfigs()

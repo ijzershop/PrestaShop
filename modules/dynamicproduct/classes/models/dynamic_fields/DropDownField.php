@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -40,11 +40,19 @@ class DropDownField extends DynamicField
     {
         $options = DynamicDropdownOption::getDropdownOptionsByIdField($this->id, $this->id_lang);
         $option_price_helper = new OptionPriceHelper($this->module, $this->context);
-        if ((int)$this->settings->display_value_price) {
-            $options = $option_price_helper->addPriceFromValue($options, $this->id_product);
+        if ((int) $this->settings->display_value_price) {
+            $options = $option_price_helper->displayValue(
+                $options,
+                $this->id_product,
+                $this->settings
+            );
         }
-        if ((int)$this->settings->display_secondary_value_price) {
-            $options = $option_price_helper->addPriceFromSecondaryValue($options, $this->id_product);
+        if ((int) $this->settings->display_secondary_value_price) {
+            $options = $option_price_helper->displaySecondaryValue(
+                $options,
+                $this->id_product,
+                $this->settings
+            );
         }
         return $options;
     }
@@ -58,7 +66,7 @@ class DropDownField extends DynamicField
         }
         if (count($this->options)) {
             $ids = array_keys($this->options);
-            $first = (int)$ids[0];
+            $first = (int) $ids[0];
             return $this->options[$first]->value;
         }
         return 0;
@@ -73,7 +81,7 @@ class DropDownField extends DynamicField
         }
         if (count($this->options)) {
             $ids = array_keys($this->options);
-            $first = (int)$ids[0];
+            $first = (int) $ids[0];
             return array($this->options[$first]->id);
         }
         return array();

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -73,12 +73,12 @@ class IntervalFormula extends DynamicObject
         $sql = new DbQuery();
         $sql->select(self::$definition['primary']);
         $sql->from(self::$definition['table']);
-        $sql->where('id_interval_condition_group = ' . (int)$id_interval_condition_group);
-        $sql->where('id_interval_field = ' . (int)$id_interval_field);
-        $id = (int)Db::getInstance()->getValue($sql);
+        $sql->where('id_interval_condition_group = ' . (int) $id_interval_condition_group);
+        $sql->where('id_interval_field = ' . (int) $id_interval_field);
+        $id = (int) Db::getInstance()->getValue($sql);
         $interval_formula = new self($id);
-        $interval_formula->id_interval_condition_group = (int)$id_interval_condition_group;
-        $interval_formula->id_interval_field = (int)$id_interval_field;
+        $interval_formula->id_interval_condition_group = (int) $id_interval_condition_group;
+        $interval_formula->id_interval_field = (int) $id_interval_field;
         return $interval_formula;
     }
 
@@ -89,7 +89,7 @@ class IntervalFormula extends DynamicObject
     private static function getByConditionGroups($condition_groups)
     {
         $ids = array_map(static function ($condition_group) {
-            return (int)$condition_group->id;
+            return (int) $condition_group->id;
         }, $condition_groups);
         if (!count($ids)) {
             return array();
@@ -118,7 +118,7 @@ class IntervalFormula extends DynamicObject
         $objects = array();
         $sql = new DbQuery();
         $sql->from(static::$definition['table']);
-        $sql->where('id_interval_condition_group = ' . (int)$id_condition_group);
+        $sql->where('id_interval_condition_group = ' . (int) $id_condition_group);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id = $row[static::$definition['primary']];
@@ -139,7 +139,7 @@ class IntervalFormula extends DynamicObject
         $objects = array();
         $sql = new DbQuery();
         $sql->from(static::$definition['table']);
-        $sql->where('id_interval_field = ' . (int)$id_interval_field);
+        $sql->where('id_interval_field = ' . (int) $id_interval_field);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id = $row[static::$definition['primary']];

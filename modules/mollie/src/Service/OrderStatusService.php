@@ -102,18 +102,17 @@ class OrderStatusService
         $history->id_order = $order->id;
         $history->changeIdOrderState($statusId, $orderId, $useExistingPayment);
 
-        // $status = OrderStatusUtility::transformPaymentStatusToPaid($status, Config::STATUS_PAID_ON_BACKORDER);
+        $status = OrderStatusUtility::transformPaymentStatusToPaid($status, Config::STATUS_PAID_ON_BACKORDER);
 
-        // if ($this->checkIfOrderConfNeedsToBeSend($statusId)) {
-        //     $this->mailService->sendOrderConfMail($order, $statusId);
-        // }
+        if ($this->checkIfOrderConfNeedsToBeSend($statusId)) {
+            $this->mailService->sendOrderConfMail($order, $statusId);
+        }
 
+        if ('0' === Configuration::get('MOLLIE_MAIL_WHEN_' . Tools::strtoupper($status))) {
             $history->add();
-        // if ('0' === Configuration::get('MOLLIE_MAIL_WHEN_' . Tools::strtoupper($status))) {
-        //     $history->add();
-        // } else {
-        //     $history->addWithemail(true, $templateVars);
-        // }
+        } else {
+            $history->addWithemail(true, $templateVars);
+        }
     }
 
     public function transformOrderStatusToBackorder($status, $orderId)

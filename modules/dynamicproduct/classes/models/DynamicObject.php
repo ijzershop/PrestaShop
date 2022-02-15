@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -176,7 +176,7 @@ class DynamicObject extends ObjectModel
 
     public static function deleteByProduct($id_product)
     {
-        return Db::getInstance()->delete(static::$definition['table'], 'id_product = ' . (int)$id_product);
+        return Db::getInstance()->delete(static::$definition['table'], 'id_product = ' . (int) $id_product);
     }
 
     public function delete()
@@ -200,12 +200,12 @@ class DynamicObject extends ObjectModel
                     $value = self::formatValue(Tools::getValue($field), $type);
                     $this->$field = $value;
                 }
-                if ((int)$type === self::TYPE_BOOL) {
+                if ((int) $type === self::TYPE_BOOL) {
                     $value = self::formatValue(Tools::getIsset($field), $type);
                     $this->$field = $value;
                 }
             } else {
-                $id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+                $id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
                 $translations = Tools::getValue($field);
                 if (!is_array($translations)) {
                     $translations = self::getTranslationsFromArray($field, $_POST);
@@ -222,7 +222,7 @@ class DynamicObject extends ObjectModel
             }
         }
 
-        if (!(int)$this->id && !(int)$this->position && isset($fields['position'])) {
+        if (!(int) $this->id && !(int) $this->position && isset($fields['position'])) {
             $this->position = self::getHighestPosition($this);
         }
 
@@ -288,7 +288,7 @@ class DynamicObject extends ObjectModel
             }
         }
         if (isset($values['id'])) {
-            $obj->id = (int)$values['id'];
+            $obj->id = (int) $values['id'];
         }
         return $obj;
     }
@@ -300,10 +300,10 @@ class DynamicObject extends ObjectModel
         $sql->from(static::$definition['table']);
         if (isset(static::$definition['group_by'])) {
             $group_by = static::$definition['group_by'];
-            $sql->where(pSQL($group_by) . ' = ' . (int)$object->$group_by);
+            $sql->where(pSQL($group_by) . ' = ' . (int) $object->$group_by);
         }
         $max = Db::getInstance()->getValue($sql);
-        return (int)$max + 1;
+        return (int) $max + 1;
     }
 
     /**
@@ -342,7 +342,7 @@ class DynamicObject extends ObjectModel
         $objects = array();
         $sql = new DbQuery();
         $sql->from(static::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_product);
+        $sql->where('id_product = ' . (int) $id_product);
         if ($order) {
             $sql->orderBy('position ASC');
         }
@@ -367,7 +367,7 @@ class DynamicObject extends ObjectModel
         $translations = array();
         foreach ($array as $key => $value) {
             if (preg_match("@{$field}_(\d)+@", $key, $match)) {
-                $id_lang = (int)$match[1];
+                $id_lang = (int) $match[1];
                 if ($id_lang) {
                     $translations[$id_lang] = $value;
                 }
@@ -384,8 +384,8 @@ class DynamicObject extends ObjectModel
         $data = array(
             pSQL($complement_field) => 0
         );
-        $where = pSQL($group_by) . ' = ' . (int)$this->$group_by;
-        $where .= ' AND ' . pSQL($definition['primary']) . ' != ' . (int)$this->id;
+        $where = pSQL($group_by) . ' = ' . (int) $this->$group_by;
+        $where .= ' AND ' . pSQL($definition['primary']) . ' != ' . (int) $this->id;
         Db::getInstance()->update($definition['table'], $data, $where);
     }
 
@@ -394,7 +394,7 @@ class DynamicObject extends ObjectModel
         $fields = static::$definition['fields'];
         foreach ($fields as $field => $info) {
             $type = $info['type'];
-            if (in_array((int)$type, array(self::TYPE_INT, self::TYPE_FLOAT), true)) {
+            if (in_array((int) $type, array(self::TYPE_INT, self::TYPE_FLOAT), true)) {
                 $original_value = $this->$field;
                 if ($original_value !== null) {
                     $value = self::formatValue($original_value, $type);

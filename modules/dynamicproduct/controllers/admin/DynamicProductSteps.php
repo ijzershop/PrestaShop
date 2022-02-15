@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -50,14 +50,14 @@ class DynamicProductStepsController extends ModuleAdminController
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
-        $this->id_product = (int)Tools::getValue('id_product');
-        $this->id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $this->id_product = (int) Tools::getValue('id_product');
+        $this->id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
     }
 
     public function postProcess()
     {
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
-        if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
+        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(Tools::jsonEncode(array(
                 'error'   => true,
                 'message' => $this->module->l('This product is for viewing only!')
@@ -82,9 +82,9 @@ class DynamicProductStepsController extends ModuleAdminController
 
     private function processInsertStep()
     {
-        $id_step = (int)Tools::getValue('id_step');
+        $id_step = (int) Tools::getValue('id_step');
         $product_step = new DynamicProductStep();
-        $product_step->id_product = (int)$this->id_product;
+        $product_step->id_product = (int) $this->id_product;
         $product_step->id_step = $id_step;
         $product_step->position = DynamicProductStep::getHighestPosition($product_step);
         $product_step->save();
@@ -95,7 +95,7 @@ class DynamicProductStepsController extends ModuleAdminController
 
     private function processDeleteStep()
     {
-        $id_step = (int)Tools::getValue('id_step');
+        $id_step = (int) Tools::getValue('id_step');
         $product_step = new DynamicProductStep($id_step);
         $product_step->delete();
         $this->respond(array(
@@ -105,10 +105,10 @@ class DynamicProductStepsController extends ModuleAdminController
 
     private function processReorderSteps()
     {
-        $order = (array)Tools::getValue('order');
+        $order = (array) Tools::getValue('order');
         foreach ($order as $position => $id_product_step) {
-            $product_step = new DynamicProductStep((int)$id_product_step);
-            $product_step->position = (int)$position + 1;
+            $product_step = new DynamicProductStep((int) $id_product_step);
+            $product_step->position = (int) $position + 1;
             $product_step->save();
         }
         $this->respond();
@@ -116,12 +116,12 @@ class DynamicProductStepsController extends ModuleAdminController
 
     private function processSaveGroupsOrder()
     {
-        $order = (array)Tools::getValue('order');
+        $order = (array) Tools::getValue('order');
         foreach ($order as $position => $order_data) {
-            $id_product_group = (int)$order_data['id_group'];
-            $product_group = new DynamicProductFieldGroup((int)$id_product_group);
-            $product_group->id_step = (int)$order_data['id_step'];
-            $product_group->position = (int)$position + 1;
+            $id_product_group = (int) $order_data['id_group'];
+            $product_group = new DynamicProductFieldGroup((int) $id_product_group);
+            $product_group->id_step = (int) $order_data['id_step'];
+            $product_group->position = (int) $position + 1;
             $product_group->save();
         }
         $this->respond();
@@ -132,16 +132,16 @@ class DynamicProductStepsController extends ModuleAdminController
         $order = Tools::getValue('order');
         if (is_array($order)) {
             foreach ($order as $position => $order_data) {
-                $id_field = (int)$order_data['id_field'];
+                $id_field = (int) $order_data['id_field'];
                 $field = new DynamicField($id_field);
-                if ((int)$field->id_product !== $this->id_product) {
+                if ((int) $field->id_product !== $this->id_product) {
                     $common_field = DynamicCommonField::getByFieldAndProduct($id_field, $this->id_product);
-                    $common_field->id_step = (int)$order_data['id_step'];
-                    $common_field->position = (int)$position;
+                    $common_field->id_step = (int) $order_data['id_step'];
+                    $common_field->position = (int) $position;
                     $common_field->save();
                 } else {
-                    $field->id_step = (int)$order_data['id_step'];
-                    $field->position = (int)$position;
+                    $field->id_step = (int) $order_data['id_step'];
+                    $field->position = (int) $position;
                     $field->save();
                 }
             }
@@ -151,10 +151,10 @@ class DynamicProductStepsController extends ModuleAdminController
 
     private function processSaveStep()
     {
-        $id_field = (int)Tools::getValue('id_field');
-        $id_step = (int)Tools::getValue('id_step');
+        $id_field = (int) Tools::getValue('id_field');
+        $id_step = (int) Tools::getValue('id_step');
         $dynamic_field = new DynamicField($id_field);
-        if ((int)$dynamic_field->id_product !== $this->id_product) {
+        if ((int) $dynamic_field->id_product !== $this->id_product) {
             $common_field = DynamicCommonField::getByFieldAndProduct($id_field, $this->id_product);
             $common_field->id_step = $id_step;
             $common_field->save();
@@ -168,7 +168,7 @@ class DynamicProductStepsController extends ModuleAdminController
     private function respond($data = array(), $success = 1)
     {
         /** @noinspection CallableParameterUseCaseInTypeContextInspection */
-        $success = $success && (int)!array_key_exists('error', $data);
+        $success = $success && (int) !array_key_exists('error', $data);
         $arr = array(
             'success' => $success,
         );

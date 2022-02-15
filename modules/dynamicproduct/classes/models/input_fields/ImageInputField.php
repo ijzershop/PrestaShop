@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -29,4 +29,12 @@ namespace classes\models\input_fields;
 class ImageInputField extends UploadInputField
 {
     public $type = _DP_IMAGE_;
+
+    public function displayValue()
+    {
+        if (!$this->value) {
+            return "";
+        }
+        return $this->module->provider->getDataFileUrl('upload/' . $this->value);
+    }
 }

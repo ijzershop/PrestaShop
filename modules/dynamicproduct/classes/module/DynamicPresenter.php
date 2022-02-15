@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -67,7 +67,7 @@ class DynamicPresenter
 
     protected function getFormHelper()
     {
-        $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
         $helper = new HelperForm();
         $helper->module = $this->module;
         foreach (Language::getLanguages(false) as $lang) {
@@ -75,7 +75,7 @@ class DynamicPresenter
                 'id_lang'    => $lang['id_lang'],
                 'iso_code'   => $lang['iso_code'],
                 'name'       => $lang['name'],
-                'is_default' => $default_lang === (int)$lang['id_lang'] ? 1 : 0
+                'is_default' => $default_lang === (int) $lang['id_lang'] ? 1 : 0
             );
         }
         $helper->default_form_language = $default_lang;
@@ -87,7 +87,7 @@ class DynamicPresenter
     protected function getFormValues()
     {
         $values = array();
-        $id_object = (int)Tools::getValue('id_' . $this->model);
+        $id_object = (int) Tools::getValue('id_' . $this->model);
         $model_class = DynamicObject::getModelClass($this->model);
         if (class_exists($model_class)) {
             $object = new $model_class($id_object);

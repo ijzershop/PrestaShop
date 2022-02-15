@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -65,7 +65,7 @@ class DynamicProportion extends DynamicObject
         $dynamic_proportions = array();
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_source_product);
+        $sql->where('id_product = ' . (int) $id_source_product);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id_proportion = $row['id_proportion'];
@@ -79,7 +79,7 @@ class DynamicProportion extends DynamicObject
 
     public static function deleteByProduct($id_product)
     {
-        return Db::getInstance()->delete(self::$definition['table'], 'id_product = ' . (int)$id_product);
+        return Db::getInstance()->delete(self::$definition['table'], 'id_product = ' . (int) $id_product);
     }
 
     public static function getDataByProduct($id_product)
@@ -87,10 +87,10 @@ class DynamicProportion extends DynamicObject
         $data = array();
         $dynamic_proportions = self::getByProduct($id_product);
         foreach ($dynamic_proportions as $dynamic_proportion) {
-            $field_src = new DynamicField((int)$dynamic_proportion->id_field_src);
-            $field_target = new DynamicField((int)$dynamic_proportion->id_field);
+            $field_src = new DynamicField((int) $dynamic_proportion->id_field_src);
+            $field_target = new DynamicField((int) $dynamic_proportion->id_field);
             if (Validate::isLoadedObject($field_src) && Validate::isLoadedObject($field_target)) {
-                $proportion = (float)$dynamic_proportion->value;
+                $proportion = (float) $dynamic_proportion->value;
                 if ($proportion) {
                     $data[$field_src->name] = array(
                         'target'     => $field_target->name,
@@ -115,7 +115,7 @@ class DynamicProportion extends DynamicObject
         $dynamic_proportions = array();
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
-        $sql->where('id_field = ' . (int)$id_field . ' OR id_field_src = ' . (int)$id_field);
+        $sql->where('id_field = ' . (int) $id_field . ' OR id_field_src = ' . (int) $id_field);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id_proportion = $row['id_proportion'];

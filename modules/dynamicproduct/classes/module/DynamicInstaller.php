@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -138,6 +138,10 @@ class DynamicInstaller
             'name'  => 'Dynamic Product Dev',
             'class' => 'DynamicProductDev'
         ),
+        array(
+            'name'  => 'Dynamic Product CSV',
+            'class' => 'DynamicProductCSV'
+        ),
     );
 
     public function __construct($module, $context)
@@ -201,7 +205,7 @@ class DynamicInstaller
 
     public function uninstallController($name)
     {
-        $tab = new Tab((int)Tab::getIdFromClassName($name));
+        $tab = new Tab((int) Tab::getIdFromClassName($name));
         return $tab->delete();
     }
 

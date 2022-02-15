@@ -109,9 +109,22 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 
         foreach ($products as $product){
             $productName = $product['product_name'];
+
+            if($product['id_category_default'] == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_CATEGORY') && $product['description_short'] != "")
+            {
+                $text = new DOMDocument();
+                $text->preserveWhiteSpace = false;
+                $text->loadHTML(mb_convert_encoding($product['description_short'] , 'HTML-ENTITIES', 'UTF-8'));
+
+                $productName .= '   '. $text->textContent;
+            }
+
             if(!is_null($product['customizedDatas'])){
                 $productName .= ' - '.$product['customizedDatas'][$product['id_address_delivery']][$product['id_customization']]['datas'][1][0]['value'];
             }
+
+
+
 
             $query["lines"][] = ["qty" => $product['product_quantity'],
                 "description" => $productName,

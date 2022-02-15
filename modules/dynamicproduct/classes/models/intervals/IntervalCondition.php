@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -81,7 +81,7 @@ class IntervalCondition extends DynamicObject
         $objects = array();
         $sql = new DbQuery();
         $sql->from(static::$definition['table']);
-        $sql->where('id_interval_condition_group = ' . (int)$id_interval_condition_group);
+        $sql->where('id_interval_condition_group = ' . (int) $id_interval_condition_group);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id = $row[static::$definition['primary']];
@@ -103,15 +103,15 @@ class IntervalCondition extends DynamicObject
         if ($this->type === self::$TYPE_RANGE) {
             $condition_range = IntervalConditionRange::getByIntervalCondition($this->id);
             $this->condition_range = $condition_range;
-            $this->min = (float)$condition_range->min;
-            $this->max = (float)$condition_range->max;
+            $this->min = (float) $condition_range->min;
+            $this->max = (float) $condition_range->max;
         }
         if ($this->type === self::$TYPE_VALUES) {
             $condition_values = IntervalConditionValue::getByIntervalCondition($this->id);
             $this->condition_value = $condition_values;
             $this->values = array();
             foreach ($condition_values as $condition_value) {
-                $this->values[] = (float)$condition_value->value;
+                $this->values[] = (float) $condition_value->value;
             }
         }
     }

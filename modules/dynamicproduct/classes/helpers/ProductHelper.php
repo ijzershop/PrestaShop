@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -51,7 +51,7 @@ class ProductHelper
     public static function getProductFeatureFields($id_product)
     {
         $feature_fields = array();
-        $product_features = Product::getFrontFeaturesStatic((int)Configuration::get('PS_LANG_DEFAULT'), $id_product);
+        $product_features = Product::getFrontFeaturesStatic((int) Configuration::get('PS_LANG_DEFAULT'), $id_product);
         foreach ($product_features as $product_feature) {
             $label = $product_feature['name'];
             $name = self::getCleanFeatureName($label);
@@ -67,7 +67,7 @@ class ProductHelper
     public static function getProductAttributeFields($id_product)
     {
         $attribute_fields = array();
-        $groups = AttributeGroup::getAttributesGroups((int)Configuration::get('PS_LANG_DEFAULT'));
+        $groups = AttributeGroup::getAttributesGroups((int) Configuration::get('PS_LANG_DEFAULT'));
         foreach ($groups as $group) {
             $id_group = $group['id_attribute_group'];
             if (DynamicTools::productHasAttributeGroup($id_product, $id_group)) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -47,16 +47,16 @@ class FieldsVisibilityHelper
 
     public function getFieldsVisibility($id_product, $id_attribute, $input_fields)
     {
-        $conditions_visibility = DynamicEquation::getConditionsVisibility($id_product, $input_fields);
-        $attribute_visibility = $this->module->provider->getVisibilityValues($id_product, $id_attribute);
-        return $attribute_visibility + $conditions_visibility;
+        $conditions_visibility = DynamicEquation::getHiddenItems($id_product, $input_fields);
+        $hidden_fields_by_attribute = $this->module->provider->getVisibilityValues($id_product, $id_attribute);
+        $hidden_fields = array_merge($conditions_visibility['fields'], array_keys($hidden_fields_by_attribute));
+        $conditions_visibility['fields'] = $hidden_fields;
+        return $conditions_visibility;
     }
 
     public function getMetConditions($id_product, $input_fields)
     {
-        return array(
-            'met_conditions' => DynamicEquation::getMetConditions($id_product, $input_fields)
-        );
+        return DynamicEquation::getMetConditions($id_product, $input_fields);
     }
 
     /**
@@ -84,7 +84,7 @@ class FieldsVisibilityHelper
 
     private function isHidden($visibility, $id_field)
     {
-        return isset($visibility[$id_field]) && (int)$visibility[$id_field] === 0;
+        return isset($visibility[$id_field]) && (int) $visibility[$id_field] === 0;
     }
 
     private function hasHiddenOptions($visibility, $id_field)
@@ -96,6 +96,6 @@ class FieldsVisibilityHelper
     {
         return isset($visibility['groups'])
             && isset($visibility['groups'][$id_group])
-            && (int)$visibility['groups'][$id_group] === 0;
+            && (int) $visibility['groups'][$id_group] === 0;
     }
 }

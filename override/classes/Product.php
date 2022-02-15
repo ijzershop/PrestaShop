@@ -21,7 +21,6 @@ class Product extends ProductCore {
     public $oi_offer_extra_shipping;
     public $name;
     public $jsonld;
-
     public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
     {
         self::$definition['fields']['saw_loss'] = array('type' => self::TYPE_INT,
@@ -58,131 +57,14 @@ class Product extends ProductCore {
             'lang' => true,
             'validate' => 'isString',
             'required' => false, 'size' => 255);
-
         parent::__construct($id_product, $full, $id_lang, $id_shop);
     }
-
-    /**
-     * Get static price
-     *
-     * @param int $id_product
-     * @param bool $usetax
-     * @param null $id_product_attribute
-     * @param int $decimals
-     * @param null $divisor
-     * @param false $only_reduc
-     * @param bool $usereduc
-     * @param int $quantity
-     * @param false $force_associated_tax
-     * @param null $id_customer
-     * @param null $id_cart
-     * @param null $id_address
-     * @param null $specific_price_output
-     * @param bool $with_ecotax
-     * @param bool $use_group_reduction
-     * @param Context|null $context
-     * @param bool $use_customer_price
-     * @param null $id_customization
-     * @return float|int
-     */
-     public static function getPriceStatic(
-        $id_product,
-        $usetax = true,
-        $id_product_attribute = null,
-        $decimals = 6,
-        $divisor = null,
-        $only_reduc = false,
-        $usereduc = true,
-        $quantity = 1,
-        $force_associated_tax = false,
-        $id_customer = null,
-        $id_cart = null,
-        $id_address = null,
-        &$specific_price_output = null,
-        $with_ecotax = true,
-        $use_group_reduction = true,
-        Context $context = null,
-        $use_customer_price = true,
-        $id_customization = null
-    ) {
-
-
-        if (!$context) {
-            $context = Context::getContext();
-        }
-        $return = parent::getPriceStatic(
-            $id_product,
-            $usetax,
-            $id_product_attribute,
-            $decimals,
-            $divisor,
-            $only_reduc,
-            $usereduc,
-            $quantity,
-            $force_associated_tax,
-            $id_customer,
-            $id_cart,
-            $id_address,
-            $specific_price_output,
-            $with_ecotax,
-            $use_group_reduction,
-            $context,
-            $use_customer_price,
-            $id_customization
-        );
-        $module = Module::getInstanceByName('dynamicproduct');
-        if (!$module->active|| $only_reduc) {
-            return $return;
-        }
-        if ((int)$id_cart && DynamicConfig::isExcluded($id_product)) {
-            if ((int)$id_product_attribute || (int)$id_customization) {
-                $base_price = parent::getPriceStatic(
-                    $id_product,
-                    $usetax,
-                    false,
-                    $decimals,
-                    $divisor,
-                    $only_reduc,
-                    $usereduc,
-                    $quantity,
-                    $force_associated_tax,
-                    $id_customer,
-                    $id_cart,
-                    $id_address,
-                    $specific_price_output,
-                    $with_ecotax,
-                    $use_group_reduction,
-                    $context,
-                    $use_customer_price
-                );
-                $difference = $return - $base_price;
-                $id_currency = Validate::isLoadedObject($context->currency) ?
-                    (int)$context->currency->id :
-                    (int) Configuration::get('PS_CURRENCY_DEFAULT');
-                $difference = Tools::convertPrice($difference, $id_currency);
-                return max($difference, 0);
-            } else {
-                return 0;
-            }
-        }
-        return $return;
-    }
-
-    /**
-     * Get all available attribute groups.
-     *
-     * @param int $id_lang Language identifier
-     * @param int $id_product_attribute Combination id to get the groups for
-     *
-     * @return array Attribute groups
-     */
     public function getAttributesGroups($id_lang, $id_product_attribute = null)
     {
         $ssa = Module::getInstanceByName('singlestockattributespoco');
         if (!$ssa || !$ssa->active || !$ssa->useSSA($this->id)) {
             return parent::getAttributesGroups($id_lang);
         }
-
         if (!Combination::isFeatureActive()) {
             return [];
         }
@@ -204,14 +86,11 @@ class Product extends ProductCore {
                     AND al.`id_lang` = ' . (int) $id_lang . '
                     AND agl.`id_lang` = ' . (int) $id_lang .'
                     ';
-
         if ($id_product_attribute !== null) {
             $sql .= ' AND product_attribute_shop.`id_product_attribute` = ' . (int) $id_product_attribute . ' ';
         }
-
         $sql .= 'GROUP BY id_attribute_group, id_product_attribute
                 ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
-
         $ret = Db::getInstance()->executeS($sql);
         $stock = '';
         foreach ($ret as &$row) {
@@ -223,7 +102,6 @@ class Product extends ProductCore {
         }
         return $ret;
     }
-
     public static function isDynamicProduct($product){
         if(is_array($product)){
             $id_product = $product['id_product'];
@@ -324,17 +202,17 @@ class Product extends ProductCore {
     }
     /*
     * module: dynamicproduct
-    * date: 2021-10-15 10:43:05
-    * version: 2.30.0
+    * date: 2022-02-07 13:34:28
+    * version: 2.43.11
     */
     public static function getProductProperties($id_lang, $row, Context $context = null)
     {
         $result = parent::getProductProperties($id_lang, $row, $context);
-
+        
         $module = Module::getInstanceByName('dynamicproduct');
         if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
-            $id_product = (int)$row['id_product'];
-            $dynamic_config = new classes\models\DynamicConfig($id_product);
+            $id_product = (int) $row['id_product'];
+            $dynamic_config = classes\models\DynamicConfig::getByProduct($id_product);
             if ($dynamic_config->active) {
                 $displayed_price = classes\models\DynamicConfig::getDisplayedPrice($id_product);
                 if ($displayed_price || $dynamic_config->display_dynamic_price) {

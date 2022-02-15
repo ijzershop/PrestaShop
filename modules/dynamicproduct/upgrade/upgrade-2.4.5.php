@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -53,8 +53,8 @@ function upgrade_module_2_4_5($module)
     foreach ($product_values as $id_product => $id_fields) {
         foreach ($id_fields as $id_field) {
             $combination_field = new DynamicCombinationField();
-            $combination_field->id_product = (int)$id_product;
-            $combination_field->id_field = (int)$id_field;
+            $combination_field->id_product = (int) $id_product;
+            $combination_field->id_field = (int) $id_field;
             $combination_field->save();
         }
     }

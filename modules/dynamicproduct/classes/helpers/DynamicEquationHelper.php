@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -76,8 +76,8 @@ class DynamicEquationHelper
             $first_columns = $csv[0];
             $count_first_columns = count($first_columns);
             for ($i = 1; $i < $count_first_columns - 1; $i++) {
-                $value_comprised = $column_value >= (float)$first_columns[$i] &&
-                    $column_value < (float)$first_columns[$i + 1];
+                $value_comprised = $column_value >= (float) $first_columns[$i] &&
+                    $column_value < (float) $first_columns[$i + 1];
                 $value_identical = DynamicTools::isString($first_columns[$i]) && $column_value === $first_columns[$i];
                 if ($value_comprised || $value_identical) {
                     $idx_first = $i;
@@ -96,7 +96,7 @@ class DynamicEquationHelper
 
         for ($i = 1; $i < $count_second_columns - 1; $i++) {
             if (isset($csv[$i][0])) {
-                $value_comprised = $row_value >= (float)$csv[$i][0] && $row_value < (float)$csv[$i + 1][0];
+                $value_comprised = $row_value >= (float) $csv[$i][0] && $row_value < (float) $csv[$i + 1][0];
                 $value_identical = DynamicTools::isString($csv[$i][0]) && $row_value === $csv[$i][0];
                 if (isset($csv[$i][0]) && ($value_comprised || $value_identical)) {
                     $idx_second = $i;
@@ -113,7 +113,7 @@ class DynamicEquationHelper
         }
 
         if ($idx_first && $idx_second && isset($csv[$idx_second][$idx_first])) {
-            return (float)$csv[$idx_second][$idx_first];
+            return (float) $csv[$idx_second][$idx_first];
         }
 
         return $default;

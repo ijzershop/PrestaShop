@@ -1,5 +1,5 @@
 {*
-* 2007-2021 PrestaShop
+* 2007-2022 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2021 PrestaShop SA
+*  @copyright 2007-2022 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {$values = $input_field->getDisplayedValues()}
 {if count($values) === 1}
-    {$values[0]}
+    {$urls = $input_field->getImagesUrls()}
+  <span data-url="{$urls['image_url']}">{$values[0]}</span>
 {else}
   <ul>
       {foreach $values as $value}

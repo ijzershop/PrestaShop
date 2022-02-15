@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -108,7 +108,7 @@ class DynamicFieldFactory
         $sql = new DbQuery();
         $sql->select('type');
         $sql->from($module->name . '_field');
-        $sql->where('id_field = ' . (int)$id_field);
-        return (int)Db::getInstance()->getValue($sql);
+        $sql->where('id_field = ' . (int) $id_field);
+        return (int) Db::getInstance()->getValue($sql);
     }
 }

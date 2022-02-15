@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -51,7 +51,7 @@ class DynamicRadioOption extends DynamicObject
 
     private static $radio_options;
 
-    public $displayed_price;
+    public $displayed_value;
 
     public static $definition = array(
         'table'      => 'dynamicproduct_radio_option',
@@ -89,12 +89,12 @@ class DynamicRadioOption extends DynamicObject
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
         $sql->select('id_radio_option');
-        $sql->where('id_field = ' . (int)$id_field);
+        $sql->where('id_field = ' . (int) $id_field);
         $sql->where('!deleted');
         $sql->orderBy('`position` ASC');
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
-            $id_radio_option = (int)$row['id_radio_option'];
+            $id_radio_option = (int) $row['id_radio_option'];
             $radio_option = new self($id_radio_option, $id_lang);
             if (Validate::isLoadedObject($radio_option)) {
                 $radio_options[$id_radio_option] = $radio_option;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -49,19 +49,19 @@ function upgrade_module_1_9_8($module)
     );
     if (is_array($fields)) {
         foreach ($fields as $field) {
-            $id_field = (int)$field['id_field'];
-            $id_unit_group = (int)$field['id_unit_group'];
-            $id_default_unit = (int)Db::getInstance()->getValue(
+            $id_field = (int) $field['id_field'];
+            $id_unit_group = (int) $field['id_unit_group'];
+            $id_default_unit = (int) Db::getInstance()->getValue(
                 'SELECT `id_default_unit` 
                 FROM `' . _DB_PREFIX_ . $module->name . '_unit_group` 
-                WHERE `id_unit_group` = ' . (int)$id_unit_group
+                WHERE `id_unit_group` = ' . (int) $id_unit_group
             );
             Db::getInstance()->update(
                 $module->name . '_field',
                 array(
-                    'id_unit' => (int)$id_default_unit
+                    'id_unit' => (int) $id_default_unit
                 ),
-                'id_field = ' . (int)$id_field
+                'id_field = ' . (int) $id_field
             );
         }
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -55,6 +55,7 @@ class DynamicConfig
     public $exclude = 0;
     public $displayed_price = 0;
     public $displayed_price_label = null;
+    public $display_starting_from = 1;
     public $display_dynamic_price = 0;
     public $display_weight = 0;
     public $hide_qty = 0;
@@ -71,6 +72,7 @@ class DynamicConfig
             'exclude'               => array('type' => self::TYPE_INT),
             'displayed_price'       => array('type' => self::TYPE_FLOAT),
             'displayed_price_label' => array('type' => self::TYPE_STRING),
+            'display_starting_from' => array('type' => self::TYPE_INT),
             'display_dynamic_price' => array('type' => self::TYPE_INT),
             'display_weight'        => array('type' => self::TYPE_INT),
             'hide_qty'              => array('type' => self::TYPE_INT),
@@ -80,7 +82,7 @@ class DynamicConfig
 
     public function __construct($id_product = null)
     {
-        $this->id_product = (int)$id_product;
+        $this->id_product = (int) $id_product;
         $this->module = DynamicTools::getModule();
         $this->setValues();
     }
@@ -100,7 +102,7 @@ class DynamicConfig
             $sql = new DbQuery();
             $sql->from(self::$definition['table']);
             $sql->select('name, value');
-            $sql->where('id_product = ' . (int)$this->id_product);
+            $sql->where('id_product = ' . (int) $this->id_product);
             $result = Db::getInstance()->executeS($sql);
             self::$cache[$cache_key] = $result;
         }
@@ -164,7 +166,7 @@ class DynamicConfig
     public static function getDisplayedPrice($id_product)
     {
         $product_config = DynamicConfig::getByProduct($id_product);
-        return (float)$product_config->displayed_price;
+        return (float) $product_config->displayed_price;
     }
 
     public static function getActiveProducts()
@@ -199,7 +201,7 @@ class DynamicConfig
         $field = $fields[$name];
         $value = ObjectModel::formatValue($value, $field['type']);
         $data = array(
-            'id_product' => (int)$this->id_product,
+            'id_product' => (int) $this->id_product,
             'name'       => pSQL($name),
             'value'      => pSQL($value)
         );
@@ -212,7 +214,7 @@ class DynamicConfig
         foreach ($fields as $property => $info) {
             $value = ObjectModel::formatValue($this->$property, $info['type']);
             $data = array(
-                'id_product' => (int)$this->id_product,
+                'id_product' => (int) $this->id_product,
                 'name'       => pSQL($property),
                 'value'      => pSQL($value)
             );
@@ -222,6 +224,6 @@ class DynamicConfig
 
     public function delete()
     {
-        Db::getInstance()->delete(self::$definition['table'], 'id_product = ' . (int)$this->id_product);
+        Db::getInstance()->delete(self::$definition['table'], 'id_product = ' . (int) $this->id_product);
     }
 }

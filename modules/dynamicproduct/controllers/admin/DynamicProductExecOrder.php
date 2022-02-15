@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -46,14 +46,14 @@ class DynamicProductExecOrderController extends ModuleAdminController
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
-        $this->id_product = (int)Tools::getValue('id_product');
-        $this->id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $this->id_product = (int) Tools::getValue('id_product');
+        $this->id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
     }
 
     public function postProcess()
     {
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
-        if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
+        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(Tools::jsonEncode(array(
                 'error'   => true,
                 'message' => $this->module->l('This product is for viewing only!')
@@ -70,7 +70,7 @@ class DynamicProductExecOrderController extends ModuleAdminController
 
     private function processAddItem()
     {
-        $id_exec = (int)Tools::getValue('id_exec');
+        $id_exec = (int) Tools::getValue('id_exec');
         $exec_order = new ExecOrder();
         $exec_order->id_product = $this->id_product;
         $exec_order->id_exec = $id_exec;
@@ -83,7 +83,7 @@ class DynamicProductExecOrderController extends ModuleAdminController
 
     private function processDeleteItem()
     {
-        $id_item = (int)Tools::getValue('id_item');
+        $id_item = (int) Tools::getValue('id_item');
         $exec_order = new ExecOrder($id_item);
         $exec_order->delete();
         $this->respond();
@@ -91,10 +91,10 @@ class DynamicProductExecOrderController extends ModuleAdminController
 
     private function processReorderExecOrder()
     {
-        $order = (array)Tools::getValue('order');
+        $order = (array) Tools::getValue('order');
         foreach ($order as $position => $id_exec_order) {
-            $exec_order = new ExecOrder((int)$id_exec_order);
-            $exec_order->position = (int)$position + 1;
+            $exec_order = new ExecOrder((int) $id_exec_order);
+            $exec_order->position = (int) $position + 1;
             $exec_order->save();
         }
         $this->respond();
@@ -112,7 +112,7 @@ class DynamicProductExecOrderController extends ModuleAdminController
     private function respond($data = array(), $success = 1)
     {
         /** @noinspection CallableParameterUseCaseInTypeContextInspection */
-        $success = $success && (int)!array_key_exists('error', $data);
+        $success = $success && (int) !array_key_exists('error', $data);
         $arr = array(
             'success' => $success,
         );

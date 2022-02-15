@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,13 +20,14 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 namespace classes\helpers;
 
 use classes\models\DynamicCombinationValue;
+use classes\models\DynamicCommonField;
 use classes\models\DynamicField;
 use Context;
 use DynamicProduct;
@@ -61,8 +62,8 @@ class DynamicFieldsHelper
             if (!isset($fields[$field_name])) {
                 $initial_options = $dynamic_field->getInitialOptions();
                 $this->addField($fields, array(
-                    'id_product'       => (int)$id_product,
-                    'id_field'         => (int)$dynamic_field->id,
+                    'id_product'       => (int) $id_product,
+                    'id_field'         => (int) $dynamic_field->id,
                     'name'             => $dynamic_field->name,
                     'value'            => $initial_value,
                     'value_formatted'  => $initial_value,
@@ -72,7 +73,7 @@ class DynamicFieldsHelper
                 ));
             }
 
-            $is_dynamic_value = in_array((int)$dynamic_field->type, array(_DP_PRICE_, _DP_FIXED_, _DP_PHP_), true);
+            $is_dynamic_value = in_array((int) $dynamic_field->type, array(_DP_PRICE_, _DP_FIXED_, _DP_PHP_), true);
 
             if (empty($fields[$field_name]['value']) && $is_dynamic_value) {
                 $fields[$field_name]['value'] = $initial_value;
@@ -97,7 +98,7 @@ class DynamicFieldsHelper
         $attributes = $product->getAttributeCombinationsById($id_attribute, $this->context->language->id);
         foreach ($attributes as $attribute) {
             $this->addField($fields, array(
-                'id_product' => (int)$id_product,
+                'id_product' => (int) $id_product,
                 'id_field'   => 0,
                 'name'       => ProductHelper::getCleanAttributeName($attribute['group_name']),
                 'value'      => $attribute['attribute_name'],
@@ -112,7 +113,7 @@ class DynamicFieldsHelper
         $features = ProductHelper::getProductFeatureFields($id_product);
         foreach ($features as $feature) {
             $this->addField($fields, array(
-                'id_product' => (int)$id_product,
+                'id_product' => (int) $id_product,
                 'id_field'   => 0,
                 'name'       => $feature['name'],
                 'value'      => $feature['value'],
@@ -127,7 +128,7 @@ class DynamicFieldsHelper
         $product_price = $this->module->provider->getProductPrice($id_product, $id_attribute);
 
         $this->addField($fields, array(
-            'id_product' => (int)$id_product,
+            'id_product' => (int) $id_product,
             'id_field'   => 0,
             'name'       => 'product_price',
             'value'      => $product_price,
@@ -138,7 +139,7 @@ class DynamicFieldsHelper
         $product_weight = $this->module->provider->getProductWeight($id_product, $id_attribute);
 
         $this->addField($fields, array(
-            'id_product' => (int)$id_product,
+            'id_product' => (int) $id_product,
             'id_field'   => 0,
             'name'       => 'product_weight',
             'value'      => $product_weight,
@@ -148,7 +149,7 @@ class DynamicFieldsHelper
 
         if (!isset($fields['quantity'])) {
             $this->addField($fields, array(
-                'id_product' => (int)$id_product,
+                'id_product' => (int) $id_product,
                 'id_field'   => 0,
                 'name'       => 'quantity',
                 'value'      => 1,
@@ -159,7 +160,7 @@ class DynamicFieldsHelper
 
         if (!isset($fields['changed'])) {
             $this->addField($fields, array(
-                'id_product' => (int)$id_product,
+                'id_product' => (int) $id_product,
                 'id_field'   => 0,
                 'name'       => 'changed',
                 'value'      => '',
@@ -190,5 +191,27 @@ class DynamicFieldsHelper
         } else {
             $fields[$name] = $field;
         }
+    }
+
+    public function deleteField($id_product, $id_field)
+    {
+        $dynamic_field = new DynamicField($id_field);
+
+        if ((int) $dynamic_field->common) {
+            if ($id_product === (int) $dynamic_field->id_product) {
+                $common_fields = DynamicCommonField::getByIdField($id_field);
+                foreach ($common_fields as $common_field) {
+                    $common_field->delete();
+                }
+                $dynamic_field->delete();
+            } else {
+                $common_field = DynamicCommonField::getByFieldAndProduct($id_field, $id_product);
+                $common_field->delete();
+            }
+        } else {
+            $dynamic_field->delete();
+        }
+
+        return $dynamic_field;
     }
 }

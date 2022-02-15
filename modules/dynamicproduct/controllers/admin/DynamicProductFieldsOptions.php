@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -65,16 +65,16 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
-        $this->id_product = (int)Tools::getValue('id_product');
-        $this->id_field = (int)Tools::getValue('id_field');
-        $this->id_option = (int)Tools::getValue('id_option');
-        $this->id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $this->id_product = (int) Tools::getValue('id_product');
+        $this->id_field = (int) Tools::getValue('id_field');
+        $this->id_option = (int) Tools::getValue('id_option');
+        $this->id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
     }
 
     public function postProcess()
     {
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
-        if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
+        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(Tools::jsonEncode(array(
                 'error'   => true,
                 'message' => $this->module->l('This product is for viewing only!')
@@ -107,7 +107,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
 
     private function processSaveOption()
     {
-        $id_option = (int)Tools::getValue('id');
+        $id_option = (int) Tools::getValue('id');
         /** @var DynamicDropdownOption $dynamic_option */
         $dynamic_option = $this->getOptionClass($this->id_field, $id_option);
         $dynamic_option->saveFromPost();
@@ -119,7 +119,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
             Db::getInstance()->update(
                 $table,
                 array('is_default' => 0),
-                'id_field = ' . (int)$this->id_field .
+                'id_field = ' . (int) $this->id_field .
                 ' AND `' . bqSQL($primary) . '` != ' . $id_option
             );
         }
@@ -147,7 +147,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         if (is_array($order)) {
             foreach ($order as $position => $id_option) {
                 $option = $this->getOptionClass($this->id_field, $id_option);
-                $option->position = (int)$position;
+                $option->position = (int) $position;
                 $option->save();
             }
         }
@@ -198,7 +198,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
     private function processImportImages()
     {
         $dynamic_field = new DynamicField($this->id_field);
-        $type = (int)$dynamic_field->type;
+        $type = (int) $dynamic_field->type;
         $image_folder = self::$image_folders[$type];
         $img_dir = $this->module->provider->getDataDir('images/' . $image_folder);
 
@@ -273,7 +273,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
     private function getOptionClass($id_field, $id_option = 0)
     {
         $dynamic_field = new DynamicField($id_field);
-        $type = (int)$dynamic_field->type;
+        $type = (int) $dynamic_field->type;
         $class_name = self::$types[$type];
         return new $class_name($id_option);
     }
@@ -281,7 +281,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
     public function respond($data = array(), $success = 1)
     {
         /** @noinspection CallableParameterUseCaseInTypeContextInspection */
-        $success = $success && (int)!array_key_exists('error', $data);
+        $success = $success && (int) !array_key_exists('error', $data);
         $arr = array(
             'success' => $success,
         );

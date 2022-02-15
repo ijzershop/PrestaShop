@@ -48,6 +48,8 @@ abstract class ProductListingFrontController extends ProductListingFrontControll
                 }
             }
         }
+
+
         /**
          * End add module dynamic prices
          */
@@ -63,6 +65,7 @@ abstract class ProductListingFrontController extends ProductListingFrontControll
             ],
             $search
         );
+
 
         if (!empty($data['products']) && is_array($data['products'])) {
             $data['products'] = $this->prepareProductArrayForAjaxReturn($data['products']);

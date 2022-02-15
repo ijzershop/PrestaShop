@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -48,15 +48,15 @@ class DynamicProductCombinationsController extends ModuleAdminController
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
-        $this->id_product = (int)Tools::getValue('id_product');
-        $this->id_field = (int)Tools::getValue('id_field');
-        $this->id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $this->id_product = (int) Tools::getValue('id_product');
+        $this->id_field = (int) Tools::getValue('id_field');
+        $this->id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
     }
 
     public function postProcess()
     {
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
-        if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
+        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(Tools::jsonEncode(array(
                 'error'   => true,
                 'message' => $this->module->l('This product is for viewing only!')
@@ -73,7 +73,7 @@ class DynamicProductCombinationsController extends ModuleAdminController
 
     private function processSaveValue()
     {
-        $id_attribute = (int)Tools::getValue('id_attribute');
+        $id_attribute = (int) Tools::getValue('id_attribute');
         $combination_value = DynamicCombinationValue::getCombinationValue(
             $this->id_product,
             $id_attribute,
@@ -93,7 +93,7 @@ class DynamicProductCombinationsController extends ModuleAdminController
 
     private function processAddColumn()
     {
-        $id_field = (int)Tools::getValue('id_field');
+        $id_field = (int) Tools::getValue('id_field');
         $combination_field = DynamicCombinationField::getByProductAndField($this->id_product, $id_field);
         if (Validate::isLoadedObject($combination_field)) {
             $this->respond(array(
@@ -107,13 +107,13 @@ class DynamicProductCombinationsController extends ModuleAdminController
 
     private function processDeleteColumn()
     {
-        $id_field = (int)Tools::getValue('id_field');
+        $id_field = (int) Tools::getValue('id_field');
         $combination_field = DynamicCombinationField::getByProductAndField($this->id_product, $id_field);
         $combination_field->delete();
 
         Db::getInstance()->delete(
             DynamicCombinationValue::$definition['table'],
-            'id_product = ' . (int)$this->id_product . ' AND id_field = ' . (int)$id_field
+            'id_product = ' . (int) $this->id_product . ' AND id_field = ' . (int) $id_field
         );
 
         $this->respond($this->getNewData());
@@ -135,7 +135,7 @@ class DynamicProductCombinationsController extends ModuleAdminController
 
     public function respond($data = array(), $success = 1)
     {
-        $success = $success && (int)!array_key_exists('error', $data);
+        $success = $success && (int) !array_key_exists('error', $data);
         $arr = array(
             'success' => $success,
         );

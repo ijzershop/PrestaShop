@@ -1,8 +1,0 @@
-{
-  "e2e_url": "http://localhost/e2e",
-  "module_name": "dynamicproduct",
-  "versions_dir": "/mnt/data/Important/Prestashop/versions/",
-  "e2e_dir": "/mnt/y/sv/e2e/dynamicproduct/",
-  "e2e_database": "e2e_dynamicproduct",
-  "ssh_root": "/srv/www/e2e/"
-}

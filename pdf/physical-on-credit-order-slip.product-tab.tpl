@@ -70,6 +70,14 @@
 						{/if}
 					</td>
 				</tr>
+          {if $order_detail.id_category_default == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_CATEGORY') && $order_detail.description_short != ""}
+            <tr style="border:0px;" class="{$bgcolor_class}">
+              <td colspan="2">
+                  {$order_detail.description_short nofilter}
+              </td>
+              <td colspan="3"></td>
+            </tr>
+          {/if}
         {if is_array($order_detail['customizedDatas'])}
 						<tr class="customization_data {$bgcolor_class}">
 							<td colspan="2">

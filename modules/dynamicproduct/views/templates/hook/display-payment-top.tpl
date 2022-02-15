@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2021 PrestaShop SA
+*  @copyright 2007-2022 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -51,32 +51,32 @@
   <script type="text/javascript">
     var _intv = setInterval(function () {
       if (typeof $ === "function") {
-        hidePaymentMethods();
-        clearInterval(_intv);
+        hidePaymentMethods()
+        clearInterval(_intv)
       }
-    }, 100);
+    }, 100)
 
     function hidePaymentMethods() {
-      $(".payment-options").remove();
-      $("#conditions-to-approve").remove();
-      $("#payment-confirmation").remove();
-    };
+      $(".payment-options").remove()
+      $("#conditions-to-approve").remove()
+      $("#payment-confirmation").remove()
+    }
   </script>
 {else}
   <script type="text/javascript">
     var _intv = setInterval(function () {
       if (typeof $ === "function") {
-        showPaymentMethods();
-        clearInterval(_intv);
+        showPaymentMethods()
+        clearInterval(_intv)
       }
-    }, 100);
+    }, 100)
 
     function showPaymentMethods() {
-      $("#opc_payment_methods-content").show();
-      $("#HOOK_PAYMENT .row").show();
+      $("#opc_payment_methods-content").show()
+      $("#HOOK_PAYMENT .row").show()
       // for 1.7
-      $(".payment-options").show();
-      $("#conditions-to-approve").show();
-    };
+      $(".payment-options").show()
+      $("#conditions-to-approve").show()
+    }
   </script>
 {/if}

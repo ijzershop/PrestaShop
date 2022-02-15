@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -49,6 +49,7 @@ class DynamicUnitValue extends DynamicObject
     public $color;
     public $display_value_price;
     public $display_secondary_value_price;
+    public $custom_suffix;
     public $display_in_popup;
     public $hide_when_empty = 1;
     public $show_in_summary = 0;
@@ -80,6 +81,7 @@ class DynamicUnitValue extends DynamicObject
             'color'                         => array('type' => self::TYPE_STRING),
             'display_value_price'           => array('type' => self::TYPE_INT),
             'display_secondary_value_price' => array('type' => self::TYPE_INT),
+            'custom_suffix'                 => array('type' => self::TYPE_STRING),
             'display_in_popup'              => array('type' => self::TYPE_INT),
             'hide_when_empty'               => array('type' => self::TYPE_INT),
             'show_in_summary'               => array('type' => self::TYPE_INT),
@@ -107,10 +109,10 @@ class DynamicUnitValue extends DynamicObject
         $sql = new DbQuery();
         $sql->select('id_unit_value');
         $sql->from(self::$definition['table']);
-        $sql->where('id_field = ' . (int)$id_field);
+        $sql->where('id_field = ' . (int) $id_field);
         $id_unit_value = Db::getInstance()->getValue($sql);
         $dynamic_unit_value = new self($id_unit_value, $id_lang);
-        $dynamic_unit_value->id_field = (int)$id_field;
+        $dynamic_unit_value->id_field = (int) $id_field;
         return self::$unit_values[$key] = $dynamic_unit_value;
     }
 

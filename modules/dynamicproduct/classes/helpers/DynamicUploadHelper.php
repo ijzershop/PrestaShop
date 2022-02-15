@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -54,7 +54,7 @@ class DynamicUploadHelper
             $dynamic_input->assignInputFields($this->context->language->id);
             $input_fields = $dynamic_input->input_fields;
             foreach ($input_fields as $input_field) {
-                if (in_array((int)$input_field->type, $types, true)) {
+                if (in_array((int) $input_field->type, $types, true)) {
                     if ($input_field instanceof UploadInputField) {
                         $file_path = $input_field->getFilePath();
                         $thumb_path = $input_field->getThumbPath();

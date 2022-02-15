@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -28,6 +28,7 @@
 
 use classes\DynamicTools;
 use classes\factory\DynamicFieldFactory;
+use classes\helpers\DynamicFieldsHelper;
 use classes\models\DynamicCommonField;
 use classes\models\DynamicField;
 
@@ -49,15 +50,15 @@ class DynamicProductFieldsController extends ModuleAdminController
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
-        $this->id_product = (int)Tools::getValue('id_product');
-        $this->id_field = (int)Tools::getValue('id_field');
-        $this->id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $this->id_product = (int) Tools::getValue('id_product');
+        $this->id_field = (int) Tools::getValue('id_field');
+        $this->id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
     }
 
     public function postProcess()
     {
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
-        if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
+        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(Tools::jsonEncode(array(
                 'error'   => true,
                 'message' => $this->module->l('This product is for viewing only!')
@@ -87,9 +88,9 @@ class DynamicProductFieldsController extends ModuleAdminController
 
     private function processSaveField()
     {
-        $id_field = (int)Tools::getValue('id');
+        $id_field = (int) Tools::getValue('id');
         $dynamic_field = new DynamicField($id_field);
-        $id_product_original = (int)$dynamic_field->id_product;
+        $id_product_original = (int) $dynamic_field->id_product;
         $dynamic_field->saveFromPost();
         if ($id_product_original !== $this->id_product) {
             $dynamic_field->id_product = $id_product_original;
@@ -110,26 +111,24 @@ class DynamicProductFieldsController extends ModuleAdminController
 
     private function processDeleteField()
     {
-        $dynamic_field = new DynamicField($this->id_field);
-
-        if ((int)$dynamic_field->common) {
-            if ($this->id_product === (int)$dynamic_field->id_product) {
-                $common_fields = DynamicCommonField::getByIdField($this->id_field);
-                foreach ($common_fields as $common_field) {
-                    $common_field->delete();
-                }
-                $dynamic_field->delete();
-            } else {
-                $common_field = DynamicCommonField::getByFieldAndProduct($this->id_field, $this->id_product);
-                $common_field->delete();
-            }
-        } else {
-            $dynamic_field->delete();
-        }
+        $fields_helper = new DynamicFieldsHelper($this->module, $this->context);
+        $dynamic_field = $fields_helper->deleteField($this->id_product, $this->id_field);
 
         $this->respond(array(
             'field' => $dynamic_field
         ));
+    }
+
+    private function processDeleteFields()
+    {
+        $fields = Tools::getValue('fields');
+        $fields_helper = new DynamicFieldsHelper($this->module, $this->context);
+
+        foreach ($fields as $id_field) {
+            $fields_helper->deleteField($this->id_product, (int) $id_field);
+        }
+
+        $this->respond();
     }
 
     private function processSaveFieldImage()
@@ -181,12 +180,12 @@ class DynamicProductFieldsController extends ModuleAdminController
         if (is_array($order)) {
             foreach ($order as $position => $id_field) {
                 $field = new DynamicField($id_field);
-                if ((int)$field->id_product !== $this->id_product) {
+                if ((int) $field->id_product !== $this->id_product) {
                     $common_field = DynamicCommonField::getByFieldAndProduct($id_field, $this->id_product);
                     $common_field->position = $position;
                     $common_field->save();
                 } else {
-                    $field->position = (int)$position;
+                    $field->position = (int) $position;
                     $field->save();
                 }
             }
@@ -196,7 +195,7 @@ class DynamicProductFieldsController extends ModuleAdminController
 
     private function processLoadFavoriteField()
     {
-        $id_field = (int)Tools::getValue('id_field');
+        $id_field = (int) Tools::getValue('id_field');
         $field = new DynamicField($id_field);
         $new_field = $this->module->handler->copyField($field->id, $this->id_product);
         $id_new_field = $new_field['id_field'];
@@ -213,7 +212,7 @@ class DynamicProductFieldsController extends ModuleAdminController
 
     private function processLoadCommonField()
     {
-        $id_field = (int)Tools::getValue('id_field');
+        $id_field = (int) Tools::getValue('id_field');
         $dynamic_field = new DynamicField($id_field);
 
         $common_field = DynamicCommonField::getByFieldAndProduct($id_field, $this->id_product);
@@ -244,7 +243,7 @@ class DynamicProductFieldsController extends ModuleAdminController
 
     public function respond($data = array(), $success = 1)
     {
-        $success = $success && (int)!array_key_exists('error', $data);
+        $success = $success && (int) !array_key_exists('error', $data);
         $arr = array(
             'success' => $success,
         );

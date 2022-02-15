@@ -246,7 +246,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                 }
             }
 
-
             // Find out if column 'price before discount' is required
             if ($order_detail['reduction_amount_tax_excl'] > 0) {
                 $has_discount = true;
@@ -457,6 +456,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'total_tab' => $this->smarty->fetch($this->getTemplate('invoice.total-tab')),
             'shipping_tab' => $this->smarty->fetch($this->getTemplate('invoice.shipping-tab')),
         );
+
         $this->smarty->assign($tpls);
 
         return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code));

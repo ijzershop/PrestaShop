@@ -182,7 +182,6 @@ class MollieReturnModuleFrontController extends AbstractMollieController
         $transactionId = Tools::getValue('transaction_id');
         $dbPayment = $paymentMethodRepo->getPaymentBy('transaction_id', $transactionId);
         $cart = new Cart($dbPayment['cart_id']);
-
         if (!Validate::isLoadedObject($cart)) {
             exit(json_encode([
                 'success' => false,
@@ -260,12 +259,6 @@ class MollieReturnModuleFrontController extends AbstractMollieController
                 $response = $paymentReturnService->handleFailedStatus($transaction);
                 break;
             }
-
-
-            if(!$order->hasBeenPaid()){
-                $order = $this->createNewOrderFromPaidTransaction($transaction, $cart);
-            }
-
             $response = $paymentReturnService->handleStatus(
                     $order,
                     $transaction,
@@ -297,43 +290,5 @@ class MollieReturnModuleFrontController extends AbstractMollieController
         $this->warning[] = $message;
 
         $this->context->cookie->__set('mollie_payment_canceled_error', json_encode($this->warning));
-    }
-
-
-    private function createNewOrderFromPaidTransaction($transaction, $cart)
-    {
-        $id_cart = $cart->id;
-        $id_order_state = Configuration::get('MOLLIE_STATUS_PAID');
-        $amount_paid = (float)$transaction->amount->value;
-        $payment_method = $transaction->method;
-        $message = Message::getMessageByCartId($cart->id);
-        $extra_vars = ['transaction_id' => $transaction->id];
-        $currency_special = null;
-        $dont_touch_amount = false;
-        $secure_key = $cart->secure_key;
-        $shop_entity = new \PrestaShop\PrestaShop\Adapter\Entity\Shop($this->context->shop->id);
-
-        $payment_module = new PaymentModule();
-        $payment_module->active = true;
-        $payment_module->name = $this->module->name;
-
-        try {
-            $payment_module->validateOrder(
-                $id_cart,
-                $id_order_state,
-                $amount_paid,
-                $payment_method,
-                $message,
-                $extra_vars,
-                $currency_special,
-                $dont_touch_amount,
-                $secure_key,
-                $shop_entity
-            );
-        } catch (PrestaShopException $e) {
-            return false;
-        }
-
-        return Order::getByCartId($cart->id);
     }
 }

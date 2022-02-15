@@ -4,7 +4,7 @@
     <displayName><![CDATA[Cash payment]]></displayName>
     <version><![CDATA[2.1.0]]></version>
     <description><![CDATA[Accept cash payments by displaying your account details during the checkout and make it easy for your customers to purchase on your store.]]></description>
-    <author><![CDATA[PrestaShop]]></author>
+    <author><![CDATA[JB Stoker]]></author>
     <tab><![CDATA[payments_gateways]]></tab>
 	<confirmUninstall><![CDATA[Are you sure about removing these details?]]></confirmUninstall>
     <is_configurable>1</is_configurable>

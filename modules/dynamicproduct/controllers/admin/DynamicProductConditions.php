@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -47,14 +47,14 @@ class DynamicProductConditionsController extends ModuleAdminController
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
-        $this->id_product = (int)Tools::getValue('id_product');
-        $this->id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $this->id_product = (int) Tools::getValue('id_product');
+        $this->id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
     }
 
     public function postProcess()
     {
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
-        if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
+        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(Tools::jsonEncode(array(
                 'error'   => true,
                 'message' => $this->module->l('This product is for viewing only!')
@@ -81,7 +81,7 @@ class DynamicProductConditionsController extends ModuleAdminController
 
     private function processSaveCondition()
     {
-        $id_condition = (int)Tools::getValue('id_condition');
+        $id_condition = (int) Tools::getValue('id_condition');
         $dynamic_condition = new DynamicCondition($id_condition);
         $dynamic_condition->formula = Tools::getValue('formula');
         $dynamic_condition->save();
@@ -93,29 +93,27 @@ class DynamicProductConditionsController extends ModuleAdminController
     private function processSaveFieldStates()
     {
         $id_condition = Tools::getValue('id_condition');
-        $visibility = Tools::getValue('visibility');
+        $hidden_fields = Tools::getValue('hidden_fields');
 
         // Clear all previous visibility values
         Db::getInstance()->delete(
             $this->module->name . '_condition_visibility',
-            'id_condition = ' . (int)$id_condition
+            'id_condition = ' . (int) $id_condition
         );
 
-        foreach ($visibility as $id_field => $visible) {
-            if ((int)$id_field) {
-                if (!(int)$visible) {
-                    Db::getInstance()->insert(
-                        $this->module->name . '_condition_visibility',
-                        array(
-                            'id_condition' => (int)$id_condition,
-                            'id_field'     => (int)$id_field,
-                            'visible'      => (int)$visible,
-                        ),
-                        false,
-                        true,
-                        Db::REPLACE
-                    );
-                }
+        foreach ($hidden_fields as $id_field) {
+            if ((int) $id_field) {
+                Db::getInstance()->insert(
+                    $this->module->name . '_condition_visibility',
+                    array(
+                        'id_condition' => (int) $id_condition,
+                        'id_field'     => (int) $id_field,
+                        'visible'      => 0,
+                    ),
+                    false,
+                    true,
+                    Db::REPLACE
+                );
             }
         }
 
@@ -127,29 +125,27 @@ class DynamicProductConditionsController extends ModuleAdminController
     private function processSaveGroupStates()
     {
         $id_condition = Tools::getValue('id_condition');
-        $visibility = Tools::getValue('visibility');
+        $hidden_groups = Tools::getValue('hidden_groups');
 
         // Clear all previous visibility values
         Db::getInstance()->delete(
             $this->module->name . '_condition_group_visibility',
-            'id_condition = ' . (int)$id_condition
+            'id_condition = ' . (int) $id_condition
         );
 
-        foreach ($visibility as $id_group => $visible) {
-            if ((int)$id_group) {
-                if (!(int)$visible) {
-                    Db::getInstance()->insert(
-                        $this->module->name . '_condition_group_visibility',
-                        array(
-                            'id_condition' => (int)$id_condition,
-                            'id_group'     => (int)$id_group,
-                            'visible'      => (int)$visible,
-                        ),
-                        false,
-                        true,
-                        Db::REPLACE
-                    );
-                }
+        foreach ($hidden_groups as $id_group) {
+            if ((int) $id_group) {
+                Db::getInstance()->insert(
+                    $this->module->name . '_condition_group_visibility',
+                    array(
+                        'id_condition' => (int) $id_condition,
+                        'id_group'     => (int) $id_group,
+                        'visible'      => 0,
+                    ),
+                    false,
+                    true,
+                    Db::REPLACE
+                );
             }
         }
 
@@ -161,29 +157,27 @@ class DynamicProductConditionsController extends ModuleAdminController
     private function processSaveStepStates()
     {
         $id_condition = Tools::getValue('id_condition');
-        $visibility = Tools::getValue('visibility');
+        $hidden_steps = Tools::getValue('hidden_steps');
 
         // Clear all previous visibility values
         Db::getInstance()->delete(
             $this->module->name . '_condition_step_visibility',
-            'id_condition = ' . (int)$id_condition
+            'id_condition = ' . (int) $id_condition
         );
 
-        foreach ($visibility as $id_step => $visible) {
-            if ((int)$id_step) {
-                if (!(int)$visible) {
-                    Db::getInstance()->insert(
-                        $this->module->name . '_condition_step_visibility',
-                        array(
-                            'id_condition' => (int)$id_condition,
-                            'id_step'     => (int)$id_step,
-                            'visible'      => (int)$visible,
-                        ),
-                        false,
-                        true,
-                        Db::REPLACE
-                    );
-                }
+        foreach ($hidden_steps as $id_step) {
+            if ((int) $id_step) {
+                Db::getInstance()->insert(
+                    $this->module->name . '_condition_step_visibility',
+                    array(
+                        'id_condition' => (int) $id_condition,
+                        'id_step'      => (int) $id_step,
+                        'visible'      => 0,
+                    ),
+                    false,
+                    true,
+                    Db::REPLACE
+                );
             }
         }
 
@@ -194,7 +188,7 @@ class DynamicProductConditionsController extends ModuleAdminController
 
     private function processSaveName()
     {
-        $id_condition = (int)Tools::getValue('id_condition');
+        $id_condition = (int) Tools::getValue('id_condition');
         $dynamic_condition = new DynamicCondition($id_condition);
         $dynamic_condition->name = Tools::getValue('name');
         $dynamic_condition->save();
@@ -205,7 +199,7 @@ class DynamicProductConditionsController extends ModuleAdminController
 
     private function processSaveFormula()
     {
-        $id_condition = (int)Tools::getValue('id_condition');
+        $id_condition = (int) Tools::getValue('id_condition');
         $formula = Tools::getValue('formula');
         $fields = Tools::getValue('fields');
         $validation = DynamicEquation::checkFormula($this->id_product, $formula, $fields);
@@ -225,7 +219,7 @@ class DynamicProductConditionsController extends ModuleAdminController
 
     private function processDeleteCondition()
     {
-        $id_condition = (int)Tools::getValue('id_condition');
+        $id_condition = (int) Tools::getValue('id_condition');
         $dynamic_condition = new DynamicCondition($id_condition);
         $dynamic_condition->delete();
         $this->respond();
@@ -237,14 +231,14 @@ class DynamicProductConditionsController extends ModuleAdminController
         $id_field = Tools::getValue('id_field');
         $id_option = Tools::getValue('id_option');
         $visible = Tools::getValue('visible');
-        if (!(int)$visible) {
+        if (!(int) $visible) {
             Db::getInstance()->insert(
                 $this->module->name . '_condition_option_visibility',
                 array(
-                    'id_condition' => (int)$id_condition,
-                    'id_field'     => (int)$id_field,
-                    'id_option'    => (int)$id_option,
-                    'visible'      => (int)$visible,
+                    'id_condition' => (int) $id_condition,
+                    'id_field'     => (int) $id_field,
+                    'id_option'    => (int) $id_option,
+                    'visible'      => (int) $visible,
                 ),
                 false,
                 true,
@@ -253,9 +247,9 @@ class DynamicProductConditionsController extends ModuleAdminController
         } else {
             Db::getInstance()->delete(
                 $this->module->name . '_condition_option_visibility',
-                'id_condition = ' . (int)$id_condition . ' AND ' .
-                'id_field = ' . (int)$id_field . ' AND ' .
-                'id_option = ' . (int)$id_option
+                'id_condition = ' . (int) $id_condition . ' AND ' .
+                'id_field = ' . (int) $id_field . ' AND ' .
+                'id_option = ' . (int) $id_option
             );
         }
         $this->respond(array(
@@ -263,9 +257,38 @@ class DynamicProductConditionsController extends ModuleAdminController
         ));
     }
 
+    private function processFixConditionGroups()
+    {
+        $sql = new DbQuery();
+        $sql->from($this->module->name . '_condition_group_visibility');
+        $sql->where('visible = 0');
+        $rows = Db::getInstance()->executeS($sql, false);
+        while ($row = Db::getInstance()->nextRow($rows)) {
+            $id_condition = (int) $row['id_condition'];
+            $id_group = (int) $row['id_group'];
+            $condition = new DynamicCondition($id_condition);
+            if (Validate::isLoadedObject($condition)) {
+                $id_product = (int) $condition->id_product;
+                $sql = new DbQuery();
+                $sql->from($this->module->name . '_product_field_group');
+                $sql->where('id_field_group = ' . (int) $id_group);
+                $id_product_field_group = (int) Db::getInstance()->getValue($sql);
+                if ($id_product_field_group) {
+                    Db::getInstance()->update($this->module->name . '_condition_group_visibility', array(
+                        'id_group' => (int) $id_product_field_group
+                    ), '`id_condition` = ' . (int) $id_condition . ' AND `id_group` =' . (int) $id_group);
+                }
+            }
+        }
+
+        $this->respond(array(
+            'conditions' => DynamicCondition::getByProduct($this->id_product)
+        ));
+    }
+
     public function respond($data = array(), $success = 1)
     {
-        $success = $success && (int)!array_key_exists('error', $data);
+        $success = $success && (int) !array_key_exists('error', $data);
         $arr = array(
             'success' => $success,
         );

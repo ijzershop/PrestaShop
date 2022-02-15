@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,13 +20,12 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 namespace classes\models;
 
-use classes\DynamicTools;
 use Db;
 use DbQuery;
 use Validate;
@@ -38,10 +37,10 @@ class DynamicCondition extends DynamicObject
     public $name;
     public $formula;
 
-    public $field_visibility;
-    public $options_visibility;
-    public $group_visibility;
-    public $step_visibility;
+    public $hidden_fields;
+    public $hidden_options;
+    public $hidden_groups;
+    public $hidden_steps;
 
     public static $definition = array(
         'table'   => 'dynamicproduct_condition',
@@ -56,10 +55,10 @@ class DynamicCondition extends DynamicObject
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         parent::__construct($id, $id_lang, $id_shop);
-        $this->field_visibility = $this->getFieldsVisibilityValues();
-        $this->options_visibility = $this->getOptionsVisibilityValues();
-        $this->group_visibility = $this->getGroupsVisibilityValues();
-        $this->step_visibility = $this->getStepsVisibilityValues();
+        $this->hidden_fields = $this->getHiddenFields();
+        list($this->hidden_options) = $this->getHiddenOptions();
+        $this->hidden_groups = $this->getHiddenGroups();
+        $this->hidden_steps = $this->getHiddenSteps();
     }
 
     public static function getByIdProduct($id_product, $order = false, $id_lang = null)
@@ -78,7 +77,7 @@ class DynamicCondition extends DynamicObject
         $dynamic_conditions = array();
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_source_product);
+        $sql->where('id_product = ' . (int) $id_source_product);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id_condition = $row['id_condition'];
@@ -92,46 +91,73 @@ class DynamicCondition extends DynamicObject
 
     public static function deleteByProduct($id_product)
     {
-        return Db::getInstance()->delete(self::$definition['table'], 'id_product = ' . (int)$id_product);
+        return Db::getInstance()->delete(self::$definition['table'], 'id_product = ' . (int) $id_product);
     }
 
-    public function getFieldsVisibilityValues()
+    public function getHiddenFields()
     {
         $sql = new DbQuery();
         $sql->from($this->module->name . '_condition_visibility');
-        $sql->where('id_condition = ' . (int)$this->id);
+        $sql->where('id_condition = ' . (int) $this->id);
         $sql->where('visible = 0');
         $result = Db::getInstance()->executeS($sql);
-        return DynamicTools::organizeBy('id_field', $result, 'visible');
+        $fields = array();
+        if (is_array($result)) {
+            foreach ($result as $item) {
+                $fields[] = (int) $item['id_field'];
+            }
+        }
+        return $fields;
     }
 
-    public function getOptionsVisibilityValues()
+    public function getHiddenOptions()
     {
         $sql = new DbQuery();
         $sql->from($this->module->name . '_condition_option_visibility');
-        $sql->where('id_condition = ' . (int)$this->id);
+        $sql->where('id_condition = ' . (int) $this->id);
         $sql->where('visible = 0');
         $result = Db::getInstance()->executeS($sql);
-        return DynamicTools::organizeDoubleBy('id_field', 'id_option', $result, 'visible');
+        $options = array();
+        $options_map = array();
+        if (is_array($result)) {
+            foreach ($result as $item) {
+                $id_option = (int) $item['id_option'];
+                $options_map[$id_option] = (int) $item['id_field'];
+                $options[] = $id_option;
+            }
+        }
+        return array($options, $options_map);
     }
 
-    public function getGroupsVisibilityValues()
+    public function getHiddenGroups()
     {
         $sql = new DbQuery();
         $sql->from($this->module->name . '_condition_group_visibility');
-        $sql->where('id_condition = ' . (int)$this->id);
+        $sql->where('id_condition = ' . (int) $this->id);
         $sql->where('visible = 0');
         $result = Db::getInstance()->executeS($sql);
-        return DynamicTools::organizeBy('id_group', $result, 'visible');
+        $groups = array();
+        if (is_array($result)) {
+            foreach ($result as $item) {
+                $groups[] = (int) $item['id_group'];
+            }
+        }
+        return $groups;
     }
 
-    public function getStepsVisibilityValues()
+    public function getHiddenSteps()
     {
         $sql = new DbQuery();
         $sql->from($this->module->name . '_condition_step_visibility');
-        $sql->where('id_condition = ' . (int)$this->id);
+        $sql->where('id_condition = ' . (int) $this->id);
         $sql->where('visible = 0');
         $result = Db::getInstance()->executeS($sql);
-        return DynamicTools::organizeBy('id_step', $result, 'visible');
+        $steps = array();
+        if (is_array($result)) {
+            foreach ($result as $item) {
+                $steps[] = (int) $item['id_step'];
+            }
+        }
+        return $steps;
     }
 }

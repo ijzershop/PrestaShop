@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -64,7 +64,7 @@ class FieldFormula extends DynamicObject
         $field_formulas = array();
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_source_product);
+        $sql->where('id_product = ' . (int) $id_source_product);
         $sql->orderBy('position ASC');
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
@@ -79,7 +79,7 @@ class FieldFormula extends DynamicObject
 
     public static function deleteByProduct($id_product)
     {
-        return Db::getInstance()->delete(self::$definition['table'], 'id_product = ' . (int)$id_product);
+        return Db::getInstance()->delete(self::$definition['table'], 'id_product = ' . (int) $id_product);
     }
 
     public function getTargetField()

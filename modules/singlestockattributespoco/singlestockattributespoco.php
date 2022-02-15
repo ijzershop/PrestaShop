@@ -57,7 +57,7 @@ class SingleStockAttributesPoco extends Module
         if (!parent::install() ||
             !$this->registerHook('backOfficeHeader') ||
             !$this->registerHook('actionValidateOrder') ||
-            !$this->registerHook('actionGetProductPropertiesAfter') ||
+            !$this->registerHook('actionGetProductPropertiesAfterUnitPrice') ||
             !$this->installTab() ||
             !$this->registerHook('actionOrderStatusPostUpdate') ||
             !$this->registerHook('actionOrderEdited')) {
@@ -415,7 +415,7 @@ class SingleStockAttributesPoco extends Module
         }
     }
 
-    public function hookActionGetProductPropertiesAfter($params)
+    public function hookActionGetProductPropertiesAfterUnitPrice($params)
     {
         if (!$this->useSSA($params['product']['id_product'])) {
             return;

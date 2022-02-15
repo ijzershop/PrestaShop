@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -47,7 +47,7 @@ class IntervalField extends DynamicObject
         'multilang' => false,
         'fields'    => array(
             'id_interval' => array('type' => self::TYPE_INT),
-            'id_field' => array('type' => self::TYPE_INT),
+            'id_field'    => array('type' => self::TYPE_INT),
         )
     );
 
@@ -66,7 +66,7 @@ class IntervalField extends DynamicObject
         $objects = array();
         $sql = new DbQuery();
         $sql->from(static::$definition['table']);
-        $sql->where('id_interval = ' . (int)$id_interval);
+        $sql->where('id_interval = ' . (int) $id_interval);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id = $row[static::$definition['primary']];
@@ -87,7 +87,7 @@ class IntervalField extends DynamicObject
         $objects = array();
         $sql = new DbQuery();
         $sql->from(static::$definition['table']);
-        $sql->where('id_field = ' . (int)$id_field);
+        $sql->where('id_field = ' . (int) $id_field);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id = $row[static::$definition['primary']];

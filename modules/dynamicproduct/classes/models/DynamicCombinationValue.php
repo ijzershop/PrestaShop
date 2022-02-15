@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -58,7 +58,7 @@ class DynamicCombinationValue extends DynamicObject
         $combination_values = array();
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_product);
+        $sql->where('id_product = ' . (int) $id_product);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id_combination_value = $row['id_combination_value'];
@@ -81,9 +81,9 @@ class DynamicCombinationValue extends DynamicObject
         $sql = new DbQuery();
         $sql->select('id_combination_value');
         $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_product);
-        $sql->where('id_attribute = ' . (int)$id_attribute);
-        $sql->where('id_field = ' . (int)$id_field);
+        $sql->where('id_product = ' . (int) $id_product);
+        $sql->where('id_attribute = ' . (int) $id_attribute);
+        $sql->where('id_field = ' . (int) $id_field);
         $id_combination_value = Db::getInstance()->getValue($sql, false);
         $combination_value = new self($id_combination_value);
         if (!Validate::isLoadedObject($combination_value)) {
@@ -99,13 +99,13 @@ class DynamicCombinationValue extends DynamicObject
         $sql = new DbQuery();
         $sql->select('init');
         $sql->from(self::$definition['table']);
-        $sql->where('id_attribute = ' . (int)$id_attribute);
-        $sql->where('id_field = ' . (int)$id_field);
+        $sql->where('id_attribute = ' . (int) $id_attribute);
+        $sql->where('id_field = ' . (int) $id_field);
         $init = Db::getInstance()->getValue($sql);
         if ($init === false) {
             return false;
         }
-        return (float)$init;
+        return (float) $init;
     }
 
     /**

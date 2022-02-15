@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -55,7 +55,7 @@ class GridValue extends DynamicObject
         $objects = array();
         $sql = new DbQuery();
         $sql->from(static::$definition['table']);
-        $sql->where('id_grid = ' . (int)$id_grid);
+        $sql->where('id_grid = ' . (int) $id_grid);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id = $row[static::$definition['primary']];
@@ -72,7 +72,7 @@ class GridValue extends DynamicObject
         $objects = array();
         $sql = new DbQuery();
         $sql->from(static::$definition['table']);
-        $sql->where('id_grid_column = ' . (int)$id_grid_column);
+        $sql->where('id_grid_column = ' . (int) $id_grid_column);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id = $row[static::$definition['primary']];
@@ -89,7 +89,7 @@ class GridValue extends DynamicObject
         $objects = array();
         $sql = new DbQuery();
         $sql->from(static::$definition['table']);
-        $sql->where('id_grid_row = ' . (int)$id_grid_row);
+        $sql->where('id_grid_row = ' . (int) $id_grid_row);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id = $row[static::$definition['primary']];
@@ -105,14 +105,14 @@ class GridValue extends DynamicObject
     {
         $sql = new DbQuery();
         $sql->from(static::$definition['table']);
-        $sql->where('id_grid = ' . (int)$id_grid);
-        $sql->where('id_grid_column = ' . (int)$id_grid_column);
-        $sql->where('id_grid_row = ' . (int)$id_grid_row);
-        $id_grid_value = (int)Db::getInstance()->getValue($sql);
+        $sql->where('id_grid = ' . (int) $id_grid);
+        $sql->where('id_grid_column = ' . (int) $id_grid_column);
+        $sql->where('id_grid_row = ' . (int) $id_grid_row);
+        $id_grid_value = (int) Db::getInstance()->getValue($sql);
         $grid_value = new self($id_grid_value);
-        $grid_value->id_grid = (int)$id_grid;
-        $grid_value->id_grid_column = (int)$id_grid_column;
-        $grid_value->id_grid_row = (int)$id_grid_row;
+        $grid_value->id_grid = (int) $id_grid;
+        $grid_value->id_grid_column = (int) $id_grid_column;
+        $grid_value->id_grid_row = (int) $id_grid_row;
         return $grid_value;
     }
 }

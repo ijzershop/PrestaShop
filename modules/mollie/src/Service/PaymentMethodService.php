@@ -245,7 +245,9 @@ class PaymentMethodService
         $secureKey,
         MolPaymentMethod $molPaymentMethod,
         $orderReference,
-        $cardToken = ''
+        $cardToken = '',
+        $saveCard = true,
+        $useSavedCard = false
     ) {
         $totalAmount = TextFormatUtility::formatNumber($amount, 2);
         $context = Context::getContext();
@@ -279,15 +281,12 @@ class PaymentMethodService
             true
         );
 
-        $webhookUrl = null;
-        if (!EnvironmentUtility::isLocalEnvironment()) {
-            $webhookUrl = $context->link->getModuleLink(
-                'mollie',
-                'webhook',
-                [],
-                true
-            );
-        }
+        $webhookUrl = $context->link->getModuleLink(
+            'mollie',
+            'webhook',
+            [],
+            true
+        );
 
         $metaData = [
             'cart_id' => $cartId,
@@ -323,9 +322,15 @@ class PaymentMethodService
             }
 
             $isCreditCardPayment = PaymentMethod::CREDITCARD === $molPaymentMethod->id_method;
-            if ($isCreditCardPayment && $this->isCustomerSaveEnabled()) {
-                $apiCustomer = $this->customerService->processCustomerCreation($cart, $molPaymentMethod->id_method);
-                $paymentData->setCustomerId($apiCustomer->id);
+            if (!$isCreditCardPayment) {
+                return $paymentData;
+            }
+
+            if ($molPaymentMethod->id_method === PaymentMethod::CREDITCARD) {
+                $molCustomer = $this->handleCustomerInfo($cart->id_customer, $saveCard, $useSavedCard);
+                if ($molCustomer) {
+                    $paymentData->setCustomerId($molCustomer->customer_id);
+                }
             }
 
             return $paymentData;
@@ -368,25 +373,24 @@ class PaymentMethodService
             if ($cardToken) {
                 $payment['cardToken'] = $cardToken;
             }
-            if (!EnvironmentUtility::isLocalEnvironment()) {
-                $payment['webhookUrl'] = $context->link->getModuleLink(
-                    'mollie',
-                    'webhook',
-                    [],
-                    true
-                );
-            }
+            $payment['webhookUrl'] = $context->link->getModuleLink(
+                'mollie',
+                'webhook',
+                [],
+                true
+            );
+
             if ($issuer) {
                 $payment['issuer'] = $issuer;
             }
 
-            $isCreditCardPayment = PaymentMethod::CREDITCARD === $molPaymentMethod->id_method;
-            if ($isCreditCardPayment && $this->isCustomerSaveEnabled()) {
-                $apiCustomer = $this->customerService->processCustomerCreation($cart, $molPaymentMethod->id_method);
-                $payment['customerId'] = $apiCustomer->id;
+            if ($molPaymentMethod->id_method === PaymentMethod::CREDITCARD) {
+                $molCustomer = $this->handleCustomerInfo($cart->id_customer, $saveCard, $useSavedCard);
+                if ($molCustomer) {
+                    $orderData->setCustomerId($molCustomer->customer_id);
+                    $orderData->setPayment($payment);
+                }
             }
-
-            $orderData->setPayment($payment);
 
             return $orderData;
         }
@@ -409,12 +413,9 @@ class PaymentMethodService
         }
     }
 
-    private function isCustomerSaveEnabled()
+    private function isCustomerSaveEnabled(bool $isSingleClickPaymentEnabled, $saveCard = true)
     {
-        $isComponentsEnabled = Configuration::get(Config::MOLLIE_IFRAME);
-        $isSingleClickPaymentEnabled = Configuration::get(Config::MOLLIE_SINGLE_CLICK_PAYMENT);
-
-        return !$isComponentsEnabled && $isSingleClickPaymentEnabled;
+        return $isSingleClickPaymentEnabled && $saveCard;
     }
 
     private function removeNotSupportedMethods($methods, $mollieMethods)
@@ -453,7 +454,7 @@ class PaymentMethodService
                 'resource' => 'orders',
                 'include' => 'issuers',
                 'includeWallets' => 'applepay',
-                'locale' => $language->language_code,
+                'locale' => $language->locale,
                 'billingCountry' => $country->iso_code,
                 'amount' => [
                     'value' => (string) TextFormatUtility::formatNumber($cartAmount, 2),
@@ -463,5 +464,23 @@ class PaymentMethodService
         );
 
         return $methods->getArrayCopy();
+    }
+
+    public function handleCustomerInfo($customerId, $saveCard, $useSavedCard): ?\MolCustomer
+    {
+        $isSingleClickPaymentEnabled = (bool) Configuration::get(Config::MOLLIE_SINGLE_CLICK_PAYMENT);
+        if (!$this->isCustomerSaveEnabled($isSingleClickPaymentEnabled)) {
+            return null;
+        }
+
+        if ($saveCard) {
+            $apiCustomer = $this->customerService->processCustomerCreation($customerId);
+        } elseif ($useSavedCard) {
+            $apiCustomer = $this->customerService->getCustomer($customerId);
+        } else {
+            return null;
+        }
+
+        return $apiCustomer;
     }
 }

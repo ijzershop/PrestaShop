@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -34,23 +34,23 @@ function upgrade_module_2_2_4($module)
     /** @noinspection UnnecessaryCastingInspection */
     $queries = array(
         'UPDATE `__PREFIX_unit_value` SET `required` = `step` 
-        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int)_DP_TEXT_ . ')',
+        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int) _DP_TEXT_ . ')',
         'UPDATE `__PREFIX_unit_value` SET `required` = `step`
-        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int)_DP_TEXTAREA_ . ')',
+        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int) _DP_TEXTAREA_ . ')',
         'UPDATE `__PREFIX_unit_value` SET `required` = `step`
-        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int)_DP_FEATURE_ . ')',
+        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int) _DP_FEATURE_ . ')',
         'UPDATE `__PREFIX_unit_value` SET `required` = `step`
-        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int)_DP_DATE_ . ')',
+        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int) _DP_DATE_ . ')',
         'UPDATE `__PREFIX_unit_value` SET `multiselect` = `init` 
-        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int)_DP_THUMBNAILS_ . ')',
+        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int) _DP_THUMBNAILS_ . ')',
         'UPDATE `__PREFIX_unit_value` SET `color` = `extra` 
-        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int)_DP_COLORPICKER_ . ')',
+        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int) _DP_COLORPICKER_ . ')',
         'UPDATE `__PREFIX_unit_value` 
         SET `required` = `step`, `min_width` = `min`, `min_height` = `max`, `max_size` = `init` 
-        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int)_DP_IMAGE_ . ')',
+        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int) _DP_IMAGE_ . ')',
         'UPDATE `__PREFIX_unit_value` 
         SET `required` = `step`, `max_size` = `init`, `extensions` = `extra` 
-        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int)_DP_FILE_ . ')'
+        WHERE `id_field` IN (SELECT `id_field` FROM __PREFIX_field WHERE `type` = ' . (int) _DP_FILE_ . ')'
     );
 
     $success = true;

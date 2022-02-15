@@ -1706,7 +1706,7 @@ function updateCarrierOnDeliveryChange() {
       $('input[name="payment_address[house_number_extension]"]').val('');
       $('input[name="payment_address[postcode]"]').val('');
       $('input[name="payment_address[city]"]').val('');
-      $('input[name="payment_address[id_country]"]').val("13");
+      $('select[name="payment_address[id_country]"]').val("13");
       $('input[name="payment_address[phone]"]').val('');
       $('#checkoutShippingAddress').show();
       $('#checkoutBillingAddress').hide();
@@ -2990,7 +2990,7 @@ $(document).ready(function () {
     // End: Added by Anshul for PayPlug
     var errors = '';
     var data = $('#velsof_supercheckout_form').serializeArray();
-
+console.log(data);
     $.ajax({
       type: 'POST',
       headers: {
@@ -3308,7 +3308,6 @@ $(document).ready(function () {
       //   }
       // }
 
-
       //No shipping so fill shipping address with custom data to prevent empty errors
       var company_field_value = $('input:text[name="no_shipping_company"]').val();
       if ($('.supercheckout_shipping_option:checked').attr('value') == add2OrderCarrier && typeof addToOrderAddress !== undefined) {
@@ -3320,7 +3319,7 @@ $(document).ready(function () {
         $('input[name="shipping_address[house_number_extension]"]').val(addToOrderAddress.house_number_extension);
         $('input[name="shipping_address[postcode]"]').val(addToOrderAddress.postcode);
         $('input[name="shipping_address[city]"]').val(addToOrderAddress.city);
-        $('input[name="shipping_address[id_country]"]').val(addToOrderAddress.country);
+        $('select[name="shipping_address[id_country]"]').val(addToOrderAddress.country);
         $('input[name="shipping_address[phone]"]').val(addToOrderAddress.phone);
 
         if ($('input[name="payment_address[house_number]"]').val().length == 0 || $('input[name="payment_address[postcode]"]').val().length == 0) {
@@ -3332,7 +3331,7 @@ $(document).ready(function () {
           $('input[name="payment_address[house_number_extension]"]').val(addToOrderAddress.house_number_extension);
           $('input[name="payment_address[postcode]"]').val(addToOrderAddress.postcode);
           $('input[name="payment_address[city]"]').val(addToOrderAddress.city);
-          $('input[name="payment_address[id_country]"]').val(addToOrderAddress.country);
+          $('select[name="payment_address[id_country]"]').val(addToOrderAddress.country);
           $('input[name="payment_address[phone]"]').val(addToOrderAddress.phone);
         }
 
@@ -3340,6 +3339,8 @@ $(document).ready(function () {
         $('#use_for_invoice_none').prop('checked', true);
       } else {
 
+        $('input[name="shipping_address[shipping_address_id]"]').val('');
+        $('input[name="shipping_address[id_customer_address]"]').val('new');
         $('input[name="shipping_address[company]"]').val(company_field_value);
         $('input[name="shipping_address[firstname]"]').val(surname_field_value);
         $('input[name="shipping_address[lastname]"]').val(lastname_field_value);
@@ -3348,22 +3349,42 @@ $(document).ready(function () {
         $('input[name="shipping_address[house_number_extension]"]').val("");
         $('input[name="shipping_address[postcode]"]').val("8938 BG");
         $('input[name="shipping_address[city]"]').val("Leeuwarden");
-        $('input[name="shipping_address[id_country]"]').val("13");
+        $('select[name="shipping_address[id_country]"]').val("13");
         $('input[name="shipping_address[phone]"]').val(phone_field_value);
 
-        if ($('input[name="payment_address[house_number]"]').val().length == 0 || $('input[name="payment_address[postcode]"]').val().length == 0) {
-          $('input[name="payment_address[company]"]').val(company_field_value);
-          $('input[name="payment_address[firstname]"]').val(surname_field_value);
-          $('input[name="payment_address[lastname]"]').val(lastname_field_value);
-          $('input[name="payment_address[address1]"]').val("Ceresweg");
-          $('input[name="payment_address[house_number]"]').val("1");
-          $('input[name="payment_address[house_number_extension]"]').val("");
-          $('input[name="payment_address[postcode]"]').val("8938 BG");
-          $('input[name="payment_address[city]"]').val("Leeuwarden");
-          $('input[name="payment_address[id_country]"]').val("13");
-          $('input[name="payment_address[phone]"]').val(phone_field_value);
-        }
-        $('#use_for_invoice').prop('checked', 'checked');
+
+          if($('input[name="payment_address[company]"]').val().length === 0){
+            $('input[name="payment_address[company]"]').val(company_field_value);
+          }
+          if($('input[name="payment_address[firstname]"]').val().length === 0){
+            $('input[name="payment_address[firstname]"]').val(surname_field_value);
+          }
+          if($('input[name="payment_address[lastname]"]').val().length === 0){
+            $('input[name="payment_address[lastname]"]').val(lastname_field_value);
+          }
+          if($('input[name="payment_address[address1]"]').val().length === 0){
+            $('input[name="payment_address[address1]"]').val("Ceresweg");
+          }
+          if($('input[name="payment_address[house_number]"]').val().length === 0){
+            $('input[name="payment_address[house_number]"]').val("1");
+          }
+          if($('input[name="payment_address[house_number_extension]"]').val().length === 0){
+            $('input[name="payment_address[house_number_extension]"]').val("");
+          }
+          if($('input[name="payment_address[postcode]"]').val().length === 0){
+            $('input[name="payment_address[postcode]"]').val("8938 BG");
+          }
+          if($('input[name="payment_address[city]"]').val().length === 0){
+            $('input[name="payment_address[city]"]').val("Leeuwarden");
+          }
+          if($('select[name="payment_address[id_country]"]').val().length === 0){
+            $('select[name="payment_address[id_country]"]').val("13");
+          }
+          if($('input[name="payment_address[phone]"]').val().length === 0){
+            $('input[name="payment_address[phone]"]').val(phone_field_value);
+          }
+        $('#use_for_invoice').prop('checked', false);
+        $('#use_for_invoice_none').prop('checked', true);
       }
     } else {
 
@@ -3657,7 +3678,6 @@ $(document).ready(function () {
     if(breakCheckout){
       return;
     }
-
     return placeOrder();
   });
 });

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -29,7 +29,6 @@
 use classes\controllers\front\DynamicFrontController;
 use classes\DynamicTools;
 use classes\helpers\DynamicCalculatorHelper;
-use classes\helpers\FieldsVisibilityHelper;
 use classes\models\DynamicConfig;
 use classes\models\DynamicField;
 use classes\models\DynamicFieldGroup;
@@ -42,11 +41,11 @@ class DynamicProductLoaderModuleFrontController extends DynamicFrontController
 {
     protected function processLoadVariables()
     {
-        $is_hot_mode = (int)Tools::getValue('is_hot_mode');
-        $id_product = (int)Tools::getValue('id_product');
-        $id_source_product = (int)Tools::getValue('id_source_product');
-        $id_attribute = (int)Tools::getValue('id_attribute');
-        $is_admin_edit = (int)Tools::getValue('is_admin_edit');
+        $is_hot_mode = (int) Tools::getValue('is_hot_mode');
+        $id_product = (int) Tools::getValue('id_product');
+        $id_source_product = (int) Tools::getValue('id_source_product');
+        $id_attribute = (int) Tools::getValue('id_attribute');
+        $is_admin_edit = (int) Tools::getValue('is_admin_edit');
 
         $product_config = DynamicConfig::getByProduct($id_product);
 
@@ -59,34 +58,34 @@ class DynamicProductLoaderModuleFrontController extends DynamicFrontController
 
         $is_admin = $this->module->provider->isAdmin();
         $translation_helper = new TranslationHelper($this->module, $this->context);
+        $calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
 
         $input_fields = array();
         $fields_visibility = array();
-        $calculated_prices = null;
+        $calculator_helper->resetDebugMessages();
         $error = null;
         try {
-            $input_fields = DynamicInputField::getDefaultInputFields(
+            list($input_fields, $fields_visibility) = DynamicInputField::getDefaultInputFields(
                 $id_product,
                 $id_attribute,
                 true,
                 $_GET
             );
-            $visibility_helper = new FieldsVisibilityHelper($this->module, $this->context);
-            $fields_visibility = $visibility_helper->getFieldsVisibility(
+
+            $calculation = $calculator_helper->processCalculation(
                 $id_product,
                 $id_attribute,
-                $input_fields
-            );
-            $calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
-            $calculated_prices = $calculator_helper->getCalculatedPrices(
-                $id_product,
-                $this->id_attribute,
                 $input_fields,
-                null,
-                false
+                $fields_visibility,
+                null
             );
         } catch (Exception $e) {
-            $error = DynamicTools::reportException($e);
+            $error = DynamicTools::reportException($e, true);
+            $calculation = array(
+                'input_fields'   => $input_fields,
+                'visibility'     => $fields_visibility,
+                'debug_messages' => DynamicProduct::$debug_messages,
+            );
         }
 
         $source = DynamicTools::getSource();
@@ -108,12 +107,10 @@ class DynamicProductLoaderModuleFrontController extends DynamicFrontController
                 'has_groups'        => $has_groups,
                 'steps'             => DynamicProductStep::getByIdProduct($id_product, true, $id_lang),
                 'field_types'       => $this->module->field_types,
-                'input_fields'      => $input_fields,
-                'fields_visibility' => $fields_visibility,
+                'calculation'       => $calculation,
                 'error'             => $error,
                 'id_cart'           => Tools::getValue('dp_cart', 0),
                 'id_customer'       => Tools::getValue('dp_customer', 0),
-                'prices'            => $calculated_prices,
                 'controllers'       => array(
                     'calculator'    => $this->context->link->getModuleLink($this->module->name, 'calculator'),
                     'customization' => $this->context->link->getModuleLink($this->module->name, 'customization'),

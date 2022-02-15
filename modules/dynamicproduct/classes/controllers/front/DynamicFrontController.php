@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -44,13 +44,13 @@ class DynamicFrontController extends ModuleFrontController
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
-        $this->id_product = (int)Tools::getValue('id_product');
+        $this->id_product = (int) Tools::getValue('id_product');
         $this->id_attribute = $this->getAttributeID();
     }
 
     private function getAttributeID()
     {
-        $id_attribute = (int)Tools::getValue('id_attribute');
+        $id_attribute = (int) Tools::getValue('id_attribute');
         $attributes = Tools::getValue('attributes');
         if ($attributes) {
             $id_attribute = $this->module->provider->getAttributeID($this->id_product, $attributes);

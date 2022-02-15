@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  * @property string author_address
  * @property bool bootstrap
@@ -61,6 +61,7 @@ use classes\module\DynamicViewer;
 use classes\module\HotMedia;
 use classes\presenter\MainConfigPresenter;
 use lib\dp_trans\TranslationHelper;
+use lib\media\DynamicEntriesHelper;
 
 /**
  * @property bool bootstrap
@@ -98,6 +99,8 @@ class DynamicProduct extends Module
 
     private $displayed_container = false;
 
+    public static $debug_messages = array();
+
     public $hooks = array(
         'displayHeader',
         'displayProductAdditionalInfo',
@@ -112,7 +115,7 @@ class DynamicProduct extends Module
     {
         $this->name = 'dynamicproduct';
         $this->tab = 'front_office_features';
-        $this->version = '2.30.0';
+        $this->version = '2.43.11';
         $this->author = 'Tuni-Soft';
         $this->need_instance = 0;
         $this->module_key = 'e7d243d9b0b857ca2dba85c8d3b0afda';
@@ -132,7 +135,7 @@ class DynamicProduct extends Module
 
         $this->initFieldTypesList();
 
-        if ((int)Configuration::get('PS_DISABLE_OVERRIDES')) {
+        if ((int) Configuration::get('PS_DISABLE_OVERRIDES')) {
             $this->warning = $this->l(
                 'You must enable overrides (in Performance) in order for the module to work properly'
             );
@@ -159,7 +162,7 @@ class DynamicProduct extends Module
             return false;
         }
 
-        if (!$this->execSQL('install')) {
+        if (!$this->execSQL('sql/install')) {
             return false;
         }
 
@@ -218,9 +221,9 @@ class DynamicProduct extends Module
 
     public function initDefines()
     {
-        if (!defined('_FRONT_DEV_PORT_')) {
-            define('_FRONT_DEV_PORT_', 2001);
-            define('_ADMIN_DEV_PORT_', 2003);
+        if (!defined('_DP_FRONT_DEV_PORT_')) {
+            define('_DP_FRONT_DEV_PORT_', 2001);
+            define('_DP_ADMIN_DEV_PORT_', 2003);
         }
         include dirname(__FILE__) . '/types.php';
     }
@@ -231,17 +234,17 @@ class DynamicProduct extends Module
             'dp_id_input' => 0,
         ));
         if (Tools::getIsset('id_input')) {
-            $id_input = (int)Tools::getValue('id_input');
+            $id_input = (int) Tools::getValue('id_input');
 
             $dp_input = new DynamicInput($id_input);
             $dp_input->assignInputFields($this->context->language->id);
 
             if ($dp_input->checkAuth()) {
-                $is_same_cart = (int)$dp_input->id_cart === (int)$this->provider->getCart();
+                $is_same_cart = (int) $dp_input->id_cart === (int) $this->provider->getCart();
                 $is_admin = Tools::getIsset('is_admin_edit') && $this->provider->isAdmin();
                 if ($is_same_cart || $is_admin) {
                     Media::addJsDef(array(
-                        'dp_id_input' => (int)$dp_input->id,
+                        'dp_id_input' => (int) $dp_input->id,
                     ));
                 }
                 Media::addJsDef(array(
@@ -431,7 +434,7 @@ class DynamicProduct extends Module
         $this->installer = new DynamicInstaller($this, $this->context);
 
         $port = DynamicTools::getHotPort();
-        if (DynamicTools::isHotMode($port)) {
+        if ($port && DynamicTools::isHotMode($port)) {
             $this->media = new HotMedia($this, $this->context);
         } else {
             $this->media = new DynamicMedia($this, $this->context);
@@ -525,22 +528,11 @@ class DynamicProduct extends Module
             'link'           => $this->context->link,
             'req'            => $admin_link,
             'dp_languages'   => $this->languages,
-            'dp_lang'        => (int)$id_lang,
+            'dp_lang'        => (int) $id_lang,
             'dp_module_link' => $this->context->link->getAdminLink('AdminModules') . '&configure=' . $this->name,
         ));
 
         $this->postProcess();
-
-        $this->media->addCSS(array(
-            'views/css/admin/dp-module-form.css',
-            'views/css/admin/dp_lang.css'
-        ));
-
-        $this->media->addJS($this->media->addHash(array(
-            'views/js/plugins/lang/jquery.dp_lang.js',
-            'views/js/admin/common.js',
-            'views/js/admin/dp-module-form.js'
-        )));
 
         $action = $this->presenter->getCurrentAction();
         if ($action) {
@@ -576,25 +568,27 @@ class DynamicProduct extends Module
     /** @noinspection PhpUnused */
     public function hookDisplayHeader()
     {
-        $ajax = (int)Tools::getValue('ajax');
+        $ajax = (int) Tools::getValue('ajax');
         if ($ajax) {
             return null;
         }
 
+        $entries_helper = new DynamicEntriesHelper($this, $this->context);
+
         $output = '';
 
-        $is_hot_mode = DynamicTools::isHotMode(_FRONT_DEV_PORT_);
+        $is_hot_mode = DynamicTools::isHotMode(_DP_FRONT_DEV_PORT_);
         $css_base_path = null;
         $js_base_path = null;
 
-        $this->media->addJS(array(
-            'views/js/front/dp-cart-summary.js'
-        ), $js_base_path);
+        $cart_entry = $entries_helper->getEntry('dp-cart-summary');
+        $this->media->addJS($cart_entry['js'], $js_base_path);
+        $this->media->addCSS($cart_entry['css'], $css_base_path);
 
         $controller_name = Tools::getValue('controller');
 
         if ($controller_name === 'product') {
-            $id_product = (int)Tools::getValue('id_product');
+            $id_product = (int) Tools::getValue('id_product');
 
             $id_attribute = $this->provider->getCurrentAttribute($id_product);
             $product_config = DynamicConfig::getByProduct($id_product);
@@ -602,10 +596,10 @@ class DynamicProduct extends Module
             if ($product_config->active) {
                 $this->handler->addCustomField($id_product);
 
+                $entry = $entries_helper->getEntry('dp-product-buttons');
+
                 if (!$is_hot_mode) {
-                    $this->media->addCSS(array(
-                        'views/css/front/dp-product-buttons.css',
-                    ), $css_base_path);
+                    $this->media->addCSS($entry['css'], $css_base_path);
                 }
 
                 $this->assignEditInput();
@@ -614,12 +608,13 @@ class DynamicProduct extends Module
                 $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
 
                 Media::addJsDef(array(
-                    'dp_hot_mode' => $is_hot_mode,
-                    'dp'          => array(
+                    'dp_hot_mode'   => $is_hot_mode,
+                    'ps_module_dev' => DynamicTools::isModuleDevMode(),
+                    'dp'            => array(
                         'id_product'        => $id_product,
                         'id_source_product' => $id_source_product,
                         'id_attribute'      => $id_attribute,
-                        'is_admin_edit'     => (int)(Tools::getIsset('is_admin_edit') && $is_admin),
+                        'is_admin_edit'     => (int) (Tools::getIsset('is_admin_edit') && $is_admin),
                         'controllers'       => array(
                             'loader' => $this->context->link->getModuleLink($this->name, 'loader'),
                         ),
@@ -638,7 +633,6 @@ class DynamicProduct extends Module
                 }
 
                 $this->media->addJS(array(
-                    'views/js/plugins/jquery.ui.touch-punch.min.js',
                     $this->media->getJSDir() . 'dynamic/custom.js',
                     $this->media->getJSDir() . 'dynamic/custom' . $id_source_product . '.js',
                     $this->media->getThemeJSDir() . 'dynamic/custom.js',
@@ -646,9 +640,7 @@ class DynamicProduct extends Module
                 ));
 
                 if (!$is_hot_mode) {
-                    $this->media->addJS(array(
-                        'views/js/front/dp-product-buttons.js',
-                    ));
+                    $this->media->addJS($entry['js']);
                 }
 
                 $this->smarty->assign(array(
@@ -663,14 +655,10 @@ class DynamicProduct extends Module
         Media::addJsDef(array(
             'dp_version'     => $this->version,
             'dp_id_module'   => $this->id,
-            'dp_public_path' => $this->getFolderUrl('views/js/')
+            'dp_public_path' => $this->getFolderUrl('lib/media/dist/')
         ));
 
         $output .= $this->display(__FILE__, 'views/templates/hook/display-header.tpl');
-
-        $this->media->addCSS(array(
-            'views/css/front/dp-cart-summary.css'
-        ), $css_base_path);
 
         $this->media->addCSS(array(
             $this->media->getCSSDir() . 'dynamic.css',
@@ -678,7 +666,7 @@ class DynamicProduct extends Module
         ));
 
         if ($controller_name === 'product') {
-            $id_product = (int)Tools::getValue('id_product');
+            $id_product = (int) Tools::getValue('id_product');
             $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
 
             $this->media->addCSS(array(
@@ -722,7 +710,7 @@ class DynamicProduct extends Module
     {
         /** @var Order $order */
         $order = $params['order'];
-        $id_cart = (int)$order->id_cart;
+        $id_cart = (int) $order->id_cart;
 
         DynamicInput::updateCartQuantities(new Cart($id_cart));
 
@@ -742,8 +730,8 @@ class DynamicProduct extends Module
         );
         /** @var OrderState $order_status */
         $order_status = $params['newOrderStatus'];
-        $id_order = (int)$params['id_order'];
-        $id_cart = (int)Order::getCartIdStatic($id_order);
+        $id_order = (int) $params['id_order'];
+        $id_cart = (int) Order::getCartIdStatic($id_order);
 
         $cart = new Cart($id_cart);
         $is_canceled = in_array($order_status->id, $error_or_canceled_statuses, false);
@@ -772,13 +760,18 @@ class DynamicProduct extends Module
 
     public function hookDisplayProductButton()
     {
-        $id_product = (int)Tools::getValue('id_product');
+        $id_product = (int) Tools::getValue('id_product');
 
         $this->smarty->assign(array(
             'product_link'   => $this->provider->getProductLink($id_product),
             'product_config' => DynamicConfig::getByProduct($id_product),
         ));
-        return $this->display(__FILE__, 'views/templates/hook/display-product-button.tpl');
+        return $this->display(
+            __FILE__,
+            'views/templates/hook/display-product-button.tpl',
+            $this->name . "-button-$id_product",
+            $this->name . "-button-$id_product"
+        );
     }
 
     public function hookDisplayProductAdditionalInfo()
@@ -787,7 +780,7 @@ class DynamicProduct extends Module
             return false;
         }
 
-        $id_product = (int)Tools::getValue('id_product');
+        $id_product = (int) Tools::getValue('id_product');
 
         $dp_config = DynamicConfig::getByProduct($id_product);
 
@@ -800,12 +793,16 @@ class DynamicProduct extends Module
         }
         $this->displayed_container = true;
 
-        $output = '';
         if (!$dp_config->active) {
             return false;
         }
 
-        return $output . $this->display(__FILE__, 'views/templates/hook/display-product-buttons.tpl');
+        return $this->display(
+            __FILE__,
+            'views/templates/hook/display-product-buttons.tpl',
+            $this->name . '-buttons',
+            $this->name . '-buttons'
+        );
     }
 
     /** @noinspection PhpUnused */
@@ -815,6 +812,11 @@ class DynamicProduct extends Module
         if (!$id_input) {
             return $params['customization']['value'];
         }
+
+        if (isset($params['array'])) {
+            return $this->hookDisplayCustomizationValues($id_input);
+        }
+
         $this->context->smarty->assign(array(
             'is_pdf' => false
         ));
@@ -843,15 +845,18 @@ class DynamicProduct extends Module
     /** @noinspection PhpUnused */
     public function hookDisplayProductPriceBlock($params)
     {
-        $id_product = (int)$params['product']['id_product'];
+        $id_product = (int) $params['product']['id_product'];
         $dynamic_config = DynamicConfig::getByProduct($id_product);
-        $is_active = (int)$dynamic_config->active;
+        $is_active = (int) $dynamic_config->active;
         if ($is_active) {
             if ($params['type'] === 'before_price') {
                 if (!empty($dynamic_config->displayed_price_label)) {
                     return null;
                 }
-                return $this->l('starting from');
+                if ($dynamic_config->display_starting_from) {
+                    return $this->l('Starting from');
+                }
+                return null;
             }
             if ($params['type'] === 'unit_price') {
                 return $dynamic_config->displayed_price_label;
@@ -869,7 +874,7 @@ class DynamicProduct extends Module
         Media::addJsDef(array(
             'dp_id_module'    => $this->id,
             'ps_module_dev'   => DynamicTools::isModuleDevMode(),
-            'dp_public_path'  => $this->getFolderUrl('views/js/'),
+            'dp_public_path'  => $this->getFolderUrl('lib/media/dist/'),
             'dp_translations' => $translation_helper->getAdminTranslations(),
             'dp_module_link'  => $link->getAdminLink('AdminModules') . '&configure=' . $this->name
         ));
@@ -877,7 +882,7 @@ class DynamicProduct extends Module
         $controller_name = $this->context->controller->controller_name;
 
         if ($controller_name === 'AdminProducts') {
-            $is_hot_mode = DynamicTools::isHotMode(_FRONT_DEV_PORT_);
+            $is_hot_mode = DynamicTools::isHotMode(_DP_FRONT_DEV_PORT_);
             $css_base_path = null;
             $js_base_path = null;
 
@@ -909,6 +914,8 @@ class DynamicProduct extends Module
                         'ps_uri'  => __PS_BASE_URI__,
                         'uri'     => $this->getPathUri(),
 
+                        'loaded' => false,
+
                         'demo_mode' => DynamicTools::isDemoMode(),
 
                         'id_product'             => $id_product,
@@ -916,7 +923,7 @@ class DynamicProduct extends Module
                         'id_source_product_name' => Product::getProductName($id_source_product, null, $id_lang),
                         'nb_linked_configs'      => DynamicProductConfigLink::getNbLinkedConfigs($id_source_product),
 
-                        'id_default_lang' => (int)Configuration::get('PS_LANG_DEFAULT'),
+                        'id_default_lang' => (int) Configuration::get('PS_LANG_DEFAULT'),
                         'languages'       => Language::getLanguages(),
                         'config'          => DynamicConfig::getByProduct($id_product),
 
@@ -1005,14 +1012,11 @@ class DynamicProduct extends Module
                     ),
                 ));
 
-                $this->media->addCSS(array(
-                    'https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css',
-                ), $css_base_path);
+                $entries_helper = new DynamicEntriesHelper($this, $this->context);
+                $entry = $entries_helper->getEntry('dp-product-config');
 
                 if (!$is_hot_mode) {
-                    $this->media->addCSS(array(
-                        'views/css/admin/common.css',
-                    ), $css_base_path);
+                    $this->media->addCSS($entry['css'], $css_base_path);
                 }
 
                 $this->context->controller->addJqueryPlugin('tablednd');
@@ -1021,18 +1025,8 @@ class DynamicProduct extends Module
                 $this->context->controller->addJqueryUI('ui.draggable');
                 $this->context->controller->addJqueryUI('ui.droppable');
 
-                $this->media->addJS($this->media->addHash(array(
-                    'views/js/plugins/colorpicker/colorpicker.js',
-                    'views/js/plugins/form/jquery.form.js',
-                    'views/js/plugins/lang/jquery.dp_lang.js',
-                    'views/js/plugins/notify/notify.js',
-                )));
-
                 if (!$is_hot_mode) {
-                    $this->media->addJS($this->media->addHash(array(
-                        'views/js/admin/common.js',
-                        'views/js/admin/dp-product-config.js',
-                    )), $js_base_path);
+                    $this->media->addJS($entry['js'], $js_base_path);
                 }
             } else {
                 Media::addJsDef(array(
@@ -1044,36 +1038,33 @@ class DynamicProduct extends Module
                     'dpa_message'       => $this->getAdminMessages()
                 ));
 
-                $this->media->addJS($this->media->addHash(array(
-                    'views/js/admin/common.js',
-                    'views/js/admin/dp-products-list.js',
-                )), $js_base_path);
+                $entries_helper = new DynamicEntriesHelper($this, $this->context);
+                $entry = $entries_helper->getEntry('dp-products-list');
+
+                $this->media->addJS($entry['js'], $js_base_path);
             }
         }
 
         if ($controller_name === 'AdminOrders' || $controller_name === "AdminCarts") {
-            $this->media->addCSS(array(
-                'views/css/admin/common.css',
-                'views/css/admin/dp-order-summary.css'
-            ));
-            $this->media->addJS($this->media->addHash(array(
-                'views/js/admin/common.js',
-                'views/js/admin/dp-order-summary.js'
-            )));
+            $entries_helper = new DynamicEntriesHelper($this, $this->context);
+            $entry = $entries_helper->getEntry('dp-order-summary');
+            $this->media->addCSS($entry['css']);
+            $this->media->addJS($entry['js']);
         }
 
         if ($controller_name === 'AdminModules' && Tools::getValue('configure') === $this->name) {
-            $this->media->addJS(array(
-                'views/js/plugins/lang/jquery.dp_lang.js',
-                'views/js/plugins/lang/jquery.dp_lang.js'
-            ));
             Media::addJsDef(array(
                 'dp_config'   => $link->getAdminLink('DynamicMainConfig'),
                 'dpa_message' => $this->getAdminMessages(),
             ));
+
+            $entries_helper = new DynamicEntriesHelper($this, $this->context);
+            $entry = $entries_helper->getEntry('dp-module-form');
+            $this->media->addCSS($entry["css"]);
+            $this->media->addJS($entry['js']);
         }
 
-        $this->context->controller->addCSS($this->_path . 'views/css/admin/admin.css');
+        $this->context->controller->addCSS($this->_path . 'views/css/admin.css');
     }
 
     /** @noinspection PhpUnused */
@@ -1081,7 +1072,7 @@ class DynamicProduct extends Module
     {
         $output = '';
 
-        $is_hot_mode = DynamicTools::isHotMode(_FRONT_DEV_PORT_);
+        $is_hot_mode = DynamicTools::isHotMode(_DP_FRONT_DEV_PORT_);
         if ($is_hot_mode) {
             $output .= $this->display(__FILE__, 'views/templates/hook/vite-script-admin.tpl');
         }
@@ -1095,7 +1086,7 @@ class DynamicProduct extends Module
     {
         $output = '';
 
-        $is_hot_mode = DynamicTools::isHotMode(_FRONT_DEV_PORT_);
+        $is_hot_mode = DynamicTools::isHotMode(_DP_FRONT_DEV_PORT_);
         if ($is_hot_mode) {
             $output .= $this->display(__FILE__, 'views/templates/hook/vite-script-admin.tpl');
         }
@@ -1104,7 +1095,7 @@ class DynamicProduct extends Module
 
     public function hookDisplayAdminProductsExtra($params)
     {
-        $id_product = isset($params['id_product']) ? (int)$params['id_product'] : 0;
+        $id_product = isset($params['id_product']) ? (int) $params['id_product'] : 0;
         $id_product = $id_product ?: Tools::getValue('id_product');
 
         if (!$id_product) {
@@ -1121,34 +1112,39 @@ class DynamicProduct extends Module
         /** @var Cart $cart */
         $cart = isset($params['cart']) ? $params['cart'] : null;
 
+        if (!Validate::isLoadedObject(Context::getContext()->cart)) {
+            return;
+        }
+
         if ($cart) {
             $id_lang = $this->context->language->id;
             $products = $cart->getProducts();
             foreach ($products as $product) {
-                $id_product = (int)$product['id_product'];
+                $id_product = (int) $product['id_product'];
                 $dynamic_config = DynamicConfig::getByProduct($id_product);
-                if ((int)$dynamic_config->active) {
-                    $id_attribute = (int)$product['id_product_attribute'];
-                    $id_customization = (int)$product['id_customization'];
+                if ((int) $dynamic_config->active) {
+                    $id_attribute = (int) $product['id_product_attribute'];
+                    $id_customization = (int) $product['id_customization'];
 
                     $price_equation = DynamicEquation::getPriceEquation($id_product);
                     $weight_equation = DynamicEquation::getWeightEquation($id_product);
 
                     $recalc_price = DynamicEquation::containsQuantityField($price_equation->formula);
                     $recalc_weight = DynamicEquation::containsQuantityField($weight_equation->formula);
-                    $recalc = $recalc_price || $recalc_weight;
+                    $is_reorder = Tools::getIsset('submitReorder');
+                    $recalc = $recalc_price || $recalc_weight || $is_reorder;
 
                     if ($recalc) {
                         $quantity_input_field = new DynamicInputField();
                         $quantity_input_field->name = 'quantity';
-                        $quantity_input_field->value = (int)$product['quantity'];
+                        $quantity_input_field->value = (int) $product['quantity'];
                         $customization_input = DynamicInput::getInputByCustomization($id_customization);
                         if (Validate::isLoadedObject($customization_input)) {
                             $customization_input->assignInputFields($id_lang);
                             $input_fields = $customization_input->input_fields;
                             $input_fields['quantity'] = $quantity_input_field;
 
-                            if ($recalc_price) {
+                            if ($recalc_price || $is_reorder) {
                                 $price = DynamicEquation::calculatePriceFormula(
                                     $id_product,
                                     $id_attribute,
@@ -1158,7 +1154,7 @@ class DynamicProduct extends Module
                                 $customization_input->updatePrice($price);
                             }
 
-                            if ($recalc_weight) {
+                            if ($recalc_weight || $is_reorder) {
                                 $weight = DynamicEquation::calculateWeightFormula(
                                     $id_product,
                                     $id_attribute,
@@ -1210,7 +1206,7 @@ class DynamicProduct extends Module
 
     public function hookDisplayAdminInputSummary($id_input, $params)
     {
-        $id_lang = (int)$this->context->language->id;
+        $id_lang = (int) $this->context->language->id;
         $input = new DynamicInput($id_input, $id_lang);
         $input->assignInputFields($id_lang);
 
@@ -1229,14 +1225,33 @@ class DynamicProduct extends Module
         return $this->display(__FILE__, 'views/templates/hook/display-admin-input-summary.tpl');
     }
 
+    public function hookDisplayCustomizationValues($id_input)
+    {
+        $id_lang = (int) $this->context->language->id;
+        $input = new DynamicInput($id_input, $id_lang);
+        $input->assignInputFields($id_lang);
+
+        $summary = array();
+        foreach ($input->input_fields as $input_field) {
+            if (!$input_field->isSkipped()) {
+                $summary[] = array(
+                    'label' => $input_field->label,
+                    'value' => $input_field->displayValue(),
+                );
+            }
+        }
+
+        return $summary;
+    }
+
     /** @noinspection PhpUnused */
     public function hookActionProductAdd($params)
     {
         if ($this->provider->isDuplicateRequest()) {
-            $id_product_old = (int)$this->provider->getProductIdFromDuplicateRequest();
+            $id_product_old = (int) $this->provider->getProductIdFromDuplicateRequest();
             $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product_old);
 
-            $id_product_new = (int)$params['id_product'];
+            $id_product_new = (int) $params['id_product'];
 
             if ($id_source_product == $id_product_old) {
                 $this->handler->copyConfig($id_product_new, $id_product_old, true);
@@ -1249,7 +1264,7 @@ class DynamicProduct extends Module
     /** @noinspection PhpUnusedPrivateMethodInspection */
     private function displayUpdateUnit()
     {
-        $id_unit = (int)Tools::getValue('id_unit');
+        $id_unit = (int) Tools::getValue('id_unit');
         $unit = new DynamicUnit($id_unit);
 
         $this->context->smarty->assign(array(
@@ -1272,7 +1287,7 @@ class DynamicProduct extends Module
     /** @noinspection PhpUnusedPrivateMethodInspection */
     private function displayUpdateFieldGroup()
     {
-        $id_field_group = (int)Tools::getValue('id_field_group');
+        $id_field_group = (int) Tools::getValue('id_field_group');
         $field_group = new DynamicFieldGroup($id_field_group);
 
         $this->context->smarty->assign(array(
@@ -1295,7 +1310,7 @@ class DynamicProduct extends Module
     /** @noinspection PhpUnusedPrivateMethodInspection */
     private function displayUpdateStep()
     {
-        $id_step = (int)Tools::getValue('id_step');
+        $id_step = (int) Tools::getValue('id_step');
         $step = new DynamicStep($id_step);
 
         $this->context->smarty->assign(array(

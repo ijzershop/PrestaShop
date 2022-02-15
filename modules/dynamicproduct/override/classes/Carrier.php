@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,14 +20,14 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
 class Carrier extends CarrierCore
 {
     public static function getAvailableCarrierList(
-        Product $product,
+        $product,
         $id_warehouse,
         $id_address_delivery = null,
         $id_shop = null,
@@ -51,13 +51,13 @@ class Carrier extends CarrierCore
 
         Module::getInstanceByName('dynamicproduct');
         $sizes = classes\models\DynamicInput::getMaxSizes($product);
-        if ((float)$sizes['width']) {
+        if ((float) $sizes['width']) {
             $product->width = $sizes['width'];
         }
-        if ((float)$sizes['height']) {
+        if ((float) $sizes['height']) {
             $product->height = $sizes['height'];
         }
-        if ((float)$sizes['depth']) {
+        if ((float) $sizes['depth']) {
             $product->depth = $sizes['depth'];
         }
         return parent::getAvailableCarrierList($product, $id_warehouse, $id_address_delivery, $id_shop, $cart, $error);

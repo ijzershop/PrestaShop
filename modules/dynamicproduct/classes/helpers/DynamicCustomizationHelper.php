@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -59,10 +59,10 @@ class DynamicCustomizationHelper
     public function saveCustomization($id_product, $id_attribute, $id_address_delivery, $id_cart)
     {
         $data = array(
-            'id_product_attribute' => (int)$id_attribute,
-            'id_address_delivery'  => (int)$id_address_delivery,
-            'id_cart'              => (int)$id_cart,
-            'id_product'           => (int)$id_product,
+            'id_product_attribute' => (int) $id_attribute,
+            'id_address_delivery'  => (int) $id_address_delivery,
+            'id_cart'              => (int) $id_cart,
+            'id_product'           => (int) $id_product,
             'quantity'             => 0,
             'in_cart'              => 0
         );
@@ -86,13 +86,13 @@ class DynamicCustomizationHelper
     ) {
         /** @noinspection UnnecessaryCastingInspection */
         $data = array(
-            'id_customization' => (int)$id_customization,
-            'id_module'        => (int)$id_module,
-            'type'             => (int)Product::CUSTOMIZE_TEXTFIELD,
-            'index'            => (int)$id_customization_field,
-            'value'            => (int)$dynamic_input->id,
-            'price'            => (float)$dynamic_input->price,
-            'weight'           => (float)$dynamic_input->weight,
+            'id_customization' => (int) $id_customization,
+            'id_module'        => (int) $id_module,
+            'type'             => (int) Product::CUSTOMIZE_TEXTFIELD,
+            'index'            => (int) $id_customization_field,
+            'value'            => (int) $dynamic_input->id,
+            'price'            => (float) $dynamic_input->price,
+            'weight'           => (float) $dynamic_input->weight,
         );
 
         Db::getInstance()->insert('customized_data', $data, false, true, Db::REPLACE);
@@ -100,7 +100,7 @@ class DynamicCustomizationHelper
         Db::getInstance()->update(
             'product',
             array('customizable' => $customizable),
-            'id_product = ' . (int)$id_product
+            'id_product = ' . (int) $id_product
         );
     }
 
@@ -115,18 +115,18 @@ class DynamicCustomizationHelper
         $input_fields
     ) {
         $dynamic_input = new DynamicInput();
-        $dynamic_input->id_product = (int)$id_product;
-        $dynamic_input->id_attribute = (int)$id_attribute;
-        $dynamic_input->id_cart = (int)$id_cart;
-        $dynamic_input->cart_quantity = (int)$quantity;
-        $dynamic_input->id_customer = (int)$this->module->provider->getCustomer();
-        $dynamic_input->id_guest = (int)$this->module->provider->getGuest();
+        $dynamic_input->id_product = (int) $id_product;
+        $dynamic_input->id_attribute = (int) $id_attribute;
+        $dynamic_input->id_cart = (int) $id_cart;
+        $dynamic_input->cart_quantity = (int) $quantity;
+        $dynamic_input->id_customer = (int) $this->module->provider->getCustomer();
+        $dynamic_input->id_guest = (int) $this->module->provider->getGuest();
         $dynamic_input->hash = Tools::getValue('hash');
 
-        $dynamic_input->price = (float)$price_equation_result;
-        $dynamic_input->weight = (float)$weight_equation_result;
+        $dynamic_input->price = (float) $price_equation_result;
+        $dynamic_input->weight = (float) $weight_equation_result;
         $dynamic_input->dynamic_quantity = DynamicEquation::getDynamicQuantity($dynamic_input, $input_fields);
-        $dynamic_input->id_customization = (int)$id_customization;
+        $dynamic_input->id_customization = (int) $id_customization;
         $dynamic_input->save();
         return $dynamic_input;
     }
@@ -139,7 +139,7 @@ class DynamicCustomizationHelper
     {
         foreach ($input_fields as $input_field) {
             $input_field->id = null;
-            $input_field->id_input = (int)$id_input;
+            $input_field->id_input = (int) $id_input;
             $input_field->save();
         }
     }

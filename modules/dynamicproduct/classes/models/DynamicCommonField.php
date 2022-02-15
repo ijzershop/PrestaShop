@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -62,7 +62,7 @@ class DynamicCommonField extends DynamicObject
         $common_fields = array();
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
-        $sql->where('id_field = ' . (int)$id_field);
+        $sql->where('id_field = ' . (int) $id_field);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id_field = $row['id_common_field'];
@@ -84,7 +84,7 @@ class DynamicCommonField extends DynamicObject
         $common_fields = array();
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_source_product);
+        $sql->where('id_product = ' . (int) $id_source_product);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id_field = $row['id_common_field'];
@@ -101,12 +101,12 @@ class DynamicCommonField extends DynamicObject
         $sql = new DbQuery();
         $sql->select(self::$definition['primary']);
         $sql->from(self::$definition['table']);
-        $sql->where('id_field = ' . (int)$id_field);
-        $sql->where('id_product = ' . (int)$id_product);
-        $id_common_field = (int)Db::getInstance()->getValue($sql);
+        $sql->where('id_field = ' . (int) $id_field);
+        $sql->where('id_product = ' . (int) $id_product);
+        $id_common_field = (int) Db::getInstance()->getValue($sql);
         $common_field = new self($id_common_field);
-        $common_field->id_field = (int)$id_field;
-        $common_field->id_product = (int)$id_product;
+        $common_field->id_field = (int) $id_field;
+        $common_field->id_product = (int) $id_product;
         return $common_field;
     }
 }

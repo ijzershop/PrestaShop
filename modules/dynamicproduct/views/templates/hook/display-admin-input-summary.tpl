@@ -1,5 +1,5 @@
 {**
-* 2010-2021 Tuni-Soft
+* 2010-2022 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author
-*  @copyright 2014-2021
+*  @copyright 2014-2022
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
@@ -30,7 +30,7 @@
           {foreach from=$input->input_fields item=input_field}
               {if $input_field->isSkippedName()}{continue}{/if}
               {if $input_field->isSkipped() && !$input_field->isAdminField()}{continue}{/if}
-            <div>
+            <span>
                 {if $input_field->label}
                   <strong>{$input_field->label|escape:'htmlall':'UTF-8'}:</strong>
                 {/if}
@@ -39,19 +39,30 @@
                 {else}
                     {$input_field->displayValue()|escape:'htmlall':'UTF-8'}
                 {/if}
-            </div>
+            </span>
+            <br>
           {/foreach}
       {/if}
 
-      {if $input->canDisplayWeight()}
-        <strong>{l s='Weight' mod='dynamicproduct'}:</strong>
-          {$input->weight|floatval} {Configuration::get('PS_WEIGHT_UNIT')|escape:'htmlall':'UTF-8'}
-        <br>
+      {if $input->canDisplayWeight()||1}
+        <span>
+          <strong>{l s='Weight' mod='dynamicproduct'}:</strong>
+            {$input->weight|floatval} {Configuration::get('PS_WEIGHT_UNIT')|escape:'htmlall':'UTF-8'}
+        </span>
       {/if}
 
       {if !$is_pdf}
+        <br>
         <a target="_blank" class="btn btn-default" data-cy="admin-edit" style="margin-top: 10px;"
-           href="{$input->getEditLink(true)|escape:'htmlall':'UTF-8'}">{l s='Edit this customization' mod='dynamicproduct'}</a>
+           href="{$input->getEditLink(true)|escape:'htmlall':'UTF-8'}"
+        >
+            {l s='Edit this customization' mod='dynamicproduct'}
+        </a>
+        <a target="_blank" class="btn btn-default" style="margin-top: 10px;"
+           href="{$input->getCSVLink()|escape:'htmlall':'UTF-8'}"
+        >
+            {l s='Export as CSV' mod='dynamicproduct'}
+        </a>
       {/if}
   </div>
 </div>

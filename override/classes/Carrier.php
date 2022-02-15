@@ -6,11 +6,11 @@ class Carrier extends CarrierCore
 {
     /*
     * module: dynamicproduct
-    * date: 2021-10-15 10:43:05
-    * version: 2.30.0
+    * date: 2022-02-07 13:34:27
+    * version: 2.43.11
     */
     public static function getAvailableCarrierList(
-        Product $product,
+        $product,
         $id_warehouse,
         $id_address_delivery = null,
         $id_shop = null,
@@ -32,13 +32,13 @@ class Carrier extends CarrierCore
         }
         Module::getInstanceByName('dynamicproduct');
         $sizes = classes\models\DynamicInput::getMaxSizes($product);
-        if ((float)$sizes['width']) {
+        if ((float) $sizes['width']) {
             $product->width = $sizes['width'];
         }
-        if ((float)$sizes['height']) {
+        if ((float) $sizes['height']) {
             $product->height = $sizes['height'];
         }
-        if ((float)$sizes['depth']) {
+        if ((float) $sizes['depth']) {
             $product->depth = $sizes['depth'];
         }
         return parent::getAvailableCarrierList($product, $id_warehouse, $id_address_delivery, $id_shop, $cart, $error);

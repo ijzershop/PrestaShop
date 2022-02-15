@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -49,15 +49,15 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
-        $this->id_product = (int)Tools::getValue('id_product');
-        $this->id_field = (int)Tools::getValue('id_field');
-        $this->id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $this->id_product = (int) Tools::getValue('id_product');
+        $this->id_field = (int) Tools::getValue('id_field');
+        $this->id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
     }
 
     public function postProcess()
     {
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
-        if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
+        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(Tools::jsonEncode(array(
                 'error'   => true,
                 'message' => $this->module->l('This product is for viewing only!')
@@ -74,9 +74,9 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
 
     private function processSaveFieldSettings()
     {
-        $id_field = (int)Tools::getValue('id');
+        $id_field = (int) Tools::getValue('id');
         $dynamic_field = new DynamicField($id_field);
-        $id_product_original = (int)$dynamic_field->id_product;
+        $id_product_original = (int) $dynamic_field->id_product;
         $dynamic_field->saveFromPost();
         if ($id_product_original !== $this->id_product) {
             $dynamic_field->id_product = $id_product_original;
@@ -93,10 +93,14 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
         $unit_value->id_field = $id_field;
         $unit_value->save();
 
+        $short_descriptions = Tools::getValue('short_description');
+        $translation_helper->fillEmpty($short_descriptions);
+
         $descriptions = Tools::getValue('description');
         $translation_helper->fillEmpty($descriptions);
 
-        $field = new DynamicField($this->id_field);
+        $field = new DynamicField($id_field);
+        $field->short_description = $short_descriptions;
         $field->description = $descriptions;
         $field->save();
 
@@ -109,9 +113,9 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
 
         $unit_value = DynamicUnitValue::getUnitValue($this->id_field);
         $unit_value->id_field = $this->id_field;
-        $unit_value->min = (int)$options['min'];
-        $unit_value->max = (int)$options['max'];
-        $unit_value->required = (int)$options['required'];
+        $unit_value->min = (int) $options['min'];
+        $unit_value->max = (int) $options['max'];
+        $unit_value->required = (int) $options['required'];
         $unit_value->save();
 
         $translation_helper = new TranslationHelper($this->module, $this->context);
@@ -138,7 +142,7 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
 
         $unit_value = DynamicUnitValue::getUnitValue($this->id_field);
         $unit_value->id_field = $this->id_field;
-        $unit_value->step = (int)$options['required'];
+        $unit_value->step = (int) $options['required'];
         $unit_value->min_date = $options['min_date'];
         $unit_value->max_date = $options['max_date'];
         $unit_value->save();
@@ -249,9 +253,9 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
         }
 
         $unit_value = DynamicUnitValue::getUnitValue($this->id_field);
-        $unit_value->id_field = (int)$this->id_field;
-        $unit_value->max_size = (float)$options['max_size'];
-        $unit_value->required = (int)$options['required'];
+        $unit_value->id_field = (int) $this->id_field;
+        $unit_value->max_size = (float) $options['max_size'];
+        $unit_value->required = (int) $options['required'];
         $unit_value->extensions = $options['extensions'];
         $unit_value->save();
 
@@ -273,18 +277,18 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
         $options = Tools::getValue('options');
 
         $unit_value = DynamicUnitValue::getUnitValue($this->id_field);
-        $unit_value->id_field = (int)$this->id_field;
-        $unit_value->max_size = (float)$options['max_size'];
-        $unit_value->min_width = (float)$options['min_width'];
-        $unit_value->min_height = (float)$options['min_height'];
-        $unit_value->required = (int)$options['required'];
+        $unit_value->id_field = (int) $this->id_field;
+        $unit_value->max_size = (float) $options['max_size'];
+        $unit_value->min_width = (float) $options['min_width'];
+        $unit_value->min_height = (float) $options['min_height'];
+        $unit_value->required = (int) $options['required'];
         $unit_value->save();
         $this->respond();
     }
 
     private function processSaveFieldMultiselect()
     {
-        $value = (int)Tools::getValue('value');
+        $value = (int) Tools::getValue('value');
         $options = DynamicUnitValue::getUnitValue($this->id_field);
         $options->id_field = $this->id_field;
         $options->multiselect = $value;
@@ -294,7 +298,7 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
 
     private function processSaveThumbnailSize()
     {
-        $value = (int)Tools::getValue('value');
+        $value = (int) Tools::getValue('value');
         $options = DynamicUnitValue::getUnitValue($this->id_field);
         $options->id_field = $this->id_field;
         $options->max_size = $value;
@@ -317,7 +321,7 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
 
     public function respond($data = array(), $success = 1)
     {
-        $success = $success && (int)!array_key_exists('error', $data);
+        $success = $success && (int) !array_key_exists('error', $data);
         $arr = array(
             'success' => $success,
         );

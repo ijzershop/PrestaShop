@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -32,7 +32,7 @@ use Context;
 use Db;
 use DynamicProduct;
 use OrderDetail;
-use PrestaShop\PrestaShop\Adapter\Validate;
+use Validate;
 
 class DynamicProductCost
 {
@@ -52,9 +52,9 @@ class DynamicProductCost
     {
         $order_details = OrderDetail::getList($id_order);
         foreach ($order_details as $order_detail) {
-            $id_product = (int)$order_detail['product_id'];
+            $id_product = (int) $order_detail['product_id'];
 
-            $id_customization = (int)$order_detail['id_customization'];
+            $id_customization = (int) $order_detail['id_customization'];
             if (!$id_customization) {
                 continue;
             }
@@ -73,11 +73,11 @@ class DynamicProductCost
             if (!$formula) {
                 continue;
             }
-            $cost = DynamicEquation::evaluateFormula($formula, $dynamic_input->getInputFields());
+            $cost = DynamicEquation::evaluateFormula($formula, $dynamic_input->getInputFields(), 'Cost formula');
             Db::getInstance()->update(
                 'order_detail',
-                array('purchase_supplier_price' => (float)$cost),
-                'id_order_detail = ' . (int)$order_detail['id_order_detail']
+                array('purchase_supplier_price' => (float) $cost),
+                'id_order_detail = ' . (int) $order_detail['id_order_detail']
             );
         }
     }

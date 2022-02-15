@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -73,7 +73,7 @@ class LegacyInputFields
         $sql = new DbQuery();
         $sql->select('inputs');
         $sql->from($this->module->name . '_input');
-        $sql->where('id_input = ' . (int)$id_input);
+        $sql->where('id_input = ' . (int) $id_input);
         $inputs = Db::getInstance()->getValue($sql);
         if ($this->shouldEscapeJson($inputs)) {
             $inputs = $this->unescape($inputs);

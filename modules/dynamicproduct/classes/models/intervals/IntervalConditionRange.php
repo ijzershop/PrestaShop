@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -60,10 +60,10 @@ class IntervalConditionRange extends DynamicObject
         $sql = new DbQuery();
         $sql->select(self::$definition['primary']);
         $sql->from(static::$definition['table']);
-        $sql->where('id_interval_condition = ' . (int)$id_interval_condition);
-        $id = (int)Db::getInstance()->getValue($sql);
+        $sql->where('id_interval_condition = ' . (int) $id_interval_condition);
+        $id = (int) Db::getInstance()->getValue($sql);
         $object = new self($id);
-        $object->id_interval_condition = (int)$id_interval_condition;
+        $object->id_interval_condition = (int) $id_interval_condition;
         return $object;
     }
 }

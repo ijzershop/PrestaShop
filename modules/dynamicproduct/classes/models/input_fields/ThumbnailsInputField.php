@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -38,14 +38,46 @@ class ThumbnailsInputField extends DynamicInputField
         return parent::isSkipped() || count($this->selected_options) === 0;
     }
 
+    public function displayValue()
+    {
+        if (!count($this->selected_options)) {
+            return null;
+        }
+
+        $values = array();
+
+        foreach ($this->selected_options as $id_option) {
+            $thumbnails_option = new DynamicThumbnailsOption($id_option, $this->id_lang);
+            if (\Validate::isLoadedObject($thumbnails_option)) {
+                $values[] = $thumbnails_option->label;
+            }
+        }
+
+        return join(', ', $values);
+    }
+
     /** @noinspection PhpUnused */
     public function getDisplayedValues()
     {
         $displayed_values = array();
         foreach ($this->selected_options as $id_thumbnail_option) {
-            $thumbnails_option = new DynamicThumbnailsOption((int)$id_thumbnail_option, $this->id_lang);
+            $thumbnails_option = new DynamicThumbnailsOption((int) $id_thumbnail_option, $this->id_lang);
             $displayed_values[] = $thumbnails_option->label;
         }
         return $displayed_values;
+    }
+
+    public function getImagesUrls()
+    {
+        if (is_array($this->selected_options) && count($this->selected_options) === 1) {
+            $option = new DynamicThumbnailsOption((int) $this->selected_options[0]);
+            if (\Validate::isLoadedObject($option) && $option->hasImage()) {
+                return array(
+                    'thumb_url' => $option->thumb_url,
+                    'image_url' => $option->image_url,
+                );
+            }
+        }
+        return array();
     }
 }

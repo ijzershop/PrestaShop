@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -110,7 +110,7 @@ class DynamicInput extends DynamicObject
                 $input_quantity += $dynamic_quantity * $dynamic_input->cart_quantity;
             }
         }
-        return (int)$input_quantity;
+        return (int) $input_quantity;
     }
 
     /**
@@ -118,7 +118,7 @@ class DynamicInput extends DynamicObject
      */
     public static function updateCartQuantities($cart, $add = false)
     {
-        $id_cart = (int)$cart->id;
+        $id_cart = (int) $cart->id;
         $dynamic_inputs = self::getInputsByIdCart($id_cart);
         foreach ($dynamic_inputs as $dynamic_input) {
             $dynamic_input->assignCartQuantity();
@@ -156,7 +156,7 @@ class DynamicInput extends DynamicObject
             ON CONCAT("|", di.`id_input`, "|") = cd.`value` OR di.`id_input` = cd.`value`
             INNER JOIN `' . _DB_PREFIX_ . 'cart_product` cp
             ON cp.id_cart = cc.id_cart AND cp.id_product_attribute = cc.id_product_attribute
-            WHERE cc.`id_cart` = ' . (int)$id_cart . ' AND cc.`in_cart` = 1';
+            WHERE cc.`id_cart` = ' . (int) $id_cart . ' AND cc.`in_cart` = 1';
         return Db::getInstance()->executeS($sql);
     }
 
@@ -208,7 +208,7 @@ class DynamicInput extends DynamicObject
         if (is_array($rows)) {
             foreach ($rows as $row) {
                 $id_input = $row['id_input'];
-                $dynamic_input = new self((int)$id_input);
+                $dynamic_input = new self((int) $id_input);
                 if (Validate::isLoadedObject($dynamic_input)) {
                     $dynamic_inputs[$id_input] = $dynamic_input;
                 }
@@ -238,14 +238,14 @@ class DynamicInput extends DynamicObject
             ON cd.`id_customization` = cc.`id_customization`
             INNER JOIN `' . _DB_PREFIX_ . 'dynamicproduct_input` di
             ON CONCAT("|", di.`id_input`, "|") = cd.`value` OR di.`id_input` = cd.`value`
-            WHERE di.`id_product` = ' . (int)$id_product .
-            ($id_attribute !== false ? ' AND di.`id_attribute` = ' . (int)$id_attribute : '')
-            . ' AND cc.`in_cart` = 1' . ' AND cc.`id_cart` = ' . (int)$id_cart;
+            WHERE di.`id_product` = ' . (int) $id_product .
+            ($id_attribute !== false ? ' AND di.`id_attribute` = ' . (int) $id_attribute : '')
+            . ' AND cc.`in_cart` = 1' . ' AND cc.`id_cart` = ' . (int) $id_cart;
         $rows = Db::getInstance()->executeS($sql);
         if (is_array($rows)) {
             foreach ($rows as $row) {
                 $id_input = $row['id_input'];
-                $dynamic_input = new DynamicInput((int)$id_input);
+                $dynamic_input = new DynamicInput((int) $id_input);
                 if (Validate::isLoadedObject($dynamic_input)) {
                     $dynamic_inputs[$id_input] = $dynamic_input;
                 }
@@ -269,7 +269,7 @@ class DynamicInput extends DynamicObject
         }
 
         $sql = 'SELECT id_input FROM `' . _DB_PREFIX_ . 'dynamicproduct_input` 
-            WHERE `id_customization` = ' . (int)$id_customization;
+            WHERE `id_customization` = ' . (int) $id_customization;
 
         $id_input = Db::getInstance()->getValue($sql);
         $dynamic_input = new DynamicInput($id_input);
@@ -316,9 +316,9 @@ class DynamicInput extends DynamicObject
 
     public function updatePrice($price)
     {
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'customized_data` SET `price` = ' . (float)$price .
-            ' WHERE `id_customization` = ' . (int)$this->id_customization;
-        $success = Db::getInstance()->executeS($sql);
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'customized_data` SET `price` = ' . (float) $price .
+            ' WHERE `id_customization` = ' . (int) $this->id_customization;
+        $success = Db::getInstance()->execute($sql);
         if ($success) {
             $this->price = $price;
             $this->save();
@@ -327,9 +327,9 @@ class DynamicInput extends DynamicObject
 
     public function updateWeight($weight)
     {
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'customized_data` SET `weight` = ' . (float)$weight .
-            ' WHERE `id_customization` = ' . (int)$this->id_customization;
-        $success = Db::getInstance()->executeS($sql);
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'customized_data` SET `weight` = ' . (float) $weight .
+            ' WHERE `id_customization` = ' . (int) $this->id_customization;
+        $success = Db::getInstance()->execute($sql);
         if ($success) {
             $this->weight = $weight;
             $this->save();
@@ -349,7 +349,7 @@ class DynamicInput extends DynamicObject
             null,
             false,
             true,
-            (int)$this->cart_quantity
+            (int) $this->cart_quantity
         );
     }
 
@@ -386,7 +386,7 @@ class DynamicInput extends DynamicObject
         if (is_array($inputs)) {
             $id_inputs = array();
             foreach ($inputs as $input) {
-                $id_inputs[] = (int)$input->id;
+                $id_inputs[] = (int) $input->id;
             }
 
             if (count($id_inputs)) {
@@ -413,9 +413,9 @@ class DynamicInput extends DynamicObject
                         if (preg_match($suffix_pattern, $name)) {
                             $name_without_suffix = preg_replace($suffix_pattern, '', $name);
                             if (isset($sizes[$name_without_suffix])) {
-                                $value = (float)$input_field['value'] * $coefficient;
+                                $value = (float) $input_field['value'] * $coefficient;
                                 if (!$value && property_exists($product, $name_without_suffix)) {
-                                    $value = (float)$product->{$name_without_suffix};
+                                    $value = (float) $product->{$name_without_suffix};
                                 }
                                 if ($value > $sizes[$name_without_suffix]) {
                                     $sizes[$name_without_suffix] = $value;
@@ -435,7 +435,7 @@ class DynamicInput extends DynamicObject
         $sql = new DbQuery();
         $sql->select('*');
         $sql->from('customization');
-        $sql->where('id_customization = ' . (int)$id_customization);
+        $sql->where('id_customization = ' . (int) $id_customization);
         return Db::getInstance()->getRow($sql);
     }
 
@@ -445,8 +445,8 @@ class DynamicInput extends DynamicObject
         $sql->select('c.quantity');
         $sql->from('customization', 'c');
         $sql->leftJoin('customized_data', 'cd', 'c.id_customization = cd.id_customization');
-        $sql->where('cd.value = "|' . (int)$id_input . '|" OR cd.value = ' . (int)$id_input);
-        return (int)Db::getInstance()->getValue($sql);
+        $sql->where('cd.value = "|' . (int) $id_input . '|" OR cd.value = ' . (int) $id_input);
+        return (int) Db::getInstance()->getValue($sql);
     }
 
     /**
@@ -458,7 +458,7 @@ class DynamicInput extends DynamicObject
     public static function getProductQuantityInCart($cart, $id_product, $id_attribute, $id_customization)
     {
         $quantity = $cart->containsProduct($id_product, $id_attribute, $id_customization);
-        return isset($quantity['quantity']) ? (int)$quantity['quantity'] : 0;
+        return isset($quantity['quantity']) ? (int) $quantity['quantity'] : 0;
     }
 
     public function duplicateInput($id_cart_new)
@@ -467,14 +467,14 @@ class DynamicInput extends DynamicObject
 
         $this->assignInputFields();
 
-        $this->id_cart = (int)$id_cart_new;
-        $this->id_guest = (int)$this->module->provider->getGuest();
-        $this->id_customer = (int)$this->module->provider->getCustomer();
+        $this->id_cart = (int) $id_cart_new;
+        $this->id_guest = (int) $this->module->provider->getGuest();
+        $this->id_customer = (int) $this->module->provider->getCustomer();
         $this->add();
 
         foreach ($this->input_fields as $input_field) {
             $id_field = $input_field->id_field;
-            $is_field = !!(int)$id_field;
+            $is_field = !!(int) $id_field;
 
             $field_available = true;
             $newly_disabled = false;
@@ -492,7 +492,7 @@ class DynamicInput extends DynamicObject
                 $has_errors = true;
             }
         }
-        return array((int)$this->id, $has_errors);
+        return array((int) $this->id, $has_errors);
     }
 
     public function checkAuth()
@@ -502,15 +502,15 @@ class DynamicInput extends DynamicObject
         }
         $id_guest = $this->module->provider->getGuest();
         $id_customer = $this->module->provider->getCustomer();
-        $matches_guest = $id_guest && ($id_guest === (int)$this->id_guest);
-        $matches_customer = $id_customer && ($id_customer === (int)$this->id_customer);
+        $matches_guest = $id_guest && ($id_guest === (int) $this->id_guest);
+        $matches_customer = $id_customer && ($id_customer === (int) $this->id_customer);
         return $matches_guest || $matches_customer;
     }
 
     /** @noinspection PhpUnused */
     public function canDisplayWeight()
     {
-        return DynamicConfig::getDisplayWeight($this->id_product) && (float)$this->weight;
+        return DynamicConfig::getDisplayWeight($this->id_product) && (float) $this->weight;
     }
 
     public function canExcludeProductPrice()
@@ -530,6 +530,31 @@ class DynamicInput extends DynamicObject
             $params['is_admin_edit'] = true;
         }
         return DynamicTools::addQueryToUrl($product_url, $params) . $this->hash;
+    }
+
+    public function getCSVLink()
+    {
+        return DynamicTools::addQueryToUrl(
+            $this->context->link->getAdminLink('DynamicProductCSV'),
+            array(
+                'action'   => 'download_csv',
+                'id_input' => $this->id,
+            )
+        );
+    }
+
+    public function getCSVSummary()
+    {
+        $this->assignInputFields($this->context->language->id);
+
+        $csv = "Field,Value";
+        foreach ($this->input_fields as $input_field) {
+            if (!$input_field->isSkipped() && !$input_field->isSkippedName()) {
+                $csv .= "\n";
+                $csv .= $input_field->label . ',' . $input_field->displayValue();
+            }
+        }
+        return $csv;
     }
 
     public function delete()

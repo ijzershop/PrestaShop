@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -40,13 +40,13 @@ class SwitchInputField extends DynamicInputField
 
     private function skipIfEmpty()
     {
-        return $this->field->settings->hide_when_empty && (float)$this->value === (float)0;
+        return $this->field->settings->hide_when_empty && (float) $this->value === (float) 0;
     }
 
     public function displayValue()
     {
         $generic_source = DynamicTools::getGenericSource();
-        return (int)$this->value ?
+        return (int) $this->value ?
             $this->module->l('Yes', $generic_source) :
             $this->module->l('No', $generic_source);
     }

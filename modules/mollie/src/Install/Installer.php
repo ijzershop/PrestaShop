@@ -164,12 +164,12 @@ class Installer implements InstallerInterface
             'actionOrderStatusUpdate',
             'displayPDFInvoice',
             'actionAdminOrdersListingFieldsModifier',
-            'actionAdminStatusesListingFieldsModifier',
             'actionAdminControllerSetMedia',
             'actionValidateOrder',
             'actionOrderGridDefinitionModifier',
             'actionOrderGridQueryBuilderModifier',
             'actionObjectCurrencyUpdateAfter',
+            'displayHeader',
         ];
     }
 
@@ -522,9 +522,22 @@ class Installer implements InstallerInterface
     {
         $status = new OrderState((int) Configuration::get($statusName));
         if (Validate::isLoadedObject($status)) {
+            $this->enableStatus($status);
+
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @param OrderState $orderState
+     */
+    private function enableStatus($orderState)
+    {
+        if ((bool) $orderState->deleted) {
+            $orderState->deleted = false;
+            $orderState->save();
+        }
     }
 }

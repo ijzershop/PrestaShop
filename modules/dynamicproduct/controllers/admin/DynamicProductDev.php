@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -42,7 +42,7 @@ class DynamicProductDevController extends ModuleAdminController
         $controller_name = 'AdminProducts';
         $_GET['controller'] = $_POST['controller'] = $_REQUEST['controller'] = $controller_name;
         $this->context->controller->controller_name = $controller_name;
-        $this->id_product = (int)Tools::getValue('id_product');
+        $this->id_product = (int) Tools::getValue('id_product');
     }
 
     public function setMedia($isNewTheme = true)

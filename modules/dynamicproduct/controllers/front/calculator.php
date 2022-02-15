@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -29,7 +29,6 @@
 use classes\controllers\front\DynamicFrontController;
 use classes\DynamicTools;
 use classes\helpers\DynamicCalculatorHelper;
-use classes\helpers\FieldsVisibilityHelper;
 use classes\models\DynamicInputField;
 
 /** @noinspection PhpUnused */
@@ -39,12 +38,18 @@ class DynamicProductCalculatorModuleFrontController extends DynamicFrontControll
     /** @noinspection PhpUnused */
     protected function processCalculateResult()
     {
+        $calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
+
         $fields = Tools::getValue('fields');
         $adapter_data = Tools::getValue('adapter_data');
+
         $input_fields = array();
+        $fields_visibility = array();
+
+        $calculator_helper->resetDebugMessages();
 
         try {
-            $input_fields = DynamicInputField::getInputFieldsFromData(
+            [$input_fields, $fields_visibility] = DynamicInputField::getInputFieldsFromData(
                 $this->id_product,
                 $this->id_attribute,
                 $fields,
@@ -57,86 +62,26 @@ class DynamicProductCalculatorModuleFrontController extends DynamicFrontControll
             ));
         }
 
-        $calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
-
         try {
-            $calculator_helper->checkFormulas($this->id_product, $input_fields);
+            $calculation = $calculator_helper->processCalculation(
+                $this->id_product,
+                $this->id_attribute,
+                $input_fields,
+                $fields_visibility,
+                $adapter_data
+            );
         } catch (Exception $e) {
+            $calculation = array(
+                'input_fields'   => $input_fields,
+                'visibility'     => $fields_visibility,
+                'debug_messages' => DynamicProduct::$debug_messages,
+            );
             $this->respond(array(
                 'error'   => 1,
                 'message' => DynamicTools::reportException($e)
             ));
         }
 
-        $visibility_helper = new FieldsVisibilityHelper($this->module, $this->context);
-        $fields_visibility = array();
-        try {
-            $fields_visibility = $visibility_helper->getFieldsVisibility(
-                $this->id_product,
-                $this->id_attribute,
-                $input_fields,
-                $this->id_product
-            );
-        } catch (Exception $e) {
-            $this->respond(array(
-                'error'   => 1,
-                'message' => DynamicTools::reportException($e)
-            ));
-        }
-        $visibility_helper->setExcludedFields($input_fields, $fields_visibility);
-
-        $is_container_hidden = isset($fields_visibility[0]) && (int)$fields_visibility[0] === 0;
-
-        $calculated_prices = array();
-        try {
-            $calculated_prices = $calculator_helper->getCalculatedPrices(
-                $this->id_product,
-                $this->id_attribute,
-                $input_fields,
-                $adapter_data,
-                $is_container_hidden
-            );
-        } catch (Exception $e) {
-            $this->respond(array(
-                'error'   => true,
-                'message' => DynamicTools::reportException($e)
-            ));
-        }
-
-        $calculated_weight = $calculator_helper->getCalculatedWeight(
-            $this->id_product,
-            $this->id_attribute,
-            $input_fields,
-            $is_container_hidden
-        );
-
-        $in_stock = $calculator_helper->checkProductStock($this->id_product, $this->id_attribute, $input_fields);
-
-        $fields_visibility = $calculator_helper->getFieldsVisibility($fields_visibility);
-
-        $met_conditions = $visibility_helper->getMetConditions(
-            $this->id_product,
-            $input_fields
-        );
-
-        $debug_messages = $calculator_helper->getDebugMessages($this->id_product, $input_fields);
-
-        $quantity_discounts = $calculator_helper->getQuantityDiscounts(
-            $this->id_product,
-            $this->id_attribute,
-            $calculated_prices
-        );
-
-        $response =
-            $calculated_prices +
-            $calculated_weight +
-            $fields_visibility +
-            $met_conditions +
-            $debug_messages +
-            $in_stock +
-            array('input_fields' => $input_fields) +
-            array('quantity_discounts' => $quantity_discounts);
-
-        $this->respond($response);
+        $this->respond($calculation);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -52,6 +52,7 @@ class DynamicField extends DynamicObject
     public $common;
     public $label;
     public $value;
+    public $short_description;
     public $description;
 
     public $deleted = 0;
@@ -77,38 +78,42 @@ class DynamicField extends DynamicObject
         'group_by'  => 'id_product',
         'multilang' => true,
         'fields'    => array(
-            'id_product'  => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_group'    => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_step'     => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_unit'     => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'type'        => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'name'        => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
-            'init'        => array('type' => self::TYPE_FLOAT),
-            'active'      => array('type' => self::TYPE_INT),
-            'favorite'    => array('type' => self::TYPE_INT),
-            'common'      => array('type' => self::TYPE_INT),
-            'position'    => array('type' => self::TYPE_INT),
-            'deleted'     => array('type' => self::TYPE_INT),
+            'id_product'        => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'id_group'          => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'id_step'           => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'id_unit'           => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'type'              => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'name'              => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
+            'init'              => array('type' => self::TYPE_FLOAT),
+            'active'            => array('type' => self::TYPE_INT),
+            'favorite'          => array('type' => self::TYPE_INT),
+            'common'            => array('type' => self::TYPE_INT),
+            'position'          => array('type' => self::TYPE_INT),
+            'deleted'           => array('type' => self::TYPE_INT),
             /* Lang fields */
-            'label'       => array(
+            'label'             => array(
                 'type'     => self::TYPE_STRING,
                 'lang'     => true,
                 'required' => false,
                 'validate' => 'isGenericName',
                 'size'     => 200
             ),
-            'value'       => array(
+            'value'             => array(
                 'type'     => self::TYPE_STRING,
                 'lang'     => true,
                 'required' => false,
                 'validate' => 'isCleanHtml',
                 'size'     => 100
             ),
-            'description' => array(
+            'short_description' => array(
                 'type'     => self::TYPE_HTML,
                 'lang'     => true,
                 'required' => false,
-                'validate' => 'iscleanhtml',
+            ),
+            'description'       => array(
+                'type'     => self::TYPE_HTML,
+                'lang'     => true,
+                'required' => false,
             ),
         )
     );
@@ -146,7 +151,7 @@ class DynamicField extends DynamicObject
         $sql = new DbQuery();
         $sql->select('id_field');
         $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int)$id_source_product);
+        $sql->where('id_product = ' . (int) $id_source_product);
         $sql->where('name = "' . pSQL($field_name) . '"');
         $id_field = Db::getInstance()->getValue($sql);
         return self::$fields_by_name[$key] = new DynamicField($id_field, $id_lang);
@@ -163,22 +168,22 @@ class DynamicField extends DynamicObject
         $dynamic_fields = array();
         $sql = 'SELECT `id_field`, `id_group`, `type`, `id_step`, `position`, false as linked 
         FROM `' . _DB_PREFIX_ . 'dynamicproduct_field`
-        WHERE id_product = ' . (int)$id_source_product . ' AND !deleted 
+        WHERE id_product = ' . (int) $id_source_product . ' AND !deleted 
         UNION
         (SELECT cf.`id_field`, cf.`id_group`, f.`type`, cf.`id_step`, cf.`position`, true as linked 
         FROM `' . _DB_PREFIX_ . 'dynamicproduct_common_field` cf
         JOIN `' . _DB_PREFIX_ . 'dynamicproduct_field` f
         ON f.`id_field` = cf.`id_field`
-        WHERE cf.`id_product` = ' . (int)$id_source_product . ')
+        WHERE cf.`id_product` = ' . (int) $id_source_product . ')
         ORDER BY `position`';
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id_field = $row['id_field'];
-            $dynamic_field = DynamicFieldFactory::create((int)$row['type'], $id_field, $id_lang);
+            $dynamic_field = DynamicFieldFactory::create((int) $row['type'], $id_field, $id_lang);
             $dynamic_field->linked = $row['linked'];
-            $dynamic_field->id_step = (int)$row['id_step'];
-            $dynamic_field->position = (int)$row['position'];
-            $dynamic_field->id_group = (int)$row['id_group'];
+            $dynamic_field->id_step = (int) $row['id_step'];
+            $dynamic_field->position = (int) $row['position'];
+            $dynamic_field->id_group = (int) $row['id_group'];
             $dynamic_fields[$id_field] = $dynamic_field;
         }
         return $dynamic_fields;
@@ -221,7 +226,7 @@ class DynamicField extends DynamicObject
         $fields = self::getFieldsByIdProduct($id_product, $id_lang);
         foreach ($fields as $field) {
             $id_group = $field->id_group;
-            if ((int)$field->id_product !== (int)$id_source_product) {
+            if ((int) $field->id_product !== (int) $id_source_product) {
                 $common_field = DynamicCommonField::getByFieldAndProduct($field->id, $id_product);
                 $id_group = $common_field->id_group;
             }
@@ -340,7 +345,7 @@ class DynamicField extends DynamicObject
 
     protected function initName()
     {
-        if ((int)$this->id) {
+        if ((int) $this->id) {
             if (empty($this->name)) {
                 $this->name = 'field-' . $this->id;
             }

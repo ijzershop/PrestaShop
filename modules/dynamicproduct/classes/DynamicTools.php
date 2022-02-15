@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -63,7 +63,7 @@ class DynamicTools
     public static function checkRestricted($id, $array)
     {
         $context = self::getContext();
-        return (int)$context->employee->id_profile !== 1 && in_array((int)$id, $array, false);
+        return (int) $context->employee->id_profile !== 1 && in_array((int) $id, $array, false);
     }
 
     public static function getRestricted($string)
@@ -92,12 +92,15 @@ class DynamicTools
 
     public static function getHotPort()
     {
+        if (!self::isModuleDevMode()) {
+            return false;
+        }
         $context = self::getContext();
-        $port = _FRONT_DEV_PORT_;
+        $port = _DP_FRONT_DEV_PORT_;
         if ($context->controller) {
             $port = $context->controller->controller_type === 'front' ?
-                _FRONT_DEV_PORT_ :
-                _ADMIN_DEV_PORT_;
+                _DP_FRONT_DEV_PORT_ :
+                _DP_ADMIN_DEV_PORT_;
         }
         return $port;
     }
@@ -110,14 +113,19 @@ class DynamicTools
         if (Tools::getIsset('hot')) {
             return true;
         }
+
+        if (!defined('_PS_SOCK_IP_')) {
+            define('_PS_SOCK_IP_', '127.0.0.1');
+        }
+
         $fsock = @fsockopen(_PS_SOCK_IP_, $port, $errno, $errstr, 1);
-        return (bool)$fsock;
+        return (bool) $fsock;
     }
 
     public static function isSuperAdmin()
     {
         $context = self::getContext();
-        return (int)$context->employee->id_profile === 1;
+        return (int) $context->employee->id_profile === 1;
     }
 
     public static function getDir()
@@ -188,8 +196,9 @@ class DynamicTools
             if ($id_cart) {
                 /** @noinspection UnnecessaryCastingInspection */
                 Db::getInstance()->execute(
-                    'UPDATE `' . _DB_PREFIX_ . 'customization` SET `id_address_delivery` = ' . (int)$id_address_delivery
-                    . ' WHERE `id_cart` = ' . (int)$id_cart . ' AND `id_address_delivery`=0'
+                    'UPDATE `' . _DB_PREFIX_ . 'customization` 
+                    SET `id_address_delivery` = ' . (int) $id_address_delivery
+                    . ' WHERE `id_cart` = ' . (int) $id_cart . ' AND `id_address_delivery`=0'
                 );
             }
         }
@@ -274,7 +283,7 @@ class DynamicTools
                 ON a.id_attribute = pac.id_attribute
               LEFT JOIN ' . _DB_PREFIX_ . 'product_attribute pa
                 ON pa.id_product_attribute = pac.id_product_attribute
-              WHERE pa.id_product = ' . (int)$id_product . ' AND ag.id_attribute_group = ' . (int)$id_group
+              WHERE pa.id_product = ' . (int) $id_product . ' AND ag.id_attribute_group = ' . (int) $id_group
         );
     }
 
@@ -323,10 +332,10 @@ class DynamicTools
     {
         $dynamic_product = self::getModule();
         $cache = $dynamic_product->provider->getDataFile('cache/' . md5($url) . '.cache');
-        $should_use_cache = (bool)$minutes;
+        $should_use_cache = (bool) $minutes;
         if ($should_use_cache) {
             if (file_exists($cache)) {
-                $is_cache_valid = filemtime($cache) > time() - 60 * (float)$minutes;
+                $is_cache_valid = filemtime($cache) > time() - 60 * (float) $minutes;
                 if ($is_cache_valid) {
                     return Tools::file_get_contents($cache);
                 }

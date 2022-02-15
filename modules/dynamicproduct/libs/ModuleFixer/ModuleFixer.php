@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -85,7 +85,7 @@ class ModuleFixer
 
         foreach ($module_hooks as $hook_name) {
             if (!Hook::isModuleRegisteredOnHook($this->module, $hook_name, $this->context->shop->id)) {
-                $id_hook = (int)Hook::getIdByName($hook_name);
+                $id_hook = (int) Hook::getIdByName($hook_name);
                 $hook = new Hook($id_hook, $this->context->language->id);
                 $hooks_list[] = array(
                     'id_hook'     => $id_hook,
@@ -110,7 +110,7 @@ class ModuleFixer
 
     private function restoreHooks()
     {
-        $hooks = (array)Tools::getValue('hooks');
+        $hooks = (array) Tools::getValue('hooks');
         if (is_array($hooks)) {
             $hook_names = array_keys($hooks);
             foreach ($hook_names as $hook_name) {

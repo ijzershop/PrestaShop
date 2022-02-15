@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -70,7 +70,7 @@ class MMathparserNParamNode extends MathParserNode
         }
 
         if (is_numeric($value)) {
-            return (float)$value;
+            return (float) $value;
         }
 
         throw new Exception('Value is not numeric: ' . $value);
@@ -78,7 +78,7 @@ class MMathparserNParamNode extends MathParserNode
 
     public function getValueAsString()
     {
-        return (string)$this->getValue();
+        return (string) $this->getValue();
     }
 
     public function isFunctionUsed($name)

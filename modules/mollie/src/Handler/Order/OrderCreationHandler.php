@@ -50,7 +50,6 @@ use Mollie\DTO\PaymentData;
 use Mollie\Repository\PaymentMethodRepositoryInterface;
 use Mollie\Service\OrderFeeService;
 use Mollie\Service\OrderStatusService;
-use Mollie\Service\TransactionService;
 use Mollie\Utility\NumberUtility;
 use Mollie\Utility\PaymentFeeUtility;
 use Mollie\Utility\TextGeneratorUtility;
@@ -58,7 +57,6 @@ use MolPaymentMethod;
 use Order;
 use OrderDetail;
 use PrestaShop\Decimal\Number;
-use PrestaShopException;
 
 class OrderCreationHandler
 {
@@ -93,14 +91,8 @@ class OrderCreationHandler
 
     /**
      * @param MollieOrderAlias|MolliePaymentAlias $apiPayment
-     * @param int $cartId
-     * @param bool $isKlarnaOrder
-     *
-     * @return int
-     *
-     * @throws PrestaShopException
      */
-    public function createOrder($apiPayment, $cartId, $isKlarnaOrder = false)
+    public function createOrder($apiPayment, int $cartId, $isKlarnaOrder = false): int
     {
         $orderStatus = $isKlarnaOrder ?
             (int) Config::getStatuses()[PaymentStatus::STATUS_AUTHORIZED] :
@@ -127,7 +119,9 @@ class OrderCreationHandler
                 }
             }
         }
-
+        if (Order::getOrderByCartId((int) $cartId)) {
+            return 0;
+        }
         if (!$paymentFee) {
             $this->module->validateOrder(
                 (int) $cartId,
@@ -135,7 +129,7 @@ class OrderCreationHandler
                 (float) $apiPayment->amount->value,
                 isset(Config::$methods[$apiPayment->method]) ? Config::$methods[$apiPayment->method] : $this->module->name,
                 null,
-                [],
+                ['transaction_id' => $apiPayment->id],
                 null,
                 false,
                 $cart->secure_key
@@ -143,7 +137,6 @@ class OrderCreationHandler
 
             /* @phpstan-ignore-next-line */
             $orderId = (int) Order::getOrderByCartId((int) $cartId);
-            $this->updateTransaction($orderId, $apiPayment);
 
             return $orderId;
         }
@@ -171,7 +164,7 @@ class OrderCreationHandler
             (float) $apiPayment->amount->value,
             isset(Config::$methods[$apiPayment->method]) ? Config::$methods[$apiPayment->method] : $this->module->name,
             null,
-            [],
+            ['transaction_id' => $apiPayment->id],
             null,
             false,
             $cart->secure_key
@@ -185,7 +178,6 @@ class OrderCreationHandler
                 $orderStatus = Config::STATUS_PAID_ON_BACKORDER;
             }
         }
-        $this->updateTransaction($orderId, $apiPayment);
 
         $this->feeService->createOrderFee($cartId, $paymentFee);
 
@@ -269,20 +261,6 @@ class OrderCreationHandler
         $order->update();
 
         return $paymentData;
-    }
-
-    /**
-     * @param int $orderId
-     * @param MolliePaymentAlias|MollieOrderAlias $transaction
-     */
-    private function updateTransaction($orderId, $transaction)
-    {
-        /** @var TransactionService $transactionService */
-        $transactionService = $this->module->getMollieContainer(TransactionService::class);
-        $order = new Order($orderId);
-        if (!$order->getOrderPayments()) {
-            $transactionService->updateOrderTransaction($transaction->id, $order->reference);
-        }
     }
 
     private function isOrderBackOrder($orderId)

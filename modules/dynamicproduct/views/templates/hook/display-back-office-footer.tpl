@@ -1,5 +1,5 @@
 {**
-* 2010-2021 Tuni-Soft
+* 2010-2022 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author
-*  @copyright 2014-2021
+*  @copyright 2014-2022
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 

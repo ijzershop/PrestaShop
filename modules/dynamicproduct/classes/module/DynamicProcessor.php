@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -70,7 +70,7 @@ class DynamicProcessor
 
     public function processEditUnit()
     {
-        $id_unit = (int)Tools::getValue('id_unit');
+        $id_unit = (int) Tools::getValue('id_unit');
         if (DynamicTools::checkRestricted($id_unit, $this->module->restricted_units)) {
             $this->module->html_content .= $this->module->displayError('You do not have permission to edit this.');
             return;
@@ -82,7 +82,7 @@ class DynamicProcessor
 
     public function processDeleteUnit()
     {
-        $id_unit = (int)Tools::getValue('id_unit');
+        $id_unit = (int) Tools::getValue('id_unit');
         if (DynamicTools::checkRestricted($id_unit, $this->module->restricted_units)) {
             $this->module->html_content .= $this->module->displayError('You do not have permission to edit this.');
         } else {
@@ -99,7 +99,7 @@ class DynamicProcessor
 
     public function processEditFieldGroup()
     {
-        $id_field_group = (int)Tools::getValue('id_field_group');
+        $id_field_group = (int) Tools::getValue('id_field_group');
         $field_group = new DynamicFieldGroup($id_field_group);
         $field_group->saveFromPost();
         DynamicTools::redirect();
@@ -107,7 +107,7 @@ class DynamicProcessor
 
     public function processEditStep()
     {
-        $id_step = (int)Tools::getValue('id_step');
+        $id_step = (int) Tools::getValue('id_step');
         $step = new DynamicStep($id_step);
         $step->saveFromPost();
         DynamicTools::redirect();
@@ -115,21 +115,21 @@ class DynamicProcessor
 
     public function processDeleteFieldGroup()
     {
-        $id_field_group = (int)Tools::getValue('id_field_group');
+        $id_field_group = (int) Tools::getValue('id_field_group');
         $field_group = new DynamicFieldGroup($id_field_group);
         $field_group->delete();
     }
 
     public function processDeleteStep()
     {
-        $id_step = (int)Tools::getValue('id_step');
+        $id_step = (int) Tools::getValue('id_step');
         $step = new DynamicStep($id_step);
         $step->delete();
     }
 
     public function processRemoveFavoriteField()
     {
-        $id_favorite_field = (int)Tools::getValue('id_favorite_field');
+        $id_favorite_field = (int) Tools::getValue('id_favorite_field');
         $favorite_field = new DynamicField($id_favorite_field);
         $favorite_field->favorite = false;
         $favorite_field->save();
@@ -137,7 +137,7 @@ class DynamicProcessor
 
     public function processRemoveCommonField()
     {
-        $id_common_field = (int)Tools::getValue('id_common_field');
+        $id_common_field = (int) Tools::getValue('id_common_field');
         $common_field = new DynamicField($id_common_field);
         $common_field->common = false;
         $common_field->save();

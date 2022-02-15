@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -43,14 +43,14 @@ class TranslationHelper
     {
         $this->module = $module;
         $this->context = $context;
-        $this->id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $this->id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
     }
 
     public function fillEmpty(&$translations)
     {
         if (is_array($translations)) {
             foreach ($translations as $id_trans_lang => &$translation) {
-                if (((int)$id_trans_lang !== $this->id_default_lang) && empty($translation)) {
+                if (((int) $id_trans_lang !== $this->id_default_lang) && empty($translation)) {
                     $translation = $translations[$this->id_default_lang];
                 }
             }

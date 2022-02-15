@@ -29,7 +29,10 @@ services:
     arguments:
       - '@Mollie\Provider\PaymentOption\BasePaymentOptionProvider'
       - '@Mollie\Provider\PaymentOption\CreditCardPaymentOptionProvider'
+      - '@Mollie\Provider\PaymentOption\CreditCardSingleClickPaymentOptionProvider'
       - '@Mollie\Provider\PaymentOption\IdealPaymentOptionProvider'
+      - '@Mollie\Repository\MolCustomerRepository'
+      - '@mollie.customer'
 
   Mollie\Handler\PaymentOption\PaymentOptionHandlerInterface: '@Mollie\Handler\PaymentOption\PaymentOptionHandler'
 

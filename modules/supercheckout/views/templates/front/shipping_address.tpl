@@ -240,18 +240,17 @@
             </div>
         </div>
 
-
         <ul class="list-unstyled">
             <li>
                 <div class="input-box input-different-shipping" {if !$settings['show_use_delivery_for_payment_add'][$user_type]} style="display:none;" {/if}>
                   <input style="height:auto;" type="radio" name="use_for_invoice" id="use_for_invoice" value="on"
-                         {if $settings['use_delivery_for_payment_add'][$user_type]}checked="checked"{/if}
+                         {if $settings['use_delivery_for_payment_add'][$user_type]}checked{/if}
                   >
                   <label for="use_for_invoice"><b>Factuur adres is hetzelfde als het bezorg adres</b></label>
                   <br><br><br>
 
                     <input style="height:auto;margin-top:40px" type="radio" name="use_for_invoice" id="use_for_invoice_none" value="off"
-                           {if !$settings['use_delivery_for_payment_add'][$user_type]}checked="checked"{/if}
+                           {if !$settings['use_delivery_for_payment_add'][$user_type]}checked{/if}
                            >
                     <label for="use_for_invoice_none"><b>Ander factuur adres</b></label>
 
@@ -283,7 +282,7 @@
         *
         * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
         * versions in the future. If you wish to customize PrestaShop for your
-        * needs please refer tohttp://www.prestashop.com for more information.
+        * needs please refer to http://www.prestashop.com for more information.
         * We offer the best and most useful modules PrestaShop and modifications for your online store.
         *
         * @category  PrestaShop Module

@@ -151,6 +151,7 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplateInvoice
             return $item1['reference'] <=> $item2['reference'];
         });
 
+
         $this->smarty->assign(array(
             'order' => $this->order,
             'order_details' => $order_details,

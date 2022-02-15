@@ -1,5 +1,5 @@
 {**
-* 2010-2021 Tuni-Soft
+* 2010-2022 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -18,30 +18,31 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author
-*  @copyright 2014-2021
+*  @copyright 2014-2022
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
 <div id="dp-product-button">
 
-    <a style="position: relative;" href="{$product_link|escape:'htmlall':'UTF-8'}#"
-       class="btn btn-primary dsn-customize">{l s='Customize' mod='dynamicproduct'}</a>
+  <a style="position: relative;" href="{$product_link|escape:'htmlall':'UTF-8'}#"
+     class="btn btn-primary dsn-customize"
+  >{l s='Customize' mod='dynamicproduct'}</a>
 
     {if $product_config->required}
-        <script>
-          var disableCartButton = function () {
-            if (!$('.dp-container').length) {
-              $('.modal.quickview [data-button-action="add-to-cart"]').attr('disabled', 'disabled');
-            }
-          };
-          if (typeof $ === 'function') {
-            $(function () {
-              disableCartButton();
-            });
-            prestashop.on('updatedProduct', function () {
-              disableCartButton();
-            });
+      <script>
+        var disableCartButton = function () {
+          if (!$(".dp-container").length) {
+            $(".modal.quickview [data-button-action=\"add-to-cart\"]").attr("disabled", "disabled")
           }
-        </script>
+        }
+        if (typeof $ === "function") {
+          $(function () {
+            disableCartButton()
+          })
+          prestashop.on("updatedProduct", function () {
+            disableCartButton()
+          })
+        }
+      </script>
     {/if}
 </div>

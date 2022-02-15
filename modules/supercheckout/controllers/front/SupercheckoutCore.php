@@ -1076,6 +1076,9 @@ class SupercheckoutCore extends ModuleFrontController
         } else {
             $use_for_invoice = 'off';
         }
+
+
+
 //        unset($_POST);
 
         if (isset($posted_data['checkout_option']) && $posted_data['checkout_option'] == 0) {
@@ -1151,6 +1154,9 @@ class SupercheckoutCore extends ModuleFrontController
         }
         /* End-MK made changes to display error if product is out of stock */
 
+
+
+
         $id_current_address_delivery = $this->checkout_session->getIdAddressDelivery();
         $currency = Currency::getCurrency((int) $this->context->cart->id_currency);
         $minimal_purchase = Tools::convertPrice((float) Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
@@ -1176,17 +1182,17 @@ class SupercheckoutCore extends ModuleFrontController
         }
 
         $id_delivery_address = 0;
-        if ((isset($posted_data['shipping_address_value'])
-            && $posted_data['shipping_address_value'] == 1)
-            || !isset($posted_data['shipping_address_value'])
+        if ((isset($posted_data['shipping_address']['id_customer_address'])
+            && $posted_data['shipping_address']['id_customer_address'] == 'new')
+            || !isset($posted_data['shipping_address']['id_customer_address'])
         ) {
             if (isset($this->context->cookie->supercheckout_temp_address_delivery)
                 && $this->context->cookie->supercheckout_temp_address_delivery > 0
             ) {
                 $id_delivery_address = $this->context->cookie->supercheckout_temp_address_delivery;
             }
-        } elseif (isset($posted_data['shipping_address_value'])
-            && $posted_data['shipping_address_value'] == 0
+        } elseif (isset($posted_data['shipping_address']['id_customer_address'])
+            && $posted_data['shipping_address']['id_customer_address'] != 'new'
             && isset($posted_data['shipping_address']['shipping_address_id'])
         ) {
             $id_delivery_address = $posted_data['shipping_address']['shipping_address_id'];
@@ -1196,8 +1202,8 @@ class SupercheckoutCore extends ModuleFrontController
 
         if (isset($posted_data['use_for_invoice']) && $posted_data['use_for_invoice'] == 'on') {
             $id_invoice_address = $id_delivery_address;
-        } elseif (((isset($posted_data['payment_address_value']) && $posted_data['payment_address_value'] == 1)
-            || !isset($posted_data['payment_address_value']))
+        } elseif (((isset($posted_data['payment_address']['id_customer_address']) && $posted_data['payment_address']['id_customer_address'] == 'new')
+            || !isset($posted_data['payment_address']['id_customer_address']))
         ) {
             if (isset($this->context->cookie->supercheckout_temp_address_invoice)
                 && $this->context->cookie->supercheckout_temp_address_invoice > 0) {
@@ -1227,20 +1233,23 @@ class SupercheckoutCore extends ModuleFrontController
                     $temp_invoice_address->id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT');
                     $temp_invoice_address->id_state = 0;
 
-                    if (!$temp_invoice_address->save()) {
-                        $response['error']['general'][] = $this->module->l('Error occurred while creating new address', 'SupercheckoutCore');
-                    } else {
-                        $id_invoice_address = $temp_invoice_address->id;
-                    }
-                    $this->context->cookie->supercheckout_temp_address_invoice = $id_invoice_address;
+//                    if (!$temp_invoice_address->save()) {
+//                        $response['error']['general'][] = $this->module->l('Error occurred while creating new address', 'SupercheckoutCore');
+//                    } else {
+//                        $id_invoice_address = $temp_invoice_address->id;
+//                    }
+//                    $this->context->cookie->supercheckout_temp_address_invoice = $id_invoice_address;
                 }
             }
         } elseif ($posted_data['use_for_invoice'] == 'off'
-            && isset($posted_data['payment_address_value'])
-            && $posted_data['payment_address_value'] == 0
+            && isset($posted_data['payment_address']['id_customer_address'])
+            && $posted_data['payment_address']['id_customer_address'] != 'new'
         ) {
             $id_invoice_address = $posted_data['payment_address']['payment_address_id'];
         }
+
+
+
 
         //////////////////////////Start - Plugin Validations //////////////////////////
         //Set User Type and password according to user type
@@ -1280,13 +1289,9 @@ class SupercheckoutCore extends ModuleFrontController
             $checkout_option = 0;
         }
 
-        $shipping_address_value = 1;
-        if (isset($posted_data['shipping_address_value'])) {
-            $shipping_address_value = $posted_data['shipping_address_value'];
-        }
 
         $loop_index = 0;
-        if (!$this->context->cart->isVirtualCart() && $shipping_address_value == 1) {
+        if (!$this->context->cart->isVirtualCart() && $posted_data['shipping_address']['id_customer_address'] == 'new') {
             foreach ($posted_data['shipping_address'] as $key => $value) {
                 if($key == 'id_customer_address' || $key = 'shipping_address_id'){
                     continue;
@@ -1440,18 +1445,15 @@ class SupercheckoutCore extends ModuleFrontController
             }
         }
 
-        $payment_address_value = 1;
-        if (isset($posted_data['payment_address_value'])) {
-            $payment_address_value = $posted_data['payment_address_value'];
-        }
 
         if ($posted_data['use_for_invoice'] == 'off') {
             $loop_index = 0;
-            if (!$this->context->cart->isVirtualCart() && $payment_address_value == 1) {
+            if (!$this->context->cart->isVirtualCart() && $posted_data['payment_address']['id_customer_address'] == 'new') {
                 foreach ($posted_data['payment_address'] as $key => $value) {
                     if($key == 'id_customer_address' || $key == 'payment_address_id'){
                         continue;
                     }
+
                     $add_plugin_config = $this->supercheckout_settings['payment_address'][$key];
                     if ($add_plugin_config[$user_type]['require'] == 1
                         && $posted_data['payment_address'][$key] == ''
@@ -1605,12 +1607,10 @@ class SupercheckoutCore extends ModuleFrontController
             return $response;
         }
 
-
-
         //////////////////////////End - Plugin Validations //////////////////////////
 
-        if ((isset($posted_data['shipping_address_value']) && $posted_data['shipping_address_value'] == 1)
-            || (!isset($posted_data['shipping_address_value']) && !$this->context->cart->isVirtualCart())) {
+        if ((isset($posted_data['shipping_address']['id_customer_address']) && $posted_data['shipping_address']['id_customer_address'] == 'new')
+            || (!isset($posted_data['shipping_address']['id_customer_address']) && !$this->context->cart->isVirtualCart())) {
             $delivery_address = new Address($id_delivery_address);
 
             $delivery_address->firstname = (!empty($posted_data['shipping_address']['firstname']))
@@ -1690,22 +1690,22 @@ class SupercheckoutCore extends ModuleFrontController
                     $id_delivery_address = $delivery_address->id;
                 }
             }
-        } elseif (isset($posted_data['shipping_address_value'])
-            && $posted_data['shipping_address_value'] == 0
+        } elseif (isset($posted_data['shipping_address']['id_customer_address'])
+            && $posted_data['shipping_address']['id_customer_address'] != 'new'
             && isset($posted_data['shipping_address']['shipping_address_id'])
         ) {
             $id_delivery_address = $posted_data['shipping_address']['shipping_address_id'];
         }
 
         if (isset($posted_data['use_for_invoice']) && $posted_data['use_for_invoice'] == 'on'
-            && ((isset($posted_data['shipping_address_value']) && $posted_data['shipping_address_value'] == 1)
-            || !isset($posted_data['shipping_address_value']))
+            && ((isset($posted_data['shipping_address']['id_customer_address']) && $posted_data['shipping_address']['id_customer_address'] == 'new')
+            || !isset($posted_data['shipping_address']['id_customer_address']))
         ) {
             $invoice_address = $delivery_address;
             $id_invoice_address = $id_delivery_address;
         } elseif (isset($posted_data['use_for_invoice']) && $posted_data['use_for_invoice'] == 'on'
-            && isset($posted_data['shipping_address_value'])
-            && $posted_data['shipping_address_value'] == 0
+            && isset($posted_data['shipping_address']['id_customer_address'])
+            && $posted_data['shipping_address']['id_customer_address'] != 'new'
         ) {
             $id_invoice_address = $id_delivery_address;
         }
@@ -1791,8 +1791,8 @@ class SupercheckoutCore extends ModuleFrontController
             }
 
         } elseif ($posted_data['use_for_invoice'] == 'off'
-            && isset($posted_data['payment_address_value'])
-            && $posted_data['payment_address_value'] == 0
+            && isset($posted_data['payment_address']['id_customer_address'])
+            && $posted_data['payment_address']['id_customer_address'] != 'new'
         ) {
             $id_invoice_address = $posted_data['payment_address']['payment_address_id'];
         }

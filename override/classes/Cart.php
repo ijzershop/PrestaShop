@@ -41,16 +41,12 @@ class Cart extends CartCore
         if (!is_null(Context::getContext()->cart->id_carrier) && (int)Context::getContext()->cart->id_carrier > 0) {
             $id_carrier = Context::getContext()->cart->id_carrier;
         }
-
-        //Fetch carrier id from delivery option
         if($id_carrier == 0 && !empty($cart->delivery_option)){
             $deliveryOption = json_decode($cart->delivery_option);
-
             $id_carrier = reset($deliveryOption);
             $cart->id_carrier = $id_carrier;
             $order->id_carrier = $id_carrier;
         }
-
         if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
             $type = Cart::ONLY_PRODUCTS;
         }
@@ -760,17 +756,17 @@ class Cart extends CartCore
     }
     /*
     * module: dynamicproduct
-    * date: 2021-10-15 10:43:05
-    * version: 2.30.0
+    * date: 2022-02-07 13:34:28
+    * version: 2.43.11
     */
     public function duplicate()
     {
-        $id_cart_old = (int)$this->id;
+        $id_cart_old = (int) $this->id;
         $result = parent::duplicate();
-        $id_cart_new = (int)$result['cart']->id;
+        $id_cart_new = (int) $result['cart']->id;
         Module::getInstanceByName('dynamicproduct');
         if (Module::isEnabled('dynamicproduct')) {
-
+            
             $module = Module::getInstanceByName('dynamicproduct');
             $module->hookCartDuplicated(array(
                 'id_cart_old' => $id_cart_old,

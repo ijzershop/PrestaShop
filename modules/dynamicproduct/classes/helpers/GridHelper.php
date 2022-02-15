@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -60,7 +60,7 @@ class GridHelper
         }
 
         $grid = new Grid();
-        $grid->id_product = (int)$id_source_product;
+        $grid->id_product = (int) $id_source_product;
         $grid->save();
         $id_grid = $grid->id;
 
@@ -73,7 +73,7 @@ class GridHelper
         for ($c = 1; $c < $columns_count; $c++) {
             $grid_column = new GridColumn();
             $grid_column->id_grid = $id_grid;
-            $grid_column->value = (float)$columns[$c];
+            $grid_column->value = (float) $columns[$c];
             $grid_column->save();
             $grid_columns[$c] = $grid_column;
         }
@@ -83,7 +83,7 @@ class GridHelper
             if (isset($csv_data[$r][0])) {
                 $grid_row = new GridRow();
                 $grid_row->id_grid = $id_grid;
-                $grid_row->value = (float)$csv_data[$r][0];
+                $grid_row->value = (float) $csv_data[$r][0];
                 $grid_row->save();
                 $grid_rows[$r] = $grid_row;
             }
@@ -99,7 +99,7 @@ class GridHelper
                     $grid_value->id_grid = $id_grid;
                     $grid_value->id_grid_column = $grid_columns[$c]->id;
                     $grid_value->id_grid_row = $grid_rows[$r]->id;
-                    $grid_value->value = (float)$value;
+                    $grid_value->value = (float) $value;
                     $grid_value->save();
                 }
             }

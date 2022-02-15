@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -246,7 +246,7 @@ class MathParser
             throw new Exception('Variable name cannot be null.');
         }
         if (is_numeric($new_val)) {
-            $new_val = (float)$new_val;
+            $new_val = (float) $new_val;
         } else {
             if (!is_string($new_val)) {
                 throw new Exception('Variable should be floating point or string value: ' . $new_val);
@@ -345,7 +345,7 @@ class MathParser
         if ($this->isFunction($upcname)) {
             throw new Exception($this->getMessage1('FncExst', $new_func_name));
         } elseif ($param_count < -1) {
-            throw new Exception($this->getMessage2('WrngNPrms', $new_func_name, (string)$param_count));
+            throw new Exception($this->getMessage2('WrngNPrms', $new_func_name, (string) $param_count));
         } else {
             $func = new MathParserParserFunction($upcname, $func_addr, $param_count);
             $this->functions[$upcname] = $func;
@@ -554,12 +554,12 @@ class MathParser
     public function getValueAsDouble()
     {
         $obj = $this->evaluate();
-        return (float)$obj;
+        return (float) $obj;
     }
 
     public function getValueAsString()
     {
-        return (string)$this->evaluate();
+        return (string) $this->evaluate();
     }
 
     private function isValidChar($index, $c)
@@ -640,7 +640,7 @@ class MathParser
     protected static function isValidDouble($formula, &$dbl_val)
     {
         if (is_numeric($formula)) {
-            $dbl_val = (float)$formula;
+            $dbl_val = (float) $formula;
             return true;
         }
         return false;

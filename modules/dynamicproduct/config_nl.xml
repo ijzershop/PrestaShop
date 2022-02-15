@@ -2,7 +2,7 @@
 <module>
     <name>dynamicproduct</name>
     <displayName><![CDATA[Dynamic Product]]></displayName>
-    <version><![CDATA[2.30.0]]></version>
+    <version><![CDATA[2.43.11]]></version>
     <description><![CDATA[Allow your clients to customize their order by modifying various aspects of their products.]]></description>
     <author><![CDATA[Tuni-Soft]]></author>
     <tab><![CDATA[front_office_features]]></tab>

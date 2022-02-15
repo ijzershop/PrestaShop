@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -66,7 +66,7 @@ class DynamicProvider
 
     public function getCustomer()
     {
-        return $this->context->cookie ? (int)$this->context->cookie->id_customer : 0;
+        return $this->context->cookie ? (int) $this->context->cookie->id_customer : 0;
     }
 
     public function getCustomerGroup()
@@ -84,17 +84,17 @@ class DynamicProvider
 
     public function getGuest()
     {
-        $id_guest = $this->context->cookie ? (int)$this->context->cookie->id_guest : 0;
+        $id_guest = $this->context->cookie ? (int) $this->context->cookie->id_guest : 0;
         if (!$id_guest && class_exists('Guest')) {
             Guest::setNewGuest($this->context->cookie);
         }
-        return $this->context->cookie ? (int)$this->context->cookie->id_guest : 0;
+        return $this->context->cookie ? (int) $this->context->cookie->id_guest : 0;
     }
 
     public function getCurrency()
     {
         if ($this->context->currency !== null) {
-            $id_currency = (int)$this->context->currency->id;
+            $id_currency = (int) $this->context->currency->id;
             if ($id_currency) {
                 return $id_currency;
             }
@@ -105,12 +105,12 @@ class DynamicProvider
     public function getCart()
     {
         if (Validate::isLoadedObject($this->context->cart)) {
-            return (int)$this->context->cart->id;
+            return (int) $this->context->cart->id;
         }
 
-        if (isset($this->context->cookie->id_cart) && (int)$this->context->cookie->id_cart) {
+        if (isset($this->context->cookie->id_cart) && (int) $this->context->cookie->id_cart) {
             $this->context->cart = new Cart($this->context->cookie->id_cart);
-            return (int)$this->context->cookie->id_cart;
+            return (int) $this->context->cookie->id_cart;
         }
 
         return 0;
@@ -125,11 +125,11 @@ class DynamicProvider
         $id_address_delivery = 0;
         if ($context->customer->id) {
             $id_customer = Context::getContext()->customer->id;
-            if ((int)$context->cart->id_address_delivery) {
+            if ((int) $context->cart->id_address_delivery) {
                 $id_address_delivery = $context->cart->id_address_delivery;
             }
             if ($id_address_delivery === 0) {
-                $id_address_delivery = (int)Address::getFirstCustomerAddressId($id_customer);
+                $id_address_delivery = (int) Address::getFirstCustomerAddressId($id_customer);
             }
             if (!Customer::customerHasAddress($id_customer, $id_address_delivery)) {
                 $id_address_delivery = 0;
@@ -140,14 +140,14 @@ class DynamicProvider
 
     public function getAttributeID($id_product, $attributes)
     {
-        return (int)Product::getIdProductAttributesByIdAttributes($id_product, $attributes);
+        return (int) Product::getIdProductAttributesByIdAttributes($id_product, $attributes);
     }
 
     public function getProductLink($id_product, $id_attribute = 0, $params = array())
     {
-        $product = new Product((int)$id_product, false, $this->context->language->id);
+        $product = new Product((int) $id_product, false, $this->context->language->id);
 
-        $is_rewrite_active = (bool)Configuration::get('PS_REWRITING_SETTINGS');
+        $is_rewrite_active = (bool) Configuration::get('PS_REWRITING_SETTINGS');
         $product_link = $this->context->link->getProductLink(
             $product,
             $product->link_rewrite,
@@ -172,12 +172,12 @@ class DynamicProvider
     public function getProductPrice($id_product, $id_attribute)
     {
         $context = DynamicTools::getContext();
-        $id_default_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+        $id_default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
         $clone_context = $context->cloneContext();
         $clone_context->currency = new Currency($id_default_currency);
         $specific_price_output = null;
 
-        return (float)Product::getPriceStatic(
+        return (float) Product::getPriceStatic(
             $id_product,
             false,
             $id_attribute,
@@ -202,12 +202,12 @@ class DynamicProvider
         $sql = new DbQuery();
         $sql->select('weight');
         $sql->from('product');
-        $sql->where('id_product = ' . (int)$id_product);
-        $product_weight = (float)Db::getInstance()->getValue($sql);
+        $sql->where('id_product = ' . (int) $id_product);
+        $product_weight = (float) Db::getInstance()->getValue($sql);
 
         $combination = new Combination($id_attribute);
 
-        return $product_weight + (float)$combination->weight;
+        return $product_weight + (float) $combination->weight;
     }
 
     public function getProductCombinations($id_product)
@@ -223,14 +223,14 @@ class DynamicProvider
     {
         $sql = new DbQuery();
         $sql->from($this->module->name . '_visibility');
-        $sql->where('id_product = ' . (int)$id_product);
-        if ((int)$id_attribute) {
-            $sql->where('id_attribute = ' . (int)$id_attribute);
+        $sql->where('id_product = ' . (int) $id_product);
+        if ((int) $id_attribute) {
+            $sql->where('id_attribute = ' . (int) $id_attribute);
         }
-        if ((int)$id_field) {
-            $sql->where('id_field = ' . (int)$id_field);
+        if ((int) $id_field) {
+            $sql->where('id_field = ' . (int) $id_field);
         }
-        if ((int)$id_field) {
+        if ((int) $id_field) {
             $sql->select('visible');
             return Db::getInstance()->getValue($sql);
         }
@@ -248,19 +248,19 @@ class DynamicProvider
         $sql = new DbQuery();
         $sql->select('id_customization_field');
         $sql->from('customization_field');
-        $sql->where('id_product = ' . (int)$id_product);
+        $sql->where('id_product = ' . (int) $id_product);
         $sql->where('required = 1');
-        return (int)Db::getInstance()->getRow($sql);
+        return (int) Db::getInstance()->getRow($sql);
     }
 
     public function getDynamicInputIdFromString($value)
     {
         $matched = preg_match('@\|(\d+)\|@', $value, $match);
         if ($matched) {
-            return (int)$match[1];
+            return (int) $match[1];
         }
         if (is_numeric($value)) {
-            return (int)$value;
+            return (int) $value;
         }
         return false;
     }
@@ -286,7 +286,7 @@ class DynamicProvider
         if (!$context) {
             $context = Context::getContext();
         }
-        return (int)$context->language->id;
+        return (int) $context->language->id;
     }
 
     public function isDevMode()
@@ -296,19 +296,19 @@ class DynamicProvider
 
     public function isModuleDebugMode()
     {
-        return (int)DynamicMainConfig::getConfig()->debug_mode;
+        return (int) DynamicMainConfig::getConfig()->debug_mode;
     }
 
     public function getNewID($new_ids, $id_old)
     {
-        return isset($new_ids[$id_old]) ? $new_ids[$id_old] : $id_old;
+        return isset($new_ids[$id_old]) ? (int) $new_ids[$id_old] : (int) $id_old;
     }
 
-    public function getOldOption($options_new, $id_field, $id_option)
+    public function getNewOption($options_new, $id_field, $id_option)
     {
         return isset($options_new[$id_field]) && isset($options_new[$id_field][$id_option]) ?
-            $options_new[$id_field][$id_option] :
-            $id_option;
+            (int) $options_new[$id_field][$id_option] :
+            (int) $id_option;
     }
 
     public function getTabID($class_name)
@@ -317,7 +317,7 @@ class DynamicProvider
         $sql->select('id_tab');
         $sql->from('tab');
         $sql->where('class_name = "' . pSQL($class_name) . '"');
-        $id_tab = (int)Db::getInstance()->getValue($sql);
+        $id_tab = (int) Db::getInstance()->getValue($sql);
         return $id_tab ?: -1;
     }
 
@@ -364,7 +364,11 @@ class DynamicProvider
 
     public function getCurrentProductID()
     {
-        $id_product = 0;
+        $id_product = (int) Tools::getValue('id_product', 0);
+
+        if ($id_product) {
+            return $id_product;
+        }
 
         $path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : null;
         if (!$path) {
@@ -376,17 +380,22 @@ class DynamicProvider
 
         $matched = preg_match("/\/products\/(\d+)/", $path, $matches);
         if ($matched) {
-            $id_product = (int)$matches[1];
+            $id_product = (int) $matches[1];
+        }
+
+        $matched = preg_match("/\/products-v2\/(\d+)/", $path, $matches);
+        if ($matched) {
+            $id_product = (int) $matches[1];
         }
 
         if (!$id_product) {
-            $id_product = (int)str_replace('/product/form/', '', $path);
+            $id_product = (int) str_replace('/product/form/', '', $path);
         }
 
         if (!$id_product) {
             $matched = preg_match("/id_product=(\d+)/", $path, $matches);
             if ($matched) {
-                $id_product = (int)$matches[1];
+                $id_product = (int) $matches[1];
             }
         }
         return $id_product;
@@ -394,8 +403,8 @@ class DynamicProvider
 
     public function getProductIdFromDuplicateRequest()
     {
-        $id_product = (int)Tools::getValue('id_product');
-        return $id_product ?: (int)str_replace(
+        $id_product = (int) Tools::getValue('id_product');
+        return $id_product ?: (int) str_replace(
             array(
                 '/sell/catalog/products/unit/duplicate/',
                 '/product/unit/duplicate/'
@@ -407,8 +416,11 @@ class DynamicProvider
 
     public function isAdmin()
     {
+        if (defined("_PS_IS_ADMIN_") && _PS_IS_ADMIN_) {
+            return true;
+        }
         $cookie = new Cookie('psAdmin');
-        if ((int)$cookie->id_employee) {
+        if ((int) $cookie->id_employee) {
             // we have an employee in the cookie
             return true;
         }
@@ -417,7 +429,7 @@ class DynamicProvider
 
     public function getCurrentAttribute(int $id_product)
     {
-        return (int)Tools::getValue('id_product_attribute', Product::getDefaultAttribute($id_product));
+        return (int) Tools::getValue('id_product_attribute', Product::getDefaultAttribute($id_product));
     }
 
     public function convertPrice($price, Currency $currency = null, Context $context = null): float

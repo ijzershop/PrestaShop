@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -48,7 +48,7 @@ class DynamicDropdownOption extends DynamicObject
     public $image_url;
     public $thumb_url;
 
-    public $displayed_price;
+    public $displayed_value;
 
     private static $dropdown_options;
 
@@ -94,12 +94,12 @@ class DynamicDropdownOption extends DynamicObject
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
         $sql->select('id_dropdown_option');
-        $sql->where('id_field = ' . (int)$id_field);
+        $sql->where('id_field = ' . (int) $id_field);
         $sql->where('!deleted');
         $sql->orderBy('`position` ASC');
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
-            $id_dropdown_option = (int)$row['id_dropdown_option'];
+            $id_dropdown_option = (int) $row['id_dropdown_option'];
             $dropdown_option = new self($id_dropdown_option, $id_lang);
             if (Validate::isLoadedObject($dropdown_option)) {
                 $dropdown_options[$id_dropdown_option] = $dropdown_option;

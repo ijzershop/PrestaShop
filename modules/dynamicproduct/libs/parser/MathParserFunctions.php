@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -31,7 +31,7 @@ use libs\parser\MathParserParserException;
 
 function mpAdd($p1, $p2)
 {
-    return (float)$p1 + (float)$p2;
+    return (float) $p1 + (float) $p2;
 }
 
 function mpAddStr($p1, $p2)
@@ -46,27 +46,27 @@ function mpAddStr($p1, $p2)
 
 function mpSubtract($p1, $p2)
 {
-    return (float)$p1 - (float)$p2;
+    return (float) $p1 - (float) $p2;
 }
 
 function mpMult($p1, $p2)
 {
-    return (float)$p1 * (float)$p2;
+    return (float) $p1 * (float) $p2;
 }
 
 function mpDiv($p1, $p2)
 {
-    return (float)$p1 / (float)$p2;
+    return (float) $p1 / (float) $p2;
 }
 
 function mpPower($p1, $p2)
 {
-    return pow((float)$p1, (float)$p2);
+    return pow((float) $p1, (float) $p2);
 }
 
 function mpMod($p1, $p2)
 {
-    return (float)$p1 % (float)$p2;
+    return (float) $p1 % (float) $p2;
 }
 
 function mpNotequals($p1, $p2)
@@ -183,24 +183,24 @@ function ifFunc($cond, $true_case, $false_case)
 function mpNum($val)
 {
     if (is_numeric($val)) {
-        return (float)$val;
+        return (float) $val;
     }
     throw new MathParserParserException(MathParser::getMessage2('InvNum', $val), 'NUM', 'NUM');
 }
 
 function checkFunc($val)
 {
-    return (int)(Tools::strlen($val) > 0);
+    return (int) (Tools::strlen($val) > 0);
 }
 
 function mpContains($val, $partial)
 {
-    return (int)(strpos($val, $partial) !== false);
+    return (int) (strpos($val, $partial) !== false);
 }
 
 function strLength($val)
 {
-    return (int)Tools::strlen($val);
+    return (int) Tools::strlen($val);
 }
 
 function mpSubstr($str, $start, $length = false)
@@ -252,7 +252,7 @@ function mpTrunc($val)
 
 function mpFloat($val)
 {
-    return (float)$val;
+    return (float) $val;
 }
 
 function mpLogn($base, $val)
@@ -268,17 +268,17 @@ function mpRand()
 
 function mpRound($val, $precision = 0)
 {
-    return Tools::ps_round($val, (int)$precision);
+    return Tools::ps_round($val, (int) $precision);
 }
 
 function mpRoundUp($val, $precision = 0)
 {
-    return Tools::ps_round($val, (int)$precision, PS_ROUND_UP);
+    return Tools::ps_round($val, (int) $precision, PS_ROUND_UP);
 }
 
 function mpRoundDown($val, $precision = 0)
 {
-    return Tools::ps_round($val, (int)$precision, PS_ROUND_DOWN);
+    return Tools::ps_round($val, (int) $precision, PS_ROUND_DOWN);
 }
 
 function mpConcat()

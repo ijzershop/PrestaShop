@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -31,6 +31,7 @@ use classes\factory\DynamicFieldFactory;
 use classes\factory\InputFieldFactory;
 use classes\helpers\DynamicCalculatorHelper;
 use classes\helpers\DynamicFieldsHelper;
+use classes\helpers\FieldsVisibilityHelper;
 use classes\models\intervals\IntervalCondition;
 use Db;
 use DbQuery;
@@ -103,7 +104,7 @@ class DynamicInputField extends DynamicObject
             'id_input'        => array('type' => self::TYPE_INT),
             'id_field'        => array('type' => self::TYPE_INT),
             'name'            => array('type' => self::TYPE_STRING),
-            'value'           => array('type' => self::TYPE_STRING),
+            'value'           => array('type' => self::TYPE_HTML),
             'secondary_value' => array('type' => self::TYPE_STRING),
             'options'         => array('type' => self::TYPE_STRING),
             'type'            => array('type' => self::TYPE_INT),
@@ -139,11 +140,11 @@ class DynamicInputField extends DynamicObject
         $input_fields = array();
         $sql = new DbQuery();
         $sql->from(self::$definition['table']);
-        $sql->where('id_input = ' . (int)$id_input);
+        $sql->where('id_input = ' . (int) $id_input);
         $rows = Db::getInstance()->executeS($sql, false);
         while ($row = Db::getInstance()->nextRow($rows)) {
             $id_input_field = $row['id_input_field'];
-            $dynamic_input_field = InputFieldFactory::create((int)$row['type'], (int)$id_input_field, $id_lang);
+            $dynamic_input_field = InputFieldFactory::create((int) $row['type'], (int) $id_input_field, $id_lang);
             if (Validate::isLoadedObject($dynamic_input_field)) {
                 $input_fields[$dynamic_input_field->name] = $dynamic_input_field;
             }
@@ -180,7 +181,7 @@ class DynamicInputField extends DynamicObject
     {
         $this->value_formatted = $this->value;
         if ($this->type === _DP_PRICE_) {
-            $this->value_formatted = $this->module->provider->convertAndFormatPrice((float)$this->value);
+            $this->value_formatted = $this->module->provider->convertAndFormatPrice((float) $this->value);
         }
     }
 
@@ -190,7 +191,7 @@ class DynamicInputField extends DynamicObject
             return $this->getNullValue();
         }
         if ($this->hasExcludedOptions()) {
-            return (float)$this->value - $this->getExcludedOptionsValue();
+            return (float) $this->value - $this->getExcludedOptionsValue();
         }
 
         $reset = false;
@@ -223,7 +224,7 @@ class DynamicInputField extends DynamicObject
                     if ($has_strings) {
                         $str_values[] = $option_value;
                     } else {
-                        $value += (float)$option_value;
+                        $value += (float) $option_value;
                     }
                 }
             }
@@ -261,7 +262,7 @@ class DynamicInputField extends DynamicObject
                     if (!is_numeric($option_secondary_value) && !empty($option_secondary_value)) {
                         return $option_secondary_value;
                     }
-                    $value += (float)$option_secondary_value;
+                    $value += (float) $option_secondary_value;
                 }
             }
         }
@@ -293,7 +294,7 @@ class DynamicInputField extends DynamicObject
     public function isWithinLimit($interval_condition)
     {
         return $this->value >= $interval_condition->min &&
-            ($this->value < $interval_condition->max || (float)$interval_condition->max === (float)0);
+            ($this->value < $interval_condition->max || (float) $interval_condition->max === (float) 0);
     }
 
     /**
@@ -301,7 +302,7 @@ class DynamicInputField extends DynamicObject
      */
     public function isWithinValues($interval_condition)
     {
-        return in_array((float)$this->value, $interval_condition->values, true);
+        return in_array((float) $this->value, $interval_condition->values, true);
     }
 
     private function setLabel()
@@ -338,7 +339,7 @@ class DynamicInputField extends DynamicObject
     {
         $excluded_options = array();
         foreach ($visibility as $id_option => $visible) {
-            if ((int)$visible === 0) {
+            if ((int) $visible === 0) {
                 $excluded_options[] = $id_option;
             }
         }
@@ -363,7 +364,7 @@ class DynamicInputField extends DynamicObject
         $total_value = 0;
         foreach ($this->excluded_options as $id_option) {
             if (isset($this->field->options[$id_option]) && in_array($id_option, $this->selected_options, false)) {
-                $total_value += (float)$this->field->options[$id_option]->value;
+                $total_value += (float) $this->field->options[$id_option]->value;
             }
         }
         return $total_value;
@@ -400,7 +401,7 @@ class DynamicInputField extends DynamicObject
     private function setSelectOption($option)
     {
         if (!$this->locked_value) {
-            $id_option = (int)$option->id;
+            $id_option = (int) $option->id;
             $this->selected_options = array($id_option);
             $this->options = json_encode(array($id_option));
             $this->setValue($option->value);
@@ -409,7 +410,7 @@ class DynamicInputField extends DynamicObject
 
     protected function getFirstOption()
     {
-        return isset($this->selected_options[0]) ? (int)$this->selected_options[0] : 0;
+        return isset($this->selected_options[0]) ? (int) $this->selected_options[0] : 0;
     }
 
     public static function getDefaultInputFields($id_product, $id_attribute, $load_all = false, $values = array())
@@ -421,7 +422,9 @@ class DynamicInputField extends DynamicObject
      * @param $id_product
      * @param $id_attribute
      * @param $fields
-     * @return DynamicInputField[]
+     * @param bool $load_all
+     * @param array $values
+     * @return array[DynamicInputField[], array]
      */
     public static function getInputFieldsFromData(
         $id_product,
@@ -456,18 +459,34 @@ class DynamicInputField extends DynamicObject
 
         $exec_order = ExecOrder::getByIdProduct($id_product, true);
         if (count($exec_order)) {
-            DynamicEquation::processExecOrder($id_product, $id_attribute, $exec_order, $input_fields);
+            list($fields_visibility) = DynamicEquation::processExecOrder(
+                $id_product,
+                $id_attribute,
+                $exec_order,
+                $input_fields
+            );
         } else {
+            $visibility_helper = new FieldsVisibilityHelper($module, $context);
+            $fields_visibility = $visibility_helper->getFieldsVisibility(
+                $id_product,
+                $id_attribute,
+                $input_fields
+            );
+
+            $visibility_helper->setExcludedFields($input_fields, $fields_visibility);
+
             DynamicEquation::execIntervalConditions($id_product, $input_fields);
             DynamicEquation::execFieldFormulas($id_product, $input_fields);
             DynamicEquation::execGrids($id_product, $input_fields);
         }
 
-        return $input_fields;
+        return [$input_fields, $fields_visibility];
     }
 
     /**
      * @param $field
+     * @param $id_lang
+     * @param bool $has_changed_field
      * @return DynamicInputField
      */
     public static function getInputFieldFromData($field, $id_lang, $has_changed_field = false)
@@ -476,7 +495,7 @@ class DynamicInputField extends DynamicObject
 
         foreach (self::$definition['fields'] as $field_name => $field_info) {
             if (isset($field[$field_name])) {
-                if ($field_info['type'] !== self::TYPE_STRING) {
+                if (!in_array($field_info['type'], array(self::TYPE_STRING, self::TYPE_HTML))) {
                     $value = self::formatValue($field[$field_name], $field_info['type']);
                 } else {
                     $value = $field[$field_name];
@@ -487,6 +506,12 @@ class DynamicInputField extends DynamicObject
 
         $input_field->setData($id_lang);
 
+        // Disallow setting the html value from javascript
+        if ((int) $field['type'] === _DP_HTML_) {
+            $input_field->value = "";
+            $input_field->value_formatted = "";
+        }
+
         if (isset($field['selected_options'])) {
             $input_field->selected_options = $field['selected_options'];
             $input_field->options = json_encode($input_field->selected_options, true);
@@ -494,7 +519,7 @@ class DynamicInputField extends DynamicObject
             $input_field->secondary_value = $input_field->getSecondaryValueForCalculation();
         }
 
-        if (!$has_changed_field && $input_field->type === _DP_INPUT_ && !(float)$input_field->value) {
+        if (!$has_changed_field && $input_field->type === _DP_INPUT_ && !(float) $input_field->value) {
             $dynamic_calculator_helper = new DynamicCalculatorHelper(
                 DynamicTools::getModule(),
                 DynamicTools::getContext()
@@ -555,5 +580,10 @@ class DynamicInputField extends DynamicObject
             $this->module->name,
             $template
         );
+    }
+
+    public function getImagesUrls()
+    {
+        return array();
     }
 }

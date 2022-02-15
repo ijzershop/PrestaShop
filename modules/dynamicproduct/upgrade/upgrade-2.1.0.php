@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -49,7 +49,7 @@ function upgrade_module_2_1_0($module)
     $errors = '';
     foreach ($queries as $query) {
         try {
-            $query = str_replace('__PREFIX', _DB_PREFIX_.$module->name, $query);
+            $query = str_replace('__PREFIX', _DB_PREFIX_ . $module->name, $query);
             $query = str_replace('_MYSQL_ENGINE_', _MYSQL_ENGINE_, $query);
             Db::getInstance()->execute($query);
         } catch (Exception $e) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -49,11 +49,11 @@ class DropdownInputField extends DynamicInputField
             return null;
         }
 
-        $id_dropown_option = $this->getFirstOption();
-        if (!$id_dropown_option) {
+        $id_dropdown_option = $this->getFirstOption();
+        if (!$id_dropdown_option) {
             return $this->value_formatted;
         }
 
-        return (new DynamicDropdownOption($id_dropown_option, $this->id_lang))->label;
+        return (new DynamicDropdownOption($id_dropdown_option, $this->id_lang))->label;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -59,18 +59,18 @@ class MainConfigPresenter extends DynamicPresenter
 
         return array(
             'form' => array(
-                'legend' => array(
+                'legend'  => array(
                     'title' => $this->module->l('Configuration', $source),
-                    'icon' => 'icon-cogs'
+                    'icon'  => 'icon-cogs'
                 ),
-                'input'  => array(
+                'input'   => array(
                     $switch_debug_mode,
                 ),
                 'buttons' => array(
                     array(
                         'title' => $this->module->l('Troubleshooting', $source),
-                        'href' => $this->module->provider->getModuleAdminLink('view_troubleshooter'),
-                        'icon' => 'process-icon-terminal',
+                        'href'  => $this->module->provider->getModuleAdminLink('view_troubleshooter'),
+                        'icon'  => 'process-icon-terminal',
                         'class' => 'pull-left btn-success'
                     )
                 )

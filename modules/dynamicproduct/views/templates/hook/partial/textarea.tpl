@@ -1,5 +1,5 @@
 {**
-* 2010-2021 Tuni-Soft
+* 2010-2022 Tuni-Soft
 *
 * NOTICE OF LICENSE
 *
@@ -18,18 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author
-*  @copyright 2014-2021
+*  @copyright 2014-2022
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 
-{if !$is_pdf}
-    <br>
-    {foreach from=$input_field->getLines() item=line name=line}
-        {$line|escape:'htmlall':'UTF-8'}
-        {if !$smarty.foreach.line.last}
-            <br>
-        {/if}
-    {/foreach}
-{else}
-    {implode($input_field->getLines(), ' ')|escape:'htmlall':'UTF-8'}
-{/if}
+<br>
+{foreach from=$input_field->getLines() item=line name=line}
+  <span>{$line|escape:'htmlall':'UTF-8'}</span>
+    {if !$smarty.foreach.line.last}
+      <br>
+    {/if}
+{/foreach}

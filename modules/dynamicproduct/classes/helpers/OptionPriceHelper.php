@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tunis-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -30,6 +30,7 @@ use classes\DynamicTools;
 use classes\models\DynamicDropdownOption;
 use classes\models\DynamicRadioOption;
 use classes\models\DynamicThumbnailsOption;
+use classes\models\DynamicUnitValue;
 use Context;
 use DynamicProduct;
 
@@ -49,14 +50,21 @@ class OptionPriceHelper
 
     /**
      * @param DynamicDropdownOption[]|DynamicRadioOption[]|DynamicThumbnailsOption[] $options
+     * @param integer $id_product
+     * @param DynamicUnitValue $settings
+     * @return DynamicDropdownOption[]|DynamicRadioOption[]|DynamicThumbnailsOption[]
      */
-    public function addPriceFromValue($options, $id_product)
+    public function displayValue($options, $id_product, $settings)
     {
         foreach ($options as $option) {
-            if ((float)$option->value) {
-                $option->displayed_price = DynamicTools::formatPrice(
-                    $this->module->calculator->applyTax((float)$option->value, false, false, $id_product)
-                );
+            if ((float) $option->value) {
+                if (!$settings->custom_suffix) {
+                    $option->displayed_value = DynamicTools::formatPrice(
+                        $this->module->calculator->applyTax((float) $option->value, false, false, $id_product)
+                    );
+                } else {
+                    $option->displayed_value = (float) $option->value . $settings->custom_suffix;
+                }
             }
         }
         return $options;
@@ -64,14 +72,21 @@ class OptionPriceHelper
 
     /**
      * @param DynamicDropdownOption[]|DynamicRadioOption[]|DynamicThumbnailsOption[] $options
+     * @param integer $id_product
+     * @param DynamicUnitValue $settings
+     * @return DynamicDropdownOption[]|DynamicRadioOption[]|DynamicThumbnailsOption[]
      */
-    public function addPriceFromSecondaryValue($options, $id_product)
+    public function displaySecondaryValue($options, $id_product, $settings)
     {
         foreach ($options as $option) {
-            if ((float)$option->secondary_value) {
-                $option->displayed_price = DynamicTools::formatPrice(
-                    $this->module->calculator->applyTax((float)$option->secondary_value, false, false, $id_product)
-                );
+            if ((float) $option->secondary_value) {
+                if (!$settings->custom_suffix) {
+                    $option->displayed_value = DynamicTools::formatPrice(
+                        $this->module->calculator->applyTax((float) $option->secondary_value, false, false, $id_product)
+                    );
+                } else {
+                    $option->displayed_value = (float) $option->secondary_value . $settings->custom_suffix;
+                }
             }
         }
         return $options;

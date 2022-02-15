@@ -1,0 +1,65 @@
+{
+  "dp-product-buttons": {
+    "name": "dp-product-buttons",
+    "js": [
+      "lib/media/dist/common-e2b9837f90b2c5d50dd3.js",
+      "lib/media/dist/dp-product-buttons-e2b9837f90b2c5d50dd3.js"
+    ],
+    "css": [
+      "lib/media/dist/css/common-e2b9837f90b2c5d50dd3.css"
+    ]
+  },
+  "dp-cart-summary": {
+    "name": "dp-cart-summary",
+    "js": [
+      "lib/media/dist/common-e2b9837f90b2c5d50dd3.js",
+      "lib/media/dist/dp-cart-summary-e2b9837f90b2c5d50dd3.js"
+    ],
+    "css": [
+      "lib/media/dist/css/common-e2b9837f90b2c5d50dd3.css",
+      "lib/media/dist/css/dp-cart-summary-e2b9837f90b2c5d50dd3.css"
+    ]
+  },
+  "dp-product-config": {
+    "name": "dp-product-config",
+    "js": [
+      "lib/media/dist/common-e2b9837f90b2c5d50dd3.js",
+      "lib/media/dist/dp-product-config-e2b9837f90b2c5d50dd3.js"
+    ],
+    "css": [
+      "lib/media/dist/css/common-e2b9837f90b2c5d50dd3.css"
+    ]
+  },
+  "dp-products-list": {
+    "name": "dp-products-list",
+    "js": [
+      "lib/media/dist/common-e2b9837f90b2c5d50dd3.js",
+      "lib/media/dist/dp-products-list-e2b9837f90b2c5d50dd3.js"
+    ],
+    "css": [
+      "lib/media/dist/css/common-e2b9837f90b2c5d50dd3.css"
+    ]
+  },
+  "dp-order-summary": {
+    "name": "dp-order-summary",
+    "js": [
+      "lib/media/dist/common-e2b9837f90b2c5d50dd3.js",
+      "lib/media/dist/dp-order-summary-e2b9837f90b2c5d50dd3.js"
+    ],
+    "css": [
+      "lib/media/dist/css/common-e2b9837f90b2c5d50dd3.css",
+      "lib/media/dist/css/dp-order-summary-e2b9837f90b2c5d50dd3.css"
+    ]
+  },
+  "dp-module-form": {
+    "name": "dp-module-form",
+    "js": [
+      "lib/media/dist/common-e2b9837f90b2c5d50dd3.js",
+      "lib/media/dist/dp-module-form-e2b9837f90b2c5d50dd3.js"
+    ],
+    "css": [
+      "lib/media/dist/css/common-e2b9837f90b2c5d50dd3.css",
+      "lib/media/dist/css/dp-module-form-e2b9837f90b2c5d50dd3.css"
+    ]
+  }
+}

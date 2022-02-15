@@ -1,6 +1,6 @@
 <?php
 /**
- * 2010-2021 Tuni-Soft
+ * 2010-2022 Tuni-Soft
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * for more information.
  *
  * @author    Tuni-Soft
- * @copyright 2010-2021 Tuni-Soft
+ * @copyright 2010-2022 Tuni-Soft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -39,11 +39,11 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
     /** @noinspection PhpUnused */
     protected function processUploadImage()
     {
-        $id_field = (int)Tools::getValue('id_field');
+        $id_field = (int) Tools::getValue('id_field');
 
         $field = new DynamicField($id_field);
 
-        if ((int)$field->type !== _DP_IMAGE_) {
+        if ((int) $field->type !== _DP_IMAGE_) {
             $this->respond(array(
                 'error'   => true,
                 'message' => $this->module->l('The upload could not be completed')
@@ -84,11 +84,11 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
 
         $info = getimagesize($save_path);
 
-        if ($options->min_width && (int)$info[0] < $options->min_width) {
+        if ($options->min_width && (int) $info[0] < $options->min_width) {
             $this->respond(array(
                 'error'   => true,
                 'message' =>
-                    $this->module->l('The minmium required width is')
+                    $this->module->l('The minimum required width is')
                     . ' ' . $options->min_width . ' ' . $this->module->l('pixels')
                     . ' (' . $this->module->l('The uploaded image has a width of')
                     . ' ' . $info[0] . ' ' . $this->module->l('pixels') . ')'
@@ -96,11 +96,11 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
             unlink($save_path);
         }
 
-        if ($options->min_height && (int)$info[1] < $options->min_height) {
+        if ($options->min_height && (int) $info[1] < $options->min_height) {
             $this->respond(array(
                 'error'   => true,
                 'message' =>
-                    $this->module->l('The minmium required height is')
+                    $this->module->l('The minimum required height is')
                     . ' ' . $options->min_height . ' ' . $this->module->l('pixels')
                     . ' (' . $this->module->l('The uploaded image has a height of')
                     . ' ' . $info[1] . ' ' . $this->module->l('pixels') . ')'
@@ -134,11 +134,11 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
     /** @noinspection PhpUnused */
     protected function processUploadFile()
     {
-        $id_field = (int)Tools::getValue('id_field');
+        $id_field = (int) Tools::getValue('id_field');
 
         $field = new DynamicField($id_field);
 
-        if ((int)$field->type !== _DP_FILE_) {
+        if ((int) $field->type !== _DP_FILE_) {
             $this->respond(array(
                 'error'   => true,
                 'message' => $this->module->l('The upload could not be completed')

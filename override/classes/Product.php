@@ -208,7 +208,7 @@ class Product extends ProductCore {
     public static function getProductProperties($id_lang, $row, Context $context = null)
     {
         $result = parent::getProductProperties($id_lang, $row, $context);
-        
+
         $module = Module::getInstanceByName('dynamicproduct');
         if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
             $id_product = (int) $row['id_product'];
@@ -221,5 +221,125 @@ class Product extends ProductCore {
             }
         }
         return $result;
+    }
+
+    /**
+     * Check if product is orderable and return true false
+     *
+     * PS_ORDER_OUT_OF_STOCK = bestellen van producten niet op vooraad [1=>Ja, 0=>Nee]   =========== Standaard prestashop
+     * PS_STOCK_MANAGEMENT (stock_management) = vooraadbeheer [1=>Ja, 0=>Nee] 			 =========== Standaard Prestashop
+     * PS_CATALOG_MODE = Catalogus modus (geen bestellingen mogelijk) = [1=>Ja, 0=>Nee]    =========== Standaard Prestashop
+     * out_of_stock = product vooraad beheer [0=>Bestelling niet toestaan, 1=>Bestelling Toestaan, 2=>Gebruik Prestashop setting]   =========== Product Instelling
+     * quantity = vooraad per product   =========== Product Instelling
+     * min_order_quantity = vooraad per product   =========== Product Instelling
+     *
+     *
+     * @param $product
+     */
+    public function productIsOrderable($id_product = null){
+        $id_lang = (int) Context::getContext()->language->id;
+        $id_shop = (int) Context::getContext()->shop->id;
+        $id_shop_group = (int) Context::getContext()->shop->id_shop_group;
+
+        if(!$id_product){
+            return false;
+        }
+        $product = new Product($id_product);
+
+        $id_attribute = 0;
+        if(isset(Product::getProductAttributesIds($id_product)[0])){
+            $id_attribute = (int)reset(Product::getProductAttributesIds($id_product)[0]);
+        }
+
+        if((int) Configuration::get('PS_CATALOG_MODE', $id_lang, $id_shop_group, $id_shop,0) == 0){
+            if((int) Configuration::get('PS_STOCK_MANAGEMENT', $id_lang, $id_shop_group, $id_shop,0) == 1){
+                if((int) StockAvailable::getQuantityAvailableByProduct($id_product, $id_attribute) < (int) $product->minimal_quantity){
+                    switch((int)$product->out_of_stock){
+                        case 0:
+                                return false;
+                            break;
+                        case 1:
+                                return true;
+                            break;
+                        case 2:
+                            if((int) Configuration::get('PS_ORDER_OUT_OF_STOCK', $id_lang, $id_shop_group, $id_shop,1) == 0){
+                                return false;
+                            } else {
+                                //Bestelbaar desondanks niet op vooraad
+                                return true;
+                            }
+                            break;
+                    }
+                } else {
+                    //Er is nog genoeg vooraad
+                    return true;
+                }
+            } else {
+                //Vooraadbeheer is uit alles is bestelbaar
+                return true;
+            }
+        } else {
+            //Is catalogus modes, niets is bestelbaar
+            return false;
+        }
+    }
+
+
+    public function hasMaxProductsRemainingStock($id_product = null, $stock_limit=100){
+        $id_lang = (int) Context::getContext()->language->id;
+        $id_shop = (int) Context::getContext()->shop->id;
+        $id_shop_group = (int) Context::getContext()->shop->id_shop_group;
+
+        if(!$id_product){
+            $is_orderable = false;
+        }
+        $product = new Product($id_product);
+
+        $id_attribute = 0;
+        if(isset(Product::getProductAttributesIds($id_product)[0])){
+            $id_attribute = (int)reset(Product::getProductAttributesIds($id_product)[0]);
+        }
+        $available_stock = (int)StockAvailable::getQuantityAvailableByProduct($id_product, $id_attribute);
+
+
+        if((int) Configuration::get('PS_CATALOG_MODE', $id_lang, $id_shop_group, $id_shop,0) == 0){
+            if((int) Configuration::get('PS_STOCK_MANAGEMENT', $id_lang, $id_shop_group, $id_shop,0) == 1){
+                if($available_stock < (int) $product->minimal_quantity){
+                    switch((int)$product->out_of_stock){
+                        case 0:
+                            $is_orderable = false;
+                            break;
+                        case 1:
+                            $is_orderable = true;
+                            break;
+                        case 2:
+                            if((int) Configuration::get('PS_ORDER_OUT_OF_STOCK', $id_lang, $id_shop_group, $id_shop,1) == 0){
+                                $is_orderable = false;
+                            } else {
+                                //Bestelbaar desondanks niet op vooraad
+                                $is_orderable = true;
+                            }
+                            break;
+                    }
+                } else {
+                    //Er is nog genoeg vooraad
+                    $is_orderable = true;
+                }
+            } else {
+                //Vooraadbeheer is uit alles is bestelbaar
+                $is_orderable = true;
+            }
+        } else {
+            //Is catalogus modes, niets is bestelbaar
+            $is_orderable = false;
+        }
+
+        $msg = '';
+
+        if($available_stock > 0 && $available_stock <= (int)$stock_limit){
+            $msg = '<div class="w-100 text-danger text-center">Nog '.$available_stock.' stuks beschikbaar</div>';
+        }
+
+        return json_encode(['is_orderable' => $is_orderable, 'remaining_qty_msg' => $msg, 'remaining_stock' => $available_stock]);
     }
 }

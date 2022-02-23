@@ -22,13 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
-<table id="summary-tab" width="100%">
-  <tr>
-    <th class="header small" valign="middle">{l s='Order Reference' d='Shop.Pdf' pdf='true'}</th>
-    <th class="header small" valign="middle">{l s='Order date' d='Shop.Pdf' pdf='true'}</th>
-  </tr>
-  <tr>
-    <td class="center small white">{$order->getUniqReference()}</td>
-    <td class="center small white">{dateFormat date=$order->date_add full=0}</td>
-  </tr>
+<table id="shipping-tab" width="100%">
+	<tr>
+		<td class="shipping left small grey bold" width="44%">{l s='Carrier' d='Shop.Pdf' pdf='true'}</td>
+		<td class="shipping left small white" width="56%">{$carrier->name}</td>
+	</tr>
 </table>

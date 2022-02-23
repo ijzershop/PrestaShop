@@ -22,13 +22,22 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
-<table id="summary-tab" width="100%">
-  <tr>
-    <th class="header small" valign="middle">{l s='Order Reference' d='Shop.Pdf' pdf='true'}</th>
-    <th class="header small" valign="middle">{l s='Order date' d='Shop.Pdf' pdf='true'}</th>
-  </tr>
-  <tr>
-    <td class="center small white">{$order->getUniqReference()}</td>
-    <td class="center small white">{dateFormat date=$order->date_add full=0}</td>
-  </tr>
-</table>
+{if isset($order_invoice->note) && $order_invoice->note}
+	<tr>
+		<td colspan="12" height="10">&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td colspan="6" class="left">
+			<table id="note-tab" style="width: 100%">
+				<tr>
+					<td class="grey">{l s='Note' d='Shop.Pdf' pdf='true'}</td>
+				</tr>
+				<tr>
+					<td class="note">{$order_invoice->note|nl2br}</td>
+				</tr>
+			</table>
+		</td>
+		<td colspan="1">&nbsp;</td>
+	</tr>
+{/if}

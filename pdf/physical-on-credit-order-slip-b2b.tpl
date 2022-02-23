@@ -70,7 +70,9 @@
 	<tr>
 		<!-- Code TVA -->
 		<td colspan="6" class="left">
+
 			{$tax_tab}
+
 		</td>
 		<td colspan="1">&nbsp;</td>
 		<!-- Calcule TVA -->
@@ -81,8 +83,6 @@
 		</td>
 	</tr>
 
-	{$note_tab}
-
 	<tr>
 		<td colspan="12" height="10">&nbsp;</td>
 	</tr>
@@ -91,15 +91,6 @@
 		<td colspan="6" class="left">
 
 			{$payment_tab}
-
-		</td>
-		<td colspan="1">&nbsp;</td>
-	</tr>
-
-	<tr>
-		<td colspan="6" class="left">
-
-			{$shipping_tab}
 
 		</td>
 		<td colspan="1">&nbsp;</td>
@@ -125,16 +116,16 @@
 
 	<!-- Hook -->
 	{if isset($HOOK_DISPLAY_PDF)}
-	<tr>
-		<td colspan="12" height="30">&nbsp;</td>
-	</tr>
+		<tr>
+			<td colspan="12" height="30">&nbsp;</td>
+		</tr>
 
-	<tr>
-		<td colspan="2">&nbsp;</td>
-		<td colspan="10">
-			{$HOOK_DISPLAY_PDF}
-		</td>
-	</tr>
+		<tr>
+			<td colspan="2">&nbsp;</td>
+			<td colspan="10">
+				{$HOOK_DISPLAY_PDF}
+			</td>
+		</tr>
 	{/if}
 
 </table>

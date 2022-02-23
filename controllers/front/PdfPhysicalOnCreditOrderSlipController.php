@@ -28,10 +28,40 @@ class PdfPhysicalOnCreditOrderSlipControllerCore extends FrontController
     public $php_self = 'pdf-physical-on-credit-order-slip';
     protected $display_header = false;
     protected $display_footer = false;
+    public $content_only = true;
 
+    protected $template;
+    public $filename;
+
+    public function postProcess()
+    {
+        if (!(int) Configuration::get('PS_INVOICE')) {
+            die($this->trans('Invoices are disabled in this shop.', [], 'Shop.Notifications.Error'));
+        }
+
+        $id_order = (int) Tools::getValue('id_order');
+        if (Validate::isUnsignedId($id_order)) {
+            $order = new Order((int) $id_order);
+        }
+
+        if (!isset($order) || !Validate::isLoadedObject($order)) {
+            die($this->trans('The invoice was not found.', [], 'Shop.Notifications.Error'));
+        }
+
+        if ((isset($this->context->customer->id) && $order->id_customer != $this->context->customer->id) || (Tools::isSubmit('secure_key') && $order->secure_key != Tools::getValue('secure_key'))) {
+            die($this->trans('The invoice was not found.', [], 'Shop.Notifications.Error'));
+        }
+
+        if (!OrderState::invoiceAvailable($order->getCurrentState()) && !$order->invoice_number) {
+            die($this->trans('No invoice is available.', [], 'Shop.Notifications.Error'));
+        }
+
+        $this->order = $order;
+    }
     public function display()
     {
-        $pdf = new PDF(Context::getContext()->cart, 'PhysicalOnCreditOrderSlip', $this->context->smarty);
+        $order_invoice_list = $this->order->getInvoicesCollection();
+        $pdf = new PDF($order_invoice_list, 'PhysicalOnCreditOrderSlip', $this->context->smarty);
         $pdf->render(true);
     }
 }

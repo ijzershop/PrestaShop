@@ -2856,7 +2856,6 @@ $(document).ready(function () {
 // This function is called when ajax request is made
   function placeOrder() {
     /* Start Code Added By Priyanshu on 11-Feb-2021 for the packetery ( Zasilkovna ) compatibility */
-
     var isValid = true;
     // changes by rishabh jain for product availablility by zipcode
     if ($('#product_not_available .alert').length) {
@@ -2917,7 +2916,10 @@ $(document).ready(function () {
         return false;
       }
     } else {
+      // var data = $('#velsof_supercheckout_form').serializeArray();
+      // console.log([$('.supercheckout_shipping_option:checked').attr('value'), add2OrderCarrier, pickupCarrier, $('#use_for_invoice').is(':checked'), $('#use_for_invoice_none').is(':checked'), data]);
       display_progress(10);
+      // return;
       kbAfterPlaceOrder();
     }
     return;
@@ -2990,7 +2992,8 @@ $(document).ready(function () {
     // End: Added by Anshul for PayPlug
     var errors = '';
     var data = $('#velsof_supercheckout_form').serializeArray();
-console.log(data);
+
+
     $.ajax({
       type: 'POST',
       headers: {
@@ -3239,6 +3242,7 @@ console.log(data);
 
   $("#supercheckout_confirm_order").click(function (event) {
     event.preventDefault();
+
     let breakCheckout = false;
     $('#desired_reference').parent().find('.errorsmall').remove();
     if ($('.supercheckout_shipping_option:checked').attr('value') == add2OrderCarrier) {
@@ -3252,8 +3256,7 @@ console.log(data);
     }
     showNoShippingPhone();
 
-
-    if ($('.supercheckout_shipping_option:checked').attr('value') == add2OrderCarrier || $('.supercheckout_shipping_option:checked').attr('value') == pickupCarrier) {
+    if (Number($('.supercheckout_shipping_option:checked').attr('value')) === add2OrderCarrier || Number($('.supercheckout_shipping_option:checked').attr('value')) === pickupCarrier) {
       //Is checkout without shipping address
       var surname_field_value = $('input:text[name="no_shipping_surname"]').val();
       if (surname_field_value == '') {

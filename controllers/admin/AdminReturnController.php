@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -42,6 +42,8 @@ class AdminReturnControllerCore extends AdminController
         $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'order_return_state ors ON (ors.`id_order_return_state` = a.`state`)';
         $this->_join .= 'LEFT JOIN ' . _DB_PREFIX_ . 'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = ' . (int) $this->context->language->id . ')';
         $this->_join .= ' LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON (o.`id_order` = a.`id_order`)';
+        $this->_orderBy = 'id_order_return';
+        $this->_orderWay = 'DESC';
 
         $this->fields_list = [
             'id_order_return' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'width' => 25],
@@ -148,6 +150,15 @@ class AdminReturnControllerCore extends AdminController
             'submit' => [
                 'title' => $this->trans('Save', [], 'Admin.Actions'),
             ],
+            'buttons' => [
+                'save-and-stay' => [
+                    'title' => $this->trans('Save and stay', [], 'Admin.Actions'),
+                    'name' => 'submitAdd' . $this->table . 'AndStay',
+                    'type' => 'submit',
+                    'class' => 'btn btn-default pull-right',
+                    'icon' => 'process-icon-save',
+                ],
+            ],
         ];
 
         $order = new Order($this->object->id_order);
@@ -165,6 +176,9 @@ class AdminReturnControllerCore extends AdminController
         // Prepare customer explanation for display
         $this->object->question = '<span class="normal-text">' . nl2br($this->object->question) . '</span>';
 
+        $parameters = ['vieworder' => 1, 'id_order' => (int) $order->id];
+        $orderUrl = $this->context->link->getAdminLink('AdminOrders', true, [], $parameters);
+
         $this->tpl_form_vars = [
             'customer' => new Customer($this->object->id_customer),
             'url_customer' => $this->context->link->getAdminLink('AdminCustomers', true, [], [
@@ -179,7 +193,7 @@ class AdminReturnControllerCore extends AdminController
                 ],
                 'Admin.Orderscustomers.Feature'
             ),
-            'url_order' => 'index.php?tab=AdminOrders&id_order=' . (int) $order->id . '&vieworder&token=' . Tools::getAdminToken('AdminOrders' . (int) Tab::getIdFromClassName('AdminOrders') . (int) $this->context->employee->id),
+            'url_order' => $orderUrl,
             'picture_folder' => _THEME_PROD_PIC_DIR_,
             'returnedCustomizations' => $returned_customizations,
             'customizedDatas' => Product::getAllCustomizedDatas((int) ($order->id_cart)),

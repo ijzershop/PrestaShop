@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -50,7 +50,7 @@ class AccessCore extends ObjectModel
     /**
      * Is access granted to this Role?
      *
-     * @param string $role Role name ("Superadministrator", "sales", "translator", etc.)
+     * @param string|array<string> $role Role name ("Superadministrator", "sales", "translator", etc.)
      * @param int $idProfile Profile ID
      *
      * @return bool Whether access is granted
@@ -175,7 +175,7 @@ class AccessCore extends ObjectModel
      *
      * @param int $idParentTab Tab ID
      *
-     * @return string Full module slug
+     * @return array<int, array<string, string>> Full module slug
      */
     public static function findSlugByIdParentTab($idParentTab)
     {
@@ -207,27 +207,27 @@ class AccessCore extends ObjectModel
     /**
      * Sluggify tab.
      *
-     * @param string $tab Tab class name
+     * @param array $tab Tab class name
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
      *
      * @return string Full slug for tab
      */
     public static function sluggifyTab($tab, $authorization = '')
     {
-        return sprintf('ROLE_MOD_TAB_%s_%s', strtoupper($tab['class_name']), $authorization);
+        return sprintf('ROLE_MOD_TAB_%s_%s', strtoupper($tab['class_name'] ?? ''), $authorization);
     }
 
     /**
      * Sluggify module.
      *
-     * @param string $module Module name
+     * @param array $module Module name
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
      *
      * @return string Full slug for module
      */
     public static function sluggifyModule($module, $authorization = '')
     {
-        return sprintf('ROLE_MOD_MODULE_%s_%s', strtoupper($module['name']), $authorization);
+        return sprintf('ROLE_MOD_MODULE_%s_%s', strtoupper($module['name'] ?? ''), $authorization);
     }
 
     /**
@@ -331,7 +331,7 @@ class AccessCore extends ObjectModel
      * @param int $idProfile Profile ID
      * @param int $idTab Tab ID
      * @param string $lgcAuth Legacy authorization
-     * @param int $enabled Whether access should be granted
+     * @param bool $enabled Whether access should be granted
      * @param int $addFromParent Child from parents
      *
      * @return string Whether legacy access has been successfully updated ("ok", "error")

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Twig;
@@ -29,11 +29,14 @@ namespace PrestaShopBundle\Twig;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * This class is used by Twig_Environment and provide some methods callable from a twig template.
  */
-class HookExtension extends \Twig_Extension
+class HookExtension extends AbstractExtension
 {
     /**
      * @var HookDispatcherInterface
@@ -74,8 +77,9 @@ class HookExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('renderhooksarray', [$this, 'renderHooksArray'], ['is_safe' => ['html']]),
+            new TwigFilter('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),
+            new TwigFilter('renderhooksarray', [$this, 'renderHooksArray'], ['is_safe' => ['html']]),
+            new TwigFilter('hooksarraycontent', [$this, 'hooksArrayContent']),
         ];
     }
 
@@ -87,9 +91,10 @@ class HookExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('renderhooksarray', [$this, 'renderHooksArray'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('hookcount', [$this, 'hookCount']),
+            new TwigFunction('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),
+            new TwigFunction('renderhooksarray', [$this, 'renderHooksArray'], ['is_safe' => ['html']]),
+            new TwigFunction('hookcount', [$this, 'hookCount']),
+            new TwigFunction('hooksarraycontent', [$this, 'hooksArrayContent']),
         ];
     }
 
@@ -166,8 +171,32 @@ class HookExtension extends \Twig_Extension
     }
 
     /**
+     * Return the concatenated content of a renderHooksArray response
+     *
+     * @param array $hooksArray the array returned by the renderHooksArray function
+     *
+     * @return string
+     */
+    public function hooksArrayContent($hooksArray)
+    {
+        if (!is_array($hooksArray)) {
+            return '';
+        }
+
+        $content = '';
+
+        foreach ($hooksArray as $hook) {
+            $content .= $hook['content'] ?? '';
+        }
+
+        return $content;
+    }
+
+    /**
      * Count how many listeners will respond to the hook name.
      * Does not trigger the hook, so maybe some listeners could not add a response to the result.
+     *
+     * @deprecated since 1.7.7.0
      *
      * @param string $hookName
      *
@@ -175,6 +204,8 @@ class HookExtension extends \Twig_Extension
      */
     public function hookCount($hookName)
     {
-        return count($this->hookDispatcher->getListeners($hookName));
+        @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 1.7.7.0.', E_USER_DEPRECATED);
+
+        return count($this->hookDispatcher->getListeners(strtolower($hookName)));
     }
 }

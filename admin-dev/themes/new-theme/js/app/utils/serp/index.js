@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,14 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 import Vue from 'vue';
+import {EventEmitter} from '@components/event-emitter';
 import serp from './serp.vue';
 
 const {$} = window;
@@ -41,12 +42,19 @@ class SerpApp {
     }
 
     this.originalUrl = url;
-    this.useMultiLang = selectors.multiLanguageInput !== undefined
-                        && selectors.multiLanguageItem !== undefined;
+    this.useMultiLang = selectors.multiLanguageInput !== undefined || selectors.multiLanguageField !== undefined;
 
     if (this.useMultiLang) {
-      this.multiLangInputSelector = selectors.multiLanguageInput;
-      this.attachMultiLangEvents(selectors.multiLanguageItem);
+      const possibleSelectors = [];
+
+      if (selectors.multiLanguageInput) {
+        possibleSelectors.push(selectors.multiLanguageInput);
+      }
+      if (selectors.multiLanguageField) {
+        possibleSelectors.push(selectors.multiLanguageField);
+      }
+      this.multiLangSelector = possibleSelectors.join(',');
+      this.attachMultiLangEvents();
     }
 
     this.data = {
@@ -76,6 +84,12 @@ class SerpApp {
         this.checkUrl();
       },
     );
+
+    EventEmitter.on('languageSelected', () => {
+      this.checkTitle();
+      this.checkDesc();
+      this.checkUrl();
+    });
   }
 
   initializeSelectors(selectors) {
@@ -107,8 +121,13 @@ class SerpApp {
   }
 
   setUrl(rewrite) {
+    // We replace two placeholders because there was a typo in the initial one ('friendy' instead of 'friendly')
     this.data.url = this.originalUrl.replace(
       '{friendy-url}',
+      rewrite,
+    );
+    this.data.url = this.data.url.replace(
+      '{friendly-url}',
       rewrite,
     );
   }
@@ -118,8 +137,8 @@ class SerpApp {
     let {watchedTitle} = this;
 
     if (this.useMultiLang) {
-      watchedTitle = watchedTitle.closest(this.multiLangInputSelector).find('input');
-      defaultTitle = defaultTitle.closest(this.multiLangInputSelector).find('input');
+      watchedTitle = watchedTitle.closest(this.multiLangSelector).find('input');
+      defaultTitle = defaultTitle.closest(this.multiLangSelector).find('input');
     }
 
     const title1 = watchedTitle.length ? watchedTitle.val() : '';
@@ -136,10 +155,10 @@ class SerpApp {
 
     if (this.useMultiLang) {
       watchedDescription = watchedDescription
-        .closest(this.multiLangInputSelector)
+        .closest(this.multiLangSelector)
         .find(this.watchedDescription.is('input') ? 'input' : 'textarea');
       defaultDescription = defaultDescription
-        .closest(this.multiLangInputSelector)
+        .closest(this.multiLangSelector)
         .find(this.defaultDescription.is('input') ? 'input' : 'textarea');
     }
 
@@ -151,8 +170,9 @@ class SerpApp {
 
   checkUrl() {
     let {watchedMetaUrl} = this;
+
     if (this.useMultiLang) {
-      watchedMetaUrl = watchedMetaUrl.closest(this.multiLangInputSelector).find('input');
+      watchedMetaUrl = watchedMetaUrl.closest(this.multiLangSelector).find('input');
     }
 
     this.setUrl(watchedMetaUrl.val());

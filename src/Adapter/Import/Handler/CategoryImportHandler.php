@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Import\Handler;
@@ -165,12 +165,12 @@ final class CategoryImportHandler extends AbstractImportHandler
         parent::importRow($importConfig, $runtimeConfig, $dataRow);
 
         $entityFields = $runtimeConfig->getEntityFields();
-        $categoryId = $this->fetchDataValueByKey($dataRow, $entityFields, 'id');
+        $categoryId = (int) $this->fetchDataValueByKey($dataRow, $entityFields, 'id');
 
         $this->checkCategoryId($categoryId);
 
         if ($categoryId && ($importConfig->forceIds() || ObjectModel::existsInDatabase($categoryId, 'category'))) {
-            $category = new Category((int) $categoryId);
+            $category = new Category($categoryId);
         } else {
             $category = new Category();
         }
@@ -248,8 +248,8 @@ final class CategoryImportHandler extends AbstractImportHandler
             // Validation for parenting itself
             if ($isValidation && $category->parent == $category->id) {
                 $this->error($this->translator->trans(
-                'The category ID must be unique. It can\'t be the same as the one for the parent category (ID: %1$s).',
-                    $categoryId ?: null,
+                    'The category ID must be unique. It can\'t be the same as the one for the parent category (ID: %1$s).',
+                    [$categoryId ?: null],
                     'Admin.Advparameters.Notification'
                 ));
 
@@ -284,7 +284,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                 $unfriendlyError = $this->configuration->getBoolean('UNFRIENDLY_ERROR');
                 $categoryToCreate = new Category();
                 $categoryToCreate->name = $this->dataFormatter->createMultiLangField($category->parent);
-                $categoryToCreate->active = 1;
+                $categoryToCreate->active = true;
                 $linkRewrite = $this->dataFormatter->createFriendlyUrl(
                     $categoryToCreate->name[$this->languageId]
                 );
@@ -500,7 +500,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                     '%1$s (ID: %2$s) cannot be %3$s',
                     [
                         !empty($categoryName) ? $this->tools->sanitize($categoryName) : 'No Name',
-                        !empty($categoryId) ? $this->tools->sanitize($categoryId) : 'No ID',
+                        !empty($categoryId) ? $this->tools->sanitize((string) $categoryId) : 'No ID',
                         $runtimeConfig->shouldValidateData() ? 'validated' : 'saved',
                     ],
                     'Admin.Advparameters.Notification'
@@ -535,7 +535,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                         if (!is_numeric($shop)) {
                             $category->addShop(Shop::getIdByName($shop));
                         } else {
-                            $category->addShop($shop);
+                            $category->addShop((int) $shop);
                         }
                     }
                 }

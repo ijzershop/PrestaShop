@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
-$currentDir = dirname(__FILE__);
+
+use PrestaShop\PrestaShop\Core\Session\SessionHandler;
 
 /* Custom defines made by users */
-if (is_file($currentDir . '/defines_custom.inc.php')) {
-    include_once $currentDir . '/defines_custom.inc.php';
+if (is_file(__DIR__ . '/defines_custom.inc.php')) {
+    include_once __DIR__ . '/defines_custom.inc.php';
 }
 
-require_once $currentDir . '/defines.inc.php';
+require_once __DIR__ . '/defines.inc.php';
 
 require_once _PS_CONFIG_DIR_ . 'autoload.php';
 
@@ -53,12 +54,7 @@ if (!file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.yml') && !file_exists(_
     Tools::redirectToInstall();
 }
 
-require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
-
-/* Improve PHP configuration on Windows */
-if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
-    Windows::improveFilesytemPerformances();
-}
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 if (defined('_PS_CREATION_DATE_')) {
     $creationDate = _PS_CREATION_DATE_;
@@ -74,10 +70,14 @@ if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
     include_once _PS_CUSTOM_CONFIG_FILE_;
 }
 
+/* @phpstan-ignore-next-line */
 if (_PS_DEBUG_PROFILING_) {
+    include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
     include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Db.php';
+    include_once _PS_TOOL_DIR_ . 'profiling/Hook.php';
+    include_once _PS_TOOL_DIR_ . 'profiling/Module.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Tools.php';
 }
 
@@ -125,7 +125,7 @@ define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
-require_once $currentDir . '/defines_uri.inc.php';
+require_once __DIR__ . '/defines_uri.inc.php';
 
 global $_MODULES;
 $_MODULES = array();
@@ -138,13 +138,13 @@ define('_PS_PRICE_DISPLAY_PRECISION_', 2);
 /**
  * @deprecated since 1.7.7
  */
-define('_PS_PRICE_COMPUTE_PRECISION_', 6);
+define('_PS_PRICE_COMPUTE_PRECISION_', 2);
 
 /* Load all languages */
 Language::loadLanguages();
 
 /* Loading default country */
-$default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+$default_country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'), (int) Configuration::get('PS_LANG_DEFAULT'));
 $context->country = $default_country;
 
 /* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
@@ -164,14 +164,14 @@ if ($cookie_lifetime > 0) {
     $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 }
 
+$force_ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
 if (defined('_PS_ADMIN_DIR_')) {
-    $cookie = new Cookie('psAdmin', '', $cookie_lifetime);
+    $cookie = new Cookie('psAdmin', '', $cookie_lifetime, null, false, $force_ssl);
 } else {
-    $force_ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+    $domains = null;
     if ($context->shop->getGroup()->share_order) {
         $cookie = new Cookie('ps-sg' . $context->shop->getGroup()->id, '', $cookie_lifetime, $context->shop->getUrlsSharedCart(), false, $force_ssl);
     } else {
-        $domains = null;
         if ($context->shop->domain != $context->shop->domain_ssl) {
             $domains = array($context->shop->domain_ssl, $context->shop->domain);
         }
@@ -180,11 +180,23 @@ if (defined('_PS_ADMIN_DIR_')) {
     }
 }
 
+if (PHP_SAPI !== 'cli') {
+    $sessionHandler = new SessionHandler(
+        $cookie_lifetime,
+        $force_ssl,
+        Configuration::get('PS_COOKIE_SAMESITE'),
+        Context::getContext()->shop->physical_uri
+    );
+    $sessionHandler->init();
+
+    $context->session = $sessionHandler->getSession();
+}
+
 $context->cookie = $cookie;
 
 /* Create employee if in BO, customer else */
 if (defined('_PS_ADMIN_DIR_')) {
-    $employee = new Employee($cookie->id_employee);
+    $employee = new Employee((int) $cookie->id_employee);
     $context->employee = $employee;
 
     /* Auth on shops are recached after employee assignation */
@@ -197,20 +209,22 @@ if (defined('_PS_ADMIN_DIR_')) {
 
 /* if the language stored in the cookie is not available language, use default language */
 if (isset($cookie->id_lang) && $cookie->id_lang) {
-    $language = new Language($cookie->id_lang);
+    $language = new Language((int) $cookie->id_lang);
 }
-if (!isset($language) || !Validate::isLoadedObject($language)) {
-    $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+if (!isset($language) || !Validate::isLoadedObject($language) || !$language->isAssociatedToShop()) {
+    $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
 }
+
 $context->language = $language;
 
 /* Get smarty */
-require_once $currentDir . '/smarty.config.inc.php';
+require_once __DIR__ . '/smarty.config.inc.php';
+/* @phpstan-ignore-next-line */
 $context->smarty = $smarty;
 
 if (!defined('_PS_ADMIN_DIR_')) {
     if (isset($cookie->id_customer) && (int) $cookie->id_customer) {
-        $customer = new Customer($cookie->id_customer);
+        $customer = new Customer((int) $cookie->id_customer);
         if (!Validate::isLoadedObject($customer)) {
             $context->cookie->logout();
         } else {

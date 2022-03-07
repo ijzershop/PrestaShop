@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -29,10 +29,10 @@
  */
 class FeatureCore extends ObjectModel
 {
-    /** @var string Name */
+    /** @var string|array<int, string> Name */
     public $name;
 
-    /** @var int $position */
+    /** @var int */
     public $position;
 
     /**
@@ -150,7 +150,7 @@ class FeatureCore extends ObjectModel
     {
         $this->clearCache();
 
-        $result = 1;
+        $result = true;
         $fields = $this->getFieldsLang();
         foreach ($fields as $field) {
             foreach (array_keys($field) as $key) {
@@ -163,15 +163,18 @@ class FeatureCore extends ObjectModel
 					WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id . '
 						AND `id_lang` = ' . (int) $field['id_lang'];
             $mode = Db::getInstance()->getRow($sql);
-            $result &= (!$mode) ? Db::getInstance()->insert($this->def['table'] . '_lang', $field) :
-                Db::getInstance()->update(
-                    $this->def['table'] . '_lang',
-                    $field,
-                    '`' . $this->def['primary'] . '` = ' . (int) $this->id . ' AND `id_lang` = ' . (int) $field['id_lang']
+            $result = $result &&
+                (!$mode
+                    ? Db::getInstance()->insert($this->def['table'] . '_lang', $field)
+                    : Db::getInstance()->update(
+                        $this->def['table'] . '_lang',
+                        $field,
+                        '`' . $this->def['primary'] . '` = ' . (int) $this->id . ' AND `id_lang` = ' . (int) $field['id_lang']
+                    )
                 );
         }
         if ($result) {
-            $result &= parent::update($nullValues);
+            $result = parent::update($nullValues);
             if ($result) {
                 Hook::exec('actionFeatureSave', ['id_feature' => $this->id]);
             }
@@ -232,7 +235,7 @@ class FeatureCore extends ObjectModel
      */
     public static function nbFeatures($idLang)
     {
-        return Db::getInstance()->getValue('
+        return (int) Db::getInstance()->getValue('
 		SELECT COUNT(*) as nb
 		FROM `' . _DB_PREFIX_ . 'feature` ag
 		LEFT JOIN `' . _DB_PREFIX_ . 'feature_lang` agl
@@ -244,7 +247,7 @@ class FeatureCore extends ObjectModel
      * Create a feature from import.
      *
      * @param string $name Feature name
-     * @param bool $position Feature position
+     * @param bool|int $position Feature position
      *
      * @return int Feature ID
      */
@@ -269,7 +272,8 @@ class FeatureCore extends ObjectModel
 
             return $feature->id;
         } elseif (isset($rq['id_feature']) && $rq['id_feature']) {
-            if (is_numeric($position) && $feature = new Feature((int) $rq['id_feature'])) {
+            if (is_numeric($position)) {
+                $feature = new Feature((int) $rq['id_feature']);
                 $feature->position = (int) $position;
                 if (Validate::isLoadedObject($feature)) {
                     $feature->update();
@@ -278,6 +282,8 @@ class FeatureCore extends ObjectModel
 
             return (int) $rq['id_feature'];
         }
+
+        return 0;
     }
 
     /**
@@ -296,7 +302,8 @@ class FeatureCore extends ObjectModel
      * Move a feature.
      *
      * @param bool $way Up (1)  or Down (0)
-     * @param int $position
+     * @param int|null $position
+     * @param int|null $idFeature
      *
      * @return bool Update result
      */

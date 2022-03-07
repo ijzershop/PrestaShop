@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -190,12 +190,12 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                         [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],
@@ -218,10 +218,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             return;
         }
         if (!isset($obj->id)) {
-            $this->no_back = false;
             $content = parent::renderForm();
         } else {
-            $this->no_back = true;
             $this->page_header_toolbar_btn['new'] = [
                 'href' => '#',
                 'desc' => $this->trans('Add a new tax rule', [], 'Admin.International.Feature'),
@@ -283,10 +281,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 ],
                 [
                     'type' => 'text',
-                    'label' => $this->trans('Zip/postal code range', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Zip/Postal code range', [], 'Admin.International.Feature'),
                     'name' => 'zipcode',
                     'required' => false,
-                    'hint' => $this->trans('You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.', [], 'Admin.International.Help'),
+                    'hint' => $this->trans('You can define a range of Zip/Postal codes (e.g., 75000-75015) or simply use one Zip/Postal code.', [], 'Admin.International.Help'),
                 ],
                 [
                     'type' => 'select',
@@ -441,7 +439,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 $tr = new TaxRule();
 
                 // update or creation?
-                if (isset($id_rule) && $first) {
+                if ($first) {
                     $tr->id = $id_rule;
                     $first = false;
                 }
@@ -462,7 +460,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                             if ($zip_code) {
                                 if (!$country->checkZipCode($zip_code)) {
                                     $this->errors[] = $this->trans(
-                                        'The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.',
+                                        'The Zip/Postal code is invalid. It must be typed as follows: %format% for %country%.',
                                         [
                                             '%format%' => str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))),
                                             '%country%' => $country->name,
@@ -513,6 +511,19 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         $this->deleteTaxRule([Tools::getValue('id_tax_rule')]);
     }
 
+    protected function displayAjaxUpdateTaxRule()
+    {
+        if ($this->access('view')) {
+            $id_tax_rule = Tools::getValue('id_tax_rule');
+            $tax_rules = new TaxRule((int) $id_tax_rule);
+            $output = [];
+            foreach (get_object_vars($tax_rules) as $key => $result) {
+                $output[$key] = $result;
+            }
+            die(json_encode($output));
+        }
+    }
+
     protected function deleteTaxRule(array $id_tax_rule_list)
     {
         $result = true;
@@ -528,9 +539,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 }
             }
         }
+        $idTaxRulesGroup = isset($tax_rules_group) ? (int) $tax_rules_group->id : 0;
 
         Tools::redirectAdmin(
-            self::$currentIndex . '&' . $this->identifier . '=' . (int) $tax_rules_group->id . '&conf=4&update' . $this->table . '&token=' . $this->token
+            self::$currentIndex . '&' . $this->identifier . '=' . $idTaxRulesGroup . '&conf=4&update' . $this->table . '&token=' . $this->token
         );
     }
 
@@ -545,19 +557,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
     {
         // @TODO: check if the rule already exists
         return $tr->validateController();
-    }
-
-    protected function displayAjaxUpdateTaxRule()
-    {
-        if ($this->access('view')) {
-            $id_tax_rule = Tools::getValue('id_tax_rule');
-            $tax_rules = new TaxRule((int) $id_tax_rule);
-            $output = [];
-            foreach ($tax_rules as $key => $result) {
-                $output[$key] = $result;
-            }
-            die(json_encode($output));
-        }
     }
 
     /**

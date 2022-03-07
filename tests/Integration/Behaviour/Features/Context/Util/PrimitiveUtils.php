@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Util;
@@ -53,28 +53,20 @@ class PrimitiveUtils
         switch ($type) {
             case self::TYPE_BOOLEAN:
                 return self::castStringBooleanIntoBoolean($element);
-                break;
 
             case self::TYPE_INTEGER:
                 return intval($element);
-                break;
 
             case self::TYPE_DOUBLE:
                 return floatval($element);
-                break;
 
             case self::TYPE_STRING:
                 return $element;
-                break;
 
             case self::TYPE_DATETIME:
-                $dateTime = new \DateTime($element);
-
-                return $dateTime;
-                break;
+                return new \DateTime($element);
 
             case self::TYPE_ARRAY:
-
                 if ('empty' === $element) {
                     return [];
                 }
@@ -82,10 +74,7 @@ class PrimitiveUtils
                     return $element;
                 }
 
-                $exploded = explode('; ', $element);
-
-                return $exploded;
-                break;
+                return explode('; ', $element);
 
             case self::TYPE_NULL:
                 if (('null' === $element) || ('Null' === $element) || ('NULL' === $element)) {
@@ -99,8 +88,6 @@ class PrimitiveUtils
             case self::TYPE_RESOURCE:
             case self::TYPE_UNKNOWN:
                 throw new Exception("Cannot cast element into type $type");
-                break;
-
             default:
                 throw new RuntimeException("Unexpected cast type $type, function gettype is not supposed to return it");
         }
@@ -128,25 +115,20 @@ class PrimitiveUtils
             case self::TYPE_BOOLEAN:
             case self::TYPE_INTEGER:
                 return $element1 === $element2;
-                break;
             case self::TYPE_DOUBLE:
-
                 // see http://php.net/manual/en/language.types.float.php#language.types.float.comparison
                 $epsilon = 0.00001;
 
                 return abs($element1 - $element2) < $epsilon;
-                break;
 
             case self::TYPE_DATETIME:
                 return $element1->format('YmdHis') === $element2->format('YmdHis');
-                break;
 
             case self::TYPE_STRING:
                 $cleanedString1 = trim($element1);
                 $cleanedString2 = trim($element2);
 
                 return $cleanedString1 === $cleanedString2;
-                break;
 
             case self::TYPE_ARRAY:
                 $castedArray1 = self::castArrayElementsIntoString($element1);
@@ -156,22 +138,18 @@ class PrimitiveUtils
                 sort($castedArray2);
 
                 return $castedArray1 === $castedArray2;
-                break;
 
             case self::TYPE_OBJECT:
             case self::TYPE_RESOURCE:
             case self::TYPE_NULL:
                 if ((null === $element1) && (null === $element2)) {
                     return true;
-                } else {
-                    return false;
                 }
-                break;
+
+                return false;
 
             case self::TYPE_UNKNOWN:
                 throw new Exception("Cannot compare elements of type $type");
-                break;
-
             default:
                 throw new RuntimeException("Unexpected type $type, function gettype is not supposed to return it");
         }
@@ -219,6 +197,10 @@ class PrimitiveUtils
     {
         $arrayAsString = str_replace(['[', ']', ' '], ['', '', ''], $arrayAsString);
 
+        if (empty($arrayAsString)) {
+            return [];
+        }
+
         return explode(',', $arrayAsString);
     }
 
@@ -257,5 +239,17 @@ class PrimitiveUtils
             default:
                 throw new RuntimeException("Unknown string integer: $element");
         }
+    }
+
+    /**
+     * @param int $length
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    public static function generateRandomString(int $length): string
+    {
+        return bin2hex(random_bytes((int) round($length / 2)));
     }
 }

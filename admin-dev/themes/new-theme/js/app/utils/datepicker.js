@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,19 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 import 'url-polyfill';
 
 const {$} = window;
 
 const replaceDatePicker = () => {
-  const datepickerWidget = $('body').find('.bootstrap-datetimepicker-widget:last');
+  const datepickerWidget = $('body').find(
+    '.bootstrap-datetimepicker-widget:last',
+  );
+
   if (datepickerWidget.length <= 0) {
     return;
   }
@@ -40,11 +43,11 @@ const replaceDatePicker = () => {
   datepickerWidget.appendTo('body');
 
   // Height changed because the css from column-filters is not applied any more
-  let top = (position.top) + margin;
+  let top = position.top + margin;
 
   // Datepicker is settle to the top position
   if (datepickerWidget.hasClass('top')) {
-    top += (originalHeight - datepickerWidget.outerHeight(true) - margin);
+    top += originalHeight - datepickerWidget.outerHeight(true) - margin;
   }
 
   datepickerWidget.css({
@@ -64,10 +67,12 @@ const replaceDatePicker = () => {
 const init = function initDatePickers() {
   const $datePickers = $('.datepicker input[type="text"]');
   $.each($datePickers, (i, picker) => {
-    $(picker).datetimepicker(
-      {
+    $(picker)
+      .datetimepicker({
         locale: window.full_language_code,
-        format: $(picker).data('format') ? $(picker).data('format') : 'YYYY-MM-DD',
+        format: $(picker).data('format')
+          ? $(picker).data('format')
+          : 'YYYY-MM-DD',
         sideBySide: true,
         icons: {
           time: 'time',
@@ -75,16 +80,17 @@ const init = function initDatePickers() {
           up: 'up',
           down: 'down',
         },
-      },
-    ).on(
-      'dp.show',
-      replaceDatePicker,
-    ).on(
-      'dp.hide',
-      () => {
+      })
+      .on('dp.show', replaceDatePicker)
+      .on('dp.hide', () => {
         $(window).off('resize', replaceDatePicker);
-      },
-    );
+      })
+      .on('dp.change', (e) => {
+        // Looks like we can't bind an event to a datepicker selected afterwhile.
+        // So we emit an event on change to manipulate datas
+        const event = new CustomEvent('datepickerChange', e);
+        window.document.dispatchEvent(event);
+      });
   });
 };
 

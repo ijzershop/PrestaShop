@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -29,14 +29,29 @@
  */
 abstract class HTMLTemplateCore
 {
+    /**
+     * @var string
+     */
     public $title;
+
+    /**
+     * @var string
+     */
     public $date;
+
+    /**
+     * @var bool
+     */
     public $available_in_your_account = true;
 
-    /** @var Smarty */
+    /**
+     * @var Smarty
+     */
     public $smarty;
 
-    /** @var Shop */
+    /**
+     * @var Shop
+     */
     public $shop;
 
     /**
@@ -81,18 +96,13 @@ abstract class HTMLTemplateCore
      */
     protected function getShopAddress()
     {
-        $shop_address = '';
-
-        $shop_address_obj = $this->shop->getAddress();
-        if (isset($shop_address_obj) && $shop_address_obj instanceof Address) {
-            $shop_address = AddressFormat::generateAddress($shop_address_obj, [], ' - ', ' ');
-        }
-
-        return $shop_address;
+        return AddressFormat::generateAddress($this->shop->getAddress(), [], ' - ', ' ');
     }
 
     /**
      * Returns the invoice logo.
+     *
+     * @return string|null
      */
     protected function getLogo()
     {
@@ -160,7 +170,14 @@ abstract class HTMLTemplateCore
         $hook_name = 'displayPDF' . $template;
 
         $this->smarty->assign([
-            'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, ['object' => $object]),
+            'HOOK_DISPLAY_PDF' => Hook::exec(
+                $hook_name,
+                [
+                    'object' => $object,
+                    // The smarty instance is a clone that does NOT escape HTML
+                    'smarty' => $this->smarty,
+                ]
+            ),
         ]);
     }
 
@@ -189,7 +206,7 @@ abstract class HTMLTemplateCore
      * If the template is not present in the theme directory, it will return the default template
      * in _PS_PDF_DIR_ directory.
      *
-     * @param $template_name
+     * @param string $template_name
      *
      * @return string
      */

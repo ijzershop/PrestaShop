@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -188,6 +188,15 @@ class AdminShopGroupControllerCore extends AdminController
                     'required' => true,
                 ],
                 [
+                    'type' => 'color',
+                    'label' => $this->trans('Color', [], 'Admin.Catalog.Feature'),
+                    'name' => 'color',
+                    'desc' => [
+                        $this->trans('It will only be applied to this group of shops, each store will keep its individual color.', [], 'Admin.Shopparameters.Feature'),
+                    ],
+                    'hint' => $this->trans('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").', [], 'Admin.Catalog.Help'),
+                ],
+                [
                     'type' => 'switch',
                     'label' => $this->trans('Share customers', [], 'Admin.Advparameters.Feature'),
                     'name' => 'share_customer',
@@ -209,7 +218,7 @@ class AdminShopGroupControllerCore extends AdminController
                 ],
                 [
                     'type' => 'switch',
-                    'label' => $this->trans('Share available quantities to sell', [], 'Admin.Advparameters.Feature'),
+                    'label' => $this->trans('Share available quantities for sale', [], 'Admin.Advparameters.Feature'),
                     'name' => 'share_stock',
                     'required' => true,
                     'class' => 't',
@@ -286,7 +295,7 @@ class AdminShopGroupControllerCore extends AdminController
             $disabled = false;
         }
 
-        $default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+        $default_shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         $this->tpl_form_vars = [
             'disabled' => $disabled,
             'checked' => (Tools::getValue('addshop_group') !== false) ? true : false,
@@ -335,6 +344,13 @@ class AdminShopGroupControllerCore extends AdminController
         return parent::postProcess();
     }
 
+    public function beforeUpdateOptions()
+    {
+        if (!(new Shop((int) Tools::getValue('PS_SHOP_DEFAULT')))->getBaseURL()) {
+            $this->errors[] = $this->trans('You must configure this store\'s URL before setting it as default.', [], 'Admin.Advparameters.Notification');
+        }
+    }
+
     protected function afterAdd($new_shop_group)
     {
         //Reset available quantitites
@@ -352,7 +368,7 @@ class AdminShopGroupControllerCore extends AdminController
         if ($this->fields_options && is_array($this->fields_options)) {
             $this->display = 'options';
             $this->show_toolbar = false;
-            $helper = new HelperOptions($this);
+            $helper = new HelperOptions();
             $this->setHelperDisplay($helper);
             $helper->id = $this->id;
             $helper->tpl_vars = $this->tpl_option_vars;

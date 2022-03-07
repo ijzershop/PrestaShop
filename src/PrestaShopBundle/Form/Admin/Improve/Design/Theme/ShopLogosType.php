@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
@@ -37,6 +37,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Class ThemeLogosType is used to configure theme's logos.
@@ -80,25 +81,23 @@ class ShopLogosType extends AbstractType
     {
         $shopLogoSettings = new ShopLogoSettings();
 
-        $availableLogoFileTypes = implode(',', $shopLogoSettings->getLogoImageExtensionsWithDot());
-
         $builder
             ->add('header_logo', FileType::class, [
                 'required' => false,
                 'attr' => [
-                    'accept' => $availableLogoFileTypes,
+                    'accept' => implode(',', $shopLogoSettings->getLogoImageExtensionsWithDot()),
                 ],
             ])
             ->add('mail_logo', FileType::class, [
                 'required' => false,
                 'attr' => [
-                    'accept' => $availableLogoFileTypes,
+                    'accept' => implode(',', $shopLogoSettings->getLogoImageExtensionsWithDot('PS_LOGO_MAIL')),
                 ],
             ])
             ->add('invoice_logo', FileType::class, [
                 'required' => false,
                 'attr' => [
-                    'accept' => $availableLogoFileTypes,
+                    'accept' => implode(',', $shopLogoSettings->getLogoImageExtensionsWithDot('PS_LOGO_INVOICE')),
                 ],
             ])
             ->add('favicon', FileType::class, [
@@ -267,8 +266,8 @@ class ShopLogosType extends AbstractType
     /**
      * Gets the checkbox form fields which are the source of multi-store behavior.
      *
-     * @param $form
-     * @param $suffix
+     * @param FormInterface $form
+     * @param string $suffix
      *
      * @return array
      */

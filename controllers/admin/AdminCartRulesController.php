@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -41,7 +41,13 @@ class AdminCartRulesControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->bulk_actions = ['delete' => ['text' => $this->trans('Delete selected', [], 'Admin.Actions'), 'icon' => 'icon-trash', 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning')]];
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'icon' => 'icon-trash',
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+            ],
+        ];
 
         $this->fields_list = [
             'id_cart_rule' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'],
@@ -56,6 +62,10 @@ class AdminCartRulesControllerCore extends AdminController
 
     public function ajaxProcessLoadCartRules()
     {
+        if (!$this->access('view')) {
+            return die(json_encode(['error' => 'You do not have the right permission']));
+        }
+
         $type = $token = $search = '';
         $limit = $count = $id_cart_rule = 0;
         if (Tools::getIsset('limit')) {
@@ -78,7 +88,7 @@ class AdminCartRulesControllerCore extends AdminController
             $search = Tools::getValue('search');
         }
 
-        $page = floor($count / $limit);
+        $page = (int) floor($count / $limit);
 
         $html = '';
         $next_link = '';
@@ -90,7 +100,7 @@ class AdminCartRulesControllerCore extends AdminController
 
             /** @var CartRule $current_object */
             $current_object = $this->loadObject(true);
-            $cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, ($page) * $limit, $limit, $search);
+            $cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, $page * $limit, $limit, $search);
 
             if ($type == 'selected') {
                 $i = 1;
@@ -170,9 +180,9 @@ class AdminCartRulesControllerCore extends AdminController
                     // Add a new rule group
                     $rule_group_id = 1;
                     if (is_array($rule_group_array)) {
-                        // Empty for (with a ; at the end), that just find the first rule_group_id available in rule_group_array
-                        for ($rule_group_id = 1; in_array($rule_group_id, $rule_group_array); ++$rule_group_id) {
-                            42;
+                        // Find the first rule_group_id that is not available in the array
+                        while (in_array($rule_group_id, $rule_group_array)) {
+                            ++$rule_group_id;
                         }
                         $_POST['product_rule_group'][] = $rule_group_id;
                     } else {
@@ -235,8 +245,9 @@ class AdminCartRulesControllerCore extends AdminController
     {
         $res = parent::processDelete();
         if (Tools::isSubmit('delete' . $this->table)) {
-            $back = urldecode(Tools::getValue('back', ''));
+            $back = rawurldecode(Tools::getValue('back', ''));
             if (!empty($back)) {
+                $back .= (strpos($back, '?') === false ? '?' : '&') . 'conf=1';
                 $this->redirect_after = $back;
             }
         }
@@ -267,7 +278,11 @@ class AdminCartRulesControllerCore extends AdminController
             $this->context->smarty->assign('new_cart_rule', $cart_rule);
         }
         if (Tools::getValue('submitFormAjax')) {
-            $this->redirect_after = false;
+            $this->redirect_after = null;
+            if ($cart_rule) {
+                $this->context->smarty->assign('refresh_cart', true);
+                $this->display = 'edit';
+            }
         }
 
         return $cart_rule;
@@ -378,8 +393,9 @@ class AdminCartRulesControllerCore extends AdminController
             $i = 1;
             foreach ($array as $ruleGroupId) {
                 $productRulesArray = [];
-                if (is_array($array = Tools::getValue('product_rule_' . $ruleGroupId)) && count($array)) {
-                    foreach ($array as $ruleId) {
+                $arrayPRGroupId = Tools::getValue('product_rule_' . $ruleGroupId);
+                if (is_array($arrayPRGroupId) && count($arrayPRGroupId)) {
+                    foreach ($arrayPRGroupId as $ruleId) {
                         $productRulesArray[] = $this->getProductRuleDisplay(
                             $ruleGroupId,
                             $ruleId,
@@ -497,16 +513,11 @@ class AdminCartRulesControllerCore extends AdminController
                 break;
             case 'categories':
                 $categories = ['selected' => [], 'unselected' => []];
-                $results = Db::getInstance()->executeS('
-				SELECT DISTINCT name, c.id_category as id
-				FROM ' . _DB_PREFIX_ . 'category c
-				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
-					ON (c.`id_category` = cl.`id_category`
-					AND cl.`id_lang` = ' . (int) Context::getContext()->language->id . Shop::addSqlRestrictionOnLang('cl') . ')
-				' . Shop::addSqlAssociation('category', 'c') . '
-				WHERE id_lang = ' . (int) Context::getContext()->language->id . '
-				ORDER BY name');
-                foreach ($results as $row) {
+                $categoryTree = Category::getNestedCategories(Category::getRootCategory()->id, (int) Context::getContext()->language->id, false);
+
+                $flatCategories = $this->populateCategories([], $categoryTree);
+
+                foreach ($flatCategories as $row) {
                     $categories[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
                 }
                 Context::getContext()->smarty->assign('product_rule_itemlist', $categories);
@@ -520,6 +531,25 @@ class AdminCartRulesControllerCore extends AdminController
         }
 
         return $this->createTemplate('product_rule.tpl')->fetch();
+    }
+
+    public function populateCategories(array $flatCategories, array $currentCategoryTree, string $currentPath = ''): array
+    {
+        if (!$currentCategoryTree) {
+            return $flatCategories;
+        }
+
+        $separator = ' > ';
+        foreach ($currentCategoryTree as $categoryArray) {
+            $fullName = ($currentPath ? $currentPath . $separator : '') . $categoryArray['name'];
+            $flatCategories[] = ['id' => $categoryArray['id_category'], 'name' => $fullName];
+            // recursive call for childrens
+            if (!empty($categoryArray['children'])) {
+                $flatCategories = $this->populateCategories($flatCategories, $categoryArray['children'], $fullName);
+            }
+        }
+
+        return $flatCategories;
     }
 
     public function ajaxProcess()
@@ -562,7 +592,9 @@ class AdminCartRulesControllerCore extends AdminController
                 $combinations = [];
                 $productObj = new Product((int) $product['id_product'], false, (int) $this->context->language->id);
                 $attributes = $productObj->getAttributesGroups((int) $this->context->language->id);
-                $product['formatted_price'] = $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($product['price_tax_incl'], $this->context->currency), $this->context->currency->iso_code);
+                $product['formatted_price'] = $product['price_tax_incl']
+                    ? $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($product['price_tax_incl'], $this->context->currency), $this->context->currency->iso_code)
+                    : '';
 
                 foreach ($attributes as $attribute) {
                     if (!isset($combinations[$attribute['id_product_attribute']]['attributes'])) {
@@ -573,7 +605,9 @@ class AdminCartRulesControllerCore extends AdminController
                     $combinations[$attribute['id_product_attribute']]['default_on'] = $attribute['default_on'];
                     if (!isset($combinations[$attribute['id_product_attribute']]['price'])) {
                         $price_tax_incl = Product::getPriceStatic((int) $product['id_product'], true, $attribute['id_product_attribute']);
-                        $combinations[$attribute['id_product_attribute']]['formatted_price'] = $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($price_tax_incl, $this->context->currency), $this->context->currency->iso_code);
+                        $combinations[$attribute['id_product_attribute']]['formatted_price'] = $price_tax_incl
+                            ? $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($price_tax_incl, $this->context->currency), $this->context->currency->iso_code)
+                            : '';
                     }
                 }
 
@@ -601,6 +635,11 @@ class AdminCartRulesControllerCore extends AdminController
     public function renderForm()
     {
         $limit = 40;
+        $this->toolbar_btn['save'] = [
+            'href' => '#',
+            'desc' => $this->trans('Save', [], 'Admin.Actions'),
+        ];
+
         $this->toolbar_btn['save-and-stay'] = [
             'href' => '#',
             'desc' => $this->trans('Save and stay', [], 'Admin.Actions'),
@@ -612,22 +651,22 @@ class AdminCartRulesControllerCore extends AdminController
         // All the filter are prefilled with the correct information
         $customer_filter = '';
         if (Validate::isUnsignedId($current_object->id_customer) &&
-            ($customer = new Customer($current_object->id_customer)) &&
-            Validate::isLoadedObject($customer)) {
+            Validate::isLoadedObject($customer = new Customer($current_object->id_customer))
+        ) {
             $customer_filter = $customer->firstname . ' ' . $customer->lastname . ' (' . $customer->email . ')';
         }
 
         $gift_product_filter = '';
         if (Validate::isUnsignedId($current_object->gift_product) &&
-            ($product = new Product($current_object->gift_product, false, $this->context->language->id)) &&
-            Validate::isLoadedObject($product)) {
+            Validate::isLoadedObject($product = new Product($current_object->gift_product, false, $this->context->language->id))
+        ) {
             $gift_product_filter = (!empty($product->reference) ? $product->reference : $product->name);
         }
 
         $reduction_product_filter = '';
         if (Validate::isUnsignedId($current_object->reduction_product) &&
-            ($product = new Product($current_object->reduction_product, false, $this->context->language->id)) &&
-            Validate::isLoadedObject($product)) {
+            Validate::isLoadedObject($product = new Product($current_object->reduction_product, false, $this->context->language->id))
+        ) {
             $reduction_product_filter = (!empty($product->reference) ? $product->reference : $product->name);
         }
 
@@ -700,7 +739,7 @@ class AdminCartRulesControllerCore extends AdminController
                 'show_toolbar' => true,
                 'toolbar_btn' => $this->toolbar_btn,
                 'toolbar_scroll' => $this->toolbar_scroll,
-                'title' => [$this->trans('Payment: ', [], 'Admin.Catalog.Feature'), $this->trans('Cart Rules', [], 'Admin.Catalog.Feature')],
+                'title' => [$this->trans('Payment:', [], 'Admin.Catalog.Feature'), $this->trans('Cart Rules', [], 'Admin.Catalog.Feature')],
                 'defaultDateFrom' => date('Y-m-d H:00:00'),
                 'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 month')),
                 'customerFilter' => $customer_filter,
@@ -744,5 +783,62 @@ class AdminCartRulesControllerCore extends AdminController
             $found = true;
         }
         echo json_encode(['found' => $found, 'vouchers' => $vouchers]);
+    }
+
+    /**
+     * For the listing, Override the method displayDeleteLink for the HelperList
+     * That allows to have links with all characters (like < & >)
+     *
+     * @param string $token
+     * @param string $id
+     * @param string|null $name
+     *
+     * @return string
+     */
+    public function displayDeleteLink(string $token, string $id, ?string $name = null): string
+    {
+        if (!$this->access('delete')) {
+            return '';
+        }
+
+        $tpl = $this->createTemplate('helpers/list/list_action_delete.tpl');
+
+        if (!array_key_exists('Delete', self::$cache_lang)) {
+            self::$cache_lang['Delete'] = $this->trans('Delete', [], 'Admin.Actions');
+        }
+        if (!array_key_exists('DeleteItem', self::$cache_lang)) {
+            self::$cache_lang['DeleteItem'] = $this->trans('Delete selected item?', [], 'Admin.Notifications.Info');
+        }
+        if (!array_key_exists('Name', self::$cache_lang)) {
+            self::$cache_lang['Name'] = $this->trans('Name:', [], 'Admin.Shipping.Feature');
+        }
+
+        if (null !== $name) {
+            // \n\n is not between double quotes because in js/jquery/plugins/alerts/jquery.alerts.js, \n is replaced by <br>.
+            $name = '\n\n' . self::$cache_lang['Name'] . ' ' . $name;
+        }
+
+        $data = [
+            $this->identifier => $id,
+            'href' => $this->context->link->getAdminLink(
+                'AdminCartRules',
+                true, [],
+                [
+                    'id_cart_rule' => (int) $id,
+                    'deletecart_rule' => 1,
+                ]
+            ),
+            'action' => self::$cache_lang['Delete'],
+        ];
+
+        if ($this->specificConfirmDelete !== false) {
+            $data['confirm'] = null !== $this->specificConfirmDelete
+                ? '\r' . $this->specificConfirmDelete
+                : Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'] . $name);
+        }
+
+        $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
+
+        return $tpl->fetch();
     }
 }

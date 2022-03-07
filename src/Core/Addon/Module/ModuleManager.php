@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,25 +17,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
-use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -238,11 +236,11 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * @param Module $installedProduct
+     * @param ModuleInterface $installedProduct
      *
      * @return bool
      */
-    protected function shouldRecommendConfigurationForModule(Module $installedProduct)
+    protected function shouldRecommendConfigurationForModule(ModuleInterface $installedProduct)
     {
         $warnings = $this->getModuleInstallationWarnings($installedProduct);
 
@@ -250,11 +248,11 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * @param Module $installedProduct
+     * @param ModuleInterface $installedProduct
      *
-     * @return array
+     * @return string|array
      */
-    protected function getModuleInstallationWarnings(Module $installedProduct)
+    protected function getModuleInstallationWarnings(ModuleInterface $installedProduct)
     {
         if ($installedProduct->hasValidInstance()) {
             return $installedProduct->getInstance()->warning;
@@ -288,21 +286,50 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if ($this->moduleProvider->isInstalled($name)) {
-            return $this->upgrade($name, 'latest', $source);
+            if ($source !== null) {
+                return $this->upgrade($name, 'latest', $source);
+            }
+
+            // Module is already installed
+            return true;
         }
 
         if (!empty($source)) {
             $this->moduleZipManager->storeInModulesFolder($source);
-        } elseif (!$this->moduleProvider->isOnDisk($name)) {
-            $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
         $module = $this->moduleRepository->getModule($name);
-        $this->checkConfirmationGiven(__FUNCTION__, $module);
         $result = $module->onInstall();
 
         $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::INSTALL, $module);
+
+        return $result;
+    }
+
+    /**
+     * Execute post install
+     *
+     * @param string $moduleName
+     *
+     * @return bool true for success
+     */
+    public function postInstall(string $moduleName): bool
+    {
+        if (!$this->moduleProvider->isInstalled($moduleName)) {
+            return false;
+        }
+
+        if (!$this->moduleProvider->isOnDisk($moduleName)) {
+            return false;
+        }
+
+        $module = $this->moduleRepository->getModule($moduleName);
+        /** @var ModuleInterface $module */
+        $result = $module->onPostInstall();
+
+        $this->checkAndClearCache($result);
+        $this->dispatch(ModuleManagementEvent::POST_INSTALL, $module);
 
         return $result;
     }
@@ -331,7 +358,7 @@ class ModuleManager implements AddonManagerInterface
         $result = $module->onUninstall();
 
         if ($result && $this->actionParams->get('deletion', false)) {
-            $result = $result && $this->removeModuleFromDisk($name);
+            $result = $this->removeModuleFromDisk($name);
         }
 
         $this->checkAndClearCache($result);
@@ -344,7 +371,7 @@ class ModuleManager implements AddonManagerInterface
      * Download new files from source, backup old files, replace files with new ones
      * and execute all necessary migration scripts form current version to the new one.
      *
-     * @param Addon $name the theme you want to upgrade
+     * @param string $name the theme you want to upgrade
      * @param string $version the version you want to up upgrade to
      * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
      *
@@ -363,11 +390,6 @@ class ModuleManager implements AddonManagerInterface
         // 1- From source
         if ($source != null) {
             $this->moduleZipManager->storeInModulesFolder($source);
-        } elseif ($module->canBeUpgradedFromAddons()) {
-            // 2- From Addons
-            // This step is not mandatory (in case of local module),
-            // we do not check the result
-            $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
         // Load and execute upgrade files
@@ -645,34 +667,17 @@ class ModuleManager implements AddonManagerInterface
      * This function is a refacto of the event dispatching.
      *
      * @param string $event
-     * @param \PrestaShop\PrestaShop\Core\Addon\Module\Module $module
+     * @param ModuleInterface $module
      */
     private function dispatch($event, $module)
     {
-        $this->eventDispatcher->dispatch($event, new ModuleManagementEvent($module));
+        $this->eventDispatcher->dispatch(new ModuleManagementEvent($module), $event);
     }
 
     private function checkIsInstalled($name)
     {
         if (!$this->moduleProvider->isInstalled($name)) {
             throw new Exception($this->translator->trans('The module %module% must be installed first', ['%module%' => $name], 'Admin.Modules.Notification'));
-        }
-    }
-
-    /**
-     * We check the module does not ask for pre-requisites to be respected prior the action being executed.
-     *
-     * @param string $action
-     * @param Module $module
-     *
-     * @throws UnconfirmedModuleActionException
-     */
-    private function checkConfirmationGiven($action, Module $module)
-    {
-        if ($action === 'install') {
-            if ($module->attributes->has('prestatrust') && !$this->actionParams->has('confirmPrestaTrust')) {
-                throw (new UnconfirmedModuleActionException())->setModule($module)->setAction($action)->setSubject('PrestaTrust');
-            }
         }
     }
 

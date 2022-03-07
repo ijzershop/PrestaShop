@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
@@ -48,17 +48,17 @@ class EditableCustomer
     private $genderId;
 
     /**
-     * @var string
+     * @var FirstName
      */
     private $firstName;
 
     /**
-     * @var string
+     * @var LastName
      */
     private $lastName;
 
     /**
-     * @var string
+     * @var Email
      */
     private $email;
 
@@ -128,6 +128,11 @@ class EditableCustomer
     private $riskId;
 
     /**
+     * @var bool
+     */
+    private $isGuest;
+
+    /**
      * @param CustomerId $customerId
      * @param int $genderId
      * @param FirstName $firstName
@@ -146,6 +151,7 @@ class EditableCustomer
      * @param float $allowedOutstandingAmount
      * @param int $maxPaymentDays
      * @param int $riskId
+     * @param bool $isGuest
      */
     public function __construct(
         CustomerId $customerId,
@@ -165,7 +171,8 @@ class EditableCustomer
         $website,
         $allowedOutstandingAmount,
         $maxPaymentDays,
-        $riskId
+        $riskId,
+        bool $isGuest = false
     ) {
         $this->customerId = $customerId;
         $this->genderId = $genderId;
@@ -185,6 +192,7 @@ class EditableCustomer
         $this->allowedOutstandingAmount = $allowedOutstandingAmount;
         $this->maxPaymentDays = $maxPaymentDays;
         $this->riskId = $riskId;
+        $this->isGuest = $isGuest;
     }
 
     /**
@@ -329,5 +337,13 @@ class EditableCustomer
     public function isNewsletterSubscribed()
     {
         return $this->isNewsletterSubscribed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGuest(): bool
+    {
+        return $this->isGuest;
     }
 }

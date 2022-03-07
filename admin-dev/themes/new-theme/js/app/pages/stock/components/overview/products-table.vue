@@ -1,10 +1,11 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <PSTable class="mt-1">
@@ -123,14 +123,45 @@
   </PSTable>
 </template>
 
-<script>
-  import PSAlert from '@app/widgets/ps-alert';
-  import PSTable from '@app/widgets/ps-table/ps-table';
-  import PSSort from '@app/widgets/ps-table/ps-sort';
-  import PSLoader from '@app/widgets/ps-loader';
-  import ProductLine from './product-line';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSAlert from '@app/widgets/ps-alert.vue';
+  import PSTable from '@app/widgets/ps-table/ps-table.vue';
+  import PSSort from '@app/widgets/ps-table/ps-sort.vue';
+  import PSLoader from '@app/widgets/ps-loader.vue';
+  import ProductLine from './product-line.vue';
 
-  export default {
+  /* eslint-disable camelcase */
+  export interface StockProduct {
+    active: number;
+    attribute_name: string;
+    combination_cover_id: number;
+    combination_id: number;
+    combination_name: string;
+    combination_reference: string;
+    combination_thumbnail: string;
+    combinations_product_url: string;
+    edit_url: string;
+    product_attributes: string;
+    product_available_quantity: number;
+    product_cover_id: number;
+    product_features: string;
+    product_id: number;
+    product_low_stock_alert: number;
+    product_low_stock_threshold: string;
+    product_name: string;
+    product_physical_quantity: number;
+    product_reference: string;
+    product_reserved_quantity: number;
+    product_thumbnail: string;
+    qty: number;
+    supplier_id: number;
+    supplier_name: string;
+    total_combinations: number;
+  }
+  /* eslint-enable camelcase */
+
+  export default Vue.extend({
     props: {
       isLoading: {
         type: Boolean,
@@ -145,21 +176,21 @@
       PSLoader,
     },
     methods: {
-      sort(order, sortDirection) {
+      sort(order: string, sortDirection: string): void {
         this.$store.dispatch('updateOrder', order);
         this.$emit('sort', sortDirection === 'desc' ? 'desc' : 'asc');
       },
     },
     computed: {
-      products() {
+      products(): Array<StockProduct> {
         return this.$store.state.products;
       },
-      emptyProducts() {
+      emptyProducts(): boolean {
         return !this.$store.state.products.length;
       },
-      currentSort() {
+      currentSort(): string {
         return this.$store.state.order;
       },
     },
-  };
+  });
 </script>

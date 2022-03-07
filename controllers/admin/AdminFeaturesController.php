@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,16 +17,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * @property Feature $object
+ * @property FeatureValue $object
  */
 class AdminFeaturesControllerCore extends AdminController
 {
@@ -115,7 +115,7 @@ class AdminFeaturesControllerCore extends AdminController
 
     public function renderView()
     {
-        if (($id = Tools::getValue('id_feature'))) {
+        if (($id = (int) Tools::getValue('id_feature'))) {
             $this->setTypeValue();
             $this->list_id = 'feature_value';
             $this->lang = true;
@@ -292,14 +292,14 @@ class AdminFeaturesControllerCore extends AdminController
                 break;
 
             case 'view':
-                $bread_extended[] = $this->feature_name[$this->context->employee->id_lang];
+                $bread_extended[] = $this->feature_name[$this->context->employee->id_lang] ?? null;
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 
                 break;
 
             case 'editFeatureValue':
                 if (Tools::getValue('id_feature_value')) {
-                    if (($id = Tools::getValue('id_feature'))) {
+                    if (($id = (int) Tools::getValue('id_feature'))) {
                         if (Validate::isLoadedObject($obj = new Feature((int) $id))) {
                             $bread_extended[] = '<a href="' . Context::getContext()->link->getAdminLink('AdminFeatures') . '&id_feature=' . $id . '&viewfeature">' . $obj->name[$this->context->employee->id_lang] . '</a>';
                         }
@@ -379,10 +379,6 @@ class AdminFeaturesControllerCore extends AdminController
         // Create Object FeatureValue
         $feature_value = new FeatureValue(Tools::getValue('id_feature_value'));
 
-        $this->tpl_vars = [
-            'feature_value' => $feature_value,
-        ];
-
         $this->getlanguages();
         $helper = new HelperForm();
         $helper->show_cancel_button = true;
@@ -403,7 +399,9 @@ class AdminFeaturesControllerCore extends AdminController
         $helper->override_folder = 'feature_value/';
         $helper->id = $feature_value->id;
         $helper->toolbar_scroll = false;
-        $helper->tpl_vars = $this->tpl_vars;
+        $helper->tpl_vars = [
+            'feature_value' => $feature_value,
+        ];
         $helper->languages = $this->_languages;
         $helper->default_form_language = $this->default_form_language;
         $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
@@ -433,9 +431,7 @@ class AdminFeaturesControllerCore extends AdminController
                 }
                 $this->content .= $this->renderView();
             } elseif ($this->display == 'editFeatureValue') {
-                if (!$this->object = new FeatureValue((int) Tools::getValue('id_feature_value'))) {
-                    return;
-                }
+                $this->object = new FeatureValue((int) Tools::getValue('id_feature_value'));
                 $this->content .= $this->initFormFeatureValue();
             } elseif ($this->display != 'view' && !$this->ajax) {
                 // If a feature value was saved, we need to reset the values to display the list
@@ -460,7 +456,7 @@ class AdminFeaturesControllerCore extends AdminController
     public function initProcess()
     {
         // Are we working on feature values?
-        if (Tools::getValue('id_feature_value')
+        if ((Tools::getValue('id_feature_value') && !Tools::getValue('id_feature'))
             || Tools::isSubmit('deletefeature_value')
             || Tools::isSubmit('submitAddfeature_value')
             || Tools::isSubmit('addfeature_value')
@@ -526,7 +522,7 @@ class AdminFeaturesControllerCore extends AdminController
 
         if (Tools::isSubmit('submitAdd' . $this->table . 'AndStay') && !count($this->errors)) {
             if ($this->table == 'feature_value' && ($this->display == 'edit' || $this->display == 'add')) {
-                $this->redirect_after = self::$currentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $this->token;
+                $this->redirect_after = self::$currentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&conf=3&token=' . $this->token;
             } else {
                 $this->redirect_after = self::$currentIndex . '&' . $this->identifier . '=&conf=3&update' . $this->table . '&token=' . $this->token;
             }
@@ -623,7 +619,7 @@ class AdminFeaturesControllerCore extends AdminController
     public function ajaxProcessUpdatePositions()
     {
         if ($this->access('edit')) {
-            $way = (int) Tools::getValue('way');
+            $way = (bool) Tools::getValue('way');
             $id_feature = (int) Tools::getValue('id');
             $positions = Tools::getValue('feature');
 
@@ -638,8 +634,9 @@ class AdminFeaturesControllerCore extends AdminController
                 $pos = explode('_', $value);
 
                 if (isset($pos[2]) && (int) $pos[2] === $id_feature) {
-                    if ($feature = new Feature((int) $pos[2])) {
-                        if (isset($position) && $feature->updatePosition($way, $position, $id_feature)) {
+                    $feature = new Feature((int) $pos[2]);
+                    if (Validate::isLoadedObject($feature)) {
+                        if ($feature->updatePosition($way, $position, $id_feature)) {
                             echo 'ok position ' . (int) $position . ' for feature ' . (int) $pos[1] . '\r\n';
                         } else {
                             echo '{"hasError" : true, "errors" : "Can not update feature ' . (int) $id_feature . ' to position ' . (int) $position . ' "}';

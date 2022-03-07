@@ -1,32 +1,25 @@
 const webpack = require('webpack');
-const keepLicense = require('uglify-save-license');
+const TerserPlugin = require('terser-webpack-plugin');
 const common = require('./common.js');
 
 /**
  * Returns the production webpack config,
  * by merging production specific configuration with the common one.
+ *
  */
 function prodConfig() {
-  const prod = Object.assign(
-    common,
-    {
-      stats: 'minimal',
+  const prod = Object.assign(common, {
+    stats: 'minimal',
+    optimization: {
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          parallel: true,
+          extractComments: false,
+        }),
+      ],
     },
-  );
-
-  prod.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      uglifyOptions: {
-        compress: {
-          drop_console: true,
-        },
-        output: {
-          comments: keepLicense,
-        },
-      },
-    }),
-  );
+  });
 
   // Required for Vue production environment
   prod.plugins.push(

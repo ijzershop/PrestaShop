@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Routing\AdminLinkBuilder;
 use PrestaShop\PrestaShop\Adapter\Routing\LegacyHelperLinkBuilder;
@@ -55,7 +55,7 @@ class HelperListCore extends Helper
     /** @var string ORDER BY clause determined by field/arrows in list header */
     public $orderBy;
 
-    /** @var string Default ORDER BY clause when $orderBy is not defined */
+    /** @var bool|string Default ORDER BY clause when `$orderBy` is not defined */
     public $_defaultOrderBy = false;
 
     /** @var array : list of vars for button delete */
@@ -68,7 +68,7 @@ class HelperListCore extends Helper
 
     protected $deleted = 0;
 
-    /** @var array $cache_lang use to cache texts in current language */
+    /** @var array use to cache texts in current language */
     public static $cache_lang = [];
 
     public $is_cms = false;
@@ -131,15 +131,41 @@ class HelperListCore extends Helper
     /** @var EntityLinkBuilderFactory */
     private $linkBuilderFactory;
 
-    public function __construct()
+    /**
+     * @var string
+     */
+    public $shopLinkType;
+
+    /**
+     * @var string Image type
+     */
+    public $imageType;
+
+    /**
+     * @var string
+     */
+    public $list_id;
+
+    /**
+     * You can use $controllerMapping to add entity/controller mapping in order to have migrated links
+     * in a legacy list (this requires to have correctly set the _legacy_link in the routing of course)
+     *
+     * exemple: $helper = new HelperList(['cart' => 'AdminCarts']);
+     *
+     * @param array $controllerMapping
+     */
+    public function __construct(array $controllerMapping = [])
     {
         $this->base_folder = 'helpers/list/';
         $this->base_tpl = 'list.tpl';
 
-        $adminLinkBuilder = new AdminLinkBuilder(Context::getContext()->link, [
+        $controllerMapping = array_merge([
             'customer' => 'AdminCustomers',
             'product' => 'AdminProducts',
-        ]);
+            'order' => 'AdminOrders',
+            'cart' => 'AdminCarts',
+        ], $controllerMapping);
+        $adminLinkBuilder = new AdminLinkBuilder(Context::getContext()->link, $controllerMapping);
         $this->linkBuilderFactory = new EntityLinkBuilderFactory([
             $adminLinkBuilder,
             new LegacyHelperLinkBuilder(),
@@ -151,10 +177,10 @@ class HelperListCore extends Helper
     /**
      * Return an html list given the data to fill it up.
      *
-     * @param array $list entries to display (rows)
+     * @param array|bool $list entries to display (rows)
      * @param array $fields_display fields (cols)
      *
-     * @return string html
+     * @return string|bool
      */
     public function generateList($list, $fields_display)
     {
@@ -221,7 +247,7 @@ class HelperListCore extends Helper
         if (isset($this->fields_list['position'])) {
             if ($this->position_identifier) {
                 if (isset($this->position_group_identifier)) {
-                    $position_group_identifier = Tools::getIsset($this->position_group_identifier) ? Tools::getValue($this->position_group_identifier) : $this->position_group_identifier;
+                    $position_group_identifier = Tools::getIsset($this->position_group_identifier) ? (int) Tools::getValue($this->position_group_identifier) : $this->position_group_identifier;
                 } else {
                     $position_group_identifier = (int) Tools::getValue('id_' . ($this->is_cms ? 'cms_' : '') . 'category', ($this->is_cms ? '1' : Category::getRootCategory()->id));
                 }
@@ -321,11 +347,11 @@ class HelperListCore extends Helper
                     $this->_list[$index][$key] = [
                         'position' => $tr[$key],
                         'position_url_down' => $this->currentIndex .
-                            (isset($key_to_get) ? '&' . $key_to_get . '=' . (int) $position_group_identifier : '') .
+                            (isset($key_to_get) ? '&' . $key_to_get . '=' . (int) ($position_group_identifier ?? 0) : '') .
                             '&' . $this->position_identifier . '=' . $id .
                             '&way=1&position=' . ((int) $tr['position'] + 1) . '&token=' . $this->token,
                         'position_url_up' => $this->currentIndex .
-                            (isset($key_to_get) ? '&' . $key_to_get . '=' . (int) $position_group_identifier : '') .
+                            (isset($key_to_get) ? '&' . $key_to_get . '=' . (int) ($position_group_identifier ?? 0) : '') .
                             '&' . $this->position_identifier . '=' . $id .
                             '&way=0&position=' . ((int) $tr['position'] - 1) . '&token=' . $this->token,
                     ];
@@ -375,15 +401,15 @@ class HelperListCore extends Helper
         $this->content_tpl->assign(array_merge($this->tpl_vars, [
             'shop_link_type' => $showShopColumn,
             'multishop_active' => $isMultiShopActive,
-            'name' => isset($name) ? $name : null,
+            'name' => $name ?? null,
             'position_identifier' => $this->position_identifier,
             'identifier' => $this->identifier,
             'table' => $this->table,
             'token' => $this->token,
             'color_on_bg' => $this->colorOnBackground,
-            'position_group_identifier' => isset($position_group_identifier) ? $position_group_identifier : false,
+            'position_group_identifier' => $position_group_identifier ?? false,
             'bulk_actions' => $this->bulk_actions,
-            'positions' => isset($positions) ? $positions : null,
+            'positions' => $positions ?? null,
             'order_by' => $this->orderBy,
             'order_way' => $this->orderWay,
             'is_cms' => $this->is_cms,
@@ -397,8 +423,8 @@ class HelperListCore extends Helper
             'has_actions' => !empty($this->actions),
             'list_skip_actions' => $this->list_skip_actions,
             'row_hover' => $this->row_hover,
-            'list_id' => isset($this->list_id) ? $this->list_id : $this->table,
-            'checked_boxes' => Tools::getValue((isset($this->list_id) ? $this->list_id : $this->table) . 'Box'),
+            'list_id' => $this->list_id ?? $this->table,
+            'checked_boxes' => Tools::getValue(($this->list_id ?? $this->table) . 'Box'),
         ]));
 
         return $this->content_tpl->fetch();
@@ -415,7 +441,15 @@ class HelperListCore extends Helper
         }
 
         if (!array_key_exists('Copy images too?', self::$cache_lang)) {
-            self::$cache_lang['Copy images too?'] = Context::getContext()->getTranslator()->trans('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', [], 'Admin.Catalog.Notification');
+            $translator = Context::getContext()->getTranslator();
+            self::$cache_lang['Copy images too?'] = $translator->trans(
+                'This will copy the images too. If you wish to proceed, click "%yes_label%". If not, click "%no_label%".',
+                [
+                    '%yes_label%' => $translator->trans('Yes', [], 'Admin.Global'),
+                    '%no_label%' => $translator->trans('No', [], 'Admin.Global'),
+                ],
+                'Admin.Catalog.Notification'
+            );
         }
 
         $duplicate = $this->currentIndex . '&' . $this->identifier . '=' . $id . '&duplicate' . $this->table;
@@ -604,10 +638,6 @@ class HelperListCore extends Helper
 
         $id_cat = (int) Tools::getValue('id_' . ($this->is_cms ? 'cms_' : '') . 'category');
 
-        if (!isset($token) || empty($token)) {
-            $token = $this->token;
-        }
-
         /* Determine total page number */
         $pagination = $this->_default_pagination;
         if (in_array((int) Tools::getValue($this->list_id . '_pagination'), $this->_pagination)) {
@@ -619,12 +649,8 @@ class HelperListCore extends Helper
         $total_pages = max(1, ceil($this->listTotal / $pagination));
 
         $identifier = Tools::getIsset($this->identifier) ? '&' . $this->identifier . '=' . (int) Tools::getValue($this->identifier) : '';
-        $order = '';
-        if (Tools::getIsset($this->table . 'Orderby')) {
-            $order = '&' . $this->table . 'Orderby=' . urlencode($this->orderBy) . '&' . $this->table . 'Orderway=' . urlencode(strtolower($this->orderWay));
-        }
 
-        $action = $this->currentIndex . $identifier . '&token=' . $token . '#' . $this->list_id;
+        $action = $this->currentIndex . $identifier . '&token=' . $this->token . '#' . $this->list_id;
 
         /* Determine current page number */
         $page = (int) Tools::getValue('submitFilter' . $this->list_id);
@@ -683,9 +709,11 @@ class HelperListCore extends Helper
                     if (is_string($value)) {
                         $value = json_decode($value, true);
                     }
-                    if (!Validate::isCleanHtml($value[0]) || !Validate::isCleanHtml($value[1])) {
+
+                    if (!isset($value[0]) || !isset($value[1]) || !Validate::isCleanHtml($value[0]) || !Validate::isCleanHtml($value[1])) {
                         $value = '';
                     }
+
                     $name = $this->list_id . 'Filter_' . (isset($params['filter_key']) ? $params['filter_key'] : $key);
                     $name_id = str_replace('!', '__', $name);
 

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class GroupCore extends ObjectModel
 {
     public $id;
 
-    /** @var string Lastname */
+    /** @var string|array<int, string> */
     public $name;
 
     /** @var string Reduction */
@@ -37,7 +37,7 @@ class GroupCore extends ObjectModel
     public $price_display_method;
 
     /** @var bool Show prices */
-    public $show_prices = 1;
+    public $show_prices = true;
 
     /** @var string Object creation date */
     public $date_add;
@@ -72,6 +72,9 @@ class GroupCore extends ObjectModel
     protected static $ps_customer_group = null;
 
     protected $webserviceParameters = [];
+
+    public const PRICE_DISPLAY_METHOD_TAX_INCL = 0;
+    public const PRICE_DISPLAY_METHOD_TAX_EXCL = 1;
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
@@ -206,7 +209,7 @@ class GroupCore extends ObjectModel
             Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', 1);
         }
 
-        return parent::update($autodate, $null_values);
+        return parent::update($null_values);
     }
 
     public function delete()
@@ -269,8 +272,8 @@ class GroupCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param $table
-     * @param $has_active_column
+     * @param string|null $table Name of table linked to entity
+     * @param bool $has_active_column True if the table has an active column
      *
      * @return bool
      */
@@ -310,8 +313,8 @@ class GroupCore extends ObjectModel
     /**
      * Adding restrictions modules to the group with id $id_group.
      *
-     * @param $id_group
-     * @param $modules
+     * @param int $id_group
+     * @param array $modules
      * @param array $shops
      *
      * @return bool
@@ -359,7 +362,7 @@ class GroupCore extends ObjectModel
 
         $res = true;
         foreach ($shops as $shop) {
-            $res &= Db::getInstance()->execute('
+            $res = $res && Db::getInstance()->execute('
 			INSERT INTO `' . _DB_PREFIX_ . 'module_group` (`id_module`, `id_shop`, `id_group`)
 			(SELECT ' . (int) $id_module . ', ' . (int) $shop . ', id_group FROM `' . _DB_PREFIX_ . 'group`)');
         }

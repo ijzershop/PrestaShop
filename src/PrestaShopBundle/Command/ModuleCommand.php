@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,24 +17,27 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Command;
 
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ModuleCommand extends ContainerAwareCommand
+class ModuleCommand extends Command
 {
     private $allowedActions = [
         'install',
@@ -48,24 +52,52 @@ class ModuleCommand extends ContainerAwareCommand
     ];
 
     /**
-     * @var \Symfony\Component\Console\Helper\FormatterHelper
+     * @var FormatterHelper
      */
     protected $formatter;
 
     /**
-     * @var \PrestaShopBundle\Translation\Translator
+     * @var TranslatorInterface
      */
     protected $translator;
 
     /**
-     * @var \Symfony\Component\Console\Input\Input
+     * @var InputInterface
      */
     protected $input;
 
     /**
-     * @var \Symfony\Component\Console\Output\Output
+     * @var OutputInterface
      */
     protected $output;
+
+    /**
+     * @var LegacyContext
+     */
+    private $context;
+
+    /**
+     * @var ModuleSelfConfigurator
+     */
+    private $moduleSelfConfigurator;
+
+    /**
+     * @var ModuleManager
+     */
+    private $moduleManager;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        LegacyContext $context,
+        ModuleSelfConfigurator $moduleSelfConfigurator,
+        ModuleManager $moduleManager
+    ) {
+        parent::__construct();
+        $this->translator = $translator;
+        $this->context = $context;
+        $this->moduleSelfConfigurator = $moduleSelfConfigurator;
+        $this->moduleManager = $moduleManager;
+    }
 
     protected function configure()
     {
@@ -80,16 +112,13 @@ class ModuleCommand extends ContainerAwareCommand
     protected function init(InputInterface $input, OutputInterface $output)
     {
         $this->formatter = $this->getHelper('formatter');
-        $this->translator = $this->getContainer()->get('translator');
         $this->input = $input;
         $this->output = $output;
-        /** @var LegacyContext $legacyContext */
-        $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
         //We need to have an employee or the module hooks don't work
         //see LegacyHookSubscriber
-        if (!$legacyContext->getContext()->employee) {
+        if (!$this->context->getContext()->employee) {
             //Even a non existing employee is fine
-            $legacyContext->getContext()->employee = new Employee(42);
+            $this->context->getContext()->employee = new Employee(42);
         }
     }
 
@@ -111,7 +140,7 @@ class ModuleCommand extends ContainerAwareCommand
                 'error'
             );
 
-            return;
+            return 1;
         }
 
         if ($action === 'configure') {
@@ -119,18 +148,19 @@ class ModuleCommand extends ContainerAwareCommand
         } else {
             $this->executeGenericModuleAction($action, $moduleName);
         }
+
+        return 0;
     }
 
     protected function executeConfigureModuleAction($moduleName, $file = null)
     {
-        $moduleSelfConfigurator = $this->getContainer()->get('prestashop.adapter.module.self_configurator');
-        $moduleSelfConfigurator->module($moduleName);
+        $this->moduleSelfConfigurator->module($moduleName);
         if ($file) {
-            $moduleSelfConfigurator->file($file);
+            $this->moduleSelfConfigurator->file($file);
         }
 
         // Check if validation passed and exit in case of errors
-        $errors = $moduleSelfConfigurator->validate();
+        $errors = $this->moduleSelfConfigurator->validate();
         if (!empty($errors)) {
             // Display errors as a list
             $errors = array_map(function ($val) { return '- ' . $val; }, $errors);
@@ -146,7 +176,7 @@ class ModuleCommand extends ContainerAwareCommand
         }
 
         // Actual configuration
-        $moduleSelfConfigurator->configure();
+        $this->moduleSelfConfigurator->configure();
         $this->displayMessage(
             $this->translator->trans('Configuration successfully applied.', [], 'Admin.Modules.Notification'),
             'info'
@@ -155,11 +185,7 @@ class ModuleCommand extends ContainerAwareCommand
 
     protected function executeGenericModuleAction($action, $moduleName)
     {
-        /**
-         * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
-         */
-        $moduleManager = $this->getContainer()->get('prestashop.module.manager');
-        if ($moduleManager->{$action}($moduleName)) {
+        if ($this->moduleManager->{$action}($moduleName)) {
             $this->displayMessage(
                 $this->translator->trans(
                     '%action% action on module %module% succeeded.',
@@ -173,7 +199,7 @@ class ModuleCommand extends ContainerAwareCommand
             return;
         }
 
-        $error = $moduleManager->getError($moduleName);
+        $error = $this->moduleManager->getError($moduleName);
         $this->displayMessage(
             $this->translator->trans(
                 'Cannot %action% module %module%. %error_details%',

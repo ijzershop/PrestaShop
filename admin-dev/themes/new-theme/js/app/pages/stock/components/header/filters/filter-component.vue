@@ -1,10 +1,11 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <div class="filter-container">
@@ -74,13 +74,14 @@
   </div>
 </template>
 
-<script>
-  import PSTags from '@app/widgets/ps-tags';
-  import PSTreeItem from '@app/widgets/ps-tree/ps-tree-item';
-  import PSTree from '@app/widgets/ps-tree/ps-tree';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSTags from '@app/widgets/ps-tags.vue';
+  import PSTreeItem from '@app/widgets/ps-tree/ps-tree-item.vue';
+  import PSTree from '@app/widgets/ps-tree/ps-tree.vue';
   import {EventBus} from '@app/utils/event-bus';
 
-  export default {
+  const FilterComponent = Vue.extend({
     props: {
       placeholder: {
         type: String,
@@ -94,6 +95,7 @@
       label: {
         type: String,
         required: true,
+        default: '',
       },
       list: {
         type: Array,
@@ -101,13 +103,13 @@
       },
     },
     computed: {
-      isOverview() {
+      isOverview(): boolean {
         return this.$route.name === 'overview';
       },
-      hasPlaceholder() {
+      hasPlaceholder(): boolean {
         return !this.tags.length;
       },
-      PSTreeTranslations() {
+      PSTreeTranslations(): {expand: string, reduce: string} {
         return {
           expand: this.trans('tree_expand'),
           reduce: this.trans('tree_reduce'),
@@ -115,9 +117,19 @@
       },
     },
     methods: {
-      getItems() {
-        const matchList = [];
-        this.list.filter((data) => {
+      reset(): void {
+        this.tags = [];
+      },
+      getItems(): Array<any> {
+        /* eslint-disable camelcase */
+        const matchList: Array<{
+          id: number,
+          name: string,
+          supplier_id: number,
+          visible: boolean,
+        }> = [];
+        /* eslint-enable camelcase */
+        this.list.filter((data: any) => {
           const label = data[this.label].toLowerCase();
           data.visible = false;
           if (label.match(this.currentVal)) {
@@ -137,7 +149,7 @@
         }
         return this.list;
       },
-      onCheck(obj) {
+      onCheck(obj: any): void {
         const itemLabel = obj.item[this.label];
         const filterType = this.hasChildren ? 'category' : 'supplier';
 
@@ -145,6 +157,7 @@
           this.tags.push(itemLabel);
         } else {
           const index = this.tags.indexOf(itemLabel);
+
           if (this.splice) {
             this.tags.splice(index, 1);
           }
@@ -156,11 +169,12 @@
           this.$emit('active', [], filterType);
         }
       },
-      onTyping(val) {
+      onTyping(val: string): void {
         this.currentVal = val.toLowerCase();
       },
-      onTagChanged(tag) {
+      onTagChanged(tag: any): void {
         let checkedTag = tag;
+
         if (this.tags.indexOf(this.currentVal) !== -1) {
           this.tags.pop();
         }
@@ -171,13 +185,14 @@
         EventBus.$emit('toggleCheckbox', checkedTag);
         this.currentVal = '';
       },
-      filterList(tags) {
-        const idList = [];
+      filterList(tags: Array<any>): Array<number> {
+        const idList: Array<number> = [];
         const {categoryList} = this.$store.state;
         const list = this.hasChildren ? categoryList : this.list;
 
-        list.map((data) => {
+        list.map((data: Record<string, any>) => {
           const isInIdList = idList.indexOf(Number(data[this.itemId])) === -1;
+
           if (tags.indexOf(data[this.label]) !== -1 && isInIdList) {
             idList.push(Number(data[this.itemId]));
           }
@@ -189,8 +204,8 @@
     data() {
       return {
         currentVal: '',
-        match: null,
-        tags: [],
+        match: null as null | Record<string, any>,
+        tags: [] as Array<any>,
         splice: true,
         hasChildren: false,
       };
@@ -200,5 +215,9 @@
       PSTree,
       PSTreeItem,
     },
-  };
+  });
+
+  export type FilterComponentInstanceType = InstanceType<typeof FilterComponent> | undefined;
+
+  export default FilterComponent;
 </script>

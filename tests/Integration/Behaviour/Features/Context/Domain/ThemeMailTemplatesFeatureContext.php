@@ -1,11 +1,36 @@
 <?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
+
+declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
-use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameWithEmailsChoiceProvider;
 
 class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
 {
@@ -18,7 +43,7 @@ class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
      *
      * @param TableNode $table
      */
-    public function generateEmailsWithTheFollowingDetails(TableNode $table)
+    public function generateEmailsWithTheFollowingDetails(TableNode $table): void
     {
         $testCaseData = $table->getRowsHash();
 
@@ -52,13 +77,9 @@ class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
      *
      * @return array
      */
-    private function mapGenerateThemeMailTemplatesData(array $testCaseData, array $data)
+    private function mapGenerateThemeMailTemplatesData(array $testCaseData, array $data): array
     {
-        /** @var ThemeByNameWithEmailsChoiceProvider $themeWithEmailsChoiceProvider */
-        $themeWithEmailsChoiceProvider =
-            $this->getContainer()->get('prestashop.core.form.choice_provider.theme_by_name_with_emails');
-        $AvailableLanguages = $themeWithEmailsChoiceProvider->getChoices();
-        $data['themeName'] = $AvailableLanguages[$testCaseData['Email theme']];
+        $data['themeName'] = $testCaseData['Email theme'];
 
         // have not found locale choice provider
         $data['languageLocale'] = array_flip(self::LANGUAGES_MAP)[$data['Language']];

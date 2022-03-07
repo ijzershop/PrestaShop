@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -129,7 +129,7 @@ class CMSCore extends ObjectModel
      * Get links.
      *
      * @param int $idLang Language ID
-     * @param null $selection
+     * @param array|null $selection
      * @param bool $active
      * @param Link|null $link
      *
@@ -187,8 +187,8 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param $way
-     * @param $position
+     * @param int|null $way
+     * @param int|null $position
      *
      * @return bool
      */
@@ -232,7 +232,7 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param $idCategory
+     * @param int $idCategory
      *
      * @return bool
      */
@@ -258,14 +258,13 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param $idCategory
+     * @param int $idCategory
      *
      * @return false|string|null
      */
     public static function getLastPosition($idCategory)
     {
-        $sql = '
-		SELECT MAX(position) + 1
+        $sql = 'SELECT MAX(position) + 1
 		FROM `' . _DB_PREFIX_ . 'cms`
 		WHERE `id_cms_category` = ' . (int) $idCategory;
 
@@ -273,10 +272,10 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param null $idLang
-     * @param null $idCmsCategory
+     * @param int|null $idLang
+     * @param int|null $idCmsCategory
      * @param bool $active
-     * @param null $idShop
+     * @param int|null $idShop
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
@@ -312,7 +311,7 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param $idCms
+     * @param int $idCms
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */

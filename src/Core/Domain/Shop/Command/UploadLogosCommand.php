@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\Command;
@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedMailAndInvoiceImageExtensionException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -90,12 +91,12 @@ class UploadLogosCommand
     /**
      * @param UploadedFile $uploadedInvoiceLogo
      *
-     * @throws NotSupportedLogoImageExtensionException
+     * @throws NotSupportedMailAndInvoiceImageExtensionException
      * @throws FileUploadException
      */
     public function setUploadedInvoiceLogo(UploadedFile $uploadedInvoiceLogo)
     {
-        $this->assertIsValidLogoImageExtension($uploadedInvoiceLogo);
+        $this->assertIsValidMailAndInvoiceImageExtension($uploadedInvoiceLogo);
         $this->assertNativeFileValidationDoesNotFail($uploadedInvoiceLogo);
 
         $this->uploadedInvoiceLogo = $uploadedInvoiceLogo;
@@ -112,12 +113,12 @@ class UploadLogosCommand
     /**
      * @param UploadedFile $uploadedMailLogo
      *
-     * @throws NotSupportedLogoImageExtensionException
+     * @throws NotSupportedMailAndInvoiceImageExtensionException
      * @throws FileUploadException
      */
     public function setUploadedMailLogo(UploadedFile $uploadedMailLogo)
     {
-        $this->assertIsValidLogoImageExtension($uploadedMailLogo);
+        $this->assertIsValidMailAndInvoiceImageExtension($uploadedMailLogo);
         $this->assertNativeFileValidationDoesNotFail($uploadedMailLogo);
 
         $this->uploadedMailLogo = $uploadedMailLogo;
@@ -153,11 +154,32 @@ class UploadLogosCommand
      *
      * @throws NotSupportedLogoImageExtensionException
      */
-    private function assertIsValidLogoImageExtension(UploadedFile $uploadedFile)
+    private function assertIsValidLogoImageExtension(UploadedFile $uploadedFile): void
     {
         $extension = $uploadedFile->getClientOriginalExtension();
         if (!in_array($extension, ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS, true)) {
-            throw new NotSupportedLogoImageExtensionException(sprintf('Not supported "%s" image logo extension. Supported extensions are ""', implode(',', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS)));
+            throw new NotSupportedLogoImageExtensionException(sprintf(
+                'Not supported "%s" image logo extension. Supported extensions are "%s"',
+                $extension,
+                implode(',', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS
+            )));
+        }
+    }
+
+    /**
+     * @param UploadedFile $uploadedFile
+     *
+     * @throws NotSupportedMailAndInvoiceImageExtensionException
+     */
+    private function assertIsValidMailAndInvoiceImageExtension(UploadedFile $uploadedFile): void
+    {
+        $extension = $uploadedFile->getClientOriginalExtension();
+        if (!in_array($extension, ShopLogoSettings::AVAILABLE_MAIL_AND_INVOICE_LOGO_IMAGE_EXTENSIONS, true)) {
+            throw new NotSupportedMailAndInvoiceImageExtensionException(sprintf(
+                'Not supported "%s" image logo extension. Supported extensions are "%s"',
+                $extension,
+                implode(',', ShopLogoSettings::AVAILABLE_MAIL_AND_INVOICE_LOGO_IMAGE_EXTENSIONS
+            )));
         }
     }
 
@@ -168,7 +190,7 @@ class UploadLogosCommand
      *
      * @throws FileUploadException
      */
-    private function assertNativeFileValidationDoesNotFail(UploadedFile $uploadedFile)
+    private function assertNativeFileValidationDoesNotFail(UploadedFile $uploadedFile): void
     {
         $errorCode = $uploadedFile->getError();
 

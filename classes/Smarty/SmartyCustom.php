@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class SmartyCustomCore extends Smarty
 {
@@ -63,7 +63,7 @@ class SmartyCustomCore extends Smarty
     {
         Db::getInstance()->execute('REPLACE INTO `' . _DB_PREFIX_ . 'smarty_last_flush` (`type`, `last_flush`) VALUES (\'template\', FROM_UNIXTIME(' . time() . '))');
 
-        return $this->delete_from_lazy_cache(null, null, null);
+        return $this->delete_from_lazy_cache('', null, null);
     }
 
     /**
@@ -109,7 +109,7 @@ class SmartyCustomCore extends Smarty
     {
         $this->check_compile_cache_invalidation();
 
-        return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+        return parent::fetch($template, $cache_id, $compile_id, $parent);
     }
 
     /**
@@ -129,7 +129,7 @@ class SmartyCustomCore extends Smarty
      * Handle the lazy template cache invalidation.
      *
      * @param string $template template name
-     * @param string $cache_id cache id
+     * @param string|array|object|null $cache_id cache id
      * @param string $compile_id compile id
      */
     public function check_template_invalidation($template, $cache_id, $compile_id)
@@ -269,10 +269,10 @@ class SmartyCustomCore extends Smarty
      * Delete the current template from the lazy cache or the whole cache if no template name is given.
      *
      * @param string $template template name
-     * @param string $cache_id cache id
-     * @param string $compile_id compile id
+     * @param string|null $cache_id cache id
+     * @param string|null $compile_id compile id
      *
-     * @return bool
+     * @return bool|int
      */
     public function delete_from_lazy_cache($template, $cache_id, $compile_id)
     {
@@ -281,8 +281,7 @@ class SmartyCustomCore extends Smarty
         }
 
         $template_md5 = md5($template);
-        $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache`
-							WHERE template_hash=\'' . pSQL($template_md5) . '\'';
+        $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache` WHERE template_hash=\'' . pSQL($template_md5) . '\'';
 
         if ($cache_id != null) {
             $sql .= ' AND cache_id LIKE "' . pSQL((string) $cache_id) . '%"';

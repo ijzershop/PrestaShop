@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -35,7 +35,6 @@ class AdminStatesControllerCore extends AdminController
         $this->table = 'state';
         $this->className = 'State';
         $this->lang = false;
-        $this->requiredDatabase = true;
 
         parent::__construct();
 
@@ -58,12 +57,10 @@ class AdminStatesControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         $countries_array = $zones_array = [];
-        $this->zones = Zone::getZones();
-        $this->countries = Country::getCountries($this->context->language->id, false, true, false);
-        foreach ($this->zones as $zone) {
+        foreach (Zone::getZones() as $zone) {
             $zones_array[$zone['id_zone']] = $zone['name'];
         }
-        foreach ($this->countries as $country) {
+        foreach (Country::getCountries($this->context->language->id, false, true, false) as $country) {
             $countries_array[$country['id_country']] = $country['name'];
         }
 
@@ -112,7 +109,7 @@ class AdminStatesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display)) {
+        if ($this->display === null || $this->display === 'list') {
             $this->page_header_toolbar_btn['new_state'] = [
                 'href' => self::$currentIndex . '&addstate&token=' . $this->token,
                 'desc' => $this->trans('Add new state', [], 'Admin.International.Feature'),
@@ -134,6 +131,15 @@ class AdminStatesControllerCore extends AdminController
 
     public function renderForm()
     {
+        // display multistore information message if multistore is used
+        if ($this->container->get('prestashop.adapter.multistore_feature')->isUsed()) {
+            $this->informations[] = $this->trans(
+                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                [],
+                'Admin.Notifications.Info'
+            );
+        }
+
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('States', [], 'Admin.International.Feature'),
@@ -194,12 +200,12 @@ class AdminStatesControllerCore extends AdminController
                         [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Enabled', [], 'Admin.Global') . '" title="' . $this->trans('Enabled', [], 'Admin.Global') . '" />',
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('Disabled', [], 'Admin.Global') . '" title="' . $this->trans('Disabled', [], 'Admin.Global') . '" />',
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],

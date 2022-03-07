@@ -1,10 +1,11 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <div
@@ -53,7 +53,10 @@
           </div>
         </form>
       </div>
-      <Filters @applyFilter="applyFilter" />
+      <Filters
+        ref="filters"
+        @applyFilter="applyFilter"
+      />
     </div>
     <div class="col-md-4 alert-box">
       <transition name="fade">
@@ -71,14 +74,15 @@
   </div>
 </template>
 
-<script>
-  import PSTags from '@app/widgets/ps-tags';
-  import PSButton from '@app/widgets/ps-button';
-  import PSAlert from '@app/widgets/ps-alert';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSTags from '@app/widgets/ps-tags.vue';
+  import PSButton from '@app/widgets/ps-button.vue';
+  import PSAlert from '@app/widgets/ps-alert.vue';
   import {EventBus} from '@app/utils/event-bus';
-  import Filters from './filters';
+  import Filters, {FiltersInstanceType} from './filters.vue';
 
-  export default {
+  const Search = Vue.extend({
     components: {
       Filters,
       PSTags,
@@ -86,22 +90,26 @@
       PSAlert,
     },
     computed: {
-      error() {
+      filtersRef(): FiltersInstanceType {
+        return <FiltersInstanceType>(this.$refs.filters);
+      },
+      error(): boolean {
         return (this.alertType === 'ALERT_TYPE_DANGER');
       },
     },
     methods: {
-      onClick() {
-        const {tag} = this.$refs.psTags;
-        this.$refs.psTags.add(tag);
+      onClick(): void {
+        const refPsTags = this.$refs.psTags as VTags;
+        const {tag} = refPsTags;
+        refPsTags.add(tag);
       },
-      onSearch() {
+      onSearch(): void {
         this.$emit('search', this.tags);
       },
-      applyFilter(filters) {
+      applyFilter(filters: Array<any>): void {
         this.$emit('applyFilter', filters);
       },
-      onCloseAlert() {
+      onCloseAlert(): void {
         this.showAlert = false;
       },
     },
@@ -111,7 +119,7 @@
       },
     },
     mounted() {
-      EventBus.$on('displayBulkAlert', (type) => {
+      EventBus.$on('displayBulkAlert', (type: string) => {
         this.alertType = type === 'success' ? 'ALERT_TYPE_SUCCESS' : 'ALERT_TYPE_DANGER';
         this.showAlert = true;
         setTimeout(() => {
@@ -119,11 +127,17 @@
         }, 5000);
       });
     },
-    data: () => ({
-      tags: [],
-      showAlert: false,
-      alertType: 'ALERT_TYPE_DANGER',
-      duration: false,
-    }),
-  };
+    data() {
+      return {
+        tags: [],
+        showAlert: false,
+        alertType: 'ALERT_TYPE_DANGER',
+        duration: false,
+      };
+    },
+  });
+
+  export type SearchInstanceType = InstanceType<typeof Search> | undefined;
+
+  export default Search;
 </script>

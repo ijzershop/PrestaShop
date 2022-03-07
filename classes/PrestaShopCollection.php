@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -119,12 +119,12 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * @param string $on
      * @param int $type
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function join($association, $on = '', $type = null)
     {
         if (!$association) {
-            return;
+            return $this;
         }
 
         if (!isset($this->join_list[$association])) {
@@ -155,9 +155,9 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * @param string $field Field name
      * @param string $operator List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
      * @param mixed $value
-     * @param string $type where|having
+     * @param string $method where|having
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function where($field, $operator, $value, $method = 'where')
     {
@@ -223,7 +223,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param string $sql
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function sqlWhere($sql)
     {
@@ -239,7 +239,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * @param string $operator List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
      * @param mixed $value
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function having($field, $operator, $value)
     {
@@ -251,7 +251,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param string $sql
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function sqlHaving($sql)
     {
@@ -266,7 +266,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * @param string $field Field name
      * @param string $order asc|desc
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function orderBy($field, $order = 'asc')
     {
@@ -284,7 +284,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param string $sql
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function sqlOrderBy($sql)
     {
@@ -298,7 +298,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param string $field Field name
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function groupBy($field)
     {
@@ -312,7 +312,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param string $sql
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function sqlGroupBy($sql)
     {
@@ -326,7 +326,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param bool $display_query If true, query will be displayed (for debug purpose)
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function getAll($display_query = false)
     {
@@ -389,7 +389,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Retrieve the first result.
      *
-     * @return ObjectModel|false
+     * @return ObjectModel|bool
      */
     public function getFirst()
     {
@@ -399,6 +399,21 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         }
 
         return $this[0];
+    }
+
+    /**
+     * Retrieve the last result.
+     *
+     * @return ObjectModel|false
+     */
+    public function getLast()
+    {
+        $this->getAll();
+        if (!count($this)) {
+            return false;
+        }
+
+        return $this[count($this) - 1];
     }
 
     /**
@@ -491,7 +506,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @see ArrayAccess::offsetExists()
      *
-     * @param $offset
+     * @param mixed $offset
      *
      * @return bool
      */
@@ -507,7 +522,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @see ArrayAccess::offsetGet()
      *
-     * @param $offset
+     * @param mixed $offset
      *
      * @return ObjectModel
      */
@@ -526,8 +541,8 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @see ArrayAccess::offsetSet()
      *
-     * @param $offset
-     * @param $value
+     * @param mixed $offset
+     * @param ObjectModel $value
      */
     public function offsetSet($offset, $value)
     {
@@ -548,7 +563,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @see ArrayAccess::offsetUnset()
      *
-     * @param $offset
+     * @param mixed $offset
      */
     public function offsetUnset($offset)
     {
@@ -573,6 +588,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             $definition = $this->definition;
             $split = explode('.', $association);
             $is_lang = false;
+            $asso = '';
             for ($i = 0, $total_association = count($split); $i < $total_association; ++$i) {
                 $asso = $split[$i];
 
@@ -736,7 +752,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param int $page_number
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function setPageNumber($page_number)
     {
@@ -755,7 +771,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param int $page_size
      *
-     * @return PrestaShopCollection
+     * @return $this
      */
     public function setPageSize($page_size)
     {

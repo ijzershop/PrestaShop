@@ -1,10 +1,11 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale={(isset($viewport_scale)) ? $viewport_scale : '1'}">
@@ -69,15 +69,20 @@
     var employee_token = '{getAdminToken tab='AdminEmployees'}';
     var choose_language_translate = '{l s='Choose language:' js=1 d='Admin.Actions'}';
     var default_language = '{$default_language|intval}';
-    var admin_modules_link = '{$link->getAdminLink("AdminModulesSf", true, ['route' => "admin_module_catalog_post"])|addslashes}';
+    var admin_modules_link = '{$link->getAdminLink("AdminModulesSf", true, ['route' => "admin_module_manage"])|addslashes}';
     var admin_notification_get_link = '{$link->getAdminLink("AdminCommon")|addslashes}';
     var admin_notification_push_link = adminNotificationPushLink = '{$link->getAdminLink("AdminCommon", true, ['route' => 'admin_common_notifications_ack'])|addslashes}';
     var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
     var update_success_msg = '{l s='Update successful' js=1 d='Admin.Notifications.Success'}';
-    var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.' js=1 d='Admin.Notifications.Warning'}';
     var search_product_msg = '{l s='Search for a product' js=1 d='Admin.Orderscustomers.Feature'}';
   </script>
 {/if}
+
+{$admin_path = "{__PS_BASE_URI__}{basename(_PS_ADMIN_DIR_)}/themes/new-theme/public/"}
+
+{$preloadFilePath = "../public/preload.tpl"}
+
+{include file=$preloadFilePath admin_dir=$admin_path}
 
 {if isset($css_files)}
   {foreach from=$css_files key=css_uri item=media}

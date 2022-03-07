@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
@@ -36,7 +36,8 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
+use Twig\Error\LoaderError;
 
 /**
  * MailTemplateTwigRenderer is a basic implementation of MailTemplateRendererInterface
@@ -44,8 +45,8 @@ use Symfony\Component\Templating\EngineInterface;
  */
 class MailTemplateTwigRenderer implements MailTemplateRendererInterface
 {
-    /** @var EngineInterface */
-    private $engine;
+    /** @var Environment */
+    private $twig;
 
     /** @var LayoutVariablesBuilderInterface */
     private $variablesBuilder;
@@ -53,22 +54,22 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     /** @var HookDispatcherInterface */
     private $hookDispatcher;
 
-    /** @var TransformationInterface[] */
+    /** @var TransformationCollection */
     private $transformations;
 
     /**
-     * @param EngineInterface $engine
+     * @param Environment $twig
      * @param LayoutVariablesBuilderInterface $variablesBuilder
      * @param HookDispatcherInterface $hookDispatcher
      *
      * @throws TypeException
      */
     public function __construct(
-        EngineInterface $engine,
+        Environment $twig,
         LayoutVariablesBuilderInterface $variablesBuilder,
         HookDispatcherInterface $hookDispatcher
     ) {
-        $this->engine = $engine;
+        $this->twig = $twig;
         $this->variablesBuilder = $variablesBuilder;
         $this->hookDispatcher = $hookDispatcher;
         $this->transformations = new TransformationCollection();
@@ -126,11 +127,13 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         } else {
             $layoutPath = !empty($layout->getTxtPath()) ? $layout->getTxtPath() : $layout->getHtmlPath();
         }
-        if (!file_exists($layoutPath)) {
+
+        try {
+            $renderedTemplate = $this->twig->render($layoutPath, $layoutVariables);
+        } catch (LoaderError $e) {
             throw new FileNotFoundException(sprintf('Could not find layout file: %s', $layoutPath));
         }
 
-        $renderedTemplate = $this->engine->render($layoutPath, $layoutVariables);
         $templateTransformations = $this->getMailLayoutTransformations($layout, $templateType);
         /** @var TransformationInterface $transformation */
         foreach ($templateTransformations as $transformation) {
@@ -153,9 +156,16 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      */
     private function getMailLayoutTransformations(LayoutInterface $mailLayout, $templateType)
     {
+        $themeName = '';
+        if (preg_match('#mails/themes/([^/]+)/#', $mailLayout->getHtmlPath(), $matches)) {
+            $themeName = $matches[1];
+        }
         $templateTransformations = new TransformationCollection();
         /** @var TransformationInterface $transformation */
         foreach ($this->transformations as $transformation) {
+            if (get_class($transformation) == 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation' && $themeName == 'modern') {
+                continue;
+            }
             if ($templateType !== $transformation->getType()) {
                 continue;
             }

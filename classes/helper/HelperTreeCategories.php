@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class HelperTreeCategoriesCore extends TreeCore
 {
@@ -143,7 +143,7 @@ class HelperTreeCategoriesCore extends TreeCore
                     }
                 }
 
-                $tree = Category::getCategoryInformations([$root_category], $lang);
+                $tree = Category::getCategoryInformation([$root_category], $lang);
 
                 $children = $this->fillTree($categories, $root_category);
 
@@ -256,6 +256,13 @@ class HelperTreeCategoriesCore extends TreeCore
         return $this->_root_category;
     }
 
+    /**
+     * @param array<int> $value
+     *
+     * @return self
+     *
+     * @throws PrestaShopException
+     */
     public function setSelectedCategories($value)
     {
         if (!is_array($value)) {
@@ -291,7 +298,7 @@ class HelperTreeCategoriesCore extends TreeCore
             } elseif ($this->getContext()->shop->id) {
                 $this->setShop(new Shop($this->getContext()->shop->id));
             } elseif (!Shop::isFeatureActive()) {
-                $this->setShop(new Shop(Configuration::get('PS_SHOP_DEFAULT')));
+                $this->setShop(new Shop((int) Configuration::get('PS_SHOP_DEFAULT')));
             } else {
                 $this->setShop(new Shop(0));
             }
@@ -371,14 +378,14 @@ class HelperTreeCategoriesCore extends TreeCore
         }
 
         $collapse_all = new TreeToolbarLink(
-            'Collapse All',
+            $this->translator->trans('Collapse all', [], 'Admin.Actions'),
             '#',
             '$(\'#' . $this->getId() . '\').tree(\'collapseAll\');$(\'#collapse-all-' . $this->getId() . '\').hide();$(\'#expand-all-' . $this->getId() . '\').show(); return false;',
             'icon-collapse-alt'
         );
         $collapse_all->setAttribute('id', 'collapse-all-' . $this->getId());
         $expand_all = new TreeToolbarLink(
-            'Expand All',
+            $this->translator->trans('Expand all', [], 'Admin.Actions'),
             '#',
             '$(\'#' . $this->getId() . '\').tree(\'expandAll\');$(\'#collapse-all-' . $this->getId() . '\').show();$(\'#expand-all-' . $this->getId() . '\').hide(); return false;',
             'icon-expand-alt'
@@ -389,14 +396,14 @@ class HelperTreeCategoriesCore extends TreeCore
 
         if ($this->useCheckBox()) {
             $check_all = new TreeToolbarLink(
-                'Check All',
+                $this->translator->trans('Check all', [], 'Admin.Actions'),
                 '#',
                 'checkAllAssociatedCategories($(\'#' . $this->getId() . '\')); return false;',
                 'icon-check-sign'
             );
             $check_all->setAttribute('id', 'check-all-' . $this->getId());
             $uncheck_all = new TreeToolbarLink(
-                'Uncheck All',
+                $this->translator->trans('Uncheck all', [], 'Admin.Actions'),
                 '#',
                 'uncheckAllAssociatedCategories($(\'#' . $this->getId() . '\')); return false;',
                 'icon-check-empty'

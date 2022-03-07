@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\TestCase;
@@ -40,25 +40,28 @@ class PhpErrorsCounter
      */
     public function registerErrorHandler()
     {
-        set_error_handler(function ($errorType) {
-            switch ($errorType) {
-                case E_WARNING:
-                    $this->warnings++;
+        set_error_handler([$this, 'errorHandler'], E_ALL);
+    }
+
+    public function errorHandler(int $errorType, string $errstr, string $errfile, int $errline, array $errcontext)
+    {
+        switch ($errorType) {
+            case E_WARNING:
+                $this->warnings++;
                 break;
-                case E_DEPRECATED:
-                case E_USER_DEPRECATED:
-                    $this->deprecations++;
+            case E_DEPRECATED:
+            case E_USER_DEPRECATED:
+                $this->deprecations++;
                 break;
-                case E_ERROR:
-                    $this->errors++;
+            case E_ERROR:
+                $this->errors++;
                 break;
-                case E_NOTICE:
-                    $this->notices++;
+            case E_NOTICE:
+                $this->notices++;
                 break;
-                default:
-                    // nothing to do.
-            }
-        }, E_ALL);
+            default:
+                // nothing to do.
+        }
     }
 
     public function restoreErrorHandler()

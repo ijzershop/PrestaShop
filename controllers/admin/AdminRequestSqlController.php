@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -51,13 +51,12 @@ class AdminRequestSqlControllerCore extends AdminController
         $this->table = 'request_sql';
         $this->className = 'RequestSql';
         $this->lang = false;
-        $this->export = true;
 
         parent::__construct();
 
         $this->fields_list = [
             'id_request_sql' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'class' => 'fixed-width-xs'],
-            'name' => ['title' => $this->trans('SQL query Name', [], 'Admin.Advparameters.Feature')],
+            'name' => ['title' => $this->trans('SQL query name', [], 'Admin.Advparameters.Feature')],
             'sql' => [
                 'title' => $this->trans('SQL query', [], 'Admin.Advparameters.Feature'),
                 'filter_key' => 'a!sql',
@@ -127,10 +126,10 @@ class AdminRequestSqlControllerCore extends AdminController
         $this->displayInformation('
 		<strong>' . $this->trans('How do I create a new SQL query?', [], 'Admin.Advparameters.Help') . '</strong><br />
 		<ul>
-			<li>' . $this->trans('Click "Add New".', [], 'Admin.Advparameters.Help') . '</li>
-			<li>' . $this->trans('Fill in the fields and click "Save".', [], 'Admin.Advparameters.Help') . '</li>
-			<li>' . $this->trans('You can then view the query results by clicking on the Edit action in the dropdown menu', [], 'Admin.Advparameters.Help') . ' <i class="icon-pencil"></i></li>
-			<li>' . $this->trans('You can also export the query results as a CSV file by clicking on the Export button', [], 'Admin.Advparameters.Help') . ' <i class="icon-cloud-upload"></i></li>
+			<li>' . $this->trans('Click "%add_new_label%".', ['%add_new_label%' => $this->trans('Add new SQL query', [], 'Admin.Advparameters.Feature')], 'Admin.Advparameters.Help') . '</li>
+			<li>' . $this->trans('Fill in the fields and click "%save_label%".', ['%save_label%' => $this->trans('Save', [], 'Admin.Actions')], 'Admin.Advparameters.Help') . '</li>
+			<li>' . $this->trans('You can then view the query results by clicking on the "%view_label%" action in the dropdown menu', ['%view_label%' => $this->trans('View', [], 'Admin.Global')], 'Admin.Advparameters.Help') . ' <i class="icon-pencil"></i></li>
+			<li>' . $this->trans('You can also export the query results as a CSV file by clicking on the "%export_label%" button', ['%export_label%' => $this->trans('Export', [], 'Admin.Actions')], 'Admin.Advparameters.Help') . ' <i class="icon-cloud-upload"></i></li>
 		</ul>');
 
         $this->addRowAction('export');
@@ -179,6 +178,7 @@ class AdminRequestSqlControllerCore extends AdminController
     public function postProcess()
     {
         /* PrestaShop demo mode */
+        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 
@@ -196,6 +196,7 @@ class AdminRequestSqlControllerCore extends AdminController
     public function ajaxProcess()
     {
         /* PrestaShop demo mode */
+        /* @phpstan-ignore-next-line  */
         if (_PS_MODE_DEMO_) {
             die($this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error'));
         }
@@ -216,13 +217,13 @@ class AdminRequestSqlControllerCore extends AdminController
 
     public function renderView()
     {
-        /** @var RequestSql $obj */
         if (!($obj = $this->loadObject(true))) {
             return;
         }
-
+        /** @var RequestSql $obj */
         $view = [];
         if ($results = Db::getInstance()->executeS($obj->sql)) {
+            $tab_key = [];
             foreach (array_keys($results[0]) as $key) {
                 $tab_key[] = $key;
             }
@@ -262,7 +263,7 @@ class AdminRequestSqlControllerCore extends AdminController
     /**
      * Display export action link.
      *
-     * @param $token
+     * @param string $token
      * @param int $id
      *
      * @return string
@@ -331,12 +332,12 @@ class AdminRequestSqlControllerCore extends AdminController
     }
 
     /**
-     * Genrating a export file.
+     * Generating an export file.
      */
     public function processExport($textDelimiter = '"')
     {
         $id = Tools::getValue($this->identifier);
-        $export_dir = defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ . '/export/' : _PS_ADMIN_DIR_ . '/export/';
+        $export_dir = _PS_ADMIN_DIR_ . '/export/';
         if (!Validate::isFileName($id)) {
             die(Tools::displayError());
         }
@@ -346,6 +347,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
             if ($sql) {
                 $results = Db::getInstance()->executeS($sql[0]['sql']);
+                $tab_key = [];
                 foreach (array_keys($results[0]) as $key) {
                     $tab_key[] = $key;
                     fwrite($csv, $key . ';');
@@ -383,7 +385,7 @@ class AdminRequestSqlControllerCore extends AdminController
     /**
      * Display all errors.
      *
-     * @param $e : array of errors
+     * @param array $e Array of errors
      */
     public function displayError($e)
     {

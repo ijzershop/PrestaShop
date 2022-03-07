@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,13 +17,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\Builder;
 
@@ -33,29 +35,30 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormRegistryInterface;
 
 class FormBuilderFactoryTest extends TestCase
 {
-    public function testCanBeConstructed()
+    public function testCanBeConstructed(): void
     {
         $factory = new FormBuilderFactory(
             $this->createMock(FormFactoryInterface::class),
-            $this->createMock(HookDispatcherInterface::class)
+            $this->createMock(HookDispatcherInterface::class),
+            $this->createMock(FormRegistryInterface::class)
         );
 
         $this->assertInstanceOf(FormBuilderFactoryInterface::class, $factory);
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         // constructor mocks
-        $formFactoryMock = $this->createMock(FormFactoryInterface::class);
-        $hookDispatcherMock = $this->createMock(HookDispatcherInterface::class);
         $dataProviderMock = $this->createMock(FormDataProviderInterface::class);
 
         $factory = new FormBuilderFactory(
-            $formFactoryMock,
-            $hookDispatcherMock
+            $this->createMock(FormFactoryInterface::class),
+            $this->createMock(HookDispatcherInterface::class),
+            $this->createMock(FormRegistryInterface::class)
         );
 
         $builder = $factory->create('a', $dataProviderMock);

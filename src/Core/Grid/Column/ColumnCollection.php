@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
@@ -39,12 +39,12 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     /**
      * @internal
      */
-    const POSITION_AFTER = 'after';
+    public const POSITION_AFTER = 'after';
 
     /**
      * @internal
      */
-    const POSITION_BEFORE = 'before';
+    public const POSITION_BEFORE = 'before';
 
     /**
      * {@inheritdoc}
@@ -148,15 +148,16 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
             throw new ColumnNotFoundException(sprintf('Cannot insert new column into collection. Column with id "%s" was not found.', $id));
         }
 
-        $existingColumnKeyPosition = array_search($id, array_keys($this->items));
+        $existingColumnKeyPosition = (int) array_search($id, array_keys($this->items));
 
         if (self::POSITION_AFTER === $position) {
             ++$existingColumnKeyPosition;
         }
 
-        $columns = array_slice($this->items, 0, $existingColumnKeyPosition, true) +
-            [$newColumn->getId() => $newColumn] +
-            array_slice($this->items, $existingColumnKeyPosition, null, true);
+        $columns = array_slice($this->items, 0, $existingColumnKeyPosition, true)
+            + [$newColumn->getId() => $newColumn]
+            + array_slice($this->items, $existingColumnKeyPosition, null, true)
+        ;
 
         $this->items = $columns;
     }

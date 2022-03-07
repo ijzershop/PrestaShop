@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
@@ -93,15 +93,31 @@ abstract class AbstractDeleteSupplierHandler
             }
 
             if ($this->hasPendingOrders($supplierId)) {
-                throw new CannotDeleteSupplierException($supplierId->getValue(), sprintf('Supplier with id %s cannot be deleted due to it has pending orders', $supplierId->getValue()), CannotDeleteSupplierException::HAS_PENDING_ORDERS);
+                throw new CannotDeleteSupplierException(
+                    sprintf(
+                        'Supplier with id %d cannot be deleted due to it has pending orders',
+                        $supplierId->getValue()
+                    ),
+                    CannotDeleteSupplierException::HAS_PENDING_ORDERS
+                );
             }
 
             if (false === $this->deleteProductSupplierRelation($supplierId)) {
-                throw new CannotDeleteSupplierProductRelationException(sprintf('Unable to delete suppliers with id "%s" product relation from product_supplier table', $supplierId->getValue()));
+                throw new CannotDeleteSupplierProductRelationException(
+                    sprintf(
+                        'Unable to delete suppliers with id "%d" product relation from product_supplier table',
+                        $supplierId->getValue()
+                    )
+                );
             }
 
             if (1 >= count($entity->getAssociatedShops()) && false === $this->deleteSupplierAddress($supplierId)) {
-                throw new CannotDeleteSupplierAddressException(sprintf('Unable to set deleted flag for supplier with id "%s" address', $supplierId->getValue()));
+                throw new CannotDeleteSupplierAddressException(
+                    sprintf(
+                        'Unable to set deleted flag for supplier with id "%d" address',
+                        $supplierId->getValue()
+                    )
+                );
             }
 
             if (false === $entity->delete()) {

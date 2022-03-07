@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
@@ -202,14 +202,17 @@ class OrderLazyArray extends AbstractLazyArray
 
             foreach ($cartProducts['products'] as $cartProduct) {
                 if (($cartProduct['id_product'] === $orderProduct['id_product'])
-                    && ($cartProduct['id_product_attribute'] === $orderProduct['id_product_attribute'])) {
+                    && ($cartProduct['id_product_attribute'] === $orderProduct['id_product_attribute'])
+                ) {
                     if (isset($cartProduct['attributes'])) {
                         $orderProduct['attributes'] = $cartProduct['attributes'];
                     } else {
                         $orderProduct['attributes'] = [];
                     }
                     $orderProduct['cover'] = $cartProduct['cover'];
+                    $orderProduct['default_image'] = $cartProduct['default_image'];
                     $orderProduct['unit_price_full'] = $cartProduct['unit_price_full'];
+                    break;
                 }
             }
 
@@ -298,7 +301,9 @@ class OrderLazyArray extends AbstractLazyArray
         $historyList = $order->getHistory($context->language->id, false, true);
 
         foreach ($historyList as $historyId => $history) {
-            if ($history['id_order_state'] == $order->current_state) {
+            // HistoryList only contains order states that are not hidden to customers, the last visible order state,
+            // that is to say the one we get in the first iteration
+            if ($historyId === array_key_first($historyList)) {
                 $historyId = 'current';
             }
             $orderHistory[$historyId] = $history;
@@ -327,7 +332,6 @@ class OrderLazyArray extends AbstractLazyArray
 
         foreach ($customerMessages as $cmId => $customerMessage) {
             $messages[$cmId] = $customerMessage;
-            $messages[$cmId]['message'] = nl2br($customerMessage['message']);
             $messages[$cmId]['message_date'] = Tools::displayDate($customerMessage['date_add'], null, true);
             if (isset($customerMessage['elastname']) && $customerMessage['elastname']) {
                 $messages[$cmId]['name'] = $customerMessage['efirstname'] . ' ' . $customerMessage['elastname'];
@@ -350,7 +354,7 @@ class OrderLazyArray extends AbstractLazyArray
     {
         $order = $this->order;
 
-        $carrier = new Carrier((int) $order->id_carrier, (int) $order->id_lang);
+        $carrier = new Carrier((int) $order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
         $orderCarrier = $this->objectPresenter->present($carrier);
         $orderCarrier['name'] = ($carrier->name == '0') ? Configuration::get('PS_SHOP_NAME') : $carrier->name;
         $orderCarrier['delay'] = $carrier->delay;
@@ -397,8 +401,8 @@ class OrderLazyArray extends AbstractLazyArray
         $order = $this->order;
 
         $carrier = $this->getCarrier();
-        if (!empty($carrier['url']) && !empty($order->shipping_number)) {
-            return str_replace('@', $order->shipping_number, $carrier['url']);
+        if (!empty($carrier['url']) && !empty($order->getShippingNumber())) {
+            return str_replace('@', $order->getShippingNumber(), $carrier['url']);
         }
 
         return '';
@@ -442,7 +446,7 @@ class OrderLazyArray extends AbstractLazyArray
             'color' => '',
             'unremovable' => '',
             'hidden' => '',
-            'logable' => '',
+            'loggable' => '',
             'delivery' => '',
             'shipped' => '',
             'paid' => '',

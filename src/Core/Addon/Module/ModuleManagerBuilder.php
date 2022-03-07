@@ -1,12 +1,13 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -17,21 +18,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
 use Db;
-use Doctrine\Common\Cache\FilesystemCache;
-use GuzzleHttp\Client;
-use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -46,7 +43,8 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
-use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
@@ -73,10 +71,14 @@ class ModuleManagerBuilder
     public static $moduleDataUpdater = null;
     public static $moduleZipManager = null;
     public static $translator = null;
-    public static $addonsDataProvider = null;
     public static $categoriesProvider = null;
     public static $instance = null;
     public static $cacheProvider = null;
+
+    /**
+     * @var bool
+     */
+    private $isDebug;
 
     /**
      * @return ModuleManagerBuilder|null
@@ -131,9 +133,7 @@ class ModuleManagerBuilder
                 self::$modulesRepository = $sfContainer->get('prestashop.core.admin.module.repository');
             } else {
                 self::$modulesRepository = new ModuleRepository(
-                    self::$adminModuleDataProvider,
                     self::$moduleDataProvider,
-                    self::$moduleDataUpdater,
                     self::$legacyLogger,
                     self::$translator,
                     _PS_MODULE_DIR_,
@@ -145,8 +145,12 @@ class ModuleManagerBuilder
         return self::$modulesRepository;
     }
 
-    private function __construct()
+    /**
+     * @param bool $isDebug
+     */
+    private function __construct(bool $isDebug = _PS_MODE_DEV_)
     {
+        $this->isDebug = $isDebug;
         /**
          * If the Symfony container is available, it will be used for the other methods
          * build & buildRepository. No need to init manually all the dependancies.
@@ -158,41 +162,24 @@ class ModuleManagerBuilder
 
         $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
 
-        $config = $yamlParser->parse($this->getConfigDir() . '/config.yml');
-        $prestashopAddonsConfig =
-            $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
+        $prestashopAddonsConfig = $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
 
-        $clientConfig = $config['csa_guzzle']['clients']['addons_api']['config'];
+        $tools = new Tools();
+        $tools->refreshCaCertFile();
 
         self::$translator = Context::getContext()->getTranslator();
 
-        $marketPlaceClient = new ApiClient(
-            new Client($clientConfig),
-            self::$translator->getLocale(),
-            $this->getCountryIso(),
-            new Tools(),
-            (new Configuration())->get('_PS_BASE_URL_'),
-            \AppKernel::VERSION
-        );
-
-        $marketPlaceClient->setSslVerification(_PS_CACHE_CA_CERT_FILE_);
-        if (file_exists($this->getConfigDir() . '/parameters.php')) {
-            $parameters = require $this->getConfigDir() . '/parameters.php';
-            if (array_key_exists('addons.api_client.verify_ssl', $parameters['parameters'])) {
-                $marketPlaceClient->setSslVerification($parameters['parameters']['addons.api_client.verify_ssl']);
-            }
-        }
-
         self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator, new NullDispatcher());
-        self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
         $kernelDir = realpath($this->getConfigDir() . '/../../var');
-        self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/prod';
-        if (_PS_MODE_DEV_) {
-            self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/dev';
-        }
-
-        self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir . '/doctrine');
+        $cacheDir = $kernelDir . ($this->isDebug ? '/cache/dev' : '/cache/prod');
+        self::$cacheProvider = new DoctrineProvider(
+            new FilesystemAdapter(
+                '',
+                0,
+                $cacheDir . '/doctrine'
+            )
+        );
 
         $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
         $themeName = Context::getContext()->shop->theme_name;
@@ -210,18 +197,14 @@ class ModuleManagerBuilder
         if (null === self::$adminModuleDataProvider) {
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
-                self::$translator,
-                self::$legacyLogger,
-                self::$addonsDataProvider,
                 self::$categoriesProvider,
                 self::$moduleDataProvider,
-                self::$cacheProvider,
                 Context::getContext()->employee
             );
             self::$adminModuleDataProvider->setRouter($this->getSymfonyRouter());
 
             self::$translator = Context::getContext()->getTranslator();
-            self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
+            self::$moduleDataUpdater = new ModuleDataUpdater();
         }
     }
 
@@ -233,7 +216,7 @@ class ModuleManagerBuilder
     private function getSymfonyRouter()
     {
         // get the environment to load the good routing file
-        $routeFileName = _PS_MODE_DEV_ === true ? 'routing_dev.yml' : 'routing.yml';
+        $routeFileName = $this->isDebug === true ? 'routing_dev.yml' : 'routing.yml';
         $routesDirectory = $this->getConfigDir();
         $locator = new FileLocator([$routesDirectory]);
         $loader = new YamlFileLoader($locator);
@@ -251,6 +234,6 @@ class ModuleManagerBuilder
      */
     private function getCountryIso()
     {
-        return \CountryCore::getIsoById(\Configuration::get('PS_COUNTRY_DEFAULT'));
+        return \CountryCore::getIsoById((int) \Configuration::get('PS_COUNTRY_DEFAULT'));
     }
 }

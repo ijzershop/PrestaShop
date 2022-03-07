@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
@@ -89,11 +89,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             ->setIdShop($this->context->shop->id)
             ->setIdLang($this->context->language->id)
             ->setIdCurrency($this->context->currency->id)
-            ->setIdCustomer(
-                $this->context->customer ?
-                    $this->context->customer->id :
-                    null
-            );
+            ->setIdCustomer($this->context->customer ? $this->context->customer->id : null);
     }
 
     /**
@@ -128,7 +124,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     /**
      * Renders an array of facets.
      *
-     * @param array $facets
+     * @param ProductSearchResult $result
      *
      * @return string the HTML of the facets
      */
@@ -166,7 +162,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     /**
      * Renders an array of active filters.
      *
-     * @param array $facets
+     * @param ProductSearchResult $result
      *
      * @return string the HTML of the facets
      */
@@ -220,7 +216,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      *
      * @param ProductSearchQuery $query
      *
-     * @return ProductSearchProviderInterface or null
+     * @return ProductSearchProviderInterface|null
      */
     private function getProductSearchProviderFromModules($query)
     {
@@ -240,6 +236,8 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 return $provider;
             }
         }
+
+        return null;
     }
 
     /**
@@ -300,6 +298,10 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         $query->setEncodedFacets($encodedFacets);
 
+        Hook::exec('actionProductSearchProviderRunQueryBefore', [
+            'query' => $query,
+        ]);
+
         // We're ready to run the actual query!
 
         /** @var ProductSearchResult $result */
@@ -307,6 +309,11 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $context,
             $query
         );
+
+        Hook::exec('actionProductSearchProviderRunQueryAfter', [
+            'query' => $query,
+            'result' => $result,
+        ]);
 
         if (Configuration::get('PS_CATALOG_MODE') && !Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) {
             $this->disablePriceControls($result);

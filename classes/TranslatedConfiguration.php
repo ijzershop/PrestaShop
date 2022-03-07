@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -56,8 +56,8 @@ class TranslatedConfigurationCore extends Configuration
     /**
      * TranslatedConfigurationCore constructor.
      *
-     * @param null $id
-     * @param null $idLang
+     * @param int|null $id
+     * @param int|null $idLang
      */
     public function __construct($id = null, $idLang = null)
     {
@@ -65,7 +65,7 @@ class TranslatedConfigurationCore extends Configuration
         // Check if the id configuration is set in the configuration_lang table.
         // Otherwise configuration is not set as translated configuration.
         if ($id !== null) {
-            $idTranslated = Db::getInstance()->executeS('				SELECT `' . bqSQL($this->def['primary']) . '`
+            $idTranslated = Db::getInstance()->executeS('SELECT `' . bqSQL($this->def['primary']) . '`
 				FROM `' . bqSQL(_DB_PREFIX_ . $this->def['table']) . '_lang`
 				WHERE `' . bqSQL($this->def['primary']) . '`=' . (int) $id . ' LIMIT 0,1
 			');
@@ -96,11 +96,13 @@ class TranslatedConfigurationCore extends Configuration
     public function update($nullValues = false)
     {
         $ishtml = false;
-        foreach ($this->value as $i18NValue) {
-            if (Validate::isCleanHtml($i18NValue)) {
-                $ishtml = true;
+        if (is_array($this->value)) {
+            foreach ($this->value as $i18NValue) {
+                if (Validate::isCleanHtml($i18NValue)) {
+                    $ishtml = true;
 
-                break;
+                    break;
+                }
             }
         }
         Configuration::updateValue($this->name, $this->value, $ishtml);

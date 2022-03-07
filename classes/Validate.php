@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
+use Egulias\EmailValidator\Validation\RFCValidation;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
+use PrestaShop\PrestaShop\Core\Email\SwiftMailerValidation;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Validation;
 
 class ValidateCore
 {
+    public const ORDER_BY_REGEXP = '/^(?:(`?)[\w!_-]+\1\.)?(?:(`?)[\w!_-]+\2)$/';
+
     const ADMIN_PASSWORD_LENGTH = 8;
     const PASSWORD_LENGTH = 5;
 
@@ -53,7 +59,10 @@ class ValidateCore
      */
     public static function isEmail($email)
     {
-        return !empty($email) && preg_match(Tools::cleanNonUnicodeSupport('/^[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+(?:[.]?[_a-z\p{L}0-9-])*\.[a-z\p{L}0-9]+$/ui'), $email);
+        return !empty($email) && (new EmailValidator())->isValid($email, new MultipleValidationWithAnd([
+            new RFCValidation(),
+            new SwiftMailerValidation(), // special validation to be compatible with Swift Mailer
+        ]));
     }
 
     /**
@@ -180,7 +189,7 @@ class ValidateCore
             new CustomerName(),
         ]);
 
-        return (count($violations) !== 0) ? 0 : 1;
+        return count($violations) === 0;
     }
 
     /**
@@ -503,21 +512,6 @@ class ValidateCore
     }
 
     /**
-     * Check for password validity.
-     *
-     * @param string $passwd Password to validate
-     * @param int $size
-     *
-     * @return bool Validity is ok or not
-     *
-     * @deprecated 1.7.0
-     */
-    public static function isPasswd($passwd, $size = Validate::PASSWORD_LENGTH)
-    {
-        return self::isPlaintextPassword($passwd, $size);
-    }
-
-    /**
      * Check if plaintext password is valid
      * Size is limited by `password_hash()` (72 chars).
      *
@@ -541,7 +535,6 @@ class ValidateCore
      * Anything else is invalid.
      *
      * @param string $hashedPasswd Password to validate
-     * @param int $size
      *
      * @return bool Indicates whether the given string is a valid hashed password
      *
@@ -621,7 +614,7 @@ class ValidateCore
     }
 
     /**
-     * Check for birthDate validity.
+     * Check for birthDate validity. To avoid year in two digits, disallow date < 200 years ago
      *
      * @param string $date birthdate to validate
      * @param string $format optional format
@@ -638,14 +631,16 @@ class ValidateCore
         if (!empty(DateTime::getLastErrors()['warning_count']) || false === $d) {
             return false;
         }
+        $twoHundredYearsAgo = new Datetime();
+        $twoHundredYearsAgo->sub(new DateInterval('P200Y'));
 
-        return $d->setTime(0, 0, 0)->getTimestamp() <= time();
+        return $d->setTime(0, 0, 0) <= new Datetime() && $d->setTime(0, 0, 0) >= $twoHundredYearsAgo;
     }
 
     /**
      * Check for boolean validity.
      *
-     * @param bool $bool Boolean to validate
+     * @param mixed $bool Value to validate as a boolean
      *
      * @return bool Validity is ok or not
      */
@@ -748,7 +743,7 @@ class ValidateCore
      *
      * @param string $way Keyword to validate
      *
-     * @return bool Validity is ok or not
+     * @return int Validity is ok or not
      */
     public static function isOrderWay($way)
     {
@@ -765,7 +760,7 @@ class ValidateCore
      */
     public static function isOrderBy($order)
     {
-        return preg_match('/^[a-zA-Z0-9.!_-]+$/', $order);
+        return preg_match(static::ORDER_BY_REGEXP, $order);
     }
 
     /**
@@ -808,7 +803,7 @@ class ValidateCore
     /**
      * Check for an integer validity.
      *
-     * @param int $value Integer to validate
+     * @param int|bool $value Integer to validate
      *
      * @return bool Validity is ok or not
      */
@@ -820,13 +815,13 @@ class ValidateCore
     /**
      * Check for an integer validity (unsigned).
      *
-     * @param int $value Integer to validate
+     * @param mixed $value Integer to validate
      *
      * @return bool Validity is ok or not
      */
     public static function isUnsignedInt($value)
     {
-        return (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
+        return (is_numeric($value) || is_string($value)) && (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
     }
 
     /**
@@ -1116,7 +1111,7 @@ class ValidateCore
     /**
      * Check for PHP serialized data.
      *
-     * @param string $data Serialized data to validate
+     * @param string|null $data Serialized data to validate
      *
      * @return bool Validity is ok or not
      */
@@ -1142,7 +1137,7 @@ class ValidateCore
     /**
      * Check for Latitude/Longitude.
      *
-     * @param string $data Coordinate to validate
+     * @param string|null $data Coordinate to validate
      *
      * @return bool Validity is ok or not
      */
@@ -1178,15 +1173,17 @@ class ValidateCore
     /**
      * @param array $ids
      *
-     * @return bool return true if the array contain only unsigned int value
+     * @return bool return true if the array contain only unsigned int value and not empty
      */
     public static function isArrayWithIds($ids)
     {
-        if (count($ids)) {
-            foreach ($ids as $id) {
-                if ($id == 0 || !Validate::isUnsignedInt($id)) {
-                    return false;
-                }
+        if (!is_array($ids) || count($ids) < 1) {
+            return false;
+        }
+
+        foreach ($ids as $id) {
+            if ($id == 0 || !Validate::isUnsignedInt($id)) {
+                return false;
             }
         }
 

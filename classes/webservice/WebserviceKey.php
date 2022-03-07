@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class WebserviceKeyCore extends ObjectModel
 {
@@ -53,7 +53,27 @@ class WebserviceKeyCore extends ObjectModel
             return false;
         }
 
-        return parent::add($autodate = true, $nullValues = false);
+        $result = parent::add($autodate = true, $nullValues = false);
+
+        if ($result) {
+            PrestaShopLogger::addLog(
+                Context::getContext()->getTranslator()->trans(
+                    'Webservice key created: %s',
+                    [
+                        $this->key,
+                    ],
+                    'Admin.Advparameters.Feature'
+                ),
+                1,
+                0,
+                'WebserviceKey',
+                (int) $this->id,
+                false,
+                (int) Context::getContext()->employee->id
+            );
+        }
+
+        return $result;
     }
 
     public static function keyExists($key)
@@ -66,7 +86,27 @@ class WebserviceKeyCore extends ObjectModel
 
     public function delete()
     {
-        return parent::delete() && ($this->deleteAssociations() !== false);
+        $result = parent::delete() && ($this->deleteAssociations() !== false);
+
+        if ($result) {
+            PrestaShopLogger::addLog(
+                Context::getContext()->getTranslator()->trans(
+                    'Webservice key %s has been deleted',
+                    [
+                        $this->key,
+                    ],
+                    'Admin.Advparameters.Feature'
+                ),
+                1,
+                0,
+                'WebserviceKey',
+                (int) $this->id,
+                false,
+                (int) Context::getContext()->employee->id
+            );
+        }
+
+        return $result;
     }
 
     public function deleteAssociations()
@@ -74,6 +114,9 @@ class WebserviceKeyCore extends ObjectModel
         return Db::getInstance()->delete('webservice_permission', 'id_webservice_account = ' . (int) $this->id);
     }
 
+    /**
+     * @param string $auth_key
+     */
     public static function getPermissionForAccount($auth_key)
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -92,6 +135,9 @@ class WebserviceKeyCore extends ObjectModel
         return $permissions;
     }
 
+    /**
+     * @param string $auth_key
+     */
     public static function isKeyActive($auth_key)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -100,6 +146,9 @@ class WebserviceKeyCore extends ObjectModel
 		WHERE `key` = "' . pSQL($auth_key) . '"');
     }
 
+    /**
+     * @param string $auth_key
+     */
     public static function getClassFromKey($auth_key)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -108,6 +157,28 @@ class WebserviceKeyCore extends ObjectModel
 		WHERE `key` = "' . pSQL($auth_key) . '"');
     }
 
+    /**
+     * @param string $auth_key
+     *
+     * @return int
+     */
+    public static function getIdFromKey(string $auth_key)
+    {
+        $sql = sprintf(
+            'SELECT id_webservice_account FROM `%swebservice_account` WHERE `key` = "%s"',
+            _DB_PREFIX_,
+            pSQL($auth_key)
+        );
+
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+    }
+
+    /**
+     * @param int $id_account
+     * @param array $permissions_to_set
+     *
+     * @return bool
+     */
     public static function setPermissionForAccount($id_account, $permissions_to_set)
     {
         $ok = true;
@@ -115,7 +186,7 @@ class WebserviceKeyCore extends ObjectModel
         if (!Db::getInstance()->execute($sql)) {
             $ok = false;
         }
-        if (isset($permissions_to_set)) {
+        if (is_array($permissions_to_set)) {
             $permissions = [];
             $resources = WebserviceRequest::getResources();
             $methods = ['GET', 'PUT', 'POST', 'DELETE', 'HEAD'];

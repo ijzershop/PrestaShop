@@ -1,10 +1,11 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,16 +16,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% block product_footer %}
   <div class="product-footer justify-content-md-center">
-    <div class="col-lg-4">
+    <div class="col-lg-3">
       <a
         href="{{ path('admin_product_unit_action', {action: 'delete', id: productId}) }}"
         class="tooltip-link btn btn-lg delete"
@@ -65,7 +65,7 @@
         />
       {% endif %}
     </div>
-    <div class="col-sm-5 col-lg-7 text-right">
+    <div class="col-sm-5 col-lg-9 text-right">
       <input
         id="submit"
         type="submit"
@@ -106,6 +106,18 @@
       >
         {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
       </button>
+      <a
+        class="btn btn-outline-primary ml-3 new-product"
+        href="{{ path('admin_products_v2_create') }}"
+      >
+        {{ 'New product on experimental page'|trans({}, 'Admin.Catalog.Feature')|raw }}
+      </a>
+      <a
+        class="btn btn-outline-primary ml-3"
+        href="{{ path('admin_products_v2_edit', {'productId': productId}) }}"
+      >
+        {{ 'Edit on experimental page'|trans({}, 'Admin.Catalog.Feature')|raw }}
+      </a>
 
       <div class="js-spinner spinner hide btn-primary-reverse onclick mr-1 btn"></div>
       <div class="btn-group hide dropdown">

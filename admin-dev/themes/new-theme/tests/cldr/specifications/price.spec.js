@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,14 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
-import {expect} from 'chai';
+import { expect } from 'chai';
 import PriceSpecification from '../../../js/app/cldr/specifications/price';
 import NumberSymbol from '../../../js/app/cldr/number-symbol';
 
@@ -40,7 +40,7 @@ describe('PriceSpecification', () => {
       '×',
       '‰',
       '∞',
-      'NaN',
+      'NaN'
     );
   });
   describe('validateData', () => {
@@ -52,64 +52,37 @@ describe('PriceSpecification', () => {
 
     it('should throw if invalid negative pattern', () => {
       expect(() => {
-        new PriceSpecification(
-          '#,##0.###',
-        );
+        new PriceSpecification('#,##0.###');
       }).to.throw('Invalid negativePattern');
     });
 
     it('should throw if invalid symbol', () => {
       expect(() => {
-        new PriceSpecification(
-          '#,##0.###',
-          '-#,##0.###',
-        );
+        new PriceSpecification('#,##0.###', '-#,##0.###');
       }).to.throw('Invalid symbol');
     });
 
     it('should throw if invalid maxFractionDigits', () => {
       expect(() => {
-        new PriceSpecification(
-          '#,##0.###',
-          '-#,##0.###',
-          symbol,
-        );
+        new PriceSpecification('#,##0.###', '-#,##0.###', symbol);
       }).to.throw('Invalid maxFractionDigits');
     });
 
     it('should throw if invalid minFractionDigits', () => {
       expect(() => {
-        new PriceSpecification(
-          '#,##0.###',
-          '-#,##0.###',
-          symbol,
-          3,
-        );
+        new PriceSpecification('#,##0.###', '-#,##0.###', symbol, 3);
       }).to.throw('Invalid minFractionDigits');
     });
 
     it('should throw if invalid groupingUsed', () => {
       expect(() => {
-        new PriceSpecification(
-          '#,##0.###',
-          '-#,##0.###',
-          symbol,
-          3,
-          0,
-        );
+        new PriceSpecification('#,##0.###', '-#,##0.###', symbol, 3, 0);
       }).to.throw('Invalid groupingUsed');
     });
 
     it('should throw if invalid primaryGroupSize', () => {
       expect(() => {
-        new PriceSpecification(
-          '#,##0.###',
-          '-#,##0.###',
-          symbol,
-          3,
-          0,
-          false,
-        );
+        new PriceSpecification('#,##0.###', '-#,##0.###', symbol, 3, 0, false);
       }).to.throw('Invalid primaryGroupSize');
     });
 
@@ -122,7 +95,7 @@ describe('PriceSpecification', () => {
           3,
           0,
           true,
-          3,
+          3
         );
       }).to.throw('Invalid secondaryGroupSize');
     });
@@ -137,7 +110,7 @@ describe('PriceSpecification', () => {
           0,
           true,
           3,
-          3,
+          3
         );
       }).to.throw('Invalid currencySymbol');
     });
@@ -153,7 +126,7 @@ describe('PriceSpecification', () => {
           true,
           3,
           3,
-          '$',
+          '$'
         );
       }).to.throw('Invalid currencyCode');
     });
@@ -170,7 +143,7 @@ describe('PriceSpecification', () => {
           3,
           3,
           '$',
-          'USD',
+          'USD'
         );
       }).to.not.throw();
     });

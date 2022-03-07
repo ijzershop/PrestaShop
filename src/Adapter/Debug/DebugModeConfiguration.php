@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,16 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Debug;
 
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\ClassIndexCacheClearer;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
@@ -49,11 +50,22 @@ class DebugModeConfiguration implements DataConfigurationInterface
      */
     private $configDefinesPath;
 
-    public function __construct(DebugMode $debugMode, Configuration $configuration, $configDefinesPath)
+    /**
+     * @var ClassIndexCacheClearer
+     */
+    private $classIndexCacheClearer;
+
+    /**
+     * @param DebugMode $debugMode
+     * @param Configuration $configuration
+     * @param string $configDefinesPath
+     */
+    public function __construct(DebugMode $debugMode, Configuration $configuration, $configDefinesPath, ClassIndexCacheClearer $classIndexCacheClearer)
     {
         $this->debugMode = $debugMode;
         $this->configuration = $configuration;
         $this->configDefinesPath = $configDefinesPath;
+        $this->classIndexCacheClearer = $classIndexCacheClearer;
     }
 
     /**
@@ -80,6 +92,8 @@ class DebugModeConfiguration implements DataConfigurationInterface
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_DISABLE_NON_NATIVE_MODULE', $configuration['disable_non_native_modules']);
             $this->configuration->set('PS_DISABLE_OVERRIDES', $configuration['disable_overrides']);
+
+            $this->classIndexCacheClearer->clear();
 
             $status = $this->updateDebugMode((bool) $configuration['debug_mode']);
 
@@ -141,9 +155,9 @@ class DebugModeConfiguration implements DataConfigurationInterface
     /**
      * Change Debug mode value if needed.
      *
-     * @param $enableStatus
+     * @param bool $enableStatus
      *
-     * @return int the status of update
+     * @return int|null Status of update
      */
     private function updateDebugMode($enableStatus)
     {
@@ -152,5 +166,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
         if ($enableStatus !== $currentDebugMode) {
             return (true === $enableStatus) ? $this->debugMode->enable() : $this->debugMode->disable();
         }
+
+        return null;
     }
 }

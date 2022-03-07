@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
@@ -61,7 +61,7 @@ class CustomerFormDataProviderTest extends TestCase
     /**
      * Set up dependencies for CustomerFormDataProvider
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->queryBus = $this->createMock(CommandBusInterface::class);
         $this->queryBus
@@ -86,7 +86,8 @@ class CustomerFormDataProviderTest extends TestCase
                     'prestashop.com',
                     36.99,
                     10,
-                    1
+                    1,
+                    false
                 )
             )
         ;
@@ -133,6 +134,7 @@ class CustomerFormDataProviderTest extends TestCase
             'is_partner_offers_subscribed' => true,
             'group_ids' => [1, 2, 3],
             'default_group_id' => 3,
+            'is_guest' => false,
         ], $customerFormDataProvider->getData(1));
     }
 
@@ -162,6 +164,7 @@ class CustomerFormDataProviderTest extends TestCase
             'allowed_outstanding_amount' => 36.99,
             'max_payment_days' => 10,
             'risk_id' => 1,
+            'is_guest' => false,
         ], $customerFormDataProvider->getData(1));
     }
 
@@ -179,6 +182,7 @@ class CustomerFormDataProviderTest extends TestCase
             'is_partner_offers_subscribed' => false,
             'group_ids' => [1, 2, 3],
             'default_group_id' => 3,
+            'is_guest' => false,
         ], $customerFormDataProvider->getDefaultData());
     }
 
@@ -198,6 +202,7 @@ class CustomerFormDataProviderTest extends TestCase
             'default_group_id' => 3,
             'allowed_outstanding_amount' => 0,
             'max_payment_days' => 0,
+            'is_guest' => false,
         ], $customerFormDataProvider->getDefaultData());
     }
 }

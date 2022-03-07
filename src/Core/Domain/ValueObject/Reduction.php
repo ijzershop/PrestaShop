@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\ValueObject;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 
 /**
@@ -37,17 +37,17 @@ class Reduction
     /**
      * For reducing concrete amount of money from price
      */
-    const TYPE_AMOUNT = 'amount';
+    public const TYPE_AMOUNT = 'amount';
 
     /**
      * For reducing certain percentage calculated from price
      */
-    const TYPE_PERCENTAGE = 'percentage';
+    public const TYPE_PERCENTAGE = 'percentage';
 
     /**
      * Allowed reduction types
      */
-    const ALLOWED_TYPES = [
+    public const ALLOWED_TYPES = [
         self::TYPE_AMOUNT,
         self::TYPE_PERCENTAGE,
     ];
@@ -55,7 +55,7 @@ class Reduction
     /**
      * Maximum allowed value for percentage type reduction
      */
-    const MAX_ALLOWED_PERCENTAGE = 100;
+    public const MAX_ALLOWED_PERCENTAGE = 100;
 
     /**
      * @var string
@@ -63,22 +63,24 @@ class Reduction
     private $type;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $value;
 
     /**
      * @param string $type
-     * @param float $value
+     * @param string $value
      *
      * @throws DomainConstraintException
      */
-    public function __construct(string $type, float $value)
+    public function __construct(string $type, string $value)
     {
         $this->assertIsAllowedType($type);
-        $this->assertIsValidValue($type, $value);
+        $decimalValue = new DecimalNumber($value);
+        $this->assertIsValidValue($type, $decimalValue);
+
         $this->type = $type;
-        $this->value = new Number((string) $value);
+        $this->value = $decimalValue;
     }
 
     /**
@@ -90,9 +92,9 @@ class Reduction
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getValue(): Number
+    public function getValue(): DecimalNumber
     {
         return $this->value;
     }
@@ -110,31 +112,21 @@ class Reduction
     }
 
     /**
-     * @param $type
-     * @param $value
+     * @param string $type
+     * @param DecimalNumber $value
      *
      * @throws DomainConstraintException
      */
-    private function assertIsValidValue(string $type, float $value)
+    private function assertIsValidValue(string $type, DecimalNumber $value)
     {
         if (self::TYPE_PERCENTAGE === $type) {
-            if (!$this->assertIsNotNegative($value) || self::MAX_ALLOWED_PERCENTAGE < $value) {
-                throw new DomainConstraintException(sprintf('Invalid reduction percentage "%s". It must be from 0 to %s%%', $value, self::MAX_ALLOWED_PERCENTAGE), DomainConstraintException::INVALID_REDUCTION_PERCENTAGE);
+            if ($value->isLowerThanZero() || $value->isGreaterThan(new DecimalNumber((string) self::MAX_ALLOWED_PERCENTAGE))) {
+                throw new DomainConstraintException(sprintf('Invalid reduction percentage "%s". It must be from 0 to %s%%', (string) $value, self::MAX_ALLOWED_PERCENTAGE), DomainConstraintException::INVALID_REDUCTION_PERCENTAGE);
             }
         }
 
-        if (!$this->assertIsNotNegative($value)) {
-            throw new DomainConstraintException(sprintf('Invalid reduction amount "%s". It cannot be less than 0', $value), DomainConstraintException::INVALID_REDUCTION_AMOUNT);
+        if ($value->isLowerThanZero()) {
+            throw new DomainConstraintException(sprintf('Invalid reduction amount "%s". It cannot be less than 0', (string) $value), DomainConstraintException::INVALID_REDUCTION_AMOUNT);
         }
-    }
-
-    /**
-     * @param float $value
-     *
-     * @return bool
-     */
-    private function assertIsNotNegative(float $value)
-    {
-        return 0 <= $value;
     }
 }

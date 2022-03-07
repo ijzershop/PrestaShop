@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
@@ -34,11 +34,6 @@ class OrderReturnForViewing
      * @var int
      */
     private $orderInvoiceId;
-
-    /**
-     * @var int
-     */
-    private $carrierId;
 
     /**
      * @var DateTimeImmutable
@@ -56,14 +51,9 @@ class OrderReturnForViewing
     private $stateName;
 
     /**
-     * @var string|null
+     * @var string
      */
-    private $trackingUrl;
-
-    /**
-     * @var string|null
-     */
-    private $trackingNumber;
+    private $orderReturnNumber;
 
     /**
      * @var int
@@ -73,31 +63,25 @@ class OrderReturnForViewing
     /**
      * @param int $idOrderReturn
      * @param int $orderInvoiceId
-     * @param int $carrierId
      * @param DateTimeImmutable $date
      * @param string $type
      * @param string $stateName
-     * @param string|null $trackingUrl
-     * @param string|null $trackingNumber
+     * @param string $orderReturnNumber
      */
     public function __construct(
         int $idOrderReturn,
         int $orderInvoiceId,
-        int $carrierId,
         DateTimeImmutable $date,
         string $type,
         string $stateName,
-        ?string $trackingUrl,
-        ?string $trackingNumber
+        string $orderReturnNumber
     ) {
         $this->orderInvoiceId = $orderInvoiceId;
-        $this->carrierId = $carrierId;
         $this->date = $date;
         $this->type = $type;
         $this->stateName = $stateName;
-        $this->trackingUrl = $trackingUrl;
-        $this->trackingNumber = $trackingNumber;
         $this->idOrderReturn = $idOrderReturn;
+        $this->orderReturnNumber = $orderReturnNumber;
     }
 
     /**
@@ -106,14 +90,6 @@ class OrderReturnForViewing
     public function getOrderInvoiceId(): int
     {
         return $this->orderInvoiceId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCarrierId(): int
-    {
-        return $this->carrierId;
     }
 
     /**
@@ -141,19 +117,11 @@ class OrderReturnForViewing
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getTrackingUrl(): ?string
+    public function getOrderReturnNumber(): string
     {
-        return $this->trackingUrl;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTrackingNumber(): ?string
-    {
-        return $this->trackingNumber;
+        return $this->orderReturnNumber;
     }
 
     /**

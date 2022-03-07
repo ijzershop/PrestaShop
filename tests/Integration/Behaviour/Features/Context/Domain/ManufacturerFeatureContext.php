@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use AdminController;
 use Behat\Gherkin\Node\TableNode;
+use Context;
+use FrontController;
 use Manufacturer;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
@@ -36,8 +40,11 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerComma
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use RuntimeException;
+use stdClass;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -63,9 +70,24 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * Needed for getting Viewable objects from handlers, for example ViewableManufacturer
+     *
+     * @BeforeScenario
+     */
+    public function before()
+    {
+        // needed because if no controller defined then CONTEXT_ALL is selected and exception is thrown
+        /** @var AdminController|FrontController $adminControllerTestDouble */
+        $adminControllerTestDouble = new stdClass();
+        $adminControllerTestDouble->controller_type = 'admin';
+        $adminControllerTestDouble->php_self = 'dummyTestDouble';
+        Context::getContext()->controller = $adminControllerTestDouble;
+    }
+
+    /**
      * @When I add new manufacturer :reference with following properties:
      */
-    public function createManufacturerWithDefaultLang($reference, TableNode $node)
+    public function createManufacturerWithDefaultLang(string $reference, TableNode $node): void
     {
         $data = $node->getRowsHash();
 
@@ -75,7 +97,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I edit manufacturer :reference with following properties:
      */
-    public function editManufacturerWithDefaultLang($reference, TableNode $node)
+    public function editManufacturerWithDefaultLang(string $reference, TableNode $node): void
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($reference);
@@ -114,7 +136,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I delete manufacturer :manufacturerReference
      */
-    public function deleteManufacturer($manufacturerReference)
+    public function deleteManufacturer(string $manufacturerReference): void
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
@@ -125,7 +147,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I delete manufacturers: :manufacturerReferences using bulk action
      */
-    public function bulkDeleteManufacturers($manufacturerReferences)
+    public function bulkDeleteManufacturers(string $manufacturerReferences): void
     {
         $manufacturerIds = [];
         foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
@@ -138,7 +160,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then manufacturers: :manufacturerReferences should be deleted
      */
-    public function assertManufacturersAreDeleted($manufacturerReferences)
+    public function assertManufacturersAreDeleted(string $manufacturerReferences): void
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
             $this->assertManufacturerIsDeleted($manufacturerReference);
@@ -148,7 +170,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then manufacturer :reference name should be :name
      */
-    public function assertManufacturerName($reference, $name)
+    public function assertManufacturerName(string $reference, string $name): void
     {
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
@@ -160,7 +182,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then manufacturer :reference :field in default language should be :value
      */
-    public function assertFieldValue($reference, $field, $value)
+    public function assertFieldValue(string $reference, $field, $value)
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($reference);
@@ -173,7 +195,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then manufacturer :reference :field field in default language should be empty
      */
-    public function assertFieldIsEmpty($reference, $field)
+    public function assertFieldIsEmpty(string $reference, $field)
     {
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
@@ -185,7 +207,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I (enable|disable)? manufacturer "(.*)"$/
      */
-    public function toggleStatus($action, $reference)
+    public function toggleStatus(string $action, string $reference)
     {
         $expectedStatus = 'enable' === $action;
 
@@ -201,7 +223,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I (enable|disable) multiple manufacturers: "(.+)" using bulk action$/
      */
-    public function bulkToggleStatus($action, $manufacturerReferences)
+    public function bulkToggleStatus(string $action, string $manufacturerReferences)
     {
         $expectedStatus = 'enable' === $action;
         $manufacturerIdsByReference = [];
@@ -224,7 +246,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^manufacturers: "(.+)" should be (enabled|disabled)$/
      */
-    public function assertMultipleManufacturersStatus($manufacturerReferences, $expectedStatus)
+    public function assertMultipleManufacturersStatus(string $manufacturerReferences, string $expectedStatus)
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
             $this->assertStatus($manufacturerReference, $expectedStatus);
@@ -235,7 +257,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
      * @Given /^manufacturer "(.*)" is (enabled|disabled)?$/
      * @Then /^manufacturer "(.*)" should be (enabled|disabled)?$/
      */
-    public function assertStatus($manufacturerReference, $expectedStatus)
+    public function assertStatus(string $manufacturerReference, string $expectedStatus)
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
@@ -251,7 +273,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then manufacturer :manufacturerReference should be deleted
      */
-    public function assertManufacturerIsDeleted($manufacturerReference)
+    public function assertManufacturerIsDeleted(string $manufacturerReference)
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
@@ -267,10 +289,35 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param $reference
+     * @Then I should get error that manufacturer does not exist
+     */
+    public function assertManufacturerDoesNotExistError()
+    {
+        $this->assertLastErrorIs(ManufacturerNotFoundException::class);
+    }
+
+    /**
+     * @Given manufacturer :manufacturerReference named :name exists
+     *
+     * @param string $name
+     * @param string $manufacturerReference
+     */
+    public function assertManufacturerExistsByName(string $name, string $manufacturerReference): void
+    {
+        if ($manufacturerId = Manufacturer::getIdByName($name)) {
+            $this->getSharedStorage()->set($manufacturerReference, $manufacturerId);
+
+            return;
+        }
+
+        throw new RuntimeException(sprintf('Manufacturer %s named "%s" does not exist', $manufacturerReference, $name));
+    }
+
+    /**
+     * @param string $reference
      * @param array $data
      */
-    private function createManufacturerUsingCommand($reference, array $data)
+    private function createManufacturerUsingCommand(string $reference, array $data): void
     {
         $command = new AddManufacturerCommand(
             $data['name'],
@@ -289,5 +336,30 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $manufacturerId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($reference, new Manufacturer($manufacturerId->getValue()));
+    }
+
+    /**
+     * @Then manufacturer :manufacturerReference should have :countOfAddresses addresses and :countOfProducts products
+     *
+     * @param string $manufacturerReference
+     * @param int $countOfAddresses
+     * @param int $countOfProducts
+     */
+    public function manufacturerShouldHaveAddedAddresses(
+        string $manufacturerReference,
+        int $countOfAddresses,
+        int $countOfProducts)
+    {
+        /** @var Manufacturer $manufacturer */
+        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
+        /** @var ViewableManufacturer $viewableMaufacturer */
+        $viewableMaufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
+            $manufacturer->id,
+            (int) $this->getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_LANG_DEFAULT')
+        ));
+
+        Assert::assertSame($manufacturer->name, $viewableMaufacturer->getName());
+        Assert::assertSame($countOfAddresses, count($viewableMaufacturer->getManufacturerAddresses()));
+        Assert::assertSame($countOfProducts, count($viewableMaufacturer->getManufacturerProducts()));
     }
 }

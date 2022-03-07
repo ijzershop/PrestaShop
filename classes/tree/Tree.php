@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,13 +17,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShopBundle\Translation\TranslatorComponent;
+
 class TreeCore
 {
     const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
@@ -47,11 +50,15 @@ class TreeCore
     private $_title;
     private $_no_js;
 
-    /** @var TreeToolbar|ITreeToolbar */
+    /** @var TreeToolbar|ITreeToolbarCore */
     private $_toolbar;
+
+    /** @var TranslatorComponent */
+    public $translator;
 
     public function __construct($id, $data = null)
     {
+        $this->translator = Context::getContext()->getTranslator();
         $this->setId($id);
 
         if (isset($data)) {
@@ -97,7 +104,7 @@ class TreeCore
 
     public function getAttribute($name)
     {
-        return $this->hasAttribute($name) ? $this->_attributes[$name] : null;
+        return $this->_attributes[$name] ?? null;
     }
 
     public function setAttributes($value)
@@ -265,9 +272,9 @@ class TreeCore
     }
 
     /**
-     * @param $value
+     * @param array|string $value
      *
-     * @return Tree
+     * @return self
      */
     public function setTemplateDirectory($value)
     {
@@ -498,6 +505,11 @@ class TreeCore
         return isset($this->_toolbar);
     }
 
+    /**
+     * @param string|array $directory
+     *
+     * @return string|array
+     */
     private function _normalizeDirectory($directory)
     {
         $last = $directory[strlen($directory) - 1];

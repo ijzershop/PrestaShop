@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
@@ -46,13 +46,13 @@ use Tools;
  */
 final class MailPreviewVariablesBuilder
 {
-    const ORDER_CONFIRMATION = 'order_conf';
+    public const ORDER_CONFIRMATION = 'order_conf';
 
-    const DOWNLOAD_PRODUCT = 'download_product';
+    public const DOWNLOAD_PRODUCT = 'download_product';
 
-    const EMAIL_ALERTS_MODULE = 'ps_emailalerts';
-    const NEW_ORDER = 'new_order';
-    const RETURN_SLIP = 'return_slip';
+    public const EMAIL_ALERTS_MODULE = 'ps_emailalerts';
+    public const NEW_ORDER = 'new_order';
+    public const RETURN_SLIP = 'return_slip';
 
     /** @var ConfigurationInterface */
     private $configuration;
@@ -148,10 +148,10 @@ final class MailPreviewVariablesBuilder
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @param array $parameters
-     * @param null $domain
-     * @param null $local
+     * @param string|null $domain
+     * @param string|null $local
      *
      * @return string
      */
@@ -227,11 +227,11 @@ final class MailPreviewVariablesBuilder
                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                 'lastname' => '<span style="font-weight:bold;">%s</span>',
             ]),
-            '{date}' => Tools::displayDate($order->date_add, null, 1),
+            '{date}' => Tools::displayDate($order->date_add, null, true),
             '{order_name}' => $order->getUniqReference(),
             '{id_order}' => $order->id,
             '{payment}' => Tools::substr($order->payment, 0, 255),
-            '{total_products}' => count($order->getProducts()),
+            '{total_products}' => $this->locale->formatPrice($order->total_products_wt, $this->context->currency->iso_code),
             '{total_discounts}' => $this->locale->formatPrice($order->total_discounts, $this->context->currency->iso_code),
             '{total_wrapping}' => $this->locale->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
             '{total_shipping}' => $this->locale->formatPrice($order->total_shipping, $this->context->currency->iso_code),
@@ -270,7 +270,10 @@ final class MailPreviewVariablesBuilder
                     }
 
                     if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
-                        $customizationText .= count($customization['datas'][Product::CUSTOMIZE_FILE]) . ' ' . $this->trans('image(s)', [], 'Modules.Mailalerts.Admin') . '<br />';
+                        $customizationText .= count($customization['datas'][Product::CUSTOMIZE_FILE])
+                            . ' '
+                            . $this->trans('image(s)', [], 'Modules.Mailalerts.Admin')
+                            . '<br />';
                     }
 
                     $customizationText .= '---<br />';
@@ -359,6 +362,7 @@ final class MailPreviewVariablesBuilder
 
             $productTemplate = [
                 'id_product' => $product['id_product'],
+                'id_product_attribute' => $product['id_product_attribute'],
                 'reference' => $product['reference'],
                 'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
                 'price' => $this->locale->formatPrice($productPrice * $product['quantity'], $this->context->currency->iso_code),

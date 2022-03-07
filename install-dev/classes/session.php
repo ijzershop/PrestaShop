@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,16 +17,45 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
  * Manage session for install script
+ *
+ * @property string $last_step
+ * @property string|null $lang
+ * @property array $process_validated
+ * @property string $install_type
+ * @property bool $database_clear
+ * @property string $step
+ * @property string $database_server
+ * @property string $database_login
+ * @property string $database_password
+ * @property string $database_name
+ * @property string $database_prefix
+ * @property string $database_engine
+ * @property string $shop_name
+ * @property array $xml_loader_ids
+ * @property int $shop_activity
+ * @property string $shop_country
+ * @property string $admin_firstname
+ * @property string $admin_lastname
+ * @property string $admin_password
+ * @property string $admin_password_confirm
+ * @property string $admin_email
+ * @property string $shop_timezone
+ * @property bool $configuration_agrement
+ * @property bool $licence_agrement
+ * @property int $enable_ssl
+ * @property int $rewrite_engine
+ * @property bool $use_smtp
+ * @property string $smtp_encryption
+ * @property int $smtp_port
  */
 class InstallSession
 {
@@ -44,12 +74,12 @@ class InstallSession
 
     public function __construct()
     {
-        session_name('install_'.substr(md5($_SERVER['HTTP_HOST']), 0, 12));
+        session_name('install_' . substr(md5($_SERVER['HTTP_HOST']), 0, 12));
         $session_started = session_start();
         if (!($session_started)
         || (!isset($_SESSION['session_mode']) && (isset($_GET['_']) || isset($_POST['submitNext']) || isset($_POST['submitPrevious']) || isset($_POST['language'])))) {
             static::$_cookie_mode = true;
-            static::$_cookie = new Cookie('ps_install', null, time() + 7200, null, true);
+            static::$_cookie = new Cookie('ps_install', '', time() + 7200, null, true);
         }
         if ($session_started && !isset($_SESSION['session_mode'])) {
             $_SESSION['session_mode'] = 'session';
@@ -94,7 +124,7 @@ class InstallSession
                 return;
             }
             if (is_array($value)) {
-                $value = 'serialized_array:'.serialize($value);
+                $value = 'serialized_array:' . serialize($value);
             }
             static::$_cookie->{$varname} = $value;
         } else {

@@ -116,11 +116,11 @@
       <label class="control-label" for="input-no_shipping_phone">Telefoonnummer: <span style="display:inline;" class="supercheckout-required">*</span></label>
         {assign var='first_address_loggedin' value=null}
           {if !isset($guest_information)}
-            {if $customer.addresses}
+            {if $customer.addresses && Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id}
               {assign var='first_address_loggedin' value=reset($customer.addresses)}
-              <input type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value="{$first_address_loggedin['phone']}"/>
+                  <input type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value="{$first_address_loggedin['phone']}"/>
             {else}
-              <input type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value=""/>
+              <input type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value="{if Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}0582123138{/if}"/>
             {/if}
           {/if}
     </div>
@@ -155,14 +155,6 @@
                 <label for="guest_checkout">{l s='Guest' mod='supercheckout'}</label>
             </div>
         {/if}
-{*        <div class="radio-inline">*}
-{*            {if $settings['checkout_option'] eq 2 || ($settings['enable_guest_checkout'] eq 0 && $settings['checkout_option'] eq 1)}*}
-{*                <input type="radio" name="checkout_option" value="2" id="register_checkout" checked>*}
-{*            {else}*}
-{*                <input type="radio" name="checkout_option" value="2" id="register_checkout">*}
-{*            {/if}*}
-{*            <label for="register_checkout">{l s='Register' mod='supercheckout'}</label>*}
-{*        </div>*}
     </div>
 
     <div class="login-form">
@@ -185,7 +177,7 @@
       <div class="no-shipping-names-row phone">
         <div class="form-group">
           <label class="control-label" for="input-no_shipping_phone">Telefoonnummer: <span style="display:inline;" class="supercheckout-required">*</span></label>
-          <input  type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value=""/>
+          <input  type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value="{if Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}0582123138{/if}"/>
         </div>
       </div>
       {*      Start extra names by no shipping *}

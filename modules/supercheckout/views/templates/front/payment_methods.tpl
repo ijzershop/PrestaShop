@@ -12,10 +12,18 @@
     </div>
 {else}
     <ul>
+        {assign var="id_module_mollie" value=Module::getModuleIdByName('mollie')}
+        {assign var="id_module_pin" value=Module::getModuleIdByName('ps_pinpayment')}
+        {if Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}
+            {assign var="selected_payment_method" value=$id_module_pin}
+        {else}
+            {assign var="selected_payment_method" value=$id_module_mollie}
+        {/if}
+
         {foreach from=$payment_methods item="option"}
-            <li>
-                <div class="radio ">
-                    <input type="radio" name="payment_method" data-module-name="{$option.module_name nofilter}{*escape not required as contains html*}" value="{$option.id}" id="{$option.id}" {if $option.id == 'payment-option-2'}checked="checked" {elseif $option.id == $selected_payment_method} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>
+          <li>
+                <div class="radio">
+                    <input type="radio" name="payment_method" data-module-name="{$option.module_name nofilter}{*escape not required as contains html*}" value="{$option.id}" id="{$option.id}" {if $option.id_module == $selected_payment_method} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>
                     <label id="payment_lbl_{$option.id_module|intval}" for="{$option.id}">
                         {if $display_payment_style neq 0}
                             {if $option.payment_image_url neq ''}

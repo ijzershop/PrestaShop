@@ -1,12 +1,17 @@
 {
   "name": "prestashop/ps_creditpayment",
   "description": "PrestaShop module ps_creditpayment",
-  "homepage": "https://github.com/PrestaShop/ps_creditpayment",
   "license": "AFL-3.0",
+  "autoload": {
+    "psr-4": {"Ps_Creditpayment\\": "src/"},
+    "classmap": ["ps_creditpayment.php"],
+    "config": {"prepend-autoloader": false},
+    "type": "prestashop-module"
+  },
   "authors": [
     {
-      "name": "PrestaShop SA",
-      "email": "contact@prestashop.com"
+      "name": "JB Stoker",
+      "email": "jelmer@ijzershop.nl"
     }
   ],
   "require": {
@@ -18,6 +23,5 @@
   "config": {
     "preferred-install": "dist",
     "prepend-autoloader": false
-  },
-  "type": "prestashop-module"
+  }
 }

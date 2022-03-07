@@ -19,6 +19,15 @@
  */
 
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+
+use Ps_Creditpayment\Grid\Column\Type\Common\CustomerGroupsColumn;
+use Ps_Creditpayment\Grid\Column\Type\Common\InformerIdentificationColumn;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
+use PrestaShop\PrestaShop\Adapter\Entity\Group;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -58,6 +67,8 @@ class Ps_Creditpayment extends PaymentModule
         if (!parent::install() ||
             !$this->registerHook('paymentReturn') ||
             !$this->registerHook('paymentOptions') ||
+            !$this->registerHook('actionCustomerGridDefinitionModifier') ||
+            !$this->registerHook('actionCustomerGridQueryBuilderModifier') ||
             !$this->addOrderState($this->trans('Credit Payment',  array(), 'Modules.Creditpayment.Admin'))) {
             return false;
         }
@@ -487,5 +498,109 @@ public function addOrderState($name)
             'total' => $total,
             'bankcreditCustomText' => $bankcreditCustomText,
         );
+    }
+
+
+
+    /**
+     * Hooks allows to modify Order grid definition.
+     * This hook is a right place to add/remove columns or actions (bulk, grid).
+     *
+     * @param array $params
+     */
+    public function hookActionCustomerGridDefinitionModifier(array $params)
+    {
+        /** @var GridDefinitionInterface $definition */
+        $definition = $params['definition'];
+
+        /** @var ColumnCollection */
+        $columns = $definition->getColumns();
+        $columns->remove('social_title');
+        $columns->remove('newsletter');
+        $columns->remove('optin');
+        $columns->remove('date_add');
+        $columns->move('active', 7);
+
+        $informerIdColumn = new InformerIdentificationColumn('informer_identification');
+        $informerIdColumn->setOptions(['sortable' => false, 'clickable' => false, 'field' => 'informer_identification']);
+        $informerIdColumn->setName('Informer Id');
+        $columns->addAfter('email', $informerIdColumn);
+
+        $customerGroupColumn = new CustomerGroupsColumn('customer_group');
+        $customerGroupColumn->setOptions(['field' => 'customer_group']);
+        $customerGroupColumn->setName('Customer Groups');
+        $columns->addAfter('email', $customerGroupColumn);
+
+        $filters = $definition->getFilters();
+
+        $informerIDFilter = new Filter('informer_identification', TextType::class);
+        $informerIDFilter->setTypeOptions([
+            'required' => false,
+            'attr' => [
+                'placeholder' => $this->trans('Zoek Informer ID', [], 'Admin.Actions'),
+            ],
+        ]);
+        $informerIDFilter->setAssociatedColumn('informer_identification');
+
+        $filters->add($informerIDFilter);
+
+
+        $groups = Group::getGroups(Context::getContext()->language->getId(), Context::getContext()->shop->id);
+        $choices = [];
+        foreach ($groups as $group){
+            $choices[$group['name']] = $group['id_group'];
+        }
+
+        $customerGroupFilter = new Filter('customer_group', ChoiceType::class);
+        $customerGroupFilter->setTypeOptions([
+            'choices' => $choices,
+            'required' => false,
+            'attr' => [
+                'multiple' => false,
+                'expanded' => false,
+                'placeholder' => $this->trans('Zoek groep', [], 'Admin.Actions'),
+                ],
+        ]);
+        $customerGroupFilter->setAssociatedColumn('customer_group');
+
+        $filters->add($customerGroupFilter);
+
+    }
+
+
+    public function hookActionCustomerGridQueryBuilderModifier(array $params)
+    {
+        $searchQueryBuilder = $params['search_query_builder'];
+        $searchQueryBuilder->addSelect('c.informer_identification as informer_identification');
+
+        $searchQueryBuilder->leftJoin('c','ps176_customer_group', 'cg', 'c.id_customer = cg.id_customer');
+        $searchQueryBuilder->addSelect('cg.id_group');
+        $searchQueryBuilder->leftJoin('cg','ps176_group_lang', 'cgl', 'cg.id_group = cgl.id_group');
+        $searchQueryBuilder->where('cgl.id_lang = 1');
+        $searchQueryBuilder->addSelect('GROUP_CONCAT(DISTINCT cgl.name) as customer_group');
+        $searchQueryBuilder->groupBy('c.id_customer');
+        $countQueryBuilder = $params['count_query_builder'];
+        $countQueryBuilder->addSelect('c.informer_identification as informer_identification');
+
+        $searchCriteria = $params['search_criteria'];
+
+        if ('informer_identification' === $searchCriteria->getOrderBy()) {
+            $searchQueryBuilder->orderBy('c.`informer_identification`', $searchCriteria->getOrderWay());
+        }
+
+        if ('customer_group' === $searchCriteria->getOrderBy()) {
+            $searchQueryBuilder->orderBy('cgl.`name`', $searchCriteria->getOrderWay());
+        }
+
+        foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
+            if ('informer_identification' === $filterName) {
+                $searchQueryBuilder->andWhere("`c`.`informer_identification` LIKE '%" . $filterValue . "%'");
+            }
+//TODO Fix multiple select
+            if ('customer_group' === $filterName) {
+                $searchQueryBuilder->andWhere("`cg`.`id_group` IN (" . $filterValue . ")");
+            }
+        }
+        return $searchQueryBuilder;
     }
 }

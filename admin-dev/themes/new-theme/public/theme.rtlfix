@@ -133,7 +133,7 @@
   border-left-style: solid;
 }
 
-/* Align order status dropdown correctly */
-.adminorders .dropdown-menu {
-  right: inherit;
+/* Fix scrollbar position in sidebar menu */
+.nav-bar-overflow .ps__rail-y {
+  left: 0 !important;
 }

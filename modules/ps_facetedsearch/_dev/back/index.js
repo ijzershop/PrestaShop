@@ -226,7 +226,7 @@ $(document).ready(() => {
   }
 });
 
-$(document).on('ready', () => {
+$( function() {
   const layeredDefaultCategory = $('input[name="ps_layered_filter_by_default_category"]');
   layeredDefaultCategory.on('change', function initializeOptions(event) {
     const elm = $(this);

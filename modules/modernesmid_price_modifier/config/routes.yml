@@ -1,0 +1,7 @@
+price_modifier_index:
+    path: '/modernesmid/price-modifier'
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShop\Module\ModernesmidPriceModifier\Controller\Admin\AdminPriceModifierController::indexAction'
+        legacy_controller: 'AdminPriceModifierController'
+        _legacy_link: 'AdminPriceModifierController'

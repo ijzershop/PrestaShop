@@ -61,7 +61,7 @@ class Ps_EmailAlerts extends Module
     {
         $this->name = 'ps_emailalerts';
         $this->tab = 'administration';
-        $this->version = '2.3.2';
+        $this->version = '2.3.3';
         $this->author = 'PrestaShop';
         $this->need_instance = 0;
 
@@ -106,10 +106,8 @@ class Ps_EmailAlerts extends Module
             !$this->registerHook('actionProductAttributeDelete') ||
             !$this->registerHook('actionProductAttributeUpdate') ||
             !$this->registerHook('actionProductCoverage') ||
-            !$this->registerHook('actionProductOutOfStock') ||
             !$this->registerHook('actionOrderReturn') ||
             !$this->registerHook('actionOrderEdited') ||
-            !$this->registerHook('registerGDPRConsent') ||
             !$this->registerHook('actionDeleteGDPRCustomer') ||
             !$this->registerHook('actionExportGDPRData') ||
             !$this->registerHook('displayProductAdditionalInfo') ||
@@ -531,12 +529,10 @@ class Ps_EmailAlerts extends Module
                     $mail_id_lang,
                     'new_order',
                     $this->trans(
-                        '%s | %s | %s | %s',
+                        'New order : #%d - %s',
                         [
+                            $order->id,
                             $order->reference,
-                            Tools::displayPrice($order->total_paid, $currency),
-                            strtoupper(Tools::substr($order->payment, 0, 32)),
-                            (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name)
                         ],
                         'Emails.Subject',
                         $locale),
@@ -699,7 +695,7 @@ class Ps_EmailAlerts extends Module
         Db::getInstance()->execute($sql);
     }
 
-    public function hookActionAttributeDelete($params)
+    public function hookActionProductAttributeDelete($params)
     {
         if ($params['deleteAllAttributes']) {
             $sql = '

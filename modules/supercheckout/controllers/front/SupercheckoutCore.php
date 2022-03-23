@@ -130,36 +130,36 @@ class SupercheckoutCore extends ModuleFrontController
     public function setMedia()
     {
         parent::setMedia();
-        $stripe_official = '';
-        if (Module::isInstalled('stripe_official') && Module::isEnabled('stripe_official')) {
-            $stripe_official = $this->module_dir . 'views/js/front/payments.js';
-        }
+//        $stripe_official = '';
+//        if (Module::isInstalled('stripe_official') && Module::isEnabled('stripe_official')) {
+//            $stripe_official = $this->module_dir . 'views/js/front/payments.js';
+//        }
         $lang_iso_code = $this->context->language->iso_code;
         //add css
         $css = array(
-            $this->module_dir . 'views/css/front/notifications/jquery.notyfy.css',
-            $this->module_dir . 'views/css/front/notifications/jquery.gritter.css',
+//            $this->module_dir . 'views/css/front/notifications/jquery.notyfy.css',
+//            $this->module_dir . 'views/css/front/notifications/jquery.gritter.css',
             /* changes by rishabh jain done for 8th dec for ui enhancement */
             $this->module_dir . 'views/css/front/supercheckout_cart.css',
             /* changes over */
             /* Start: Added by Anshul Mittal for design change Aug 2019*/
-            $this->module_dir . 'views/css/font-awesome-new-design/css/all.css',
+//            $this->module_dir . 'views/css/font-awesome-new-design/css/all.css',
 //            $this->module_dir . 'views/css/front/style.css',
-            $this->module_dir . 'views/css/front/Bootstrap/bootstrap.css',
+//            $this->module_dir . 'views/css/front/Bootstrap/bootstrap.css',
             /* End: Added by Anshul Mittal for design change Aug 2019*/
         );
         $js = array(
-            __PS_BASE_URI__ . 'js/jquery/jquery-1.11.0.min.js',
-            $this->module_dir . 'views/js/front/jquery.tinysort.min.js',
-            $this->module_dir . 'views/js/front/bootstrap.js',
-            $this->module_dir . 'views/js/front/notifications/jquery.gritter.min.js',
-            $this->module_dir . 'views/js/front/notifications/jquery.notyfy.js',
-            $this->module_dir . 'views/js/front/supercheckout_notifications.js',
+//            __PS_BASE_URI__ . 'js/jquery/jquery-1.11.0.min.js',
+//            $this->module_dir . 'views/js/front/jquery.tinysort.min.js',
+//            $this->module_dir . 'views/js/front/bootstrap.js',
+//            $this->module_dir . 'views/js/front/notifications/jquery.gritter.min.js',
+//            $this->module_dir . 'views/js/front/notifications/jquery.notyfy.js',
+//            $this->module_dir . 'views/js/front/supercheckout_notifications.js',
             $this->module_dir . 'views/js/front/supercheckout.js',
             $this->module_dir . 'views/js/front/supercheckout_common.js',
-            $stripe_official
+//            $stripe_official
         );
-        $this->addJqueryPlugin('fancybox');
+//        $this->addJqueryPlugin('fancybox');
 
         // Changes by Anshul Mittal
         $custom_ssl_var = 0;
@@ -167,13 +167,13 @@ class SupercheckoutCore extends ModuleFrontController
             $custom_ssl_var = 1;
         }
 
-        if ((bool) Configuration::get('PS_SSL_ENABLED') && $custom_ssl_var == 1) {
-            $css[] = _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . 'js/jquery/plugins/fancybox/jquery.fancybox.css';
-            $js[] = _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . 'js/jquery/plugins/fancybox/jquery.fancybox.js';
-        } else {
-            $css[] = _PS_BASE_URL_ . __PS_BASE_URI__ . 'js/jquery/plugins/fancybox/jquery.fancybox.css';
-            $js[] = _PS_BASE_URL_ . __PS_BASE_URI__ . 'js/jquery/plugins/fancybox/jquery.fancybox.js';
-        }
+//        if ((bool) Configuration::get('PS_SSL_ENABLED') && $custom_ssl_var == 1) {
+//            $css[] = _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . 'js/jquery/plugins/fancybox/jquery.fancybox.css';
+//            $js[] = _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . 'js/jquery/plugins/fancybox/jquery.fancybox.js';
+//        } else {
+//            $css[] = _PS_BASE_URL_ . __PS_BASE_URI__ . 'js/jquery/plugins/fancybox/jquery.fancybox.css';
+//            $js[] = _PS_BASE_URL_ . __PS_BASE_URI__ . 'js/jquery/plugins/fancybox/jquery.fancybox.js';
+//        }
 
         foreach ($css as $css_uri) {
             if ($uri = $this->getasseturi($css_uri)) {
@@ -782,65 +782,65 @@ class SupercheckoutCore extends ModuleFrontController
     }
 
 
-    /*
-    * Function added by Anshul to subscribe customer email to SendinBlue
-    *
-    * @param    string email   Email of customer
-    * @param    string first_name   First name of customer
-    * @param    string last_name   Last name of customer
-    */
-
-    protected function addEmailToListSendinBlue($email, $first_name = null, $last_name = null)
-    {
-        $apikey = $this->supercheckout_settings['SendinBlue']['api'];
-        $listid = $this->supercheckout_settings['SendinBlue']['list'];
-        $mailin = new KbSuperMailin('https://api.sendinblue.com/v2.0', $apikey);
-
-        $data_arr = array("email" => $email,
-            "listid" => array($listid),
-            "attributes" => array("NAME" => $first_name, "SURNAME" => $last_name)
-        );
-
-        $mailin->create_update_user($data_arr); //calling function to add user
-    }
-
-    /*
-    * Function added by Anshul to subscribe customer email to Klaviyo
-    *
-    * @param    string email   Email of customer
-    * @param    string first_name   First name of customer
-    * @param    string last_name   Last name of customer
-    */
-
-    protected function addEmailToListKlaviyo($email, $first_name = null, $last_name = null)
-    {
-        $api_key = $this->supercheckout_settings['klaviyo']['api'];
-        $list_id = $this->supercheckout_settings['klaviyo']['list'];
-        $properties = array();
-        if ($first_name) {
-            $properties['$first_name'] = $first_name;
-        }
-        if ($last_name) {
-            $properties['$last_name'] = $last_name;
-        }
-        $properties_val = count($properties) ? urlencode(json_encode($properties)) : '{}';
-        $fields = array(
-            'api_key=' . $api_key,
-            'email=' . urlencode($email),
-            'confirm_optin=false',
-            'properties=' . $properties_val,
-        );
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://a.klaviyo.com/api/v1/list/' . $list_id . '/members');
-        curl_setopt($ch, CURLOPT_POST, count($fields));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, join('&', $fields));
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_exec($ch);
-        curl_close($ch);
-    }
+//    /*
+//    * Function added by Anshul to subscribe customer email to SendinBlue
+//    *
+//    * @param    string email   Email of customer
+//    * @param    string first_name   First name of customer
+//    * @param    string last_name   Last name of customer
+//    */
+//
+//    protected function addEmailToListSendinBlue($email, $first_name = null, $last_name = null)
+//    {
+//        $apikey = $this->supercheckout_settings['SendinBlue']['api'];
+//        $listid = $this->supercheckout_settings['SendinBlue']['list'];
+//        $mailin = new KbSuperMailin('https://api.sendinblue.com/v2.0', $apikey);
+//
+//        $data_arr = array("email" => $email,
+//            "listid" => array($listid),
+//            "attributes" => array("NAME" => $first_name, "SURNAME" => $last_name)
+//        );
+//
+//        $mailin->create_update_user($data_arr); //calling function to add user
+//    }
+//
+//    /*
+//    * Function added by Anshul to subscribe customer email to Klaviyo
+//    *
+//    * @param    string email   Email of customer
+//    * @param    string first_name   First name of customer
+//    * @param    string last_name   Last name of customer
+//    */
+//
+//    protected function addEmailToListKlaviyo($email, $first_name = null, $last_name = null)
+//    {
+//        $api_key = $this->supercheckout_settings['klaviyo']['api'];
+//        $list_id = $this->supercheckout_settings['klaviyo']['list'];
+//        $properties = array();
+//        if ($first_name) {
+//            $properties['$first_name'] = $first_name;
+//        }
+//        if ($last_name) {
+//            $properties['$last_name'] = $last_name;
+//        }
+//        $properties_val = count($properties) ? urlencode(json_encode($properties)) : '{}';
+//        $fields = array(
+//            'api_key=' . $api_key,
+//            'email=' . urlencode($email),
+//            'confirm_optin=false',
+//            'properties=' . $properties_val,
+//        );
+//
+//        $ch = curl_init();
+//        curl_setopt($ch, CURLOPT_URL, 'https://a.klaviyo.com/api/v1/list/' . $list_id . '/members');
+//        curl_setopt($ch, CURLOPT_POST, count($fields));
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, join('&', $fields));
+//        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+//        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//        curl_exec($ch);
+//        curl_close($ch);
+//    }
 
     protected function getOtherCartRules($rule_in_cart = array())
     {

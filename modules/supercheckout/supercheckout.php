@@ -42,10 +42,8 @@ class Supercheckout extends Module
         $this->name = 'supercheckout';
         $this->tab = 'checkout';
         $this->version = '6.0.9';
-        $this->author = 'Knowband';
+        $this->author = 'JB Stoker';
         $this->need_instance = 0;
-//        $this->module_key = '68a34cdd0bc05f6305874ea844eefa05';
-        $this->author_address = '0x2C366b113bd378672D4Ee91B75dC727E857A54A6';
         $this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' <= _PS_VERSION_);
         $this->bootstrap = true;
 
@@ -558,22 +556,22 @@ class Supercheckout extends Module
             $this->downloadFile(Tools::getValue('id_field'));
         }
 //        echo $this->registerHook('displayTop');
-        if (!class_exists('KbMailChimp')) {
-            include_once _PS_MODULE_DIR_ . 'supercheckout/libraries/mailchimpl library.php';
-        }
+//        if (!class_exists('KbMailChimp')) {
+//            include_once _PS_MODULE_DIR_ . 'supercheckout/libraries/mailchimpl library.php';
+//        }
         ini_set('max_input_vars', 2000);
         if (Tools::isSubmit('ajax')) {
             if (Tools::isSubmit('method')) {
                 switch (Tools::getValue('method')) {
-                    case 'getMailChimpList':
-                        $this->getMailchimpLists(trim(Tools::getValue('key')));
-                        break;
-                    case 'getSendinBlueList':
-                        $this->getSendinBlueList(trim(Tools::getValue('key')));
-                        break;
-                    case 'getklaviyoList':
-                        $this->getKlaviyoList(trim(Tools::getValue('key')));
-                        break;
+//                    case 'getMailChimpList':
+//                        $this->getMailchimpLists(trim(Tools::getValue('key')));
+//                        break;
+//                    case 'getSendinBlueList':
+//                        $this->getSendinBlueList(trim(Tools::getValue('key')));
+//                        break;
+//                    case 'getklaviyoList':
+//                        $this->getKlaviyoList(trim(Tools::getValue('key')));
+//                        break;
                     //Called getMailchimpLists
                     case 'removeFile':
                         $this->removeFile(trim(Tools::getValue('id')));
@@ -1295,31 +1293,9 @@ class Supercheckout extends Module
         }
     }
 
-    /*start-MK made changes to display demo block in the frontend*/
+
     public function hookDisplayContentWrapperTop()
     {
-        if (Configuration::get('VELOCITY_SUPERCHECKOUT_DEMO')) {
-//            $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'supercheckout/views/css/font-awesome-new-design/css/all.css');
-//            die;
-            $settings = array();
-            if (!Configuration::get('VELOCITY_SUPERCHECKOUT') || Configuration::get('VELOCITY_SUPERCHECKOUT') == '') {
-                $settings = $this->getDefaultSettings();
-            } else {
-                $settings = unserialize(Configuration::get('VELOCITY_SUPERCHECKOUT'));
-            }
-
-            if (Dispatcher::getInstance()->getController() != 'supercheckout') {
-                unset($this->context->cookie->kb_supercheckout_demo);
-            }
-            if (!empty($settings) && $settings['enable']) {
-                $this->context->smarty->assign(array(
-                    'one_column_link' => $this->context->link->getModuleLink($this->name, 'superdemo', array('action' => 'view', 'type' => 1)),
-                    'two_column_link' => $this->context->link->getModuleLink($this->name, 'superdemo', array('action' => 'view', 'type' => 2)),
-                    'three_column_link' => $this->context->link->getModuleLink($this->name, 'superdemo', array('action' => 'view', 'type' => 3)),
-                ));
-                return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->name . '/views/templates/hook/demo_layout.tpl');
-            }
-        }
     }
 
 
@@ -1346,19 +1322,19 @@ class Supercheckout extends Module
     public function hookDisplayHeader()
     {
         $settings = array();
-        if (Configuration::get('VELOCITY_SUPERCHECKOUT_DEMO')) {
-            $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'supercheckout/views/css/font-awesome-new-design/css/all.css');
-        }
-        if (Module::isInstalled('socialloginizer') && Module::isEnabled('socialloginizer')) {
-            $social_login_data = unserialize(Configuration::get('VELOCITY_SOCIAL_LOGINIZER'));
-            if (isset($social_login_data['order'])) {
-                $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'socialloginizer/views/css/icons.css');
-                $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'socialloginizer/views/css/font-awesome.min.css');
-                $this->context->controller->addJs(_PS_MODULE_DIR_ . 'socialloginizer/views/js/tinysort/jquery.tinysort.min.js');
-                $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'socialloginizer/views/css/loginizer_front.css');
-                $this->context->controller->addJs(_PS_MODULE_DIR_ . 'socialloginizer/views/js/custom-social-login.js');
-            }
-        }
+//        if (Configuration::get('VELOCITY_SUPERCHECKOUT_DEMO')) {
+//            $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'supercheckout/views/css/font-awesome-new-design/css/all.css');
+//        }
+//        if (Module::isInstalled('socialloginizer') && Module::isEnabled('socialloginizer')) {
+//            $social_login_data = unserialize(Configuration::get('VELOCITY_SOCIAL_LOGINIZER'));
+//            if (isset($social_login_data['order'])) {
+//                $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'socialloginizer/views/css/icons.css');
+//                $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'socialloginizer/views/css/font-awesome.min.css');
+//                $this->context->controller->addJs(_PS_MODULE_DIR_ . 'socialloginizer/views/js/tinysort/jquery.tinysort.min.js');
+//                $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'socialloginizer/views/css/loginizer_front.css');
+//                $this->context->controller->addJs(_PS_MODULE_DIR_ . 'socialloginizer/views/js/custom-social-login.js');
+//            }
+//        }
         if (!Configuration::get('VELOCITY_SUPERCHECKOUT') || Configuration::get('VELOCITY_SUPERCHECKOUT') == '') {
             $settings = $this->getDefaultSettings();
         } else {
@@ -1386,52 +1362,52 @@ class Supercheckout extends Module
         }
         /* End: Code added by Anshul to make the changes regarding IP */
         if ($show) {
-            if (!Tools::getValue('klarna_supercheckout')) {
-                if (isset($settings['super_test_mode']) && $settings['super_test_mode'] != 1) {
-                    $page_name = $this->context->controller->php_self;
-                    if ($page_name == 'order-opc' || $page_name == 'order' || $page_name == 'checkout' || (isset($settings['disable_cart_page']) && $settings['disable_cart_page'] == 1 && $page_name == 'cart' && !isset($_SERVER['HTTP_X_REQUESTED_WITH']) && Context::getContext()->customer->isLogged()) && Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id) {
-                        if ($settings['enable'] == 1) {
-                            $current_page_url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-                            $query_string = parse_url($current_page_url);
-                            $query_params = array();
-                            if (isset($query_string['query'])) {
-                                parse_str($query_string['query'], $query_params);
-                                if (isset($query_params['isPaymentStep'])) {
-                                    unset($query_params['isPaymentStep']);
-                                }
-                            }
-                            Tools::redirect(
-                                $this->context->link->getModuleLink(
-                                    $this->name,
-                                    $this->name,
-                                    $query_params,
-                                    (bool) Configuration::get('PS_SSL_ENABLED')
-                                )
-                            );
-                        }
-                    }
-                }
-            }
+//            if (!Tools::getValue('klarna_supercheckout')) {
+//                if (isset($settings['super_test_mode']) && $settings['super_test_mode'] != 1) {
+//                    $page_name = $this->context->controller->php_self;
+//                    if ($page_name == 'order-opc' || $page_name == 'order' || $page_name == 'checkout' || (isset($settings['disable_cart_page']) && $settings['disable_cart_page'] == 1 && $page_name == 'cart' && !isset($_SERVER['HTTP_X_REQUESTED_WITH']) && Context::getContext()->customer->isLogged()) && Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id) {
+//                        if ($settings['enable'] == 1) {
+//                            $current_page_url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+//                            $query_string = parse_url($current_page_url);
+//                            $query_params = array();
+//                            if (isset($query_string['query'])) {
+//                                parse_str($query_string['query'], $query_params);
+//                                if (isset($query_params['isPaymentStep'])) {
+//                                    unset($query_params['isPaymentStep']);
+//                                }
+//                            }
+//                            Tools::redirect(
+//                                $this->context->link->getModuleLink(
+//                                    $this->name,
+//                                    $this->name,
+//                                    $query_params,
+//                                    (bool) Configuration::get('PS_SSL_ENABLED')
+//                                )
+//                            );
+//                        }
+//                    }
+//                }
+//            }
 
-            if (Configuration::get('VELOCITY_SUPERCHECKOUT_CSS') || Configuration::get('VELOCITY_SUPERCHECKOUT_CSS') != ''
-            ) {
-                $settings['custom_css'] = unserialize((Configuration::get('VELOCITY_SUPERCHECKOUT_CSS')));
-                $settings['custom_css'] = urldecode($settings['custom_css']);
-            }
-
-            if (Configuration::get('VELOCITY_SUPERCHECKOUT_JS') || Configuration::get('VELOCITY_SUPERCHECKOUT_JS') != ''
-            ) {
-                $settings['custom_js'] = unserialize((Configuration::get('VELOCITY_SUPERCHECKOUT_JS')));
-                $settings['custom_js'] = urldecode($settings['custom_js']);
-            }
-
-            if (isset($settings['custom_css'])) {
-                $this->smarty->assign($settings['custom_css']);
-            }
-
-            if (isset($settings['custom_js'])) {
-                $this->smarty->assign($settings['custom_js']);
-            }
+//            if (Configuration::get('VELOCITY_SUPERCHECKOUT_CSS') || Configuration::get('VELOCITY_SUPERCHECKOUT_CSS') != ''
+//            ) {
+//                $settings['custom_css'] = unserialize((Configuration::get('VELOCITY_SUPERCHECKOUT_CSS')));
+//                $settings['custom_css'] = urldecode($settings['custom_css']);
+//            }
+//
+//            if (Configuration::get('VELOCITY_SUPERCHECKOUT_JS') || Configuration::get('VELOCITY_SUPERCHECKOUT_JS') != ''
+//            ) {
+//                $settings['custom_js'] = unserialize((Configuration::get('VELOCITY_SUPERCHECKOUT_JS')));
+//                $settings['custom_js'] = urldecode($settings['custom_js']);
+//            }
+//
+//            if (isset($settings['custom_css'])) {
+//                $this->smarty->assign($settings['custom_css']);
+//            }
+//
+//            if (isset($settings['custom_js'])) {
+//                $this->smarty->assign($settings['custom_js']);
+//            }
         }
     }
 
@@ -1477,121 +1453,121 @@ class Supercheckout extends Module
         $this->context->cookie->__unset($this->context->cookie->supercheckout_perm_address_invoice);
     }
 
-    protected function getMailchimpLists($mailchimp_api)
-    {
-        try {
-            $id = $mailchimp_api;
-            $mchimp = new KbMailChimp($id);
-            $arrchimp = ($mchimp->call('lists/list'));
-            $totallists = $arrchimp['total'];
-            if ($totallists >= 1) {
-                $listchimp = $arrchimp['data'];
-                echo Tools::jsonEncode($listchimp);
-            } else {
-                echo Tools::jsonEncode(array('false'));
-            }
-        } catch (Exception $e) {
-            echo Tools::jsonEncode(array('false'));
-        }
-        die;
-    }
+//    protected function getMailchimpLists($mailchimp_api)
+//    {
+//        try {
+//            $id = $mailchimp_api;
+//            $mchimp = new KbMailChimp($id);
+//            $arrchimp = ($mchimp->call('lists/list'));
+//            $totallists = $arrchimp['total'];
+//            if ($totallists >= 1) {
+//                $listchimp = $arrchimp['data'];
+//                echo Tools::jsonEncode($listchimp);
+//            } else {
+//                echo Tools::jsonEncode(array('false'));
+//            }
+//        } catch (Exception $e) {
+//            echo Tools::jsonEncode(array('false'));
+//        }
+//        die;
+//    }
+//
+//    /*
+//     * Function added by Anshul for SendinBlue
+//     */
+//    protected function getSendinBlueList($SendinBlue_api)
+//    {
+//        try {
+//            $apikey = $SendinBlue_api;
+//            $response = array(); //defining array to store response
+//            if (trim($apikey) != '' && $apikey !== null) {
+//                $mailin = new KbSuperMailin('https://api.sendinblue.com/v2.0', $apikey);
+//
+//                $folder = $mailin->get_folder(1)['data']; // it'll be modified later as get_lists() is not working to get all list
+//                foreach ($folder as $value) {
+//                    $response[] = $value['lists'];
+//                }
+//            }
+//            if (empty($response)) {
+//                echo Tools::jsonEncode(array('false'));
+//            } else {
+//                echo Tools::jsonEncode($response[0]);
+//            }
+//        } catch (Exception $e) {
+//            echo Tools::jsonEncode(array('false'));
+//        }
+//        die;
+//    }
 
-    /*
-     * Function added by Anshul for SendinBlue
-     */
-    protected function getSendinBlueList($SendinBlue_api)
-    {
-        try {
-            $apikey = $SendinBlue_api;
-            $response = array(); //defining array to store response
-            if (trim($apikey) != '' && $apikey !== null) {
-                $mailin = new KbSuperMailin('https://api.sendinblue.com/v2.0', $apikey);
-
-                $folder = $mailin->get_folder(1)['data']; // it'll be modified later as get_lists() is not working to get all list
-                foreach ($folder as $value) {
-                    $response[] = $value['lists'];
-                }
-            }
-            if (empty($response)) {
-                echo Tools::jsonEncode(array('false'));
-            } else {
-                echo Tools::jsonEncode($response[0]);
-            }
-        } catch (Exception $e) {
-            echo Tools::jsonEncode(array('false'));
-        }
-        die;
-    }
-
-    /*
-     * Function added by Anshul for Klaviyo
-     */
-    protected function getKlaviyoList($Klaviyo_api)
-    {
-        try {
-            $api_key = $Klaviyo_api;
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://a.klaviyo.com/api/v1/lists?api_key=' . $api_key);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-            $output = json_decode(curl_exec($ch));
-            curl_close($ch);
-
-            if (property_exists($output, 'status')) {
-                $status = $output->status;
-                if ($status === 403) {
-                    $reason = $this->l('The Private Klaviyo API Key you have set is invalid.');
-                } elseif ($status === 401) {
-                    $reason = $this->l('The Private Klaviyo API key you have set is no longer valid.');
-                } else {
-                    $reason = $this->l('Unable to verify Klaviyo Private API Key.');
-                }
-
-                $result = array(
-                    'success' => false,
-                    'reason' => $reason
-                );
-            } else {
-                $static_groups = array_filter($output->data, function ($list) {
-                    return $list->list_type === 'list';
-                });
-
-                usort($static_groups, function ($a, $b) {
-                    return Tools::strtolower($a->name) > Tools::strtolower($b->name) ? 1 : -1;
-                });
-
-                $result = array(
-                    'success' => true,
-                    'lists' => $static_groups
-                );
-            }
-            $options = array();
-            if (!$result["success"]) {
-                $options["error"][] = array(
-                    'value' => "0",
-                    'label' => $result["reason"]);
-            } else {
-                if (!empty($result["lists"])) {
-                    foreach ($result["lists"] as $list) {
-                        $options["success"][] = array(
-                            'value' => $list->id,
-                            'label' => $list->name);
-                    }
-                } else {
-                    $options["error"][] = array(
-                        'value' => "0",
-                        'label' => $this->l("No list found. (Verify Credentials)"));
-                }
-            }
-
-            echo Tools::jsonEncode($options['success']);
-        } catch (Exception $e) {
-            echo Tools::jsonEncode(array('false'));
-        }
-        die;
-    }
+//    /*
+//     * Function added by Anshul for Klaviyo
+//     */
+//    protected function getKlaviyoList($Klaviyo_api)
+//    {
+//        try {
+//            $api_key = $Klaviyo_api;
+//            $ch = curl_init();
+//            curl_setopt($ch, CURLOPT_URL, 'https://a.klaviyo.com/api/v1/lists?api_key=' . $api_key);
+//            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+//            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//
+//            $output = json_decode(curl_exec($ch));
+//            curl_close($ch);
+//
+//            if (property_exists($output, 'status')) {
+//                $status = $output->status;
+//                if ($status === 403) {
+//                    $reason = $this->l('The Private Klaviyo API Key you have set is invalid.');
+//                } elseif ($status === 401) {
+//                    $reason = $this->l('The Private Klaviyo API key you have set is no longer valid.');
+//                } else {
+//                    $reason = $this->l('Unable to verify Klaviyo Private API Key.');
+//                }
+//
+//                $result = array(
+//                    'success' => false,
+//                    'reason' => $reason
+//                );
+//            } else {
+//                $static_groups = array_filter($output->data, function ($list) {
+//                    return $list->list_type === 'list';
+//                });
+//
+//                usort($static_groups, function ($a, $b) {
+//                    return Tools::strtolower($a->name) > Tools::strtolower($b->name) ? 1 : -1;
+//                });
+//
+//                $result = array(
+//                    'success' => true,
+//                    'lists' => $static_groups
+//                );
+//            }
+//            $options = array();
+//            if (!$result["success"]) {
+//                $options["error"][] = array(
+//                    'value' => "0",
+//                    'label' => $result["reason"]);
+//            } else {
+//                if (!empty($result["lists"])) {
+//                    foreach ($result["lists"] as $list) {
+//                        $options["success"][] = array(
+//                            'value' => $list->id,
+//                            'label' => $list->name);
+//                    }
+//                } else {
+//                    $options["error"][] = array(
+//                        'value' => "0",
+//                        'label' => $this->l("No list found. (Verify Credentials)"));
+//                }
+//            }
+//
+//            echo Tools::jsonEncode($options['success']);
+//        } catch (Exception $e) {
+//            echo Tools::jsonEncode(array('false'));
+//        }
+//        die;
+//    }
 
     protected function removeFile($id)
     {
@@ -2230,7 +2206,7 @@ class Supercheckout extends Module
             'super_test_mode' => 0,
             'free_shipping_amount'=> '',
             'SendinBlue' => 0,
-            'klaviyo' => 0,
+//            'klaviyo' => 0,
             'email_marketing_delete' => 0,
             'super_test_mode' => 0,
             'qty_update_option' => 0,
@@ -2952,67 +2928,6 @@ class Supercheckout extends Module
         if (!empty($customer['email']) && Validate::isEmail($customer['email'])) {
             if (Module::isInstalled('supercheckout')) {
                 $config = Tools::unserialize(Configuration::get('VELOCITY_SUPERCHECKOUT'));
-                if ($config['enable'] == 1 && $config['email_marketing_delete'] == 1) {
-                    $this->deleteEmailFromMarketingServices($customer['email']);
-                    return json_encode(true);
-                }
-            }
-        }
-    }
-
-    /*
-     * Function added by Anshul to delete the email from Marketing services
-     */
-    public function deleteEmailFromMarketingServices($email)
-    {
-        $config = Tools::unserialize(Configuration::get('VELOCITY_SUPERCHECKOUT'));
-        if ($config['email_marketing_delete'] == 1) {
-            try {
-                if (!class_exists('KbMailChimp')) {
-                    include_once _PS_MODULE_DIR_ . 'supercheckout/libraries/mailchimpl library.php';
-                }
-                $api_key = $config['mailchimp']['api'];
-                $list_id = $config['mailchimp']['list'];
-                $Mailchimp = new KbMailChimp($api_key);
-                $subscriber_hash = $Mailchimp->subscriberHash(trim($email));
-                $result = $Mailchimp->delete("lists/$list_id/members/$subscriber_hash");
-            } catch (\Exception $e) {
-//                 $e->getMessage();
-            }
-        }
-        if ($config['email_marketing_delete'] == 1) {
-            try {
-                if (!class_exists('KbSuperMailin')) {
-                    include_once(dirname(__FILE__) . '/libraries/sendinBlue/Mailin.php');
-                }
-                $api_key = $config['SendinBlue']['api'];
-                $list_id = $config['SendinBlue']['list'];
-
-                $mailin = new KbSuperMailin('https://api.sendinblue.com/v2.0', $api_key);
-                $data_arr = array("email" => $email
-                );
-                $mailin->delete_user($data_arr); //calling function to add user
-            } catch (\Exception $e) {
-            }
-        }
-        if ($config['email_marketing_delete'] == 1) {
-            try {
-                $api_key = $config['klaviyo']['api'];
-                $list_id = $config['klaviyo']['list'];
-                $fields = array(
-                    'api_key=' . $api_key,
-                    'email=' . urlencode($email)
-                );
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, 'https://a.klaviyo.com/api/v1/list/' . $list_id . '/members/exclude');
-                curl_setopt($ch, CURLOPT_POST, count($fields));
-                curl_setopt($ch, CURLOPT_POSTFIELDS, join('&', $fields));
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_exec($ch);
-                curl_close($ch);
-            } catch (\Exception $e) {
             }
         }
     }

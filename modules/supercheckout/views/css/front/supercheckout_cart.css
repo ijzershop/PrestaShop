@@ -1307,10 +1307,6 @@ input.kbfiletype {
     }
 }*/
 
-#velsof_supercheckout_form .row {
-    display: block;
-}
-
 @media(max-width:992px){
 .accountOptions li .fa, .accountOptions li .fas {
         clear: both;
@@ -1329,7 +1325,7 @@ input.kbfiletype {
 .opc-container #payment-method [type="radio"]:not(:checked){
    position: absolute;
    width: 100%;
-   height: 100%;
+   height: auto;
    z-index: 0;
    opacity: 0;
    left: 0;

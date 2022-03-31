@@ -533,7 +533,9 @@ class AddressCore extends ObjectModel
                 $address = new Address((int) $id_address);
 
                 if (!Validate::isLoadedObject($address)) {
-                    throw new PrestaShopException('Invalid address #' . (int) $id_address);
+                    $address->id = (int) $id_address;
+                    $address->delete();
+//                    throw new PrestaShopException('Invalid address #' . (int) $id_address);
                 }
             } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
                 $address = new Address();

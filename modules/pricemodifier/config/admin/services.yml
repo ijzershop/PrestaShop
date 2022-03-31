@@ -1,0 +1,11 @@
+# services backend
+imports:
+  - { resource: ../common.yml }
+
+services:
+  pricemodifier.demo:
+    class: 'PrestaShop\Module\Pricemodifier\Admin\ConfigurationController'
+    public: true
+    arguments:
+      - '@doctrine.cache.provider'
+

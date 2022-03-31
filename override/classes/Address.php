@@ -40,6 +40,76 @@ class Address extends AddressCore
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
         ),
     );
+
+
+
+
+    /**
+     * Initialize an address corresponding to the specified id address or if empty to the
+     * default shop configuration.
+     *
+     * @param int $id_address
+     * @param bool $with_geoloc
+     *
+     * @return Address address
+     *
+     * @throws PrestaShopException
+     */
+    public static function initialize($id_address = null, $with_geoloc = false)
+    {
+        $context = Context::getContext();
+
+        if ($id_address) {
+            $context_hash = (int) $id_address;
+        } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
+            $context_hash = md5((int) $context->customer->geoloc_id_country . '-' . (int) $context->customer->id_state . '-' .
+                $context->customer->postcode);
+        } else {
+            $context_hash = md5((int) $context->country->id);
+        }
+
+        $cache_id = 'Address::initialize_' . $context_hash;
+
+        if (!Cache::isStored($cache_id)) {
+            // if an id_address has been specified retrieve the address
+            if ($id_address) {
+                $address = new Address((int) $id_address);
+
+                if (!Validate::isLoadedObject($address)) {
+                    $address->id = (int) $id_address;
+                    $address->delete();
+//                    throw new PrestaShopException('Invalid address #' . (int) $id_address);
+                }
+            } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
+                $address = new Address();
+                $address->id_country = (int) $context->customer->geoloc_id_country;
+                $address->id_state = (int) $context->customer->id_state;
+                $address->postcode = $context->customer->postcode;
+            } elseif ((int) $context->country->id && ((int) $context->country->id != Configuration::get('PS_SHOP_COUNTRY_ID'))) {
+                $address = new Address();
+                $address->id_country = (int) $context->country->id;
+                $address->id_state = 0;
+                $address->postcode = 0;
+            } elseif ((int) Configuration::get('PS_SHOP_COUNTRY_ID')) {
+                // set the default address
+                $address = new Address();
+                $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID');
+                $address->id_state = Configuration::get('PS_SHOP_STATE_ID');
+                $address->postcode = Configuration::get('PS_SHOP_CODE');
+            } else {
+                // set the default address
+                $address = new Address();
+                $address->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+                $address->id_state = 0;
+                $address->postcode = 0;
+            }
+            Cache::store($cache_id, $address);
+
+            return $address;
+        }
+
+        return Cache::retrieve($cache_id);
+    }
 }
 
 

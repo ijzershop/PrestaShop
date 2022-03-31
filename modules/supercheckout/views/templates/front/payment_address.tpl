@@ -11,6 +11,8 @@
     {assign var='existing_address' value=reset($customer.addresses)}
   {/if}
 {/if}
+
+
 <div class="supercheckout-checkout-content"></div>
 <input type="hidden" name="payment_address[payment_address_id]" value="{if !isset($guest_information) && $existing_address}{$existing_address['id']}{/if}">
     <div class="opc_billing_address custom-panel">
@@ -77,13 +79,12 @@
                     {/if}
 
                     {if $settings['payment_address'][$p_address_key]['html_format'] == 1}
-
                         {if $p_address_key eq 'postcode'}
                             <div class="row sort_data d-flex" id="payment_post_code" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                             {else}
                                 <div class="sort_data col-12 p-0" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                                 {/if}
-                                <div class="{if $p_address_key == 'id_country' || $p_address_key == 'city'}col-12{else}col-12 col-sm-6{/if} {if $p_address_key == 'postcode' ||  $p_address_key == 'firstname'}{if $p_address_key == 'firstname'}pl-sm-0 float-left p-0 {/if} pr-sm-0{elseif $p_address_key == 'lastname'}pl-sm-1 pr-sm-0 float-right{/if}">
+                                <div class="{if $p_address_key == 'id_country' || $p_address_key == 'city'}col-12 p-0{else}col-12 col-sm-6{/if} {if $p_address_key == 'postcode' ||  $p_address_key == 'firstname'}{if $p_address_key == 'firstname'}pl-sm-0 float-left p-0 {/if} pr-sm-0{elseif $p_address_key == 'lastname'}pl-sm-1 pr-sm-0 float-right{/if}">
                                     <div class="form-group ">
                                         <label class="control-label"for="payment_address[{$p_address_key}]">{l s={$settings['payment_address'][$p_address_key]['title']} mod='supercheckout'}
                                             {if $p_address_key eq 'vat_number'}
@@ -142,7 +143,7 @@
                                     </div>
                                 </div>
                             {elseif $settings['payment_address'][$p_address_key]['html_format'] == 2}
-                                <div class="{if $p_address_key == 'id_country'}col-12{else}col-12 col-sm-6{/if} {if $p_address_key == 'postcode' || $p_address_key == 'phone' ||  $p_address_key == 'firstname'}pr-sm-0{elseif $p_address_key == 'city' || $p_address_key == 'phone_mobile' || $p_address_key == 'lastname'}pl-sm-1 {if $p_address_key == 'lastname'}pr-sm-0 p-0 float-right{/if}{/if}">
+                                <div class="{if $p_address_key == 'id_country'}col-12 p-0{else}col-12 col-sm-6{/if} {if $p_address_key == 'postcode' || $p_address_key == 'phone' ||  $p_address_key == 'firstname'}pr-sm-0{elseif $p_address_key == 'city' || $p_address_key == 'phone_mobile' || $p_address_key == 'lastname'}pl-sm-1 {if $p_address_key == 'lastname'}pr-sm-0 p-0 float-right{/if}{/if}">
                                     <div class="form-group ">
                                         <label class="control-label"for="payment_address[{$p_address_key}]">{l s={$settings['payment_address'][$p_address_key]['title']} mod='supercheckout'}
                                             {if $p_address_key eq 'vat_number'}
@@ -206,14 +207,14 @@
                                 <div class="sort_data col-12 col-sm-6 pl-0 pr-0 float-left" id="payment_post_code" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                                 {else}
                                     {if $p_address_key == 'address1'}
-                                    <div class="row">
-                                        <div class="sort_data col-12" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="display: flow-root;">
+                                    <div class="col-12 p-0">
+                                        <div class="sort_data col-12 p-0" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="display: flow-root;">
                                     {elseif $p_address_key == 'house_number'}
                                         <div class="sort_data col-8 col-sm-3 pl-sm-1 pr-sm-0 pr-0 pl-0 float-left" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                                     {elseif $p_address_key == 'house_number_extension'}
                                         <div class="sort_data col-4 col-sm-3 pl-sm-1 pl-1 pr-0 float-right" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                                     {else}
-                                        <div class="sort_data col-12 {if $p_address_key == 'company'} p-0 {/if}" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
+                                        <div class="sort_data col-12 {if $p_address_key == 'company'} p-0 {/if} p-0" data-percentage="{$settings['payment_address'][$p_address_key]['sort_order']|intval}" style="{$display_row}">
                                     {/if}
 
                                   {/if}

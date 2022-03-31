@@ -76,6 +76,8 @@ final class AddressFormDataProvider implements FormDataProviderInterface
             'company' => $editableAddress->getCompany(),
             'vat_number' => $editableAddress->getVatNumber(),
             'address1' => $editableAddress->getAddress(),
+            'house_number' => $editableAddress->getHouseNumber(),
+            'house_number_extension' => $editableAddress->getHouseNumberExtension(),
             'address2' => $editableAddress->getAddress2(),
             'city' => $editableAddress->getCity(),
             'postcode' => $editableAddress->getPostCode(),

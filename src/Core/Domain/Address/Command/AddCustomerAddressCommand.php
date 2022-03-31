@@ -65,6 +65,16 @@ class AddCustomerAddressCommand
     /**
      * @var string
      */
+    private $houseNumber;
+
+    /**
+     * @var string
+     */
+    private $houseNumberExtension;
+
+    /**
+     * @var string
+     */
     private $city;
 
     /**
@@ -123,6 +133,8 @@ class AddCustomerAddressCommand
      * @param string $firstName
      * @param string $lastName
      * @param string $address
+     * @param string $houseNumber
+     * @param string $houseNumberExtension
      * @param string $city
      * @param int $countryId
      * @param string $postcode
@@ -144,6 +156,8 @@ class AddCustomerAddressCommand
         string $firstName,
         string $lastName,
         string $address,
+        string $houseNumber,
+        string $houseNumberExtension,
         string $city,
         int $countryId,
         string $postcode,
@@ -161,6 +175,8 @@ class AddCustomerAddressCommand
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->address = $address;
+        $this->houseNumber = $houseNumber;
+        $this->houseNumberExtension = $houseNumberExtension;
         $this->city = $city;
         $this->countryId = new CountryId($countryId);
         $this->postCode = $postcode;
@@ -212,6 +228,22 @@ class AddCustomerAddressCommand
     public function getAddress(): string
     {
         return $this->address;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHouseNumber(): string
+    {
+        return $this->houseNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHouseNumberExtension(): string
+    {
+        return $this->houseNumberExtension;
     }
 
     /**

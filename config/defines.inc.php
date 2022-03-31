@@ -56,6 +56,8 @@ if (_PS_MODE_DEV_ === true) {
 
 if (!defined('_PS_DEBUG_PROFILING_')) {
     define('_PS_DEBUG_PROFILING_', false);
+} else {
+    define('_PS_DEBUG_PROFILING_', false);
 }
 if (!defined('_PS_MODE_DEMO_')) {
     define('_PS_MODE_DEMO_', false);

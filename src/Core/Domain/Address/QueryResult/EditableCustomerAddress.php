@@ -74,6 +74,16 @@ class EditableCustomerAddress
     /**
      * @var string
      */
+    private $houseNumber;
+
+    /**
+     * @var string
+     */
+    private $houseNumberExtension;
+
+    /**
+     * @var string
+     */
     private $city;
 
     /**
@@ -139,6 +149,8 @@ class EditableCustomerAddress
      * @param string $firstName
      * @param string $lastName
      * @param string $address
+     * @param string $houseNumber
+     * @param string $houseNumberExtension
      * @param string $city
      * @param CountryId $countryId
      * @param string $postCode
@@ -160,6 +172,8 @@ class EditableCustomerAddress
         string $firstName,
         string $lastName,
         string $address,
+        string $houseNumber,
+        string $houseNumberExtension,
         string $city,
         CountryId $countryId,
         string $postCode,
@@ -180,6 +194,8 @@ class EditableCustomerAddress
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->address = $address;
+        $this->houseNumber = $houseNumber;
+        $this->houseNumberExtension = $houseNumberExtension;
         $this->city = $city;
         $this->countryId = $countryId;
         $this->postCode = $postCode;
@@ -344,5 +360,15 @@ class EditableCustomerAddress
     public function getOther(): ?string
     {
         return $this->other;
+    }
+
+    public function getHouseNumber()
+    {
+        return $this->houseNumber;
+    }
+
+    public function getHouseNumberExtension()
+    {
+        return $this->houseNumberExtension;
     }
 }

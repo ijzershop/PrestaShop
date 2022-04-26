@@ -20,6 +20,8 @@ class Product extends ProductCore {
     public $id_oi_offer;
     public $oi_offer_extra_shipping;
     public $name;
+    public $seo_keywords;
+    public $alternate_name;
     public $jsonld;
     public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
     {
@@ -52,6 +54,8 @@ class Product extends ProductCore {
                                                                  'lang' => true,
                                                                  'validate' => 'isCatalogName',
                                                                  'required' => true, 'size' => 255);
+        self::$definition['fields']['alternate_name'] = array('type' => self::TYPE_STRING, 'required' => false);
+        self::$definition['fields']['seo_keywords'] = array('type' => self::TYPE_STRING, 'required' => false);
         self::$definition['fields']['jsonld'] = array('type' => self::TYPE_STRING, 'required' => false);
         self::$definition['fields']['link_rewrite'] = array('type' => self::TYPE_STRING,
             'lang' => true,

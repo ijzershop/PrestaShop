@@ -60,6 +60,8 @@ final class InvoicePdfGenerator implements PDFGeneratorInterface
         Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => [$orderInvoice]]);
 
         $pdf = new PDF($orderInvoice, PDF::TEMPLATE_INVOICE, Context::getContext()->smarty);
+
+        ob_end_clean();
         $pdf->render();
     }
 }

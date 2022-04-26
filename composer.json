@@ -111,7 +111,7 @@
     "swiftmailer/swiftmailer": "~6.2",
     "symfony/monolog-bundle": "^3.1.0",
     "symfony/polyfill-apcu": "^1.0",
-    "symfony/polyfill-php73": "^1.10",
+    "symfony/polyfill-php80": "^1.18",
     "symfony/swiftmailer-bundle": "^3.1",
     "symfony/symfony": "^3.4.37",
     "tecnickcom/tcpdf": "^6.2.12",

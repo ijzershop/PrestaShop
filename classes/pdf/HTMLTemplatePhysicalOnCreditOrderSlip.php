@@ -250,6 +250,21 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
         $cart_rules = $this->order->getCartRules($this->order_invoice->id);
         $free_shipping = false;
         foreach ($cart_rules as $key => $cart_rule) {
+            //Add return amount by balie orders
+            $cartRuleData = new CartRule($cart_rule['id_cart_rule']);
+
+            $cart_rules[$key]['reduction_amount'] = $cartRuleData->reduction_amount;
+
+            if($cartRuleData->group_restriction) {
+                $cartRuleGroup = Db::getInstance()->executeS('SELECT id_group FROM ' . _DB_PREFIX_ . 'cart_rule_group WHERE id_cart_rule = ' . (int)$cart_rule['id_cart_rule']);
+                if (isset($cartRuleGroup[0]['id_group']) && $cartRuleGroup[0]['id_group'] == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_BALIE_GROUP',
+                        null, null, null, 5)) {
+                    $cart_rules[$key]['remaining_amount'] = (float)$this->order_invoice->getOrder()->total_shipping_tax_excl - ((float)$cartRuleData->reduction_amount - (float)$cart_rule['value_tax_excl']);
+                    if($cart_rules[$key]['remaining_amount'] > 0){
+                        $cart_rules[$key]['remaining_amount'] = $cart_rules[$key]['remaining_amount']*1.21;
+                    }
+                }
+            }
             if ($cart_rule['free_shipping']) {
                 $free_shipping = true;
                 /*

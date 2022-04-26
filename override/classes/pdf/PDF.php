@@ -90,6 +90,8 @@ class PDFCore
         if (count($this->objects) > 1) { // when bulk mode only
             $this->send_bulk_flag = true;
         }
+
+
     }
 
     /**

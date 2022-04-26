@@ -198,6 +198,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'payment_tab' => $this->smarty->fetch($this->getTemplate('order-slip.payment-tab')),
             'tax_tab' => $this->getTaxTabContent(),
         );
+
         $this->smarty->assign($tpls);
 
         return $this->smarty->fetch($this->getTemplate('order-slip'));
@@ -236,6 +237,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
                             && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
 
         $this->smarty->assign(array(
+            'isTaxEnabled' => (bool) Configuration::get('PS_TAX'),
             'tax_exempt' => $tax_exempt,
             'product_tax_breakdown' => $this->getProductTaxesBreakdown(),
             'shipping_tax_breakdown' => $this->getShippingTaxesBreakdown(),

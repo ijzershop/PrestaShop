@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
 
-{$style_tab}
+{*{$style_tab}*}
 
 
 <table width="100%" id="body" border="0" cellpadding="0" cellspacing="0" style="margin:0;">

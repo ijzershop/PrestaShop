@@ -65,7 +65,7 @@ class AttributeGroup extends AttributeGroupCore
         if(is_array($attributes_list)){
 
             $attributes = implode('|',array_unique($attributes_list));
-            $filtered_name = preg_replace(['/(- ('.$attributes.'):\s*[a-zA-Z])/', '/(\(('.$attributes.'):\s*[a-zA-Z])\)/'], '', $productName);
+            $filtered_name = preg_replace(['/(- ('.$attributes.')\s*:\s*[a-zA-Z])/', '/(- ('.$attributes.'):\s*[a-zA-Z])/', '/(\(('.$attributes.'):\s*[a-zA-Z])\)/'], '', $productName);
         }
         return $filtered_name;
     }

@@ -1,2 +1,2 @@
 #!/bin/bash
-rm -rf /httpdocs/var/cache/dev/profiler/*
+rm -rf /var/www/vhosts/ijzershop.nl/httpdocs/var/cache/dev/profiler/*

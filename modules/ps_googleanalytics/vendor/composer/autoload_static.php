@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit3922e0494bc21abc8987ad3f07de4956
+class ComposerStaticInit3c7dfcf1dcf6fb6de6799f22f0d6cddd
 {
     public static $classMap = array (
         'AdminGanalyticsAjaxController' => __DIR__ . '/../..' . '/controllers/admin/AdminGanalyticsAjax.php',
@@ -39,7 +39,7 @@ class ComposerStaticInit3922e0494bc21abc8987ad3f07de4956
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit3922e0494bc21abc8987ad3f07de4956::$classMap;
+            $loader->classMap = ComposerStaticInit3c7dfcf1dcf6fb6de6799f22f0d6cddd::$classMap;
 
         }, null, ClassLoader::class);
     }

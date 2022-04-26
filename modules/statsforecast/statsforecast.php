@@ -425,9 +425,6 @@ class statsforecast extends Module
 					</thead>
 					<tbody>';
         foreach ($ca['payment'] as $payment) {
-            if(is_null($payment['total'])){
-                $payment['total'] = 0.000000;
-            }
             $this->html .= '
 						<tr>
 							<td class="text-center">'.$payment['payment_method'].'</td>

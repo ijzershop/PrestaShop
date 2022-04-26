@@ -249,7 +249,7 @@ $(document).ready(function () {
   });
 
   //Create shipping state list based on selected shipping country
-  $('select[name="shipping_address[id_country]"]').on('change', function () {
+  $('select[name="shipping_address[id_country]"]').change(function () {
     var selected_country = $(this).find('option:selected').attr('value');
     var selected_state = 0;
     statelist(selected_country, selected_state, 'select[name="shipping_address[id_state]"]');
@@ -264,7 +264,7 @@ $(document).ready(function () {
   $('#shipping-new').on('change', 'select[name="shipping_address[id_state]"]', function () {
     if ($('#use_for_invoice').is(':checked')) {
       var selected_state = $(this).find('option:selected').attr('value');
-      $('select[name="payment_address[id_state]"] option').prop('selected', false);
+      $('select[name="payment_address[id_state]"] option').removeAttr('selected');
       $('select[name="payment_address[id_state]"] option').each(function () {
         if ($(this).val() == selected_state) {
           $(this).prop('selected', true);
@@ -463,6 +463,32 @@ $(document).ready(function () {
   });
   //EOC -Remove Field Errors on active input of checkout options
 
+  //BOC - Place Orde Button Background Color
+  $("#supercheckout-fieldset .orangebutton").mouseover(function () {
+    if (button_background != 'F77219')
+      $(this).css("background", "#" + ColorLuminance(button_background, -0.2));
+  });
+  $("#supercheckout-fieldset .orangebuttonsmall").mouseover(function () {
+    if (button_background != 'F77219')
+      $(this).css("background", "#" + ColorLuminance(button_background, -0.2));
+  });
+  $("#supercheckout-fieldset .orangebuttonapply").mouseover(function () {
+    if (button_background != 'F77219')
+      $(this).css("background", "#" + ColorLuminance(button_background, -0.2));
+  });
+  $("#supercheckout-fieldset .orangebutton").mouseout(function () {
+    if (button_background != 'F77219')
+      $(this).css("background", "#" + button_background);
+  });
+  $("#supercheckout-fieldset .orangebuttonsmall").mouseout(function () {
+    if (button_background != 'F77219')
+      $(this).css("background", "#" + button_background);
+  });
+  $("#supercheckout-fieldset .orangebuttonapply").mouseout(function () {
+    if (button_background != 'F77219')
+      $(this).css("background", "#" + button_background);
+  });
+  //EOC - Place Orde Button Background Color
 
   //on blur validation
   applyInlineValidation();
@@ -1348,14 +1374,14 @@ function buildAddressBlock(id_address, type) {
 }
 
 function updateInvoiceAddress() {
-  $('select[name="payment_address_id"] option').prop('selected', false);
+  $('select[name="payment_address_id"] option').removeAttr('selected');
   $('select[name="payment_address_id"] option').each(function () {
     if ($(this).val() == $('select[name="shipping_address_id"]').find('option:selected').attr('value')) {
       $(this).prop('selected', true);
     }
   });
   buildAddressBlock($('select[name="payment_address_id"] option:selected').val(), 'invoice');
-  $('input[name="payment_address_value"]').prop('checked', false);
+  $('input[name="payment_address_value"]').removeAttr('checked');
   $('input[name="payment_address_value"]').parent().removeClass('checked');
   $('input[name="payment_address_value"]').each(function () {
     if ($(this).val() == $('input[name="shipping_address_value"]:checked').val()) {
@@ -1367,7 +1393,7 @@ function updateInvoiceAddress() {
     $('#payment-new').slideUp();
   }
 
-  $('select[name="payment_address[id_country]"] option').prop('selected', false);
+  $('select[name="payment_address[id_country]"] option').removeAttr('selected');
   $('select[name="payment_address[id_country]"] option').each(function () {
     if ($(this).val() == $('select[name="shipping_address[id_country]"]').find('option:selected').attr('value')) {
       $(this).prop('selected', true);
@@ -1378,7 +1404,7 @@ function updateInvoiceAddress() {
   var selected_state = 0;
   statelist(selected_country, selected_state, 'select[name="payment_address[id_state]"]');
 
-  $('select[name="payment_address[id_state]"] option').prop('selected', false);
+  $('select[name="payment_address[id_state]"] option').removeAttr('selected');
   $('select[name="payment_address[id_state]"] option').each(function () {
     if ($(this).val() == $('select[name="shipping_address[id_state]"]').find('option:selected').attr('value')) {
       $(this).prop('selected', true);
@@ -1391,9 +1417,9 @@ function updateKbGiftMessage() {
   $('#kb_gift_msg_error').hide();
   $('#kb_gift_receiver_error').hide();
   $('#kb_gift_sender_error').hide();
-  var msg_sender = $('#supercheckout_gift_sender').val().trim();
-  var msg_reciever = $('#supercheckout_gift_receiver').val().trim();
-  var gift_message = $('#supercheckout_gift_message').val().trim();
+  var msg_sender = $.trim($('#supercheckout_gift_sender').val());
+  var msg_reciever = $.trim($('#supercheckout_gift_receiver').val());
+  var gift_message = $.trim($('#supercheckout_gift_message').val());
   if ((msg_sender != '') && (msg_reciever != '') && (gift_message != '')) {
     $.ajax({
       type: 'POST',
@@ -1479,12 +1505,12 @@ function setGuestInformation() {
   $('textarea[name="shipping_address[other]"]').val(guest_information['other']);
   if (guest_information['id_gender'] == '1') {
     $('#customer_gender_1').attr('checked', 'checked');
-    $('#customer_gender_2').prop('checked', false);
+    $('#customer_gender_2').removeAttr('checked');
     $('#customer_gender_1').parent('span').addClass('checked');
     $('#customer_gender_2').parent('span').removeClass('checked');
   } else {
     $('#customer_gender_2').attr('checked', 'checked');
-    $('#customer_gender_1').prop('checked', false);
+    $('#customer_gender_1').removeAttr('checked');
     $('#customer_gender_2').parent('span').addClass('checked');
     $('#customer_gender_1').parent('span').removeClass('checked');
   }
@@ -1741,6 +1767,7 @@ function updateCarrierOnDeliveryChange() {
         });
         /*End Code Added By Priyanshu on 11-Feb-2021 to fix the issue of Extra Content not displaying for delivery Methods*/
         loadCart();
+        loadPayments();
       }
     },
     error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -1751,6 +1778,15 @@ function updateCarrierOnDeliveryChange() {
   });
 }
 
+$("#velsof_supercheckout_form").bind("keypress", function (e) {
+  if (e.keyCode == 13) {
+    return false; // ignore the default event
+  }
+});
+
+function isPressedEnter(evt) {
+
+}
 
 function updateDeliveryExtraChange() {
   var messagePattern = /[<>{}]/i;
@@ -1931,7 +1967,7 @@ function checkDniandVatNumber(type) {
             }
           }
         } else {
-//                    $('select[name="shipping_address[id_state]"]').prop('selected', false);
+//                    $('select[name="shipping_address[id_state]"]').removeAttr('selected');
           //$('select[name="shipping_address[id_state]"]').parent().parent().hide();
 //                    $('select[name="shipping_address[id_state]"]').parent().hide();
         }
@@ -1959,7 +1995,7 @@ function checkDniandVatNumber(type) {
           //$('select[name="payment_address[id_state]"]').parent().parent().show();
           $('select[name="payment_address[id_state]"]').parent().show();
         } else {
-          $('select[name="payment_address[id_state]"]').prop('selected', false);
+          $('select[name="payment_address[id_state]"]').removeAttr('selected');
           //$('select[name="payment_address[id_state]"]').parent().parent().hide();
           $('select[name="payment_address[id_state]"]').parent().hide();
         }
@@ -2635,6 +2671,15 @@ function loadPaymentAddtionalInfo() {
       }
       // End: Changes made by Anshul Mittal for PayPal Plus
 
+      // Start: Changes made by Anshul Mittal for stripe v2.0.1 - v2.0.3
+//            if ($('input:radio[name="payment_method"]:checked').attr('data-module-name') == 'stripe_official') {
+//                callbackStripeToSc();
+//            } else {
+//                $("#supercheckout_confirm_order").click(function() {
+//                    placeOrder();
+//                });
+//            }
+      // End: Changes made by Anshul Mittal for stripe v2.0.1 - v2.0.3
     },
     error: function (XMLHttpRequest, textStatus, errorThrown) {
       var errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
@@ -2704,7 +2749,7 @@ function display_progress(value) {
 }
 
 function hide_progress() {
-  $('#supercheckout_confirm_order').prop('disabled', false);
+  $('#supercheckout_confirm_order').removeAttr('disabled');
   $('#submission_progress_overlay').hide();
   $('#supercheckout_order_progress_bar').hide();
   $('#supercheckout_order_progress_status_text').html('0%');
@@ -3196,7 +3241,7 @@ $(document).ready(function () {
     }, 10)
   }
 
-  $("#supercheckout_confirm_order").on('click', function (event) {
+  $("#supercheckout_confirm_order").click(function (event) {
     event.preventDefault();
 
     let breakCheckout = false;
@@ -4066,7 +4111,7 @@ function checkCustomFieldBlocks() {
   var customFieldsContainers = $(".div_custom_fields");
   customFieldsContainers.each(function (index) {
     var divValue = $(this).html();
-    if (divValue.trim() == "") {
+    if ($.trim(divValue) == "") {
       $(this).hide();
     }
   });
@@ -4254,10 +4299,10 @@ function password_option(e) {
 }
 
 function MobileLogin() {
-  var kbMobileNumber = $('#mobile_number').val().trim();
-  var kbCountryId = $('select[name="mobile_country"]').val().trim();
-  var kbPassword = $('#mobile_Password').val().trim();
-  var kbCurrentOTP = $('#mobile_otp').val().trim();
+  var kbMobileNumber = $.trim($('#mobile_number').val());
+  var kbCountryId = $.trim($('select[name="mobile_country"]').val());
+  var kbPassword = $.trim($('#mobile_Password').val());
+  var kbCurrentOTP = $.trim($('#mobile_otp').val());
 
   if ($('input:radio[name=password_option]:checked').val() == 0) {
     if ((kbMobileNumber != '') && (kbCountryId != '') && (kbPassword != '')) {
@@ -4326,8 +4371,8 @@ function MobileLogin() {
 }
 
 function sendOtp() {
-  var kbMobileNumber = $('#mobile_number').val().trim();
-  var kbCountryId = $('select[name="mobile_country"]').val().trim();
+  var kbMobileNumber = $.trim($('#mobile_number').val());
+  var kbCountryId = $.trim($('select[name="mobile_country"]').val());
   if (true) {
     if ((kbMobileNumber != '') && (kbCountryId != '')) {
       $.ajax({
@@ -4368,8 +4413,8 @@ function sendOtp() {
 }
 
 function checkMobileNumberExist() {
-  var kbMobileNumber = $('#mobile_number').val().trim();
-  var kbCountryId = $('select[name="mobile_country"]').val().trim();
+  var kbMobileNumber = $.trim($('#mobile_number').val());
+  var kbCountryId = $.trim($('select[name="mobile_country"]').val());
   if ($('input:radio[name=mobile_option]:checked').val() == 1) {
     if ((kbMobileNumber != '') && (kbCountryId != '')) {
       $.ajax({
@@ -4411,12 +4456,12 @@ function checkMobileNumberExist() {
 }
 
 function MobileRegister() {
-  var kbMobileNumber = $('#mobile_number').val().trim();
-  var kbCountryId = $('select[name="mobile_country"]').val().trim();
-  var kbPassword = $('#mobile_Password').val().trim();
-  var kbFirstName = $('#mobile_firstname').val().trim();
-  var kbLastName = $('#mobile_lastname').val().trim();
-  var kbEmail = $('#mobile_email').val().trim();
+  var kbMobileNumber = $.trim($('#mobile_number').val());
+  var kbCountryId = $.trim($('select[name="mobile_country"]').val());
+  var kbPassword = $.trim($('#mobile_Password').val());
+  var kbFirstName = $.trim($('#mobile_firstname').val());
+  var kbLastName = $.trim($('#mobile_lastname').val());
+  var kbEmail = $.trim($('#mobile_email').val());
   if ((kbMobileNumber != '') && (kbCountryId != '') && (kbPassword != '') && (kbFirstName != '') && (kbLastName != '') && (kbEmail != '')) {
     if (true) {
       $.ajax({
@@ -4456,9 +4501,9 @@ function MobileRegister() {
 }
 
 function verfyOtp() {
-  var kbMobileNumber = $('#mobile_number').val().trim();
-  var kbCountryId = $('select[name="mobile_country"]').val().trim();
-  var kbCurrentOTP = $('#mobile_otp').val().trim();
+  var kbMobileNumber = $.trim($('#mobile_number').val());
+  var kbCountryId = $.trim($('select[name="mobile_country"]').val());
+  var kbCurrentOTP = $.trim($('#mobile_otp').val());
   if ((kbMobileNumber != '') && (kbCountryId != '') && (kbCurrentOTP != '')) {
     $.ajax({
       url: kbmobile_front_url,
@@ -4533,7 +4578,7 @@ function updateAddressForm(address_type) {
         $(jsonData).insertAfter($('#shipping-existing'));
         showSelectedState($('#checkoutShippingAddress .shipping_update_form select[name="shipping_address[id_country]"]').val(), address_type);
         checkDniandVatNumber('delivery');
-        $('select[name="shipping_address[id_country]"]').on('change', function () {
+        $('select[name="shipping_address[id_country]"]').change(function () {
           var selected_country = $(this).find('option:selected').attr('value');
           var selected_state = 0;
           statelist(selected_country, selected_state, 'select[name="shipping_address[id_state]"]');
@@ -4558,7 +4603,7 @@ function updateAddressForm(address_type) {
         $(jsonData).insertAfter($('#payment-existing'));
         showSelectedState($('#checkoutBillingAddress .payment_update_form select[name="payment_address[id_country]"]').val(), address_type);
         checkDniandVatNumber('invoice');
-        $('select[name="payment_address[id_country]"]').on('change', function () {
+        $('select[name="payment_address[id_country]"]').change(function () {
           var selected_country = $(this).find('option:selected').attr('value');
           var selected_state = 0;
           statelist(selected_country, selected_state, 'select[name="payment_address[id_state]"]');

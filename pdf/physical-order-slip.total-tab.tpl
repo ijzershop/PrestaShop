@@ -33,18 +33,26 @@
     </td>
   </tr>
 
-  {if $footer.product_discounts_tax_excl > 0}
+    {assign var="remaining_amount" value=0}
+    {assign var="discount_amount" value=0}
+    {assign var="reduction_amount" value=0}
+    {if is_array($cart_rules) && count($cart_rules)}
+        {foreach $cart_rules as $cart_rule}
+            {assign var="discount_amount" value=($discount_amount+$cart_rule.reduction_amount)}
+            {assign var="remaining_amount" value=($remaining_amount+$cart_rule.remaining_amount)}
+        {/foreach}
+    {/if}
 
-    <tr>
-      <td class="grey" width="50%">
-        {l s='Total Discounts' d='Shop.Pdf' pdf='true'}
-      </td>
-      <td class="white" width="50%">
-        - {displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_excl}
-      </td>
-    </tr>
-
-  {/if}
+    {if $footer.product_discounts_tax_excl > 0}
+      <tr>
+        <td class="grey" width="50%">
+            {l s='Discounts' d='Shop.Pdf' pdf='true'}
+        </td>
+        <td class="white" width="50%">
+          € - {number_format($discount_amount, 2, ',', '.')}
+        </td>
+      </tr>
+    {/if}
   {if !$order->isVirtual()}
   <tr>
     <td class="grey" width="50%">
@@ -92,6 +100,7 @@
         </td>
       </tr>
     {/if}
+    {if !isset($remaining_amount) || $remaining_amount > 0}
     <tr class="bold big">
       <td class="grey">
         {l s='Total' d='Shop.Pdf' pdf='true'}
@@ -100,5 +109,14 @@
         {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}
       </td>
     </tr>
+    {/if}
   {/if}
+    {if isset($remaining_amount) && $remaining_amount < 0}
+      <tr class="bold big">
+        <td class="grey">Terug betaling</td>
+        <td class="white right">
+            {displayPrice currency=$order->id_currency price=abs($remaining_amount)}
+        </td>
+      </tr>
+    {/if}
 </table>

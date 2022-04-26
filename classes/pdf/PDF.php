@@ -151,17 +151,13 @@ class PDFCore
             $this->pdf_renderer->createPagination($template->getPagination());
             $this->pdf_renderer->createContent($template->getContent());
             $this->pdf_renderer->writePage();
+
             $render = true;
 
             unset($template);
         }
 
         if ($render) {
-            // clean the output buffer
-            if (ob_get_level() && ob_get_length() > 0) {
-                ob_clean();
-            }
-
             return $this->pdf_renderer->render($this->filename, $display);
         }
     }

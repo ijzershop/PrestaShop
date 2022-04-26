@@ -3,7 +3,7 @@ imports:
 parameters:
   ps_accounts.environment: 'production'
   ps_accounts.accounts_api_url: 'https://accounts-api.distribution.prestashop.net/v1/'
-  ps_accounts.accounts_ui_url: 'https://accounts.distribution.prestashop.net/en'
+  ps_accounts.accounts_ui_url: 'https://accounts.distribution.prestashop.net'
   ps_accounts.sso_api_url: 'https://auth.prestashop.com/api/v1/'
   ps_accounts.sso_account_url: 'https://auth.prestashop.com/login'
   ps_accounts.sso_resend_verification_email_url: 'https://auth.prestashop.com/account/send-verification-email'

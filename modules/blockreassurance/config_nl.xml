@@ -2,7 +2,7 @@
 <module>
     <name>blockreassurance</name>
     <displayName><![CDATA[Klantvertrouwen]]></displayName>
-    <version><![CDATA[5.1.0]]></version>
+    <version><![CDATA[5.1.1]]></version>
     <description><![CDATA[Connect with your visitors and reassure them about secure payment, free shipping or returns.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[seo]]></tab>

@@ -101,6 +101,8 @@ class Cart extends CartCore
         $computePrecision = Context::getContext()->getComputingPrecision();
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier, $computePrecision, $keepOrderPrices);
         $small_order_fee_addition = 0;
+        $discounts = 0;
+
         switch ($type) {
             case Cart::ONLY_SHIPPING:
                 $calculator->calculateRows();
@@ -116,6 +118,7 @@ class Cart extends CartCore
                 $calculator->processCalculation();
                 $amount = $calculator->getTotal();
                 $productTotal = $calculator->getRowTotal()->getTaxExcluded();
+
                 if (!Module::isEnabled('smallorderfee') || (!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')) || $productTotal === 0.0) {
                     $small_order_fee_addition = 0;
                 } else {
@@ -145,8 +148,11 @@ class Cart extends CartCore
                 throw new \Exception('unknown cart calculation type : ' . $type);
         }
         $value = $withTaxes ? $amount->getTaxIncluded() + $small_order_fee_addition : $amount->getTaxExcluded() + $small_order_fee_addition;
+
         return Tools::ps_round($value, $computePrecision);
     }
+
+
     public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
         if (isset(Context::getContext()->cookie->id_country)) {
@@ -766,7 +772,7 @@ class Cart extends CartCore
         $id_cart_new = (int) $result['cart']->id;
         Module::getInstanceByName('dynamicproduct');
         if (Module::isEnabled('dynamicproduct')) {
-            
+
             $module = Module::getInstanceByName('dynamicproduct');
             $module->hookCartDuplicated(array(
                 'id_cart_old' => $id_cart_old,

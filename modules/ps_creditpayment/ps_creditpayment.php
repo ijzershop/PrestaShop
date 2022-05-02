@@ -572,7 +572,6 @@ public function addOrderState($name)
     {
         $searchQueryBuilder = $params['search_query_builder'];
         $searchQueryBuilder->addSelect('c.informer_identification as informer_identification');
-
         $searchQueryBuilder->leftJoin('c','ps176_customer_group', 'cg', 'c.id_customer = cg.id_customer');
         $searchQueryBuilder->addSelect('cg.id_group');
         $searchQueryBuilder->leftJoin('cg','ps176_group_lang', 'cgl', 'cg.id_group = cgl.id_group');
@@ -601,6 +600,7 @@ public function addOrderState($name)
                 $searchQueryBuilder->andWhere("`cg`.`id_group` IN (" . $filterValue . ")");
             }
         }
+
         return $searchQueryBuilder;
     }
 }

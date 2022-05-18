@@ -81,6 +81,7 @@ class Address extends AddressCore
 //                    throw new PrestaShopException('Invalid address #' . (int) $id_address);
                 }
             } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
+
                 $address = new Address();
                 $address->id_country = (int) $context->customer->geoloc_id_country;
                 $address->id_state = (int) $context->customer->id_state;

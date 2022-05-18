@@ -63,14 +63,12 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 	public function addToInformerApi($order){
         if(!empty($this->context->cookie->on_credit_reference)){
             $reference = $this->context->cookie->on_credit_reference;
-            $this->context->cookie->on_credit_reference = '';
         } else {
             $reference  = $order->reference;
         }
 
         if(!empty($this->context->cookie->on_credit_buyer)){
             $customer_comment = 'Opgehaald door '.$this->context->cookie->on_credit_buyer . '<br>';
-            $this->context->cookie->on_credit_buyer = '';
         }
 
         foreach (Message::getMessagesByOrderId($order->id, false) as $message) {
@@ -421,6 +419,9 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                         }
                     }
 
+
+
+
                     // Insert new Order detail list using cart for the current order
                     //$orderDetail = new OrderDetail(null, null, $this->context);
                     //$orderDetail->createList($order, $this->context->cart, $id_order_state);
@@ -732,13 +733,55 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
             }
             $this->addToInformerApi($order);
-
+            $this->addProjectAndEmployeeToMessages($order);
             return true;
         } else {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', array(), 'Admin.Payment.Notification');
             PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
             die(Tools::displayError($error));
         }
+    }
+
+    private function addProjectAndEmployeeToMessages($order){
+        $projectMessage = '';
+        if(!empty($this->context->cookie->on_credit_reference)){
+            $projectMessage = $projectMessage = strip_tags('Ref: '. $this->context->cookie->on_credit_reference.'<br>', '<br>');
+            $this->context->cookie->on_credit_reference = '';
+        }
+
+        $customerMessage = '';
+        if(!empty($this->context->cookie->on_credit_buyer)){
+            $customerMessage = strip_tags('Afhaler: '.$this->context->cookie->on_credit_buyer . '<br>', '<br>');
+            $this->context->cookie->on_credit_buyer = '';
+        }
+
+        if (Validate::isCleanHtml($projectMessage) && $projectMessage != '') {
+            if (self::DEBUG_MODE) {
+                PrestaShopLogger::addLog('PaymentModule::validateOrder - Message with on credit project info is about to be added', 1, null, 'Cart', (int)$id_cart, true);
+            }
+            $projectMsg = new Message();
+            $projectMsg->message = $projectMessage;
+            $projectMsg->id_cart = (int)$order->id_cart;
+            $projectMsg->id_customer = (int)($order->id_customer);
+            $projectMsg->id_order = (int)$order->id;
+            $projectMsg->private = 0;
+            $projectMsg->add();
+        }
+
+        if (Validate::isCleanHtml($customerMessage) && $customerMessage != '') {
+            if (self::DEBUG_MODE) {
+                PrestaShopLogger::addLog('PaymentModule::validateOrder - Message with on credit customer info is about to be added', 1, null, 'Cart', (int)$id_cart, true);
+            }
+            $customerMsg = new Message();
+            $customerMsg->message = $customerMessage;
+            $customerMsg->id_cart = (int)$order->id_cart;
+            $customerMsg->id_customer = (int)($order->id_customer);
+            $customerMsg->id_order = (int)$order->id;
+            $customerMsg->private = 0;
+            $customerMsg->add();
+        }
+
+        return true;
     }
 
 

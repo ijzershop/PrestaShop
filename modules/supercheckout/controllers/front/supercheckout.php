@@ -682,7 +682,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                     $temp_invoice_address->city = ' ';
                     $temp_invoice_address->postcode = 0;
                     $temp_invoice_address->phone = ' ';
-                    $temp_invoice_address->alias = Tools::substr($this->module->l('Address Alias') . ' - ' . date('s') . rand(0, 9), 0, 30);
+                    $temp_invoice_address->alias = Tools::substr($this->module->l('Adres') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
                     $temp_invoice_address->other = ' ';
                     $temp_invoice_address->id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
                     $temp_invoice_address->id_state = 0;
@@ -1058,9 +1058,9 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
 
                 $delivery_address->alias = (isset($posted_data['shipping_address']['alias']))
                         ? (empty($posted_data['shipping_address']['alias']))
-                            ? Tools::substr($this->module->l('Address Alias') . ' - ' . date('s') . rand(0, 9), 0, 30)
+                            ? Tools::substr($this->module->l('Adres') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30)
                             : $posted_data['shipping_address']['alias']
-                        : Tools::substr($this->module->l('Address Alias') . ' - ' . date('s') . rand(0, 9), 0, 30);
+                        : Tools::substr($this->module->l('Adres') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
                 $delivery_address->other = (!empty($posted_data['shipping_address']['other'])) ? $posted_data['shipping_address']['other'] : ' ';
 
                 $delivery_address->id_customer = $id_customer;
@@ -1128,7 +1128,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                     $delivery_address->dni = '-';
                 }
 
-                $delivery_address->alias = (isset($posted_data['shipping_address']['alias'])) ? (empty($posted_data['shipping_address']['alias'])) ? Tools::substr($this->module->l('Address Alias') . ' - ' . date('s') . rand(0, 9), 0, 30) : $posted_data['shipping_address']['alias'] : Tools::substr($this->module->l('Address Alias') . ' - ' . date('s') . rand(0, 9), 0, 30);
+                $delivery_address->alias = (isset($posted_data['shipping_address']['alias'])) ? (empty($posted_data['shipping_address']['alias'])) ? Tools::substr($this->module->l('Adres') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30) : $posted_data['shipping_address']['alias'] : Tools::substr($this->module->l('Adres') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
                 $delivery_address->other = (!empty($posted_data['shipping_address']['other'])) ? $posted_data['shipping_address']['other'] : '';
 
                 $delivery_address->id_customer = $id_customer;
@@ -1209,9 +1209,9 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                 }
                 $invoice_address->alias = (isset($posted_data['payment_address']['alias']))
                                 ? (empty($posted_data['payment_address']['alias']))
-                                    ? Tools::substr($this->module->l('Address Alias') . ' - ' . date('s') . rand(0, 9), 0, 30)
+                                    ? Tools::substr($this->module->l('Adres') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30)
                                     : $posted_data['payment_address']['alias']
-                                : Tools::substr($this->module->l('Address Alias') . ' - ' . date('s') . rand(0, 9), 0, 30);
+                                : Tools::substr($this->module->l('Adres') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
                 $invoice_address->other = (!empty($posted_data['payment_address']['other'])) ? $posted_data['payment_address']['other'] : ' ';
                 $invoice_address->id_customer = $id_customer;
 
@@ -1259,7 +1259,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                 if (!Country::isNeedDniByCountryId($invoice_address->id_country)) {
                     $invoice_address->dni = '-';
                 }
-                $invoice_address->alias = (isset($posted_data['payment_address']['alias'])) ? (empty($posted_data['payment_address']['alias'])) ? Tools::substr($this->module->l('Address Alias') . ' - ' . date('s') . rand(0, 9), 0, 30) : $posted_data['payment_address']['alias'] : Tools::substr($this->module->l('Address Alias') . ' - ' . date('s') . rand(0, 9), 0, 30);
+                $invoice_address->alias = (isset($posted_data['payment_address']['alias'])) ? (empty($posted_data['payment_address']['alias'])) ? Tools::substr($this->module->l('Adres') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30) : $posted_data['payment_address']['alias'] : Tools::substr($this->module->l('Adres') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
                 $invoice_address->other = (!empty($posted_data['payment_address']['other'])) ? $posted_data['payment_address']['other'] : '';
                 $invoice_address->id_customer = $id_customer;
 
@@ -2934,7 +2934,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                 $invoice_address->id_state = $id_state;
                 $invoice_address->postcode = $postcode;
                 $invoice_address->other = ' ';
-                $invoice_address->alias = Tools::substr($this->module->l('Address Alias') . ' - ' . date('s') . rand(0, 9), 0, 30);
+                $invoice_address->alias = Tools::substr($this->module->l('Adres') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
                 if ($invoice_address->save()) {
                     $this->checkout_session->setIdAddressInvoice($invoice_address->id);
                     $this->context->cookie->supercheckout_temp_address_invoice = $invoice_address->id;

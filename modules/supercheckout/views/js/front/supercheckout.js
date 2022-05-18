@@ -49,6 +49,54 @@ function delayKeyUp(callback) {
 }
 
 $(document).ready(function () {
+  //fix edit address
+  $(document).on('input', '[name="payment_address[postcode]"], ' +
+    '[name="payment_address[address1]"], ' +
+    '[name="payment_address[house_number]"], ' +
+    '[name="payment_address[house_number_extension]"], ' +
+    '[name="payment_address[city]"], ' +
+    '[name="payment_address[id_country]"], ' +
+    '[name="payment_address[phone]"], ' +
+    '[name="payment_address[firstname]"], ' +
+    '[name="payment_address[lastname]"], ' +
+    '[name="payment_address[company]"]',
+    function(event) {
+      var oldValue = event.target.defaultValue;
+      var newValue = $(this).val();
+
+      if(oldValue !== newValue){
+        //empty customer address id and set to new
+        $('[name="payment_address[id_customer_address]"]').val('new');
+        $('[name="payment_address[payment_address_id]"]').val('');
+      }
+    });
+
+
+  $(document).on('input', '[name="shipping_address[postcode]"], ' +
+    '[name="shipping_address[address1]"], ' +
+    '[name="shipping_address[house_number]"], ' +
+    '[name="shipping_address[house_number_extension]"], ' +
+    '[name="shipping_address[city]"], ' +
+    '[name="shipping_address[id_country]"], ' +
+    '[name="shipping_address[phone]"], ' +
+    '[name="shipping_address[firstname]"], ' +
+    '[name="shipping_address[lastname]"], ' +
+    '[name="shipping_address[company]"]',
+    function(event) {
+      var oldValue = event.target.defaultValue;
+      var newValue = $(this).val();
+
+      if(oldValue !== newValue){
+        //empty customer address id and set to new
+        $('[name="shipping_address[id_customer_address]"]').val('new');
+        $('[name="shipping_address[payment_address_id]"]').val('');
+      }
+    });
+//end fix edit address
+
+
+
+
   if($('#cart-postcode-check-toggle').prop('checked') === true){
     checkFormatAddressApiCheckout();
   }

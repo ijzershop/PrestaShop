@@ -24,8 +24,8 @@
  *}
 <table id="payment-tab" width="100%">
 	<tr>
-		<td class="payment center small grey bold left" width="44%">{l s='Payment Method' d='Shop.Pdf' pdf='true'}</td>
-		<td class="payment left white" width="56%">
+		<td class="payment center small grey bold left" width="40%">{l s='Payment Method' d='Shop.Pdf' pdf='true'}</td>
+		<td class="payment left white" width="60%">
 			<table width="100%" border="0">
 				{foreach from=$order_invoice->getOrderPaymentCollection() item=payment}
 					<tr>

@@ -27,4 +27,7 @@
 		<td class="shipping left small grey bold" width="44%">{l s='Carrier' d='Shop.Pdf' pdf='true'}</td>
 		<td class="shipping left small white" width="56%">{$carrier->name}</td>
 	</tr>
+      {foreach from=Message::getMessagesByOrderId($order->id, false) item='message'}
+        <tr><td class="shipping left small grey" colspan="2">{$message.message}</td></tr>
+      {/foreach}
 </table>

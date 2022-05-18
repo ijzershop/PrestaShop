@@ -113,7 +113,13 @@
                           </div>
                           {if Context::getContext()->cookie->logged == '1'}
                             {if count($availableOrders) > 0}
-                            {assign var="addToOrderAddress" value=Address::initialize((int)$availableOrders[0].id_address_delivery)}
+                                {foreach $availableOrders as $key => $addToOrder}
+                                  {if Address::addressExists($addToOrder.id_address_delivery)}
+                                      {assign var="addToOrderAddress" value=Address::initialize((int)$addToOrder.id_address_delivery)}
+                                      {break}
+                                  {/if}
+                                {/foreach}
+
                             <script type="text/javascript">
                               var addToOrderAddress = {};
                               addToOrderAddress.city = "{$addToOrderAddress->city}";

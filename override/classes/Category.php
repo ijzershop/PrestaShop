@@ -203,4 +203,16 @@ class Category extends CategoryCore
         // Modify SQL result
         return Product::getProductsProperties($idLang, $result);
     }
+
+    public function getCategoryLdFaq($id_category, $id_lang=1){
+        if((int)$id_category > 0){
+            $sql = 'SELECT jsonld FROM `'._DB_PREFIX_.'category_lang` WHERE id_category = ' . $id_category . ' AND id_lang = ' . $id_lang;
+
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
+
+            return $result[0]['jsonld'] ?? '';
+        } else {
+            return '';
+        }
+    }
 }

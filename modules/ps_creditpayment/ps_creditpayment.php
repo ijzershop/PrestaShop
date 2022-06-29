@@ -398,8 +398,6 @@ class Ps_Creditpayment extends PaymentModule
                 $arr['id'] = $index;
 
 
-
-
                 if(!isset($item->description)){
                     if($type == 'vat'){
                         $arr['name'] = $item->vat_code . ' - ' . $item->name;

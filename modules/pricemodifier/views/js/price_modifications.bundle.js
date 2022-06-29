@@ -126,10 +126,10 @@ $(document).ready(function() {
           style: 'stroke-width: 10px'
         });
       }
-      $('th#supplier_diff_'+rowId).text(Number(newSupPrice-oldSupPrice).toFixed(4));
-      $('th#store_diff_'+rowId).text(Number(newStorPrice-oldStorPrice).toFixed(4));
-      $('th#store_profit_old_'+rowId).text(Number(oldStorPrice-oldSupPrice).toFixed(4));
-      $('th#store_profit_new_'+rowId).text(Number(newStorPrice-newSupPrice).toFixed(4));
+      $('th#supplier_diff_'+rowId).text(Number(newSupPrice-oldSupPrice).toFixed(2));
+      $('th#store_diff_'+rowId).text(Number(newStorPrice-oldStorPrice).toFixed(2));
+      $('th#store_profit_old_'+rowId).text(Number(oldStorPrice-oldSupPrice).toFixed(2));
+      $('th#store_profit_new_'+rowId).text(Number(newStorPrice-newSupPrice).toFixed(2));
 
     });
 
@@ -190,10 +190,10 @@ $(document).ready(function() {
                   [newSupPrice, newStorPrice],
                 ]});
 
-              $('th#supplier_diff_'+rowId).text(Number(newSupPrice-oldSupPrice).toFixed(4));
-              $('th#store_diff_'+rowId).text(Number(newStorPrice-oldStorPrice).toFixed(4));
-              $('th#store_profit_old_'+rowId).text(Number(oldStorPrice-oldSupPrice).toFixed(4));
-              $('th#store_profit_new_'+rowId).text(Number(newStorPrice-newSupPrice).toFixed(4));
+              $('th#supplier_diff_'+rowId).text(Number(newSupPrice-oldSupPrice).toFixed(2));
+              $('th#store_diff_'+rowId).text(Number(newStorPrice-oldStorPrice).toFixed(2));
+              $('th#store_profit_old_'+rowId).text(Number(oldStorPrice-oldSupPrice).toFixed(2));
+              $('th#store_profit_new_'+rowId).text(Number(newStorPrice-newSupPrice).toFixed(2));
             },
             error : function (data){
               console.log(data);

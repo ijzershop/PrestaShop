@@ -158,7 +158,7 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
                 return $this->getProductFeatureValue($id_product, 45, 1);
             },
             '({PW})' => function ($matches) use ($id_product) {
-                return Product::getPriceStatic($id_product, false, null, 6);
+                return Product::getPriceStatic($id_product, false, null, 2);
             }
         ];
         $result = preg_replace_callback_array($patterns, $formula);

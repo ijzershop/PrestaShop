@@ -77,7 +77,7 @@
           x: position.x + options.labelOffset.x,
           y: position.y + options.labelOffset.y,
           style: 'text-anchor: ' + options.textAnchor
-        }, options.labelClass).text(options.labelInterpolationFnc(value).toFixed(4));
+        }, options.labelClass).text(options.labelInterpolationFnc(value).toFixed(2));
       }
 
       return function barChartLabel(chart) {

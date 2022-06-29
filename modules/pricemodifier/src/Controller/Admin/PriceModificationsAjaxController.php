@@ -68,14 +68,27 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
         $sql->limit('50');
 
         if(!empty($term)){
-            $where = 'pl.`name` LIKE \'%' . pSQL($term) . '%\'';
+            $where = ' 1 = 1 ';
+            $search_items = explode(' ', $term);
+
+            $items = [];
+            foreach ($search_items as $item) {
+                if(!empty($item)){
+                    $items[$item][] = 'pl.`name` LIKE \'%' . pSQL($item) . '%\' ';
+                }
+            }
+
+            foreach ($items as $likes) {
+                $where .= ' AND (' . implode(' OR ', $likes) . ') ';
+            }
+
             $sql->where($where);
         }
 
         $result = Db::getInstance()->executeS($sql);
 
         if (!$result) {
-            return false;
+            return [];
         }
         return $result;
     }

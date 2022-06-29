@@ -217,7 +217,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 $incr_formula = $item['increment_formula'];
                 $active = $item['active'] ?? 0;
 
-                if ($active != '1' || $store_product < 1) {
+                if ($store_product < 1) {
                     continue;
                 }
 

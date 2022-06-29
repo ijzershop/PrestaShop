@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>ganalyticspro</name>
+    <displayName><![CDATA[Google Analytics : GA4 and Universal-Analytics]]></displayName>
+    <version><![CDATA[2.0.3]]></version>
+    <description><![CDATA[Install the Google Analytics 4 (GA4) tag on your site and collect data for your GA4 and Universal Analytics (UA), with enhanced e-commerce, reports in your Google Analytics account]]></description>
+    <author><![CDATA[Business Tech]]></author>
+    <tab><![CDATA[analytics_stats]]></tab>
+	<confirmUninstall><![CDATA[Are you sure you want to uninstall the module Google Analytics : GA4 and Universal-Analytics (your configuration will be lost)?]]></confirmUninstall>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

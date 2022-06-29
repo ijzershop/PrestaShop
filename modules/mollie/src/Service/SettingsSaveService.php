@@ -21,9 +21,12 @@ use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\Types\PaymentStatus;
 use Mollie\Config\Config;
 use Mollie\Exception\MollieException;
+use Mollie\Handler\Certificate\CertificateHandlerInterface;
+use Mollie\Handler\Certificate\Exception\ApplePayDirectCertificateCreation;
 use Mollie\Handler\Settings\PaymentMethodPositionHandlerInterface;
 use Mollie\Repository\CountryRepository;
 use Mollie\Repository\PaymentMethodRepository;
+use Mollie\Utility\TagsUtility;
 use MolPaymentMethodIssuer;
 use OrderState;
 use PrestaShopDatabaseException;
@@ -32,6 +35,8 @@ use Tools;
 
 class SettingsSaveService
 {
+    const FILE_NAME = 'SettingsSaveService';
+
     /**
      * @var Mollie
      */
@@ -72,6 +77,11 @@ class SettingsSaveService
      */
     private $apiService;
 
+    /**
+     * @var CertificateHandlerInterface
+     */
+    private $applePayDirectCertificateHandler;
+
     public function __construct(
         Mollie $module,
         CountryRepository $countryRepository,
@@ -80,7 +90,8 @@ class SettingsSaveService
         ApiService $apiService,
         MolCarrierInformationService $carrierInformationService,
         PaymentMethodPositionHandlerInterface $paymentMethodPositionHandler,
-        ApiKeyService $apiKeyService
+        ApiKeyService $apiKeyService,
+        CertificateHandlerInterface $applePayDirectCertificateHandler
     ) {
         $this->module = $module;
         $this->countryRepository = $countryRepository;
@@ -90,6 +101,7 @@ class SettingsSaveService
         $this->carrierInformationService = $carrierInformationService;
         $this->paymentMethodPositionHandler = $paymentMethodPositionHandler;
         $this->apiService = $apiService;
+        $this->applePayDirectCertificateHandler = $applePayDirectCertificateHandler;
     }
 
     /**
@@ -130,7 +142,7 @@ class SettingsSaveService
 
         if ($oldEnvironment === $environment && $apiKey && $this->module->api !== null) {
             $savedPaymentMethods = [];
-            foreach ($this->apiService->getMethodsForConfig($this->module->api, $this->module->getPathUri()) as $method) {
+            foreach ($this->apiService->getMethodsForConfig($this->module->api) as $method) {
                 $paymentMethodId = $method['obj']->id;
                 try {
                     $paymentMethod = $this->paymentMethodService->savePaymentMethod($method);
@@ -171,7 +183,19 @@ class SettingsSaveService
             Config::MOLLIE_SHOW_CUSTOM_LOGO,
             $useCustomLogo
         );
-
+        $isApplePayDirectEnabled = (bool) Tools::getValue('MOLLIE_APPLE_PAY_DIRECT_ENABLED');
+        if ($isApplePayDirectEnabled) {
+            try {
+                $this->applePayDirectCertificateHandler->handle();
+            } catch (ApplePayDirectCertificateCreation $e) {
+                $isApplePayDirectEnabled = false;
+                $errors[] = $e->getMessage();
+                $errors[] = TagsUtility::ppTags(
+                    $this->module->l('Grant permissions for the folder or visit [1]ApplePay[/1] to see how it can be added manually', self::FILE_NAME),
+                    [$this->module->display($this->module->getPathUri(), 'views/templates/admin/applePayDirectDocumentation.tpl')]
+                );
+            }
+        }
         $molliePaymentscreenLocale = Tools::getValue(Config::MOLLIE_PAYMENTSCREEN_LOCALE);
         $mollieOrderConfirmationSand = Tools::getValue(Config::MOLLIE_SEND_ORDER_CONFIRMATION);
         $mollieIFrameEnabled = Tools::getValue(Config::MOLLIE_IFRAME);
@@ -189,6 +213,7 @@ class SettingsSaveService
         $mollieMethodCountriesDisplayEnabled = (bool) Tools::getValue(Config::MOLLIE_METHOD_COUNTRIES_DISPLAY);
         $mollieErrors = Tools::getValue(Config::MOLLIE_DISPLAY_ERRORS);
         $voucherCategory = Tools::getValue(Config::MOLLIE_VOUCHER_CATEGORY);
+        $applePayDirectStyle = Tools::getValue(Config::MOLLIE_APPLE_PAY_DIRECT_STYLE);
 
         $mollieShipMain = Tools::getValue(Config::MOLLIE_AUTO_SHIP_MAIN);
         if (!isset($mollieErrors)) {
@@ -221,6 +246,8 @@ class SettingsSaveService
         }
 
         if (empty($errors)) {
+            Configuration::updateValue(Config::MOLLIE_APPLE_PAY_DIRECT, $isApplePayDirectEnabled);
+            Configuration::updateValue(Config::MOLLIE_APPLE_PAY_DIRECT_STYLE, $applePayDirectStyle);
             Configuration::updateValue(Config::MOLLIE_API_KEY, $mollieApiKey);
             Configuration::updateValue(Config::MOLLIE_API_KEY_TEST, $mollieApiKeyTest);
             Configuration::updateValue(Config::MOLLIE_ENVIRONMENT, $environment);

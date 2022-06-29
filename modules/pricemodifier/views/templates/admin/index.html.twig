@@ -1,0 +1,92 @@
+{#**
+ * Price Modifier
+ * Copyright since 2021 JB Stoker and Contributors
+ * <JB Stoker> Property
+ *
+
+ * @author    JB Stoker <jelmer@ijzershop.nl>
+ * @copyright Since 2021 JB Stoker
+ * @license   https://opensource.org/licenses/MIT
+ *#}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content_header %}
+  <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/views/css/price_modifications.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/chartist/dist/chartist.css') }}"/>
+
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col mb-3">
+      <a class="float-right btn btn-primary pointer" id="page-header-desc-configuration-infoshowhide"
+         href="#show_hide_info_formule" title="Toggle info" data-toggle="collapse" role="button" aria-expanded="false">
+        <i class="material-icons">info</i> Toggle info
+      </a>
+    </div>
+  </div>
+  {% block price_modifications_list_panel %}
+    <div id="select2_data_link" data-link="{{ admin_select2_data_link }}"></div>
+    <div class="row collapse" id="show_hide_info_formule">
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <h2>Formules</h2>
+            <p>De formules kunnen ingevoerd worden als een som, om de formule te testen hoeft deze niet opgeslagen worden. Doormiddel van het klikken op de knop naast het nieuw prijs veld word er een berekening gedaan op basis van de ingevoerde gegevens.
+              De gerenderde formule word getoond onder het fomule vak, en de nieuwe berekende prijs word in het veld van nieuwe prijs geladen.</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <p>Voor de som kunnen de volgende karakters gebruikt worden.</p>
+            <ul class="list-unstyled">
+              <li><b>+</b> Optellen</li>
+              <li><b>-</b> Aftrekken</li>
+              <li><b>*</b> Vermenigvuldigen</li>
+              <li><b>/</b> Delen</li>
+              <li><b>()</b> Groeperen</li>
+              <li><b>%</b> Modulus</li>
+            </ul>
+          </div>
+          <div class="col-6">
+            <p>Voor variabele waarden kan er gebruik gemaakt worden van de onderstaande onderdelen. Hierbij moet ieder onderdeel omsloten zijn met accolades {}.
+              Let wel op dat de waarde wel beschikbaar moet zijn in de database, anders zal deze leeg blijven of een error geven.</p>
+            <ul class="list-unstyled">
+              <li><b>{HL}</b> Handelslengte vanuit xml leverancier</li>
+              <li><b>{GL}</b> Gewicht vanuit xml leverancier</li>
+              <li><b>{PL}</b> Geselecteerde prijs vanuit xml leverancier</li>
+              <li><hr></li>
+              <li><b>{HW}</b> Handelslengte van geselecteerd product uit database van de webshop</li>
+              <li><b>{GW}</b> Gewicht van geselecteerd product uit database van de webshop</li>
+              <li><b>{PW}</b> Huidige prijs van geselecteerd product uit database van de webshop</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+    </div>
+    <div class="row">
+      <div class="col">
+        {% include '@Modules/pricemodifier/views/templates/admin/grid/grid_panel.html.twig' with {'grid': price_modificationGrid} %}
+      </div>
+    </div>
+  {% endblock %}
+{% endblock %}
+
+
+{% block javascripts %}
+  <script src="{{ asset('../modules/pricemodifier/node_modules/chartist/dist/chartist.js') }}"></script>
+  <script src="{{ asset('../modules/pricemodifier/views/js/barChartLabelPlugin.js') }}"></script>
+  {{ parent() }}
+
+  <script src="{{ asset('../modules/pricemodifier/views/js/price_modifications.bundle.js') }}"></script>
+  <script src="{{ asset('../admin-dev/themes/new-theme/public/product_price_modification.bundle.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+
+{% endblock %}

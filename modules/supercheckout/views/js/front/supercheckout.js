@@ -3029,10 +3029,27 @@ $(document).ready(function () {
    * Added by Anshul for calling the Place order after file upload
    */
 
+  function removeDotsAndCommas(){
+    var idList = [
+                    'shipping_address[firstname]',
+                    'shipping_address[lastname]',
+                    'payment_address[firstname]',
+                    'payment_address[lastname]',
+                    'no_shipping_surname',
+                    'no_shipping_lastname'
+    ];
+
+    for (const key in idList) {
+      $('[name="'+idList[key]+'"]').val($('[name="'+idList[key]+'"]').val().replace(/[.,]+/g, ''));
+    }
+  }
+
+
   function kbAfterPlaceOrder() {
     $('.errorsmall').remove();
     hideGeneralError();
     var payment_module_name = $('input:radio[name="payment_method"]:checked').attr('data-module-name');
+    removeDotsAndCommas();
     // Start: Added by Anshul for PayPlug
     if (payment_module_name == 'payplug') {
       loadPaymentsPayPlug();
@@ -3293,6 +3310,9 @@ $(document).ready(function () {
     event.preventDefault();
 
     let breakCheckout = false;
+
+
+
     $('#desired_reference').parent().find('.errorsmall').remove();
     if ($('.supercheckout_shipping_option:checked').attr('value') == add2OrderCarrier) {
       if ($('#added_to_order').val() === "") {
@@ -3342,23 +3362,7 @@ $(document).ready(function () {
         // displayGeneralError(display_general_error_msg);
         breakCheckout = true;
       }
-      //
-      // if($('.supercheckout_shipping_option:checked').attr('value') == add2OrderCarrier) {
-      //   var added_to_order_field_value = $('input:text[name="added_to_order"]').val();
-      //   if (added_to_order_field_value == '') {
-      //     $('#desired_reference').parent().find('span.errorsmall').remove();
-      //     $('#desired_reference').removeClass('error-form warning-form');
-      //     $('#desired_reference').removeClass('ok-form');
-      //     $('#desired_reference').addClass('error-form');
-      //     $('#desired_reference').parent().append('<span class="errorsmall col-12">Selecteer a.u.b. de bestelling waaraan u deze aankoop aan toe wilt voegen</span>');
-      //     // $("html, body").animate({scrollTop: $("span.errorsmall").offset().top-80}, "fast");
-      //     // displayGeneralError(display_general_error_msg);
-      //     // $("html, body").animate({
-      //     //   scrollTop: 800
-      //     // }, "fast");
-      //     breakCheckout = true;
-      //   }
-      // }
+
 
       //No shipping so fill shipping address with custom data to prevent empty errors
       var company_field_value = $('input:text[name="no_shipping_company"]').val();

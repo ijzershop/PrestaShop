@@ -1,0 +1,151 @@
+# @see https://devdocs.prestashop.com/1.7/modules/concepts/controllers/admin-controllers/#how-to-map-an-action-of-your-controller-to-a-uri
+# @see https://devdocs.prestashop.com/1.7/modules/concepts/controllers/admin-controllers/tabs/
+#
+# configuration
+modernesmid_pricemodifier_configuration_index:
+  path: /pricemodifier/configuration
+  methods: [ GET ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\ConfigurationController::indexAction'
+    _legacy_controller: 'AdminPricemodifierConfiguration'
+    _legacy_link: 'AdminPricemodifierConfiguration'
+
+# price_modifications
+modernesmid_pricemodifier_price_modification_index:
+  path: /pricemodifier/price_modifications
+  methods: [ GET ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::indexAction'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification'
+
+modernesmid_pricemodifier_price_modification_search:
+  path: /pricemodifier/price_modifications
+  methods: [ POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::searchAction'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:search'
+
+modernesmid_pricemodifier_price_modification_generate:
+  path: /pricemodifier/generate
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::generateAction'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:generate'
+
+modernesmid_pricemodifier_price_modification_create:
+  path: /pricemodifier/price_modifications/new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::createAction'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:add'
+
+modernesmid_pricemodifier_price_modification_edit:
+  path: /pricemodifier/price_modifications/{price_modificationId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::editAction'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:update'
+  requirements:
+    price_modificationId: \d+
+
+modernesmid_pricemodifier_price_modification_delete:
+  path: /pricemodifier/price_modifications/{price_modificationId}/delete
+  methods: [ DELETE ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::deleteAction'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:deleteprice_modification'
+  requirements:
+    price_modificationId: \d+
+
+modernesmid_pricemodifier_price_modification_bulk_delete:
+  path: /pricemodifier/price_modifications/bulkDelete
+  methods: [ POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::deleteBulkAction'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:submitBulkdeleteprice_modification'
+
+modernesmid_pricemodifier_price_modification_toggle_status:
+  path: /pricemodifier/price_modifications/{price_modificationId}/toggle-status
+  methods: [ POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::toggleStatusAction'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:statusprice_modification'
+    _legacy_parameters:
+      id: price_modificationId
+  requirements:
+    price_modificationId: \d+
+
+
+modernesmid_pricemodifier_price_modification_ajax_fetch_data:
+  path: pricemodifier/price_modifications/ajax/fetch_data
+  methods: [ POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsAjaxController::fetchProductData'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:fetch_product_data'
+
+modernesmid_pricemodifier_price_modification_ajax_calculate_price:
+  path: pricemodifier/price_modifications/ajax/calculate_price
+  methods: [ POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsAjaxController::calculatePrice'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:calculate_price'
+
+modernesmid_pricemodifier_price_modification_ajax_select2_products_data:
+  path: pricemodifier/price_modifications/ajax/select2_products_data
+  methods: [ GET ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsAjaxController::select2ProductsData'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:select2_products_data'
+
+
+modernesmid_pricemodifier_price_modification_save_bulk_product_settings:
+  path: pricemodifier/price_modifications/bulk/update-products
+  methods: [ POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::bulkUpdateProductsAction'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:bulk_update_products'
+
+modernesmid_pricemodifier_price_modification_save_product_settings:
+  path: pricemodifier/price_modifications/{price_modificationId}/update-product
+  methods: [ POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::updateProductAction'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:update_product'
+    _legacy_parameters:
+      id: price_modificationId
+    requirements:
+      price_modificationId: \d+
+
+
+modernesmid_pricemodifier_price_modification_save_product_price:
+  path: pricemodifier/price_modifications/{price_modificationId}/save-price
+  methods: [ POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::updateProductPrice'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:update_product_price'
+    _legacy_parameters:
+      id: price_modificationId
+    requirements:
+      price_modificationId: \d+
+
+modernesmid_pricemodifier_price_modification_save_bulk_product_prices:
+  path: pricemodifier/price_modifications/bulk/update-prices
+  methods: [ POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::bulkUpdateProductsPrices'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:bulk_update_prices'

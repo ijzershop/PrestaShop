@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>gamification</name>
-    <displayName><![CDATA[Verkoper Expertise]]></displayName>
-    <version><![CDATA[2.3.2]]></version>
-    <description><![CDATA[Word een e-commerce expert in een oog omslag]]></description>
+    <displayName><![CDATA[Expertise van verkopers]]></displayName>
+    <version><![CDATA[2.5.0]]></version>
+    <description><![CDATA[Word in een handomdraai een e-commerce expert!]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[administration]]></tab>
     <is_configurable>1</is_configurable>

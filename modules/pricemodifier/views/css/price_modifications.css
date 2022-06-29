@@ -1,0 +1,24 @@
+/*
+ * Price Modifier
+ * Copyright since 2021 JB Stoker and Contributors
+ * <JB Stoker> Property
+ *
+
+ * @author    JB Stoker <jelmer@ijzershop.nl>
+ * @copyright Since 2021 JB Stoker
+ * @license   https://opensource.org/licenses/MIT
+ */
+
+.ct-series-a .ct-bar {
+  stroke: #0000FF!important;
+}
+
+.ct-series-b .ct-bar {
+  stroke: #ADFF2F!important;
+}
+
+.formula_result{
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+}

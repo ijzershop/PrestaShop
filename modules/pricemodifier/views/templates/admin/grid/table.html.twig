@@ -1,0 +1,120 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+
+{{ renderhook('displayAdminGridTableBefore', {
+  'grid': grid,
+  'legacy_controller': app.request.attributes.get('_legacy_controller'),
+  'controller': app.request.attributes.get('_controller')
+}) }}
+
+{{ form_start(grid.filter_form, {'attr': {'id': grid.id ~ '_filter_form', 'class': 'table-responsive'}}) }}
+
+<table
+  class="grid-table js-grid-table table {% if is_ordering_column(grid) %}grid-ordering-column{% endif %} {% if grid.attributes.is_empty_state %}border-0{% endif %}"
+  id="{{ grid.id }}_grid_table"
+  data-query="{{ grid.data.query }}"
+>
+  <thead class="thead-default">
+  {% block grid_table_head %}
+    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/headers_row.html.twig', {'grid': grid}) }}
+    {% if grid.actions.bulk|length > 0 or grid.filter_form|length > 1 %}
+      {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {'grid': grid}) }}
+    {% endif %}
+  {% endblock %}
+  </thead>
+  <tbody>
+  {% block grid_table_body %}
+    {% if grid.data.records is not empty %}
+      {% for record in grid.data.records %}
+        {% set product_price = 0 %}
+
+        <tr>
+          {% for column in grid.columns %}
+            <td
+              class="{{ column.type }}-type column-{{ column.id }}{% if column.options.clickable is defined and column.options.clickable %} clickable{% endif %}">
+              {% if column.id == "id_store_product" %}
+                <label>
+                  <select data-link="{{admin_link}}" data-rowid="{{ record.id }}" data-value="{{ record.id_store_product }}" data-price="{{ record.id_store_product_price }}" data-name="{{ record.id_store_product_name }}" name="selected_product_{{ record.id }}" class="form-control supplier_connected_product_selection">
+                  </select>
+                </label>
+              {% elseif column.id == "name_supplier" %}
+                <div style="min-width: 200px;">{{ record.name_supplier|raw }}</div>
+              {% elseif column.id == "price_formula" %}
+                <label>
+                  <input type="text" name="formula_{{ record.id }}" value="{{ record.formula }}" class="form-control formula" style="min-width:200px;">
+                </label>
+                {% elseif column.id == "increment_formula" %}
+                <label>
+                  <input type="text" name="increment_formula_{{ record.id }}" value="{{ record.increment_formula }}" class="form-control increment_formula" style="min-width:200px;">
+                  <span id="increment_formula_result_{{ record.id }}" class="increment_formula_result"></span>
+                </label>
+
+              {% elseif column.id == "store_price" %}
+                <span data-id="{{ record.id }}" data-column="{{ column.id }}"
+                      class="store_price font-weight-bold">{{ record.id_store_product_price }}</span>
+
+              {% elseif column.id == "new_price" %}
+                <div style="min-width: 200px" class="input-group">
+                    <input type="text" name="new_price_{{ record.id }}" value="{{ record.new_price }}" class="form-control new_price" novalidate>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calculate_new_price" type="button" data-link="{{admin_calculate_link}}" data-rowid="{{ record.id }}">
+                      <i class="material-icons">loop</i>
+                    </button>
+                  </div>
+
+                </div>
+                <span id="formula_result_{{ record.id }}" class="formula_result"></span>
+              {% elseif column.id == "chart" %}
+                <div style="min-width:250px;" data-name="new_price_{{ record.id }}_chart" class="price_mod_cart" data-id="{{ record.id }}" data-new_supplier_price="{{ record.base_price_supplier }}" data-old_supplier_price="{{ record.old_supplier_price }}" data-old_store_price="{{ record.old_store_price }}"></div>
+                <div class="w-100 mt-2">
+                  <table class="table table-condensed">
+                    <tr><td>Lever.</td><th id="supplier_diff_{{ record.id }}"></th></tr>
+                    <tr><td>Winkel</td><th id="store_diff_{{ record.id }}"></th></tr>
+                  </table>
+                </div>
+              {% elseif column.id == "supplier_data" %}
+                {% include '@Modules/pricemodifier/views/templates/admin/grid/supplier_data_column.html.twig' with {'record': record} %}
+              {% else %}
+                {{ column_content(record, column, grid) }}
+              {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    {% else %}
+      {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/empty_row.html.twig', {'grid': grid}) }}
+    {% endif %}
+  {% endblock %}
+  </tbody>
+  {% block grid_table_footer %}{% endblock %}
+</table>
+
+{{ form_end(grid.filter_form) }}
+
+{{ renderhook('displayAdminGridTableAfter', {
+  'grid': grid,
+  'legacy_controller': app.request.attributes.get('_legacy_controller'),
+  'controller': app.request.attributes.get('_controller')
+}) }}

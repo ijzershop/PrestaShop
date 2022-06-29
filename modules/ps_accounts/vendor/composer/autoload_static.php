@@ -4,14 +4,14 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita2ab4a56721ff904ceb46fcb9757c291
+class ComposerStaticInitc3ee5a9ef31d4a566dfddf2bcceb7086
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+        'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         '32dcc8afd4335739640db7d200c1971d' => __DIR__ . '/..' . '/symfony/polyfill-apcu/bootstrap.php',
         '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
-        'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         '256c1545158fc915c75e51a931bdba60' => __DIR__ . '/..' . '/lcobucci/jwt/compat/class-aliases.php',
         '0d273777b2b0d96e49fb3d800c6b0e81' => __DIR__ . '/..' . '/lcobucci/jwt/compat/json-exception-polyfill.php',
         'd6b246ac924292702635bb2349f4a64b' => __DIR__ . '/..' . '/lcobucci/jwt/compat/lcobucci-clock-polyfill.php',
@@ -906,29 +906,19 @@ class ComposerStaticInita2ab4a56721ff904ceb46fcb9757c291
         'phpseclib\\Net\\SSH2' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/Net/SSH2.php',
         'phpseclib\\System\\SSH\\Agent' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/System/SSH/Agent.php',
         'phpseclib\\System\\SSH\\Agent\\Identity' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/System/SSH/Agent/Identity.php',
-        'ps_AccountsApiCartsModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiCarts.php',
-        'ps_AccountsApiCategoriesModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiCategories.php',
-        'ps_AccountsApiDeletedObjectsModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiDeletedObjects.php',
-        'ps_AccountsApiGoogleTaxonomiesModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiGoogleTaxonomies.php',
-        'ps_AccountsApiHealthCheckModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiHealthCheck.php',
-        'ps_AccountsApiInfoModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiInfo.php',
-        'ps_AccountsApiModulesModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiModules.php',
-        'ps_AccountsApiOrdersModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiOrders.php',
-        'ps_AccountsApiThemesModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiThemes.php',
         'ps_AccountsApiV1ShopHmacModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopHmac.php',
         'ps_AccountsApiV1ShopLinkAccountModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopLinkAccount.php',
         'ps_AccountsApiV1ShopTokenModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopToken.php',
         'ps_AccountsApiV1ShopUrlModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopUrl.php',
-        'ps_accountsApiProductsModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiProducts.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita2ab4a56721ff904ceb46fcb9757c291::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita2ab4a56721ff904ceb46fcb9757c291::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInita2ab4a56721ff904ceb46fcb9757c291::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInita2ab4a56721ff904ceb46fcb9757c291::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc3ee5a9ef31d4a566dfddf2bcceb7086::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc3ee5a9ef31d4a566dfddf2bcceb7086::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitc3ee5a9ef31d4a566dfddf2bcceb7086::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitc3ee5a9ef31d4a566dfddf2bcceb7086::$classMap;
 
         }, null, ClassLoader::class);
     }

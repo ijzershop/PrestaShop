@@ -101,6 +101,7 @@ module.exports = {
     product_catalog: './scss/pages/product/products_catalog.scss',
     product_edit: './js/pages/product/edit',
     product_page: './js/product-page/index',
+    product_price_modification: './js/product-price-modification-page/index',
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
     sql_manager: './js/pages/sql-manager',

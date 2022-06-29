@@ -159,7 +159,11 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
                 return (float)$supWeight;
             },
             '({PL})' => function () use ($supplier_price, $supplierData) { //is de geslecteerde prijs van leverancier
-                $supPrice = $supplierData['prices']->{$supplier_price};
+                if(!isset($supplierData['prices']->{$supplier_price})){
+                    return;
+                }
+
+            $supPrice = $supplierData['prices']->{$supplier_price};
                 $supplier_price_value = $supPrice;
                 return $supPrice;
             },

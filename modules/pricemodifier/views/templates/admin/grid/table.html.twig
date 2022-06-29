@@ -90,8 +90,9 @@
                 <div style="min-width:250px;" data-name="new_price_{{ record.id }}_chart" class="price_mod_cart" data-id="{{ record.id }}" data-new_supplier_price="{{ record.base_price_supplier }}" data-old_supplier_price="{{ record.old_supplier_price }}" data-old_store_price="{{ record.old_store_price }}"></div>
                 <div class="w-100 mt-2">
                   <table class="table table-condensed">
-                    <tr><td>Lever.</td><th id="supplier_diff_{{ record.id }}"></th></tr>
-                    <tr><td>Winkel</td><th id="store_diff_{{ record.id }}"></th></tr>
+                    <tr><td>Lever.</td><th colspan="2" id="supplier_diff_{{ record.id }}"></th></tr>
+                    <tr><td>Winkel</td><th colspan="2" id="store_diff_{{ record.id }}"></th></tr>
+                    <tr><td>Winst</td><th class="profit-th-old" id="store_profit_old_{{ record.id }}"></th><th class="profit-th-new" id="store_profit_new_{{ record.id }}"></th></tr>
                   </table>
                 </div>
               {% elseif column.id == "supplier_data" %}

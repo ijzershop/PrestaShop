@@ -17,8 +17,32 @@
   stroke: #ADFF2F!important;
 }
 
+.ct-bar-label{
+  letter-spacing: 0.1em;
+}
+
 .formula_result{
   font-weight: bold;
   font-size: 16px;
   text-align: center;
+}
+
+.profit-th-old, .profit-th-new{
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+
+.profit-th-old{
+  color:#000000;
+  background-color: #ADFF2F;
+}
+
+
+.profit-th-new{
+  color:#FFFFFF;
+  background-color: #0000dd;
+}
+
+.column-chart table th{
+  letter-spacing: 0.1em;
 }

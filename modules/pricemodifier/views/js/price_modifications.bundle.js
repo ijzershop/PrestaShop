@@ -6,24 +6,18 @@ $(document).ready(function() {
     if(formula !== ''){
 
     }
-
     return price;
   }
-
 
   function runFormula(price, formula){
     return price;
   }
 
-
-
   $('.supplier_connected_product_selection').on('change', function(e){
-    console.log($(this).val());
     let idProduct = $(this).val();
     let link = $(this).attr('data-link');
     let rowId = $(this).attr('data-rowid');
 
-    console.log(link);
     $.ajax({
       type: 'POST',
       cache: false,
@@ -42,12 +36,10 @@ $(document).ready(function() {
         console.log(data);
       }
     });
-
-
   });
 
-
   $('.calculate_new_price').on('click', function(e){
+    e.preventDefault();
     let link = $(this).attr('data-link');
     let rowId = $(this).attr('data-rowid');
 
@@ -136,7 +128,8 @@ $(document).ready(function() {
       }
       $('th#supplier_diff_'+rowId).text(Number(newSupPrice-oldSupPrice).toFixed(4));
       $('th#store_diff_'+rowId).text(Number(newStorPrice-oldStorPrice).toFixed(4));
-
+      $('th#store_profit_old_'+rowId).text(Number(oldStorPrice-oldSupPrice).toFixed(4));
+      $('th#store_profit_new_'+rowId).text(Number(newStorPrice-newSupPrice).toFixed(4));
 
     });
 
@@ -199,31 +192,20 @@ $(document).ready(function() {
 
               $('th#supplier_diff_'+rowId).text(Number(newSupPrice-oldSupPrice).toFixed(4));
               $('th#store_diff_'+rowId).text(Number(newStorPrice-oldStorPrice).toFixed(4));
+              $('th#store_profit_old_'+rowId).text(Number(oldStorPrice-oldSupPrice).toFixed(4));
+              $('th#store_profit_new_'+rowId).text(Number(newStorPrice-newSupPrice).toFixed(4));
             },
             error : function (data){
               console.log(data);
             }
           });
-
-
-
-
-
-
         },
         error : function (data){
           console.log(data);
         }
       });
-
-
-
-
-
     });
-})
-
-
+  });
 });
 
 $( window ).on( "load", function(){

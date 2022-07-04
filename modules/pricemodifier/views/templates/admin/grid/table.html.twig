@@ -61,6 +61,8 @@
                 </label>
               {% elseif column.id == "name_supplier" %}
                 <div style="min-width: 200px;">{{ record.name_supplier|raw }}</div>
+              {% elseif column.id == "id_category_default" %}
+                <div style="min-width: 200px;">{{ record.cat_name|raw }}</div>
               {% elseif column.id == "price_formula" %}
                 <label>
                   <input type="text" name="formula_{{ record.id }}" value="{{ record.formula }}" class="form-control formula" style="min-width:200px;">
@@ -73,7 +75,7 @@
 
               {% elseif column.id == "store_price" %}
                 <span data-id="{{ record.id }}" data-column="{{ column.id }}"
-                      class="store_price font-weight-bold">{{ record.id_store_product_price }}</span>
+                      class="store_price font-weight-bold">{{ record.formatted_id_store_product_price }}</span>
 
               {% elseif column.id == "new_price" %}
                 <div style="min-width: 200px" class="input-group">

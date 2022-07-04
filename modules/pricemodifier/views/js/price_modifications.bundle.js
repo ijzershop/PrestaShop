@@ -1,5 +1,9 @@
 $(document).ready(function() {
 
+  let moneyFormat = new Intl.NumberFormat('nl-NL', {
+    style: 'currency',
+    currency: 'EUR'});
+
   function calculateNewPrice(startPrice = 0, formula = ''){
     let price = 0 ;
 
@@ -126,11 +130,10 @@ $(document).ready(function() {
           style: 'stroke-width: 10px'
         });
       }
-      $('th#supplier_diff_'+rowId).text(Number(newSupPrice-oldSupPrice).toFixed(2));
-      $('th#store_diff_'+rowId).text(Number(newStorPrice-oldStorPrice).toFixed(2));
-      $('th#store_profit_old_'+rowId).text(Number(oldStorPrice-oldSupPrice).toFixed(2));
-      $('th#store_profit_new_'+rowId).text(Number(newStorPrice-newSupPrice).toFixed(2));
-
+      $('th#supplier_diff_'+rowId).text(moneyFormat.format(newSupPrice-oldSupPrice));
+      $('th#store_diff_'+rowId).text(moneyFormat.format(newStorPrice-oldStorPrice));
+      $('th#store_profit_old_'+rowId).text(moneyFormat.format(oldStorPrice-oldSupPrice));
+      $('th#store_profit_new_'+rowId).text(moneyFormat.format(newStorPrice-newSupPrice));
     });
 
 
@@ -190,10 +193,10 @@ $(document).ready(function() {
                   [newSupPrice, newStorPrice],
                 ]});
 
-              $('th#supplier_diff_'+rowId).text(Number(newSupPrice-oldSupPrice).toFixed(2));
-              $('th#store_diff_'+rowId).text(Number(newStorPrice-oldStorPrice).toFixed(2));
-              $('th#store_profit_old_'+rowId).text(Number(oldStorPrice-oldSupPrice).toFixed(2));
-              $('th#store_profit_new_'+rowId).text(Number(newStorPrice-newSupPrice).toFixed(2));
+              $('th#supplier_diff_'+rowId).text(moneyFormat.format(newSupPrice-oldSupPrice));
+              $('th#store_diff_'+rowId).text(moneyFormat.format(newStorPrice-oldStorPrice));
+              $('th#store_profit_old_'+rowId).text(moneyFormat.format(oldStorPrice-oldSupPrice));
+              $('th#store_profit_new_'+rowId).text(moneyFormat.format(newStorPrice-newSupPrice));
             },
             error : function (data){
               console.log(data);
@@ -208,14 +211,70 @@ $(document).ready(function() {
   });
 });
 
+function indexOfAll(string, searchItem) {
+  let searchArray = searchItem.split(' ');
+  let indexes = 0;
+  for(let i=0; i < searchArray.length; i++){
+    if(string.indexOf(searchArray[i]) >= 0) {
+      indexes++;
+    }
+  }
+  return indexes === searchArray.length;
+}
+
+
+function matchCustom(params, data) {
+  //
+  // console.log([params, data]);
+
+  // If there are no search terms, return all of the data
+  if ($.trim(params.term) === '') {
+    return data;
+  }
+
+  // Do not display the item if there is no 'text' property
+  if (typeof data.text === 'undefined') {
+    return null;
+  }
+
+  // `params.term` should be the term that is used for searching
+  // `data.text` is the text that is displayed for the data object
+
+  if (indexOfAll(data.text, params.term)) {
+    let modifiedData = $.extend({}, data, true);
+    // You can return modified objects from here
+    // This includes matching the `children` how you want in nested data sets
+    return modifiedData;
+  }
+
+  // Return `null` if the term should not be displayed
+  return null;
+}
+
+
 $( window ).on( "load", function(){
   let adminSelect2DataLink = $('#select2_data_link').attr('data-link');
 
 
   $('#product_price_modification_id_store_product').select2({
+    matcher: matchCustom,
     allowClear: true,
     width:300,
-    cache: true,
+    cache: false,
+    placeholder: "Selecteer een product",
+  placeholderOption: ""
+  });
+
+  $('#product_price_modification_id_category_default').select2({
+    allowClear: true,
+    matcher: matchCustom,
+    width:300,
+    cache: false,
+    placeholder: {
+      id : '-1',
+      text: 'Selecteer een categorie'
+    },
+    placeholderOption: ""
   });
 
 

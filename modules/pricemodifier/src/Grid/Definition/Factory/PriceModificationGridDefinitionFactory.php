@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Modernesmid\Module\Pricemodifier\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\Context;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
@@ -56,6 +57,7 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
      * @var string
      */
     private $redirectionUr;
+    private $context;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
@@ -70,6 +72,7 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
         parent::__construct($hookDispatcher);
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectionUr = $redirectionUrl;
+        $this->context = Context::getContext();
     }
 
     /**
@@ -116,6 +119,13 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setName($this->trans('Product', [], 'Modules.Pricemodifier.Admin'))
                 ->setOptions([
                     'field' => 'id_store_product',
+                    'sortable' => true,
+                ])
+            )
+            ->add((new DataColumn('id_category_default'))
+                ->setName($this->trans('Store Category', [], 'Modules.Pricemodifier.Admin'))
+                ->setOptions([
+                    'field' => 'id_category_default',
                     'sortable' => true,
                 ])
             )
@@ -234,24 +244,50 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
      */
     protected function getFilters()
     {
-        $id_lang = Context::getContext()->language->id;
+        $id_lang = $this->context->language->id;
 
-        $sql = new DbQuery();
-        $sql->select('p.`id_product` as id, p.`id_category_default`, CONCAT_WS(" - ", cl.`name`,pl.`name`) as text');
-        $sql->from('product', 'p');
-        $sql->join(Shop::addSqlAssociation('product', 'p'));
-        $sql->leftJoin(
+        $customCategory = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_CATEGORY', null);
+
+        $sqlProducts = new DbQuery();
+        $sqlProducts->select('p.`id_product` as id, p.`id_category_default`, CONCAT(pl.`name`, " - " , clp.`name`," ", cl.`name`) as text');
+        $sqlProducts->from('product', 'p');
+        $sqlProducts->join(Shop::addSqlAssociation('product', 'p'));
+        $sqlProducts->leftJoin(
             'product_lang',
             'pl',
             'p.`id_product` = pl.`id_product`
             AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl')
         );
-        $sql->leftJoin('category_lang', 'cl', 'cl.`id_category` = p.`id_category_default`');
-        $sql->orderBy('cl.`name` ASC');
-        $sql->limit('1500');
+        $sqlProducts->leftJoin('category', 'c', 'c.`id_category` = p.`id_category_default`');
+        $sqlProducts->leftJoin('category_lang', 'cl', 'cl.`id_category` = c.`id_category`');
+        $sqlProducts->leftJoin('category_lang', 'clp', 'clp.`id_category` = c.`id_parent`');
+        $sqlProducts->where('c.level_depth > 1');
+        $sqlProducts->where('p.id_category_default != '.$customCategory);
+        $sqlProducts->orderBy('cl.`name` ASC');
+        $sqlProducts->limit('1500');
 
-        $products = Db::getInstance()->executeS($sql);
+        $products = Db::getInstance()->executeS($sqlProducts);
+        uasort($products, function ($x, $y) {
+            return $x['text'] <=> $y['text'];
+        });
         $productList = array_combine(array_column($products,'text'), array_column($products,'id'));
+
+
+        $sqlCategories = new DbQuery();
+        $sqlCategories->select('c.`id_category` as id, CONCAT(clp.`name`," - ", cl.`name`) as text');
+        $sqlCategories->from('category', 'c');
+        $sqlCategories->leftJoin('category_lang', 'cl', 'cl.`id_category` = c.`id_category`');
+        $sqlCategories->leftJoin('category_lang', 'clp', 'clp.`id_category` = c.`id_parent`');
+        $sqlCategories->where('c.level_depth > 1');
+        $sqlProducts->where('p.id_category_default != '.$customCategory);
+        $sqlCategories->orderBy('cl.`name` ASC');
+        $sqlCategories->limit('1500');
+        $categories = Db::getInstance()->executeS($sqlCategories);
+
+        uasort($categories, function ($x, $y) {
+            return $x['text'] <=> $y['text'];
+        });
+        $categoryList = array_combine(array_column($categories,'text'), array_column($categories,'id'));
 
         return (new FilterCollection())
             ->add((new Filter('id', TextType::class))
@@ -275,14 +311,21 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
             ->add((new Filter('id_store_product', ChoiceType::class))
                 ->setTypeOptions([
                     'required' => false,
-                    'choices' => [
-                        $productList
-                    ],
+                    'choices' => $productList,
                     'attr' => [
                         'placeholder' => $this->trans('Selected store product', [], 'Modules.Pricemodifier.Admin'),
                     ],
                 ])
                 ->setAssociatedColumn('id_store_product')
+            )->add((new Filter('id_category_default', ChoiceType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'choices' => $categoryList,
+                    'attr' => [
+                        'placeholder' => $this->trans('Selected store product category', [], 'Modules.Pricemodifier.Admin'),
+                    ],
+                ])
+                ->setAssociatedColumn('id_category_default')
             )
             ->add((new Filter('file_supplier', ChoiceType::class))
                 ->setTypeOptions([

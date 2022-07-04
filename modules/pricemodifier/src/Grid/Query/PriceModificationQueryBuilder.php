@@ -15,6 +15,7 @@ namespace Modernesmid\Module\Pricemodifier\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\ORM\Query\Expr\Join;
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -68,6 +69,8 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
             q.id_store_product,
             q.file_supplier,
             q.selected_supplier_price,
+            cl.name as cat_name,
+            p.id_category_default,
             q.formula,
             q.increment_formula,
             q.old_supplier_price,
@@ -75,6 +78,8 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
             q.old_price_update,
             json_unquote(q.supplier_data) as supplier_data,
             q.active')
+            ->leftJoin('q', $this->dbPrefix.'product', 'p','p.id_product = q.id_store_product')
+            ->leftJoin('p', $this->dbPrefix.'category_lang', 'cl','p.id_category_default = cl.id_category AND cl.id_lang = '. $this->languageId . ' AND cl.id_shop = '. $this->shopId)
             ->groupBy('q.id');
 
         $this->searchCriteriaApplicator
@@ -91,7 +96,9 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT q.id)');
+            ->select('COUNT(DISTINCT q.id)')
+            ->leftJoin('q', $this->dbPrefix.'product', 'p','p.id_product = q.id_store_product')
+            ->leftJoin('p', $this->dbPrefix.'category_lang', 'cl','p.id_category_default = cl.id_category AND cl.id_lang = '. $this->languageId . ' AND cl.id_shop = '. $this->shopId);
 
         return $qb;
     }
@@ -109,6 +116,8 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
             'id',
             'name_supplier',
             'id_store_product',
+            'id_category_default',
+            'cat_name',
             'supplier_data',
             'file_supplier',
             'selected_supplier_price',
@@ -121,6 +130,8 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
             'id' => 'q.id',
             'name_supplier' => 'q.name_supplier',
             'id_store_product' => 'q.id_store_product',
+            'id_category_default' => 'p.id_category_default',
+            'cat_name' => 'cl.name',
             'supplier_data' => 'q.supplier_data',
             'file_supplier' => 'q.file_supplier',
             'selected_supplier_price' => 'q.selected_supplier_price',
@@ -150,12 +161,17 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('name_supplier' === $name) {
+                $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
+                $qb->setParameter($name, '%' . $value . '%');
+                continue;
+            }
+            if ('id_store_product' === $name) {
                 $qb->andWhere($allowedFiltersMap[$name] . ' = :' . $name);
                 $qb->setParameter($name, $value);
 
                 continue;
             }
-            if ('id_store_product' === $name) {
+            if ('id_category_default' === $name) {
                 $qb->andWhere($allowedFiltersMap[$name] . ' = :' . $name);
                 $qb->setParameter($name, $value);
 

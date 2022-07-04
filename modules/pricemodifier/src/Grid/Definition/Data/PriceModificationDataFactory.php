@@ -32,8 +32,11 @@ use Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsAjaxCont
 use Modernesmid\Module\Pricemodifier\Entity\PriceModification;
 use Modernesmid\Module\Pricemodifier\Repository\PriceModificationRepository;
 use PDO;
-use Product;
-use Context;
+use PrestaShop\PrestaShop\Adapter\Entity\Category;
+use PrestaShop\PrestaShop\Adapter\Entity\Product;
+use PrestaShop\PrestaShop\Adapter\Entity\Context;
+use PrestaShop\PrestaShop\Adapter\Entity\Tools;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
@@ -41,6 +44,8 @@ use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleCache;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Symfony\Component\DependencyInjection\Container;
 use Modernesmid\Module\Pricemodifier\Grid\Query\PriceModificationQueryBuilder;
 
@@ -82,6 +87,8 @@ final class PriceModificationDataFactory implements GridDataFactoryInterface
            $this->hookDispatcher = $hookDispatcher;
            $this->queryParser = $queryParser;
            $this->gridId = $gridId;
+           $this->context = Context::getContext();
+           $this->locale = Tools::getContextLocale($this->context);
        }
 
        /**
@@ -134,7 +141,7 @@ final class PriceModificationDataFactory implements GridDataFactoryInterface
             */
            private function modifyRecords(array $records)
            {
-                $id_lang = Context::getContext()->language->id;
+                $id_lang = $this->context->language->id;
                    foreach ($records as $key => $record) {
 
                     $id_product = $record['id_store_product'];
@@ -175,19 +182,45 @@ final class PriceModificationDataFactory implements GridDataFactoryInterface
                                                                                        6
                                                                                    );
 
+
+
+                       $cat = new Category($record['id_category_default']);
+                       if($cat->isParentCategoryAvailable()){
+                           $catName = '';
+                           $cats = $cat->getParentsCategories($id_lang);
+                           if(isset($cats[1])){
+                               $catName = $cats[1]['name'] . ' - ';
+                           }
+                           if(isset($cats[0])){
+                               $catName .= $cats[0]['name'];
+                           }
+                           $records[$key]['cat_name'] = $catName;
+                       }
+
                        $records[$key]['generated_formula'] = $newPrice->generated_formula;
                        $records[$key]['base_price_supplier'] = $newPrice->total;
                        $records[$key]['new_price'] = $newPriceWithIncrement->total;
                        $records[$key]['supplier_price_value'] = $newPrice->supplier_price;
                        $records[$key]['supplier_data'] = json_decode($record['supplier_data']);
 
-
-
-//                       var_export($records[$key]);
+                       $records[$key]['formatted_old_supplier_price'] = $this->formattedPrice($records[$key]['old_supplier_price']);
+                       $records[$key]['formatted_old_store_price'] = $this->formattedPrice($records[$key]['old_store_price']);
+                       $records[$key]['formatted_id_store_product_price'] = $this->formattedPrice($records[$key]['id_store_product_price']);
+                       $records[$key]['formatted_base_price_supplier'] = $this->formattedPrice($records[$key]['base_price_supplier']);
+                       $records[$key]['formatted_new_price'] = $this->formattedPrice($records[$key]['new_price']);
+                       $records[$key]['formatted_supplier_price_value'] = $this->formattedPrice($records[$key]['supplier_price_value']);
                    }
-//               die();
 
                return $records;
            }
 
-   }
+
+        private function formattedPrice($price = 0){
+            if($price){
+                   return $this->locale->formatPrice($price, $this->context->currency->iso_code);
+               } else {
+                   return $this->locale->formatPrice(0, $this->context->currency->iso_code);
+               }
+        }
+
+}

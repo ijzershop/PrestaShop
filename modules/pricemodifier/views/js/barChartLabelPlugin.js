@@ -22,6 +22,11 @@
   (function(window, document, Chartist) {
     'use strict';
 
+    var moneyFormat = new Intl.NumberFormat('nl-NL', {
+      style: 'currency',
+      currency: 'EUR'});
+
+
     var defaultOptions = {
       labelClass: 'ct-bar-label',
       labelOffset: {
@@ -77,7 +82,7 @@
           x: position.x + options.labelOffset.x,
           y: position.y + options.labelOffset.y,
           style: 'text-anchor: ' + options.textAnchor
-        }, options.labelClass).text(options.labelInterpolationFnc(value).toFixed(2));
+        }, options.labelClass).text(moneyFormat.format(options.labelInterpolationFnc(value)));
       }
 
       return function barChartLabel(chart) {

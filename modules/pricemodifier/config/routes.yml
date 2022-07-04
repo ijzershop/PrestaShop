@@ -149,3 +149,19 @@ modernesmid_pricemodifier_price_modification_save_bulk_product_prices:
     _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::bulkUpdateProductsPrices'
     _legacy_controller: 'AdminPricemodifierPriceModification'
     _legacy_link: 'AdminPricemodifierPriceModification:bulk_update_prices'
+
+modernesmid_pricemodifier_price_modification_save_bulk_product_active:
+  path: pricemodifier/price_modifications/bulk/activate-products
+  methods: [ POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::bulkActivateProducts'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:bulk_activate_products'
+
+modernesmid_pricemodifier_price_modification_save_bulk_product_deactive:
+  path: pricemodifier/price_modifications/bulk/deactivate-products
+  methods: [ POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsController::bulkDeActivateProducts'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:bulk_deactivate_products'

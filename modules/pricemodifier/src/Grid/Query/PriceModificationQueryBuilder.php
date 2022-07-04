@@ -161,8 +161,12 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('name_supplier' === $name) {
-                $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
-                $qb->setParameter($name, '%' . $value . '%');
+                $searchTerms = explode(" ", $value);
+
+                foreach ($searchTerms as $i => $term){
+                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name.'_'.$i);
+                    $qb->setParameter($name.'_'.$i, '%' . $term . '%');
+                }
                 continue;
             }
             if ('id_store_product' === $name) {

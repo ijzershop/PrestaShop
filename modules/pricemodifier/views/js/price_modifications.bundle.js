@@ -199,12 +199,12 @@ $(document).ready(function() {
               $('th#store_profit_new_'+rowId).text(moneyFormat.format(newStorPrice-newSupPrice));
             },
             error : function (data){
-              console.log(data);
+              // console.log(data);
             }
           });
         },
         error : function (data){
-          console.log(data);
+          // console.log(data);
         }
       });
     });
@@ -262,7 +262,7 @@ $( window ).on( "load", function(){
     width:300,
     cache: false,
     placeholder: "Selecteer een product",
-  placeholderOption: ""
+    placeholderOption: ""
   });
 
   $('#product_price_modification_id_category_default').select2({
@@ -271,7 +271,7 @@ $( window ).on( "load", function(){
     width:300,
     cache: false,
     placeholder: {
-      id : '-1',
+      id : '',
       text: 'Selecteer een categorie'
     },
     placeholderOption: ""

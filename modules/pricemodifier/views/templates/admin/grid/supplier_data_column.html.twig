@@ -6,7 +6,7 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.haaks_zagen == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'haaks_zagen' %}checked{% endif %}  type="radio" class="selected_formule_item form-radio" name="selected_formule_item_{{ record.id }}"/>data-type="haaks_zagen" data-value={{ record.supplier_data.prices.haaks_zagen }}"
+      <input {% if record.selected_supplier_price == 'haaks_zagen' %}checked{% endif %}  type="radio" class="selected_formule_item form-radio" name="selected_formule_item_{{ record.id }}" data-type="haaks_zagen" data-value="{{ record.supplier_data.prices.haaks_zagen }}"/>
     </td>
     <td>Haaks Zagen
     </td>

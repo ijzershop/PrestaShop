@@ -119,7 +119,7 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setName($this->trans('Product', [], 'Modules.Pricemodifier.Admin'))
                 ->setOptions([
                     'field' => 'id_store_product',
-                    'sortable' => true,
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('id_category_default'))
@@ -140,28 +140,28 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setName($this->trans('Price Formula', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id',
-                    'sortable' => true,
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('increment_formula'))
                 ->setName($this->trans('Increment Formula', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id',
-                    'sortable' => true,
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('store_price'))
                 ->setName($this->trans('Store Price', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id',
-                    'sortable' => true,
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('new_price'))
                 ->setName($this->trans('New Price', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id',
-                    'sortable' => true,
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('chart'))
@@ -175,6 +175,7 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setName($this->trans('File', [], 'Modules.Pricemodifier.Admin'))
                 ->setOptions([
                     'field' => 'file_supplier',
+                    'sortable' => true,
                 ])
             )
             ->add((new ToggleColumn('active'))
@@ -184,6 +185,7 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                     'primary_field' => 'id',
                     'route' => 'modernesmid_pricemodifier_price_modification_toggle_status',
                     'route_param_name' => 'price_modificationId',
+                    'sortable' => true,
                 ])
             )
             ->add((new ActionColumn('actions'))
@@ -394,17 +396,31 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
     {
         return (new BulkActionCollection())
             ->add((new SubmitBulkAction('update_settings_bulk'))
-                ->setName($this->trans('Update product settings', [], 'Admin.Actions'))
+                ->setName($this->trans('Update product regel', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'modernesmid_pricemodifier_price_modification_save_bulk_product_settings',
                     'confirm_message' => $this->trans('Update settings of all selected rows?', [], 'Admin.Notifications.Warning'),
                 ])
             )
             ->add((new SubmitBulkAction('update_prices_bulk'))
-                ->setName($this->trans('Update product prices', [], 'Admin.Actions'))
+                ->setName($this->trans('Update prijzen', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'modernesmid_pricemodifier_price_modification_save_bulk_product_prices',
                     'confirm_message' => $this->trans('Update prices of all selected rows?', [], 'Admin.Notifications.Warning'),
+                ])
+            )
+            ->add((new SubmitBulkAction('set_active_bulk'))
+                ->setName($this->trans('Activeer producten', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'modernesmid_pricemodifier_price_modification_save_bulk_product_active',
+                    'confirm_message' => $this->trans('Activate all selected products?', [], 'Admin.Notifications.Warning'),
+                ])
+            )
+            ->add((new SubmitBulkAction('set_deactive_bulk'))
+                ->setName($this->trans('De-activeer producten', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'modernesmid_pricemodifier_price_modification_save_bulk_product_deactive',
+                    'confirm_message' => $this->trans('Deactivate all selected products?', [], 'Admin.Notifications.Warning'),
                 ])
             )
             ->add((new SubmitBulkAction('delete_bulk'))

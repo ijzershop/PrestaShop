@@ -217,18 +217,18 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 $incr_formula = $item['increment_formula'];
                 $active = $item['active'] ?? 0;
 
-                if ($store_product < 1) {
-                    continue;
-                }
 
                 $priceMod = $repository->findOneById($item['id']);
 
                 $priceMod->setActive(boolval($active));
+                $priceMod->setFormula($formula);
+                $priceMod->setIncrementFormula($incr_formula);
 
+                if ((int)$store_product > 0) {
+                    $priceMod->setIdStoreProduct((int)$store_product);
+                }
 
-                $priceMod->setIdStoreProduct((int)$store_product);
-
-                if ($supplier_price > 0) {
+                if ($supplier_price > 0 && $store_product > 0) {
                     $storePrice = Product::getPriceStatic((int)$store_product, false, null, 6);
 
                     $contr = new PriceModificationsAjaxController();
@@ -241,8 +241,94 @@ class PriceModificationsController extends FrameworkBundleAdminController
                     $priceMod->setSelectedSupplierPrice($supplier_price);
                 }
 
-                $priceMod->setFormula($formula);
-                $priceMod->setIncrementFormula($incr_formula);
+                /** @var EntityManagerInterface $em */
+                $em = $this->get('doctrine.orm.entity_manager');
+                $em->persist($priceMod);
+                $em->flush();
+            }
+
+        } catch (Exception $e) {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'Failed to update product %price_modification%',
+                    'Modules.Pricemodifier.Admin',
+                    ['%price_modification%' => $priceMod->getNameSupplier()]
+                )
+            );
+        }
+        $this->addFlash(
+            'success',
+            $this->trans(
+                'Update successfully',
+                'Modules.Pricemodifier.Admin',
+                []
+            )
+        );
+        return $this->redirectToRoute('modernesmid_pricemodifier_price_modification_index');
+    }
+
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function bulkActivateProducts(Request $request)
+    {
+        $data = \json_decode($request->get('bulk_selected_rows_data'), true);
+
+        $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');
+
+        try {
+
+            foreach ($data as $i => $item) {
+                $priceMod = $repository->findOneById($item['id']);
+
+                $priceMod->setActive(true);
+
+                /** @var EntityManagerInterface $em */
+                $em = $this->get('doctrine.orm.entity_manager');
+                $em->persist($priceMod);
+                $em->flush();
+            }
+
+        } catch (Exception $e) {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'Failed to update product %price_modification%',
+                    'Modules.Pricemodifier.Admin',
+                    ['%price_modification%' => $priceMod->getNameSupplier()]
+                )
+            );
+        }
+        $this->addFlash(
+            'success',
+            $this->trans(
+                'Update successfully',
+                'Modules.Pricemodifier.Admin',
+                []
+            )
+        );
+        return $this->redirectToRoute('modernesmid_pricemodifier_price_modification_index');
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function bulkDeActivateProducts(Request $request)
+    {
+        $data = \json_decode($request->get('bulk_selected_rows_data'), true);
+
+        $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');
+
+        try {
+
+            foreach ($data as $i => $item) {
+                $priceMod = $repository->findOneById($item['id']);
+
+                $priceMod->setActive(false);
 
                 /** @var EntityManagerInterface $em */
                 $em = $this->get('doctrine.orm.entity_manager');
@@ -401,29 +487,26 @@ class PriceModificationsController extends FrameworkBundleAdminController
         $priceMod = $repository->findOneById($supplier_id);
 
         $priceMod->setActive(boolval($active));
-
-
-        $priceMod->setIdStoreProduct((int)$store_product);
+        $priceMod->setFormula($formula);
+        $priceMod->setIncrementFormula($incr_formula);
 
         if ((int)$store_product > 0) {
-            $supplierData = $priceMod->getSupplierData();
-            $supplierPrice = $supplierData['prices']->{$supplier_price};
+            $priceMod->setIdStoreProduct((int)$store_product);
+        }
+
+        if ($supplier_price > 0 && $store_product > 0) {
             $storePrice = Product::getPriceStatic((int)$store_product, false, null, 6);
 
             $contr = new PriceModificationsAjaxController();
             $calculatedSupplierPrice = json_decode($contr->calculateFormula($formula, $store_product, $priceMod, $supplier_price));
 
-
             $priceMod->setOldSupplierPrice((string)$calculatedSupplierPrice->total);
             $priceMod->setOldStorePrice((string)$storePrice);
             $priceMod->setOldPriceUpdate(new \DateTime());
+
+            $priceMod->setSelectedSupplierPrice($supplier_price);
         }
 
-        $priceMod->setFormula($formula);
-        $priceMod->setIncrementFormula($incr_formula);
-        $priceMod->setSelectedSupplierPrice($supplier_price);
-
-//        $total = $this->calculateFormula($formula, $store_product, $priceMod, $supplier_price);
         try {
             /** @var EntityManagerInterface $em */
             $em = $this->get('doctrine.orm.entity_manager');

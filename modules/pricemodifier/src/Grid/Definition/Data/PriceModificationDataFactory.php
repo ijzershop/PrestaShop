@@ -118,6 +118,7 @@ final class PriceModificationDataFactory implements GridDataFactoryInterface
            );
        }
 
+
        /**
         * @param QueryBuilder $queryBuilder
         *
@@ -171,8 +172,11 @@ final class PriceModificationDataFactory implements GridDataFactoryInterface
                     $priceMod->setOldStorePrice((int)$record['old_store_price']);
                     $priceMod->setSupplierData($record['supplier_data']);
 
-                    $newPrice = json_decode($contr->calculateFormula($formula, $id_product, $priceMod, $record['selected_supplier_price']));
-                    $newPriceWithIncrement = json_decode($contr->calculateFormula($formula.''.$incrementFormula, $id_product, $priceMod, $record['selected_supplier_price']));
+
+                       if($id_product > 0 && !is_null($record['selected_supplier_price'])){
+                           $newPrice = json_decode($contr->calculateFormula($formula, $id_product, $priceMod, $record['selected_supplier_price']));
+                           $newPriceWithIncrement = json_decode($contr->calculateFormula($formula.''.$incrementFormula, $id_product, $priceMod, $record['selected_supplier_price']));
+                       }
 
                        $records[$key]['id_store_product_name'] = Product::getProductName($records[$key]['id_store_product'], null, $id_lang);
                        $records[$key]['id_store_product_price'] = Product::getPriceStatic(
@@ -197,10 +201,18 @@ final class PriceModificationDataFactory implements GridDataFactoryInterface
                            $records[$key]['cat_name'] = $catName;
                        }
 
-                       $records[$key]['generated_formula'] = $newPrice->generated_formula;
-                       $records[$key]['base_price_supplier'] = $newPrice->total;
-                       $records[$key]['new_price'] = $newPriceWithIncrement->total;
-                       $records[$key]['supplier_price_value'] = $newPrice->supplier_price;
+
+                       if($id_product > 0 && !is_null($record['selected_supplier_price'])){
+                           $records[$key]['generated_formula'] = $newPrice->generated_formula;
+                           $records[$key]['base_price_supplier'] = $newPrice->total;
+                           $records[$key]['new_price'] = $newPriceWithIncrement->total;
+                           $records[$key]['supplier_price_value'] = $newPrice->supplier_price;
+                       } else {
+                           $records[$key]['generated_formula'] = '';
+                           $records[$key]['base_price_supplier'] = 0;
+                           $records[$key]['new_price'] = 0;
+                           $records[$key]['supplier_price_value'] = 0;
+                       }
                        $records[$key]['supplier_data'] = json_decode($record['supplier_data']);
 
                        $records[$key]['formatted_old_supplier_price'] = $this->formattedPrice($records[$key]['old_supplier_price']);

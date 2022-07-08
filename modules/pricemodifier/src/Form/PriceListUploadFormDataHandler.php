@@ -74,9 +74,11 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
 
 
         try {
-
+            $repository = $this->entityManager->getRepository(PriceModification::class);
             foreach ($xmlData as $product) {
-                $supplier_name = '<b>'.$product['naam'].'</b><br>'. $product['type'];
+
+                $supplier_name = preg_replace('/ +/', ' ','<b>' . $product['naam'] . '</b><br>' . $product['type']);
+
                 $active = false;
                 $supplier_data = [];
                 $supplier_data['prices'] = [];
@@ -104,22 +106,23 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
                 $supplier_data['prices']['verven_per_m1'] = $product['verven_per_m1'];
                 $supplier_data['prices']['haaks_zagen'] = $product['haaks_zagen'];
 
-                $repository = $this->entityManager->getRepository(PriceModification::class);
-                $priceMod = $repository->findOneBy(['name_supplier' => $supplier_name, 'file_supplier' => $supplier]);
+
+                $priceMod = $repository->findBySupplier($supplier_name, $supplier);
 
                 if (is_null($priceMod)) {
+
                     $priceMod = new PriceModification();
+                    $priceMod->setIdStoreProduct(0);
+                    $priceMod->setNameSupplier($supplier_name);
+                    $priceMod->setFileSupplier($supplier);
+                    $priceMod->setActive($active);
                 }
-
-                $priceMod->setNameSupplier($supplier_name);
-                $priceMod->setIdStoreProduct(0);
-                $priceMod->setFileSupplier($supplier);
                 $priceMod->setSupplierData(json_encode($supplier_data));
-                $priceMod->setActive($active);
 
-                $this->entityManager->persist($priceMod);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($priceMod);
+
             }
+            $this->entityManager->flush();
         } catch (PrestaShopException $exception) {
             return $exception->getMessage();
         }

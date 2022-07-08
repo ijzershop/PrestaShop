@@ -80,4 +80,26 @@ class PriceModificationRepository extends EntityRepository
             return $price_modification['id'];
         }, $price_modifications);
     }
+
+
+    /**
+     * Find one item by ID.
+     *
+     * @param int $id
+     *
+     * @return array
+     */
+    public function findBySupplier($name_supplier, $file_supplier)
+    {
+        $qb = $this->createQueryBuilder('q')
+            ->addSelect('q');
+        $qb
+            ->andWhere('q.name_supplier = :name_supplier')
+            ->setParameter('name_supplier', $name_supplier)
+            ->andWhere('q.file_supplier = :file_supplier')
+            ->setParameter('file_supplier', $file_supplier);
+        return $qb->getQuery()->getFirstResult();
+    
+    }
+
 }

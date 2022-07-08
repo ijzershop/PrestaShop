@@ -1,10 +1,18 @@
 <?php
 namespace Modernesmid\Module\Pricemodifier\Controller\Admin\Classes;
+use NumberFormatter;
 use PhpOffice\PhpSpreadsheet\IOFactory as IoFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class ConvertUploadedFile
 {
+
+private $moneyFormatter;
+
+function __construct(){
+    $this->moneyFormatter = new NumberFormatter('nl-NL',NumberFormatter::DECIMAL);
+}
+
 
     /**
      * @throws \PhpOffice\PhpSpreadsheet\Exception
@@ -49,9 +57,9 @@ class ConvertUploadedFile
                     $sheets = $file_obj->getSheetNames();
                     foreach ($sheets as $sheet_name) {
                         $worksheet = $file_obj->getSheetByName($sheet_name);
+                        $sheetName = preg_replace(["/^([0-9]\s*-\s*)/", " /\s\s+/"], ["", " "], rtrim($sheet_name));
 
-                        if (in_array(substr($sheet_name, 4), [
-                            "WGW RONDSTAAL",
+                        $tabArray = ["WGW RONDSTAAL",
                             "WGW RONDSTAAL - S355J2",
                             "WGW VIERKANTSTAAL",
                             "WGW VIERKANTSTAAL - S355J2",
@@ -100,9 +108,9 @@ class ConvertUploadedFile
                             "BLANK-ST 37-2 K VIERKANT",
                             "BLANK-AUTOMATENST. ROND",
                             "BLANK-AUTOMATENST. VIERK."
-                        ])) {
-
-                            $result = $this->processDoumaXmlCells($worksheet, $sheet_name);
+                        ];
+                        if (in_array((string)$sheetName, $tabArray)) {
+                            $result = $this->processDoumaXmlCells($worksheet, $sheetName);
                             if (!is_null($result)) {
                                 array_push($new_data_array, $result);
                             }
@@ -131,9 +139,9 @@ class ConvertUploadedFile
                     $sheets = $file_obj->getSheetNames();
                     foreach ($sheets as $sheet_name) {
                         $worksheet = $file_obj->getSheetByName($sheet_name);
+                        $sheetName = preg_replace(["/^([0-9]\s*-\s*)/", " /\s\s+/"], ["", " "], rtrim($sheet_name));
 
-                        if (in_array(substr($sheet_name, 4), [
-                            "WGW RONDSTAAL",
+                        $tabArray = ["WGW RONDSTAAL",
                             "WGW RONDSTAAL - S355J2",
                             "WGW VIERKANTSTAAL",
                             "WGW VIERKANTSTAAL - S355J2",
@@ -182,9 +190,10 @@ class ConvertUploadedFile
                             "BLANK-ST 37-2 K VIERKANT",
                             "BLANK-AUTOMATENST. ROND",
                             "BLANK-AUTOMATENST. VIERK."
-                        ])) {
+                        ];
+                        if (in_array((string)$sheetName, $tabArray)) {
 
-                            $result = $this->processDoumaXmlCells($worksheet, $sheet_name);
+                            $result = $this->processDoumaXmlCells($worksheet, $sheetName);
 
                             if (!is_null($result)) {
                                 array_push($new_data_array, $result);
@@ -349,7 +358,7 @@ class ConvertUploadedFile
      */
     private function processDoumaXmlCells($worksheet, $sheet_name)
     {
-        if ($this->strposa($sheet_name, [
+        if (in_array($sheet_name, [
             "WGW RONDSTAAL",
             "WGW RONDSTAAL - S355J2",
             "WGW VIERKANTSTAAL",
@@ -365,49 +374,49 @@ class ConvertUploadedFile
             "WGW HALFRONDSTAAL",
             "WGW STRIPPEN",
             "WGW STRIPPEN S355J2",
-        ], 1)) {
+        ])) {
             return $this->doumaStafStaalIterator($worksheet, $sheet_name);
         }
 
 
-        if ($this->strposa($sheet_name, [
+        if (in_array($sheet_name, [
             "BALKSTAAL HE- A",
             "BALKSTAAL HE- B",
             "BALKSTAAL IPE",
             "BALKSTAAL UNP",
-        ], 1)) {
+        ])) {
             return $this->doumaBalkStaalIterator($worksheet, $sheet_name);
         }
 
-        if ($this->strposa($sheet_name, [
+        if (in_array($sheet_name, [
             "WGW PLATEN S235JRG2",
             "WGW GEBEITSTE PLATEN",
             "WGW TRANENPLATEN",
             "KGW PLATEN DC01",
             "SENDZIMIR VERZ PLATEN",
             "ELECTROLYTISCH VERZ PLATEN"
-        ], 1)) {
+        ])) {
             return $this->doumaPlaatStaalIterator($worksheet, $sheet_name);
         }
 
 
-        if ($this->strposa($sheet_name, [
+        if (in_array($sheet_name, [
             "WGW LASER PLATEN",
             "WGW CORTEN PLATEN",
-        ], 1)) {
+        ])) {
             return $this->doumaPlaatStaal2Iterator($worksheet, $sheet_name);
         }
 
 
-        if ($this->strposa($sheet_name, [
+        if (in_array($sheet_name, [
             "KOKER ONGEBEITST VIERK",
             "KOKER ONGEBEITST RECHT",
             "KOKER GEBEITST VIERKAN",
             "KOKER GEBEITST RECHTHO",
-        ], 1)) {
+        ])) {
             return $this->doumaKokerProfielIterator($worksheet, $sheet_name);
         }
-        if ($this->strposa($sheet_name, [
+        if (in_array($sheet_name, [
             "GELASTE KL A BUIS",
             "GELASTE GASBUIS",
             "GELASTE CONSTR. BUIS",
@@ -415,19 +424,19 @@ class ConvertUploadedFile
             "GELASTE PRECISIEBUIS",
             "GELASTE BUIS",
             "NAADLOZE BUIS",
-        ], 1)) {
+        ])) {
             return $this->doumaRondeBuisIterator($worksheet, $sheet_name);
         }
 
-        if ($this->strposa($sheet_name, [
+        if (in_array($sheet_name, [
             "KGW HOEKPROFIEL",
             "KGW U-PROFIEL",
             "KGW DIVERSEN"
-        ], 1)) {
+        ])) {
             return $this->doumaKoudGewalstIterator($worksheet, $sheet_name);
         }
 
-        if ($this->strposa($sheet_name, [
+        if (in_array($sheet_name, [
             "BLANK-ST 37-2 K PLAT",
             "BLANK-ST 37-2 K ROND",
             "BLANK-ST 52-3 K ROND",
@@ -436,19 +445,19 @@ class ConvertUploadedFile
             "BLANK-ST 37-2 K VIERKANT",
             "BLANK-AUTOMATENST. ROND",
             "BLANK-AUTOMATENST. VIERK.",
-        ], 1)) {
+        ])) {
             return $this->doumaBlankStaalIterator($worksheet, $sheet_name);
         }
 
-        if ($this->strposa($sheet_name, [
+        if (in_array($sheet_name, [
             "ZILVERSTAAL-ROND",
-        ], 1)) {
+        ])) {
             return $this->doumaZilverStaalIterator($worksheet, $sheet_name);
         }
 
 
 //
-//            if($this->strposa($sheet_name, [
+//            if(in_array($sheet_name, [
 //                "LASBOCHTEN 3S",
 //                "LASBOCHTEN 5S",
 //                "BLINDFLENZEN",
@@ -486,7 +495,7 @@ class ConvertUploadedFile
                 $cell_data = $cell->getValue();
                 //Naam veld
                 if ($index == 'A' && is_string($cell_data)) {
-                    $new_row_data['type'] = substr($sheet_name, 4);
+                    $new_row_data['type'] = $sheet_name;
                     $new_row_data['naam'] = $cell_data;
                 }
 
@@ -496,38 +505,73 @@ class ConvertUploadedFile
                 }
 
                 #gewicht
-                if ($index == 'D' && floatval($cell_data) > 0) {
-                    $new_row_data['gewicht'] = $cell_data;
+                if ($index == 'D') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['gewicht'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['gewicht'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs < 75
-                if ($index == 'E' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_75'] = $cell_data;
+                if ($index == 'E') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_75'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_75'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs < 150
-                if ($index == 'F' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_150'] = $cell_data;
+                if ($index == 'F') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_150'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_150'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs < 300
-                if ($index == 'G' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_300'] = $cell_data;
+                if ($index == 'G') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_300'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_300'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs 300+
-                if ($index == 'H' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_vanaf_300'] = $cell_data;
+                if ($index == 'H') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_vanaf_300'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_vanaf_300'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #stalen per 100kg
-                if ($index == 'I' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_per_100'] = $cell_data;
+                if ($index == 'I') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_per_100'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_per_100'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #stalen + menieën per 100kg
-                if ($index == 'J' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_menieën_per_100'] = $cell_data;
+                if ($index == 'J') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_100'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_100'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
             }
@@ -555,7 +599,7 @@ class ConvertUploadedFile
                 $cell_data = $cell->getValue();
                 //Naam veld
                 if ($index == 'A' && is_string($cell_data)) {
-                    $new_row_data['type'] = substr($sheet_name, 4);
+                    $new_row_data['type'] = $sheet_name;
                     $new_row_data['naam'] = $cell_data;
                 }
                 //Gewicht per m1
@@ -564,43 +608,83 @@ class ConvertUploadedFile
                 }
 
                 //Prijst < 75 veld
-                if ($index == 'C' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_75'] = $cell_data;
+                if ($index == 'C') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_75'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_75'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 //Prijst < 150 veld
-                if ($index == 'D' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_150'] = $cell_data;
+                if ($index == 'D') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_150'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_150'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 //Prijst < 300 veld
-                if ($index == 'E' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_300'] = $cell_data;
+                if ($index == 'E') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_300'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_300'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 //Prijst 300+ veld
-                if ($index == 'F' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_vanaf_300'] = $cell_data;
+                if ($index == 'F') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_vanaf_300'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_vanaf_300'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 //Prijst 300+ veld
-                if ($index == 'G' && floatval($cell_data) > 0) {
-                    $new_row_data['haaks_zagen'] = $cell_data;
+                if ($index == 'G') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['haaks_zagen'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['haaks_zagen'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 //Stralen per 100kg veld
-                if ($index == 'H' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_per_100'] = $cell_data;
+                if ($index == 'H') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_per_100'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_per_100'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 //Stralen & Menieën per 100kg veld
-                if ($index == 'I' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_menieën_per_100'] = $cell_data;
+                if ($index == 'I') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_100'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_100'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 //Verf oppervlak m2 per m1
-                if ($index == 'J' && floatval($cell_data) > 0) {
-                    $new_row_data['verven_per_m1'] = $cell_data;
+                if ($index == 'J') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['verven_per_m1'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['verven_per_m1'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
             }
@@ -629,7 +713,7 @@ class ConvertUploadedFile
                 $cell_data = $cell->getValue();
                 //Naam veld
                 if ($index == 'A' && is_string($cell_data)) {
-                    $new_row_data['type'] = substr($sheet_name, 4);
+                    $new_row_data['type'] = $sheet_name;
                     $new_row_data['naam'] = $cell_data;
                 }
                 //Gewicht per stuk
@@ -638,33 +722,63 @@ class ConvertUploadedFile
                 }
 
                 //Prijst < 250 veld
-                if ($index == 'D' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_250'] = $cell_data;
+                if ($index == 'D') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_250'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_250'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 //Prijst < 500 veld
-                if ($index == 'E' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_500'] = $cell_data;
+                if ($index == 'E') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_500'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_500'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 //Prijst < 1000 veld
-                if ($index == 'F' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_1000'] = $cell_data;
+                if ($index == 'F') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_1000'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_1000'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 //Prijst 1000+ veld
-                if ($index == 'G' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_vanaf_1000'] = $cell_data;
+                if ($index == 'G') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_vanaf_1000'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_vanaf_1000'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 //Stralen per 100kg veld
-                if ($index == 'H' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_per_100'] = $cell_data;
+                if ($index == 'H') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_per_100'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_per_100'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 //Stralen & Menieën per 100kg veld
-                if ($index == 'I' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_menieën_per_100'] = $cell_data;
+                if ($index == 'I') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_100'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_100'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
             }
@@ -695,7 +809,7 @@ class ConvertUploadedFile
 
             foreach ($cell_iterator as $index => $cell) {
                 $cell_data = $cell->getValue();
-                if ($index == 'A' && $this->strposa($cell_data, ['SSAB Laser Plus', 'SSAB Strenx', 'Corten A'])) {
+                if ($index == 'A' && in_array($cell_data, ['SSAB Laser Plus', 'SSAB Strenx', 'Corten A'])) {
                     $temp_type_name = ' - ' . $cell_data;
                 }
 
@@ -765,7 +879,7 @@ class ConvertUploadedFile
 
                 //Naam veld
                 if ($index == 'A' && is_string($cell_data)) {
-                    $new_row_data['type'] = substr($sheet_name, 4);
+                    $new_row_data['type'] = $sheet_name;
                     $new_row_data['naam'] = $cell_data;
                 }
 
@@ -780,25 +894,45 @@ class ConvertUploadedFile
                 }
 
                 #Gewicht per Kg/M
-                if ($index == 'E' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_per_kilo'] = $cell_data;
+                if ($index == 'E') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_per_kilo'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_per_kilo'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs per meter
-                if ($index == 'F' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_per_meter'] = $cell_data;
+                if ($index == 'F') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_per_meter'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_per_meter'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #stalen per 100kg
-                if ($index == 'G' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_per_meter'] = $cell_data;
+                if ($index == 'G') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_per_meter'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_per_meter'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 } else {
                     $new_row_data['stralen_per_meter'] = '';
                 }
 
                 #stalen + menieën per 100kg
-                if ($index == 'H' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_menieën_per_meter'] = $cell_data;
+                if ($index == 'H') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_meter'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_meter'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 } else {
                     $new_row_data['stralen_menieën_per_meter'] = '';
                 }
@@ -830,7 +964,7 @@ class ConvertUploadedFile
 
                 //Naam veld
                 if ($index == 'A' && is_string($cell_data)) {
-                    $new_row_data['type'] = substr($sheet_name, 4);
+                    $new_row_data['type'] = $sheet_name;
                     $new_row_data['naam'] = $cell_data;
                 }
 
@@ -845,25 +979,45 @@ class ConvertUploadedFile
                 }
 
                 #Gewicht per Kg/M
-                if ($index == 'E' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_per_kilo'] = $cell_data;
+                if ($index == 'E') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_per_kilo'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_per_kilo'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs per meter
-                if ($index == 'F' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_per_meter'] = $cell_data;
+                if ($index == 'F') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_per_meter'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_per_meter'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #stalen per 100kg
-                if ($index == 'G' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_per_meter'] = $cell_data;
+                if ($index == 'G') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_per_meter'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_per_meter'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 } else {
                     $new_row_data['stralen_per_meter'] = '';
                 }
 
                 #stalen + menieën per 100kg
-                if ($index == 'H' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_menieën_per_meter'] = $cell_data;
+                if ($index == 'H') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_meter'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_meter'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 } else {
                     $new_row_data['stralen_menieën_per_meter'] = '';
                 }
@@ -894,43 +1048,78 @@ class ConvertUploadedFile
                 $cell_data = $cell->getValue();
                 //Naam veld
                 if ($index == 'A' && is_string($cell_data)) {
-                    $new_row_data['type'] = substr($sheet_name, 4);
+                    $new_row_data['type'] = $sheet_name;
                     $new_row_data['naam'] = $cell_data;
                 }
 
                 #gewicht
-                if ($index == 'C' && floatval($cell_data) > 0) {
-                    $new_row_data['gewicht'] = $cell_data;
+                if ($index == 'C') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['gewicht'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['gewicht'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs < 75
-                if ($index == 'D' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_75'] = $cell_data;
+                if ($index == 'D') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_75'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_75'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs < 150
-                if ($index == 'E' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_150'] = $cell_data;
+                if ($index == 'E') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_150'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_150'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs < 300
-                if ($index == 'F' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_300'] = $cell_data;
+                if ($index == 'F') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_300'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_300'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs 300+
-                if ($index == 'G' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_vanaf_300'] = $cell_data;
+                if ($index == 'G') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_vanaf_300'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_vanaf_300'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #stalen per 100kg
-                if ($index == 'H' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_per_100'] = $cell_data;
+                if ($index == 'H') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_per_100'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_per_100'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #stalen + menieën per 100kg
-                if ($index == 'I' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_menieën_per_100'] = $cell_data;
+                if ($index == 'I') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_100'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_100'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
             }
@@ -961,7 +1150,7 @@ class ConvertUploadedFile
             foreach ($cell_iterator as $index => $cell) {
                 $cell_data = $cell->getValue();
 
-                if ($index == 'A' && $this->strposa($cell_data, ['GELIJKZIJDIG', 'ONGELIJKZIJDIG', 'GESLEPEN'])) {
+                if ($index == 'A' && in_array($cell_data, ['GELIJKZIJDIG', 'ONGELIJKZIJDIG', 'GESLEPEN'])) {
                     $temp_type_name = ' - ' . $cell_data;
                 }
 
@@ -972,38 +1161,73 @@ class ConvertUploadedFile
                 }
 
                 #gewicht
-                if ($index == 'C' && floatval($cell_data) > 0) {
-                    $new_row_data['gewicht'] = $cell_data;
+                if ($index == 'C') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['gewicht'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['gewicht'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs < 75
-                if ($index == 'D' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_75'] = $cell_data;
+                if ($index == 'D') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_75'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_75'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs < 150
-                if ($index == 'E' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_150'] = $cell_data;
+                if ($index == 'E') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_150'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_150'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs < 300
-                if ($index == 'F' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_tot_300'] = $cell_data;
+                if ($index == 'F') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_tot_300'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_tot_300'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs 300+
-                if ($index == 'G' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_vanaf_300'] = $cell_data;
+                if ($index == 'G') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_vanaf_300'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_vanaf_300'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #stalen per 100kg
-                if ($index == 'H' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_per_100'] = $cell_data;
+                if ($index == 'H') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_per_100'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_per_100'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #stalen + menieën per 100kg
-                if ($index == 'I' && floatval($cell_data) > 0) {
-                    $new_row_data['stralen_menieën_per_100'] = $cell_data;
+                if ($index == 'I') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_100'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['stralen_menieën_per_100'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
             }
@@ -1033,21 +1257,36 @@ class ConvertUploadedFile
                 $cell_data = $cell->getValue();
 
                 //Naam veld
-                $new_row_data['type'] = substr($sheet_name, 4);
+                $new_row_data['type'] = $sheet_name;
 
                 #maat
-                if ($index == 'A' && floatval($cell_data) > 0) {
-                    $new_row_data['naam'] = $cell_data;
+                if ($index == 'A') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['naam'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['naam'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #gewicht
-                if ($index == 'C' && floatval($cell_data) > 0) {
-                    $new_row_data['gewicht'] = $cell_data;
+                if ($index == 'C') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['gewicht'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['gewicht'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
                 #prijs per meter
-                if ($index == 'D' && floatval($cell_data) > 0) {
-                    $new_row_data['prijs_per_meter'] = $cell_data;
+                if ($index == 'D') {
+                    if(floatval($cell_data) > 0) {
+                        $new_row_data['prijs_per_meter'] = floatval($cell_data);
+                    }
+                    if($this->moneyFormatter->parse($cell_data) > 0) {
+                        $new_row_data['prijs_per_meter'] = $this->moneyFormatter->parse($cell_data);
+                    }
                 }
 
             }
@@ -1058,92 +1297,5 @@ class ConvertUploadedFile
         return $new_data_list;
     }
 
-
-//    /**
-//     * @param $worksheet
-//     * @param string $sheet_name
-//     * @return array
-//     */
-//    private function doumaFittingLasbochtFlensStaalIterator($worksheet, string $sheet_name = "DOUMA"){
-//                            $new_data_list = [];
-//            foreach ($worksheet->getRowIterator() as $row) {// this is where you do your database stuff
-//                $cell_iterator = $row->getCellIterator();
-//                $cell_iterator->setIterateOnlyExistingCells(true);
-//
-//                $new_row_data = [];
-//                foreach ($cell_iterator as $index => $cell) {
-//                    $cell_data = $cell->getValue();
-//                    //Naam veld
-//                    if ($index == 'A' && is_string($cell_data)) {
-//                        $new_row_data[0] = $cell_data;
-//                    }
-//                    //Leeg veld
-//                    if ($index == 'B' && is_null($cell_data)) {
-//                        $new_row_data[1] = $cell_data;
-//                    }
-//
-//                    #handels lengte
-//                    if ($index == 'C' && ($cell_data == '3+' || $cell_data == '6+' || $cell_data == '7+')) {
-//                        $new_row_data[2] = $cell_data;
-//                    }
-//
-//                    #gewicht
-//                    if ($index == 'D' && floatval($cell_data) > 0) {
-//                        $new_row_data[3] = $cell_data;
-//                    }
-//
-//                    #prijs < 75
-//                    if ($index == 'E' && floatval($cell_data) > 0) {
-//                        $new_row_data[4] = $cell_data;
-//                    }
-//
-//                    #prijs < 150
-//                    if ($index == 'F' && floatval($cell_data) > 0) {
-//                        $new_row_data[5] = $cell_data;
-//                    }
-//
-//                    #prijs < 300
-//                    if ($index == 'G' && floatval($cell_data) > 0) {
-//                        $new_row_data[6] = $cell_data;
-//                    }
-//
-//                    #prijs 300+
-//                    if ($index == 'H' && floatval($cell_data) > 0) {
-//                        $new_row_data[7] = $cell_data;
-//                    }
-//
-//                    #stalen per 100kg
-//                    if ($index == 'I' && floatval($cell_data) > 0) {
-//                        $new_row_data[8] = $cell_data;
-//                    }
-//
-//                    #stalen + menieën per 100kg
-//                    if ($index == 'J' && floatval($cell_data) > 0) {
-//                        $new_row_data[9] = $cell_data;
-//                    }
-//
-////var_dump($new_row_data);
-//                    if (count($new_row_data) >= 9) {
-//                        $new_data_list[] = $new_row_data;
-//                    }
-//                }
-//            }
-//
-//            return $new_row_data;
-//    }
-
-    private function strposa(string $haystack, array $needles, int $offset = 0): bool
-    {
-        foreach ($needles as $needle) {
-            if (strpos($haystack, $needle, $offset) !== false) {
-                return true; // stop on first true result
-            }
-        }
-
-        return false;
-    }
-
 }
 
-//
-//(new ConvertUploadedFile())->processUpload();

@@ -134,7 +134,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
      */
     public function deleteAction($price_modificationId)
     {
-        $repository = $this->get('modernesmid.module.pricemodifier.repository.pricemodifier_repository');
+        $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');
         try {
             $price_modification = $repository->findOneById($price_modificationId);
         } catch (EntityNotFoundException $e) {

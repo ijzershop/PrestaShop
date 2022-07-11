@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Modernesmid\Module\Pricemodifier\Controller\Admin;
 
+use ParseError;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Entity\Feature;
@@ -185,7 +186,12 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
 
         if ($this->validateGeneratedFormula($result)) {
             $math_string = 'return '.$result.';';
-            $total = eval($math_string);
+
+            try {
+                $total = eval($math_string);
+            } catch (ParseError $err) {
+                return json_encode(['msg' => $err->getMessage(),'total' => 0,'supplier_price'=> $supplier_price_value,'generated_formula' => $result]);
+            }
         }
         return json_encode(['msg' => 'formule berekend','total' => $total,'supplier_price'=> $supplier_price_value,'generated_formula' => $result]);
     }

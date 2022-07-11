@@ -59,16 +59,6 @@
 
             <div class="form-group">
                 <label class="control-label col-xs-12 col-md-4 col-lg-3">
-                    <span><b>{l s='HTML element for "add to cart" event on a product page' mod='ganalyticspro'}</b></span>:
-                </label>
-                <div class="col-xs-4">
-                    <input type="text" size="5" name="bt_code_addtocart_product" id="bt_code_addtocart_product" value="{if !empty($sDomProductAddToCart)}{$sDomProductAddToCart|escape:'htmlall':'UTF-8'}{/if}" />
-                </div>
-                <a class="pull-left btn btn-md btn-info" onclick="$('#bt_code_addtocart_product').val('{$aSelectorDefault.add_to_cart}');">{l s='Reset' mod='ganalyticspro'}</a>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label col-xs-12 col-md-4 col-lg-3">
                     <span><b>{l s='HTML element for "select item" event on a product list page' mod='ganalyticspro'}</b></span>:
                 </label>
                 <div class="col-xs-4">

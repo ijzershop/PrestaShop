@@ -58,8 +58,8 @@ class BT_GapPurchaseTag extends BT_BaseGapFourTaglTags
             $aProductInfo['products'] = $this->oOrder->getCartProducts();
         }
 
-        //Set bValid if the payment method isn't valid and is not ps_wirepayment or ps_checkpayment
-        if ($this->oOrder->module != 'ps_wirepayment' && $this->oOrder->module != 'ps_checkpayment' && empty($this->oOrder->valid)) {
+        //Use case set the valid to false and do not send the tag if this is PS order status error
+        if ($this->oOrder->getCurrentState() == Configuration::get('PS_OS_ERROR')) {
             $this->bValid = false;
         }
 

@@ -186,13 +186,20 @@ $(document).ready(function () {
                 });
             });
 
-            $(btGapTag.btnAddToCart).bind("click", function () {
-                gtag("event", "add_to_cart", {
-                    currency: "" + btGapTag.tagContent.currency.value + "",
-                    value: btGapTag.tagContent.value.value,
-                    items: aData,
-                });
-            });
+            if (typeof prestashop !== 'undefined') {
+                prestashop.on(
+                    'updateCart',
+                    function (event) {
+                        if (event && event.reason) {
+                            gtag("event", "add_to_cart", {
+                                currency: "" + btGapTag.tagContent.currency.value + "",
+                                value: btGapTag.tagContent.value.value,
+                                items: aData,
+                            });
+                        }
+                    }
+                );
+            }
         }
 
         // Handle the promotion category page

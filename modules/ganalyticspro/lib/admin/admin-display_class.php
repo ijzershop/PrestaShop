@@ -199,7 +199,6 @@ class BT_AdminDisplay implements BT_IAdmin
             'sLabelFormat' => GAnalyticsPro::$aConfiguration['GAP_CAT_LABEL_FORMAT'],
             'aLabelFormat' => $GLOBALS['GAP_LABEL_FORMAT'],
             'bTrackCartPage' => GAnalyticsPro::$aConfiguration['GAP_TRACK_ADD_CART_PAGE'],
-            'sDomProductAddToCart' => GAnalyticsPro::$aConfiguration['GAP_JS_CART_SELECTOR_PROD'],
             'sDomCategoryProduct' => GAnalyticsPro::$aConfiguration['GAP_JS_CATEGORY_PROD'],
             'sDomRemoveCart' => GAnalyticsPro::$aConfiguration['GAP_JS_REMOVE_CART'],
             'sDomShipping' => GAnalyticsPro::$aConfiguration['GAP_JS_SHIPPING'],

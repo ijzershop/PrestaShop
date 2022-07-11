@@ -56,7 +56,6 @@ $GLOBALS['GAP_CONFIGURATION'] = array(
     'GAP_USE_GFOUR' => false,
     'GAP_TRACK_ADD_CART_PAGE' => false,
     'GAP_UPDATE_HTML_ELEM' => false,
-    'GAP_JS_CART_SELECTOR_PROD' => '',
     'GAP_JS_CATEGORY_PROD' => '',
     'GAP_JS_REMOVE_CART' => '',
     'GAP_JS_SHIPPING' => '',

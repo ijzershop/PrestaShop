@@ -280,11 +280,9 @@ abstract class BT_BaseGapFourTaglTags
         } else {
             $aProperties['coupon_name'] = array('label' => 'coupon', 'value' => 'no_coupon');
         }
-
-        if (!empty($this->fValue)) {
-            $aProperties['value'] = array('label' => 'value', 'value' => $this->fValue);
-        }
-
+        
+        $aProperties['value'] = array('label' => 'value', 'value' => $this->fValue);
+   
         if (!empty($this->fValueShipping)) {
             $aProperties['value_shipping'] = array('label' => 'shipping', 'value' => $this->fValueShipping);
         }

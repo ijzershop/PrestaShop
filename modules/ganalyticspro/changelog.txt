@@ -4,6 +4,17 @@ Module: Google Analytics : GA4 and Universal-Analytics
 Change history for "Google Analytics : GA4 and Universal-Analytics"
 ---------------------------------------------------------------
 ===========================
+Version 2.0.4 (20/06/2022)|
+===========================
+Added   
+-----
+- Fix some PHP notice
+- Use PS JS event for addToCart event
+- Fix case for free product and prevent JS errors
+- Improve the purchase event detection and don't send tag if the order status is on error according to PS status
+
+
+===========================
 Version 2.0.3 (04/04/2022)|
 ===========================
 Added   

@@ -216,7 +216,6 @@ class BT_GapModuleDao
         return (Db::getInstance()->ExecuteS($sQuery));
     }
 
-
     /**
      * getCartSteps() method returns list of the cart steps
      *
@@ -225,19 +224,19 @@ class BT_GapModuleDao
      */
     public static function getCartSteps($iCartId)
     {
-        $aCheckout = array();
+        $checkout_step = array();
 
-        // set query
-        $sQuery = 'SELECT `checkout_session_data` as `checkout`'
-            . ' FROM `' . _DB_PREFIX_ . 'cart`'
-            . ' WHERE `id_cart` = ' . (int)$iCartId;
+        $query = new \DbQuery();
+        $query->select('c.checkout_session_data as checkout');
+        $query->from('cart', 'c');
+        $query->where('c.`id_cart` = ' . (int)$iCartId);
 
-        $aResult = Db::getInstance()->ExecuteS($sQuery);
+        $results = \Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-        if (!empty($aResult)) {
-            $aCheckout = (array)Tools::jsonDecode($aResult[0]['checkout']);
+        if (!empty($results)) {
+            $checkout_step = (array)Tools::jsonDecode($results[0]['checkout']);
         }
 
-        return $aCheckout;
+        return $checkout_step;
     }
 }

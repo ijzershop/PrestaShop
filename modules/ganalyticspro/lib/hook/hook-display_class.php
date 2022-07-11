@@ -120,7 +120,6 @@ class BT_GapHookDisplay implements BT_IGapHook
                 'iCartId' => $iCartId,
                 'iOrderId' => $iOrderId,
                 'js' => array(
-                    'cartSelectorProd' => GAnalyticsPro::$aConfiguration['GAP_JS_CART_SELECTOR_PROD'],
                     'elementCategoryProduct' => GAnalyticsPro::$aConfiguration['GAP_JS_CATEGORY_PROD'],
                     'elementRemoveCart' => GAnalyticsPro::$aConfiguration['GAP_JS_REMOVE_CART'],
                     'elementShipping' => GAnalyticsPro::$aConfiguration['GAP_JS_SHIPPING'],
@@ -134,7 +133,6 @@ class BT_GapHookDisplay implements BT_IGapHook
 
             $jsDefs['tagContent'] = BT_GapModuleTools::buildDynDisplayTag($aDynTags, $sPageType);
             $jsDefs['bAddToCartTrigger'] = GAnalyticsPro::$aConfiguration['GAP_TRACK_ADD_CART_PAGE'];
-            $jsDefs['btnAddToCart'] = $aDynTags['js']['cartSelectorProd'];
             $jsDefs['elementCategoryProduct'] = $aDynTags['js']['elementCategoryProduct'];
             $jsDefs['elementRemoveCart'] = $aDynTags['js']['elementRemoveCart'];
             $jsDefs['elementShipping'] = $aDynTags['js']['elementShipping'];

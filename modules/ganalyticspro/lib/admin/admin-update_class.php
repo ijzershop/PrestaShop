@@ -204,7 +204,6 @@ class BT_AdminUpdate implements BT_IAdmin
             Configuration::updateValue('GAP_STATUS_PARTIAL_REFUNDED',serialize(Tools::getValue('bt_order-status_partial_refund')));
             Configuration::updateValue('GAP_CAT_LABEL_FORMAT',Tools::getValue('bt_label-format'));
             Configuration::updateValue('GAP_TRACK_ADD_CART_PAGE', Tools::getValue('bt_track_cart_page'));
-            Configuration::updateValue('GAP_JS_CART_SELECTOR_PROD', Tools::getValue('bt_code_addtocart_product'));
             Configuration::updateValue('GAP_JS_CATEGORY_PROD', Tools::getValue('bt_code_category_product'));
             Configuration::updateValue('GAP_JS_REMOVE_CART', Tools::getValue('bt_code_remove_cart'));
             Configuration::updateValue('GAP_JS_SHIPPING', Tools::getValue('bt_code_shipping'));

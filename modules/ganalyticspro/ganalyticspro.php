@@ -5,7 +5,7 @@
  * @author    businesstech.fr <modules@businesstech.fr> - https://www.businesstech.fr/
  * @copyright Business Tech 2022 - https://www.businesstech.fr/
  * @license   see file: LICENSE.txt
- * @version 2.0.3
+ * @version 2.0.4
  *
  *           ____    _______
  *          |  _ \  |__   __|
@@ -93,7 +93,7 @@ class GAnalyticsPro extends Module
         $this->name = 'ganalyticspro';
         $this->module_key = '7814804ce39cacda037743a3b29ee2af';
         $this->tab = 'analytics_stats';
-        $this->version = '2.0.3';
+        $this->version = '2.0.4';
         $this->author = 'Business Tech';
         $this->ps_versions_compliancy['min'] = '1.7.4.0';
         $this->need_instance = 1;
@@ -191,7 +191,6 @@ class GAnalyticsPro extends Module
     public function getContent()
     {
         require_once(_GAP_PATH_CONF . 'admin.conf.php');
-
         require_once(_GAP_PATH_LIB_ADMIN . 'base-ctrl_class.php');
         require_once(_GAP_PATH_LIB_ADMIN . 'admin-ctrl_class.php');
 
@@ -199,7 +198,6 @@ class GAnalyticsPro extends Module
 
             // use case 1.7.0 to 1.7.8
             if (!empty(GAnalyticsPro::$bCompare17)) {
-                Configuration::updateValue('GAP_JS_CART_SELECTOR_PROD', '.add-to-cart');
                 Configuration::updateValue('GAP_JS_CATEGORY_PROD', 'li.product-miniature');
                 Configuration::updateValue('GAP_JS_REMOVE_CART', 'a.remove-from-cart');
                 Configuration::updateValue('GAP_JS_SHIPPING', 'input[type=radio]');
@@ -212,7 +210,6 @@ class GAnalyticsPro extends Module
             }
 
             if (!empty(GAnalyticsPro::$bCompare1780)) {
-                Configuration::updateValue('GAP_JS_CART_SELECTOR_PROD', 'button.add-to-cart');
                 Configuration::updateValue('GAP_JS_CATEGORY_PROD', 'article.product-miniature');
                 Configuration::updateValue('GAP_JS_REMOVE_CART', 'a.remove-from-cart');
                 Configuration::updateValue('GAP_JS_SHIPPING', 'input[type=radio]');
@@ -318,9 +315,6 @@ class GAnalyticsPro extends Module
     private function _execHook($sHookType, $sAction, array $aParams = array())
     {
         // include
-        //Adedd to fix missing constants when loading hook from backoffice
-        require_once(_GAP_PATH_CONF . 'admin.conf.php');
-
         require_once(_GAP_PATH_CONF . 'hook.conf.php');
         require_once(_GAP_PATH_LIB_HOOK . 'hook-ctrl_class.php');
 

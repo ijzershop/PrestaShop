@@ -211,8 +211,10 @@ class PriceModificationsController extends FrameworkBundleAdminController
         try {
 
             foreach ($data as $i => $item) {
+
+
                 $store_product = $item['store_product'];
-                $supplier_price = $item['supplier_price'] ?? 0;
+                $supplier_price = $item['supplier_price'] ?? "";
                 $formula = $item['formula'];
                 $incr_formula = $item['increment_formula'];
                 $active = $item['active'] ?? 0;
@@ -223,12 +225,13 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 $priceMod->setActive(boolval($active));
                 $priceMod->setFormula($formula);
                 $priceMod->setIncrementFormula($incr_formula);
+                $priceMod->setSelectedSupplierPrice($supplier_price);
 
                 if ((int)$store_product > 0) {
                     $priceMod->setIdStoreProduct((int)$store_product);
                 }
 
-                if ($supplier_price > 0 && $store_product > 0) {
+                if ($supplier_price != "" && $store_product > 0) {
                     $storePrice = Product::getPriceStatic((int)$store_product, false, null, 6);
 
                     $contr = new PriceModificationsAjaxController();
@@ -238,7 +241,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
                     $priceMod->setOldStorePrice((string)$storePrice);
                     $priceMod->setOldPriceUpdate(new \DateTime());
 
-                    $priceMod->setSelectedSupplierPrice($supplier_price);
+
                 }
 
                 /** @var EntityManagerInterface $em */
@@ -489,12 +492,13 @@ class PriceModificationsController extends FrameworkBundleAdminController
         $priceMod->setActive(boolval($active));
         $priceMod->setFormula($formula);
         $priceMod->setIncrementFormula($incr_formula);
+        $priceMod->setSelectedSupplierPrice($supplier_price);
 
         if ((int)$store_product > 0) {
             $priceMod->setIdStoreProduct((int)$store_product);
         }
 
-        if ($supplier_price > 0 && $store_product > 0) {
+        if ($supplier_price != "" && $store_product > 0) {
             $storePrice = Product::getPriceStatic((int)$store_product, false, null, 6);
 
             $contr = new PriceModificationsAjaxController();
@@ -503,8 +507,6 @@ class PriceModificationsController extends FrameworkBundleAdminController
             $priceMod->setOldSupplierPrice((string)$calculatedSupplierPrice->total);
             $priceMod->setOldStorePrice((string)$storePrice);
             $priceMod->setOldPriceUpdate(new \DateTime());
-
-            $priceMod->setSelectedSupplierPrice($supplier_price);
         }
 
         try {

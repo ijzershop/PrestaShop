@@ -39,6 +39,6 @@ class PriceModificationFilters extends Filters
      */
     public function getLimit()
     {
-        return $this->getInt('limit')*10 ?: null;
+        return $this->getInt('limit') ?: null;
     }
 }

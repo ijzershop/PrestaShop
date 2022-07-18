@@ -186,7 +186,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                                              $file = $customized['datas'][1][0]['technical_image'];
                                              if(!is_null($file) && !empty($file)){
 
-                                                 $fileContents = $this->get_contents(Context::getContext()->shop->getBaseURL(true).$file);
+                                                 $fileContents = $this->get_contents(Context::getContext()->shop->getBaseURL(true, false).$file);
 
                                                  if($fileContents != false){
 
@@ -264,7 +264,6 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             'carrier' => $carrier,
             'display_product_images' => Configuration::get('PS_PDF_IMG_DELIVERY'),
         ));
-
 
         $tpls = array(
             'style_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.style-tab')),

@@ -87,6 +87,7 @@ class GAnalyticsPro extends Module
     public function __construct()
     {
         require_once(dirname(__FILE__) . '/conf/common.conf.php');
+        require_once(dirname(__FILE__) . '/conf/admin.conf.php');
         require_once(_GAP_PATH_LIB . 'warning_class.php');
         require_once(_GAP_PATH_LIB . 'module-tools_class.php');
 

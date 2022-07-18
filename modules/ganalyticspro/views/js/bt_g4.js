@@ -35,7 +35,7 @@ $(document).ready(function () {
             });
         } else if (btGapTag.iConsentConsentLvl == 1) {
             gtag("consent", "update", {
-                ad_storage: "denied",
+                ad_storage: "granted",
                 analytics_storage: "granted",
             });
         } else if (btGapTag.iConsentConsentLvl == 2) {
@@ -119,6 +119,7 @@ $(document).ready(function () {
             // Use case click on product on page list
             $(btGapTag.elementCategoryProduct).each(function (index) {
                 $(this).bind("click", function (event) {
+
                     $.ajax({
                         type: "POST",
                         url: btGapTag.ajaxUrl,
@@ -286,7 +287,6 @@ $(document).ready(function () {
                 });
             });
         }
-
         // Use case begin checkout
         if (btGapTag.tagContent.tracking_type.value == "begin_checkout") {
             let aData = [];

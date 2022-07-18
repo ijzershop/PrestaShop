@@ -392,11 +392,11 @@ class Ps_Creditpayment extends PaymentModule
         $response = curl_exec($curlCard);
         if (!curl_errno($curlCard)) {
             $returnData = json_decode($response);
+
             $arrayList = [];
             foreach ($returnData->{$type} as $index => $item){
                 $arr = [];
                 $arr['id'] = $index;
-
 
                 if(!isset($item->description)){
                     if($type == 'vat'){

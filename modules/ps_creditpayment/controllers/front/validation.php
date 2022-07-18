@@ -130,6 +130,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                 "discount" => $product['reduction_amount_tax_incl'],
                 "vat_id" => $line_vat_id,
                 "ledger_id" => $line_category_id,
+                "product_id" => 617423,
                 "costs_id" => 0
             ];
         }
@@ -142,6 +143,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                 "discount" => 0,
                 "vat_id" => $line_vat_id,
                 "ledger_id" => $line_category_id,
+                "product_id" => 617423,
                 "costs_id" => 0
                 ];
         }
@@ -166,6 +168,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         ));
         $info = curl_getinfo($curlCard);
         $response = curl_exec($curlCard);
+
 
         if (!curl_errno($curlCard)) {
             $returnData = json_decode($response);

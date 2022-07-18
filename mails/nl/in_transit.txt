@@ -5,12 +5,12 @@ Uw bestelling met referentie {order_name} is onderweg.
 U kunt uw pakket volgen door op de volgende link te klikken: {followup}
 
 Wat is de status van uw bestelling?
-Volg de status en details in uw eigen    [> klantaccount](https://ijzershop.local/mijn-account)
-Geen account? Volg dan uw bestelling via    [> bestelling volgen](https://ijzershop.local/bestelling-volgen-als-gast)
+Volg de status en details in uw eigen    [> klantaccount](https://ijzershop.eu/mijn-account)
+Geen account? Volg dan uw bestelling via    [> bestelling volgen](https://ijzershop.eu/bestelling-volgen-als-gast)
 
 Heeft u een vraag?
 Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
-[> veel gestelde vragen](https://ijzershop.local/content/51-veelgestelde-vragen)
+[> veel gestelde vragen](https://ijzershop.eu/content/51-FAQ)
 
 [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 

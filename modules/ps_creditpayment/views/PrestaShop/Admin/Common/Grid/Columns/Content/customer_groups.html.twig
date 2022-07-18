@@ -1,0 +1,14 @@
+{% set groups = record.customer_group|split(',') %}
+<ul class="list-unstyled mb-0">
+  {% for group in groups %}
+    {% if group == "Klant op rekening" %}
+      <li><span class="badge badge-warning w-100">{{ group }}</span></li>
+    {% elseif group == "Klant met voucher" %}
+      <li><span class="badge badge-primary w-100">{{ group }}</span></li>
+    {% elseif group == "Balie" %}
+      <li><span class="badge badge-danger w-100">{{ group }}</span></li>
+    {% else %}
+      <li><span class="badge badge-info w-100">{{ group }}</span></li>
+    {% endif %}
+  {% endfor %}
+</ul>

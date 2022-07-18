@@ -5,8 +5,8 @@ Uw bestelling met referentie {order_name} van {shop_name} is gewijzigd door de v
 Ga naar uw klantaccount voor meer info hieromtrent.
 
 Wat is de status van uw bestelling?
-Volg de status en details in uw eigen    [> klantaccount](https://ijzershop.local/mijn-account)
-Geen account? Volg dan uw bestelling via    [> bestelling volgen](https://ijzershop.local/bestelling-volgen-als-gast)
+Volg de status en details in uw eigen    [> klantaccount](https://ijzershop.eu/mijn-account)
+Geen account? Volg dan uw bestelling via    [> bestelling volgen](https://ijzershop.eu/bestelling-volgen-als-gast)
 
 [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 

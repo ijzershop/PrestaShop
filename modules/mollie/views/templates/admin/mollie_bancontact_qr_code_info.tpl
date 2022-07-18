@@ -6,4 +6,7 @@
 * @link        https://github.com/mollie/PrestaShop
 * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
 *}
-<div id="mollie-applepay-direct-button"></div>
+<a href="https://docs.mollie.com/payments/qr-codes"
+   target="_blank"
+   rel="noopener noreferrer"
+>

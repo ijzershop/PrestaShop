@@ -202,4 +202,35 @@ class Order extends OrderCore
 
         return $res;
     }
+
+    /**
+     * Return a unique reference like : GWJTHMZUN#2.
+     *
+     * With multishipping, order reference are the same for all orders made with the same cart
+     * in this case this method suffix the order reference by a # and the order number
+     *
+     * @since 1.5.0.14
+     */
+    public function getUniqReference($onlyInteger=false)
+    {
+        $query = new DbQuery();
+        $query->select('MIN(id_order) as min, MAX(id_order) as max');
+        $query->from('orders');
+        $query->where('id_cart = ' . (int) $this->id_cart);
+
+        $order = Db::getInstance()->getRow($query);
+
+        if($onlyInteger){
+            $this->reference = preg_filter('/[^\d.\n]|(?<!\d)\./', "", $this->reference);
+        }
+
+        if ($order['min'] == $order['max']) {
+            return $this->reference;
+        } else {
+            return $this->reference . '#' . ($this->id + 1 - $order['min']);
+
+        }
+    }
+
+
 }

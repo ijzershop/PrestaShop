@@ -42,7 +42,6 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $this->order_invoice = $order_invoice;
         $this->order = new Order($this->order_invoice->id_order);
         $this->smarty = $smarty;
-
         // If shop_address is null, then update it with current one.
         // But no DB save required here to avoid massive updates for bulk PDF generation case.
         // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
@@ -75,9 +74,15 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         foreach ($order_details as $product) {
             $total_weight = (double)$total_weight+((double)$product['product_weight']*(int)$product['product_quantity']);
         }
+
         $carrier = $this->order->id_carrier;
         $carrierObj = new Carrier($carrier, 1);
 
+        if(empty($carrierObj->name)){
+            $shipCarrierId = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_SHIPPING_CARRIER', $this->order->id_lang, $this->order->id_shop_group, $this->order->id_shop, 10);;
+
+            $carrierObj = new Carrier($shipCarrierId);
+        }
 
         $this->smarty->assign(
             array('header' => $carrierObj->name,
@@ -151,12 +156,6 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
 
         $order_details = $this->order_invoice->getProducts();
-        /**
-         * Sort the products by product_reference
-         */
-        uasort($order_details, function ($item1, $item2) {
-            return $item1['product_reference'] <=> $item2['product_reference'];
-        });
 
             foreach ($order_details as &$order_detail) {
                 if(!is_null($order_detail['id_oi_offer'])){
@@ -187,7 +186,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                                              $file = $customized['datas'][1][0]['technical_image'];
                                              if(!is_null($file) && !empty($file)){
 
-                                                 $fileContents = $this->get_contents(Context::getContext()->shop->getBaseURL(true).$file);
+                                                 $fileContents = $this->get_contents(Context::getContext()->shop->getBaseURL(true, false).$file);
 
                                                  if($fileContents != false){
 
@@ -251,6 +250,9 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                 }
             }
         }
+        //Sorting by reference of products
+        $referenceColumn = array_column($order_details, 'reference');
+        array_multisort($referenceColumn, SORT_ASC, $order_details);
 
         $this->smarty->assign(array(
             'order' => $this->order,

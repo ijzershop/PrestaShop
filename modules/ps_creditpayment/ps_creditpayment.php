@@ -572,6 +572,7 @@ public function addOrderState($name)
     {
         $searchQueryBuilder = $params['search_query_builder'];
         $searchQueryBuilder->addSelect('c.informer_identification as informer_identification');
+
         $searchQueryBuilder->leftJoin('c','ps176_customer_group', 'cg', 'c.id_customer = cg.id_customer');
         $searchQueryBuilder->addSelect('cg.id_group');
         $searchQueryBuilder->leftJoin('cg','ps176_group_lang', 'cgl', 'cg.id_group = cgl.id_group');
@@ -592,15 +593,32 @@ public function addOrderState($name)
         }
 
         foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
-            if ('informer_identification' === $filterName) {
-                $searchQueryBuilder->andWhere("`c`.`informer_identification` LIKE '%" . $filterValue . "%'");
-            }
-//TODO Fix multiple select
-            if ('customer_group' === $filterName) {
-                $searchQueryBuilder->andWhere("`cg`.`id_group` IN (" . $filterValue . ")");
+
+            switch ($filterName){
+                case 'id_customer':
+                    $searchQueryBuilder->andWhere("`c`.`id_customer` LIKE '%" . $filterValue . "%'");
+                    break;
+                case 'firstname':
+                    $searchQueryBuilder->andWhere("`c`.`firstname` LIKE '%" . $filterValue . "%'");
+                    break;
+                case 'lastname':
+                    $searchQueryBuilder->andWhere("`c`.`lastname` LIKE '%" . $filterValue . "%'");
+                    break;
+                case 'email':
+                    $searchQueryBuilder->andWhere("`c`.`email` LIKE '%" . $filterValue . "%'");
+                    break;
+                case 'active':
+                    $searchQueryBuilder->andWhere("`c`.`active` = '" . $filterValue."'");
+                    break;
+                case 'informer_identification':
+                    $searchQueryBuilder->andWhere("`c`.`informer_identification` LIKE '%" . $filterValue . "%'");
+                    break;
+                case 'customer_group':
+                    $searchQueryBuilder->andWhere("`cg`.`id_group` IN (" . $filterValue . ")");
+                    break;
             }
         }
-
         return $searchQueryBuilder;
+
     }
 }

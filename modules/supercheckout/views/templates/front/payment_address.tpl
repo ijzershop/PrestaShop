@@ -7,7 +7,7 @@
 {assign var='existing_address' value=[]}
 {if !isset($guest_information)}
   {assign var='existing_address' value=null}
-  {if $customer.addresses}
+  {if $customer.addresses && Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') != $customer['id']}
     {assign var='existing_address' value=reset($customer.addresses)}
   {/if}
 {/if}
@@ -96,7 +96,6 @@
                                             <input type='hidden' class="{$google_region_type|escape:'htmlall':'UTF-8'}"/>
                                             <select name="payment_address[{$p_address_key}]" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} class="form-control supercheckout-large-field"  tabindex="-1">
                                                 {if $p_address_key eq 'id_country'}
-                                                    <option value="0">--</option>
                                                     {foreach from=$countries item='country'}
                                                         <option value="{$country['id_country']|intval}"  id='{$country['iso_code']}' {if $country['id_country'] == $default_country && isset($guest_information)} selected="selected" {elseif !isset($guest_information) && $existing_address['id_country'] == $country['id_country']} selected="selected" {/if}>{$country['name']}</option>
                                                     {/foreach}
@@ -155,7 +154,6 @@
                                             <input type='hidden' class="{$google_region_type|escape:'htmlall':'UTF-8'}"/>
                                             <select name="payment_address[{$p_address_key}]" {if $p_address_key eq 'id_country'} onchange="restrictAutofillbyCountry(this)" {/if} class="form-control supercheckout-large-field"  tabindex="-1">
                                                 {if $p_address_key eq 'id_country'}
-                                                    <option value="0">--</option>
                                                     {foreach from=$countries item='country'}
                                                         <option value="{$country['id_country']|intval}"  id='{$country['iso_code']}' {if $country['id_country'] == $default_country} selected="selected"{/if}>{$country['name']}</option>
                                                     {/foreach}

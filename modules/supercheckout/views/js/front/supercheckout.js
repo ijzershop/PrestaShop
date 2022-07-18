@@ -49,6 +49,54 @@ function delayKeyUp(callback) {
 }
 
 $(document).ready(function () {
+  //fix edit address
+  $(document).on('input', '[name="payment_address[postcode]"], ' +
+    '[name="payment_address[address1]"], ' +
+    '[name="payment_address[house_number]"], ' +
+    '[name="payment_address[house_number_extension]"], ' +
+    '[name="payment_address[city]"], ' +
+    '[name="payment_address[id_country]"], ' +
+    '[name="payment_address[phone]"], ' +
+    '[name="payment_address[firstname]"], ' +
+    '[name="payment_address[lastname]"], ' +
+    '[name="payment_address[company]"]',
+    function(event) {
+      var oldValue = event.target.defaultValue;
+      var newValue = $(this).val();
+
+      if(oldValue !== newValue){
+        //empty customer address id and set to new
+        $('[name="payment_address[id_customer_address]"]').val('new');
+        $('[name="payment_address[payment_address_id]"]').val('');
+      }
+    });
+
+
+  $(document).on('input', '[name="shipping_address[postcode]"], ' +
+    '[name="shipping_address[address1]"], ' +
+    '[name="shipping_address[house_number]"], ' +
+    '[name="shipping_address[house_number_extension]"], ' +
+    '[name="shipping_address[city]"], ' +
+    '[name="shipping_address[id_country]"], ' +
+    '[name="shipping_address[phone]"], ' +
+    '[name="shipping_address[firstname]"], ' +
+    '[name="shipping_address[lastname]"], ' +
+    '[name="shipping_address[company]"]',
+    function(event) {
+      var oldValue = event.target.defaultValue;
+      var newValue = $(this).val();
+
+      if(oldValue !== newValue){
+        //empty customer address id and set to new
+        $('[name="shipping_address[id_customer_address]"]').val('new');
+        $('[name="shipping_address[payment_address_id]"]').val('');
+      }
+    });
+//end fix edit address
+
+
+
+
   if($('#cart-postcode-check-toggle').prop('checked') === true){
     checkFormatAddressApiCheckout();
   }
@@ -2977,6 +3025,23 @@ $(document).ready(function () {
     });
   }
 
+
+  function removeDotsAndCommas(){
+    var idList = [
+                    'shipping_address[firstname]',
+                    'shipping_address[lastname]',
+                    'payment_address[firstname]',
+                    'payment_address[lastname]',
+                    'no_shipping_surname',
+                    'no_shipping_lastname'
+    ];
+
+    for (const key in idList) {
+      $('[name="'+idList[key]+'"]').val($('[name="'+idList[key]+'"]').val().replace(/[.,]+/g, ''));
+    }
+  }
+
+
   /*
    * Added by Anshul for calling the Place order after file upload
    */
@@ -2984,6 +3049,9 @@ $(document).ready(function () {
   function kbAfterPlaceOrder() {
     $('.errorsmall').remove();
     hideGeneralError();
+
+    removeDotsAndCommas();
+
     var payment_module_name = $('input:radio[name="payment_method"]:checked').attr('data-module-name');
     // Start: Added by Anshul for PayPlug
     if (payment_module_name == 'payplug') {

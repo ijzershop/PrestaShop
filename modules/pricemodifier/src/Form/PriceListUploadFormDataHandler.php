@@ -94,9 +94,9 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
                 $supplier_data['attributes']['kwaliteit'] = $product['kwaliteit'];
                 $supplier_data['attributes']['uitvoering'] = $product['uitvoering'];
                 $supplier_data['attributes']['handelslengte'] = $product['handelslengte'];
+                $supplier_data['attributes']['kilo_per_meter'] = $product['kilo_per_meter'];
                 $supplier_data['attributes']['gewicht'] = $product['gewicht'];
                 $supplier_data['prices']['prijs_per_meter'] = $product['prijs_per_meter'];
-                $supplier_data['prices']['prijs_per_kilo'] = $product['prijs_per_kilo'];
                 $supplier_data['prices']['prijs_tot_75'] = $product['prijs_tot_75'];
                 $supplier_data['prices']['prijs_tot_150'] = $product['prijs_tot_150'];
                 $supplier_data['prices']['prijs_tot_250'] = $product['prijs_tot_250'];

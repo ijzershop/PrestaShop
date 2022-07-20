@@ -42,7 +42,7 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
     {
         $term = $request->get('term');
         $products = $this->findProducts($term);
-        $result = json_encode(['total_count'=> count($products), 'items' => (array)$products]);
+        $result = json_encode(['total_count' => count($products), 'items' => (array)$products]);
         die($result);
     }
 
@@ -51,7 +51,8 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
      * @return array|bool|\mysqli_result|\PDOStatement|resource
      * @throws \PrestaShopDatabaseException
      */
-    private function findProducts($term){
+    private function findProducts($term)
+    {
 
         $id_lang = $this->getContext()->language->id;
 
@@ -63,19 +64,19 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
             'product_lang',
             'pl',
             'p.`id_product` = pl.`id_product`
-            AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl')
+            AND pl.`id_lang` = ' . (int)$id_lang . Shop::addSqlRestrictionOnLang('pl')
         );
         $sql->leftJoin('category_lang', 'cl', 'cl.`id_category` = p.`id_category_default`');
         $sql->orderBy('cl.`name` ASC');
         $sql->limit('50');
 
         $where = ' 1 = 1 ';
-        if(!empty($term)){
+        if (!empty($term)) {
             $search_items = explode(' ', $term);
 
             $items = [];
             foreach ($search_items as $item) {
-                if(!empty($item)){
+                if (!empty($item)) {
                     $items[$item][] = 'pl.`name` LIKE \'%' . pSQL($item) . '%\' ';
                 }
             }
@@ -86,7 +87,7 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
 
             $sql->where($where);
         }
-    $where .= ' AND cl.`id_category` NOT IN (6,382) ';
+        $where .= ' AND cl.`id_category` NOT IN (6,382) ';
 
         $sql->where($where);
 
@@ -113,12 +114,11 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
         $priceMod = $repository->findOneById($supplier_id);
         try {
             $result = $this->calculateFormula($formula, $store_product, $priceMod, $supplier_price);
-        } catch (Exception $exception){
+        } catch (Exception $exception) {
             $result = json_encode(['msg' => 'Er ging iets fout tijdens het genereren van de formule']);
         }
         die($result);
     }
-
 
 
     /**
@@ -128,7 +128,7 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
      * Beschikbare Dynamische waarden
      *
      * {HL} = Handelslengte Leverancier
-     * {GL} = Gewicht leverancier
+     * {GHL} = Gewicht leverancier
      * {PL} = Geselecteerde Prijs Leverancier
      * {HW} = Handelslengte Webshop
      * {GW} = Gewicht Webshop
@@ -159,22 +159,26 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
                 $supLength = $supplierData['attributes']->{'handelslengte'} ?? 0;
                 return (float)$supLength;
             },
-            '({GL})' => function () use ($supplierData) { //is gewicht van leverancier
+            '({GHL})' => function () use ($supplierData) { //is gewicht van leverancier
                 $supWeight = $supplierData['attributes']->{'gewicht'} ?? 0;
                 return (float)$supWeight;
             },
+            '({GML})' => function () use ($supplierData) { //is gewicht van leverancier
+                $supWeightPerMeter = $supplierData['attributes']->{'kilo_per_meter'} ?? 0;
+                return (float)$supWeightPerMeter;
+            },
             '({PL})' => function () use ($supplier_price, $supplierData) { //is de geslecteerde prijs van leverancier
-                if(!isset($supplierData['prices']->{$supplier_price})){
+                if (!isset($supplierData['prices']->{$supplier_price})) {
                     return;
                 }
 
-            $supPrice = $supplierData['prices']->{$supplier_price};
+                $supPrice = $supplierData['prices']->{$supplier_price};
                 $supplier_price_value = $supPrice;
-                return $supPrice;
+                return round($supPrice, 2);
             },
             '({HW})' => function () use ($id_product) {
 
-                return $this->getProductFeatureValue($id_product, 32, 1)/1000;
+                return $this->getProductFeatureValue($id_product, 32, 1) / 1000;
             },
             '({GW})' => function ($matches) use ($id_product) {
                 return $this->getProductFeatureValue($id_product, 45, 1);
@@ -189,15 +193,15 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
 
 
         if ($this->validateGeneratedFormula($result)) {
-            $math_string = 'return '.$result.';';
+            $math_string = 'return ' . $result . ';';
 
             try {
                 $total = eval($math_string);
             } catch (ParseError $err) {
-                return json_encode(['msg' => $err->getMessage(),'total' => 0,'supplier_price'=> $supplier_price_value,'generated_formula' => $result]);
+                return json_encode(['msg' => $err->getMessage(), 'total' => 0, 'supplier_price' => $supplier_price_value, 'generated_formula' => $result]);
             }
         }
-        return json_encode(['msg' => 'formule berekend','total' => $total,'supplier_price'=> $supplier_price_value,'generated_formula' => $result]);
+        return json_encode(['msg' => 'formule berekend', 'total' => $total, 'supplier_price' => $supplier_price_value, 'generated_formula' => $result]);
     }
 
     /**
@@ -242,7 +246,7 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
                 WHERE fp.id_product = ' . (int)$id_product . ' AND fp.id_feature = ' . (int)$id_feature
         );
 
-        if(empty($featureValue)){
+        if (empty($featureValue)) {
             return 0;
         }
 

@@ -52,6 +52,7 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
      * @throws \PrestaShopDatabaseException
      */
     private function findProducts($term){
+
         $id_lang = $this->getContext()->language->id;
 
         $sql = new DbQuery();
@@ -68,8 +69,8 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
         $sql->orderBy('cl.`name` ASC');
         $sql->limit('50');
 
+        $where = ' 1 = 1 ';
         if(!empty($term)){
-            $where = ' 1 = 1 ';
             $search_items = explode(' ', $term);
 
             $items = [];
@@ -85,6 +86,9 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
 
             $sql->where($where);
         }
+    $where .= ' AND cl.`id_category` NOT IN (6,382) ';
+
+        $sql->where($where);
 
         $result = Db::getInstance()->executeS($sql);
 

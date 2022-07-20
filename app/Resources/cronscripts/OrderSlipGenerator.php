@@ -227,9 +227,6 @@ class OrderSlipGenerator
     	$context->currency = new Currency(1, 1, 1);
         $pdf_file = new PDF($object, $template, $context->smarty);
 
-        var_export($pdf_file);
-        die();
-
         $delivery_slip_pdf = $pdf_file->render(false);
         $this->slipTime = time();
         file_put_contents(dirname(__FILE__, 4).'/upload/pakbonnen/pakbonnen_'.$this->slipTime.'.pdf', $delivery_slip_pdf);

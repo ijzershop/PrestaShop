@@ -1,4 +1,4 @@
-{#**
+{# **
  * Price Modifier
  * Copyright since 2021 JB Stoker and Contributors
  * <JB Stoker> Property
@@ -7,7 +7,7 @@
  * @author    JB Stoker <jelmer@ijzershop.nl>
  * @copyright Since 2021 JB Stoker
  * @license   https://opensource.org/licenses/MIT
- *#}
+ * #}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
@@ -33,8 +33,11 @@
         <div class="row">
           <div class="col">
             <h2>Formules</h2>
-            <p>De formules kunnen ingevoerd worden als een som, om de formule te testen hoeft deze niet opgeslagen worden. Doormiddel van het klikken op de knop naast het nieuw prijs veld word er een berekening gedaan op basis van de ingevoerde gegevens.
-              De gerenderde formule word getoond onder het fomule vak, en de nieuwe berekende prijs word in het veld van nieuwe prijs geladen.</p>
+            <p>De formules kunnen ingevoerd worden als een som, om de formule te testen hoeft deze niet opgeslagen
+              worden. Doormiddel van het klikken op de knop naast het nieuw prijs veld word er een berekening gedaan op
+              basis van de ingevoerde gegevens.
+              De gerenderde formule word getoond onder het fomule vak, en de nieuwe berekende prijs word in het veld van
+              nieuwe prijs geladen.</p>
           </div>
         </div>
         <div class="row">
@@ -50,13 +53,17 @@
             </ul>
           </div>
           <div class="col-6">
-            <p>Voor variabele waarden kan er gebruik gemaakt worden van de onderstaande onderdelen. Hierbij moet ieder onderdeel omsloten zijn met accolades {}.
-              Let wel op dat de waarde wel beschikbaar moet zijn in de database, anders zal deze leeg blijven of een error geven.</p>
+            <p>Voor variabele waarden kan er gebruik gemaakt worden van de onderstaande onderdelen. Hierbij moet ieder
+              onderdeel omsloten zijn met accolades {}.
+              Let wel op dat de waarde wel beschikbaar moet zijn in de database, anders zal deze leeg blijven of een
+              error geven.</p>
             <ul class="list-unstyled">
               <li><b>{HL}</b> Handelslengte vanuit xml leverancier</li>
               <li><b>{GL}</b> Gewicht vanuit xml leverancier</li>
               <li><b>{PL}</b> Geselecteerde prijs vanuit xml leverancier</li>
-              <li><hr></li>
+              <li>
+                <hr>
+              </li>
               <li><b>{HW}</b> Handelslengte van geselecteerd product uit database van de webshop</li>
               <li><b>{GW}</b> Gewicht van geselecteerd product uit database van de webshop</li>
               <li><b>{PW}</b> Huidige prijs van geselecteerd product uit database van de webshop</li>
@@ -76,17 +83,39 @@
         {% include '@Modules/pricemodifier/views/templates/admin/grid/grid_panel.html.twig' with {'grid': price_modificationGrid} %}
       </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   {% endblock %}
 {% endblock %}
 
 
-{% block javascripts %}
-  <script src="{{ asset('../modules/pricemodifier/node_modules/chartist/dist/chartist.js') }}"></script>
-  <script src="{{ asset('../modules/pricemodifier/views/js/barChartLabelPlugin.js') }}"></script>
-  {{ parent() }}
+                                                                                  {% block javascripts %}
+<script src="{{ asset('../modules/pricemodifier/node_modules/chartist/dist/chartist.js') }}"></script>
 
-  <script src="{{ asset('../modules/pricemodifier/views/js/price_modifications.bundle.js') }}"></script>
-  <script src="{{ asset('../admin-dev/themes/new-theme/public/product_price_modification.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+<script src="{{ asset('../modules/pricemodifier/views/js/barChartLabelPlugin.js') }}"></script>
+{{ parent() }}
+
+<script src="{{ asset('../modules/pricemodifier/views/js/price_modifications.bundle.js') }}"></script>
+<script src="{{ asset('../admin-dev/themes/new-theme/public/product_price_modification.bundle.js') }}"></script>
+<script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+
+
 
 {% endblock %}

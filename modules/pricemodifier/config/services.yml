@@ -53,7 +53,7 @@ services:
   modernesmid.module.pricemodifier.form.identifiable_object.data_handler.price_list_upload_form_data_handler:
     class: 'Modernesmid\Module\Pricemodifier\Form\PriceListUploadFormDataHandler'
     arguments:
-      - '@modernesmid.module.pricemodifier.repository.price_list_upload_repository'
+      - '@modernesmid.module.pricemodifier.repository.price_modification_repository'
       - '@doctrine.orm.default_entity_manager'
 
 

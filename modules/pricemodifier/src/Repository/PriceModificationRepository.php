@@ -98,6 +98,7 @@ class PriceModificationRepository extends EntityRepository
             ->setParameter('name_supplier', $name_supplier)
             ->andWhere('q.file_supplier = :file_supplier')
             ->setParameter('file_supplier', $file_supplier);
+
         return $qb->getQuery()->getFirstResult();
 
     }

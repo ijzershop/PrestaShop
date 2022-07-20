@@ -4,7 +4,6 @@
  * Copyright since 2021 JB Stoker and Contributors
  * <JB Stoker> Property
  *
-
  * @author    JB Stoker
  * @copyright Since 2021 JB Stoker
  * @license   https://opensource.org/licenses/MIT
@@ -113,7 +112,6 @@ class PriceModification
      * @ORM\Column(name="old_price_update", type="datetime", nullable=false)
      */
     private $old_price_update;
-
 
 
     public function __construct()

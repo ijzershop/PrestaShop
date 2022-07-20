@@ -377,7 +377,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
             foreach ($data as $i => $item) {
                 $store_product = $item['store_product'];
                 $active = $item['active'] ?? 0;
-                $newPrice = $item['new_price'] ?? 0;
+                $newPrice = round((float)str_replace(',','.', $item['new_price'] ?? 0), 6);
 
                 if ($active != '1' || $store_product < 1) {
                     continue;
@@ -389,9 +389,13 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 $priceMod->setOldStorePrice((string)$newPrice);
 
                 $product = new Product((int)$store_product);
-                $productName = $product->name[$id_lang];
-                $product->price = $newPrice;
 
+
+                $productName = $product->name[$id_lang];
+
+
+
+                $product->price = $newPrice;
                 $product->update();
 
                 /** @var EntityManagerInterface $em */
@@ -429,7 +433,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
         $id_lang = Context::getContext()->language->id;
         $store_product = $request->get('store_product');
         $active = $request->get('active');
-        $newPrice = $request->get('new_price');
+        $newPrice = round((float)str_replace(',','.', $request->get('new_price') ?? 0), 6);
         $supplier_id = $price_modificationId;
 
         $supplier_id = $price_modificationId;

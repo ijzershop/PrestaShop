@@ -549,7 +549,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
      * Beschikbare Dynamische waarden
      *
      * {HL} = Handelslengte Leverancier
-     * {GL} = Gewicht leverancier
+     * {GHL} = Gewicht leverancier
      * {PL} = Geselecteerde Prijs Leverancier
      * {HW} = Handelslengte Webshop
      * {GW} = Gewicht Webshop
@@ -580,7 +580,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 $supLength = $supplierData['attributes']['handelslengte'] ?? 0;
                 return (float)$supLength;
             },
-            '({GL})' => function () use ($supplierData) { //is gewicht van leverancier
+            '({GHL})' => function () use ($supplierData) { //is gewicht van leverancier
                 $supWeight = $supplierData['attributes']['gewicht'] ?? 0;
                 return (float)$supWeight;
             },

@@ -68,15 +68,6 @@
     <td>€ {{ record.supplier_data.prices.verven_per_m1|number_format(2,',','.') }}
     </td>
   </tr>
-  <tr style="{% if record.supplier_data.prices.prijs_per_kilo == "" %}display:none;{% endif %}">
-    <td>
-      <input {% if record.selected_supplier_price == 'prijs_per_kilo' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="prijs_per_kilo" data-value="{{ record.supplier_data.prices.prijs_per_kilo }}" name="selected_formule_item_{{ record.id }}"/>
-    </td>
-    <td>Prijs p/kg
-    </td>
-    <td>€ {{ record.supplier_data.prices.prijs_per_kilo|number_format(2,',','.') }}
-    </td>
-  </tr>
   <tr style="{% if record.supplier_data.prices.prijs_tot_1000 == "" %}display:none;{% endif %}">
     <td>
       <input {% if record.selected_supplier_price == 'prijs_tot_1000' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="prijs_tot_1000" data-value="{{ record.supplier_data.prices.prijs_tot_1000 }}" name="selected_formule_item_{{ record.id }}"/>
@@ -156,9 +147,13 @@
 </div>
 <div id="attributes_table_{{record.id}}" class="collapse">
   <table style="min-width:300px;">
-        <tr>
-          <td style="{% if record.supplier_data.attributes.gewicht == "" %}display:none;{% endif %}">Gewicht</td>
+        <tr style="{% if record.supplier_data.attributes.gewicht == "" %}display:none;{% endif %}">
+          <td>Gewicht</td>
           <td>{{record.supplier_data.attributes.gewicht}} <sub>Kg</sub></td>
+        </tr>
+        <tr  style="{% if record.supplier_data.attributes.kilo_per_meter == "" %}display:none;{% endif %}">
+          <td>Kilo per meter</td>
+          <td>{{record.supplier_data.attributes.kilo_per_meter}} <sub>Kg</sub></td>
         </tr>
         <tr style="{% if record.supplier_data.attributes.diameter == "" %}display:none;{% endif %}">
           <td>Diameter</td>

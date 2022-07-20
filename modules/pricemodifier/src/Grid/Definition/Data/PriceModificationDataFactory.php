@@ -221,6 +221,11 @@ final class PriceModificationDataFactory implements GridDataFactoryInterface
                        $records[$key]['formatted_base_price_supplier'] = $this->formattedPrice($records[$key]['base_price_supplier']);
                        $records[$key]['formatted_new_price'] = $this->formattedPrice($records[$key]['new_price']);
                        $records[$key]['formatted_supplier_price_value'] = $this->formattedPrice($records[$key]['supplier_price_value']);
+
+
+                        if(stripos($records[$key]['name_supplier'], 'omschrijving')){
+                            unset($records[$key]);
+                        }
                    }
 
                return $records;

@@ -288,6 +288,7 @@ $( window ).on( "load", function(){
         },
       },
       allowClear: true,
+      minimumInputLength:2,
       width:300,
       cache: true,
     });
@@ -306,4 +307,37 @@ $( window ).on( "load", function(){
     }
   })
 
-} );
+
+  $(document).on('select2:open', (e) => {
+
+    setTimeout(function (){
+      $('.select2-search__field').first().focus();
+
+    }, 200)
+  });
+
+
+
+  $(document).on('click', '#bulk-update-clear', function(e){
+    $('#price-formula-bulk-input').val(void(0));
+    $('#increment-formula-bulk-input').val(void(0));
+  });
+
+  $(document).on('click', '#bulk-update-update', function(e){
+    let priceFormula = $('#price-formula-bulk-input').val();
+    let incrFormula = $('#increment-formula-bulk-input').val();
+
+    $('.js-bulk-action-checkbox:checked').each(function (index, element) {
+      let rowId = element.value;
+      $('input[name="formula_'+rowId+'"]').val(priceFormula);
+      $('input[name="increment_formula_'+rowId+'"]').val(incrFormula);
+
+    })
+
+
+
+  });
+});
+
+
+

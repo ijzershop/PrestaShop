@@ -79,34 +79,36 @@
 
     </div>
     <div class="row">
+      <div class="col d-flex justify-content-center">
+        <form action="#" id="bulk-update-formula-form"  class="form-inline">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" id="price-formula-bulk-label">Price Formula</label>
+              </div>
+              <input type="text" class="form-control" placeholder="...." aria-label="Price Formula" id="price-formula-bulk-input" aria-describedby="price-formula-bulk-label">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" id="increment-formula-bulk-label">Increment Formula</label>
+              </div>
+              <input type="text" class="form-control" placeholder="...." aria-label="Price Formula" id="increment-formula-bulk-input" aria-describedby="increment-formula-bulk-label">
+            </div>
+              <div class="btn-group mb-3" role="group" aria-label="group">
+                <button type="button" id="bulk-update-clear" class="btn btn-secondary">Clear</button>
+                <button type="button" id="bulk-update-update" class="btn btn-warning">Update</button>
+              </div>
+        </form>
+      </div>
+
       <div class="col">
         {% include '@Modules/pricemodifier/views/templates/admin/grid/grid_panel.html.twig' with {'grid': price_modificationGrid} %}
       </div>
     </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   {% endblock %}
 {% endblock %}
 
-
-                                                                                  {% block javascripts %}
+{% block javascripts %}
 <script src="{{ asset('../modules/pricemodifier/node_modules/chartist/dist/chartist.js') }}"></script>
 
 <script src="{{ asset('../modules/pricemodifier/views/js/barChartLabelPlugin.js') }}"></script>
@@ -115,7 +117,4 @@
 <script src="{{ asset('../modules/pricemodifier/views/js/price_modifications.bundle.js') }}"></script>
 <script src="{{ asset('../admin-dev/themes/new-theme/public/product_price_modification.bundle.js') }}"></script>
 <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-
-
-
 {% endblock %}

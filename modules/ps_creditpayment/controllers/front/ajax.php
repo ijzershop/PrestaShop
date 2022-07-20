@@ -45,7 +45,7 @@ class ps_creditpaymentAjaxModuleFrontController extends ModuleFrontController
 
 
         $sql = '
-		SELECT cg.`id_customer` as id, CONCAT(c.firstname, " ", c.lastname, " / ",c.email) as text
+		SELECT cg.`id_customer` as id, CONCAT(c.company, " - ",c.firstname, " ", c.lastname, " / ",c.email) as text
 		FROM `' . _DB_PREFIX_ . 'customer_group` cg
 		LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (cg.`id_customer` = c.`id_customer`)
 		WHERE cg.`id_group` = ' . $customersGroup . '

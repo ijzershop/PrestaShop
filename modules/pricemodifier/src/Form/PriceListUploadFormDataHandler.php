@@ -14,21 +14,24 @@ namespace Modernesmid\Module\Pricemodifier\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Modernesmid\Module\Pricemodifier\Controller\Admin\Classes\ConvertUploadedFile;
-use Modernesmid\Module\Pricemodifier\Entity\PriceListUpload;
+
 use Modernesmid\Module\Pricemodifier\Entity\PriceModification;
-use Modernesmid\Module\Pricemodifier\Repository\PriceListUploadRepository;
+use Modernesmid\Module\Pricemodifier\Repository\PriceModificationRepository;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException;
 use PrestaShop\PrestaShop\Core\File\Exception\FileException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ *
+ */
 class PriceListUploadFormDataHandler implements FormDataHandlerInterface
 {
     /**
-     * @var PriceListUploadRepository
+     * @var PriceModificationRepository
      */
-    private $price_list_uploadRepository;
+    private $priceModificationRepository;
 
     /**
      * @var EntityManagerInterface
@@ -36,15 +39,15 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
     private $entityManager;
 
     /**
-     * @param PriceListUploadRepository $price_list_uploadRepository
+     * @param PriceModificationRepository $priceModificationRepository
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(
-        PriceListUploadRepository $price_list_uploadRepository,
+        PriceModificationRepository $priceModificationRepository,
         EntityManagerInterface    $entityManager
     )
     {
-        $this->price_modificationRepository = $price_list_uploadRepository;
+        $this->price_modificationRepository = $priceModificationRepository;
         $this->entityManager = $entityManager;
     }
 
@@ -74,7 +77,10 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
 
 
         try {
-            $repository = $this->entityManager->getRepository(PriceModification::class);
+
+            $em = $this->entityManager;
+            $repository = $em->getRepository(PriceModification::class);
+
             foreach ($xmlData as $product) {
 
                 $supplier_name = preg_replace('/ +/', ' ','<b>' . $product['naam'] . '</b><br>' . $product['type']);
@@ -107,22 +113,21 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
                 $supplier_data['prices']['haaks_zagen'] = $product['haaks_zagen'];
 
 
-                $priceMod = $repository->findBySupplier($supplier_name, $supplier);
+                $priceMod = $repository->findBy(['name_supplier' => $supplier_name, 'file_supplier' => $supplier], null, 1);
 
-                if (is_null($priceMod)) {
-
+                if (empty($priceMod)) {
                     $priceMod = new PriceModification();
                     $priceMod->setIdStoreProduct(0);
                     $priceMod->setNameSupplier($supplier_name);
                     $priceMod->setFileSupplier($supplier);
                     $priceMod->setActive($active);
+                    $priceMod->setSupplierData(json_encode($supplier_data));
+                    $em->persist($priceMod);
+                } else {
+                    $priceMod[0]->setSupplierData(json_encode($supplier_data));
                 }
-                $priceMod->setSupplierData(json_encode($supplier_data));
-
-                    $this->entityManager->persist($priceMod);
-
+                $em->flush();
             }
-            $this->entityManager->flush();
         } catch (PrestaShopException $exception) {
             return $exception->getMessage();
         }

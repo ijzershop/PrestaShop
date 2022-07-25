@@ -196,6 +196,8 @@ class OrderSlipGenerator
 
         try {
             $this->generateBatchFile($order_invoice_collection, $this->pdfDeliverySlipTemplate);
+
+
             foreach ($order_invoice_collection as $order) {
                 try {
                     $order_object = new Order($order->id_order);
@@ -227,9 +229,6 @@ class OrderSlipGenerator
     	$context->currency = new Currency(1, 1, 1);
         $pdf_file = new PDF($object, $template, $context->smarty);
 
-        var_export($pdf_file);
-        die();
-
         $delivery_slip_pdf = $pdf_file->render(false);
         $this->slipTime = time();
         file_put_contents(dirname(__FILE__, 4).'/upload/pakbonnen/pakbonnen_'.$this->slipTime.'.pdf', $delivery_slip_pdf);
@@ -237,7 +236,7 @@ class OrderSlipGenerator
 }
 
 try {
-    $batch = new OrderSlipGenerator(true);
+    $batch = new OrderSlipGenerator(false);
     $batch->generateOrderSlips();
 } catch (PrestaShopDatabaseException | PrestaShopException $exeption) {
     return $exeption;

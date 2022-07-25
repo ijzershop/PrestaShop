@@ -22,6 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
+{assign var="remaining_amount" value=0}
+{assign var="discount_amount" value=0}
+{assign var="reduction_amount" value=0}
 <table id="total-tab" width="100%">
 
   <tr>
@@ -33,13 +36,16 @@
     </td>
   </tr>
 
-    {assign var="remaining_amount" value=0}
-    {assign var="discount_amount" value=0}
-    {assign var="reduction_amount" value=0}
+
     {if is_array($cart_rules) && count($cart_rules)}
         {foreach $cart_rules as $cart_rule}
-            {assign var="discount_amount" value=($discount_amount+$cart_rule.reduction_amount)}
-            {assign var="remaining_amount" value=($remaining_amount+$cart_rule.remaining_amount)}
+            {if $cart_rule.reduction_amount != '0.000000'}
+                {assign var="discount_amount" value=($discount_amount+$cart_rule.reduction_amount)}
+                {assign var="remaining_amount" value=($remaining_amount+$cart_rule.remaining_amount)}
+                {else}
+                {assign var="discount_amount" value=($discount_amount+$cart_rule.value_tax_excl)}
+                {assign var="remaining_amount" value=($remaining_amount+$cart_rule.value_tax_excl)}
+            {/if}
         {/foreach}
     {/if}
 

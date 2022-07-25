@@ -178,8 +178,9 @@ class Calculator
             $cartRules = $this->getCartRulesData();
 
             $totalDiscount = 0;
+            $totalDiscountPercentage = 0;
             foreach ($cartRules as $cartRule) {
-                $totalDiscount += $cartRule->getCartRule()->reduction_amount;
+                    $totalDiscount += $cartRule->getCartRule()->reduction_amount;
             }
 
             $remainingDiscount = $totalDiscount - $calculatedDiscount->getTaxExcluded();
@@ -194,10 +195,9 @@ class Calculator
         if (!$this->isProcessed && !$ignoreProcessedFlag) {
             throw new \Exception('Cart must be processed before getting its total');
         }
-
         $amount = $this->getRowTotalWithoutDiscount();
         $amount = $amount->sub($this->rounded($this->getDiscountTotal(), $this->computePrecision));
-
+        $shippingFees = $this->fees->getInitialShippingFees();
         if (null !== $shippingFees) {
             $amount = $amount->add($this->rounded($shippingFees, $this->computePrecision));
         }

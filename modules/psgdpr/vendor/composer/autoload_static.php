@@ -4,10 +4,9 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf5d427740d4a2b1e852a489841f2b86e
+class ComposerStaticInit3b3766f22cf274366972a7e5a6cf0528
 {
     public static $classMap = array (
-        'APIFAQ' => __DIR__ . '/../..' . '/classes/APIFAQClass.php',
         'AdminAjaxPsgdprController' => __DIR__ . '/../..' . '/controllers/admin/AdminAjaxPsgdprController.php',
         'AdminDownloadInvoicesPsgdprController' => __DIR__ . '/../..' . '/controllers/admin/AdminDownloadInvoicesPsgdprController.php',
         'GDPRConsent' => __DIR__ . '/../..' . '/classes/GDPRConsent.php',
@@ -23,7 +22,7 @@ class ComposerStaticInitf5d427740d4a2b1e852a489841f2b86e
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInitf5d427740d4a2b1e852a489841f2b86e::$classMap;
+            $loader->classMap = ComposerStaticInit3b3766f22cf274366972a7e5a6cf0528::$classMap;
 
         }, null, ClassLoader::class);
     }

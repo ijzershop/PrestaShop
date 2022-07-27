@@ -1075,12 +1075,29 @@ font-size: 11px;
         <style>
             {urldecode($settings['custom_css']) nofilter}{*Variable contains css content, escape not required*}
         </style>
-        <div class="supercheckout-empty-page-content" style="display:block">
-            <div class="permanent-warning">{l s='Your shopping cart is empty.' mod='supercheckout'}</div>
+        <div class="supercheckout-empty-page-content" style="display:block;">
+            <div class="permanent-warning" style="text-align:center;font-size: 16px">{l s='Your shopping cart is empty.' mod='supercheckout'} U word na 5 seconden doorgestuurd naar onze home pagina. <b id="counter">5</b></div>
         </div>
         <script>
             var cart_empty = {$empty};
             {urldecode($settings['custom_js']) nofilter}  {*escape not required as contains JS*}
+
+            const counterInterval = setInterval(startCounter, 1000);
+
+            function stopCounter() {
+              clearInterval(counterInterval);
+            }
+
+            function startCounter() {
+              let div = document.querySelector("#counter");
+              let count = div.textContent * 1 - 1;
+              div.textContent = count;
+              if (count <= 1) {
+                stopCounter();
+                window.location.replace("{$urls.base_url}");
+
+              }
+            }
         </script>
     {/if}
 {/block}

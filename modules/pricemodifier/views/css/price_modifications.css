@@ -1,0 +1,82 @@
+/*
+ * Price Modifier
+ * Copyright since 2021 JB Stoker and Contributors
+ * <JB Stoker> Property
+ *
+
+ * @author    JB Stoker <jelmer@ijzershop.nl>
+ * @copyright Since 2021 JB Stoker
+ * @license   https://opensource.org/licenses/MIT
+ */
+
+.ct-series-a .ct-bar {
+  stroke: #0000FF!important;
+}
+
+.ct-series-b .ct-bar {
+  stroke: #ADFF2F!important;
+}
+
+.ct-bar-label{
+  letter-spacing: 0.1em;
+}
+
+.formula_result{
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+}
+
+.profit-th-old, .profit-th-new{
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+
+.profit-th-old{
+  color:#000000;
+  background-color: #ADFF2F;
+}
+
+
+.profit-th-new{
+  color:#FFFFFF;
+  background-color: #0000dd;
+}
+
+.column-chart table th{
+  letter-spacing: 0.1em;
+}
+
+
+
+/**
+Loader
+ */
+
+#chemie-loader{
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top:0;
+  left:0;
+  display: none;
+  background-color: white;
+  background-image: url("/modules/pricemodifier/views/img/chemie.gif");
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index:9;
+}
+
+#chemie-loader.on{
+  display: block;
+}
+
+#chemie-loader-text{
+  position: absolute;
+  bottom: 20%;
+  text-align: center;
+  width: 100%;
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #5ab336;
+}

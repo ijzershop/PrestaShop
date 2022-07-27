@@ -106,6 +106,7 @@ class PDFGenerator extends PDFGeneratorCore
         $this->setMargins(12, 40, 12);
         $this->setPageOrientation('P', true, 40);
         $this->AddPage();
+
         if(strpos($this->header, 'BEZORGEN') !== false || strpos($this->header, 'BEZORGING') !== false || strpos($this->header, 'AFHALEN') !== false || strpos($this->header, 'TOEVOEGEN') !== false){
             $link = new LinkCore;
             if(is_null($reference)){

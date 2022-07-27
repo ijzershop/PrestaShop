@@ -44,9 +44,9 @@
     "paragonie/random_compat": "^2.0",
     "pear/archive_tar": "^1.4.12",
     "pelago/emogrifier": "^2.1",
-    "phpoffice/phpspreadsheet": "~1.5",
+    "phpoffice/phpspreadsheet": "1.23.0",
     "prestashop/blockreassurance": "^5",
-    "prestashop/blockwishlist": "^2.0",
+    "prestashop/blockwishlist": "^2.1",
     "prestashop/circuit-breaker": "^3.0",
     "prestashop/contactform": "^4",
     "prestashop/dashactivity": "^2",
@@ -111,12 +111,14 @@
     "swiftmailer/swiftmailer": "~6.2",
     "symfony/monolog-bundle": "^3.1.0",
     "symfony/polyfill-apcu": "^1.0",
-    "symfony/polyfill-php80": "^1.18",
+    "symfony/polyfill-php80": "1.18.1",
     "symfony/swiftmailer-bundle": "^3.1",
     "symfony/symfony": "^3.4.37",
     "tecnickcom/tcpdf": "^6.2.12",
     "tijsverkoyen/css-to-inline-styles": "^2.2",
-    "twig/twig": "^1.38"
+    "twig/twig": "^1.38",
+    "ext-mysqli": "*",
+    "ext-pdo": "*"
   },
   "repositories": [
     {
@@ -161,15 +163,8 @@
     ]
   },
   "scripts": {
-    "post-install-cmd": [
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-    ],
     "post-update-cmd": [
-      "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+      "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile"
     ],
     "create-test-db": [
       "@php ./tests-legacy/create-test-db.php"

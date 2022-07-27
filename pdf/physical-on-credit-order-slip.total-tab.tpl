@@ -37,10 +37,15 @@
     {assign var="discount_amount" value=0}
     {assign var="reduction_amount" value=0}
     {if is_array($cart_rules) && count($cart_rules)}
-        {foreach $cart_rules as $cart_rule}
+    {foreach $cart_rules as $cart_rule}
+        {if $cart_rule.reduction_amount != '0.000000'}
             {assign var="discount_amount" value=($discount_amount+$cart_rule.reduction_amount)}
             {assign var="remaining_amount" value=($remaining_amount+$cart_rule.remaining_amount)}
-        {/foreach}
+        {else}
+            {assign var="discount_amount" value=($discount_amount+$cart_rule.value_tax_excl)}
+            {assign var="remaining_amount" value=($remaining_amount+$cart_rule.value_tax_excl)}
+        {/if}
+    {/foreach}
     {/if}
 
     {if $footer.product_discounts_tax_excl > 0}

@@ -157,6 +157,8 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
         $order_details = $this->order_invoice->getProducts();
 
+
+
             foreach ($order_details as &$order_detail) {
                 if(!is_null($order_detail['id_oi_offer'])){
                     $descProduct = new Product($order_detail['product_id']);
@@ -272,6 +274,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             'product_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.product-tab')),
             'payment_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.payment-tab')),
         );
+
         $this->smarty->assign($tpls);
 
         return $this->smarty->fetch($this->getTemplate('delivery-slip'));

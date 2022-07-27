@@ -40,7 +40,6 @@
             {assign var='google_region_type' value=''}
             {foreach from=$settings['payment_address'] key='p_address_key' item='p_address_field'}
 
-{*          {var_export([$p_address_key,$p_address_field])}*}
 
                 {$display_row = ''}
                 {$google_region_type = ''}

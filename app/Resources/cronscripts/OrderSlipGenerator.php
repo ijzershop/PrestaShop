@@ -152,7 +152,12 @@ class OrderSlipGenerator
     {
         $date_from = date('Y-m-d H:i:s', strtotime('-14 days'));
         $date_to = date('Y-m-d H:i:s', strtotime('-5 minutes'));
-        $last_updated_date = date('Y-m-d H:i:s', strtotime('-1 minute'));
+
+        if($this->debug){
+            $last_updated_date = date('Y-m-d H:i:s');
+        } else {
+            $last_updated_date = date('Y-m-d H:i:s', strtotime('-1 minute'));
+        }
 
         $sql_query = new DbQuery();
         $sql_query->select('oi.*');
@@ -169,6 +174,10 @@ class OrderSlipGenerator
          }
 
         $order_invoice_list = Db::getInstance()->executeS($sql_query);
+
+        if($this->debug){
+            var_export($order_invoice_list);
+        }
 
         return ObjectModel::hydrateCollection('OrderInvoice', $order_invoice_list);
     }
@@ -187,6 +196,8 @@ class OrderSlipGenerator
 
         try {
             $this->generateBatchFile($order_invoice_collection, $this->pdfDeliverySlipTemplate);
+
+
             foreach ($order_invoice_collection as $order) {
                 try {
                     $order_object = new Order($order->id_order);
@@ -217,6 +228,7 @@ class OrderSlipGenerator
     	$context = Context::getContext();
     	$context->currency = new Currency(1, 1, 1);
         $pdf_file = new PDF($object, $template, $context->smarty);
+
         $delivery_slip_pdf = $pdf_file->render(false);
         $this->slipTime = time();
         file_put_contents(dirname(__FILE__, 4).'/upload/pakbonnen/pakbonnen_'.$this->slipTime.'.pdf', $delivery_slip_pdf);

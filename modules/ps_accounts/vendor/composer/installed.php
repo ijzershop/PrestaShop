@@ -1,22 +1,22 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'v5.2.6',
-        'version' => '5.2.6.0',
+        'pretty_version' => 'v5.3.0',
+        'version' => '5.3.0.0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '302488af8c5d8aecf62afdaf0983badda7dd9689',
+        'reference' => '85eb2f8ec8b3f6aca83d800900b3a4b690fc7ad8',
         'name' => '__root__',
         'dev' => false,
     ),
     'versions' => array(
         '__root__' => array(
-            'pretty_version' => 'v5.2.6',
-            'version' => '5.2.6.0',
+            'pretty_version' => 'v5.3.0',
+            'version' => '5.3.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '302488af8c5d8aecf62afdaf0983badda7dd9689',
+            'reference' => '85eb2f8ec8b3f6aca83d800900b3a4b690fc7ad8',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(

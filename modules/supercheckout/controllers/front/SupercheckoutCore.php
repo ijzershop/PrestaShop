@@ -246,7 +246,7 @@ class SupercheckoutCore extends ModuleFrontController
                 $invoice_address->id_state = 0;
                 $invoice_address->postcode = 0;
                 $invoice_address->other = ' ';
-                $invoice_address->alias = Tools::substr($this->module->l('Address Alias', 'SupercheckoutCore') . ' - ' . date('s') . rand(0, 9), 0, 30);
+                $invoice_address->alias = Tools::substr($this->module->l('Adres', 'SupercheckoutCore') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
 
                 if ($invoice_address->save()) {
                     $this->checkout_session->setIdAddressInvoice($invoice_address->id);
@@ -274,7 +274,7 @@ class SupercheckoutCore extends ModuleFrontController
                     $delivery_address->city = ' ';
                     $delivery_address->postcode = 0;
                     $delivery_address->phone = ' ';
-                    $delivery_address->alias = Tools::substr($this->module->l('Address Alias', 'SupercheckoutCore') . ' - ' . date('s') . rand(0, 9), 0, 30);
+                    $delivery_address->alias = Tools::substr($this->module->l('Adres', 'SupercheckoutCore') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
                     $delivery_address->other = ' ';
                     $delivery_address->vat_number = Tools::getValue('vat_number', ' ');
                     $delivery_address->id_country = (int) $id_country;
@@ -322,7 +322,7 @@ class SupercheckoutCore extends ModuleFrontController
                     $delivery_address->city = ' ';
                     $delivery_address->postcode = 0;
                     $delivery_address->phone = ' ';
-                    $delivery_address->alias = Tools::substr($this->module->l('Address Alias', 'SupercheckoutCore') . ' - ' . date('s') . rand(0, 9), 0, 30);
+                    $delivery_address->alias = Tools::substr($this->module->l('Adres', 'SupercheckoutCore') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
                     $delivery_address->other = ' ';
                     $delivery_address->vat_number = Tools::getValue('vat_number', ' ');
                 }
@@ -1060,6 +1060,49 @@ class SupercheckoutCore extends ModuleFrontController
         }
     }
 
+
+    private function checkAddressSameOrModifier($id_address, $address, $house_number, $house_number_extension, $postcode, $city, $country, $company, $firstname, $lastname, $createNew = true){
+
+        if((int)$id_address > 0){
+            $ad =  new Address($id_address);
+
+            if(strtolower($ad->address1) != strtolower($address) ||
+                strtolower($ad->house_number) != strtolower($house_number) ||
+                strtolower($ad->house_number_extension) != strtolower($house_number_extension) ||
+                strtolower($ad->postcode) != strtolower($postcode) ||
+                strtolower($ad->city) != strtolower($city) ||
+                strtolower($ad->id_country) != strtolower($country) ||
+                strtolower($ad->company) != strtolower($company) ||
+                strtolower($ad->firstname) != strtolower($firstname) ||
+                strtolower($ad->lastname) != strtolower($lastname)){
+
+                //iets is niet hetzelfde
+                $newAddress = new Address();
+                $newAddress->alias = Tools::substr($this->module->l('Adres', 'SupercheckoutCore') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
+                $newAddress->address1 = $address;
+                $newAddress->house_number = $house_number;
+                $newAddress->house_number_extension = $house_number_extension;
+                $newAddress->postcode = $postcode;
+                $newAddress->city = $city;
+                $newAddress->id_country = $country;
+                $newAddress->company = $company;
+                $newAddress->firstname = $firstname;
+                $newAddress->lastname = $lastname;
+
+                if($createNew){
+                    $newAddress->save(false);
+                }
+
+                return $newAddress->id;
+            } else {
+                return $id_address;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+
     protected function confirmOrder()
     {
         $response = array();
@@ -1197,6 +1240,20 @@ class SupercheckoutCore extends ModuleFrontController
         ) {
             $id_delivery_address = $posted_data['shipping_address']['shipping_address_id'];
         }
+//Create new address when existing is updated
+//        $id_delivery_address = $this->checkAddressSameOrModifier($id_delivery_address,
+//            $posted_data['shipping_address']['address1'],
+//            $posted_data['shipping_address']['house_number'],
+//            $posted_data['shipping_address']['house_number_extension'],
+//            $posted_data['shipping_address']['postcode'],
+//            $posted_data['shipping_address']['city'],
+//            $posted_data['shipping_address']['id_country'],
+//            $posted_data['shipping_address']['company'],
+//            $posted_data['shipping_address']['firstname'],
+//            $posted_data['shipping_address']['lastname'], true);
+
+//        $posted_data['shipping_address']['shipping_address_id'] = $id_delivery_address;
+//End create new address when existing is updated
 
         $id_invoice_address = 0;
 
@@ -1228,7 +1285,7 @@ class SupercheckoutCore extends ModuleFrontController
                     $temp_invoice_address->city = ' ';
                     $temp_invoice_address->postcode = 0;
                     $temp_invoice_address->phone = ' ';
-                    $temp_invoice_address->alias = Tools::substr($this->module->l('Address Alias', 'SupercheckoutCore') . ' - ' . date('s') . rand(0, 9), 0, 30);
+                    $temp_invoice_address->alias = Tools::substr($this->module->l('Adres', 'SupercheckoutCore') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
                     $temp_invoice_address->other = ' ';
                     $temp_invoice_address->id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT');
                     $temp_invoice_address->id_state = 0;
@@ -1247,8 +1304,20 @@ class SupercheckoutCore extends ModuleFrontController
         ) {
             $id_invoice_address = $posted_data['payment_address']['payment_address_id'];
         }
+//Create new address when existing is updated
+//        $id_invoice_address = $this->checkAddressSameOrModifier($id_invoice_address,
+//            $posted_data['payment_address']['address1'],
+//            $posted_data['payment_address']['house_number'],
+//            $posted_data['payment_address']['house_number_extension'],
+//            $posted_data['payment_address']['postcode'],
+//            $posted_data['payment_address']['city'],
+//            $posted_data['payment_address']['id_country'],
+//            $posted_data['payment_address']['company'],
+//            $posted_data['payment_address']['firstname'],
+//            $posted_data['payment_address']['lastname'], true);
 
-
+//        $posted_data['payment_address']['payment_address_id'] = $id_invoice_address;
+//End newly created address at modification
 
 
         //////////////////////////Start - Plugin Validations //////////////////////////
@@ -1658,9 +1727,9 @@ class SupercheckoutCore extends ModuleFrontController
 
             $delivery_address->alias = (isset($posted_data['shipping_address']['alias']))
                 ? (empty($posted_data['shipping_address']['alias']))
-                    ? Tools::substr($this->module->l('Address Alias', 'SupercheckoutCore') . ' - ' . date('s') . rand(0, 9), 0, 30)
+                    ? Tools::substr($this->module->l('Adres', 'SupercheckoutCore') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30)
                     : $posted_data['shipping_address']['alias']
-                : Tools::substr($this->module->l('Address Alias', 'SupercheckoutCore') . ' - ' . date('s') . rand(0, 9), 0, 30);
+                : Tools::substr($this->module->l('Adres', 'SupercheckoutCore') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
 
             $delivery_address->other = (!empty($posted_data['shipping_address']['other']))
                 ? $posted_data['shipping_address']['other'] : ' ';
@@ -1758,9 +1827,9 @@ class SupercheckoutCore extends ModuleFrontController
             }
             $invoice_address->alias = (isset($posted_data['payment_address']['alias']))
                 ? (empty($posted_data['payment_address']['alias']))
-                    ? Tools::substr($this->module->l('Address Alias', 'SupercheckoutCore') . ' - ' . date('s') . rand(0, 9), 0, 30)
+                    ? Tools::substr($this->module->l('Adres', 'SupercheckoutCore') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30)
                     : $posted_data['payment_address']['alias']
-                : Tools::substr($this->module->l('Address Alias', 'SupercheckoutCore') . ' - ' . date('s') . rand(0, 9), 0, 30);
+                : Tools::substr($this->module->l('Adres', 'SupercheckoutCore') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
 
             $invoice_address->other = (!empty($posted_data['payment_address']['other']))
                 ? $posted_data['payment_address']['other'] : ' ';
@@ -2061,21 +2130,12 @@ class SupercheckoutCore extends ModuleFrontController
                 $this->supercheckoutUpdateMsg($posted_data['comment']);
             }
 
-
-
-
             if (Configuration::get('PS_CART_FOLLOWING')
                 && (empty($this->context->cookie->id_cart)
                 || Cart::getNbProducts($this->context->cookie->id_cart) == 0)
             ) {
                 $this->context->cookie->id_cart = (int) Cart::lastNoneOrderedCart($this->context->customer->id);
             }
-
-                //Disable carrier update because it breaks carrier and shoppingcart
-//            if (Tools::getIsset('delivery_option')) {
-//                $_POST['delivery_option'] = Tools::getValue('delivery_option');
-//                $this->updateCarrier();
-//            }
 
             $this->updateCartDeliveryAddress($id_current_address_delivery, $id_delivery_address);
             if(isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0){

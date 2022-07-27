@@ -507,3 +507,7 @@ modules/productcomments.zip
 !/OrderSlipGenerator.php
 !/mails/themes/modernesmid/*
 modules/mollie_backup/
+modules/pricemodifier.zip
+modules/pricemodifier/uploads/
+CronJobTest.php
+app/Resources/cronscripts/OrderSlipGeneratorTester.php

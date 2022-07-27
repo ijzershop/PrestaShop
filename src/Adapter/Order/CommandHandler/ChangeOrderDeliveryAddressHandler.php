@@ -95,6 +95,7 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderCommandHandle
 
         $cart = Cart::getCartByOrderId($order->id);
 
+
         if (!Validate::isLoadedObject($address)) {
             throw new OrderException('New delivery address is not valid');
         }
@@ -105,7 +106,9 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderCommandHandle
             $comparator = new CartProductsComparator($cart);
 
             $cart->updateDeliveryAddressId((int) $cart->id_address_delivery, (int) $address->id);
-            $cart->setDeliveryOption([
+
+
+           $cart->setDeliveryOption([
                 (int) $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($order->id_carrier),
             ]);
             $cart->update();
@@ -114,8 +117,10 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderCommandHandle
             $this->synchronizeOrderWithCart($order, $cart, $comparator);
 
             $order->id_address_delivery = $address->id;
+
             $this->orderDetailTaxUpdater->updateOrderDetailsTaxes($order);
             $this->orderAmountUpdater->update($order, $cart);
+
         } finally {
             $this->contextStateManager->restorePreviousContext();
         }

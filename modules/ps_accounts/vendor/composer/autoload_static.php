@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf222327ab95214c7d912c2382798d8e3
+class ComposerStaticInitc3ee5a9ef31d4a566dfddf2bcceb7086
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
@@ -906,29 +906,19 @@ class ComposerStaticInitf222327ab95214c7d912c2382798d8e3
         'phpseclib\\Net\\SSH2' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/Net/SSH2.php',
         'phpseclib\\System\\SSH\\Agent' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/System/SSH/Agent.php',
         'phpseclib\\System\\SSH\\Agent\\Identity' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/System/SSH/Agent/Identity.php',
-        'ps_AccountsApiCartsModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiCarts.php',
-        'ps_AccountsApiCategoriesModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiCategories.php',
-        'ps_AccountsApiDeletedObjectsModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiDeletedObjects.php',
-        'ps_AccountsApiGoogleTaxonomiesModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiGoogleTaxonomies.php',
-        'ps_AccountsApiHealthCheckModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiHealthCheck.php',
-        'ps_AccountsApiInfoModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiInfo.php',
-        'ps_AccountsApiModulesModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiModules.php',
-        'ps_AccountsApiOrdersModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiOrders.php',
-        'ps_AccountsApiThemesModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiThemes.php',
         'ps_AccountsApiV1ShopHmacModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopHmac.php',
         'ps_AccountsApiV1ShopLinkAccountModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopLinkAccount.php',
         'ps_AccountsApiV1ShopTokenModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopToken.php',
         'ps_AccountsApiV1ShopUrlModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopUrl.php',
-        'ps_accountsApiProductsModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiProducts.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf222327ab95214c7d912c2382798d8e3::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf222327ab95214c7d912c2382798d8e3::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitf222327ab95214c7d912c2382798d8e3::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitf222327ab95214c7d912c2382798d8e3::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc3ee5a9ef31d4a566dfddf2bcceb7086::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc3ee5a9ef31d4a566dfddf2bcceb7086::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitc3ee5a9ef31d4a566dfddf2bcceb7086::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitc3ee5a9ef31d4a566dfddf2bcceb7086::$classMap;
 
         }, null, ClassLoader::class);
     }

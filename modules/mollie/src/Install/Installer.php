@@ -170,6 +170,10 @@ class Installer implements InstallerInterface
             'actionOrderGridQueryBuilderModifier',
             'actionObjectCurrencyUpdateAfter',
             'displayHeader',
+            'displayProductActions',
+            'displayExpressCheckout',
+            'actionObjectOrderPaymentAddAfter',
+            'displayProductAdditionalInfo',
         ];
     }
 
@@ -422,6 +426,8 @@ class Installer implements InstallerInterface
         $this->configurationAdapter->updateValue(Config::MOLLIE_CSS, '');
 
         $this->configurationAdapter->updateValue(Config::MOLLIE_API, Config::MOLLIE_ORDERS_API);
+        $this->configurationAdapter->updateValue(Config::MOLLIE_APPLE_PAY_DIRECT_STYLE, 0);
+        $this->configurationAdapter->updateValue(Config::MOLLIE_BANCONTACT_QR_CODE_ENABLED, 0);
     }
 
     public function setDefaultCarrierStatuses()

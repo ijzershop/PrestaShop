@@ -1,0 +1,113 @@
+{#**
+ * Price Modifier
+ * Copyright since 2021 JB Stoker and Contributors
+ * <JB Stoker> Property
+ *
+
+ * @author    JB Stoker <jelmer@ijzershop.nl>
+ * @copyright Since 2021 JB Stoker
+ * @license   https://opensource.org/licenses/MIT
+ *#}
+
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block content_header %}
+  <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/views/css/price_modifications.css') }}"/>
+
+{% endblock %}
+
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {% include '@Modules/pricemodifier/views/templates/admin/form.html.twig' %}
+    </div>
+  </div>
+
+
+  <div id="chemie-loader">
+    <span id="chemie-loader-text">Loading funny messages</span>
+  </div>
+
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('../modules/pricemodifier/views/js/price_modification_form.bundle.js') }}"></script>
+
+  <script>
+    let msgList = [
+      "Uploading XML document",
+      "I feel like im supposed to be loading something",
+      "We’re going to need a bigger boat",
+      "Adjusting flux capacitor",
+      "Filtering morale",
+      "Parsing XML Data to usable format",
+      "Don't think of purple hippos",
+      "Bypassing control of the matter-antimatter integrator",
+      "Don't break your screen yet!",
+      "Let's take a mindfulness minute",
+      "Checking for existing records, one moment please.",
+      "Unicorns are at the end of this road, I promise.",
+      "Looking for sense of humour, please hold on.",
+      "Distracted by cat gifs",
+      "Feel free to spin in your chair",
+      "We're testing your patience",
+      "Go ahead, hold your breath and do an ironman plank till loading complete",
+      "Bored of slow loading spinner, buy more RAM!",
+      "Pushing pixels",
+      "Updating and creating records",
+      "Deleting all your hidden porn",
+      "Patience! This is difficult, you know",
+      "Discovering new ways of making you wait",
+      "Your time is very important to us. Please wait while we ignore you",
+      "Rupturing the subspace barrier",
+      "Still faster than Windows update",
+      "Deleting uploaded xml file",
+      "Grabbing extra minions",
+      "Please wait while the minions do their work",
+      "Doing the heavy lifting",
+      "Converging tachyon pulses",
+      "Feeding unicorns",
+      "I swear it's almost done."
+    ];
+
+
+    document.getElementById('upload-xml-button').onmousedown =  function() {
+      if (document.getElementById('price_list_upload_uploaded_file').value === "") {
+        return true;
+      }
+      document.getElementById('chemie-loader').classList.add('on');
+      let counter = 0;
+      let dotsInterval = undefined;
+      setInterval(showMessages, 3000);
+
+      function showMessages() {
+        if (dotsInterval !== undefined) {
+          clearInterval(dotsInterval);
+        }
+        let message = msgList[counter];
+        dotsInterval = setInterval(function () {
+          message += '.';
+          document.getElementById("chemie-loader-text").innerHTML = message;
+        }, 800);
+
+        if (counter+1 == msgList.length) {
+          counter = 0;
+        } else {
+          counter++;
+        }
+      }
+
+      document.getElementsByName('price_list_upload')[0].requestSubmit()
+    }
+
+
+
+
+
+
+  </script>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{
+  "name": "pricemodifier",
+  "version": "1.0.0",
+  "description": "![PHP tests](https://github.com/modernesmid/pricemodifier/workflows/PHP%20tests/badge.svg) ![NodeJS tests](https://github.com/modernesmid/pricemodifier/workflows/NodeJS%20tests/badge.svg) ![JS tests](https://github.com/modernesmid/pricemodifier/workflows/JS%20tests/badge.svg) ![Build & Release draft](https://github.com/modernesmid/pricemodifier/workflows/Build%20&%20Release%20draft/badge.svg) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/modernesmid/pricemodifier) [![GitHub license](https://img.shields.io/github/license/modernesmid/pricemodifier)](https://github.com/modernesmid/pricemodifier/LICENSE.md)",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chartist": "^0.11.4",
+    "chartist-plugin-tooltip": "0.0.11",
+    "chartist-plugin-tooltips-updated": "^0.1.4"
+  }
+}

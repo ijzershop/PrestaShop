@@ -62,14 +62,31 @@ class Ps_Creditpayment extends PaymentModule
         $this->confirmUninstall = $this->trans('Are you sure about removing these details?', array(), 'Modules.Creditpayment.Admin');
     }
 
+    /**
+     * Set default medias for this controller
+     */
+    public function hookHeader($params)
+    {
+
+        $this->context->controller->addCSS(array(
+            $this->_path . '/views/css/ps_creditpayment.css',
+        ));
+
+        $this->context->controller->addJS(array(
+            $this->_path . '/views/js/ps_creditpayment.js',
+        ));
+    }
+
+
     public function install()
     {
         if (!parent::install() ||
+            !$this->registerHook('header') ||
             !$this->registerHook('paymentReturn') ||
             !$this->registerHook('paymentOptions') ||
             !$this->registerHook('actionCustomerGridDefinitionModifier') ||
             !$this->registerHook('actionCustomerGridQueryBuilderModifier') ||
-            !$this->addOrderState($this->trans('Credit Payment',  array(), 'Modules.Creditpayment.Admin'))) {
+            !$this->addOrderState($this->trans('Credit Payment', array(), 'Modules.Creditpayment.Admin'))) {
             return false;
         }
         return true;
@@ -91,8 +108,7 @@ class Ps_Creditpayment extends PaymentModule
     }
 
 
-
-public function addOrderState($name)
+    public function addOrderState($name)
     {
         $state_exist = false;
         $states = OrderState::getOrderStates((int)$this->context->language->id);
@@ -117,7 +133,7 @@ public function addOrderState($name)
             $order_state->name = array();
             $languages = Language::getLanguages(false);
             foreach ($languages as $language)
-                $order_state->name[ $language['id_lang'] ] = $name;
+                $order_state->name[$language['id_lang']] = $name;
             $order_state->add();
 
             $stateId = $order_state->id;
@@ -133,8 +149,8 @@ public function addOrderState($name)
             $custom_text = array();
             $languages = Language::getLanguages(false);
             foreach ($languages as $lang) {
-                if (Tools::getIsset('BANK_CREDIT_CUSTOM_TEXT_'.$lang['id_lang'])) {
-                    $custom_text[$lang['id_lang']] = Tools::getValue('BANK_CREDIT_CUSTOM_TEXT_'.$lang['id_lang']);
+                if (Tools::getIsset('BANK_CREDIT_CUSTOM_TEXT_' . $lang['id_lang'])) {
+                    $custom_text[$lang['id_lang']] = Tools::getValue('BANK_CREDIT_CUSTOM_TEXT_' . $lang['id_lang']);
                 }
             }
             if (Tools::getIsset('BANK_CREDIT_COMPLETE_STATE')) {
@@ -142,43 +158,42 @@ public function addOrderState($name)
                 Configuration::updateValue('BANK_CREDIT_COMPLETE_STATE', $newState);
             }
 
-            if(Tools::getIsset('CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID')){
+            if (Tools::getIsset('CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID')) {
                 $data = Tools::getValue('CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID');
                 Configuration::updateValue('CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID', $data);
             }
-            if(Tools::getIsset('CREDITPAYMENT_INFORMER_CURRENCY_ID')){
+            if (Tools::getIsset('CREDITPAYMENT_INFORMER_CURRENCY_ID')) {
                 $data = Tools::getValue('CREDITPAYMENT_INFORMER_CURRENCY_ID');
                 Configuration::updateValue('CREDITPAYMENT_INFORMER_CURRENCY_ID', $data);
             }
-            if(Tools::getIsset('CREDITPAYMENT_INFORMER_VAT_OPTION')){
+            if (Tools::getIsset('CREDITPAYMENT_INFORMER_VAT_OPTION')) {
                 $data = Tools::getValue('CREDITPAYMENT_INFORMER_VAT_OPTION');
                 Configuration::updateValue('CREDITPAYMENT_INFORMER_VAT_OPTION', $data);
             }
-            if(Tools::getIsset('CREDITPAYMENT_INFORMER_TEMPLATE_ID')){
+            if (Tools::getIsset('CREDITPAYMENT_INFORMER_TEMPLATE_ID')) {
                 $data = Tools::getValue('CREDITPAYMENT_INFORMER_TEMPLATE_ID');
                 Configuration::updateValue('CREDITPAYMENT_INFORMER_TEMPLATE_ID', $data);
             }
-            if(Tools::getIsset('CREDITPAYMENT_INFORMER_LINE_VAT_ID')){
+            if (Tools::getIsset('CREDITPAYMENT_INFORMER_LINE_VAT_ID')) {
                 $data = Tools::getValue('CREDITPAYMENT_INFORMER_LINE_VAT_ID');
                 Configuration::updateValue('CREDITPAYMENT_INFORMER_LINE_VAT_ID', $data);
             }
-            if(Tools::getIsset('CREDITPAYMENT_INFORMER_LINE_LEDGER_ID')){
+            if (Tools::getIsset('CREDITPAYMENT_INFORMER_LINE_LEDGER_ID')) {
                 $data = Tools::getValue('CREDITPAYMENT_INFORMER_LINE_LEDGER_ID');
                 Configuration::updateValue('CREDITPAYMENT_INFORMER_LINE_LEDGER_ID', $data);
             }
-            if(Tools::getIsset('CREDITPAYMENT_INFORMER_SECURITY_CODE')){
+            if (Tools::getIsset('CREDITPAYMENT_INFORMER_SECURITY_CODE')) {
                 $data = Tools::getValue('CREDITPAYMENT_INFORMER_SECURITY_CODE');
                 Configuration::updateValue('CREDITPAYMENT_INFORMER_SECURITY_CODE', $data);
             }
-            if(Tools::getIsset('CREDITPAYMENT_INFORMER_API_KEY')){
+            if (Tools::getIsset('CREDITPAYMENT_INFORMER_API_KEY')) {
                 $data = Tools::getValue('CREDITPAYMENT_INFORMER_API_KEY');
                 Configuration::updateValue('CREDITPAYMENT_INFORMER_API_KEY', $data);
             }
-            if(Tools::getIsset('CREDITPAYMENT_INFORMER_FOOTER_TEXT')){
+            if (Tools::getIsset('CREDITPAYMENT_INFORMER_FOOTER_TEXT')) {
                 $data = Tools::getValue('CREDITPAYMENT_INFORMER_FOOTER_TEXT');
                 Configuration::updateValue('CREDITPAYMENT_INFORMER_FOOTER_TEXT', $data);
             }
-
 
 
         }
@@ -188,7 +203,7 @@ public function addOrderState($name)
 
     public function getContent()
     {
-        if (Tools::isSubmit('btnSubmit')){
+        if (Tools::isSubmit('btnSubmit')) {
             if (!count($this->_postErrors)) {
                 $this->_postProcess();
             } else {
@@ -223,10 +238,10 @@ public function addOrderState($name)
         $customersWithGroup = $creditGroup->getCustomers();
         $is_balie_employee = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id;
         $add_to_list = false;
-        if($is_balie_employee){
+        if ($is_balie_employee) {
             $add_to_list = true;
-            for ($i = 0; $i <= count($customersWithGroup); $i++){
-                if(isset($customersWithGroup[$i])){
+            for ($i = 0; $i <= count($customersWithGroup); $i++) {
+                if (isset($customersWithGroup[$i])) {
                     array_push($customers, array('id_customer' => $customersWithGroup[$i]['id_customer'],
                         'company' => $customersWithGroup[$i]['company'],
                         'firstname' => $customersWithGroup[$i]['firstname'],
@@ -252,25 +267,25 @@ public function addOrderState($name)
 //            }
 //        }
 
-            if($add_to_list) {
-                $this->smarty->assign(
-                    [
-                        'customers' => $customers
-                    ]
-                );
-                $newOption = new PaymentOption();
-                $newOption->setModuleName($this->name)
-                    ->setCallToActionText($this->trans('Betalen met credit', array(), 'Modules.Creditpayment.Shop'))
-                    ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
-                    ->setLogo(_MODULE_DIR_ . '/ps_creditpayment/ps_creditpayment.png')
-                    ->setAdditionalInformation($this->fetch('module:ps_creditpayment/views/templates/hook/ps_creditpayment_intro.tpl'));
+        if ($add_to_list) {
+            $this->smarty->assign(
+                [
+                    'customers' => $customers
+                ]
+            );
+            $newOption = new PaymentOption();
+            $newOption->setModuleName($this->name)
+                ->setCallToActionText($this->trans('Betalen met credit', array(), 'Modules.Creditpayment.Shop'))
+                ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
+                ->setLogo(_MODULE_DIR_ . '/ps_creditpayment/ps_creditpayment.png')
+                ->setAdditionalInformation($this->fetch('module:ps_creditpayment/views/templates/hook/ps_creditpayment_intro.tpl'));
 
-                $payment_options = [
-                    $newOption,
-                ];
-                return $payment_options;
-            }
+            $payment_options = [
+                $newOption,
+            ];
+            return $payment_options;
         }
+    }
 
     public function hookPaymentReturn($params)
     {
@@ -290,7 +305,7 @@ public function addOrderState($name)
                     Configuration::get('PS_OS_OUTOFSTOCK'),
                     Configuration::get('PS_OS_OUTOFSTOCK_UNPAID'),
                 )
-        )) {
+            )) {
             $totalToPaid = $params['order']->getOrdersTotalPaid() - $params['order']->getTotalPaid();
 
             $newState = (int)Configuration::get('BANK_CREDIT_COMPLETE_STATE');
@@ -349,11 +364,72 @@ public function addOrderState($name)
         return false;
     }
 
+    private function fetchDataFromInformerApi($url, $type='payment_conditions')
+    {
+        $curlCard = curl_init();
+
+        $security_code = Configuration::get('CREDITPAYMENT_INFORMER_SECURITY_CODE', null, null, null, "62356");
+        $api_key = Configuration::get('CREDITPAYMENT_INFORMER_API_KEY', null, null, null, "MEUGbrj3nT8Z4orUVznSQRMCYFxP6SySePckp0tVfJPrcB1DjO2");
+
+        $headers = array(
+            "accept: application/json",
+            "Securitycode: " . $security_code,
+            "Apikey: " . $api_key,
+        );
+
+        curl_setopt_array($curlCard, array(
+            CURLOPT_URL => "https://api.informer.eu/v1/" . $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_POSTFIELDS => json_encode([]),
+        ));
+        $info = curl_getinfo($curlCard);
+        $response = curl_exec($curlCard);
+        if (!curl_errno($curlCard)) {
+            $returnData = json_decode($response);
+
+            $arrayList = [];
+            foreach ($returnData->{$type} as $index => $item){
+                $arr = [];
+                $arr['id'] = $index;
+
+                if(!isset($item->description)){
+                    if($type == 'vat'){
+                        $arr['name'] = $item->vat_code . ' - ' . $item->name;
+                    } else {
+                        $arr['name'] = $item->name;
+                    }
+                } else {
+                    $arr['name'] = $item->description;
+                }
+                $arrayList[] = $arr;
+            }
+        } else {
+            $arrayList = [];
+        }
+        curl_close($curlCard);
+
+        return $arrayList;
+    }
+
 
     public function renderForm()
     {
         $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
         $orderStates = OrderState::getOrderStates($lang->id);
+
+
+        $selectDataPaymentCondition = $this->fetchDataFromInformerApi('payment-conditions/');
+        $selectDataCurrency = $this->fetchDataFromInformerApi('currencies/', 'currencies');
+        $selectDataTemplate = $this->fetchDataFromInformerApi('templates/','templates');
+        $selectDataLineVatId = $this->fetchDataFromInformerApi('vat/','vat');
+        $selectDataLineLedgerId = $this->fetchDataFromInformerApi('ledgers/','ledgers');
+
         $fields_form_customization = array(
             'form' => array(
                 'legend' => array(
@@ -380,40 +456,70 @@ public function addOrderState($name)
                             'name' => 'name',
                         ]
                     ),
-                    array('type'=> 'text',
+                    array('type' => 'select',
                         'label' => $this->trans('Informer payment condition id', array(), 'Modules.Creditpayment.Admin'),
-                        'name' => 'CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID'),
-                    array('type'=> 'text',
+                        'name' => 'CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID',
+                        'options' => [
+                            'query' => $selectDataPaymentCondition,
+                            'id' => 'id',
+                            'name' => 'name',
+                        ]
+                    ),
+                    array('type' => 'select',
                         'label' => $this->trans('Informer currency id', array(), 'Modules.Creditpayment.Admin'),
-                        'name' => 'CREDITPAYMENT_INFORMER_CURRENCY_ID'),
-                    array('type'=> 'select',
+                        'name' => 'CREDITPAYMENT_INFORMER_CURRENCY_ID',
+                        'options' => [
+                            'query' => $selectDataCurrency,
+                            'id' => 'id',
+                            'name' => 'name',
+                        ]
+                    ),
+                    array('type' => 'select',
                         'label' => $this->trans('Informer vat option id', array(), 'Modules.Creditpayment.Admin'),
                         'name' => 'CREDITPAYMENT_INFORMER_VAT_OPTION',
                         'options' => [
                             'query' => [
-                                    ['id' => 'incl', 'name' => 'Inclusief BTW'],
-                                    ['id' => 'excl', 'name' => 'Exclusief BTW'],
+                                ['id' => 'incl', 'name' => 'Inclusief BTW'],
+                                ['id' => 'excl', 'name' => 'Exclusief BTW'],
                             ],
                             'id' => 'id',
                             'name' => 'name',
                         ]
                     ),
-                    array('type'=> 'text',
+                    array('type' => 'select',
                         'label' => $this->trans('Informer template id', array(), 'Modules.Creditpayment.Admin'),
-                        'name' => 'CREDITPAYMENT_INFORMER_TEMPLATE_ID'),
-                    array('type'=> 'text',
+                        'name' => 'CREDITPAYMENT_INFORMER_TEMPLATE_ID',
+                        'options' => [
+                            'query' => $selectDataTemplate,
+                            'id' => 'id',
+                            'name' => 'name',
+                        ]
+                    ),
+                    array('type' => 'select',
                         'label' => $this->trans('Informer product line vat id', array(), 'Modules.Creditpayment.Admin'),
-                        'name' => 'CREDITPAYMENT_INFORMER_LINE_VAT_ID'),
-                    array('type'=> 'text',
+                        'name' => 'CREDITPAYMENT_INFORMER_LINE_VAT_ID',
+                        'options' => [
+                            'query' => $selectDataLineVatId,
+                            'id' => 'id',
+                            'name' => 'name',
+                        ]
+                    ),
+                    array('type' => 'select',
                         'label' => $this->trans('Informer product line ledger id', array(), 'Modules.Creditpayment.Admin'),
-                        'name' => 'CREDITPAYMENT_INFORMER_LINE_LEDGER_ID'),
-                    array('type'=> 'text',
+                        'name' => 'CREDITPAYMENT_INFORMER_LINE_LEDGER_ID',
+                        'options' => [
+                            'query' => $selectDataLineLedgerId,
+                            'id' => 'id',
+                            'name' => 'name',
+                        ]
+                    ),
+                    array('type' => 'text',
                         'label' => $this->trans('Informer security code', array(), 'Modules.Creditpayment.Admin'),
                         'name' => 'CREDITPAYMENT_INFORMER_SECURITY_CODE'),
-                    array('type'=> 'text',
+                    array('type' => 'text',
                         'label' => $this->trans('Informer api key', array(), 'Modules.Creditpayment.Admin'),
                         'name' => 'CREDITPAYMENT_INFORMER_API_KEY'),
-                    array('type'=> 'text',
+                    array('type' => 'text',
                         'label' => $this->trans('Informer footer text', array(), 'Modules.Creditpayment.Admin'),
                         'name' => 'CREDITPAYMENT_INFORMER_FOOTER_TEXT')
                 ),
@@ -428,12 +534,12 @@ public function addOrderState($name)
         $helper->table = $this->table;
         $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
         $helper->default_form_language = $lang->id;
-        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? : 0;
+        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ?: 0;
         $helper->id = (int)Tools::getValue('id_carrier');
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'btnSubmit';
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='
-            .$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) . '&configure='
+            . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = array(
             'fields_value' => $this->getConfigFieldsValues(),
@@ -450,7 +556,7 @@ public function addOrderState($name)
         $languages = Language::getLanguages(false);
         foreach ($languages as $lang) {
             $custom_text[$lang['id_lang']] = Tools::getValue(
-                'BANK_CREDIT_CUSTOM_TEXT_'.$lang['id_lang'],
+                'BANK_CREDIT_CUSTOM_TEXT_' . $lang['id_lang'],
                 Configuration::get('BANK_CREDIT_CUSTOM_TEXT', $lang['id_lang'])
             );
         }
@@ -501,7 +607,6 @@ public function addOrderState($name)
     }
 
 
-
     /**
      * Hooks allows to modify Order grid definition.
      * This hook is a right place to add/remove columns or actions (bulk, grid).
@@ -547,7 +652,7 @@ public function addOrderState($name)
 
         $groups = Group::getGroups(Context::getContext()->language->getId(), Context::getContext()->shop->id);
         $choices = [];
-        foreach ($groups as $group){
+        foreach ($groups as $group) {
             $choices[$group['name']] = $group['id_group'];
         }
 
@@ -559,7 +664,7 @@ public function addOrderState($name)
                 'multiple' => false,
                 'expanded' => false,
                 'placeholder' => $this->trans('Zoek groep', [], 'Admin.Actions'),
-                ],
+            ],
         ]);
         $customerGroupFilter->setAssociatedColumn('customer_group');
 
@@ -573,9 +678,9 @@ public function addOrderState($name)
         $searchQueryBuilder = $params['search_query_builder'];
         $searchQueryBuilder->addSelect('c.informer_identification as informer_identification');
 
-        $searchQueryBuilder->leftJoin('c','ps176_customer_group', 'cg', 'c.id_customer = cg.id_customer');
+        $searchQueryBuilder->leftJoin('c', 'ps176_customer_group', 'cg', 'c.id_customer = cg.id_customer');
         $searchQueryBuilder->addSelect('cg.id_group');
-        $searchQueryBuilder->leftJoin('cg','ps176_group_lang', 'cgl', 'cg.id_group = cgl.id_group');
+        $searchQueryBuilder->leftJoin('cg', 'ps176_group_lang', 'cgl', 'cg.id_group = cgl.id_group');
         $searchQueryBuilder->where('cgl.id_lang = 1');
         $searchQueryBuilder->addSelect('GROUP_CONCAT(DISTINCT cgl.name) as customer_group');
         $searchQueryBuilder->groupBy('c.id_customer');
@@ -594,7 +699,7 @@ public function addOrderState($name)
 
         foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
 
-            switch ($filterName){
+            switch ($filterName) {
                 case 'id_customer':
                     $searchQueryBuilder->andWhere("`c`.`id_customer` LIKE '%" . $filterValue . "%'");
                     break;
@@ -608,7 +713,7 @@ public function addOrderState($name)
                     $searchQueryBuilder->andWhere("`c`.`email` LIKE '%" . $filterValue . "%'");
                     break;
                 case 'active':
-                    $searchQueryBuilder->andWhere("`c`.`active` = '" . $filterValue."'");
+                    $searchQueryBuilder->andWhere("`c`.`active` = '" . $filterValue . "'");
                     break;
                 case 'informer_identification':
                     $searchQueryBuilder->andWhere("`c`.`informer_identification` LIKE '%" . $filterValue . "%'");

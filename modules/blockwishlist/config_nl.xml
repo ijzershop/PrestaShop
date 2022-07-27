@@ -2,8 +2,8 @@
 <module>
     <name>blockwishlist</name>
     <displayName><![CDATA[Verlanglijst]]></displayName>
-    <version><![CDATA[2.0.1]]></version>
-    <description><![CDATA[Voegt een blok toe met daarin de verlanglijst van de klant.]]></description>
+    <version><![CDATA[2.1.0]]></version>
+    <description><![CDATA[Allow customers to create wishlists to save their favorite products for later.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[front_office_features]]></tab>
     <is_configurable>1</is_configurable>

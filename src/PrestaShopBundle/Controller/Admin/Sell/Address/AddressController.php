@@ -431,7 +431,7 @@ class AddressController extends FrameworkBundleAdminController
             );
             // Special order handler
             $addressFormHandler = $this->get(
-                'prestashop.core.form.identifiable_object.handler.order_address_form_handler'
+                'modernesmid.core.form.identifiable_object.handler.order_address_form_handler'
             );
 
             // Address type required for EditOrderAddressCommand
@@ -462,6 +462,7 @@ class AddressController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handleFor($orderId, $addressForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
+
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
                 if ($request->query->has('submitFormAjax')) {

@@ -2,6 +2,10 @@
 @import "config/settings";
 @import "config/keyframes";
 
+// Tools with vars overwritten
+@import "~bootstrap/scss/mixins/transition";
+@import "~bootstrap/scss/mixins/border-radius";
+
 // Tools
 @import "~prestakit/scss/application";
 @import "~dropzone/dist/min/dropzone.min.css";
@@ -18,9 +22,7 @@
 @import "mixins/hover";
 @import "mixins/stars";
 
-// Tools with vars overwritten
-@import "~bootstrap/scss/mixins/transition";
-@import "~bootstrap/scss/mixins/border-radius";
+
 
 // Components
 @import "components/layout/content_div";

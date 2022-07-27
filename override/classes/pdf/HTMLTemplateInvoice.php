@@ -614,7 +614,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             $format = Configuration::get('PS_INVOICE_YEAR_POS') ? '%1$s%3$s-%2$06d' : '%1$s%2$06d-%3$s';
         }
 
-         if(isset($this->order->reference) && !empty($this->order->reference)){
+        if(isset($this->order->reference) && !empty($this->order->reference)){
             return $this->order->reference . '.pdf';
         } else {
             return sprintf(
@@ -624,5 +624,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                     date('Y', strtotime($this->order_invoice->date_add))
                 ) . '.pdf';
         }
+
+
     }
 }

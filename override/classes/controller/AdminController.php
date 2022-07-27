@@ -6,6 +6,11 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 
 class AdminController extends AdminControllerCore
 {
+
+    /** @var array Number of results in list per page (used in select field) */
+    protected $_pagination = [20, 50, 100, 250, 500, 750, 1000, 1250, 1500];
+
+
     /**
      * Check for security token.
      *

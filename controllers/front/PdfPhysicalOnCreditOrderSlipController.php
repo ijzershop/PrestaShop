@@ -48,9 +48,9 @@ class PdfPhysicalOnCreditOrderSlipControllerCore extends FrontController
             die($this->trans('The invoice was not found.', [], 'Shop.Notifications.Error'));
         }
 
-        if ((isset($this->context->customer->id) && $order->id_customer != $this->context->customer->id) || (Tools::isSubmit('secure_key') && $order->secure_key != Tools::getValue('secure_key'))) {
-            die($this->trans('The invoice was not found.', [], 'Shop.Notifications.Error'));
-        }
+//        if ((isset($this->context->customer->id) && $order->id_customer != $this->context->customer->id) || (Tools::isSubmit('secure_key') && $order->secure_key != Tools::getValue('secure_key'))) {
+//            die($this->trans('The invoice was not found.', [], 'Shop.Notifications.Error'));
+//        }
 
         if (!OrderState::invoiceAvailable($order->getCurrentState()) && !$order->invoice_number) {
             die($this->trans('No invoice is available.', [], 'Shop.Notifications.Error'));

@@ -9,6 +9,11 @@
  * @see        https://github.com/mollie/PrestaShop
  * @codingStandardsIgnoreStart
  */
+
+use Mollie\Config\Config;
+use Mollie\Repository\PaymentMethodRepositoryInterface;
+use Mollie\Utility\PsVersionUtility;
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 class Mollie extends PaymentModule
@@ -44,7 +49,7 @@ class Mollie extends PaymentModule
     {
         $this->name = 'mollie';
         $this->tab = 'payments_gateways';
-        $this->version = '5.0.1';
+        $this->version = '5.2.0';
         $this->author = 'Mollie B.V.';
         $this->need_instance = 1;
         $this->bootstrap = true;
@@ -59,7 +64,6 @@ class Mollie extends PaymentModule
         $this->compile();
         $this->loadEnv();
         $this->setApiKey();
-
         new \Mollie\Handler\ErrorHandler\ErrorHandler($this);
     }
 
@@ -140,7 +144,6 @@ class Mollie extends PaymentModule
         return parent::enable($force_all);
     }
 
-    // todo: check 1.7.2
     private function compile()
     {
         if (!class_exists('Symfony\Component\DependencyInjection\ContainerBuilder') ||
@@ -230,7 +233,8 @@ class Mollie extends PaymentModule
         /** @var \Mollie\Repository\ModuleRepository $moduleRepository */
         $moduleRepository = $this->getMollieContainer(\Mollie\Repository\ModuleRepository::class);
         $moduleDatabaseVersion = $moduleRepository->getModuleDatabaseVersion($this->name);
-        if ($moduleDatabaseVersion < $this->version) {
+        $needsUpgrade = Tools::version_compare($this->version, $moduleDatabaseVersion, '>');
+        if ($needsUpgrade) {
             $this->context->controller->errors[] = $this->l('Please upgrade Mollie module.');
 
             return;
@@ -346,11 +350,7 @@ class Mollie extends PaymentModule
 
     public function hookDisplayHeader(array $params)
     {
-        if (!$this->context->controller instanceof OrderController) {
-            return;
-        }
-
-        if (!$this->isPaymentCheckoutStep()) {
+        if ($this->context->controller->php_self !== 'order') {
             return;
         }
 
@@ -366,9 +366,12 @@ class Mollie extends PaymentModule
         );
         $this->context->controller->addJS("{$this->_path}views/js/front/mollie_iframe.js");
         $this->context->controller->addJS("{$this->_path}views/js/front/mollie_single_click.js");
+        $this->context->controller->addJS("{$this->_path}views/js/front/bancontact/qr_code.js");
+        $this->context->controller->addCSS($this->getPathUri() . 'views/css/front/bancontact_qr_code.css');
 
         Media::addJsDef([
             'ajaxUrl' => $this->context->link->getModuleLink('mollie', 'ajax'),
+            'bancontactAjaxUrl' => $this->context->link->getModuleLink('mollie', 'bancontactAjax'),
         ]);
         $this->context->controller->addJS("{$this->_path}views/js/front/mollie_error_handle.js");
         $this->context->controller->addCSS("{$this->_path}views/css/mollie_iframe.css");
@@ -387,14 +390,50 @@ class Mollie extends PaymentModule
     /**
      * @throws PrestaShopException
      */
-    public function hookActionFrontControllerSetMedia()
+    public function hookActionFrontControllerSetMedia($params)
     {
         /** @var \Mollie\Service\ErrorDisplayService $errorDisplayService */
         $errorDisplayService = $this->getMollieContainer()->get(\Mollie\Service\ErrorDisplayService::class);
+        /** @var PaymentMethodRepositoryInterface $methodRepository */
+        $methodRepository = $this->getMollieContainer()->get(PaymentMethodRepositoryInterface::class);
 
         $isCartController = $this->context->controller instanceof CartControllerCore;
         if ($isCartController) {
             $errorDisplayService->showCookieError('mollie_payment_canceled_error');
+        }
+        /** @var ?MolPaymentMethod $paymentMethod */
+        $paymentMethod = $methodRepository->findOneBy(
+            [
+                'id_method' => Config::MOLLIE_METHOD_ID_APPLE_PAY,
+                'live_environment' => Configuration::get(Config::MOLLIE_ENVIRONMENT),
+            ]
+        );
+        if (!$paymentMethod || !$paymentMethod->enabled) {
+            return;
+        }
+
+        $isApplePayEnabled = Configuration::get(Config::MOLLIE_APPLE_PAY_DIRECT);
+        if ($isApplePayEnabled) {
+            $controller = $this->context->controller;
+            if ($controller instanceof ProductControllerCore || $controller instanceof CartControllerCore) {
+                Media::addJsDef([
+                    'countryCode' => $this->context->country->iso_code,
+                    'currencyCode' => $this->context->currency->iso_code,
+                    'totalLabel' => $this->context->shop->name,
+                    'customerId' => $this->context->customer->id ?? 0,
+                    'ajaxUrl' => $this->context->link->getModuleLink('mollie', 'applePayDirectAjax'),
+                    'cartId' => $this->context->cart->id,
+                    'applePayButtonStyle' => (int) Configuration::get(Config::MOLLIE_APPLE_PAY_DIRECT_STYLE),
+                ]);
+                $this->context->controller->addCSS($this->getPathUri() . 'views/css/front/apple_pay_direct.css');
+
+                if ($controller instanceof ProductControllerCore) {
+                    $this->context->controller->addJS($this->getPathUri() . 'views/js/front/applePayDirect/applePayDirectProduct.js');
+                }
+                if ($controller instanceof CartControllerCore) {
+                    $this->context->controller->addJS($this->getPathUri() . 'views/js/front/applePayDirect/applePayDirectCart.js');
+                }
+            }
         }
     }
 
@@ -465,7 +504,7 @@ class Mollie extends PaymentModule
     public function hookDisplayAdminOrder($params)
     {
         /** @var \Mollie\Repository\PaymentMethodRepository $paymentMethodRepo */
-        $paymentMethodRepo = $this->getMollieContainer(\Mollie\Repository\PaymentMethodRepositoryInterface::class);
+        $paymentMethodRepo = $this->getMollieContainer(PaymentMethodRepositoryInterface::class);
 
         /** @var \Mollie\Service\ShipmentServiceInterface $shipmentService */
         $shipmentService = $this->getMollieContainer(\Mollie\Service\ShipmentService::class);
@@ -516,8 +555,8 @@ class Mollie extends PaymentModule
         }
         $paymentOptions = [];
 
-        /** @var \Mollie\Repository\PaymentMethodRepositoryInterface $paymentMethodRepository */
-        $paymentMethodRepository = $this->getMollieContainer(\Mollie\Repository\PaymentMethodRepositoryInterface::class);
+        /** @var PaymentMethodRepositoryInterface $paymentMethodRepository */
+        $paymentMethodRepository = $this->getMollieContainer(PaymentMethodRepositoryInterface::class);
 
         /** @var \Mollie\Handler\PaymentOption\PaymentOptionHandlerInterface $paymentOptionsHandler */
         $paymentOptionsHandler = $this->getMollieContainer(\Mollie\Handler\PaymentOption\PaymentOptionHandlerInterface::class);
@@ -633,6 +672,9 @@ class Mollie extends PaymentModule
             Mollie\Handler\Shipment\ShipmentSenderHandlerInterface::class
         );
 
+        if (!$this->api) {
+            return;
+        }
         try {
             $shipmentSenderHandler->handleShipmentSender($this->api, $order, $orderStatus);
         } catch (Exception $e) {
@@ -766,8 +808,7 @@ class Mollie extends PaymentModule
             $params['select'] = rtrim($params['select'], ' ,') . ' ,mol.`transaction_id`';
         }
         if (isset($params['join'])) {
-            $params['join'] .= ' LEFT JOIN `' . _DB_PREFIX_ . 'mollie_payments` mol ON mol.`order_reference` = a.`reference`
-			AND mol.`cart_id` = a.`id_cart` AND mol.order_id > 0';
+            $params['join'] .= ' LEFT JOIN `' . _DB_PREFIX_ . 'mollie_payments` mol ON mol.`cart_id` = a.`id_cart` AND mol.order_id > 0';
         }
         $params['fields']['order_id'] = [
             'title' => $this->l('Payment link'),
@@ -856,6 +897,47 @@ class Mollie extends PaymentModule
         }
     }
 
+    public function hookActionObjectOrderPaymentAddAfter($params)
+    {
+        /** @var OrderPayment $orderPayment */
+        $orderPayment = $params['object'];
+
+        /** @var PaymentMethodRepositoryInterface $paymentMethodRepo */
+        $paymentMethodRepo = $this->getMollieContainer(PaymentMethodRepositoryInterface::class);
+
+        $orders = Order::getByReference($orderPayment->order_reference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+        if (!Validate::isLoadedObject($order)) {
+            return;
+        }
+        $mollieOrder = $paymentMethodRepo->getPaymentBy('cart_id', $order->id_cart);
+        if (!$mollieOrder) {
+            return;
+        }
+        $orderPayment->payment_method = Config::$methods[$mollieOrder['method']];
+        $orderPayment->update();
+    }
+
+    public function hookDisplayProductActions($params)
+    {
+        if (PsVersionUtility::isPsVersionHigherThen(_PS_VERSION_, '1.7.6.0')) {
+            return $this->display(__FILE__, 'views/templates/front/apple_pay_direct.tpl');
+        }
+    }
+
+    public function hookDisplayExpressCheckout($params)
+    {
+        return $this->display(__FILE__, 'views/templates/front/apple_pay_direct.tpl');
+    }
+
+    public function hookDisplayProductAdditionalInfo()
+    {
+        if (!PsVersionUtility::isPsVersionHigherThen(_PS_VERSION_, '1.7.6.0')) {
+            return $this->display(__FILE__, 'views/templates/front/apple_pay_direct.tpl');
+        }
+    }
+
     /**
      * @param int $orderId
      *
@@ -868,8 +950,8 @@ class Mollie extends PaymentModule
         /** @var Mollie $module */
         $module = Module::getInstanceByName('mollie');
         /** @var \Mollie\Repository\PaymentMethodRepository $molliePaymentRepo */
-        $molliePaymentRepo = $module->getMollieContainer(\Mollie\Repository\PaymentMethodRepositoryInterface::class);
-        $molPayment = $molliePaymentRepo->getPaymentBy('order_id', (string) $orderId);
+        $molliePaymentRepo = $module->getMollieContainer(PaymentMethodRepositoryInterface::class);
+        $molPayment = $molliePaymentRepo->getPaymentBy('cart_id', (string) Cart::getCartIdByOrderId($orderId));
         if (\Mollie\Utility\MollieStatusUtility::isPaymentFinished($molPayment['bank_status'])) {
             return false;
         }
@@ -893,7 +975,8 @@ class Mollie extends PaymentModule
         /** @var \Mollie\Repository\ModuleRepository $moduleRepository */
         $moduleRepository = $this->getMollieContainer(\Mollie\Repository\ModuleRepository::class);
         $moduleDatabaseVersion = $moduleRepository->getModuleDatabaseVersion($this->name);
-        if ($moduleDatabaseVersion < $this->version) {
+        $needsUpgrade = Tools::version_compare($this->version, $moduleDatabaseVersion, '>');
+        if ($needsUpgrade) {
             return;
         }
 
@@ -936,56 +1019,6 @@ class Mollie extends PaymentModule
         $segment->track();
 
         return parent::runUpgradeModule();
-    }
-
-    /**
-     * Tells if we are in the Payment step from the order tunnel.
-     * We use the ReflectionObject because it only exists from Prestashop 1.7.7
-     *
-     * @return bool
-     */
-    private function isPaymentCheckoutStep()
-    {
-        if (!$this->context->controller instanceof OrderController) {
-            return false;
-        }
-
-        $checkoutSteps = $this->getAllOrderSteps();
-
-        /* Get the checkoutPaymentKey from the $checkoutSteps array */
-        foreach ($checkoutSteps as $stepObject) {
-            if ($stepObject instanceof CheckoutPaymentStep) {
-                return (bool) $stepObject->isCurrent();
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Get all existing Payment Steps from front office.
-     * Use ReflectionObject before Prestashop 1.7.7
-     * From Prestashop 1.7.7 object checkoutProcess is now public
-     *
-     * @return array
-     */
-    private function getAllOrderSteps()
-    {
-        $isPrestashop177 = version_compare(_PS_VERSION_, '1.7.7.0', '>=');
-
-        if (true === $isPrestashop177) {
-            /* @phpstan-ignore-next-line */
-            return $this->context->controller->getCheckoutProcess()->getSteps();
-        }
-
-        /* Reflect checkoutProcess object */
-        $reflectedObject = (new ReflectionObject($this->context->controller))->getProperty('checkoutProcess');
-        $reflectedObject->setAccessible(true);
-
-        /* Get Checkout steps data */
-        $checkoutProcessClass = $reflectedObject->getValue($this->context->controller);
-
-        return $checkoutProcessClass->getSteps();
     }
 
     private function isPhpVersionCompliant()

@@ -1,0 +1,23 @@
+services:
+  # From PS 1.7.0 to PS 1.7.3, the bundled version of Symfony is 2.x on which the _defaults
+  # key is invalid. To prevent error on these versions, each service has to be specifically
+  # declared as public.
+  #  _defaults:
+  #   public: true
+  modernesmid.module.pricemodifier.repository.price_modification_repository:
+    class: Modernesmid\Module\Pricemodifier\Repository\PriceModificationRepository
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    arguments:
+      - 'Modernesmid\Module\Pricemodifier\Entity\PriceModification'
+
+  modernesmid.module.pricemodifier.price_modifications.install:
+    class: Modernesmid\Module\Pricemodifier\Database\PriceModificationInstaller
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  modernesmid.module.pricemodifier.repository.price_list_upload_repository:
+    class: Modernesmid\Module\Pricemodifier\Repository\PriceListUploadRepository
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    arguments:
+      - Modernesmid\Module\Pricemodifier\Entity\PriceListUpload

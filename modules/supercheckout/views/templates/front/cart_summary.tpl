@@ -211,7 +211,11 @@
                     {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE')}
                         {assign var="discounts" value=0}
                         {foreach Context::getContext()->cart->getCartRules() as $rule}
-                            {assign var="discounts" value=$discounts+$rule['reduction_amount']}
+                            {if $rule['reduction_amount'] != '0.000000'}
+                              {assign var="discounts" value=$discounts+$rule['reduction_amount']}
+                            {elseif $rule['reduction_percent'] != '0.000000'}
+                              {assign var="discounts" value=$discounts+$rule['value_tax_exc']}
+                            {/if}
                         {/foreach}
 
                       <tr id="supercheckout_summary_total_{$subtotal.type}">
@@ -242,8 +246,9 @@
 
 
       {*  Only show voucher when customer from group or balie mederwerker *}
-      {assign var="total_discount" value=0}
       {if in_array((int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_VOUCHER_GROUP'), Customer::getGroupsStatic(Context::getContext()->cart->id_customer)) || (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE')}
+          {assign var="total_discount" value=0}
+          {assign var="total_discount_percent" value=0}
           {if $vouchers.allowed}
               {foreach $vouchers.added as $voucher}
                   {assign var="voucher_object" value=CartRule::getCartsRuleByCode($voucher.code, Context::getContext()->cookie->lang, false)}
@@ -258,9 +263,19 @@
                     onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><i
                       class="fas fa-trash"></i></a>
                   <span
-                    class="price text-right">{Context::getContext()->currentLocale->formatPrice($voucher_object[0].reduction_amount, 'EUR')}</span>
+                    class="price text-right">
+                  {if $voucher_object[0].reduction_amount != '0.000000'}
+                      {Context::getContext()->currentLocale->formatPrice($voucher_object[0].reduction_amount, 'EUR')}
+                      {assign var="total_discount" value=$total_discount+($voucher_object[0].reduction_amount)}
+                  {elseif $voucher_object[0].reduction_percent != '0.000000'}
+                      {$voucher_object[0].reduction_percent}%
+                      {assign var="total_discount_percent" value=$total_discount_percent+($voucher_object[0].reduction_percent)}
+                  {/if}
+
+
+                  </span>
                 </div>
-                  {assign var="total_discount" value=$total_discount+($voucher_object[0].reduction_amount)}
+
               {/foreach}
               {if count($vouchers.added) == 0}
                 <div class="rewardHeader"
@@ -294,35 +309,32 @@
 
       {/if}
 
-      {*  End Only show voucher when customer from group or balie mederwerker *}
-      {assign var="discount_check" value=Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING)+(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS)-$total_discount)}
+
+      {if $total_discount > 0}
+          {*  End Only show voucher when customer from group or balie mederwerker *}
+          {assign var="discount_check" value=Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING)+(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS)-$total_discount)}
+      {else}
+          {*  End Only show voucher when customer from group or balie mederwerker *}
+          {assign var="discount_check" value=(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING)+(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS))*($total_discount_percent/100))}
+      {/if}
       {* Start Code Added By Priyanshu on 11-Feb-2021 to implement the Total Price Display functionality*}
 
-
    {if !Context::getContext()->cart->getOrderTotal(true, Cart::BOTH) == 0 && ((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE'))}
-    
-{if ((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE')) && $discount_check >= 0}
-  <div class="totalAmount pb-0"
+    <div class="totalAmount pb-0"
          style="{if $logged}{if $settings['order_total_option']['total']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['total']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
       <h3>
           {l s='Total Amount' mod='supercheckout'} {l s='(Tax incl.)' mod='supercheckout'}:
 
+{if ((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE')) && $discount_check > 0}
   <span id="total_price"
         class="price amountMoney">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::BOTH),'EUR')}{*escape not required as contains html*}</span>
-{/if}
-
 {else}
-<div class="totalAmount pb-0"
-         style="{if $logged}{if $settings['order_total_option']['total']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['total']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
-      <h3>
-          {l s='Total Amount' mod='supercheckout'} {l s='(Tax incl.)' mod='supercheckout'}:
-
         <span id="total_price"
               class="price amountMoney">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::BOTH),'EUR')}{*escape not required as contains html*}</span>
 {/if}
       </h3>
     </div>
-
+{/if}
       {if ((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE')) && $discount_check < 0}
         <div class="totalAmount pb-0"
              style="{if $logged}{if $settings['order_total_option']['total']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['total']['guest']['display'] eq 1}{else}display:none{/if}{/if};">

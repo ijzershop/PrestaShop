@@ -1,0 +1,250 @@
+Module: Google Analytics : GA4 and Universal-Analytics
+
+
+Change history for "Google Analytics : GA4 and Universal-Analytics"
+---------------------------------------------------------------
+===========================
+Version 2.0.4 (20/06/2022)|
+===========================
+Added   
+-----
+- Fix some PHP notice
+- Use PS JS event for addToCart event
+- Fix case for free product and prevent JS errors
+- Improve the purchase event detection and don't send tag if the order status is on error according to PS status
+
+
+===========================
+Version 2.0.3 (04/04/2022)|
+===========================
+Added   
+-----
+Improve the tad add on consent
+Only sends purchase event on the valid payment
+Fix for purchase event with discount to get the good value
+Removed PS 1.6 compatibility
+
+===========================
+Version 2.0.2 (10/11/2021)|
+===========================
+Added   
+-----
+Improve order id detection
+
+==========================
+Version 2.0.1 (11/10/2021)|
+===========================
+Added   
+-----
+Fix for purchase tag calculation whithout shipping 
+Fix for manufacturer page tag
+
+===========================
+Version 2.0.0 (24/09/2021)|
+===========================
+Added   
+-----
+Handle GA4 tag
+Rework module
+Rework backoffice interfaces
+Make compatible GA4 and UA
+Handle consent tag with ACB (to handle level of consent) - Or with button trigger click for all cookie banners
+Rename the product
+
+===========================
+Version 1.1.5 (01/07/2020)|
+===========================
+Fixed
+-----
+- Removed useless option 
+- Apply some minor fix
+
+
+===========================
+Version 1.1.4 (12/10/2018)|
+===========================
+Added
+-----
+- N/A
+
+Fixed
+-----
+- Bad assignation for product var on the product list page
+- Improve control for aProduct var ( sometimes template doesn't return array )
+
+Files
+-----
+- lib/hook/hook-display_class.php
+- lib/hook/hook-action_class.php
+
+
+
+===========================
+Version 1.1.3 (02/10/2018)|
+===========================
+Added
+-----
+- N/A
+
+Fixed
+-----
+- Compatibilty for PS 1.7.5.0
+- Tracking event on the category page for PS 1.7
+- The code send from the back-office when the module doesn't handle it
+
+Files
+-----
+- lib/hook/hook-display_class.php
+- lib/hook/hook-action_class.php
+
+===========================
+Version 1.1.2 (08/11/2017)|
+===========================
+Added
+-----
+- N/A
+
+Fixed
+-----
+- Bug fix for product list page exceed the maximum number of products managed by the GA JS object
+- Bug fix for the missing module-dao_class.php file during the the order status updating
+- Bug fix for the orders related to the direct link via the API.
+
+Files
+-----
+- lib/hook/hook-display_class.php
+- lib/hook/hook-action_class.php
+
+
+===========================
+Version 1.1.1 (27/06/2017)|
+===========================
+Added
+-----
+- N/A
+
+Fixed
+-----
+- Bug fix for PS 1.7 on the execution of footer code twice because we didn't detect on which controller the "DisplayBeforeBodyClosingTag" hook should be executed
+
+Files
+-----
+- ganalyticspro.php
+
+
+===========================
+Version 1.1.0 (28/04/2017)|
+===========================
+Added
+-----
+- Compatibility 1.7
+- New option to define the delay to send again a transaction code on the back-office via the "orders" tab if the order code has not been sent in the order confirmation page
+- New option to use the Google API and send the order transaction code and order refund code via cURL and the Google's API
+- New option to check your order if they have been sent as transaction and refunded code, and also to re-send the transaction code or sending the refund code for the first time
+
+Fixed
+-----
+- N.A
+
+Files
+-----
+- N.A
+
+
+===========================
+Version 1.0.4 (08/12/2016)|
+===========================
+Added
+-----
+- Compatibility 1.7
+
+Fixed
+-----
+- N.A
+
+Files
+-----
+- N.A
+
+===========================
+Version 1.0.4 (04/08/2016)|
+===========================
+Added
+-----
+- Step 1 of the checkout process when the OPC is activated. Before, we just detected both shipping and payment steps at the same time.
+
+Fixed
+-----
+- N.A
+
+Files
+-----
+- lib/hook/hook-display_class.php
+
+
+===========================
+Version 1.0.3 (20/06/2016)|
+===========================
+Added
+-----
+- New option to send or not the payment details on the last funnel step due to the visitors who are using analytics blocker, then we skip the prevent event propagation with JavaScript. In that way the redirection page could be done.
+
+Fixed
+-----
+- N.A
+
+Files
+-----
+- conf/admin.conf.php
+- lib/hook/hook-display_class.php
+- views/templates/hook/footer.tpl
+
+
+===========================
+Version 1.0.2 (18/03/2016)|
+===========================
+Added
+-----
+- N.A
+
+Fixed
+-----
+- the redirect link on the combination URL was stopped by the JavaScript, we added a new way to keep the current link and make the redirection in JavaScript.
+
+Files
+-----
+- views/js/bt_ganalyticspro.js
+- lib/analytics/ec-analytics_class.php
+
+
+===========================
+Version 1.0.1 (23/02/2016)|
+===========================
+Added
+-----
+- text to explain the Google Analytics Pro will use the admin tab section in the future
+
+Fixed
+-----
+- name of some classes that still had the name of GSnippetsReviews module in the stats-display_class.php
+
+Files
+-----
+- templates/stats/body.tpl
+- lib/admin/stats-display_class.php
+
+
+===========================
+Version 1.0.0 (04/02/2016)|
+===========================
+Added
+-----
+- Original release
+
+Fixed
+-----
+- N.A
+
+Files
+-----
+- N.A

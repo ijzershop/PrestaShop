@@ -224,7 +224,7 @@ class OrderSlipGenerator
 }
 
 try {
-    $batch = new OrderSlipGenerator(true);
+    $batch = new OrderSlipGenerator(false);
     $batch->generateOrderSlips();
 } catch (PrestaShopDatabaseException | PrestaShopException $exeption) {
     return $exeption;

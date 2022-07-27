@@ -265,7 +265,6 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             'display_product_images' => Configuration::get('PS_PDF_IMG_DELIVERY'),
         ));
 
-
         $tpls = array(
             'style_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.style-tab')),
             'addresses_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.addresses-tab')),

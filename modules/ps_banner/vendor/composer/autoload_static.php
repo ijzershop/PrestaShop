@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit9e8207072fe7ab90537392d749650119
+class ComposerStaticInitcefbd5f7044960153281d5529e56f685
 {
     public static $classMap = array (
         'Ps_Banner' => __DIR__ . '/../..' . '/ps_banner.php',
@@ -13,7 +13,7 @@ class ComposerStaticInit9e8207072fe7ab90537392d749650119
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit9e8207072fe7ab90537392d749650119::$classMap;
+            $loader->classMap = ComposerStaticInitcefbd5f7044960153281d5529e56f685::$classMap;
 
         }, null, ClassLoader::class);
     }

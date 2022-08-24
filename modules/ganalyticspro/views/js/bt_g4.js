@@ -104,7 +104,7 @@ $(document).ready(function () {
         // Handle the case for category page
         if (btGapTag.tagContent.tracking_type.value == "view_item_list") {
             let aData = [];
-            if (btGapTag.tagContent.contents.value != []) {
+            if (btGapTag.tagContent.contents !== undefined && btGapTag.tagContent.contents.value != []) {
                 btGapTag.tagContent.contents.value.forEach(function (data) {
                     aData.push(data);
                 });

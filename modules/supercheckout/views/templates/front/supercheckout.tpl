@@ -146,7 +146,7 @@ padding: 1rem 0 .9375rem;
 }
 
 #footer {
-       padding-bottom: .9375rem;
+       padding-bottom: 0!important;
        padding-top: .9375rem !important;
 }
 .opc-container {

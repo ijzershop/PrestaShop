@@ -111,7 +111,8 @@ csa_guzzle:
     clients:
         addons_api:
             config: # you can specify the options as in http://docs.guzzlephp.org/en/latest/quickstart.html#creating-a-client
-                base_url: "https://api-addons.prestashop.com"
+#                base_url: "https://api-addons.prestashop.com"
+                base_url: "https://127.0.0.1"
                 defaults:
                     timeout: "5.0"
                 headers:

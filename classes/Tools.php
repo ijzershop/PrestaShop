@@ -3953,7 +3953,8 @@ exit;
 
         $post_data = http_build_query($post_query_data);
 
-        $end_point = 'api.addons.prestashop.com';
+//        $end_point = 'api.addons.prestashop.com';
+        $end_point = '127.0.0.1';
 
         switch ($request) {
             case 'native':

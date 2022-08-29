@@ -147,7 +147,7 @@ padding: 1rem 0 .9375rem;
 
 #footer {
        padding-bottom: 0!important;
-       padding-top: .9375rem !important;
+       padding-top: 0 !important;
 }
 .opc-container {
 letter-spacing: 0px !important;

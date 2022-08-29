@@ -82,18 +82,18 @@
         </td>
       </tr>
       <tr>
-{*        <td width="30%">*}
-{*                        <span class="cart-product-price text-right">*}
-{*                          <span class="price special-price d-block text-right"*}
-{*                                style="font-size: 14px;"><b>{Context::getContext()->currentLocale->formatPrice($product.price_with_reduction_without_tax, 'EUR')}</b></span> *}{*escape not required as contains html*}
-{*                            {if $product.price != $product.regular_price}*}
-{*                              <span*}
-{*                                class="price regular-price d-block text-right">{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax, 'EUR')}</span>*}
-{*                                *}{*escape not required as contains html*}
+          {*        <td width="30%">*}
+          {*                        <span class="cart-product-price text-right">*}
+          {*                          <span class="price special-price d-block text-right"*}
+          {*                                style="font-size: 14px;"><b>{Context::getContext()->currentLocale->formatPrice($product.price_with_reduction_without_tax, 'EUR')}</b></span> *}{*escape not required as contains html*}
+          {*                            {if $product.price != $product.regular_price}*}
+          {*                              <span*}
+          {*                                class="price regular-price d-block text-right">{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax, 'EUR')}</span>*}
+          {*                                *}{*escape not required as contains html*}
 
-{*                            {/if}*}
-{*                        </span>*}
-{*        </td>*}
+          {*                            {/if}*}
+          {*                        </span>*}
+          {*        </td>*}
         <td width="60%" class="text-center">
           <div class="text-center"
                style="border:1px solid #ced4da; {if $logged}{if $settings['cart_options']['product_qty']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['cart_options']['product_qty']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
@@ -198,38 +198,38 @@
                 </td>
 
                   {else if $subtotal.type == 'tax'}
-              <tr id="supercheckout_summary_total_{$subtotal.type}"
-                  style="{if $logged}{if $settings['order_total_option']['total_tax']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['total_tax']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
-                <td colspan="5" class="text-right title"><strong>Btw (21%) </strong></td>
-                <td class="value text-right"><span id="supercheckout_total_{$subtotal.type}_value"
-                                                   class="price">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::BOTH)-Context::getContext()->cart->getOrderTotal(false, Cart::BOTH),'EUR')}{*escape not required as contains html*}</span>
-                </td>
+            <tr id="supercheckout_summary_total_{$subtotal.type}"
+                style="{if $logged}{if $settings['order_total_option']['total_tax']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['total_tax']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
+              <td colspan="5" class="text-right title"><strong>Btw (21%) </strong></td>
+              <td class="value text-right"><span id="supercheckout_total_{$subtotal.type}_value"
+                                                 class="price">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::BOTH)-Context::getContext()->cart->getOrderTotal(false, Cart::BOTH),'EUR')}{*escape not required as contains html*}</span>
+              </td>
 
-                  {else}
+                {else}
 
                 {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS) > 0}
                     {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE')}
                         {assign var="discounts" value=0}
                         {foreach Context::getContext()->cart->getCartRules() as $rule}
                             {if $rule['reduction_amount'] != '0.000000'}
-                              {assign var="discounts" value=$discounts+$rule['reduction_amount']}
+                                {assign var="discounts" value=$discounts+$rule['reduction_amount']}
                             {elseif $rule['reduction_percent'] != '0.000000'}
-                              {assign var="discounts" value=$discounts+$rule['value_tax_exc']}
+                                {assign var="discounts" value=$discounts+$rule['value_tax_exc']}
                             {/if}
                         {/foreach}
 
                       <tr id="supercheckout_summary_total_{$subtotal.type}">
                         <td colspan="5" class="text-right title"><strong>{l s=$subtotal.label mod='supercheckout'} </strong></td>
-              <td class="value text-right"><span id="supercheckout_total_{$subtotal.type}_value"
-                                                 class="price">
+                        <td class="value text-right"><span id="supercheckout_total_{$subtotal.type}_value"
+                                                           class="price">
                           - {Context::getContext()->currentLocale->formatPrice($discounts, 'EUR')}
                         </td>
                       </tr>
                     {else}
                       <tr id="supercheckout_summary_total_{$subtotal.type}">
                         <td colspan="5" class="text-right title"><strong>{l s=$subtotal.label mod='supercheckout'} </strong></td>
-              <td class="value text-right"><span id="supercheckout_total_{$subtotal.type}_value"
-                                                 class="price">
+                        <td class="value text-right"><span id="supercheckout_total_{$subtotal.type}_value"
+                                                           class="price">
                           - {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS), 'EUR')}
                         </td>
                       </tr>
@@ -244,11 +244,11 @@
 
   <div class="custom-panel rewardsection">
 
-
+      {assign var="total_discount" value=0}
+      {assign var="total_discount_percent" value=0}
       {*  Only show voucher when customer from group or balie mederwerker *}
       {if in_array((int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_VOUCHER_GROUP'), Customer::getGroupsStatic(Context::getContext()->cart->id_customer)) || (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE')}
-          {assign var="total_discount" value=0}
-          {assign var="total_discount_percent" value=0}
+
           {if $vouchers.allowed}
               {foreach $vouchers.added as $voucher}
                   {assign var="voucher_object" value=CartRule::getCartsRuleByCode($voucher.code, Context::getContext()->cookie->lang, false)}
@@ -310,31 +310,40 @@
       {/if}
 
 
-      {if $total_discount > 0}
+      {if isset($total_discount) && $total_discount > 0}
           {*  End Only show voucher when customer from group or balie mederwerker *}
           {assign var="discount_check" value=Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING)+(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS)-$total_discount)}
-      {else}
+      {elseif isset($total_discount_percent)}
           {*  End Only show voucher when customer from group or balie mederwerker *}
           {assign var="discount_check" value=(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING)+(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS))*($total_discount_percent/100))}
       {/if}
       {* Start Code Added By Priyanshu on 11-Feb-2021 to implement the Total Price Display functionality*}
 
-   {if !Context::getContext()->cart->getOrderTotal(true, Cart::BOTH) == 0 && ((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE'))}
+      {if !Context::getContext()->cart->getOrderTotal(true, Cart::BOTH) == 0 && ((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE'))}
+        <div class="totalAmount pb-0"
+             style="{if $logged}{if $settings['order_total_option']['total']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['total']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
+          <h3>
+              {l s='Total Amount' mod='supercheckout'} {l s='(Tax incl.)' mod='supercheckout'}:
+
+              {if ((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE')) && $discount_check > 0}
+                <span id="total_price"
+                      class="price amountMoney">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::BOTH),'EUR')}{*escape not required as contains html*}</span>
+              {else}
+                <span id="total_price"
+                      class="price amountMoney">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::BOTH),'EUR')}{*escape not required as contains html*}</span>
+              {/if}
+          </h3>
+        </div>
+          {else}
     <div class="totalAmount pb-0"
          style="{if $logged}{if $settings['order_total_option']['total']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['total']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
       <h3>
           {l s='Total Amount' mod='supercheckout'} {l s='(Tax incl.)' mod='supercheckout'}:
-
-{if ((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE')) && $discount_check > 0}
-  <span id="total_price"
-        class="price amountMoney">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::BOTH),'EUR')}{*escape not required as contains html*}</span>
-{else}
         <span id="total_price"
               class="price amountMoney">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::BOTH),'EUR')}{*escape not required as contains html*}</span>
-{/if}
       </h3>
     </div>
-{/if}
+      {/if}
       {if ((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE')) && $discount_check < 0}
         <div class="totalAmount pb-0"
              style="{if $logged}{if $settings['order_total_option']['total']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['total']['guest']['display'] eq 1}{else}display:none{/if}{/if};">

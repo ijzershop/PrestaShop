@@ -3077,23 +3077,6 @@ $(document).ready(function () {
     });
   }
 
-
-  function removeDotsAndCommas(){
-    var idList = [
-                    'shipping_address[firstname]',
-                    'shipping_address[lastname]',
-                    'payment_address[firstname]',
-                    'payment_address[lastname]',
-                    'no_shipping_surname',
-                    'no_shipping_lastname'
-    ];
-
-    for (const key in idList) {
-      $('[name="'+idList[key]+'"]').val($('[name="'+idList[key]+'"]').val().replace(/[.,]+/g, ''));
-    }
-  }
-
-
   /*
    * Added by Anshul for calling the Place order after file upload
    */
@@ -3117,9 +3100,6 @@ $(document).ready(function () {
   function kbAfterPlaceOrder() {
     $('.errorsmall').remove();
     hideGeneralError();
-
-    removeDotsAndCommas();
-
     var payment_module_name = $('input:radio[name="payment_method"]:checked').attr('data-module-name');
     removeDotsAndCommas();
     // Start: Added by Anshul for PayPlug

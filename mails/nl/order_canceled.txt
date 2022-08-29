@@ -5,8 +5,8 @@ Uw bestelling met referentie {order_name} is door ons geannuleerd.
 Ga naar uw klantaccount voor meer info hieromtrent.
 
 Wat is de status van uw bestelling?
-Volg de status en details in uw eigen    [> klantaccount](https://ijzershop.eu/mijn-account)
-Geen account? Volg dan uw bestelling via    [> bestelling volgen](https://ijzershop.eu/bestelling-volgen-als-gast)
+Volg de status en details in uw eigen    [> klantaccount](https://ijzershop.nl/mijn-account)
+Geen account? Volg dan uw bestelling via    [> bestelling volgen](https://ijzershop.nl/bestelling-volgen-als-gast)
 
 [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 
@@ -14,4 +14,4 @@ Geen account? Volg dan uw bestelling via    [> bestelling volgen](https://ijzers
 
 [email: info@v15.nl](mailto:info@v15.nl)
 
-IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01
+IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 75220555 | BTW nr.: NL860193421B01

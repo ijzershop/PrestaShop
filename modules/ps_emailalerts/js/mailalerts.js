@@ -47,19 +47,19 @@ function  addNotification(productId, productAttributeId) {
   return false;
 }
 
-$( function() {
+$(document).on('ready', function() {
   const mailAlertSubmitButtonClass = '.js-mailalert-add';
   const mailAlertWrapper = $('.js-mailalert');
   const mailAlertSubmitButton = mailAlertWrapper.find(mailAlertSubmitButtonClass);
 
   if (mailAlertWrapper.find('#gdpr_consent').length) {
-    // We use a timeout to put this at the end of the callstack, so it's executed after GPDR module.
+    // We use a timeout to put this at the end of the callstack, so it's executed after GPDR module. 
     setTimeout(() => {
       mailAlertSubmitButton.prop('disabled', true);
 
       mailAlertWrapper.find('[name="psgdpr_consent_checkbox"]').on('change', function (e) {
         e.stopPropagation();
-
+      
         mailAlertSubmitButton.prop('disabled', !$(this).prop('checked'));
       });
     }, 0);

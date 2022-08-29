@@ -5,12 +5,12 @@ Uw bestelling met referentie {order_name} is onderweg.
 U kunt uw pakket volgen door op de volgende link te klikken: {followup}
 
 Wat is de status van uw bestelling?
-Volg de status en details in uw eigen    [> klantaccount](https://ijzershop.eu/mijn-account)
-Geen account? Volg dan uw bestelling via    [> bestelling volgen](https://ijzershop.eu/bestelling-volgen-als-gast)
+Volg de status en details in uw eigen    [> klantaccount](https://ijzershop.nl/mijn-account)
+Geen account? Volg dan uw bestelling via    [> bestelling volgen](https://ijzershop.nl/bestelling-volgen-als-gast)
 
 Heeft u een vraag?
 Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
-[> veel gestelde vragen](https://ijzershop.eu/content/51-FAQ)
+[> veel gestelde vragen](https://ijzershop.nl/content/51-FAQ)
 
 [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 
@@ -22,4 +22,4 @@ Hoeveel sterren krijgen wij van u?,
 Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
 >  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
 
-IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01
+IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 75220555 | BTW nr.: NL860193421B01

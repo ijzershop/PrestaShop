@@ -4,4 +4,4 @@ Uw verwezen vriend {sponsored_firstname} {sponsored_lastname} heeft zijn/haar ee
 
 We bieden u graag een waardebon aan ter waarde van {discount_display} (WAARDEBON# {discount_name}) die u bij uw volgende bestelling kunt gebruiken.
 
-IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01
+IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 75220555 | BTW nr.: NL860193421B01

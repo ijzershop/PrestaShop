@@ -64,7 +64,7 @@
                   {foreach from=$product.customizations item="customization"}
                       {foreach from=$customization.fields item="field"}
                         <div class="text-center text-sm-left pl-1">
-                          <b>{str_replace(['zaaginstructies', 'knipinstructies','zagen','knippen'],['<i class="fas fa-modernesmid-saw"></i>','<i class="fas fa-cut"></i>', '<i class="fas fa-modernesmid-saw"></i>','<i class="fas fa-cut"></i>'],$field.label) nofilter} </b>
+                          <b>{str_replace(['zaaginstructies', 'knipinstructies','zagen','knippen'],['<i class="fak fa-saw"></i>','<i class="fas fa-cut"></i>', '<i class="fak fa-saw"></i>','<i class="fas fa-cut"></i>'],$field.label) nofilter} </b>
                             {if $field.type == 'text'}
                                 {if (int)$field.id_module}
                                     {$field.text nofilter}

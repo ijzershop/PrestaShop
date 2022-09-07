@@ -46,7 +46,7 @@
              id="{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}"
              onclick="deleteProductFromCart(this.id);" class="remove-from-cart" rel="nofollow" href="#"
              style="width:10%;float:right;{if $logged}{if $settings['cart_options']['product_name']['logged']['display'] eq 1 || $settings['cart_options']['product_model']['logged']['display'] eq 1 || $settings['cart_options']['product_qty']['logged']['display'] eq 1 || $settings['cart_options']['product_price']['logged']['display'] eq 1 || $settings['cart_options']['product_total']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['cart_options']['product_name']['guest']['display'] eq 1 || $settings['cart_options']['product_model']['guest']['display'] eq 1 || $settings['cart_options']['product_qty']['guest']['display'] eq 1 || $settings['cart_options']['product_price']['guest']['display'] eq 1 || $settings['cart_options']['product_total']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
-            <i class="fa fa-trash"></i>
+            <i class="fa-sharp fa-trash"></i>
           </a>
           <div class="product-title text-center text-sm-left" style="width:90%;float:left;">
             <a class="pl-1" href="{$product_url|escape:'quotes'}">{$product.name|escape:'quotes'}</a>
@@ -64,7 +64,7 @@
                   {foreach from=$product.customizations item="customization"}
                       {foreach from=$customization.fields item="field"}
                         <div class="text-center text-sm-left pl-1">
-                          <b>{str_replace(['zaaginstructies', 'knipinstructies','zagen','knippen'],['<i class="fak fa-saw"></i>','<i class="fas fa-cut"></i>', '<i class="fak fa-saw"></i>','<i class="fas fa-cut"></i>'],$field.label) nofilter} </b>
+                          <b>{str_replace(['zaaginstructies', 'knipinstructies','zagen','knippen'],['<i class="fak fa-saw"></i>','<i class="fa-sharp fa-cut"></i>', '<i class="fak fa-saw"></i>','<i class="fa-sharp fa-cut"></i>'],$field.label) nofilter} </b>
                             {if $field.type == 'text'}
                                 {if (int)$field.id_module}
                                     {$field.text nofilter}
@@ -111,7 +111,7 @@
                                                     data-type="plus" data-field=""
                                                     onclick="downQty('quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}')">
 
-                                                        <span class="fas fa-minus"></span>
+                                                        <span class="fa-sharp fa-minus"></span>
                                                 </button>
                                         </span>
                     <input min="1" onclick="this.select()" autocomplete="off" type="text" id="quantity"
@@ -123,7 +123,7 @@
                                                         class="input-group-text cart_quantity_down qty-btn decrease_button quantity-right-plus btn btn-primary btn-number"
                                                         data-type="plus" data-field=""
                                                         onclick="upQty('quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}')">
-                                                        <span class="fas fa-plus"></span>
+                                                        <span class="fa-sharp fa-plus"></span>
                                                 </button>
                                         </span>
                   {else}
@@ -261,7 +261,7 @@
                     href="javascript:void(0)"
                     style="float: left;margin-left: 2%;"
                     onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><i
-                      class="fas fa-trash"></i></a>
+                      class="fa-sharp fa-trash"></i></a>
                   <span
                     class="price text-right">
                   {if $voucher_object[0].reduction_amount != '0.000000'}

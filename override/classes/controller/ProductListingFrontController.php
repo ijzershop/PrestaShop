@@ -12,9 +12,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
-
-use DynamicProductController;
-
+require($_SERVER['DOCUMENT_ROOT']."/modules/modernesmiddynamicproduct/controllers/DynamicProductController.php");
 /**
  * This class is the base class for all front-end "product listing" controllers,
  * like "CategoryController", that is, controllers whose primary job is

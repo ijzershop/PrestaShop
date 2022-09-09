@@ -13,8 +13,6 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 
-use DynamicProductController;
-
 /**
  * This class is the base class for all front-end "product listing" controllers,
  * like "CategoryController", that is, controllers whose primary job is
@@ -38,7 +36,7 @@ abstract class ProductListingFrontController extends ProductListingFrontControll
          * Start add module dynamic prices
          */
         foreach ($search['products'] as $product) {
-            if($product->price_amount == 0){
+            if($product->price_amount == 0 && class_exists('DynamicProductController')){
                 $dynModule = new DynamicProductController();
                 $data = $dynModule->getDefaultDynamicProductPrices($product, $product->id_attribute);
 

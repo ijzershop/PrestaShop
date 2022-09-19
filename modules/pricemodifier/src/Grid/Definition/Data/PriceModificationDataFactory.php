@@ -172,6 +172,7 @@ final class PriceModificationDataFactory implements GridDataFactoryInterface
                     $priceMod->setOldStorePrice((int)$record['old_store_price']);
                     $priceMod->setSupplierData($record['supplier_data']);
 
+                    $priceMod->setUpdatedAt();
 
                        if($id_product > 0 && !is_null($record['selected_supplier_price'])){
                            $newPrice = json_decode($contr->calculateFormula($formula, $id_product, $priceMod, $record['selected_supplier_price']));
@@ -216,7 +217,7 @@ final class PriceModificationDataFactory implements GridDataFactoryInterface
                        $records[$key]['supplier_data'] = json_decode($record['supplier_data']);
 
                        $records[$key]['formatted_old_supplier_price'] = $this->formattedPrice($records[$key]['old_supplier_price']);
-                       $records[$key]['formatted_old_store_price'] = $this->formattedPrice($records[$key]['old_store_price']);
+                       $records[$key]['formatted_old_store_price'] = json_decode($records[$key]['old_store_price']);
                        $records[$key]['formatted_id_store_product_price'] = $this->formattedPrice($records[$key]['id_store_product_price']);
                        $records[$key]['formatted_base_price_supplier'] = $this->formattedPrice($records[$key]['base_price_supplier']);
                        $records[$key]['formatted_new_price'] = $this->formattedPrice($records[$key]['new_price']);

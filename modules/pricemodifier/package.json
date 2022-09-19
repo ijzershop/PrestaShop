@@ -14,6 +14,7 @@
   "dependencies": {
     "chartist": "^0.11.4",
     "chartist-plugin-tooltip": "0.0.11",
-    "chartist-plugin-tooltips-updated": "^0.1.4"
+    "chartist-plugin-tooltips-updated": "^0.1.4",
+    "datatables.net-dt": "^1.12.1"
   }
 }

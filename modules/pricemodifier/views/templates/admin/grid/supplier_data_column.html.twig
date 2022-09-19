@@ -6,7 +6,9 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.haaks_zagen == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'haaks_zagen' %}checked{% endif %}  type="radio" class="selected_formule_item form-radio" name="selected_formule_item_{{ record.id }}" data-type="haaks_zagen" data-value="{{ record.supplier_data.prices.haaks_zagen }}"/>
+      <input {% if record.selected_supplier_price == 'haaks_zagen' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" name="selected_formule_item_{{ record.id }}"
+             data-type="haaks_zagen" data-value="{{ record.supplier_data.prices.haaks_zagen }}"/>
     </td>
     <td>Haaks Zagen
     </td>
@@ -14,7 +16,9 @@
     </td>
   <tr style="{% if record.supplier_data.prices.prijs_tot_75 == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'prijs_tot_75' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="prijs_tot_75" data-value="{{ record.supplier_data.prices.prijs_tot_75 }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'prijs_tot_75' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="prijs_tot_75"
+             data-value="{{ record.supplier_data.prices.prijs_tot_75 }}" name="selected_formule_item_{{ record.id }}"/>
     </td>
     <td>Prijs tot 75
     </td>
@@ -24,7 +28,9 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.prijs_tot_150 == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'prijs_tot_150' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="prijs_tot_150" data-value="{{ record.supplier_data.prices.prijs_tot_150 }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'prijs_tot_150' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="prijs_tot_150"
+             data-value="{{ record.supplier_data.prices.prijs_tot_150 }}" name="selected_formule_item_{{ record.id }}"/>
     </td>
     <td>Prijs tot 150
     </td>
@@ -33,7 +39,9 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.prijs_tot_250 == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'prijs_tot_250' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="prijs_tot_250" data-value="{{ record.supplier_data.prices.prijs_tot_250 }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'prijs_tot_250' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="prijs_tot_250"
+             data-value="{{ record.supplier_data.prices.prijs_tot_250 }}" name="selected_formule_item_{{ record.id }}"/>
     </td>
     <td>Prijs tot 250
     </td>
@@ -42,7 +50,9 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.prijs_tot_300 == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'prijs_tot_300' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="prijs_tot_300" data-value="{{ record.supplier_data.prices.prijs_tot_300 }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'prijs_tot_300' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="prijs_tot_300"
+             data-value="{{ record.supplier_data.prices.prijs_tot_300 }}" name="selected_formule_item_{{ record.id }}"/>
     </td>
     <td>Prijs tot 300
     </td>
@@ -52,7 +62,9 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.prijs_tot_500 == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'prijs_tot_500' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="prijs_tot_500" data-value="{{ record.supplier_data.prices.prijs_tot_500 }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'prijs_tot_500' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="prijs_tot_500"
+             data-value="{{ record.supplier_data.prices.prijs_tot_500 }}" name="selected_formule_item_{{ record.id }}"/>
     </td>
     <td>Prijs tot 500
     </td>
@@ -61,7 +73,9 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.verven_per_m1 == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'verven_per_m1' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="verven_per_m1" data-value="{{ record.supplier_data.prices.verven_per_m1 }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'verven_per_m1' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="verven_per_m1"
+             data-value="{{ record.supplier_data.prices.verven_per_m1 }}" name="selected_formule_item_{{ record.id }}"/>
     </td>
     <td>Verven p/m1
     </td>
@@ -70,7 +84,10 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.prijs_tot_1000 == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'prijs_tot_1000' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="prijs_tot_1000" data-value="{{ record.supplier_data.prices.prijs_tot_1000 }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'prijs_tot_1000' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="prijs_tot_1000"
+             data-value="{{ record.supplier_data.prices.prijs_tot_1000 }}"
+             name="selected_formule_item_{{ record.id }}"/>
     </td>
     <td>Prijs tot 1000
     </td>
@@ -79,7 +96,10 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.prijs_per_meter == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'prijs_per_meter' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="prijs_per_meter" data-value="{{ record.supplier_data.prices.prijs_per_meter }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'prijs_per_meter' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="prijs_per_meter"
+             data-value="{{ record.supplier_data.prices.prijs_per_meter }}"
+             name="selected_formule_item_{{ record.id }}"/>
     </td>
     <td>Prijs p/m
     </td>
@@ -88,7 +108,10 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.prijs_vanaf_300 == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'prijs_vanaf_300' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="prijs_vanaf_300" data-value="{{ record.supplier_data.prices.prijs_vanaf_300 }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'prijs_vanaf_300' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="prijs_vanaf_300"
+             data-value="{{ record.supplier_data.prices.prijs_vanaf_300 }}"
+             name="selected_formule_item_{{ record.id }}"/>
     </td>
     <td>Prijs vanaf 300
     </td>
@@ -97,7 +120,10 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.stralen_per_100 == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'stralen_per_100' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="stralen_per_100" data-value="{{ record.supplier_data.prices.stralen_per_100 }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'stralen_per_100' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="stralen_per_100"
+             data-value="{{ record.supplier_data.prices.stralen_per_100 }}"
+             name="selected_formule_item_{{ record.id }}"/>
     </td>
     <td>Stralen per 100
     </td>
@@ -106,7 +132,10 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.prijs_vanaf_1000 == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'prijs_vanaf_1000' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="prijs_vanaf_1000" data-value="{{ record.supplier_data.prices.prijs_vanaf_1000 }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'prijs_vanaf_1000' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="prijs_vanaf_1000"
+             data-value="{{ record.supplier_data.prices.prijs_vanaf_1000 }}"
+             name="selected_formule_item_{{ record.id }}"/>
     </td>
     <td>Prijs vanaf 1000
     </td>
@@ -115,62 +144,237 @@
   </tr>
   <tr style="{% if record.supplier_data.prices.stralen_per_meter == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'stralen_per_meter' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="stralen_per_meter" data-value="{{ record.supplier_data.prices.stralen_per_meter }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'stralen_per_meter' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="stralen_per_meter"
+             data-value="{{ record.supplier_data.prices.stralen_per_meter }}"
+             name="selected_formule_item_{{ record.id }}"/>
     </td>
     <td>Stralen p/m
     </td>
     <td>€ {{ record.supplier_data.prices.stralen_per_meter|number_format(2,',','.') }}
     </td>
   </tr>
-  <tr style="{% if record.supplier_data.prices.stralen_menieën_per_100 == "" %}display:none;{% endif %}">
+  <tr style="{% if record.supplier_data.prices.stralen_menieen_per_100 == "" %}display:none;{% endif %}">
+  <td>
+    <input {% if record.selected_supplier_price == 'stralen_menieen_per_100' %}checked{% endif %} type="radio"
+           class="selected_formule_item form-radio" data-type="stralen_menieen_per_100"
+           data-value="{{ record.supplier_data.prices.stralen_menieen_per_100 }}"
+           name="selected_formule_item_{{ record.id }}"/>
+  </td>
+  <td>Stralen & Menieën per 100
+  </td>
+  <td>€ {{record.supplier_data.prices.stralen_menieen_per_100|number_format(2,',','.') }}
+  </td>
+</tr>
+<tr style="{% if record.supplier_data.prices.stralen_menieen_per_meter == "" %}display:none;{% endif %}">
+  <td>
+    <input {% if record.selected_supplier_price == 'stralen_menieen_per_meter' %}checked{% endif %} type="radio"
+           class="selected_formule_item form-radio" data-type="stralen_menieen_per_meter"
+           data-value="{{ record.supplier_data.prices.stralen_menieen_per_meter }}"
+           name="selected_formule_item_{{ record.id }}"/>
+  </td>
+  <td>Stralen & Menieën p/m
+  </td>
+  <td>€ {{record.supplier_data.prices.stralen_menieen_per_meter|number_format(2,',','.') }}
+  </td>
+</tr>
+
+  {#Indi prijs regels#}
+  <tr style="{% if record.supplier_data.prices.bruto_prijs_per_stuk == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'stralen_menieën_per_100' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="stralen_menieën_per_100" data-value="{{ record.supplier_data.prices.stralen_menieën_per_100 }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'bruto_prijs_per_stuk' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="bruto_prijs_per_stuk"
+             data-value="{{ record.supplier_data.prices.bruto_prijs_per_stuk }}"
+             name="selected_formule_item_{{ record.id }}"/>
     </td>
-    <td>Stralen & Menieën per 100
+    <td>Bruto prijs per stuk <small>({{ record.supplier_data.attributes.eenheid }})</small>
     </td>
-    <td>€ {{record.supplier_data.prices.stralen_menieën_per_100|number_format(2,',','.') }}
+    <td>€ {{ record.supplier_data.prices.bruto_prijs_per_stuk|number_format(2,',','.') }}
     </td>
   </tr>
-  <tr style="{% if record.supplier_data.prices.stralen_menieën_per_meter == "" %}display:none;{% endif %}">
+
+  <tr style="{% if record.supplier_data.prices.netto_prijs_per_stuk == "" %}display:none;{% endif %}">
     <td>
-      <input {% if record.selected_supplier_price == 'stralen_menieën_per_meter' %}checked{% endif %} type="radio" class="selected_formule_item form-radio" data-type="stralen_menieën_per_meter" data-value="{{ record.supplier_data.prices.stralen_menieën_per_meter }}" name="selected_formule_item_{{ record.id }}"/>
+      <input {% if record.selected_supplier_price == 'netto_prijs_per_stuk' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="netto_prijs_per_stuk"
+             data-value="{{ record.supplier_data.prices.netto_prijs_per_stuk }}"
+             name="selected_formule_item_{{ record.id }}"/>
     </td>
-    <td>Stralen & Menieën p/m
+    <td>Netto prijs per stuk <small>({{ record.supplier_data.attributes.eenheid }})</small>
     </td>
-    <td>€ {{record.supplier_data.prices.stralen_menieën_per_meter|number_format(2,',','.') }}
+    <td>€ {{ record.supplier_data.prices.netto_prijs_per_stuk|number_format(2,',','.') }}
     </td>
   </tr>
+
+  {#  MCB prijsregel #}
+  <tr style="{% if record.supplier_data.prices.basis_prijs == "" %}display:none;{% endif %}">
+    <td>
+      <input {% if record.selected_supplier_price == 'basis_prijs' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="basis_prijs"
+             data-value="{{ record.supplier_data.prices.basis_prijs }}" name="selected_formule_item_{{ record.id }}"/>
+    </td>
+    <td>Basis prijs
+    </td>
+    <td>€ {{ record.supplier_data.prices.basis_prijs|number_format(2,',','.') }}
+    </td>
+  </tr>
+
+  <tr style="{% if record.supplier_data.prices.staffel_prijs_1 == "" %}display:none;{% endif %}">
+    <td>
+      <input {% if record.selected_supplier_price == 'staffel_prijs_1' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="staffel_prijs_1"
+             data-value="{{ record.supplier_data.prices.staffel_prijs_1 }}"
+             name="selected_formule_item_{{ record.id }}"/>
+    </td>
+    <td>Staffel {{ record.supplier_data.prices.staffel_aantal_1 }}<sub>kg</sub>
+    </td>
+    <td>€ {{ record.supplier_data.prices.staffel_prijs_1|number_format(2,',','.') }}
+    </td>
+  </tr>
+
+  <tr style="{% if record.supplier_data.prices.staffel_prijs_2 == "" %}display:none;{% endif %}">
+    <td>
+      <input {% if record.selected_supplier_price == 'staffel_prijs_2' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="staffel_prijs_2"
+             data-value="{{ record.supplier_data.prices.staffel_prijs_2 }}"
+             name="selected_formule_item_{{ record.id }}"/>
+    </td>
+    <td>Staffel {{ record.supplier_data.prices.staffel_aantal_2 }}<sub>kg</sub>
+    </td>
+    <td>€ {{ record.supplier_data.prices.staffel_prijs_2|number_format(2,',','.') }}
+    </td>
+  </tr>
+
+  <tr style="{% if record.supplier_data.prices.staffel_prijs_3 == "" %}display:none;{% endif %}">
+    <td>
+      <input {% if record.selected_supplier_price == 'staffel_prijs_3' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="staffel_prijs_3"
+             data-value="{{ record.supplier_data.prices.staffel_prijs_3 }}"
+             name="selected_formule_item_{{ record.id }}"/>
+    </td>
+    <td>Staffel {{ record.supplier_data.prices.staffel_aantal_3 }}<sub>kg</sub>
+    </td>
+    <td>€ {{ record.supplier_data.prices.staffel_prijs_3|number_format(2,',','.') }}
+    </td>
+  </tr>
+
+  <tr style="{% if record.supplier_data.prices.staffel_prijs_4 == "" %}display:none;{% endif %}">
+    <td>
+      <input {% if record.selected_supplier_price == 'staffel_prijs_4' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="staffel_prijs_4"
+             data-value="{{ record.supplier_data.prices.staffel_prijs_4 }}"
+             name="selected_formule_item_{{ record.id }}"/>
+    </td>
+    <td>Staffel {{ record.supplier_data.prices.staffel_aantal_4 }}<sub>kg</sub>
+    </td>
+    <td>€ {{ record.supplier_data.prices.staffel_prijs_4|number_format(2,',','.') }}
+    </td>
+  </tr>
+
+  <tr style="{% if record.supplier_data.prices.staffel_prijs_5 == "" %}display:none;{% endif %}">
+    <td>
+      <input {% if record.selected_supplier_price == 'staffel_prijs_5' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="staffel_prijs_5"
+             data-value="{{ record.supplier_data.prices.staffel_prijs_5 }}"
+             name="selected_formule_item_{{ record.id }}"/>
+    </td>
+    <td>Staffel {{ record.supplier_data.prices.staffel_aantal_5 }}<sub>kg</sub>
+    </td>
+    <td>€ {{ record.supplier_data.prices.staffel_prijs_5|number_format(2,',','.') }}
+    </td>
+  </tr>
+
+  <tr style="{% if record.supplier_data.prices.staffel_prijs_6 == "" %}display:none;{% endif %}">
+    <td>
+      <input {% if record.selected_supplier_price == 'staffel_prijs_6' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="staffel_prijs_6"
+             data-value="{{ record.supplier_data.prices.staffel_prijs_6 }}"
+             name="selected_formule_item_{{ record.id }}"/>
+    </td>
+    <td>Staffel {{ record.supplier_data.prices.staffel_aantal_6 }}<sub>kg</sub>
+    </td>
+    <td>€ {{ record.supplier_data.prices.staffel_prijs_6|number_format(2,',','.') }}
+    </td>
+  </tr>
+
+  <tr style="{% if record.supplier_data.prices.staffel_prijs_7 == "" %}display:none;{% endif %}">
+    <td>
+      <input {% if record.selected_supplier_price == 'staffel_prijs_7' %}checked{% endif %} type="radio"
+             class="selected_formule_item form-radio" data-type="staffel_prijs_7"
+             data-value="{{ record.supplier_data.prices.staffel_prijs_7 }}"
+             name="selected_formule_item_{{ record.id }}"/>
+    </td>
+    <td>Staffel {{ record.supplier_data.prices.staffel_aantal_7 }}<sub>kg</sub>
+    </td>
+    <td>€ {{ record.supplier_data.prices.staffel_prijs_7|number_format(2,',','.') }}
+    </td>
+  </tr>
+
 </table>
 
 <div class="w-100">
-  <a class="open-attributes-table" data-toggle="collapse" href="#attributes_table_{{record.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">Attributen Tonen/Verbergen</a>
+  <a class="open-attributes-table" data-toggle="collapse" href="#attributes_table_{{ record.id }}" role="button"
+     aria-expanded="false" aria-controls="collapseExample">Attributen Tonen/Verbergen</a>
 </div>
-<div id="attributes_table_{{record.id}}" class="collapse">
+<div id="attributes_table_{{ record.id }}" class="collapse">
   <table style="min-width:300px;">
-        <tr style="{% if record.supplier_data.attributes.gewicht == "" %}display:none;{% endif %}">
-          <td>Gewicht</td>
-          <td>{{record.supplier_data.attributes.gewicht}} <sub>Kg</sub></td>
-        </tr>
-        <tr  style="{% if record.supplier_data.attributes.kilo_per_meter == "" %}display:none;{% endif %}">
-          <td>Kilo per meter</td>
-          <td>{{record.supplier_data.attributes.kilo_per_meter}} <sub>Kg</sub></td>
-        </tr>
-        <tr style="{% if record.supplier_data.attributes.diameter == "" %}display:none;{% endif %}">
-          <td>Diameter</td>
-          <td>{{ record.supplier_data.attributes.diameter }} <sub>&#x2300;</sub></td>
-        </tr>
-        <tr style="{% if record.supplier_data.attributes.kwaliteit == "" %}display:none;{% endif %}">
-          <td>Kwaliteit</td>
-          <td>{{ record.supplier_data.attributes.kwaliteit }}</td>
-        </tr>
-        <tr style="{% if record.supplier_data.attributes.uitvoering == "" %}display:none;{% endif %}">
-          <td>Uitvoering</td>
-          <td>{{ record.supplier_data.attributes.uitvoering }}</td>
-        </tr>
-        <tr style="{% if record.supplier_data.attributes.handelslengte == "" %}display:none;{% endif %}">
-          <td>Handelslengte</td>
-          <td>{{ record.supplier_data.attributes.handelslengte }} <sub>Meter</sub></td>
-        </tr>
+    <tr style="{% if record.supplier_data.attributes.gewicht == "" %}display:none;{% endif %}">
+      <td>Gewicht</td>
+      <td>{{ record.supplier_data.attributes.gewicht }} <sub>Kg</sub></td>
+    </tr>
+    <tr style="{% if record.supplier_data.attributes.kilo_per_meter == "" %}display:none;{% endif %}">
+      <td>Kilo per meter</td>
+      <td>{{ record.supplier_data.attributes.kilo_per_meter }} <sub>Kg</sub></td>
+    </tr>
+    <tr style="{% if record.supplier_data.attributes.diameter == "" %}display:none;{% endif %}">
+      <td>Diameter</td>
+      <td>{{ record.supplier_data.attributes.diameter }} <sub>&#x2300;</sub></td>
+    </tr>
+    <tr style="{% if record.supplier_data.attributes.kwaliteit == "" %}display:none;{% endif %}">
+      <td>Kwaliteit</td>
+      <td>{{ record.supplier_data.attributes.kwaliteit }}</td>
+    </tr>
+    <tr style="{% if record.supplier_data.attributes.uitvoering == "" %}display:none;{% endif %}">
+      <td>Uitvoering</td>
+      <td>{{ record.supplier_data.attributes.uitvoering }}</td>
+    </tr>
+    <tr style="{% if record.supplier_data.attributes.handelslengte == "" %}display:none;{% endif %}">
+      <td>Handelslengte</td>
+      <td>{{ record.supplier_data.attributes.handelslengte }} <sub>Meter</sub></td>
+    </tr>
+
+
+    <tr style="{% if record.supplier_data.attributes.min_afname == "" %}display:none;{% endif %}">
+      <td>Minimale afname</td>
+      <td>{{ record.supplier_data.attributes.min_afname }}</td>
+    </tr>
+    <tr style="{% if record.supplier_data.attributes.korting == "" %}display:none;{% endif %}">
+      <td>Korting</td>
+      <td>{{ record.supplier_data.attributes.korting }}%</td>
+    </tr>
+    <tr style="{% if record.supplier_data.attributes.artikel_groep == "" %}display:none;{% endif %}">
+      <td>Artikelgroep</td>
+      <td>{{ record.supplier_data.attributes.artikel_groep }}</td>
+    </tr>
+    <tr style="{% if record.supplier_data.attributes.artikel_nummer == "" %}display:none;{% endif %}">
+      <td>Artikelnummer</td>
+      <td>{{ record.supplier_data.attributes.artikel_nummer }}</td>
+    </tr>
+    <tr style="{% if record.supplier_data.attributes.barcode == "" %}display:none;{% endif %}">
+      <td>Barcode</td>
+      <td>{{ record.supplier_data.attributes.barcode }}</td>
+    </tr>
+
+    <tr style="{% if record.supplier_data.attributes.oud_artikel == "" %}display:none;{% endif %}">
+      <td>Oud Artikel</td>
+      <td>{{ record.supplier_data.attributes.oud_artikel }}</td>
+    </tr>
+    <tr style="{% if record.supplier_data.attributes.nieuw_artikel == "" %}display:none;{% endif %}">
+      <td>Nieuw Artikel</td>
+      <td>{{ record.supplier_data.attributes.nieuw_artikel }}</td>
+    </tr>
+
+
   </table>
 </div>
 

@@ -109,9 +109,17 @@ class PriceModification
     /**
      * @var datetime
      *
-     * @ORM\Column(name="old_price_update", type="datetime", nullable=false)
+     * @ORM\Column(name="old_price_update", type="datetime", nullable=true)
      */
     private $old_price_update;
+
+
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
+     */
+    private $updated_at;
 
 
     public function __construct()
@@ -293,7 +301,29 @@ class PriceModification
      */
     public function setOldStorePrice(string $old_store_price): PriceModification
     {
-        $this->old_store_price = $old_store_price;
+        $priceList = [];
+        $array = ['date' => date('Y-m-d H:i:s'), 'price' => $old_store_price];
+        if(!is_null($this->old_store_price)) {
+            $priceList = json_decode($this->old_store_price);
+
+            if (json_last_error() === 0 && is_array($priceList)) {
+                array_unshift($priceList,  $array);
+            } elseif(floatval($priceList) > 0){
+                    $array2 = ['date' => date('Y-m-d H:i:s'), 'price' => $priceList];
+                    $priceList = [];
+                    array_unshift($priceList, $array2);
+                    array_unshift($priceList, $array);
+            } else {
+                    $priceList = [];
+            }
+        } else {
+            array_unshift($priceList, $array);
+        }
+
+        if(count($priceList) > 10){
+            array_pop($priceList);
+        }
+        $this->old_store_price = json_encode($priceList);
 
         return $this;
     }
@@ -359,6 +389,26 @@ class PriceModification
     {
         $this->supplier_data = $supplier_data;
 
+        return $this;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getUpdatedAt(): array
+    {
+        return $this->updated_at;
+    }
+
+    /**
+     * @return PriceModification
+     */
+    public function setUpdatedAt(): PriceModification
+    {
+        $dateTime = new DateTime('NOW');
+
+        $this->updated_at = $dateTime;
         return $this;
     }
 }

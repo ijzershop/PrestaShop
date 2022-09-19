@@ -62,7 +62,7 @@
               {% elseif column.id == "name_supplier" %}
                 <div style="min-width: 200px;">{{ record.name_supplier|raw }}</div>
               {% elseif column.id == "id_category_default" %}
-                <div style="min-width: 200px;">{{ record.cat_name|raw }}</div>
+                <div style="min-width: 200px;text-align: center;">{{ record.cat_name|raw }}</div>
               {% elseif column.id == "price_formula" %}
                 <label>
                   <input type="text" name="formula_{{ record.id }}" value="{{ record.formula }}" class="form-control formula" style="min-width:200px;">
@@ -74,8 +74,11 @@
                 </label>
 
               {% elseif column.id == "store_price" %}
-                <span data-id="{{ record.id }}" data-column="{{ column.id }}"
+                <div style="min-width: 100px; text-align:center;" >
+
+                  <span data-id="{{ record.id }}" data-column="{{ column.id }}"
                       class="store_price font-weight-bold">{{ record.formatted_id_store_product_price }}</span>
+                </div>
 
               {% elseif column.id == "new_price" %}
                 <div style="min-width: 200px" class="input-group">
@@ -88,6 +91,16 @@
 
                 </div>
                 <span id="formula_result_{{ record.id }}" class="formula_result"></span>
+
+                <br>
+                <div class="row history-price-table-div">
+                  <table class="table table-condensed border-0">
+                    <tr><th colspan="2">Oude prijzen</th></tr>
+                    {% for history_price in record.formatted_old_store_price %}
+                      <tr class="history_price_row" data-row-id="{{ record.id }}" data-date="{{ history_price.date }}" data-price="{{ history_price.price }}"><td><small>{{ history_price.date }}</small></td><th>{{ history_price.price }}</th></tr>
+                    {% endfor %}
+                  </table>
+                </div>
               {% elseif column.id == "chart" %}
                 <div style="min-width:250px;" data-name="new_price_{{ record.id }}_chart" class="price_mod_cart" data-id="{{ record.id }}" data-new_supplier_price="{{ record.base_price_supplier }}" data-old_supplier_price="{{ record.old_supplier_price }}" data-old_store_price="{{ record.old_store_price }}"></div>
                 <div class="w-100 mt-2">
@@ -100,7 +113,9 @@
               {% elseif column.id == "supplier_data" %}
                 {% include '@Modules/pricemodifier/views/templates/admin/grid/supplier_data_column.html.twig' with {'record': record} %}
               {% else %}
-                {{ column_content(record, column, grid) }}
+                <div style="min-width: max-content; text-align: center;">
+                  {{ column_content(record, column, grid) }}
+                </div>
               {% endif %}
             </td>
           {% endfor %}

@@ -55,8 +55,11 @@ class PriceModificationFormDataHandler implements FormDataHandlerInterface
         $price_modification->setFileSupplier($data['file_supplier']);
         $price_modification->setActive($data['active']);
 
+        $price_modification->setUpdatedAt();
+
         $this->entityManager->persist($price_modification);
         $this->entityManager->flush();
+
 
         return $price_modification->getId();
     }
@@ -72,6 +75,7 @@ class PriceModificationFormDataHandler implements FormDataHandlerInterface
         $price_modification->setIdStoreProduct($data['id_store_product']);
         $price_modification->setFileSupplier($data['file_supplier']);
         $price_modification->setActive($data['active']);
+        $price_modification->setUpdatedAt();
 
         $this->entityManager->flush();
 

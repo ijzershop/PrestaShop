@@ -10,6 +10,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Feature;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException;
 use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Adapter\Entity\Shop;
+use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
@@ -118,6 +119,176 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
             $result = json_encode(['msg' => 'Er ging iets fout tijdens het genereren van de formule']);
         }
         die($result);
+    }
+
+    /**
+     * @return void
+     * @throws \PrestaShopDatabaseException
+     */
+    public function fetchMissedProducts()
+    {
+
+        $db = Db::getInstance();
+        $id_lang = $this->getContext()->language->id;
+
+        $draw = Tools::getValue('draw');
+        $page = Tools::getValue('start');
+        $length = Tools::getValue('length');
+        $search = Tools::getValue('search');
+        $order = Tools::getValue('order');
+        $columns = Tools::getValue('columns');
+
+
+        $sql = new DbQuery();
+        $sql->select('mp.`name_supplier` as name_supplier, mp.`file_supplier` as file_supplier,mp.`active` as active, mp.`old_price_update` as old_price_update ,mp.`updated_at` as updated_at,CONCAT_WS(" - ", cl.`name`,pl.`name`) as product_name, p.`price`');
+        $sql->from('product', 'p');
+        $sql->leftJoin('price_modification', 'mp', 'p.`id_product` = mp.`id_store_product`');
+        $sql->leftJoin(
+            'product_lang',
+            'pl',
+            'p.`id_product` = pl.`id_product`
+            AND pl.`id_lang` = ' . (int)$id_lang . Shop::addSqlRestrictionOnLang('pl')
+        );
+        $sql->leftJoin('category_lang', 'cl', 'cl.`id_category` = p.`id_category_default`');
+
+        $db->execute($sql);
+
+        $totalRecords = $db->numRows();
+
+
+        $where = ' 1 = 1 ';
+        $items = [];
+        foreach ($columns as $item) {
+            if (!empty($item['search']['value'])) {
+                switch ($item['data']) {
+                    case 'name_supplier':
+                        $term = $item['search']['value'];
+
+                        $search_items = explode(' ', $term);
+
+                        $items = [];
+                        foreach ($search_items as $searchItem) {
+                            if (!empty($searchItem)) {
+                                $items[$searchItem][] = 'mp.`name_supplier` LIKE \'%' . pSQL($searchItem) . '%\' ';
+                            }
+                        }
+
+                        foreach ($items as $likes) {
+                            $where .= ' AND (' . implode(' OR ', $likes) . ') ';
+                        }
+
+                        $items[$item['data']][] = $where;
+                        break;
+                    case 'product_name':
+                        $term = $item['search']['value'];
+
+                        $search_items = explode(' ', $term);
+
+                        $items = [];
+                        foreach ($search_items as $searchItem) {
+                            if (!empty($searchItem)) {
+                                $items[$searchItem][] = 'cl.`name` LIKE \'%' . pSQL($searchItem) . '%\' OR pl.`name` LIKE \'%' . pSQL($searchItem) . '%\' ';
+                            }
+                        }
+
+                        foreach ($items as $likes) {
+                            $where .= ' AND (' . implode(' OR ', $likes) . ') ';
+                        }
+
+                        $items[$item['data']][] = $where;
+
+                        break;
+                    case 'price':
+                        $items[$item['data']][] = 'pl.`price` LIKE \'%' . pSQL($item['search']['value']) . '%\' ';
+                        break;
+                    case 'old_price_update':
+                        $date = explode(',', $item['search']['value']);
+
+
+                        if (empty($date[0])) {
+                            $from = date('Y-m-d H:i', strtotime('1999-01-01 00:00:00'));
+                        } else {
+                            $from = date('Y-m-d H:i', strtotime($date[0]));
+                        }
+
+                        if (empty($date[1])) {
+                            $to = date('Y-m-d 23:59:59');
+                        } else {
+                            $to = date('Y-m-d H:i', strtotime($date[1]));
+                        }
+
+                        $items[$item['data']][] = '(mp.`old_price_update` BETWEEN \'' . pSQL($from) . '\' AND \'' . pSQL($to) . '\') ';
+                        break;
+                    case 'updated_at':
+                        $date = explode(',', $item['search']['value']);
+
+                        if (empty($date[0])) {
+                            $from = date('Y-m-d H:i', strtotime('1999-01-01 00:00:00'));
+                        } else {
+                            $from = date('Y-m-d 00:00:00', strtotime($date[0]));
+                        }
+
+                        if (empty($date[1])) {
+                            $to = date('Y-m-d 23:59:59');
+                        } else {
+                            $to = date('Y-m-d 23:59:59', strtotime($date[1]));
+                        }
+
+                        $items[$item['data']][] = '(mp.`updated_at` BETWEEN \'' . pSQL($from) . '\' AND \'' . pSQL($to) . '\') ';
+                        break;
+                }
+
+            }
+        }
+
+
+        foreach ($items as $likes) {
+            $where .= ' AND (' . implode(' OR ', $likes) . ') ';
+        }
+        //first draw no search values
+        if($draw == '1' && count($items) == 0){
+            $baseFrom = date('Y-m-d H:i', strtotime('1999-01-01 00:00:00'));
+            $baseTo = date('Y-m-d 23:59:59', strtotime('-16 weeks'));
+            $where .= ' AND (mp.`updated_at` BETWEEN \'' . pSQL($baseFrom) . '\' AND \'' . pSQL($baseTo) . '\') ';
+        }
+
+        $where .= ' AND mp.`active` = 1 ';
+        $sql->where($where);
+
+        $sql->limit($length, (int)$length * (int)$page);
+
+        $columnArray = [
+          'mp.`name_supplier`',
+          'product_name',
+          'p.`price`',
+          'mp.`old_price_update`',
+          'mp.`updated_at`'
+        ];
+
+        $orderBy = '';
+        foreach ($order as $sortIndex => $sortItem){
+            if($sortIndex > 0){
+                $orderBy .= ' AND ' . $columnArray[$sortItem['column']] . ' ' . $sortItem['dir'] . ' ';
+            } else {
+                $orderBy .= $columnArray[$sortItem['column']] . ' ' . $sortItem['dir'] . ' ';
+            }
+        }
+        $sql->orderBy($orderBy);
+
+        $result = $db->executeS($sql);
+        $totalFilteredRecords = $db->numRows();
+
+        $returnDataArray = [
+            'start' => $page,
+            'length' => $length,
+            'columns' => $columns,
+            'search' => $search,
+            'draw' => $draw,
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalFilteredRecords,
+            'data' => $result
+        ];
+        return die(json_encode($returnDataArray));
     }
 
 

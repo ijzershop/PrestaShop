@@ -42,8 +42,7 @@ class PriceListUploadType extends CommonAbstractType
                 'choices' => [
                     'Douma' => 'douma',
                     'MCB' => 'mcb',
-                    'Indi' => 'indi',
-                    'Haquebord' => 'haquebord'
+                    'Indi' => 'indi'
                 ],
             ])
             ->add('uploaded_file', FileType::class, [

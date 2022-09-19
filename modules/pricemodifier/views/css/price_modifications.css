@@ -80,3 +80,24 @@ Loader
   font-weight: bold;
   color: #5ab336;
 }
+
+.history-price-table-div{
+  max-height: 165px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+
+.history_price_row:hover{
+  font-size: 1rem;
+  color:green;
+}
+
+.history_price_row{
+  cursor: pointer;
+}
+
+
+#missed-products-table_filter{
+  display:none;
+}

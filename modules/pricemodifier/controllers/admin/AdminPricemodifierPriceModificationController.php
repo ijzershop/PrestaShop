@@ -16,5 +16,4 @@ class AdminPricemodifierPriceModificationController extends ModuleAdminControlle
             Tools::redirectAdmin($sfRouter->generate('modernesmid_pricemodifier_price_modification_index'));
         }
     }
-
 }

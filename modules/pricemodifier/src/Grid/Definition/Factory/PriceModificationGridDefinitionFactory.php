@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
@@ -39,9 +40,12 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFactory
@@ -171,6 +175,15 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                     'sortable' => false,
                 ])
             )
+
+
+            ->add((new DateTimeColumn('old_price_update'))
+                ->setName($this->trans('Updated Store Price', [], 'Modules.Pricemodifier.Admin'))
+                ->setOptions([
+                    'field' => 'old_price_update',
+                    'sortable' => true,
+                ])
+            )
             ->add((new DataColumn('file_supplier'))
                 ->setName($this->trans('File', [], 'Modules.Pricemodifier.Admin'))
                 ->setOptions([
@@ -185,6 +198,13 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                     'primary_field' => 'id',
                     'route' => 'modernesmid_pricemodifier_price_modification_toggle_status',
                     'route_param_name' => 'price_modificationId',
+                    'sortable' => true,
+                ])
+            )
+            ->add((new DateTimeColumn('updated_at'))
+                ->setName($this->trans('Updated record', [], 'Modules.Pricemodifier.Admin'))
+                ->setOptions([
+                    'field' => 'updated_at',
                     'sortable' => true,
                 ])
             )
@@ -335,8 +355,7 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                     'choices' => [
                         'Douma' => 'douma',
                         'MCB' => 'mcb',
-                        'Indi' => 'indi',
-                        'Haquebord' => 'haquebord'
+                        'Indi' => 'indi'
                     ],
                     'attr' => [
                         'placeholder' => $this->trans('File from', [], 'Modules.Pricemodifier.Admin'),
@@ -344,6 +363,26 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                 ])
                 ->setAssociatedColumn('file_supplier')
             )
+
+
+            ->add((new Filter('old_price_update', DateRangeType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'date_format' => 'YYYY-MM-DD',
+                ])
+                ->setAssociatedColumn('old_price_update')
+            )
+
+            ->add((new Filter('updated_at', DateRangeType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'date_format' => 'YYYY-MM-DD',
+                ])
+                ->setAssociatedColumn('updated_at')
+            )
+
+
+
             ->add((new Filter('active', YesAndNoChoiceType::class))
                 ->setTypeOptions([
                     'required' => false,

@@ -57,6 +57,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
         $adminLink = $this->generateUrl('modernesmid_pricemodifier_price_modification_ajax_fetch_data');
         $adminCalculateLink = $this->generateUrl('modernesmid_pricemodifier_price_modification_ajax_calculate_price');
         $adminSelect2DataLink = $this->generateUrl('modernesmid_pricemodifier_price_modification_ajax_select2_products_data');
+        $adminDataTableMissed = $this->generateUrl('modernesmid_pricemodifier_price_modification_ajax_fetch_datatable_products');
 
         return $this->render(
             '@Modules/pricemodifier/views/templates/admin/index.html.twig',
@@ -68,7 +69,8 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 'supplier_data_array' => 0,
                 'admin_link' => $adminLink,
                 'admin_calculate_link' => $adminCalculateLink,
-                'admin_select2_data_link' => $adminSelect2DataLink
+                'admin_select2_data_link' => $adminSelect2DataLink,
+                'admin_datatable_missed' => $adminDataTableMissed
             ]
         );
     }
@@ -243,6 +245,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
 
 
                 }
+                $priceMod->setUpdatedAt();
 
                 /** @var EntityManagerInterface $em */
                 $em = $this->get('doctrine.orm.entity_manager');
@@ -512,6 +515,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
             $priceMod->setOldStorePrice((string)$storePrice);
             $priceMod->setOldPriceUpdate(new \DateTime());
         }
+        $priceMod->setUpdatedAt();
 
         try {
             /** @var EntityManagerInterface $em */

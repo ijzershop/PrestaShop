@@ -76,6 +76,7 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
             q.old_supplier_price,
             q.old_store_price,
             q.old_price_update,
+            q.updated_at,
             json_unquote(q.supplier_data) as supplier_data,
             q.active')
             ->leftJoin('q', $this->dbPrefix.'product', 'p','p.id_product = q.id_store_product')
@@ -124,6 +125,8 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
             'formula',
             'increment_formula',
             'active',
+            'old_price_update',
+            'updated_at'
         ];
 
         $allowedFiltersMap = [
@@ -138,6 +141,8 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
             'formula' => 'q.formula',
             'increment_formula' => 'q.increment_formula',
             'active' => 'q.active',
+            'old_price_update' => 'q.old_price_update',
+            'updated_at' => 'q.updated_at',
         ];
 
         $qb = $this->connection->createQueryBuilder();
@@ -192,6 +197,26 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
                 $qb->andWhere($allowedFiltersMap[$name] . ' = :' . $name);
                 $qb->setParameter($name, $value);
 
+                continue;
+            }
+
+            if ('old_price_update' === $name) {
+                $from  = $value['from'] ?? '0000-00-00';
+                $to  = $value['to'] ?? date('yyyy-mm-dd');
+
+                $qb->andWhere($allowedFiltersMap[$name] . ' BETWEEN :from AND :to');
+                $qb->setParameter('from', $from);
+                $qb->setParameter('to', $to);
+                continue;
+            }
+
+            if ('updated_at' === $name) {
+                $from  = $value['from'] ?? '0000-00-00';
+                $to  = $value['to'] ?? date('yyyy-mm-dd');
+
+                $qb->andWhere($allowedFiltersMap[$name] . ' BETWEEN :from AND :to');
+                $qb->setParameter('from', $from);
+                $qb->setParameter('to', $to);
                 continue;
             }
 

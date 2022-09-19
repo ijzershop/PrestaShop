@@ -100,6 +100,15 @@ modernesmid_pricemodifier_price_modification_ajax_calculate_price:
     _legacy_controller: 'AdminPricemodifierPriceModification'
     _legacy_link: 'AdminPricemodifierPriceModification:calculate_price'
 
+
+modernesmid_pricemodifier_price_modification_ajax_fetch_datatable_products:
+  path: pricemodifier/price_modifications/ajax/fetch_datatables_products
+  methods: [ POST ]
+  defaults:
+    _controller: 'Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsAjaxController::fetchMissedProducts'
+    _legacy_controller: 'AdminPricemodifierPriceModification'
+    _legacy_link: 'AdminPricemodifierPriceModification:fetched_missed_products'
+
 modernesmid_pricemodifier_price_modification_ajax_select2_products_data:
   path: pricemodifier/price_modifications/ajax/select2_products_data
   methods: [ GET ]

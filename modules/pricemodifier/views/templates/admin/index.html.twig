@@ -13,22 +13,33 @@
 
 {% block content_header %}
   <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/views/css/price_modifications.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/datatables.net-dt/css/jquery.dataTables.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/chartist/dist/chartist.css') }}"/>
-
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 {% endblock %}
 
 {% block content %}
   <div class="row">
     <div class="col mb-3">
-      <a class="float-right btn btn-primary pointer" id="page-header-desc-configuration-infoshowhide"
+      <a class="btn btn-primary pointer" id="page-header-desc-configuration-infoshowhide"
          href="#show_hide_info_formule" title="Toggle info" data-toggle="collapse" role="button" aria-expanded="false">
         <i class="material-icons">info</i> Toggle info
       </a>
     </div>
+    <div class="col mb-3">
+      <a class="btn btn-primary pointer float-right" id="page-header-missed-products-infoshowhide"
+         href="#show_hide_missed_products" title="Toggle info" data-toggle="collapse" role="button" aria-expanded="false">
+        <i class="material-icons">info</i> Toggle missed products
+      </a>
+    </div>
   </div>
-  {% block price_modifications_list_panel %}
+  <div class="row">
+  <div class="col-12 col-lg-6">
+    {#    Infoblock start    #}
+
     <div id="select2_data_link" data-link="{{ admin_select2_data_link }}"></div>
-    <div class="row collapse" id="show_hide_info_formule">
+    <div id="datatable_missed_data_link" data-link="{{ admin_datatable_missed }}"></div>
+    <div class="collapse card p-2" id="show_hide_info_formule">
       <div class="col">
         <div class="row">
           <div class="col">
@@ -73,33 +84,63 @@
         </div>
       </div>
     </div>
+    {#    Infoblock end    #}
+  </div>
+  <div class="col-12 col-lg-6">
+    <div class="collapse card p-2" id="show_hide_missed_products">
+      <table id="missed-products-table" class="table w-100">
+        <thead>
+          <tr>
+            <th>Leverancier naam</th>
+            <th>Winkel Product</th>
+            <th>Huidige prijs</th>
+            <th>Laatste update modifier</th>
+            <th>Laatste update product</th>
+          </tr>
+        </thead>
+        <tbody>
 
-
-
-
-
+        </tbody>
+        <tfoot>
+        <th><input class="form-control" type="text" placeholder="Zoek naam lev." /></th>
+        <th><input class="form-control" type="text" placeholder="Zoek naam shop" /></th>
+        <td></td>
+        <th><input id="missing_records_from" class="form-control" type="text" placeholder="Zoek record wijziging" /><input id="missing_records_to" class="form-control" type="text" placeholder="Zoek record wijziging" /></th>
+        <th><input id="price_update_from" class="form-control" type="text" placeholder="Zoek prijs wijziging" /><input id="price_update_to" class="form-control" type="text" placeholder="Zoek prijs wijziging" /></th>
+        </tfoot>
+      </table>
     </div>
-    <div class="row">
-      <div class="col-12 d-flex justify-content-center">
+  </div>
+
+  <div class="col-12 offset-lg-6 col-lg-6 mt-2">
+    <div class="card pb-3 pt-3 ">
+      <div class="col-12 p-0 d-flex justify-content-center">
         <form action="#" id="bulk-update-formula-form"  class="form-inline">
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <label class="input-group-text" id="price-formula-bulk-label">Price Formula</label>
-              </div>
-              <input type="text" class="form-control" placeholder="...." aria-label="Price Formula" id="price-formula-bulk-input" aria-describedby="price-formula-bulk-label">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <label class="input-group-text" id="price-formula-bulk-label">Price Formula</label>
             </div>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <label class="input-group-text" id="increment-formula-bulk-label">Increment Formula</label>
-              </div>
-              <input type="text" class="form-control" placeholder="...." aria-label="Price Formula" id="increment-formula-bulk-input" aria-describedby="increment-formula-bulk-label">
+            <input type="text" class="form-control" placeholder="...." aria-label="Price Formula" id="price-formula-bulk-input" aria-describedby="price-formula-bulk-label">
+          </div>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <label class="input-group-text" id="increment-formula-bulk-label">Increment Formula</label>
             </div>
-              <div class="btn-group mb-3" role="group" aria-label="group">
-                <button type="button" id="bulk-update-clear" class="btn btn-secondary">Clear</button>
-                <button type="button" id="bulk-update-update" class="btn btn-warning">Update</button>
-              </div>
+            <input type="text" class="form-control" placeholder="...." aria-label="Price Formula" id="increment-formula-bulk-input" aria-describedby="increment-formula-bulk-label">
+          </div>
+          <div class="btn-group ml-2" role="group" aria-label="group">
+            <button type="button" id="bulk-update-clear" class="btn btn-secondary">Clear</button>
+            <button type="button" id="bulk-update-update" class="btn btn-warning">Update</button>
+          </div>
         </form>
       </div>
+    </div>
+  </div>
+
+  {% block price_modifications_list_panel %}
+
+
+
 
       <div class="col-12">
         {% include '@Modules/pricemodifier/views/templates/admin/grid/grid_panel.html.twig' with {'grid': price_modificationGrid} %}
@@ -115,6 +156,7 @@
 <script src="{{ asset('../modules/pricemodifier/views/js/barChartLabelPlugin.js') }}"></script>
 {{ parent() }}
 
+<script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('../modules/pricemodifier/views/js/price_modifications.bundle.js') }}"></script>
 <script src="{{ asset('../admin-dev/themes/new-theme/public/product_price_modification.bundle.js') }}"></script>
 <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>

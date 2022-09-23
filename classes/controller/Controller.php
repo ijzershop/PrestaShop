@@ -573,7 +573,6 @@ abstract class ControllerCore
         if (!is_array($component)) {
             $component = [$component];
         }
-
         foreach ($component as $ui) {
             $ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
             $this->addCSS($ui_path['css'], 'all', false);

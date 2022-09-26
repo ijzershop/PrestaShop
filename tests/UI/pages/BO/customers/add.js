@@ -29,7 +29,16 @@ class AddCustomer extends BOBasePage {
     this.dayOfBirthSelect = 'select#customer_birthday_day';
     this.statusToggleInput = toggle => `#customer_is_enabled_${toggle}`;
     this.partnerOffersToggleInput = toggle => `#customer_is_partner_offers_subscribed_${toggle}`;
+    this.companyInput = '#customer_company_name';
+    this.allowedOutstandingAmountInput = '#customer_allowed_outstanding_amount';
+    this.riskRatingSelect = '#customer_risk_id';
+
+    // Group access selector
     this.groupAccessCheckbox = id => `#customer_group_ids_${id}`;
+    this.visitorCheckbox = this.groupAccessCheckbox(0);
+    this.guestCheckbox = this.groupAccessCheckbox(1);
+    this.customerCheckbox = this.groupAccessCheckbox(2);
+
     this.selectAllGroupAccessCheckbox = 'input.js-choice-table-select-all';
     this.defaultCustomerGroupSelect = 'select#customer_default_group_id';
     this.saveCustomerButton = '#save-button';
@@ -47,25 +56,47 @@ class AddCustomer extends BOBasePage {
    */
   async fillCustomerForm(page, customerData) {
     // Click on label for social input
-    const socialTitleElement = await this.getParentElement(
-      page,
-      this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1),
-    );
-
-    await socialTitleElement.click();
+    await this.setHiddenCheckboxValue(page, this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
 
     // Fill form
     await this.setValue(page, this.firstNameInput, customerData.firstName);
     await this.setValue(page, this.lastNameInput, customerData.lastName);
     await this.setValue(page, this.emailInput, customerData.email);
     await this.setValue(page, this.passwordInput, customerData.password);
-    await page.selectOption(this.yearOfBirthSelect, customerData.yearOfBirth);
-    await page.selectOption(this.monthOfBirthSelect, customerData.monthOfBirth);
-    await page.selectOption(this.dayOfBirthSelect, customerData.dayOfBirth);
-    await page.check(this.statusToggleInput(customerData.enabled ? 1 : 0));
-    await page.check(this.partnerOffersToggleInput(customerData.partnerOffers ? 1 : 0));
+    await this.selectByVisibleText(page, this.yearOfBirthSelect, customerData.yearOfBirth);
+    await this.selectByVisibleText(page, this.monthOfBirthSelect, customerData.monthOfBirth);
+    await this.selectByVisibleText(page, this.dayOfBirthSelect, customerData.dayOfBirth);
+    await this.setChecked(page, this.statusToggleInput(customerData.enabled ? 1 : 0));
+    await this.setChecked(page, this.partnerOffersToggleInput(customerData.partnerOffers ? 1 : 0));
     await this.setCustomerGroupAccess(page, customerData.defaultCustomerGroup);
     await this.selectByVisibleText(page, this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
+  }
+
+  /**
+   * Fill form for add/edit B2B customer
+   * @param page {Page} Browser tab
+   * @param customerData {CustomerData} Data to set on new customer form
+   * @return {Promise<void>}
+   */
+  async fillB2BCustomerForm(page, customerData) {
+    // Click on label for social input
+    await this.setHiddenCheckboxValue(page, this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
+
+    // Fill form
+    await this.setValue(page, this.firstNameInput, customerData.firstName);
+    await this.setValue(page, this.lastNameInput, customerData.lastName);
+    await this.setValue(page, this.emailInput, customerData.email);
+    await this.setValue(page, this.passwordInput, customerData.password);
+    await this.selectByVisibleText(page, this.yearOfBirthSelect, customerData.yearOfBirth);
+    await this.selectByVisibleText(page, this.monthOfBirthSelect, customerData.monthOfBirth);
+    await this.selectByVisibleText(page, this.dayOfBirthSelect, customerData.dayOfBirth);
+    await this.setChecked(page, this.statusToggleInput(customerData.enabled ? 1 : 0));
+    await this.setChecked(page, this.partnerOffersToggleInput(customerData.partnerOffers ? 1 : 0));
+    await this.setCustomerGroupAccess(page, customerData.defaultCustomerGroup);
+    await this.selectByVisibleText(page, this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
+    await this.setValue(page, this.companyInput, customerData.company);
+    await this.setValue(page, this.allowedOutstandingAmountInput, customerData.allowedOutstandingAmount);
+    await this.selectByVisibleText(page, this.riskRatingSelect, customerData.riskRating);
   }
 
 
@@ -85,6 +116,21 @@ class AddCustomer extends BOBasePage {
   }
 
   /**
+   * Fill form for add/edit B2B customer and get successful message after saving
+   * @param page {Page} Browser tab
+   * @param customerData {CustomerData} Data to set on new customer form
+   * @return {Promise<string>}
+   */
+  async createEditB2BCustomer(page, customerData) {
+    // Fill form
+    await this.fillB2BCustomerForm(page, customerData);
+
+    // Save Customer
+    await this.clickAndWaitForNavigation(page, this.saveCustomerButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
    * Set customer group access in form
    * @param page {Page} Browser tab
    * @param customerGroup {string} Value to set on customer group input
@@ -93,35 +139,22 @@ class AddCustomer extends BOBasePage {
   async setCustomerGroupAccess(page, customerGroup) {
     switch (customerGroup) {
       case 'Customer':
-        await this.changeCheckboxValue(page, this.selectAllGroupAccessCheckbox);
+        await this.setCheckedWithIcon(page, this.visitorCheckbox, false);
+        await this.setCheckedWithIcon(page, this.customerCheckbox);
+        await this.setCheckedWithIcon(page, this.guestCheckbox, false);
         break;
       case 'Guest':
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(0), false);
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(2), false);
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(1));
+        await this.setCheckedWithIcon(page, this.visitorCheckbox, false);
+        await this.setCheckedWithIcon(page, this.customerCheckbox, false);
+        await this.setCheckedWithIcon(page, this.guestCheckbox);
         break;
       case 'Visitor':
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(1), false);
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(2), false);
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(0));
+        await this.setCheckedWithIcon(page, this.guestCheckbox, false);
+        await this.setCheckedWithIcon(page, this.customerCheckbox, false);
+        await this.setCheckedWithIcon(page, this.visitorCheckbox);
         break;
       default:
         throw new Error(`${customerGroup} was not found as a group access`);
-    }
-  }
-
-  /**
-   * @override
-   * Select, unselect checkbox
-   * @param page {Page} Browser tab
-   * @param checkboxSelector {string} Selector of checkbox
-   * @param valueWanted {boolean} True if we want to select checkBox, else otherwise
-   * @return {Promise<void>}
-   */
-  async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
-    if (valueWanted !== (await this.isCheckboxSelected(page, checkboxSelector))) {
-      // The selector is not visible, that why '+ i' is required here
-      await page.$eval(`${checkboxSelector} + i`, el => el.click());
     }
   }
 }

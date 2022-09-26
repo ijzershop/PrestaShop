@@ -1,0 +1,23 @@
+{shop_url}
+
+Hier zijn uw aanmeldgegevens
+
+E-mailadres: {email}
+
+Belangrijke veiligheidstips
+
+• Bewaar uw accountgegevens op een veilige plaats.
+
+• Verstrek uw aanmeldgegevens nooit aan derden.
+
+• Wijzig uw wachtwoord regelmatig.
+
+• Als u vermoedt dat iemand anders uw account zonder uw toestemming gebruikt, neem dan onmiddellijk contact met ons op.
+
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
+
+[telefoon: 058-2123138](tel://0900-2502500)
+
+[email: info@v15.nl](mailto:info@v15.nl)
+
+IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

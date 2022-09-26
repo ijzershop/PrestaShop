@@ -4,7 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -26,9 +26,9 @@ const baseContext = 'functional_BO_header_quickAccess';
 let browserContext;
 let page;
 
-const quickAccessLinkData = {name: 'New customer', url: 'index.php/sell/customers/new', openNewWindow: false};
+const quickAccessLinkData = {name: 'New customer', url: 'index.php/sell/customers/new', openNewWindow: true};
 
-describe('Header : Quick access links', async () => {
+describe('BO - Header : Quick access links', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -82,7 +82,7 @@ describe('Header : Quick access links', async () => {
 
     await newVoucherPage.reloadPage(page);
 
-    await newVoucherPage.manageQuickAccess(page);
+    await newVoucherPage.goToManageQuickAccessPage(page);
 
     const pageTitle = await quickAccessPage.getPageTitle(page);
     await expect(pageTitle).to.contains(quickAccessPage.pageTitle);
@@ -107,7 +107,7 @@ describe('Header : Quick access links', async () => {
   it('should check the new link from Quick access', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNewLink', baseContext);
 
-    await dashboardPage.quickAccessToPage(page, 4);
+    page = await dashboardPage.quickAccessToPageNewWindow(page, 4);
 
     const pageTitle = await newCustomerPage.getPageTitle(page);
     await expect(pageTitle).to.contains(newCustomerPage.pageTitleCreate);
@@ -116,7 +116,7 @@ describe('Header : Quick access links', async () => {
   it('should go to \'Manage quick access\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToManageQuickAccessPageToDeleteLink', baseContext);
 
-    await newCustomerPage.manageQuickAccess(page);
+    await newCustomerPage.goToManageQuickAccessPage(page);
 
     const pageTitle = await quickAccessPage.getPageTitle(page);
     await expect(pageTitle).to.contains(quickAccessPage.pageTitle);

@@ -9,7 +9,7 @@ const files = require('@utils/files');
 const testContext = require('@utils/testContext');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -72,7 +72,9 @@ describe('BO - Customer Service : View messages', async () => {
   it('should send message to customer service', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-    const validationMessage = await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
+    await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
+
+    const validationMessage = await contactUsPage.getAlertSuccess(page);
     await expect(validationMessage).to.equal(contactUsPage.validationMessage);
   });
 

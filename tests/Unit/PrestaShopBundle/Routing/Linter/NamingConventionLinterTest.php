@@ -27,11 +27,10 @@
 namespace Tests\Unit\PrestaShopBundle\Routing\Linter;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\PrestaShopBundle;
+use PrestaShopBundle\Routing\Linter\Exception\ControllerNotFoundException;
 use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
+use PrestaShopBundle\Routing\Linter\Exception\SymfonyControllerConventionException;
 use PrestaShopBundle\Routing\Linter\NamingConventionLinter;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Tests\Resources\Controller\TestController;
 
@@ -42,9 +41,9 @@ class NamingConventionLinterTest extends TestCase
      */
     private $namingConventionLinter;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->namingConventionLinter = new NamingConventionLinter($this->createControllerNameParser());
+        $this->namingConventionLinter = new NamingConventionLinter();
     }
 
     /**
@@ -63,6 +62,26 @@ class NamingConventionLinterTest extends TestCase
     public function testLinterThrowsExceptionWhenRouteAndControllerDoesNotFollowNamingConventions($routeName, Route $route)
     {
         $this->expectException(NamingConventionException::class);
+
+        $this->namingConventionLinter->lint($routeName, $route);
+    }
+
+    /**
+     * @dataProvider getRoutesThatDoNotFollowSymfonyConventions
+     */
+    public function testLinterThrowsExceptionWhenControllerDoesNotFollowSymfonyConventions($routeName, Route $route)
+    {
+        $this->expectException(SymfonyControllerConventionException::class);
+
+        $this->namingConventionLinter->lint($routeName, $route);
+    }
+
+    /**
+     * @dataProvider getRoutesThatUseControllerNotFound
+     */
+    public function testLinterThrowsExceptionWhenControllerIsNotFound($routeName, Route $route)
+    {
+        $this->expectException(ControllerNotFoundException::class);
 
         $this->namingConventionLinter->lint($routeName, $route);
     }
@@ -101,13 +120,23 @@ class NamingConventionLinterTest extends TestCase
         ];
     }
 
-    public function createControllerNameParser()
+    public function getRoutesThatDoNotFollowSymfonyConventions(): iterable
     {
-        $kernel = $this->createMock(KernelInterface::class);
-        $kernel->method('getBundles')->willReturn([
-            'prestashop' => $this->createMock(PrestaShopBundle::class),
-        ]);
+        yield [
+            'admin_tests_do_something',
+            new Route('/', [
+                '_controller' => sprintf('%s:%s', TestController::class, 'doSomethingComplexAction'),
+            ]),
+        ];
+    }
 
-        return new ControllerNameParser($kernel);
+    public function getRoutesThatUseControllerNotFound(): iterable
+    {
+        yield [
+            'admin_tests_do_something',
+            new Route('/', [
+                '_controller' => sprintf('%s::%s', TestController::class, 'methodNotFound'),
+            ]),
+        ];
     }
 }

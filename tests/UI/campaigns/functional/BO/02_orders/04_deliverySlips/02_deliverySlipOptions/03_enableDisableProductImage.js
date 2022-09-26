@@ -5,13 +5,13 @@ const helper = require('@utils/helpers');
 const files = require('@utils/files');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const deliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import FO pages
 const productPage = require('@pages/FO/product');
@@ -65,8 +65,22 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
   });
 
   const tests = [
-    {args: {action: 'Enable', enable: true, imageNumber: 2}},
-    {args: {action: 'Disable', enable: false, imageNumber: 1}},
+    {
+      args: {
+        action: 'Enable',
+        enable: true,
+        imageNumber: global.URLHasPort ? 1 : 2,
+        isProductImageDisplayed: 'a product image displayed',
+      },
+    },
+    {
+      args: {
+        action: 'Disable',
+        enable: false,
+        imageNumber: global.URLHasPort ? 0 : 1,
+        isProductImageDisplayed: 'no product image displayed',
+      },
+    },
   ];
 
   tests.forEach((test, index) => {
@@ -190,7 +204,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
         });
       });
 
-      describe('Generate the delivery slip and check product image', async () => {
+      describe(`Generate the delivery slip and check that there is ${test.args.isProductImageDisplayed}`, async () => {
         it('should go to \'Orders > Orders\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage${index}`, baseContext);
 
@@ -208,27 +222,27 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           await testContext.addContextItem(this, 'testIdentifier', `goToCreatedOrderPage${index}`, baseContext);
 
           await ordersPage.goToOrder(page, 1);
-          const pageTitle = await viewOrderPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+          const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+          await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
         });
 
         it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-          const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+          const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
           await expect(result).to.equal(Statuses.shipped.status);
         });
 
         it('should download the delivery slip', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `downloadDeliverySlips${index}`, baseContext);
 
-          filePath = await viewOrderPage.downloadDeliverySlip(page);
+          filePath = await orderPageTabListBlock.downloadDeliverySlip(page);
 
           const exist = await files.doesFileExist(filePath);
           await expect(exist).to.be.true;
         });
 
-        it('should check the product images in the PDF File', async function () {
+        it(`should check that there is ${test.args.isProductImageDisplayed} in the PDF File`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductImage${index}`, baseContext);
 
           const imageNumber = await files.getImageNumberInPDF(filePath);

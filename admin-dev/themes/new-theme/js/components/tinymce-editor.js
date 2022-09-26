@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import ComponentsMap from '@components/components-map';
 import {EventEmitter} from './event-emitter';
 
 const {$} = window;
@@ -112,30 +113,46 @@ class TinyMCEEditor {
     var tbpKey = this.fetchKey(window.location.hostname);
 
     const cfg = {
-    selector: 'textarea.autoload_rte',
-    plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
-    browser_spellcheck: true,
-    toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
-    contextmenu: "bootstrap",
-    image_advtab: true ,
-    external_filemanager_path:"/js/filemanager/",
-    filemanager_title:"Bestands beheer" ,
-    external_plugins: { "filemanager" : "/js/filemanager/plugin.min.js"},
-    bootstrapConfig: {
-      language: iso_user,
-      url: base_url + 'js/tiny_mce/plugins/bootstrap/',
-      iconFont: 'fontawesome5',
-      imagesPath: '/upload',
-      key: tbpKey,
-      enableTemplateEdition: true,
-    },
-      editorStyleFormats: {
-                textStyles: true, // true or false
-                blockStyles: true, // true or false
-                containerStyles: true, // true or false
-                responsive: ['xs', 'sm'], // xs sm md lg
-                spacing: ['all', 'x', 'y', 'top', 'right', 'bottom', 'left'] // all x y top right bottom left
-            },
+      selector: '.rte',
+      plugins: 'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize',
+      browser_spellcheck: true,
+      toolbar1:
+        /* eslint-disable-next-line max-len */
+        'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
+      toolbar2: '',
+      language: window.iso_user,
+      external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
+      filemanager_title: 'File manager',
+      external_plugins: {
+        filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
+      },
+      content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
+      skin: 'prestashop',
+      mobile: {
+        theme: 'mobile',
+        plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
+        toolbar:
+          /* eslint-disable-next-line max-len */
+          'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect',
+      },
+      menubar: false,
+      statusbar: false,
+      relative_urls: false,
+      convert_urls: false,
+      entity_encoding: 'raw',
+      extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
+      valid_children: '+*[*]',
+      valid_elements: '*[*]',
+      rel_list: [{title: 'nofollow', value: 'nofollow'}],
+      editor_selector: ComponentsMap.tineMceEditor.selectorClass,
+      init_instance_callback: () => {
+        this.changeToMaterial();
+      },
+      setup: (editor) => {
+        this.setupEditor(editor);
+      },
+      ...config,
+    };
 
     style_formats_autohide: true,
     language: window.iso_user,

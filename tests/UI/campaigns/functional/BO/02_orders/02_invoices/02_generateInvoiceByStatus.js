@@ -5,13 +5,13 @@ const helper = require('@utils/helpers');
 const files = require('@utils/files');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
@@ -69,14 +69,14 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage${index + 1}`, baseContext);
 
         await ordersPage.goToOrder(page, orderToEdit.args.orderRow);
-        const pageTitle = await viewOrderPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
       it(`should change the order status to '${orderToEdit.args.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index + 1}`, baseContext);
 
-        const result = await viewOrderPage.modifyOrderStatus(page, orderToEdit.args.status);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, orderToEdit.args.status);
         await expect(result).to.equal(orderToEdit.args.status);
       });
     });
@@ -86,10 +86,10 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
     it('should go to \'Orders > Invoices\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage', baseContext);
 
-      await viewOrderPage.goToSubMenu(
+      await orderPageTabListBlock.goToSubMenu(
         page,
-        viewOrderPage.ordersParentLink,
-        viewOrderPage.invoicesLink,
+        orderPageTabListBlock.ordersParentLink,
+        orderPageTabListBlock.invoicesLink,
       );
 
       const pageTitle = await invoicesPage.getPageTitle(page);
@@ -118,11 +118,25 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
     });
 
     it('should choose the statuses, generate the invoice and check the file existence', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceExistence', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'selectStatusesAndCheckInvoiceExistence', baseContext);
 
       // Choose 2 status
       await invoicesPage.chooseStatus(page, Statuses.paymentAccepted.status);
       await invoicesPage.chooseStatus(page, Statuses.shipped.status);
+
+      // Generate PDF
+      filePath = await invoicesPage.generatePDFByStatusAndDownload(page);
+
+      // Check that file exist
+      const exist = await files.doesFileExist(filePath);
+      await expect(exist).to.be.true;
+    });
+
+    it('should choose one status, generate the invoice and check the file existence', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectOneStatusAndCheckInvoiceExistence', baseContext);
+
+      // Choose one status
+      await invoicesPage.chooseStatus(page, Statuses.paymentAccepted.status);
 
       // Generate PDF
       filePath = await invoicesPage.generatePDFByStatusAndDownload(page);

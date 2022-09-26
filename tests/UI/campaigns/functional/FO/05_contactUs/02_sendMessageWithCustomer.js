@@ -4,7 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const files = require('@utils/files');
 
 // Import pages
@@ -46,7 +46,7 @@ Log in with default customer
 Send a message on contact page
 Verify message on customer service page
  */
-describe('Send message from contact us page with customer logged in', async () => {
+describe('FO - Contact us : Send message from contact us page with customer logged in', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -99,7 +99,8 @@ describe('Send message from contact us page with customer logged in', async () =
   it('should send message to customer service', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-    const validationMessage = await foContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+    await foContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+    const validationMessage = await foContactUsPage.getAlertSuccess(page);
     await expect(validationMessage).to.equal(foContactUsPage.validationMessage);
   });
 

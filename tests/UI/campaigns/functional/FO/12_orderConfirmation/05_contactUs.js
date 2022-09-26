@@ -4,7 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const files = require('@utils/files');
 
 // Import pages
@@ -56,7 +56,7 @@ const contactUsData = {
 11 go to the "customer service" page
 12 check that the previously made message is visible and the infos are correct
 */
-describe('FO contact us from order confirmation page', async () => {
+describe('FO - Order confirmation : Contact us', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -205,7 +205,9 @@ describe('FO contact us from order confirmation page', async () => {
     it('should send the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendTheMessage', baseContext);
 
-      const sendMessageSuccessAlert = await contactUsPage.sendMessage(page, contactUsData, filename);
+      await contactUsPage.sendMessage(page, contactUsData, filename);
+
+      const sendMessageSuccessAlert = await contactUsPage.getAlertSuccess(page);
       await expect(sendMessageSuccessAlert).to.contains(contactUsPage.validationMessage);
     });
   });

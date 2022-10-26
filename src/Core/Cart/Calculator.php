@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Cart;
 
 use CartCore;
 use Currency;
+use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
+use PrestaShop\PrestaShop\Adapter\Entity\Context;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Tools;
 

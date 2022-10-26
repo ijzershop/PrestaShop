@@ -529,12 +529,10 @@ class Ps_EmailAlerts extends Module
                     $mail_id_lang,
                     'new_order',
                     $this->trans(
-                        '%s | %s | %s | %s',
+                        'New order : #%d - %s',
                         [
+                            $order->id,
                             $order->reference,
-                            Tools::displayPrice($order->total_paid, $currency),
-                            strtoupper(Tools::substr($order->payment, 0, 32)),
-                            (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name)
                         ],
                         'Emails.Subject',
                         $locale),

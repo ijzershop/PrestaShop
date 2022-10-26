@@ -3313,7 +3313,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
             $intent = $this->retrievePaymentIntent($amount, $currency);
 
             if (!$intent) {
-//                Stripe_officialClasslib\Extensions\ProcessLogger\ProcessLoggerHandler::logError('Payment Intent not retrieve. amount: ' . $amount . ' currency: ' . $currency . ' Round precision:' . _PS_PRICE_COMPUTE_PRECISION_, null, null, 'hookHeader');
+//                Stripe_officialClasslib\Extensions\ProcessLogger\ProcessLoggerHandler::logError('Payment Intent not retrieve. amount: ' . $amount . ' currency: ' . $currency . ' Round precision:' . _PS_PRICE_COMPUTE_PRECISION_, null, null, 'hookDisplayHeader');
 //                Stripe_officialClasslib\Extensions\ProcessLogger\ProcessLoggerHandler::closeLogger();
                 // @todo set isWellConfigured to false to prevent display pay by stripe options on hookPaymentOptions
                 //                            return;

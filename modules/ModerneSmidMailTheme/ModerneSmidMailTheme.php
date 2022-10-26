@@ -83,7 +83,7 @@ class ModerneSmidMailTheme extends Module
         Configuration::updateValue('MODERNESMIDMAILTHEME_LIVE_MODE', false);
 
         return parent::install() &&
-            $this->registerHook('header') &&
+            $this->registerHook('displayHeader') &&
             $this->registerHook('backOfficeHeader') &&
             $this->registerHook(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK);
     }
@@ -399,7 +399,7 @@ class ModerneSmidMailTheme extends Module
     /**
      * Add the CSS & JavaScript files you want to be added on the FO.
      */
-    public function hookHeader()
+    public function hookDisplayHeader()
     {
         $this->context->controller->addJS($this->_path.'/views/js/front.js');
         $this->context->controller->addCSS($this->_path.'/views/css/front.css');

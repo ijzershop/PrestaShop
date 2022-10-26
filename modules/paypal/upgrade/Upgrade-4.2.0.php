@@ -38,7 +38,7 @@ function upgrade_module_4_2_0($module)
         return false;
     }
 
-    if (!$module->registerHook('header')
+    if (!$module->registerHook('displayHeader')
         || !$module->registerHook('displayBackOfficeHeader')
         || !$module->registerHook('displayFooterProduct')
         || !$module->registerHook('actionBeforeCartUpdateQty')

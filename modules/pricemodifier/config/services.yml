@@ -76,13 +76,13 @@ services:
       - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
 
 
-    modernesmid.module.pricemodifier.grid.data_provider.price_modifications_decorator:
-    class: 'Modernesmid\Module\Pricemodifier\Grid\Definition\Data\PriceModificationDataFactory'
-    arguments:
-      - '@prestashop.core.grid.data.factory.order'
-      - '@prestashop.core.localization.locale.repository'
-      - '@prestashop.adapter.legacy.configuration'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
+#    modernesmid.module.pricemodifier.grid.data_provider.price_modifications_decorator:
+#      class: 'Modernesmid\Module\Pricemodifier\Grid\Definition\Data\PriceModificationDataFactory'
+#      arguments:
+#        - '@prestashop.core.grid.data.factory.order'
+#        - '@prestashop.core.localization.locale.repository'
+#        - '@prestashop.adapter.legacy.configuration'
+#        - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
 
 
   modernesmid.module.pricemodifier.grid.factory.price_modifications:

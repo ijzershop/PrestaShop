@@ -288,12 +288,12 @@ class uecookie extends Module
 					        <option ' . (Configuration::get('ueTiny') != 1 ? 'selected' : '') . ' value="0">' . $this->l('Original prestashop\'s editor') . '</option>
 					    </select>
 					</div>
-					
+
 					<div style="margin-bottom:20px; display:block; clear:both; text-align:center; overflow:hidden;">
 		                <div style="display:block; clear:both; margin-bottom:20px;">
 							<label>' . $this->l('UE cookie law text') . ':</label>
 							<div class="margin-form">' . $content . '
-							</div>	
+							</div>
 		                </div>
 	                </div>
                     <label>' . $this->l('Position') . '</label>
@@ -355,7 +355,7 @@ class uecookie extends Module
 					        <option ' . (Configuration::get('uecookie_x_where') == 3 ? 'selected' : '') . ' value="3">' . $this->l('Center (below the contents)') . '</option>
 					    </select>
 					</div>
-                                        
+
                     <label>' . $this->l('Opacity') . '</label>
 					<div class="margin-form">
 						<input type="text" name="uecookie_opacity" value="' . Configuration::get('uecookie_opacity') . '"/>
@@ -380,7 +380,7 @@ class uecookie extends Module
                     		</div>
                     	</div>
 					</div>
-                    
+
                     <label>' . $this->l('Clean up stored configuration') . '</label>
 					<div class="margin-form">
     	                <input type="checkbox" name="uecookie_cleanup" value="1" /> ' . $this->l('Remove stored configuration before save new settings') . '
@@ -391,7 +391,7 @@ class uecookie extends Module
                     		</div>
                     	</div>
 					</div>
-					
+
 	                <div style="margin-top:20px; clear:both; overflow:hidden; display:block; text-align:center">
                     <iframe src="//apps.facepages.eu/somestuff/uecookie.html" width="100%" height="150" border="0" style="border:none;"></iframe>
 	                </div>
@@ -430,7 +430,7 @@ class uecookie extends Module
         }
     }
 
-    public function hookHeader($params)
+    public function hookDisplayHeader($params)
     {
         if (Configuration::get('uecookie_lib') == 1) {
             if ( ! isset($_COOKIE['cookie_ue'])) {

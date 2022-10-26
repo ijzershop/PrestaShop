@@ -64,7 +64,7 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 
 		if(count($this->_errors)){
 			return false;
-		}elseif (!parent::install() || !$this->registerHook('header')|| !$this->registerHook('actionSubmitAccountBefore') || !$this->registerHook('actionBeforeSubmitAccount') || !Configuration::updateValue('RECAPTCHA_BADGE', 1) || !Configuration::updateValue('RECAPTCHA_ACCOUNT', 1)){
+		}elseif (!parent::install() || !$this->registerHook('displayHeader')|| !$this->registerHook('actionSubmitAccountBefore') || !$this->registerHook('actionBeforeSubmitAccount') || !Configuration::updateValue('RECAPTCHA_BADGE', 1) || !Configuration::updateValue('RECAPTCHA_ACCOUNT', 1)){
 			return false;
 		}else{
 			return true;
@@ -237,7 +237,7 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 	/**
 	 * Hook Header for the contact form
 	 */
-	public function hookHeader($params)
+	public function hookDisplayHeader($params)
 	{
 		// Display on the contact form
 		if ($this->context->controller instanceof ContactController ||

@@ -27,10 +27,8 @@ use PrestaShop\Module\Ps_Googleanalytics\GoogleAnalyticsTools;
 use PrestaShop\Module\Ps_Googleanalytics\Handler\GanalyticsJsHandler;
 use PrestaShop\Module\Ps_Googleanalytics\Repository\GanalyticsRepository;
 use PrestaShop\Module\Ps_Googleanalytics\Wrapper\ProductWrapper;
-
 use Ps_Googleanalytics;
 use Shop;
-use Tools;
 use Validate;
 
 class HookDisplayOrderConfirmation implements HookInterface
@@ -53,19 +51,12 @@ class HookDisplayOrderConfirmation implements HookInterface
     public function run()
     {
         if (true === $this->module->psVersionIs17) {
-            if(isset($this->params['order'])){
-                $order = $this->params['order'];
-            } else {
-                $order = Tools::getValue('id_order');
-                if(Validate::isLoadedObject($order)){
-                    $order = new Order($order);
-                }
-            }
+            $order = $this->params['order'];
         } else {
             $order = $this->params['objOrder'];
         }
 
-        if (Validate::isLoadedObject($order) && (int)$order->getCurrentState() != (int) Configuration::get('PS_OS_ERROR')) {
+        if (Validate::isLoadedObject($order) && $order->getCurrentState() != (int) Configuration::get('PS_OS_ERROR')) {
             $ganalyticsRepository = new GanalyticsRepository();
             $gaOrderSent = $ganalyticsRepository->findGaOrderByOrderId((int) $order->id);
 

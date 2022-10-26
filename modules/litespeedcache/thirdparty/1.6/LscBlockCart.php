@@ -35,7 +35,7 @@ class LscBlockCart extends LscIntegration
             EsiConf::FLD_PRIV => 1,
             EsiConf::FLD_TAG => LiteSpeedCacheConfig::TAG_CART,
             EsiConf::FLD_PURGE_CONTROLLERS => 'CartController?id_product',
-            EsiConf::FLD_HOOK_METHODS => '!hookHeader',
+            EsiConf::FLD_HOOK_METHODS => '!hookDisplayHeader',
             EsiConf::FLD_IGNORE_EMPTY => 1,
             EsiConf::FLD_TIPURL => 'https://docs.litespeedtech.com/lscache/lscps/settings/#blockcart-template',
         ];

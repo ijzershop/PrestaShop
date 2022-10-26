@@ -30,6 +30,6 @@ if (!defined('_PS_VERSION_')) {
 function upgrade_module_5_0_1($object)
 {
     return $object->unregisterHook('displayGDPRConsent')
-        && $object->unregisterHook('header')
+        && $object->unregisterHook('displayHeader')
         && $object->registerHook('displayHeader');
 }

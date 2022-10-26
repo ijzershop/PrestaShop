@@ -1,9 +1,0 @@
-{shop_url}
-
-Goed nieuws, dit product is terug op voorraad!
-
-{product}
-
-Klik op de volgende link om de productpagina te bezoeken en te bestellen: [{product}]({product_link})
-
-IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 75220555 | BTW nr.: NL860193421B01

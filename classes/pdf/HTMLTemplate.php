@@ -148,7 +148,7 @@ abstract class HTMLTemplateCore
 
 
         $protocol = 'https://';
-        if(Tools::getMediaServer('_PS_IMG_') == 'ijzershop.local'){
+        if(Tools::getMediaServer('_PS_IMG_') == 'ijzershop8.local'){
             $protocol = 'http://';
         }
 

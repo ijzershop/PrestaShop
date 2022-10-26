@@ -39,7 +39,7 @@ function upgrade_module_2_1_2($module)
 {
     $module->unregisterHook('top');
     $module->registerHook('displayTop');
-    $module->unregisterHook('header');
+    $module->unregisterHook('displayHeader');
     $module->registerHook('displayHeader');
 
     if (defined('_PS_ROOT_DIR_')) {

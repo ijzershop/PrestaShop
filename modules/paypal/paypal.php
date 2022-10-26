@@ -828,7 +828,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return $paymentOptions;
     }
 
-    public function hookHeader()
+    public function hookDisplayHeader()
     {
         $returnContent = '';
         $this->context->controller->registerStylesheet($this->name . '-fo', 'modules/' . $this->name . '/views/css/paypal_fo.css');

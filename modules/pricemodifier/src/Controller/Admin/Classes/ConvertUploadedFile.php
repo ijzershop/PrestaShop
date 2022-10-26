@@ -264,7 +264,7 @@ class ConvertUploadedFile
 
     public function processUpload()
     {
-        return $this->readFile('C:\wamp64\www\ijzershop.local\modules\pricemodifier\uploads\Douma-prijslijst-2022-05-18.xls',
+        return $this->readFile('C:\wamp64\www\ijzershop8.local\modules\pricemodifier\uploads\Douma-prijslijst-2022-05-18.xls',
             'DOUMA');
     }
 

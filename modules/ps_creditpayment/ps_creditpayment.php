@@ -65,7 +65,7 @@ class Ps_Creditpayment extends PaymentModule
     /**
      * Set default medias for this controller
      */
-    public function hookHeader($params)
+    public function hookDisplayHeader($params)
     {
 
         $this->context->controller->addCSS(array(
@@ -81,7 +81,7 @@ class Ps_Creditpayment extends PaymentModule
     public function install()
     {
         if (!parent::install() ||
-            !$this->registerHook('header') ||
+            !$this->registerHook('displayHeader') ||
             !$this->registerHook('paymentReturn') ||
             !$this->registerHook('paymentOptions') ||
             !$this->registerHook('actionCustomerGridDefinitionModifier') ||

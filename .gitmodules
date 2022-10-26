@@ -13,9 +13,6 @@ url=git@github.com:ijzershop/offerintegration.git
 [submodule "modules/modernesmidthemeconfigurator"]
 	path = modules/modernesmidthemeconfigurator
 url=git@github.com:ijzershop/modernesmidthemeconfigurator.git
-[submodule "modules/smallorderfee"]
-	path = modules/smallorderfee
-url=git@github.com:ijzershop/smallorderfee.git
 [submodule "modules/koopmanorderexport"]
 	path = modules/koopmanorderexport
 url=git@github.com:ijzershop/koopmanorderexport.git

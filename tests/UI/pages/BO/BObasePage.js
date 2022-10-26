@@ -27,6 +27,10 @@ class BOBasePage extends CommonPage {
     // top navbar
     this.userProfileIconNonMigratedPages = '#employee_infos';
     this.userProfileIcon = '#header_infos #header-employee-container';
+    this.userProfileFirstname = '.employee-wrapper-avatar .employee_profile';
+    this.userProfileAvatar = '.employee-avatar img';
+    this.userProfileYourProfileLinkNonMigratedPages = '.employee-wrapper-profile > a.admin-link';
+    this.userProfileYourProfileLink = '.employee-link.profile-link';
     this.userProfileLogoutLink = 'a#header_logout';
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
@@ -35,6 +39,7 @@ class BOBasePage extends CommonPage {
     this.quickAddCurrentLink = '#quick-add-link';
     this.quickAccessRemoveLink = '#quick-remove-link';
     this.manageYourQuickAccessLink = '#quick-manage-link';
+    this.navbarSarchInput = '#bo_query';
 
     // Header links
     this.helpButton = '#product_form_open_help';
@@ -293,6 +298,40 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
+  async goToMyProfile(page) {
+    if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
+      await page.click(this.userProfileIcon);
+    } else {
+      await page.click(this.userProfileIconNonMigratedPages);
+    }
+    if (await this.elementVisible(page, this.userProfileYourProfileLink, 1000)) {
+      await this.waitForVisibleSelector(page, this.userProfileYourProfileLink);
+    } else {
+      await this.waitForVisibleSelector(page, this.userProfileYourProfileLinkNonMigratedPages);
+    }
+    await this.clickAndWaitForNavigation(page, this.userProfileYourProfileLink);
+  }
+
+  /**
+   * Returns the URL of the avatar for the current employee from the dropdown
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getCurrentEmployeeAvatar(page) {
+    if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
+      await page.click(this.userProfileIcon);
+    } else {
+      await page.click(this.userProfileIconNonMigratedPages);
+    }
+
+    return page.getAttribute(this.userProfileAvatar, 'src');
+  }
+
+  /**
+   * Returns to the dashboard then logout
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async logoutBO(page) {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
       await page.click(this.userProfileIcon);
@@ -474,6 +513,18 @@ class BOBasePage extends CommonPage {
         continueToPage ? this.invalidTokenContinuelink : this.invalidTokenCancellink,
       );
     }
+  }
+
+  /**
+   * Search in BackOffice
+   * @param page {Page} Browser tab
+   * @param query {string} String
+   * @returns {Promise<void>}
+   */
+  async search(page, query) {
+    await this.setValue(page, this.navbarSarchInput, query);
+    await page.keyboard.press('Enter');
+    await page.waitForNavigation('networkidle');
   }
 }
 

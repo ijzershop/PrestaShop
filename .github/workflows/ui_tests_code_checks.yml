@@ -2,8 +2,9 @@ name: UI tests code checks
 
 on:
   pull_request:
+    types: [ opened, reopened, synchronize, edited ]
     paths:
-      - './tests/UI'
+      - 'tests/UI/**'
       - '.github/workflows/ui_tests_code_checks.yml'
 
 defaults:
@@ -52,7 +53,6 @@ jobs:
   Steps-identifiers:
     runs-on: ubuntu-latest
     name: Checking doubles in steps identifiers
-    if: contains(github.event.pull_request.labels.*.name, 'TE')
 
     steps:
       - name: Cancel Previous Runs

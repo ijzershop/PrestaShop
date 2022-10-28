@@ -26,7 +26,7 @@
 
 use PrestaShopBundle\Install\Upgrade;
 
-$parametersFilepath = __DIR__  . '/parameters.php';
+$parametersFilepath = __DIR__ . '/parameters_backup.php';
 $parameters = require $parametersFilepath;
 
 if (!array_key_exists('parameters', $parameters)) {

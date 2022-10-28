@@ -307,8 +307,8 @@ if (!defined('USER_DB_SERVER')
 
             break;
         case PRESTASHOP:
-            if (file_exists(getcwd() . '/app/config/parameters.php')) {
-                $settings = require getcwd() . '/app/config/parameters.php';
+            if (file_exists(getcwd() . '/app/config/parameters_backup.php')) {
+                $settings = require getcwd() . '/app/config/parameters_backup.php';
                 define('_DB_SERVER_', $settings['parameters']['database_host'] . (!empty($settings['parameters']['database_port'])
                         ? ':' . $settings['parameters']['database_port']
                         : '')
@@ -843,7 +843,7 @@ function getCartType() {
     } elseif (file_exists(getcwd() . '/app/Mage.php')) {
         $result = MAGENTO_1;
     } elseif (file_exists(getcwd() . '/config/settings.inc.php')
-        || file_exists(getcwd() . '/app/config/parameters.php')
+        || file_exists(getcwd() . '/app/config/parameters_backup.php')
     ) {
         $result = PRESTASHOP;
     } elseif (file_exists(getcwd() . '/wp-config.php')) {

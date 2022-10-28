@@ -13,7 +13,6 @@
     <mapping directory="$PROJECT_DIR$/modules/ps_shoppingcart" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/modules/sawandcutmodule" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/modules/singlestockattributespoco" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/modules/smallorderfee" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/themes/modernesmid" vcs="Git" />
   </component>
 </project>

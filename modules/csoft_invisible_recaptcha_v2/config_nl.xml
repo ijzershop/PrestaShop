@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>csoft_invisible_recaptcha_v2</name>
-    <displayName><![CDATA[Invisible reCaptcha]]></displayName>
+    <displayName><![CDATA[Onzichtbare reCaptcha]]></displayName>
     <version><![CDATA[1.1.4]]></version>
-    <description><![CDATA[Add a Invisible reCaptcha to your website contact form and registration account page]]></description>
+    <description><![CDATA[Voeg een onzichtbare reCaptcha toe aan het contactformulier van uw website en aan uw registratieaccountpagina]]></description>
     <author><![CDATA[ComonSoft]]></author>
     <tab><![CDATA[front_office_features]]></tab>
     <is_configurable>1</is_configurable>
     <need_instance>1</need_instance>
-	<limited_countries></limited_countries>
 </module>

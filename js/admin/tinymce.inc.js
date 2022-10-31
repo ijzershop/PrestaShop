@@ -73,7 +73,7 @@ const tinySetup = function(config) {
     var base_url = location.protocol + '//' + location.host + '/';
     // detect localhost
   }
-  var tbpKey = this.fetchKey(window.location.hostname);
+  var tbpKey = TinyMCEEditor.fetchKey(window.location.hostname);
 
   var default_config = {
     selector: '.rte',

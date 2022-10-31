@@ -84,7 +84,7 @@ class ModerneSmidMailTheme extends Module
 
         return parent::install() &&
             $this->registerHook('displayHeader') &&
-            $this->registerHook('backOfficeHeader') &&
+            $this->registerHook('displayBackOfficeHeader') &&
             $this->registerHook(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK);
     }
 
@@ -388,7 +388,7 @@ class ModerneSmidMailTheme extends Module
     /**
     * Add the CSS & JavaScript files you want to be loaded in the BO.
     */
-    public function hookBackOfficeHeader()
+    public function hookDisplayBackOfficeHeader()
     {
         if (Tools::getValue('configure') == $this->name) {
             $this->context->controller->addJS($this->_path.'views/js/back.js');

@@ -378,7 +378,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
 
             $product_for_template = $this->getTemplateVarProduct();
-            
+
             $filteredProduct = Hook::exec(
                 'filterProductContent',
                 ['object' => $product_for_template],
@@ -641,7 +641,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->combinations[$row['id_product_attribute']]['isbn'] = $row['isbn'];
                 $this->combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
                 $this->combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
-                if ($row['available_date'] != '0000-00-00' && Validate::isDate($row['available_date'])) {
+                if (!is_null($row['available_date']) &&  $row['available_date'] != '0000-00-00' && Validate::isDate($row['available_date'])) {
                     $this->combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];
                     $this->combinations[$row['id_product_attribute']]['date_formatted'] = Tools::displayDate($row['available_date']);
                 } else {
@@ -805,6 +805,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if (is_array($attributes_combinations) && count($attributes_combinations)) {
             foreach ($attributes_combinations as &$ac) {
                 foreach ($ac as &$val) {
+                    if(is_null($val)){
+                       continue;
+                    }
+
                     $val = str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite(str_replace([',', '.'], '-', $val)));
                 }
             }

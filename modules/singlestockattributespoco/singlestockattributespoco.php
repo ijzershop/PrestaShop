@@ -55,7 +55,7 @@ class SingleStockAttributesPoco extends Module
         $secure_key = md5(mt_rand() . time());
 
         if (!parent::install() ||
-            !$this->registerHook('backOfficeHeader') ||
+            !$this->registerHook('displayBackOfficeHeader') ||
             !$this->registerHook('actionValidateOrder') ||
             !$this->registerHook('actionGetProductPropertiesAfterUnitPrice') ||
             !$this->installTab() ||
@@ -321,7 +321,7 @@ class SingleStockAttributesPoco extends Module
     /**
      * Add the CSS & JavaScript files you want to be loaded in the BO.
      */
-    public function hookBackOfficeHeader()
+    public function hookDisplayBackOfficeHeader()
     {
         if (Tools::getValue('configure') == $this->name) {
             $this->context->controller->addCSS($this->_path . 'views/css/globalBack.css');

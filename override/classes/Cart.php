@@ -38,7 +38,7 @@ class Cart extends CartCore
         if ((int)$id_carrier <= 0) {
             $id_carrier = null;
         }
-        if (!is_null(Context::getContext()->cart->id_carrier) && (int)Context::getContext()->cart->id_carrier > 0) {
+        if (!is_null(Context::getContext()->cart) && (int)Context::getContext()->cart->id_carrier > 0) {
             $id_carrier = Context::getContext()->cart->id_carrier;
         }
         if($id_carrier == 0 && !empty($cart->delivery_option)){

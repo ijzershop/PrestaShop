@@ -108,7 +108,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         foreach ($products as $product){
             $productName = $product['product_name'];
 
-            if($product['id_category_default'] == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_CATEGORY') && $product['description_short'] != "")
+            if($product['id_category_default'] == (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY') && $product['description_short'] != "")
             {
                 $text = new DOMDocument();
                 $text->preserveWhiteSpace = false;

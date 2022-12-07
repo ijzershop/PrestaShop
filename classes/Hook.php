@@ -225,6 +225,7 @@ class HookCore extends ObjectModel
      */
     public static function getNameById($hook_id)
     {
+//        return true;
         $cache_id = 'hook_namebyid_' . $hook_id;
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->getValue('

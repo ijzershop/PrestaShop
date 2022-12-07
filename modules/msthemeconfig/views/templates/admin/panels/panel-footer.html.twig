@@ -1,0 +1,1740 @@
+<div class="card">
+  <div class="card-header">
+    Footer
+  </div>
+  <div class="card-body">
+
+      {#      BANNER TOP   #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Zekerheden balk
+      <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+              data-target="#collapseBannerTop" aria-expanded="false" aria-controls="collapseBannerTop">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseBannerTop">
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <p class="help-block">
+              The certainties banner contains 5 boxes in wich several certainties can be shown. Each certainty has three
+              values, The text, the image and the title text shown when hovering above an image.
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <b class="help-block">
+              Set the values of the first box in the certainties banner
+            </b>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            First box active
+          </label>
+          <div class="col-xs-8">
+
+            <div class="radio">
+              <label><input type="radio" name="MSTHEMECONFIG_FIRST_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_FIRST_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_FIRST_BOX_ACTIVE" id="no" value="0"
+                            {% if MSTHEMECONFIG_FIRST_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Text (first box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_BANNER_FIRST_TEXT"
+                   id="MSTHEMECONFIG_BANNER_FIRST_TEXT"
+                   value="{{ MSTHEMECONFIG_BANNER_FIRST_TEXT }}" class="form-control">
+            <p class="help-block">
+              Set the text of the first box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Title (first box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_BANNER_FIRST_TITLE"
+                   id="MSTHEMECONFIG_BANNER_FIRST_TITLE"
+                   value="{{ MSTHEMECONFIG_BANNER_FIRST_TITLE }}" class="form-control">
+            <p class="help-block">
+              Set the image title of the first box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Linked page (first box)
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_BANNER_FIRST_LINK" class="w-100 select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_BANNER_FIRST_LINK">
+              {{ MSTHEMECONFIG_BANNER_FIRST_LINK|raw }}
+            </select>
+            <p class="help-block">
+              Select the page which is used to redirect onclick
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Image (first box)
+          </label>
+          <div class="col-xs-8">
+            <div class="w-100" id="MSTHEMECONFIG_BANNER_FIRST_IMAGE-images-thumbnails">
+              <img src="{{ MSTHEMECONFIG_BANNER_FIRST_IMAGE }}" class="img-thumbnail"
+                   style="max-height:100px;"></div>
+          </div>
+        </div>
+        <div class="col-xs-8 col-xs-offset-4 margin-top-1">
+          <input id="MSTHEMECONFIG_BANNER_FIRST_IMAGE" type="file"
+                 name="MSTHEMECONFIG_BANNER_FIRST_IMAGE" class="hide">
+          <div class="dummyfile input-group">
+            <span class="input-group-addon"><i class="icon-file"></i></span>
+            <input id="MSTHEMECONFIG_BANNER_FIRST_IMAGE-name" type="text"
+                   name="MSTHEMECONFIG_BANNER_FIRST_IMAGE" readonly=""
+                   value="{{ MSTHEMECONFIG_BANNER_FIRST_IMAGE|replace({'../upload/': ''}) }}">
+            <span class="input-group-btn">
+                        <button id="MSTHEMECONFIG_BANNER_FIRST_IMAGE-selectbutton" type="button"
+                                name="submitAddAttachments" class="btn btn-default">
+                          <i class="icon-folder-open"></i> Bestand toevoegen
+                        </button>
+                </span>
+          </div>
+          <p class="help-block">
+            Upload image (used in the first box)
+          </p>
+        </div>
+
+
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <b class="help-block margin-top-2">
+              Set the values of the second box in the certainties banner
+            </b>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Second box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_SECOND_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_SECOND_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_SECOND_BOX_ACTIVE" id="no" value=""
+                            {% if MSTHEMECONFIG_SECOND_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Text (second box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_BANNER_SECOND_TEXT"
+                   id="MSTHEMECONFIG_BANNER_SECOND_TEXT"
+                   value="{{ MSTHEMECONFIG_BANNER_SECOND_TEXT }}" class="form-control">
+            <p class="help-block">
+              Set the text of the second box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Title (second box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_BANNER_SECOND_TITLE"
+                   id="MSTHEMECONFIG_BANNER_SECOND_TITLE"
+                   value="{{ MSTHEMECONFIG_BANNER_SECOND_TITLE }}" class="form-control">
+            <p class="help-block">
+              Set the image title of the second box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Linked page (second box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_BANNER_SECOND_LINK"
+                   id="MSTHEMECONFIG_BANNER_SECOND_LINK"
+                   value="{{ MSTHEMECONFIG_BANNER_SECOND_LINK }}" class="form-control"
+                   required="required">
+            <p class="help-block">
+              Set the page which is used to redirect onclick
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Image (second box)
+          </label>
+          <div class="col-xs-8">
+            <div class="w-100" id="MSTHEMECONFIG_BANNER_SECOND_IMAGE-images-thumbnails">
+              <img src="{{ MSTHEMECONFIG_BANNER_SECOND_IMAGE }}" class="img-thumbnail"
+                   style="max-height:100px;"></div>
+          </div>
+        </div>
+        <div class="col-xs-8 col-xs-offset-4 margin-top-1">
+          <input id="MSTHEMECONFIG_BANNER_SECOND_IMAGE" type="file"
+                 name="MSTHEMECONFIG_BANNER_SECOND_IMAGE" class="hide">
+          <div class="dummyfile input-group">
+            <span class="input-group-addon"><i class="icon-file"></i></span>
+            <input id="MSTHEMECONFIG_BANNER_SECOND_IMAGE-name" type="text"
+                   name="MSTHEMECONFIG_BANNER_SECOND_IMAGE" readonly=""
+                   value="{{ MSTHEMECONFIG_BANNER_SECOND_IMAGE|replace({'../upload/': ''}) }}">
+            <span class="input-group-btn">
+                        <button id="MSTHEMECONFIG_BANNER_SECOND_IMAGE-selectbutton" type="button"
+                                name="submitAddAttachments" class="btn btn-default">
+                          <i class="icon-folder-open"></i> Bestand toevoegen
+                        </button>
+                </span>
+          </div>
+          <p class="help-block">
+            Upload image (used in the second box)
+          </p>
+        </div>
+
+
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <b class="help-block margin-top-2">
+              Set the values of the third box in the certainties banner
+            </b>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Third box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_THIRD_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_THIRD_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_THIRD_BOX_ACTIVE" id="no" value="0"
+                            {% if MSTHEMECONFIG_THIRD_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Text (third box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_BANNER_THIRD_TEXT"
+                   id="MSTHEMECONFIG_BANNER_THIRD_TEXT"
+                   value="{{ MSTHEMECONFIG_BANNER_THIRD_TEXT }}" class="form-control">
+            <p class="help-block">
+              Set the text of the third box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Title (third box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_BANNER_THIRD_TITLE"
+                   id="MSTHEMECONFIG_BANNER_THIRD_TITLE"
+                   value="{{ MSTHEMECONFIG_BANNER_THIRD_TITLE }}" class="form-control">
+            <p class="help-block">
+              Set the image title of the third box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Linked page (third box)
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_BANNER_THIRD_LINK" class="w-100 select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_BANNER_THIRD_LINK">
+              {{ MSTHEMECONFIG_BANNER_THIRD_LINK|raw }}
+            </select>
+            <p class="help-block">
+              Select the page which is used to redirect onclick
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Image (third box)
+          </label>
+          <div class="col-xs-8">
+            <div class="w-100" id="MSTHEMECONFIG_BANNER_THIRD_IMAGE-images-thumbnails">
+              <img src="{{ MSTHEMECONFIG_BANNER_THIRD_IMAGE }}" class="img-thumbnail"
+                   style="max-height:100px;"></div>
+          </div>
+        </div>
+        <div class="col-xs-8 col-xs-offset-4 margin-top-1">
+          <input id="MSTHEMECONFIG_BANNER_THIRD_IMAGE" type="file"
+                 name="MSTHEMECONFIG_BANNER_THIRD_IMAGE" class="hide">
+          <div class="dummyfile input-group">
+            <span class="input-group-addon"><i class="icon-file"></i></span>
+            <input id="MSTHEMECONFIG_BANNER_THIRD_IMAGE-name" type="text"
+                   name="MSTHEMECONFIG_BANNER_THIRD_IMAGE" readonly=""
+                   value="{{ MSTHEMECONFIG_BANNER_THIRD_IMAGE|replace({'../upload/': ''}) }}">
+            <span class="input-group-btn">
+                        <button id="MSTHEMECONFIG_BANNER_THIRD_IMAGE-selectbutton" type="button"
+                                name="submitAddAttachments" class="btn btn-default">
+                          <i class="icon-folder-open"></i> Bestand toevoegen
+                        </button>
+                </span>
+          </div>
+          <p class="help-block">
+            Upload image (used in the third box)
+          </p>
+        </div>
+
+
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <b class="help-block">
+              Set the values of the fourth box in the certainties banner
+            </b>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Fourth box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_FOURTH_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_FOURTH_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_FOURTH_BOX_ACTIVE" id="no" value="0"
+                            {% if MSTHEMECONFIG_FOURTH_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Text (fourth box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_BANNER_FOURTH_TEXT"
+                   id="MSTHEMECONFIG_BANNER_FOURTH_TEXT"
+                   value="{{ MSTHEMECONFIG_BANNER_FOURTH_TEXT }}" class="form-control">
+            <p class="help-block">
+              Set the text of the fourth box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Title (fourth box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_BANNER_FOURTH_TITLE"
+                   id="MSTHEMECONFIG_BANNER_FOURTH_TITLE"
+                   value="{{ MSTHEMECONFIG_BANNER_FOURTH_TITLE }}" class="form-control">
+            <p class="help-block">
+              Set the image title of the fourth box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Linked page (fourth box)
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_BANNER_FOURTH_LINK" class="w-100 select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_BANNER_FOURTH_LINK">
+              {{ MSTHEMECONFIG_BANNER_FOURTH_LINK|raw }}
+            </select>
+            <p class="help-block">
+              Select the page which is used to redirect onclick
+            </p>
+          </div>
+        </div>
+
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Image (fourth box)
+          </label>
+          <div class="col-xs-8">
+            <div class="w-100" id="MSTHEMECONFIG_BANNER_FOURTH_IMAGE-images-thumbnails">
+              <img src="{{ MSTHEMECONFIG_BANNER_FOURTH_IMAGE }}" class="img-thumbnail"
+                   style="max-height:100px;"></div>
+          </div>
+        </div>
+        <div class="col-xs-8 col-xs-offset-4 margin-top-1">
+          <input id="MSTHEMECONFIG_BANNER_FOURTH_IMAGE" type="file"
+                 name="MSTHEMECONFIG_BANNER_FOURTH_IMAGE" class="hide">
+          <div class="dummyfile input-group">
+            <span class="input-group-addon"><i class="icon-file"></i></span>
+            <input id="MSTHEMECONFIG_BANNER_FOURTH_IMAGE-name" type="text"
+                   name="MSTHEMECONFIG_BANNER_FOURTH_IMAGE" readonly=""
+                   value="{{ MSTHEMECONFIG_BANNER_FOURTH_IMAGE|replace({'../upload/': ''}) }}">
+            <span class="input-group-btn">
+                        <button id="MSTHEMECONFIG_BANNER_FOURTH_IMAGE-selectbutton" type="button"
+                                name="submitAddAttachments" class="btn btn-default">
+                          <i class="icon-folder-open"></i> Bestand toevoegen
+                        </button>
+                </span>
+          </div>
+          <p class="help-block">
+            Upload image (used in the fourth box)
+          </p>
+        </div>
+
+
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <b class="help-block">
+              Set the values of the fifth box in the certainties banner
+            </b>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Fifth box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_FIFTH_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_FIFTH_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_FIFTH_BOX_ACTIVE" id="no" value="0"
+                            {% if MSTHEMECONFIG_FIFTH_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Text (fifth box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_BANNER_FIFTH_TEXT"
+                   id="MSTHEMECONFIG_BANNER_FIFTH_TEXT"
+                   value="{{ MSTHEMECONFIG_BANNER_FIFTH_TEXT }}" class="form-control">
+            <p class="help-block">
+              Set the text of the fifth box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Title (fifth box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_BANNER_FIFTH_TITLE"
+                   id="MSTHEMECONFIG_BANNER_FIFTH_TITLE"
+                   value="{{ MSTHEMECONFIG_BANNER_FIFTH_TITLE }}" class="form-control">
+            <p class="help-block">
+              Set the image title of the fifth box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Linked page (fifth box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_BANNER_FIFTH_LINK"
+                   id="MSTHEMECONFIG_BANNER_FIFTH_LINK"
+                   value="{{ MSTHEMECONFIG_BANNER_FIFTH_LINK }}" class="form-control"
+                   required="required">
+            <p class="help-block">
+              Set the page which is used to redirect onclick
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Image (fifth box)
+          </label>
+          <div class="col-xs-8">
+            <div class="w-100" id="MSTHEMECONFIG_BANNER_FIFTH_IMAGE-images-thumbnails">
+              <img src="{{ MSTHEMECONFIG_BANNER_FIFTH_IMAGE }}" class="img-thumbnail"
+                   style="max-height:100px;"></div>
+          </div>
+        </div>
+        <div class="col-xs-8 col-xs-offset-4 margin-top-1">
+          <input id="MSTHEMECONFIG_BANNER_FIFTH_IMAGE" type="file"
+                 name="MSTHEMECONFIG_BANNER_FIFTH_IMAGE" class="hide">
+          <div class="dummyfile input-group">
+            <span class="input-group-addon"><i class="icon-file"></i></span>
+            <input id="MSTHEMECONFIG_BANNER_FIFTH_IMAGE-name" type="text"
+                   name="MSTHEMECONFIG_BANNER_FIFTH_IMAGE" readonly=""
+                   value="{{ MSTHEMECONFIG_BANNER_FIFTH_IMAGE|replace({'../upload/': ''}) }}">
+            <span class="input-group-btn">
+                        <button id="MSTHEMECONFIG_BANNER_FIFTH_IMAGE-selectbutton" type="button"
+                                name="submitAddAttachments" class="btn btn-default">
+                          <i class="icon-folder-open"></i> Bestand toevoegen
+                        </button>
+                </span>
+          </div>
+          <p class="help-block">
+            Upload image (used in the fifth box)
+          </p>
+        </div>
+      </div>
+
+      {# FOOTER TOP  #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Footer Top
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseFooterTop" aria-expanded="false" aria-controls="collapseFooterTop">
+          <i class="toggle-panel text-white text-decoration-none"></i>
+        </button>
+      </span>
+      <div class="collapse" id="collapseFooterTop">
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <b class="help-block">
+              Set the values of the "About Us" box in the footer top
+            </b>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            About us header box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_ABOUT_FOOTERTOP_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_ABOUT_FOOTERTOP_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_ABOUT_FOOTERTOP_BOX_ACTIVE" id="no"
+                            value="0"
+                            {% if MSTHEMECONFIG_ABOUT_FOOTERTOP_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Header for about us block
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERTOP_ABOUTUS_HEADER"
+                   id="MSTHEMECONFIG_FOOTERTOP_ABOUTUS_HEADER"
+                   value="{{ MSTHEMECONFIG_FOOTERTOP_ABOUTUS_HEADER }}" class="form-control"
+                   required="required">
+            <p class="help-block">
+              Set the title of the about us block
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            <span class="label-tooltip" data-toggle="tooltip" data-html="true" title=""
+                  data-original-title="													Create max 15 lines
+               ">
+            About us block
+            </span>
+          </label>
+          <div class="col-xs-8">
+               <textarea name="MSTHEMECONFIG_FOOTERTOP_ABOUTUS_TEXT"
+                         id="MSTHEMECONFIG_FOOTERTOP_ABOUTUS_TEXT" cols="60" rows="10"
+                         class="autoload_rte">{{ MSTHEMECONFIG_FOOTERTOP_ABOUTUS_TEXT|raw }}</textarea>
+            <p class="help-block">
+              Set the about us text
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            About us page
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FOOTERTOP_ABOUTUS_LINK" class="w-100 select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_FOOTERTOP_ABOUTUS_LINK">
+              {{ MSTHEMECONFIG_FOOTERTOP_ABOUTUS_LINK|raw }}
+            </select>
+            <p class="help-block">
+              Select the about us page
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <b class="help-block">
+              Set the values of the "Information" box in the footer top
+            </b>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Information header box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_INFORMATION_FOOTERTOP_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_INFORMATION_FOOTERTOP_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_INFORMATION_FOOTERTOP_BOX_ACTIVE" id="no"
+                            value="0"
+                            {% if MSTHEMECONFIG_INFORMATION_FOOTERTOP_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Header for information block
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERTOP_INFORMATION_HEADER"
+                   id="MSTHEMECONFIG_FOOTERTOP_INFORMATION_HEADER"
+                   value="{{ MSTHEMECONFIG_FOOTERTOP_INFORMATION_HEADER }}" class="form-control"
+                   required="required">
+            <p class="help-block">
+              Set the title of the information block
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            <span class="label-tooltip" data-toggle="tooltip" data-html="true" title=""
+                  data-original-title="													Create for each link an new line
+               ">
+            Information block
+            </span>
+          </label>
+          <div class="col-xs-8">
+               <textarea name="MSTHEMECONFIG_FOOTERTOP_INFORMATION"
+                         id="MSTHEMECONFIG_FOOTERTOP_INFORMATION" cols="60" rows="10"
+                         class="autoload_rte">{{ MSTHEMECONFIG_FOOTERTOP_INFORMATION|raw }}</textarea>
+            <p class="help-block">
+              Create information links
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <b class="help-block">
+              Set the values of the "Partners" box in the footer top
+            </b>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Partners header box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_PARTNERS_FOOTERTOP_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_PARTNERS_FOOTERTOP_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_PARTNERS_FOOTERTOP_BOX_ACTIVE" id="no"
+                            value="0"
+                            {% if MSTHEMECONFIG_PARTNERS_FOOTERTOP_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Header for partners block
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERTOP_PARTNERS_HEADER"
+                   id="MSTHEMECONFIG_FOOTERTOP_PARTNERS_HEADER"
+                   value="{{ MSTHEMECONFIG_FOOTERTOP_PARTNERS_HEADER }}" class="form-control"
+                   required="required">
+            <p class="help-block">
+              Set the title of the partners block
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            <span class="label-tooltip" data-toggle="tooltip" data-html="true" title=""
+                  data-original-title="													Create for each link an new line
+               ">
+            Webshop partners block
+            </span>
+          </label>
+          <div class="col-xs-8">
+               <textarea name="MSTHEMECONFIG_FOOTERTOP_PARTNERS"
+                         id="MSTHEMECONFIG_FOOTERTOP_PARTNERS" cols="60" rows="10"
+                         class="autoload_rte">{{ MSTHEMECONFIG_FOOTERTOP_PARTNERS|raw }}</textarea>
+            <p class="help-block">
+              Create partner links
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <b class="help-block">
+              Set the values of the "Store Information" box in the footer top
+            </b>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Store Information header box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_STORE_INFORMATION_FOOTERTOP_BOX_ACTIVE"
+                            id="yes" value="1"
+                            {% if MSTHEMECONFIG_STORE_INFORMATION_FOOTERTOP_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_STORE_INFORMATION_FOOTERTOP_BOX_ACTIVE"
+                            id="no" value="0"
+                            {% if MSTHEMECONFIG_STORE_INFORMATION_FOOTERTOP_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <p class="help-block">
+              Set store information for
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Store information page
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FOOTERTOP_STOREINFO_LINK" class="w-100 select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_FOOTERTOP_STOREINFO_LINK">
+              {{ MSTHEMECONFIG_FOOTERTOP_STOREINFO_LINK|raw }}
+            </select>
+            <p class="help-block">
+              Select the page with the store information
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Google place api string
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERTOP_STOREINFO_GOOGLE_STRING"
+                   id="MSTHEMECONFIG_FOOTERTOP_STOREINFO_GOOGLE_STRING"
+                   value="{{ MSTHEMECONFIG_FOOTERTOP_STOREINFO_GOOGLE_STRING }}" class="form-control">
+            <p class="help-block">
+              Google string for place api to add link to google maps
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Opening and Closing time formatted as desired
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERTOP_STOREINFO_OPENED"
+                   id="MSTHEMECONFIG_FOOTERTOP_STOREINFO_OPENED"
+                   value="{{ MSTHEMECONFIG_FOOTERTOP_STOREINFO_OPENED }}" class="form-control">
+            <p class="help-block">
+              Open from to
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Address in single line
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERTOP_STOREINFO_ADDRESS"
+                   id="MSTHEMECONFIG_FOOTERTOP_STOREINFO_ADDRESS"
+                   value="{{ MSTHEMECONFIG_FOOTERTOP_STOREINFO_ADDRESS }}" class="form-control">
+            <p class="help-block">
+              Address
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Phonenumber formatted as desired
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERTOP_STOREINFO_PHONE"
+                   id="MSTHEMECONFIG_FOOTERTOP_STOREINFO_PHONE"
+                   value="{{ MSTHEMECONFIG_FOOTERTOP_STOREINFO_PHONE }}" class="form-control">
+            <p class="help-block">
+              Phonenumber
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Whatsapp number formatted as desired
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERTOP_STOREINFO_WHATSAPP"
+                   id="MSTHEMECONFIG_FOOTERTOP_STOREINFO_WHATSAPP"
+                   value="{{ MSTHEMECONFIG_FOOTERTOP_STOREINFO_WHATSAPP }}" class="form-control">
+            <p class="help-block">
+              Whatsapp number
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Contact page
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERTOP_STOREINFO_CONTACTPAGE"
+                   id="MSTHEMECONFIG_FOOTERTOP_STOREINFO_CONTACTPAGE"
+                   value="{{ MSTHEMECONFIG_FOOTERTOP_STOREINFO_CONTACTPAGE }}" class="form-control"
+                   required="required">
+            <p class="help-block">
+              Add the page link with the contact form
+            </p>
+          </div>
+        </div>
+      </div>
+      {#      FOOTER BOTTOM    #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Footer Bottom
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseFooterBottom" aria-expanded="false" aria-controls="collapseFooterBottom">
+          <i class="toggle-panel text-white text-decoration-none"></i>
+        </button>
+      </span>
+      <div class="collapse" id="collapseFooterBottom">
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <p class="help-block">
+              The bottom part of the footer contains 5 boxes. Each box has four values, The text, the image, the title
+              text shown when hovering above an image and the cms to wich the link redirects.
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <p class="help-block">
+              Set the values of the first box in the bottom part of the footer
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            First footer bottom box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_FIRST_FOOTERBOTTOM_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_FIRST_FOOTERBOTTOM_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_FIRST_FOOTERBOTTOM_BOX_ACTIVE" id="no"
+                            value="0"
+                            {% if MSTHEMECONFIG_FIRST_FOOTERBOTTOM_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Text (first box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TEXT"
+                   id="MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TEXT"
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TEXT }}" class="form-control">
+            <p class="help-block">
+              Set the text of the first box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Title (first box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TITLE"
+                   id="MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TITLE"
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TITLE }}" class="form-control">
+            <p class="help-block">
+              Set the image title of the first box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Linked page (first box)
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FOOTERBOTTOM_FIRST_LINK" class="w-100 select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_FOOTERBOTTOM_FIRST_LINK">
+              {{ MSTHEMECONFIG_FOOTERBOTTOM_FIRST_LINK|raw }}
+            </select>
+            <p class="help-block">
+              Select the page with the contact form
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Image (first box)
+          </label>
+          <div class="col-xs-8">
+            <div class="w-100" id="MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE-images-thumbnails">
+              <img src="{{ MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE }}" class="img-thumbnail"
+                   style="max-height:100px;"></div>
+          </div>
+        </div>
+        <div class="col-xs-8 col-xs-offset-4 margin-top-1">
+          <input id="MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE" type="file"
+                 name="MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE" class="hide">
+          <div class="dummyfile input-group">
+            <span class="input-group-addon"><i class="icon-file"></i></span>
+            <input id="MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE-name" type="text"
+                   name="MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE" readonly=""
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE|replace({'../upload/': ''}) }}">
+            <span class="input-group-btn">
+                        <button id="MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE-selectbutton" type="button"
+                                name="submitAddAttachments" class="btn btn-default">
+                          <i class="icon-folder-open"></i> Bestand toevoegen
+                        </button>
+                </span>
+          </div>
+          <p class="help-block">
+            Upload image (used in the first box)
+          </p>
+        </div>
+
+
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <p class="help-block">
+              Set the values of the second box in the bottom part of the footer
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Second footer bottom box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_SECOND_FOOTERBOTTOM_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_SECOND_FOOTERBOTTOM_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_SECOND_FOOTERBOTTOM_BOX_ACTIVE" id="no"
+                            value="0"
+                            {% if MSTHEMECONFIG_SECOND_FOOTERBOTTOM_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Text (second box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TEXT"
+                   id="MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TEXT"
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TEXT }}" class="form-control">
+            <p class="help-block">
+              Set the text of the second box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Title (second box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TITLE"
+                   id="MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TITLE"
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TITLE }}" class="form-control">
+            <p class="help-block">
+              Set the image title of the second box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Linked page (second box)
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FOOTERBOTTOM_SECOND_LINK" class="w-100 select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_FOOTERBOTTOM_SECOND_LINK">
+              {{ MSTHEMECONFIG_FOOTERBOTTOM_SECOND_LINK|raw }}
+            </select>
+            <p class="help-block">
+              Select the page with the contact form
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Image (second box)
+          </label>
+          <div class="col-xs-8">
+            <div class="w-100" id="MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE-images-thumbnails">
+              <img src="{{ MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE }}" class="img-thumbnail"
+                   style="max-height:100px;"></div>
+          </div>
+        </div>
+        <div class="col-xs-8 col-xs-offset-4 margin-top-1">
+          <input id="MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE" type="file"
+                 name="MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE" class="hide">
+          <div class="dummyfile input-group">
+            <span class="input-group-addon"><i class="icon-file"></i></span>
+            <input id="MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE-name" type="text"
+                   name="MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE" readonly=""
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE|replace({'../upload/': ''}) }}">
+            <span class="input-group-btn">
+                        <button id="MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE-selectbutton" type="button"
+                                name="submitAddAttachments" class="btn btn-default">
+                          <i class="icon-folder-open"></i> Bestand toevoegen
+                        </button>
+                </span>
+          </div>
+          <p class="help-block">
+            Upload image (used in the second box)
+          </p>
+        </div>
+
+
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <p class="help-block">
+              Set the values of the third box in the bottom part of the footer
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Third footer bottom box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_THIRD_FOOTERBOTTOM_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_THIRD_FOOTERBOTTOM_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_THIRD_FOOTERBOTTOM_BOX_ACTIVE" id="no"
+                            value="0"
+                            {% if MSTHEMECONFIG_THIRD_FOOTERBOTTOM_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Text (third box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TEXT"
+                   id="MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TEXT"
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TEXT }}" class="form-control">
+            <p class="help-block">
+              Set the text of the third box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Title (third box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TITLE"
+                   id="MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TITLE"
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TITLE }}" class="form-control">
+            <p class="help-block">
+              Set the image title of the third box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Linked page (third box)
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FOOTERBOTTOM_THIRD_LINK" class="w-100 select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_FOOTERBOTTOM_THIRD_LINK">
+              {{ MSTHEMECONFIG_FOOTERBOTTOM_THIRD_LINK|raw }}
+            </select>
+            <p class="help-block">
+              Select the page with the contact form
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Image (third box)
+          </label>
+          <div class="col-xs-8">
+            <div class="w-100" id="MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE-images-thumbnails">
+              <img src="{{ MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE }}" class="img-thumbnail"
+                   style="max-height:100px;"></div>
+          </div>
+        </div>
+        <div class="col-xs-8 col-xs-offset-4 margin-top-1">
+          <input id="MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE" type="file"
+                 name="MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE" class="hide">
+          <div class="dummyfile input-group">
+            <span class="input-group-addon"><i class="icon-file"></i></span>
+            <input id="MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE-name" type="text"
+                   name="MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE" readonly=""
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE|replace({'../upload/': ''}) }}">
+            <span class="input-group-btn">
+                        <button id="MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE-selectbutton" type="button"
+                                name="submitAddAttachments" class="btn btn-default">
+                          <i class="icon-folder-open"></i> Bestand toevoegen
+                        </button>
+                </span>
+          </div>
+          <p class="help-block">
+            Upload image (used in the third box)
+          </p>
+        </div>
+
+
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <p class="help-block">
+              Set the values of the fourth box in the bottom part of the footer
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Fourth footer bottom box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_FOURTH_FOOTERBOTTOM_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_FOURTH_FOOTERBOTTOM_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_FOURTH_FOOTERBOTTOM_BOX_ACTIVE" id="no"
+                            value="0"
+                            {% if MSTHEMECONFIG_FOURTH_FOOTERBOTTOM_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Text (fourth box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TEXT"
+                   id="MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TEXT"
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TEXT }}" class="form-control">
+            <p class="help-block">
+              Set the text of the fourth box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Title (fourth box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE"
+                   id="MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE"
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE }}" class="form-control">
+            <p class="help-block">
+              Set the image title of the fourth box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Linked page (fourth box)
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_LINK" class="w-100 select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_LINK">
+              {{ MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_LINK|raw }}
+            </select>
+            <p class="help-block">
+              Select the page with the contact form
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Image (fourth box)
+          </label>
+          <div class="col-xs-8">
+            <div class="w-100" id="MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE-images-thumbnails">
+              <img src="{{ MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE }}" class="img-thumbnail"
+                   style="max-height:100px;"></div>
+          </div>
+        </div>
+        <div class="col-xs-8 col-xs-offset-4 margin-top-1">
+          <input id="MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE" type="file"
+                 name="MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE" class="hide">
+          <div class="dummyfile input-group">
+            <span class="input-group-addon"><i class="icon-file"></i></span>
+            <input id="MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE-name" type="text"
+                   name="MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE" readonly=""
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE|replace({'../upload/': ''}) }}">
+            <span class="input-group-btn">
+                        <button id="MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE-selectbutton" type="button"
+                                name="submitAddAttachments" class="btn btn-default">
+                          <i class="icon-folder-open"></i> Bestand toevoegen
+                        </button>
+                </span>
+          </div>
+          <p class="help-block">
+            Upload image (used in the fourth box)
+          </p>
+        </div>
+
+
+        <div class="form-group col-xs-12">
+          <div class="col-xs-12">
+            <p class="help-block">
+              Set the values of the fifth box in the bottom part of the footer
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Fifth footer bottom box active
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_FIFTH_FOOTERBOTTOM_BOX_ACTIVE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_FIFTH_FOOTERBOTTOM_BOX_ACTIVE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_FIFTH_FOOTERBOTTOM_BOX_ACTIVE" id="no"
+                            value="0"
+                            {% if MSTHEMECONFIG_FIFTH_FOOTERBOTTOM_BOX_ACTIVE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Text (fifth box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TEXT"
+                   id="MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TEXT"
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TEXT }}" class="form-control">
+            <p class="help-block">
+              Set the text of the fifth box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Title (fifth box)
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TITLE"
+                   id="MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TITLE"
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TITLE }}" class="form-control">
+            <p class="help-block">
+              Set the image title of the fifth box
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Linked page (fifth box)
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_LINK" class="w-100 select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_LINK">
+              {{ MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_LINK|raw }}
+            </select>
+            <p class="help-block">
+              Select the page with the contact form
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Image (fifth box)
+          </label>
+          <div class="col-xs-8">
+            <div class="w-100" id="MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE-images-thumbnails">
+              <img src="{{ MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE }}" class="img-thumbnail"
+                   style="max-height:100px;"></div>
+          </div>
+        </div>
+        <div class="col-xs-8 col-xs-offset-4 margin-top-1">
+          <input id="MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE" type="file"
+                 name="MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE" class="hide">
+          <div class="dummyfile input-group">
+            <span class="input-group-addon"><i class="icon-file"></i></span>
+            <input id="MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE-name" type="text"
+                   name="MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE" readonly=""
+                   value="{{ MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE|replace({'../upload/': ''}) }}">
+            <span class="input-group-btn">
+                        <button id="MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE-selectbutton" type="button"
+                                name="submitAddAttachments" class="btn btn-default">
+                          <i class="icon-folder-open"></i> Bestand toevoegen
+                        </button>
+                </span>
+          </div>
+          <p class="help-block">
+            Upload image (used in the fifth box)
+          </p>
+        </div>
+
+
+      </div>
+
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#MSTHEMECONFIG_BANNER_FIRST_IMAGE-selectbutton').click(function (e) {
+      $('#MSTHEMECONFIG_BANNER_FIRST_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_BANNER_FIRST_IMAGE-name').click(function (e) {
+      $('#MSTHEMECONFIG_BANNER_FIRST_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_BANNER_FIRST_IMAGE-name').on('dragenter', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_BANNER_FIRST_IMAGE-name').on('dragover', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_BANNER_FIRST_IMAGE-name').on('drop', function (e) {
+      e.preventDefault();
+      let files = e.originalEvent.dataTransfer.files;
+      $('#MSTHEMECONFIG_BANNER_FIRST_IMAGE')[0].files = files;
+      $(this).val(files[0].name);
+    });
+
+    $('#MSTHEMECONFIG_BANNER_FIRST_IMAGE').change(function (e) {
+      if ($(this)[0].files !== undefined) {
+        let files = $(this)[0].files;
+        let name = '';
+
+        $.each(files, function (index, value) {
+          name += value.name + ', ';
+        });
+
+        $('#MSTHEMECONFIG_BANNER_FIRST_IMAGE-name').val(name.slice(0, -2));
+      } else // Internet Explorer 9 Compatibility
+      {
+        let name = $(this).val().split(/[\\/]/);
+        $('#MSTHEMECONFIG_BANNER_FIRST_IMAGE-name').val(name[name.length - 1]);
+      }
+    });
+
+    if (typeof MSTHEMECONFIG_BANNER_FIRST_IMAGE_max_files !== 'undefined') {
+      $('#MSTHEMECONFIG_BANNER_FIRST_IMAGE').closest('form').on('submit', function (e) {
+        if ($('#MSTHEMECONFIG_BANNER_FIRST_IMAGE')[0].files.length > MSTHEMECONFIG_BANNER_FIRST_IMAGE_max_files) {
+          e.preventDefault();
+          alert('U kunt maximaal  bestanden uploaden');
+        }
+      });
+    }
+  });
+
+  $(document).ready(function () {
+    $('#MSTHEMECONFIG_BANNER_SECOND_IMAGE-selectbutton').click(function (e) {
+      $('#MSTHEMECONFIG_BANNER_SECOND_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_BANNER_SECOND_IMAGE-name').click(function (e) {
+      $('#MSTHEMECONFIG_BANNER_SECOND_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_BANNER_SECOND_IMAGE-name').on('dragenter', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_BANNER_SECOND_IMAGE-name').on('dragover', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_BANNER_SECOND_IMAGE-name').on('drop', function (e) {
+      e.preventDefault();
+      let files = e.originalEvent.dataTransfer.files;
+      $('#MSTHEMECONFIG_BANNER_SECOND_IMAGE')[0].files = files;
+      $(this).val(files[0].name);
+    });
+
+    $('#MSTHEMECONFIG_BANNER_SECOND_IMAGE').change(function (e) {
+      if ($(this)[0].files !== undefined) {
+        let files = $(this)[0].files;
+        let name = '';
+
+        $.each(files, function (index, value) {
+          name += value.name + ', ';
+        });
+
+        $('#MSTHEMECONFIG_BANNER_SECOND_IMAGE-name').val(name.slice(0, -2));
+      } else // Internet Explorer 9 Compatibility
+      {
+        let name = $(this).val().split(/[\\/]/);
+        $('#MSTHEMECONFIG_BANNER_SECOND_IMAGE-name').val(name[name.length - 1]);
+      }
+    });
+
+    if (typeof MSTHEMECONFIG_BANNER_SECOND_IMAGE_max_files !== 'undefined') {
+      $('#MSTHEMECONFIG_BANNER_SECOND_IMAGE').closest('form').on('submit', function (e) {
+        if ($('#MSTHEMECONFIG_BANNER_SECOND_IMAGE')[0].files.length > MSTHEMECONFIG_BANNER_SECOND_IMAGE_max_files) {
+          e.preventDefault();
+          alert('U kunt maximaal  bestanden uploaden');
+        }
+      });
+    }
+  });
+
+  $(document).ready(function () {
+    $('#MSTHEMECONFIG_BANNER_THIRD_IMAGE-selectbutton').click(function (e) {
+      $('#MSTHEMECONFIG_BANNER_THIRD_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_BANNER_THIRD_IMAGE-name').click(function (e) {
+      $('#MSTHEMECONFIG_BANNER_THIRD_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_BANNER_THIRD_IMAGE-name').on('dragenter', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_BANNER_THIRD_IMAGE-name').on('dragover', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_BANNER_THIRD_IMAGE-name').on('drop', function (e) {
+      e.preventDefault();
+      let files = e.originalEvent.dataTransfer.files;
+      $('#MSTHEMECONFIG_BANNER_THIRD_IMAGE')[0].files = files;
+      $(this).val(files[0].name);
+    });
+
+    $('#MSTHEMECONFIG_BANNER_THIRD_IMAGE').change(function (e) {
+      if ($(this)[0].files !== undefined) {
+        let files = $(this)[0].files;
+        let name = '';
+
+        $.each(files, function (index, value) {
+          name += value.name + ', ';
+        });
+
+        $('#MSTHEMECONFIG_BANNER_THIRD_IMAGE-name').val(name.slice(0, -2));
+      } else // Internet Explorer 9 Compatibility
+      {
+        let name = $(this).val().split(/[\\/]/);
+        $('#MSTHEMECONFIG_BANNER_THIRD_IMAGE-name').val(name[name.length - 1]);
+      }
+    });
+
+    if (typeof MSTHEMECONFIG_BANNER_THIRD_IMAGE_max_files !== 'undefined') {
+      $('#MSTHEMECONFIG_BANNER_THIRD_IMAGE').closest('form').on('submit', function (e) {
+        if ($('#MSTHEMECONFIG_BANNER_THIRD_IMAGE')[0].files.length > MSTHEMECONFIG_BANNER_THIRD_IMAGE_max_files) {
+          e.preventDefault();
+          alert('U kunt maximaal  bestanden uploaden');
+        }
+      });
+    }
+  });
+
+  $(document).ready(function () {
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE-selectbutton').click(function (e) {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE-name').click(function (e) {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE-name').on('dragenter', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE-name').on('dragover', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE-name').on('drop', function (e) {
+      e.preventDefault();
+      let files = e.originalEvent.dataTransfer.files;
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE')[0].files = files;
+      $(this).val(files[0].name);
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE').change(function (e) {
+      if ($(this)[0].files !== undefined) {
+        let files = $(this)[0].files;
+        let name = '';
+
+        $.each(files, function (index, value) {
+          name += value.name + ', ';
+        });
+
+        $('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE-name').val(name.slice(0, -2));
+      } else // Internet Explorer 9 Compatibility
+      {
+        let name = $(this).val().split(/[\\/]/);
+        $('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE-name').val(name[name.length - 1]);
+      }
+    });
+
+    if (typeof MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE_max_files !== 'undefined') {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE').closest('form').on('submit', function (e) {
+        if ($('#MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE')[0].files.length > MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE_max_files) {
+          e.preventDefault();
+          alert('U kunt maximaal  bestanden uploaden');
+        }
+      });
+    }
+  });
+
+  $(document).ready(function () {
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE-selectbutton').click(function (e) {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE-name').click(function (e) {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE-name').on('dragenter', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE-name').on('dragover', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE-name').on('drop', function (e) {
+      e.preventDefault();
+      let files = e.originalEvent.dataTransfer.files;
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE')[0].files = files;
+      $(this).val(files[0].name);
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE').change(function (e) {
+      if ($(this)[0].files !== undefined) {
+        let files = $(this)[0].files;
+        let name = '';
+
+        $.each(files, function (index, value) {
+          name += value.name + ', ';
+        });
+
+        $('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE-name').val(name.slice(0, -2));
+      } else // Internet Explorer 9 Compatibility
+      {
+        let name = $(this).val().split(/[\\/]/);
+        $('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE-name').val(name[name.length - 1]);
+      }
+    });
+
+    if (typeof MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE_max_files !== 'undefined') {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE').closest('form').on('submit', function (e) {
+        if ($('#MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE')[0].files.length > MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE_max_files) {
+          e.preventDefault();
+          alert('U kunt maximaal  bestanden uploaden');
+        }
+      });
+    }
+  });
+
+  $(document).ready(function () {
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE-selectbutton').click(function (e) {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE-name').click(function (e) {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE-name').on('dragenter', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE-name').on('dragover', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE-name').on('drop', function (e) {
+      e.preventDefault();
+      let files = e.originalEvent.dataTransfer.files;
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE')[0].files = files;
+      $(this).val(files[0].name);
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE').change(function (e) {
+      if ($(this)[0].files !== undefined) {
+        let files = $(this)[0].files;
+        let name = '';
+
+        $.each(files, function (index, value) {
+          name += value.name + ', ';
+        });
+
+        $('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE-name').val(name.slice(0, -2));
+      } else // Internet Explorer 9 Compatibility
+      {
+        let name = $(this).val().split(/[\\/]/);
+        $('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE-name').val(name[name.length - 1]);
+      }
+    });
+
+    if (typeof MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE_max_files !== 'undefined') {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE').closest('form').on('submit', function (e) {
+        if ($('#MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE')[0].files.length > MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE_max_files) {
+          e.preventDefault();
+          alert('U kunt maximaal  bestanden uploaden');
+        }
+      });
+    }
+  });
+
+
+  $(document).ready(function () {
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE-selectbutton').click(function (e) {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE-name').click(function (e) {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE-name').on('dragenter', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE-name').on('dragover', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE-name').on('drop', function (e) {
+      e.preventDefault();
+      let files = e.originalEvent.dataTransfer.files;
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE')[0].files = files;
+      $(this).val(files[0].name);
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE').change(function (e) {
+      if ($(this)[0].files !== undefined) {
+        let files = $(this)[0].files;
+        let name = '';
+
+        $.each(files, function (index, value) {
+          name += value.name + ', ';
+        });
+
+        $('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE-name').val(name.slice(0, -2));
+      } else // Internet Explorer 9 Compatibility
+      {
+        let name = $(this).val().split(/[\\/]/);
+        $('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE-name').val(name[name.length - 1]);
+      }
+    });
+
+    if (typeof MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE_max_files !== 'undefined') {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE').closest('form').on('submit', function (e) {
+        if ($('#MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE')[0].files.length > MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE_max_files) {
+          e.preventDefault();
+          alert('U kunt maximaal  bestanden uploaden');
+        }
+      });
+    }
+  });
+
+
+  $(document).ready(function () {
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE-selectbutton').click(function (e) {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE-name').click(function (e) {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE').trigger('click');
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE-name').on('dragenter', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE-name').on('dragover', function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE-name').on('drop', function (e) {
+      e.preventDefault();
+      let files = e.originalEvent.dataTransfer.files;
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE')[0].files = files;
+      $(this).val(files[0].name);
+    });
+
+    $('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE').change(function (e) {
+      if ($(this)[0].files !== undefined) {
+        let files = $(this)[0].files;
+        let name = '';
+
+        $.each(files, function (index, value) {
+          name += value.name + ', ';
+        });
+
+        $('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE-name').val(name.slice(0, -2));
+      } else // Internet Explorer 9 Compatibility
+      {
+        let name = $(this).val().split(/[\\/]/);
+        $('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE-name').val(name[name.length - 1]);
+      }
+    });
+
+    if (typeof MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE_max_files !== 'undefined') {
+      $('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE').closest('form').on('submit', function (e) {
+        if ($('#MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE')[0].files.length > MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE_max_files) {
+          e.preventDefault();
+          alert('U kunt maximaal  bestanden uploaden');
+        }
+      });
+    }
+  });
+</script>

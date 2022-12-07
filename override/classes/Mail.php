@@ -156,6 +156,12 @@ class Mail extends MailCore
             $shop = new Shop((int) $idShop);
         }
 
+        if (!isset($shop)) {
+            self::dieOrLog($die, 'Error: parameter "idShop" is corrupted');
+
+            return false;
+        }
+
         $configuration = Configuration::getMultiple(
             [
                 'PS_SHOP_EMAIL',
@@ -167,6 +173,10 @@ class Mail extends MailCore
                 'PS_MAIL_SMTP_ENCRYPTION',
                 'PS_MAIL_SMTP_PORT',
                 'PS_MAIL_TYPE',
+                'PS_MAIL_DKIM_ENABLE',
+                'PS_MAIL_DKIM_DOMAIN',
+                'PS_MAIL_DKIM_SELECTOR',
+                'PS_MAIL_DKIM_KEY',
             ],
             null,
             null,
@@ -228,7 +238,7 @@ class Mail extends MailCore
             return false;
         }
 
-        // if bcc is not null, make sure it's a vaild e-mail
+        // if bcc is not null, make sure it's a valid e-mail
         if (null !== $bcc && !is_array($bcc) && !Validate::isEmail($bcc)) {
             self::dieOrLog($die, 'Error: parameter "bcc" is corrupted');
             $bcc = null;
@@ -255,10 +265,24 @@ class Mail extends MailCore
             return false;
         }
 
-        /* Construct multiple recipients list if needed */
         $message = new Swift_Message();
 
-        if (is_array($to) && isset($to)) {
+        /* Create new message and DKIM sign it, if enabled and all data for signature are provided */
+        if ((bool) $configuration['PS_MAIL_DKIM_ENABLE'] === true
+            && !empty($configuration['PS_MAIL_DKIM_DOMAIN'])
+            && !empty($configuration['PS_MAIL_DKIM_SELECTOR'])
+            && !empty($configuration['PS_MAIL_DKIM_KEY'])
+        ) {
+            $signer = new Swift_Signers_DKIMSigner(
+                $configuration['PS_MAIL_DKIM_KEY'],
+                $configuration['PS_MAIL_DKIM_DOMAIN'],
+                $configuration['PS_MAIL_DKIM_SELECTOR']
+            );
+            $message->attachSigner($signer);
+        }
+
+        /* Construct multiple recipients list if needed */
+        if (is_array($to)) {
             foreach ($to as $key => $addr) {
                 $addr = trim($addr);
                 if (!Validate::isEmail($addr)) {
@@ -274,8 +298,8 @@ class Mail extends MailCore
                 }
 
                 $addrName = ($addrName == null || $addrName == $addr || !Validate::isGenericName($addrName)) ?
-                    '' :
-                    self::mimeEncode($addrName);
+                          '' :
+                          self::mimeEncode($addrName);
                 $message->addTo(self::toPunycode($addr), $addrName);
             }
             $toPlugin = $to[0];
@@ -328,10 +352,6 @@ class Mail extends MailCore
                 $connection = new Swift_SendmailTransport();
             }
 
-            if (!$connection) {
-                return false;
-            }
-
             $swift = new Swift_Mailer($connection);
             /* Get templates content */
             $iso = Language::getIsoById((int) $idLang);
@@ -358,6 +378,7 @@ class Mail extends MailCore
                 $moduleName = $res[1];
             }
 
+            $isoTemplate = '';
             foreach ($isoArray as $isoCode) {
                 $isoTemplate = $isoCode . '/' . $template;
                 $templatePath = self::getTemplateBasePath($isoTemplate, $moduleName, $shop->theme);
@@ -376,10 +397,10 @@ class Mail extends MailCore
                         )
                     );
                 } elseif (!file_exists($templatePath . $isoTemplate . '.html') &&
-                    (
-                        $configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
-                        $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
-                    )
+                          (
+                              $configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
+                              $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
+                          )
                 ) {
                     PrestaShopLogger::addLog(
                         Context::getContext()->getTranslator()->trans(
@@ -418,7 +439,7 @@ class Mail extends MailCore
             $templateTxt .= strip_tags(
                 html_entity_decode(
                     Tools::file_get_contents($templatePath . $isoTemplate . '.txt'),
-                    null,
+                    ENT_COMPAT,
                     'utf-8'
                 )
             );
@@ -476,10 +497,10 @@ class Mail extends MailCore
             /**
              * Start adding template vars
              */
-            $templateVars['{custom_footer_html}'] = Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', ''));
-            $templateVars['{custom_footer_txt}'] = Tools::safeOutput(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT_TXT', ''));
+            $templateVars['{custom_footer_html}'] = Tools::safeOutput(Configuration::get('MSTHEMECONFIG_EMAIL_FOOTER_TEXT', ''));
+            $templateVars['{custom_footer_txt}'] = Tools::safeOutput(Configuration::get('MSTHEMECONFIG_EMAIL_FOOTER_TEXT_TXT', ''));
             $templateVars['{faq_page}'] = Tools::safeOutput(Context::getContext()->link->getCMSLink(
-                Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ'),
+                Configuration::get('MSTHEMECONFIG_CONTACTPAGE_FAQ'),
                 null,
                 true,
                 $idLang,
@@ -573,17 +594,17 @@ class Mail extends MailCore
             $templateVars = array_merge($templateVars, $extraTemplateVars);
             $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin([self::toPunycode($toPlugin) => $templateVars]));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
-                $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
-            ) {
-                $message->addPart($templateTxt, 'text/plain', 'utf-8');
-            }
-            if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
             ) {
-                $message->addPart($templateHtml, 'text/html', 'utf-8');
+                $message->setBody($templateHtml, 'text/html', 'utf-8');
+                if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH) {
+                    $message->addPart($templateTxt, 'text/plain', 'utf-8');
+                }
+            } else {
+                $message->setBody($templateTxt, 'text/plain', 'utf-8');
             }
 
-            if ($fileAttachment && !empty($fileAttachment)) {
+            if (!empty($fileAttachment)) {
                 // Multiple attachments?
                 if (!is_array(current($fileAttachment))) {
                     $fileAttachment = [$fileAttachment];
@@ -607,7 +628,6 @@ class Mail extends MailCore
             Hook::exec('actionMailAlterMessageBeforeSend', [
                 'message' => &$message,
             ]);
-
 
             $send = $swift->send($message);
 
@@ -644,7 +664,7 @@ class Mail extends MailCore
                 'Swift Error: ' . $e->getMessage(),
                 3,
                 null,
-                'Swift_Message'
+                'SwiftMessage'
             );
 
             return false;

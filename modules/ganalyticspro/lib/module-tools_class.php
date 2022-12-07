@@ -117,7 +117,7 @@ class BT_GapModuleTools
      */
     public static function getIdByCartId($id_cart)
     {
-        $sql = 'SELECT `id_order` 
+        $sql = 'SELECT `id_order`
             FROM `' . _DB_PREFIX_ . 'orders`
             WHERE `id_cart` = ' . (int) $id_cart .
             Shop::addSqlRestriction();
@@ -147,7 +147,7 @@ class BT_GapModuleTools
 
     /**
      * getCategory() method get the category name according whit the option
-     * 
+     *
      * @param int $iCategoryId
      *
      * @return array
@@ -996,7 +996,7 @@ class BT_GapModuleTools
         if (function_exists('json_encode')) {
             $aData = json_encode($aData);
         } elseif (method_exists('Tools', 'jsonEncode')) {
-            $aData = Tools::jsonEncode($aData);
+            $aData = json_encode($aData);
         } else {
             if (is_null($aData)) {
                 return 'null';
@@ -1049,7 +1049,7 @@ class BT_GapModuleTools
         if (function_exists('json_decode')) {
             $aData = json_decode($aData);
         } elseif (method_exists('Tools', 'jsonDecode')) {
-            $aData = Tools::jsonDecode($aData);
+            $aData = json_decode($aData);
         }
         return $aData;
     }
@@ -1436,13 +1436,13 @@ class BT_GapModuleTools
     }
 
     /**
-     * return the array of element for reset HTML element according to the 
+     * return the array of element for reset HTML element according to the
      * @return array
      */
     public static function resetHtmlSelector()
     {
         $aSelectorDefault = array();
-        
+
         // use case 1.7.0 to 1.7.8
         if (!empty(GAnalyticsPro::$bCompare17)) {
 

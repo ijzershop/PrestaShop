@@ -75,7 +75,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
     {
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
         if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
-            exit(Tools::jsonEncode(array(
+            exit(json_encode(array(
                 'error'   => true,
                 'message' => $this->module->l('This product is for viewing only!')
             )));
@@ -286,6 +286,6 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
             'success' => $success,
         );
         $arr = array_merge($arr, $data);
-        exit(Tools::jsonEncode($arr));
+        exit(json_encode($arr));
     }
 }

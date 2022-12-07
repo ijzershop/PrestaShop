@@ -1,0 +1,133 @@
+<div class="card">
+  <div class="card-header">
+    Gebruikers en Groepen
+  </div>
+  <div class="card-body">
+
+      {# Profiles #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Profielen
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseProfile" aria-expanded="false" aria-controls="collapseProfile">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseProfile">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right required">
+            Werkplaats profielen
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES[]"
+                    class="w-100 form-control  select2-data-input" data-type="profiles"
+                    id="MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES" multiple="multiple" size="15">
+              {{ MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES|raw }}
+            </select>
+            <p class="help-block">Select the all profiles you want to use as workshop employee profiles</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right required">
+            Winkel medewerker profielen
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_EMPLOYEE_SHOP_PROFILES[]"
+                    class="w-100 form-control  select2-data-input" data-type="profiles"
+                    id="MSTHEMECONFIG_EMPLOYEE_SHOP_PROFILES" multiple="multiple" size="15">
+              {{ MSTHEMECONFIG_EMPLOYEE_SHOP_PROFILES|raw }}
+            </select>
+            <p class="help-block">Select the all profiles you want to use as shop employee profiles</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right required">
+            Balie profiel
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE"
+                    class="w-100 form-control  select2-data-input" data-type="profiles"
+                    id="MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE">
+              {{ MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE|raw }}
+            </select>
+            <p class="help-block">Select the desired customer profile to use at live store register</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right required">
+            Customer group for ordering on credit
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP"
+                    class="w-100 form-control  select2-data-input" data-type="groups" ="
+            MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP">
+            {{ MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP|raw }}
+            </select>
+            <p class="help-block">Select the desired customer group to use for orders on credit</p>
+          </div>
+        </div>
+      </div>
+      {# Groups #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Groepen
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseGroups" aria-expanded="false" aria-controls="collapseGroups">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseGroups">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right required">
+            Customer group with option to use vouchers
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP"
+                    class="w-100 form-control  select2-data-input" data-type="groups"
+                    id="MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP">
+              {{ MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP|raw }}
+            </select>
+            <p class="help-block">Select the desired customer group that can use vouchers</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right required">
+            Customer group for counter access
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_EMPLOYEE_CUSTOMER_BALIE_GROUP"
+                    class="w-100 form-control  select2-data-input" data-type="customer"
+                    id="MSTHEMECONFIG_EMPLOYEE_CUSTOMER_BALIE_GROUP">
+              {{ MSTHEMECONFIG_EMPLOYEE_CUSTOMER_BALIE_GROUP|raw }}
+            </select>
+            <p class="help-block">Select the desired customer group for counter access</p>
+          </div>
+        </div>
+      </div>
+      {# Extra #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Op rekening
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseCredit" aria-expanded="false" aria-controls="collapseCredit">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseCredit">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right">
+            Show On Credit Option Customer
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_SHOW_ONCREDIT_CUSTOMER" class="w-100 form-control"
+                    id="MSTHEMECONFIG_SHOW_ONCREDIT_CUSTOMER">
+              <option value="0"
+                      {% if MSTHEMECONFIG_SHOW_ONCREDIT_CUSTOMER == 0 %}selected="selected"{% endif %}>
+                Hide
+              </option>
+              <option value="1"
+                      {% if MSTHEMECONFIG_SHOW_ONCREDIT_CUSTOMER == 1 %}selected="selected"{% endif %}>
+                Show
+              </option>
+            </select>
+            <p class="help-block">Show/Hide on credit option for customers</p>
+          </div>
+        </div>
+      </div>
+
+  </div>
+</div>

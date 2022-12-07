@@ -559,7 +559,7 @@ class Channable extends Module
             $jsonData['created'] = $product->date_add;
             $jsonData['title'] = $product->name[Context::getContext()->language->id];
             if ($jsonData['stock'] !== null) {
-                $curlJson = Tools::jsonEncode($jsonData);
+                $curlJson = json_encode($jsonData);
 
                 if (!isset(self::$sent_update_ids[$jsonData['id']])) {
                     foreach ($webHookData as $webHook) {
@@ -577,9 +577,9 @@ class Channable extends Module
             }
             /*
             error_log('fired event');
-            error_log(Tools::jsonEncode($jsonData));
+            error_log(json_encode($jsonData));
             header('Content-Type: application/json');
-            echo Tools::jsonEncode($jsonData);
+            echo json_encode($jsonData);
             die();
             */
         }

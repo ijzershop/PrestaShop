@@ -1,0 +1,10 @@
+{
+  "name": "msthemeconfig",
+  "version": "2.0.0",
+  "description": "theme configurator of de modernesmid prestashop webshop",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "select2": "^4.1.0-rc.0"
+  }
+}

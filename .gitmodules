@@ -1,18 +1,9 @@
-[submodule "themes/modernesmid"]
-	path = themes/modernesmid
-url=git@github.com:ijzershop/modernesmid-theme.git
 [submodule "modules/sawandcutmodule"]
 	path = modules/sawandcutmodule
 url=git@github.com:ijzershop/sawandcutmodule.git
-[submodule "modules/ijzershopkiyoh"]
-	path = modules/ijzershopkiyoh
-	url = git@ijzershop@bitbucket.org:ijzershop/ijzershopkiyoh.git
 [submodule "modules/offerintegration"]
 	path = modules/offerintegration
 url=git@github.com:ijzershop/offerintegration.git
-[submodule "modules/modernesmidthemeconfigurator"]
-	path = modules/modernesmidthemeconfigurator
-url=git@github.com:ijzershop/modernesmidthemeconfigurator.git
 [submodule "modules/koopmanorderexport"]
 	path = modules/koopmanorderexport
 url=git@github.com:ijzershop/koopmanorderexport.git

@@ -204,43 +204,8 @@ class Product extends ProductCore {
         }
         return $results_array;
     }
-    /*
-    * module: dynamicproduct
-    * date: 2022-02-07 13:34:28
-    * version: 2.43.11
-    */
-    public static function getProductProperties($id_lang, $row, Context $context = null)
-    {
-        $result = parent::getProductProperties($id_lang, $row, $context);
 
-        $module = Module::getInstanceByName('dynamicproduct');
-        if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
-            $id_product = (int) $row['id_product'];
-            $dynamic_config = classes\models\DynamicConfig::getByProduct($id_product);
-            if ($dynamic_config->active) {
-                $displayed_price = classes\models\DynamicConfig::getDisplayedPrice($id_product);
-                if ($displayed_price || $dynamic_config->display_dynamic_price) {
-                    $module->calculator->assignProductPrices($row, $displayed_price, $result);
-                }
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * Check if product is orderable and return true false
-     *
-     * PS_ORDER_OUT_OF_STOCK = bestellen van producten niet op vooraad [1=>Ja, 0=>Nee]   =========== Standaard prestashop
-     * PS_STOCK_MANAGEMENT (stock_management) = vooraadbeheer [1=>Ja, 0=>Nee] 			 =========== Standaard Prestashop
-     * PS_CATALOG_MODE = Catalogus modus (geen bestellingen mogelijk) = [1=>Ja, 0=>Nee]    =========== Standaard Prestashop
-     * out_of_stock = product vooraad beheer [0=>Bestelling niet toestaan, 1=>Bestelling Toestaan, 2=>Gebruik Prestashop setting]   =========== Product Instelling
-     * quantity = vooraad per product   =========== Product Instelling
-     * min_order_quantity = vooraad per product   =========== Product Instelling
-     *
-     *
-     * @param $product
-     */
-    public function productIsOrderable($id_product = null){
+    public static function productIsOrderable($id_product = null){
         $id_lang = (int) Context::getContext()->language->id;
         $id_shop = (int) Context::getContext()->shop->id;
         $id_shop_group = (int) Context::getContext()->shop->id_shop_group;
@@ -269,27 +234,23 @@ class Product extends ProductCore {
                             if((int) Configuration::get('PS_ORDER_OUT_OF_STOCK', $id_lang, $id_shop_group, $id_shop,1) == 0){
                                 return false;
                             } else {
-                                //Bestelbaar desondanks niet op vooraad
                                 return true;
                             }
                             break;
                     }
                 } else {
-                    //Er is nog genoeg vooraad
                     return true;
                 }
             } else {
-                //Vooraadbeheer is uit alles is bestelbaar
                 return true;
             }
         } else {
-            //Is catalogus modes, niets is bestelbaar
             return false;
         }
     }
 
 
-    public function hasMaxProductsRemainingStock($id_product = null, $stock_limit=100){
+    public static function hasMaxProductsRemainingStock($id_product = null, $stock_limit=100){
         $id_lang = (int) Context::getContext()->language->id;
         $id_shop = (int) Context::getContext()->shop->id;
         $id_shop_group = (int) Context::getContext()->shop->id_shop_group;
@@ -320,21 +281,17 @@ class Product extends ProductCore {
                             if((int) Configuration::get('PS_ORDER_OUT_OF_STOCK', $id_lang, $id_shop_group, $id_shop,1) == 0){
                                 $is_orderable = false;
                             } else {
-                                //Bestelbaar desondanks niet op vooraad
                                 $is_orderable = true;
                             }
                             break;
                     }
                 } else {
-                    //Er is nog genoeg vooraad
                     $is_orderable = true;
                 }
             } else {
-                //Vooraadbeheer is uit alles is bestelbaar
                 $is_orderable = true;
             }
         } else {
-            //Is catalogus modes, niets is bestelbaar
             $is_orderable = false;
         }
 

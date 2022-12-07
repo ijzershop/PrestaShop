@@ -27,13 +27,13 @@
                       {if (int)$carrier.id != (int)Configuration::get('ADDTOORDER_DELIVERY_METHOD')}
                         <li class="highlight">
                           <div class="radio">
-                                {if (!empty($delivery_option) && $delivery_option == $carrier.id) && Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id}
+                                {if (!empty($delivery_option) && $delivery_option == $carrier.id) && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id}
                                     <input class='supercheckout_shipping_option delivery_option_radio' type="radio" name="delivery_option[{$id_address|intval}]" value="{$carrier.id nofilter}{*escape not required as contains html*}" id="shipping_method_{$id_address|intval}_{$carrier.id|intval}" checked="checked" />
                                     {assign var='selected' value=1}
-                                {elseif ((isset($default_shipping_method) && $carrier.id == $default_shipping_method ) || empty($delivery_option)) && Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id}
+                                {elseif ((isset($default_shipping_method) && $carrier.id == $default_shipping_method ) || empty($delivery_option)) && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id}
                                     <input class='supercheckout_shipping_option delivery_option_radio' type="radio" name="delivery_option[{$id_address|intval}]" value="{$carrier.id nofilter}{*escape not required as contains html*}" id="shipping_method_{$id_address|intval}_{$carrier.id|intval}" checked="checked" />
                                 {else}
-                                  {if Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id && $carrier.id == Configuration::get('MODERNESMIDTHEMECONFIGURATOR_PICKUP_CARRIER')}
+                                  {if Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id && $carrier.id == Configuration::get('MSTHEMECONFIG_PICKUP_CARRIER')}
                                     <input class='supercheckout_shipping_option delivery_option_radio' type="radio" name="delivery_option[{$id_address|intval}]" value="{$carrier.id nofilter}{*escape not required as contains html*}" id="shipping_method_{$id_address|intval}_{$carrier.id|intval}" checked="checked"/>
                                   {else}
                                     <input class='supercheckout_shipping_option delivery_option_radio' type="radio" name="delivery_option[{$id_address|intval}]" value="{$carrier.id nofilter}{*escape not required as contains html*}" id="shipping_method_{$id_address|intval}_{$carrier.id|intval}" />

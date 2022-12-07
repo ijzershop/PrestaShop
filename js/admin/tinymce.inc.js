@@ -42,16 +42,21 @@ function fetchKey(hostname) {
   keys["gerofitness.viho.nl"] =  "";
   keys["ijzershop.frl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=";//Set
   keys["ijzershop.nl"] =  "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY="; //Set
-  keys["ijzershop176.local"] =  "cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpmftIOvjnss+mhviBjMWYpzfTD8gujkxPFveiunw80iXmfbHphHun6k0qBPJyPtFC8="; //SET
+  keys["ijzershop.eu"] =  "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY="; //Set
+  keys["ijzershop176.local"] =  "cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpmftIOvjnss+mhviBjMWYpzfTD8gujkxPFveiunw80iXmfbHphHun6k0qBPJyPtFC8=";
   keys["paneelhek.nl"] =  "";
   keys["paneelhek.viho.nl"] =  "";
   keys["viho.nl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4="; //Set
 
-  return keys[hostname];
+  if(keys.hasOwnProperty(hostname)){
+    return keys[hostname];
+  } else {
+    return "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY=";
+  }
 
 }
 
-const tinySetup = function(config) {
+let tinySetup = function(config) {
   if (typeof tinyMCE === 'undefined') {
     setTimeout(function() {
       tinySetup(config);
@@ -73,13 +78,13 @@ const tinySetup = function(config) {
     var base_url = location.protocol + '//' + location.host + '/';
     // detect localhost
   }
-  var tbpKey = TinyMCEEditor.fetchKey(window.location.hostname);
+  var tbpKey = fetchKey(window.location.hostname);
 
   var default_config = {
     selector: '.rte',
-    plugins: 'link table media advlist code table autoresize bootstrap fullscreen responsivefilemanager paste lists',
+    plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
     browser_spellcheck: true,
-    toolbar: "undo redo code | bold italic underline strikethrough | numlist bullist checklist | fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
+    toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
     paste_data_images: true,
     paste_preprocess: function(plugin, args) {
       let m;
@@ -180,8 +185,8 @@ const tinySetup = function(config) {
   $.each(default_config, function(index, el) {
     if (config[index] === undefined) config[index] = el;
   });
-
-  var plugins_arr = config['plugins'].split(/[ ,]/);
+console.log(config);
+  var plugins_arr = config['plugins'];
   var old_plugins_array = ['iespell', 'inlinepopups', 'style', 'xhtmlxtras', 'safari'];
   $.each(plugins_arr, function(index, data) {
     if (data == 'advhr') plugins_arr[index] = 'hr';

@@ -150,14 +150,4 @@
   {% endblock %}
 {% endblock %}
 
-{% block javascripts %}
-<script src="{{ asset('../modules/pricemodifier/node_modules/chartist/dist/chartist.js') }}"></script>
 
-<script src="{{ asset('../modules/pricemodifier/views/js/barChartLabelPlugin.js') }}"></script>
-{{ parent() }}
-
-<script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('../modules/pricemodifier/views/js/price_modifications.bundle.js') }}"></script>
-<script src="{{ asset('../admin-dev/themes/new-theme/public/product_price_modification.bundle.js') }}"></script>
-<script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}

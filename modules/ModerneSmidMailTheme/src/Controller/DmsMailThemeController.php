@@ -233,9 +233,9 @@ class DmsMailThemeController extends FrameworkBundleAdminController
                 $contents = $instance->get('twig')->render(_PS_MODULE_DIR_.'ModerneSmidMailTheme/mails/themes/modernesmid/components/footer_blocks.html.twig', [
                     'footer_visibles' => (array)$templateBlocksData,
                     'locale' => Context::getContext()->language->locale,
-                    'faq_page' => Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '',''),
+                    'faq_page' => Context::getContext()->link->getCMSLink(Configuration::get('MSTHEMECONFIG_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '',''),
                     'add_to_order' => '<b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;">Iets vergeten te bestellen?<br/></span></b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;line-height: 25px;">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.</span>',
-                    'custom_footer_html' => Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),
+                    'custom_footer_html' => Configuration::get('MSTHEMECONFIG_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),
                     'shop_name' => Context::getContext()->shop->name,
                     'shop_url' => Context::getContext()->link->getPageLink('index', true),
                     'my_account_url' => Context::getContext()->link->getPageLink('my-account', true),
@@ -247,9 +247,9 @@ class DmsMailThemeController extends FrameworkBundleAdminController
                 $contents = $instance->get('twig')->render(_PS_MODULE_DIR_.'ModerneSmidMailTheme/mails/themes/modernesmid/components/footer_blocks.html.twig', [
                     'footer_visibles' => (array)$templateBlocksData,
                     'locale' => Context::getContext()->language->locale,
-                    'faq_page' => Context::getContext()->link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '',''),
+                    'faq_page' => Context::getContext()->link->getCMSLink(Configuration::get('MSTHEMECONFIG_CONTACTPAGE_FAQ', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),null,true, '',''),
                     'add_to_order' => '<b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;">Iets vergeten te bestellen?<br/></span></b><span style="color:#777777;font-size: 16px;font-family:Open-sans, sans-serif;line-height: 25px;">Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.</span>',
-                    'custom_footer_html' => Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),
+                    'custom_footer_html' => Configuration::get('MSTHEMECONFIG_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, ''),
                     'shop_name' => Context::getContext()->shop->name,
                     'shop_url' => Context::getContext()->link->getPageLink('index', true),
                     'my_account_url' => Context::getContext()->link->getPageLink('my-account', true),

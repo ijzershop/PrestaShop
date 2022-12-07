@@ -173,7 +173,7 @@ class Calculator
     public function getTotal($ignoreProcessedFlag = false)
     {
         $shippingFees = $this->fees->getInitialShippingFees();
-        if((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE')) {
+        if((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE')) {
             $calculatedDiscount = $this->getDiscountTotal();
             $cartRules = $this->getCartRulesData();
 

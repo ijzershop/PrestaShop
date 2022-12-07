@@ -384,7 +384,7 @@ class Gsitemap extends Module
             ShopUrl::resetMainDomainCache();
         }
 
-        $offerCat = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_CATEGORY', $lang['id_lang'], $this->context->shop->id_shop_group, $this->context->shop->id, 382);
+        $offerCat = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', $lang['id_lang'], $this->context->shop->id_shop_group, $this->context->shop->id, 382);
         $sqlCatLimit = '';
 
         if((int)$offerCat > 0){
@@ -453,7 +453,7 @@ class Gsitemap extends Module
             ShopUrl::resetMainDomainCache();
         }
 
-        $offerCat = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_CATEGORY', $lang['id_lang'], $this->context->shop->id_shop_group, $this->context->shop->id, 382);
+        $offerCat = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', $lang['id_lang'], $this->context->shop->id_shop_group, $this->context->shop->id, 382);
         $sqlCatLimit = '';
 
         if((int)$offerCat > 0){

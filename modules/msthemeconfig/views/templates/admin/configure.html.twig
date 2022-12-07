@@ -1,0 +1,198 @@
+
+<style>
+  .page-subtitle{
+    display:none;
+  }
+
+  .tab-btn{
+    margin: 5px 0;
+    padding:  5px;
+  }
+
+  .card{
+    width: 100%;
+    padding:0 15px 15px 15px;
+    display: inline-block;
+  }
+
+  .card-header{
+    text-align: right;
+    font-size: 1em;
+    border-bottom: 1px solid #cccccc;
+    font-weight: bold;
+  }
+
+  .star{
+    font-size: 1.6em;
+    font-weight: bold;
+    vertical-align: middle;
+  }
+
+  .card-sub-header{
+    color:#ffffff;
+    background-color: #0a6aa1;
+    font-size: 1.6em;
+    font-weight: bold;
+    line-height: 1.2em;
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 5px;
+  }
+  .margin-top-1{
+    margin-top: 1em!important;
+  }
+  .margin-top-2{
+    margin-top: 2em!important;
+  }
+
+  button .toggle-panel{
+    color:#ffffff;
+    font-size: 1.6em;
+    line-height: 0;
+    text-decoration: none;
+  }
+
+  button .toggle-panel:before{
+    content: '-';
+  }
+
+  button.collapsed .toggle-panel:before{
+    content: '+';
+  }
+
+  .select2-container {
+    min-width: 100%!important;
+  }
+
+  .bootstrap .collapse.in {
+    display: block;
+  }
+
+  #home_categories_sorted li{
+    padding: 5px;
+    border: 1px solid grey;
+    background-color: lightgrey;
+    cursor: grab;
+  }
+</style>
+
+{% block content %}
+<div class="panel">
+  <h3><i class="icon icon-credit-card"></i> {% trans %}Moderne Smid BV Theme Configurator{% endtrans %} <button class="btn btn-xs btn-link collapsed pull-right" data-toggle="collapse" data-target="#info-config" type="button" role="tab" aria-controls="info-config" aria-selected="true"> <i class="material-icons">visibility</i></button></h3>
+  <div class="collapse"  id="info-config" role="tabpanel" aria-labelledby="info-config" tabindex="0">
+  <div>
+    <strong>{l s='This module adds extra settings for the ModerneSmid Theme!' mod='msthemeconfig'}</strong><br />
+    {l s='Please enter the needed configurations to use the Moderne Smid BV Theme.' mod='msthemeconfig'}<br />
+    <br />
+    {l s='To use pre-formatted snippets you can create your own bootstrap html snippets in the snippets-manager.' mod='msthemeconfig'}
+    <br />
+    {l s='The snippets are grouped into categories these categories are shown as different tabs in the snippet dialog' mod='msthemeconfig'}
+    <br />
+    <br />
+    {l s='The Snippets manager allows to:' mod='msthemeconfig'}
+    <ul>
+      <li>{l s='add/remove categories & snippets' mod='msthemeconfig'}</li>
+      <li>{l s='edit the categories names' mod='msthemeconfig'}</li>
+      <li>{l s='edit the snippets names & code' mod='msthemeconfig'}</li>
+      <li>{l s='re-order the categories & snippets' mod='msthemeconfig'}</li>
+    </ul>
+    {l s='The snippets are available in the editor snippets dialog.' mod='msthemeconfig'}
+    <br/>
+    <a target="_blank" href="/js/tiny_mce/plugins/bootstrap/snippets/snippets-manager.html">{l s='To go to the snippets editor click here' mod='msthemeconfig'}</a><br />
+  </div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="d-flex align-items-start row">
+    <div class="nav flex-column col-xs-3" id="modernesmid-config-tab" role="tablist" aria-orientation="vertical">
+      {% if 'home' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg active" data-panel="home" id="v-pills-home-tab" data-toggle="pill" data-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Algemeen</button>
+      {% endif %}
+      {% if 'pages' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="pages" id="v-pills-pages-tab" data-toggle="pill" data-target="#v-pills-pages" type="button" role="tab" aria-controls="v-pills-pages" aria-selected="false">Pagina's</button>
+      {% endif %}
+      {% if 'footer' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="footer" id="v-pills-footer-tab" data-toggle="pill" data-target="#v-pills-footer" type="button" role="tab" aria-controls="v-pills-footer" aria-selected="false">Footer</button>
+      {% endif %}
+      {% if 'email' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="email" id="v-pills-email-tab" data-toggle="pill" data-target="#v-pills-email" type="button" role="tab" aria-controls="v-pills-email" aria-selected="false">Email</button>
+      {% endif %}
+      {% if 'alert' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="alert" id="v-pills-alert-tab" data-toggle="pill" data-target="#v-pills-alert" type="button" role="tab" aria-controls="v-pills-alert" aria-selected="false">Alert</button>
+      {% endif %}
+      {% if 'config' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="config-main" id="v-pills-config-main-tab" data-toggle="pill" data-target="#v-pills-config-main" type="button" role="tab" aria-controls="v-pills-config-main" aria-selected="false">Algemene Configuratie</button>
+      {% endif %}
+      {% if 'config' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="config-user" id="v-pills-config-user-tab" data-toggle="pill" data-target="#v-pills-config-user" type="button" role="tab" aria-controls="v-pills-config-user" aria-selected="false">Gebruiker Configuratie</button>
+      {% endif %}
+      {% if 'kiyoh' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="kiyoh" id="v-pills-kiyoh-tab" data-toggle="pill" data-target="#v-pills-kiyoh" type="button" role="tab" aria-controls="v-pills-kiyoh" aria-selected="false">Kiyoh</button>
+      {% endif %}
+      {% if 'koopman' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="koopman" id="v-pills-koopman-tab" data-toggle="pill" data-target="#v-pills-koopman" type="button" role="tab" aria-controls="v-pills-koopman" aria-selected="false">Koopman</button>
+      {% endif %}
+      {% if 'services' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="services" id="v-pills-services-tab" data-toggle="pill" data-target="#v-pills-services" type="button" role="tab" aria-controls="v-pills-services" aria-selected="false">Diensten & Api's</button>
+      {% endif %}
+      {% if 'dev' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="dev" id="v-pills-dev-tab" data-toggle="pill" data-target="#v-pills-dev" type="button" role="tab" aria-controls="v-pills-dev" aria-selected="false">Development</button>
+      {% endif %}
+    </div>
+    <form method="POST" action="">
+    <div class="tab-content col-xs-9" id="modernesmid-config-tab-content">
+      {% if 'home' in employee_access %}
+      <div class="tab-pane fade active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0"></div>
+      {% endif %}
+      {% if 'pages' in employee_access %}
+      <div class="tab-pane fade" id="v-pills-pages" role="tabpanel" aria-labelledby="v-pills-pages-tab" tabindex="0"></div>
+      {% endif %}
+      {% if 'alert' in employee_access %}
+      <div class="tab-pane fade" id="v-pills-alert" role="tabpanel" aria-labelledby="v-pills-alert-tab" tabindex="0"></div>
+      {% endif %}
+      {% if 'main' in employee_access %}
+      <div class="tab-pane fade" id="v-pills-config-main" role="tabpanel" aria-labelledby="v-pills-config-main-tab" tabindex="0"></div>
+      {% endif %}
+      {% if 'user' in employee_access %}
+      <div class="tab-pane fade" id="v-pills-config-user" role="tabpanel" aria-labelledby="v-pills-config-user-tab" tabindex="0"></div>
+      {% endif %}
+      {% if 'dev' in employee_access %}
+      <div class="tab-pane fade" id="v-pills-dev" role="tabpanel" aria-labelledby="v-pills-dev-tab" tabindex="0"></div>
+      {% endif %}
+      {% if 'email' in employee_access %}
+      <div class="tab-pane fade" id="v-pills-email" role="tabpanel" aria-labelledby="v-pills-email-tab" tabindex="0"></div>
+      {% endif %}
+      {% if 'footer' in employee_access %}
+      <div class="tab-pane fade" id="v-pills-footer" role="tabpanel" aria-labelledby="v-pills-footer-tab" tabindex="0"></div>
+      {% endif %}
+      {% if 'kiyoh' in employee_access %}
+      <div class="tab-pane fade" id="v-pills-kiyoh" role="tabpanel" aria-labelledby="v-pills-kiyoh-tab" tabindex="0"></div>
+      {% endif %}
+      {% if 'koopman' in employee_access %}
+      <div class="tab-pane fade" id="v-pills-koopman" role="tabpanel" aria-labelledby="v-pills-koopman-tab" tabindex="0"></div>
+      {% endif %}
+      {% if 'services' in employee_access %}
+      <div class="tab-pane fade" id="v-pills-services" role="tabpanel" aria-labelledby="v-pills-services-tab" tabindex="0"></div>
+      {% endif %}
+    </div>
+    <div class="col-xs-12">
+      <input type="hidden" value="1" name="submitMsThemeConfig"/>
+      <button class="btn btn-lg collapsed pull-right" type="submit"> Wijzigen </button>
+    </div>
+    </form>
+  </div>
+
+
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+  <script type="application/javascript">
+    let debugModerneSmidThemeConfigurator = false;
+    window.msThemeConfigAjaxUrl = '{{ ajax_url }}';
+    window.msThemeConfigSelect2Url = '{{ select2_url }}';
+  </script>
+{% endblock %}
+

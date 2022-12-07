@@ -234,9 +234,9 @@ class Ps_Creditpayment extends PaymentModule
             $this->getTemplateVarInfos()
         );
         $customers = array();
-        $creditGroup = new Group(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_CREDIT_GROUP'), Context::getContext()->language->id, Context::getContext()->shop->id);
+        $creditGroup = new Group(Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP'), Context::getContext()->language->id, Context::getContext()->shop->id);
         $customersWithGroup = $creditGroup->getCustomers();
-        $is_balie_employee = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id;
+        $is_balie_employee = Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id;
         $add_to_list = false;
         if ($is_balie_employee) {
             $add_to_list = true;
@@ -252,11 +252,11 @@ class Ps_Creditpayment extends PaymentModule
         }
 //        else {
 //
-//            var_export(!Configuration::get('MODERNESMIDTHEMECONFIGURATOR_SHOW_ONCREDIT_CUSTOMER'));
+//            var_export(!Configuration::get('MSTHEMECONFIG_SHOW_ONCREDIT_CUSTOMER'));
 //
 //
 //            for ($i = 0; $i <= count($customersWithGroup); $i++){
-//                if(isset($customersWithGroup[$i]) && (int)$customersWithGroup[$i]['id_customer'] == (int)Context::getContext()->customer->id && !Configuration::get('MODERNESMIDTHEMECONFIGURATOR_SHOW_ONCREDIT_CUSTOMER')){
+//                if(isset($customersWithGroup[$i]) && (int)$customersWithGroup[$i]['id_customer'] == (int)Context::getContext()->customer->id && !Configuration::get('MSTHEMECONFIG_SHOW_ONCREDIT_CUSTOMER')){
 //                    array_push($customers, array('id_customer'=> $customerWithGroup[$i]['id_customer'],
 //                                         'company'=> $customerWithGroup[$i]['company'],
 //                                         'firstname'=> $customerWithGroup[$i]['firstname'],

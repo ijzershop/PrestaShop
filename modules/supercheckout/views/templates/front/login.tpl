@@ -116,11 +116,11 @@
       <label class="control-label" for="input-no_shipping_phone">Telefoonnummer: <span style="display:inline;" class="supercheckout-required">*</span></label>
         {assign var='first_address_loggedin' value=null}
           {if !isset($guest_information)}
-            {if $customer.addresses && Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id}
+            {if $customer.addresses && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id}
               {assign var='first_address_loggedin' value=reset($customer.addresses)}
                   <input type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value="{$first_address_loggedin['phone']}"/>
             {else}
-              <input type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value="{if Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}0582123138{/if}"/>
+              <input type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value="{if Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}0582123138{/if}"/>
             {/if}
           {/if}
     </div>
@@ -177,7 +177,7 @@
       <div class="no-shipping-names-row phone">
         <div class="form-group">
           <label class="control-label" for="input-no_shipping_phone">Telefoonnummer: <span style="display:inline;" class="supercheckout-required">*</span></label>
-          <input  type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value="{if Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}0582123138{/if}"/>
+          <input  type="text" class="form-control percheckout-large-field" name="no_shipping_phone" id="input-no_shipping_phone" value="{if Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}0582123138{/if}"/>
         </div>
       </div>
       {*      Start extra names by no shipping *}

@@ -1,0 +1,54 @@
+<div class="card">
+  <div class="card-header">
+    Development
+  </div>
+  <div class="card-body">
+
+      {# Testing Domains #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Test Omgeving
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseTest" aria-expanded="false" aria-controls="collapseTest">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseTest">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right">
+            Test Domains
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_TEST_WEBSITES"
+                   id="MSTHEMECONFIG_TEST_WEBSITES"
+                   value="{{ MSTHEMECONFIG_TEST_WEBSITES }}" class="form-control">
+            <p class="help-block">
+              Enter the full url of the test domains, so the test header logo can be shown
+            </p>
+          </div>
+        </div>
+      </div>
+      {# Systeem opties #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Systeem opties
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseSystem" aria-expanded="false" aria-controls="collapseSystem">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseSystem">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right">
+            Order list filter time
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_ORDERLIST_FILTER_TIME"
+                   id="MSTHEMECONFIG_ORDERLIST_FILTER_TIME"
+                   value="{{ MSTHEMECONFIG_ORDERLIST_FILTER_TIME }}" class="form-control">
+            <p class="help-block">
+              Enter the filter time you would like to use for fetching order records. example: ("-4 weeks","8
+              september","-1 week","-2 days") for viewing a month off orders
+            </p>
+          </div>
+        </div>
+      </div>
+
+  </div>
+</div>

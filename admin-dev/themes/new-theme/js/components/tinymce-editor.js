@@ -33,9 +33,11 @@ const {$} = window;
  * npm and fully integrate in the back-office theme.
  */
 class TinyMCEEditor {
+  cfg;
   constructor(options) {
     const opts = options || {};
     this.tinyMCELoaded = false;
+    this.config = {};
     if (typeof opts.baseAdminUrl === 'undefined') {
       if (typeof window.baseAdminDir !== 'undefined') {
         opts.baseAdminUrl = window.baseAdminDir;
@@ -71,52 +73,54 @@ class TinyMCEEditor {
     }
   }
 
-  static fetchKey(hostname) {
-    var keys = [];
-    keys["bouwstaalmat.nl"] =  "";
-    keys["bouwstaalmat.viho.nl"] =  "";
-    keys["constructiebalk.nl"] =  "3wORV+ZdWifIWnUWSxdAUtCPcNfJnjU/DMxjcGDxcZnBQVJgpRjWdVZMdqAhsj5pbZd3c/h/s41crmf9zwJuv3VrO/4pkSLOmAdBZJT3W6Y="; //set
-    keys["constructieklus.nl"] =  "";
-    keys["constructieklus.viho.nl"] =  "";
-    keys["demodernesmid.nl"] =  "";
-    keys["demodernesmid.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO+zP8NYYqmVXAXbxgL6gbmPashb4b9GpWNnBUAErfRNXXYLw30+WTmQ6IQvaGJ1N8A=="; //SET
-    keys["gerofitness.nl"] =  "";
-    keys["gerofitness.viho.nl"] =  "";
-    keys["ijzershop.frl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=";//Set
-    keys["ijzershop.nl"] =  "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY="; //Set
-    keys["ijzershop.eu"] =  "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY="; //Set
-    keys["ijzershop176.local"] =  "cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpmftIOvjnss+mhviBjMWYpzfTD8gujkxPFveiunw80iXmfbHphHun6k0qBPJyPtFC8=";
-    keys["paneelhek.nl"] =  "";
-    keys["paneelhek.viho.nl"] =  "";
-    keys["viho.nl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4="; //Set
 
-    if(keys.hasOwnProperty(hostname)){
-      return keys[hostname];
-    } else {
-      return "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY=";
-    }
-
-  }
   /**
    * Prepare the config and init all TinyMCE editors
    *
    * @param config
    */
   initTinyMCE(config) {
-    if (typeof (base_url) == "undefined") {
-      // detect the root url
-      var base_url = location.protocol + '//' + location.host + '/';
-      // detect localhost
-      // the value must include your local window.location.hostname
+
+    let fetchKey = function(hostname) {
+      let keys = [];
+      keys["bouwstaalmat.nl"] =  "";
+      keys["bouwstaalmat.viho.nl"] =  "";
+      keys["constructiebalk.nl"] =  "3wORV+ZdWifIWnUWSxdAUtCPcNfJnjU/DMxjcGDxcZnBQVJgpRjWdVZMdqAhsj5pbZd3c/h/s41crmf9zwJuv3VrO/4pkSLOmAdBZJT3W6Y="; //set
+      keys["constructieklus.nl"] =  "";
+      keys["constructieklus.viho.nl"] =  "";
+      keys["demodernesmid.nl"] =  "";
+      keys["demodernesmid.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO+zP8NYYqmVXAXbxgL6gbmPashb4b9GpWNnBUAErfRNXXYLw30+WTmQ6IQvaGJ1N8A=="; //SET
+      keys["gerofitness.nl"] =  "";
+      keys["gerofitness.viho.nl"] =  "";
+      keys["ijzershop.frl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=";//Set
+      keys["ijzershop.nl"] =  "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY="; //Set
+      keys["ijzershop.eu"] =  "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY="; //Set
+      keys["ijzershop176.local"] =  "cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpmftIOvjnss+mhviBjMWYpzfTD8gujkxPFveiunw80iXmfbHphHun6k0qBPJyPtFC8=";
+      keys["paneelhek.nl"] =  "";
+      keys["paneelhek.viho.nl"] =  "";
+      keys["viho.nl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4="; //Set
+
+      if(keys.hasOwnProperty(hostname)){
+        return keys[hostname];
+      } else {
+        return "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY=";
+      }
+
     }
-    var tbpKey = TinyMCEEditor.fetchKey(window.location.hostname);
+
+    // detect the root url
+    const base_url = location.protocol + '//' + location.host + '/';
+    // detect localhost
+    // the value must include your local window.location.hostname
+    if (typeof (base_url) == "undefined") {
+    }
+    const tbpKey = fetchKey(window.location.hostname);
 
     const cfg = {
-      selector: '.rte',
+      selector: '.autoload_rte',
       plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
       browser_spellcheck: true,
-      toolbar1: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
-      toolbar2: '',
+      toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
       language: window.iso_user,
       contextmenu: "bootstrap",
       image_advtab: true ,
@@ -192,6 +196,7 @@ class TinyMCEEditor {
       config.selector = '.' + config.editor_selector;
     }
 
+     this.config =  cfg;
     // Change icons in popups
 
     $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => {
@@ -200,6 +205,10 @@ class TinyMCEEditor {
 
     window.tinyMCE.init(cfg);
     this.watchTabChanges(cfg);
+  }
+
+  panelLoaded() {
+    this.watchTabChanges(this.config);
   }
 
   /**
@@ -236,10 +245,12 @@ class TinyMCEEditor {
       const tabContainer = $(textarea).closest('.translations.tabbable');
 
       if (translatedField.length && tabContainer.length) {
+
         const textareaLocale = translatedField.data('locale');
         const textareaLinkSelector = `.nav-item a[data-locale="${textareaLocale}"]`;
 
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
+
           const form = $(textarea).closest('form');
           const editor = window.tinyMCE.get(textarea.id);
 
@@ -253,6 +264,14 @@ class TinyMCEEditor {
             form,
           });
         });
+      } else {
+          const form = $(textarea).closest('form');
+          const editor = window.tinyMCE.get(textarea.id);
+
+          if (editor) {
+            editor.remove();
+            window.tinyMCE.init(this.config);
+          }
       }
     });
 

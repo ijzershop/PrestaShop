@@ -79,7 +79,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $carrierObj = new Carrier($carrier, 1);
 
         if(empty($carrierObj->name)){
-            $shipCarrierId = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_SHIPPING_CARRIER', $this->order->id_lang, $this->order->id_shop_group, $this->order->id_shop, 10);;
+            $shipCarrierId = Configuration::get('MSTHEMECONFIG_SHIPPING_CARRIER', $this->order->id_lang, $this->order->id_shop_group, $this->order->id_shop, 10);;
 
             $carrierObj = new Carrier($shipCarrierId);
         }
@@ -168,7 +168,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                 }
 
 
-                if($order_detail['product_reference'] == Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_REFERENCE')){
+                if($order_detail['product_reference'] == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')){
                     $descProduct = new Product($order_detail['product_id']);
                     if($descProduct){
                         $order_detail['product_desc_short'] = reset($descProduct->description);

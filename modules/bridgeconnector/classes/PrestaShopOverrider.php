@@ -161,7 +161,7 @@ class PrestaShopOverrider extends BridgeConnectorCore
 
     public function getCartVersion()
     {
-        return Tools::jsonEncode(
+        return json_encode(
             array(
                 'cart_version'  => _PS_VERSION_,
                 'cookie_key'    => _COOKIE_KEY_,
@@ -604,7 +604,7 @@ class PrestaShopOverrider extends BridgeConnectorCore
 
     public function jsonEncode($arr)
     {
-        return Tools::jsonEncode($arr);
+        return json_encode($arr);
     }
 
     public function stripSlashes($str)

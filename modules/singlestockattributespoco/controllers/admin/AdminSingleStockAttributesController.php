@@ -35,7 +35,7 @@ class AdminSingleStockAttributesController extends ModuleAdminController
         }
 
         if ($this->random != $this->module->ssa_random) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'hasError' => true,
                 'error' => $this->module->l('No permission')
             )));
@@ -57,21 +57,21 @@ class AdminSingleStockAttributesController extends ModuleAdminController
             $id_product = (int)Tools::getValue('id_product');
             $product = new Product($id_product);
             if (!Validate::isLoadedObject($product)) {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'error' => $this->module->l('The product ID is invalid')
                 )));
             } elseif ($this->module->addProduct($id_product) == -1) {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'error' => $this->module->l('This product already added')
                 )));
             } else {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'error' => '',
                     'message' => $this->module->l('Product successfully added')
                 )));
             }
         } elseif (Tools::getValue('action') == 'loadProducts') {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'error' => '',
                 'content' => $this->module->loadProducts()
             )));
@@ -79,23 +79,23 @@ class AdminSingleStockAttributesController extends ModuleAdminController
             $id_product = (int)Tools::getValue('id_product');
 
             if (!$this->module->removeProduct($id_product)) {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'error' => $this->module->l('Something went wrong, please refresh the page and try again')
                 )));
             }
 
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'error' => '',
                 'message' => $this->module->l('Product successfully removed')
             )));
         } elseif (Tools::getValue('action') == 'removeAllProducts') {
             if (!$this->module->removeAllProducts()) {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'error' => $this->module->l('Something went wrong, please refresh the page and try again')
                 )));
             }
 
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'error' => '',
                 'message' => $this->module->l('All products successfully removed')
             )));
@@ -112,21 +112,21 @@ class AdminSingleStockAttributesController extends ModuleAdminController
             $id_category = (int)Tools::getValue('id_category');
             $category = new Category($id_category);
             if (!Validate::isLoadedObject($category)) {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'error' => $this->module->l('The Category ID is invalid')
                 )));
             } elseif ($this->module->addCategory($id_category) == -1) {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'error' => $this->module->l('This category already added')
                 )));
             } else {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'error' => '',
                     'message' => $this->module->l('Category successfully added')
                 )));
             }
         } elseif (Tools::getValue('action') == 'loadCategories') {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'error' => '',
                 'content' => $this->module->loadCategories()
             )));
@@ -134,34 +134,34 @@ class AdminSingleStockAttributesController extends ModuleAdminController
             $id_category = (int)Tools::getValue('id_category');
 
             if (!$this->module->removeCategory($id_category)) {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'error' => $this->module->l('Something went wrong, please refresh the page and try again')
                 )));
             }
 
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'error' => '',
                 'message' => $this->module->l('Category successfully removed')
             )));
         } elseif (Tools::getValue('action') == 'removeAllCategories') {
             if (!$this->module->removeAllCategories()) {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'error' => $this->module->l('Something went wrong, please refresh the page and try again')
                 )));
             }
 
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'error' => '',
                 'message' => $this->module->l('All categories successfully removed')
             )));
         } elseif (Tools::getValue('action') == 'updateSettings') {
             Configuration::updateValue('SSA_PRODUCTS_TYPE', (int)Tools::getValue('products_type'));
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'error' => '',
                 'message' => $this->module->l('Successfully updated')
             )));
         } else {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'hasError' => true,
                 'error' => $this->module->l('Action not found')
             )));

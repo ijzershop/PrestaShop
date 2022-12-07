@@ -1,0 +1,134 @@
+<div class="card">
+  <div class="card-header">
+    Statussen, Carriers etc.
+  </div>
+  <div class="card-body">
+
+      {#   Custom Product   #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Custom Product
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseCustomProduct" aria-expanded="false" aria-controls="collapseCustomProduct">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseCustomProduct">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            Categorie voor Custom Product
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY"
+                    class="w-100 form-control select2-data-input" data-type="categories_home"
+                    id="MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY">
+              {{ MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY|raw }}
+            </select>
+            <p class="help-block">
+              Select the category you want to use for custom products added
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            Custom Product Referentie
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE"
+                   id="MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE"
+                   value="{{ MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE }}" class="form-control">
+            <p class="help-block">
+              Enter the reference name for custom products added at cart section
+            </p>
+          </div>
+        </div>
+      </div>
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Statussen
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseState" aria-expanded="false" aria-controls="collapseState">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseState">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            Status voor Bestelling betaald
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_ORDERSTATE_PAID" class="w-100 form-control select2-data-input"
+                    data-type="order_states" id="MSTHEMECONFIG_ORDERSTATE_PAID">
+              {{ MSTHEMECONFIG_ORDERSTATE_PAID|raw }}
+            </select>
+            <p class="help-block">
+              Select the orderstate of order paid, to disallow setting multiple times state paid
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            Status voor bestelling gratis
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_ORDERSTATE_FREE_ORDER"
+                    class="w-100 form-control select2-data-input" data-type="order_states"
+                    id="MSTHEMECONFIG_ORDERSTATE_FREE_ORDER">
+              {{ MSTHEMECONFIG_ORDERSTATE_FREE_ORDER|raw }}
+            </select>
+            <p class="help-block">
+              Select the orderstate of free orders
+            </p>
+          </div>
+        </div>
+      </div>
+      {# Carriers #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Verzend opties
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseCarrier" aria-expanded="false" aria-controls="collapseCarrier">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseCarrier">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            Set the shipping carrier
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_SHIPPING_CARRIER" class="w-100 form-control select2-data-input"
+                    data-type="carriers" id="MSTHEMECONFIG_SHIPPING_CARRIER">
+              {{ MSTHEMECONFIG_SHIPPING_CARRIER|raw }}
+            </select>
+            <p class="help-block">
+              Shipping Carrier
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            Set the pickup carrier
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_PICKUP_CARRIER" class="w-100 form-control select2-data-input"
+                    data-type="carriers" id="MSTHEMECONFIG_PICKUP_CARRIER">
+              {{ MSTHEMECONFIG_PICKUP_CARRIER|raw }}
+            </select>
+            <p class="help-block">
+              Pickup Carrier
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            Set the add to order carrier
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_ADD2ORDER_CARRIER" class="w-100 form-control select2-data-input"
+                    data-type="carriers" id="MSTHEMECONFIG_ADD2ORDER_CARRIER">
+              {{ MSTHEMECONFIG_ADD2ORDER_CARRIER|raw }}
+            </select>
+            <p class="help-block">
+              AddToOrder Carrier
+            </p>
+          </div>
+        </div>
+      </div>
+
+  </div>
+</div>

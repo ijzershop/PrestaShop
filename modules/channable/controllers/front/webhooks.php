@@ -29,7 +29,7 @@ class ChannableWebhooksModuleFrontController extends ModuleFrontController
 
     public function postProcess()
     {
-        
+
         if (!Tools::getValue('key')) {
             die('Not authenticated');
         }
@@ -39,7 +39,7 @@ class ChannableWebhooksModuleFrontController extends ModuleFrontController
 
         $postData = Channable::fetchPhpInput();
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $jsonData = ChannableWebhook::getAllWebhooks();             
+            $jsonData = ChannableWebhook::getAllWebhooks();
         } elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
             if (!Tools::getValue('id')) {
                 die('ID not submitted');
@@ -48,19 +48,19 @@ class ChannableWebhooksModuleFrontController extends ModuleFrontController
             $webhook->delete();
             $jsonData = array('status' => 'OK');
         } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $postData = Tools::jsonDecode($postData);
+            $postData = json_decode($postData);
             if ($postData != null) {
                 $webhook = ChannableWebhook::getExistingOrNewWebhook((string)$postData->address);
                 $webhook->action = (string)$postData->action;
                 $webhook->active = (string)$postData->active;
                 $webhook->save();
-                $jsonData = array('status' => 'OK');                
+                $jsonData = array('status' => 'OK');
             }
         }
-        
+
         if (isset($jsonData)) {
             header('Content-Type: application/json');
-            echo Tools::jsonEncode($jsonData);
+            echo json_encode($jsonData);
         }
         die();
     }

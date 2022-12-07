@@ -243,7 +243,7 @@ class GAnalyticsPro extends Module
             if (!empty($aDisplay)) {
                 $aDisplay['assign'] = array_merge($aDisplay['assign'], array(
                     'aUpdateErrors' => $aUpdateModule,
-                    'oJsTranslatedMsg' => BT_GapModuleTools::jsonEncode($GLOBALS[_GAP_MODULE_NAME . '_JS_MSG'])
+                    'oJsTranslatedMsg' => BT_GapModulejson_encode($GLOBALS[_GAP_MODULE_NAME . '_JS_MSG'])
                 ));
 
                 // get content

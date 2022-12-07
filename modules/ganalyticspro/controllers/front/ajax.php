@@ -70,7 +70,7 @@ class GanalyticsproAjaxModuleFrontController extends ModuleFrontController
                 }
             }
 
-            die(Tools::jsonEncode($this->jsonOutput));
+            die(json_encode($this->jsonOutput));
         }
     }
 
@@ -105,7 +105,7 @@ class GanalyticsproAjaxModuleFrontController extends ModuleFrontController
                 );
             }
 
-            die(Tools::jsonEncode($this->jsonOutput));
+            die(json_encode($this->jsonOutput));
         }
     }
 
@@ -138,7 +138,7 @@ class GanalyticsproAjaxModuleFrontController extends ModuleFrontController
                 );
             }
 
-            die(Tools::jsonEncode($this->jsonOutput));
+            die(json_encode($this->jsonOutput));
         }
     }
 
@@ -171,7 +171,7 @@ class GanalyticsproAjaxModuleFrontController extends ModuleFrontController
                 );
             }
 
-            die(Tools::jsonEncode($this->jsonOutput));
+            die(json_encode($this->jsonOutput));
         }
     }
 
@@ -209,7 +209,7 @@ class GanalyticsproAjaxModuleFrontController extends ModuleFrontController
             }
             $this->jsonOutput['refunds'] = $aOutputData;
 
-            die(Tools::jsonEncode($this->jsonOutput));
+            die(json_encode($this->jsonOutput));
         }
     }
 
@@ -250,7 +250,7 @@ class GanalyticsproAjaxModuleFrontController extends ModuleFrontController
                                 );
                             }
                         }
-                        
+
                         $aOutputData['refunds_partial'][$key]['refund_data'] = array(
                             'currency' => Context::getContext()->currency->iso_code,
                             'transaction_id' => $oOrder->reference,
@@ -266,7 +266,7 @@ class GanalyticsproAjaxModuleFrontController extends ModuleFrontController
 
             $this->jsonOutput['refunds_partial'] = $aOutputData;
 
-            die(Tools::jsonEncode($this->jsonOutput['refunds_partial']));
+            die(json_encode($this->jsonOutput['refunds_partial']));
         }
     }
 
@@ -284,7 +284,7 @@ class GanalyticsproAjaxModuleFrontController extends ModuleFrontController
             // Set the user cookie
             Context::getContext()->cookie->bt_gap_consent_lvl = true;
 
-            die(Tools::jsonEncode($this->jsonOutput));
+            die(json_encode($this->jsonOutput));
         }
     }
 }

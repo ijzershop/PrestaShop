@@ -1,0 +1,529 @@
+<div class="card">
+  <div class="card-header">
+    Pagina's
+  </div>
+  <div class="card-body">
+
+      {#    HEADER  #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Header Onderdelen
+      <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+              data-target="#collapseHeader" aria-expanded="false" aria-controls="collapseHeader">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseHeader">
+        {#  Menu Icon  #}
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Show Menu Icon
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_SHOW_MENU_ICON" class="w-100 select2-native-input"
+                    id="MSTHEMECONFIG_SHOW_MENU_ICON">
+              <option value="0"
+                      {% if MSTHEMECONFIG_SHOW_MENU_ICON == '0' %}selected="selected"{% endif %}>Hide
+              </option>
+              <option value="1"
+                      {% if MSTHEMECONFIG_SHOW_MENU_ICON == '1' %}selected="selected"{% endif %}>Show
+              </option>
+            </select>
+            <p class="help-block">Show/Hide the menu icon in header</p>
+          </div>
+        </div>
+
+        {#   Whatsapp Link text   #}
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Whatsapp text
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_HEADER_WHATSAPP_TEXT"
+                   id="MSTHEMECONFIG_HEADER_WHATSAPP_TEXT"
+                   value="{{ MSTHEMECONFIG_HEADER_WHATSAPP_TEXT }}" class="form-control">
+            <p class="help-block">Enter the text show at the top whatsapp link</p>
+          </div>
+        </div>
+
+        {#     Whatsapp link   #}
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Whatsapp link
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_HEADER_WHATSAPP_LINK"
+                   id="MSTHEMECONFIG_HEADER_WHATSAPP_LINK"
+                   value="{{ MSTHEMECONFIG_HEADER_WHATSAPP_LINK }}" class="form-control">
+            <p class="help-block">Enter the link value for the top whatsapp link</p>
+          </div>
+        </div>
+        {#   Phonenumber link text   #}
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Phonenumber text
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_HEADER_PHONENUMBER_TEXT"
+                   id="MSTHEMECONFIG_HEADER_PHONENUMBER_TEXT"
+                   value="{{ MSTHEMECONFIG_HEADER_PHONENUMBER_TEXT }}" class="form-control">
+            <p class="help-block">Enter the text show at the top Phonenumber link</p>
+          </div>
+        </div>
+        {#   Phonenumber link   #}
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Phonenumber link
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_HEADER_PHONENUMBER_LINK"
+                   id="MSTHEMECONFIG_HEADER_PHONENUMBER_LINK"
+                   value="{{ MSTHEMECONFIG_HEADER_PHONENUMBER_LINK }}" class="form-control">
+            <p class="help-block">Enter the link value for the top Phonenumber link</p>
+          </div>
+        </div>
+        {#      Mail link text #}
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Mail text
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_HEADER_MAIL_TEXT"
+                   id="MSTHEMECONFIG_HEADER_MAIL_TEXT"
+                   value="{{ MSTHEMECONFIG_HEADER_MAIL_TEXT }}" class="form-control">
+            <p class="help-block">Enter the text show at the top mail link</p>
+          </div>
+        </div>
+        {#   Linked Contact Page   #}
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Linked contact page
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_HEADER_MAIL_LINK" class="w-100 select2-data-input"
+                    data-type="pages" id="MSTHEMECONFIG_HEADER_MAIL_LINK">
+              {{ MSTHEMECONFIG_HEADER_MAIL_LINK|raw }}
+            </select>
+            <p class="help-block">Select the page which is used to redirect onclick</p>
+          </div>
+        </div>
+
+        {#   Linked Offer Page   #}
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Linked offer page
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_OFFER_LINK" class="w-100 select2-data-input" data-type="pages"
+                    id="MSTHEMECONFIG_OFFER_LINK">
+              {{ MSTHEMECONFIG_OFFER_LINK|raw }}
+            </select>
+            <p class="help-block">Select the page which is used to redirect onclick</p>
+          </div>
+        </div>
+
+        {#   Primary Color   #}
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Primary color
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_PRIMARY_COLOR" class="w-100 select2-native-input"
+                    id="MSTHEMECONFIG_PRIMARY_COLOR">
+              <option value="#3b56ad"
+                      {% if MSTHEMECONFIG_PRIMARY_COLOR == '#3b56ad' %}selected{% endif %}>Blauw
+              </option>
+              <option value="#FF6A00"
+                      {% if MSTHEMECONFIG_PRIMARY_COLOR == '#FF6A00' %}selected{% endif %}>Oranje
+              </option>
+            </select>
+            <p class="help-block">Select the primary color</p>
+          </div>
+        </div>
+      </div>
+      {#  HOMEPAGE  #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Home pagina Onderdelen
+      <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+              data-target="#collapseHome" aria-expanded="false" aria-controls="collapseHome">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseHome">
+        <div class="form-group col-xs-12" data-tab-id="main">
+          <label class="control-label col-xs-4 required">
+            Categories
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_HOMEPAGE_CATEGORIES" class="w-100 select2-data-input"
+                    data-type="categories_home" id="MSTHEMECONFIG_HOMEPAGE_CATEGORIES"
+                    multiple="multiple" size="15">
+              {{ MSTHEMECONFIG_HOMEPAGE_CATEGORIES|raw }}
+            </select>
+            <p class="help-block">Select the all categories you want to show on the homepage</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Background color
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_HOMEPAGE_BACKGROUND_COLOR" class="w-100 select2-native-input"
+                    id="MSTHEMECONFIG_HOMEPAGE_BACKGROUND_COLOR" size="15">
+              <option value="#ffffff"
+                      {% if MSTHEMECONFIG_HOMEPAGE_BACKGROUND_COLOR == '#ffffff' %}selected{% endif %}>
+                Wit
+              </option>
+              <option value="#efefef"
+                      {% if MSTHEMECONFIG_HOMEPAGE_BACKGROUND_COLOR == '#efefef' %}selected{% endif %}>
+                Licht Grijs
+              </option>
+              <option value="#777777"
+                      {% if MSTHEMECONFIG_HOMEPAGE_BACKGROUND_COLOR == '#777777' %}selected{% endif %}>
+                Donker Grijs
+              </option>
+              <option value="#FF6A00"
+                      {% if MSTHEMECONFIG_HOMEPAGE_BACKGROUND_COLOR == '#FF6A00' %}selected{% endif %}>
+                Oranje
+              </option>
+              <option value="#000000"
+                      {% if MSTHEMECONFIG_HOMEPAGE_BACKGROUND_COLOR == '#000000' %}selected{% endif %}>
+                Zwart
+              </option>
+            </select>
+            <p class="help-block">Background color of home text block</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            <span class="label-tooltip" data-toggle="tooltip" data-html="true" title=""
+                  data-original-title="style it with bootstrap columns to ensure keeping the correct styling">
+            Homepage text
+            </span>
+          </label>
+          <div class="col-xs-8">
+               <textarea name="MSTHEMECONFIG_HOMEPAGE_TEXT"
+                         id="MSTHEMECONFIG_HOMEPAGE_TEXT"
+                         cols="120" rows="100"
+                         class="autoload_rte">{{ MSTHEMECONFIG_HOMEPAGE_TEXT|raw }}</textarea>
+            <p class="help-block">Set the html text which you would like to show on the homepage</p>
+          </div>
+        </div>
+      </div>
+
+      {#   CATEGORY   #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Category Pagina Onderdelen
+      <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+              data-target="#collapseCategory" aria-expanded="false" aria-controls="collapseCategory">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseCategory">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Show category on product page
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_CATEGORY_SHOW_PRODUCT_PAGE" id="yes"
+                            value="1"
+                            {% if MSTHEMECONFIG_CATEGORY_SHOW_PRODUCT_PAGE == 1 %}checked="checked"{% endif %}>Yes</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_CATEGORY_SHOW_PRODUCT_PAGE" id="no" value=""
+                            {% if MSTHEMECONFIG_CATEGORY_SHOW_PRODUCT_PAGE == 0 %}checked="checked"{% endif %}>No</label>
+            </div>
+            <p class="help-block">Show category bottom text on product page</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            <span class="label-tooltip" data-toggle="tooltip" data-html="true" title=""
+                  data-original-title="style it with bootstrap columns to ensure keeping the correct styling">
+            Category bottom text
+            </span>
+          </label>
+          <div class="col-xs-8">
+               <textarea name="MSTHEMECONFIG_CATEGORY_BOTTOM_TEXT"
+                         id="MSTHEMECONFIG_CATEGORY_BOTTOM_TEXT" cols="120" rows="100"
+                         class="autoload_rte">{{ MSTHEMECONFIG_CATEGORY_BOTTOM_TEXT|raw }}</textarea>
+            <p class="help-block">Set the html text which you would like to show at the bottom of the category pages</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Category image width
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_CATEGORY_IMAGE_SIZE" class="w-100 select2-native-input"
+                    id="MSTHEMECONFIG_CATEGORY_IMAGE_SIZE">
+              <option value="col-sm-4 col-md-2"
+                      {% if MSTHEMECONFIG_CATEGORY_IMAGE_SIZE == 'col-sm-4 col-md-2' %}selected{% endif %}>
+                Klein
+              </option>
+              <option value="col-sm-8 col-md-4"
+                      {% if MSTHEMECONFIG_CATEGORY_IMAGE_SIZE == 'col-sm-8 col-md-4' %}selected{% endif %}>
+                Groot
+              </option>
+            </select>
+            <p class="help-block">Select the desired width of the category images</p>
+          </div>
+        </div>
+      </div>
+
+      {#   PRODUCT PAGE   #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Product Pagina Onderdelen
+      <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+              data-target="#collapseProduct" aria-expanded="false" aria-controls="collapseProduct">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseProduct">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Show product features or parent category description on product page
+          </label>
+          <div class="col-xs-8">
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_SHOW_PRODUCT_FEATURES" id="product_features"
+                            value="product"
+                            {% if MSTHEMECONFIG_SHOW_PRODUCT_FEATURES == 'product' %}checked="checked"{% endif %}>Show
+                product
+                features</label>
+            </div>
+            <div class="radio ">
+              <label><input type="radio" name="MSTHEMECONFIG_SHOW_PRODUCT_FEATURES"
+                            id="category_description" value="category"
+                            {% if MSTHEMECONFIG_SHOW_PRODUCT_FEATURES == 'category' %}checked="checked"{% endif %}>Show
+                category description</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Product Length
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FEATURE_LENGTH" class="w-100 select2-data-input"
+                    data-type="features" id="MSTHEMECONFIG_FEATURE_LENGTH">
+              {{ MSTHEMECONFIG_FEATURE_LENGTH|raw }}
+            </select>
+            <p class="help-block">Select the feature for length product</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Product Width
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FEATURE_WIDTH" class="w-100 select2-data-input"
+                    data-type="features" id="MSTHEMECONFIG_FEATURE_WIDTH">
+              {{ MSTHEMECONFIG_FEATURE_WIDTH|raw }}
+            </select>
+            <p class="help-block">Select the feature for width product</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Product Height
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FEATURE_HEIGHT" class="w-100 select2-data-input"
+                    data-type="features" id="MSTHEMECONFIG_FEATURE_HEIGHT">
+              {{ MSTHEMECONFIG_FEATURE_HEIGHT|raw }}
+            </select>
+            <p class="help-block">Select the feature for height product</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Product Weight
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FEATURE_WEIGHT" class="w-100 select2-data-input"
+                    data-type="features" id="MSTHEMECONFIG_FEATURE_WEIGHT">
+              {{ MSTHEMECONFIG_FEATURE_WEIGHT|raw }}
+            </select>
+            <p class="help-block">Select the feature for weight product</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Product Material
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FEATURE_MATERIAL" class="w-100 select2-data-input"
+                    data-type="features" id="MSTHEMECONFIG_FEATURE_MATERIAL">
+              {{ MSTHEMECONFIG_FEATURE_MATERIAL|raw }}
+            </select>
+            <p class="help-block">Select the feature for material of the product</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required">
+            Product Color
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FEATURE_COLOR" class="w-100 select2-data-input"
+                    data-type="features" id="MSTHEMECONFIG_FEATURE_COLOR">
+              {{ MSTHEMECONFIG_FEATURE_COLOR|raw }}
+            </select>
+            <p class="help-block">Select the feature for color of the product</p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4">
+            Shown features
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_FEATURE_ENABLED[]" class="w-100 select2-data-input"
+                    data-type="features" id="MSTHEMECONFIG_FEATURE_ENABLED" multiple="multiple"
+                    size="15">
+              {{ MSTHEMECONFIG_FEATURE_ENABLED|raw }}
+            </select>
+            <p class="help-block">Select the all features wich you would like to show on the product page</p>
+          </div>
+        </div>
+      </div>
+
+      {#   Contact Page   #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Contact Pagina Onderdelen
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseContact" aria-expanded="false" aria-controls="collapseContact">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseContact">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4  text-right required">
+            Construction link page
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_CONTACTPAGE_CONSTRUCTION" class="w-100  select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_CONTACTPAGE_CONSTRUCTION">
+              {{ MSTHEMECONFIG_CONTACTPAGE_CONSTRUCTION|raw }}
+            </select>
+            <p class="help-block">
+              Select the page for redirect the construction page link
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4  text-right required">
+            Faq link page
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_CONTACTPAGE_FAQ" class="w-100 select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_CONTACTPAGE_FAQ">
+              {{ MSTHEMECONFIG_CONTACTPAGE_FAQ|raw }}
+            </select>
+            <p class="help-block">
+              Select the page for redirect the faq page link
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4  text-right required">
+            Privacy link page
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_CONTACTPAGE_PRIVACY" class="w-100 select2-data-input"
+                    data-type="pages"
+                    id="MSTHEMECONFIG_CONTACTPAGE_PRIVACY">
+              {{ MSTHEMECONFIG_CONTACTPAGE_PRIVACY|raw }}
+            </select>
+            <p class="help-block">
+              Select the page for redirect the privacy page link
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4  text-right required">
+            CMS page contact form offers
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE"
+                   id="MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE"
+                   value="{{ MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE }}" class=""
+                   required="required">
+            <p class="help-block">
+              Select the page for showing the offer request contact form
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4  text-right required">
+            CMS page contact form information
+          </label>
+          <div class="col-xs-8">
+            <input type="text" name="MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE"
+                   id="MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE"
+                   value="{{ MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE }}" class=""
+                   required="required">
+            <p class="help-block">
+              Select the page for showing the information request contact form
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right ">
+            <span class="label-tooltip" data-toggle="tooltip" data-html="true" title=""
+                  data-original-title="Build it in html mode">
+            Offer page text
+            </span>
+          </label>
+          <div class="col-xs-8">
+               <textarea name="MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_TEXT"
+                         id="MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_TEXT" cols="60" rows="10"
+                         class="autoload_rte">{{ MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_TEXT|raw }}</textarea>
+            <p class="help-block">
+              Set the offer contact page html text
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right ">
+            <span class="label-tooltip" data-toggle="tooltip" data-html="true" title=""
+                  data-original-title="Build it in html mode">
+            Information page text
+            </span>
+          </label>
+          <div class="col-xs-8">
+               <textarea name="MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_TEXT"
+                         id="MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_TEXT" cols="60" rows="10"
+                         class="autoload_rte">{{ MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_TEXT|raw }}</textarea>
+            <p class="help-block">
+              Set the information contact page html text
+            </p>
+          </div>
+        </div>
+      </div>
+      {#   Cookie page   #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Cookie Onderdelen
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseCookie" aria-expanded="false" aria-controls="collapseCookie">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseCookie">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4  text-right required">
+            Linked avg page
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_AVG_INFO_PAGE" class="w-100 select2-data-input" data-type="pages"
+                    id="MSTHEMECONFIG_AVG_INFO_PAGE">
+              {{ MSTHEMECONFIG_AVG_INFO_PAGE|raw }}
+              elect>
+              <p class="help-block">
+                Select the page which is used to redirect onclick
+              </p>
+          </div>
+        </div>
+      </div>
+
+  </div>
+</div>
+
+
+
+

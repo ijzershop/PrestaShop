@@ -184,7 +184,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
         }
 
         //Profile 3 is werplaats medewerkers admin is 1
-        $workshopProfiles = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_WORKSHOP_PROFILES');
+        $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES');
         $profiles = array();
         if(!empty($workshopProfiles)){
             $profiles = explode(',', $workshopProfiles);
@@ -320,7 +320,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 
         $this->addJqueryUI('ui.datepicker');
         $this->addJS(_PS_JS_DIR_ . 'vendor/d3.v3.min.js');
-        $this->addJS('https://maps.googleapis.com/maps/api/js?key='.Configuration::get('MODERNESMIDTHEMECONFIGURATOR_MAPS_KEY', null, null,  null, 'AIzaSyDv2qdzmbvRDXH-zzdqJY87K7y3W1iaMX8'));
+        $this->addJS('https://maps.googleapis.com/maps/api/js?key='.Configuration::get('MSTHEMECONFIG_MAPS_KEY', null, null,  null, 'AIzaSyDv2qdzmbvRDXH-zzdqJY87K7y3W1iaMX8'));
 
         if ($this->access('edit') && $this->display == 'view') {
             $this->addJS(_PS_JS_DIR_ . 'admin/orders.js');

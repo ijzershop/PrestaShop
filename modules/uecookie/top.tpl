@@ -56,7 +56,7 @@
 </script>
 <style>
     {literal}
-    .closeFontAwesome { 
+    .closeFontAwesome {
         cursor: pointer;
         padding: 2px 5px 2px 15px;
     }
@@ -98,7 +98,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <a class="btn btn-sm btn-dark rounded-0" href="{$link->getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_PRIVACY'))}">Privacy voorwaarden</a>
+                    <a class="btn btn-sm btn-dark rounded-0" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_CONTACTPAGE_PRIVACY'))}">Privacy voorwaarden</a>
                     <button class="btn btn-sm btn-dark rounded-0" onclick="closeUeNotify()">Ok</button>
                 </td>
             </tr>

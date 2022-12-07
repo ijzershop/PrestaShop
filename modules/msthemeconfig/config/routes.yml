@@ -1,0 +1,59 @@
+admin_categories_edit:
+    path: /sell/catalog/categories/{categoryId}/edit
+    methods: [GET, POST]
+    defaults:
+        _controller: 'MsThemeConfig\Controller\Admin\DmsAdminCategoryController::editAction'
+        _legacy_controller: 'AdminCategories'
+        _legacy_link: 'AdminCategories:update-category'
+        _legacy_parameters:
+            id_category: categoryId
+    requirements:
+        categoryId: \d+
+        _disable_module_prefix: 'true'
+
+admin_categories_edit_root:
+    path: /sell/catalog/categories/{categoryId}/edit-root
+    methods: [GET, POST]
+    defaults:
+        _controller: 'MsThemeConfig\Controller\Admin\DmsAdminCategoryController::editRootAction'
+        _legacy_controller: 'AdminCategories'
+        _legacy_link: 'AdminCategories:update-category'
+        _legacy_parameters:
+            id_category: categoryId
+    requirements:
+        categoryId: \d+
+        _disable_module_prefix: 'true'
+
+
+admin_configuration_get_panel:
+  path: /modernesmid/ajax/configuration/get-panel/{panel_name}
+  methods: [GET, POST]
+  defaults:
+      _controller: 'MsThemeConfig\Controller\Admin\ModernAjax::getPanel'
+      _legacy_controller: 'ModernAjax'
+      _legacy_link: 'ModernAjax:getPanel'
+      _legacy_parameters:
+          panel_name: panel_name
+  requirements:
+      panel_name: '([a-z-]+)?'
+
+
+modernesmid_config_get_select2_data:
+  path: /modernesmid/ajax/configuration/select2-get-data/{data_type}
+  methods: [GET, POST]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\ModernAjax::getSelect2Data'
+    _legacy_controller: 'ModernAjax'
+    _legacy_link: 'ModernAjax:getSelect2Data'
+    _legacy_parameters:
+      data_type: data_type
+  requirements:
+    panel_name: '([a-z-]+)?'
+
+
+modernesmid_config_page:
+  path: /improve/modules/manage/action/configure/msthemeconfig
+  methods: [GET]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\MsAdminThemeConfController::initContent'
+    _legacy_controller: MsAdminThemeConfController

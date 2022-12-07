@@ -42,7 +42,7 @@ class BT_GapModuleDao
     }
 
     /**
-     * addRefundPartial() method add a refund to handle 
+     * addRefundPartial() method add a refund to handle
      *
      * @param int $iShopId
      * @param int $iOrderId
@@ -109,7 +109,7 @@ class BT_GapModuleDao
     }
 
     /**
-     * addRefund() method add a refund to handle 
+     * addRefund() method add a refund to handle
      *
      * @param int $iShopId
      * @param int $iOrderId
@@ -234,7 +234,7 @@ class BT_GapModuleDao
         $results = \Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
         if (!empty($results)) {
-            $checkout_step = (array)Tools::jsonDecode($results[0]['checkout']);
+            $checkout_step = (array)json_decode($results[0]['checkout']);
         }
 
         return $checkout_step;

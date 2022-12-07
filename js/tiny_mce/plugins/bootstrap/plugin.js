@@ -139,7 +139,8 @@
     };
 
     var defaultConfig = {
-      bootstrapCss: 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css',
+      bootstrapColumns: 12,
+      bootstrapCss: 'https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css',
       editorStyleFormats: {
         textStyles: true,
         blockStyles: true,
@@ -5855,8 +5856,7 @@
         }
         this.styleFormatConfig = new StyleFormatConfig();
         this.styleFormatsAll = this.styleFormatConfig.getStyleFormats();
-        var _loop_2 = function (index) {
-          var format = this_2.styleFormatsAll[index];
+        this.styleFormatsAll.forEach(function (format) {
           if (activeKeys.includes(format.title)) {
             var stylesToTest = [
               'Text styles',
@@ -5864,18 +5864,17 @@
               'Container styles'
             ];
             if (stylesToTest.includes(format.title)) {
-              var tempFormat = {
+              var tempFormat_1 = {
                 title: format.title,
                 items: []
               };
               var props = format.items;
-              var propsToTest = [
+              var propsToTest_1 = [
                 'Margin',
                 'Padding'
               ];
-              var _loop_3 = function (index_1) {
-                var prop = props[index_1];
-                if (propsToTest.includes(prop.title)) {
+              props.forEach(function (prop) {
+                if (propsToTest_1.includes(prop.title)) {
                   var tempProps_1 = {
                     title: prop.title,
                     items: []
@@ -5889,59 +5888,50 @@
                   Object.entries(screensToTest).forEach(function (_a) {
                     var screenKey = _a[0], screenTitle = _a[1];
                     if (_this.editorStyleFormats.responsive.includes(screenKey)) {
-                      var tempScreen = {
+                      var tempScreen_1 = {
                         title: screenTitle,
                         items: []
                       };
                       var spacings = _this.editorStyleFormats.spacing;
-                      var tempSpacing = [];
-                      for (var index_2 = 0; index_2 < spacings.length; index_2++) {
-                        var spacingTitle = spacings[index_2];
+                      spacings.forEach(function (spacingTitle) {
                         var spItems = _this.findStyleFormatItems(format.title, prop.title, screenTitle, spacingTitle);
-                        tempScreen.items.push(spItems);
-                        tempSpacing.push(spItems);
+                        tempScreen_1.items.push(spItems);
+                        if (_this.editorStyleFormats.responsive.length < 2 && _this.editorStyleFormats.responsive[0] === 'xs') {
+                          tempProps_1.items.push(spItems);
+                        }
                         spItems.items.forEach(function (item) {
                           if ('classes' in item) {
                             _this.addStyleFormat(item);
                           }
                         });
-                      }
-                      if (_this.editorStyleFormats.responsive.length > 1) {
-                        tempProps_1.items.push(tempScreen);
-                      } else {
-                        tempProps_1.items.push(tempSpacing);
+                      });
+                      if (_this.editorStyleFormats.responsive.length > 1 || _this.editorStyleFormats.responsive[0] !== 'xs') {
+                        tempProps_1.items.push(tempScreen_1);
                       }
                     }
                   });
-                  tempFormat.items.push(tempProps_1);
+                  tempFormat_1.items.push(tempProps_1);
                 } else {
-                  tempFormat.items.push(prop);
+                  tempFormat_1.items.push(prop);
                   prop.items.forEach(function (item) {
                     if ('classes' in item) {
                       _this.addStyleFormat(item);
                     } else if ('items' in item) {
-                      item.items.forEach(function (item) {
-                        if ('classes' in item) {
-                          _this.addStyleFormat(item);
+                      item.items.forEach(function (it) {
+                        if ('classes' in it) {
+                          _this.addStyleFormat(it);
                         }
                       });
                     }
                   });
                 }
-              };
-              for (var index_1 = 0; index_1 < props.length; index_1++) {
-                _loop_3(index_1);
-              }
-              outputStyleFormats.push(tempFormat);
+              });
+              outputStyleFormats.push(tempFormat_1);
             } else {
               outputStyleFormats.push(format);
             }
           }
-        };
-        var this_2 = this;
-        for (var index = 0; index < this.styleFormatsAll.length; index++) {
-          _loop_2(index);
-        }
+        });
         this.editor.settings.style_formats = outputStyleFormats;
         var toolbarElements = [];
         for (var _f = 0, _g = Object.entries(this.elements); _f < _g.length; _f++) {
@@ -6013,7 +6003,7 @@
       }
       BootstrapPlugin.prototype.init = function () {
         var _this = this;
-        this.editor.on('ExecCommand', function (e) {
+        this.editor.on('BeforeExecCommand', function (e) {
           if (e.command === 'mceToggleFormat') {
             if (e.value.match(/rounded$/)) {
               e.value = e.value.replace('rounded', 'rounded-rounded');
@@ -6027,6 +6017,14 @@
               var nodeType = match[1];
               var prop_1 = match[2];
               var value = match[3];
+              var range = tinymce.activeEditor.selection.getRng();
+              var selectedLength = range.endOffset - range.startOffset;
+              if (selectedLength > 0) {
+                var ct = tinymce.activeEditor.selection.getContent();
+                tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML('span', { id: 'tbp-span' }, ct));
+                tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select('#tbp-span')[0]);
+                tinymce.activeEditor.dom.setAttrib('tbp-span', 'id', '');
+              }
               var $node_1 = tinymce.activeEditor.selection.getNode();
               if (nodeType === 'block') {
                 $node_1 = _this.$($node_1).closest(_this.styleFormatConfig.blockSelector);
@@ -6072,10 +6070,9 @@
         if (this.enableTemplateEdition === true) {
           tinymce.dom.DomQuery(this.editor.dom.select('body')).addClass('templatesEnabled');
         }
-        //DELETED KEY CHECK
-        // if (this.key.match(/key-here$/g) !== null) {
-        //   this.throwRegistrationAlert();
-        // }
+        if (this.key.match(/key-here$/g) !== null) {
+          this.throwRegistrationAlert();
+        }
         this.editor.ui.registry.addContextMenu('bootstrap', {
           update: function (element) {
             var ctxElements = 'addParagraphBefore addParagraphAfter | addParagraphAtBeginning addParagraphAtEnd';
@@ -6110,11 +6107,10 @@
         this.enableUiButtonsToggle();
         this.loadHtmlTemplates();
         this.enableContextToolbarsEvents();
-        //DELETED KEY CHECK
-        // var u = new URLSearchParams({ data: this.key }).toString();
-        // var request = new XMLHttpRequest();
-        // request.open('GET', 'https://www.registration.miglisoft.com/verify.json?' + u, true);
-        // request.send();
+        var u = new URLSearchParams({ data: this.key }).toString();
+        var request = new XMLHttpRequest();
+        request.open('GET', 'https://www.registration.miglisoft.com/verify.json?' + u, true);
+        request.send();
       };
       BootstrapPlugin.prototype.activate = function (element, elementSelector) {
         var $target;
@@ -6243,7 +6239,7 @@
           'After'
         ];
         rowPos.forEach(function (pos) {
-          var _loop_4 = function (i) {
+          var _loop_2 = function (i) {
             var columnText = 'column';
             if (i > 1) {
               columnText = 'columns';
@@ -6256,7 +6252,7 @@
             });
           };
           for (var i = 1; i < 5; i++) {
-            _loop_4(i);
+            _loop_2(i);
           }
           _this.editor.ui.registry.addContextToolbar('bsRow' + pos + 'ContextToolbar', {
             predicate: function (node) {
@@ -6374,65 +6370,23 @@
             scope: 'node'
           });
         });
+        var colCsssuffix = [];
+        colCsssuffix.push({
+          name: 'auto',
+          value: ''
+        });
+        for (var index = 1; index <= this.bootstrapColumns; index++) {
+          colCsssuffix.push({
+            name: index.toString() + '/' + this.bootstrapColumns.toString(),
+            value: index.toString()
+          });
+        }
         var colCssProperties = [{
             name: 'width',
             text: 'width',
             icon: 'template',
             prefix: 'col-',
-            suffix: [
-              {
-                name: 'auto',
-                value: ''
-              },
-              {
-                name: '1/12',
-                value: '1'
-              },
-              {
-                name: '2/12',
-                value: '2'
-              },
-              {
-                name: '3/12',
-                value: '3'
-              },
-              {
-                name: '4/12',
-                value: '4'
-              },
-              {
-                name: '5/12',
-                value: '5'
-              },
-              {
-                name: '6/12',
-                value: '6'
-              },
-              {
-                name: '7/12',
-                value: '7'
-              },
-              {
-                name: '8/12',
-                value: '8'
-              },
-              {
-                name: '9/12',
-                value: '9'
-              },
-              {
-                name: '10/12',
-                value: '10'
-              },
-              {
-                name: '11/12',
-                value: '11'
-              },
-              {
-                name: '12/12',
-                value: '12'
-              }
-            ]
+            suffix: colCsssuffix
           }];
         colCssProperties.forEach(function (cssprop) {
           _this.editor.ui.registry.addMenuButton(cssprop.name, {
@@ -6458,13 +6412,16 @@
                         icon: subMenuIcon,
                         onAction: function () {
                           var csspropPrefix = cssprop.prefix;
-                          if (suffix.value === '') {
-                            csspropPrefix = csspropPrefix.slice(0, -1);
-                          }
                           if (!_this.$(_this.currentCol).hasClass(csspropPrefix + screen.prefix + suffix.value)) {
                             cssprop.suffix.forEach(function (sf) {
                               _this.$(_this.currentCol).removeClass(csspropPrefix + screen.prefix + sf.value);
                             });
+                          }
+                          if (suffix.value === '') {
+                            if (screen.prefix === '') {
+                              csspropPrefix = csspropPrefix.slice(0, -1);
+                            }
+                            screen.prefix = screen.prefix.slice(0, -1);
                           }
                           _this.$(_this.currentCol).toggleClass(csspropPrefix + screen.prefix + suffix.value);
                           return false;
@@ -6492,7 +6449,7 @@
           'After'
         ];
         colPos.forEach(function (pos) {
-          var _loop_5 = function (i) {
+          var _loop_3 = function (i) {
             var columnText = 'column';
             if (i > 1) {
               columnText = 'columns';
@@ -6505,7 +6462,7 @@
             });
           };
           for (var i = 1; i < 5; i++) {
-            _loop_5(i);
+            _loop_3(i);
           }
           _this.editor.ui.registry.addContextToolbar('bsCol' + pos + 'ContextToolbar', {
             predicate: function (node) {
@@ -6628,7 +6585,7 @@
         switch (type) {
         case 'col':
           var col = this.findClosestCol(this.editor.selection.getNode());
-          this.editor.selection.setCursorLocation(col);
+          this.editor.selection.setCursorLocation(col, 0);
           $htmlContent = this.$('<div></div>');
           for (var index = 0; index < nb; index++) {
             $htmlContent.append(this.htmlTemplates.col);
@@ -6645,7 +6602,7 @@
           break;
         case 'row':
           var row = this.editor.selection.getNode().closest('.row');
-          this.editor.selection.setCursorLocation(row);
+          this.editor.selection.setCursorLocation(row, 0);
           $htmlContent = this.$(this.htmlTemplates.row);
           for (var index = 0; index < nb; index++) {
             $htmlContent.append(this.htmlTemplates.col);
@@ -6723,7 +6680,7 @@
         var value;
         if (titleParts.length === 2) {
           if (titleParts[1].includes('-')) {
-            regexTitle = /([a-z-]+[a-z]+-)([a-z0-9-]+)/;
+            regexTitle = /([a-z-]+[a-z]*-)([a-z0-9-]+)/;
             match = regexTitle.exec(titleParts[1]);
           } else {
             regexTitle = /([a-z]+)/;
@@ -6812,8 +6769,7 @@
         }
       };
       BootstrapPlugin.prototype.getValidElements = function () {
-        var valid_elements = '@[aria-*|data-*|role|accesskey|draggable|style|class|hidden|tabindex|contenteditable|id|title|contextmenu|lang|dir<ltr?rtl|spellcheck|onabort|onerror|onmousewheel|onblur|onfocus|onpause|oncanplay|onformchange|onplay|oncanplaythrough|onforminput|onplaying|onchange|oninput|onprogress|onclick|oninvalid|onratechange|oncontextmenu|onkeydown|onreadystatechange|ondblclick|onkeypress|onscroll|ondrag|onkeyup|onseeked|ondragend|onload|onseeking|ondragenter|onloadeddata|onselect|ondragleave|onloadedmetadata|onshow|ondragover|onloadstart|onstalled|ondragstart|onmousedown|onsubmit|ondrop|onmousemove|onsuspend|ondurationmouseout|ontimeupdate|onemptied|onmouseover|onvolumechange|onended|onmouseup|onwaiting],a[target<_blank?_self?_top?_parent|ping|media|href|hreflang|type|rel<alternate?archives?author?bookmark?external?feed?first?help?index?last?license?next?nofollow?noreferrer?prev?search?sidebar?tag?up],abbr,address,area[alt|coords|shape|href|target<_blank?_self?_top?_parent|ping|media|hreflang|type|shape<circle?default?poly?rect|rel<alternate?archives?author?bookmark?external?feed?first?help?index?last?license?next?nofollow?noreferrer?prev?search?sidebar?tag?up],article,aside,audio[src|preload<none?metadata?auto|autoplay<autoplay|loop<loop|controls<controls|mediagroup],blockquote[cite],body,br,button[autofocus<autofocus|disabled<disabled|form|formaction|formenctype|formmethod<get?put?post?delete|formnovalidate?novalidate|formtarget<_blank?_self?_top?_parent|name|type<reset?submit?button|value],canvas[width,height],caption,cite,code,col[span],colgroup[span],command[type<command?checkbox?radio|label|icon|disabled<disabled|checked<checked|radiogroup|default<default],datalist[data],dd,del[cite|datetime],details[open<open],dfn,div,dl,dt,em/i,embed[src|type|width|height],eventsource[src],fieldset[disabled<disabled|form|name],figcaption,figure,footer,form[accept-charset|action|enctype|method<get?post?put?delete|name|novalidate<novalidate|target<_blank?_self?_top?_parent],h1,h2,h3,h4,h5,h6,header,hgroup,hr,i[class],iframe[name|src|srcdoc|seamless<seamless|width|height|sandbox],img[alt=|src|ismap|usemap|width|height],input[accept|alt|autocomplete<on?off|autofocus<autofocus|checked<checked|disabled<disabled|form|formaction|formenctype|formmethod<get?put?post?delete|formnovalidate?novalidate|formtarget<_blank?_self?_top?_parent|height|list|max|maxlength|min|multiple<multiple|name|pattern|placeholder|readonly<readonly|required<required|size|src|step|type<hidden?text?search?tel?url?email?password?datetime?date?month?week?time?datetime-local?number?range?color?checkbox?radio?file?submit?image?reset?button|value|width],ins[cite|datetime],kbd,keygen[autofocus<autofocus|challenge|disabled<disabled|form|name],label[for|form],legend,li[value],main,mark,map[name],menu[type<context?toolbar?list|label],meter[value|min|low|high|max|optimum],nav,noscript,object[data|type|name|usemap|form|width|height],ol[reversed|start],optgroup[disabled<disabled|label],option[disabled<disabled|label|selected<selected|value],output[for|form|name],p,param[name,value],-pre,progress[value,max],q[cite],ruby,rp,rt,samp,script[src|async<async|defer<defer|type|charset],section,select[autofocus<autofocus|disabled<disabled|form|multiple<multiple|name|size],small,source[src|type|media],span,-strong/b,-sub,summary,-sup,table,tbody,td[colspan|rowspan|headers],textarea[autofocus<autofocus|disabled<disabled|form|maxlength|name|placeholder|readonly<readonly|required<required|rows|cols|wrap<soft|hard],tfoot,th[colspan|rowspan|headers|scope],thead,time[datetime],tr,ul,var,video[preload<none?metadata?auto|src|crossorigin|poster|autoplay<autoplay|mediagroup|loop<loop|muted<muted|controls<controls|width|height],wbr';
-        return valid_elements;
+        return '@[aria-*|data-*|role|accesskey|draggable|style|class|hidden|tabindex|contenteditable|id|title|contextmenu|lang|dir<ltr?rtl|spellcheck|onabort|onerror|onmousewheel|onblur|onfocus|onpause|oncanplay|onformchange|onplay|oncanplaythrough|onforminput|onplaying|onchange|oninput|onprogress|onclick|oninvalid|onratechange|oncontextmenu|onkeydown|onreadystatechange|ondblclick|onkeypress|onscroll|ondrag|onkeyup|onseeked|ondragend|onload|onseeking|ondragenter|onloadeddata|onselect|ondragleave|onloadedmetadata|onshow|ondragover|onloadstart|onstalled|ondragstart|onmousedown|onsubmit|ondrop|onmousemove|onsuspend|ondurationmouseout|ontimeupdate|onemptied|onmouseover|onvolumechange|onended|onmouseup|onwaiting],a[target<_blank?_self?_top?_parent|ping|media|href|hreflang|type|rel<alternate?archives?author?bookmark?external?feed?first?help?index?last?license?next?nofollow?noreferrer?prev?search?sidebar?tag?up],abbr,address,area[alt|coords|shape|href|target<_blank?_self?_top?_parent|ping|media|hreflang|type|shape<circle?default?poly?rect|rel<alternate?archives?author?bookmark?external?feed?first?help?index?last?license?next?nofollow?noreferrer?prev?search?sidebar?tag?up],article,aside,audio[src|preload<none?metadata?auto|autoplay<autoplay|loop<loop|controls<controls|mediagroup],blockquote[cite],body,br,button[autofocus<autofocus|disabled<disabled|form|formaction|formenctype|formmethod<get?put?post?delete|formnovalidate?novalidate|formtarget<_blank?_self?_top?_parent|name|type<reset?submit?button|value],canvas[width,height],caption,cite,code,col[span],colgroup[span],command[type<command?checkbox?radio|label|icon|disabled<disabled|checked<checked|radiogroup|default<default],datalist[data],dd,del[cite|datetime],details[open<open],dfn,div,dl,dt,em/i,embed[src|type|width|height],eventsource[src],fieldset[disabled<disabled|form|name],figcaption,figure,footer,form[accept-charset|action|enctype|method<get?post?put?delete|name|novalidate<novalidate|target<_blank?_self?_top?_parent],h1,h2,h3,h4,h5,h6,header,hgroup,hr,i[class],iframe[name|src|srcdoc|seamless<seamless|width|height|sandbox],img[alt=|src|ismap|usemap|width|height],input[accept|alt|autocomplete<on?off|autofocus<autofocus|checked<checked|disabled<disabled|form|formaction|formenctype|formmethod<get?put?post?delete|formnovalidate?novalidate|formtarget<_blank?_self?_top?_parent|height|list|max|maxlength|min|multiple<multiple|name|pattern|placeholder|readonly<readonly|required<required|size|src|step|type<hidden?text?search?tel?url?email?password?datetime?date?month?week?time?datetime-local?number?range?color?checkbox?radio?file?submit?image?reset?button|value|width],ins[cite|datetime],kbd,keygen[autofocus<autofocus|challenge|disabled<disabled|form|name],label[for|form],legend,li[value],main,mark,map[name],menu[type<context?toolbar?list|label],meter[value|min|low|high|max|optimum],nav,noscript,object[data|type|name|usemap|form|width|height],ol[reversed|start],optgroup[disabled<disabled|label],option[disabled<disabled|label|selected<selected|value],output[for|form|name],p,param[name,value],-pre,progress[value,max],q[cite],ruby,rp,rt,samp,script[src|async<async|defer<defer|type|charset],section,select[autofocus<autofocus|disabled<disabled|form|multiple<multiple|name|size],small,source[src|type|media],span,-strong/b,-sub,summary,-sup,table,tbody,td[colspan|rowspan|headers],textarea[autofocus<autofocus|disabled<disabled|form|maxlength|name|placeholder|readonly<readonly|required<required|rows|cols|wrap<soft|hard],tfoot,th[colspan|rowspan|headers|scope],thead,time[datetime],tr,ul,var,video[preload<none?metadata?auto|src|crossorigin|poster|autoplay<autoplay|mediagroup|loop<loop|muted<muted|controls<controls|width|height],wbr';
       };
       BootstrapPlugin.prototype.isIcon = function (selectedNode) {
         return new RegExp(this.iconSearchClass, 'gi').test(selectedNode.className);
@@ -6835,12 +6791,12 @@
         types.forEach(function (type) {
           _this.htmlTemplates.toolbars[type] = '<div class="context-trigger-wrapper bg-light p-1">\n                <div class="flex-grow-1 text-left no-events"><span class="badge badge-secondary font-weight-normal mb-2 px-2 py-1 rounded-0 no-events">' + tinymce.util.I18n.translate('Edit ' + type) + '</span></div>\n                <div class="btn-group rounded-0" role="group">\n                    <button type="button" class="btn btn-sm btn-warning rounded-0 context-btn tbp-ui add-' + type + '-before-btn" title="' + tinymce.util.I18n.translate('Add ' + type + ' before') + '"><span class="d-inline-block svg-icon">' + _this.editorIcons.plus + '</span></button>\n                    <button type="button" class="btn btn-sm btn-primary rounded-0 context-btn tbp-ui edit-' + type + '-btn" title="' + tinymce.util.I18n.translate('Edit ' + type) + '"><span class="d-inline-block svg-icon">' + _this.editorIcons.edit + '</span></button>\n                    <button type="button" class="btn btn-sm btn-warning rounded-0 mr-5 context-btn tbp-ui add-' + type + '-after-btn" title="' + tinymce.util.I18n.translate('Add ' + type + ' after') + '"><span class="d-inline-block svg-icon">' + _this.editorIcons.plus + '</span></button>\n                    <button type="button" class="btn btn-sm btn-danger rounded-0 context-btn tbp-ui remove-' + type + '-btn" title="' + tinymce.util.I18n.translate('Remove ' + type) + '"><span class="d-inline-block svg-icon">' + _this.editorIcons.minus + '</span></button>\n                </div>\n            </div>';
         });
-        this.htmlTemplates.col = '<div class="col">' + tinymce.util.I18n.translate('New column') + '</div>';
+        this.htmlTemplates.col = '<div class="col"><p>' + tinymce.util.I18n.translate('New column') + '</p></div>';
         this.htmlTemplates.row = '<div class="row"></div>';
       };
-      // BootstrapPlugin.prototype.throwRegistrationAlert = function () {
-      //   this.editor.setContent('<div class="alert alert-danger mx-5 my-5"><p>Your <a href="https://www.tinymce-bootstrap-plugin.com">Bootstrap plugin</a> is <strong>not registered</strong>.</p><p class="mb-0">Open your registration file and enter your purchase code, then paste the key in <em>tinymce.init({bootstrapConfig {key}})</em> to make it work properly.</p></div>');
-      // };
+      BootstrapPlugin.prototype.throwRegistrationAlert = function () {
+        this.editor.setContent('<div class="alert alert-danger mx-5 my-5"><p>Your <a href="https://www.tinymce-bootstrap-plugin.com">Bootstrap plugin</a> is <strong>not registered</strong>.</p><p class="mb-0">Open your registration file and enter your purchase code, then paste the key in <em>tinymce.init({bootstrapConfig {key}})</em> to make it work properly.</p></div>');
+      };
       return BootstrapPlugin;
     }();
 

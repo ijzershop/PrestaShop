@@ -726,7 +726,6 @@ class HelperListCore extends Helper
                     $params['name_date'] = $name;
 
                     $this->context->controller->addJqueryUI('ui.datepicker');
-
                     break;
 
                 case 'select':

@@ -636,7 +636,7 @@ class SupercheckoutCore extends ModuleFrontController
         $free_order_error = 'Geen online betaling';
         $order->validateOrder(
             $this->context->cart->id,
-            (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_ORDERSTATE_FREE_ORDER', null, null, null, 33),
+            (int)Configuration::get('MSTHEMECONFIG_ORDERSTATE_FREE_ORDER', null, null, null, 33),
             0,
             $free_order_error,
             null,
@@ -1055,7 +1055,7 @@ class SupercheckoutCore extends ModuleFrontController
                 }
                 /* End Code Modified by Priyanshu on 25-August-2020 to to fix the issue of php file uploading */
             }
-            echo Tools::jsonEncode($errors);
+            echo json_encode($errors);
             die;
         }
     }
@@ -1113,9 +1113,9 @@ class SupercheckoutCore extends ModuleFrontController
             }
         }
         if (isset($posted_data['kb_super_policy'])) {
-            $this->context->cookie->__set('supercheckout_accepted_consent', Tools::jsonEncode(array_keys($posted_data['kb_super_policy'])));
+            $this->context->cookie->__set('supercheckout_accepted_consent', json_encode(array_keys($posted_data['kb_super_policy'])));
         } else {
-            $this->context->cookie->__set('supercheckout_accepted_consent', Tools::jsonEncode(array()));
+            $this->context->cookie->__set('supercheckout_accepted_consent', json_encode(array()));
         }
         if (Configuration::get('PS_CONDITIONS')) {
             if ($this->supercheckout_settings['confirm']['term_condition'][($this->is_logged) ? 'logged' : 'guest']['require'] == 1) {

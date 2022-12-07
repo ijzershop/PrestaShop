@@ -73,7 +73,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
                 'remove_onclick' => true,
                 'callback' => 'calculateCheckoutConversion'
             ),
-            
+
             'date_add' => array(
                 'title' => $this->module->l('Date', 'AdminAbandonedCheckoutController'),
                 'align' => 'text-left',
@@ -83,7 +83,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
                 'filter_key' => 'a!date_add',
             ),
         );
-                
+
         $str = '';
         if (Tools::isSubmit('abandoned_data_filter')) {
             //assign custom filter data
@@ -108,7 +108,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
                 .' SUM(IF(IF (IFNULL(o.id_order, "Non ordered") = "Non ordered", IF(TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', a.`date_add`)) > 86400, "Abandoned cart", "Non ordered"), o.id_order) > 0 , 1, 0)) AS ordered_checkouts, '
                 .' SUM(IF(IF (IFNULL(o.id_order, "Non ordered") = "Non ordered", IF(TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', a.`date_add`)) > 86400, "Abandoned cart", "Non ordered"), o.id_order) > 0 , (cu.conversion_rate * o.total_paid), 0)) AS ordered_revenues, '
                 .' SUM(IF(IF (IFNULL(o.id_order, "Non ordered") = "Non ordered", IF(TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', a.`date_add`)) > 86400, "Abandoned cart", "Non ordered"), o.id_order) = "Abandoned cart" , aca.total_amount , 0)) AS abandoned_revenues, "1" as checkout_conversion';
-        
+
         $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'customer c ON (c.id_customer = a.id_customer)
 		LEFT JOIN ' . _DB_PREFIX_ . 'currency cu ON (cu.id_currency = a.id_currency)
 		LEFT JOIN ' . _DB_PREFIX_ . 'carrier ca ON (ca.id_carrier = a.id_carrier)
@@ -129,7 +129,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
 
         $this->shopLinkType = 'shop';
     }
-    
+
     /*
      * Function defined to remove the ADD NEW button
      */
@@ -154,7 +154,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
         unset($param);
         return number_format($checkout_conversion * 100, 2) .'%';
     }
-    
+
     /*
      * Function defined to format the price
      */
@@ -163,7 +163,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
         $context = Context::getContext();
         $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
         $currency = new Currency($default_currency);
-        
+
         $currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
         if (is_int($currency)) {
             $currency = Currency::getCurrencyInstance($currency);
@@ -172,7 +172,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
         $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
         return Tools::displayPrice($value);
     }
-    
+
     /*
      * Function defined to calculate the total cart amount of abandoned cart as there is no record for this in core tables so created a new one and uodated the data according to filter
      */
@@ -192,7 +192,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
             }
         }
     }
-    
+
     /*
      * Function defined to calculate the total amount of abandoned carts
      */
@@ -205,7 +205,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
 
         return self::getTotalCart($id_cart, true, Cart::BOTH_WITHOUT_SHIPPING);
     }
-    
+
     public static function getTotalCart($id_cart, $use_tax_display = false, $type = Cart::BOTH)
     {
         $cart = new Cart($id_cart);
@@ -216,21 +216,21 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
         $currency = new Currency($default_currency);
         return Tools::convertPriceFull($cart->getOrderTotal($use_tax_display, $type), new Currency((int) $cart->id_currency), $currency);
     }
-    
-    
-    
+
+
+
     protected function getKbModuleDir()
     {
         return _PS_MODULE_DIR_ . $this->module->name . '/';
     }
-    
+
     public function setMedia($isnewtheme = false)
     {
         parent::setMedia($isnewtheme);
         $this->addJS($this->getKbModuleDir() . 'views/js/admin/abandoned_data.js');
         $this->addJqueryPlugin('flot');
     }
-    
+
     /**
      * Function defined to create a query to format date according to filter type (day/month/week/year)
      * @param string $ac_filter_format
@@ -272,9 +272,9 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
         $this->context->smarty->assign('end_date', $end_date);
         $this->context->smarty->assign('ac_filter_format', $ac_filter_format);
         $this->context->smarty->assign('current_url', $this->context->link->getAdminLink('AdminAbandonedCheckout'));
-        
+
         //query to fetch abandoned cart amount, ordered cart amount, number of abandoned cart & number of ordered cart day/month/week/year wise
-        $sql = "SELECT SQL_CALC_FOUND_ROWS a.`date_add` AS `date_add`, a.id_cart, o.id_order, 
+        $sql = "SELECT SQL_CALC_FOUND_ROWS a.`date_add` AS `date_add`, a.id_cart, o.id_order,
             ".$str." as period,  SUM(IF(IF (IFNULL(o.id_order, 'Non ordered') = 'Non ordered',
             IF(TIME_TO_SEC(TIMEDIFF('".pSQL(date('Y-m-d H:i:00', time()))."', a.`date_add`)) > 86400, 'Abandoned cart', 'Non ordered'), o.id_order) = 'Abandoned cart', 1, 0)) AS abandoned_checkouts,
             SUM(IF(IF (IFNULL(o.id_order, 'Non ordered') = 'Non ordered', IF(TIME_TO_SEC(TIMEDIFF('".pSQL(date('Y-m-d H:i:00', time()))."', a.`date_add`)) > 86400, 'Abandoned cart', 'Non ordered'),
@@ -282,8 +282,8 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
             SUM(IF(IF (IFNULL(o.id_order, 'Non ordered') = 'Non ordered', IF(TIME_TO_SEC(TIMEDIFF('".pSQL(date('Y-m-d H:i:00', time()))."', a.`date_add`)) > 86400, 'Abandoned cart', 'Non ordered'),
             o.id_order) > 0 , (cu.conversion_rate * o.total_paid), 0)) AS ordered_revenues,
             SUM(IF(IF (IFNULL(o.id_order, 'Non ordered') = 'Non ordered', IF(TIME_TO_SEC(TIMEDIFF('".pSQL(date('Y-m-d H:i:00', time()))."', a.`date_add`)) > 86400, 'Abandoned cart', 'Non ordered'),
-            o.id_order) = 'Abandoned cart' , aca.total_amount , 0)) AS abandoned_revenues 
-            FROM `"._DB_PREFIX_."cart` a 
+            o.id_order) = 'Abandoned cart' , aca.total_amount , 0)) AS abandoned_revenues
+            FROM `"._DB_PREFIX_."cart` a
             LEFT JOIN "._DB_PREFIX_."customer c ON (c.id_customer = a.id_customer)
             LEFT JOIN "._DB_PREFIX_."currency cu ON (cu.id_currency = a.id_currency)
             LEFT JOIN "._DB_PREFIX_."carrier ca ON (ca.id_carrier = a.id_carrier)
@@ -296,7 +296,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
             TIME_TO_SEC(TIMEDIFF('".pSQL(date('Y-m-d H:i:00', time()))."', `date_add`)) < 1800
             LIMIT 1
             ) AS co ON co.`id_guest` = a.`id_guest`";
-        
+
         $ac_filter_format = Tools::strtoupper($ac_filter_format);
         $sql .= ' WHERE a.date_add BETWEEN "'.date('Y-m-d H:i:s', $start_date).'" AND "'.date('Y-m-d 23:59:59', $end_date).'"'; //get the data of selected date difference
         $sql .= ' GROUP BY '.$ac_filter_format.'(a.date_add)';   //filter according to day/month/week/year wise
@@ -312,12 +312,12 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
         $this->context->smarty->assign('conversion_data_graph', '');
         $this->context->smarty->assign('current_currency_sign', $this->context->currency->sign);
         if (!empty($conversion_data_graph)) {
-            $this->context->smarty->assign('conversion_data_graph', Tools::jsonEncode($conversion_data_graph));
+            $this->context->smarty->assign('conversion_data_graph', json_encode($conversion_data_graph));
         }
         if (!empty($ac_complete_data_graph)) {
-            $this->context->smarty->assign('ac_complete_data_graph', Tools::jsonEncode($ac_complete_data_graph));
+            $this->context->smarty->assign('ac_complete_data_graph', json_encode($ac_complete_data_graph));
         }
-        
+
         //calculate total data for ordered cart amount, number of ordered carts, abandoned cart amount & number of abandoned carts
         $ordered_checkouts = 0;
         $abandoned_checkouts = 0;
@@ -329,7 +329,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
             $abandoned_revenues += (float) $value['abandoned_revenues'];
             $ordered_revenues += (float) $value['ordered_revenues'];
         }
-        
+
         $checkout_conversion = 0;
         if ($ordered_checkouts != 0 || $abandoned_checkouts != 0) {
             $checkout_conversion = ($ordered_checkouts)/($ordered_checkouts + $abandoned_checkouts);
@@ -376,7 +376,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
         $this->content .= $template_html;
         parent::initContent();
     }
-    
+
     /*
      * Function defined to calculate the graph data for revenue of abandoned cart & ordered cart in defined time period
      * @params array $KPIdata
@@ -394,7 +394,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
             $i++;
         }
     }
-    
+
     /*
      * Function defined to calculate the graph data for conversion rate of abandoned cart & ordered cart in defined time period
      * @params array $KPIdata

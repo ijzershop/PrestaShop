@@ -17,9 +17,9 @@ class ps_creditpaymentAjaxModuleFrontController extends ModuleFrontController
     public function initContent()
     {
         $customers = array();
-        $creditGroup = new Group(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_CREDIT_GROUP'), Context::getContext()->language->id, Context::getContext()->shop->id);
+        $creditGroup = new Group(Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP'), Context::getContext()->language->id, Context::getContext()->shop->id);
         $customersWithGroup = $creditGroup->getCustomers();
-        $is_balie_employee = Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id;
+        $is_balie_employee = Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id;
         $add_to_list = false;
         if($is_balie_employee){
             $add_to_list = true;
@@ -38,10 +38,10 @@ class ps_creditpaymentAjaxModuleFrontController extends ModuleFrontController
 
         $this->ajax = true;
         if ($this->errors) {
-            die(Tools::jsonEncode(['hasError' => true, 'errors' => $this->errors]));
+            die(json_encode(['hasError' => true, 'errors' => $this->errors]));
         }
 
-        $customersGroup = (int)Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_CREDIT_GROUP');
+        $customersGroup = (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP');
 
 
         $sql = '
@@ -53,8 +53,11 @@ class ps_creditpaymentAjaxModuleFrontController extends ModuleFrontController
 
 
         $query = $_GET['q'] ?? null;
-
-        $search_items = explode(' ', $query);
+        if(!is_null($query)){
+            $search_items = explode(' ', $query);
+        } else {
+            $search_items = [];
+        }
 
         $research_fields = ['c.id_customer', 'c.firstname', 'c.lastname', 'c.email', 'c.company'];
 

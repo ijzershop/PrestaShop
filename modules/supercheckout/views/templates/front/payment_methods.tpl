@@ -14,7 +14,7 @@
     <ul>
         {assign var="id_module_mollie" value=Module::getModuleIdByName('mollie')}
         {assign var="id_module_pin" value=Module::getModuleIdByName('ps_pinpayment')}
-        {if Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}
+        {if Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}
             {assign var="selected_payment_method" value=$id_module_pin}
         {else}
             {assign var="selected_payment_method" value=$id_module_mollie}
@@ -24,7 +24,7 @@
 
           <li>
                 <div class="radio">
-                    <input type="radio" name="payment_method" data-module-name="{$option.module_name nofilter}{*escape not required as contains html*}" value="{$option.id}" id="{$option.id}" {if (Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id && $option.action|strstr:"ideal") || (Context::getContext()->customer->isLogged() && Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id && $option.action|strstr:"pinpayment")} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>
+                    <input type="radio" name="payment_method" data-module-name="{$option.module_name nofilter}{*escape not required as contains html*}" value="{$option.id}" id="{$option.id}" {if (Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id && $option.action|strstr:"ideal") || (Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id && $option.action|strstr:"pinpayment")} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>
                   <label id="payment_lbl_{$option.id_module|intval}" for="{$option.id}">
                         {if $display_payment_style neq 0}
                             {if $option.payment_image_url neq ''}

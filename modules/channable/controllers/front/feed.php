@@ -26,30 +26,30 @@
 
 class ChannableFeedModuleFrontController extends ModuleFrontController
 {
-    
+
     protected static $combination_separator = '||||';
     protected static $combination_desc_separator = '####';
     protected static $imgurl_separator = '!!!!';
-    
+
     private $time_debug = false;
     private $sql_debug = false;
     private $sql_optimization_mode = 'id_product'; // or 'id_product_and_attribute';
     private $multiquerymode = false;
-    
+
     public function postProcess()
     {
-        
+
         if (!Tools::getValue('key')) {
             die('Not authenticated');
         }
         if (!WebserviceKey::keyExists(Tools::getValue('key')) || !WebserviceKey::isKeyActive(Tools::getValue('key'))) {
             die('Not authenticated');
         }
-        
+
         if (Tools::getValue('multiquerymode') == 'true' || Configuration::get('CHANNABLE_MULTIQUERY_MODE')) {
             $this->multiquerymode = true;
         }
-        
+
         if (Tools::getValue('time_debug') == 'true') {
             $this->time_debug = true;
         }
@@ -59,18 +59,18 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
         if (Tools::getValue('sql_optimization_mode') == 'id_product' || Tools::getValue('sql_optimization_mode') == 'id_product_and_attribute') {
             $this->sql_optimization_mode = Tools::getValue('sql_optimization_mode');
         }
-        
+
         $currency = false;
         if (isset(Context::getContext()->currency)) {
             $currency = Context::getContext()->currency;
             $currency = (string)$currency->iso_code;
         }
-        
+
         $default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
         $id_zone = (int)$default_country->id_zone;
         $id_carrier = (int)Configuration::get('PS_CARRIER_DEFAULT');
         $default_carrier = new Carrier((int)Configuration::get('PS_CARRIER_DEFAULT'));
-        
+
         if ((int)Configuration::get('CHANNABLE_CUSTOMER_ID') > 0) {
             $channable_customer_id = (int)Configuration::get('CHANNABLE_CUSTOMER_ID');
             if (Customer::getAddressesTotalById($channable_customer_id) > 0) {
@@ -81,20 +81,20 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 $id_zone = (int)$default_country->id_zone;
             }
         }
-        
+
         $shipping_time_available = '';
         $shipping_time_outofstock = '';
-        
+
         if (Module::isInstalled('advancedeucompliance') && Module::isEnabled('advancedeucompliance')) {
             $shipping_time_available = Configuration::get('AEUC_LABEL_DELIVERY_TIME_AVAILABLE', (int)Context::getContext()->language->id);
             $shipping_time_outofstock = Configuration::get('AEUC_LABEL_DELIVERY_TIME_OOS', (int)Context::getContext()->language->id);
         }
-        
+
         $starttime = microtime(true);
         $limit_string = false;
-        
+
         $sql_optimization_mode = Configuration::get('CHANNABLE_SQL_OPTIMIZATION_MODE');
-        
+
         if (Tools::getValue('limit')) {
             $limit_string = ' LIMIT ' . pSQL(Tools::getValue('limit'));
         } else {
@@ -102,7 +102,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
         }
         if ($sql_optimization_mode) {
             $product_ids_in = array();
-            
+
             if ($this->sql_optimization_mode == 'id_product') {
                 $product_ids_sql = '
                 SELECT
@@ -119,7 +119,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
             		   ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (sav.quantity > 0) ' : '') . '
               GROUP BY p.id_product
               ORDER BY p.id_product ' . $limit_string;
-                
+
                 if ($product_ids_results = Db::getInstance()->ExecuteS($product_ids_sql)) {
                     foreach ($product_ids_results as $product_ids_row) {
                         $product_ids_in[] = (int)$product_ids_row['id_product'];
@@ -149,7 +149,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                        ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (pq.quantity > 0) ' : '') . '
               GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
               ORDER BY p.id_product ' . $limit_string;
-                
+
                 if ($product_ids_results = Db::getInstance()->ExecuteS($product_ids_sql)) {
                     foreach ($product_ids_results as $product_ids_row) {
                         $product_ids_in[] = '\'' . $product_ids_row['product_id_in'] . '\'';
@@ -160,10 +160,10 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 $product_ids_in[] = '12345678987654321'; // dummy ID to receive empty result
             }
         }
-        
-        
+
+
         if ($this->multiquerymode) {
-            
+
             $sql = 'SELECT
                 if(pa.id_product_attribute IS NULL,
                    p.id_product,
@@ -211,7 +211,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product)
                 ' . (Configuration::get('PS_STOCK_MANAGEMENT') ?
                     'LEFT JOIN
-                	'._DB_PREFIX_.'stock_available sav ON (sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 
+                	'._DB_PREFIX_.'stock_available sav ON (sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` =
                 	 ( if(pa.id_product_attribute IS NULL, 0, pa.id_product_attribute) )
                 	 '.StockAvailable::addSqlShopRestriction(null, null, 'sav').')' : ''
                     ) . '
@@ -228,9 +228,9 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (' . (Configuration::get('PS_STOCK_MANAGEMENT') ? 'sav.quantity' : 'pq.quantity') . ' > 0) ' : '') . '
             GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
             ORDER BY p.id_product ' . ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? '' : $limit_string);
-                    
+
         } else {
-            
+
             $sql = 'SELECT
                 if(pa.id_product_attribute IS NULL,
                    p.id_product,
@@ -341,7 +341,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                     LEFT JOIN
                 '._DB_PREFIX_.'tax t ON (t.id_tax = tr.id_tax)
                     LEFT JOIN
-                '._DB_PREFIX_.'stock_available sav ON (sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 
+                '._DB_PREFIX_.'stock_available sav ON (sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` =
                 ( if(pa.id_product_attribute IS NULL, 0, pa.id_product_attribute) )
                 '.StockAvailable::addSqlShopRestriction(null, null, 'sav').')
             WHERE
@@ -365,8 +365,8 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
             GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
             ORDER BY p.id_product, pac.id_attribute ' . ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? '' : $limit_string);
         }
-        
-        
+
+
         if ($this->time_debug) {
             $results = Db::getInstance()->ExecuteS($sql);
             echo 'Results: ' . sizeof($results) . '<br />';
@@ -378,17 +378,17 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
             echo '<pre>';
             echo $sql; die();
         }
-        
+
         header('Content-Type: application/json');
-        
+
         $items = array();
-        
+
         //$items['page_size'] = Configuration::get('CHANNABLE_DEFAULT_PAGE_SIZE');
         header('Page-Size: ' . Configuration::get('CHANNABLE_DEFAULT_PAGE_SIZE'));
-        
+
         if ($results = Db::getInstance()->ExecuteS($sql)) {
             foreach ($results as $row) {
-                
+
                 $defaultCategory = new Category($row['id_category_default']);
                 $defaultTree = array_reverse($defaultCategory->getParentsCategories());
                 $tmp = array();
@@ -396,14 +396,14 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                     $tmp[] = $d['name'];
                 }
                 $row['product_category'] = join(" > ", $tmp);
-                
+
                 $product_categories_raw_titles = array();
                 $product_categories_raw = array();
-                
+
                 if (Configuration::get('CHANNABLE_FEEDMODE_ALTERNATIVE') == 1 || !isset($row['categories_id'])) {
                     $row['categories_ids'] = $this->fetchCategories($row['parent_id']);
                 }
-                
+
                 foreach (explode(",", $row['categories_ids']) as $category_id) {
                     $tmpCategory = new Category((int)$category_id);
                     $tmpTree = array_reverse($tmpCategory->getParentsCategories());
@@ -418,7 +418,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                         'found' => false
                     );
                 }
-                
+
                 foreach ($product_categories_raw as $pcr_key => $product_category_raw) {
                     foreach ($product_categories_raw_titles as $pcrt_key => $product_categories_raw_title) {
                         if ($pcr_key != $pcrt_key) {
@@ -439,11 +439,11 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                         $row['categories'][] = $product_category_raw['tree'];
                     }
                 }
-                
+
                 unset($product_categories_raw);
                 unset($row['id_category_default']);
                 unset($row['categories_ids']);
-                
+
                 if (Configuration::get('CHANNABLE_FEEDMODE_ALTERNATIVE') != 1) {
                     $row['supplier'] = (int)$row['id_supplier'] > 0 ? Supplier::getNameById($row['id_supplier']) : '';
                     unset($row['id_supplier']);
@@ -453,7 +453,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                             $cmbData = explode(self::$combination_desc_separator, $cmb);
                             $row[Tools::strtolower($cmbData[0])] = $cmbData[1];
                         }
-                    } else {                    
+                    } else {
                     	if ((int)$row['id_product_attribute'] > 0) {
                     		$product = new Product($row['parent_id']);
                 	        $combination_array = $product->getAttributeCombinationsById((int)$row['id_product_attribute'], (int)Context::getContext()->language->id);
@@ -491,21 +491,21 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                     }
                     $row = $this->buildFeatures($row);
                 }
-                
+
                 if ($currency) {
                     $row['currency'] = $currency;
                 }
                 $row['description'] = strip_tags(str_replace(array("<br />", "<br>"), "\n", $row['description_html']));
                 $row['short_description'] = strip_tags(str_replace(array("<br />", "<br>"), "\n", $row['short_description_html']));
                 $row['link'] = $this->context->link->getProductLink($row['parent_id']);
-                
+
                 $setSSL = false;
                 if (strpos($row['link'], 'https://') !== false) {
                     $setSSL = true;
                 }
-                
+
                 $delivery_period = $row['stock'] > 0 ? $shipping_time_available : $shipping_time_outofstock;
-                
+
                 if (Configuration::get('CHANNABLE_FEEDMODE_SKIP_SHIPPING') == '1') {
                     $delivery_price = false;
                 } else {
@@ -544,14 +544,14 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                         }
                     }
                 }
-                
+
                 if (isset($delivery_price) && $delivery_price !== false) {
                     $row['shipping'] = array('country' => $default_country->iso_code, 'price' => $delivery_price);
                 }
-                
+
                 $row['price'] += $row['combination_price'];
                 $row['price_raw'] += $row['combination_price'];
-                
+
                 $specific_prices_obj = null;
                 $row['sale_price'] = Product::getPriceStatic(
                     (int)$row['parent_id'],
@@ -583,7 +583,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                     null,
                     $specific_prices_obj
                     );
-                
+
                 if (!isset($row['tax_rate']) || is_null($row['tax_rate'])) {
                     if (isset($channable_default_address_id)) {
                         Context::getContext()->cart->id_customer = $channable_customer_id;
@@ -591,7 +591,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                         Context::getContext()->cart->id_address_invoice = (int)$channable_default_address_id;
                         Context::getContext()->cart->id_guest = 0;
                     }
-                    
+
                     if (!isset($product)) {
                         $product = new Product($row['parent_id']);
                     }
@@ -606,20 +606,20 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                     }
                     $row['tax_rate'] = $product->tax_rate;
                 }
-                
+
                 $row['price_incl_vat'] = (float) ( ($row['price_raw'] * (($row['tax_rate'] / 100) + 1)) + ($row['ecotax'] * (($row['tax_rate'] / 100) + 1)) );
-                
+
                 unset($row['price_raw']);
                 unset($row['ecotax']);
                 unset($row['combination_price']);
-                
+
                 if (!isset($row['brand'])) {
                     if (!isset($product)) {
                         $product = new Product($row['parent_id']);
                     }
                     $row['brand'] = $product->getWsManufacturerName();
                 }
-                
+
                 $have_combination_images = false;
                 if ($row['id_product_attribute'] != '' && $row['id_product_attribute'] > 0) {
                     $row['link'] = $this->context->link->getProductLink($row['parent_id'], null, null,null, null,null, $row['id_product_attribute'], false, false, true);
@@ -648,7 +648,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                         }
                     }
                 }
-                
+
                 if ($have_combination_images && isset($row['additional_images_raw'])) {
                     // all good, nothing to do
                 } else {
@@ -661,7 +661,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                             $row['id_image'] = $id_image_cover['id_image'];
                         }
                     }
-                    
+
                     if (!$have_combination_images) {
                         $product = new Product($row['parent_id']);
                         $images = $product->getImages((int)Context::getContext()->language->id);
@@ -683,11 +683,11 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                         }
                     }
                 }
-                
+
                 if (isset($row['image_link'])) {
                     $row['image_link'] = $setSSL ? str_replace('http://', 'https://', $row['image_link']) : $row['image_link'];
                 }
-                
+
                 if (isset($row['additional_images_raw'])) {
                     $additional_images = array();
                     $ais = explode(self::$imgurl_separator, $row['additional_images_raw']);
@@ -701,9 +701,9 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 unset($row['additional_images_raw']);
                 unset($row['id_image']);
                 unset($row['id_product_attribute']);
-                
+
                 $row['delivery_period'] = $delivery_period;
-                
+
                 $items[] = $row;
                 unset($product);
 
@@ -718,7 +718,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
             }
         } else {
         }
-        echo Tools::jsonEncode($items);
+        echo json_encode($items);
         die();
     }
 
@@ -936,6 +936,6 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 return $table;
         }
     }
-    
-    
+
+
 }

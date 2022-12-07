@@ -379,7 +379,7 @@ class AdminSeohelpingController extends ModuleAdminController
             'iTotalDisplayRecords' => $filtered_total,
             'aaData' => $data,
         ];
-        exit(Tools::jsonEncode($output));
+        exit(json_encode($output));
     }
 
     /**
@@ -394,7 +394,7 @@ class AdminSeohelpingController extends ModuleAdminController
         $result = [];
         $id_rule = (int) trim(pSQL(Tools::getValue('id_rule')));
         $result['value'] = (int) TinyCache::getCache('cpt_rule_' . $id_rule);
-        echo Tools::jsonEncode($result);
+        echo json_encode($result);
     }
 
     /**
@@ -406,7 +406,7 @@ class AdminSeohelpingController extends ModuleAdminController
     {
         $id_rule = (int) trim(pSQL(Tools::getValue('id_rule')));
         TinyCache::clearCache('cpt_rule_' . $id_rule);
-        echo Tools::jsonEncode(false);
+        echo json_encode(false);
     }
 
     /**
@@ -499,7 +499,7 @@ class AdminSeohelpingController extends ModuleAdminController
 
             Cache::clean('hook_module_exec_list_*');
 
-            die(Tools::jsonEncode([
+            die(json_encode([
                 'page' => $page,
                 'pourcent' => $calc,
                 'message' => $message,
@@ -526,7 +526,7 @@ class AdminSeohelpingController extends ModuleAdminController
 
                 Cache::clean('hook_module_exec_list_*');
 
-                die(Tools::jsonEncode([
+                die(json_encode([
                     'pourcent' => 100,
                     'message' => $this->l('All the products have been updated'),
                     'batch' => 1,

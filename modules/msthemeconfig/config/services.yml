@@ -1,0 +1,97 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.tokenized_url_listener:
+        class: MsThemeConfig\EventListener\DmsTokenizedUrlsListener
+        arguments:
+            - "@security.csrf.token_manager"
+            - "@router"
+            - "@=service('prestashop.user_provider').getUsername()"
+            - "@prestashop.adapter.legacy.context"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: DmsOnKernelRequest }
+
+    #Add address
+    modernesmid.adapter.address.command_handler.add_customer_address_handler:
+        class: 'MsThemeConfig\Adapter\Address\CommandHandler\AddCustomerAddressHandler'
+        tags:
+            - name: tactician.handler
+              command: 'MsThemeConfig\Core\Domain\Address\Command\AddCustomerAddressCommand'
+
+    #Edit address
+    modernesmid.adapter.address.command_handler.edit_customer_address_handler:
+        class: 'MsThemeConfig\Adapter\Address\CommandHandler\EditCustomerAddressHandler'
+        tags:
+            - name: tactician.handler
+              command: 'MsThemeConfig\Core\Domain\Address\Command\EditCustomerAddressCommand'
+
+
+    #edit cart address
+    modernesmid.adapter.address.command_handler.edit_cart_address_handler:
+        class: 'MsThemeConfig\Adapter\Address\CommandHandler\EditCartAddressHandler'
+        arguments:
+            - 'modernesmid.adapter.address.command_handler.edit_customer_address_handler'
+        tags:
+            - name: tactician.handler
+              command: 'MsThemeConfig\Core\Domain\Address\Command\EditCartAddressCommand'
+
+
+    #Get address
+    modernesmid.adapter.address.query_handler.get_customer_address_for_editing_handler:
+        class: 'MsThemeConfig\Adapter\Address\QueryHandler\GetCustomerAddressForEditingHandler'
+        tags:
+            - name: tactician.handler
+              command: 'MsThemeConfig\Core\Domain\Address\Query\GetCustomerAddressForEditing'
+
+    #form address
+    prestashop.core.form.identifiable_object.data_handler.address_form_data_handler:
+        class: 'MsThemeConfig\Core\Form\IdentifiableObject\DataHandler\AddressFormDataHandler'
+        arguments:
+            - '@prestashop.core.command_bus'
+            - '@prestashop.adapter.data_provider.customer'
+
+
+    prestashop.core.form.identifiable_object.data_handler.order_address_form_data_handler:
+        class: 'MsThemeConfig\Core\Form\IdentifiableObject\DataHandler\OrderAddressFormDataHandler'
+        arguments:
+            - '@prestashop.core.command_bus'
+
+    prestashop.core.form.identifiable_object.data_provider.address_form_data_provider:
+        class: 'MsThemeConfig\Core\Form\IdentifiableObject\DataProvider\AddressFormDataProvider'
+        arguments:
+            - '@prestashop.core.query_bus'
+            - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+
+    #PDF generation
+    prestashop.adapter.pdf.generator.invoice:
+        class: 'MsThemeConfig\Adapter\PDF\PDFGenerator'
+        arguments:
+            - "@=service('prestashop.adapter.legacy.context').getSmarty()"
+            - '@prestashop.adapter.pdf.type_provider.invoice'
+
+    prestashop.adapter.pdf.order_invoice_pdf_generator:
+        class: 'MsThemeConfig\Adapter\PDF\OrderInvoicePdfGenerator'
+        arguments:
+            - '@translator'
+
+    prestashop.adapter.pdf.delivery_slip_pdf_generator:
+        class: 'MsThemeConfig\Adapter\PDF\DeliverySlipPdfGenerator'
+        arguments:
+            - '@translator'
+
+    prestashop.adapter.pdf.generator.credit_slip:
+        class: 'MsThemeConfig\Adapter\PDF\PDFGenerator'
+        arguments:
+            - "@=service('prestashop.adapter.legacy.context').getSmarty()"
+            - '@prestashop.adapter.pdf.type_provider.credit_slip'
+
+    prestashop.adapter.pdf.credit_slip_pdf_generator:
+        class: 'MsThemeConfig\Adapter\PDF\CreditSlipPdfGenerator'
+        arguments:
+            - '@translator'
+            - '%database_prefix%'
+            - '@doctrine.dbal.default_connection'
+
+    prestashop.adapter.pdf.generator.single_invoice:
+        class: 'MsThemeConfig\Adapter\PDF\InvoicePdfGenerator'

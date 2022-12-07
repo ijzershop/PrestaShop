@@ -63,9 +63,7 @@ class PaymentModule extends PaymentModuleCore
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int) $id_cart, true);
         }
 
-        if (!isset($this->context)) {
-            $this->context = Context::getContext();
-        }
+        $this->context = Context::getContext();
         $this->context->cart = new Cart((int) $id_cart);
         $this->context->customer = new Customer((int) $this->context->cart->id_customer);
 
@@ -419,7 +417,7 @@ class PaymentModule extends PaymentModuleCore
 
             // Switch to back order if needed
             if (Configuration::get('PS_STOCK_MANAGEMENT') &&
-                ($order_detail->getStockState() ||
+                    ($order_detail->getStockState() ||
                     $order_detail->product_quantity_in_stock < 0)) {
                 $history = new OrderHistory();
                 $history->id_order = (int) $order->id;
@@ -435,6 +433,8 @@ class PaymentModule extends PaymentModuleCore
 
             // Order is reloaded because the status just changed
             $order = new Order((int) $order->id);
+
+
 
             // Send an e-mail to customer (one order = one email)
             if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && $this->context->customer->id) {
@@ -454,7 +454,7 @@ class PaymentModule extends PaymentModuleCore
                     Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
                     $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
                     $file_attachement['content'] = $pdf->render(false);
-                    $file_attachement['name'] = $pdf->getFilename();
+                    $file_attachement['name'] = $pdf->filename;
                     $file_attachement['mime'] = 'application/pdf';
                     $this->context->language = $currentLanguage;
                     $this->context->getTranslator()->setLocale($currentLanguage->locale);

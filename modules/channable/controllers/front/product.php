@@ -26,17 +26,17 @@
 
 class ChannableProductModuleFrontController extends ModuleFrontController
 {
-    
+
     public function postProcess()
     {
-        
+
         if (!Tools::getValue('key')) {
             die('Not authenticated');
         }
         if (!WebserviceKey::keyExists(Tools::getValue('key')) || !WebserviceKey::isKeyActive(Tools::getValue('key'))) {
             die('Not authenticated');
         }
-        
+
         if (Tools::getValue('id_product')) {
             $get_id_product = Tools::getValue('id_product');
             $selected_attribute = false;
@@ -156,7 +156,7 @@ class ChannableProductModuleFrontController extends ModuleFrontController
         }
         if (isset($jsonData)) {
             header('Content-Type: application/json');
-            echo Tools::jsonEncode($jsonData);
+            echo json_encode($jsonData);
         }
         die();
     }

@@ -7,7 +7,7 @@
 {assign var='existing_address' value=[]}
 {if !isset($guest_information)}
   {assign var='existing_address' value=null}
-  {if $customer.addresses && Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') != $customer['id']}
+  {if $customer.addresses && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') != $customer['id']}
     {assign var='existing_address' value=reset($customer.addresses)}
   {/if}
 {/if}

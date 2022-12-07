@@ -76,7 +76,7 @@ class BT_AdminCtrl extends BT_GapBaseCtrl
                 BT_GapModuleTools::translateJsMsg();
 
                 // set params
-                $aParams['oJsTranslatedMsg'] = BT_GapModuleTools::jsonEncode($GLOBALS[_GAP_MODULE_NAME . '_JS_MSG']);
+                $aParams['oJsTranslatedMsg'] = BT_GapModulejson_encode($GLOBALS[_GAP_MODULE_NAME . '_JS_MSG']);
 
                 // use case - type not define => first page requested
                 if (empty(self::$sType)) {

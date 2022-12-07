@@ -623,7 +623,7 @@ class Supercheckout extends Module
                         $json['response'] = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'supercheckout/views/templates/admin/edit_form_custom_fields.tpl');
                         break;
                 }
-                echo Tools::jsonEncode($json);
+                echo json_encode($json);
                 die;
             } elseif (Tools::isSubmit('gdpr_privacy_action')) {
                 // <editor-fold defaultstate="collapsed" desc="GDPR change">
@@ -672,7 +672,7 @@ class Supercheckout extends Module
                         $json['response'] = $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'supercheckout/views/templates/admin/gdpr_filter_customer_data.tpl');
                         break;
                 }
-                echo Tools::jsonEncode($json);
+                echo json_encode($json);
                 die;
                 // </editor-fold>
             }
@@ -1206,7 +1206,7 @@ class Supercheckout extends Module
     public function checkMobileLoginModuleActive()
     {
         if (Module::isInstalled('kbmobilelogin') && Module::isEnabled('kbmobilelogin')) {
-            $mobileLoginSettings = Tools::jsonDecode(Configuration::get('KB_MOBILE_LOGIN'), true);
+            $mobileLoginSettings = json_decode(Configuration::get('KB_MOBILE_LOGIN'), true);
             if ($mobileLoginSettings['enable']) {
                 return true;
             }
@@ -1389,7 +1389,7 @@ class Supercheckout extends Module
             if (!Tools::getValue('klarna_supercheckout')) {
                 if (isset($settings['super_test_mode']) && $settings['super_test_mode'] != 1) {
                     $page_name = $this->context->controller->php_self;
-                    if ($page_name == 'order-opc' || $page_name == 'order' || $page_name == 'checkout' || (isset($settings['disable_cart_page']) && $settings['disable_cart_page'] == 1 && $page_name == 'cart' && !isset($_SERVER['HTTP_X_REQUESTED_WITH']) && Context::getContext()->customer->isLogged()) && Configuration::get('MODERNESMIDTHEMECONFIGURATOR_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id) {
+                    if ($page_name == 'order-opc' || $page_name == 'order' || $page_name == 'checkout' || (isset($settings['disable_cart_page']) && $settings['disable_cart_page'] == 1 && $page_name == 'cart' && !isset($_SERVER['HTTP_X_REQUESTED_WITH']) && Context::getContext()->customer->isLogged()) && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id) {
                         if ($settings['enable'] == 1) {
                             $current_page_url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                             $query_string = parse_url($current_page_url);
@@ -1486,12 +1486,12 @@ class Supercheckout extends Module
             $totallists = $arrchimp['total'];
             if ($totallists >= 1) {
                 $listchimp = $arrchimp['data'];
-                echo Tools::jsonEncode($listchimp);
+                echo json_encode($listchimp);
             } else {
-                echo Tools::jsonEncode(array('false'));
+                echo json_encode(array('false'));
             }
         } catch (Exception $e) {
-            echo Tools::jsonEncode(array('false'));
+            echo json_encode(array('false'));
         }
         die;
     }
@@ -1513,12 +1513,12 @@ class Supercheckout extends Module
                 }
             }
             if (empty($response)) {
-                echo Tools::jsonEncode(array('false'));
+                echo json_encode(array('false'));
             } else {
-                echo Tools::jsonEncode($response[0]);
+                echo json_encode($response[0]);
             }
         } catch (Exception $e) {
-            echo Tools::jsonEncode(array('false'));
+            echo json_encode(array('false'));
         }
         die;
     }
@@ -1586,9 +1586,9 @@ class Supercheckout extends Module
                 }
             }
 
-            echo Tools::jsonEncode($options['success']);
+            echo json_encode($options['success']);
         } catch (Exception $e) {
-            echo Tools::jsonEncode(array('false'));
+            echo json_encode(array('false'));
         }
         die;
     }
@@ -2140,7 +2140,7 @@ class Supercheckout extends Module
         $accepted_consent = array();
         $default_policy_text = '';
         if (isset($this->context->cookie->supercheckout_accepted_consent)) {
-            $accepted_consent = Tools::jsonDecode($this->context->cookie->supercheckout_accepted_consent);
+            $accepted_consent = json_decode($this->context->cookie->supercheckout_accepted_consent);
         }
         if (isset($this->context->cookie->supercheckout_default_policy)) {
             $default_policy_text = $this->context->cookie->supercheckout_default_policy;
@@ -2861,7 +2861,7 @@ class Supercheckout extends Module
         if (!Tools::isEmpty($default_policy_text)) {
             $acceptedConsentText[0] = $default_policy_text;
         }
-        $accepted_consent = Tools::jsonEncode($acceptedConsentText);
+        $accepted_consent = json_encode($acceptedConsentText);
         $policy_consent_data = array(
             'id_customer' => (int)$order->id_customer,
             'id_order' => (int)$id_order,
@@ -2896,7 +2896,7 @@ class Supercheckout extends Module
                     'id_order' => $id_order,
                     'email' => $email,
                     'date' => $date_add,
-                    'consent' => Tools::jsonDecode($accepted_consent, true)
+                    'consent' => json_decode($accepted_consent, true)
                 );
             }
         }

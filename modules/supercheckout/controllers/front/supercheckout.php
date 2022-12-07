@@ -179,7 +179,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                 );
             }
 
-            echo Tools::jsonEncode($this->json);
+            echo json_encode($this->json);
             die;
         } elseif (Tools::isSubmit('mylogout')) {
             $this->context->customer->mylogout();
@@ -240,7 +240,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                     $result1 = curl_exec($ch);
                     curl_close($ch);
-                    $token = Tools::jsonDecode($result1);
+                    $token = json_decode($result1);
                     if (isset($token->access_token) && $token->access_token != '') {
 //                        $pay_link2 = 'https://api.sandbox.paypal.com/v1/identity/oauth2/userinfo?schema=openid&access_token=';
                         $pay_link2 = 'https://api.paypal.com/v1/identity/oauth2/userinfo?schema=openid&access_token=';
@@ -252,7 +252,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         $result2 = curl_exec($ch);
                         curl_close($ch);
-                        $data = Tools::jsonDecode($result2);
+                        $data = json_decode($result2);
                     }
 
                     if (count($data) > 0) {
@@ -522,7 +522,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
         } else {
             $errors['error_occured'] = 1;
             $errors['error'] = $this->module->l('Sufficient data not received', 'supercheckout');
-            echo Tools::jsonEncode($errors);
+            echo json_encode($errors);
             die;
         }
     }
@@ -540,19 +540,19 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                 if ($address->delete()) {
                     $success['status'] = 1;
                     $success['msg'] = $this->module->l('Address has been removed successfully.', 'supercheckout');
-                    echo Tools::jsonEncode($success);
+                    echo json_encode($success);
                     die;
                 } else {
                     $success['status'] = 0;
                     $success['msg'] = $this->module->l('Error in address removing. Please try again.', 'supercheckout');
-                    echo Tools::jsonEncode($success);
+                    echo json_encode($success);
                     die;
                 }
             }
         } else {
             $errors['error_occured'] = 1;
             $errors['error'] = $this->module->l('Sufficient data not received', 'supercheckout');
-            echo Tools::jsonEncode($errors);
+            echo json_encode($errors);
             die;
         }
     }
@@ -1614,7 +1614,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
         $islogged = (bool) ($this->context->customer->id && Customer::customerIdExistsStatic((int) $this->context->cookie->id_customer));
         if ($islogged && $this->context->cookie->is_guest) {
             $guest_data = $this->getGuestInformations();
-            $this->context->smarty->assign(array('guest_information' => Tools::jsonEncode($guest_data)));
+            $this->context->smarty->assign(array('guest_information' => json_encode($guest_data)));
         }
 
         $translated_months = array();
@@ -1901,7 +1901,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
         $this->context->smarty->assign('array_fields', $array_fields);
 
         if ($this->checkMobileLoginActive()) {
-            $mobile_login_setting = Tools::jsonDecode(Configuration::get('KB_MOBILE_LOGIN'), true);
+            $mobile_login_setting = json_decode(Configuration::get('KB_MOBILE_LOGIN'), true);
 //            print_r($mobile_login_setting);die;
             $this->context->smarty->assign('mobileLoginActive', 1);
             $current_lang_id = $this->context->language->id;
@@ -1930,7 +1930,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
         //End: Changes added by Anshul
 
 //        if ($this->checkGiftMessageEnabled()) {
-//            $mobile_login_setting = Tools::jsonDecode(Configuration::get('KB_MOBILE_LOGIN'), true);
+//            $mobile_login_setting = json_decode(Configuration::get('KB_MOBILE_LOGIN'), true);
 //            $this->context->smarty->assign('mobileLoginActive', 1);
 //            $current_lang_id = $this->context->language->id;
 //            $mobileLoginobject = new KbMobileLogin();
@@ -2051,7 +2051,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 $result1 = curl_exec($ch);
                 curl_close($ch);
-                $token = Tools::jsonDecode($result1);
+                $token = json_decode($result1);
                 if (isset($token->access_token) && $token->access_token != '') {
 //                    $pay_link2 = 'https://api.sandbox.paypal.com/v1/identity/oauth2/userinfo?schema=openid&access_token=';
                     $pay_link2 = 'https://api.paypal.com/v1/identity/oauth2/userinfo?schema=openid&access_token=';
@@ -2063,7 +2063,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                     $result2 = curl_exec($ch);
                     curl_close($ch);
-                    $data = Tools::jsonDecode($result2);
+                    $data = json_decode($result2);
                 }
 
                 if (count($data) > 0) {
@@ -2408,7 +2408,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
     public function checkMobileLoginActive()
     {
         if (Module::isInstalled('kbmobilelogin') && Module::isEnabled('kbmobilelogin')) {
-            $mobileLoginSettings = Tools::jsonDecode(Configuration::get('KB_MOBILE_LOGIN'), true);
+            $mobileLoginSettings = json_decode(Configuration::get('KB_MOBILE_LOGIN'), true);
             $settings = unserialize(Configuration::get('VELOCITY_SUPERCHECKOUT'));
 //            print_r($settings);
 //            die;
@@ -3592,8 +3592,8 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
         // The delivery option was selected
         if (isset($this->context->cart->delivery_option) && $this->context->cart->delivery_option != '') {
 //            $delivery_option = Tools::unSerialize($this->context->cart->delivery_option);
-            if (is_object(Tools::jsonDecode($this->context->cart->delivery_option)) || is_array(Tools::jsonDecode($this->context->cart->delivery_option))) {
-                $delivery_option = Tools::jsonDecode($this->context->cart->delivery_option, true);
+            if (is_object(json_decode($this->context->cart->delivery_option)) || is_array(json_decode($this->context->cart->delivery_option))) {
+                $delivery_option = json_decode($this->context->cart->delivery_option, true);
             } else {
                 $delivery_option = Tools::unSerialize($this->context->cart->delivery_option);
             }
@@ -3671,10 +3671,10 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
         //Function to get country details of visitor
         $ip_addr = $this->getUserIP();
         $au_value1 = $this->curlGetContents("http://www.geoplugin.net/json.gp?ip=" . $ip_addr);
-        $ip_data1 = Tools::jsonDecode($au_value1);
+        $ip_data1 = json_decode($au_value1);
 
         $au_value2 = $this->curlGetContents("http://freegeoip.net/json/" . $ip_addr);
-        $ip_data2 = Tools::jsonDecode($au_value2);
+        $ip_data2 = json_decode($au_value2);
 
         if (isset($ip_data1->geoplugin_countryCode) && $ip_data1->geoplugin_countryCode != null) {
             $ip_data = $ip_data1;

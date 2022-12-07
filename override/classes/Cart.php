@@ -455,7 +455,7 @@ class Cart extends CartCore
             }
         }
         $productItem = new Product($id_product);
-        if ($productItem && $productItem->reference == Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_REFERENCE')) {
+        if ($productItem && $productItem->reference == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')) {
             $productItem->delete();
         }
         $result = Db::getInstance()->getRow('
@@ -759,26 +759,5 @@ class Cart extends CartCore
             }
         }
         return true;
-    }
-    /*
-    * module: dynamicproduct
-    * date: 2022-02-07 13:34:28
-    * version: 2.43.11
-    */
-    public function duplicate()
-    {
-        $id_cart_old = (int) $this->id;
-        $result = parent::duplicate();
-        $id_cart_new = (int) $result['cart']->id;
-        Module::getInstanceByName('dynamicproduct');
-        if (Module::isEnabled('dynamicproduct')) {
-
-            $module = Module::getInstanceByName('dynamicproduct');
-            $module->hookCartDuplicated(array(
-                'id_cart_old' => $id_cart_old,
-                'id_cart_new' => $id_cart_new,
-            ));
-        }
-        return $result;
     }
 }

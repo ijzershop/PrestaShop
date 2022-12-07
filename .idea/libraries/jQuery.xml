@@ -2,12 +2,9 @@
   <library name="jQuery" type="javaScript">
     <properties>
       <option name="frameworkName" value="jQuery" />
-      <sourceFilesUrls>
-        <item url="file://$PROJECT_DIR$/themes/modernesmid/_dev/node_modules/jquery" />
-      </sourceFilesUrls>
     </properties>
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/themes/modernesmid/_dev/node_modules/jquery" />
+      <root url="file://$PROJECT_DIR$/themes/modernesmid_backup_1.7/_dev/node_modules/jquery" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

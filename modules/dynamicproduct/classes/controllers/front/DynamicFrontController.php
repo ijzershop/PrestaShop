@@ -79,6 +79,6 @@ class DynamicFrontController extends ModuleFrontController
             'success' => $success,
         );
         $arr = array_merge($arr, $data);
-        exit(Tools::jsonEncode($arr));
+        exit(json_encode($arr));
     }
 }

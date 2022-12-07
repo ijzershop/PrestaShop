@@ -1,0 +1,38 @@
+#kiyoh-block{
+  height: 118px;
+}
+
+#kiyoh-block .list-group {
+  justify-content: space-around;
+  height: 100%;
+  padding: 7px 0px 7px 0px;
+}
+
+#kiyoh-block .list-group-item span.text {
+  font-size: 0.8rem;
+}
+#kiyoh-block .list-group-item span.icon {
+  width:1rem;
+}
+#kiyoh-block .list-group-item {
+  display:block;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 579px) {
+  #kiyoh-block .list-group-item {
+    width:auto;
+    font-size: 0;
+  }
+}
+@media (max-width: 625px) {
+  #kiyoh-block .list-group-item span.text {
+    font-size: .9rem;
+  }
+
+  #kiyoh-block .list-group {
+    justify-content: space-around;
+    height: 100%;
+    padding: 7px 25px 7px 0px;
+  }
+}

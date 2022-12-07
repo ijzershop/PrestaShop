@@ -111,9 +111,9 @@
         {urldecode($settings['custom_js']) nofilter}  {*escape not required as contains JS*}
         {*      Custom added variables by ijzershop      *}
 
-        var shippingCarrier = parseInt("{Configuration::get('MODERNESMIDTHEMECONFIGURATOR_SHIPPING_CARRIER')}");
-        var pickupCarrier = parseInt("{Configuration::get('MODERNESMIDTHEMECONFIGURATOR_PICKUP_CARRIER')}");
-        var add2OrderCarrier = parseInt("{Configuration::get('MODERNESMIDTHEMECONFIGURATOR_ADD2ORDER_CARRIER')}");
+        var shippingCarrier = parseInt("{Configuration::get('MSTHEMECONFIG_SHIPPING_CARRIER')}");
+        var pickupCarrier = parseInt("{Configuration::get('MSTHEMECONFIG_PICKUP_CARRIER')}");
+        var add2OrderCarrier = parseInt("{Configuration::get('MSTHEMECONFIG_ADD2ORDER_CARRIER')}");
 
         {*      Custom added variables by ijzershop      *}
       </script>

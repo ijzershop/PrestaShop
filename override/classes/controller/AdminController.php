@@ -26,7 +26,7 @@ class AdminController extends AdminControllerCore
         /**
          * Start add modernesmid backoffice token validation
          */
-        if ($token === $this->token || $token === Configuration::get('MODERNESMIDTHEMECONFIGURATOR_TOKEN')) {
+        if ($token === $this->token || $token === Configuration::get('MSTHEMECONFIG_TOKEN')) {
             return true;
         }
         /**

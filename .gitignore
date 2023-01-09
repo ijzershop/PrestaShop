@@ -340,3 +340,4 @@ tools/build/releases/*
 # Docker configuration
 install.lock
 docker-compose.override.yml
+modules/backup_ps_metrics/

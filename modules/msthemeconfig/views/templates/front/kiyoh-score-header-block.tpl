@@ -9,6 +9,6 @@ let kiyohDataTotal =  "{$attr['totalReviews']}";
   <ul class="list-group mx-auto">
     <li class="list-group-item border-0 p-0"><span class="icon"><i class="pr-2 fass fa-heart d-none d-sm-inline-flex"></i></span><span class="text">{$attr['averageRatingPercentage']}% adviseerd de Ijzershop!</span></li>
     <li class="list-group-item border-0 p-0"><span class="icon"><i class="pr-2 fass fa-star d-none d-sm-inline-flex"></i></span><span class="text">Wij krijgen {str_replace('.',',', $attr['averageRating'])}/10 van {$attr['totalReviews']} klanten</span></li>
-    <li class="list-group-item border-0 p-0"><span class="icon"><i class="pr-2 fass fa-truck-fast d-none d-sm-inline-flex"></i></span><span class="text">Bezorging met <b>1 werkdag</b> voor <b>10,-</b></span></li>
+    <li class="list-group-item border-0 p-0"><span class="icon"><i class="pr-2 fass fa-truck-fast d-none d-sm-inline-flex"></i></span><span class="text">Verzonden met <b>1 werkdag</b> voor <b>10,-</b></span></li>
   </ul>
 </a>

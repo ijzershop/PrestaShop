@@ -173,7 +173,7 @@
 
 
   {/literal}
-{*</script>*}
+</script>
 {block name='hook_extra'}{/block}
 
 <style type="text/css">

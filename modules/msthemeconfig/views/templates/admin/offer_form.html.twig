@@ -1,0 +1,69 @@
+{#**
+ * Price Modifier
+ * Copyright since 2021 JB Stoker and Contributors
+ * <JB Stoker> Property
+ *
+
+ * @author    JB Stoker <jelmer@ijzershop.nl>
+ * @copyright Since 2021 JB Stoker
+ * @license   https://opensource.org/licenses/MIT
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% block contact_form %}
+  {{ form_start(offerForm) }}
+
+
+  <style>
+    .select2-dropdown { z-index: 9999 }
+    .tox-tinymce-aux{
+      z-index: 9999;
+    }
+    #offer_integration_form .form-control-label{
+      max-width:20%;
+    }
+  </style>
+  <div class="card w-100">
+    <h3 class="card-header">
+      <i class="material-icons">location_city</i> {{ 'Offer'|trans({}, 'Modules.Pricemodifier.Admin') }}
+      <button type="button" class="btn btn-sm btn-primary float-right" id="add-new-product" data-offer-id="{% if offerId is defined %}{{ offerId }}{% endif %}">
+        {{ 'Voeg product toe'|trans({}, 'Admin.Actions') }}
+      </button>
+    </h3>
+
+    <div class="card-block w-100">
+      <div class="card-body row">
+        <div class="col-md-12 col-lg-4" id="offer_integration_form">
+          <input id="select2-url" value="{{ adminSelect2DataLink }}" type="hidden"/>
+          <input id="offer-put-url" value="{{ putLink }}" type="hidden"/>
+          {{ form_errors(offerForm) }}
+          {% block price_modification_form_rest %}
+            {{ form_rest(offerForm) }}
+          {% endblock %}
+        </div>
+        <div class="col-md-12  col-lg-8 float-right">
+          {% include '@Modules/msthemeconfig/views/templates/admin/offer_row_table_row.html.twig' with {'offerRows': offerRows} %}
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <a href="{{ path('offerintegration_index') }}" class="btn btn-outline-secondary">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+      <button class="btn btn-primary float-right" id="submit">
+        {{ 'Save'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
+  </div>
+  {{ form_end(offerForm) }}
+{% endblock %}
+
+
+{% block javascripts %}
+
+
+<script type="text/javascript">
+
+</script>
+{% endblock %}

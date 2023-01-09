@@ -117,13 +117,16 @@
       {% if 'email' in employee_access %}
         <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="email" id="v-pills-email-tab" data-toggle="pill" data-target="#v-pills-email" type="button" role="tab" aria-controls="v-pills-email" aria-selected="false">Email</button>
       {% endif %}
+      {% if 'mail-theme' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="mail-theme" id="v-pills-mail-theme-tab" data-toggle="pill" data-target="#v-pills-mail-theme" type="button" role="tab" aria-controls="v-pills-mail-theme" aria-selected="false">Mail Theme</button>
+      {% endif %}
       {% if 'alert' in employee_access %}
         <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="alert" id="v-pills-alert-tab" data-toggle="pill" data-target="#v-pills-alert" type="button" role="tab" aria-controls="v-pills-alert" aria-selected="false">Alert</button>
       {% endif %}
-      {% if 'config' in employee_access %}
+      {% if 'main' in employee_access %}
         <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="config-main" id="v-pills-config-main-tab" data-toggle="pill" data-target="#v-pills-config-main" type="button" role="tab" aria-controls="v-pills-config-main" aria-selected="false">Algemene Configuratie</button>
       {% endif %}
-      {% if 'config' in employee_access %}
+      {% if 'user' in employee_access %}
         <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="config-user" id="v-pills-config-user-tab" data-toggle="pill" data-target="#v-pills-config-user" type="button" role="tab" aria-controls="v-pills-config-user" aria-selected="false">Gebruiker Configuratie</button>
       {% endif %}
       {% if 'kiyoh' in employee_access %}
@@ -131,6 +134,9 @@
       {% endif %}
       {% if 'koopman' in employee_access %}
         <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="koopman" id="v-pills-koopman-tab" data-toggle="pill" data-target="#v-pills-koopman" type="button" role="tab" aria-controls="v-pills-koopman" aria-selected="false">Koopman</button>
+      {% endif %}
+      {% if 'offer' in employee_access %}
+        <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="offer" id="v-pills-offer-tab" data-toggle="pill" data-target="#v-pills-offer" type="button" role="tab" aria-controls="v-pills-offer" aria-selected="false">Offerte Integratie</button>
       {% endif %}
       {% if 'services' in employee_access %}
         <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="services" id="v-pills-services-tab" data-toggle="pill" data-target="#v-pills-services" type="button" role="tab" aria-controls="v-pills-services" aria-selected="false">Diensten & Api's</button>
@@ -162,6 +168,9 @@
       {% if 'email' in employee_access %}
       <div class="tab-pane fade" id="v-pills-email" role="tabpanel" aria-labelledby="v-pills-email-tab" tabindex="0"></div>
       {% endif %}
+      {% if 'mail-theme' in employee_access %}
+        <div class="tab-pane fade" id="v-pills-mail-theme" role="tabpanel" aria-labelledby="v-pills-mail-theme-tab" tabindex="0"></div>
+      {% endif %}
       {% if 'footer' in employee_access %}
       <div class="tab-pane fade" id="v-pills-footer" role="tabpanel" aria-labelledby="v-pills-footer-tab" tabindex="0"></div>
       {% endif %}
@@ -170,6 +179,9 @@
       {% endif %}
       {% if 'koopman' in employee_access %}
       <div class="tab-pane fade" id="v-pills-koopman" role="tabpanel" aria-labelledby="v-pills-koopman-tab" tabindex="0"></div>
+      {% endif %}
+      {% if 'offer' in employee_access %}
+      <div class="tab-pane fade" id="v-pills-offer" role="tabpanel" aria-labelledby="v-pills-offer-tab" tabindex="0"></div>
       {% endif %}
       {% if 'services' in employee_access %}
       <div class="tab-pane fade" id="v-pills-services" role="tabpanel" aria-labelledby="v-pills-services-tab" tabindex="0"></div>

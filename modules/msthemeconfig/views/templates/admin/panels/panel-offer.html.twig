@@ -1,10 +1,50 @@
 <div class="card">
   <div class="card-header">
-    Koopman Transmission
+    Offerte Integratie
   </div>
+
   <div class="card-body">
+    <br>
+    {#   Whatsapp Link text   #}
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4">
+        Gewicht
+      </label>
+      <div class="col-xs-8">
+        <input type="text" name="MSTHEMECONFIG_OFFER_INTEGRATION_WEIGHT"
+               id="MSTHEMECONFIG_OFFER_INTEGRATION_WEIGHT"
+               value="{{ MSTHEMECONFIG_OFFER_INTEGRATION_WEIGHT }}" class="form-control">
+        <p class="help-block">Enter the weight of package when extra weight is added</p>
+      </div>
+    </div>
 
+    {#   Whatsapp Link text   #}
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4">
+        Extra Shipping
+      </label>
+      <div class="col-xs-8">
+        <input type="text" name="MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING"
+               id="MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING"
+               value="{{ MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING }}" class="form-control">
+        <p class="help-block">Enter the text show at the top whatsapp link</p>
+      </div>
+    </div>
 
-
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Categorie voor offerte producten
+      </label>
+      <div class="col-xs-8">
+        <select name="MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID"
+                class="w-100 form-control select2-data-input" data-type="categories_home"
+                id="MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID">
+          {{ MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID|raw }}
+        </select>
+        <p class="help-block">
+          Select the category you want to use for offer products
+        </p>
+      </div>
+    </div>
   </div>
 </div>

@@ -18,6 +18,9 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ *
+ */
 class PriceModificationRepository extends EntityRepository
 {
 

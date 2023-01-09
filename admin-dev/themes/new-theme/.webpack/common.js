@@ -84,6 +84,7 @@ module.exports = {
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
     msthemeconfig_admin: './js/msthemeconfig',
+    msthemeconfig_offergrid: './js/msthemeconfig_grid',
     manufacturer_address_form:
       './js/pages/manufacturer/manufacturer_address_form',
     merchandise_return: './js/pages/merchandise-return',

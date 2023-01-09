@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace MsThemeConfig\Core\Domain\Address\Command;
 
-use MsThemeConfig\Core\Domain\Address\Command\AbstractEditAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAddressTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;

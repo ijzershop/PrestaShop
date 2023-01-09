@@ -43,9 +43,9 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressExcep
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressRequiredFieldsException;
-use ModernesmidThemeConfigurator\Core\Domain\Address\Query\GetCustomerAddressForEditing;
+use MsThemeConfig\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
-use ModernesmidThemeConfigurator\Core\Domain\Address\QueryResult\EditableCustomerAddress;
+use MsThemeConfig\Core\Domain\Address\QueryResult\EditableCustomerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CartAddressType;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
@@ -431,7 +431,7 @@ class AddressController extends FrameworkBundleAdminController
             );
             // Special order handler
             $addressFormHandler = $this->get(
-                'modernesmid.core.form.identifiable_object.handler.order_address_form_handler'
+                'prestashop.core.form.identifiable_object.handler.order_address_form_handler'
             );
 
             // Address type required for EditOrderAddressCommand

@@ -1,0 +1,41 @@
+<table id="offer-row-table" class="table">
+  <thead>
+  <tr>
+    <th>Naam</th>
+    <th>Omschrijving</th>
+    <th>Prijs</th>
+    <th>Aantal</th>
+    <th>Gewicht</th>
+    <th>Extra Verzendkosten</th>
+    <th></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  {% for offerRow in offerRows %}
+  <tr data-row-id="{{ offerRow.id_product }}">
+    <td>{{ offerRow.name }}</td>
+    <td>
+      <div style="max-height: 150px;overflow: scroll">
+        {{ offerRow.description_short|raw }}
+      </div>
+    </td>
+    <td>{{ offerRow.price }}</td>
+    <td>{{ offerRow.quantity }}</td>
+    <td>{{ offerRow.weight }}</td>
+    <td>{% if offerRow.oi_offer_extra_shipping is same as(0) %}Nee{% else %}Ja{% endif %}</td>
+    <td>
+      <button data-offer="{{ offerRow|json_encode }}" type="button"
+                class="btn btn-sm btn-warning update-offer-row w-100"
+                data-row-id="{{ offerRow.id_product }}"
+                id="button_{{ offerRow.id_product }}">Wijzig</button>
+      <button type="button"
+              class="btn btn-sm btn-danger  delete-offer-row w-100"
+              data-link="/admin-dev/index.php/modules/modernesmid/offerintegration/admin-offer/row/{{ offerRow.id_product }}/delete"
+              data-row-id="{{ offerRow.id_product }}"
+              id="delete_button_{{ offerRow.id_product }}">Delete</button>
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>

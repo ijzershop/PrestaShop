@@ -29,7 +29,7 @@ admin_configuration_get_panel:
   path: /modernesmid/ajax/configuration/get-panel/{panel_name}
   methods: [GET, POST]
   defaults:
-      _controller: 'MsThemeConfig\Controller\Admin\ModernAjax::getPanel'
+      _controller: 'MsThemeConfig\Class\ModernAjax::getPanel'
       _legacy_controller: 'ModernAjax'
       _legacy_link: 'ModernAjax:getPanel'
       _legacy_parameters:
@@ -38,11 +38,81 @@ admin_configuration_get_panel:
       panel_name: '([a-z-]+)?'
 
 
+# Orders
+admin_orders_index:
+  path: /sell/orders/
+  methods: [GET, POST]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsAdminOrderController::indexAction'
+    _legacy_controller: 'AdminOrders'
+    _legacy_link: 'AdminOrders'
+    _disable_module_prefix: true
+
+admin_orders_view:
+  path: /{orderId}/view
+  methods: [GET, POST]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsAdminOrderController::viewAction'
+    _legacy_controller: 'AdminOrders'
+    _legacy_link: 'AdminOrders:vieworder'
+    _legacy_parameters:
+      id_order: 'orderId'
+    _disable_module_prefix: true
+  options:
+    expose: true
+  requirements:
+    orderId: \d+
+
+admin_orders_preview:
+  path: /{orderId}/preview
+  methods: [GET]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsAdminOrderController::previewAction'
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+#  Customers
+
+admin_customers_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsAdminCustomerController::createAction'
+    _legacy_controller: 'AdminCustomers'
+    _legacy_link: 'AdminCustomers:addcustomer'
+
+admin_customers_edit:
+  path: /{customerId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsAdminCustomerController::editAction'
+    _legacy_controller: 'AdminCustomers'
+    _legacy_link: 'AdminCustomers:updatecustomer'
+    _legacy_parameters:
+      id_customer: customerId
+  requirements:
+    customerId: \d+
+
+admin_customers_view:
+  path: /{customerId}/view
+  methods: [GET, POST]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsAdminCustomerController::viewAction'
+    _legacy_controller: 'AdminCustomers'
+    _legacy_link: 'AdminCustomers:viewcustomer'
+    _legacy_parameters:
+      id_customer: customerId
+  requirements:
+    customerId: \d+
+  options:
+    expose: true
+
 modernesmid_config_get_select2_data:
   path: /modernesmid/ajax/configuration/select2-get-data/{data_type}
   methods: [GET, POST]
   defaults:
-    _controller: 'MsThemeConfig\Controller\Admin\ModernAjax::getSelect2Data'
+    _controller: 'MsThemeConfig\Class\ModernAjax::getSelect2Data'
     _legacy_controller: 'ModernAjax'
     _legacy_link: 'ModernAjax:getSelect2Data'
     _legacy_parameters:
@@ -51,9 +121,157 @@ modernesmid_config_get_select2_data:
     panel_name: '([a-z-]+)?'
 
 
+admin_addresses_index:
+  path: /sell/addresses/
+  methods: GET
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsAdminAddressController::indexAction'
+    _legacy_controller: AdminAddresses
+    _legacy_link: 'AdminAddresses'
+
+admin_addresses_edit:
+  path: /sell/addresses/{addressId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsAdminAddressController::editAction'
+    _legacy_controller: DmsAdminAddressController
+    _legacy_parameters:
+      id_address: addressId
+  requirements:
+    addressId: \d+
+  options:
+    expose: true
+
+
+##Address edit
+admin_order_addresses_edit:
+  path: /order/{orderId}/{addressType}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsAdminAddressController::editOrderAddressAction'
+    _legacy_controller: DmsAdminAddressController
+  requirements:
+    orderId: \d+
+    addressType: delivery|invoice
+
 modernesmid_config_page:
   path: /improve/modules/manage/action/configure/msthemeconfig
   methods: [GET]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\MsAdminThemeConfController::initContent'
     _legacy_controller: MsAdminThemeConfController
+
+#Offerintegration
+offerintegration_index:
+  path: /modernesmid/offerintegration/admin-offer
+  methods: [ GET ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\AdminOfferController::indexAction'
+    _legacy_controller: AdminOfferController
+    _legacy_link: 'AdminOfferController'
+
+offerintegration_create:
+  path: /modernesmid/offerintegration/admin-offer/new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\AdminOfferController::createAction'
+    _legacy_controller: AdminOfferController
+    _legacy_link: 'AdminOfferController:add'
+
+
+offerintegration_send_email:
+  path: /modernesmid/offerintegration/admin-offer/send-mail/{offer_id}
+  methods: [ POST ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\AdminOfferController::sendMailAction'
+    _legacy_controller: AdminOfferController
+    _legacy_link: 'AdminOfferController:send-mail'
+  requirements:
+    offer_id: \d+
+
+offerintegration_edit:
+  path: /modernesmid/offerintegration/admin-offer/edit/{offer_id}
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\AdminOfferController::editAction'
+    _legacy_controller: AdminOfferController
+    _legacy_link: 'AdminOfferController:edit'
+  requirements:
+    offer_id: \d+
+
+offerintegration_delete:
+  path: /modernesmid/offerintegration/admin-offer/{offer_id}/delete
+  methods: [ DELETE ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\AdminOfferController::deleteAction'
+    _legacy_controller: AdminOfferController
+    _legacy_link: 'AdminOfferController:delete'
+  requirements:
+    offer_id: \d+
+
+offerintegration_bulk_delete:
+  path: /modernesmid/offerintegration/admin-offer/bulkDelete
+  methods: [ POST ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\AdminOfferController::deleteBulkAction'
+    _legacy_controller: AdminOfferController
+    _legacy_link: 'AdminOfferController:submitBulkdelete'
+
+offerintegration_search:
+  path: /modernesmid/offerintegration/search
+  methods: [ POST ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\AdminOfferController::searchAction'
+    _legacy_controller: 'AdminOfferController'
+    _legacy_link: 'AdminOfferController:search'
+
+offerintegration_ajax_select2_products_data:
+  path: /modernesmid/offerintegration/ajax/select2_products_data
+  methods: [GET, POST]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\MsAdminAjaxController::select2ProductsData'
+    _legacy_controller: 'MsAdminAjaxController'
+    _legacy_link: 'MsAdminAjax:select2_products_data'
+    _legacy_parameters:
+
+offerintegration_ajax_put_offer_row:
+  path: /modernesmid/offerintegration/ajax/put
+  methods: [POST]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\MsAdminAjaxController::putOfferRowAction'
+    _legacy_controller: 'MsAdminAjaxController'
+    _legacy_link: 'MsAdminAjax:put_offer_row'
+    _legacy_parameters:
+
+offerintegration_ajax_delete_row:
+  path: /modernesmid/offerintegration/admin-offer/row/{offer_id}/delete
+  methods: [ GET ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\MsAdminAjaxController::deleteAction'
+    _legacy_controller: MsAdminAjaxController
+    _legacy_link: 'MsAdminAjaxController:delete'
+  requirements:
+    offer_id: \d+
+
+#Modernesmid Mail Theme
+
+admin_mail_theme_send_test_mail:
+  path: /send-test-mail/{locale}/{theme}/{layout}
+  methods: [GET]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsMailThemeController::sendTestMailAction'
+    _legacy_link: DmsMailThemeController:rawModuleLayout
+    _legacy_controller: DmsMailThemeController
+    module: ''
+
+admin_mail_theme_send_test_module_mail:
+  path: /send-test-mail/{locale}/{theme}/{module}/{layout}
+  methods: [GET]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsMailThemeController::sendTestMailAction'
+    _legacy_link: DmsMailThemeController:rawModuleLayout
+    _legacy_controller: DmsMailThemeController
+
+
+
+

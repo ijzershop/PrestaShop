@@ -29,6 +29,7 @@ namespace MsThemeConfig\Core\Domain\Address\QueryResult;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
 /**
@@ -144,25 +145,25 @@ class EditableCustomerAddress
     /**
      * @param AddressId $addressId
      * @param CustomerId $customerId
-     * @param string $customerEmail
-     * @param string $addressAlias
-     * @param string $firstName
-     * @param string $lastName
-     * @param string $address
-     * @param string $houseNumber
-     * @param string $houseNumberExtension
-     * @param string $city
+     * @param string|null $customerEmail
+     * @param string|null $addressAlias
+     * @param string|null $firstName
+     * @param string|null $lastName
+     * @param string|null $address
+     * @param string|null $houseNumber
+     * @param string|null $houseNumberExtension
+     * @param string|null $city
      * @param CountryId $countryId
-     * @param string $postCode
-     * @param string $dni
-     * @param string $company
-     * @param string $vatNumber
-     * @param string $address2
-     * @param StateId $stateId
-     * @param string $homePhone
-     * @param string $mobilePhone
-     * @param string $other
-     * @param string[] $requiredFields
+     * @param string|null $postCode
+     * @param string|null $dni
+     * @param string|null $company
+     * @param string|null $vatNumber
+     * @param string|null $address2
+     * @param $stateId
+     * @param string|null $homePhone
+     * @param string|null $mobilePhone
+     * @param string|null $other
+     * @param array $requiredFields
      */
     public function __construct(
         AddressId $addressId,
@@ -173,18 +174,18 @@ class EditableCustomerAddress
         string $lastName,
         string $address,
         string $houseNumber,
-        string $houseNumberExtension,
+        string|null $houseNumberExtension,
         string $city,
         CountryId $countryId,
         string $postCode,
-        string $dni,
-        string $company,
-        string $vatNumber,
-        string $address2,
-        StateId $stateId,
+        string|null $dni,
+        string|null $company,
+        string|null $vatNumber,
+        string|null $address2,
+        $stateId,
         string $homePhone,
-        string $mobilePhone,
-        string $other,
+        string|null $mobilePhone,
+        string|null $other,
         array $requiredFields
     ) {
         $this->addressId = $addressId;
@@ -331,9 +332,9 @@ class EditableCustomerAddress
     }
 
     /**
-     * @return StateId|null
+     * @return StateId|NoStateId
      */
-    public function getStateId(): ?StateId
+    public function getStateId(): StateId|NoStateId
     {
         return $this->stateId;
     }

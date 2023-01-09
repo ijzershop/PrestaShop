@@ -1,0 +1,52 @@
+<div class="card" id="offer-row-form">
+  <div class="card-header">
+    Offer row
+  </div>
+  <div class="card-body">
+    <h5 class="card-title"><span>${title}</span></h5>
+    <p class="card-text">
+    <form>
+      <div class="form-group">
+        <label for="store-products">Product</label>
+        <select id="store-products" class="form-control" name="select2[]" data-toggle="select2" data-minimumresultsforsearch="0" aria-hidden="true">
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="offer-row-title">Naam</label>
+        <input type="text" class="form-control" id="offer-row-title" placeholder="Product Naam">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="offer-price">Prijs</label>
+          <input type="text" class="form-control" id="offer-price" placeholder="0.00">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="offer-qty">Aantal</label>
+          <input type="number" step="1" min="1" class="form-control" id="offert-qty" placeholder="1">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="offer-weight">Gewicht</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="offer-weight" placeholder="35">
+            <div class="input-group-append">
+              <span class="input-group-text" id="basic-addon2">Kg</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="offer-message">Omschrijving</label>
+        <textarea class="autoload_rte form-control" id="offer-message">
+
+        </textarea>
+      </div>
+    </form>
+    </p>
+    <a href="#" class="btn btn-primary">Save</a>
+  </div>
+</div>

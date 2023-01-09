@@ -31,7 +31,6 @@ use Order;
 use MsThemeConfig\Core\Domain\Address\Command\EditOrderAddressCommand;
 use MsThemeConfig\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use MsThemeConfig\Core\Domain\Address\CommandHandler\EditCustomerAddressHandlerInterface;
-use MsThemeConfig\Core\Domain\Address\CommandHandler\EditOrderAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateOrderAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
@@ -43,12 +42,13 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderInvoiceAdd
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShopException;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * EditOrderAddressCommandHandler manages an address update, it then updates order and cart
  * relation to the newly created address.
  */
-class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
+class EditOrderAddressHandler implements EditCustomerAddressHandlerInterface
 {
     /**
      * @var EditCustomerAddressHandlerInterface
@@ -88,7 +88,7 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
      * @throws CountryConstraintException
      * @throws StateConstraintException
      */
-    public function handle(EditOrderAddressCommand $command): AddressId
+    public function handle(EditOrderAddressCommand|EditCustomerAddressCommand $command): AddressId
     {
         try {
             $addressCommand = $this->createEditAddressCommand($command);
@@ -114,6 +114,7 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
         return $addressId;
     }
 
+
     /**
      * @param EditOrderAddressCommand $orderCommand
      *
@@ -126,9 +127,6 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
      */
     private function createEditAddressCommand(EditOrderAddressCommand $orderCommand): EditCustomerAddressCommand
     {
-
-        var_export($orderCommand);
-        die();
         $order = new Order($orderCommand->getOrderId()->getValue());
         $addressId = null;
         switch ($orderCommand->getAddressType()) {

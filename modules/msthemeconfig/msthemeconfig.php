@@ -1,22 +1,25 @@
 <?php
 declare(strict_types=1);
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-
-use MsThemeConfig\Controller\Admin\ModernAjax;
-use MsThemeConfig\Controller\Admin\MsAdminThemeConfController;
-use PrestaShop\PrestaShop\Adapter\Entity\Module;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
+use PrestaShop\PrestaShop\Adapter\Entity\Module;
+use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopDatabaseException;
+use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException;
 use PrestaShop\PrestaShop\Adapter\Entity\Shop;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
-
-use MsThemeConfig\Controller\ModernHook;
-use MsThemeConfig\Controller\ModernConfigurator;
+use PrestaShop\PrestaShop\Adapter\Entity\Category;
+use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
-use Symfony\Component\HttpFoundation\JsonResponse;
+
+use MsThemeConfig\Class\ModernConfigurator;
+use MsThemeConfig\Class\ModernAjax;
+use MsThemeConfig\Class\ModernHook;
+use MsThemeConfig\Class\MailTheme;
 
 /**
  *
@@ -31,16 +34,51 @@ class MsThemeConfig extends Module
      * @var array[]
      */
     protected $tabs = [
+        //Configuratie module
         [
             'route_name' => 'modernesmid_config_page',
             'name' => 'Moderne Smid Thema Conf', // One name for all langs
             'class_name' => 'MsAdminThemeConfController',
             'visible' => true,
             'parent_class_name' => 'AdminParentModulesSf',
-        ]
+        ],
+        //Offerte module
+        [
+            'route_name' => 'offerintegration_index',
+            'name' => 'Offerte aanmaken', // One name for all langs
+            'class_name' => 'AdminOfferController',
+            'visible' => true,
+            'parent_class_name'=>'SELL',
+            'icon'=>'account_circle',
+
+        ],
+        //Koopman Order Export
+        [
+            'route_name' => 'koopman_print_labels',
+            'name' => 'Koopman label(s) printen', // One name for all langs
+            'class_name' => 'koopmanOrderExportAdmin',
+            'visible' => true,
+            'parent_class_name'=>'AdminParentOrders',
+            'icon'=>'account_circle',
+
+        ],
+        [
+            'route_name' => 'koopman_close_day',
+            'name' => 'Koopman dagafsluiting', // One name for all langs
+            'class_name' => 'koopmanDagafsluitingAdmin',
+            'visible' => true,
+            'parent_class_name'=>'AdminParentOrders',
+            'icon'=>'account_circle',
+
+        ],
     ];
 
+
     private string $transDomain;
+    private ?int $idShop;
+    private ?int $idShopGroup;
+    private int $idLang;
+    private $MailThemeClass;
 
     public function __construct()
     {
@@ -50,6 +88,7 @@ class MsThemeConfig extends Module
         $this->bootstrap = true;
         $this->version = '1.0.0';
         $this->tab = 'front_office_features';
+        $this->MailThemeClass = new MailTheme();
 
         parent::__construct();
 
@@ -72,11 +111,17 @@ class MsThemeConfig extends Module
         if (!Configuration::get('MSTHEMECONFIG_NAME')) {
             $this->warning = $this->trans('No name provided', [], $this->transDomain);
         }
+
+
+
+        $this->idShop = $this->context->shop->id;
+        $this->idShopGroup = $this->context->shop->getGroup()->id;
+        $this->idLang = $this->context->language->id;
     }
     /**
      * @throws PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Adapter\Entity\PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException|\PrestaShopException
      */
     public function getModernConfig(): ModernConfigurator
     {
@@ -84,16 +129,18 @@ class MsThemeConfig extends Module
     }
     /**
      * @return ModernHook
-     * @throws PrestaShopException
+     * @throws PrestaShopException|\PrestaShopException
      */
     public function getModernHooks(): ModernHook
     {
         return new ModernHook($this, $this->context);
     }
+
     /**
      * Insert module into datable.
      *
      * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException|\PrestaShopException
      */
     public function install(): bool
     {
@@ -101,7 +148,55 @@ class MsThemeConfig extends Module
             Shop::setContext(ShopCore::CONTEXT_ALL);
         }
 
+        $createOfferTableQuery = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'oi_offer` (
+            `id_oi_offer` int(11) NOT NULL AUTO_INCREMENT,
+            `code` varchar(16) DEFAULT NULL,
+            `name` varchar(64) DEFAULT NULL,
+            `email` varchar(128) DEFAULT NULL,
+            `phone` varchar(32) DEFAULT NULL,
+            `message` TEXT DEFAULT NULL,
+            `date_exp` DATETIME DEFAULT NULL,
+            `date_add` DATETIME NOT NULL,
+            `date_upd` DATETIME NOT NULL,
+            PRIMARY KEY (`id_oi_offer`),
+            UNIQUE KEY (`code`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+
+        $addOfferIdToProductTable = 'ALTER TABLE `'._DB_PREFIX_.'product` ADD `id_oi_offer` int(11) DEFAULT NULL;';
+        $addOfferShippingToProductTable = 'ALTER TABLE `'._DB_PREFIX_.'product` ADD `oi_offer_extra_shipping` int(11) DEFAULT NULL;';
+
+        $addOfferIdToProductShopTable = 'ALTER TABLE `'._DB_PREFIX_.'product_shop` ADD `id_oi_offer` int(11) DEFAULT NULL;';
+        $addOfferShippingToProductShopTable = 'ALTER TABLE `'._DB_PREFIX_.'product_shop` ADD `oi_offer_extra_shipping` int(11) DEFAULT NULL;';
+
+        $checkColumnIdOidOfferProduct = "SHOW COLUMNS FROM "._DB_NAME_."."._DB_PREFIX_."product WHERE FIELD =  'id_oi_offer';";
+        $checkColumnIdShippingOfferProduct = "SHOW COLUMNS FROM "._DB_NAME_."."._DB_PREFIX_."product WHERE FIELD =  'oi_offer_extra_shipping';";
+        $checkColumnIdOidOfferProductShop = "SHOW COLUMNS FROM "._DB_NAME_."."._DB_PREFIX_."product_shop WHERE FIELD =  'id_oi_offer';";
+        $checkColumnIdShippingOfferProductShop = "SHOW COLUMNS FROM "._DB_NAME_."."._DB_PREFIX_."product_shop WHERE FIELD =  'oi_offer_extra_shipping';";
+
+
+        Db::getInstance()->execute($createOfferTableQuery);
+
+        if(!Db::getInstance()->execute($checkColumnIdOidOfferProduct)){
+            Db::getInstance()->execute($addOfferIdToProductTable);
+        }
+
+        if(!Db::getInstance()->execute($checkColumnIdOidOfferProductShop)){
+            Db::getInstance()->execute($addOfferIdToProductShopTable);
+        }
+
+        if(!Db::getInstance()->execute($checkColumnIdShippingOfferProduct)){
+            Db::getInstance()->execute($addOfferShippingToProductTable);
+        }
+
+        if(!Db::getInstance()->execute($checkColumnIdShippingOfferProductShop)){
+            Db::getInstance()->execute($addOfferShippingToProductShopTable);
+        }
+
+
+
         return (
+            $this->MailThemeClass->makeThemeSymlink() &&
+            $this->createOfferIntegrationCategory() &&
             parent::install()
             && Configuration::updateValue('MSTHEMECONIG_NAME', 'Moderne Smid Webshop Thema Configuratie')  && $this->installHooks()
         );
@@ -113,9 +208,40 @@ class MsThemeConfig extends Module
      */
     public function uninstall(): bool
     {
+        $checkColumnIdOidOfferProduct = "SHOW COLUMNS FROM "._DB_NAME_."."._DB_PREFIX_."product WHERE FIELD =  'id_oi_offer';";
+        $checkColumnIdShippingOfferProduct = "SHOW COLUMNS FROM "._DB_NAME_."."._DB_PREFIX_."product WHERE FIELD =  'oi_offer_extra_shipping';";
+        $checkColumnIdOidOfferProductShop = "SHOW COLUMNS FROM "._DB_NAME_."."._DB_PREFIX_."product_shop WHERE FIELD =  'id_oi_offer';";
+        $checkColumnIdShippingProductShop = "SHOW COLUMNS FROM "._DB_NAME_."."._DB_PREFIX_."product_shop WHERE FIELD =  'oi_offer_extra_shipping';";
+
+        $removeOfferIdToProductTable = 'ALTER TABLE `'._DB_PREFIX_.'product` DROP COLUMN `id_oi_offer`;';
+        $removeOfferShippingToProductTable = 'ALTER TABLE `'._DB_PREFIX_.'product` DROP COLUMN `oi_offer_extra_shipping`;';
+        $removeOfferIdToProductShopTable = 'ALTER TABLE `'._DB_PREFIX_.'product_shop` DROP COLUMN `id_oi_offer`;';
+        $removeOfferShippingToProductShopTable = 'ALTER TABLE `'._DB_PREFIX_.'product_shop` DROP COLUMN `oi_offer_extra_shipping`;';
+
+
+        if (!parent::uninstall()) {
+            return false;
+        }
+
+        if(!Db::getInstance()->execute($checkColumnIdOidOfferProduct)){
+            Db::getInstance()->execute($removeOfferIdToProductTable);
+        }
+
+        if(!Db::getInstance()->execute($checkColumnIdOidOfferProductShop)){
+            Db::getInstance()->execute($removeOfferIdToProductShopTable);
+        }
+
+        if(!Db::getInstance()->execute($checkColumnIdShippingOfferProduct)){
+            Db::getInstance()->execute($removeOfferShippingToProductTable);
+        }
+
+        if(!Db::getInstance()->execute($checkColumnIdShippingProductShop)){
+            Db::getInstance()->execute($removeOfferShippingToProductShopTable);
+        }
+
         return (
-            parent::uninstall()
-            && Configuration::deleteByName('MSTHEMECONIG_NAME')
+            $this->MailThemeClass->removeThemeSymlink() &&
+            parent::uninstall() && Configuration::deleteByName('MSTHEMECONIG_NAME')
         );
     }
     /**
@@ -127,25 +253,35 @@ class MsThemeConfig extends Module
     {
         $hookArray = [
             'actionAddressFormBuilderModifier',
+            'actionAdminControllerSetMedia',
             'actionAdminProductsControllerSaveAfter',
+            'actionAddressGridQueryBuilderModifier',
             'actionAfterCreateAddressFormHandler',
             'actionAfterCreateCategoryFormHandler',
             'actionAfterCreateCustomerAddressFormHandler',
+            'actionAfterCreateCustomerFormHandler',
             'actionAfterCreateRootCategoryFormHandler',
             'actionAfterUpdateCategoryFormHandler',
             'actionAfterUpdateCustomerAddressFormHandler',
+            'actionAfterUpdateCustomerFormHandler',
             'actionAfterUpdateOrderAddressFormHandler',
             'actionAfterUpdateRootCategoryFormHandler',
             'actionBuildFrontEndObject',
+            'actionBuildMailLayoutVariables',
+            'actionCancelProductFormBuilderModifier',
             'actionCategoryFormBuilderModifier',
             'actionCustomerAccountAdd',
             'actionCustomerAddressFormBuilderModifier',
+            'actionCustomerFormBuilderModifier',
             'actionFrontControllerInitAfter',
             'actionFrontControllerSetMedia',
-            'actionAdminControllerSetMedia',
+            'actionListMailThemes',
+            'actionOrderGridDefinitionModifier',
+            'actionOrderGridQueryBuilderModifier',
             'actionOrderStatusPostUpdate',
             'actionProductSearchProviderRunQueryAfter',
             'actionRootCategoryFormBuilderModifier',
+            'additionalCustomerFields',
             'displayAdditionalCategoryFields',
             'displayAdditionalCustomerAddressFields',
             'displayAdditionalRootCategoryFields',
@@ -158,7 +294,7 @@ class MsThemeConfig extends Module
             'displayOrderConfirmation',
             'displayPDFDeliverySlip',
             'filterProductContent',
-            'kiyohBanner'
+            'kiyohBanner',
         ];
 
         $sep = DIRECTORY_SEPARATOR;
@@ -208,7 +344,7 @@ class MsThemeConfig extends Module
 
             return $modernConfig->getConfigPage($viewData);
 
-        } catch (\PrestaShop\PrestaShop\Adapter\Entity\PrestaShopDatabaseException|\PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException|PrestaShopException $e) {
+        } catch (PrestaShopDatabaseException|PrestaShopException|PrestaShopException $e) {
             return $e->getMessage();
         }
     }
@@ -251,6 +387,7 @@ class MsThemeConfig extends Module
     {
 
 
+
         $imgKeys = [
             'MSTHEMECONFIG_BANNER_FIRST_IMAGE',
             'MSTHEMECONFIG_BANNER_SECOND_IMAGE',
@@ -277,15 +414,19 @@ class MsThemeConfig extends Module
         ];
 
         $multipleSelectKeys = [
-            'MSTHEMECONFIG_HOMEPAGE_CATEGORIES[]',
-            'MSTHEMECONFIG_CHANNABLE_CATEGORIES[]',
-            'MSTHEMECONFIG_SHOP_NOTIFICATION_PAGES[]',
-            'MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES[]',
-            'MSTHEMECONFIG_EMPLOYEE_SHOP_PROFILES[]',
-            'MSTHEMECONFIG_FEATURE_ENABLED[]',
+            'MSTHEMECONFIG_HOMEPAGE_CATEGORIES',
+            'MSTHEMECONFIG_CHANNABLE_CATEGORIES',
+            'MSTHEMECONFIG_SHOP_NOTIFICATION_PAGES',
+            'MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES',
+            'MSTHEMECONFIG_EMPLOYEE_SHOP_PROFILES',
+            'MSTHEMECONFIG_FEATURE_ENABLED',
+            'KOOPMANORDEREXPORT_SHIPPED_ACCEPTED_STATUSSES',
+            'KOOPMANORDEREXPORT_RETOUR_ACCEPTED_STATUSSES',
+            'KOOPMANORDEREXPORT_RETOUR_CREATED_STATUSSES',
         ];
 
         $form_values = Tools::getAllValues();
+
 
         foreach (array_keys($form_values) as $key) {
             if(!preg_match('/^[A-Z0-9_]+$/', $key)){
@@ -294,42 +435,10 @@ class MsThemeConfig extends Module
 
             //check if is multiple select
             if (in_array($key, $multipleSelectKeys)) {
-                switch ($key) {
-                    case 'MSTHEMECONFIG_HOMEPAGE_CATEGORIES[]':
-                        $categoriesString = implode(',',
-                            json_decode(Tools::getValue('MSTHEMECONFIG_HOMEPAGE_CATEGORIES_SORTED')));
-                        Configuration::updateValue('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES',
-                            $categoriesString);
-                        break;
-                    case 'MSTHEMECONFIG_SHOP_NOTIFICATION_PAGES[]':
-                        $categoriesString = implode(',',
-                            Tools::getValue('MSTHEMECONFIG_SHOP_NOTIFICATION_PAGES'));
-                        Configuration::updateValue('MSTHEMECONFIG_SHOP_NOTIFICATION_PAGES',
-                            $categoriesString);
-                        break;
-                    case 'MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES[]':
-                        $profileString = implode(',',
-                            Tools::getValue('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES'));
-                        Configuration::updateValue('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES',
-                            $profileString);
-                        break;
-                    case 'MSTHEMECONFIG_EMPLOYEE_SHOP_PROFILES[]':
-                        $profileString = implode(',',
-                            Tools::getValue('MSTHEMECONFIG_EMPLOYEE_SHOP_PROFILES'));
-                        Configuration::updateValue('MSTHEMECONFIG_EMPLOYEE_SHOP_PROFILES',
-                            $profileString);
-                        break;
-                    case 'MSTHEMECONFIG_FEATURE_ENABLED[]':
-                        $featureString = implode(',', Tools::getValue('MSTHEMECONFIG_FEATURE_ENABLED'));
-                        Configuration::updateValue('MSTHEMECONFIG_FEATURE_ENABLED', $featureString);
-                        break;
-                    case 'MSTHEMECONFIG_CHANNABLE_CATEGORIES[]':
-                        $categoriesString = implode(',',
-                            Tools::getValue('MSTHEMECONFIG_CHANNABLE_CATEGORIES'));
-                        Configuration::updateValue('MSTHEMECONFIG_CHANNABLE_SELECTED_CATEGORIES',
-                            $categoriesString);
-                        break;
-                }
+                $arrayString = implode(',', Tools::getValue($key));
+                $dbKey = str_replace('[]','', $key);
+
+                Configuration::updateValue($dbKey, [1=>$arrayString], false,  $this->idShopGroup, $this->idShop);
 
                 continue;
             }
@@ -367,6 +476,50 @@ class MsThemeConfig extends Module
             }
         }
     }
+
+    /**
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function createOfferIntegrationCategory(): bool
+    {
+        $check = Category::searchByName((int)Configuration::get('PS_LANG_DEFAULT'), 'Offertes', true);
+
+        if (empty($check)) {
+            $category = new Category();
+            $category->name = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Offertes'];
+            $category->second_name = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Offerte Category'];
+            $category->link_rewrite = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Offerte'];
+            $category->description = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Speciale Categorie voor Offertes'];
+            $category->active = 1;
+            $category->is_root_category = 0;
+            $category->position = 1;
+            $category->id_parent = 1;
+
+            if ($category->add()) {
+                Configuration::set('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID', (int)$category->id_category, $this->idShopGroup, $this->idShop);
+                return true;
+            }
+        } else {
+            $category = new Category((int)$check['id_category']);
+            $category->name = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Offertes'];
+            $category->second_name = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Offerte Category'];
+            $category->link_rewrite = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Offerte'];
+            $category->description = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Speciale Categorie voor Offertes'];
+            $category->active = 1;
+            $category->is_root_category = 0;
+            $category->position = 1;
+            $category->id_parent = 1;
+
+            if ($category->update()) {
+                Configuration::set('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID', (int)$category->id_category, $this->idShopGroup, $this->idShop);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     /**
      * @param $params
      * @return string
@@ -564,7 +717,7 @@ class MsThemeConfig extends Module
      * @return void
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @throws ModuleErrorException
+     * @throws ModuleErrorException|\PrestaShopException
      */
     public function hookActionAddressFormBuilderModifier($params): void
     {
@@ -574,7 +727,7 @@ class MsThemeConfig extends Module
 
     /**
      * @throws PrestaShopException
-     * @throws ModuleErrorException
+     * @throws ModuleErrorException|\PrestaShopException
      */
     public function hookActionAfterCreateAddressFormHandler($params): void
     {
@@ -585,7 +738,7 @@ class MsThemeConfig extends Module
     /**
      * @param $params;
      * @throws PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException
+     * @throws PrestaShopException|\PrestaShopException
      */
     public function hookActionFrontControllerSetMedia($params): void
     {
@@ -597,7 +750,7 @@ class MsThemeConfig extends Module
     /**
      * @param $params;
      * @throws PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException
+     * @throws PrestaShopException|\PrestaShopException
      */
     public function hookActionAdminControllerSetMedia($params): void
     {
@@ -605,23 +758,24 @@ class MsThemeConfig extends Module
         $hookClass->hookActionAdminControllerSetMedia($params);
     }
 
-    /**|string
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     * @throws SmartyException
-     * @throws \PrestaShop\PrestaShop\Adapter\Entity\PrestaShopDatabaseException
+    /**
+     * @return string|bool
      */
     public function hookKiyohBanner(): string|bool
     {
-        $hookClass = $this->getModernHooks();
-        return $hookClass->hookKiyohBanner();
+        try {
+            $hookClass = $this->getModernHooks();
+            return $hookClass->hookKiyohBanner();
+        } catch (PrestaShopException|\PrestaShopException|SmartyException) {
+            return '';
+        }
     }
 
     /**
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @throws SmartyException
-     * @throws \PrestaShop\PrestaShop\Adapter\Entity\PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     public function hookDisplayCMSDisputeInformation(): void
     {
@@ -679,7 +833,7 @@ class MsThemeConfig extends Module
     }
 
     /**
-     * @throws PrestaShopException
+     * @throws PrestaShopException|\PrestaShopException
      */
     public function hookActionRootCategoryFormBuilderModifier($params): void
     {
@@ -688,7 +842,7 @@ class MsThemeConfig extends Module
     }
 
     /**
-     * @throws PrestaShopException
+     * @throws PrestaShopException|\PrestaShopException
      */
     public function hookDisplayAdditionalRootCategoryFields($params): void
     {
@@ -699,7 +853,7 @@ class MsThemeConfig extends Module
     /**
      * @param $params
      * @throws ModuleErrorException
-     * @throws PrestaShopException
+     * @throws PrestaShopException|\PrestaShopException
      */
     public function hookActionAfterUpdateRootCategoryFormHandler($params): void
     {
@@ -709,7 +863,7 @@ class MsThemeConfig extends Module
 
     /**
      * @throws PrestaShopException
-     * @throws ModuleErrorException
+     * @throws ModuleErrorException|\PrestaShopException
      */
     public function hookActionAfterCreateRootCategoryFormHandler($params): void
     {
@@ -719,7 +873,7 @@ class MsThemeConfig extends Module
 
     /**
      * @param $params
-     * @throws PrestaShopException
+     * @throws PrestaShopException|\PrestaShopException
      */
     public function hookActionAfterUpdateOrderAddressFormHandler($params): void
     {
@@ -728,4 +882,112 @@ class MsThemeConfig extends Module
     }
 
 
+
+    /**
+     * @param $params
+     * @throws PrestaShopException|\PrestaShopException
+     */
+    public function hookActionCustomerFormBuilderModifier($params): void
+    {
+        $hookClass = $this->getModernHooks();
+        $hookClass->hookActionCustomerFormBuilderModifier($params);
+    }
+
+
+        /**
+     * @param $params
+     * @throws PrestaShopException|\PrestaShopException
+         */
+    public function hookAdditionalCustomerFields($params): void
+    {
+        $hookClass = $this->getModernHooks();
+        $hookClass->hookAdditionalCustomerFields($params);
+    }
+
+
+    /**
+     * @param $params
+     * @throws PrestaShopException
+     * @throws ModuleErrorException|\PrestaShopException
+     */
+    public function hookActionAfterUpdateCustomerFormHandler($params): void
+    {
+        $hookClass = $this->getModernHooks();
+        $hookClass->hookActionAfterUpdateCustomerFormHandler($params);
+    }
+
+
+        /**
+     * @param $params
+     * @throws PrestaShopException
+     */
+    public function hookActionAfterCreateCustomerFormHandler($params): void
+    {
+        $hookClass = $this->getModernHooks();
+        $hookClass->hookActionAfterCreateCustomerFormHandler($params);
+    }
+
+
+    /**
+     * @param $params
+     * @throws PrestaShopException
+     * @throws ColumnNotFoundException|\PrestaShopException
+     */
+    public function hookActionOrderGridDefinitionModifier($params): void
+    {
+        $hookClass = $this->getModernHooks();
+        $hookClass->hookActionOrderGridDefinitionModifier($params);
+    }
+
+
+        /**
+     * @param $params
+     * @throws PrestaShopException
+     */
+    public function hookActionOrderGridQueryBuilderModifier($params): void
+    {
+        $hookClass = $this->getModernHooks();
+        $hookClass->hookActionOrderGridQueryBuilderModifier($params);
+    }
+
+    /**
+     * @param $params
+     * @throws PrestaShopException
+     */
+    public function hookActionAddressGridQueryBuilderModifier($params): void
+    {
+        $hookClass = $this->getModernHooks();
+        $hookClass->hookActionAddressGridQueryBuilderModifier($params);
+    }
+        /**
+     * @param $params
+     * @throws PrestaShopException
+     */
+    public function hookActionCancelProductFormBuilderModifier($params): void
+    {
+        $hookClass = $this->getModernHooks();
+        $hookClass->hookActionCancelProductFormBuilderModifier($params);
+    }
+
+
+    /**
+     * @param $params
+     * @throws PrestaShopException
+     */
+    public function hookActionListMailThemes($params): void
+    {
+        $hookClass = $this->getModernHooks();
+        $hookClass->hookActionListMailThemes($params);
+    }
+
+
+    /**
+     * @param $params
+     * @throws PrestaShopException
+     */
+    public function hookActionBuildMailLayoutVariables($params): void
+    {
+        $hookClass = $this->getModernHooks();
+        $hookClass->hookActionBuildMailLayoutVariables($params);
+    }
 }

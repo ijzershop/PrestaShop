@@ -76,14 +76,22 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
                 if (false === $copyAddress->delete()) {
                     throw new DeleteAddressException(sprintf('Cannot delete Address object with id "%s".', $copyAddress->id), DeleteAddressException::FAILED_DELETE);
                 }
-            } elseif (false === $editedAddress->update()) {
-                throw new CannotUpdateAddressException(sprintf('Failed to update address "%s"', $editedAddress->id));
+            } else{
+
+                $result = $editedAddress->save(true);
+
+                if(!$result){
+                    throw new CannotUpdateAddressException(sprintf('Failed to update address "%s"', $editedAddress->id));
+                }
             }
+
         } catch (PrestaShopException $e) {
             throw new AddressException(sprintf('An error occurred when updating address "%s"', $command->getAddressId()->getValue()));
         }
 
-        return new AddressId((int) $editedAddress->id);
+        $addressId = new AddressId((int) $editedAddress->id);
+
+        return $addressId;
     }
 
     /**

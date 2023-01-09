@@ -1,0 +1,18 @@
+Beste {customer_name},
+
+Wij hebben uw offerte aanvraag ontvangen.
+
+Om de aanbieding die wij voor u hebben samengesteld te bekijken klikt u op de volgende link: {url}.
+
+U krijgt dan een overzicht van de producten die zijn aangevraagd en kunt u het gewenste aantal invullen en toevoegen aan uw winkelwagen. Vervolgens kunt u de winkelwagen nog aanvullen met andere producten van <a href="https://www.ijzershop.nl">www.IjzerShop.nl</a> en afrekenen via Ideal, Paypal of een bankoverschrijving. Na ontvangst van de bestelling ontvangt u direct een bevestiging van uw order inclusief factuur in uw mailbox
+Let op deze aanbieding verloopt op {date_exp}, daarna word de aanbieding verwijderd uit ons systeem.
+
+Mocht u naar aanleiding van onze offerte nog vragen hebben horen wij deze graag.
+
+Met vriendelijke groet,
+
+Verkoop Ijzershop.nl
+
+Venusweg 15
+8938 BC Leeuwarden
+Tel: 0900-2502500

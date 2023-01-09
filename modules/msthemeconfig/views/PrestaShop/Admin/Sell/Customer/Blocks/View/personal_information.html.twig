@@ -1,0 +1,413 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">person</i>
+    {{ customerInformation.personalInformation.firstName }}
+    {{ customerInformation.personalInformation.lastName }}
+    {{ '[%06d]'|format(customerInformation.customerId.value) }}
+    -
+    <a href="mailto:{{ customerInformation.personalInformation.email }}">
+      {{ customerInformation.personalInformation.email }}
+    </a>
+
+    <a href="#" onclick="renderInformerModal()"
+       class="tooltip-link float-right"
+       data-toggle="pstooltip"
+       title=""
+       data-placement="top"
+       data-original-title="{{ 'Create Informer Account for this customer'|trans({}, 'Admin.Actions') }}"
+    >
+      <i class="material-icons">supervisor_account</i>
+    </a>
+
+    <a href="{{ getAdminLink('AdminCustomers', true, {'id_customer': customerInformation.customerId.value, 'updatecustomer': 1, 'back': app.request.uri}) }}"
+       class="tooltip-link float-right"
+       data-toggle="pstooltip"
+       title=""
+       data-placement="top"
+       data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+    >
+      <i class="material-icons">edit</i>
+    </a>
+
+  </h3>
+  <div class="card-body">
+    <div class="row mb-1">
+      <div class="col-4 text-right">
+        {{ 'Social Title'|trans({}, 'Admin.Global') }}
+      </div>
+      <div class="col-8">
+        {{ customerInformation.personalInformation.socialTitle }}
+      </div>
+    </div>
+
+    <div class="row mb-1">
+      <div class="col-4 text-right">
+        {{ 'Age'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </div>
+      <div class="col-8">
+        {{ customerInformation.personalInformation.birthday }}
+      </div>
+    </div>
+
+    <div class="row mb-1">
+      <div class="col-4 text-right">
+        {{ 'Registration Date'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </div>
+      <div class="col-8">
+        {{ customerInformation.personalInformation.registrationDate }}
+      </div>
+    </div>
+
+    <div class="row mb-1">
+      <div class="col-4 text-right">
+        {{ 'Last Visit'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </div>
+      <div class="col-8">
+        {{ customerInformation.personalInformation.lastVisitDate }}
+      </div>
+    </div>
+
+    {% if customerInformation.personalInformation.rankBySales %}
+      <div class="row mb-1">
+        <div class="col-4 text-right">
+          {{ 'Best Customer Rank'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </div>
+        <div class="col-8">
+          {{ customerInformation.personalInformation.rankBySales }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if isMultistoreEnabled %}
+      <div class="row mb-1">
+        <div class="col-4 text-right">
+          {{ 'Shop'|trans({}, 'Admin.Global') }}
+        </div>
+        <div class="col-8">
+          {{ customerInformation.personalInformation.shopName }}
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="row mb-1">
+      <div class="col-4 text-right">
+        {{ 'Language'|trans({}, 'Admin.Global') }}
+      </div>
+      <div class="col-8">
+        {{ customerInformation.personalInformation.languageName }}
+      </div>
+    </div>
+
+    <div class="row mb-1">
+      <div class="col-4 text-right">
+        {{ 'Registrations'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </div>
+      <div class="col-8">
+        {% set isNewsletterSubscribed = customerInformation.personalInformation.subscriptions.newsletterSubscribed %}
+        {% set isPartnerOffersSubscribed = customerInformation.personalInformation.subscriptions.partnerOffersSubscribed %}
+
+        <span class="badge badge-{% if isNewsletterSubscribed %}success{% else %}danger{% endif %} rounded pt-0 pb-0">
+          <i class="material-icons">{% if isNewsletterSubscribed %}check{% else %}cancel{% endif %}</i>
+          {{ 'Newsletter'|trans({}, 'Admin.Global') }}
+        </span>
+
+        <span class="badge badge-{% if isPartnerOffersSubscribed %}success{% else %}danger{% endif %} rounded pt-0 pb-0">
+          <i class="material-icons">{% if isPartnerOffersSubscribed %}check{% else %}cancel{% endif %}</i>
+          {{ 'Partner offers'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </span>
+      </div>
+    </div>
+
+    <div class="row mb-1">
+      <div class="col-4 text-right">
+        {{ 'Latest Update'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </div>
+      <div class="col-8">
+        {{ customerInformation.personalInformation.lastUpdateDate }}
+      </div>
+    </div>
+
+    <div class="row mb-1">
+      <div class="col-4 text-right">
+        {{ 'Status'|trans({}, 'Admin.Global') }}
+      </div>
+      <div class="col-8">
+        {% set isCustomerActive = customerInformation.personalInformation.active %}
+
+        <span class="badge badge-{% if isCustomerActive %}success{% else %}danger{% endif %} rounded pt-0 pb-0">
+          {% if isCustomerActive %}
+            <i class="material-icons">check</i>
+            {{ 'Active'|trans({}, 'Admin.Global') }}
+          {% else %}
+            <i class="material-icons">cancel</i>
+            {{ 'Inactive'|trans({}, 'Admin.Global') }}
+          {% endif %}
+        </span>
+      </div>
+    </div>
+{#   Informer Id #}
+    <div class="row mb-1">
+      <div class="col-4 text-right">
+        {{ 'Informer Identification'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </div>
+      <div  class="col-8">
+        {{ customerInformation.informer_identification }}
+      </div>
+    </div>
+{#  End Informer id  #}
+    {% if customerInformation.personalInformation.guest %}
+      <div class="row mb-1">
+        <div class="col-4 text-right">
+          {{ 'This customer is registered as a Guest.'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </div>
+        <div class="col-8">
+          {% if customerInformation.generalInformation.customerBySameEmailExists %}
+            <p>{{ 'A registered customer account using the defined email address already exists. '|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+          {% else %}
+{#            {{ form_start(transferGuestAccountForm, {'action': path('admin_customers_transform_guest_to_customer', {'customerId': customerInformation.customerId.value})}) }}#}
+{#              <button class="btn btn-primary btn-sm">#}
+{#                {{ 'Transform to a customer account'|trans({}, 'Admin.Orderscustomers.Feature') }}#}
+{#              </button>#}
+
+{#              <p class="small-text">{{ 'This feature generates a random password before sending an email to your customer.'|trans({}, 'Admin.Orderscustomers.Help') }}</p>#}
+{#            {{ form_end(transferGuestAccountForm) }}#}
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+
+
+
+  </div>
+</div>
+
+<div class="modal" id="informer-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Informer Relatie aanmaken</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Om een informer relatie account aan te maken zijn een aantal onderdelen verplicht. Kijk de gegevens goe na en pas aan indien nodig. Na het aanmaken van de informer account kan deze alleen nog gewijzigd worden in Informer Online</p>
+        <form id="informer-modal-form" data-token="{{customerInformerData.token}}">
+          <input type="hidden" name="id_customer" id="id_customer" class="form-control" value="{{customerInformation.customerId.value}}"/>
+            <input type="hidden" name="update_informer" id="update_informer" class="form-control" value="{{customerInformation.informer_identification}}"/>
+          {#          Company Settings #}
+          <div class="row">
+            <div class="card col-12">
+              <div class="card-header row">
+                Bedrijf
+              </div>
+              <div class="card-body row">
+                <div class="col-12">
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_company_name">* Bedrijfsnaam</label>
+                    <div class="col-8">
+                      <input type="text" name="company_name" id="informer_company_name" required class="form-control" value="{{customerInformerData.address.company}}"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_email">Email</label>
+                    <div class="col-8">
+                      <input type="text" name="email" id="informer_email" class="form-control" value="{{customerInformation.personalInformation.email}}"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_phone_number">Telefoon</label>
+                    <div class="col-8">
+                      <input type="text" name="phone_number" id="informer_phone_number" class="form-control" value="{{customerInformerData.address.phone}}"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_fax_number">Fax</label>
+                    <div class="col-8">
+                      <input type="text" name="fax_number" id="informer_fax_number" class="form-control"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_vat">BTW Nummer</label>
+                    <div class="col-8">
+                      <input type="text" name="vat" id="informer_vat" class="form-control"  value="{{customerInformerData.address.vat_number}}"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_coc">KvK Nummer</label>
+                    <div class="col-8">
+                      <input type="text" name="coc" id="informer_coc" class="form-control"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_bic">BIC code</label>
+                    <div class="col-8">
+                      <input type="text" name="bic" id="informer_bic" class="form-control"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_iban">IBAN code</label>
+                    <div class="col-8">
+                      <input type="text" name="iban" id="informer_iban" class="form-control"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_web">Website</label>
+                    <div class="col-8">
+                      <input type="text" name="web" id="informer_web" class="form-control"  value=""/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+{#          Company Settings #}
+          <div class="row">
+            <div class="card col-12">
+              <div class="card-header row">
+                Contact Persoon
+              </div>
+              <div class="card-body row">
+                <div class="col-12">
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_firstname">Voornaam</label>
+                    <div class="col-8">
+                      <input type="text" name="firstname" id="informer_firstname" class="form-control" value="{{customerInformation.personalInformation.firstname}}"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_surname_prefix">Achternaam voorvoegsel</label>
+                    <div class="col-8">
+                      <input type="text" name="surname_prefix" id="informer_surname_prefix" class="form-control"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_surname">Achternaam</label>
+                    <div class="col-8">
+                      <input type="text" name="surname" id="informer_surname" class="form-control" value="{{customerInformation.personalInformation.lastname}}"/>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+{#          Company Settings #}
+          <div class="row">
+            <div class="card col-12">
+              <div class="card-header row">
+                Adres
+              </div>
+              <div class="card-body row">
+                <div class="col-12">
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_street">Straat</label>
+                    <div class="col-8">
+                      <input type="text" name="street" id="informer_street" class="form-control"  value="{{customerInformerData.address.address1}}"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_house_number">Huisnummer</label>
+                    <div class="col-8">
+                      <input type="text" name="house_number" id="informer_house_number" class="form-control" value="{{customerInformerData.address.house_number}}"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_house_number_suffix">Huisnummer achtervoegsel</label>
+                    <div class="col-8">
+                      <input type="text" name="house_number_suffix" id="informer_house_number_suffix" class="form-control" value="{{customerInformerData.address.house_number_extension}}"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_zip">Postcode</label>
+                    <div class="col-8">
+                      <input type="text" name="zip" id="informer_zip" class="form-control" value="{{customerInformerData.address.postcode}}"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_city">Plaats</label>
+                    <div class="col-8">
+                      <input type="text" name="city" id="informer_city" class="form-control" value="{{customerInformerData.address.city}}"/>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-4 col-form-label text-right" for="informer_country">Land</label>
+                    <div class="col-8">
+                      {% if customerInformerData.address.country|lower == 'nederland' %}
+                      <input type="text" name="country" id="informer_country" class="form-control" value="NL"/>
+                      {% elseif customerInformerData.address.country|lower == 'belgie' %}
+                        <input type="text" name="country" id="informer_country" class="form-control" value="BE"/>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="createInformerRelation" {% if customerInformation.informer_identification|number_format > 0 %} class="btn btn-warning">Relatie wijzigen {% else %} class="btn btn-primary">Relatie aanmaken {% endif %}</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
+      </div>
+    </div>
+  </div>
+</div>
+{#{{ Tools::getAdminTokenLite('AdminModules') }}#}
+
+<script>
+
+  function renderInformerModal(){
+    $('#informer-modal').modal('show');
+  }
+
+$('#createInformerRelation').on('click', function(e){
+  e.preventDefault();
+  var formData = $('#informer-modal-form').serialize();
+  var adminToken = $('#informer-modal-form').attr('data-token');
+  var postdata = {
+    'ajax': 1,
+    'controller': 'AdminThemeConf',
+    'action': 'createInformerRelation',
+    'token': adminToken,
+    'formdata': formData,
+  };
+  $.ajax({
+    type: 'POST',
+    url: 'index.php',
+    data: postdata,
+    success: function(r){
+      console.log(r);
+    }
+  });
+
+  // console.log(formData);
+
+})
+</script>

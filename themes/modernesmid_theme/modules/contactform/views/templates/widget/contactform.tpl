@@ -125,7 +125,7 @@
           <input class="form-control mb-2" type="text" name="phonenumber" value="" />
         {/if}
 
-        {if Context::getContext()->controller->php_self == 'contactinformation' || Context::getContext()->controller->php_self == 'contactretour' }
+        {if Context::getContext()->controller->php_self == 'contactretour' }
           {if $contact.orders}
 {*            <label class="text-dark">{l s='Order reference' d='Modules.Contactform.Shop'}</label>*}
             <div class="card car-body col">

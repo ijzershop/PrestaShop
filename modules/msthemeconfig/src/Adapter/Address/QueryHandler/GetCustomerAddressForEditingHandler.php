@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShopException;
 
@@ -78,6 +79,14 @@ final class GetCustomerAddressForEditingHandler extends AbstractCustomerAddressH
             $reqFields = "";
         }
 
+        if(empty($address->id_state)){
+            $state = new NoStateId();
+
+        } else {
+            $state = new StateId((int) $address->id_state);
+        }
+
+
         $editableCustomerAddress = new EditableCustomerAddress(
             $addressId,
             $customerId,
@@ -95,7 +104,7 @@ final class GetCustomerAddressForEditingHandler extends AbstractCustomerAddressH
             $address->company,
             $address->vat_number,
             $address->address2,
-            new StateId($address->id_state),
+            $state,
             $address->phone,
             $address->phone_mobile,
             $address->other,

@@ -63,9 +63,9 @@ class Address extends AddressCore
             $context_hash = (int) $id_address;
         } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
             $context_hash = md5((int) $context->customer->geoloc_id_country . '-' . (int) $context->customer->id_state . '-' .
-                $context->customer->postcode);
+                                $context->customer->postcode);
         } else {
-            $context_hash = md5((int) $context->country->id);
+            $context_hash = md5((string) $context->country->id);
         }
 
         $cache_id = 'Address::initialize_' . $context_hash;
@@ -75,13 +75,12 @@ class Address extends AddressCore
             if ($id_address) {
                 $address = new Address((int) $id_address);
 
-                if (!Validate::isLoadedObject($address)) {
-                    $address->id = (int) $id_address;
-                    $address->delete();
-//                    throw new PrestaShopException('Invalid address #' . (int) $id_address);
-                }
+//                if (!Validate::isLoadedObject($address)) {
+//                    $address->id = (int) $id_address;
+//                    $address->delete();
+////                    throw new PrestaShopException('Invalid address #' . (int) $id_address);
+//                }
             } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
-
                 $address = new Address();
                 $address->id_country = (int) $context->customer->geoloc_id_country;
                 $address->id_state = (int) $context->customer->id_state;
@@ -90,19 +89,19 @@ class Address extends AddressCore
                 $address = new Address();
                 $address->id_country = (int) $context->country->id;
                 $address->id_state = 0;
-                $address->postcode = 0;
+                $address->postcode = '0';
             } elseif ((int) Configuration::get('PS_SHOP_COUNTRY_ID')) {
                 // set the default address
                 $address = new Address();
-                $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID');
-                $address->id_state = Configuration::get('PS_SHOP_STATE_ID');
+                $address->id_country = (int) Configuration::get('PS_SHOP_COUNTRY_ID');
+                $address->id_state = (int) Configuration::get('PS_SHOP_STATE_ID');
                 $address->postcode = Configuration::get('PS_SHOP_CODE');
             } else {
                 // set the default address
                 $address = new Address();
-                $address->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+                $address->id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT');
                 $address->id_state = 0;
-                $address->postcode = 0;
+                $address->postcode = '0';
             }
             Cache::store($cache_id, $address);
 

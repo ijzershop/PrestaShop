@@ -4,7 +4,550 @@
   </div>
   <div class="card-body">
 
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Koopman Algemeen
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseKoopmanMain" aria-expanded="false" aria-controls="collapseKoopmanMain">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+    <div class="collapse" id="collapseKoopmanMain">
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Select status condition
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SELECT_STATUS"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_SELECT_STATUS">
+          {{ KOOPMANORDEREXPORT_SELECT_STATUS|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status of the orders to export.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Select carrier condition
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SELECT_CARRIER"
+                class="w-100 form-control select2-data-input" data-type="carriers"
+                id="KOOPMANORDEREXPORT_SELECT_CARRIER">
+          {{ KOOPMANORDEREXPORT_SELECT_CARRIER|raw }}
+        </select>
+        <p class="help-block">
+          Choose the carrier of the orders to export.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4">
+        Change order status
+      </label>
+      <div class="col-xs-8">
+
+        <div class="radio">
+          <label><input type="radio" name="KOOPMANORDEREXPORT_UPDATE_BOOL" id="yes"
+                        value="1"
+                        {% if KOOPMANORDEREXPORT_UPDATE_BOOL == 1 %}checked="checked"{% endif %}>Yes</label>
+        </div>
+        <div class="radio ">
+          <label><input type="radio" name="MSTHEMECONFIG_FIRST_BOX_ACTIVE" id="no" value="0"
+                        {% if KOOPMANORDEREXPORT_UPDATE_BOOL == 0 %}checked="checked"{% endif %}>No</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Change order-status into
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_UPDATE_STATUS"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_UPDATE_STATUS">
+          KOOPMANORDEREXPORT_UPDATE_STATUS|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status to convert orders into.
+        </p>
+      </div>
+    </div>
 
 
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">SOAP Url</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_SOAP_URL"
+               id="KOOPMANORDEREXPORT_SOAP_URL" value="{{ KOOPMANORDEREXPORT_SOAP_URL }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman api soap url</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">API Username</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_API_USERNAME"
+               id="KOOPMANORDEREXPORT_API_USERNAME" value="{{ KOOPMANORDEREXPORT_API_USERNAME }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman api username</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">API Password</label>
+      <div class="col-xs-8">
+        <input type="password" name="KOOPMANORDEREXPORT_API_PASSWORD"
+               id="KOOPMANORDEREXPORT_API_PASSWORD" value="{{ KOOPMANORDEREXPORT_API_PASSWORD }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman api password</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">Koopman Afzender</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_KOOPMAN_AFZENDER"
+               id="KOOPMANORDEREXPORT_KOOPMAN_AFZENDER" value="{{ KOOPMANORDEREXPORT_KOOPMAN_AFZENDER }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman afzender</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">Koopman Afzender Naam</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM"
+               id="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM" value="{{ KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman afzender naam</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">Koopman Afzender Sub Naam</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM2"
+               id="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM2" value="{{ KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM2 }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman afzender sub naam</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">Favicon prefix</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERSTRAAT"
+               id="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERSTRAAT" value="{{ KOOPMANORDEREXPORT_KOOPMAN_AFZENDERSTRAAT }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman afzender straat</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">Koopman Afzender Huisnr</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERHUISNR"
+               id="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERHUISNR" value="{{ KOOPMANORDEREXPORT_KOOPMAN_AFZENDERHUISNR }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman afzender huisnummer</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">Koopman Afzender Postcode</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPOSTCODE"
+               id="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPOSTCODE"
+               value="{{ KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPOSTCODE }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman afzender postcode</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">Koopman Afzender Plaats</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPLAATS"
+               id="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPLAATS" value="{{ KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPLAATS }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman afzender plaats</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">Koopman Afzender Land</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERLAND"
+               id="KOOPMANORDEREXPORT_KOOPMAN_AFZENDERLAND" value="{{ KOOPMANORDEREXPORT_KOOPMAN_AFZENDERLAND }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman afzender land</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">Koopman Depot</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_KOOPMAN_DEPOT"
+               id="KOOPMANORDEREXPORT_KOOPMAN_DEPOT" value="{{ KOOPMANORDEREXPORT_KOOPMAN_DEPOT }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman depot</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">Koopman Verlader</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_KOOPMAN_VERLADER"
+               id="KOOPMANORDEREXPORT_KOOPMAN_VERLADER" value="{{ KOOPMANORDEREXPORT_KOOPMAN_VERLADER }}"
+               class="form-control">
+        <p class="help-block">Enter the koopman verlader</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12" data-tab-id="koopman-settings">
+      <label class="control-label col-xs-4 text-right">Labels folder (/upload/...)</label>
+      <div class="col-xs-8">
+        <input type="text" name="KOOPMANORDEREXPORT_LABELS_FOLDER"
+               id="KOOPMANORDEREXPORT_LABELS_FOLDER" value="{{ KOOPMANORDEREXPORT_LABELS_FOLDER }}"
+               class="form-control">
+        <p class="help-block">Enter the label upload folder</p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Select packing lane 1
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SELECT_PACKAGELANE_1_PROFILE"
+                class="w-100 form-control select2-data-input" data-type="profiles"
+                id="KOOPMANORDEREXPORT_SELECT_PACKAGELANE_1_PROFILE">
+          {{ KOOPMANORDEREXPORT_SELECT_PACKAGELANE_1_PROFILE|raw }}
+        </select>
+        <p class="help-block">
+          Choose the employee profile for usage at the computer at packaging lane 1.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Select packing lane 2
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SELECT_PACKAGELANE_2_PROFILE"
+                class="w-100 form-control select2-data-input" data-type="profiles"
+                id="KOOPMANORDEREXPORT_SELECT_PACKAGELANE_2_PROFILE">
+          {{ KOOPMANORDEREXPORT_SELECT_PACKAGELANE_2_PROFILE|raw }}
+        </select>
+        <p class="help-block">
+          Choose the employee profile for usage at the computer at packaging lane 2.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Select packing lane 3,
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SELECT_PACKAGELANE_3_PROFILE"
+                class="w-100 form-control select2-data-input" data-type="profiles"
+                id="KOOPMANORDEREXPORT_SELECT_PACKAGELANE_3_PROFILE">
+          {{ KOOPMANORDEREXPORT_SELECT_PACKAGELANE_3_PROFILE|raw }}
+        </select>
+        <p class="help-block">
+          Choose the employee profile for usage at the computer at packaging lane 3.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Select carrier for pickup order
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER">
+          {{ KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER|raw }}
+        </select>
+        <p class="help-block">
+          Choose the carrier of the orders to pickup.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Select status for pickup order
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SELECT_PICKUP_STATUS"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_SELECT_PICKUP_STATUS">
+          {{ KOOPMANORDEREXPORT_SELECT_PICKUP_STATUS|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status of the orders which are pickup orders..
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Select status for order when picked up at store
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SELECT_PICKEDUP_STATUS"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_SELECT_PICKEDUP_STATUS">
+          {{ KOOPMANORDEREXPORT_SELECT_PICKEDUP_STATUS|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status of the orders which are picked up by customer.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Select carrier for added order
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SELECT_ADDEDORDER_CARRIER"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_SELECT_ADDEDORDER_CARRIER">
+          {{ KOOPMANORDEREXPORT_SELECT_ADDEDORDER_CARRIER|raw }}
+        </select>
+        <p class="help-block">
+          Choose the carrier of the orders to pickup..
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Select status for added to order
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SELECT_ADDEDORDER_STATUS"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_SELECT_ADDEDORDER_STATUS">
+          {{ KOOPMANORDEREXPORT_SELECT_ADDEDORDER_STATUS|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status of the orders which are added to other order.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Select status for order when is sent to workshop
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SELECT_WORKSHOP_STATUS"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_SELECT_WORKSHOP_STATUS">
+          {{ KOOPMANORDEREXPORT_SELECT_WORKSHOP_STATUS|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status of the orders which are send to the workshop..
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        Select status for order when is sent to waiting for stock
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS">
+          {{ KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status of the orders which are waiting for stock..
+        </p>
+      </div>
+    </div>
+    </div>
+    <span class="col-xs-12 card-sub-header"><i class="star">*</i> Koopman Retour
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseKoopmanRetour" aria-expanded="false" aria-controls="collapseKoopmanRetour">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+    <div class="collapse" id="collapseKoopmanRetour">
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4">
+        Show Retour
+      </label>
+      <div class="col-xs-8">
+
+        <div class="radio">
+          <label><input type="radio" name="KOOPMANORDEREXPORT_SHOW_RETOUR" id="yes"
+                        value="1"
+                        {% if KOOPMANORDEREXPORT_SHOW_RETOUR == 1 %}checked="checked"{% endif %}>Tonen</label>
+        </div>
+        <div class="radio ">
+          <label><input type="radio" name="MSTHEMECONFIG_FIRST_BOX_ACTIVE" id="no" value="0"
+                        {% if KOOPMANORDEREXPORT_SHOW_RETOUR == 0 %}checked="checked"{% endif %}>Verbergen</label>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        TransMission Status Shipped
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_SHIPPED_ACCEPTED_STATUSSES[]"
+                class="w-100 form-control select2-data-input" data-type="order_states" multiple="multiple"
+                id="KOOPMANORDEREXPORT_SHIPPED_ACCEPTED_STATUSSES">
+          {{ KOOPMANORDEREXPORT_SHIPPED_ACCEPTED_STATUSSES|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status for shipping status buttons.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        TransMission Status Retour
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_RETOUR_ACCEPTED_STATUSSES[]"
+                class="w-100 form-control select2-data-input" data-type="order_states" multiple="multiple"
+                id="KOOPMANORDEREXPORT_RETOUR_ACCEPTED_STATUSSES">
+          {{ KOOPMANORDEREXPORT_RETOUR_ACCEPTED_STATUSSES|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status for retour buttons.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        TransMission Status Retour Created
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_RETOUR_CREATED_STATUSSES[]"
+                class="w-100 form-control select2-data-input" data-type="order_states" multiple="multiple"
+                id="KOOPMANORDEREXPORT_RETOUR_CREATED_STATUSSES">
+          {{ KOOPMANORDEREXPORT_RETOUR_CREATED_STATUSSES|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status for when a retour is created.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        TransMission Status Transferred
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_STATUS_TRANSFERRED"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_STATUS_TRANSFERRED">
+          {{ KOOPMANORDEREXPORT_STATUS_TRANSFERRED|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status for transferred to Transmission.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        TransMission Status Arrived at depot
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_STATUS_DEPOT"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_STATUS_DEPOT">
+          {{ KOOPMANORDEREXPORT_STATUS_DEPOT|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status for arrived at transmission depot.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        TransMission Status Delivery on way
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_STATUS_ON_ROUTE"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_STATUS_ON_ROUTE">
+          {{ KOOPMANORDEREXPORT_STATUS_ON_ROUTE|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status for when the delivery person is on the way.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        TransMission Status Delivered
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_STATUS_DELIVERED"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_STATUS_DELIVERED">
+          {{ KOOPMANORDEREXPORT_STATUS_DELIVERED|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status for when the package is delivered.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        TransMission Status Second try delivery
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_STATUS_ON_ROUTE_SECOND"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_STATUS_ON_ROUTE_SECOND">
+          {{ KOOPMANORDEREXPORT_STATUS_ON_ROUTE_SECOND|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status for when the delivery person is on the way for the second delivery try.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 required text-right">
+        TransMission Status Failed to deliver
+      </label>
+      <div class="col-xs-8">
+        <select name="KOOPMANORDEREXPORT_STATUS_DELIVERY_FAILED"
+                class="w-100 form-control select2-data-input" data-type="order_states"
+                id="KOOPMANORDEREXPORT_STATUS_DELIVERY_FAILED">
+          {{ KOOPMANORDEREXPORT_STATUS_DELIVERY_FAILED|raw }}
+        </select>
+        <p class="help-block">
+          Choose the status for when the delivery person failed to deliver the package.
+        </p>
+      </div>
+    </div>
+  </div>
   </div>
 </div>

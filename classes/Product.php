@@ -3616,6 +3616,7 @@ class ProductCore extends ObjectModel
 
         // retrieve address informations
         $address = Address::initialize($id_address, true);
+
         $id_country = (int) $address->id_country;
         $id_state = (int) $address->id_state;
         $zipcode = $address->postcode;

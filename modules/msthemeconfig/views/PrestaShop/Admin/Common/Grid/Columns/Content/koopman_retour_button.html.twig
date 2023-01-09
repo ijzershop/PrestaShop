@@ -1,0 +1,12 @@
+{# modules/msthemeconfig/views/PrestaShop/Admin/Common/Grid/Columns/Content/koopman_retour_button.html.twig #}
+<div class="text-center">
+  {% if record.current_state in column.options.acceptedStates|keys %}
+    {% if record.current_state in column.options.createdStates|keys %}
+      <span class="material-icons text-success">done</span>
+    {% else %}
+      <button type="button" class="btn btn-secondary createRetour" data-order-id="{{ record.id_order }}">{{ column.options.label }}</button>
+    {% endif %}
+  {% else %}
+    <span class="material-icons text-danger">close</span>
+  {% endif %}
+</div>

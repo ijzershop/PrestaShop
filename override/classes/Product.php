@@ -1,6 +1,8 @@
 <?php
 use classes\models\DynamicConfig;
 use classes\models\DynamicEquation;
+use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
+
 class Product extends ProductCore {
         /*
     * module: offerintegration
@@ -14,12 +16,6 @@ class Product extends ProductCore {
     * version: 1.0.9.1
     */
     public $link_rewrite;
-    public $saw_loss;
-    public $min_saw_size;
-    public $min_cut_size;
-    public $id_oi_offer;
-    public $oi_offer_extra_shipping;
-    public $name;
     public $seo_keywords;
     public $alternate_name;
     public $jsonld;
@@ -200,8 +196,10 @@ class Product extends ProductCore {
         foreach ($result as $row) {
             $row['price_tax_inc'] = Product::getPriceStatic($row['id_product'], true, null, 2);
             $row['price_tax_exc'] = Product::getPriceStatic($row['id_product'], false, null, 2);
+            $row['quantity'] = (int)StockAvailable::getQuantityAvailableByProduct($row['id_product'], null);
             $results_array[] = $row;
         }
+
         return $results_array;
     }
 

@@ -35,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 
+/**
+ *
+ */
 class OrderAddressFormDataHandler implements FormDataHandlerInterface
 {
     /**
@@ -57,6 +60,7 @@ class OrderAddressFormDataHandler implements FormDataHandlerInterface
     {
         // Not used for creation, only edition
     }
+
 
     /**
      * {@inheritdoc}
@@ -140,4 +144,5 @@ class OrderAddressFormDataHandler implements FormDataHandlerInterface
 
         $this->commandBus->handle($editAddressCommand);
     }
+
 }

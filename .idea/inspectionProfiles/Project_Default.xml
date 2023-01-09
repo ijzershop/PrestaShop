@@ -82,6 +82,7 @@
     <inspection_tool class="ContinueOrBreakFromFinallyBlockJS" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ContinueStatementJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ContinueStatementWithLabelJS" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="ControllerActionMissingExit" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CssBrowserCompatibilityForProperties" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CssConvertColorToHexInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CssConvertColorToRgbInspection" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -679,7 +680,7 @@
     <inspection_tool class="PhpMockeryInvalidMockingMethodInspection" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PhpModifierOrderInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpModuloByOneInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
-    <inspection_tool class="PhpMultipleClassDeclarationsInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpMultipleClassDeclarationsInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpMultipleClassesDeclarationsInOneFile" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpNamedArgumentMightBeUnresolvedInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpNamedArgumentUsageInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
@@ -1031,6 +1032,7 @@
     </inspection_tool>
     <inspection_tool class="UnusedDefine" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UpdateDependencyToLatestVersion" enabled="true" level="INFORMATION" enabled_by_default="true" />
+    <inspection_tool class="UseControllerShortcuts" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="VoidExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="VueDataFunction" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="VueDuplicateTag" enabled="false" level="WARNING" enabled_by_default="false" />

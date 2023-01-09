@@ -349,12 +349,12 @@ class ShopCore extends ObjectModel
             $request_uri = rawurldecode($_SERVER['REQUEST_URI']);
 
             $result = self::findShopByHost($host);
-
             // If could not find a matching, try with port
             if (empty($result)) {
                 $host = Tools::getHttpHost(false, false, false);
                 $result = self::findShopByHost($host);
             }
+
 
             $through = false;
             foreach ($result as $row) {

@@ -9,5 +9,4 @@
 	<confirmUninstall><![CDATA[Are you sure you want to uninstall the module Google Analytics : GA4 and Universal-Analytics (your configuration will be lost)?]]></confirmUninstall>
     <is_configurable>1</is_configurable>
     <need_instance>1</need_instance>
-	<limited_countries></limited_countries>
 </module>

@@ -46,7 +46,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class DmsAdminCustomerController.
- * @package KoopmanOrderExport\Controller\Admin
+ * @package MsThemeConfig\Controller\Admin
  */
 class DmsAdminCategoryController extends FrameworkBundleAdminController
 {

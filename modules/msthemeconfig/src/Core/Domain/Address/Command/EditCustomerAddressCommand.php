@@ -26,7 +26,6 @@
 
 namespace MsThemeConfig\Core\Domain\Address\Command;
 
-use MsThemeConfig\Core\Domain\Address\Command\AbstractEditAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 

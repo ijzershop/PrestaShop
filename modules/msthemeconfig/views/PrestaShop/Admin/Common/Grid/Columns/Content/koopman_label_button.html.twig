@@ -1,0 +1,114 @@
+{# modules/msthemeconfig/views/PrestaShop/Admin/Common/Grid/Columns/Content/koopman_retour_button.html.twig #}
+<div class="text-center">
+  <div class="btn-group-vertical w-100">
+    <div class="badge badge-important w-100 koopman-current-status-badge status_{{ record.current_state }}" style="background-color: {{ record.color }};">
+      {% if record.carrier is same as column.options.stateCarrier.shipping %}
+         <i class="koopman-current-status-badge-label">{{ column.options.stateCarrier.shipping_label }}</i> | <b> {{ record.osname }} </b>
+      {% elseif record.carrier is same as column.options.stateCarrier.pickup %}
+         <i class="koopman-current-status-badge-label">{{ column.options.stateCarrier.pickup_label }}</i> | <b> {{ record.osname }} </b>
+      {% elseif record.carrier is same as column.options.stateCarrier.added %}
+         <i class="koopman-current-status-badge-label">{{ column.options.stateCarrier.added_label }}</i> | <b> {{ record.osname }} </b>
+      {% endif %}
+    </div>
+
+    {#     Shipping Carrier#}
+    {% if record.carrier is same as column.options.stateCarrier.shipping %}
+      <div class="cc-koopman koopman w-100" data-href="' + link + '" title="Koopman label afdrukken">
+
+        <input id="envelope_{{ record.id_order }}" type="radio" name="koopman-package" value="envelope"/>
+        <label class="type-cc btn btn-primary envelope" for="envelope_{{ record.id_order }}"></label>
+
+        <input id="plaat_{{ record.id_order }}" type="radio" name="koopman-package" value="plaat"/>
+        <label class="type-cc btn btn-primary plaat" for="plaat_{{ record.id_order }}"></label>
+
+        <input id="meter-1_{{ record.id_order }}" type="radio" name="koopman-package" value="1-meter"/>
+        <label class="type-cc btn btn-primary meter-1" for="meter-1_{{ record.id_order }}"></label>
+
+        <input id="meter-smaller-2_{{ record.id_order }}" type="radio" name="koopman-package" value="2-meter-smaller"/>
+        <label class="type-cc btn btn-primary meter-smaller-2" for="meter-smaller-2_{{ record.id_order }}"></label>
+
+        <input id="meter-larger-2_{{ record.id_order }}" type="radio" name="koopman-package" value="2-meter-larger"/>
+        <label class="type-cc btn btn-primary meter-larger-2" for="meter-larger-2_{{ record.id_order }}"></label>
+      </div>
+
+    {#     Pickup Carrier #}
+    {% elseif record.carrier is same as column.options.stateCarrier.pickup %}
+      {#  Afgehaald State  #}
+      {% if record.current_state is not same as column.options.stateType.pickup %}
+        {#  Af te halen State  #}
+        <div class="cc-koopman aftehalen-btn" data-order="{{ record.id_order }}" title="Af te halen">
+          <input id="aftehalen_{{ record.id_order }}" type="radio" name="af-halen-pakket" value="aftehalen"/>
+          <label class="type-cc aftehalen" for="aftehalen_{{ record.id_order }}"></label>
+        </div>
+      {% else %}
+        <div class="cc-koopman  afgehaald-btn" data-order="{{ record.id_order }}" title="Afgehaald">
+          <input id="afgehaald_{{ record.id_order }}" type="radio" name="afgehaald-pakket" value="afgehaald"/>
+          <label class="type-cc afgehaald" for="afgehaald_{{ record.id_order }}"></label>
+        </div>
+      {% endif %}
+
+    {% elseif record.carrier is same as column.options.stateCarrier.added %}
+      <div class="cc-koopman koopman w-100" data-href="' + link + '" title="Koopman label afdrukken">
+
+        <input id="envelope_{{ record.id_order }}" type="radio" name="koopman-package" value="envelope"/>
+        <label class="type-cc btn btn-primary envelope" for="envelope_{{ record.id_order }}"></label>
+
+        <input id="plaat_{{ record.id_order }}" type="radio" name="koopman-package" value="plaat"/>
+        <label class="type-cc btn btn-primary plaat" for="plaat_{{ record.id_order }}"></label>
+
+        <input id="meter-1_{{ record.id_order }}" type="radio" name="koopman-package" value="1-meter"/>
+        <label class="type-cc btn btn-primary meter-1" for="meter-1_{{ record.id_order }}"></label>
+
+        <input id="meter-smaller-2_{{ record.id_order }}" type="radio" name="koopman-package" value="2-meter-smaller"/>
+        <label class="type-cc btn btn-primary meter-smaller-2" for="meter-smaller-2_{{ record.id_order }}"></label>
+
+        <input id="meter-larger-2_{{ record.id_order }}" type="radio" name="koopman-package" value="2-meter-larger"/>
+        <label class="type-cc btn btn-primary meter-larger-2" for="meter-larger-2_{{ record.id_order }}"></label>
+      </div>
+
+
+      {#  Toevoegen State  #}
+      {% if record.current_state not in column.options.stateType.added %}
+        <div class="cc-koopman toegevoegd-btn" data-order="{{ record.id_order }}" title="Toegevoegd">
+          <input id="toegevoegd_{{ record.id_order }}" type="radio" name="toegevoegd-aan-pakket" value="toegevoegd"/>
+          <label class="type-cc toegevoegd" for="toegevoegd_{{ record.id_order }}"></label>
+        </div>
+      {% endif %}
+    {% endif %}
+
+
+      {#  Backorder Waiting State  #}
+      {% if record.current_state is not same as column.options.stateType.waiting %}
+        <div class="cc-koopman backorder-btn btn btn-warning"
+             data-order="{{ record.id_order }}" title="Status wijzigen naar achtend op vooraad">
+          <input id="backorder_{{ record.id_order }}" type="radio" name="backorder-pakket" value="backorder"/>
+          <label class="type-cc backorder" for="backorder_{{ record.id_order }}">
+            <span class="koopman-label-icon"></span> Wacht op vooraad
+          </label>
+        </div>
+      {% endif %}
+
+      {#  Send to Workshop State  #}
+      {% if record.current_state is not same as column.options.stateType.workshop %}
+        <div data-toggle="modal" data-target="#trelloModal" class="cc-koopman workshop-btn btn btn-success"
+             data-order="{{ record.id_order }}" title="Status wijzigen naar werkplaats">
+          <input id="workshop_{{ record.id_order }}" type="radio" name="workshop-pakket" value="workshop"/>
+          <label class="type-cc workshop" for="workshop_{{ record.id_order }}">
+            <span class="koopman-label-icon"></span> Werkplaats
+          </label>
+        </div>
+      {% endif %}
+
+
+    {#  Being prepared State  #}
+    {% if record.current_state is not same as column.options.stateType.shipping %}
+      <div class="cc-koopman beingprepared-btn btn btn-warning"
+           data-order="{{ record.id_order }}" title="Status wijzigen naar word voorbereid">
+        <input id="beingprepared_{{ record.id_order }}" type="radio" name="beingprepared-pakket" value="beingprepared"/>
+        <label class="type-cc beingprepared" for="beingprepared_{{ record.id_order }}">
+          <span class="koopman-label-icon"></span> Word voorbereid
+        </label>
+      </div>
+    {% endif %}
+  </div>
+</div>

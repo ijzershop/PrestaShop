@@ -1,9 +1,6 @@
 [submodule "modules/sawandcutmodule"]
 	path = modules/sawandcutmodule
 url=git@github.com:ijzershop/sawandcutmodule.git
-[submodule "modules/offerintegration"]
-	path = modules/offerintegration
-url=git@github.com:ijzershop/offerintegration.git
 [submodule "modules/koopmanorderexport"]
 	path = modules/koopmanorderexport
 url=git@github.com:ijzershop/koopmanorderexport.git

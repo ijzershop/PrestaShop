@@ -38,7 +38,7 @@ interface EditOrderAddressHandlerInterface
     /**
      * @param EditOrderAddressCommand $command
      *
-     * @return AddressId The newly created address id
+     * @return The newly created address id
      */
     public function handle(EditOrderAddressCommand $command): AddressId;
 }

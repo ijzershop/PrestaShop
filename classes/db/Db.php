@@ -26,8 +26,6 @@
 /**
  * Class DbCore.
  */
-use PrestaShop\PrestaShop\Adapter\Entity\Tools;
-
 abstract class DbCore
 {
     /** @var int Constant used by insert() method */

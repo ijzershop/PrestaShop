@@ -269,7 +269,6 @@ class TinyMCEEditor {
           const editor = window.tinyMCE.get(textarea.id);
 
           if (editor) {
-            editor.remove();
             window.tinyMCE.init(this.config);
           }
       }

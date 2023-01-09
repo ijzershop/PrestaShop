@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+<style type="text/css">
+
+body{
+    text-align:center;
+    background-color:#f2f2f2;
+    height: 600px;
+}
+
+.loader-box{
+    width:200px;
+    height:100%;
+    margin:auto;
+    background-color:transparent;
+    margin-top:100px;
+    text-align:left;
+}
+
+
+.loader{
+    width:100px;
+    height:100%;
+    background-color:#FFFFFF;
+    overflow:hidden;
+    display:block;
+    border-left:1px solid #3b56ad;
+    position:relative;
+    margin:15px auto;
+  z-index:1;
+}
+
+.element-animation{
+  animation:animationFrames linear 5s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both; /*when the spec is finished*/
+  -webkit-animation: animationFrames linear 5s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-fill-mode:both; /*Chrome 16+, Safari 4+*/
+  -moz-animation: animationFrames linear 5s;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-fill-mode:both; /*FF 5+*/
+  -o-animation: animationFrames linear 5s;
+  -o-animation-iteration-count: infinite;
+  -o-animation-fill-mode:both; /*Not implemented yet*/
+  -ms-animation: animationFrames linear 5s;
+  -ms-animation-iteration-count: infinite;
+  -ms-animation-fill-mode:both; /*IE 10+*/
+}
+
+
+@keyframes animationFrames{
+  0% {
+    transform: translate(-18px,600px)  ;
+  }
+  100% {
+    transform: translate(-18px,-50px)  ;
+  }
+}
+
+@-moz-keyframes animationFrames{
+  0% {
+    transform: translate(-18px,600px)  ;
+  }
+  100% {
+    transform: translate(-18px,-50px)  ;
+  }
+}
+
+@-webkit-keyframes animationFrames {
+  0% {
+    transform: translate(-18px,600px)  ;
+  }
+  100% {
+    transform: translate(-18px,-50px)  ;
+  }
+}
+
+@-o-keyframes animationFrames {
+  0% {
+    transform: translate(-18px,100px)  ;
+  }
+  100% {
+    transform: translate(-18px,-70px)  ;
+  }
+}
+
+@-ms-keyframes animationFrames {
+  0% {
+    transform: translate(-18px,600px)  ;
+  }
+  100% {
+    transform: translate(-18px,-50px)  ;
+  }
+}
+</style>
+
+<div class="loader-box">
+    <div class="loader">
+        <div class="element-animation">
+        <img src="C:/wamp64/www/constructiebalk-176/themes/modernesmid_theme/assets/img/saw.gif" width="auto" height="50">
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
+

@@ -1,15 +1,14 @@
 <?php
-declare(strict_types=1);
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
+use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\Module;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopDatabaseException;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException;
-use PrestaShop\PrestaShop\Adapter\Entity\Shop;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Category;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
@@ -58,7 +57,7 @@ class MsThemeConfig extends Module
             'name' => 'Koopman label(s) printen', // One name for all langs
             'class_name' => 'koopmanOrderExportAdmin',
             'visible' => true,
-            'parent_class_name'=>'AdminParentOrders',
+            'parent_class_name'=>'SELL',
             'icon'=>'account_circle',
 
         ],
@@ -67,18 +66,21 @@ class MsThemeConfig extends Module
             'name' => 'Koopman dagafsluiting', // One name for all langs
             'class_name' => 'koopmanDagafsluitingAdmin',
             'visible' => true,
-            'parent_class_name'=>'AdminParentOrders',
+            'parent_class_name'=>'SELL',
             'icon'=>'account_circle',
 
         ],
     ];
 
 
-    private string $transDomain;
-    private ?int $idShop;
-    private ?int $idShopGroup;
-    private int $idLang;
-    private $MailThemeClass;
+    public $transDomain;
+    public $idShop;
+    public $idShopGroup;
+    public $idLang;
+    public $MailThemeClass;
+    public $name;
+    public $author;
+    public $need_instance;
 
     public function __construct()
     {
@@ -105,7 +107,7 @@ class MsThemeConfig extends Module
 
         $this->ps_versions_compliancy = [
             'min' => '1.7',
-            'max' =>'8.99.99'
+            'max' =>'8.9.9.9'
         ];
 
         if (!Configuration::get('MSTHEMECONFIG_NAME')) {
@@ -139,16 +141,10 @@ class MsThemeConfig extends Module
     /**
      * Insert module into datable.
      *
-     * @throws PrestaShopException
-     * @throws PrestaShopDatabaseException|\PrestaShopException
      */
-    public function install(): bool
+    public function install()
     {
-        if (Shop::isFeatureActive()) {
-            Shop::setContext(ShopCore::CONTEXT_ALL);
-        }
-
-        $createOfferTableQuery = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'oi_offer` (
+        $createOfferTableQuery = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'offer_integration` (
             `id_oi_offer` int(11) NOT NULL AUTO_INCREMENT,
             `code` varchar(16) DEFAULT NULL,
             `name` varchar(64) DEFAULT NULL,
@@ -193,13 +189,10 @@ class MsThemeConfig extends Module
         }
 
 
-
-        return (
-            $this->MailThemeClass->makeThemeSymlink() &&
-            $this->createOfferIntegrationCategory() &&
-            parent::install()
-            && Configuration::updateValue('MSTHEMECONIG_NAME', 'Moderne Smid Webshop Thema Configuratie')  && $this->installHooks()
-        );
+        return $this->MailThemeClass->makeThemeSymlink() &&
+        $this->createOfferIntegrationCategory() &&
+        Configuration::updateValue('MSTHEMECONIG_NAME', 'Moderne Smid Webshop Thema Configuratie') &&
+        $this->installHooks() ? true : false;
     }
     /**
      * Delete module from datable.

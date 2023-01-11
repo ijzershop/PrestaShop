@@ -94,7 +94,7 @@ class ModernConfigurator
     {
         $container = SymfonyContainer::getInstance()->get('twig');
         return $container->render(
-            '@Modules/MsThemeConfig/views/templates/admin/configure.html.twig',
+            '@Modules/msthemeconfig/views/templates/admin/configure.html.twig',
             $viewData
         , $this->context);
     }

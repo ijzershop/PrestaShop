@@ -85,7 +85,7 @@ class MsThemeConfig extends Module
         [
             'route_name' => 'koopman_order_export_close_day',
             'name' => 'Koopman dagafsluiting', // One name for all langs
-            'class_name' => 'koopmanDagafsluitingAdmin',
+            'class_name' => 'KoopmanDagafsluitingAdmin',
             'visible' => true,
             'parent_class_name'=>'AdminParentOrders',
             'icon'=>'account_circle',

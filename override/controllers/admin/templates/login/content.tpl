@@ -47,7 +47,7 @@
 		<div class="alert alert-warning">{$warningSslMessage}</div>
 		{/if}
 	</div>
-	<div><img src="/themes/modernesmid/assets/img/ijzershop-logo-518x115.jpg" alt="{$shop_name}" width="100%" /></div>
+	<div><img src="/themes/modernesmid_theme/assets/img/ijzershop-logo-518x115.jpg" alt="{$shop_name}" width="100%" /></div>
 	<div class="flip-container" style="margin-top: 10px;">
 		<div class="flipper">
 			<div class="front front_login panel" {if isset($reset_token) && isset($id_employee)}style="display:none;"{/if}>

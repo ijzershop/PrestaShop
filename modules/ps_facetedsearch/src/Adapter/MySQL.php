@@ -210,7 +210,7 @@ class MySQL extends AbstractAdapter
                 'tableAlias' => 'm',
                 'fieldName' => 'name',
                 'joinCondition' => '(p.id_manufacturer = m.id_manufacturer)',
-                'joinType' => self::LEFT_JOIN,
+                'joinType' => self::INNER_JOIN,
             ],
             'name' => [
                 'tableName' => 'product_lang',

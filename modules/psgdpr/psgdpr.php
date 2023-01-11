@@ -122,7 +122,7 @@ class Psgdpr extends Module
         // Settings
         $this->name = 'psgdpr';
         $this->tab = 'administration';
-        $this->version = '1.4.3';
+        $this->version = '1.4.2';
         $this->author = 'PrestaShop';
         $this->need_instance = 0;
 
@@ -566,7 +566,6 @@ class Psgdpr extends Module
                 $label = Configuration::get('PSGDPR_CUSTOMER_FORM', $id_lang);
                 break;
             case 'authentication':
-            case 'registration':
             case 'order':
             case 'order-confirmation':
                 $active = Configuration::get('PSGDPR_CREATION_FORM_SWITCH');
@@ -659,7 +658,7 @@ class Psgdpr extends Module
             'ps_version' => $this->ps_version,
         ]);
 
-        return $this->fetch('module:' . $this->name . '/views/templates/front/customerAccount.tpl');
+        return $this->display(dirname(__FILE__), 'views/templates/front/customerAccount.tpl');
     }
 
     /**
@@ -715,7 +714,7 @@ class Psgdpr extends Module
     {
         $modulesRegister = Hook::getHookModuleExecList('registerGDPRConsent'); // get modules using the gdpr hook
 
-        if (empty($modulesRegister)) { // if 0 module stop
+        if (empty($modulesRegister) || count($modulesRegister) <= 1) { // if 0 module stop (1 to exclude gdpr module)
             return;
         }
 
@@ -905,7 +904,6 @@ class Psgdpr extends Module
 
         // get referrers
         if (version_compare(_PS_VERSION_, '8.0.0', '<')) {
-            // @phpstan-ignore-next-line
             $data['referrer'] = Referrer::getReferrers($customer->id);
         }
 
@@ -1141,10 +1139,12 @@ class Psgdpr extends Module
      */
     public function getAgeCustomer($id_customer)
     {
-        return (int) Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue('SELECT TIMESTAMPDIFF(YEAR, birthday, CURDATE()) AS age
+        $value = (int) Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue('SELECT AVG(DATEDIFF("' . date('Y-m-d') . ' 00:00:00", birthday))
             FROM `' . _DB_PREFIX_ . 'customer` c
             WHERE active = 1
             AND id_customer = ' . (int) $id_customer . '
             AND birthday IS NOT NULL AND birthday != "0000-00-00" ' . Shop::addSqlRestriction());
+
+        return (int) round($value / 365);
     }
 }

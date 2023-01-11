@@ -2,7 +2,7 @@
 
 ## About
 
-Enrich your stats, display a table of your latest orders and a ranking of your products.
+Adds a block with a table of your latest orders and a ranking of your products.
 
 ## Reporting issues
 

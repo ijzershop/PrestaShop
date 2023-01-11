@@ -1,9 +1,15 @@
 <?php
+declare(strict_types=1);
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+require_once __DIR__.'/vendor/autoload.php';
 
+use MsThemeConfig\Class\ModernConfigurator;
+use MsThemeConfig\Class\ModernAjax;
+use MsThemeConfig\Class\ModernHook;
+use MsThemeConfig\Class\MailTheme;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\Module;
@@ -14,12 +20,6 @@ use PrestaShop\PrestaShop\Adapter\Entity\Category;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
-
-use MsThemeConfig\Class\ModernConfigurator;
-use MsThemeConfig\Class\ModernAjax;
-use MsThemeConfig\Class\ModernHook;
-use MsThemeConfig\Class\MailTheme;
-
 /**
  *
  * Module for Modernesmid Theme Configuration
@@ -27,12 +27,28 @@ use MsThemeConfig\Class\MailTheme;
  */
 class MsThemeConfig extends Module
 {
-    /**
+    public $transDomain;
+
+
+    public $idShop;
+    public $idShopGroup;
+    public $idLang;
+    public $name;
+    public $author;
+    public $need_instance;
+    public $bootstrap;
+    public $version;
+    public $tab;
+    public $displayName;
+    public $description;
+    public $confirmUninstall;
+    public $ps_versions_compliancy;
+    public $warning;
+
+      /**
      * Add Tab to side manu for this module
-     *
-     * @var array[]
      */
-    protected $tabs = [
+    public $tabs = [
         //Configuratie module
         [
             'route_name' => 'modernesmid_config_page',
@@ -40,6 +56,8 @@ class MsThemeConfig extends Module
             'class_name' => 'MsAdminThemeConfController',
             'visible' => true,
             'parent_class_name' => 'AdminParentModulesSf',
+            'wording' => 'Moderne Smid Thema Conf', // Translation key
+            'wording_domain' => 'Modules.MsThemeConfig.Module', // Translation domain
         ],
         //Offerte module
         [
@@ -47,40 +65,36 @@ class MsThemeConfig extends Module
             'name' => 'Offerte aanmaken', // One name for all langs
             'class_name' => 'AdminOfferController',
             'visible' => true,
-            'parent_class_name'=>'SELL',
+            'parent_class_name'=>'AdminParentOrders',
             'icon'=>'account_circle',
+            'wording' => 'Offerte aanmaken', // Translation key
+            'wording_domain' => 'Modules.MsThemeConfig.Module', // Translation domain
 
         ],
         //Koopman Order Export
         [
-            'route_name' => 'koopman_print_labels',
+            'route_name' => 'koopman_order_export_print_labels',
             'name' => 'Koopman label(s) printen', // One name for all langs
-            'class_name' => 'koopmanOrderExportAdmin',
+            'class_name' => 'KoopmanOrderExportAdmin',
             'visible' => true,
-            'parent_class_name'=>'SELL',
+            'parent_class_name'=>'AdminParentOrders',
             'icon'=>'account_circle',
-
+            'wording' => 'Koopman label(s) printen', // Translation key
+            'wording_domain' => 'Modules.MsThemeConfig.Module', // Translation domain
         ],
         [
-            'route_name' => 'koopman_close_day',
+            'route_name' => 'koopman_order_export_close_day',
             'name' => 'Koopman dagafsluiting', // One name for all langs
             'class_name' => 'koopmanDagafsluitingAdmin',
             'visible' => true,
-            'parent_class_name'=>'SELL',
+            'parent_class_name'=>'AdminParentOrders',
             'icon'=>'account_circle',
-
-        ],
+            'wording' => 'Koopman dagafsluiting', // Translation key
+            'wording_domain' => 'Modules.MsThemeConfig.Module', // Translation domain
+        ]
     ];
 
 
-    public $transDomain;
-    public $idShop;
-    public $idShopGroup;
-    public $idLang;
-    public $MailThemeClass;
-    public $name;
-    public $author;
-    public $need_instance;
 
     public function __construct()
     {
@@ -88,9 +102,8 @@ class MsThemeConfig extends Module
         $this->author = 'Jelmer Stoker';
         $this->need_instance = 1;
         $this->bootstrap = true;
-        $this->version = '1.0.0';
+        $this->version = '1.0.1';
         $this->tab = 'front_office_features';
-        $this->MailThemeClass = new MailTheme();
 
         parent::__construct();
 
@@ -107,18 +120,18 @@ class MsThemeConfig extends Module
 
         $this->ps_versions_compliancy = [
             'min' => '1.7',
-            'max' =>'8.9.9.9'
+            'max' => '8.99.99'
         ];
 
         if (!Configuration::get('MSTHEMECONFIG_NAME')) {
             $this->warning = $this->trans('No name provided', [], $this->transDomain);
         }
 
-
-
         $this->idShop = $this->context->shop->id;
         $this->idShopGroup = $this->context->shop->getGroup()->id;
         $this->idLang = $this->context->language->id;
+
+
     }
     /**
      * @throws PrestaShopException
@@ -188,11 +201,19 @@ class MsThemeConfig extends Module
             Db::getInstance()->execute($addOfferShippingToProductShopTable);
         }
 
-
-        return $this->MailThemeClass->makeThemeSymlink() &&
-        $this->createOfferIntegrationCategory() &&
-        Configuration::updateValue('MSTHEMECONIG_NAME', 'Moderne Smid Webshop Thema Configuratie') &&
-        $this->installHooks() ? true : false;
+        try {
+            $this->createOfferIntegrationCategory();
+        } catch (PrestaShopDatabaseException|PrestaShopException $e) {
+        }
+        $mailClass = new MailTheme();
+        if(parent::install() &&
+            $mailClass->makeThemeSymlink() &&
+            Configuration::updateValue('MSTHEMECONIG_NAME', 'Moderne Smid Webshop Thema Configuratie',false, $this->idShopGroup, $this->idShop) &&
+            $this->installHooks()){
+            return true;
+        } else {
+            return false;
+        };
     }
     /**
      * Delete module from datable.
@@ -231,9 +252,9 @@ class MsThemeConfig extends Module
         if(!Db::getInstance()->execute($checkColumnIdShippingProductShop)){
             Db::getInstance()->execute($removeOfferShippingToProductShopTable);
         }
-
+        $mailClass = new MailTheme();
         return (
-            $this->MailThemeClass->removeThemeSymlink() &&
+            $mailClass->removeThemeSymlink() &&
             parent::uninstall() && Configuration::deleteByName('MSTHEMECONIG_NAME')
         );
     }

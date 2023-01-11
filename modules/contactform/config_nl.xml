@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>contactform</name>
+    <displayName><![CDATA[Contact formulier]]></displayName>
+    <version><![CDATA[4.3.0]]></version>
+    <description><![CDATA[Voegt een contactformulier toe aan de pagina &#039;Contact met ons opnemen&#039;.]]></description>
+    <author><![CDATA[PrestaShop]]></author>
+    <tab><![CDATA[front_office_features]]></tab>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+</module>

@@ -2,7 +2,7 @@
 
 ## About
 
-Enrich your dashboard, display a graphical representation of your store’s development.
+Adds a block with the evolution of your stores main numbers along with a graphic.
 
 ## Reporting issues
 

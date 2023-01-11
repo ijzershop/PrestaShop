@@ -43,8 +43,6 @@
 <div class="category-tree">
   <ul>
     <li><a href="{$categories.link nofilter}">{$categories.name}</a></li>
-    {if !empty($categories.children)}
-      <li>{categories nodes=$categories.children}</li>
-    {/if}
+    <li>{categories nodes=$categories.children}</li>
   </ul>
 </div>

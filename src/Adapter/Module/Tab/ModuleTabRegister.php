@@ -122,6 +122,8 @@ class ModuleTabRegister
      */
     public function registerTabs(ModuleInterface $module)
     {
+
+
         if (!$module->getInstance()) {
             return;
         }

@@ -28,8 +28,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PrestaShop\Module\FacetedSearch\Adapter\MySQL;
 use PrestaShop\Module\FacetedSearch\Product\Search;
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use stdClass;
+use Tools;
 
 class SearchTest extends MockeryTestCase
 {
@@ -81,14 +81,7 @@ class SearchTest extends MockeryTestCase
 
         Context::setStaticExpectations($contextMock);
 
-        // Initialize the search engine
         $this->search = new Search($contextMock);
-
-        // Initialize fake query
-        $query = Mockery::mock(ProductSearchQuery::class);
-        $query->shouldReceive('getIdCategory')
-            ->andReturn(12);
-        $this->search->setQuery($query);
     }
 
     public function testGetFacetedSearchTypeAdapter()
@@ -101,6 +94,19 @@ class SearchTest extends MockeryTestCase
 
     public function testInitSearchWithoutCorrectSelectedFilters()
     {
+        $toolsMock = Mockery::mock(Tools::class);
+        $toolsMock->shouldReceive('getValue')
+            ->andReturnUsing(function ($arg) {
+                $valueMap = [
+                    'id_category' => 12,
+                    'id_category_layered' => 11,
+                ];
+
+                return $valueMap[$arg];
+            });
+
+        Tools::setStaticExpectations($toolsMock);
+
         $this->search->initSearch(['quantity' => []]);
 
         $this->assertEquals([], $this->search->getSearchAdapter()->getFilters()->toArray());
@@ -110,14 +116,14 @@ class SearchTest extends MockeryTestCase
                 'id_category_default' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
                 'id_category' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
@@ -151,6 +157,19 @@ class SearchTest extends MockeryTestCase
 
     public function testInitSearchWithEmptyFilters()
     {
+        $toolsMock = Mockery::mock(Tools::class);
+        $toolsMock->shouldReceive('getValue')
+            ->andReturnUsing(function ($arg) {
+                $valueMap = [
+                    'id_category' => 12,
+                    'id_category_layered' => 11,
+                ];
+
+                return $valueMap[$arg];
+            });
+
+        Tools::setStaticExpectations($toolsMock);
+
         $this->search->initSearch([]);
 
         $this->assertEquals([], $this->search->getSearchAdapter()->getFilters()->toArray());
@@ -160,14 +179,14 @@ class SearchTest extends MockeryTestCase
                 'id_category_default' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
                 'id_category' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
@@ -201,6 +220,19 @@ class SearchTest extends MockeryTestCase
 
     public function testInitSearchWithAllFilters()
     {
+        $toolsMock = Mockery::mock(Tools::class);
+        $toolsMock->shouldReceive('getValue')
+            ->andReturnUsing(function ($arg) {
+                $valueMap = [
+                    'id_category' => 12,
+                    'id_category_layered' => 11,
+                ];
+
+                return $valueMap[$arg];
+            });
+
+        Tools::setStaticExpectations($toolsMock);
+
         $this->search->initSearch(
             [
                 'id_feature' => [
@@ -294,7 +326,7 @@ class SearchTest extends MockeryTestCase
                 'id_category' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                         [
                             6,
@@ -361,6 +393,19 @@ class SearchTest extends MockeryTestCase
 
     public function testInitSearchWithManyFeatures()
     {
+        $toolsMock = Mockery::mock(Tools::class);
+        $toolsMock->shouldReceive('getValue')
+            ->andReturnUsing(function ($arg) {
+                $valueMap = [
+                    'id_category' => 12,
+                    'id_category_layered' => 11,
+                ];
+
+                return $valueMap[$arg];
+            });
+
+        Tools::setStaticExpectations($toolsMock);
+
         $this->search->initSearch(
             [
                 'id_feature' => [
@@ -392,14 +437,14 @@ class SearchTest extends MockeryTestCase
                 'id_category_default' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
                 'id_category' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
@@ -445,6 +490,19 @@ class SearchTest extends MockeryTestCase
 
     public function testInitSearchWithManyAttributes()
     {
+        $toolsMock = Mockery::mock(Tools::class);
+        $toolsMock->shouldReceive('getValue')
+            ->andReturnUsing(function ($arg) {
+                $valueMap = [
+                    'id_category' => 12,
+                    'id_category_layered' => 11,
+                ];
+
+                return $valueMap[$arg];
+            });
+
+        Tools::setStaticExpectations($toolsMock);
+
         $this->search->initSearch(
             [
                 'id_attribute_group' => [
@@ -476,14 +534,14 @@ class SearchTest extends MockeryTestCase
                 'id_category_default' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
                 'id_category' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
@@ -553,11 +611,18 @@ class SearchTest extends MockeryTestCase
 
         $this->search = new Search($contextMock);
 
-        // Initialize fake query
-        $query = Mockery::mock(ProductSearchQuery::class);
-        $query->shouldReceive('getIdCategory')
-            ->andReturn(12);
-        $this->search->setQuery($query);
+        $toolsMock = Mockery::mock(Tools::class);
+        $toolsMock->shouldReceive('getValue')
+            ->andReturnUsing(function ($arg) {
+                $valueMap = [
+                    'id_category' => 12,
+                    'id_category_layered' => 11,
+                ];
+
+                return $valueMap[$arg];
+            });
+
+        Tools::setStaticExpectations($toolsMock);
 
         $this->search->initSearch(['quantity' => [0]]);
 
@@ -568,14 +633,14 @@ class SearchTest extends MockeryTestCase
                 'id_category_default' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
                 'id_category' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
@@ -609,6 +674,19 @@ class SearchTest extends MockeryTestCase
 
     public function testInitSearchWithFirstQuantityFilters()
     {
+        $toolsMock = Mockery::mock(Tools::class);
+        $toolsMock->shouldReceive('getValue')
+            ->andReturnUsing(function ($arg) {
+                $valueMap = [
+                    'id_category' => 12,
+                    'id_category_layered' => 11,
+                ];
+
+                return $valueMap[$arg];
+            });
+
+        Tools::setStaticExpectations($toolsMock);
+
         $this->search->initSearch(['quantity' => [1]]);
 
         $this->assertEquals([], $this->search->getSearchAdapter()->getFilters()->toArray());
@@ -643,6 +721,19 @@ class SearchTest extends MockeryTestCase
 
     public function testInitSearchWithSecondQuantityFilters()
     {
+        $toolsMock = Mockery::mock(Tools::class);
+        $toolsMock->shouldReceive('getValue')
+            ->andReturnUsing(function ($arg) {
+                $valueMap = [
+                    'id_category' => 12,
+                    'id_category_layered' => 11,
+                ];
+
+                return $valueMap[$arg];
+            });
+
+        Tools::setStaticExpectations($toolsMock);
+
         $this->search->initSearch(['quantity' => [2]]);
 
         $this->assertEquals([], $this->search->getSearchAdapter()->getFilters()->toArray());
@@ -667,6 +758,19 @@ class SearchTest extends MockeryTestCase
 
     public function testInitSearchWithoutGroupFeature()
     {
+        $toolsMock = Mockery::mock(Tools::class);
+        $toolsMock->shouldReceive('getValue')
+            ->andReturnUsing(function ($arg) {
+                $valueMap = [
+                    'id_category' => 12,
+                    'id_category_layered' => 11,
+                ];
+
+                return $valueMap[$arg];
+            });
+
+        Tools::setStaticExpectations($toolsMock);
+
         $groupMock = Mockery::mock(Group::class);
         $groupMock->shouldReceive('isFeatureActive')
             ->andReturn(false);
@@ -682,14 +786,14 @@ class SearchTest extends MockeryTestCase
                 'id_category_default' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
                 'id_category' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
@@ -715,6 +819,19 @@ class SearchTest extends MockeryTestCase
 
     public function testInitSearchWithUserBelongingToGroups()
     {
+        $toolsMock = Mockery::mock(Tools::class);
+        $toolsMock->shouldReceive('getValue')
+            ->andReturnUsing(function ($arg) {
+                $valueMap = [
+                    'id_category' => 12,
+                    'id_category_layered' => 11,
+                ];
+
+                return $valueMap[$arg];
+            });
+
+        Tools::setStaticExpectations($toolsMock);
+
         $frontControllerMock = Mockery::mock(FrontController::class);
         $frontControllerMock->shouldReceive('getCurrentCustomerGroups')
             ->andReturn([2, 999]);
@@ -730,14 +847,14 @@ class SearchTest extends MockeryTestCase
                 'id_category_default' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],
                 'id_category' => [
                     '=' => [
                         [
-                            12,
+                            null,
                         ],
                     ],
                 ],

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace MsThemeConfig\Class;
 
@@ -17,7 +18,6 @@ class MailTheme
     {
         $module_mails_path = $_SERVER['DOCUMENT_ROOT'] . "/modules/msthemeconfig/mails/themes/modernesmid";
         $prestashop_mails_path = $_SERVER['DOCUMENT_ROOT'] . 'mails/themes/modernesmid';
-
         try {
             $fileSystem = new Filesystem();
             $fileSystem->symlink($module_mails_path, $prestashop_mails_path);

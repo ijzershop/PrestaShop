@@ -2,7 +2,7 @@
 
 ## About
 
-Help your customers get in touch when they need, add a contact form on your store.
+Adds a contact form to the "Contact us" page.
 
 ## Reporting issues
 

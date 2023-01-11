@@ -424,6 +424,7 @@ abstract class ModuleCore implements ModuleInterface
             'version' => $this->version,
         ]);
         if (!$result) {
+
             $this->_errors[] = Context::getContext()->getTranslator()->trans('Technical error: PrestaShop could not install this module.', [], 'Admin.Modules.Notification');
             if (method_exists($this, 'uninstallTabs')) {
                 $this->uninstallTabs();

@@ -1,47 +1,47 @@
 admin_categories_edit:
-    path: /sell/catalog/categories/{categoryId}/edit
-    methods: [GET, POST]
-    defaults:
-        _controller: 'MsThemeConfig\Controller\Admin\DmsAdminCategoryController::editAction'
-        _legacy_controller: 'AdminCategories'
-        _legacy_link: 'AdminCategories:update-category'
-        _legacy_parameters:
-            id_category: categoryId
-    requirements:
-        categoryId: \d+
-        _disable_module_prefix: 'true'
+  path: /sell/catalog/categories/{categoryId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsAdminCategoryController::editAction'
+    _legacy_controller: 'AdminCategories'
+    _legacy_link: 'AdminCategories:update-category'
+    _legacy_parameters:
+      id_category: categoryId
+  requirements:
+    categoryId: \d+
+    _disable_module_prefix: 'true'
 
 admin_categories_edit_root:
-    path: /sell/catalog/categories/{categoryId}/edit-root
-    methods: [GET, POST]
-    defaults:
-        _controller: 'MsThemeConfig\Controller\Admin\DmsAdminCategoryController::editRootAction'
-        _legacy_controller: 'AdminCategories'
-        _legacy_link: 'AdminCategories:update-category'
-        _legacy_parameters:
-            id_category: categoryId
-    requirements:
-        categoryId: \d+
-        _disable_module_prefix: 'true'
+  path: /sell/catalog/categories/{categoryId}/edit-root
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsAdminCategoryController::editRootAction'
+    _legacy_controller: 'AdminCategories'
+    _legacy_link: 'AdminCategories:update-category'
+    _legacy_parameters:
+      id_category: categoryId
+  requirements:
+    categoryId: \d+
+    _disable_module_prefix: 'true'
 
 
 admin_configuration_get_panel:
   path: /modernesmid/ajax/configuration/get-panel/{panel_name}
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
-      _controller: 'MsThemeConfig\Class\ModernAjax::getPanel'
-      _legacy_controller: 'ModernAjax'
-      _legacy_link: 'ModernAjax:getPanel'
-      _legacy_parameters:
-          panel_name: panel_name
+    _controller: 'MsThemeConfig\Class\ModernAjax::getPanel'
+    _legacy_controller: 'ModernAjax'
+    _legacy_link: 'ModernAjax:getPanel'
+    _legacy_parameters:
+      panel_name: panel_name
   requirements:
-      panel_name: '([a-z-]+)?'
+    panel_name: '([a-z-]+)?'
 
 
 # Orders
 admin_orders_index:
   path: /sell/orders/
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\DmsAdminOrderController::indexAction'
     _legacy_controller: 'AdminOrders'
@@ -50,7 +50,7 @@ admin_orders_index:
 
 admin_orders_view:
   path: /{orderId}/view
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\DmsAdminOrderController::viewAction'
     _legacy_controller: 'AdminOrders'
@@ -65,7 +65,7 @@ admin_orders_view:
 
 admin_orders_preview:
   path: /{orderId}/preview
-  methods: [GET]
+  methods: [ GET ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\DmsAdminOrderController::previewAction'
     _legacy_controller: AdminOrders
@@ -76,7 +76,7 @@ admin_orders_preview:
 
 admin_customers_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\DmsAdminCustomerController::createAction'
     _legacy_controller: 'AdminCustomers'
@@ -84,7 +84,7 @@ admin_customers_create:
 
 admin_customers_edit:
   path: /{customerId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\DmsAdminCustomerController::editAction'
     _legacy_controller: 'AdminCustomers'
@@ -96,7 +96,7 @@ admin_customers_edit:
 
 admin_customers_view:
   path: /{customerId}/view
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\DmsAdminCustomerController::viewAction'
     _legacy_controller: 'AdminCustomers'
@@ -110,7 +110,7 @@ admin_customers_view:
 
 modernesmid_config_get_select2_data:
   path: /modernesmid/ajax/configuration/select2-get-data/{data_type}
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'MsThemeConfig\Class\ModernAjax::getSelect2Data'
     _legacy_controller: 'ModernAjax'
@@ -156,7 +156,7 @@ admin_order_addresses_edit:
 
 modernesmid_config_page:
   path: /improve/modules/manage/action/configure/msthemeconfig
-  methods: [GET]
+  methods: [ GET ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\MsAdminThemeConfController::initContent'
     _legacy_controller: MsAdminThemeConfController
@@ -227,7 +227,7 @@ offerintegration_search:
 
 offerintegration_ajax_select2_products_data:
   path: /modernesmid/offerintegration/ajax/select2_products_data
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\MsAdminAjaxController::select2ProductsData'
     _legacy_controller: 'MsAdminAjaxController'
@@ -236,7 +236,7 @@ offerintegration_ajax_select2_products_data:
 
 offerintegration_ajax_put_offer_row:
   path: /modernesmid/offerintegration/ajax/put
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\MsAdminAjaxController::putOfferRowAction'
     _legacy_controller: 'MsAdminAjaxController'
@@ -257,7 +257,7 @@ offerintegration_ajax_delete_row:
 
 admin_mail_theme_send_test_mail:
   path: /send-test-mail/{locale}/{theme}/{layout}
-  methods: [GET]
+  methods: [ GET ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\DmsMailThemeController::sendTestMailAction'
     _legacy_link: DmsMailThemeController:rawModuleLayout
@@ -266,12 +266,29 @@ admin_mail_theme_send_test_mail:
 
 admin_mail_theme_send_test_module_mail:
   path: /send-test-mail/{locale}/{theme}/{module}/{layout}
-  methods: [GET]
+  methods: [ GET ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\DmsMailThemeController::sendTestMailAction'
     _legacy_link: DmsMailThemeController:rawModuleLayout
     _legacy_controller: DmsMailThemeController
 
+#Offerintegration
+koopman_order_export_print_labels:
+  path: /modernesmid/koopmanorderexport/print-labels
+  methods: [ GET ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\KoopmanOrderExportAdminController::display'
+    _legacy_controller: KoopmanOrderExportAdminController
+    _legacy_link: KoopmanOrderExportAdminController:display
+
+
+koopman_order_export_close_day:
+  path: /modernesmid/koopmanorderexport/dag-afsluiting
+  methods: [ GET ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\KoopmanDagafsluitingAdminController::display'
+    _legacy_controller: KoopmanDagafsluitingAdminController
+    _legacy_link: KoopmanDagafsluitingAdminController:display
 
 
 

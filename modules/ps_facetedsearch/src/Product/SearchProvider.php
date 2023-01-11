@@ -111,10 +111,6 @@ class SearchProvider implements FacetsRendererInterface, ProductSearchProviderIn
     }
 
     /**
-     * Instance of this class was previously passed to frontend controller, so we are now
-     * ready to accept runQuery requests. The query object contains all the important information
-     * about what we should get.
-     *
      * @param ProductSearchContext $context
      * @param ProductSearchQuery $query
      *
@@ -125,29 +121,25 @@ class SearchProvider implements FacetsRendererInterface, ProductSearchProviderIn
         ProductSearchQuery $query
     ) {
         $result = new ProductSearchResult();
-
-        /**
-         * Get currently selected filters. In the query, it's passed as encoded URL string,
-         * we make it an array. All filters in the URL that are no longer valid are removed.
-         */
+        // extract the filter array from the Search query
         $facetedSearchFilters = $this->filtersConverter->createFacetedSearchFiltersFromQuery($query);
 
-        // Initialize the search mechanism
         $context = $this->module->getContext();
         $facetedSearch = $this->searchFactory->build($context);
-
-        // Add query information into Search
-        $facetedSearch->setQuery($query);
-
-        // Init the search with the initial population associated with the current filters
+        // init the search with the initial population associated with the current filters
         $facetedSearch->initSearch($facetedSearchFilters);
 
-        // Load the product searcher, it gets the Adapter through Search object
+        $orderBy = $query->getSortOrder()->toLegacyOrderBy(false);
+        $orderWay = $query->getSortOrder()->toLegacyOrderWay();
+
         $filterProductSearch = new Filters\Products($facetedSearch);
 
-        // Get the product associated with the current filter
+        // get the product associated with the current filter
         $productsAndCount = $filterProductSearch->getProductByFilters(
-            $query,
+            $query->getResultsPerPage(),
+            $query->getPage(),
+            $orderBy,
+            $orderWay,
             $facetedSearchFilters
         );
 
@@ -156,17 +148,14 @@ class SearchProvider implements FacetsRendererInterface, ProductSearchProviderIn
             ->setTotalProductsCount($productsAndCount['count'])
             ->setAvailableSortOrders($this->getAvailableSortOrders());
 
-        // Now let's get the filter blocks associated with the current search.
-        // This will allow user to further filter this list we found.
+        // now get the filter blocks associated with the current search
         $filterBlockSearch = new Filters\Block(
             $facetedSearch->getSearchAdapter(),
             $context,
             $this->module->getDatabase(),
-            $this->dataAccessor,
-            $query
+            $this->dataAccessor
         );
 
-        // Get basic information about the context and see if we have these filters cached
         $idShop = (int) $context->shop->id;
         $idLang = (int) $context->language->id;
         $idCurrency = (int) $context->currency->id;
@@ -185,7 +174,6 @@ class SearchProvider implements FacetsRendererInterface, ProductSearchProviderIn
             )
         );
 
-        // If not, we regenerate it and cache it
         $filterBlock = $filterBlockSearch->getFromCache($filterHash);
         if (empty($filterBlock)) {
             $filterBlock = $filterBlockSearch->getFilterBlock($productsAndCount['count'], $facetedSearchFilters);

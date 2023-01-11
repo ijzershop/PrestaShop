@@ -213,9 +213,9 @@ class CategoriesProvider
      *
      * @param array $categories
      *
-     * @return stdClass
+     * @return array
      */
-    private function sortCategories(array $categories): stdClass
+    private function sortCategories(array $categories): array
     {
         uasort(
             $categories,

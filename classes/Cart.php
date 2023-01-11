@@ -4307,8 +4307,6 @@ class CartCore extends ObjectModel
      */
     public function deleteCustomizationToProduct($id_product, $index)
     {
-        $result = true;
-
         $cust_data = Db::getInstance()->getRow(
             'SELECT cu.`id_customization`, cd.`index`, cd.`value`, cd.`type` FROM `' . _DB_PREFIX_ . 'customization` cu
             LEFT JOIN `' . _DB_PREFIX_ . 'customized_data` cd
@@ -4319,8 +4317,14 @@ class CartCore extends ObjectModel
             AND `in_cart` = 0'
         );
 
+        if (!$cust_data) {
+            return true;
+        }
+
+        $result = true;
+
         // Delete customization picture if necessary
-        if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
+        if ($cust_data['type'] == Product::CUSTOMIZE_FILE) {
             $result = !file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) || @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']);
             $result = !($result && file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small')) || @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small');
         }
@@ -4358,6 +4362,11 @@ class CartCore extends ObjectModel
     public function getProductCustomization($id_product, $type = null, $not_in_cart = false)
     {
         if (!Customization::isFeatureActive()) {
+            return [];
+        }
+
+        // if cart is not set, return nothing to prevent loading of other users data.
+        if (0 === (int) $this->id) {
             return [];
         }
 

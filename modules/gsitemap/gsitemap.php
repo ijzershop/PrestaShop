@@ -384,14 +384,7 @@ class Gsitemap extends Module
             ShopUrl::resetMainDomainCache();
         }
 
-        $offerCat = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', $lang['id_lang'], $this->context->shop->id_shop_group, $this->context->shop->id, 382);
-        $sqlCatLimit = '';
-
-        if((int)$offerCat > 0){
-            $sqlCatLimit = ' AND `id_category_default` NOT IN (6,'.(int)$offerCat.') ';
-        }
-
-        $products_id = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product_shop` WHERE `id_product` >= ' . (int) $id_product . ' AND `active` = 1 AND `visibility` != \'none\' AND `id_shop`=' . $this->context->shop->id . $sqlCatLimit .' ORDER BY `id_product` ASC');
+        $products_id = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product_shop` WHERE `id_product` >= ' . (int) $id_product . ' AND `active` = 1 AND `visibility` != \'none\' AND `id_shop`=' . $this->context->shop->id . ' ORDER BY `id_product` ASC');
 
         foreach ($products_id as $product_id) {
             $product = new Product((int) $product_id['id_product'], false, (int) $lang['id_lang']);
@@ -453,16 +446,9 @@ class Gsitemap extends Module
             ShopUrl::resetMainDomainCache();
         }
 
-        $offerCat = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', $lang['id_lang'], $this->context->shop->id_shop_group, $this->context->shop->id, 382);
-        $sqlCatLimit = '';
-
-        if((int)$offerCat > 0){
-            $sqlCatLimit = ' AND c.`id_category` NOT IN (6,'.(int)$offerCat.') ';
-        }
-
         $categories_id = Db::getInstance()->ExecuteS('SELECT c.id_category FROM `' . _DB_PREFIX_ . 'category` c
                 INNER JOIN `' . _DB_PREFIX_ . 'category_shop` cs ON c.`id_category` = cs.`id_category`
-                WHERE c.`id_category` >= ' . (int) $id_category . ' AND c.`active` = 1 AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY') . ' AND c.id_category != ' . (int) Configuration::get('PS_HOME_CATEGORY') . ' AND c.id_parent > 0 AND c.`id_category` > 0 '. $sqlCatLimit .' AND cs.`id_shop` = ' . (int) $this->context->shop->id . ' ORDER BY c.`id_category` ASC');
+                WHERE c.`id_category` >= ' . (int) $id_category . ' AND c.`active` = 1 AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY') . ' AND c.id_category != ' . (int) Configuration::get('PS_HOME_CATEGORY') . ' AND c.id_parent > 0 AND c.`id_category` > 0 AND cs.`id_shop` = ' . (int) $this->context->shop->id . ' ORDER BY c.`id_category` ASC');
 
         foreach ($categories_id as $category_id) {
             $category = new Category((int) $category_id['id_category'], (int) $lang['id_lang']);

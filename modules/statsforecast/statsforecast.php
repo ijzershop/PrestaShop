@@ -429,8 +429,8 @@ class statsforecast extends Module
 						<tr>
 							<td class="text-center">'.$payment['payment_method'].'</td>
 							<td class="text-center">'.(int)$payment['nb'].'</td>
-							<td class="text-right">'.$this->context->getCurrentLocale()->formatPrice((int)$payment['total'], $currency->iso_code).'</td>
-							<td class="text-right">'.$this->context->getCurrentLocale()->formatPrice((int)$payment['total'] / (int)$payment['nb'], $currency->iso_code).'</td>
+							<td class="text-right">'.$this->context->getCurrentLocale()->formatPrice($payment['total'], $currency->iso_code).'</td>
+							<td class="text-right">'.$this->context->getCurrentLocale()->formatPrice($payment['total'] / (int)$payment['nb'], $currency->iso_code).'</td>
 						</tr>';
         }
         $this->html .= '

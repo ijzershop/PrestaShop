@@ -93,8 +93,7 @@ class ModernConfigurator
     public function getConfigPage(array $viewData=[]): string
     {
         $container = SymfonyContainer::getInstance()->get('twig');
-        return $container->render(
-            '@Modules/MsThemeConfig/views/templates/admin/configure.html.twig',
+        return $container->render("@Modules/msthemeconfig/views/templates/admin/configure.html.twig",
             $viewData
         , $this->context);
     }

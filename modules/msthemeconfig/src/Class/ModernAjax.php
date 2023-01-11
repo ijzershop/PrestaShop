@@ -114,7 +114,7 @@ class ModernAjax
             $panelData['admin_token'] = Tools::getAdminToken('AdminModules');
             $container = SymfonyContainer::getInstance()->get('twig');
             return Response::create($container->render(
-                '@Modules/MsThemeConfig/views/templates/admin/panels/panel-' . $panel_name . '.html.twig',
+                '@Modules/msthemeconfig/views/templates/admin/panels/panel-' . $panel_name . '.html.twig',
                 $panelData)
             );
         } catch (\PrestaShopException) {

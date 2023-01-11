@@ -225,7 +225,7 @@ class CategoriesProvider
         );
 
         // Convert array to object to be consistent with current API call
-        return json_decode(json_encode($categories));
+        return (array)json_decode(json_encode($categories));
     }
 
     /**

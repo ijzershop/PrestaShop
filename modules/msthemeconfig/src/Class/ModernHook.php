@@ -823,7 +823,7 @@ class ModernHook
         $jsonldForm = [];
         $jsonldForm['form'] = $form->createView();
 
-        die($this->module->get('twig')->render('@Modules\MsThemeConfig\views\templates\admin\custom-product-fields.html.twig', $jsonldForm));
+        die($this->module->get('twig')->render('@Modules\msthemeconfig\views\templates\admin\custom-product-fields.html.twig', $jsonldForm));
     }
 
     /**

@@ -85,7 +85,7 @@ class MsThemeConfig extends Module
         [
             'route_name' => 'koopman_order_export_close_day',
             'name' => 'Koopman dagafsluiting', // One name for all langs
-            'class_name' => 'koopmanDagafsluitingAdmin',
+            'class_name' => 'KoopmanDagafsluitingAdmin',
             'visible' => true,
             'parent_class_name'=>'AdminParentOrders',
             'icon'=>'account_circle',
@@ -449,7 +449,13 @@ class MsThemeConfig extends Module
 
             //check if is multiple select
             if (in_array($key, $multipleSelectKeys)) {
-                $arrayString = implode(',', Tools::getValue($key));
+                $value = Tools::getValue($key);
+                if(is_array($value)){
+                    $arrayString = implode(',', $value);
+                } else {
+                    $arrayString = $value;                    
+                }
+
                 $dbKey = str_replace('[]','', $key);
 
                 Configuration::updateValue($dbKey, [1=>$arrayString], false,  $this->idShopGroup, $this->idShop);

@@ -2642,7 +2642,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
 
         if (empty($passwd)) {
             $this->json['error']['password'] = $this->module->l('Password is required.');
-        } elseif (!Validate::isPasswd($passwd)) {
+        } elseif (!Validate::isPlaintextPassword($passwd)) {
             $this->json['error']['password'] = $this->module->l('Invalid Password');
         }
         if (empty($this->json['error'])) {

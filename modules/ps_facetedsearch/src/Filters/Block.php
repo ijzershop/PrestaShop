@@ -758,7 +758,7 @@ class Block
                 ];
             }
 
-            if (!isset($featureBlock[$idFeature]['featureValues'])) {
+            if (isset($featureBlock[$idFeature]['featureValues'])) {
                 $featureValues = $features[$idFeature]['featureValues'];
                 if (!isset($featureValues[$idFeatureValue]) || !isset($featureValues[$idFeatureValue]['value'])) {
                     continue;

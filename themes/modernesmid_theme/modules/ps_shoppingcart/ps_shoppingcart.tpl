@@ -23,7 +23,7 @@
   * International Registered Trademark & Property of PrestaShop SA
   *}
 {assign var='deliveryMethodCarriers' value=unserialize(Configuration::get('koopmanOrderExport'))}
-  <div class="js-cart pl-5" data-refresh-url="{$refresh_url}">{strip}
+  <div class="js-cart pl-0" style="padding-left: calc(100% - 345px) !important;" data-refresh-url="{$refresh_url}">{*{strip}*}
     <div id="top-header-shoppingcart-box">
       <table width="100%">
         <tr>
@@ -109,7 +109,7 @@
         </div>
       </div>
     </a>
-    {strip}
+{*    {strip}*}
   </div>
 
 

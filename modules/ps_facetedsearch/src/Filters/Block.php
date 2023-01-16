@@ -758,18 +758,19 @@ class Block
                 ];
             }
 
-            $featureValues = $features[$idFeature]['featureValues'];
-            if (!isset($featureValues[$idFeatureValue]['value'])) {
-                continue;
+            if (!isset($featureBlock[$idFeature]['featureValues'])) {
+                $featureValues = $features[$idFeature]['featureValues'];
+                if (!isset($featureValues[$idFeatureValue]) || !isset($featureValues[$idFeatureValue]['value'])) {
+                    continue;
+                }
+
+                $featureBlock[$idFeature]['values'][$idFeatureValue] = [
+                    'nbr' => $count,
+                    'name' => $featureValues[$idFeatureValue]['value'],
+                    'url_name' => $featureValues[$idFeatureValue]['url_name'],
+                    'meta_title' => $featureValues[$idFeatureValue]['meta_title'],
+                ];
             }
-
-            $featureBlock[$idFeature]['values'][$idFeatureValue] = [
-                'nbr' => $count,
-                'name' => $featureValues[$idFeatureValue]['value'],
-                'url_name' => $featureValues[$idFeatureValue]['url_name'],
-                'meta_title' => $featureValues[$idFeatureValue]['meta_title'],
-            ];
-
             if (array_key_exists('id_feature', $selectedFilters)) {
                 foreach ($selectedFilters['id_feature'] as $selectedFeature) {
                     if (in_array($idFeatureValue, $selectedFeature)) {

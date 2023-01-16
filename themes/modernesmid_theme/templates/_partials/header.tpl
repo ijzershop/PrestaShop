@@ -49,16 +49,7 @@
 
 
   {block name='header_top'}
-    <style>
-      #search_widget{
-        max-width:325px;
-        margin-left: auto!important;
-        margin-right: auto!important;
-      }
-    </style>
-
-
-  <div class="header-top" style="margin-top: 2px;">
+    <div class="header-top">
     <div class="cart_body {if Context::getContext()->cart->nbProducts() == 0} no_show_empty {/if}">
       <div class="side_panel d-none" id="shoppingcart-side-panel">
         {include file='themes/modernesmid_theme/modules/ps_shoppingcart/ps_shoppingcart-list.tpl'}
@@ -85,7 +76,7 @@
     <div class="row">
       <table id="header-table" class="col m-0 ml-md-2 mr-md-2 ml-lg-3 mr-lg-3">
         <tr class="row">
-          <td class="col col-xs-6 col-sm-6  col-lg-5 p-0">
+          <td class="col col-xs-6 col-sm-6  col-lg-4 p-0">
               {*      Header column      *}
                 {if in_array($urls.base_url, explode(',', Configuration::get('MSTHEMECONFIG_TEST_WEBSITES', Context::getContext()->language->id, null , Context::getContext()->shop->id, [])))}
                   <style type="text/css">
@@ -97,7 +88,7 @@
               <a href="{$urls.base_url}" class="header-logo-a w-100  pr-sm-5">
                 <ul class="list-group mx-auto">
                   <li class="list-group-item border-0 p-0">
-                    <img rel="preload" is="image" class="logo w-100 d-none d-md-block" src="{$shop.logo}" alt="{$shop.name}" style="">
+                    <img rel="preload" is="image" class="logo w-100 d-none d-md-block" src="{$shop.logo}" alt="{$shop.name}">
                     <img rel="preload" is="image" class="logo w-100 d-block d-md-none" src="/themes/modernesmid_theme/assets/logo/{strtolower($shop.name)}_mobile.svg" alt="{$shop.name}">
                   </li>
                 </ul>
@@ -110,7 +101,7 @@
               {*     / Kyio Column      *}
           </td>
             {if Module::isEnabled('ps_shoppingcart')}
-          <td class="d-none d-md-none d-lg-flex col  p-0 shoppingcart-header-box pr-md-2 pr-lg-3">
+          <td class="d-none d-md-none d-lg-flex col  p-0 shoppingcart-header-box pr-md-2 pr-lg-4">
               {*    Winkelwagen Column        *}
             <style>
               .js-cart{
@@ -123,37 +114,10 @@
             {/if}
         </tr>
       </table>
-
-{*      <div class="col-6 col-lg-6 p-0 mx-auto" id="desktop_logo">*}
-{*        {if !in_array($urls.base_url, explode(',', Configuration::get('MSTHEMECONFIG_TEST_WEBSITES', Context::getContext()->language->id, null , Context::getContext()->shop->id, [])))}*}
-{*          <style type="text/css">*}
-{*            #header-logo-img{*}
-{*              transform: rotate(180deg);*}
-{*            }*}
-{*          </style>*}
-{*        {/if}*}
-{*        <a href="{$urls.base_url}" class="header-logo-a">*}
-{*          <img id="header-logo-img"  rel="preload" as="image" class="logo w-100 d-none d-md-block" src="{$shop.logo}" alt="{$shop.name}">*}
-{*          <img id="header-logo-img"  rel="preload" as="image" class="logo w-100 d-block d-md-none" src="/themes/modernesmid_theme/assets/logo/{strtolower($shop.name)}_mobile.svg" alt="{$shop.name}">*}
-{*        </a>*}
-
-{*      </div>*}
-{*      <div class="{if Module::isEnabled('ps_shoppingcart')}col-6 col-lg-3{else} col-6 offset-lg-3 col-lg-3{/if} p-0 pt-2 pb-2 pt-lg-1 position-static">*}
-{*        {hook h='kiyohBanner'}*}
-{*      </div>*}
-{*      {if Module::isEnabled('ps_shoppingcart')}*}
-{*      <div class="col-3 d-none d-md-none d-lg-block pr-0 pb-1 shoppingcart-header-box">*}
-{*        {hook h='displayShoppingCart'}*}
-{*      </div>*}
-{*      {/if}*}
-
-
     </div>
   </div>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary mainmenu-navbar p-0 p-md-0" data-toggle="sticky-onscroll" id="main-menu-bar">
     <div class="container">
-
-{*      <a class="navbar-brand d-none d-lg-block" href="/"><img  rel="preload" as="image" src="/themes/modernesmid_theme/assets/img/home-icon.svg" width="25px" height="auto" alt="Home" title="Ga naar de startpagina"></a>*}
       <a id="navbar-brand-item-lg" class="navbar-brand d-none d-lg-block" href="/"><img  rel="preload" as="image" src="/themes/modernesmid_theme/assets/logo/{strtolower($shop.name)}-menu-logo.svg" width="auto" height="22px" alt="Home" title="Ga naar de startpagina"></a>
       <ul class="nav col d-flex d-lg-none p-0">
         <li id="navbar-brand-item-mobile" class="nav-item p-0 text-center col">
@@ -172,7 +136,7 @@
         <li class="nav-item p-0 text-center col"><a aria-label="Zoeken" class="nav-link text-white navbar-search-icon" href="#"><i class="fa-sharp fa-2x fa-search"></i></a></li>
         {/if}
         {if Module::isEnabled('ps_shoppingcart')}
-        <li class="nav-item p-0 col-5 col-sm-3"><a  style="padding:0.2rem 1rem 0.2rem 0.3rem;" aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile" href="#"><i style="font-size: 2.2em;padding-top:7px;padding-right: 15px;vertical-align: -.4em;" class="fa-sharp fa-shopping-cart"></i><span class="shoppingcart-header-total-price float-right text-white" style="font-size: 1.3em;padding-top: 7px;">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
+        <li class="nav-item p-0 col-5 col-sm-3"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile" href="#"><i class="fa-sharp fa-shopping-cart"></i><span class="shoppingcart-header-total-price float-right text-white">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
         {/if}
 {*        <li class="nav-item p-0 text-center col"><a aria-label="Neem contact met ons op via het contactformulier" class="nav-link text-white" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fa-sharp fa-2x fa-envelope"></i></a></li>*}
 {*        <li class="nav-item p-0 text-center col"><a aria-label="Bel ons" class="nav-link text-white" href="{Configuration::get('MSTHEMECONFIG_HEADER_PHONENUMBER_LINK', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fa-sharp fa-2x fa-phone"></i></a></li>*}

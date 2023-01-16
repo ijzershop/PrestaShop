@@ -449,7 +449,13 @@ class MsThemeConfig extends Module
 
             //check if is multiple select
             if (in_array($key, $multipleSelectKeys)) {
-                $arrayString = implode(',', Tools::getValue($key));
+                $value = Tools::getValue($key);
+                if(is_array($value)){
+                    $arrayString = implode(',', $value);
+                } else {
+                    $arrayString = $value;                    
+                }
+
                 $dbKey = str_replace('[]','', $key);
 
                 Configuration::updateValue($dbKey, [1=>$arrayString], false,  $this->idShopGroup, $this->idShop);

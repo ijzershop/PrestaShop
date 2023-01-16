@@ -31,7 +31,7 @@ var kiyohReviews = '';
 
 var monthArray = new Array("Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","Oktober","November","December");
 
-function firstLetterUppercase(string) 
+function firstLetterUppercase(string)
 {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -90,7 +90,7 @@ return;
                 xmlObject = xmlToJson.parse(data.responseXML).ReviewFeedDto;
                 if(parseInt(totalReviewsInDatabase) === parseInt(xmlObject.numberReviews) && pageNr == 0){
                 	checkReviewsTotalAndUpdateLatest(xmlObject);
-            	} 
+            	}
 
                 kiyohReviews = xmlObject.reviews.reviews;
 
@@ -139,7 +139,7 @@ return;
         document.getElementById('kiyoh-banner-block').style.display = 'none';
     };
     xhr.send(null);
-	} 
+	}
 }
 function fetchNextIjzershopXmlPage(){
 	var pageNr = parseInt(document.getElementById('review-page').value)+1;

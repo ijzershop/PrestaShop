@@ -33,11 +33,13 @@ if (!defined('_PS_MODE_DEV_')) {
     }
 } else {
     if (getenv('_PS_MODE_DEV_') && isset($_SERVER["REMOTE_ADDR"]) && ($_SERVER["REMOTE_ADDR"] == '213.93.172.135' || $_SERVER["REMOTE_ADDR"] == '62.195.191.68' || $_SERVER["REMOTE_ADDR"] == '::1')) {
-        define('_PS_MODE_DEV_', true);
+        define('_PS_MODE_DEV_', false);
     } else {
-        define('_PS_MODE_DEV_', true);
+        define('_PS_MODE_DEV_', false);
     }
 }
+
+
 
 /* Compatibility warning */
 if (!defined('_PS_DISPLAY_COMPATIBILITY_WARNING_')) {

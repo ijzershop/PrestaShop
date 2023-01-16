@@ -6,17 +6,19 @@
   justify-content: space-around;
   height: 100%;
   padding: 7px 0px 7px 0px;
+  background-color: #fff;
 }
 
 #kiyoh-block .list-group-item span.text {
-  font-size: 0.8rem;
+  font-size: 1rem;
+  vertical-align: text-bottom;
 }
 #kiyoh-block .list-group-item span.icon {
   width:1rem;
 }
 #kiyoh-block .list-group-item {
   display:block;
-  font-size: 0.8rem;
+  font-size: 1.2rem;
 }
 
 @media (max-width: 579px) {

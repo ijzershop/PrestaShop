@@ -234,7 +234,9 @@ class BT_GapModuleDao
         $results = \Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
         if (!empty($results)) {
-            $checkout_step = (array)json_decode($results[0]['checkout']);
+            if(!is_null($results[0]['checkout'])){
+                $checkout_step = (array)json_decode($results[0]['checkout']);
+            }
         }
 
         return $checkout_step;

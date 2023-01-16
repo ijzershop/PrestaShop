@@ -1,4 +1,6 @@
 <?php
+
+
 class Cart extends CartCore
 {
     public $added_to_order;
@@ -102,7 +104,6 @@ class Cart extends CartCore
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier, $computePrecision, $keepOrderPrices);
         $small_order_fee_addition = 0;
         $discounts = 0;
-
         switch ($type) {
             case Cart::ONLY_SHIPPING:
                 $calculator->calculateRows();
@@ -118,7 +119,6 @@ class Cart extends CartCore
                 $calculator->processCalculation();
                 $amount = $calculator->getTotal();
                 $productTotal = $calculator->getRowTotal()->getTaxExcluded();
-
                 if (!Module::isEnabled('smallorderfee') || (!is_null($productTotal) && (double)$productTotal > (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT')) || $productTotal === 0.0) {
                     $small_order_fee_addition = 0;
                 } else {
@@ -148,11 +148,8 @@ class Cart extends CartCore
                 throw new \Exception('unknown cart calculation type : ' . $type);
         }
         $value = $withTaxes ? $amount->getTaxIncluded() + $small_order_fee_addition : $amount->getTaxExcluded() + $small_order_fee_addition;
-
         return Tools::ps_round($value, $computePrecision);
     }
-
-
     public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
         if (isset(Context::getContext()->cookie->id_country)) {
@@ -572,7 +569,7 @@ class Cart extends CartCore
             }
         }
         if (!empty($id_product_attribute)) {
-            $minimal_quantity = (int) Attribute::getAttributeMinimalQty($id_product_attribute);
+            $minimal_quantity = (int) ProductAttribute::getAttributeMinimalQty($id_product_attribute);
         } else {
             $minimal_quantity = (int) $product->minimal_quantity;
         }
@@ -759,5 +756,26 @@ class Cart extends CartCore
             }
         }
         return true;
+    }
+    /*
+    * module: dynamicproduct
+    * date: 2023-01-13 08:06:00
+    * version: 2.43.11
+    */
+    public function duplicate()
+    {
+        $id_cart_old = (int) $this->id;
+        $result = parent::duplicate();
+        $id_cart_new = (int) $result['cart']->id;
+        Module::getInstanceByName('dynamicproduct');
+        if (Module::isEnabled('dynamicproduct')) {
+
+            $module = Module::getInstanceByName('dynamicproduct');
+            $module->hookCartDuplicated(array(
+                'id_cart_old' => $id_cart_old,
+                'id_cart_new' => $id_cart_new,
+            ));
+        }
+        return $result;
     }
 }

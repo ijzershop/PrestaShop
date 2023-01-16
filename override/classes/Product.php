@@ -2,7 +2,6 @@
 use classes\models\DynamicConfig;
 use classes\models\DynamicEquation;
 use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
-
 class Product extends ProductCore {
         /*
     * module: offerintegration
@@ -199,25 +198,20 @@ class Product extends ProductCore {
             $row['quantity'] = (int)StockAvailable::getQuantityAvailableByProduct($row['id_product'], null);
             $results_array[] = $row;
         }
-
         return $results_array;
     }
-
     public static function productIsOrderable($id_product = null){
         $id_lang = (int) Context::getContext()->language->id;
         $id_shop = (int) Context::getContext()->shop->id;
         $id_shop_group = (int) Context::getContext()->shop->id_shop_group;
-
         if(!$id_product){
             return false;
         }
         $product = new Product($id_product);
-
         $id_attribute = 0;
         if(isset(Product::getProductAttributesIds($id_product)[0])){
             $id_attribute = (int)reset(Product::getProductAttributesIds($id_product)[0]);
         }
-
         if((int) Configuration::get('PS_CATALOG_MODE', $id_lang, $id_shop_group, $id_shop,0) == 0){
             if((int) Configuration::get('PS_STOCK_MANAGEMENT', $id_lang, $id_shop_group, $id_shop,0) == 1){
                 if((int) StockAvailable::getQuantityAvailableByProduct($id_product, $id_attribute) < (int) $product->minimal_quantity){
@@ -246,25 +240,19 @@ class Product extends ProductCore {
             return false;
         }
     }
-
-
     public static function hasMaxProductsRemainingStock($id_product = null, $stock_limit=100){
         $id_lang = (int) Context::getContext()->language->id;
         $id_shop = (int) Context::getContext()->shop->id;
         $id_shop_group = (int) Context::getContext()->shop->id_shop_group;
-
         if(!$id_product){
             $is_orderable = false;
         }
         $product = new Product($id_product);
-
         $id_attribute = 0;
         if(isset(Product::getProductAttributesIds($id_product)[0])){
             $id_attribute = (int)reset(Product::getProductAttributesIds($id_product)[0]);
         }
         $available_stock = (int)StockAvailable::getQuantityAvailableByProduct($id_product, $id_attribute);
-
-
         if((int) Configuration::get('PS_CATALOG_MODE', $id_lang, $id_shop_group, $id_shop,0) == 0){
             if((int) Configuration::get('PS_STOCK_MANAGEMENT', $id_lang, $id_shop_group, $id_shop,0) == 1){
                 if($available_stock < (int) $product->minimal_quantity){
@@ -292,13 +280,32 @@ class Product extends ProductCore {
         } else {
             $is_orderable = false;
         }
-
         $msg = '';
-
         if($available_stock > 0 && $available_stock <= (int)$stock_limit){
             $msg = '<div class="w-100 text-danger text-center">Nog '.$available_stock.' stuks beschikbaar</div>';
         }
-
         return json_encode(['is_orderable' => $is_orderable, 'remaining_qty_msg' => $msg, 'remaining_stock' => $available_stock]);
+    }
+    /*
+    * module: dynamicproduct
+    * date: 2023-01-13 08:06:00
+    * version: 2.43.11
+    */
+    public static function getProductProperties($id_lang, $row, Context $context = null)
+    {
+        $result = parent::getProductProperties($id_lang, $row, $context);
+        
+        $module = Module::getInstanceByName('dynamicproduct');
+        if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
+            $id_product = (int) $row['id_product'];
+            $dynamic_config = classes\models\DynamicConfig::getByProduct($id_product);
+            if ($dynamic_config->active) {
+                $displayed_price = classes\models\DynamicConfig::getDisplayedPrice($id_product);
+                if ($displayed_price || $dynamic_config->display_dynamic_price) {
+                    $module->calculator->assignProductPrices($row, $displayed_price, $result);
+                }
+            }
+        }
+        return $result;
     }
 }

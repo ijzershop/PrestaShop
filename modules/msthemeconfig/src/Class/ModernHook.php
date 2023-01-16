@@ -338,7 +338,7 @@ class ModernHook
                     $depth = [
                         '@context' => 'https://schema.org/',
                         '@type' => 'QuantitativeValue',
-                        'value' => $featVal->value[$this->idLang],
+                        'value' => $this->checkFeatVal($featVal->value, $this->idLang),
                         'unitCode' => 'MMT',
                         'unitText' => 'mm'
                     ];
@@ -347,7 +347,7 @@ class ModernHook
                     $width = [
                         '@context' => 'https://schema.org/',
                         '@type' => 'QuantitativeValue',
-                        'value' => $featVal->value[$this->idLang],
+                        'value' => $this->checkFeatVal($featVal->value, $this->idLang),
                         'unitCode' => 'MMT',
                         'unitText' => 'mm'
                     ];
@@ -355,7 +355,7 @@ class ModernHook
                 case Configuration::get('MSTHEMECONFIG_FEATURE_HEIGHT', $this->idLang, $this->idShop, $this->idShopGroup):
                     $height = ['@context' => 'https://schema.org/',
                         '@type' => 'QuantitativeValue',
-                        'value' => $featVal->value[$this->idLang],
+                        'value' => $this->checkFeatVal($featVal->value, $this->idLang),
                         'unitCode' => 'MMT',
                         'unitText' => 'mm'
                     ];
@@ -364,24 +364,24 @@ class ModernHook
                     $weight = [
                         '@context' => 'https://schema.org/',
                         '@type' => 'QuantitativeValue',
-                        'value' => $featVal->value[$this->idLang],
+                        'value' => $this->checkFeatVal($featVal->value, $this->idLang),
                         'unitCode' => 'KGM',
                         'unitText' => 'Kg'
                     ];
                     break;
                 case Configuration::get('MSTHEMECONFIG_FEATURE_MATERIAL', $this->idLang, $this->idShop, $this->idShopGroup):
-                    $material = $featVal->value[$this->idLang];
+                    $material = $this->checkFeatVal($featVal->value, $this->idLang);
                     break;
                 case Configuration::get('MSTHEMECONFIG_FEATURE_COLOR', $this->idLang, $this->idShop, $this->idShopGroup):
-                    $color = $featVal->value[$this->idLang];
+                    $color = $this->checkFeatVal($featVal->value, $this->idLang);
                     break;
                 default:
-                    if (str_contains($featVal->value[$this->idLang], 'mm')) {
+                    if (str_contains($this->checkFeatVal($featVal->value, $this->idLang), 'mm')) {
                         $additionalProperty[] = [
                             '@context' => 'https://schema.org/',
                             '@type' => 'PropertyValue',
                             'name' => $feat->name[$this->idLang],
-                            'value' => str_replace('mm', '', $featVal->value[$this->idLang]),
+                            'value' => str_replace('mm', '', $this->checkFeatVal($featVal->value, $this->idLang)),
                             'unitCode' => 'MMT',
                             'unitText' => 'mm'
                         ];
@@ -390,7 +390,7 @@ class ModernHook
                             '@context' => 'https://schema.org/',
                             '@type' => 'PropertyValue',
                             'name' => $feat->name[$this->idLang],
-                            'value' => $featVal->value[$this->idLang]
+                            'value' => $this->checkFeatVal($featVal->value, $this->idLang)
                         ];
                     }
                     break;
@@ -1115,26 +1115,24 @@ class ModernHook
 
                 if ((int)$this->controller->cms->id_cms == (int)$reviewPage) {
 
-
                     $this->controller->registerJavascript(
                         'module-ijzershopkiyoh-xmlconvert',
-                        'modules/' . $this->module->name . '/views/js/xmlconvert' . $min . '.js',
+                        '/modules/msthemeconfig/views/js/xmlconvert' . $min . '.js',
                         [
                             'priority' => 1,
                             'attribute' => 'none',
                         ]
                     );
 
-                    $this->controller->registerJavascript(
-                        'module-ijzershopkiyoh-ijzershopkiyoh',
-                        'modules/' . $this->module->name . '/views/js/ijzershopkiyoh' . $min . '.js',
-                        [
-                            'priority' => 10,
-                            'attribute' => 'none',
-                        ]
-                    );
 
-                    $this->controller->registerStylesheet(
+                    Context::getContext()->controller->registerJavascript('module-msthemeconfig',
+                        '/modules/msthemeconfig/views/js/ijzershopkiyoh.js',
+                        [
+                            'position' => 'top',
+                            'priority' => 100
+                        ]);
+
+                    $this->context->controller->registerStylesheet(
                         'module-ijzershopkiyoh-style',
                         'modules/' . $this->module->name . '/views/css/ijzershopkiyoh' . $min . '.css',
                         [
@@ -1258,11 +1256,11 @@ class ModernHook
     }
 
     /**
-     * @return false|string|void
+     * @return void
      * @throws PrestaShopDatabaseException
      * @throws SmartyException|\PrestaShopDatabaseException
      */
-    public function hookDisplayCMSDisputeInformation()
+    public function hookDisplayCMSDisputeInformation(): void
     {
         $reviewPage = Configuration::get('IJZERSHOPKIYOH_REVIEW_PAGE', $this->idLang, $this->idShop, $this->idShopGroup);
 
@@ -1277,8 +1275,7 @@ class ModernHook
             ];
 
             $this->smarty->assign('attr', $attr);
-
-            return $this->smarty->fetch(_PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->module->name . '/views/templates/front/reviews.tpl');
+            die($this->smarty->fetch(_PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->module->name . '/views/templates/front/reviews.tpl'));
         }
     }
 
@@ -2228,6 +2225,21 @@ class ModernHook
         );
         $hookParams['mailLayoutVariables']['color'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', $this->idLang, $this->idShopGroup, $this->idShop));
         return $hookParams;
+    }
+
+    /**
+     * @param array|null $value
+     * @param mixed $idLang
+     * @return mixed|string
+     */
+    private function checkFeatVal(?array $value, mixed $idLang)
+    {
+        if(!isset($value[$idLang])){
+            return '';
+        } else {
+           return $value[$idLang];
+        }
+
     }
 }
 

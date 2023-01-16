@@ -83,13 +83,13 @@ $(document).ready(() => {
 
 
 
-import '@fortawesome/fontawesome-pro/js/fontawesome';
-import '@fortawesome/fontawesome-pro/js/sharp-solid';
-import '@fortawesome/fontawesome-pro/js/duotone';
-import '@fortawesome/fontawesome-pro/js/brands';
-import './fa-kit';
+import '@fortawesome/fontawesome-pro/js/fontawesome.js';
+import '@fortawesome/fontawesome-pro/js/sharp-solid.js';
+import '@fortawesome/fontawesome-pro/js/duotone.js';
+import '@fortawesome/fontawesome-pro/js/brands.js';
+import '@fortawesome/fontawesome-pro/js/v4-shims.js';
 
-import '@fortawesome/fontawesome-pro/js/v4-shims';
+import './fa-kit.js';
 
 /**
  *
@@ -1035,7 +1035,7 @@ $(function () {
       const street = '';
       const id_country = $('[name="id_country"]').val().replace(' ', '');
       if (postcode.length > 3 || houseNumber.length > 0) {
-        validateAddressApi(postcode, street, houseNumber, extension, id_country);
+        validateAddressApi(postcode, street, houseNumber, extension, id_country, event);
       }
       return false;
     }, delay);
@@ -1076,7 +1076,7 @@ $(function () {
   });
 
 
-  function validateAddressApi(postcode, street, houseNumber, extension, country) {
+  function validateAddressApi(postcode, street, houseNumber, extension, country, event) {
     var postC = postcode.replace(' ', '');
     var houseN = houseNumber.replace(' ', '');
     if (extension) {
@@ -1245,7 +1245,7 @@ $(function () {
         $('[name="id_country"]').addClass('is-invalid').removeClass('was-validated is-valid');
       });
 
-    e.stopImmediatePropagation();
+    event.stopImmediatePropagation();
   }
 
 

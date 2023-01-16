@@ -60,6 +60,8 @@ $(function() {
   /**
    * Autocomplete function search boxes
    */
+
+
   $searchBox.psBlockSearchAutocomplete({
     position: {
       my: "left-15% top+9",
@@ -104,8 +106,21 @@ $(function() {
           e.classList.remove('rotate-center');
         });
       },
-    open: function(){
-      $('.ui-autocomplete').css('width', '465px'); // HERE
+    open: function(e){
+
+      console.log($(e.target).parents('.side_panel').length);
+      if($(e.target).parents('.side_panel').length){
+        //is in side panel
+        $('.ui-autocomplete').css({
+          'width': '465px',
+          'left': '2',
+        }); // HERE
+      } else {
+
+        //is in navbar
+        $('.ui-autocomplete').css('width', '465px'); // HERE
+
+      }
     }
   });
   // // Hide searchbox at outside click

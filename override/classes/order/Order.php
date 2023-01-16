@@ -139,7 +139,7 @@ class Order extends OrderCore
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function getDiscountRuleFromOrder($id_order){
+    static public function getDiscountRuleFromOrder($id_order){
         $order = new Order($id_order);
         foreach ($order->getCartRules() as $cartRule){
             return $cartRule['value_tax_excl'];

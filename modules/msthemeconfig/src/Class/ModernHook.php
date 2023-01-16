@@ -62,6 +62,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use AppKernel;
 
 /**
  *
@@ -763,9 +764,10 @@ class ModernHook
      * @param $params
      * @return mixed
      */
-    public function hookDisplayAdminProductsSeoStepBottom($params): mixed
+    public function hookDisplayAdminProductsSeoStepBottom($params)
     {
-        global $kernel;
+        $kernel = new AppKernel('prod', false);
+        $kernel->boot();
 
         $id_product = (int)$params['id_product'];
         $productAdapter = $kernel->getContainer()->get('prestashop.adapter.data_provider.product');
@@ -795,7 +797,7 @@ class ModernHook
                 'attr' => [
                     'class' => 'col-12',
                 ]
-            ],[])
+            ])
             ->add('seo_keywords', TextType::class, [
                 'required' => false,
                 'label' => 'SEO Keywords',
@@ -823,7 +825,7 @@ class ModernHook
         $jsonldForm = [];
         $jsonldForm['form'] = $form->createView();
 
-        die($this->module->get('twig')->render('@Modules\msthemeconfig\views\templates\admin\custom-product-fields.html.twig', $jsonldForm));
+        return $this->module->get('twig')->render('@Modules\msthemeconfig\views\templates\admin\custom-product-fields.html.twig', $jsonldForm);
     }
 
     /**
@@ -1319,6 +1321,7 @@ class ModernHook
             'label' => $this->module->getTranslator()->trans('Top Description', [],
                 'Modules.MsThemeConfig'),
             'required' => false,
+            'auto_initialize' => false,
             'type' => TextareaType::class,
         ]);
 

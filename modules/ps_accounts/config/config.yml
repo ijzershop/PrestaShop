@@ -15,3 +15,8 @@ parameters:
   ps_accounts.accounts_vue_cdn_url: 'https://unpkg.com/prestashop_accounts_vue_components@3/dist/psaccountsVue.umd.min.js'
   ps_accounts.accounts_cdn_url: 'https://unpkg.com/prestashop_accounts_vue_components@4/dist/psaccountsVue.umd.min.js'
   ps_accounts.svc_accounts_ui_url: 'https://accounts.psessentials.net'
+  ps_accounts.oauth2_url_authorize: 'https://oauth.prestashop.com/oauth2/auth'
+  ps_accounts.oauth2_url_access_token: 'https://oauth.prestashop.com/oauth2/token'
+  ps_accounts.oauth2_url_resource_owner_details: 'https://oauth.prestashop.com/userinfo'
+  ps_accounts.uri_help_center_en: "https://help-center.prestashop.com/en/articles/8087001455634-i-cannot-log-in-to-the-back-office-of-my-edition-shop-with-my-prestashop-account"
+  ps_accounts.uri_help_center_fr: "https://help-center.prestashop.com/fr/articles/8087001455634-je-ne-peux-pas-me-connecter-au-back-office-de-ma-boutique-edition-avec-mon-compte-prestashop"

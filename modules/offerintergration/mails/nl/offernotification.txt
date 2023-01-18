@@ -1,0 +1,28 @@
+{shop_url}
+
+Bekijk de door u aangevraagde offerte via de onderstaande link:
+
+[Uw offerte]({url})
+Werkt de knop niet kopieëer dan de onderstaande link en plak deze in uw browser..
+{url}
+
+- - offerte word geopend op {shop_url}
+- - vul het gewenste aantal in
+- - plaats in uw winkelwagen
+- - voeg eventueel extra producten toe
+- - bestel & betaal
+- - [uw offerte is geldig tot {date_exp}]({url})
+
+Let op! deze aanbieding verloopt op , daarna wordt de aanbieding verwijderd uit ons systeem.
+
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
+
+[telefoon: 058-2123138](tel://0900-2502500)
+
+[email: info@v15.nl](mailto:info@v15.nl)
+
+Hoeveel sterren krijgen wij van u?,
+Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
+>  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
+
+ijzershop.local | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

@@ -1,0 +1,7 @@
+{shop_url}
+
+Uw voorraaddekking is nu minder dan het gespecificeerde minimum van: {warning_coverage}
+
+Huidige voorraaddekking: {current_coverage}
+
+ijzershop.local | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

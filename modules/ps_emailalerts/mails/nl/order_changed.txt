@@ -7,8 +7,8 @@ Ga naar uw klantaccount voor meer info hieromtrent.
 Met een gast account kunt de bestelling volgen via ["Bestelling volgen"]({guest_tracking_url}) in onze online shop.
 
 Wat is de status van uw bestelling?
-Volg de status en details in uw eigen    [> klantaccount](http://ijzershop8.local/mijn-account)
-Geen account? Volg dan uw bestelling via    [> bestelling volgen](http://ijzershop8.local/bestelling-volgen-als-gast)
+Volg de status en details in uw eigen    [> klantaccount](https://ijzershop.eu/mijn-account)
+Geen account? Volg dan uw bestelling via    [> bestelling volgen](https://ijzershop.eu/bestelling-volgen-als-gast)
 
 [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 

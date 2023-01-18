@@ -10,4 +10,4 @@ Volg uw bestelling en download uw factuur op onze webshop, ga naar [> Bestel ges
 
 "Als u als gast heeft besteld, kunt u uw bestelling volgen via [> Gast bestelling status]({guest_tracking_url}) pagina op onze webshop.
 
-IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 75220555 | BTW nr.: NL860193421B01
+ijzershop.local | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

@@ -13,6 +13,7 @@ use MsThemeConfig\Grid\Action\Type\ShippingStateAction;
 use MsThemeConfig\Grid\Column\LabelButtonColumn;
 use PDFCore;
 use PrestaShop\PrestaShop\Adapter\Entity\Context;
+use PrestaShop\PrestaShop\Adapter\Entity\Currency;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Adapter\Entity\Carrier;
@@ -103,8 +104,15 @@ class ModernHook
         $this->idShopGroup = $this->context->shop->getGroup()->id;
         $this->idLang = $this->context->language->id;
         $this->shopName = $this->context->shop->name;
-        $this->currencyId = $this->context->currency->id;
-        $this->currencyCode = $this->context->currency->iso_code;
+
+        if(is_null($this->context->currency)){
+            $currency = new Currency($this->idLang);
+            $this->currencyId = $currency->id;
+            $this->currencyCode = $currency->iso_code;
+        } else {
+            $this->currencyId = $this->context->currency->id;
+            $this->currencyCode = $this->context->currency->iso_code;
+        }
         $this->smarty = $this->context->smarty;
         $this->link = $this->context->link;
     }

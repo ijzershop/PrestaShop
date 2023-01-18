@@ -6,7 +6,7 @@ Iets vergeten te bestellen?Plaats een nieuwe bestelling en kies voor "Toevoegen"
 
 Heeft u een vraag?
 Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
-[> veel gestelde vragen](https://ijzershop.nl/content/51-FAQ)
+[> veel gestelde vragen](http://ijzershop8.local/content/51-FAQ)
 
 [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 
@@ -14,4 +14,4 @@ Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Ander
 
 [email: info@v15.nl](mailto:info@v15.nl)
 
-IJzerShop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 75220555 | BTW nr.: NL860193421B01
+ijzershop.local | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

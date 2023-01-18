@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ *
+ */
 class Ps_ShoppingcartAjaxModuleFrontControllerOverride extends Ps_ShoppingcartAjaxModuleFrontController
 {
     /**
@@ -32,14 +35,13 @@ class Ps_ShoppingcartAjaxModuleFrontControllerOverride extends Ps_ShoppingcartAj
     public $ssl = true;
 
     /**
+     * @return void
+     * @throws Exception
      * @see FrontController::initContent()
      *
-     * @return void
      */
     public function initContent()
     {
-        parent::initContent();
-
         $modal = null;
 
         if ($this->module instanceof Ps_Shoppingcart && Tools::getValue('action') === 'add-to-cart') {
@@ -54,12 +56,14 @@ class Ps_ShoppingcartAjaxModuleFrontControllerOverride extends Ps_ShoppingcartAj
         if (Tools::getValue('action') === 'set_carrier') {
             $carrier = Tools::getValue('checked');
             $id_cart = Context::getContext()->cookie->id_cart;
+
             $cartObject = new Cart($id_cart);
             $delivery_option_list = $cartObject->getDeliveryOptionList($this->context->country);
 
             $shipping_config = unserialize(Configuration::get('koopmanOrderExport'));
             $shippingCarrier = (int)$shipping_config['select_carrier'];
             $pickupCarrier = (int)$shipping_config['select_pickup_carrier'];
+
             try {
                 switch ($carrier) {
                     case 'shipping':
@@ -123,4 +127,6 @@ class Ps_ShoppingcartAjaxModuleFrontControllerOverride extends Ps_ShoppingcartAj
             'modal' => $modal,
         ]));
     }
+
+
 }

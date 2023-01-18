@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="shoppingcart-top-checkout col-sm-4 float-right">
-                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}{$urls.pages.cart}?action=show{else}{if isset($urls)}{$urls.pages.order}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Bestellen' d='Shop.Theme.Actions'}">{l s='Bestellen' d='Shop.Theme.Actions'}</a>
+                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}{$cart_url}?action=show{else}{if isset($urls)}{$urls.pages.order}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Bestellen' d='Shop.Theme.Actions'}">{l s='Bestellen' d='Shop.Theme.Actions'}</a>
                 </div>
             </div>
         </div>
@@ -126,7 +126,7 @@
                     {/if}
                 </div>
                 <div class="mt-3">
-                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}{$urls.pages.cart}?action=show{else}{if isset($urls)}{$urls.pages.order}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Verder naar bestellen' d='Shop.Theme.Actions'}">{l s='Verder naar bestellen' d='Shop.Theme.Actions'}</a>
+                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}{$cart_url}?action=show{else}{if isset($urls)}{$order_url}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Verder naar bestellen' d='Shop.Theme.Actions'}">{l s='Verder naar bestellen' d='Shop.Theme.Actions'}</a>
                 </div>
                 {if Context::getContext()->cart->getOrderTotal() > 0}
                 <div class="text-center mt-3 p-1">Toon details (verzendkosten, korting & btw.) <label class="switch">

@@ -125,6 +125,8 @@ export default class NavBar {
 
           const itemOffsetTop = $submenu.position().top;
           $submenu.find('ul.submenu').css('top', itemOffsetTop);
+
+          e.stopImmediatePropagation();
         });
 
         $navBar.on('click', '.menu-collapse', function onNavBarClick() {

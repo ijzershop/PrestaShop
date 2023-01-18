@@ -1,11 +1,11 @@
 <div class="row pl-1 cart_product_item_row">
-  {if (isset($link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')) && $link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')) || isset($urls.no_picture_image)}
+  {if (isset(Context::getContext()->link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')) && Context::getContext()->link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')) || isset($urls.no_picture_image)}
   <picture class="p-0 col-3 cart-product-thumbnail text-center">
-    {if isset($stwebp) && isset($stwebp.small_default) && $stwebp.small_default && isset($link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')) && $link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')}
+    {if isset($stwebp) && isset($stwebp.small_default) && $stwebp.small_default && isset(Context::getContext()->link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')) && Context::getContext()->link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')}
     <!--[if IE 9]><video style="display: none;"><![endif]-->
-    <source srcset="{$link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')|regex_replace:'/\.jpg$/':'.webp'}" title="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}" type="image/webp">
+    <source srcset="{Context::getContext()->link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')|regex_replace:'/\.jpg$/':'.webp'}" title="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}" type="image/webp">
     <!--[if IE 9]></video><![endif]-->
-    {/if}<img class="small_cart_product_image mx-auto" src="{if isset($link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')) && $link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')}{$link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')}{elseif isset($urls.no_picture_image)}{$urls.no_picture_image.bySize.small_default.url}{/if}" alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}" title="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}" itemprop="image">
+    {/if}<img class="small_cart_product_image mx-auto" src="{if isset(Context::getContext()->link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')) && Context::getContext()->link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')}{Context::getContext()->link->getImageLink($product.link_rewrite, $product.id_image, 'cart_default')}{elseif isset($urls.no_picture_image)}{$urls.no_picture_image.bySize.small_default.url}{/if}" alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}" title="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}" itemprop="image">
   </picture>{/if}
   <div class="col-9 pl-1">
     <div class="row">
@@ -26,9 +26,9 @@
         <div class="dropdown" style="height:25px;margin-bottom:5px;">
           <button type="button" id="cart-product-row-toggle-{$product.id_product}" title="Bekijk, wijzig of verwijder product" class="d-block dropdown-toggle show shoppingcart-ellipsis text-dark" data-toggle="dropdown" aria-expanded="false"><i class="text-right align-top fa-2x fa-sharp fa-ellipsis-v float-right"></i></button>
           <div class="dropdown-menu shoppingcart-dropdown-menu" aria-labelledby="cart-product-row-toggle-{$product.id_product}">
-            <a href="{$link->getProductLink($product)}" rel="noopener" target="_blank" class="dropdown-item"><i class="fa-sharp fa-question-circle"></i> Bekijk product</a>
+            <a href="{Context::getContext()->link->getProductLink($product)}" rel="noopener" target="_blank" class="dropdown-item"><i class="fa-sharp fa-question-circle"></i> Bekijk product</a>
             <a href="#" class="dropdown-item changeCartProductQty"><i class="fa-sharp fa-edit"></i> Wijzig aantal: {$product.quantity}</a>
-            <a href="#" class="ajax_remove_button dropdown-item" rel="nofollow" data-href="{$link->getRemoveFromCartURL($product.id_product, $product.id_product_attribute, $product.id_customization)}" data-link-action="remove-from-cart" title="{l s=" Remove" d="Shop.Theme.Actions" }"><i class="fa-sharp fa-trash"></i>
+            <a href="#" class="ajax_remove_button dropdown-item" rel="nofollow" data-href="{Context::getContext()->link->getRemoveFromCartURL($product.id_product, $product.id_product_attribute, $product.id_customization)}" data-link-action="remove-from-cart" title="{l s=" Remove" d="Shop.Theme.Actions" }"><i class="fa-sharp fa-trash"></i>
               Verwijder
             </a>
           </div>

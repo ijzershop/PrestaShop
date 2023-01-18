@@ -69,7 +69,6 @@ class AccountsClient extends GenericClient
                 ],
             ]);
         }
-
         $this->setClient($client);
     }
 

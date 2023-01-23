@@ -1982,7 +1982,21 @@ $('#retour_order_search').on('click', function (e) {
       // console.log(JSON.parse(e));
     });
 
+});
 
 
+$('.nav-contact').on('mouseenter',function() {
+  let $this = $(this);
+  if(!$this.hasClass('hover-show')){
+    $('.nav-contact').addClass('hover-show');
+    $('.nav-contact .dropdown-menu').addClass('hover-show');
+  }
+});
 
+$('.nav-contact').on('mouseleave',function() {
+  let $this = $(this);
+  if($this.hasClass('hover-show')){
+    $('.nav-contact').removeClass('hover-show');
+    $('.nav-contact .dropdown-menu').removeClass('hover-show');
+  }
 });

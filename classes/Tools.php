@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
-
+use PrestaShop\PrestaShop\Adapter\Entity\AddressFormat;
 class ToolsCore
 {
     public const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
@@ -3251,7 +3251,7 @@ exit;
             return $str;
         }
 
-        return str_replace(["\r\n", "\r", "\n", AddressFormat::FORMAT_NEW_LINE, PHP_EOL], '<br />', $str);
+        return str_replace(["\r\n", "\r", "\n", AddressFormatCore::FORMAT_NEW_LINE, PHP_EOL], '<br />', $str);
     }
 
     /**

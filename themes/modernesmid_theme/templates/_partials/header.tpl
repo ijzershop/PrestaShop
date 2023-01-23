@@ -132,15 +132,23 @@
           </button>
         </li>
         {/if}
-        {if Module::isEnabled('ps_searchbar')}
-        <li class="nav-item p-0 text-center col"><a aria-label="Zoeken" class="nav-link text-white navbar-search-icon" href="#"><i class="fa-sharp fa-2x fa-search"></i></a></li>
-        {/if}
-        {if Module::isEnabled('ps_shoppingcart')}
-        <li class="nav-item p-0 col-5 col-sm-3"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile" href="#"><i class="fa-sharp fa-shopping-cart"></i><span class="shoppingcart-header-total-price float-right text-white">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
-        {/if}
-{*        <li class="nav-item p-0 text-center col"><a aria-label="Neem contact met ons op via het contactformulier" class="nav-link text-white" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fa-sharp fa-2x fa-envelope"></i></a></li>*}
-{*        <li class="nav-item p-0 text-center col"><a aria-label="Bel ons" class="nav-link text-white" href="{Configuration::get('MSTHEMECONFIG_HEADER_PHONENUMBER_LINK', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fa-sharp fa-2x fa-phone"></i></a></li>*}
-{*        <li class="nav-item p-0 text-center col"><a aria-label="Bericht ons via whatsapp" class="nav-link text-white" href="{Configuration::get('MSTHEMECONFIG_HEADER_WHATSAPP_LINK', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fab fa-2x fa-whatsapp"></i></a></li>*}
+        <li class="nav-item p-0 text-center col">
+          <div class="dropdown nav-contact mx-auto">
+            <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="#" role="button" id="nav_contact_dropdown_mobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa-sharp fa-2x fa-envelope"></i></a>
+          <div class="dropdown-menu" aria-labelledby="nav_contact_dropdown_mobile">
+            <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fa-sharp fa-envelope-open-dollar"></i> Offerte aanvragen</a>
+            <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"> <i class="fa-sharp fa-info"></i> Informatie aanvragen</a>
+            <a class="dropdown-item" href="/retour-aanvragen"> <i class="fa-sharp fa-warehouse"></i> Retour aanvragen</a>
+            <a class="dropdown-item" href="{$urls.pages.guest_tracking}"><i class="fa-sharp fa-truck-fast"></i> Bestel status opvragen</a>
+          </div>
+          </div>
+        </li>
+          {if Module::isEnabled('ps_searchbar')}
+            <li class="nav-item p-0 text-center col"><a aria-label="Zoeken" class="nav-link text-white navbar-search-icon" href="#"><i class="fa-sharp fa-2x fa-search"></i></a></li>
+          {/if}
+          {if Module::isEnabled('ps_shoppingcart')}
+            <li class="nav-item p-0 col-5 col-sm-3"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile" href="#"><i class="fa-sharp fa-shopping-cart"></i><span class="shoppingcart-header-total-price float-right text-white">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
+          {/if}
       </ul>
       <div class="row collapse navbar-collapse">
         {if Module::isEnabled('ps_categorytree') || (int)Configuration::get('MSTHEMECONFIG_HEADER_PHONENUMBER_LINK', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '') == 1}
@@ -152,7 +160,18 @@
         {/if}
         <ul class="navbar-nav mr-2">
           <li id="request-offer-button" class="ml-2">
-            <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}" class="btn btn-success"><i class="fa-sharp fa-envelope"></i> Offerte aanvragen</a>
+            <div class="dropdown nav-contact mx-auto">
+              <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="#" role="button" id="nav_contact_dropdown_mobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa-sharp fa-2x fa-envelope"></i></a>
+              <div class="dropdown-menu" aria-labelledby="nav_contact_dropdown_mobile">
+                <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fa-sharp fa-envelope-open-dollar"></i> Offerte aanvragen</a>
+                <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"> <i class="fa-sharp fa-circle-info"></i> Informatie aanvragen</a>
+                <a class="dropdown-item" href="/retour-aanvragen"> <i class="fa-sharp fa-warehouse"></i> Retour aanvragen</a>
+                <a class="dropdown-item" href="{$urls.pages.guest_tracking}"><i class="fa-sharp fa-truck-fast"></i> Bestel status opvragen</a>
+              </div>
+            </div>
+
+
+{*            <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}" class="btn btn-success"><i class="fa-sharp fa-envelope"></i> Offerte aanvragen</a>*}
           </li>
         </ul>
         {if Module::isEnabled('ps_searchbar')}
@@ -205,3 +224,5 @@ stickyObserver.observe(element);
 
 
   {/block}
+
+

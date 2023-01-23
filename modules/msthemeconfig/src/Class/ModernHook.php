@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Dispatcher;
 use PrestaShop\PrestaShop\Adapter\Entity\Feature;
 use PrestaShop\PrestaShop\Adapter\Entity\FeatureValue;
 use PrestaShop\PrestaShop\Adapter\Entity\FormField;
+use PrestaShop\PrestaShop\Adapter\Entity\Link;
 use PrestaShop\PrestaShop\Adapter\Entity\Mail;
 use PrestaShop\PrestaShop\Adapter\Entity\Media;
 use PrestaShop\PrestaShop\Adapter\Entity\Module;
@@ -1166,7 +1167,7 @@ class ModernHook
         $query = 'SELECT * FROM `' . _DB_PREFIX_ . 'kiyoh_custom`';
         $results = Db::getInstance()->executeS($query);
         $interval = Configuration::get('IJZERSHOPKIYOH_UPDATE_INTERVAL', $this->idLang, $this->idShop, $this->idShopGroup);
-        $reviewPage = Configuration::get('IJZERSHOPKIYOH_REVIEW_PAGE', $this->idLang, $this->idShop, $this->idShopGroup);
+        $reviewPage = Context::getContext()->link->getCMSLink(Configuration::get('IJZERSHOPKIYOH_REVIEW_PAGE', $this->idLang, $this->idShop, $this->idShopGroup), null, null, $this->idLang, $this->idShop);
 
         if (empty($results)) {
             //table is empty set first record
@@ -1230,6 +1231,10 @@ class ModernHook
                 ];
             }
         }
+
+
+        $attr['shippingPage'] = Context::getContext()->link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FIRST_LINK', $this->idLang, $this->idShop, $this->idShopGroup), null, null, $this->idLang, $this->idShop);
+
 
         $this->smarty->assign('attr', $attr);
 

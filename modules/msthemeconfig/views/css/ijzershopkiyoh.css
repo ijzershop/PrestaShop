@@ -8,12 +8,15 @@
   padding: 7px 0px 7px 0px;
   background-color: #fff;
 }
-
-#kiyoh-block .list-group-item span.text {
+#kiyoh-block .list-group-item a{
+  text-decoration: none;
+  color:inherit;
+}
+#kiyoh-block .list-group-item a span.text {
   font-size: 1rem;
   vertical-align: text-bottom;
 }
-#kiyoh-block .list-group-item span.icon {
+#kiyoh-block .list-group-item a span.icon {
   width:1rem;
 }
 #kiyoh-block .list-group-item {
@@ -28,7 +31,7 @@
   }
 }
 @media (max-width: 625px) {
-  #kiyoh-block .list-group-item span.text {
+  #kiyoh-block .list-group-item a span.text {
     font-size: .9rem;
   }
 

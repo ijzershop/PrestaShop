@@ -287,7 +287,7 @@ div.ajax_cart_bag {
 #search_widget {
   z-index: 4 !important;
   max-width:325px;
-  margin-left: calc(50% - 24.6rem) !important;
+  margin-left: calc(50% - 17.6rem) !important;
 }
 
 #search_widget.elevated-search {
@@ -1898,6 +1898,7 @@ main {
     margin-right: -40px;
   }
 }
+
 @media (max-width: 992px) {
   #top-header-shoppingcart-mobile {
     padding: .2rem 1rem .2rem .3rem;
@@ -1907,6 +1908,7 @@ main {
     }
   }
 }
+
 @media (min-width: 576px) and (max-width: 767px) {
   .header-logo-a {
     img.logo {
@@ -1914,3 +1916,32 @@ main {
     }
   }
 }
+
+
+.nav-contact{
+  max-width: 60px;
+}
+
+.navbar-contact-icon{
+  max-width: 60px;
+  height: 39px;
+}
+.nav-contact .dropdown-menu{
+  margin:0;
+}
+.nav-contact.hover-show, .nav-contact.hover-show .dropdown-menu.hover-show{
+  display:block!important;
+}
+
+.nav-contact .dropdown-menu, .nav-contact .dropdown-menu .dropdown-item{
+  color:#ffffff;
+  background-color:#21a055;
+}
+.nav-contact .dropdown-menu .dropdown-item svg{
+  width: 22px;
+}
+.nav-contact .dropdown-menu .dropdown-item:hover{
+  color:#212529;
+  background-color:#ffffff;
+}
+

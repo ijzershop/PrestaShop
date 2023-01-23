@@ -54,5 +54,4 @@
     {/block}
 
   </section>
-
 {/block}

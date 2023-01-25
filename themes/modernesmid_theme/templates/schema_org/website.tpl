@@ -1,17 +1,20 @@
+
+
 <script type="text/javascript">
-	var el = document.createElement('script');
+
+	let el = document.createElement('script');
    	el.type = 'application/ld+json';
-	var obj = {
+	let obj = {
 				"@context": "http://schema.org",
 				"@type": "Website",
-				"name": prestashop.shop.name,
-				"url": prestashop.urls.shop_domain_url,
-				"image": prestashop.urls.shop_domain_url+prestashop.shop.logo,
+				"name": '{$shop.name}',
+				"url": '{$urls.shop_domain_url}',
+				"image": '{$shop.logo}',
 				"potentialAction": {
 					    "@type": "SearchAction",
 					    "target": {
 					    	"@type": "EntryPoint",
-						    "urlTemplate": prestashop.urls.shop_domain_url+"/zoeken?s={literal}{q}{/literal}",
+						    "urlTemplate": "{$urls.shop_domain_url}/zoeken?s={literal}{q}{/literal}",
 						    "encodingType": "application/ld+json",
 						    "contentType": "application/ld+json"
 						},

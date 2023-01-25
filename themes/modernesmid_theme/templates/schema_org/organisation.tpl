@@ -1,4 +1,4 @@
-{* <script type="text/javascript">
+ <script type="text/javascript">
 	var el = document.createElement('script');
    	el.type = 'application/ld+json';
 	var obj = {
@@ -33,4 +33,4 @@
 
    el.text = JSON.stringify(obj);
    document.querySelector('head').appendChild(el);
-</script> *}
+</script>

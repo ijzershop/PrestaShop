@@ -1,14 +1,14 @@
 <script type="text/javascript">
-	var el = document.createElement('script');
-   	el.type = 'application/ld+json';
-	var obj = {
+	el = document.createElement('script');
+  el.type = 'application/ld+json';
+	obj = {
 					"@context": "http://schema.org",
 					"@type": "Brand",
-					"name": prestashop.shop.name,
-					"url": prestashop.urls.shop_domain_url,
-					"logo": prestashop.urls.shop_domain_url+prestashop.shop.logo,
+          "name": '{$shop.name}',
+          "url": '{$urls.shop_domain_url}',
+					"logo": '{$shop.logo}',
 					"sameAs": [
-				        "https://https://nl-nl.facebook.com/ijzershop"
+				        "https://nl-nl.facebook.com/ijzershop"
 				      ]
 				};
    el.text = JSON.stringify(obj);

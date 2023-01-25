@@ -488,67 +488,67 @@ class ModernHook
 
         $availableStock = 'https://schema.org/InStock';
 
-        $productCommentRepository = $this->controller->getContainer()->get('product_comment_repository');
-        $productComments = $productCommentRepository->paginate(
-            $product->id,
-            1,
-            500,
-            true
-        );
-        $averageGrade = $productCommentRepository->getAverageGrade($product->id, true);
-        $totalComments = $productCommentRepository->getCommentsNumber($product->id, true);
-
-        $reviews = [];
-        $reviews[] = [
-            '@context' => 'https://schema.org/',
-            '@type' => 'Review',
-            'reviewRating' => ['@type' => 'Rating',
-                'ratingValue' => '5',
-                'bestRating' => '5'
-            ],
-            'author' => [
-                '@context' => 'https://schema.org/',
-                '@type' => 'Person',
-                'name' => 'De Moderne Smid'
-            ],
-            'reviewBody' => 'Prima product, zorgvuldig voor u uitgezocht'
-        ];
-
-        foreach ($productComments as $productComment) {
-            $reviews[] = [
-                '@context' => 'https://schema.org/',
-                '@type' => 'Review',
-                'reviewRating' => [
-                    '@context' => 'https://schema.org/',
-                    '@type' => 'Rating',
-                    'ratingValue' => $productComment['grade'],
-                    'bestRating' => '5'
-                ],
-                'datePublished' => $productComment['date_add'],
-                'author' => [
-                    '@context' => 'https://schema.org/',
-                    '@type' => 'Person',
-                    'name' => $productComment['firstname'] . ' ' . $productComment['lastname']
-                ],
-                'reviewBody' => $productComment['content'],
-                'publisher' => [
-                    '@context' => 'https://schema.org/',
-                    '@type' => 'Person',
-                    'name' => 'De Moderne Smid'
-                ]
-            ];
-        }
-        if ($averageGrade == 0) {
-            $grade = 5;
-        } else {
-            $grade = $averageGrade;
-        }
-        $rating = [
-            '@context' => 'https://schema.org/',
-            '@type' => 'AggregateRating',
-            'ratingValue' => $grade,
-            'reviewCount' => $totalComments + 1
-        ];
+//        $productCommentRepository = $this->controller->getContainer()->get('product_comment_repository');
+//        $productComments = $productCommentRepository->paginate(
+//            $product->id,
+//            1,
+//            500,
+//            true
+//        );
+//        $averageGrade = $productCommentRepository->getAverageGrade($product->id, true);
+//        $totalComments = $productCommentRepository->getCommentsNumber($product->id, true);
+//
+//        $reviews = [];
+//        $reviews[] = [
+//            '@context' => 'https://schema.org/',
+//            '@type' => 'Review',
+//            'reviewRating' => ['@type' => 'Rating',
+//                'ratingValue' => '5',
+//                'bestRating' => '5'
+//            ],
+//            'author' => [
+//                '@context' => 'https://schema.org/',
+//                '@type' => 'Person',
+//                'name' => 'De Moderne Smid'
+//            ],
+//            'reviewBody' => 'Prima product, zorgvuldig voor u uitgezocht'
+//        ];
+//
+//        foreach ($productComments as $productComment) {
+//            $reviews[] = [
+//                '@context' => 'https://schema.org/',
+//                '@type' => 'Review',
+//                'reviewRating' => [
+//                    '@context' => 'https://schema.org/',
+//                    '@type' => 'Rating',
+//                    'ratingValue' => $productComment['grade'],
+//                    'bestRating' => '5'
+//                ],
+//                'datePublished' => $productComment['date_add'],
+//                'author' => [
+//                    '@context' => 'https://schema.org/',
+//                    '@type' => 'Person',
+//                    'name' => $productComment['firstname'] . ' ' . $productComment['lastname']
+//                ],
+//                'reviewBody' => $productComment['content'],
+//                'publisher' => [
+//                    '@context' => 'https://schema.org/',
+//                    '@type' => 'Person',
+//                    'name' => 'De Moderne Smid'
+//                ]
+//            ];
+//        }
+//        if ($averageGrade == 0) {
+//            $grade = 5;
+//        } else {
+//            $grade = $averageGrade;
+//        }
+//        $rating = [
+//            '@context' => 'https://schema.org/',
+//            '@type' => 'AggregateRating',
+//            'ratingValue' => $grade,
+//            'reviewCount' => $totalComments + 1
+//        ];
 
         $store = new Store($this->idShop, $this->idLang);
 
@@ -689,9 +689,8 @@ class ModernHook
                         ]
                     ]
                 ]
-            ],
-            'review' => $reviews,
-            'aggregateRating' => $rating];
+            ]
+        ];
 
         return $jsonLD;
     }
@@ -1224,10 +1223,49 @@ class ModernHook
             }
         }
 
+        $reviews = [];
+        $productComments = json_decode($results[0]['kiyoh_latest_feed'], true);
+
+        foreach ($productComments['reviews']['reviews'] as $key => $productComment) {
+
+            $reviews[] = [
+                '@context' => 'https://schema.org/',
+                '@type' => 'Review',
+                'reviewRating' => [
+                    '@context' => 'https://schema.org/',
+                    '@type' => 'Rating',
+                    'ratingValue' => $productComment['rating'],
+                    'bestRating' => '10'
+                ],
+                'datePublished' => $productComment['dateSince'],
+                'author' => [
+                    '@context' => 'https://schema.org/',
+                    '@type' => 'Person',
+                    'name' => $productComment['reviewAuthor'],
+                    ],
+                'reviewBody' => $productComment['reviewContent']['reviewContent'][1]['rating'] . ', ' . $productComment['reviewContent']['reviewContent'][2]['rating'],
+                'publisher' => [
+                    '@context' => 'https://schema.org/',
+                    '@type' => 'Person',
+                    'name' => 'De Moderne Smid'
+                ]
+            ];
+        }
+        if ($attr['averageRating'] == 0) {
+            $grade = 10;
+        } else {
+            $grade = $attr['averageRating'];
+        }
+        $rating = [
+            '@context' => 'https://schema.org/',
+            '@type' => 'AggregateRating',
+            'ratingValue' => $grade,
+            'reviewCount' => $attr['totalReviews'] + 1
+        ];
 
         $attr['shippingPage'] = Context::getContext()->link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FIRST_LINK', $this->idLang, $this->idShop, $this->idShopGroup), null, null, $this->idLang, $this->idShop);
-
-
+        $attr['rating'] = json_encode($rating, JSON_UNESCAPED_SLASHES);
+        $attr['reviews'] = json_encode($reviews, JSON_UNESCAPED_SLASHES);
         $this->smarty->assign('attr', $attr);
 
         return $this->smarty->fetch(_PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->module->name . '/views/templates/front/kiyoh-score-header-block.tpl');

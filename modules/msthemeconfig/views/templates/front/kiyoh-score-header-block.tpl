@@ -3,6 +3,29 @@ let kiyohDataLink =  "{$attr['reviewPage']}";
 let kiyohDataAverage =  "{$attr['averageRating']}";
 let kiyohDataAveragePercentage =  "{$attr['averageRatingPercentage']}";
 let kiyohDataTotal =  "{$attr['totalReviews']}";
+
+
+{if isset($product.name)}
+  {assign var="name" value=$product.name}
+  {assign var="img" value=$product.image.medium.url}
+{elseif isset($category.name)}
+  {assign var="name" value=$category.name}
+  {assign var="img" value=$category.image.medium.url}
+{else}
+  {assign var="name" value=$page.meta.title}
+  {assign var="img" value=$shop.logo}
+{/if}
+</script>
+
+<script type="application/ld+json">
+  {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "image": "{$img nofilter}",
+      "name": "{$name}",
+      "aggregateRating": {$attr['rating'] nofilter},
+      "review": {$attr['reviews'] nofilter}
+}
 </script>
 
 {assign var="transmissionCarrier" value=Carrier::getCarrierByReference(2,Context::getContext()->cookie->id_lang)}
@@ -15,3 +38,7 @@ let kiyohDataTotal =  "{$attr['totalReviews']}";
     <li class="list-group-item border-0 p-0"><a href="{$attr['shippingPage']|escape:'html'}" title="{l s='Verzonden met 1 werkdag, lees hier over onze verzending' d='Modules.Ijzershopkiyoh.kiyoh-score-header-block'}"><span class="icon"><i class="pr-2 fass fa-truck-fast d-none d-sm-inline-flex"></i></span><span class="text">Verzonden met <b>1 werkdag</b> voor <b> {number_format(Tools::convertPrice($defaultShippingPrice),2,',','.')},-</b></span></a></li>
   </ul>
 </div>
+
+
+
+

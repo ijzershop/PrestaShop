@@ -1,7 +1,7 @@
 {# modules/msthemeconfig/views/PrestaShop/Admin/Common/Grid/Columns/Content/koopman_retour_button.html.twig #}
 <div class="text-center">
   <div class="btn-group-vertical w-100">
-    <div class="badge badge-important w-100 koopman-current-status-badge status_{{ record.current_state }}" style="background-color: {{ record.color }};">
+    <div class="badge badge-important koopman-current-status-badge status_{{ record.current_state }}" style="background-color: {{ record.color }};">
       {% if record.carrier is same as column.options.stateCarrier.shipping %}
          <i class="koopman-current-status-badge-label">{{ column.options.stateCarrier.shipping_label }}</i> | <b> {{ record.osname }} </b>
       {% elseif record.carrier is same as column.options.stateCarrier.pickup %}

@@ -1,35 +1,8 @@
-/**
-* 2007-2020 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2020 PrestaShop SA
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*
-* Don't forget to prefix your containers with your own identifier
-* to avoid any conflicts with others containers.
-*/
-var kiyohXml;
-var xmlObject;
-var kiyohReviews = '';
+let kiyohXml;
+let xmlObject;
+let kiyohReviews = '';
 
-var monthArray = new Array("Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","Oktober","November","December");
+let monthArray = ["Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","Oktober","November","December"];
 
 function firstLetterUppercase(string)
 {
@@ -37,13 +10,14 @@ function firstLetterUppercase(string)
 }
 
 function fetchIjzershopXmlPage(pageNr, reviewsPerPage=10) {
-if(latestSavedFeed !== '' && pageNr === 0){
-	var latestFeed = JSON.parse(latestSavedFeed).reviews.reviews;
-	            var listElement = '';
-                for (var i = 0; i < latestFeed.length; i++) {
-                    var reviewContent = latestFeed[i].reviewContent.reviewContent;
-                    var reviewReaction = latestFeed[i].reviewComments;
-                    var date = new Date(latestFeed[i].dateSince);
+
+  if(latestSavedFeed !== '' && pageNr === 0){
+	let latestFeed = JSON.parse(latestSavedFeed).reviews.reviews;
+	            let listElement = '';
+                for (let i = 0; i < latestFeed.length; i++) {
+                    let reviewContent = latestFeed[i].reviewContent.reviewContent;
+                    let reviewReaction = latestFeed[i].reviewComments;
+                    let date = new Date(latestFeed[i].dateSince);
                     listElement += `<li class="col-md-12">
 						<table>
 							<tr>
@@ -64,7 +38,7 @@ if(latestSavedFeed !== '' && pageNr === 0){
 					                    listElement += '<td class="review-author"><strong>' + date.getDate() + ' ' + monthArray[date.getMonth()] + ' ' + date.getFullYear() + '</strong>  <span>' + firstLetterUppercase(latestFeed[i].reviewAuthor) + ', ' + firstLetterUppercase(latestFeed[i].city) + '</span></td>';
 					                    listElement += `</tr><tr>`;
 					                    if(reviewReaction !== undefined){
-					                    	listElement += `<td><hr></hr></td></tr><tr>`;
+					                    	listElement += `<td><hr></td></tr><tr>`;
 					                    	listElement += '<td class="review-company-reaction"><strong>'+ourReactionText+'</strong><br/><span>'+reviewReaction.replace(new RegExp('\r?\n','g'), '<br />')+'</span></td>';
 					                    }
 					                    listElement += `</tr>
@@ -75,30 +49,30 @@ if(latestSavedFeed !== '' && pageNr === 0){
 					</li>`;
                 }
                 document.getElementById('kiyoh-comment-list').innerHTML = document.getElementById('kiyoh-comment-list').innerHTML + listElement;
-return;
+
 } else {
 
 
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open("GET", "https://www.kiyoh.com/v1/review/feed.xml?hash=e1fk9hurmsnjxrv&pageNumber="+pageNr+"&limit="+reviewsPerPage);
     xhr.setRequestHeader('Content-Type', 'application/xml');
 
     xhr.onload = function(e) {
-        var data = e.target;
+        let data = e.target;
         if (data.readyState === 4) {
             if (data.status === 200) {
                 xmlObject = xmlToJson.parse(data.responseXML).ReviewFeedDto;
-                if(parseInt(totalReviewsInDatabase) === parseInt(xmlObject.numberReviews) && pageNr == 0){
+                if(parseInt(totalReviewsInDatabase) === parseInt(xmlObject.numberReviews) && pageNr === 0){
                 	checkReviewsTotalAndUpdateLatest(xmlObject);
             	}
 
                 kiyohReviews = xmlObject.reviews.reviews;
 
-                var listElement = '';
-                for (var i = 0; i < kiyohReviews.length; i++) {
-                    var reviewContent = kiyohReviews[i].reviewContent.reviewContent;
-                    var reviewReaction = kiyohReviews[i].reviewComments;
-                    var date = new Date(kiyohReviews[i].dateSince);
+                let listElement = '';
+                for (let i = 0; i < kiyohReviews.length; i++) {
+                    let reviewContent = kiyohReviews[i].reviewContent.reviewContent;
+                    let reviewReaction = kiyohReviews[i].reviewComments;
+                    let date = new Date(kiyohReviews[i].dateSince);
                     listElement += `<li class="col-md-12">
 						<table>
 							<tr>
@@ -119,7 +93,7 @@ return;
 					                    listElement += '<td class="review-author"><strong>' + date.getDate() + ' ' + monthArray[date.getMonth()] + ' ' + date.getFullYear() + '</strong>  <span>' + firstLetterUppercase(kiyohReviews[i].reviewAuthor) + ', ' + firstLetterUppercase(kiyohReviews[i].city) + '</span></td>';
 					                    listElement += `</tr><tr>`;
 					                    if(reviewReaction !== undefined){
-					                    	listElement += `<td><hr></hr></td></tr><tr>`;
+					                    	listElement += `<td><hr></td></tr><tr>`;
 					                    	listElement += '<td class="review-company-reaction"><strong>'+ourReactionText+'</strong><br/><span>'+reviewReaction.replace(new RegExp('\r?\n','g'), '<br />')+'</span></td>';
 					                    }
 					                    listElement += `</tr>
@@ -142,15 +116,15 @@ return;
 	}
 }
 function fetchNextIjzershopXmlPage(){
-	var pageNr = parseInt(document.getElementById('review-page').value)+1;
+	let pageNr = parseInt(document.getElementById('review-page').value)+1;
 	fetchIjzershopXmlPage(pageNr, reviewsPerPage);
 	document.getElementById('review-page').value = pageNr;
 }
 function readMoreOnKiyohWebsite(){
-	var pageNr = parseInt(document.getElementById('review-page').value);
+	let pageNr = parseInt(document.getElementById('review-page').value);
 	window.open('https://www.kiyoh.com/reviews/1046584/ijzershop?lang=nl&limit='+reviewsPerPage+'&pageNumber='+pageNr, '_blank');
 }
-var kiyohButtonElem = document.getElementById('loadMoreReviews');
+let kiyohButtonElem = document.getElementById('loadMoreReviews');
 if (typeof(kiyohButtonElem) != 'undefined' && kiyohButtonElem != null)
 {
 	kiyohButtonElem.setAttribute('onclick','fetchNextIjzershopXmlPage()');

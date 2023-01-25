@@ -133,15 +133,15 @@
         </li>
         {/if}
         <li class="nav-item p-0 text-center col">
-          <div class="dropdown nav-contact mx-auto">
-            <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="#" role="button" id="nav_contact_dropdown_mobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa-sharp fa-2x fa-envelope"></i></a>
-          <div class="dropdown-menu" aria-labelledby="nav_contact_dropdown_mobile">
-            <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fa-sharp fa-envelope-open-dollar"></i> Offerte aanvragen</a>
-            <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"> <i class="fa-sharp fa-info"></i> Informatie aanvragen</a>
-            <a class="dropdown-item" href="/retour-aanvragen"> <i class="fa-sharp fa-warehouse"></i> Retour aanvragen</a>
-            <a class="dropdown-item" href="{$urls.pages.guest_tracking}"><i class="fa-sharp fa-truck-fast"></i> Bestel status opvragen</a>
-          </div>
-          </div>
+{*          <div class="dropdown nav-contact mx-auto">*}
+            <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fa-sharp fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"> Offerte Aanvraag</span></a>
+{*          <div class="dropdown-menu" aria-labelledby="nav_contact_dropdown_mobile">*}
+{*            <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fa-sharp fa-envelope-open-dollar"></i> Offerte aanvragen</a>*}
+{*            <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"> <i class="fa-sharp fa-info"></i> Informatie aanvragen</a>*}
+{*            <a class="dropdown-item" href="/retour-aanvragen"> <i class="fa-sharp fa-warehouse"></i> Retour aanvragen</a>*}
+{*            <a class="dropdown-item" href="{$urls.pages.guest_tracking}"><i class="fa-sharp fa-truck-fast"></i> Bestel status opvragen</a>*}
+{*          </div>*}
+{*          </div>*}
         </li>
           {if Module::isEnabled('ps_searchbar')}
             <li class="nav-item p-0 text-center col"><a aria-label="Zoeken" class="nav-link text-white navbar-search-icon" href="#"><i class="fa-sharp fa-2x fa-search"></i></a></li>
@@ -160,15 +160,16 @@
         {/if}
         <ul class="navbar-nav mr-2">
           <li id="request-offer-button" class="ml-2">
-            <div class="dropdown nav-contact mx-auto">
-              <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="#" role="button" id="nav_contact_dropdown_mobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa-sharp fa-2x fa-envelope"></i></a>
-              <div class="dropdown-menu" aria-labelledby="nav_contact_dropdown_mobile">
-                <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fa-sharp fa-envelope-open-dollar"></i> Offerte aanvragen</a>
-                <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"> <i class="fa-sharp fa-circle-info"></i> Informatie aanvragen</a>
-                <a class="dropdown-item" href="/retour-aanvragen"> <i class="fa-sharp fa-warehouse"></i> Retour aanvragen</a>
-                <a class="dropdown-item" href="{$urls.pages.guest_tracking}"><i class="fa-sharp fa-truck-fast"></i> Bestel status opvragen</a>
-              </div>
-            </div>
+{*            <div class="dropdown nav-contact mx-auto">*}
+            <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fa-sharp fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"> Offerte Aanvragen</span></a>
+
+{*              <div class="dropdown-menu" aria-labelledby="nav_contact_dropdown_mobile">*}
+{*                <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fa-sharp fa-envelope-open-dollar"></i> Offerte aanvragen</a>*}
+{*                <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"> <i class="fa-sharp fa-circle-info"></i> Informatie aanvragen</a>*}
+{*                <a class="dropdown-item" href="/retour-aanvragen"> <i class="fa-sharp fa-warehouse"></i> Retour aanvragen</a>*}
+{*                <a class="dropdown-item" href="{$urls.pages.guest_tracking}"><i class="fa-sharp fa-truck-fast"></i> Bestel status opvragen</a>*}
+{*              </div>*}
+{*            </div>*}
 
 
 {*            <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}" class="btn btn-success"><i class="fa-sharp fa-envelope"></i> Offerte aanvragen</a>*}

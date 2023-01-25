@@ -453,7 +453,7 @@ class MsThemeConfig extends Module
                 if(is_array($value)){
                     $arrayString = implode(',', $value);
                 } else {
-                    $arrayString = $value;                    
+                    $arrayString = $value;
                 }
 
                 $dbKey = str_replace('[]','', $key);
@@ -760,10 +760,10 @@ class MsThemeConfig extends Module
      * @throws PrestaShopException
      * @throws PrestaShopException|\PrestaShopException
      */
-    public function hookActionFrontControllerSetMedia($params): void
+    public function hookActionFrontControllerSetMedia($params)
     {
         $hookClass = $this->getModernHooks();
-        $hookClass->hookActionFrontControllerSetMedia($params);
+        return $hookClass->hookActionFrontControllerSetMedia($params);
     }
 
 

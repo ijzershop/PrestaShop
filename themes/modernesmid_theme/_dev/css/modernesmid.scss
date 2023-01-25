@@ -1917,15 +1917,20 @@ main {
   }
 }
 
-
 .nav-contact{
   max-width: 60px;
 }
 
 .navbar-contact-icon{
-  max-width: 60px;
   height: 39px;
 }
+
+.navbar-contact-icon span.text{
+  vertical-align: text-bottom;
+  font-size: .85rem;
+  margin-left: 3px;
+}
+
 .nav-contact .dropdown-menu{
   margin:0;
 }

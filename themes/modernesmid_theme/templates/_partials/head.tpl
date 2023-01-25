@@ -108,8 +108,8 @@
 
 
 <script type="text/javascript">
-  var clarityKey = "{Configuration::get('MSTHEMECONFIG_CLARITY_ID', null, null,  null, '7bu3k08a1u')}";
-  var isDebug = false;
+  let clarityKey = "{Configuration::get('MSTHEMECONFIG_CLARITY_ID', null, null,  null, '7bu3k08a1u')}";
+  let isDebug = false;
   {literal}
   //Clarity function to pass data to clarity server
   (function (c, l, a, r, i, t, y) {

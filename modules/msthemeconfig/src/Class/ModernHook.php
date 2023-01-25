@@ -1106,54 +1106,46 @@ class ModernHook
     /**
      *
      * @param $params
-     * @return void
      * @throws PrestaShopException
      * @throws \PrestaShopException
      */
-    public function hookActionFrontControllerSetMedia($params): void
+    public function hookActionFrontControllerSetMedia($params)
     {
         //check live mode to use minified files
-        $liveMode = (bool)Configuration::get('IJZERSHOPKIYOH_LIVE_MODE', $this->idLang, $this->idShop, $this->idShopGroup);
+        $liveMode = false;
         $reviewPage = Configuration::get('IJZERSHOPKIYOH_REVIEW_PAGE', $this->idLang, $this->idShop, $this->idShopGroup);
 
         $min = '';
         if($liveMode){
             $min='.min';
         }
-
-
             if (Dispatcher::getInstance()->getController() == 'cms') {
 
-                if ((int)$this->controller->cms->id_cms == (int)$reviewPage) {
+                if ((int)$this->controller->cms->id == (int)$reviewPage) {
+                    $this->controller->registerJavascript(
+                        'module-msthemeconfig-kiyohxmlconvertjs',
+                        'modules/' . $this->module->name . '/views/js/xmlconvert' . $min . '.js',
+                        [
+                            'priority' => 200,
+                            'attribute' => 'async',
+                        ]
+                    );
 
                     $this->controller->registerJavascript(
-                        'module-ijzershopkiyoh-xmlconvert',
-                        '/modules/msthemeconfig/views/js/xmlconvert' . $min . '.js',
+                        'msthemeconfig-kiyohjs',
+                        'modules/' . $this->module->name . '/views/js/ijzershopkiyoh' . $min . '.js',
                         [
-                            'priority' => 1,
-                            'attribute' => 'none',
+                            'priority' => 200,
+                            'attribute' => 'async'
                         ]
                     );
 
-
-                    Context::getContext()->controller->registerJavascript('module-msthemeconfig',
-                        '/modules/msthemeconfig/views/js/ijzershopkiyoh.js',
-                        [
-                            'position' => 'top',
-                            'priority' => 100
-                        ]);
-
-                    $this->context->controller->registerStylesheet(
-                        'module-ijzershopkiyoh-style',
-                        'modules/' . $this->module->name . '/views/css/ijzershopkiyoh' . $min . '.css',
-                        [
-                            'media' => 'all',
-                            'priority' => 10,
-                            'attribute' => 'none',
-                        ]
-                    );
+                    $this->controller->registerStyleSheet(
+                        'module-msthemeconfig-kiyohstyle',
+                        'modules/' . $this->module->name . '/views/css/ijzershopkiyoh' . $min . '.css');
                 }
             }
+            return true;
     }
 
     /**
@@ -1271,11 +1263,10 @@ class ModernHook
     }
 
     /**
-     * @return void
      * @throws PrestaShopDatabaseException
      * @throws SmartyException|\PrestaShopDatabaseException
      */
-    public function hookDisplayCMSDisputeInformation(): void
+    public function hookDisplayCMSDisputeInformation()
     {
         $reviewPage = Configuration::get('IJZERSHOPKIYOH_REVIEW_PAGE', $this->idLang, $this->idShop, $this->idShopGroup);
 
@@ -1290,7 +1281,7 @@ class ModernHook
             ];
 
             $this->smarty->assign('attr', $attr);
-            die($this->smarty->fetch(_PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->module->name . '/views/templates/front/reviews.tpl'));
+            echo $this->smarty->fetch(_PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->module->name . '/views/templates/front/reviews.tpl');
         }
     }
 

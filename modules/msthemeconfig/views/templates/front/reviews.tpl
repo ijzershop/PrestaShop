@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-lg-12">
-		<ul id="kiyoh-comment-list">
+		<ul id="kiyoh-comment-list" class="list-unstyled">
 		</ul>
 	</div>
 	<div class="col-lg-12 text-center">
@@ -13,10 +13,11 @@
 		<br/>
 	</div>
 </div>
+
 <script type="text/javascript">
-	var reviewsPerPage = "{$attr['reviewsPerPage']}";
-	var totalReviewsInDatabase = "{$attr['totalReviewsInDatabase']}";
-	var latestSavedFeed = '{$attr['latestSavedFeed'] nofilter}';
-	var ourReactionText = "{l s='Onze reactie' d='Modules.Ijzershopkiyoh.reviews'}";
-	var url= "{url entity='module' name='ijzershopkiyoh' controller='ajax' params = ['action' => 'updateLatestKiyohReviews']}";
+  let reviewsPerPage = "{$attr['reviewsPerPage']}";
+	let totalReviewsInDatabase = "{$attr['totalReviewsInDatabase']}";
+	let latestSavedFeed = '{$attr['latestSavedFeed'] nofilter}';
+	let ourReactionText = "{l s='Onze reactie' d='Modules.Ijzershopkiyoh.reviews'}";
+	let url= "{url entity='module' name='ijzershopkiyoh' controller='ajax' params = ['action' => 'updateLatestKiyohReviews']}";
 </script>

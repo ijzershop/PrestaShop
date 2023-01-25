@@ -1,3 +1,183 @@
+.review-comment {
+  font-size: 12px;
+  color: #777777;
+}
+
+.rating-number-td {
+  vertical-align: top;
+}
+
+.rating-number {
+  margin-top: 10px;
+}
+
+.rating-number span {
+  color: #fff;
+  position: absolute;
+  left: 14px;
+  font-size: 45px;
+  line-height: 90px;
+  width: 90px;
+  height: 90px;
+  text-align: center;
+  margin-top: 0;
+  z-index: 8;
+}
+
+.review-author span {
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.review-author {
+  font-size: 14px;
+  padding-top: 10px;
+}
+
+.review-inner-table {
+  margin: 10px 10px 25px 10px;
+}
+
+.review-title {
+  font-size: 18px;
+  color: #777777;
+}
+
+#kiyoh-comment-list li {
+  border-bottom: 1px solid #77777780;
+  margin: 20px 0px 10px 0px;
+  padding-bottom: 10px;
+  list-style-type: none;
+}
+
+@media only screen and (min-width: 1200px) {
+  #kiyoh-banner {
+    width: 40%;
+    height: auto;
+  }
+
+
+  #kiyoh-score {
+    position: absolute;
+    left: 13.5%;
+    top: 28%;
+    width: 20%;
+    text-align: center;
+    font-size: 1.8rem;
+    color: #3b3b3b;
+  }
+
+  #kiyoh-total-comments {
+    position: absolute;
+    left: 44%;
+    top: 18%;
+    font-size: 2.8rem;
+    color: #3b3b3b;
+  }
+
+  #kiyoh-comment-text {
+    font-size: 1.2rem;
+    position: absolute;
+    top: 65%;
+    left: 40%;
+    color: #000
+  }
+
+  .kiyoh.rating {
+    margin: 0 auto;
+    position: absolute;
+    top: 5px;
+    padding: 0;
+    right: 16%;
+    color: #3b3b3b;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  #kiyoh-banner {
+    width: 40%;
+    height: auto;
+  }
+  #kiyoh-score {
+    position: absolute;
+    left: 14%;
+    top: 25%;
+    width: 20%;
+    text-align: center;
+    font-size: 1.6rem;
+    color: #3b3b3b;
+  }
+
+  #kiyoh-total-comments {
+    position: absolute;
+    left: 48%;
+    top: 10%;
+    font-size: 2.5rem;
+    color: #3b3b3b;
+  }
+
+  #kiyoh-comment-text {
+    font-size: 1.2rem;
+    position: absolute;
+    top: 65%;
+    left: 40%;
+    color: #000
+  }
+
+  .kiyoh.rating {
+    margin: 0 auto;
+    position: absolute;
+    top: -3px;
+    padding: 0;
+    right: 10%;
+    color: #3b3b3b;
+  }
+
+  .kiyoh.rating-upper span svg.icon-star-rating {
+    width: 19px;
+    height: 19px;
+  }
+
+  .kiyoh.rating-lower span svg.icon-star-rating {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+.kiyoh.rating-upper {
+  padding: 0;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.kiyoh.rating-lower {
+  padding: 0;
+  display: flex;
+  z-index: 0;
+}
+
+.kiyoh.rating-lower {
+  padding: 0;
+  display: flex;
+  z-index: 0;
+}
+
+.kiyoh.rating-upper span svg.icon-star-rating {
+  fill: #FFB814;
+  display: block;
+}
+
+.kiyoh.rating-lower span svg.icon-star-rating {
+  fill: #FFFFFF;
+  stroke: #FFB814;
+  stroke-width: 0.5px;
+  display: block;
+}
+
 #kiyoh-block{
   height: 118px;
 }

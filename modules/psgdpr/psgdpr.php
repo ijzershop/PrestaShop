@@ -694,11 +694,17 @@ class Psgdpr extends Module
             $id_guest = Context::getContext()->cart->id_guest;
             $id_customer = 0;
         }
+
+        $customerToken = '';
+        if(Context::getContext()->customer->secure_key){
+            $customerToken = Context::getContext()->customer->secure_key;
+        }
+
         $this->context->smarty->assign([
             'ps_version' => $this->ps_version,
             'psgdpr_id_guest' => $id_guest,
             'psgdpr_id_customer' => $id_customer,
-            'psgdpr_customer_token' => sha1(Context::getContext()->customer->secure_key),
+            'psgdpr_customer_token' => sha1($customerToken),
             'psgdpr_guest_token' => sha1('psgdpr' . $id_guest . $_SERVER['REMOTE_ADDR'] . date('Y-m-d')),
             'psgdpr_id_module' => $id_module,
             'psgdpr_consent_message' => $message,

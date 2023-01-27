@@ -294,10 +294,10 @@ class Contactform extends Module implements WidgetInterface
             $this->sendMessage();
 
             if (!empty($this->context->controller->errors)) {
-                $notifications['messages'] = $this->context->controller->errors;
+                $notifications = ['messages' => $this->context->controller->errors];
                 $notifications['nw_error'] = true;
             } elseif (!empty($this->context->controller->success)) {
-                $notifications['messages'] = $this->context->controller->success;
+                $notifications = ['messages' => $this->context->controller->success];
                 $notifications['nw_error'] = false;
             }
         } elseif (empty($this->context->cookie->contactFormToken)

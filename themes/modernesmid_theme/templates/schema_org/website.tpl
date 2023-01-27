@@ -2,9 +2,9 @@
 
 <script type="text/javascript">
 
-	let el = document.createElement('script');
-   	el.type = 'application/ld+json';
-	let obj = {
+	let websiteElement = document.createElement('script');
+   	websiteElement.type = 'application/ld+json';
+	let jsonLdWebsiteObject = {
 				"@context": "http://schema.org",
 				"@type": "Website",
 				"name": '{$shop.name}',
@@ -27,6 +27,6 @@
 			};
 
 
-   el.text = JSON.stringify(obj);
-   document.querySelector('head').appendChild(el);
+   websiteElement.text = JSON.stringify(jsonLdWebsiteObject);
+   document.querySelector('head').appendChild(websiteElement);
 </script>

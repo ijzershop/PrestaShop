@@ -65,7 +65,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="https://api.whatsapp.com/send?phone={str_replace(' ','',Configuration::get('MSTHEMECONFIG_HEADER_WHATSAPP_LINK'))}" class="dropdown_list_item text-decoration-none text-dark" title="{l s="Whatsapp:" d='Shop.Modernesmid'} {Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_WHATSAPP')}">
+                    <a href="{str_replace(' ','',Configuration::get('MSTHEMECONFIG_HEADER_WHATSAPP_LINK'))}" class="dropdown_list_item text-decoration-none text-dark" title="{l s="Whatsapp:" d='Shop.Modernesmid'} {Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_WHATSAPP')}">
                         <i class="fab fa-whatsapp  list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s="Whatsapp:" d='Shop.Modernesmid'} {Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_WHATSAPP')}
                     </a>
                 </li>

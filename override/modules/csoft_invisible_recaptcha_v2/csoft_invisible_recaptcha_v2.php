@@ -246,7 +246,13 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
             $this->context->controller instanceof CategoryController ||
             $this->context->controller instanceof PageNotFoundController ||
             $this->context->controller instanceof SearchController){
-
+            $this->context->controller->registerJavascript(
+                'settings-recaptcha',
+                'modules/'.$this->name.'/js/settings.js',
+                [
+                    'attributes' => 'async'
+                ]
+            );
 			$this->context->controller->registerJavascript(
 				'recaptcha',
 				'https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl='.$this->context->language->language_code,
@@ -255,13 +261,7 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 					'server' =>  'remote'
 				]
 			);
-			$this->context->controller->registerJavascript(
-				'settings-recaptcha',
-				'modules/'.$this->name.'/js/settings.js',
-				[
-					'attributes' => 'async'
-				]
-				);
+
 
 			Media::addJsDef(array('recaptchaKey' => Configuration::get('RECAPTCHA_PUBLIC_KEY')));
 			return $this->displayCaptchaContactForm();
@@ -269,6 +269,13 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 		}elseif($this->context->controller instanceof AuthController){
 
 			if(Configuration::get('RECAPTCHA_ACCOUNT') == 1){
+                $this->context->controller->registerJavascript(
+                    'settings-recaptcha',
+                    'modules/'.$this->name.'/js/settings-account.js',
+                    [
+                        'attributes' => 'async'
+                    ]
+                );
 
 				$this->context->controller->registerJavascript(
 					'recaptcha',
@@ -279,13 +286,7 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 					]
 				);
 
-				$this->context->controller->registerJavascript(
-					'settings-recaptcha',
-					'modules/'.$this->name.'/js/settings-account.js',
-					[
-						'attributes' => 'async'
-					]
-				);
+
 				Media::addJsDef(array('recaptchaKey' => Configuration::get('RECAPTCHA_PUBLIC_KEY')));
 				return $this->displayCaptchaContactForm();
 
@@ -332,14 +333,14 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 				$decode = json_decode($response, true);
 
 				if (!$decode['success'] == true) {
-					$this->context->controller->errors[] = $this->trans('Formulaire invalide.', array(), 'Modules.Contactform.Shop');
+					$this->context->controller->errors[] = $this->trans('Google Captcha niet gevalideerd, probeer het nogmaal..', array(), 'Modules.Contactform.Shop');
 					return false;
 				}else{
 					return true;
 				}
 
 			}else{
-				$this->context->controller->errors[] = $this->trans('Erreur de traitement.', array(), 'Modules.Contactform.Shop');
+				$this->context->controller->errors[] = $this->trans('Er ging iets fout met de Google Captcha', array(), 'Modules.Contactform.Shop');
 				return false;
 			}
 		}

@@ -21,15 +21,15 @@ var onSubmit = function(token) {
 };
 
 var onloadCallback = function() {
-  if ($('form input[name=submitMessage]').length > 0) {
+  if ($('form button[name=submitMessage]').length > 0) {
 
-    $('form input[name=submitMessage]').attr('id','submitMessage');
-    if($('form input[name=submitMessage]').attr('disabled') == 'disabled'){
+    $('form button[name=submitMessage]').attr('id','submitMessage');
+    if($('form button[name=submitMessage]').attr('disabled') == 'disabled'){
         grecaptcha.render('submitMessage', {
             'sitekey' : recaptchaKey,
             'callback' : onSubmit
         });
-        $('form input[name=submitMessage]').attr('disabled','disabled');
+        $('form button[name=submitMessage]').attr('disabled','disabled');
         $('#content-wrapper form').append('<input type="hidden" name="submitMessage">');
     }else {
 
@@ -44,6 +44,6 @@ var onloadCallback = function() {
 };
 
 $(document).ready(function() {
-    $('form input[name=submitMessage]').attr('id','submitMessage');
+    $('form button[name=submitMessage]').attr('id','submitMessage');
 });
 

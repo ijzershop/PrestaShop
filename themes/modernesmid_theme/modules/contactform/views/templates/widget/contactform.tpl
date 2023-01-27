@@ -230,8 +230,11 @@
           }
         </style>
         <input class="form-control" type="text" name="url" value=""/>
-        <input type="hidden" name="token" value="{$token}" />
-        <input type="submit" class="btn btn-primary w-100"  name="submitMessage" disabled="disabled" value="{l s='Send' d='Modules.Contactform.Shop'}"/>
+        <input type="hidden" name="token" value="{$token|escape:'htmlall':'UTF-8'}" />
+        <button type="submit"  class="btn btn-primary w-100"  name="submitMessage" disabled="disabled" value="{l s='Send' d='Modules.Contactform.Shop'}">
+            {l s='Send' d='Modules.Contactform.Shop'}
+        </button>
+
       </footer>
     {/if}
   </form>

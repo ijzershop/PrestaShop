@@ -6,6 +6,9 @@ if (!defined('_PS_CORE_DIR_')) {
 require_once _PS_CORE_DIR_ . '/config/config.inc.php';
 require_once _PS_CORE_DIR_ . '/init.php';
 
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+
 /**
  *
  */
@@ -73,7 +76,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         }
 
         if (Tools::getValue('action') == 'add_custom_product_to_cart') {
-            die($this->_addCustomProductToCart());
+            return $this->_addCustomProductToCart();
         }
 
         if (Tools::getValue('action') == 'remove_custom_product_to_cart') {
@@ -247,6 +250,10 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         }
     }
 
+    /**
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function _addCustomProductToCart()
     {
         $label = $_POST['label'];
@@ -260,7 +267,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $category = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY');
 
         $cart = Context::getContext()->cart;
-
         if ($cart->id == NULL) {
             $cart->add(true, false);
             Context::getContext()->cookie->id_cart = $cart->id;
@@ -274,11 +280,11 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
         if ($paid == 'true') {
             //is paid add product to cart
-            $product = new Product();
+            $product = new ProductCore();
             $product->ean13 = '';
             $product->name = [(int)Configuration::get('PS_LANG_DEFAULT') => $label];
             $product->link_rewrite = [(int)Configuration::get('PS_LANG_DEFAULT') => uniqid()];
-            $product->description_short = $description;
+            $product->description_short = [1=> $description];
             $product->reference = $reference;
             $product->id_category_default = $category;
             $product->redirect_type = '301';
@@ -290,11 +296,14 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $product->id_tax_rules_group = '1';
             $product->online_only = 0;
             $product->meta_description = '';
+            $product->pack_stock_type = PackStockType::STOCK_TYPE_DEFAULT;
             $product->out_of_stock = '1';
+            $product->location = 'CP';
+            $product->product_type = 'standard';
+            $productAdded = $product->save(true);
+            StockAvailable::setQuantity($product->id, (int)null, $qty + 10, Context::getContext()->shop->id);
 
-            $product->add();
 
-            StockAvailable::setQuantity($product->id, null, $qty + 10, null);
             $product->addToCategories([$category]);
 
             $url_imagem = _PS_BASE_URL_ . '/themes/modernesmid_theme/assets/img/missing-product-image.jpg';
@@ -314,9 +323,10 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 }
             }
 
-            $res = $cart->updateQty($qty, $product->id, null, false);
 
-            die(json_encode(['valid' => $res, 'cart' => $cart]));
+            $res = $cart->updateQty($qty, $product->id, false, false);
+
+            return json_encode(['valid' => $res, 'cart' => $cart]);
         } else {
             $creditPrice = (int)$qty * (float)$price;
 
@@ -365,7 +375,9 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $creditGroupRestiction = Db::getInstance()->insert('cart_rule_group', ['id_cart_rule' => (int)$credit->id, 'id_group' => Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_BALIE_GROUP')]);
 
             $cart->addCartRule($credit->id);
-            die(json_encode(['valid' => true]));
+
+
+            return json_encode(['valid' => true]);
         }
     }
 

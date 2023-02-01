@@ -68,6 +68,7 @@ class MolliePaymentModuleFrontController extends ModuleFrontController
             return;
         }
 
+
         $method = Tools::getValue('method');
         $issuer = Tools::getValue('issuer') ?: null;
 

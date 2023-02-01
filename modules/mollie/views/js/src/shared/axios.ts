@@ -7,7 +7,7 @@
  * @license     https://github.com/mollie/PrestaShop/blob/master/LICENSE.md
  * @codingStandardsIgnoreStart
  */
-import axios from '@shared/axios';
+import axios from 'axios';
 
 export default axios.create({
   transformResponse: [res => JSON.parse(res.replace(/^[^{[]*/mg, '').replace(/([^}\]]*)$/mg, ''))],

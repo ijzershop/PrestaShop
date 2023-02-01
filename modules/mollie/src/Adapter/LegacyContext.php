@@ -77,6 +77,11 @@ class LegacyContext
         return $invoiceAddress->id_country;
     }
 
+    public function getCurrency()
+    {
+        return $this->getContext()->currency;
+    }
+
     public function getCurrencyId()
     {
         return $this->getContext()->currency->id;

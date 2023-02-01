@@ -1286,9 +1286,7 @@ $(function () {
     }
   });
 
-  // toevoegen aan order check
-  // test reference failing: YS-53931, success: YS-53936, YS-53935
-  $(document).on('click', '#search_order_for_shipping', function (event) {
+  function searchForAddToOrder(event){
     event.preventDefault();
     const desiredReference = $('#desired_reference').val();
 
@@ -1307,6 +1305,7 @@ $(function () {
     })
       .done(function (e) {
         var htmlBlock = '';
+        $('#desired_reference_error').hide();
         $('#order_number_validate').find('.errorsmall').remove();
         $('#desired_reference').removeClass('error-form');
         if (e.length > 0) {
@@ -1340,6 +1339,7 @@ $(function () {
         } else {
           htmlBlock = '<div class="alert alert-danger" role="alert"><strong>De gewenste bestelling is niet meer voor toevoegen beschikbaar!</strong> Zoek nogmaal op referentie of selecteer een andere verzendmethode</div>';
           $('#desired_reference_error').html(htmlBlock);
+          $('#desired_reference_error').show();
           $('#desired_reference').addClass('error-form');
         }
 
@@ -1360,6 +1360,22 @@ $(function () {
       .fail(function (e) {
         // console.log(['error', e]);
       });
+  }
+
+
+  // toevoegen aan order check
+  // test reference failing: YS-53931, success: YS-53936, YS-53935
+  $(document).on('click', '#search_order_for_shipping', function (event) {
+      return searchForAddToOrder(event);
+  });
+
+
+  // toevoegen aan order check
+  // test reference failing: YS-53931, success: YS-53936, YS-53935
+  $(document).on('keyup', '#desired_reference', function (event) {
+    if($(this).val().length === 9){
+      $('#search_order_for_shipping').trigger('click');
+    }
   });
 
   $('.showOrderTracking').on('click', function (event) {

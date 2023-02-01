@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="shoppingcart-top-checkout col-sm-4 float-right">
-                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}{$cart_url}?action=show{else}{if isset($urls.pages['order'])}{$urls.pages['order']}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Bestellen' d='Shop.Theme.Actions'}">{l s='Bestellen' d='Shop.Theme.Actions'}</a>
+                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}{$cart_url}{else}{if isset($urls.pages['order'])}{$urls.pages['order']}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Bestellen' d='Shop.Theme.Actions'}">{l s='Bestellen' d='Shop.Theme.Actions'}</a>
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
             <ul class="list-unstyled small_cart_product_list pt-3 mb-4 pb-4">
                 {assign var='totalReductionValue' value=0}
                 {foreach from=Context::getContext()->cart->getProducts() item=product}
-                <li class="pb-1">{include file='./ps_shoppingcart-product-line.tpl' product=$product}
+                <li class="pb-1">{include file='./ps_shoppingcart-product-line.tpl' product=$product cart_url=$cart_url}
                     {assign var='productReduction' value=($product.price_without_reduction_without_tax - $product.price_with_reduction_without_tax) * $product.quantity}
                       {assign var='totalReductionValue' value=(double)$totalReductionValue + (double)$productReduction}
                 </li>
@@ -126,7 +126,7 @@
                     {/if}
                 </div>
                 <div class="mt-3">
-                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}{$cart_url}?action=show{else}{if isset($urls.pages['order'])}{$urls.pages['order']}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Verder naar bestellen' d='Shop.Theme.Actions'}">{l s='Verder naar bestellen' d='Shop.Theme.Actions'}</a>
+                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}{$cart_url}{else}{if isset($urls.pages['order'])}{$urls.pages['order']}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Verder naar bestellen' d='Shop.Theme.Actions'}">{l s='Verder naar bestellen' d='Shop.Theme.Actions'}</a>
                 </div>
                 {if Context::getContext()->cart->getOrderTotal() > 0}
                 <div class="text-center mt-3 p-1">Toon details (verzendkosten, korting & btw.) <label class="switch">

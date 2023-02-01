@@ -82,7 +82,7 @@ class Ps_Creditpayment extends PaymentModule
     {
         if (!parent::install() ||
             !$this->registerHook('displayHeader') ||
-            !$this->registerHook('paymentReturn') ||
+            !$this->registerHook('displayPaymentReturn') ||
             !$this->registerHook('paymentOptions') ||
             !$this->registerHook('actionCustomerGridDefinitionModifier') ||
             !$this->registerHook('actionCustomerGridQueryBuilderModifier') ||
@@ -287,7 +287,7 @@ class Ps_Creditpayment extends PaymentModule
         }
     }
 
-    public function hookPaymentReturn($params)
+    public function hookDisplayPaymentReturn($params)
     {
 
 

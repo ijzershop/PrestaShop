@@ -52,7 +52,15 @@
     <div class="header-top">
     <div class="cart_body {if Context::getContext()->cart->nbProducts() == 0} no_show_empty {/if}">
       <div class="side_panel d-none" id="shoppingcart-side-panel">
-        {include file='themes/modernesmid_theme/modules/ps_shoppingcart/ps_shoppingcart-list.tpl'}
+          {if Module::isEnabled('ps_shoppingcart')}
+                {*    Winkelwagen Column        *}
+              <style>
+                .js-cart{
+                  width: 100%;
+                }
+              </style>
+                {hook h='displayShoppingCart' p='top_header'}
+          {/if}
       </div>
     </div>
     <div class="menu_body d-block">
@@ -108,6 +116,8 @@
                 width: 100%;
               }
             </style>
+
+
               {hook h='displayShoppingCart'}
               {*   / Winkelwagen Column        *}
           </td>

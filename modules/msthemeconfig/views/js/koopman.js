@@ -168,7 +168,7 @@ $(function () {
       })
         .done(function (data) {
           $('form#retourForm .messages').html(data);
-          // location.reload();
+          location.reload();
         });
 
     });

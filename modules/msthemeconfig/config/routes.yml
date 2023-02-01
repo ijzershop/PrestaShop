@@ -291,4 +291,12 @@ koopman_order_export_close_day:
     _legacy_link: KoopmanDagafsluitingAdminController:display
 
 
-
+#custom products of voucher creation
+customproduct_ajax_save_to_cart:
+  path: /modernesmid/customproduct/ajax/save_to_cart
+  methods: [ POST ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\MsFrontAjaxController::saveCustomProductToCart'
+    _legacy_controller: 'MsFrontAjaxController'
+    _legacy_link: 'MsAdminAjax:save_custom_product_to_cart'
+    _legacy_parameters:

@@ -1,211 +1,174 @@
-.column-customer a, .column-reference{
-  color:#000!important;
-  font-weight: bold;
-  font-size: 1.2em!important;
-  text-transform: capitalize;
+.column-customer a, .column-reference {
+  color: #000 !important;
+  font-weight: 700;
+  font-size: 1.2em !important;
+  text-transform: capitalize
 }
 
-.column-osname .dropdown-toggle{
-  margin-bottom:8px;
+.column-osname .dropdown-toggle {
+  margin-bottom: 8px
 }
 
 .cc-koopman input {
   display: none;
-  z-index: 999;
+  z-index: 999
 }
 
-.cc-koopman.btn{
-  border-color: #ffffff;
+.cc-koopman.btn {
+  border-color: #fff;
   border-style: solid;
-  border-width: 4px 6.5px;
+  border-width: 1px;
   padding: 0;
+  border-radius: 0;
+  width: 100%;
+  flex-wrap: wrap;
+  margin-right: -.9375rem !important;
+  margin-left: -.9375rem !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important
 }
 
 .cc-koopman label {
   cursor: pointer;
-  line-height: 1rem;
-  font-size: 1.4rem;
-  padding-top: .6rem;
+  line-height: 1.2rem;
+  font-size: 1.2rem;
+  padding: 1rem .5rem;
   margin-bottom: 0;
   vertical-align: middle;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 500;
 }
 
-.cc-koopman label:hover, .cc-koopman label:focus{
-  opacity: 0.8;
+.cc-koopman label:hover, .cc-koopman label:focus {
+  opacity: .8
 }
 
-.cc-koopman label.backorder span.koopman-label-icon{
-  background-image: url('/modules/msthemeconfig/views/templates/img/backorder.svg');
+.cc-koopman.backorder-btn {
+  background-color: #3498D8
 }
 
-.cc-koopman.backorder-btn{
-  background-color: #3498D8;
+.cc-koopman.backorder-btn:hover {
+  opacity: .9
 }
 
-.cc-koopman.backorder-btn:hover{
-  opacity: 0.9;
-}
-
-.cc-koopman:hover label.backorder span.koopman-label-icon{
-  background-image: url('/modules/msthemeconfig/views/templates/img/backorder_white.svg');
-}
-
-.cc-koopman label.workshop span.koopman-label-icon{
-  background-image: url('/modules/msthemeconfig/views/templates/img/workshop-white.svg');
-}
-
-
-.cc-koopman:hover label.workshop span.koopman-label-icon{
-  background-image: url('/modules/msthemeconfig/views/templates/img/workshop-white.svg');
-}
-
-.cc-koopman label.beingprepared span.koopman-label-icon{
-  background-image: url('/modules/msthemeconfig/views/templates/img/prepared.svg');
-}
-
-.cc-koopman:hover label.beingprepared span.koopman-label-icon{
-  background-image: url('/modules/msthemeconfig/views/templates/img/prepared_white.svg');
-}
-
-.cc-koopman label span.koopman-label-icon{
+.cc-koopman label span.koopman-label-icon {
   width: 40px;
   height: 47px;
   display: inline-block;
   background-size: contain;
   background-repeat: no-repeat;
-  vertical-align: middle;
+  vertical-align: middle
 }
 
 .envelope, .envelope:hover {
   height: 80px;
-  width: 19%;
-  border:2px solid #ffffff;
-  padding:0;
-  margin:0;
-  border-radius:0;
+  width: 19.5%;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 2px 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   background-color: #3d57ae;
-  background-image: url('/modules/msthemeconfig/views/templates/img/envelop_koopman.png');
+  background-image: url(/modules/msthemeconfig/views/templates/img/envelop_koopman.png)
 }
 
 .plaat, .plaat:hover {
   height: 80px;
-  width: 19%;
-  border:2px solid #ffffff;
-  padding:0;
-  margin:0;
-  border-radius:0;
+  width: 19.5%;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 2px 0px 2px 2px;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   background-color: #3d57ae;
-  background-image: url('/modules/msthemeconfig/views/templates/img/plaat_koopman.png');
+  background-image: url(/modules/msthemeconfig/views/templates/img/plaat_koopman.png)
 }
 
 .meter-1, .meter-1:hover {
   height: 80px;
-  width: 19%;
-  border:2px solid #ffffff;
-  padding:0;
-  margin:0;
-  border-radius:0;
+  width: 19.5%;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 2px 0px 2px 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   background-color: #3d57ae;
-  background-image: url('/modules/msthemeconfig/views/templates/img/1m_koopman.png');
+  background-image: url(/modules/msthemeconfig/views/templates/img/1m_koopman.png)
 }
 
 .meter-larger-2, .meter-larger-2:hover {
   height: 80px;
-  width: 19%;
-  border:2px solid #ffffff;
-  padding:0;
-  margin:0;
-  border-radius:0;
+  width: 19.5%;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 2px 0px 2px 1px;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   background-color: #3d57ae;
-  background-image: url('/modules/msthemeconfig/views/templates/img/2m+35_koopman.png');
+  background-image: url(/modules/msthemeconfig/views/templates/img/2m+35_koopman.png)
 }
 
 .meter-smaller-2, .meter-smaller-2:hover {
   height: 80px;
-  width: 19%;
-  border:2px solid #ffffff;
-  padding:0;
-  margin:0;
-  border-radius:0;
+  width: 19.5%;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 2px 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   background-color: #3d57ae;
-  background-image: url('/modules/msthemeconfig/views/templates/img/2m-35_koopman.png');
+  background-image: url(/modules/msthemeconfig/views/templates/img/2m-35_koopman.png)
 }
 
 .toegevoegd {
-  width: 396px;
-  height: 50px;
-  margin-top:5px;
-  margin-bottom: 5px;
-  margin-left: 6px !important;
-  margin-right: 6px !important;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #73c27a;
-  background-image: url('/modules/msthemeconfig/views/templates/img/toegevoegd.png');
+  background-color: #73c27a
 }
 
 .aftehalen {
-  width: 396px;
-  height: 50px;
-  margin-top:5px;
-  margin-bottom: 5px;
-  margin-left: 6px !important;
-  margin-right: 6px !important;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #caff82;
-  background-image: url('/modules/msthemeconfig/views/templates/img/aftehalen.png');
+  background-color: #caff82
 }
 
 .afgehaald {
-  width: 396px;
-  height: 50px;
-  margin-top:5px;
-  margin-bottom: 5px;
-  margin-left: 6px !important;
-  margin-right: 6px !important;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
   background-color: #028102;
-  background-image: url('/modules/msthemeconfig/views/templates/img/afgehaald.png');
-}
-
-.koopman-current-status-badge{
-  font-weight:bold;
-  font-size:.8rem;
-  border-radius: 5px 5px 0 0;
-  margin-left: 6px!important;
-  width: 396px !important;
-}
-
-.koopman-current-status-badge .type-cc{
-  margin-left: 6px;
-  margin-right: 6px;
-  width: 396px !important;
-}
-
-.koopman-current-status-badge-label{
-  font-size:.7rem;
-}
-
-.koopman-current-status-badge.status_10{
   color:#ffffff;
+}
+
+.koopman-current-status-badge {
+  font-weight: 700;
+  font-size: .8rem;
+  border-radius: 5px 5px 0 0;
+  width: 100% !important;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.koopman-current-status-badge .type-cc {
+  width: 100% !important
+}
+
+.koopman-current-status-badge-label {
+  font-size: .7rem
+}
+
+.koopman-current-status-badge.status_10 {
+  color: #fff
 }

@@ -302,7 +302,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function getFields()
     {
         $this->validateFields();
+
         $fields = $this->formatFields(self::FORMAT_COMMON);
+
 
         // For retro compatibility
         if (Shop::isTableAssociated($this->def['table'])) {
@@ -594,12 +596,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 $id_shop_list = $this->id_shop_list;
             }
         }
-
         // Database insertion
         if (Shop::checkIdShopDefault($this->def['table']) && array_key_exists('id_shop_default', get_object_vars($this))) {
             /* @phpstan-ignore-next-line  */
             $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
         }
+
+
         if (!$result = Db::getInstance()->insert($this->def['table'], $this->getFields(), $null_values)) {
             return false;
         }
@@ -1166,6 +1169,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // Check if field is required
         $required_fields = $this->getCachedFieldsRequiredDatabase();
+
         if (!$id_lang || $id_lang == $ps_lang_default) {
             if (!in_array('required', $skip) && (!empty($data['required']) || in_array($field, $required_fields))) {
                 if (Tools::isEmpty($value)) {

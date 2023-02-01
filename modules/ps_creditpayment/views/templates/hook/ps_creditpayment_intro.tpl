@@ -48,7 +48,7 @@
     {* Ophalen of werknemer van op rekening *}
   <div class="input-group mb-3">
     <div class="input-group-prepend">
-      <span class="input-group-text" for="on_credit_buyer"><i class="fas fa-user-hard-hat"></i></span>
+      <span class="input-group-text" for="on_credit_buyer"><i class="fas fa-user-tie"></i></span>
     </div>
     <input class="form-control" id="on_credit_buyer" name="on_credit_buyer" placeholder="Afhaler of werknemer">
   </div>

@@ -48,7 +48,7 @@ class Csoft_invisible_recaptcha_v2 extends Module
 
 //        var_export([_PS_THEME_DIR_,_PS_PARENT_THEME_DIR_]);
 //        die();
-		$contactFormTplChild = file_get_contents(_PS_ALL_THEMES_DIR_.'modernesmid/modules/contactform/views/templates/widget/contactform.tpl');
+		$contactFormTplChild = file_get_contents(_PS_ALL_THEMES_DIR_.'modernesmid_theme/modules/contactform/views/templates/widget/contactform.tpl');
 		$contactFormTplParent = file_get_contents(_PS_ALL_THEMES_DIR_.'classic/modules/contactform/views/templates/widget/contactform.tpl');
 
 		if($contactFormTplChild){

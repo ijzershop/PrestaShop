@@ -8,6 +8,8 @@
          <i class="koopman-current-status-badge-label">{{ column.options.stateCarrier.pickup_label }}</i> | <b> {{ record.osname }} </b>
       {% elseif record.carrier is same as column.options.stateCarrier.added %}
          <i class="koopman-current-status-badge-label">{{ column.options.stateCarrier.added_label }}</i> | <b> {{ record.osname }} </b>
+        {% else %}
+          <i class="koopman-current-status-badge-label"></i> | <b> {{ record.osname }} </b>
       {% endif %}
     </div>
   </div>

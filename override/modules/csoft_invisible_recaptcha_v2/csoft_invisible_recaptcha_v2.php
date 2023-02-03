@@ -45,7 +45,7 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 
 	public function install()
 	{
-		$contactFormTplChild = file_get_contents(_PS_ALL_THEMES_DIR_.'modernesmid/modules/contactform/views/templates/widget/contactform.tpl');
+		$contactFormTplChild = file_get_contents(_PS_ALL_THEMES_DIR_.'modernesmid_theme/modules/contactform/views/templates/widget/contactform.tpl');
 		$contactFormTplParent = file_get_contents(_PS_ALL_THEMES_DIR_.'classic/modules/contactform/views/templates/widget/contactform.tpl');
 
 		if($contactFormTplChild){

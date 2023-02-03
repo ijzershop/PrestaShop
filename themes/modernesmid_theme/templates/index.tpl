@@ -34,22 +34,25 @@
 
             <div class="row">
               {assign var="selectedCategories" value=explode(',',Configuration::get('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES'))}
+
              {if is_array($selectedCategories) && count($selectedCategories) >= 1 && $selectedCategories[0] != ''}
               {assign var="categoriesInfo" value=Category::getCategoryInformation($selectedCategories)}
               {foreach from=$selectedCategories item=category key=key}
-               {if strtolower($categoriesInfo[$category].name) != 'home'}
+              {if isset($categoriesInfo[$category])}
+               {if strtolower($categoriesInfo[$category]['name']) != 'home'}
                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
                 <div class="row text-center category-list-item mb-1">
                  <div class="category-list-item-img mx-auto overflow-hidden">
-                   <a class="text-decoration-none text-dark mx-auto" href="{$link->getCategoryLink($categoriesInfo[$category].id_category, $categoriesInfo[$category].link_rewrite)}">
-                  <img src="{$link->getCatImageLink($categoriesInfo[$category].link_rewrite, $categoriesInfo[$category].id_category, 'category_default')}" class="img-responsive"  width="140px" height="105px" alt="{$categoriesInfo[$category].name}" title="{$categoriesInfo[$category].name}">
+                   <a class="text-decoration-none text-dark mx-auto" href="{$link->getCategoryLink($categoriesInfo[$category]['id_category'], $categoriesInfo[$category]['link_rewrite'])}">
+                  <img src="{$link->getCatImageLink($categoriesInfo[$category]['link_rewrite'], $categoriesInfo[$category]['id_category'], 'category_default')}" class="img-responsive"  width="140px" height="105px" alt="{$categoriesInfo[$category]['name']}" title="{$categoriesInfo[$category]['name']}">
                 </a>
               </div>
-                <a class="text-decoration-none text-dark w-100" href="{$link->getCategoryLink($categoriesInfo[$category].id_category, $categoriesInfo[$category].link_rewrite)}">
-                    <span class="category-list-item-title mb-2 text-wordbreak d-block">{$categoriesInfo[$category].name}</span>
+                <a class="text-decoration-none text-dark w-100" href="{$link->getCategoryLink($categoriesInfo[$category]['id_category'], $categoriesInfo[$category]['link_rewrite'])}">
+                    <span class="category-list-item-title mb-2 text-wordbreak d-block">{$categoriesInfo[$category]['name']}</span>
                     </a>
                 </div>
               </div>
+              {/if}
               {/if}
               {/foreach}
               {/if}

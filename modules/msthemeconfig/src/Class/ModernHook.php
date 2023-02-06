@@ -313,10 +313,12 @@ class ModernHook
     {
         $product = new Product($idProduct);
 
-        if (!empty($product->description_short)) {
+        if (isset($product->description_short[$this->idLang])) {
             $description = trim(strip_tags($product->description_short[$this->idLang]));
-        } else {
+        } elseif(isset($product->description[$this->idLang])) {
             $description = trim(strip_tags($product->description[$this->idLang]));
+        } else {
+            $description = "";
         }
         $images = [];
         foreach ($product->getWsImages() as $image) {

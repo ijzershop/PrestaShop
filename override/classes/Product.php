@@ -286,26 +286,4 @@ class Product extends ProductCore {
         }
         return json_encode(['is_orderable' => $is_orderable, 'remaining_qty_msg' => $msg, 'remaining_stock' => $available_stock]);
     }
-    /*
-    * module: dynamicproduct
-    * date: 2023-01-13 08:06:00
-    * version: 2.43.11
-    */
-    public static function getProductProperties($id_lang, $row, Context $context = null)
-    {
-        $result = parent::getProductProperties($id_lang, $row, $context);
-        
-        $module = Module::getInstanceByName('dynamicproduct');
-        if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
-            $id_product = (int) $row['id_product'];
-            $dynamic_config = classes\models\DynamicConfig::getByProduct($id_product);
-            if ($dynamic_config->active) {
-                $displayed_price = classes\models\DynamicConfig::getDisplayedPrice($id_product);
-                if ($displayed_price || $dynamic_config->display_dynamic_price) {
-                    $module->calculator->assignProductPrices($row, $displayed_price, $result);
-                }
-            }
-        }
-        return $result;
-    }
 }

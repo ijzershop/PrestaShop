@@ -3187,6 +3187,8 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
             $finder = new PaymentOptionsFinder();
             $available_payments = $finder->present();
         }
+
+
         if ($available_payments) {
             $payment_settings_data = unserialize(Configuration::get('VELOCITY_SUPERCHECKOUT_DATA'));
 

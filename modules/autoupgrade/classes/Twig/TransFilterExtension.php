@@ -27,13 +27,20 @@
 
 namespace PrestaShop\Module\AutoUpgrade\Twig;
 
+use PrestaShop\Module\AutoUpgrade\UpgradeTools\Translator;
 use Twig_Extension;
 use Twig_SimpleFilter;
 
+/**
+ * Filter (Support for Twig 1)
+ */
 class TransFilterExtension extends Twig_Extension
 {
     const DOMAIN = 'Modules.Autoupgrade.Admin';
 
+    /**
+     * @var Translator
+     */
     private $translator;
 
     public function __construct($translator)
@@ -43,12 +50,12 @@ class TransFilterExtension extends Twig_Extension
 
     public function getFilters()
     {
-        return array(
-            new Twig_SimpleFilter('trans', array($this, 'trans')),
-        );
+        return [
+            new Twig_SimpleFilter('trans', [$this, 'trans']),
+        ];
     }
 
-    public function trans($string, $params = array())
+    public function trans($string, $params = [])
     {
         return $this->translator->trans($string, $params, self::DOMAIN);
     }

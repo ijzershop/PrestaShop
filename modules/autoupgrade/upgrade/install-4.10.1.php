@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop.
+ * 2007-2022 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA
+ * @copyright 2007-2022 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,13 +34,13 @@ if (!defined('_PS_VERSION_')) {
  *
  * @return true|string True if everything goes fine, error details otherwise
  */
-function removeFromFsDuringUpgrade(array $files)
+function removeAutoupgradePhpUnitFromFsDuringUpgrade(array $files)
 {
     $files = array_reverse($files);
     foreach ($files as $file) {
         if (is_dir($file)) {
             $iterator = new FilesystemIterator($file, FilesystemIterator::CURRENT_AS_PATHNAME | FilesystemIterator::SKIP_DOTS);
-            removeFromFsDuringUpgrade(iterator_to_array($iterator));
+            removeAutoupgradePhpUnitFromFsDuringUpgrade(iterator_to_array($iterator));
             if (!rmdir($file) && file_exists($file)) {
                 return 'Deletion of directory ' . $file . 'failed';
             }
@@ -60,7 +60,7 @@ function upgrade_module_4_10_1($module)
 {
     $path = __DIR__ . '/../vendor/phpunit';
     if (file_exists($path)) {
-        $result = removeFromFsDuringUpgrade(array($path));
+        $result = removeAutoupgradePhpUnitFromFsDuringUpgrade([$path]);
         if ($result !== true) {
             PrestaShopLogger::addLog('Could not delete PHPUnit from module. ' . $result, 3);
 

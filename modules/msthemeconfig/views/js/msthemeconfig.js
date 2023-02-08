@@ -26,7 +26,7 @@
  * to avoid any conflicts with others containers.
  */
 
-$(function () {
+
   function setSortable($parentFormElement) {
     let selectedArray = [];
     if ($parentFormElement.find('ol').length === 0) {
@@ -36,30 +36,27 @@ $(function () {
     }
     $('#MSTHEMECONFIG_HOMEPAGE_CATEGORIES option:selected').each(function (index, val) {
       $('#home_categories_sorted').append('<li data-id="' + val.value + '">' + val.textContent + '</li>');
-      if (debugModerneSmidThemeConfigurator) {
-        selectedArray.push({'id': val.value, 'text': val.textContent});
-      } else {
+
         selectedArray.push(val.value);
-      }
+
       $('#MSTHEMECONFIG_HOMEPAGE_CATEGORIES_SORTED').val(JSON.stringify(selectedArray));
     });
+
+
     $('#home_categories_sorted').sortable({
       update: function (event, ui) {
         let selectedArray = [];
         $('#home_categories_sorted li').each(function (index, el) {
-          if (debugModerneSmidThemeConfigurator) {
-            selectedArray.push({'id': el.dataset.id, 'text': el.outerText});
-          } else {
+
             selectedArray.push(el.dataset.id);
-          }
+
           $('#MSTHEMECONFIG_HOMEPAGE_CATEGORIES_SORTED').val(JSON.stringify(selectedArray));
         });
       }
     });
   }
-
-  $('#MSTHEMECONFIG_HOMEPAGE_CATEGORIES').on('change', function (event) {
-    event.preventDefault();
+$(function () {
+  $(document).on('select2:select', '#MSTHEMECONFIG_HOMEPAGE_CATEGORIES', function (event) {
     let $parentFormElement = $(this).parents('.form-group');
     setSortable($parentFormElement);
   });

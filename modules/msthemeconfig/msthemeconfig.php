@@ -399,9 +399,6 @@ class MsThemeConfig extends Module
      */
     protected function postProcess()
     {
-
-
-
         $imgKeys = [
             'MSTHEMECONFIG_BANNER_FIRST_IMAGE',
             'MSTHEMECONFIG_BANNER_SECOND_IMAGE',
@@ -428,7 +425,7 @@ class MsThemeConfig extends Module
         ];
 
         $multipleSelectKeys = [
-            'MSTHEMECONFIG_HOMEPAGE_CATEGORIES',
+            'MSTHEMECONFIG_HOMEPAGE_CATEGORIES_SORTED',
             'MSTHEMECONFIG_CHANNABLE_CATEGORIES',
             'MSTHEMECONFIG_SHOP_NOTIFICATION_PAGES',
             'MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES',
@@ -453,14 +450,13 @@ class MsThemeConfig extends Module
                 if(is_array($value)){
                     $arrayString = implode(',', $value);
                 } else {
-                    $arrayString = $value;
+                    $arrayString = str_replace(['[',']', '"'],['','',''], $value);
                 }
 
-                $dbKey = str_replace('[]','', $key);
-
-                Configuration::updateValue($dbKey, [1=>$arrayString], false,  $this->idShopGroup, $this->idShop);
-
-                continue;
+                if($key === 'MSTHEMECONFIG_HOMEPAGE_CATEGORIES_SORTED'){
+                    Configuration::updateValue('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES', $arrayString);
+                }
+                Configuration::updateValue($key, $arrayString);
             }
 
             if (in_array($key, $imgKeys)) {
@@ -471,7 +467,7 @@ class MsThemeConfig extends Module
                 $file = $this->uploadFiles($_FILES[$key]);
                 Configuration::updateValue($key, $file);
             } elseif (in_array($key, $textareaKeys)) {
-                Configuration::updateValue($key, Tools::getValue($key), true);
+                Configuration::updateValue($key, Tools::getValue($key));
             } elseif ($key == 'MSTHEMECONFIG_ORDERSTATE_SENDMAIL_JSON') {
                 $orderStateIds = Tools::getValue('SENDMAIL_ORDER_STATUS');
                 $orderStateFirstEmails = Tools::getValue('SENDMAIL_ORDER_STATUS_FIRST_EMAIL');

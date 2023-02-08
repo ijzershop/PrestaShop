@@ -72,8 +72,8 @@ class DmsOrderPreviewProductDetail extends OrderPreviewProductDetail
     public function getCustomization(): ?string
     {
         $config = new \PrestaShop\PrestaShop\Adapter\Configuration();
-        $custom_product_reference = $config->get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_REFERENCE', 'CP');
-        $offer_category = $config->get('MODERNESMIDTHEMECONFIGURATOR_CUSTOM_PRODUCT_CATEGORY', '6');
+        $custom_product_reference = $config->get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE', 'CP');
+        $offer_category = $config->get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', '6');
 
         $id_lang = Context::getContext()->cookie->id_lang;
 

@@ -39,12 +39,12 @@ class UpgradeConfiguration extends ArrayCollection
      *
      * @var array
      */
-    protected $performanceValues = array(
-        'loopFiles' => array(400, 800, 1600), // files
-        'loopTime' => array(6, 12, 25), // seconds
-        'maxBackupFileSize' => array(15728640, 31457280, 62914560), // bytes
-        'maxWrittenAllowed' => array(4194304, 8388608, 16777216), // bytes
-    );
+    protected $performanceValues = [
+        'loopFiles' => [400, 800, 1600], // files
+        'loopTime' => [6, 12, 25], // seconds
+        'maxBackupFileSize' => [15728640, 31457280, 62914560], // bytes
+        'maxWrittenAllowed' => [4194304, 8388608, 16777216], // bytes
+    ];
 
     /**
      * Get the name of the new release archive.
@@ -149,14 +149,22 @@ class UpgradeConfiguration extends ArrayCollection
     }
 
     /**
-     * @return bool True if we are allowed to update th default theme files
+     * @return bool True if we are allowed to update the default theme files
      */
     public function shouldUpdateDefaultTheme()
     {
         return (bool) $this->get('PS_AUTOUP_UPDATE_DEFAULT_THEME');
     }
 
-    public function merge(array $array = array())
+    /**
+     * @return bool True if we should update RTL files
+     */
+    public function shouldUpdateRTLFiles()
+    {
+        return (bool) $this->get('PS_AUTOUP_UPDATE_RTL_FILES');
+    }
+
+    public function merge(array $array = [])
     {
         foreach ($array as $key => $value) {
             $this->set($key, $value);

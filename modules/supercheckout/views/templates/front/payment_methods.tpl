@@ -19,7 +19,6 @@
         {else}
             {assign var="selected_payment_method" value=$id_module_mollie}
         {/if}
-
         {foreach from=$payment_methods item="option"}
 
           <li>

@@ -5,23 +5,14 @@ let kiyohDataAveragePercentage =  "{$attr['averageRatingPercentage']}";
 let kiyohDataTotal =  "{$attr['totalReviews']}";
 
 
-{if isset($product.name)}
-  {assign var="name" value=$product.name}
-  {assign var="img" value=$product.image.medium.url}
-{elseif isset($category.name)}
-  {assign var="name" value=$category.name}
-  {assign var="img" value=$category.image.medium.url}
-{else}
-  {assign var="name" value=$page.meta.title}
-  {assign var="img" value=$shop.logo}
-{/if}
+
 </script>
 
 <script type="application/ld+json">
   {
       "@context": "https://schema.org/",
       "@type": "Product",
-      "image": "{$img nofilter}",
+      "image": "",
       "name": "{$name}",
       "aggregateRating": {$attr['rating'] nofilter},
       "review": {$attr['reviews'] nofilter}

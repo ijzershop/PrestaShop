@@ -133,6 +133,9 @@ class DmsAdminCustomerController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_customers_index');
         }
 
+
+
+
         try {
             $customerForm->handleRequest($request);
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');

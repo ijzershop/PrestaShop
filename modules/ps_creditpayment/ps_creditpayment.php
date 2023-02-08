@@ -237,6 +237,7 @@ class Ps_Creditpayment extends PaymentModule
         $creditGroup = new Group(Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP'), Context::getContext()->language->id, Context::getContext()->shop->id);
         $customersWithGroup = $creditGroup->getCustomers();
         $is_balie_employee = Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id;
+
         $add_to_list = false;
         if ($is_balie_employee) {
             $add_to_list = true;

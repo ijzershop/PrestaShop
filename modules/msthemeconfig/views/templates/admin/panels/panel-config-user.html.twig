@@ -44,7 +44,7 @@
           </label>
           <div class="col-xs-8">
             <select name="MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE"
-                    class="w-100 form-control  select2-data-input" data-type="profiles"
+                    class="w-100 form-control  select2-data-input" data-type="customer"
                     id="MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE">
               {{ MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE|raw }}
             </select>
@@ -57,8 +57,8 @@
           </label>
           <div class="col-xs-8">
             <select name="MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP"
-                    class="w-100 form-control  select2-data-input" data-type="groups" ="
-            MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP">
+                    class="w-100 form-control  select2-data-input" data-type="groups" 
+                    id="MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP">
             {{ MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP|raw }}
             </select>
             <p class="help-block">Select the desired customer group to use for orders on credit</p>

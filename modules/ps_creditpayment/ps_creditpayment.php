@@ -284,6 +284,8 @@ class Ps_Creditpayment extends PaymentModule
             $payment_options = [
                 $newOption,
             ];
+
+
             return $payment_options;
         }
     }

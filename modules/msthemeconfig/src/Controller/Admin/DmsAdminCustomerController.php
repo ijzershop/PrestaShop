@@ -125,6 +125,7 @@ class DmsAdminCustomerController extends FrameworkBundleAdminController
             $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
                 ->getFormFor((int) $customerId, [], $customerFormOptions);
         } catch (Exception $exception) {
+            
             $this->addFlash(
                 'error',
                 $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))

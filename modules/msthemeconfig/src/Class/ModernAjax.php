@@ -151,7 +151,7 @@ class ModernAjax
                 $dataArray[$this->prefix . 'OFFER_LINK'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'OFFER_LINK', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'pages');
                 $dataArray[$this->prefix . 'PRIMARY_COLOR'] = Configuration::get($this->prefix . 'PRIMARY_COLOR', $this->idLang, $this->idShopGroup, $this->idShop, '#3b56ad');
                 //Homepage variables
-                $dataArray[$this->prefix . 'HOMEPAGE_CATEGORIES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'HOMEPAGE_SELECTED_CATEGORIES', $this->idLang, $this->idShopGroup, $this->idShop, []), 'categories_home');
+                $dataArray[$this->prefix . 'HOMEPAGE_CATEGORIES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'HOMEPAGE_SELECTED_CATEGORIES', $this->idLang, $this->idShopGroup, $this->idShop, []), 'categories_home', false);
                 $dataArray[$this->prefix . 'HOMEPAGE_TEXT'] = Configuration::get($this->prefix . 'HOMEPAGE_TEXT', $this->idLang, $this->idShopGroup, $this->idShop, '');
                 $dataArray[$this->prefix . 'HOMEPAGE_BACKGROUND_COLOR'] = Configuration::get($this->prefix . 'HOMEPAGE_BACKGROUND_COLOR', $this->idLang, $this->idShopGroup, $this->idShop, '#efefef');
                 //Category variables
@@ -365,7 +365,7 @@ class ModernAjax
             case 'config-user':
                 $dataArray[$this->prefix . 'EMPLOYEE_WORKSHOP_PROFILES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'EMPLOYEE_WORKSHOP_PROFILES', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'profiles');
                 $dataArray[$this->prefix . 'EMPLOYEE_SHOP_PROFILES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'EMPLOYEE_SHOP_PROFILES', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'profiles');
-                $dataArray[$this->prefix . 'EMPLOYEE_CUSTOMER_PROFILE'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'EMPLOYEE_CUSTOMER_PROFILE', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'profiles');
+                $dataArray[$this->prefix . 'EMPLOYEE_CUSTOMER_PROFILE'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'EMPLOYEE_CUSTOMER_PROFILE', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'customer');
                 $dataArray[$this->prefix . 'EMPLOYEE_CUSTOMER_BALIE_GROUP'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'EMPLOYEE_CUSTOMER_BALIE_GROUP', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'groups');
                 $dataArray[$this->prefix . 'EMPLOYEE_CUSTOMER_CREDIT_GROUP'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'EMPLOYEE_CUSTOMER_CREDIT_GROUP', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'groups');
                 $dataArray[$this->prefix . 'EMPLOYEE_CUSTOMER_VOUCHER_GROUP'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'EMPLOYEE_CUSTOMER_VOUCHER_GROUP', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'groups');
@@ -509,20 +509,28 @@ class ModernAjax
      *
      * @throws PrestaShopDatabaseException
      */
-    private function getSelect2SelectedOptions($options, $data_type): string
+    private function getSelect2SelectedOptions($options, $data_type, $sort=true): string
     {
-        $selectedOptionList = [];
-        $optionList = $this->getSelect2Data($data_type)->getContent();
-        $selectedOptions = explode(',', $options);
-        if ($optionList) {
-            $data = json_decode($optionList);
-            foreach ($data->results as $option) {
-                if (in_array($option->id, $selectedOptions)) {
-                    $selectedOptionList[] = '<option value="' . $option->id . '" selected>' . $option->text . '</option>';
-                }
+        if(!empty($options)){
+            $selectedOptionList = [];
+            $optionList = $this->getSelect2Data($data_type, $sort)->getContent();
+            $selectedOptions = explode(',', $options);
+            if ($optionList) {
+                $data = json_decode($optionList);
 
+                foreach ($selectedOptions as $selectedOption){
+                    foreach ($data->results as $option) {
+                        if ((int)$option->id === (int)$selectedOption) {
+                            $selectedOptionList[] = '<option value="' . $option->id . '" selected>' . $option->text . '</option>';
+                        }
+                    }
+                }
             }
+        } else {
+            $selectedOptionList = [];
         }
+
+
 
         return implode("", $selectedOptionList);
     }
@@ -534,7 +542,7 @@ class ModernAjax
      * @return JsonResponse
      * @throws PrestaShopDatabaseException
      */
-    public function getSelect2Data($data_type): JsonResponse
+    public function getSelect2Data($data_type, $sort = true): JsonResponse
     {
         $search = Tools::getValue('search');
         if (!$search) {
@@ -556,7 +564,13 @@ class ModernAjax
                 $pagesList['results'][] = ["id" => 0, "text" => "Geen pagina"];
                 $pagesList = $this->pageLoop($pages, $pagesList, $search);
 
-                return JsonResponse::fromJsonString(json_encode($this->sortSearchResult($pagesList)));
+                if($sort){
+                    $list = $this->sortSearchResult($pagesList);
+                } else {
+                    $list = $pagesList;
+                }
+                return JsonResponse::fromJsonString(json_encode($list));
+
             case 'notification_pages':
                 $pages = CMS::listCms($this->idLang);
                 $pagesList = [];
@@ -571,7 +585,13 @@ class ModernAjax
                 $pagesList['results'][] = ['id' => 'all', 'text' => 'Alle paginas'];
 
                 $pagesList = $this->pageLoop($pages, $pagesList, $search);
-                return JsonResponse::fromJsonString(json_encode($this->sortSearchResult($pagesList)));
+                if($sort){
+                    $list = $this->sortSearchResult($pagesList);
+                } else {
+                    $list = $pagesList;
+                }
+                return JsonResponse::fromJsonString(json_encode($list));
+
             case 'features':
                 $features = Feature::getFeatures($this->idLang);
                 $featuresList = [];
@@ -586,7 +606,13 @@ class ModernAjax
                     }
                     $featuresList['results'][] = ['id' => $id, 'text' => $title];
                 }
-                return JsonResponse::fromJsonString(json_encode($this->sortSearchResult($featuresList)));
+                if($sort){
+                    $list = $this->sortSearchResult($featuresList);
+                } else {
+                    $list = $featuresList;
+                }
+                return JsonResponse::fromJsonString(json_encode($list));
+
             case 'profiles':
                 $profiles = Profile::getProfiles($this->idLang);
                 $profilesList = [];
@@ -601,7 +627,13 @@ class ModernAjax
                     }
                     $profilesList['results'][] = ['id' => $id, 'text' => $title];
                 }
-                return JsonResponse::fromJsonString(json_encode($this->sortSearchResult($profilesList)));
+                if($sort){
+                    $list = $this->sortSearchResult($profilesList);
+                } else {
+                    $list = $profilesList;
+                }
+                return JsonResponse::fromJsonString(json_encode($list));
+
             case 'order_states':
                 $orderStates = OrderState::getOrderStates($this->idLang);
                 $orderStatesList = [];
@@ -616,7 +648,13 @@ class ModernAjax
                     }
                     $orderStatesList['results'][] = ['id' => $id, 'text' => $title];
                 }
-                return JsonResponse::fromJsonString(json_encode($this->sortSearchResult($orderStatesList)));
+                if($sort){
+                    $list = $this->sortSearchResult($orderStatesList);
+                } else {
+                    $list = $orderStatesList;
+                }
+                return JsonResponse::fromJsonString(json_encode($list));
+
             case 'carriers':
                 $carriers = Carrier::getCarriers($this->idLang, true);
                 $carriersList = [];
@@ -631,7 +669,13 @@ class ModernAjax
                     }
                     $carriersList['results'][] = ['id' => $id, 'text' => $title];
                 }
-                return JsonResponse::fromJsonString(json_encode($this->sortSearchResult($carriersList)));
+                if($sort){
+                    $list = $this->sortSearchResult($carriersList);
+                } else {
+                    $list = $carriersList;
+                }
+                return JsonResponse::fromJsonString(json_encode($list));
+
             case 'categories_home':
                 $categories = Category::getSimpleCategoriesWithParentInfos($this->idLang);
                 $categoriesList = [];
@@ -656,7 +700,14 @@ class ModernAjax
 
                 $categoriesList['results'] = $filteredCategories;
 
-                return JsonResponse::fromJsonString(json_encode($this->sortSearchResult($categoriesList)));
+                if($sort){
+                    $list = $this->sortSearchResult($categoriesList);
+                } else {
+                    $list = $categoriesList;
+                }
+
+                return JsonResponse::fromJsonString(json_encode($list));
+
             case 'customer':
                 $customerList = [];
                 $searchArray = explode(' ', $search);
@@ -698,7 +749,14 @@ class ModernAjax
                     }
                     $groupsList['results'][] = ['id' => $id, 'text' => $title];
                 }
-                return JsonResponse::fromJsonString(json_encode($this->sortSearchResult($groupsList)));
+                if($sort){
+                    $list = $this->sortSearchResult($groupsList);
+                } else {
+                    $list = $groupsList;
+                }
+                return JsonResponse::fromJsonString(json_encode($list));
+
+
         }
         return JsonResponse::fromJsonString(json_encode([]));
     }

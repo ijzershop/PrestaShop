@@ -1226,7 +1226,12 @@ class ModernHook
         }
 
         $reviews = [];
-        $productComments = json_decode($results[0]['kiyoh_latest_feed'], true);
+        if(isset($results[0]['kiyoh_latest_feed'])){
+            $productComments = json_decode($results[0]['kiyoh_latest_feed'], true);
+        } else {
+            $productComments = [];
+            $productComments['reviews']['reviews'] = [];
+        }
 
         foreach ($productComments['reviews']['reviews'] as $key => $productComment) {
 

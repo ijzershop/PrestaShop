@@ -370,6 +370,8 @@ class ModernAjax
                 $dataArray[$this->prefix . 'EMPLOYEE_CUSTOMER_CREDIT_GROUP'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'EMPLOYEE_CUSTOMER_CREDIT_GROUP', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'groups');
                 $dataArray[$this->prefix . 'EMPLOYEE_CUSTOMER_VOUCHER_GROUP'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'EMPLOYEE_CUSTOMER_VOUCHER_GROUP', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'groups');
                 $dataArray[$this->prefix . 'SHOW_ONCREDIT_CUSTOMER'] = (int)Configuration::get($this->prefix . 'SHOW_ONCREDIT_CUSTOMER', $this->idLang, $this->idShopGroup, $this->idShop, 0);
+
+
                 break;
             case 'dev':
                 $dataArray[$this->prefix . 'ORDERLIST_FILTER_TIME'] = Configuration::get($this->prefix . 'ORDERLIST_FILTER_TIME', $this->idLang, $this->idShopGroup, $this->idShop, '-4 weeks');

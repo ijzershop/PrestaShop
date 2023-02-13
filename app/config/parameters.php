@@ -6,9 +6,9 @@ return [
   [
     'database_host' => '127.0.0.1',
     'database_port' => '',
-    'database_name' => 'ijzershop_live_nl_copy',
-    'database_user' => 'ijzershopeu780',
-    'database_password' => '72arlXJvM7gw&agm',
+    'database_name' => 'ijzershop8',
+    'database_user' => 'root',
+    'database_password' => '',
     'database_prefix' => 'ps176_',
     'database_engine' => 'InnoDB',
     'mailer_transport' => 'smtp',

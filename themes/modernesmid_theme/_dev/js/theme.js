@@ -1681,7 +1681,7 @@ var showAddedToCartGlow = function (caller_element) {
 
 // Voeg regel toe aan winkel wagen
 $(document).on('click', '#addCustomProductByEmployee', function (event) {
-  event.preventDefault();
+  event.stopImmediatePropagation();
 
   var rowId = Math.random().toString(36).substr(2, 9);
   const cart = $(this).attr('data-cart');
@@ -1770,11 +1770,14 @@ $(document).on('click', '#addCustomProductByEmployee', function (event) {
 
 $(document).on('click', '.removeCustomProductEmployee', function (event) {
   event.preventDefault();
+  event.stopImmediatePropagation();
+
   const parentLI = $(this).parents('li');
   parentLI.remove();
 });
 $(document).on('click', '.saveCustomProductEmployee', function (event) {
   event.preventDefault();
+  event.stopImmediatePropagation();
 
   var rowId = $(this).attr('data-id');
   const parentRow = $(this).parents('.product-line-grid');

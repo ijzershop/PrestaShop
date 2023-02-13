@@ -25,7 +25,7 @@ use PrestaShop\PrestaShop\Adapter\StockManager;
 
 class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontController
 {
-    const DEBUG_MODE = false;
+    const DEBUG_MODE = true;
     public $name = 'ps_creditpayment';
 	/**
 	 * @see FrontController::postProcess()
@@ -33,30 +33,39 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 	public function postProcess()
 	{
 		$cart = $this->context->cart;
-		if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active)
-			Tools::redirect('index.php?controller=order&step=1');
 
-		// Check that this payment option is still available in case the customer changed his address just before the end of the checkout process
+
+        if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active){
+            Tools::redirect('index.php?controller=order&step=1');
+        }
+
+        // Check that this payment option is still available in case the customer changed his address just before the end of the checkout process
 		$authorized = false;
-		foreach (Module::getPaymentModules() as $module)
-			if ($module['name'] == 'ps_creditpayment')
-			{
-				$authorized = true;
-				break;
-			}
-		if (!$authorized)
-			die($this->module->getTranslator()->trans('This payment method is not available.', array(), 'Modules.Creditpayment.Shop'));
+		foreach (Module::getPaymentModules() as $module){
+            if ($module['name'] == 'ps_creditpayment')
+            {
+                $authorized = true;
+                break;
+            }
+        }
 
+        if (!$authorized){
+            die($this->module->getTranslator()->trans('This payment method is not available.', array(), 'Modules.Creditpayment.Shop'));
+        }
 
-		$customer = new Customer($cart->id_customer);
-		if (!Validate::isLoadedObject($customer))
-			Tools::redirect('index.php?controller=order&step=1');
+        $customer = new Customer($cart->id_customer);
+        if (!Validate::isLoadedObject($customer)){
+            Tools::redirect('index.php?controller=order&step=1');
+        }
 
-		$currency = $this->context->currency;
-		$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
+        $currency = $this->context->currency;
+        $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
 
-		$this->validateOrder($cart->id, Configuration::get('PS_OS_BANKCREDIT'), $total, 'Op Rekening', NULL, array(), (int)$currency->id, false, $this->context->cookie->selected_customer_secure_key);
-		Tools::redirect('index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key.'&oncredit=true');
+        $this->validateOrder($cart->id, Configuration::get('PS_OS_BANKCREDIT'), $total, 'Op Rekening', NULL, array(), (int)$currency->id, false, $this->context->cookie->selected_customer_secure_key);
+
+//dd('index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key.'&oncredit=true');
+
+        Tools::redirect('index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key.'&oncredit=true');
 	}
 
 
@@ -154,6 +163,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             "Securitycode: ".$security_code,
             "Apikey: ". $api_key,
         );
+
 
         curl_setopt_array($curlCard, array(
             CURLOPT_URL => "https://api.informer.eu/v1/invoice/sales",
@@ -254,7 +264,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 
             throw new PrestaShopException('Can\'t load Order status');
         }
-
         // Does order already exists ?
         if (Validate::isLoadedObject($this->context->cart) && $this->context->cart->OrderExists() == false) {
             if ($secure_key !== false && $secure_key != $this->context->cart->secure_key) {
@@ -266,7 +275,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             // For each package, generate an order
             $delivery_option_list = $this->context->cart->getDeliveryOptionList();
             $package_list = $this->context->cart->getPackageList();
-            $cart_delivery_option = $this->context->cart->getDeliveryOption(null,true,false);
+            $cart_delivery_option = $this->context->cart->getDeliveryOption(null,false,false);
 
             // If some delivery options are not defined, or not valid, use the first valid option
             foreach ($delivery_option_list as $id_address => $package) {
@@ -292,6 +301,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             $this->currentOrderReference = $reference;
 
             $cart_total_paid = (float) Tools::ps_round((float) $this->context->cart->getOrderTotal(true, Cart::BOTH), 2);
+
             foreach ($cart_delivery_option as $id_address => $key_carriers) {
                 foreach ($delivery_option_list[$id_address][$key_carriers]['carrier_list'] as $id_carrier => $data) {
                     foreach ($data['package_list'] as $id_package) {
@@ -305,6 +315,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             // Make sure CartRule caches are empty
             CartRule::cleanCache();
             $cart_rules = $this->context->cart->getCartRules();
+
             foreach ($cart_rules as $cart_rule) {
                 if (($rule = new CartRule((int) $cart_rule['obj']->id)) && Validate::isLoadedObject($rule)) {
                     if ($error = $rule->checkValidity($this->context, true, true)) {
@@ -358,6 +369,8 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             $order->total_shipping = $this->context->cart->getPackageShippingCost($this->context->cart->id_carrier, true);
             $order->total_shipping_tax_incl = $this->context->cart->getPackageShippingCost($this->context->cart->id_carrier, true);
             $order->total_shipping_tax_excl = $this->context->cart->getPackageShippingCost($this->context->cart->id_carrier, false);
+            $order->shipping_number = '';
+
 
             // The country can only change if the address used for the calculation is the delivery address, and if multi-shipping is activated
             if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery') {
@@ -391,6 +404,9 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                     throw new PrestaShopException('Can\'t save Order Payment');
                 }
             }
+
+
+
 
             // Next !
             $only_one_gift = false;
@@ -558,6 +574,8 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                         'orderStatus' => $order_status,
                     ));
 
+
+
                     foreach ($this->context->cart->getProducts() as $product) {
                         if ($order_status->logable) {
                             ProductSale::addProductSale((int) $product['id_product'], (int) $product['cart_quantity']);
@@ -589,115 +607,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                     // Order is reloaded because the status just changed
                     $order = new Order((int) $order->id);
 
-                    // Send an e-mail to customer (one order = one email)
-//                    if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && $this->context->customer->id) {
-//                        $invoice = new Address((int) $order->id_address_invoice);
-//                        $delivery = new Address((int) $order->id_address_delivery);
-//                        $delivery_state = $delivery->id_state ? new State((int) $delivery->id_state) : false;
-//                        $invoice_state = $invoice->id_state ? new State((int) $invoice->id_state) : false;
-//                        $carrier = $order->id_carrier ? new Carrier($order->id_carrier) : false;
-//
-//                        $data = array(
-//                            '{firstname}' => $this->context->customer->firstname,
-//                            '{lastname}' => $this->context->customer->lastname,
-//                            '{email}' => $this->context->customer->email,
-//                            '{delivery_block_txt}' => $this->_getFormatedAddress($delivery, AddressFormat::FORMAT_NEW_LINE),
-//                            '{invoice_block_txt}' => $this->_getFormatedAddress($invoice, AddressFormat::FORMAT_NEW_LINE),
-//                            '{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br />', array(
-//                                'firstname' => '<span style="font-weight:bold;">%s</span>',
-//                                'lastname' => '<span style="font-weight:bold;">%s</span>',
-//                            )),
-//                            '{invoice_block_html}' => $this->_getFormatedAddress($invoice, '<br />', array(
-//                                'firstname' => '<span style="font-weight:bold;">%s</span>',
-//                                'lastname' => '<span style="font-weight:bold;">%s</span>',
-//                            )),
-//                            '{delivery_company}' => $delivery->company,
-//                            '{delivery_firstname}' => $delivery->firstname,
-//                            '{delivery_lastname}' => $delivery->lastname,
-//                            '{delivery_address1}' => $delivery->address1,
-//                            '{delivery_address2}' => $delivery->address2,
-//                            '{delivery_city}' => $delivery->city,
-//                            '{delivery_postal_code}' => $delivery->postcode,
-//                            '{delivery_country}' => $delivery->country,
-//                            '{delivery_state}' => $delivery->id_state ? $delivery_state->name : '',
-//                            '{delivery_phone}' => ($delivery->phone) ? $delivery->phone : $delivery->phone_mobile,
-//                            '{delivery_other}' => $delivery->other,
-//                            '{invoice_company}' => $invoice->company,
-//                            '{invoice_vat_number}' => $invoice->vat_number,
-//                            '{invoice_firstname}' => $invoice->firstname,
-//                            '{invoice_lastname}' => $invoice->lastname,
-//                            '{invoice_address2}' => $invoice->address2,
-//                            '{invoice_address1}' => $invoice->address1,
-//                            '{invoice_city}' => $invoice->city,
-//                            '{invoice_postal_code}' => $invoice->postcode,
-//                            '{invoice_country}' => $invoice->country,
-//                            '{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
-//                            '{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
-//                            '{invoice_other}' => $invoice->other,
-//                            '{order_name}' => $order->getUniqReference(),
-//                            '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
-//                            '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', array(), 'Admin.Payment.Notification') : $carrier->name,
-//                            '{payment}' => Tools::substr($order->payment, 0, 255),
-//                            '{products}' => $product_list_html,
-//                            '{products_txt}' => $product_list_txt,
-//                            '{discounts}' => $cart_rules_list_html,
-//                            '{discounts_txt}' => $cart_rules_list_txt,
-//                            '{total_paid}' => Tools::displayPrice($order->total_paid, $this->context->currency, false),
-//                            '{total_products}' => Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? $order->total_products : $order->total_products_wt, $this->context->currency, false),
-//                            '{total_discounts}' => Tools::displayPrice($order->total_discounts, $this->context->currency, false),
-//                            '{total_shipping}' => Tools::displayPrice($order->total_shipping, $this->context->currency, false),
-//                            '{total_shipping_tax_excl}' => Tools::displayPrice($order->total_shipping_tax_excl, $this->context->currency, false),
-//                            '{total_shipping_tax_incl}' => Tools::displayPrice($order->total_shipping_tax_incl, $this->context->currency, false),
-//                            '{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $this->context->currency, false),
-//                            '{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency, false),
-//                        );
-//
-//                        if (is_array($extra_vars)) {
-//                            $data = array_merge($data, $extra_vars);
-//                        }
-//
-//                        // Join PDF invoice
-//                        if ((int) Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number) {
-//                            $order_invoice_list = $order->getInvoicesCollection();
-//                            Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => $order_invoice_list));
-//                            $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
-//                            $file_attachement['content'] = $pdf->render(false);
-//                            $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
-//                            $file_attachement['mime'] = 'application/pdf';
-//                        } else {
-//                            $file_attachement = null;
-//                        }
-//
-//                        if (self::DEBUG_MODE) {
-//                            PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
-//                        }
-//
-//                        $orderLanguage = new Language((int) $order->id_lang);
-//
-////                        if (Validate::isEmail($this->context->customer->email)) {
-////                            Mail::Send(
-////                                (int) $order->id_lang,
-////                                'order_conf',
-////                                Context::getContext()->getTranslator()->trans(
-////                                    'Order confirmation',
-////                                    array(),
-////                                    'Emails.Subject',
-////                                    $orderLanguage->locale
-////                                ),
-////                                $data,
-////                                $this->context->customer->email,
-////                                $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
-////                                null,
-////                                null,
-////                                $file_attachement,
-////                                null,
-////                                _PS_MAIL_DIR_,
-////                                false,
-////                                (int) $order->id_shop
-////                            );
-////                        }
-//                    }
-
                     // updates stock in shops
                     if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                         $product_list = $order->getProducts();
@@ -712,6 +621,8 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 
                     $order->updateOrderDetailTax();
 
+
+
                     // sync all stock
                     (new StockManager())->updatePhysicalProductQuantity(
                         (int) $order->id_shop,
@@ -720,11 +631,18 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                         null,
                         (int) $order->id
                     );
+
+
+
+
                 } else {
                     $error = $this->trans('Order creation failed', array(), 'Admin.Payment.Notification');
                     PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', (int) ($order->id_cart));
                     die(Tools::displayError($error));
                 }
+
+
+
             } // End foreach $order_detail_list
 
             // Use the last order as currentOrder
@@ -735,6 +653,9 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
             }
+
+
+
             $this->addToInformerApi($order);
             $this->addProjectAndEmployeeToMessages($order);
             return true;
@@ -758,9 +679,11 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             $this->context->cookie->on_credit_buyer = '';
         }
 
+
+
         if (Validate::isCleanHtml($projectMessage) && $projectMessage != '') {
             if (self::DEBUG_MODE) {
-                PrestaShopLogger::addLog('PaymentModule::validateOrder - Message with on credit project info is about to be added', 1, null, 'Cart', (int)$id_cart, true);
+                PrestaShopLogger::addLog('PaymentModule::validateOrder - Message with on credit project info is about to be added', 1, null, 'Cart', (int)$order->id_cart, true);
             }
             $projectMsg = new Message();
             $projectMsg->message = $projectMessage;
@@ -773,7 +696,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 
         if (Validate::isCleanHtml($customerMessage) && $customerMessage != '') {
             if (self::DEBUG_MODE) {
-                PrestaShopLogger::addLog('PaymentModule::validateOrder - Message with on credit customer info is about to be added', 1, null, 'Cart', (int)$id_cart, true);
+                PrestaShopLogger::addLog('PaymentModule::validateOrder - Message with on credit customer info is about to be added', 1, null, 'Cart', (int)$order->id_cart, true);
             }
             $customerMsg = new Message();
             $customerMsg->message = $customerMessage;

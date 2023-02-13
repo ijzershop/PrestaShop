@@ -46,7 +46,6 @@ class Order extends OrderCore
             'total_wrapping_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
             'round_mode' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'round_type' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'shipping_number' => ['type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'],
             'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
             'invoice_number' => ['type' => self::TYPE_INT],
             'delivery_number' => ['type' => self::TYPE_INT],

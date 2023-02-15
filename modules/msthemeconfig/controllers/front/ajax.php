@@ -267,6 +267,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $category = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY');
 
         $cart = Context::getContext()->cart;
+
         if ($cart->id == NULL) {
             $cart->add(true, false);
             Context::getContext()->cookie->id_cart = $cart->id;
@@ -355,7 +356,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->minimum_amount_shipping = 0;
             $credit->country_restriction = 0;
             $credit->carrier_restriction = 0;
-            $credit->group_restriction = 1;
+            $credit->group_restriction = 0;
             $credit->cart_rule_restriction = 0;
             $credit->product_restriction = 0;
             $credit->shop_restriction = 0;

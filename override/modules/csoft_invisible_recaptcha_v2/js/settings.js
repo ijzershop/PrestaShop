@@ -16,11 +16,11 @@
  * @version   1.1.2
  */
 
-var onSubmit = function(token) {
+let onSubmit = function(token) {
     $('.contact-form form').submit();
 };
 
-var onloadCallback = function() {
+let onloadCallback = function() {
   if ($('form input[name=submitMessage]').length > 0) {
 
     $('form input[name=submitMessage]').attr('id','submitMessage');
@@ -32,8 +32,6 @@ var onloadCallback = function() {
         $('form input[name=submitMessage]').attr('disabled','disabled');
         $('#content-wrapper form').append('<input type="hidden" name="submitMessage">');
     }else {
-
-
         grecaptcha.render('submitMessage', {
           'sitekey': recaptchaKey,
           'callback': onSubmit

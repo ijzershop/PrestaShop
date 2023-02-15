@@ -34,7 +34,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 	{
 		$cart = $this->context->cart;
 
-
         if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active){
             Tools::redirect('index.php?controller=order&step=1');
         }
@@ -620,9 +619,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                     }
 
                     $order->updateOrderDetailTax();
-
-
-
                     // sync all stock
                     (new StockManager())->updatePhysicalProductQuantity(
                         (int) $order->id_shop,
@@ -631,18 +627,11 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                         null,
                         (int) $order->id
                     );
-
-
-
-
                 } else {
                     $error = $this->trans('Order creation failed', array(), 'Admin.Payment.Notification');
                     PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', (int) ($order->id_cart));
                     die(Tools::displayError($error));
                 }
-
-
-
             } // End foreach $order_detail_list
 
             // Use the last order as currentOrder
@@ -653,8 +642,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
             }
-
-
 
             $this->addToInformerApi($order);
             $this->addProjectAndEmployeeToMessages($order);
@@ -678,8 +665,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             $customerMessage = strip_tags('Afhaler: '.$this->context->cookie->on_credit_buyer . '<br>', '<br>');
             $this->context->cookie->on_credit_buyer = '';
         }
-
-
 
         if (Validate::isCleanHtml($projectMessage) && $projectMessage != '') {
             if (self::DEBUG_MODE) {

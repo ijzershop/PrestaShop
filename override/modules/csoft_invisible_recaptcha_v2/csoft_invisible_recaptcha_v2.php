@@ -239,12 +239,14 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 	 */
 	public function hookDisplayHeader($params)
 	{
+
 		// Display on the contact form
 		if ($this->context->controller instanceof ContactController ||
             $this->context->controller instanceof ContactOfferController ||
             $this->context->controller instanceof ContactInformationController ||
             $this->context->controller instanceof CategoryController ||
             $this->context->controller instanceof PageNotFoundController ||
+            $this->context->controller instanceof RegistrationController ||
             $this->context->controller instanceof SearchController){
             $this->context->controller->registerJavascript(
                 'settings-recaptcha',
@@ -287,7 +289,7 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 				);
 
 
-				Media::addJsDef(array('recaptchaKey' => Configuration::get('RECAPTCHA_PUBLIC_KEY')));
+				Media::addJsDef(['recaptchaKey' => Configuration::get('RECAPTCHA_PUBLIC_KEY')]);
 				return $this->displayCaptchaContactForm();
 
 			}
@@ -299,8 +301,8 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 	/**
 	 * reCaptcha display on the contact form page
 	 */
-	private function displayCaptchaContactForm()
-	{
+	private function displayCaptchaContactForm(): string
+    {
 		$includes = '';
 
 		if(Tools::getValue('RECAPTCHA_BADGE', Configuration::get('RECAPTCHA_BADGE')) == 0){
@@ -314,7 +316,10 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 		return $includes;
 	}
 
-	public function hookActionSubmitAccountBefore(){
+    /**
+     * @return bool
+     */
+    public function hookActionSubmitAccountBefore(){
 
 		if(Configuration::get('RECAPTCHA_ACCOUNT') == 1){
 			$data = array(
@@ -347,7 +352,10 @@ class Csoft_invisible_recaptcha_v2Override extends Csoft_invisible_recaptcha_v2
 		return true;
 	}
 
-	public function hookactionBeforeSubmitAccount(){
+    /**
+     * @return bool
+     */
+    public function hookactionBeforeSubmitAccount(){
 		return $this->hookActionSubmitAccountBefore();
 	}
 }

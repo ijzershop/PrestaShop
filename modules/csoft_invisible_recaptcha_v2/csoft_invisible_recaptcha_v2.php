@@ -248,6 +248,7 @@ class Csoft_invisible_recaptcha_v2 extends Module
             $this->context->controller instanceof ContactInformationController ||
             $this->context->controller instanceof CategoryController ||
             $this->context->controller instanceof PageNotFoundController ||
+            $this->context->controller instanceof RegistrationControllerCore ||
             $this->context->controller instanceof SearchController){
 
 			$this->context->controller->registerJavascript(

@@ -133,7 +133,6 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
                 $command->getPassword()->getValue(),
                 $this->legacyCookieKey
             );
-
             $customer->passwd = $hashedPassword;
         }
 

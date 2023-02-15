@@ -62,7 +62,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 
         $this->validateOrder($cart->id, Configuration::get('PS_OS_BANKCREDIT'), $total, 'Op Rekening', NULL, array(), (int)$currency->id, false, $this->context->cookie->selected_customer_secure_key);
 
-//dd('index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key.'&oncredit=true');
 
         Tools::redirect('index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key.'&oncredit=true');
 	}
@@ -96,20 +95,20 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         $security_code = Configuration::get('CREDITPAYMENT_INFORMER_SECURITY_CODE', null, null, null, "62356");
         $api_key = Configuration::get('CREDITPAYMENT_INFORMER_API_KEY', null, null, null, "MEUGbrj3nT8Z4orUVznSQRMCYFxP6SySePckp0tVfJPrcB1DjO2");
 
-        $footer = Configuration::get('CREDITPAYMENT_INFORMER_FOOTER_TEXT', null, null, null, 'Op rekening bestelling van ijzershop.nl');
+        $footer = 'Wij verzoeken u vriendelijk het bovenstaande bedrag van {invoice.total} voor {invoice.vv_date} op onze bankrekening te voldoen, onder vermelding van het factuurnummer {invoice.number}.';
 
         //Create Card
         $query = [
-              "relation_id" => $customer->informer_identification,
-              "contact_name" => $customer->firstname . ' ' . $customer->lastname,
-              "reference" => $reference,
-              "invoice_date" => date('Y-m-d'),
-              "payment_condition_id" => $payment_condition_id,
-              "currency_id" => $currency_id,
-              "vat_option" => $vat_option,
-              "template_id" => $template_id,
-              "comment" => $customer_comment,
-              "footer" => $footer,
+            "relation_id" => $customer->informer_identification,
+            "reference" => $reference,
+            "contact_name" => $customer->firstname . ' ' . $customer->lastname,
+            "quotation_date" => date('Y-m-d'),
+            "payment_condition_id" => $payment_condition_id,
+            "currency_id" => $currency_id,
+            "vat_option" => $vat_option,
+            "template_id" => $template_id,
+            "comment" => $customer_comment,
+            "footer" => $footer,
               "lines" => []
                 ];
 
@@ -129,32 +128,42 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                 $productName .= ' - '.$product['customizedDatas'][$product['id_address_delivery']][$product['id_customization']]['datas'][1][0]['value'];
             }
 
-
-
-
             $query["lines"][] = ["qty" => $product['product_quantity'],
                 "description" => $productName,
-                "amount" => $product['unit_price_tax_incl'],
-                "discount" => $product['reduction_amount_tax_incl'],
+                "amount" => $product['unit_price_tax_excl'],
+                "discount" => $product['reduction_amount_tax_excl'],
                 "vat_id" => $line_vat_id,
                 "ledger_id" => $line_category_id,
-                "product_id" => 617423,
-                "costs_id" => 0
+                "product_id" => 617423
             ];
+        }
+
+        //Add discount rules
+        foreach ($order->getCartRules() as $order_rule) {
+                $query["lines"][] = ["qty" => 1,
+                "description" => $order_rule['name'],
+                "amount" => '-'.$order_rule['value_tax_excl'],
+                "discount" => 0,
+                "vat_id" => $line_vat_id,
+                "ledger_id" => $line_category_id,
+                "product_id" => 617423
+            ];
+        
         }
 
         //Add shipping product as last
         if((float)$order->total_shipping_tax_incl > 0){
             $query["lines"][] = ["qty" => 1,
                 "description" => "Verzending",
-                "amount" => $order->total_shipping_tax_incl,
+                "amount" => $order->total_shipping_tax_excl,
                 "discount" => 0,
                 "vat_id" => $line_vat_id,
                 "ledger_id" => $line_category_id,
-                "product_id" => 617423,
-                "costs_id" => 0
+                "product_id" => 617423
                 ];
+
         }
+
         $curlCard = curl_init();
 
         $headers = array(
@@ -163,9 +172,8 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             "Apikey: ". $api_key,
         );
 
-
         curl_setopt_array($curlCard, array(
-            CURLOPT_URL => "https://api.informer.eu/v1/invoice/sales",
+            CURLOPT_URL => "https://api.informer.eu/v1/salesorder",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 10,
@@ -178,10 +186,11 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         $info = curl_getinfo($curlCard);
         $response = curl_exec($curlCard);
 
-
         if (!curl_errno($curlCard)) {
+            PrestaShopLogger::addLog('PaymentModule::validateOrder - Informer response', 1, null, 'Cart', (int) $response, true);
             $returnData = json_decode($response);
         } else {
+            PrestaShopLogger::addLog('PaymentModule::validateOrder - Failed informer call', 1, null, 'Cart', (int) $reference, true);
             $returnData = [];
         }
         curl_close($curlCard);
@@ -228,9 +237,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         }
 
         $this->context->cart = new Cart((int) $id_cart);
-
-
-
 
         if(isset($this->context->cookie->selected_customer_id_customer) && !empty($this->context->cookie->selected_customer_id_customer)){
             $this->context->customer = new Customer((int) $this->context->cookie->selected_customer_id_customer);
@@ -314,7 +320,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             // Make sure CartRule caches are empty
             CartRule::cleanCache();
             $cart_rules = $this->context->cart->getCartRules();
-
             foreach ($cart_rules as $cart_rule) {
                 if (($rule = new CartRule((int) $cart_rule['obj']->id)) && Validate::isLoadedObject($rule)) {
                     if ($error = $rule->checkValidity($this->context, true, true)) {
@@ -643,8 +648,12 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
             }
 
-            $this->addToInformerApi($order);
-            $this->addProjectAndEmployeeToMessages($order);
+            $resultApi = $this->addToInformerApi($order);
+            $resultProjectMessage = $this->addProjectAndEmployeeToMessages($order);
+
+            $this->sendAdministrationMsg($order, $resultApi);
+
+
             return true;
         } else {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', array(), 'Admin.Payment.Notification');
@@ -1014,6 +1023,94 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         return $cart_rules_list;
     }
 
+   /**
+     * @param $order
+     * @param $resultApi
+     * @return void
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     */
+    private function sendAdministrationMsg($order, $resultApi)
+    {
+        $context = Context::getContext();
+
+        $orderObject = new Order($order->id);
+        $total_paid = $orderObject->getOrdersTotalPaid();
+        $customer_comment = "";
+        if (!empty($context->cookie->on_credit_reference)) {
+            $reference = $context->cookie->on_credit_reference;
+            $referenceText = ' met ref: ' . $context->cookie->on_credit_reference;
+        } else {
+            $reference = $order->reference;
+            $referenceText = "";
+        }
+
+        if (!empty($context->cookie->on_credit_buyer)) {
+            $customer_comment = 'Opgehaald door ' . $context->cookie->on_credit_buyer . $referenceText;
+        }
+
+        foreach (Message::getMessagesByOrderId($order->id, false) as $message) {
+            $customer_comment .= ' <br/> - ' . $message['message'];
+        }
+        $customer_comment .= '<br/>Bestelreferentie van de Ijzershop: ' . $order->reference;
+
+        if (!is_null($resultApi) && array_key_exists('invoice_id', $resultApi)) {
+            $saleOrderState = '<b style="color:#70b580; font-size: 20px;">U kunt de informer factuur inkijken op<br/> <a style="color:#ffffff" href="https://app.informer.eu/orders/sales/"> >> Informer Rekening</a>';
+            $subject = 'Nieuwe op rekening bestelling, SUCCES in informer';
+        } else {
+            $saleOrderState = '<b style="color:#ffa500; font-size: 20px;">Aanmaken van een informer factuur is mislukt!</b>';
+            $subject = 'Nieuwe op rekening bestelling, FOUT in informer';
+        }
+
+        $customer = new Customer($order->id_customer);
+
+        // Join PDF invoice
+        if ($orderObject->invoice_number) {
+            $orderLanguage = new Language((int)$orderObject->id_lang);
+            $currentLanguage = $context->language;
+            $context->language = $orderLanguage;
+            $context->getTranslator()->setLocale($orderLanguage->locale);
+            $orderObject_invoice_list = $orderObject->getInvoicesCollection();
+            Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $orderObject_invoice_list]);
+            $pdf = new PDF($orderObject_invoice_list, PDF::TEMPLATE_INVOICE, $context->smarty);
+            $file_attachement['content'] = $pdf->render(false);
+            $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$orderObject->id_lang, null, $orderObject->id_shop) . sprintf('%06d', $orderObject->invoice_number) . '.pdf';
+            $file_attachement['mime'] = 'application/pdf';
+            $context->language = $currentLanguage;
+            $context->getTranslator()->setLocale($currentLanguage->locale);
+        } else {
+            $file_attachement = null;
+        }
+
+        $storeName = $context->shop->name;
+
+        $sended = Mail::Send(
+            Context::getContext()->language->id,
+            'on_credit_msg',
+            $subject,
+            array(
+                '{firstname}' => $customer->firstname,
+                '{lastname}' => $customer->lastname,
+                '{email}' => $customer->email,
+                '{total_paid}' => Context::getContext()->currentLocale->formatPrice($total_paid, 'EUR'),
+                '{customer_oncredit_comment}' => $customer_comment,
+                '{informer_order_created}' => $saleOrderState
+            ),
+            'informer@ijzershop.nl',
+            $storeName,
+            null,
+            null,
+            $file_attachement,
+            null,
+            _PS_MAIL_DIR_,
+            false,
+            (int)$orderObject->id_shop
+        );
+
+
+    }
+
     /**
      * @param object Address $the_address that needs to be txt formated
      *
@@ -1023,5 +1120,4 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
     {
         return AddressFormat::generateAddress($the_address, array('avoid' => array()), $line_sep, ' ', $fields_style);
     }
-
 }

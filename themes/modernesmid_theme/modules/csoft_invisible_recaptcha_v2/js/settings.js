@@ -21,8 +21,8 @@ var onSubmit = function(token) {
     $('.contact-form form').submit();
   }
 
-  if ($('.js-customer-form form').length > 0) {
-    $('.js-customer-form form').submit();
+  if ($('form.js-customer-form').length > 0) {
+    $('form.js-customer-form').submit();
   }
 };
 

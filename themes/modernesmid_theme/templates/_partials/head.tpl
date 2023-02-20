@@ -107,6 +107,9 @@
 {/block}
 
 
+
+
+
 <script type="text/javascript">
   let clarityKey = "{Configuration::get('MSTHEMECONFIG_CLARITY_ID', null, null,  null, '7bu3k08a1u')}";
   let isDebug = false;
@@ -124,6 +127,7 @@
   })(window, document, "clarity", "script", clarityKey);
   {/literal}
 
+<<<<<<< HEAD
   {literal}
 
   document.addEventListener('DOMContentLoaded', function(){
@@ -174,7 +178,107 @@ if ((workingDays.indexOf(currentDay) !== -1 && (currentHour >= startHour && curr
   document.getElementById('info-row-chat').style.display = 'none';
 }
   }, false);
+=======
+
+
+  {literal} 
+  (function(d, src, c) { 
+    var t = d.scripts[d.scripts.length - 1],
+        s = d.createElement('script');
+    
+    s.id = 'la_x2s6df8d';
+    s.defer = true;
+    s.src = src;
+    s.onload = s.onreadystatechange = function(){
+      var rs=this.readyState;
+    
+    if(rs&&(rs!='complete')&&(rs!='loaded')){
+      return;
+    }
+  
+  c(this);
+  };
+
+    t.parentElement.insertBefore(s,t.nextSibling);
+  })(document, 'https://demodernesmid.ladesk.com/scripts/track.js', function(e){ 
+    var LiveAgentChatButton = LiveAgent.createButton('c0ns68q0', e);
+     
+
+
+    //If button is offline
+    button1.onOffline = function() {
+      (function(d, src, c) { 
+        var t=d.scripts[d.scripts.length - 1],
+        s=d.createElement('script'); 
+        s.id='la_x2s6df8d';
+        s.async=true;
+        s.src=src; 
+        s.onload=s.onreadystatechange=function(){
+          var rs=this.readyState;
+          if(rs&&(rs!='complete')&&(rs!='loaded')){
+            return;
+          }c(this);
+        };
+        t.parentElement.insertBefore(s,t.nextSibling);
+      })(document, '//localhost.lc/LiveAgent/LiveAgent/server/scripts/track.js',
+        function(e){ 
+          LiveAgent.createKbSearchWidget('b3e5a253', e); 
+        });
+  };
+
+
+  });
+>>>>>>> 5d5d6dfed485933e1c5c12e24dc430675fdcfc8c
   {/literal}
+
+
+
+  // <!--Start of Tawk.to Script-->
+  // var tawkToKey = "{Configuration::get('MSTHEMECONFIG_TAWKTO_WIDGET_ID', null, null,  null, '1gb4md3r7')}";
+
+  // {literal}
+  // var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+
+  // (function () {
+  //   var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+  //   s1.async = true;
+  //   s1.src = 'https://embed.tawk.to/6304745d54f06e12d8903160/' + tawkToKey;
+  //   s1.charset = 'UTF-8';
+  //   s1.setAttribute('crossorigin', '*');
+  //   s0.parentNode.insertBefore(s1, s0);
+  // })();
+  // <!--End of Tawk.to Script-->
+
+  // Tawk_API.onLoad = function(){
+  //   var pageStatus = window.Tawk_API.getStatus();
+
+  //   if(pageStatus === 'online'){
+  //     document.getElementById('info-row-mail').style.display = 'table-row';
+  //     document.getElementById('info-row-maps').style.display = 'table-row';
+  //     document.getElementById('info-row-phone').style.display = 'table-row';
+  //     document.getElementById('info-row-whatsapp').style.display = 'table-row';
+  //     document.getElementById('info-row-chat').style.display = 'table-row';
+  //   } else if(pageStatus === 'away'){
+  //     //do something for away
+  //     document.getElementById('info-row-mail').style.display = 'table-row';
+  //     document.getElementById('info-row-maps').style.display = 'table-row';
+  //     document.getElementById('info-row-phone').style.display = 'table-row';
+  //     document.getElementById('info-row-whatsapp').style.display = 'none';
+  //     document.getElementById('info-row-chat').style.display = 'none';
+  //     console.log('is for coffee');
+  //   } else {
+  //     // do something for offline
+  //     document.getElementById('info-row-mail').style.display = 'table-row';
+  //     document.getElementById('info-row-maps').style.display = 'table-row';
+  //     document.getElementById('info-row-phone').style.display = 'none';
+  //     document.getElementById('info-row-whatsapp').style.display = 'none';
+  //     document.getElementById('info-row-chat').style.display = 'none';
+  //   }
+  // };
+
+
+
+  // {/literal}
 </script>
 {block name='hook_extra'}{/block}
 

@@ -63,54 +63,23 @@
 	<tr>
 		<td colspan="12" height="10">&nbsp;</td>
 	</tr>
-
 	<!-- TVA -->
 	<tr>
 		<!-- Code TVA -->
-		<td colspan="6" class="left">
-
-			{$tax_tab}
-
-		</td>
-		<td colspan="1">&nbsp;</td>
 		<!-- Calcule TVA -->
-		<td colspan="5" rowspan="5" class="right">
-
+		<td colspan="12" rowspan="5" class="right">
 			{$total_tab}
 
-		</td>
-	</tr>
-
-	{$note_tab}
-
-	<tr>
-		<td colspan="12" height="10">&nbsp;</td>
-	</tr>
-
-	<tr>
-		<td colspan="6" class="left">
-
-			{$payment_tab}
-
-		</td>
-		<td colspan="1">&nbsp;</td>
+      <span class="center">
+              <br>      <br>
+      In alle gevallen waarin wij optreden als aanbieder of leverancier zijn op onze offertes,
+      op opdrachten aan ons en op met ons gesloten overeenkomsten de METAALUNIEVOORWAARDEN van toepassing.
+      </span>
+    </td>
 	</tr>
 
 	<tr>
-		<td colspan="6" class="left">
-
-			{$shipping_tab}
-
-		</td>
-		<td colspan="1">&nbsp;</td>
-	</tr>
-
-	<tr>
-		<td colspan="12" height="10">&nbsp;</td>
-	</tr>
-
-	<tr>
-		<td colspan="7" class="left small">
+		<td colspan="12" class="">
 
 			<table>
 				<tr>

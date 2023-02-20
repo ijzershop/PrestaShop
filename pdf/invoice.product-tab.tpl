@@ -48,6 +48,9 @@
     <th class="product header-right small" width="{$layout.total_tax_excl.width}%">
       {l s='Total' d='Shop.Pdf' pdf='true'}{if $isTaxEnabled}<br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}{/if}
     </th>
+    <th class="product header-right small" width="{$layout.total_tax_incl.width}%">
+      {l s='Total' d='Shop.Pdf' pdf='true'}{if $isTaxEnabled}<br /> {l s='(Tax incl.)' d='Shop.Pdf' pdf='true'}{/if}
+    </th>
   </tr>
   </thead>
 

@@ -26,18 +26,12 @@
 
 	<thead>
 	<tr>
-		{* <th class="product header small" width="{$layout.reference.width}%">{l s='Reference' d='Shop.Pdf' pdf='true'}</th> *}
-		<th class="product header small" width="{$layout.product.width}%"  style="text-align: left;">{l s='Product' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header small" width="{$layout.tax_code.width}%">{l s='Tax Rate' d='Shop.Pdf' pdf='true'}</th>
-
-		{if isset($layout.before_discount)}
-			<th class="product header small" width="{$layout.unit_price_tax_excl.width}%">{l s='Base price' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
-		{/if}
-
-		<th class="product header-right small" width="{$layout.unit_price_tax_excl.width}%">{l s='Unit Price' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header small" width="{$layout.quantity.width}%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header small" width="{$layout.reference.width}%">{l s='Korting' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header-right small" width="{$layout.total_tax_excl.width}%">{l s='Total' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header small" width="40%"  style="text-align: left;">{l s='Product' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header center small" width="10%">{l s='BTW' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header center small" width="10%">{l s='Unit Price' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header center small" width="10%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header-right small" width="15%">{l s='Total' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header-right small" width="15%">{l s='Total' d='Shop.Pdf' pdf='true'} <br /> {l s='(incl. btw)' d='Shop.Pdf' pdf='true'}</th>
 	</tr>
 	</thead>
 
@@ -50,7 +44,7 @@
 			<td {if isset($layout.before_discount)} colspan="7" {else} colspan="6" {/if}>
 				<table width="100%">
 					<tr class="{$bgcolor_class}">
-						<td class="product left" width="{$layout.product.width}%">
+						<td class="product left" width="40%">
 							{if $display_product_images}
 								<table width="100%">
 									<tr>
@@ -70,38 +64,30 @@
 							{/if}
 
 						</td>
-						<td class="product center" width="{$layout.tax_code.width}%">21%</td>
-
-						{if isset($layout.before_discount)}
-							<td class="product center" width="{$layout.unit_price_tax_excl.width}%">
-								{if isset($order_detail.unit_price_tax_excl_before_specific_price)}
-									{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl_before_specific_price}
-								{else}
-									--
-								{/if}
-							</td>
-						{/if}
-
-						<td class="product right" width="{$layout.unit_price_tax_excl.width}%">
+						<td class="product center" width="10%">21%</td>
+						<td class="product center" width="10%">
 							{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl_including_ecotax}
 							{if $order_detail.ecotax_tax_excl > 0}
 								<br>
 								<small>{{displayPrice currency=$order->id_currency price=$order_detail.ecotax_tax_excl}|string_format:{l s='ecotax: %s' d='Shop.Pdf' pdf='true'}}</small>
 							{/if}
 						</td>
-						<td class="product center" width="{$layout.quantity.width}%">
+						<td class="product center" width="10%">
 							{$order_detail.product_quantity}
 						</td>
-						<td class="product center" width="{$layout.reference.width}%">
-							{if $order_detail.discount_quantity_applied == 1}
-							 {displayPrice currency=$order->id_currency price=($order_detail.original_product_price-$order_detail.unit_price_tax_excl)*(int)$order_detail.product_quantity}
-				            {else}
-				            --
-				            {/if}
-						</td>
-						<td  class="product right" width="{$layout.total_tax_excl.width}%">
+{*						<td class="product center" width="{$layout.reference.width}%">*}
+{*							{if $order_detail.discount_quantity_applied == 1}*}
+{*							 {displayPrice currency=$order->id_currency price=($order_detail.original_product_price-$order_detail.unit_price_tax_excl)*(int)$order_detail.product_quantity}*}
+{*				            {else}*}
+{*				            --*}
+{*				            {/if}*}
+{*						</td>*}
+						<td  class="product right" width="15%">
 							{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl_including_ecotax}
 						</td>
+            <td  class="product right" width="15%">
+                {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_incl_including_ecotax}
+            </td>
 					</tr>
 					{foreach $order_detail.customizedDatas as $customizationPerAddress}
 						{foreach $customizationPerAddress as $customizationId => $customization}
@@ -130,22 +116,18 @@
       <tr class="discount">
         <th class="header" colspan="4" style="text-align: left;">{l s='Korting' d='Shop.Pdf' pdf='true'}</th>
         <th class="header header-right" colspan="2">
-          Totaal
+          Totaal (incl. btw)
         </th>
       </tr>
     {/if}
     <tr class="discount">
       <td class="white left" colspan="4">{$cart_rule.name}</td>
-
       {if $cart_rule.reduction_amount != '0.000000'}
-      <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=$cart_rule.reduction_amount}</td>
+      <td class="right white" colspan="3">- {displayPrice currency=$order->id_currency price=$cart_rule.reduction_amount}</td>
       {else}
-      <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=$cart_rule.value_tax_excl}</td>
+      <td class="right white" colspan="3">- {displayPrice currency=$order->id_currency price=$cart_rule.value_tax_excl}</td>
       {/if}
     </tr>
   {/foreach}
-
-
 	</tbody>
-
 </table>

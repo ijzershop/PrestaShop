@@ -384,6 +384,9 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplate
             'ps_price_compute_precision' => Context::getContext()->getComputingPrecision(),
             'round_type' => $round_type,
             'legal_free_text' => $legal_free_text,
+            'remaining_amount' => 0,
+            'discount_amount' => 0,
+            'reduction_amount' => 0
         ];
 
         if (Tools::getValue('debug')) {
@@ -404,7 +407,6 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplate
             'shipping_tab' => $this->smarty->fetch($this->getTemplate('physical-order-slip.shipping-tab')),
         ];
         $this->smarty->assign($tpls);
-
         return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code));
     }
 

@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Class ProductListingFrontController Overide fixed for 1.7.7.8

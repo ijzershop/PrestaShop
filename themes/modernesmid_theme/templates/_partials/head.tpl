@@ -124,54 +124,56 @@
   })(window, document, "clarity", "script", clarityKey);
   {/literal}
 
-
-  <!--Start of Tawk.to Script-->
-  var tawkToKey = "{Configuration::get('MSTHEMECONFIG_TAWKTO_WIDGET_ID', null, null,  null, '1gb4md3r7')}";
   {literal}
-  var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
 
-  (function () {
-    var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-    s1.async = true;
-    s1.src = 'https://embed.tawk.to/6304745d54f06e12d8903160/' + tawkToKey;
-    s1.charset = 'UTF-8';
-    s1.setAttribute('crossorigin', '*');
-    s0.parentNode.insertBefore(s1, s0);
-  })();
-  <!--End of Tawk.to Script-->
+  document.addEventListener('DOMContentLoaded', function(){
+// week days and times definitions
+let workingDays = [1,2,3,4,5];
+let startHour = 8;
+let endHour = 17;
 
-  Tawk_API.onLoad = function(){
-    var pageStatus = window.Tawk_API.getStatus();
+let currentTime = new Date();
+let currentHour = currentTime.getUTCHours();
+let currentDay = currentTime.getUTCDay();
 
-    if(pageStatus === 'online'){
-      document.getElementById('info-row-mail').style.display = 'table-row';
-      document.getElementById('info-row-maps').style.display = 'table-row';
-      document.getElementById('info-row-phone').style.display = 'table-row';
-      document.getElementById('info-row-whatsapp').style.display = 'table-row';
-      document.getElementById('info-row-chat').style.display = 'table-row';
-    } else if(pageStatus === 'away'){
-      //do something for away
-      document.getElementById('info-row-mail').style.display = 'table-row';
-      document.getElementById('info-row-maps').style.display = 'table-row';
-      document.getElementById('info-row-phone').style.display = 'table-row';
-      document.getElementById('info-row-whatsapp').style.display = 'none';
-      document.getElementById('info-row-chat').style.display = 'none';
-      console.log('is for coffee');
-    } else {
-      // do something for offline
-      document.getElementById('info-row-mail').style.display = 'table-row';
-      document.getElementById('info-row-maps').style.display = 'table-row';
-      document.getElementById('info-row-phone').style.display = 'none';
-      document.getElementById('info-row-whatsapp').style.display = 'none';
-      document.getElementById('info-row-chat').style.display = 'none';
-    }
-  };
+  let pageStatus = 'away';
 
+if ((workingDays.indexOf(currentDay) !== -1 && (currentHour >= startHour && currentHour < endHour))) {
+  // CHAT BUTTON CODE
+  (function(d, src, c) {
+      var t=d.scripts[d.scripts.length - 1],
+          s=d.createElement('script');
+          s.id='la_x2s6df8d';
+          s.async=true;
+          s.src=src;
+          s.setAttribute('cross-origin', '*');
+          s.onload=s.onreadystatechange=function(){
+            var rs=this.readyState;
+            if(rs&&(rs!='complete')&&(rs!='loaded')){
+              return;
+            }
 
-  Tawk_API.onChatMessageSystem = function(message){
-  };
-
-
+            c(this);
+          };
+          t.parentElement.insertBefore(s,t.nextSibling);
+    })(document, 'https://demodernesmid.ladesk.com/scripts/track.js',
+    function(e){
+      let LiveAgentChatButton = LiveAgent.createButton('c0ns68q0', e);
+      document.getElementById('info-row-chat').setAttribute('onclick', "javascript:void(document.getElementById('"+LiveAgentChatButton.elementId+"').click())");
+    });
+  document.getElementById('info-row-mail').style.display = 'table-row';
+  document.getElementById('info-row-maps').style.display = 'table-row';
+  document.getElementById('info-row-phone').style.display = 'table-row';
+  document.getElementById('info-row-whatsapp').style.display = 'table-row';
+  document.getElementById('info-row-chat').style.display = 'table-row';
+} else {
+  document.getElementById('info-row-mail').style.display = 'table-row';
+  document.getElementById('info-row-maps').style.display = 'table-row';
+  document.getElementById('info-row-phone').style.display = 'none';
+  document.getElementById('info-row-whatsapp').style.display = 'none';
+  document.getElementById('info-row-chat').style.display = 'none';
+}
+  }, false);
   {/literal}
 </script>
 {block name='hook_extra'}{/block}
@@ -181,8 +183,6 @@
     background-color: {Configuration::get('MSTHEMECONFIG_PRIMARY_COLOR')} !important;
   }
 </style>
-
-
 <div id="contact-info-box" class="d-none">
   <table width="100%" height="100%" style="border-color:#3b56ad;border-style:solid;border-width:1px 1px 0px 1px;">
     <tr><td class="pt-2 pb-2" >
@@ -202,7 +202,7 @@
     <tr id="info-row-mail"><td><a class="btn btn-primary rounded-0 w-100" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE')}"><i class="fa-sharp fa-envelope float-left fa-2x"></i> Mail met ons</a></td></tr>
     <tr style="display: none;" id="info-row-phone"><td><a class="btn btn-primary rounded-0 w-100" href="tel://{str_replace(' ','',Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_PHONE'))}"><i class="fa-sharp fa-phone float-left fa-2x"></i> Bel met ons</a></td></tr>
     <tr style="display: none;" id="info-row-whatsapp"><td><a class="btn btn-primary rounded-0 w-100" href="{str_replace(' ','',Configuration::get('MSTHEMECONFIG_HEADER_WHATSAPP_LINK'))}"><i class="fab fa-whatsapp float-left fa-2x"></i> App met ons</a></td></tr>
-    <tr style="display: none;" id="info-row-chat"><td><a class="btn btn-primary rounded-0 w-100" href="javascript:void(Tawk_API.toggle())"><i class="fa-tawkto-bubble float-left"></i> Chat met ons</a></td></tr>
+    <tr style="display: none;" id="info-row-chat"><td><a class="btn btn-primary rounded-0 w-100" href="#"><i class="fa-tawkto-bubble float-left"></i> Chat met ons</a></td></tr>
     <tr id="info-row-maps"><td><a class="btn btn-primary rounded-0 w-100" target="_blank" href="https://www.google.com/maps/place/{Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_GOOGLE_STRING')}"><i class="fa-sharp fa-map-marker fa-2x float-left"></i> Vind ons</a></td></tr>
   </table>
 </div>

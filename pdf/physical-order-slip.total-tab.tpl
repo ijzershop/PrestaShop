@@ -41,7 +41,7 @@
         {foreach $cart_rules as $cart_rule}
             {if $cart_rule.reduction_amount != '0.000000'}
                 {assign var="discount_amount" value=($discount_amount+$cart_rule.reduction_amount)}
-                {assign var="remaining_amount" value=($remaining_amount+$cart_rule.remaining_amount)}
+                {assign var="remaining_amount" value=($remaining_amount+($cart_rule.reduction_amount-$cart_rule.value_tax_excl))}
                 {else}
                 {assign var="discount_amount" value=($discount_amount+$cart_rule.value_tax_excl)}
                 {assign var="remaining_amount" value=($remaining_amount+$cart_rule.value_tax_excl)}

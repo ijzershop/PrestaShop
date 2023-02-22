@@ -211,7 +211,6 @@ class OrderConfirmationControllerCore extends FrontController
     public function initContent()
     {
         parent::initContent();
-
         $this->context->smarty->assign([
             'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($this->order),
             'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($this->order),

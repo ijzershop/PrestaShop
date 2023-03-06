@@ -3,6 +3,8 @@ imports:
   - { resource: ./common.yml }
 
 services:
+  _defaults:
+    public: true
   # Form services
   modernesmid.module.pricemodifier.type.price_modification:
     class: 'Modernesmid\Module\Pricemodifier\Form\PriceModificationType'

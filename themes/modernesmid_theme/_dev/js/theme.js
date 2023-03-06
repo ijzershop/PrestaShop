@@ -779,7 +779,7 @@ $(function () {
 
   const updateHeaderCart = function (cart) {
     // console.log(cart);
-
+    console.log(cart.subtotals);
     $('#header-cart-vat').text(renderMoneyString(cart.subtotals.tax.amount));
     $('#header-cart-total').text(renderMoneyString(cart.totals.total.amount));
 
@@ -813,7 +813,7 @@ $(function () {
     if (parseInt(productsTotal) === 0) {
       $('.top-header-shoppingcart').find('[data-fa-i2svg]').attr({'data-prefix': 'fad', 'data-icon': 'cart-shopping'});
     } else {
-      $('.top-header-shoppingcart').find('[data-fa-i2svg]').attr({'data-prefix': 'fass', 'data-icon': 'cart-shopping'});
+      $('.top-header-shoppingcart').find('[data-fa-i2svg]').attr({'data-prefix': 'fasr', 'data-icon': 'cart-shopping'});
     }
     $('#header-cart-subtotal').text(renderMoneyString(totalForAllProducts));
 
@@ -1331,7 +1331,7 @@ $(function () {
             '<div style="display:none;" class="border-bottom-0 pb-1 row" id="add_to_order_info">' +
             '<span class="col-12 text-left width-100" style="color:blue;">Vanwege de AVG regels kunnen wij u niet meer informatie verschaffen dan de postcode. Kijk daarom de postcode en uw referentie goed na voordat u deze bestelling er aan toevoegd.</span>' +
             '</div><br/>'
-            + '<div class="btn-group w-100"><a id="searchOrderByReferenceAgain" class="btn btn-sm btn-primary text-white" href="#"><i class="fass fa-magnifying-glass"></i> Opnieuw Zoeken</a>';
+            + '<div class="btn-group w-100"><a id="searchOrderByReferenceAgain" class="btn btn-sm btn-primary text-white" href="#"><i class="fasr fa-magnifying-glass"></i> Opnieuw Zoeken</a>';
 
           $('#order_number_validate').hide();
           $('#order_number_show_block').html(htmlBlock);
@@ -1714,8 +1714,8 @@ $(document).on('click', '#addCustomProductByEmployee', function (event) {
     '            <span class="onoffswitch-switch"></span>' +
     '        </label>' +
     '    </div>' +
-    '<button  data-cart="' + cart + '" class="btn btn-secondary btn-danger removeCustomProductEmployee"><i class="fass fa-times"></i></button> ' +
-    '<button data-cart="' + cart + '" class="btn btn-secondary btn-success saveCustomProductEmployee" data-id="' + rowId + '"><i class="fass fa-check"></i></button> ' +
+    '<button  data-cart="' + cart + '" class="btn btn-secondary btn-danger removeCustomProductEmployee"><i class="fasr fa-xmark"></i></button> ' +
+    '<button data-cart="' + cart + '" class="btn btn-secondary btn-success saveCustomProductEmployee" data-id="' + rowId + '"><i class="fasr fa-check"></i></button> ' +
     '</div></div></div>' +
     '</div>' +
     '<div class="product-line-grid-left col-12 mt-1"> ' +

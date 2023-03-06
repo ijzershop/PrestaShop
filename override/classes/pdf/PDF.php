@@ -27,7 +27,7 @@
 /**
  * @since 1.5
  */
-class PDFCore
+class PDF extends PDFCore
 {
     public $filename;
     public $pdf_renderer;

@@ -30,7 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateIdInterface;
 
 /**
  * Adds new customer address
@@ -68,7 +70,7 @@ class AddCustomerAddressCommand
     private $houseNumber;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $houseNumberExtension;
 
@@ -134,18 +136,18 @@ class AddCustomerAddressCommand
      * @param string $lastName
      * @param string $address
      * @param string $houseNumber
-     * @param string $houseNumberExtension
+     * @param string|null $houseNumberExtension
      * @param string $city
      * @param int $countryId
      * @param string $postcode
-     * @param string $dni
-     * @param string $company
-     * @param string $vat_number
-     * @param string $address2
+     * @param string|null $dni
+     * @param string|null $company
+     * @param string|null $vat_number
+     * @param string|null $address2
      * @param int $id_state
-     * @param string $phone
-     * @param string $phone_mobile
-     * @param string $other
+     * @param string|null $phone
+     * @param string|null $phone_mobile
+     * @param string|null $other
      *
      * @throws CountryConstraintException
      * @throws StateConstraintException
@@ -157,7 +159,7 @@ class AddCustomerAddressCommand
         string $lastName,
         string $address,
         string $houseNumber,
-        string $houseNumberExtension,
+        string|null $houseNumberExtension,
         string $city,
         int $countryId,
         string $postcode,
@@ -170,6 +172,7 @@ class AddCustomerAddressCommand
         ?string $phone_mobile = null,
         string $other = null
     ) {
+
         $this->customerId = new CustomerId($customerId);
         $this->addressAlias = $addressAlias;
         $this->firstName = $firstName;
@@ -184,7 +187,7 @@ class AddCustomerAddressCommand
         $this->company = $company;
         $this->vatNumber = $vat_number;
         $this->address2 = $address2;
-        $this->stateId = new StateId($id_state);
+        $this->stateId = $id_state === NoStateId::NO_STATE_ID_VALUE ? new NoStateId() : new StateId($id_state);
         $this->homePhone = $phone;
         $this->mobilePhone = $phone_mobile;
         $this->other = $other;
@@ -239,9 +242,9 @@ class AddCustomerAddressCommand
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getHouseNumberExtension(): string
+    public function getHouseNumberExtension(): string|null
     {
         return $this->houseNumberExtension;
     }
@@ -303,9 +306,9 @@ class AddCustomerAddressCommand
     }
 
     /**
-     * @return StateId|null
+     * @return StateIdInterface|null
      */
-    public function getStateId(): ?StateId
+    public function getStateId(): ?StateIdInterface
     {
         return $this->stateId;
     }

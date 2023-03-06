@@ -26,11 +26,11 @@ services:
       - "@prestashop.adapter.address.formatter"
 
   #    #Add address
-  #    modernesmid.adapter.address.command_handler.add_customer_address_handler:
-  #        class: 'MsThemeConfig\Adapter\Address\CommandHandler\AddCustomerAddressHandler'
-  #        tags:
-  #            - name: tactician.handler
-  #              command: 'MsThemeConfig\Core\Domain\Address\Command\AddCustomerAddressCommand'
+  modernesmid.adapter.address.command_handler.add_customer_address_handler:
+      class: 'MsThemeConfig\Adapter\Address\CommandHandler\AddCustomerAddressHandler'
+      tags:
+          - name: tactician.handler
+            command: 'MsThemeConfig\Core\Domain\Address\Command\AddCustomerAddressCommand'
   #
   #    #Edit address
   #    modernesmid.adapter.address.command_handler.edit_customer_address_handler:

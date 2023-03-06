@@ -4,6 +4,7 @@ namespace MsThemeConfig\Controller\Admin;
 use Exception;
 use MsThemeConfig\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use MsThemeConfig\Core\Domain\Address\QueryResult\EditableCustomerAddress;
+use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Entity\Order;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
@@ -38,7 +39,93 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DmsAdminAddressController extends FrameworkBundleAdminController{
 
+    /**
+     * Show "Add new" form and handle form submit.
+     *
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_addresses_index",
+     *     message="You do not have permission to create this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request): Response
+    {
+        $addressFormBuilder = $this->get(
+            'modernesmid.core.form.identifiable_object.builder.address_form_builder'
+        );
 
+        $addressFormHandler = $this->get(
+            'modernesmid.core.form.identifiable_object.handler.address_form_handler'
+        );
+
+        $formData = [];
+        $customerInfo = null;
+        $customerId = null;
+        if ($request->request->has('customer_address')) {
+            if (isset($request->request->get('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+                $formData['id_country'] = $formCountryId;
+            }
+            if (isset($request->request->get('customer_address')['id_customer'])) {
+                $idCustomer = (int) $request->request->get('customer_address')['id_customer'];
+                $formData['id_customer'] = $idCustomer;
+            }
+        }
+
+        if (empty($formData['id_customer']) && $request->query->has('id_customer')) {
+            $formData['id_customer'] = (int) $request->query->get('id_customer');
+        }
+        if (!empty($formData['id_customer'])) {
+            /** @var CustomerDataProvider $customerDataProvider */
+            $customerDataProvider = $this->get('prestashop.adapter.data_provider.customer');
+            /** @todo To Remove when PHPStan is fixed https://github.com/phpstan/phpstan/issues/3700 */
+            /** @phpstan-ignore-next-line */
+            $customerId = $formData['id_customer'];
+            $customer = $customerDataProvider->getCustomer($customerId);
+            $formData['first_name'] = $customer->firstname;
+            $formData['last_name'] = $customer->lastname;
+            $formData['company'] = $customer->company;
+            $customerInfo = $customer->firstname . ' ' . $customer->lastname . ' (' . $customer->email . ')';
+        }
+
+        $addressForm = $addressFormBuilder->getForm($formData);
+        $addressForm->handleRequest($request);
+        try {
+            $handlerResult = $addressFormHandler->handle($addressForm);
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+
+                if ($request->query->has('submitFormAjax')) {
+                    return $this->render(
+                        '@PrestaShop/Admin/Sell/Address/modal_create_success.html.twig',
+                        ['refreshCartAddresses' => 'true']
+                    );
+                }
+
+                if ($customerId) {
+                    return $this->redirectToRoute('admin_customers_view', ['customerId' => $customerId]);
+                }
+
+                return $this->redirectToRoute('admin_addresses_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Address/add.html.twig', [
+            'customerId' => $customerId,
+            'customerInformation' => $customerInfo,
+            'enableSidebar' => true,
+            'displayInIframe' => $request->query->has('submitFormAjax'),
+            'addressForm' => $addressForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'cancelPath' => $request->query->has('back') ? $request->query->get('back') : $this->generateUrl('admin_addresses_index'),
+        ]);
+    }
     /**
      * Handles edit form rendering and submission
      *

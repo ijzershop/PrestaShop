@@ -142,6 +142,16 @@ admin_addresses_index:
     _legacy_controller: AdminAddresses
     _legacy_link: 'AdminAddresses'
 
+admin_addresses_create:
+  path: /sell/addresses/new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\DmsAdminAddressController::createAction'
+    _legacy_controller: AdminAddresses
+    _legacy_link: AdminAddresses:addaddress
+  options:
+    expose: true
+
 admin_addresses_edit:
   path: /sell/addresses/{addressId}/edit
   methods: [ GET, POST ]

@@ -48,7 +48,7 @@ final class AddCustomerAddressHandler extends AbstractAddressHandler implements 
      * @throws AddressConstraintException
      * @throws CannotAddAddressException
      */
-    public function handle(AddCustomerAddressCommand $mcommand): AddressId
+    public function handle(AddCustomerAddressCommand|\PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand $mcommand): AddressId
     {
         $address = $this->createAddressFromCommand($mcommand);
 

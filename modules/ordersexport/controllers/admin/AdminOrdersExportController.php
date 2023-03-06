@@ -24,7 +24,7 @@ class AdminOrdersExportController extends ModuleAdminController
     }
     catch(Exception $e){
       $json['error'] = $e->getMessage();
-      die(json_encode($json));
+      die(Tools::jsonEncode($json));
     }
   }
 
@@ -44,7 +44,7 @@ class AdminOrdersExportController extends ModuleAdminController
     $id_shop_group = (int)Tools::getValue('id_shop_group');
 
     $sql = '
-      SELECT *
+      SELECT * 
       FROM ' . _DB_PREFIX_ . 'ordersexport_tasks as t
       WHERE id_shop = ' . $id_shop . '
       AND id_shop_group = ' . $id_shop_group . '
@@ -77,7 +77,7 @@ class AdminOrdersExportController extends ModuleAdminController
 
     return !(bool)strcmp($now, $execution);
   }
-
+  
   private function _updateTaskStatus( $idTask, $oneShot, $finish = false )
   {
     if( !$finish ){
@@ -136,7 +136,7 @@ class AdminOrdersExportController extends ModuleAdminController
     }
     catch(Exception $e){
       $json['error'] = $e->getMessage();
-      die(json_encode($json));
+      die(Tools::jsonEncode($json));
     }
   }
 
@@ -149,7 +149,7 @@ class AdminOrdersExportController extends ModuleAdminController
       $res = Tools::file_get_contents($url);
 
       if( $res ){
-        $version = json_decode($res);
+        $version = Tools::jsonDecode($res);
         $version = $version->module_version;
         Configuration::updateGlobalValue('GOMAKOIL_ORDERS_EXPORT_VERSION', $version);
       }
@@ -158,7 +158,7 @@ class AdminOrdersExportController extends ModuleAdminController
     }
     catch(Exception $e){
       $json['error'] = $e->getMessage();
-      die(json_encode($json));
+      die(Tools::jsonEncode($json));
     }
   }
 

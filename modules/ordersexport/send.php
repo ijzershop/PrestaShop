@@ -8,7 +8,7 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
     phpinfo();
     die;
   }
-
+  
 if ( !Tools::getValue('ajax') ){
   header('HTTP/1.0 403 Forbidden');
   echo 'You are forbidden!';  die;
@@ -196,7 +196,7 @@ try {
       $res = Tools::file_get_contents($url);
 
       if( $res ){
-        $version = json_decode($res);
+        $version = Tools::jsonDecode($res);
         $version = $version->module_version;
         Configuration::updateGlobalValue('GOMAKOIL_ORDERS_EXPORT_VERSION', $version);
       }
@@ -346,9 +346,9 @@ try {
     $customer =serialize($config);
     Configuration::updateValue('GOMAKOIL_CUSTOMERS_CHECKED', $customer, false, $default_shop_group_id, $default_shop_id);
   }
-  echo json_encode($json);
+  echo Tools::jsonEncode($json);
 }
 catch( Exception $e ){
   $json['error'] = $e->getMessage();
-  echo json_encode($json);
+  echo Tools::jsonEncode($json);
 }

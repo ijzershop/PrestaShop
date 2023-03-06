@@ -469,7 +469,7 @@ class MsThemeConfig extends Module
                 $file = $this->uploadFiles($_FILES[$key]);
                 Configuration::updateValue($key, $file);
             } elseif (in_array($key, $textareaKeys)) {
-                Configuration::updateValue($key, Tools::getValue($key));
+                Configuration::updateValue($key, Tools::getValue($key), true);
             } elseif ($key == 'MSTHEMECONFIG_ORDERSTATE_SENDMAIL_JSON') {
                 $orderStateIds = Tools::getValue('SENDMAIL_ORDER_STATUS');
                 $orderStateFirstEmails = Tools::getValue('SENDMAIL_ORDER_STATUS_FIRST_EMAIL');

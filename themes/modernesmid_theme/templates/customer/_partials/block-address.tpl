@@ -33,10 +33,10 @@
       <div class="address-footer">
         <div class="btn-group btn-toolbar justify-content-between">
           <a href="{url entity=address id=$address.id}" class="btn btn-primary btn-secondary" title="{l s='Update' d='Shop.Theme.Actions'}" data-link-action="edit-address">
-            <i class="fa-sharp fa-edit"></i>
+            <i class="fasr fa-edit"></i>
           </a>
           <a href="{url entity=address id=$address.id params=['delete' => 1, 'token' => $token]}" class="btn btn-primary btn-secondary" title="{l s='Delete' d='Shop.Theme.Actions'}"  data-link-action="delete-address">
-            <i class="fa-sharp fa-times"></i>
+            <i class="fasr fa-xmark"></i>
           </a>
         </div>
       </div>

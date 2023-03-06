@@ -47,7 +47,7 @@
   <div class="text-center up col-12 mt-3">
     <a href="#header" class="btn btn-secondary">
       {l s='Back to top' d='Shop.Theme.Actions'}
-      <i class="fa-sharp fa-chevron-up"></i>
+      <i class="fasr fa-chevron-up"></i>
     </a>
   </div>
 </div>

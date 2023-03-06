@@ -664,7 +664,7 @@ font-size: 11px;
                     {/if}
 
                     <div class="supercheckout-threecolumns supercheckout-container supercheckout-skin-generic panel-body" id="supercheckout-columnleft">
-                        <div class="row">
+                        <div class="col">
                             {assign var='layout_name' value='1_column'}
                             {assign var='multiplier' value=1}
                             {assign var='multiplier_3' value=0.98}

@@ -103,12 +103,12 @@
         <table style="margin: 10px auto;">
             <tr class="d-block">
                 <td id="cookieNoticeCheckbox">
-                      <p>Deze website maakt gebruik van cookies. Zie voor meer informatie bij onze <a class="text-decoration-none text-dark" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_CONTACTPAGE_PRIVACY'))}"><i class="fa-sharp fa-chevron-right" style="height:10px;"></i> Privacy voorwaarden</a></p>
+                      <p>Deze website maakt gebruik van cookies. Zie voor meer informatie bij onze <a class="text-decoration-none text-dark" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_CONTACTPAGE_PRIVACY'))}"><i class="fasr fa-chevron-right" style="height:10px;"></i> Privacy voorwaarden</a></p>
                       <p>
                         <label for="delete-all-after" class="switch mx-auto">
                           <input type="checkbox" name="delete-all-after" id="delete-all-after">
                           <span class="slider round"></span>
-                      </label> Verwijder al mijn gegevens na aankoop of verlaten van de site. U kunt deze gegevens na registratie ook zelf inzien en laten verwijderen. <a class="text-decoration-none text-dark" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_AVG_INFO_PAGE'))}"><i class="fa-sharp fa-chevron-right" style="height:10px;"></i> Zie hier voor meer informatie</a>
+                      </label> Verwijder al mijn gegevens na aankoop of verlaten van de site. U kunt deze gegevens na registratie ook zelf inzien en laten verwijderen. <a class="text-decoration-none text-dark" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_AVG_INFO_PAGE'))}"><i class="fasr fa-chevron-right" style="height:10px;"></i> Zie hier voor meer informatie</a>
                       </p>
                 </td>
               <td width="90px">
@@ -117,12 +117,12 @@
             </tr>
 {*          <tr class="d-block d-sm-none">*}
 {*            <td id="cookieNoticeCheckbox">*}
-{*              <p>Deze website maakt gebruik van cookies. Zie voor meer informatie bij onze <a class="text-decoration-none text-dark" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_CONTACTPAGE_PRIVACY'))}"><i class="fa-sharp fa-chevron-right" style="height:10px;"></i> Privacy voorwaarden</a></p>*}
+{*              <p>Deze website maakt gebruik van cookies. Zie voor meer informatie bij onze <a class="text-decoration-none text-dark" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_CONTACTPAGE_PRIVACY'))}"><i class="fasr fa-chevron-right" style="height:10px;"></i> Privacy voorwaarden</a></p>*}
 {*              <p>*}
 {*                <label for="delete-all-after" class="switch mx-auto">*}
 {*                  <input type="checkbox" name="delete-all-after" id="delete-all-after">*}
 {*                  <span class="slider round"></span>*}
-{*                </label> Verwijder al mijn gegevens na aankoop of verlaten van de site. U kunt deze gegevens na registratie ook zelf inzien en laten verwijderen. <a class="text-decoration-none text-dark" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_AVG_INFO_PAGE'))}"><i class="fa-sharp fa-chevron-right" style="height:10px;"></i> Zie hier voor meer informatie</a>*}
+{*                </label> Verwijder al mijn gegevens na aankoop of verlaten van de site. U kunt deze gegevens na registratie ook zelf inzien en laten verwijderen. <a class="text-decoration-none text-dark" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_AVG_INFO_PAGE'))}"><i class="fasr fa-chevron-right" style="height:10px;"></i> Zie hier voor meer informatie</a>*}
 {*              </p>*}
 {*              <p>*}
 {*                <button class="btn btn-sm btn-success rounded-0 mt-1" onclick="closeUeNotify()">Accepteren</button>*}

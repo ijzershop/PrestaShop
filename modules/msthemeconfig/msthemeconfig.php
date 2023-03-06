@@ -347,12 +347,14 @@ class MsThemeConfig extends Module
             $modernAjax = new ModernAjax();
             $ajaxUrl = $modernAjax->getAjaxUrl();
             $select2Url = str_replace('%20','', $modernAjax->getSelect2Url());
+            $symlinkMailthemeUrl = str_replace('%20','', $modernAjax->getSymlinkMailthemeUrl());
             $access =  $modernConfig->getAccessiblePanelsUser($this->context->employee->id_profile);
 
             $viewData = [
                 'ajax_url' => $ajaxUrl,
                 'module_dir' => $this->_path,
                 'select2_url' => $select2Url,
+                'symlink_mailtheme_url' => $symlinkMailthemeUrl,
                 'employee_access' => $access
             ];
 

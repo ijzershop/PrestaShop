@@ -203,7 +203,7 @@
                     <input type="text" class="form-control" id="desired_reference" placeholder="YS-000000">
                     <input type="hidden" name="added_to_order" id="added_to_order" value="">
                    <div class="input-group-append">
-                      <button id="search_order_for_shipping" class="btn btn-sm btn-success"><i class="fa-sharp fa-search"></i></button>
+                      <button id="search_order_for_shipping" class="btn btn-sm btn-success"><i class="fasr fa-magnifying-glass"></i></button>
                    </div>
                   </div>
                   <span class="col-md-12" id="desired_reference_error"></span>
@@ -239,7 +239,7 @@
     {/if}
     {if $gift.allowed}
     <span class="custom-checkbox">
-      <input class="js-gift-checkbox" id="input_gift" name="gift" type="checkbox" value="1" {if $gift.isGift}checked="checked" {/if}> <span><i class="fa-sharp fa-check rtl-no-flip checkbox-checked"></i></span>
+      <input class="js-gift-checkbox" id="input_gift" name="gift" type="checkbox" value="1" {if $gift.isGift}checked="checked" {/if}> <span><i class="fasr fa-check rtl-no-flip checkbox-checked"></i></span>
     <label for="input_gift">{$gift.label}</label>
     </span>
     <div id="gift" class="collapse{if $gift.isGift} in{/if}">

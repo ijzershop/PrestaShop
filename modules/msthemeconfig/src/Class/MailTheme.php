@@ -16,11 +16,11 @@ class MailTheme
      */
     public function makeThemeSymlink(): bool
     {
-        $module_mails_path = $_SERVER['DOCUMENT_ROOT'] . "/modules/msthemeconfig/mails/themes/modernesmid";
+        $module_mails_path = $_SERVER['DOCUMENT_ROOT'] . "modules/msthemeconfig/mails/themes/modernesmid";
         $prestashop_mails_path = $_SERVER['DOCUMENT_ROOT'] . 'mails/themes/modernesmid';
         try {
             $fileSystem = new Filesystem();
-            $fileSystem->symlink($module_mails_path, $prestashop_mails_path);
+            $fileSystem->symlink($module_mails_path, $prestashop_mails_path, true);
         } catch (ExceptionInterface $e){
             return false;
         }
@@ -32,7 +32,7 @@ class MailTheme
      */
     public function removeThemeSymlink(): bool
     {
-        $module_mails_path = $_SERVER['DOCUMENT_ROOT'] . "/modules/msthemeconfig/mails/themes/modernesmid";
+        $module_mails_path = $_SERVER['DOCUMENT_ROOT'] . "modules/msthemeconfig/mails/themes/modernesmid";
         $prestashop_mails_path = $_SERVER['DOCUMENT_ROOT'] . 'mails/themes/modernesmid';
         try {
             $fileSystem = new Filesystem();

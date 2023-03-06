@@ -47,7 +47,7 @@
             data-product-customization="{json_encode($product.id_customization)}"
             class="btn btn-success add-to-cart w-100 text-nowrap mt-2 {if !$product.add_to_cart_url}disabled{elseif !$product.available_for_order}disabled{/if}"
             data-button-action="add-to-cart"
-          ><i data-product-id="{$product.id_product}" class="fa-sharp fa-shopping-cart shopping-cart"></i></a>
+          ><i data-product-id="{$product.id_product}" class="fasr fa-cart-shopping shopping-cart"></i></a>
         </div>
         {hook h='displayProductActions' product=$product}
       </div>

@@ -31,7 +31,7 @@
 
       {block name='cart_summary_products'}
         <div class="cart-summary-products">
-          <span class="label font-weight-bold text-dark">{if (int)$cart.products_count > 1}Producten{else}Product{/if} ({$cart.products_count})</span>  <a href="#" data-toggle="collapse" class="text-dark text-decoration-none" data-target="#cart-summary-product-list"><i class="fa-sharp fa-chevron-down"></i></a>
+          <span class="label font-weight-bold text-dark">{if (int)$cart.products_count > 1}Producten{else}Product{/if} ({$cart.products_count})</span>  <a href="#" data-toggle="collapse" class="text-dark text-decoration-none" data-target="#cart-summary-product-list"><i class="fasr fa-chevron-down"></i></a>
 
 
           {block name='cart_summary_product_list'}

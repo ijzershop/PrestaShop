@@ -28,7 +28,7 @@
 
 <div class="dropdown">
   <a class="dropdown-toggle text-decoration-none text-white text-sm-white" href="#" data-target="customer-menu-dropdown-menu" role="button" id="customer-menu-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-    <i class="fa-sharp fa-user-circle d-block d-sm-block d-md-none d-lg-none logged mr-1"></i> <span class="hidden-sm-down">{$customerName}</span>
+    <i class="fasr fa-user-circle d-block d-sm-block d-md-none d-lg-none logged mr-1"></i> <span class="hidden-sm-down">{$customerName}</span>
   </a>
   <div class="dropdown-menu" id="customer-menu-dropdown-menu" aria-labelledby="customer-menu-dropdown">
       <a
@@ -37,14 +37,14 @@
         title="{l s='View my customer account' d='Shop.Theme.Customeraccount'}"
         rel="nofollow"
       >
-        <i class="fa-sharp fa-user-circle logged mr-1"></i> {l s='Your account' d='Shop.Theme.Customeraccount'}
+        <i class="fasr fa-user-circle logged mr-1"></i> {l s='Your account' d='Shop.Theme.Customeraccount'}
       </a>
       <a
         class="dropdown-item text-decoration-none logout"
         href="{$logout_url}"
         rel="nofollow"
       >
-        <i class="fa-sharp fa-key mr-1"></i> {l s='Sign out' d='Shop.Theme.Actions'}
+        <i class="fasr fa-key mr-1"></i> {l s='Sign out' d='Shop.Theme.Actions'}
       </a>
   </div>
 </div>
@@ -54,7 +54,7 @@
         title="{l s='Log in to your customer account' d='Shop.Theme.Customeraccount'}"
         rel="nofollow"
       >
-        <i class="fa-sharp fa-user-circle"></i>
+        <i class="fasr fa-user-circle"></i>
         <span class="hidden-sm-down">{l s='Sign in' d='Shop.Theme.Actions'}</span>
       </a>
     {/if}

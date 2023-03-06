@@ -32,6 +32,6 @@
     {/foreach}
   </div>
   <a class="all-product-link float-xs-left float-md-right h6 p-4 text-decoration-none" href="{$allProductsLink}">
-    {l s='All products' d='Shop.Theme.Catalog'} <i class="fa-sharp fa-chevron-right"></i>
+    {l s='All products' d='Shop.Theme.Catalog'} <i class="fasr fa-chevron-right"></i>
   </a>
 </section>

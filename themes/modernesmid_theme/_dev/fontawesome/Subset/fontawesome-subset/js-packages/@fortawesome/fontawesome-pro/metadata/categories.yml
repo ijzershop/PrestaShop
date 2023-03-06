@@ -1,0 +1,359 @@
+accessibility:
+  icons:
+    - circle-info
+    - circle-question
+    - eye
+  label: Accessibility
+alert:
+  icons:
+    - triangle-exclamation
+  label: Alert
+alphabet:
+  icons: []
+  label: Alphabet
+animals:
+  icons: []
+  label: Animals
+arrows:
+  icons:
+    - arrows-left-right
+    - arrows-up-down
+    - chevron-down
+    - chevron-left
+    - chevron-right
+    - chevron-up
+    - rotate
+  label: Arrows
+astronomy:
+  icons: []
+  label: Astronomy
+automotive:
+  icons:
+    - truck
+  label: Automotive
+buildings:
+  icons:
+    - warehouse
+  label: Buildings
+business:
+  icons:
+    - boxes-packing
+    - envelope
+    - pen-to-square
+    - percent
+    - phone
+    - scissors
+    - square-phone
+    - tag
+  label: Business
+camping:
+  icons: []
+  label: Camping
+charity:
+  icons:
+    - heart
+  label: Charity
+charts-diagrams:
+  icons: []
+  label: Charts + Diagrams
+childhood:
+  icons: []
+  label: Childhood
+clothing-fashion:
+  icons:
+    - user-tie
+  label: Clothing + Fashion
+coding:
+  icons:
+    - barcode
+    - sidebar
+  label: Coding
+communication:
+  icons:
+    - at
+    - comment
+    - envelope
+    - paper-plane
+    - phone
+    - square-phone
+  label: Communication
+connectivity:
+  icons: []
+  label: Connectivity
+construction:
+  icons: []
+  label: Construction
+design:
+  icons:
+    - eye
+    - eye-slash
+    - pen-to-square
+    - scissors
+  label: Design
+devices-hardware:
+  icons: []
+  label: Devices + Hardware
+disaster:
+  icons: []
+  label: Disaster + Crisis
+editing:
+  icons:
+    - check
+    - ellipsis-vertical
+    - eye-slash
+    - minus
+    - pen-to-square
+    - plus
+    - rotate
+    - scissors
+    - sliders-up
+    - trash
+    - xmark
+  label: Editing
+education:
+  icons: []
+  label: Education
+emoji:
+  icons: []
+  label: Emoji
+energy:
+  icons: []
+  label: Energy
+files:
+  icons:
+    - file-pdf
+    - scissors
+  label: Files
+film-video:
+  icons: []
+  label: Film + Video
+food-beverage:
+  icons: []
+  label: Food + Beverage
+fruits-vegetables:
+  icons: []
+  label: Fruits + Vegetables
+gaming:
+  icons:
+    - heart
+    - square-full
+  label: Gaming
+gender:
+  icons: []
+  label: Genders
+halloween:
+  icons: []
+  label: Halloween
+hands:
+  icons:
+    - thumbs-down
+    - thumbs-up
+  label: Hands
+holidays:
+  icons:
+    - heart
+  label: Holidays
+household:
+  icons: []
+  label: Household
+humanitarian:
+  icons:
+    - ban
+    - boxes-packing
+    - envelope
+    - file-pdf
+    - truck
+  label: Humanitarian
+logistics:
+  icons:
+    - boxes-packing
+    - dolly
+    - pallet-box
+    - truck
+    - truck-fast
+    - warehouse
+  label: Logistics
+maps:
+  icons:
+    - basket-shopping
+    - cart-shopping
+    - circle-info
+    - eye
+    - eye-slash
+    - heart
+    - info
+    - key
+    - location-dot
+    - magnifying-glass
+    - money-bill
+    - phone
+    - plus
+    - square-phone
+    - tag
+    - truck
+  label: Maps
+maritime:
+  icons: []
+  label: Maritime
+marketing:
+  icons:
+    - envelope-open-dollar
+  label: Marketing
+mathematics:
+  icons:
+    - minus
+    - percent
+    - plus
+    - xmark
+  label: Mathematics
+media-playback:
+  icons:
+    - rotate
+    - sliders-up
+  label: Media Playback
+medical-health:
+  icons:
+    - eye
+    - heart
+    - plus
+  label: Medical + Health
+money:
+  icons:
+    - money-bill
+    - percent
+  label: Money
+moving:
+  icons:
+    - boxes-packing
+    - dolly
+  label: Moving
+music-audio:
+  icons:
+    - sliders-up
+  label: Music + Audio
+nature:
+  icons: []
+  label: Nature
+numbers:
+  icons:
+    - '6'
+    - '7'
+    - '8'
+    - '9'
+  label: Numbers
+photos-images:
+  icons:
+    - eye
+    - eye-slash
+    - sliders-up
+  label: Photos + Images
+political:
+  icons: []
+  label: Political
+punctuation-symbols:
+  icons:
+    - at
+    - check
+    - circle-question
+    - minus
+    - percent
+    - plus
+  label: Punctuation + Symbols
+religion:
+  icons: []
+  label: Religion
+science:
+  icons: []
+  label: Science
+science-fiction:
+  icons: []
+  label: Science Fiction
+security:
+  icons:
+    - ban
+    - eye
+    - eye-slash
+    - key
+    - lock
+  label: Security
+shapes:
+  icons:
+    - comment
+    - heart
+    - star
+  label: Shapes
+shopping:
+  icons:
+    - barcode
+    - basket-shopping
+    - cart-shopping
+    - heart
+    - key
+    - star
+    - tag
+    - thumbs-down
+    - thumbs-up
+    - truck
+    - truck-fast
+  label: Shopping
+social:
+  icons:
+    - circle-user
+    - comment
+    - envelope
+    - heart
+    - location-dot
+    - star
+    - thumbs-down
+    - thumbs-up
+    - user
+  label: Social
+spinners:
+  icons:
+    - rotate
+  label: Spinners
+sports-fitness:
+  icons:
+    - heart
+  label: Sports + Fitness
+text-formatting:
+  icons:
+    - check
+    - list
+    - table-cells
+    - table-cells-large
+  label: Text Formatting
+time:
+  icons:
+    - clock
+  label: Time
+toggle:
+  icons:
+    - star
+  label: Toggle
+transportation:
+  icons:
+    - cart-shopping
+    - paper-plane
+    - truck
+  label: Transportation
+travel-hotel:
+  icons:
+    - key
+  label: Travel + Hotel
+users-people:
+  icons:
+    - circle-user
+    - user
+    - user-gear
+    - user-tie
+  label: Users + People
+weather:
+  icons: []
+  label: Weather
+writing:
+  icons:
+    - envelope
+    - paper-plane
+    - pen-to-square
+  label: Writing

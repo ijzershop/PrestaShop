@@ -94,7 +94,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-7 col-lg-3">
-                    <div class="input-group"> <span class="input-group-addon"><i class="fa fa-search"></i></span> <input v-on:keyup="searchCustomers()" v-model="customer_search" class="form-control"> </div>
+                    <div class="input-group"> <span class="input-group-addon"><i class="fa fa-magnifying-glass"></i></span> <input v-on:keyup="searchCustomers()" v-model="customer_search" class="form-control"> </div>
                     <div class="help-block">
                         <p>{l s='Eg: john doe ...' mod='psgdpr'}</p>
                     </div>

@@ -37,6 +37,8 @@
 
 {block name='page_content' append}
   {block name='guest_to_customer'}
+    <div class="bg-light row p-2">
+
     <form action="{$urls.pages.guest_tracking}" method="post">
       <header>
         <h1 class="h3">{l s='Transform your guest account into a customer account and enjoy:' d='Shop.Theme.Customeraccount'}</h1>
@@ -66,5 +68,7 @@
       </footer>
 
     </form>
+    </div>
+
   {/block}
 {/block}

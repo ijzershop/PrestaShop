@@ -75,7 +75,7 @@
         {/if}
 
         <p class="add-address">
-          <a class="btn btn-link" href="{$new_address_delivery_url}"><i class="fa-sharp fa-plus"></i> {l s='add new address' d='Shop.Theme.Actions'}</a>
+          <a class="btn btn-link" href="{$new_address_delivery_url}"><i class="fasr fa-plus"></i> {l s='add new address' d='Shop.Theme.Actions'}</a>
         </p>
 
         {if $use_same_address && !$cart.is_virtual}
@@ -119,7 +119,7 @@
           {/if}
 
           <p class="add-address">
-            <a class="btn btn-link" href="{$new_address_invoice_url}"><i class="fa-sharp fa-plus"></i> {l s='add new address' d='Shop.Theme.Actions'}</a>
+            <a class="btn btn-link" href="{$new_address_invoice_url}"><i class="fasr fa-plus"></i> {l s='add new address' d='Shop.Theme.Actions'}</a>
           </p>
         {/if}
 

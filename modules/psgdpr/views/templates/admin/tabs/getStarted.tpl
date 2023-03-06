@@ -57,7 +57,7 @@
         <div class="col-lg-3">
             <div class="psgdpr-card" data-target="customerActivity">
                 <div class="card-header">
-                    <h4 class="card-title-size"><i class="fa fa-search"></i> <span class="card-title">{l s='Keep track' mod='psgdpr'}</span></h4>
+                    <h4 class="card-title-size"><i class="fa fa-magnifying-glass"></i> <span class="card-title">{l s='Keep track' mod='psgdpr'}</span></h4>
                 </div>
                 <div class="card-body">
                     <p class="card-text">{l s='Visualize all of your customers’ actions related to their data and manage the erasure requests.' mod='psgdpr'}</p>

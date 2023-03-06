@@ -200,11 +200,11 @@ if ((workingDays.indexOf(currentDay) !== -1 && (currentHour >= startHour && curr
       </td>
     </tr>
     <table width="100%" height="100%">
-    <tr id="info-row-mail"><td><a class="btn btn-primary rounded-0 w-100" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE')}"><i class="fa-sharp fa-envelope float-left fa-2x"></i> Mail met ons</a></td></tr>
-    <tr style="display: none;" id="info-row-phone"><td><a class="btn btn-primary rounded-0 w-100" href="tel://{str_replace(' ','',Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_PHONE'))}"><i class="fa-sharp fa-phone float-left fa-2x"></i> Bel met ons</a></td></tr>
+    <tr id="info-row-mail"><td><a class="btn btn-primary rounded-0 w-100" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE')}"><i class="fasr fa-envelope float-left fa-2x"></i> Mail met ons</a></td></tr>
+    <tr style="display: none;" id="info-row-phone"><td><a class="btn btn-primary rounded-0 w-100" href="tel://{str_replace(' ','',Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_PHONE'))}"><i class="fasr fa-phone float-left fa-2x"></i> Bel met ons</a></td></tr>
     <tr style="display: none;" id="info-row-whatsapp"><td><a target="_blank" class="btn btn-primary rounded-0 w-100" href="{str_replace(' ','',Configuration::get('MSTHEMECONFIG_HEADER_WHATSAPP_LINK'))}"><i class="fab fa-whatsapp float-left fa-2x"></i> App met ons</a></td></tr>
     <tr style="display: none;" id="info-row-chat"><td><a class="btn btn-primary rounded-0 w-100" href="#"><i class="fa-tawkto-bubble float-left"></i> Chat met ons</a></td></tr>
-    <tr id="info-row-maps"><td><a class="btn btn-primary rounded-0 w-100" target="_blank" href="https://www.google.com/maps/place/{Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_GOOGLE_STRING')}"><i class="fa-sharp fa-map-marker fa-2x float-left"></i> Vind ons</a></td></tr>
+    <tr id="info-row-maps"><td><a class="btn btn-primary rounded-0 w-100" target="_blank" href="https://www.google.com/maps/place/{Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_GOOGLE_STRING')}"><i class="fasr fa-location-dot fa-2x float-left"></i> Vind ons</a></td></tr>
   </table>
 </div>
 

@@ -113,13 +113,13 @@
                             {if isset($settings['qty_update_option']) && $settings['qty_update_option'] eq 0 }
                                  <span class="input-group-btn">
                                     <button type="button" class="cart_quantity_down qty-btn increase_button quantity-left-minus btn btn-primary btn-number" onclick="upQty('quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}')"  data-type="minus" data-field="">
-                                        <span class="fa-sharp fa-chevron-up"></span>
+                                        <span class="fasr fa-chevron-up"></span>
                                     </button>
                                 </span>
                                 <input min="1" max="100" autocomplete="off" type="text" id="quantity" class="form-control input-number quantitybox" name="quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}" value="{$product.quantity|intval}">
                                 <span class="input-group-btn">
                                     <button type="button" class="cart_quantity_down qty-btn decrease_button quantity-right-plus btn btn-primary btn-number" data-type="plus" data-field="" onclick="downQty('quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}')">
-                                        <span class="fa-sharp fa-chevron-down"></span>
+                                        <span class="fasr fa-chevron-down"></span>
                                     </button>
                                 </span>
 
@@ -139,7 +139,7 @@
 
 
                     <td class="supercheckout-qty" style="{if $logged}{if $settings['cart_options']['product_name']['logged']['display'] eq 1 || $settings['cart_options']['product_model']['logged']['display'] eq 1 || $settings['cart_options']['product_qty']['logged']['display'] eq 1 || $settings['cart_options']['product_price']['logged']['display'] eq 1 || $settings['cart_options']['product_total']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['cart_options']['product_name']['guest']['display'] eq 1 || $settings['cart_options']['product_model']['guest']['display'] eq 1 || $settings['cart_options']['product_qty']['guest']['display'] eq 1 || $settings['cart_options']['product_price']['guest']['display'] eq 1 || $settings['cart_options']['product_total']['guest']['display'] eq 1}{else}none{/if}{/if};">
-                        <span id="{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}" onclick="deleteProductFromCart(this.id);" class="removeProduct supercheckout-product-delete delete_product"><i class="fa-sharp fa-times"></i></span></td>
+                        <span id="{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}" onclick="deleteProductFromCart(this.id);" class="removeProduct supercheckout-product-delete delete_product"><i class="fasr fa-xmark"></i></span></td>
 
                 </tr>
             {/foreach}
@@ -174,7 +174,7 @@
         {foreach $vouchers.added as $voucher}
             <div style="margin-bottom: 1%;" id="cart_discount_{$voucher.id_cart_rule}" class="cart_discount text-right" style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}none{/if}{/if};">
 
-                <span style="float:left;color:#4862A3;font-size:initial;><b>{$voucher.name}</b></span><a href="javascript:void(0)" style="float: left;margin-left: 2%;" onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><div title="{l s='Redeem' mod='supercheckout'}" class="removeProduct"><i class="fa-sharp fa-trash"></i></div></a>
+                <span style="float:left;color:#4862A3;font-size:initial;><b>{$voucher.name}</b></span><a href="javascript:void(0)" style="float: left;margin-left: 2%;" onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><div title="{l s='Redeem' mod='supercheckout'}" class="removeProduct"><i class="fasr fa-trash"></i></div></a>
                 <span class="price text-right">{$voucher.reduction_formatted nofilter}{*escape not required as contains html*}</span>
             </div>
         {/foreach}

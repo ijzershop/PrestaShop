@@ -3368,7 +3368,7 @@ $(document).ready(function () {
     $('#desired_reference').parent().find('.errorsmall').remove();
     if ($('.supercheckout_shipping_option:checked').attr('value') == add2OrderCarrier) {
       if ($('#added_to_order').val() === "") {
-        $('#desired_reference').parent().append('<span class="mt-1 errorsmall alert alert-danger text-white w-100">U heeft nog geen bestelling gezocht en geselecteerd, om uw huidige bestelling aan toe te voegen? Of de door u ingevoerde<br/> Vul het gewenste bestelnummer in en druk op de zoekknop ( <button type="button" class="btn btn-sm btn-success" style="width:14px;height:14px;padding:0.2rem 0.2rem;font-size:0.5rem;line-height:0.5;border-radius:0;"><i class="fas fa-sm fa-search" style="font-size"></i></button> ) om te bevestigen. Is de bestelling beschikbaar dan word de postcode van het aflever adres getoond.</span>');
+        $('#desired_reference').parent().append('<span class="mt-1 errorsmall alert alert-danger text-white w-100">U heeft nog geen bestelling gezocht en geselecteerd, om uw huidige bestelling aan toe te voegen? Of de door u ingevoerde<br/> Vul het gewenste bestelnummer in en druk op de zoekknop ( <button type="button" class="btn btn-sm btn-success" style="width:14px;height:14px;padding:0.2rem 0.2rem;font-size:0.5rem;line-height:0.5;border-radius:0;"><i class="fasr fa-sm fa-magnifying-glass" style="font-size"></i></button> ) om te bevestigen. Is de bestelling beschikbaar dan word de postcode van het aflever adres getoond.</span>');
         $('#desired_reference').removeClass('ok-form').addClass('error-form');
         return false;
       } else {

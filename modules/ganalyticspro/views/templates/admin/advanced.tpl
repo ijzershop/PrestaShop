@@ -140,7 +140,7 @@
             {/if}
 
             <div class="clr_30"></div>
-            <h3><i class="fa fa-shopping-cart"></i>&nbsp;{l s='Conversion management' mod='ganalyticspro'}</h3>
+            <h3><i class="fa fa-cart-shopping"></i>&nbsp;{l s='Conversion management' mod='ganalyticspro'}</h3>
 
             <div class="col-xs-12">
                 <div class="alert alert-info">{l s='The options below allow you to configure the exact conversion value (order amount) that will be sent to Google Analytics when an order is placed on your shop. By default, the conversion value sent does NOT include taxes, shipping and wrapping fees. However, if you want to include one or more of these costs, select "Yes" for the corresponding option(s) below:' mod='ganalyticspro'}</div>

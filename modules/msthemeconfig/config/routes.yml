@@ -121,6 +121,19 @@ modernesmid_config_get_select2_data:
     panel_name: '([a-z-]+)?'
 
 
+admin_configuration_symlink_mailtheme_put:
+  path: /modernesmid/ajax/configuration/admin-configuration-symlink-mailtheme/{enabled}
+  methods: [GET]
+  defaults:
+    _controller: 'MsThemeConfig\Class\ModernAjax::putMailthemeSymlink'
+    _legacy_controller: 'ModernAjax'
+    _legacy_link: 'ModernAjax:putMailthemeSymlink'
+    _legacy_parameters:
+      enabled: enabled
+  requirements:
+    enabled: '(?i:true|false)'
+
+
 admin_addresses_index:
   path: /sell/addresses/
   methods: GET

@@ -44,9 +44,9 @@
                     class="text-decoration-none text-white {if array_key_exists('type', $page) && $page.type === 'previous'}previous {elseif array_key_exists('type', $page) && $page.type === 'next'}next {/if}{['disabled' => !$page.clickable, 'js-search-link' => true]|classnames}"
                   >
                     {if array_key_exists('type', $page) && $page.type === 'previous'}
-                      <i class="fa-sharp fa-chevron-left"></i> {l s='Previous' d='Shop.Theme.Actions'}
+                      <i class="fasr fa-chevron-left"></i> {l s='Previous' d='Shop.Theme.Actions'}
                     {elseif array_key_exists('type', $page) && $page.type === 'next'}
-                      {l s='Next' d='Shop.Theme.Actions'} <i class="fa-sharp fa-chevron-right"></i>
+                      {l s='Next' d='Shop.Theme.Actions'} <i class="fasr fa-chevron-right"></i>
                     {else}
                       {$page.page}
                     {/if}

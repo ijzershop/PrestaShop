@@ -54,7 +54,7 @@
         <input type="hidden" name="submitLogin" value="1">
         {block name='form_buttons'}
           <button id="submit-login" class="btn btn-primary w-100" data-link-action="sign-in" type="submit" class="form-control-submit">
-             <i class="fa-sharp fa-lock"></i> {l s='Sign in' d='Shop.Theme.Actions'}
+             <i class="fasr fa-lock"></i> {l s='Sign in' d='Shop.Theme.Actions'}
           </button>
         {/block}
       </footer>

@@ -64,7 +64,7 @@
                   {foreach from=$product.customizations item="customization"}
                       {foreach from=$customization.fields item="field"}
                         <div class="text-center text-sm-left pl-1">
-                          <b>{str_replace(['zaaginstructies', 'knipinstructies','zagen','knippen'],['<i class="fak fa-saw"></i>','<i class="fas fa-cut"></i>', '<i class="fak fa-saw"></i>','<i class="fas fa-cut"></i>'],$field.label) nofilter} </b>
+                          <b>{str_replace(['zaaginstructies', 'knipinstructies','zagen','knippen'],['<i class="fak fa-saw"></i>','<i class="fasr fa-cut"></i>', '<i class="fak fa-saw"></i>','<i class="fasr fa-cut"></i>'],$field.label) nofilter} </b>
                             {if $field.type == 'text'}
                                 {if (int)$field.id_module}
                                     {$field.text nofilter}
@@ -111,7 +111,7 @@
                                                     data-type="plus" data-field=""
                                                     onclick="downQty('quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}')">
 
-                                                        <span class="fas fa-minus"></span>
+                                                        <span class="fasr fa-minus"></span>
                                                 </button>
                                         </span>
                     <input min="1" onclick="this.select()" autocomplete="off" type="text" id="quantity"
@@ -123,7 +123,7 @@
                                                         class="input-group-text cart_quantity_down qty-btn decrease_button quantity-right-plus btn btn-primary btn-number"
                                                         data-type="plus" data-field=""
                                                         onclick="upQty('quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}')">
-                                                        <span class="fas fa-plus"></span>
+                                                        <span class="fasr fa-plus"></span>
                                                 </button>
                                         </span>
                   {else}
@@ -235,7 +235,7 @@
                     href="javascript:void(0)"
                     style="float: left;margin-left: 2%;"
                     onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><i
-                      class="fas fa-trash"></i></a>
+                      class="fasr fa-trash"></i></a>
                   <span
                     class="price text-right">{Context::getContext()->currentLocale->formatPrice($voucher.reduction_amount/1.21, 'EUR')}</span>
                 </div>

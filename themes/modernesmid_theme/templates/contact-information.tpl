@@ -31,7 +31,7 @@
   <div class="row bg-light p-3">
     <div class="row p-2">
       <div class="col-12 col-sm-12 col-md-6">
-        <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE')}" class="btn btn-primary btn-sm w-100 mb-2" title="Ik wil graag een offerte aanvragen">Ik wil graag een offerte aanvragen <i class="fa-sharp fa-envelope"></i></a>
+        <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE')}" class="btn btn-primary btn-sm w-100 mb-2" title="Ik wil graag een offerte aanvragen">Ik wil graag een offerte aanvragen <i class="fasr fa-envelope"></i></a>
           {widget name="contactform"}
       </div>
       <div class="col-12 col-sm-12 col-md-6">

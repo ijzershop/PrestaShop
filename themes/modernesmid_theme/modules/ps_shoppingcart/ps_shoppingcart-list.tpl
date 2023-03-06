@@ -1,7 +1,7 @@
 {assign var='deliveryMethodCarriers' value=unserialize(Configuration::get('koopmanOrderExport'))}
 <div class="shoppingcart-list-block">
-    <div class="menu-title" id="shoppingcart-list-title"><a class="text-white text-decoration-none" id="shoppingcart-chevron-close"><i class="float-left mt-1 mb-1 ml-1 fa-sharp fa-chevron-right"></i> Winkelwagen</a>
-        <a href="/mijn-account" id="my-account-link" class="float-right text-white pr-2"><i class="fa-sharp fa-user-circle"></i></a>
+    <div class="menu-title" id="shoppingcart-list-title"><a class="text-white text-decoration-none" id="shoppingcart-chevron-close"><i class="float-left mt-1 mb-1 ml-1 fasr fa-chevron-right"></i> Winkelwagen</a>
+        <a href="/mijn-account" id="my-account-link" title="Mijn Account" class="float-right text-white pr-2"><i class="fasr fa-user-circle"></i></a>
     </div>
     <div class="shoppingcart-list">
         <div class="row">
@@ -45,7 +45,7 @@
                     <div class="row">
                         <span class="mar_r4">{$voucher.name}</span>
                         <span class="mar_r4">{Context::getContext()->currentLocale->formatPrice((float)$voucher.reduction_amount, 'EUR')}</span>
-                        <a href="javascript:void(0)" onclick="removeDiscount({{$voucher.id_cart_rule}})" data-link-action="remove-voucher" class="flex_child" title="{l s='Remove' d='Shop.Theme.Actions'}"><i class="fa-sharp fa-trash mar_l4"></i></a>
+                        <a href="javascript:void(0)" onclick="removeDiscount({{$voucher.id_cart_rule}})" data-link-action="remove-voucher" class="flex_child" title="{l s='Remove' d='Shop.Theme.Actions'}"><i class="fasr fa-trash mar_l4"></i></a>
                     </div>
                 </li>
                 {/foreach}

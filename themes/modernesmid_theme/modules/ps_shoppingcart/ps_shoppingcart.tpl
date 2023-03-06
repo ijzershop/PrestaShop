@@ -98,7 +98,7 @@
               <td>
 
                 <a href="#" class="btn btn-success top-header-shoppingcart" id="top-header-shoppingcart">
-                  <i class="{if (int)Context::getContext()->cart->nbProducts() > 0}fa-sharp fa-shopping-cart{else}fad fa-shopping-cart{/if} d-inline-block pr-1" style="font-size:1.3rem"></i> <span class="align-text-bottom d-inline-block d-lg-none d-xl-inline-block">Bestel</span>
+                  <i class="{if (int)Context::getContext()->cart->nbProducts() > 0}fasr fa-cart-shopping{else}fad fa-cart-shopping{/if} d-inline-block pr-1" style="font-size:1.3rem"></i> <span class="align-text-bottom d-inline-block d-lg-none d-xl-inline-block">Bestel</span>
                   <span class="float-right text-right" id="header-cart-total">
                     {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(), 'EUR' )}
                   </span>

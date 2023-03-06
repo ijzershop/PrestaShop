@@ -40,11 +40,11 @@
     <div class="comment-buttons btn-group">
       {if $usefulness_enabled}
         <a class="useful-review">
-          <i class="fa-sharp fa-thumbs-up"></i>
+          <i class="fasr fa-thumbs-up"></i>
           <span class="useful-review-value">@COMMENT_USEFUL_ADVICES@</span>
         </a>
         <a class="not-useful-review">
-          <i class="fa-sharp fa-thumbs-down"></i>
+          <i class="fasr fa-thumbs-down"></i>
           <span class="not-useful-review-value">@COMMENT_NOT_USEFUL_ADVICES@</span>
         </a>
       {/if}

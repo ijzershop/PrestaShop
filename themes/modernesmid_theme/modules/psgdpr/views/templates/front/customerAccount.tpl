@@ -15,7 +15,7 @@
 <li class="nav-item">
 	<a class="nav-link btn-light {if $page.page_name == 'module-psgdpr-gdpr'}active{/if}" id="identity-link" href="{$link->getModuleLink('psgdpr', 'gdpr')}">
 	    <span class="link-item">
-	        <i class="fa-sharp fa-user-cog"></i> {l s='GDPR - Personal data' mod='psgdpr'}
+	        <i class="fasr fa-user-cog"></i> {l s='GDPR - Personal data' mod='psgdpr'}
 	    </span>
 	</a>
 </li>

@@ -18,6 +18,6 @@
     <a class="btn btn-primary button button-small"
        href="{$link->getPageLink('order.php', true, null, ['step' => 3])|escape:'htmlall':'UTF-8'}"
        title="{l s='Back to your shopping cart' mod='mollie'}">
-        <span><i class="fa-sharp fa-chevron-left"></i> {l s='Back to your shopping cart' mod='mollie'}</span>
+        <span><i class="fasr fa-chevron-left"></i> {l s='Back to your shopping cart' mod='mollie'}</span>
     </a>
 {/block}

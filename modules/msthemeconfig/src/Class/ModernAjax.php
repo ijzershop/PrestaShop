@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\OrderState;
 use PrestaShop\PrestaShop\Adapter\Entity\Profile;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception;
 use PrestaShopDatabaseException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,6 +61,19 @@ class ModernAjax
     {
         return $this->context->link->getAdminLink('AdminModules', true, ['route' => 'admin_configuration_get_panel', 'panel_name' => ''], ['method' => 'GET']);
     }
+
+    /**
+     *
+     * Get the default url for ajax calls from the module config page
+     *
+     * @return string
+     *
+     */
+    public function getSymlinkMailthemeUrl(): string
+    {
+        return $this->context->link->getAdminLink('AdminModules', true, ['route' => 'admin_configuration_symlink_mailtheme_put', 'enabled' => ''], ['method' => 'GET']);
+    }
+
     /**
      * Get access list of panel of employee to show only needed configuration panels
      *
@@ -786,6 +800,26 @@ class ModernAjax
         }
         return $pagesList;
     }
+
+    /**
+     * @param bool $enabled
+     * @return Response
+     */
+    public function putMailthemeSymlink($enabled = false): Response
+    {
+        try {
+            $mailTheme = new MailTheme();
+            if($enabled === 'true'){
+                $mailTheme->makeThemeSymlink();
+                return Response::create('Mail theme created a symlink!', 200);
+            } else {
+                $mailTheme->removeThemeSymlink();
+                return Response::create('Mail theme removed the symlink!', 200);
+            }
+        } catch(Exception $e){
+            return Response::create('Mail theme failed creation of the symlink', 200);
+        }
+    }
     /**
      * Sort the search result alphabetical
      *
@@ -802,4 +836,5 @@ class ModernAjax
         }
         return $searchArray;
     }
+
 }

@@ -49,7 +49,7 @@
       </p>
       <div class="no-account position-absolute col-12 pb-3" style="bottom:10px;left:0">
         <a href="{$urls.pages.register}" class="btn btn-primary w-100" data-link-action="display-register-form">
-          <i class="fa-sharp fa-user"></i>  {l s='No account? Create one here' d='Shop.Theme.Customeraccount'}
+          <i class="fasr fa-user"></i>  {l s='No account? Create one here' d='Shop.Theme.Customeraccount'}
         </a>
       </div>
     </div>

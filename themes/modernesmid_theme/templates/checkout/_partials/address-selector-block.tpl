@@ -51,14 +51,14 @@
             data-link-action="edit-address"
             href="{url entity='order' params=['id_address' => $address.id, 'editAddress' => $type, 'token' => $token]}"
           >
-            <i class="fa-sharp fa-edit edit"></i> {l s='Edit' d='Shop.Theme.Actions'}
+            <i class="fasr fa-edit edit"></i> {l s='Edit' d='Shop.Theme.Actions'}
           </a>
           <a
             class="delete-address text-muted btn btn-link"
             data-link-action="delete-address"
             href="{url entity='order' params=['id_address' => $address.id, 'deleteAddress' => true, 'token' => $token]}"
           >
-            <i class="fa-sharp fa-times delete"></i> {l s='Delete' d='Shop.Theme.Actions'}
+            <i class="fasr fa-xmark delete"></i> {l s='Delete' d='Shop.Theme.Actions'}
           </a>
         {/if}
       </footer>

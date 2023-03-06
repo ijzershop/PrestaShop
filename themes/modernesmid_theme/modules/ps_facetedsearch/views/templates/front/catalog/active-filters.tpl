@@ -33,7 +33,7 @@
       {foreach from=$activeFilters item="filter"}
         {block name='active_filters_item'}
           <li class="filter-block list-group-item p-1 border-1">
-            <a class="js-search-link text-dark text-decoration-none" href="{$filter.nextEncodedFacetsURL}">{l s='%1$s: ' d='Shop.Theme.Catalog' sprintf=[$filter.facetLabel]} {$filter.label} <i class="fa-sharp fa-times close"></i></a>
+            <a class="js-search-link text-dark text-decoration-none" href="{$filter.nextEncodedFacetsURL}">{l s='%1$s: ' d='Shop.Theme.Catalog' sprintf=[$filter.facetLabel]} {$filter.label} <i class="fasr fa-times close"></i></a>
           </li>
         {/block}
       {/foreach}

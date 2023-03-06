@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h3 class="h1 card-title">
-                        <i class="fa-sharp fa-ban rtl-no-flip text-danger"></i>{l s='Your order is canceled' mod='mollie'}
+                        <i class="fasr fa-ban rtl-no-flip text-danger"></i>{l s='Your order is canceled' mod='mollie'}
                     </h3>
                 </div>
             </div>

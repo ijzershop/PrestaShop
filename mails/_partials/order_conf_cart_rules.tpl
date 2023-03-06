@@ -28,7 +28,7 @@
 			<table class="table" style="width:100%;border-collapse:collapse">
 				<tr>
 					<td width="5" style="color:#333;padding:0"></td>
-					<td style="text-align:right;color: #353943;font-size: 16px;">
+					<td style="text-align:right;color: #353943;font-size: 12px">
 							<strong>{$cart_rule['voucher_name']}</strong>
 					</td>
 					<td width="5" style="color:#333;padding:0"></td>
@@ -39,7 +39,7 @@
 			<table class="table" style="width:100%;border-collapse:collapse">
 				<tr>
 					<td width="5" style="color:#333;padding:0"></td>
-					<td align="right" style="text-align:right;color: #353943;font-size: 14px;font-weight:bold;">
+					<td align="right" style="text-align:right;color: #353943;font-size: 12px;font-weight:bold;">
 							{$cart_rule['voucher_reduction']}
 					</td>
 					<td width="5" style="color:#333;padding:0"></td>

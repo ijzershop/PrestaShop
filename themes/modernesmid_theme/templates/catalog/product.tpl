@@ -176,7 +176,7 @@
                   <div class="row">
                     <div class="add col-12">
                       <a class="btn btn-success add-to-cart w-100 {if !$product.add_to_cart_url}disabled{elseif !$product.available_for_order}disabled{/if}" data-button-action="add-to-cart" data-product-id="{$product.id_product}" type="button" {if !$product.add_to_cart_url} disabled {/if} href="{$link->getPageLink('cart')}?token={$static_token}">
-                        <i class="fass fa-shopping-cart shopping-cart" data-product-id="{$product.id_product}"></i>
+                        <i class="fasr fa-regular fa-cart-shopping shopping-cart" data-product-id="{$product.id_product}"></i>
                         <span class="d-none d-sm-inline"> {l s='Add to cart' d='Shop.Theme.Actions'} </span>
                       </a>
                     </div>

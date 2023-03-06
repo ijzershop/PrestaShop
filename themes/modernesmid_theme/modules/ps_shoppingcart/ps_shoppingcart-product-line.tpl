@@ -24,11 +24,11 @@
       {if !isset($product.is_gift) || !$product.is_gift}
       <div class="col-2">
         <div class="dropdown" style="height:25px;margin-bottom:5px;">
-          <button type="button" id="cart-product-row-toggle-{$product.id_product}" title="Bekijk, wijzig of verwijder product" class="d-block dropdown-toggle show shoppingcart-ellipsis text-dark" data-toggle="dropdown" aria-expanded="false"><i class="text-right align-top fa-2x fa-sharp fa-ellipsis-v float-right"></i></button>
+          <button type="button" id="cart-product-row-toggle-{$product.id_product}" title="Bekijk, wijzig of verwijder product" class="d-block dropdown-toggle show shoppingcart-ellipsis text-dark" data-toggle="dropdown" aria-expanded="false"><i class="text-right align-top fa-2x fasr fa-ellipsis-v float-right"></i></button>
           <div class="dropdown-menu shoppingcart-dropdown-menu" aria-labelledby="cart-product-row-toggle-{$product.id_product}">
-            <a href="{Context::getContext()->link->getProductLink($product)}" rel="noopener" target="_blank" class="dropdown-item"><i class="fa-sharp fa-question-circle"></i> Bekijk product</a>
-            <a href="#" class="dropdown-item changeCartProductQty"><i class="fa-sharp fa-edit"></i> Wijzig aantal: {$product.quantity}</a>
-            <a href="#" class="ajax_remove_button dropdown-item" rel="nofollow" data-href="{Context::getContext()->link->getRemoveFromCartURL($product.id_product, $product.id_product_attribute, $product.id_customization)}" data-link-action="remove-from-cart" title="{l s=" Remove" d="Shop.Theme.Actions" }"><i class="fa-sharp fa-trash"></i>
+            <a href="{Context::getContext()->link->getProductLink($product)}" rel="noopener" target="_blank" class="dropdown-item"><i class="fasr fa-question-circle"></i> Bekijk product</a>
+            <a href="#" class="dropdown-item changeCartProductQty"><i class="fasr fa-edit"></i> Wijzig aantal: {$product.quantity}</a>
+            <a href="#" class="ajax_remove_button dropdown-item" rel="nofollow" data-href="{Context::getContext()->link->getRemoveFromCartURL($product.id_product, $product.id_product_attribute, $product.id_customization)}" data-link-action="remove-from-cart" title="{l s=" Remove" d="Shop.Theme.Actions" }"><i class="fasr fa-trash"></i>
               Verwijder
             </a>
           </div>
@@ -81,7 +81,7 @@
             <input onclick="this.select()" class="form-control cart_quantity cart_quantity_{$product.id_product}" type="number" min="1" width="auto" value="{$product.quantity}" name="cart_quantity" data-update-url="{Context::getContext()->link->getPageLink('cart')}?token={Tools::getToken(false)}" data-product-id="{$product.id_product}" data-minimal-quantity="{$product.minimal_quantity}" {if Configuration::get('PS_STOCK_MANAGEMENT')}data-stock_quantity="{$product.stock_quantity}"{/if} data-id-product-attribute="{$product.id_product_attribute}" data-id-customization="{$product.id_customization}" data-allow-oosp="{if isset($product.add_to_cart_url) && $product.allow_oosp}1{else}0{/if}" data-allow-oosp="1" />
             <div class="input-group-append">
               <a class="btn btn-success updateCartBurron" href="#" data-update-url="{Context::getContext()->link->getPageLink('cart')}?token={Tools::getToken(false)}" data-current-value="{$product.quantity}" data-product-id="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}" data-id-customization="{$product.id_customization}">
-                <i class="fa-sharp fa-check"></i>
+                <i class="fasr fa-check"></i>
               </a>
             </div>
           </div>

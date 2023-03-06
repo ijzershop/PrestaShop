@@ -41,7 +41,7 @@
   <div class="row">
     <div class="addresses-footer col-12 pt-3 pb-3" style="bottom:10px;left:0">
       <a href="{$urls.pages.address}" class="btn btn-primary w-100" data-link-action="add-address">
-        <i class="fa-sharp fa-plus"></i>
+        <i class="fasr fa-plus"></i>
         <span>{l s='Create new address' d='Shop.Theme.Actions'}</span>
       </a>
     </div>

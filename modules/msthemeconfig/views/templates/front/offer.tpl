@@ -61,7 +61,7 @@
                         data-product-customization=""
                         class="btn btn-success add-to-cart w-100 text-nowrap mt-2 {if Configuration::get('PS_STOCK_MANAGEMENT')  &&  (int)$product.quantity <= 0 && (int)$product.out_of_stock == 0}disabled{elseif Configuration::get('PS_STOCK_MANAGEMENT') && (int)$product.quantity != 0 && (int)$product.quantity < 100 && (int)$product.quantity < 0 && (int)$product.out_of_stock == 0}disabled{/if}"
                         data-button-action="add-to-cart"
-                      ><i data-product-id="{$product.id_product}" class="fas fa-shopping-cart shopping-cart"></i> <span class="d-none d-sm-inline-block d-md-none d-lg-inline-block">Toevoegen aan winkelwagen</span></a>
+                      ><i data-product-id="{$product.id_product}" class="fasr fa-cart-shopping shopping-cart"></i> <span class="d-none d-sm-inline-block d-md-none d-lg-inline-block">Toevoegen aan winkelwagen</span></a>
                     </div>
                   </div>
                 </div>

@@ -68,7 +68,7 @@
 <div class="col-12">
 
   <a href="{$urls.pages.my_account}" class="account-link">
-    <i class="fa-sharp fa-chevron-left"></i>
+    <i class="fasr fa-chevron-left"></i>
     <span>{l s='Back to login' d='Shop.Theme.Actions'}</span>
   </a>
 </div>

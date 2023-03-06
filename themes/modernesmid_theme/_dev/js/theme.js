@@ -83,13 +83,17 @@ $(document).ready(() => {
 
 
 
-import '@fortawesome/fontawesome-pro/js/fontawesome.js';
-import '@fortawesome/fontawesome-pro/js/sharp-solid.js';
-import '@fortawesome/fontawesome-pro/js/duotone.js';
-import '@fortawesome/fontawesome-pro/js/brands.js';
-import '@fortawesome/fontawesome-pro/js/v4-shims.js';
+// import '@fortawesome/fontawesome-pro/js/fontawesome.js';
+// import '@fortawesome/fontawesome-pro/js/sharp-solid.js';
+// import '@fortawesome/fontawesome-pro/js/light.js';
+// import '@fortawesome/fontawesome-pro/js/duotone.js';
+// import '@fortawesome/fontawesome-pro/js/brands.js';
+// import '@fortawesome/fontawesome-pro/js/v4-shims.js';
 
-import './fa-kit.js';
+import '../fontawesome/modified_files/fontawesome';
+import '../fontawesome/modified_files/sharp-regular';
+import '../fontawesome/modified_files/duotone';
+import '../fontawesome/modified_files/brands';
 
 /**
  *
@@ -1327,7 +1331,7 @@ $(function () {
             '<div style="display:none;" class="border-bottom-0 pb-1 row" id="add_to_order_info">' +
             '<span class="col-12 text-left width-100" style="color:blue;">Vanwege de AVG regels kunnen wij u niet meer informatie verschaffen dan de postcode. Kijk daarom de postcode en uw referentie goed na voordat u deze bestelling er aan toevoegd.</span>' +
             '</div><br/>'
-            + '<div class="btn-group w-100"><a id="searchOrderByReferenceAgain" class="btn btn-sm btn-primary text-white" href="#"><i class="fass fa-search"></i> Opnieuw Zoeken</a>';
+            + '<div class="btn-group w-100"><a id="searchOrderByReferenceAgain" class="btn btn-sm btn-primary text-white" href="#"><i class="fass fa-magnifying-glass"></i> Opnieuw Zoeken</a>';
 
           $('#order_number_validate').hide();
           $('#order_number_show_block').html(htmlBlock);

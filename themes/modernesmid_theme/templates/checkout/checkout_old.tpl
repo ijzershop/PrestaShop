@@ -81,7 +81,7 @@
           <div class="row">
             <div class="col-12">
               <a class="btn btn-dark mt-2" href="{$urls.pages.index}">
-                <i class="fa-sharp fa-chevron-left"></i> {l s='Continue shopping' d='Shop.Theme.Actions'}
+                <i class="fasr fa-chevron-left"></i> {l s='Continue shopping' d='Shop.Theme.Actions'}
               </a>
             </div>
           </div>

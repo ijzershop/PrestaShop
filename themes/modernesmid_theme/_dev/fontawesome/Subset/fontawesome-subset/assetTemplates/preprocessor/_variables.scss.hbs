@@ -1,0 +1,267 @@
+// variables
+// --------------------------
+
+$fa-css-prefix          : fa !default;
+$fa-style               : 900 !default;
+$fa-style-family        : "Font Awesome 6 Pro" !default;
+
+$fa-display             : inline-block !default;
+
+$fa-fw-width            : fa-divide(20em, 16) !default;
+$fa-inverse             : #fff !default;
+
+$fa-border-color        : #eee !default;
+$fa-border-padding      : .2em .25em .15em !default;
+$fa-border-radius       : .1em !default;
+$fa-border-style        : solid !default;
+$fa-border-width        : .08em !default;
+
+$fa-size-scale-2xs      : 10 !default;
+$fa-size-scale-xs       : 12 !default;
+$fa-size-scale-sm       : 14 !default;
+$fa-size-scale-base     : 16 !default;
+$fa-size-scale-lg       : 20 !default;
+$fa-size-scale-xl       : 24 !default;
+$fa-size-scale-2xl      : 32 !default;
+
+$fa-sizes: (
+  "2xs"                 : $fa-size-scale-2xs,
+  "xs"                  : $fa-size-scale-xs,
+  "sm"                  : $fa-size-scale-sm,
+  "lg"                  : $fa-size-scale-lg,
+  "xl"                  : $fa-size-scale-xl,
+  "2xl"                 : $fa-size-scale-2xl
+) !default;
+
+$fa-li-width            : 2em !default;
+$fa-li-margin           : $fa-li-width * fa-divide(5, 4) !default;
+
+$fa-pull-margin         : .3em !default;
+
+$fa-primary-opacity     : 1 !default;
+$fa-secondary-opacity   : .4 !default;
+
+$fa-stack-vertical-align: middle !default;
+$fa-stack-width         : ($fa-fw-width * 2) !default;
+$fa-stack-z-index       : auto !default;
+
+$fa-font-display        : block !default;
+$fa-font-path           : "../webfonts" !default;
+
+$fa-var-6: \36;
+$fa-var-7: \37;
+$fa-var-8: \38;
+$fa-var-9: \39;
+$fa-var-at: \40;
+$fa-var-info: \f129;
+$fa-var-sliders-up: \f3f1;
+$fa-var-sliders-v: \f3f1;
+$fa-var-scissors: \f0c4;
+$fa-var-cut: \f0c4;
+$fa-var-list: \f03a;
+$fa-var-list-squares: \f03a;
+$fa-var-lock: \f023;
+$fa-var-pen-to-square: \f044;
+$fa-var-edit: \f044;
+$fa-var-eye-slash: \f070;
+$fa-var-chevron-up: \f077;
+$fa-var-money-bill: \f0d6;
+$fa-var-user: \f007;
+$fa-var-key: \f084;
+$fa-var-ban: \f05e;
+$fa-var-cancel: \f05e;
+$fa-var-star: \f005;
+$fa-var-dolly: \f472;
+$fa-var-dolly-box: \f472;
+$fa-var-user-tie: \f508;
+$fa-var-boxes-packing: \e4c7;
+$fa-var-arrows-left-right: \f07e;
+$fa-var-arrows-h: \f07e;
+$fa-var-pallet-box: \e208;
+$fa-var-heart: \f004;
+$fa-var-circle-question: \f059;
+$fa-var-question-circle: \f059;
+$fa-var-basket-shopping: \f291;
+$fa-var-shopping-basket: \f291;
+$fa-var-eye: \f06e;
+$fa-var-phone: \f095;
+$fa-var-user-gear: \f4fe;
+$fa-var-user-cog: \f4fe;
+$fa-var-trash: \f1f8;
+$fa-var-envelope-open-dollar: \f657;
+$fa-var-table-cells: \f00a;
+$fa-var-th: \f00a;
+$fa-var-file-pdf: \f1c1;
+$fa-var-table-cells-large: \f009;
+$fa-var-th-large: \f009;
+$fa-var-tag: \f02b;
+$fa-var-comment: \f075;
+$fa-var-envelope: \f0e0;
+$fa-var-circle-info: \f05a;
+$fa-var-info-circle: \f05a;
+$fa-var-truck: \f0d1;
+$fa-var-minus: \f068;
+$fa-var-subtract: \f068;
+$fa-var-cart-shopping: \f07a;
+$fa-var-shopping-cart: \f07a;
+$fa-var-clock: \f017;
+$fa-var-clock-four: \f017;
+$fa-var-ellipsis-vertical: \f142;
+$fa-var-ellipsis-v: \f142;
+$fa-var-thumbs-down: \f165;
+$fa-var-location-dot: \f3c5;
+$fa-var-map-marker-alt: \f3c5;
+$fa-var-magnifying-glass: \f002;
+$fa-var-search: \f002;
+$fa-var-chevron-down: \f078;
+$fa-var-circle-user: \f2bd;
+$fa-var-user-circle: \f2bd;
+$fa-var-truck-fast: \f48b;
+$fa-var-shipping-fast: \f48b;
+$fa-var-sidebar: \e24e;
+$fa-var-square-phone: \f098;
+$fa-var-phone-square: \f098;
+$fa-var-plus: \2b;
+$fa-var-add: \2b;
+$fa-var-xmark: \f00d;
+$fa-var-close: \f00d;
+$fa-var-multiply: \f00d;
+$fa-var-remove: \f00d;
+$fa-var-times: \f00d;
+$fa-var-chevron-left: \f053;
+$fa-var-chevron-right: \f054;
+$fa-var-percent: \25;
+$fa-var-percentage: \25;
+$fa-var-rotate: \f2f1;
+$fa-var-sync-alt: \f2f1;
+$fa-var-warehouse: \f494;
+$fa-var-check: \f00c;
+$fa-var-triangle-exclamation: \f071;
+$fa-var-exclamation-triangle: \f071;
+$fa-var-warning: \f071;
+$fa-var-paper-plane: \f1d8;
+$fa-var-arrows-up-down: \f07d;
+$fa-var-arrows-v: \f07d;
+$fa-var-thumbs-up: \f164;
+$fa-var-square-full: \f45c;
+$fa-var-barcode: \f02a;
+$fa-var-notdef: \e1fe;
+
+$fa-var-google: \f1a0;
+$fa-var-facebook: \f09a;
+$fa-var-whatsapp: \f232;
+$fa-var-twitter: \f099;
+
+$fa-icons: (
+  "6": $fa-var-6,
+  "7": $fa-var-7,
+  "8": $fa-var-8,
+  "9": $fa-var-9,
+  "at": $fa-var-at,
+  "info": $fa-var-info,
+  "sliders-up": $fa-var-sliders-up,
+  "sliders-v": $fa-var-sliders-v,
+  "scissors": $fa-var-scissors,
+  "cut": $fa-var-cut,
+  "list": $fa-var-list,
+  "list-squares": $fa-var-list-squares,
+  "lock": $fa-var-lock,
+  "pen-to-square": $fa-var-pen-to-square,
+  "edit": $fa-var-edit,
+  "eye-slash": $fa-var-eye-slash,
+  "chevron-up": $fa-var-chevron-up,
+  "money-bill": $fa-var-money-bill,
+  "user": $fa-var-user,
+  "key": $fa-var-key,
+  "ban": $fa-var-ban,
+  "cancel": $fa-var-cancel,
+  "star": $fa-var-star,
+  "dolly": $fa-var-dolly,
+  "dolly-box": $fa-var-dolly-box,
+  "user-tie": $fa-var-user-tie,
+  "boxes-packing": $fa-var-boxes-packing,
+  "arrows-left-right": $fa-var-arrows-left-right,
+  "arrows-h": $fa-var-arrows-h,
+  "pallet-box": $fa-var-pallet-box,
+  "heart": $fa-var-heart,
+  "circle-question": $fa-var-circle-question,
+  "question-circle": $fa-var-question-circle,
+  "basket-shopping": $fa-var-basket-shopping,
+  "shopping-basket": $fa-var-shopping-basket,
+  "eye": $fa-var-eye,
+  "phone": $fa-var-phone,
+  "user-gear": $fa-var-user-gear,
+  "user-cog": $fa-var-user-cog,
+  "trash": $fa-var-trash,
+  "envelope-open-dollar": $fa-var-envelope-open-dollar,
+  "table-cells": $fa-var-table-cells,
+  "th": $fa-var-th,
+  "file-pdf": $fa-var-file-pdf,
+  "table-cells-large": $fa-var-table-cells-large,
+  "th-large": $fa-var-th-large,
+  "tag": $fa-var-tag,
+  "comment": $fa-var-comment,
+  "envelope": $fa-var-envelope,
+  "circle-info": $fa-var-circle-info,
+  "info-circle": $fa-var-info-circle,
+  "truck": $fa-var-truck,
+  "minus": $fa-var-minus,
+  "subtract": $fa-var-subtract,
+  "cart-shopping": $fa-var-cart-shopping,
+  "shopping-cart": $fa-var-shopping-cart,
+  "clock": $fa-var-clock,
+  "clock-four": $fa-var-clock-four,
+  "ellipsis-vertical": $fa-var-ellipsis-vertical,
+  "ellipsis-v": $fa-var-ellipsis-v,
+  "thumbs-down": $fa-var-thumbs-down,
+  "location-dot": $fa-var-location-dot,
+  "map-marker-alt": $fa-var-map-marker-alt,
+  "magnifying-glass": $fa-var-magnifying-glass,
+  "search": $fa-var-search,
+  "chevron-down": $fa-var-chevron-down,
+  "circle-user": $fa-var-circle-user,
+  "user-circle": $fa-var-user-circle,
+  "truck-fast": $fa-var-truck-fast,
+  "shipping-fast": $fa-var-shipping-fast,
+  "sidebar": $fa-var-sidebar,
+  "square-phone": $fa-var-square-phone,
+  "phone-square": $fa-var-phone-square,
+  "plus": $fa-var-plus,
+  "add": $fa-var-add,
+  "xmark": $fa-var-xmark,
+  "close": $fa-var-close,
+  "multiply": $fa-var-multiply,
+  "remove": $fa-var-remove,
+  "times": $fa-var-times,
+  "chevron-left": $fa-var-chevron-left,
+  "chevron-right": $fa-var-chevron-right,
+  "percent": $fa-var-percent,
+  "percentage": $fa-var-percentage,
+  "rotate": $fa-var-rotate,
+  "sync-alt": $fa-var-sync-alt,
+  "warehouse": $fa-var-warehouse,
+  "check": $fa-var-check,
+  "triangle-exclamation": $fa-var-triangle-exclamation,
+  "exclamation-triangle": $fa-var-exclamation-triangle,
+  "warning": $fa-var-warning,
+  "paper-plane": $fa-var-paper-plane,
+  "arrows-up-down": $fa-var-arrows-up-down,
+  "arrows-v": $fa-var-arrows-v,
+  "thumbs-up": $fa-var-thumbs-up,
+  "square-full": $fa-var-square-full,
+  "barcode": $fa-var-barcode,
+  "notdef": $fa-var-notdef,
+);
+
+$fa-brand-icons: (
+  "google": $fa-var-google,
+  "facebook": $fa-var-facebook,
+  "whatsapp": $fa-var-whatsapp,
+  "twitter": $fa-var-twitter,
+);
+
+$fa-custom-icons: (
+  {{#each customIcons}}
+  {{@key}}: "\\{{this.unicodeHex}}",
+  {{/each}}
+);

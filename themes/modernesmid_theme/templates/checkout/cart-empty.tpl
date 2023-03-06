@@ -30,7 +30,7 @@
 
 {block name='continue_shopping' append}
   <a class="label btn btn-link" href="{$urls.pages.index}">
-    <i class="fa-sharp fa-chevron-left"></i> {l s='Continue shopping' d='Shop.Theme.Actions'}
+    <i class="fasr fa-chevron-left"></i> {l s='Continue shopping' d='Shop.Theme.Actions'}
   </a>
 {/block}
 

@@ -28,7 +28,7 @@
 		<input class="form-control form-control-sm" type="text" name="s" value="{$search_string}" placeholder="{l s='Waar bent u naar op zoek?' d='Shop.Theme.Catalog'}" aria-label="{l s='Search' d='Shop.Theme.Catalog'}">
 		<div class="input-group-append">
 			<button class="btn btn-success btn-secondary btn-sm" type="submit" aria-label="Zoeken">
-				<i class="fa-sharp fa-search d-block"></i>
+				<i class="fasr fa-magnifying-glass d-block"></i>
 			</button>
 		</div>
 		<input type="hidden" name="controller" value="search">

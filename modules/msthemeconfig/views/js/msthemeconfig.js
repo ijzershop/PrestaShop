@@ -203,6 +203,17 @@ $(function () {
   //   // }
   // }
 
-
+    $(document).on('change', '#mailtheme-symlink', function(){
+        let enabled = $(this).prop('checked');
+        $.ajax({
+          url: msThemeConfigSymLinkMailTheme + enabled,
+          type: 'GET',
+        }).done(function (e) {
+          $('form#retourForm .messages').html(e);
+        })
+          .fail(function (e) {
+            $('form#retourForm .messages').html(e);
+          });
+      });
 });
 

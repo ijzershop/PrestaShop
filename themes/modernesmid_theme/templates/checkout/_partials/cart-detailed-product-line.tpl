@@ -37,7 +37,7 @@
         data-id-customization="{$product.id_customization|escape:'javascript'}"
       >
           {if !isset($product.is_gift) || !$product.is_gift}
-            <i class="fa-sharp fa-times float-right"></i>
+            <i class="fasr fa-xmark float-right"></i>
           {/if}
       </a>
       <span class="product-image media-middle row mx-auto">
@@ -129,7 +129,7 @@
                   data-id-customization="{$product.id_customization|escape:'javascript'}"
                 >
                     {if !isset($product.is_gift) || !$product.is_gift}
-                      <i class="fa-sharp fa-times float-xs-left"></i>
+                      <i class="fasr fa-xmark float-xs-left"></i>
                     {/if}
                 </a>
                   {block name='hook_cart_extra_product_actions'}

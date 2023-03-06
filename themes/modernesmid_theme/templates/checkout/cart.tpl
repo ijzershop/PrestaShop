@@ -36,7 +36,7 @@
         <div class="card cart-container">
           <div class="card-block p-2 border-bottom card-header">
             <a class="w-100">{l s='Shopping Cart' d='Shop.Theme.Checkout'}</a>
-            <a id="clearAllProductsFromCart" href="#" class="text-decoration-none text-dark float-right"><i class="fa-sharp fa-times"></i> Winkelwagen legen</a>
+            <a id="clearAllProductsFromCart" href="#" class="text-decoration-none text-dark float-right"><i class="fasr fa-xmark"></i> Winkelwagen legen</a>
           </div>
           <hr class="separator">
           {block name='cart_overview'}
@@ -45,13 +45,13 @@
           <div class="card-footer">
             {block name='continue_shopping'}
               <a class="btn btn-dark mt-2" href="{$urls.pages.index}">
-                <i class="fa-sharp fa-chevron-left"></i> {l s='Continue shopping' d='Shop.Theme.Actions'}
+                <i class="fasr fa-chevron-left"></i> {l s='Continue shopping' d='Shop.Theme.Actions'}
               </a>
             {/block}
             {if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}
               {* Show print cart button *}
-              <a href="#" id="addCustomProductByEmployee" data-cart="{Context::getContext()->cart->id}"  class="btn btn-success float-right mt-2" alt="Extra product toevoegen"><i class="fa-sharp fa-plus"></i> Regel toevoegen</a>
-{*              <a href="#" id="printShoppingCartByEmployee" data-cart="{Context::getContext()->cart->id}" class="btn btn-link text-dark float-right mt-1" alt="Winkelwagen als pdf opslaan"><i class="fa-2x fa-sharp fa-file-pdf"></i></a>*}
+              <a href="#" id="addCustomProductByEmployee" data-cart="{Context::getContext()->cart->id}"  class="btn btn-success float-right mt-2" alt="Extra product toevoegen"><i class="fasr fa-plus"></i> Regel toevoegen</a>
+{*              <a href="#" id="printShoppingCartByEmployee" data-cart="{Context::getContext()->cart->id}" class="btn btn-link text-dark float-right mt-1" alt="Winkelwagen als pdf opslaan"><i class="fa-2x fasr fa-file-pdf"></i></a>*}
               {/if}
             </div>
           </div>

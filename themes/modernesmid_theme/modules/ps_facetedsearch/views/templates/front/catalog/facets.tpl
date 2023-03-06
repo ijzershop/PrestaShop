@@ -68,7 +68,7 @@
             {/foreach}
             <li class="row">
               <button class="btn btn-sm btn-primary rounded-0 w-100 doFilter" data-filter-id="{$_expand_id}" data-filter-type="{$facet.label}">
-                <i class=" fa-sharp fa-check"></i> Filteren
+                <i class=" fasr fa-check"></i> Filteren
               </button>
             </li>
           </ul>
@@ -82,7 +82,7 @@
       <li class="nav-item float-right position-absolute" style="right:160px">
         <div id="_desktop_search_filters_clear_all" class="clear-all-wrapper">
           <a href="{$clear_all_link}" class="nav-link p-1 mb-0 text-decoration-none text-dark js-search-filters-clear-all">
-            <i class="fa-sharp fa-times"></i>
+            <i class="fasr fa-times"></i>
             {l s='Clear all filters' d='Shop.Theme.Actions'}
           </a>
         </div>

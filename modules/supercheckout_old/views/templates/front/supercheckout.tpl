@@ -471,7 +471,7 @@
           <fieldset class="group-select row" id="supercheckout-fieldset">
             <div class="col-12 supercheckout-threecolumns supercheckout-container supercheckout-skin-generic panel-body"
                  id="supercheckout-columnleft">
-              <div class="row">
+              <div class="col">
                   {*                          Eerste kolom *}
                 <div class="col-12 col-sm-12 col-md-4" id="first_checkout_column">
                   <div class="supercheckout-column-left columnleftsort checkout-section section-login custom-panel"

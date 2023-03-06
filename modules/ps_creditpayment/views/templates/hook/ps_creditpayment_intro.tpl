@@ -25,7 +25,7 @@
       {/if}
   <div class="input-group mb-3">
     <div class="input-group-prepend">
-      <span class="input-group-text" id="customer-selection"><i class="fas fa-user"></i></span>
+      <span class="input-group-text" id="customer-selection"><i class="fasr fa-user"></i></span>
     </div>
     <select type="text" class="form-control " name="on_credit_customer_select" id="on_credit_customer_select"
             placeholder="Klant" aria-label="Klant" aria-describedby="customer-selection">
@@ -41,14 +41,14 @@
     {* Referentie of project code voor op rekening betalen *}
   <div class="input-group mb-3">
     <div class="input-group-prepend">
-      <span class="input-group-text" for="on_credit_reference"><i class="fas fa-barcode"></i></span>
+      <span class="input-group-text" for="on_credit_reference"><i class="fasr fa-barcode"></i></span>
     </div>
     <input class="form-control" id="on_credit_reference" name="on_credit_reference" placeholder="Referentie of Project">
   </div>
     {* Ophalen of werknemer van op rekening *}
   <div class="input-group mb-3">
     <div class="input-group-prepend">
-      <span class="input-group-text" for="on_credit_buyer"><i class="fas fa-user-tie"></i></span>
+      <span class="input-group-text" for="on_credit_buyer"><i class="fasr fa-user-tie"></i></span>
     </div>
     <input class="form-control" id="on_credit_buyer" name="on_credit_buyer" placeholder="Afhaler of werknemer">
   </div>

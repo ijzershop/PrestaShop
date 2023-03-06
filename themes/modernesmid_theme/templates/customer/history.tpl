@@ -62,7 +62,7 @@
             </td>
             <td class="text-sm-center d-sm-none d-none">
               {if $order.details.invoice_url}
-                <a href="{$order.details.invoice_url}"><i class="fa-2x fa-sharp fa-file-pdf"></i></a>
+                <a href="{$order.details.invoice_url}"><i class="fa-2x fasr fa-file-pdf"></i></a>
               {else}
                 -
               {/if}
@@ -87,7 +87,7 @@
               {/if}
             </td>
 {*             <td class="text-center">
-              <button data-history="{json_encode($order.history)}" data-order-reference="{$order.details.reference}" data-toggle="modal" data-target="#trackingModal" class="btn-link btn text-dark showOrderTracking"><i class="fa-sharp fa-truck fa-2x"></i></a>
+              <button data-history="{json_encode($order.history)}" data-order-reference="{$order.details.reference}" data-toggle="modal" data-target="#trackingModal" class="btn-link btn text-dark showOrderTracking"><i class="fasr fa-truck fa-2x"></i></a>
             </td> *}
           </tr>
         {/foreach}
@@ -109,13 +109,13 @@
                 <td rowspan="3">
                   <div class="text-center w-100 pb-1">
                     <a href="{$order.details.details_url}" data-link-action="view-order-details" title="{l s='Details' d='Shop.Theme.Customeraccount'}">
-                      <i class="fa-2x fa-sharp fa-file-pdf"></i>
+                      <i class="fa-2x fasr fa-file-pdf"></i>
                     </a>
                   </div>
                   {if $order.details.reorder_url}
                   <div class="text-center w-100 pt-2">
                     <a href="{$order.details.reorder_url}" title="{l s='Opnieuw bestellen' d='Shop.Theme.Actions'}">
-                      <i class="fa-2x fa-sharp fa-sync"></i>
+                      <i class="fa-2x fasr fa-sync"></i>
                     </a>
                   </div>
                   {/if}
@@ -181,49 +181,49 @@
               <div class="vprogress w-100">
                 <div class="col-12 vprogress-row">
                   <div class="circle" id="trackingModalOrderReceived">
-                    <span class="label" title="Bestelling ontvangen" data-toggle="popover" data-content="Uw bestelling is ontvangen"><i class="fa-sharp fa-shopping-basket"></i></span>
+                    <span class="label" title="Bestelling ontvangen" data-toggle="popover" data-content="Uw bestelling is ontvangen"><i class="fasr fa-shopping-basket"></i></span>
                   </div>
                     <span class="title">Bestelling ontvangen</span>
                 </div>
                 <div class="col-12 vprogress-row">
                   <div class="circle failed"  id="trackingModalPaymentReceived">
-                    <span class="label" title="Betaling ontvangen" data-toggle="popover" data-content="De betaling voor de bestelling is geverifieerd"><i class="fa-sharp fa-money-bill-alt"></i></span>
+                    <span class="label" title="Betaling ontvangen" data-toggle="popover" data-content="De betaling voor de bestelling is geverifieerd"><i class="fasr fa-money-bill-alt"></i></span>
                   </div>
                     <span class="title">Betaling ontvangen</span>
                 </div>
                 <div class="col-12 vprogress-row">
                   <div class="circle" id="trackingModalOrderPicked">
-                    <span class="label" title="Bestelling word voorbereid" data-toggle="popover" data-content="Uw bestelling word momenteel voorbereid"><i class="fa-sharp fa-dolly"></i></span>
+                    <span class="label" title="Bestelling word voorbereid" data-toggle="popover" data-content="Uw bestelling word momenteel voorbereid"><i class="fasr fa-dolly"></i></span>
                   </div>
                     <span class="title">Bestelling word voorbereid</span>
                 </div>
                 <div class="col-12 vprogress-row">
                   <div class="circle" id="trackingModalOrderReadyForShipping">
-                    <span class="label" title="Bestelling klaar voor verzending" data-toggle="popover" data-content="Uw bestelling is ingepakt en staat klaar voor verzending"><i class="fa-sharp fa-boxes"></i></span>
+                    <span class="label" title="Bestelling klaar voor verzending" data-toggle="popover" data-content="Uw bestelling is ingepakt en staat klaar voor verzending"><i class="fasr fa-boxes"></i></span>
                   </div>
                     <span class="title">Bestelling klaar voor verzending</span>
                 </div>
                 <div class="col-12 vprogress-row">
                   <div class="circle" id="trackingModalOrderTransferredToTransmission">
-                    <span class="label" title="Overgedragen aan transmission" data-toggle="popover" data-content="We hebben uw pakket overgedragen aan transmission"><i class="fa-sharp fa-pallet"></i></span>
+                    <span class="label" title="Overgedragen aan transmission" data-toggle="popover" data-content="We hebben uw pakket overgedragen aan transmission"><i class="fasr fa-pallet"></i></span>
                   </div>
                     <span class="title">Overgedragen aan transmission</span>
                 </div>
                 <div class="col-12 vprogress-row">
                   <div class="circle" id="trackingModalOrderArivedTransmissionDepot">
-                    <span class="label" title="Aangekomen op transmission depot" data-toggle="popover" data-content="Uw pakket is aangekomen op het depot van Transmission"><i class="fa-sharp fa-warehouse"></i></span>
+                    <span class="label" title="Aangekomen op transmission depot" data-toggle="popover" data-content="Uw pakket is aangekomen op het depot van Transmission"><i class="fasr fa-warehouse"></i></span>
                   </div>
                     <span class="title">Aangekomen op transmission depot</span>
                 </div>
                 <div class="col-12 vprogress-row">
                   <div class="circle" id="trackingModalOrderDeliveryOnRoute">
-                    <span class="label" title="Bezorger onderweg" data-toggle="popover" data-content="De bezorgen van transmission is momenteel onderweg om u het pakket te bezorgen"><i class="fa-sharp fa-truck"></i></span>
+                    <span class="label" title="Bezorger onderweg" data-toggle="popover" data-content="De bezorgen van transmission is momenteel onderweg om u het pakket te bezorgen"><i class="fasr fa-truck"></i></span>
                   </div>
                     <span class="title">Bezorger onderweg</span>
                 </div>
                 <div class="col-12 vprogress-row">
                   <div class="circle" id="trackingModalOrderDeliverd">
-                    <span class="label" title="Afgeleverd" data-toggle="popover" data-content="Het pakket is afgeleverd"><i class="fa-sharp fa-check"></i></span>
+                    <span class="label" title="Afgeleverd" data-toggle="popover" data-content="Het pakket is afgeleverd"><i class="fasr fa-check"></i></span>
                   </div>
                     <span class="title">Afgeleverd</span>
                 </div>

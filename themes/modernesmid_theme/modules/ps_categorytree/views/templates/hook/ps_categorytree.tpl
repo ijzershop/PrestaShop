@@ -34,10 +34,10 @@
                 {categories nodes=$node.children depth=$depth+1}
               {/if}
             {else}
-              <a class="category-sub-link" href="{$node.link}"><i class="fa-sharp fa-chevron-right"></i> {$node.name}</a>
+              <a class="category-sub-link" href="{$node.link}"><i class="fasr fa-chevron-right"></i> {$node.name}</a>
               {if $node.children}
                 <button type="button" class="text-dark btn btn-link arrows float-right" data-toggle="collapse" data-target="#category-menu-item{$node.id}" aria-expanded="false" aria-controls="#category-menu-item{$node.id}" aria-label="open/sluit {$node.name} categorie">
-                  <i style="font-size:0.7em" class="fa-sharp fa-plus"></i>
+                  <i style="font-size:0.7em" class="fasr fa-plus"></i>
                 </button>
                 <div class="collapse" id="category-menu-item{$node.id}">
                   {categories nodes=$node.children depth=$depth+1}

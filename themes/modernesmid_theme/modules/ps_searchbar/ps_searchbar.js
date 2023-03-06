@@ -40,7 +40,7 @@ $(function() {
               .append($("<td width='60px'>").html('<img src="' + product.cover.small.url + '" class="searchResultItem" width="50px" height="auto"> ').addClass("category text-center"))
               .append($("<td style='vertical-align:middle'>").html(' <b>' + product.name + '</b>').addClass("product"))
               .append($("<td style='width:50px;text-align:right;' width='50px'>").html(product.price).addClass("product price"))
-              .append($("<td style='width:50px;text-align:right;' width='50px'>").html('<a href="' + prestashop.urls.pages.cart + '?token=' + prestashop.static_token + '" data-button-action="add-to-cart" data-product-id="' + product.id_product + '" class="btn-sm btn-success add-to-cart searchAddToCart ml-1 text-center text-white"><i class="fa-sharp fa-shopping-cart" data-product-id="' + product.id_product + '"></i></a>').addClass("product price text-center"))
+              .append($("<td style='width:50px;text-align:right;' width='50px'>").html('<a href="' + prestashop.urls.pages.cart + '?token=' + prestashop.static_token + '" data-button-action="add-to-cart" data-product-id="' + product.id_product + '" class="btn-sm btn-success add-to-cart searchAddToCart ml-1 text-center text-white"><i class="fasr fa-cart-shopping" data-product-id="' + product.id_product + '"></i></a>').addClass("product price text-center"))
             ))).appendTo(ul);
 
       } else {
@@ -51,7 +51,7 @@ $(function() {
               .append($("<td width='60px'>").html('<img src="' + product.cover.small.url + '" class="searchResultItem" width="50px" height="auto"> ').addClass("category text-center"))
               .append($("<td style='vertical-align:middle'>").html(' <b>' + product.name + '</b><br/><small>' + product.description_short + '</small><br/><small class="text-warning">Dit product is momenteel niet op vooraad</small>').addClass("product"))
               .append($("<td style='width:50px;text-align:right;' width='50px'>").html(product.price).addClass("product price"))
-              .append($("<td style='width:50px;text-align:right;' width='50px'>").html('<a href="javascript:void(0)" style="opacity: 0.65;pointer-events:none;cursor:not-allowed;" class="btn-sm btn-success disabled ml-1 text-center text-white" data-product-id="' + product.id_product + '" aria-disabled="true" role="button"><i class="fa-sharp fa-shopping-cart" data-product-id="' + product.id_product + '"></i></a>').addClass("product price text-center"))
+              .append($("<td style='width:50px;text-align:right;' width='50px'>").html('<a href="javascript:void(0)" style="opacity: 0.65;pointer-events:none;cursor:not-allowed;" class="btn-sm btn-success disabled ml-1 text-center text-white" data-product-id="' + product.id_product + '" aria-disabled="true" role="button"><i class="fasr fa-cart-shopping" data-product-id="' + product.id_product + '"></i></a>').addClass("product price text-center"))
             ))).appendTo(ul);
       }
     }

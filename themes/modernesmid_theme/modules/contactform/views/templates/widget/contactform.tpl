@@ -145,7 +145,7 @@
               {else}
             <div class="card card-body">
             <div class="form-row">
-              <span class="col form-text text-muted">Vul eerst uw bestelling referentie en bijhorende postcode in. Klik daarna op <button disabled onclick="void(0)" type="button" style="font-size: .5rem;" class="btn-sm btn btn-success"><i class="fa-sharp fa-search"></i></button> om de producten van uw bestelling op te halen. U kunt dan per product aangeven welke u wilt retourneren</span>
+              <span class="col form-text text-muted">Vul eerst uw bestelling referentie en bijhorende postcode in. Klik daarna op <button disabled onclick="void(0)" type="button" style="font-size: .5rem;" class="btn-sm btn btn-success"><i class="fasr fa-magnifying-glass"></i></button> om de producten van uw bestelling op te halen. U kunt dan per product aangeven welke u wilt retourneren</span>
               <br/>
             </div>
             <div class="form-row">
@@ -157,7 +157,7 @@
                 <input class="form-control mb-2" type="text" name="postcode" value="" placeholder="{l s='Postalcode' d='Modules.Contactform.Shop'}" />
               </div>
               <div class="">
-                <button id="retour_order_search" type="button" class="btn btn-success"><i class="fa-sharp fa-search"></i></button>
+                <button id="retour_order_search" type="button" class="btn btn-success"><i class="fasr fa-magnifying-glass"></i></button>
               </div>
             </div>
             </div>
@@ -180,7 +180,7 @@
               <div class="collapse" id="retour_table_customized_info">
               <div class="card-body card bg-transparent">
                 <div class="row  text-primary align-middle">
-                  <div class="blockquote col-2 text-center"><i class="fa-sharp fa-info fa-2x"></i></div><div class="col-10 pl-0">Alleen onbewerkte producten kunnen geretourneerd worden. Alle producten die geknipt gezaagd of op andere wijze bewerkt zijn zullen niet vergoed worden</div>
+                  <div class="blockquote col-2 text-center"><i class="fasr fa-info fa-2x"></i></div><div class="col-10 pl-0">Alleen onbewerkte producten kunnen geretourneerd worden. Alle producten die geknipt gezaagd of op andere wijze bewerkt zijn zullen niet vergoed worden</div>
                 </div>
               </div>
             </div>

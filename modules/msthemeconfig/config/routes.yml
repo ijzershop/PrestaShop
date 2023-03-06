@@ -131,7 +131,7 @@ admin_configuration_symlink_mailtheme_put:
     _legacy_parameters:
       enabled: enabled
   requirements:
-    enabled: '(?i:true|false)'
+    enabled: '(?i:true|false|$)'
 
 
 admin_addresses_index:

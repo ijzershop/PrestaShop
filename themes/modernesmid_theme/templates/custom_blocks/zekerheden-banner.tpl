@@ -6,7 +6,7 @@
                 {if Configuration::get('MSTHEMECONFIG_FIRST_BOX_ACTIVE', true)}
                 <div class="col certainty">
                     <div class="row">
-                        <div class="col-4 pr-0 certainty-icon text-right">
+                        <div class="col-4 pr-0 certainty-icon text-right pl-0">
                             <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FIRST_LINK'))}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_TITLE')}">
                                 <img rel="preload" is="image" src="../upload/{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_TITLE')}" class="hover_effect_target img-fluid">
                             </a>

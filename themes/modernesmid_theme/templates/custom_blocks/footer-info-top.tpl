@@ -18,7 +18,7 @@
         </div>
       {/if}
       {if Configuration::get('MSTHEMECONFIG_INFORMATION_FOOTERTOP_BOX_ACTIVE', true)}
-      <div class="footer_block border-bottom pb-mb-4 {if Configuration::get('MSTHEMECONFIG_ABOUT_FOOTERTOP_BOX_ACTIVE', true)}col-12 col-md-4 col-lg-2{else}col{/if} pl-lg-0 pt-0 pt-md-1 pt-lg-0">
+      <div class="footer_block border-bottom pb-mb-4 {if Configuration::get('MSTHEMECONFIG_ABOUT_FOOTERTOP_BOX_ACTIVE', true)}col-12 col-md-4 col-lg-2{else}col{/if} pl-lg-0 pt-0 pt-md-1 pt-lg-0 p-0">
             <div class="title_block ">
                 <div class="title_block_inner text-dark pb-mb-1" style="font-size:16px;"> {Configuration::get('MSTHEMECONFIG_FOOTERTOP_INFORMATION_HEADER')}
                     <div class="opener float-right d-sm-flex d-md-none"><i class="fasr fa-plus plus_sign"></i></div>

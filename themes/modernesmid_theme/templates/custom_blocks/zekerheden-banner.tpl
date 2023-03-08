@@ -6,7 +6,7 @@
                 {if Configuration::get('MSTHEMECONFIG_FIRST_BOX_ACTIVE', true)}
                 <div class="col certainty">
                     <div class="row">
-                        <div class="col-4 pr-0 certainty-icon">
+                        <div class="col-4 pr-0 certainty-icon text-right">
                             <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FIRST_LINK'))}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_TITLE')}">
                                 <img rel="preload" is="image" src="../upload/{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_TITLE')}" class="hover_effect_target img-fluid">
                             </a>
@@ -29,7 +29,7 @@
                 {if Configuration::get('MSTHEMECONFIG_SECOND_BOX_ACTIVE', true)}
                 <div class="col certainty">
                     <div class="row">
-                        <div class="col-4 pr-0 certainty-icon">
+                        <div class="col-4 pr-0 certainty-icon text-right">
                             <a href="/{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_LINK')}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_TITLE')}">
                                 <img rel="preload" is="image" src="../upload/{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_TITLE')}" class="hover_effect_target img-fluid">
                             </a>
@@ -52,7 +52,7 @@
                 {if Configuration::get('MSTHEMECONFIG_THIRD_BOX_ACTIVE', true)}
                 <div class="col certainty">
                     <div class="row">
-                        <div class="col-4 pr-0 certainty-icon">
+                        <div class="col-4 pr-0 certainty-icon text-right">
                             <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_THIRD_LINK'))}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_TITLE')}">
                                 <img rel="preload" is="image" src="../upload/{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_TITLE')}" class="hover_effect_target img-fluid">
                             </a>
@@ -75,7 +75,7 @@
                 {if Configuration::get('MSTHEMECONFIG_FOURTH_BOX_ACTIVE', true)}
                 <div class="col certainty">
                     <div class="row">
-                        <div class="col-4 pr-0 certainty-icon">
+                        <div class="col-4 pr-0 certainty-icon text-right">
                             {* TODO add shippinng method selet to template module, get visitor carrier and set shipping price *}
                             {assign var="transmissionCarrier" value=Carrier::getCarrierByReference(2,Context::getContext()->cookie->id_lang)}
                             {* By changing zone the banner item gets updated belgium is 9, Germany 10 *}
@@ -107,7 +107,7 @@
                 {if Configuration::get('MSTHEMECONFIG_FIFT_BOX_ACTIVE', true)}
                 <div class="col certainty">
                     <div class="row">
-                        <div class="col-4 pr-0 certainty-icon">
+                        <div class="col-4 pr-0 certainty-icon text-right">
                             <a href="/{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_LINK')}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_TITLE')}">
                                 <img rel="preload" is="image" src="../upload/{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_TITLE')}" class="hover_effect_target img-fluid">
                             </a>

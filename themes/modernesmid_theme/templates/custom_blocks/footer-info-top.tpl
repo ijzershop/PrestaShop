@@ -10,9 +10,9 @@
             <div class="footer_block_content d-sm-none d-none d-md-flex">
                 <div class="easy_brother_block text-1 text-md-0">
                     {Configuration::get('MSTHEMECONFIG_FOOTERTOP_ABOUTUS_TEXT') nofilter}
-                    {if (int)Configuration::get('MSTHEMECONFIG_FOOTERTOP_ABOUTUS_LINK') > 0}
-                      <a class="text-dark" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERTOP_ABOUTUS_LINK'))}" title="{l s="Read more" d='Shop.Modernesmid'}">{l s="Read more" d='Shop.Modernesmid'} >></a>
-                    {/if}
+{*                    {if (int)Configuration::get('MSTHEMECONFIG_FOOTERTOP_ABOUTUS_LINK') > 0}*}
+{*                      <a class="text-dark" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERTOP_ABOUTUS_LINK'))}" title="{l s="Read more" d='Shop.Modernesmid'}">{l s="Read more" d='Shop.Modernesmid'} >></a>*}
+{*                    {/if}*}
                 </div>
             </div>
         </div>

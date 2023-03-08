@@ -37,6 +37,7 @@
         <div class="col-md-12 col-lg-4" id="offer_integration_form">
           <input id="select2-url" value="{{ adminSelect2DataLink }}" type="hidden"/>
           <input id="offer-put-url" value="{{ putLink }}" type="hidden"/>
+          <input name="new-offer-id" id="new-offer-id" value="" type="hidden"/>
           {{ form_errors(offerForm) }}
           {% block price_modification_form_rest %}
             {{ form_rest(offerForm) }}

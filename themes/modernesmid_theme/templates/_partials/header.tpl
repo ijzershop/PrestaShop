@@ -142,7 +142,7 @@
           </button>
         </li>
         {/if}
-        <li class="nav-item p-0 text-center col">
+        <li class="nav-item p-0 text-center col d-none d-sm-block">
 {*          <div class="dropdown nav-contact mx-auto">*}
             <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="/{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fasr fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"> Offerte Aanvraag</span></a>
 {*          <div class="dropdown-menu" aria-labelledby="nav_contact_dropdown_mobile">*}

@@ -1652,7 +1652,7 @@ var showAddedToCartGlow = function (caller_element) {
   var i = 1;
   var times = 0;
 
-  var glowCircle = $('#amount_circle');
+  var glowCircle = $('.amount_circle');
   // var topHeaderCart = $('#top-header-shoppingcart');
 
 

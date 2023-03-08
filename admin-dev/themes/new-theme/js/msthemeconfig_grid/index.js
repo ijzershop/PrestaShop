@@ -253,6 +253,10 @@ $(() => {
         $.fancybox.close();
         $('#ajax_confirmation').html(data.msg).show();
 
+
+        $('#add-new-product').attr('data-offer-id', offer.id_oi_offer);
+        $('#new-offer-id').val( offer.id_oi_offer);
+
         if (offer.new === true) {
           let newRowHtml = `
           <tr data-row-id="${offer.id_product}">

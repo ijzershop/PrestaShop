@@ -78,16 +78,21 @@ class OfferIntegrationFormDataHandler implements FormDataHandlerInterface
     {
 
         $offerIntegration = $this->offerIntegrationRepository->findOneById($id);
-        $offerIntegration->setCode($data['code']);
-        $offerIntegration->setName($data['name']);
-        $offerIntegration->setEmail($data['email']);
-        $offerIntegration->setPhone($data['phone']);
-        $offerIntegration->setMessage($data['message']);
-        $offerIntegration->setDateExp($data['date_exp']);
-        $offerIntegration->setUpdatedAt(date_create());
 
-        $this->entityManager->flush();
+        if($offerIntegration){
+            $offerIntegration->setCode($data['code']);
+            $offerIntegration->setName($data['name']);
+            $offerIntegration->setEmail($data['email']);
+            $offerIntegration->setPhone($data['phone']);
+            $offerIntegration->setMessage($data['message']);
+            $offerIntegration->setDateExp($data['date_exp']);
+            $offerIntegration->setUpdatedAt(date_create());
 
-        return $offerIntegration->getId();
+            $this->entityManager->flush();
+
+            return $offerIntegration->getId();
+        }
+        return 0;
+
     }
 }

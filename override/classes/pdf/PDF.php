@@ -27,7 +27,7 @@
 /**
  * @since 1.5
  */
-class PDF extends PDFCore
+class PDFCore
 {
     public $filename;
     public $pdf_renderer;
@@ -173,5 +173,49 @@ class PDF extends PDFCore
         }
 
         return $class;
+    }
+
+
+    /**
+     * Get the PDF filename based on the objects.
+     *
+     * @return string
+     */
+    public function getFilename(): string
+    {
+        if (empty($this->filename)) {
+            $this->setFilename();
+        }
+
+        return $this->filename;
+    }
+
+    /**
+     * Set the PDF filename based on the objects.
+     *
+     * @return bool
+     */
+    public function setFilename(): bool
+    {
+        $bulk = (1 < count($this->objects));
+
+        foreach ($this->objects as $object) {
+            $template = $this->getTemplateObject($object);
+            if (!$template) {
+                continue;
+            }
+
+            if ($bulk) {
+                $this->filename = $template->getBulkFilename();
+            } else {
+                $this->filename = $template->getFilename();
+            }
+
+            if (!empty($this->filename)) {
+                break;
+            }
+        }
+
+        return !empty($this->filename);
     }
 }

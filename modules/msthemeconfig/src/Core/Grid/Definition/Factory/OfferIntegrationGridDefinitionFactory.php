@@ -172,7 +172,7 @@ class OfferIntegrationGridDefinitionFactory extends AbstractGridDefinitionFactor
                     'actions' => (new RowActionCollection())
                         ->add((new SubmitRowAction('send_email'))
                             ->setName($this->trans('Send ', [], 'Admin.Actions'))
-                            ->setIcon('edit')
+                            ->setIcon('email')
                             ->setOptions([
                                 'route' => 'offerintegration_send_email',
                                 'route_param_name' => 'offer_id',

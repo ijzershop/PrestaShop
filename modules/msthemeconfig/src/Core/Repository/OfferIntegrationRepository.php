@@ -17,6 +17,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 
@@ -29,20 +31,22 @@ class OfferIntegrationRepository extends EntityRepository
      * Find one item by ID.
      *
      * @param int $id_oi_offer
-     *
-     * @return array
+     * @return float|int|mixed|string
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
-    public function findOneById($id_oi_offer)
+    public function findOneById(int $id_oi_offer)
     {
         $qb = $this->createQueryBuilder('q')
             ->addSelect('q')
         ;
+
         $qb
             ->andWhere('q.id_oi_offer = :id_oi_offer')
             ->setParameter('id_oi_offer', $id_oi_offer)
         ;
 
-        return $qb->getQuery()->getResult()[0];
+       return $qb->getQuery()->getOneOrNullResult();
     }
 
     public function getRandom($langId = 0, $limit = 0)

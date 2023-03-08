@@ -56,7 +56,7 @@
     });
   }
 $(function () {
-  $(document).on('select2:select', '#MSTHEMECONFIG_HOMEPAGE_CATEGORIES', function (event) {
+  $(document).on('select2:select select2:unselect', '#MSTHEMECONFIG_HOMEPAGE_CATEGORIES', function (event) {
     let $parentFormElement = $(this).parents('.form-group');
     setSortable($parentFormElement);
   });

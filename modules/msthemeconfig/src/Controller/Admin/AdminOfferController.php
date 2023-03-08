@@ -160,8 +160,7 @@ class AdminOfferController extends FrameworkBundleAdminController {
             $offerForm->handleRequest($request);
             $offerFormHandler = $this->get('modernesmid.form.identifiable_object.handler.offer_integrations_form_handler');
 
-
-            $result = $offerFormHandler->handleFor((int)null, $offerForm);
+            $result = $offerFormHandler->handleFor((int)$request->get('new-offer-id'), $offerForm);
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 

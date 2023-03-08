@@ -96,8 +96,8 @@
           <table width="100%">
             <tr>
               <td>
-
                 <a href="#" class="btn btn-success top-header-shoppingcart" id="top-header-shoppingcart">
+                  <span id="amount_circle" class="amount_circle" style="left: 0;top: 71px;font-size: 10px;min-width: 15px;height: 15px;line-height: 11px;">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span>
                   <i class="{if (int)Context::getContext()->cart->nbProducts() > 0}fasr fa-cart-shopping{else}fad fa-cart-shopping{/if} d-inline-block pr-1" style="font-size:1.3rem"></i> <span class="align-text-bottom d-inline-block d-lg-none d-xl-inline-block">Bestel</span>
                   <span class="float-right text-right" id="header-cart-total">
                     {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(), 'EUR' )}

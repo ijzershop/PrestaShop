@@ -22,6 +22,7 @@
  * @since 1.5.0
  */
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Adapter\Entity\FileLogger;
 
 class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontController
 {
@@ -32,6 +33,12 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 	 */
 	public function postProcess()
 	{
+        $filePath = _PS_MODULE_DIR_.'ps_creditpayment/log/informer.log';
+        $logger->setFilename($filePath);
+        $logger->logDebug('Starting example logger process.');
+
+
+
 		$cart = $this->context->cart;
 
         if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active){
@@ -73,7 +80,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         } else {
             $reference  = $order->reference;
         }
-
+        $customer_comment = '';
         if(!empty($this->context->cookie->on_credit_buyer)){
             $customer_comment = 'Opgehaald door '.$this->context->cookie->on_credit_buyer . '<br>';
         }
@@ -148,7 +155,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                 "ledger_id" => $line_category_id,
                 "product_id" => 617423
             ];
-        
+
         }
 
         //Add shipping product as last
@@ -187,10 +194,12 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         $response = curl_exec($curlCard);
 
         if (!curl_errno($curlCard)) {
+            $logger->logInfo('Informer call succeded result is:' . $response);
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Informer response', 1, null, 'Cart', (int) $response, true);
             $returnData = json_decode($response);
         } else {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Failed informer call', 1, null, 'Cart', (int) $reference, true);
+            $logger->logInfo('Informer call failed result is:' . $response.' - of order '. $reference);
             $returnData = [];
         }
         curl_close($curlCard);
@@ -1054,6 +1063,8 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             $customer_comment .= ' <br/> - ' . $message['message'];
         }
         $customer_comment .= '<br/>Bestelreferentie van de Ijzershop: ' . $order->reference;
+
+
 
         if (!is_null($resultApi) && array_key_exists('invoice_id', $resultApi)) {
             $saleOrderState = '<b style="color:#70b580; font-size: 20px;">U kunt de informer factuur inkijken op<br/> <a style="color:#ffffff" href="https://app.informer.eu/orders/sales/"> >> Informer Rekening</a>';

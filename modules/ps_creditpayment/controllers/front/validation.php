@@ -28,15 +28,16 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 {
     const DEBUG_MODE = true;
     public $name = 'ps_creditpayment';
+
 	/**
 	 * @see FrontController::postProcess()
 	 */
 	public function postProcess()
 	{
         $filePath = _PS_MODULE_DIR_.'ps_creditpayment/log/informer.log';
+        $logger = new FileLogger();
         $logger->setFilename($filePath);
         $logger->logDebug('Starting example logger process.');
-
 
 
 		$cart = $this->context->cart;
@@ -46,8 +47,8 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         }
 
         // Check that this payment option is still available in case the customer changed his address just before the end of the checkout process
-		$authorized = false;
-		foreach (Module::getPaymentModules() as $module){
+        $authorized = false;
+        foreach (Module::getPaymentModules() as $module){
             if ($module['name'] == 'ps_creditpayment')
             {
                 $authorized = true;
@@ -67,14 +68,21 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         $currency = $this->context->currency;
         $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
 
-        $this->validateOrder($cart->id, Configuration::get('PS_OS_BANKCREDIT'), $total, 'Op Rekening', NULL, array(), (int)$currency->id, false, $this->context->cookie->selected_customer_secure_key);
+        $this->validateOrder($cart->id, Configuration::get('BANK_CREDIT_COMPLETE_STATE'), $total, 'Op Rekening', NULL, array(), (int)$currency->id, false, $this->context->cookie->selected_customer_secure_key);
 
 
         Tools::redirect('index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key.'&oncredit=true');
-	}
+    }
 
 
-	public function addToInformerApi($order){
+    public function addToInformerApi($order){
+
+        $logger = new FileLogger();
+        $filePath = _PS_MODULE_DIR_.'ps_creditpayment/log/informer.log';
+        $logger->setFilename($filePath);
+        $logger->logDebug('Starting example logger process.');
+
+
         if(!empty($this->context->cookie->on_credit_reference)){
             $reference = $this->context->cookie->on_credit_reference;
         } else {
@@ -92,12 +100,12 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         $customer = new Customer($order->id_customer);
         $products = $order->getCartProducts();
 
-	    $payment_condition_id = Configuration::get('CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID', null, null, null, 444438);
-	    $currency_id = Configuration::get('CREDITPAYMENT_INFORMER_CURRENCY_ID', null, null, null, 73944);
-	    $vat_option = Configuration::get('CREDITPAYMENT_INFORMER_VAT_OPTION', null, null, null, 'incl'); //incl/excl
-	    $template_id = Configuration::get('CREDITPAYMENT_INFORMER_TEMPLATE_ID', null, null, null, 274888);
-	    $line_vat_id = Configuration::get('CREDITPAYMENT_INFORMER_LINE_VAT_ID', null, null, null, 840885);
-	    $line_category_id = Configuration::get('CREDITPAYMENT_INFORMER_LINE_LEDGER_ID', null, null, null, 7304025);
+        $payment_condition_id = Configuration::get('CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID', null, null, null, 444438);
+        $currency_id = Configuration::get('CREDITPAYMENT_INFORMER_CURRENCY_ID', null, null, null, 73944);
+        $vat_option = Configuration::get('CREDITPAYMENT_INFORMER_VAT_OPTION', null, null, null, 'incl'); //incl/excl
+        $template_id = Configuration::get('CREDITPAYMENT_INFORMER_TEMPLATE_ID', null, null, null, 274888);
+        $line_vat_id = Configuration::get('CREDITPAYMENT_INFORMER_LINE_VAT_ID', null, null, null, 840885);
+        $line_category_id = Configuration::get('CREDITPAYMENT_INFORMER_LINE_LEDGER_ID', null, null, null, 7304025);
 
         $security_code = Configuration::get('CREDITPAYMENT_INFORMER_SECURITY_CODE', null, null, null, "62356");
         $api_key = Configuration::get('CREDITPAYMENT_INFORMER_API_KEY', null, null, null, "MEUGbrj3nT8Z4orUVznSQRMCYFxP6SySePckp0tVfJPrcB1DjO2");
@@ -203,6 +211,8 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             $returnData = [];
         }
         curl_close($curlCard);
+
+        return json_decode(json_encode($returnData),true);
     }
 
 
@@ -791,7 +801,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             $carrierId = 0;
         }
 
-        $order->id_customer = (int) $cart->id_customer;
+        $order->id_customer = (int) $context->cookie->selected_customer_id_customer;
         $order->id_address_invoice = (int) $cart->id_address_invoice;
         $order->id_address_delivery = (int) $addressId;
         $order->id_currency = $currency->id;
@@ -1042,6 +1052,11 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
      */
     private function sendAdministrationMsg($order, $resultApi)
     {
+        $logger = new FileLogger();
+        $filePath = _PS_MODULE_DIR_.'ps_creditpayment/log/informer.log';
+        $logger->setFilename($filePath);
+        $logger->logDebug('Starting example logger process.');
+
         $context = Context::getContext();
 
         $orderObject = new Order($order->id);
@@ -1065,8 +1080,9 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         $customer_comment .= '<br/>Bestelreferentie van de Ijzershop: ' . $order->reference;
 
 
+        $logger->logInfo('Informer call done ready to send mail:' . json_encode($resultApi));
 
-        if (!is_null($resultApi) && array_key_exists('invoice_id', $resultApi)) {
+        if (!is_null($resultApi) && array_key_exists('order_id', $resultApi)) {
             $saleOrderState = '<b style="color:#70b580; font-size: 20px;">U kunt de informer factuur inkijken op<br/> <a style="color:#ffffff" href="https://app.informer.eu/orders/sales/"> >> Informer Rekening</a>';
             $subject = 'Nieuwe op rekening bestelling, SUCCES in informer';
         } else {

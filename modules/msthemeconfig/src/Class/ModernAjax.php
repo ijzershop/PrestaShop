@@ -165,7 +165,7 @@ class ModernAjax
                 $dataArray[$this->prefix . 'OFFER_LINK'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'OFFER_LINK', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'pages');
                 $dataArray[$this->prefix . 'PRIMARY_COLOR'] = Configuration::get($this->prefix . 'PRIMARY_COLOR', $this->idLang, $this->idShopGroup, $this->idShop, '#3b56ad');
                 //Homepage variables
-                $dataArray[$this->prefix . 'HOMEPAGE_CATEGORIES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'HOMEPAGE_SELECTED_CATEGORIES', $this->idLang, $this->idShopGroup, $this->idShop, []), 'categories_home', false);
+                $dataArray[$this->prefix . 'HOMEPAGE_CATEGORIES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'HOMEPAGE_SELECTED_CATEGORIES', null , null , null , []), 'categories_home', false);
                 $dataArray[$this->prefix . 'HOMEPAGE_TEXT'] = Configuration::get($this->prefix . 'HOMEPAGE_TEXT', $this->idLang, $this->idShopGroup, $this->idShop, '');
                 $dataArray[$this->prefix . 'HOMEPAGE_BACKGROUND_COLOR'] = Configuration::get($this->prefix . 'HOMEPAGE_BACKGROUND_COLOR', $this->idLang, $this->idShopGroup, $this->idShop, '#efefef');
                 //Category variables

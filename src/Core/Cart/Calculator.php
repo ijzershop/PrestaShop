@@ -30,6 +30,7 @@ use CartCore;
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\Context;
+use PrestaShop\PrestaShop\Adapter\Entity\Module;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Tools;
 

@@ -45,7 +45,7 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
     public function init()
     {
         FrontController::init();
-//        dd($this, !empty($this->context->cookie->id_cart) && $this->context->cookie->id_cart == $this->id_cart);
+        // var_dump(!empty($this->context->cookie->id_cart) && $this->context->cookie->id_cart == $this->id_cart);
         // Test below to prevent unnecessary logs from "parent::init()"
         $this->id_cart = (int) Tools::getValue('id_cart', 0);
         if (!empty($this->context->cookie->id_cart) && $this->context->cookie->id_cart == $this->id_cart) {
@@ -73,7 +73,6 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
         $redirectLink = $this->context->link->getPageLink('history', $this->ssl);
 
 
-//        dd($this, !$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key));
 
 //        && (int)$this->id_module !== (int)Module::getModuleIdByName('ps_creditpayment')
         // The confirmation link must contain a unique order secure key matching the key saved in database,
@@ -82,13 +81,15 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
             Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
         }
         $this->reference = $this->order->reference;
-//        dd($this, !Validate::isLoadedObject($this->order) , $this->order->id_customer != (int)$this->context->cookie->selected_customer_id_customer , $this->context->cookie->selected_customer_secure_key != $this->order->secure_key);
 
-        if(isset($this->context->cookie->selected_customer_id_customer) && !empty($this->context->cookie->selected_customer_id_customer)){
+
+        if(isset($this->context->cookie->selected_customer_id_customer) && !empty($this->context->cookie->selected_customer_id_customer) && (int)Context::getContext()->customer->id == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') && Module::getModuleIdByName('ps_creditpayment') == $this->id_module){
             if (!Validate::isLoadedObject($this->order) || $this->order->id_customer != (int)$this->context->cookie->selected_customer_id_customer || $this->context->cookie->selected_customer_secure_key != $this->order->secure_key) {
+
                 Tools::redirect($redirectLink);
             }
         } else {
+
             if (!Validate::isLoadedObject($this->order) || $this->order->id_customer != $this->context->customer->id || $this->secure_key != $this->order->secure_key) {
                 Tools::redirect($redirectLink);
             }
@@ -125,7 +126,7 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
      */
     public function initContent()
     {
-        FrontController::initContent();
+        parent::initContent();
 
         $this->context->smarty->assign([
             'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($this->order),

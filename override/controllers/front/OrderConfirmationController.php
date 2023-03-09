@@ -24,7 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
-
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShopBundle\Kernel;
 class OrderConfirmationController extends OrderConfirmationControllerCore
 {
     public $ssl = true;
@@ -43,8 +44,8 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
      */
     public function init()
     {
-        parent::init();
-
+        FrontController::init();
+//        dd($this, !empty($this->context->cookie->id_cart) && $this->context->cookie->id_cart == $this->id_cart);
         // Test below to prevent unnecessary logs from "parent::init()"
         $this->id_cart = (int) Tools::getValue('id_cart', 0);
         if (!empty($this->context->cookie->id_cart) && $this->context->cookie->id_cart == $this->id_cart) {
@@ -70,12 +71,18 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
         $this->reference = (string) $this->order->reference;
 
         $redirectLink = $this->context->link->getPageLink('history', $this->ssl);
+
+
+//        dd($this, !$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key));
+
+//        && (int)$this->id_module !== (int)Module::getModuleIdByName('ps_creditpayment')
         // The confirmation link must contain a unique order secure key matching the key saved in database,
         // this prevents user to view other customer's order confirmations
-        if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key) && (int)$this->id_module !== (int)Module::getModuleIdByName('ps_creditpayment')) {
+        if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
             Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
         }
         $this->reference = $this->order->reference;
+//        dd($this, !Validate::isLoadedObject($this->order) , $this->order->id_customer != (int)$this->context->cookie->selected_customer_id_customer , $this->context->cookie->selected_customer_secure_key != $this->order->secure_key);
 
         if(isset($this->context->cookie->selected_customer_id_customer) && !empty($this->context->cookie->selected_customer_id_customer)){
             if (!Validate::isLoadedObject($this->order) || $this->order->id_customer != (int)$this->context->cookie->selected_customer_id_customer || $this->context->cookie->selected_customer_secure_key != $this->order->secure_key) {
@@ -86,6 +93,7 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
                 Tools::redirect($redirectLink);
             }
         }
+
 
 
         // Free order uses -1 as id_module, it has a special check here
@@ -103,6 +111,37 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
 
         // If checks passed, initialize customer, we will need him anyway
         $this->customer = new Customer((int) ($this->order->id_customer));
-//        $this->order_presenter = new OrderPresenter($this->order);
+
+        //->id_customer = $this->order->id_customer;
+        $this->order_presenter = new OrderPresenter($this->order);
+    }
+
+
+
+    /**
+     * Assign template vars related to page content.
+     *
+     * @see FrontController::initContent()
+     */
+    public function initContent()
+    {
+        FrontController::initContent();
+
+        $this->context->smarty->assign([
+            'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($this->order),
+            'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($this->order),
+            'order' => (new OrderPresenter())->present($this->order),
+            'order_customer' => (new ObjectPresenter())->present($this->customer),
+            'registered_customer_exists' => Customer::customerExists($this->customer->email, false, true),
+        ]);
+
+        $this->setTemplate('checkout/order-confirmation');
+
+        // If logged in guest we clear the cookie for security reasons
+        if ($this->context->customer->is_guest) {
+            $this->context->customer->mylogout();
+        }
+
+
     }
 }

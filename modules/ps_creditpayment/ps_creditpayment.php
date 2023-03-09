@@ -27,6 +27,8 @@ use Ps_Creditpayment\Grid\Column\Type\Common\InformerIdentificationColumn;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
+
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Adapter\Entity\Group;
 
 if (!defined('_PS_VERSION_')) {
@@ -60,6 +62,9 @@ class Ps_Creditpayment extends PaymentModule
         $this->displayName = $this->trans('Credit payment', array(), 'Modules.Creditpayment.Admin');
         $this->description = $this->trans('Accept credit payments by displaying your account details during the checkout and make it easy for your customers to purchase on your store.', array(), 'Modules.Creditpayment.Admin');
         $this->confirmUninstall = $this->trans('Are you sure about removing these details?', array(), 'Modules.Creditpayment.Admin');
+
+
+
     }
 
     /**
@@ -293,12 +298,12 @@ class Ps_Creditpayment extends PaymentModule
     public function hookDisplayPaymentReturn($params)
     {
 
-
         if (!$this->active) {
             return;
         }
 
         $state = $params['order']->getCurrentState();
+
 
         if (
             in_array(
@@ -309,7 +314,7 @@ class Ps_Creditpayment extends PaymentModule
                     Configuration::get('PS_OS_OUTOFSTOCK_UNPAID'),
                 )
             )) {
-            $totalToPaid = $params['order']->getOrdersTotalPaid() - $params['order']->getTotalPaid();
+            $totalToPaid = (float)$params['order']->total_paid;
 
             $newState = (int)Configuration::get('BANK_CREDIT_COMPLETE_STATE');
             $history = new OrderHistory();
@@ -321,21 +326,22 @@ class Ps_Creditpayment extends PaymentModule
             $this->context->cookie->supercheckout_temp_address_invoice = null;
             $this->context->cookie->supercheckout_perm_address_shipping = null;
             $this->context->cookie->supercheckout_perm_address_invoice = null;
-            $this->context->cart->id_customer = $this->context->cookie->id_customer;
+
+            if(!$this->context->cart){
+                $this->context->cart = new Cart($params['order']->id_cart);
+            }
+            $this->context->cart->id_customer = $this->context->cookie->id_selected_customer;
             $this->context->cart->secure_key = $this->context->cookie->secure_key;
+
             $this->context->cookie->selected_customer_secure_key = null;
             $this->context->cookie->selected_customer_customer_firstname = null;
             $this->context->cookie->selected_customer_customer_lastname = null;
             $this->context->cookie->selected_customer_id_customer = null;
             $this->context->cookie->selected_customer_email = null;
 
-
             $this->smarty->assign(array(
                 'shop_name' => $this->context->shop->name,
-                'total' => Context::getContext()->currentLocale->formatPrice(
-                    $totalToPaid,
-                    'EUR'
-                ),
+                'total' => $totalToPaid,
                 'status' => 'ok',
                 'reference' => $params['order']->reference,
                 'contact_url' => $this->context->link->getPageLink('contact', true)

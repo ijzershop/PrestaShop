@@ -227,6 +227,7 @@ class ModernHook
      */
     public function hookDisplayOrderConfirmation($params): void
     {
+
         if (isset($params['order'])) {
             $idOrder = $params['order']->id;
             $idCart = $params['order']->id_cart;
@@ -246,8 +247,7 @@ class ModernHook
 
             $cartObject = new Cart($idCart);
             $shipping = $orderObject->getShipping();
-            $discount_check = ($shipping[0]['shipping_cost_tax_excl'] + $cartObject->getOrderTotal(false, CartCore::ONLY_PRODUCTS) - $total_discount) * 1.21;
-
+            $discount_check = ($shipping[0]['shipping_cost_tax_excl'] + $cartObject->getOrderTotal(false, CartCore::ONLY_PRODUCTS, $orderObject->getCartProducts()) - (float)$total_discount) * 1.21;
             $this->smarty->assign(['total_discount' => $total_discount, 'discount_check' => $discount_check]);
         }
     }

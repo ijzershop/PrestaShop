@@ -92,7 +92,7 @@
                     {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE')}
                         {assign var="discounts" value=0}
                           {foreach Context::getContext()->cart->getCartRules() as $rule}
-                              {assign var="discounts" value=$discounts+$rule['reduction_amount']}
+                              {assign var="discounts" value=$discounts+$rule['value_tax_exc']}
                           {/foreach}
 
                       <div class="border-bottom-0 pb-1 row">

@@ -238,9 +238,7 @@ class ModernHook
             foreach ($cartRules as $rule) {
 
                 $ruleObject = new CartRule($rule['id_cart_rule']);
-                if ($ruleObject->reduction_amount != '0.000000') {
-                    $total_discount += (float)$ruleObject->reduction_amount;
-                } else {
+                if ((float)$rule['value_tax_excl'] != '0.000000') {
                     $total_discount += (float)$rule['value_tax_excl'];
                 }
             }

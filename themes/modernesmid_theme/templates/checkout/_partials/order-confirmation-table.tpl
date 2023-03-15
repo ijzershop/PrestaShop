@@ -115,6 +115,10 @@
               <td class="text-right">{Context::getContext()->currentLocale->formatPrice($subtotal_products_price,'EUR')}</td>
             </tr>
 
+        <tr>
+          <td>Verzending</td>
+          <td class="text-right">{if $subtotals.shipping.amount > 0}{Context::getContext()->currentLocale->formatPrice($subtotals.shipping.amount/1.21,'EUR')}{else}{Context::getContext()->currentLocale->formatPrice(0,'EUR')}{/if}</td>
+        </tr>
           {if (in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP'), Customer::getGroupsStatic(Context::getContext()->cart->id_customer)) || (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE')) && $total_discount > 0}
             <tr>
               <td>Korting</td>
@@ -123,10 +127,6 @@
           {/if}
 
 
-        <tr>
-              <td>Verzending</td>
-              <td class="text-right">{if $subtotals.shipping.amount > 0}{Context::getContext()->currentLocale->formatPrice($subtotals.shipping.amount/1.21,'EUR')}{else}{Context::getContext()->currentLocale->formatPrice(0,'EUR')}{/if}</td>
-            </tr>
 
         {if $subtotals.tax.label !== null}
           <tr class="sub taxes">

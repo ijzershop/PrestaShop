@@ -102,6 +102,7 @@ class Ps_ShoppingcartAjaxModuleFrontControllerOverride extends Ps_ShoppingcartAj
 
             die(json_encode([
                 'cart' => $this->context->cart,
+                'total_shipping_with_tax' => Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING), 'EUR'),
                 'total_shipping' => Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING), 'EUR'),
                 'total_tax' => Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true)-(float)Context::getContext()->cart->getOrderTotal(false), 'EUR'),
                 'total_with_taxes' => Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true), 'EUR'),

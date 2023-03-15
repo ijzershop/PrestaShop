@@ -31,7 +31,9 @@ $(document).ready(function() {
       url: link,
       type: 'POST',
       success: function(json) {
+
         const response = JSON.parse(json);
+
         $('#shoppingcart-side-panel').html(response.modal);
         $('.shoppingcart-header-box .js-cart').replaceWith(response.preview);
 

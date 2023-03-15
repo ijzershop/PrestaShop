@@ -853,6 +853,7 @@ class SupercheckoutCore extends ModuleFrontController
             $this->context->cart
         );
 
+
         foreach ($available_cart_rules as $key => $available_cart_rule) {
             if ((isset($available_cart_rule['highlight']) && !$available_cart_rule['highlight'])
                 || strpos($available_cart_rule['code'], 'BO_ORDER_') === 0

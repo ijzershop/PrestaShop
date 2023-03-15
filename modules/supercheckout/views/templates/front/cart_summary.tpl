@@ -211,10 +211,13 @@
                     {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE')}
                         {assign var="discounts" value=0}
                         {foreach Context::getContext()->cart->getCartRules() as $rule}
+
+{*                            {var_dump($rule)}*}
+
                             {if $rule['reduction_amount'] != '0.000000'}
-                                {assign var="discounts" value=$discounts+$rule['reduction_amount']}
-                            {elseif $rule['reduction_percent'] != '0.000000'}
                                 {assign var="discounts" value=$discounts+$rule['value_tax_exc']}
+                            {elseif $rule['reduction_percent'] != '0.000000'}
+                                {assign var="discounts" value=$discounts+$rule['reduction_percent']}
                             {/if}
                         {/foreach}
 
@@ -251,7 +254,8 @@
 
           {if $vouchers.allowed}
               {foreach $vouchers.added as $voucher}
-                  {assign var="voucher_object" value=CartRule::getCartsRuleByCode($voucher.code, Context::getContext()->cookie->lang, false)}
+
+                  {assign var="voucher_object" value=CartRule::getCartsRuleByCode($voucher.code, null, true)}
                 <div style="margin-bottom: 1%;" id="cart_discount_{$voucher.id_cart_rule}"
                      class="cart_discount text-right p-1"
                      style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
@@ -264,6 +268,7 @@
                       class="fasr fa-trash"></i></a>
                   <span
                     class="price text-right">
+
                   {if $voucher_object[0].reduction_amount != '0.000000'}
                       {Context::getContext()->currentLocale->formatPrice($voucher_object[0].reduction_amount, 'EUR')}
                       {assign var="total_discount" value=$total_discount+($voucher_object[0].reduction_amount)}

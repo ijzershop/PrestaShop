@@ -778,7 +778,7 @@ $(function () {
   });
 
   const updateHeaderCart = function (cart) {
-    // console.log(cart);
+    console.log(['update header cart', cart]);
     console.log(cart.subtotals);
     $('#header-cart-vat').text(renderMoneyString(cart.subtotals.tax.amount));
     $('#header-cart-total').text(renderMoneyString(cart.totals.total.amount));
@@ -817,7 +817,7 @@ $(function () {
     }
     $('#header-cart-subtotal').text(renderMoneyString(totalForAllProducts));
 
-    let shippingCost = cart.subtotals.shipping.amount_without_tax;
+    let shippingCost = cart.subtotals.shipping.amount;
     if (shippingCost == 0) {
       $('input.carrier-selection[value="pickup"]').prop('checked', true);
     } else {

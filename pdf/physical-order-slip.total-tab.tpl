@@ -26,6 +26,7 @@
     {assign var="remaining_amount" value=0}
     {assign var="discount_amount" value=0}
     {assign var="reduction_amount" value=0}
+    {assign var="reduction_amount_tax_excl" value=0}
 
     {if is_array($cart_rules) && count($cart_rules)}
         {foreach $cart_rules as $cart_rule}
@@ -33,6 +34,7 @@
                 {assign var="discount_amount" value=($discount_amount+(float)$cart_rule.reduction_amount)}
                 {assign var="remaining_amount" value=($remaining_amount+((float)$cart_rule.reduction_amount - (float)$cart_rule.value))}
                 {assign var="reduction_amount" value=($reduction_amount+(float)$cart_rule.value)}
+                {assign var="reduction_amount_tax_excl" value=($reduction_amount_tax_excl+(float)$cart_rule.value_tax_excl)}
             {else}
                 {assign var="discount_amount" value=($discount_amount+(float)$cart_rule.value)}
                 {assign var="reduction_amount" value=($reduction_amount+(float)$cart_rule.value)}
@@ -45,8 +47,8 @@
         {l s='Total Products' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white" width="40%">
-        {if $footer.products_after_discounts_tax_excl > 0}
-            {displayPrice currency=$order->id_currency price=$footer.products_after_discounts_tax_excl}
+        {if $footer.products_before_discounts_tax_excl > 0}
+            {displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}
         {else}
           - {displayPrice currency=$order->id_currency price=($remaining_amount/1.21)}
         {/if}
@@ -56,7 +58,7 @@
     {if !$order->isVirtual()}
       <tr>
         <td class="grey" width="60%">
-            {l s='Shipping Costs' d='Shop.Pdf' pdf='true'}
+            {l s='Shipping' d='Shop.Pdf' pdf='true'}
         </td>
         <td class="white" width="40%">
             {if $footer.shipping_tax_excl > 0}
@@ -68,7 +70,16 @@
       </tr>
     {/if}
 
-
+    {if $reduction_amount > 0}
+      <tr>
+        <td class="grey" width="60%">
+            {l s='Korting' d='Shop.Pdf' pdf='true'}
+        </td>
+        <td class="white" width="40%">
+            {displayPrice currency=$order->id_currency price=0-$reduction_amount_tax_excl}
+        </td>
+      </tr>
+    {/if}
     {if $footer.wrapping_tax_excl > 0}
       <tr>
         <td class="grey">
@@ -78,8 +89,8 @@
       </tr>
     {/if}
 
-    {if $footer.total_paid_tax_excl > 0}
-      <tr class="bold">
+
+      <tr class="bold" >
         <td class="grey">
             {l s='Total (Tax excl.)' d='Shop.Pdf' pdf='true'}
         </td>
@@ -87,7 +98,7 @@
             {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_excl}
         </td>
       </tr>
-    {/if}
+
     {if $footer.total_taxes > 0}
       <tr class="bold">
         <td class="grey">
@@ -97,13 +108,13 @@
             {displayPrice currency=$order->id_currency price=$footer.total_taxes-(abs($remaining_amount)-(abs($remaining_amount)/1.21))}
         </td>
       </tr>
-    {elseif $remaining_amount > 0}
+    {elseif $remaining_amount > 0 && (abs($remaining_amount)-(abs($remaining_amount)/1.21)) > 0}
       <tr class="bold">
         <td class="grey">
             {l s='Total Tax' d='Shop.Pdf' pdf='true'}
         </td>
         <td class="white">
-            - {displayPrice currency=$order->id_currency price=(abs($remaining_amount)-(abs($remaining_amount)/1.21))}
+          - {displayPrice currency=$order->id_currency price=(abs($remaining_amount)-(abs($remaining_amount)/1.21))}
         </td>
       </tr>
     {/if}

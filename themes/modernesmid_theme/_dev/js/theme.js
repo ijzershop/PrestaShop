@@ -1909,6 +1909,7 @@ $('#contact-info-bubble').on('mouseleave', function (e) {
 
 $('#contact-info-bubble').on('click', function (e) {
   $('#contact-info-box').toggleClass('d-none');
+  e.stopImmediatePropagation();
 });
 
 //retour form

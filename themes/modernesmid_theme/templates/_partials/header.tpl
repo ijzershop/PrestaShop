@@ -28,26 +28,6 @@
   </div>
   {/block}
 
-
-
-  {block name='header_nav'}
-{*  <nav class="header-nav bg-dark">*}
-{*    <div class="container">*}
-{*      <div class="row">*}
-{*        <div class="pl-0 col-md-12 col-xs-12">*}
-{*          <div class="btn-group d-none d-sm-none d-md-block d-lg-block">*}
-{*            <a class="btn btn-link" href="{Configuration::get('MSTHEMECONFIG_HEADER_WHATSAPP_LINK', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}" rel="noopener" target="_blank"><i class="fab fa-lg fa-whatsapp"></i> {Configuration::get('MSTHEMECONFIG_HEADER_WHATSAPP_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}</a>*}
-{*            <a class="btn btn-link" href="{Configuration::get('MSTHEMECONFIG_HEADER_PHONENUMBER_LINK', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fasr fa-lg fa-phone-square-alt"></i> {Configuration::get('MSTHEMECONFIG_HEADER_PHONENUMBER_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}</a>*}
-{*            <a class="btn btn-link" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fasr fa-lg fa-at"></i> {Configuration::get('MSTHEMECONFIG_HEADER_MAIL_TEXT', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}</a>*}
-{*          {hook h='displayNav2'}*}
-{*          </div>*}
-{*        </div>*}
-{*      </div>*}
-{*    </div>*}
-{*  </nav>*}
-  {/block}
-
-
   {block name='header_top'}
     <div class="header-top">
     <div class="cart_body {if Context::getContext()->cart->nbProducts() == 0} no_show_empty {/if}">
@@ -143,15 +123,7 @@
         </li>
         {/if}
         <li class="nav-item p-0 text-center col d-none d-sm-block">
-{*          <div class="dropdown nav-contact mx-auto">*}
             <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="/{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fasr fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"> Offerte Aanvraag</span></a>
-{*          <div class="dropdown-menu" aria-labelledby="nav_contact_dropdown_mobile">*}
-{*            <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fasr fa-envelope-open-dollar"></i> Offerte aanvragen</a>*}
-{*            <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"> <i class="fasr fa-info"></i> Informatie aanvragen</a>*}
-{*            <a class="dropdown-item" href="/retour-aanvragen"> <i class="fasr fa-warehouse"></i> Retour aanvragen</a>*}
-{*            <a class="dropdown-item" href="{$urls.pages.guest_tracking}"><i class="fasr fa-truck-fast"></i> Bestel status opvragen</a>*}
-{*          </div>*}
-{*          </div>*}
         </li>
           {if Module::isEnabled('ps_searchbar')}
             <li class="nav-item p-0 text-center col"><a aria-label="Zoeken" class="nav-link text-white navbar-search-icon" href="#"><i class="fasr fa-2x fa-magnifying-glass"></i></a></li>
@@ -170,20 +142,8 @@
         {/if}
         <ul class="navbar-nav mr-2">
           <li id="request-offer-button" class="ml-2">
-{*            <div class="dropdown nav-contact mx-auto">*}
             <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="/{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fasr fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"> Offerte Aanvragen</span></a>
-
-{*              <div class="dropdown-menu" aria-labelledby="nav_contact_dropdown_mobile">*}
-{*                <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fasr fa-envelope-open-dollar"></i> Offerte aanvragen</a>*}
-{*                <a class="dropdown-item" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"> <i class="fasr fa-circle-info"></i> Informatie aanvragen</a>*}
-{*                <a class="dropdown-item" href="/retour-aanvragen"> <i class="fasr fa-warehouse"></i> Retour aanvragen</a>*}
-{*                <a class="dropdown-item" href="{$urls.pages.guest_tracking}"><i class="fasr fa-truck-fast"></i> Bestel status opvragen</a>*}
-{*              </div>*}
-{*            </div>*}
-
-
-{*            <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}" class="btn btn-success"><i class="fasr fa-envelope"></i> Offerte aanvragen</a>*}
-          </li>
+        </li>
         </ul>
         {if Module::isEnabled('ps_searchbar')}
         {hook h='displaySearch'}

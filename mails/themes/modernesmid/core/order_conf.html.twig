@@ -158,6 +158,16 @@
                         </div>
                       </td>
                     </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:20px 20px 10px 20px;word-break:break-word;">
+                        <div
+                          style="font-family:Open-sans, sans-serif;font-size:16px;line-height:25px;text-align:center;color:#FFFFFF;">
+                          <span class="label">
+                            Uw factuur is als bijlage toegevoegd.<br/>
+                            <a style="color:#ffffff;text-decoration: underline;" href="{shop_url}index.php?controller=pdf-invoice&id_order={id_order}">Wilt u hem graag online bekijken, klik dan op deze link.</a> </span><br/>
+                        </div>
+                      </td>
+                    </tr>
                   </table>
                 </td>
               </tr>
@@ -185,128 +195,7 @@
   </tr>
   <![endif]-->
   <!-- BOX ENDING -->
-  <!-- TABLE BEGINING -->
-  <!--[if mso | IE]>
-  <tr>
-    <td
-      class="" width="604px"
-    >
 
-      <table
-        align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:604px;" width="604"
-      >
-        <tr>
-          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
-  <![endif]-->
-  <div style="Margin:0px auto;max-width:604px;overflow-x:scroll">
-    <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-      <tbody>
-      <tr>
-        <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;vertical-align:top;">
-          <!--[if mso | IE]>
-          <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-
-            <tr>
-
-              <td
-                class="" style="vertical-align:top;width:604px;"
-              >
-          <![endif]-->
-          <div class="mj-column-per-100 outlook-group-fix"
-               style="font-size:12px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-            <table border="0" cellpadding="0" cellspacing="0" role="presentation"
-                   style="vertical-align:top;" width="800px">
-              <tr>
-                <td align="left" class="products-table"
-                    style="font-size:0px;padding-top:0px;padding:0px 45px;word-break:break-word;">
-                  <table cellpadding="0" cellspacing="0" width="100%" border="0"
-                         style="cellspacing:0;color:#000000;font-family:Open-sans, sans-serif;font-size: 12px;line-height:22px;table-layout:auto;width:100%;">
-                    <colgroup>
-                      <col span="1" style="width: 10%;">
-                      <col span="1" style="width: 45%;">
-                      <col span="1" style="width: 15%;">
-                      <col span="1" style="width: 15%;">
-                      <col span="1" style="width: 15%;">
-                    </colgroup>
-                    <tr>
-                      <th>{{ 'Reference'|trans({}, 'Emails.Body', locale)|raw }}</th>
-                      <th>{{ 'Product'|trans({}, 'Emails.Body', locale)|raw }}</th>
-                      <th>{{ 'Unit price'|trans({}, 'Emails.Body', locale)|raw }}</th>
-                      <th>{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
-                      <th>{{ 'Total price'|trans({}, 'Emails.Body', locale)|raw }}</th>
-                    </tr>
-                    {% if templateType == 'html' %}
-                      {products}
-                    {% endif %}
-                    {% if templateType == 'txt' %}
-                      {products_txt}
-                    {% endif %}
-                    {% if templateType == 'html' %}
-                      {discounts}
-                    {% endif %}
-                    {% if templateType == 'txt' %}
-                      {discounts_txt}
-                    {% endif %}
-                    {#                                        <tr class="order_summary">#}
-                    {#                                            <td colspan="3" align="right">#}
-                    {#                                                {{ 'Products'|trans({}, 'Emails.Body', locale)|raw }}#}
-                    {#                                            </td>#}
-                    {#                                            <td colspan="3"> {total_products}</td>#}
-                    {#                                        </tr>#}
-                    {#                                      {% set totalDiscount = total_discounts %}#}
-                    {#                                      {% if totalDiscount != '€ 0,00' %}#}
-                    {#                                        <tr class="order_summary">#}
-                    {#                                            <td colspan="3" align="right">#}
-                    {#                                                {{ 'Discounts'|trans({}, 'Emails.Body', locale)|raw }}#}
-                    {#                                            </td>#}
-                    {#                                            <td colspan="3"> {total_discounts}</td>#}
-                    {#                                        </tr>#}
-                    {#                                      {% endif %}#}
-
-                    <tr class="order_summary">
-                      <td colspan="3" align="right">
-                        {{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}
-                      </td>
-                      <td colspan="3" style="text-align:right;"> {total_shipping_tax_excl}</td>
-                    </tr>
-                    <tr class="order_summary">
-                      <td colspan="3" align="right">
-                        {{ 'BTW'|trans({}, 'Emails.Body', locale)|raw }}
-                      </td>
-                      <td colspan="3" style="text-align:right;"> {total_tax_paid}</td>
-                    </tr>
-                    <tr class="order_summary">
-                      <td colspan="3" align="right">
-                        {{ 'Total paid'|trans({}, 'Emails.Body', locale)|raw }}
-                      </td>
-                      <td colspan="3" style="text-align:right;"> {total_paid}</td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <!--[if mso | IE]>
-          </td>
-
-          </tr>
-
-          </table>
-          <![endif]-->
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-  <!--[if mso | IE]>
-  </td>
-  </tr>
-  </table>
-
-  </td>
-  </tr>
-  <![endif]-->
-  <!-- TABLE ENDING -->
 
 
 

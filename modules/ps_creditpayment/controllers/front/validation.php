@@ -187,6 +187,9 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             "Apikey: ". $api_key,
         );
 
+dd($query);
+
+
         curl_setopt_array($curlCard, array(
             CURLOPT_URL => "https://api.informer.eu/v1/salesorder",
             CURLOPT_RETURNTRANSFER => true,

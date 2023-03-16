@@ -231,5 +231,12 @@ class Order extends OrderCore
         }
     }
 
-
+    public function getFirstMessageWithId()
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+            SELECT `message`,`id_message`
+            FROM `' . _DB_PREFIX_ . 'message`
+            WHERE `id_order` = ' . (int) $this->id . '
+            ORDER BY `id_message`');
+    }
 }

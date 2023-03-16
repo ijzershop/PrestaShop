@@ -8,7 +8,7 @@ require_once _PS_CORE_DIR_ . '/init.php';
 
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
-
+use Symfony\Component\HttpFoundation\Response;
 /**
  *
  */
@@ -97,6 +97,16 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
         if (Tools::getValue('action') == 'search_customer') {
             return $this->_searchCustomer();
+        }
+
+        if (Tools::getValue('method') == 'delivery_message') {
+            return $this->_getDeliverySlipMessage($_GET['id']);
+        }
+
+
+
+        if (Tools::getValue('method') == 'save_delivery_message') {
+            die($this->_updateDeliverySlipMessage());
         }
 
 
@@ -351,8 +361,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             }
 
             $credit->minimum_amount = 0.00;
-            $credit->minimum_amount_tax = 1;
-            $credit->minimum_amount_currency = 1;
+            $credit->minimum_amount_tax = 0;
+            $credit->minimum_amount_currency = 0;
             $credit->minimum_amount_shipping = 0;
             $credit->country_restriction = 0;
             $credit->carrier_restriction = 0;
@@ -360,12 +370,12 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->cart_rule_restriction = 0;
             $credit->product_restriction = 0;
             $credit->shop_restriction = 0;
-            $credit->free_shipping = false;
+            $credit->free_shipping = 0;
             $credit->reduction_percent = 0.00;
             $credit->reduction_amount = $creditPrice;
-            $credit->reduction_tax = false;
+            $credit->reduction_tax = 1;
             $credit->reduction_currency = 1;
-            $credit->reduction_product = 0;
+            $credit->reduction_product = 1;
             $credit->reduction_exlude_special = 0;
             $credit->gift_product = 0;
             $credit->gift_product_attribute = 0;
@@ -373,7 +383,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->active = 1;
             $credit->add(true);
 
-            $creditGroupRestiction = Db::getInstance()->insert('cart_rule_group', ['id_cart_rule' => (int)$credit->id, 'id_group' => Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_BALIE_GROUP')]);
+//            $creditGroupRestiction = Db::getInstance()->insert('cart_rule_group', ['id_cart_rule' => (int)$credit->id, 'id_group' => Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_BALIE_GROUP')]);
 
             $cart->addCartRule($credit->id);
 
@@ -1447,6 +1457,82 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 'Accept' => 'application/json',
                 'Authorization: Bearer ' . $loginCall->access_token
             ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return void
+     */
+    private function _getDeliverySlipMessage($id)
+    {
+
+        $order = new Order($id);
+        $firstMessage = $order->getFirstMessageWithId();
+
+
+        if($firstMessage){
+            $message = $firstMessage['message'];
+            $message_id = $firstMessage['id_message'];
+        } else {
+            $message = '';
+            $message_id = '';
+        }
+
+        $data = [
+            'id_order' => $order->id,
+            'id_cart' => $order->id_cart,
+            'id_customer' => $order->id_customer,
+            'id_message' => $message_id,
+            'message' => $message,
+            ];
+
+        die($this->kernel->getContainer()->get('twig')->render('@Modules/msthemeconfig/views/templates/admin/delivery_slip_message_form.html.twig', $data));
+    }
+
+    /**
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
+     */
+    private function _updateDeliverySlipMessage()
+    {
+        try{
+            $id_message = (int)$_GET['id_message'];
+            $id_customer = (int)$_GET['customer'];
+            $id_cart = (int)$_GET['cart'];
+            $id_order = (int)$_GET['id_order'];
+            $message = $_GET['message'];
+
+            $db = Db::getInstance(_PS_USE_SQL_SLAVE_);
+
+            if($id_message == ""){
+                $db->insert('message', [
+                    'id_employee' => 0,
+                    'id_customer' => $id_customer,
+                    'id_cart' => $id_cart,
+                    'id_order' => $id_order,
+                    'message' => $message,
+                    'private' => 0,
+                    'date_add' => date('NOW'),
+                ], false, false, DB::INSERT, true);
+
+                return die(json_encode(['msg' =>  $db->Affected_Rows() . ' pakbon bericht is aan de bestelling toegevoegd', 'success' => true]));
+            } else {
+                $db->update('message', [
+                    'id_employee' => 0,
+                    'id_customer' => $id_customer,
+                    'id_cart' => $id_cart,
+                    'id_order' => $id_order,
+                    'message' => $message,
+                    'private' => 0,
+                    'date_add' => date('NOW'),
+                ], '`id_message` = '. $id_message);
+
+
+                return die(json_encode(['msg' => $db->Affected_Rows() . ' pakbon bericht van de bestelling is gewijzigd', 'success' => true]));
+            }
+        } catch (Exception $exception){
+            return die(json_encode(['msg' => $exception->getMessage(), 'success' => false]));
         }
     }
 }

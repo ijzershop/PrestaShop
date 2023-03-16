@@ -167,6 +167,15 @@
   <small id="switchOrderToUserHelpBlock" class="form-text text-muted">Koppel bestelling aan andere gebruiker</small>
 </form>
 
+<form class="order-actions-shipping-status">
+  <div class="input-group">
+    <button type="button" id="showDeliverySlipMessageBtn" data-order-id="{{ order.id }}"  data-toggle="modal" data-target="#showDeliverySlipMessageModal"
+            class="btn btn-action">
+      <i class="material-icons">local_shipping</i>
+      {{ 'Pakbon Bericht'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    </button>
+  </div>
+</form>
 
 
 {# End add buttons to order view #}
@@ -191,6 +200,29 @@
   </div>
 </div>
 {#  ShippingStatusModal End  #}
+
+
+{#  DeliverySlipMessageModal Start  #}
+<div class="modal fade" id="showDeliverySlipMessageModal" tabindex="-1" role="dialog" aria-labelledby="showDeliverySlipMessage" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header"><h4>Pakbon Bericht</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="delivery-slip-message-form">
+        <div class="modal-body">
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
+        <button type="button" id="save-delivery-message-btn" class="btn btn-success">Opslaan</button>
+      </div>
+    </div>
+  </div>
+</div>
+{#  DeliverySlipMessageModal End  #}
 {% block javascripts %}
   <script type="text/javascript">
     $(document).ready(function(){
@@ -288,6 +320,66 @@
 
     });
     });
+
+
+
+    $('#showDeliverySlipMessageBtn').on('click', function(event){
+      event.preventDefault();
+      $('#showDeliverySlipMessageModal').modal('show');
+      var ref = $(this).attr('data-order-id');
+      $.ajax({
+        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1',
+        type: 'GET',
+        data: {
+          id: ref,
+          method: 'delivery_message',
+          ajax: true,
+          render_template:true
+        },
+      }).done((e) => {
+        $('#showDeliverySlipMessageModal .modal-body').html(e);
+
+    });
+    });
+
+
+
+      $('#save-delivery-message-btn').on('click', function(event) {
+        event.preventDefault();
+        let orderId = $('form#delivery-slip-message-form [name="id_order"]').val();
+        let deliverySlipMessage = $('form#delivery-slip-message-form [name="delivery_slip_message"]').val();
+        let idDeliverySlipMessage = $('form#delivery-slip-message-form [name="id_message"]').val();
+        let idCustomer = $('form#delivery-slip-message-form [name="id_customer"]').val();
+        let idCart = $('form#delivery-slip-message-form [name="id_cart"]').val();
+
+        let postdata = {
+          id_order:orderId,
+          id_message:idDeliverySlipMessage,
+          message:deliverySlipMessage,
+          customer:idCustomer,
+          cart:idCart,
+          ajax: true,
+          method: 'save_delivery_message'
+        };
+        $.ajax({
+          type: 'GET',
+          url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1',
+          data: postdata,
+          success: function(r){
+            r = JSON.parse(r);
+            console.log(r)
+
+            if(r.success){
+              $.growl({ title: "Geslaagd!", message: r.msg });
+              window.location.reload(true);
+            } else {
+              $.growl.error({ title: "Fout!", message: r.msg});
+            }
+          }
+        });
+      });
+
+
     });
   </script>
 {% endblock %}

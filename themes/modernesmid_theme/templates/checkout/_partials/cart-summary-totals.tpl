@@ -37,8 +37,9 @@
       {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS) > 0}
           {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE')}
               {assign var="discounts" value=0}
+
               {foreach Context::getContext()->cart->getCartRules() as $rule}
-                  {assign var="discounts" value=$discounts+$rule['value_tax_exc']}
+                  {assign var="discounts" value=$discounts+($rule['reduction_amount']/1.21)}
               {/foreach}
 
             <div class="cart-summary-line summary-total-discount">
@@ -50,7 +51,7 @@
             </div>
           {/if}
       {/if}
-
+{*    {var_dump($cart.subtotals)}*}
 
     {if $cart.subtotals.tax}
       <div class="cart-summary-line summary-total-tax">
@@ -59,12 +60,7 @@
       </div>
     {/if}
 
-    {if Module::isEnabled('smallorderfee') && $totalForAllProducts <= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20) && (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) != 0}
-      <div class="cart-summary-line">
-          <span class="label sub">{Configuration::get('SMALLORDERFEE_ORDER_FEE_LABEL','Kleine order toeslag')}</span>
-          <span class="value sub" {if $totalForAllProducts <= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20) && (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) != 0}style="border-bottom:1px solid #c0c0c0c0;"{/if}>{Context::getContext()->currentLocale->formatPrice((double)Configuration::get('SMALLORDERFEE_ORDER_FEE',20), 'EUR')}{if $totalForAllProducts <= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20) && (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) != 0}<span style="position:absolute;right:5px;line-height:3;">+</span>{/if}</span>
-      </div>
-    {/if}
+
 
   {/block}
   {block name='cart_summary_total'}

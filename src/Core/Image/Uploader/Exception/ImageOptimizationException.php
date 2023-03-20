@@ -24,11 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Image\Uploader\Exception;
+define('_PS_INSTALL_VERSION_', '8.0.2');
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 70205);
+define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 81099);
 
-/**
- * Class ImageOptimizationException is thrown when resizing, cutting or optimizing image fails.
- */
-class ImageOptimizationException extends \Exception
-{
-}
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '7.2.5');
+define('_PS_INSTALL_MAXIMUM_PHP_VERSION_', '8.1');

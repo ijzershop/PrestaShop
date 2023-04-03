@@ -28,8 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Cart;
 
 use CartCore;
 use Currency;
-use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
-use PrestaShop\PrestaShop\Adapter\Entity\Context;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Tools;
 
@@ -172,29 +170,10 @@ class Calculator
      */
     public function getTotal($ignoreProcessedFlag = false)
     {
-        $shippingFees = $this->fees->getInitialShippingFees();
-//        if((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE')) {
-            $calculatedDiscount = $this->getDiscountTotal();
-            $cartRules = $this->getCartRulesData();
-//dd($cartRules);
-            $totalDiscount = 0;
-            $totalDiscountPercentage = 0;
-            foreach ($cartRules as $cartRule) {
-                    $totalDiscount += $cartRule->getCartRule()->reduction_amount;
-            }
-
-            $remainingDiscount = $totalDiscount - $calculatedDiscount->getTaxExcluded();
-            $shippingDiscount = $shippingFees->getTaxExcluded()-$remainingDiscount;
-
-            if($shippingDiscount >= 0){
-                $shippingFees = new AmountImmutable($shippingDiscount*1.21,$shippingDiscount);
-            }
-
-//        }
-
         if (!$this->isProcessed && !$ignoreProcessedFlag) {
             throw new \Exception('Cart must be processed before getting its total');
         }
+
         $amount = $this->getRowTotalWithoutDiscount();
         $amount = $amount->sub($this->rounded($this->getDiscountTotal(), $this->computePrecision));
         $shippingFees = $this->fees->getInitialShippingFees();

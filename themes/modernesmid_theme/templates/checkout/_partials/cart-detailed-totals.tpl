@@ -26,24 +26,10 @@
 <div class="cart-detailed-totals">
   {assign var='deliveryMethodCarriers' value=unserialize(Configuration::get('koopmanOrderExport'))}
   <div class="card-block">
-        {assign var='totalForAllProducts' value=0}
-        {assign var='totalReductonValue' value=0}
-    {foreach from=$cart.products item=product}
-        {assign var='productReduction' value=(($product.price_without_reduction_without_tax) - $product.price_with_reduction_without_tax) * $product.quantity}
-        {assign var='totalReductonValue' value=$totalReductonValue +  $productReduction}
-        {assign var='productTotal' value=$product.price_with_reduction_without_tax * $product.quantity}
-        {assign var='totalForAllProducts' value=$totalForAllProducts + $productTotal}
-    {/foreach}
-
     <div class="cart-summary-line clearfix cart-total products-total">
-        <span class="label">{if (int)$cart.products_count > 1}Producten{else}Product{/if} ({$cart.products_count}) {if $totalReductonValue > 0}<span class="info-icon-with-showhide" data-id="cart-info-2"><i class="icon-info cart-info-btn ml-2"></i></span>{/if}</span>
+        <span class="label">{if (int)$cart.products_count > 1}Producten{else}Product{/if} ({$cart.products_count})</span>
         </span>
-        <span class="value price">{Context::getContext()->currentLocale->formatPrice(floatval($totalForAllProducts), 'EUR')}</span>
-        <div style="display:none;" class="border-bottom-0 pb-1 row" id="cart-info-2">
-                        <span class="col-12 text-left width-100" style="color:blue">
-                          Bij sommige producten ontvangt u korting als u meer dan 5 of 10 bestelt. Dit is de staffelkorting.
-                        </span>
-                      </div>
+        <span class="value price">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING), 'EUR')}</span>
     </div>
     <div class="cart-summary-line clearfix cart-total shipping-total">
         <span class="label">
@@ -67,7 +53,7 @@
   </div>
 
   {block name='cart_summary_totals'}
-    {include file='checkout/_partials/cart-summary-totals.tpl' cart=$cart totalForAllProducts=$totalForAllProducts}
+    {include file='checkout/_partials/cart-summary-totals.tpl' cart=$cart}
   {/block}
 </div>
 {/block}

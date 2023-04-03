@@ -23,45 +23,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="card-block cart-summary-totals">
-{*     <div class="cart-summary-line clearfix cart-total-excl-tax">
-      <span class="label">{$cart.totals.total_excluding_tax.label}</span>
-      <span class="value price">{$cart.totals.total_excluding_tax.value}</span>
-    </div> *}
-     {assign var='totalForAllProducts' value=0}
-    {foreach from=Context::getContext()->cart->getProducts() item=product}
-        {assign var='productTotal' value=$product.price_with_reduction_without_tax * $product.quantity}
-        {assign var='totalForAllProducts' value=$totalForAllProducts + $productTotal}
-    {/foreach}
   {block name='cart_summary_tax'}
-
-      {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS) > 0}
-          {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE')}
-              {assign var="discounts" value=0}
-
-              {foreach Context::getContext()->cart->getCartRules() as $rule}
-                  {assign var="discounts" value=$discounts+($rule['reduction_amount']/1.21)}
-              {/foreach}
-
+      {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION) > 0}
             <div class="cart-summary-line summary-total-discount">
-              <span class="label sub">Korting</span><span class="value sub">- {Context::getContext()->currentLocale->formatPrice($discounts, 'EUR')}</span>
+              <span class="label sub">Korting</span><span class="value sub">{Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR')}</span>
             </div>
-          {else}
-            <div class="cart-summary-line summary-total-discount">
-              <span class="label sub">Korting</span><span class="value sub">- {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS), 'EUR')}</span>
-            </div>
-          {/if}
       {/if}
-{*    {var_dump($cart.subtotals)}*}
-
     {if $cart.subtotals.tax}
       <div class="cart-summary-line summary-total-tax">
         <span class="label sub">Btw (21%)</span>
-        <span class="value sub" {if !Module::isEnabled('smallorderfee') || $totalForAllProducts >= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20) || (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) == 0}style="border-bottom:1px solid #c0c0c0c0;"{/if}>{$cart.subtotals.tax.value}{if $totalForAllProducts >= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20) || (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) == 0}<span style="position:absolute;right:5px;line-height:3;">+</span>{/if}</span>
+        <span class="value sub" {if (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) == 0}style="border-bottom:1px solid #c0c0c0c0;"{/if}>
+      {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0}
+          {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS)-Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS),'EUR')}
+      {else}
+            {$cart.subtotals.tax.value}
+      {/if}
+          {if (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) == 0}<span style="position:absolute;right:5px;line-height:3;">+</span>{/if}</span>
       </div>
     {/if}
-
-
-
   {/block}
   {block name='cart_summary_total'}
     {if !$configuration.display_prices_tax_incl && $configuration.taxes_enabled}
@@ -75,12 +54,14 @@
       </div>
     {else}
       <div class="cart-summary-line cart-total">
-              {if !Module::isEnabled('smallorderfee') || $totalForAllProducts >= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20)}
                 <span class="label">{$cart.totals.total.label}&nbsp;{if $configuration.taxes_enabled}{$cart.labels.tax_short}{/if}</span>
-                <span class="value h6 font-weight-bolder">{$cart.totals.total.value}</span>
+                <span class="value h6 font-weight-bolder">
+              {if (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0}
+                {Context::getContext()->currentLocale->formatPrice(0-Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR')}
               {else}
-                {hook h="checkoutCartOrderFee"}
+                  {$cart.totals.total.value}
               {/if}
+        </span>
       </div>
     {/if}
   {/block}

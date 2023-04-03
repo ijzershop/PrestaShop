@@ -55,15 +55,15 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
     public function __construct(OrderInvoice $order_invoice, Smarty $smarty, $bulk_mode = false)
     {
         $this->order_invoice = $order_invoice;
-        $this->order = new Order((int) $this->order_invoice->id_order);
+        $this->order = new Order((int)$this->order_invoice->id_order);
         $this->smarty = $smarty;
-        $this->smarty->assign('isTaxEnabled', (bool) Configuration::get('PS_TAX'));
+        $this->smarty->assign('isTaxEnabled', (bool)Configuration::get('PS_TAX'));
 
         // If shop_address is null, then update it with current one.
         // But no DB save required here to avoid massive updates for bulk PDF generation case.
         // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
         if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
-            $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int) $this->order->id_shop);
+            $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int)$this->order->id_shop);
             if (!$bulk_mode) {
                 OrderInvoice::fixAllShopAddresses();
             }
@@ -76,7 +76,7 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
         $id_shop = Context::getContext()->shop->id;
         $this->title = $order_invoice->getInvoiceNumberFormatted($id_lang, $id_shop);
 
-        $this->shop = new Shop((int) $this->order->id_shop);
+        $this->shop = new Shop((int)$this->order->id_shop);
     }
 
     /**
@@ -161,19 +161,19 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
         $invoiceAddressPatternRules = json_decode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
         $deliveryAddressPatternRules = json_decode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
 
-        $invoice_address = new Address((int) $this->order->id_address_invoice);
-        $country = new Country((int) $invoice_address->id_country);
+        $invoice_address = new Address((int)$this->order->id_address_invoice);
+        $country = new Country((int)$invoice_address->id_country);
         $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
 
         $delivery_address = null;
         $formatted_delivery_address = '';
         if (isset($this->order->id_address_delivery) && $this->order->id_address_delivery) {
-            $delivery_address = new Address((int) $this->order->id_address_delivery);
+            $delivery_address = new Address((int)$this->order->id_address_delivery);
             $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
         }
 
-        $customer = new Customer((int) $this->order->id_customer);
-        $carrier = new Carrier((int) $this->order->id_carrier);
+        $customer = new Customer((int)$this->order->id_customer);
+        $carrier = new Carrier((int)$this->order->id_carrier);
 
         $order_details = $this->order_invoice->getProducts();
 
@@ -227,7 +227,7 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
         if (Configuration::get('PS_PDF_IMG_INVOICE')) {
             foreach ($order_details as &$order_detail) {
                 if ($order_detail['image'] != null) {
-                    $name = 'product_mini_' . (int) $order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int) $order_detail['product_attribute_id'] : '') . '.jpg';
+                    $name = 'product_mini_' . (int)$order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int)$order_detail['product_attribute_id'] : '') . '.jpg';
                     $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
 
                     $order_detail['image_tag'] = preg_replace(
@@ -249,22 +249,33 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
 
         $cart_rules = $this->order->getCartRules($this->order_invoice->id);
         $free_shipping = false;
+        $total_discount_tax_excl = 0;
+        $total_discount_tax_incl = 0;
+        $total_remainder_tax_excl = 0;
+        $total_remainder_tax_incl = 0;
+
         foreach ($cart_rules as $key => $cart_rule) {
             //Add return amount by balie orders
             $cartRuleData = new CartRule($cart_rule['id_cart_rule']);
 
             $cart_rules[$key]['reduction_amount'] = $cartRuleData->reduction_amount;
 
-            if($cartRuleData->group_restriction) {
+            if ($cartRuleData->group_restriction) {
                 $cartRuleGroup = Db::getInstance()->executeS('SELECT id_group FROM ' . _DB_PREFIX_ . 'cart_rule_group WHERE id_cart_rule = ' . (int)$cart_rule['id_cart_rule']);
-                if (isset($cartRuleGroup[0]['id_group']) && $cartRuleGroup[0]['id_group'] == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_BALIE_GROUP',
-                        null, null, null, 5)) {
-                    $cart_rules[$key]['remaining_amount'] = (float)$this->order_invoice->getOrder()->total_shipping_tax_excl - ((float)$cartRuleData->reduction_amount - (float)$cart_rule['value_tax_excl']);
-                    if($cart_rules[$key]['remaining_amount'] > 0){
-                        $cart_rules[$key]['remaining_amount'] = $cart_rules[$key]['remaining_amount']*1.21;
-                    }
-                }
+
             }
+
+            $cart_rules[$key]['remaining_amount'] = (float)$this->order_invoice->getOrder()->total_shipping_tax_excl - ((float)$cartRuleData->reduction_amount - (float)$cart_rule['value_tax_excl']);
+            if ($cart_rules[$key]['remaining_amount'] > 0) {
+                $cart_rules[$key]['remaining_amount'] = $cart_rules[$key]['remaining_amount'] * 1.21;
+            }
+
+            $total_discount_tax_excl = $total_discount_tax_excl + ((float)$cartRuleData->reduction_amount / 1.21);
+            $total_discount_tax_incl = $total_discount_tax_incl + (float)$cartRuleData->reduction_amount;
+            $total_remainder_tax_excl = $this->order_invoice->total_products + $this->order_invoice->getOrder()->total_shipping_tax_excl - $total_discount_tax_excl;
+            $total_remainder_tax_incl = $this->order_invoice->total_products_wt + $this->order_invoice->total_shipping_tax_incl - $total_discount_tax_incl;
+
+
             if ($cart_rule['free_shipping']) {
                 $free_shipping = true;
                 /*
@@ -306,6 +317,9 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
         $wrapping_taxes = $this->order_invoice->total_wrapping_tax_incl - $this->order_invoice->total_wrapping_tax_excl;
 
         $total_taxes = $this->order_invoice->total_paid_tax_incl - $this->order_invoice->total_paid_tax_excl;
+        if (abs($total_remainder_tax_excl) > 0) {
+            $total_taxes = $total_remainder_tax_incl - $total_remainder_tax_excl;
+        }
 
         $footer = [
             'products_before_discounts_tax_excl' => $this->order_invoice->total_products,
@@ -325,6 +339,10 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
             'total_taxes' => $total_taxes,
             'total_paid_tax_excl' => $this->order_invoice->total_paid_tax_excl,
             'total_paid_tax_incl' => $this->order_invoice->total_paid_tax_incl,
+            'total_discount_tax_excl' => $total_discount_tax_excl,
+            'total_discount_tax_incl' => $total_discount_tax_incl,
+            'total_remainder_tax_excl' => $total_remainder_tax_excl,
+            'total_remainder_tax_incl' => $total_remainder_tax_incl
         ];
 
         foreach ($footer as $key => $value) {
@@ -361,7 +379,7 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
 
         $legal_free_text = Hook::exec('displayInvoiceLegalFreeText', ['order' => $this->order]);
         if (!$legal_free_text) {
-            $legal_free_text = Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int) Context::getContext()->language->id, null, (int) $this->order->id_shop);
+            $legal_free_text = Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int)Context::getContext()->language->id, null, (int)$this->order->id_shop);
         }
 
         $data = [
@@ -415,7 +433,7 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
     {
         $debug = Tools::getValue('debug');
 
-        $address = new Address((int) $this->order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+        $address = new Address((int)$this->order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
             && !empty($address->vat_number)
             && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
@@ -523,6 +541,6 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
      */
     public function getFilename()
     {
-        return Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . $this->order->reference. '-' . $this->order->date_add . '.pdf';
+        return Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . $this->order->reference . '-' . $this->order->date_add . '.pdf';
     }
 }

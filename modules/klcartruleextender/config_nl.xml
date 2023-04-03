@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>klcartruleextender</name>
+    <displayName><![CDATA[Cart rule extender - Add shipping and wrapping cost]]></displayName>
+    <version><![CDATA[1.0.1]]></version>
+    <description><![CDATA[Let the possibility to your customers to include shipping and wrapping cost with their discount codes.]]></description>
+    <author><![CDATA[Keyrnel]]></author>
+    <tab><![CDATA[others]]></tab>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+</module>

@@ -9,6 +9,7 @@ require_once _PS_CORE_DIR_ . '/init.php';
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use Symfony\Component\HttpFoundation\Response;
+
 /**
  *
  */
@@ -25,7 +26,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
     public function __construct()
     {
-        require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
+        require_once _PS_ROOT_DIR_ . '/app/AppKernel.php';
         $this->token = 'JNtOUInXJD27nRgH';
         $this->apiPath = 'https://api.pro6pp.nl/v1/autocomplete?auth_key=' . $this->token;
         $this->kernel = new \AppKernel('dev', true);
@@ -102,7 +103,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         if (Tools::getValue('method') == 'delivery_message') {
             return $this->_getDeliverySlipMessage($_GET['id']);
         }
-
 
 
         if (Tools::getValue('method') == 'save_delivery_message') {
@@ -295,7 +295,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $product->ean13 = '';
             $product->name = [(int)Configuration::get('PS_LANG_DEFAULT') => $label];
             $product->link_rewrite = [(int)Configuration::get('PS_LANG_DEFAULT') => uniqid()];
-            $product->description_short = [1=> $description];
+            $product->description_short = [1 => $description];
             $product->reference = $reference;
             $product->id_category_default = $category;
             $product->redirect_type = '301';
@@ -375,7 +375,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->reduction_amount = $creditPrice;
             $credit->reduction_tax = 1;
             $credit->reduction_currency = 1;
-            $credit->reduction_product = 1;
+            $credit->reduction_product = 0;
             $credit->reduction_exlude_special = 0;
             $credit->gift_product = 0;
             $credit->gift_product_attribute = 0;
@@ -499,7 +499,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                     )) {
                         // the last image should not be added in the candidate list if it's bigger than the original image
                         if ($tgt_width <= $src_width && $tgt_height <= $src_height) {
-                            $path_infos[] = array($tgt_width, $tgt_height, $path . '-' . stripslashes($image_type['name']) . '.jpg');
+                            $path_infos[] = [$tgt_width, $tgt_height, $path . '-' . stripslashes($image_type['name']) . '.jpg'];
                         }
                         if ($entity == 'products') {
                             if (is_file(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int)$id_entity . '.jpg')) {
@@ -511,7 +511,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                         }
                     }
                     if (in_array($image_type['id_image_type'], $watermark_types)) {
-                        Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
+                        Hook::exec('actionWatermark', ['id_image' => $id_image, 'id_product' => $id_entity]);
                     }
                 }
             }
@@ -525,6 +525,12 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         return true;
     }
 
+    /**
+     * @param $tgt_width
+     * @param $tgt_height
+     * @param $path_infos
+     * @return mixed|string
+     */
     protected static function get_best_path($tgt_width, $tgt_height, $path_infos)
     {
         $path_infos = array_reverse($path_infos);
@@ -816,7 +822,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $data['shipping_number'] = $status[0]->Zendingnummer;
         $data['main_history'] = $mainHistory;
 
-        if(isset($status[0]->Plandatum)){
+        if (isset($status[0]->Plandatum)) {
             $data['scheduled_delivery_moment'] = [
                 'planned_delivery_date' => $status[0]->Plandatum,
                 'from' => $status[0]->Plantijdvan,
@@ -891,7 +897,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 ];
             }
 
-            array_unshift($colliesData,  [
+            array_unshift($colliesData, [
                 'history' => $history,
                 'current_state' => end($status[0]->aOpdrachtStatusRegel[$s]->aRegelHistorie),
                 'scheduled_delivery_moment' => $schedule,
@@ -913,7 +919,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         }
         $data['collies'] = $colliesData;
 
-        die($this->kernel->getContainer()->get('twig')->render('@Modules/koopmanorderexport/views/templates/admin/shipping_state_form.html.twig',$data));
+        die($this->kernel->getContainer()->get('twig')->render('@Modules/koopmanorderexport/views/templates/admin/shipping_state_form.html.twig', $data));
 
     }
 
@@ -1471,7 +1477,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $firstMessage = $order->getFirstMessageWithId();
 
 
-        if($firstMessage){
+        if ($firstMessage) {
             $message = $firstMessage['message'];
             $message_id = $firstMessage['id_message'];
         } else {
@@ -1485,7 +1491,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             'id_customer' => $order->id_customer,
             'id_message' => $message_id,
             'message' => $message,
-            ];
+        ];
 
         die($this->kernel->getContainer()->get('twig')->render('@Modules/msthemeconfig/views/templates/admin/delivery_slip_message_form.html.twig', $data));
     }
@@ -1496,7 +1502,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
      */
     private function _updateDeliverySlipMessage()
     {
-        try{
+        try {
             $id_message = (int)$_GET['id_message'];
             $id_customer = (int)$_GET['customer'];
             $id_cart = (int)$_GET['cart'];
@@ -1505,7 +1511,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
             $db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 
-            if($id_message == ""){
+            if ($id_message == "") {
                 $db->insert('message', [
                     'id_employee' => 0,
                     'id_customer' => $id_customer,
@@ -1516,7 +1522,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                     'date_add' => date('NOW'),
                 ], false, false, DB::INSERT, true);
 
-                return die(json_encode(['msg' =>  $db->Affected_Rows() . ' pakbon bericht is aan de bestelling toegevoegd', 'success' => true]));
+                return die(json_encode(['msg' => $db->Affected_Rows() . ' pakbon bericht is aan de bestelling toegevoegd', 'success' => true]));
             } else {
                 $db->update('message', [
                     'id_employee' => 0,
@@ -1526,12 +1532,12 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                     'message' => $message,
                     'private' => 0,
                     'date_add' => date('NOW'),
-                ], '`id_message` = '. $id_message);
+                ], '`id_message` = ' . $id_message);
 
 
                 return die(json_encode(['msg' => $db->Affected_Rows() . ' pakbon bericht van de bestelling is gewijzigd', 'success' => true]));
             }
-        } catch (Exception $exception){
+        } catch (Exception $exception) {
             return die(json_encode(['msg' => $exception->getMessage(), 'success' => false]));
         }
     }

@@ -35,7 +35,6 @@ class SupercheckoutCore extends ModuleFrontController
     protected $checkout_session = null;
 
 
-
     public function init()
     {
         parent::init();
@@ -43,7 +42,7 @@ class SupercheckoutCore extends ModuleFrontController
         // Added below code to close popup when user click cancel while login with social buttons
         if (Tools::getValue('error') == 'access_denied'
             && ((Tools::getValue('login_type') == 'fb')
-            || (Tools::getValue('login_type') == 'google'))
+                || (Tools::getValue('login_type') == 'google'))
         ) {
             echo '<script>window.close();</script>';
             die;
@@ -55,7 +54,7 @@ class SupercheckoutCore extends ModuleFrontController
                     'supercheckout',
                     'supercheckout',
                     array(),
-                    (bool) Configuration::get('PS_SSL_ENABLED')
+                    (bool)Configuration::get('PS_SSL_ENABLED')
                 )
             );
         }
@@ -108,7 +107,7 @@ class SupercheckoutCore extends ModuleFrontController
 
         $this->module_dir = __PS_BASE_URI__ . 'modules/' . $this->module->name . '/';
 
-        if ($this->context->customer->id && Customer::customerIdExistsStatic((int) $this->context->cookie->id_customer)) {
+        if ($this->context->customer->id && Customer::customerIdExistsStatic((int)$this->context->cookie->id_customer)) {
             $this->is_logged = true;
         } else {
             $this->is_logged = false;
@@ -167,7 +166,7 @@ class SupercheckoutCore extends ModuleFrontController
             $custom_ssl_var = 1;
         }
 
-        if ((bool) Configuration::get('PS_SSL_ENABLED') && $custom_ssl_var == 1) {
+        if ((bool)Configuration::get('PS_SSL_ENABLED') && $custom_ssl_var == 1) {
             $css[] = _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . 'js/jquery/plugins/fancybox/jquery.fancybox.css';
             $js[] = _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . 'js/jquery/plugins/fancybox/jquery.fancybox.js';
         } else {
@@ -187,6 +186,7 @@ class SupercheckoutCore extends ModuleFrontController
             }
         }
     }
+
     /* Function added by rishabh jain on 31st July 2018 to
      *  replace this function getAssetUriFromLegacyDeprecatedMethod as this function ids deprecated now
      */
@@ -199,6 +199,7 @@ class SupercheckoutCore extends ModuleFrontController
             return $matches[0];
         }
     }
+
     /* Changes over */
     public function getTemplateVarPage()
     {
@@ -206,7 +207,7 @@ class SupercheckoutCore extends ModuleFrontController
         $page = parent::getTemplateVarPage();
         if (!isset($page['meta']['title'])) {
             $page['meta']['title'] = sprintf(
-                $this->module->l('Supercheckout', 'SupercheckoutCore').' | %s',
+                $this->module->l('Supercheckout', 'SupercheckoutCore') . ' | %s',
                 Configuration::get('PS_SHOP_NAME')
             );
         }
@@ -255,7 +256,7 @@ class SupercheckoutCore extends ModuleFrontController
                 $this->context->cookie->supercheckout_temp_address_invoice = $id_address_invoice;
             }
         } else {
-            if ((int) $id_address_delivery > 0) {
+            if ((int)$id_address_delivery > 0) {
                 $this->checkout_session->setIdAddressDelivery($id_address_delivery);
                 $delivery_address = new Address($this->checkout_session->getIdAddressDelivery());
                 if (!Validate::isLoadedObject($delivery_address)) {
@@ -277,8 +278,8 @@ class SupercheckoutCore extends ModuleFrontController
                     $delivery_address->alias = Tools::substr($this->module->l('Adres', 'SupercheckoutCore') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
                     $delivery_address->other = ' ';
                     $delivery_address->vat_number = Tools::getValue('vat_number', ' ');
-                    $delivery_address->id_country = (int) $id_country;
-                    $delivery_address->id_state = (int) $id_state;
+                    $delivery_address->id_country = (int)$id_country;
+                    $delivery_address->id_state = (int)$id_state;
                     if (!empty($postcode)) {
                         $delivery_address->postcode = $postcode;
                     }
@@ -306,7 +307,7 @@ class SupercheckoutCore extends ModuleFrontController
                         $this->context->cookie->supercheckout_temp_address_delivery
                     );
                 } else {
-                    $this->checkout_session->setIdAddressDelivery((int) $id_address_delivery);
+                    $this->checkout_session->setIdAddressDelivery((int)$id_address_delivery);
                 }
                 $id_address_delivery = $this->checkout_session->getIdAddressDelivery();
                 $delivery_address = new Address($id_address_delivery);
@@ -326,8 +327,8 @@ class SupercheckoutCore extends ModuleFrontController
                     $delivery_address->other = ' ';
                     $delivery_address->vat_number = Tools::getValue('vat_number', ' ');
                 }
-                $delivery_address->id_country = (int) $id_country;
-                $delivery_address->id_state = (int) $id_state;
+                $delivery_address->id_country = (int)$id_country;
+                $delivery_address->id_state = (int)$id_state;
                 if (!empty($postcode)) {
                     $delivery_address->postcode = $postcode;
                 }
@@ -366,15 +367,15 @@ class SupercheckoutCore extends ModuleFrontController
 
         $id_cart = $this->checkout_session->getCart()->id;
         $sql = 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-        SET `id_address_delivery` = ' . (int) $new_id_address_delivery . '
-        WHERE  `id_cart` = ' . (int) $id_cart . '
-            AND `id_address_delivery` = ' . (int) $old_id_address_delivery;
+        SET `id_address_delivery` = ' . (int)$new_id_address_delivery . '
+        WHERE  `id_cart` = ' . (int)$id_cart . '
+            AND `id_address_delivery` = ' . (int)$old_id_address_delivery;
         Db::getInstance()->execute($sql);
 
         $sql = 'UPDATE `' . _DB_PREFIX_ . 'customization`
-            SET `id_address_delivery` = ' . (int) $new_id_address_delivery . '
-            WHERE  `id_cart` = ' . (int) $id_cart . '
-                AND `id_address_delivery` = ' . (int) $old_id_address_delivery;
+            SET `id_address_delivery` = ' . (int)$new_id_address_delivery . '
+            WHERE  `id_cart` = ' . (int)$id_cart . '
+                AND `id_address_delivery` = ' . (int)$old_id_address_delivery;
         Db::getInstance()->execute($sql);
     }
 
@@ -406,7 +407,6 @@ class SupercheckoutCore extends ModuleFrontController
         $this->context->smarty->assign('PS_STOCK_MANAGEMENT', Configuration::get('PS_STOCK_MANAGEMENT'));
         $this->context->smarty->assign('module_image_path', _PS_BASE_URL_SSL_ . _MODULE_DIR_ . 'supercheckout/views/img/front/');
 
-
         //Start: Changes added by Anshul
         if (isset($this->supercheckout_settings['free_shipping_amount']) && !empty($this->supercheckout_settings['free_shipping_amount'])) {
             $this->showFreeShippingBannerCalculations();
@@ -417,8 +417,6 @@ class SupercheckoutCore extends ModuleFrontController
         $total_price_display_method = $this->default_total_price_method_selected;
         $this->context->smarty->assign('total_price_display_method', $total_price_display_method);
         /* End Code Added By Priyanshu on 11-Feb-2021 to implement the Total Price Display functionality */
-
-
 
 
         $temp_vars = array(
@@ -447,7 +445,7 @@ class SupercheckoutCore extends ModuleFrontController
         $query = 'SELECT * FROM ' . _DB_PREFIX_ . 'velsof_supercheckout_custom_fields cf ';
         $query = $query . 'JOIN ' . _DB_PREFIX_ . 'velsof_supercheckout_custom_fields_lang cfl ';
         $query = $query . 'ON cf.id_velsof_supercheckout_custom_fields = cfl.id_velsof_supercheckout_custom_fields ';
-        $query = $query . 'WHERE active = 1 AND cfl.id_lang = '.(int)$id_lang;
+        $query = $query . 'WHERE active = 1 AND cfl.id_lang = ' . (int)$id_lang;
 
         $result_fields = Db::getInstance()->executeS($query);
         $array_fields = array();
@@ -457,8 +455,8 @@ class SupercheckoutCore extends ModuleFrontController
                 $query = 'SELECT * FROM ' . _DB_PREFIX_ . 'velsof_supercheckout_custom_fields cf ';
                 $query .= 'JOIN ' . _DB_PREFIX_ . 'velsof_supercheckout_custom_fields_lang cfl ';
                 $query .= 'ON cf.id_velsof_supercheckout_custom_fields = cfl.id_velsof_supercheckout_custom_fields ';
-                $query .= 'WHERE cf.id_velsof_supercheckout_custom_fields = '.(int)$id_velsof_supercheckout_custom_fields.'
-					AND cfl.id_lang = '.(int)$id_lang_current.' AND cf.active = 1';
+                $query .= 'WHERE cf.id_velsof_supercheckout_custom_fields = ' . (int)$id_velsof_supercheckout_custom_fields . '
+					AND cfl.id_lang = ' . (int)$id_lang_current . ' AND cf.active = 1';
                 $result_custom_fields_details = Db::getInstance()->executeS($query);
                 $array_fields[$id_velsof_supercheckout_custom_fields] = $result_custom_fields_details[0];
             } else {
@@ -467,8 +465,8 @@ class SupercheckoutCore extends ModuleFrontController
                 $query .= 'ON cf.id_velsof_supercheckout_custom_fields = cfl.id_velsof_supercheckout_custom_fields ';
                 $query .= 'JOIN ' . _DB_PREFIX_ . 'velsof_supercheckout_custom_field_options_lang cfol ';
                 $query .= 'ON cf.id_velsof_supercheckout_custom_fields = cfol.id_velsof_supercheckout_custom_fields ';
-                $query .= 'WHERE cf.id_velsof_supercheckout_custom_fields = '.(int)$id_velsof_supercheckout_custom_fields.'
-					AND cfl.id_lang = '.(int)$id_lang_current.' AND cfol.id_lang = '. (int)$id_lang_current.' AND cf.active = 1';
+                $query .= 'WHERE cf.id_velsof_supercheckout_custom_fields = ' . (int)$id_velsof_supercheckout_custom_fields . '
+					AND cfl.id_lang = ' . (int)$id_lang_current . ' AND cfol.id_lang = ' . (int)$id_lang_current . ' AND cf.active = 1';
                 $result_custom_fields_details = Db::getInstance()->executeS($query);
                 // Setting required variables
                 $array_fields[$id_velsof_supercheckout_custom_fields]['options'] = $result_custom_fields_details;
@@ -591,22 +589,22 @@ class SupercheckoutCore extends ModuleFrontController
     public function checkZipCode($id_country, $postcode)
     {
         $arr = array();
-        $zip_code_format = Country::getZipCodeFormat((int) $id_country);
-        if (Country::getNeedZipCode((int) $id_country)) {
+        $zip_code_format = Country::getZipCodeFormat((int)$id_country);
+        if (Country::getNeedZipCode((int)$id_country)) {
             if ($zip_code_format) {
                 $zip_regexp = '/^' . $zip_code_format . '$/ui';
                 $zip_regexp = str_replace(' ', '( |)', $zip_regexp);
                 $zip_regexp = str_replace('-', '(-|)', $zip_regexp);
                 $zip_regexp = str_replace('N', '[0-9]', $zip_regexp);
                 $zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
-                $zip_regexp = str_replace('C', Country::getIsoById((int) $id_country), $zip_regexp);
+                $zip_regexp = str_replace('C', Country::getIsoById((int)$id_country), $zip_regexp);
 
                 if (!preg_match($zip_regexp, $postcode)) {
                     $arr['error'] = $this->module->l('Invalid Zip Code', 'SupercheckoutCore') . '<br />'
                         . $this->module->l('Must be typed as follows:', 'SupercheckoutCore') . ' '
                         . str_replace(
                             'C',
-                            Country::getIsoById((int) $id_country),
+                            Country::getIsoById((int)$id_country),
                             str_replace('N', '0', str_replace('L', 'A', $zip_code_format))
                         );
                 } else {
@@ -645,9 +643,9 @@ class SupercheckoutCore extends ModuleFrontController
             false,
             $this->context->cart->secure_key
         );
-        $order_id = (int) Order::getOrderByCartId($this->context->cart->id);
+        $order_id = (int)Order::getOrderByCartId($this->context->cart->id);
 
-        $order1 = new Order((int) $order_id);
+        $order1 = new Order((int)$order_id);
         $email = $this->context->customer->email;
         if ($this->context->customer->is_guest) {
             $this->context->customer->logout();
@@ -667,12 +665,12 @@ class SupercheckoutCore extends ModuleFrontController
         if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
             return array('key' => 'postcode',
                 'error' => $this->module->l('Invalid Zip Code', 'SupercheckoutCore') . '<br>'
-                . $this->module->l('Must be typed as follows:', 'SupercheckoutCore')
-                . str_replace(
-                    'C',
-                    $country->iso_code,
-                    str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))
-                )
+                    . $this->module->l('Must be typed as follows:', 'SupercheckoutCore')
+                    . str_replace(
+                        'C',
+                        $country->iso_code,
+                        str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))
+                    )
             );
         } elseif (empty($postcode) && $country->need_zip_code) {
             return array('key' => 'postcode', 'error' => $this->module->l('Required Field', 'SupercheckoutCore'));
@@ -722,8 +720,8 @@ class SupercheckoutCore extends ModuleFrontController
         $query->select('count(*)');
         $query->from('address');
         $query->where('alias = \'' . pSQL($alias) . '\'');
-        $query->where('id_address != ' . (int) $id_address);
-        $query->where('id_customer = ' . (int) $id_customer);
+        $query->where('id_address != ' . (int)$id_address);
+        $query->where('id_customer = ' . (int)$id_customer);
         $query->where('deleted = 0');
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -735,15 +733,15 @@ class SupercheckoutCore extends ModuleFrontController
             if (!Validate::isMessage($message_content)) {
                 $invalid_message_error = $this->module->l('Invalid message', 'SupercheckoutCore');
                 $this->errors[] = Tools::displayError($invalid_message_error);
-            } elseif ($old_message = Message::getMessageByCartId((int) $this->context->cart->id)) {
-                $message = new Message((int) $old_message['id_message']);
+            } elseif ($old_message = Message::getMessageByCartId((int)$this->context->cart->id)) {
+                $message = new Message((int)$old_message['id_message']);
                 $message->message = $message_content;
                 $message->update();
             } else {
                 $message = new Message();
                 $message->message = $message_content;
-                $message->id_cart = (int) $this->context->cart->id;
-                $message->id_customer = (int) $this->context->cart->id_customer;
+                $message->id_cart = (int)$this->context->cart->id;
+                $message->id_customer = (int)$this->context->cart->id_customer;
                 $message->add();
             }
         } else {
@@ -877,7 +875,7 @@ class SupercheckoutCore extends ModuleFrontController
         $address_delivery = new Address($this->context->cookie->supercheckout_perm_address_delivery);
 
         $address_cookie = $this->context->cookie->supercheckout_perm_address_invoice;
-        $id_address_invoice = $this->context->cookie->supercheckout_perm_address_invoice ? (int) $address_cookie : 0;
+        $id_address_invoice = $this->context->cookie->supercheckout_perm_address_invoice ? (int)$address_cookie : 0;
         $address_invoice = new Address($id_address_invoice);
         if ($customer->birthday) {
             $birthday = explode('-', $customer->birthday);
@@ -886,13 +884,13 @@ class SupercheckoutCore extends ModuleFrontController
         }
 
         return array(
-            'id_customer' => (int) $customer->id,
+            'id_customer' => (int)$customer->id,
             'email' => $customer->email,
             'customer_lastname' => $customer->lastname,
             'customer_firstname' => $customer->firstname,
-            'newsletter' => (int) $customer->newsletter,
-            'optin' => (int) $customer->optin,
-            'id_address_delivery' => (int) $this->context->cart->id_address_delivery,
+            'newsletter' => (int)$customer->newsletter,
+            'optin' => (int)$customer->optin,
+            'id_address_delivery' => (int)$this->context->cart->id_address_delivery,
             'company' => $address_delivery->company,
             'lastname' => $address_delivery->lastname,
             'firstname' => $address_delivery->firstname,
@@ -908,9 +906,9 @@ class SupercheckoutCore extends ModuleFrontController
             'alias' => $address_delivery->alias,
             'other' => $address_delivery->other,
             'phone_mobile' => $address_delivery->phone_mobile,
-            'id_country' => (int) $address_delivery->id_country,
-            'id_state' => (int) $address_delivery->id_state,
-            'id_gender' => (int) $customer->id_gender,
+            'id_country' => (int)$address_delivery->id_country,
+            'id_state' => (int)$address_delivery->id_state,
+            'id_gender' => (int)$customer->id_gender,
             'sl_year' => $birthday[0],
             'sl_month' => $birthday[1],
             'sl_day' => $birthday[2],
@@ -927,8 +925,8 @@ class SupercheckoutCore extends ModuleFrontController
             'city_invoice' => $address_invoice->city,
             'phone_invoice' => $address_invoice->phone,
             'phone_mobile_invoice' => $address_invoice->phone_mobile,
-            'id_country_invoice' => (int) $address_invoice->id_country,
-            'id_state_invoice' => (int) $address_invoice->id_state,
+            'id_country_invoice' => (int)$address_invoice->id_country,
+            'id_state_invoice' => (int)$address_invoice->id_state,
             'id_address_invoice' => $id_address_invoice,
             'invoice_company' => $address_invoice->company,
             'invoice_lastname' => $address_invoice->lastname,
@@ -944,8 +942,8 @@ class SupercheckoutCore extends ModuleFrontController
             'invoice_city' => $address_invoice->city,
             'invoice_phone' => $address_invoice->phone,
             'invoice_phone_mobile' => $address_invoice->phone_mobile,
-            'invoice_id_country' => (int) $address_invoice->id_country,
-            'invoice_id_state' => (int) $address_invoice->id_state,
+            'invoice_id_country' => (int)$address_invoice->id_country,
+            'invoice_id_state' => (int)$address_invoice->id_state,
             'invoice_alias' => $address_invoice->alias,
             'invoice_other' => $address_invoice->other,
         );
@@ -997,7 +995,7 @@ class SupercheckoutCore extends ModuleFrontController
         } elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
             $custom_ssl_var = 1;
         }
-        if ((bool) Configuration::get('PS_SSL_ENABLED') && $custom_ssl_var == 1) {
+        if ((bool)Configuration::get('PS_SSL_ENABLED') && $custom_ssl_var == 1) {
             return true;
         } else {
             return false;
@@ -1012,8 +1010,8 @@ class SupercheckoutCore extends ModuleFrontController
         $errors = array();
         $errors['error_occured'] = 0;
         if (isset($_FILES['custom_fields'])) {
-            $id_cart = (int) $this->context->cookie->id_cart;
-            $where_delete = "id_cart = " . (int) $id_cart;
+            $id_cart = (int)$this->context->cookie->id_cart;
+            $where_delete = "id_cart = " . (int)$id_cart;
             Db::getInstance()->delete('velsof_supercheckout_fields_data', $where_delete);
             foreach ($_FILES['custom_fields']["tmp_name"] as $key => $value) {
                 $file_info = array();
@@ -1040,9 +1038,9 @@ class SupercheckoutCore extends ModuleFrontController
                             $value = serialize($file_info);
                         }
                         $fields_data = array(
-                            'id_velsof_supercheckout_custom_fields' => (int) $id_velsof_supercheckout_custom_fields,
+                            'id_velsof_supercheckout_custom_fields' => (int)$id_velsof_supercheckout_custom_fields,
                             'id_order' => 0,
-                            'id_cart' => (int) $id_cart,
+                            'id_cart' => (int)$id_cart,
                             'field_value' => pSQL($value)
                         );
                         Db::getInstance()->insert('velsof_supercheckout_fields_data', $fields_data);
@@ -1062,12 +1060,13 @@ class SupercheckoutCore extends ModuleFrontController
     }
 
 
-    private function checkAddressSameOrModifier($id_address, $address, $house_number, $house_number_extension, $postcode, $city, $country, $company, $firstname, $lastname, $createNew = true){
+    private function checkAddressSameOrModifier($id_address, $address, $house_number, $house_number_extension, $postcode, $city, $country, $company, $firstname, $lastname, $createNew = true)
+    {
 
-        if((int)$id_address > 0){
-            $ad =  new Address($id_address);
+        if ((int)$id_address > 0) {
+            $ad = new Address($id_address);
 
-            if(strtolower($ad->address1) != strtolower($address) ||
+            if (strtolower($ad->address1) != strtolower($address) ||
                 strtolower($ad->house_number) != strtolower($house_number) ||
                 strtolower($ad->house_number_extension) != strtolower($house_number_extension) ||
                 strtolower($ad->postcode) != strtolower($postcode) ||
@@ -1075,7 +1074,7 @@ class SupercheckoutCore extends ModuleFrontController
                 strtolower($ad->id_country) != strtolower($country) ||
                 strtolower($ad->company) != strtolower($company) ||
                 strtolower($ad->firstname) != strtolower($firstname) ||
-                strtolower($ad->lastname) != strtolower($lastname)){
+                strtolower($ad->lastname) != strtolower($lastname)) {
 
                 //iets is niet hetzelfde
                 $newAddress = new Address();
@@ -1090,7 +1089,7 @@ class SupercheckoutCore extends ModuleFrontController
                 $newAddress->firstname = $firstname;
                 $newAddress->lastname = $lastname;
 
-                if($createNew){
+                if ($createNew) {
                     $newAddress->save(false);
                 }
 
@@ -1122,7 +1121,6 @@ class SupercheckoutCore extends ModuleFrontController
         }
 
 
-
 //        unset($_POST);
 
         if (isset($posted_data['checkout_option']) && $posted_data['checkout_option'] == 0) {
@@ -1141,7 +1139,7 @@ class SupercheckoutCore extends ModuleFrontController
         }
 
         // <editor-fold defaultstate="collapsed" desc="GDPR Change">
-        $getMandatoryActivePolicySQL = 'SELECT policy_id FROM '._DB_PREFIX_.'velsof_supercheckout_policies where is_manadatory = 1 and status = 1';
+        $getMandatoryActivePolicySQL = 'SELECT policy_id FROM ' . _DB_PREFIX_ . 'velsof_supercheckout_policies where is_manadatory = 1 and status = 1';
         $getMandatoryActivePolicyList = Db::getInstance()->ExecuteS($getMandatoryActivePolicySQL);
         $oneDimensionalMandatoryServiceListArray = array_map('current', $getMandatoryActivePolicyList);
         if (count($getMandatoryActivePolicyList)) {
@@ -1177,12 +1175,12 @@ class SupercheckoutCore extends ModuleFrontController
         if ($this->is_logged) {
             $id_customer = $this->context->customer->id;
         } elseif ($this->is_logged && $this->context->cookie->is_guest) {
-            $id_customer = (int) $this->context->cookie->id_customer;
+            $id_customer = (int)$this->context->cookie->id_customer;
         } else {
             $id_customer = 0;
         }
 
-        if(isset($posted_data['added_to_order']) && $posted_data['added_to_order'] != ''){
+        if (isset($posted_data['added_to_order']) && $posted_data['added_to_order'] != '') {
             $this->context->cart->added_to_order = $posted_data['added_to_order'];
         }
 
@@ -1199,11 +1197,9 @@ class SupercheckoutCore extends ModuleFrontController
         /* End-MK made changes to display error if product is out of stock */
 
 
-
-
         $id_current_address_delivery = $this->checkout_session->getIdAddressDelivery();
-        $currency = Currency::getCurrency((int) $this->context->cart->id_currency);
-        $minimal_purchase = Tools::convertPrice((float) Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
+        $currency = Currency::getCurrency((int)$this->context->cart->id_currency);
+        $minimal_purchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
 
         if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase) {
             $msg = $this->module->l('A minimum purchase total of %1s (tax excl.) is required in order to validate your order, current purchase is %2s (tax excl.).', 'SupercheckoutCore');
@@ -1218,16 +1214,16 @@ class SupercheckoutCore extends ModuleFrontController
 
         $delivery_address = null;
         $invoice_address = null;
-        if(isset($posted_data['shipping_address']['shipping_address_id'])){
+        if (isset($posted_data['shipping_address']['shipping_address_id'])) {
             $this->context->cookie->supercheckout_temp_address_delivery = $posted_data['shipping_address']['shipping_address_id'];
         }
-        if(isset($posted_data['payment_address']['payment_address_id'])){
+        if (isset($posted_data['payment_address']['payment_address_id'])) {
             $this->context->cookie->supercheckout_temp_address_invoice = $posted_data['payment_address']['payment_address_id'];
         }
 
         $id_delivery_address = 0;
         if ((isset($posted_data['shipping_address']['id_customer_address'])
-            && $posted_data['shipping_address']['id_customer_address'] == 'new')
+                && $posted_data['shipping_address']['id_customer_address'] == 'new')
             || !isset($posted_data['shipping_address']['id_customer_address'])
         ) {
             if (isset($this->context->cookie->supercheckout_temp_address_delivery)
@@ -1269,7 +1265,7 @@ class SupercheckoutCore extends ModuleFrontController
             } else {
                 if (!isset($posted_data['payment_address']['payment_address_id'])) {
                     $temp_invoice_address = new Address();
-                    $temp_country_var = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
+                    $temp_country_var = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
                     if ($temp_country_var->need_identification_number) {
                         $temp_invoice_address->dni = '-';
                     }
@@ -1288,7 +1284,7 @@ class SupercheckoutCore extends ModuleFrontController
                     $temp_invoice_address->phone = ' ';
                     $temp_invoice_address->alias = Tools::substr($this->module->l('Adres', 'SupercheckoutCore') . ' - ' . date('d-m-Y') . rand(0, 9), 0, 30);
                     $temp_invoice_address->other = ' ';
-                    $temp_invoice_address->id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT');
+                    $temp_invoice_address->id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
                     $temp_invoice_address->id_state = 0;
 
 //                    if (!$temp_invoice_address->save()) {
@@ -1363,7 +1359,7 @@ class SupercheckoutCore extends ModuleFrontController
         $loop_index = 0;
         if (!$this->context->cart->isVirtualCart() && $posted_data['shipping_address']['id_customer_address'] == 'new') {
             foreach ($posted_data['shipping_address'] as $key => $value) {
-                if($key == 'id_customer_address' || $key = 'shipping_address_id'){
+                if ($key == 'id_customer_address' || $key = 'shipping_address_id') {
                     continue;
                 }
                 $add_plugin_config = $this->supercheckout_settings['shipping_address'][$key];
@@ -1419,7 +1415,7 @@ class SupercheckoutCore extends ModuleFrontController
 
                 if (($key == 'phone_mobile' || $key == 'phone')
                     && !empty($posted_data['shipping_address'][$key])
-                    && !(boolean) Validate::isPhoneNumber($posted_data['shipping_address'][$key])
+                    && !(boolean)Validate::isPhoneNumber($posted_data['shipping_address'][$key])
                 ) {
                     $response['error']['shipping_address'][$loop_index] = array(
                         'key' => $key,
@@ -1439,9 +1435,9 @@ class SupercheckoutCore extends ModuleFrontController
                             'key' => $key,
                             'error' => $this->module->l('This country is not active', 'SupercheckoutCore')
                         );
-                    } elseif ((int) $country->contains_states
+                    } elseif ((int)$country->contains_states
                         && (isset($posted_data['shipping_address']['id_state'])
-                        && !(int) $posted_data['shipping_address']['id_state'])
+                            && !(int)$posted_data['shipping_address']['id_state'])
                     ) {
                         $response['error']['shipping_address'][$loop_index] = array(
                             'key' => $key,
@@ -1463,7 +1459,7 @@ class SupercheckoutCore extends ModuleFrontController
                     ) {
                         if (isset($posted_data['shipping_address']['dni'])
                             && $country->isNeedDni() && ($posted_data['shipping_address']['dni'] == ''
-                            || !Validate::isDniLite($posted_data['shipping_address']['dni']))
+                                || !Validate::isDniLite($posted_data['shipping_address']['dni']))
                         ) {
                             $response['error']['shipping_address'][$loop_index] = array(
                                 'key' => 'dni',
@@ -1474,7 +1470,7 @@ class SupercheckoutCore extends ModuleFrontController
                 }
 
                 if ($key == 'id_state' && $posted_data['shipping_address'][$key] == 0) {
-                    if (Country::containsStates((int) $posted_data['shipping_address']['id_country'])) {
+                    if (Country::containsStates((int)$posted_data['shipping_address']['id_country'])) {
                         $response['error']['shipping_address'][$loop_index] = array(
                             'key' => $key,
                             'error' => $this->module->l('Required Field', 'SupercheckoutCore')
@@ -1484,13 +1480,13 @@ class SupercheckoutCore extends ModuleFrontController
                 if ($id_customer != 0) {
                     if ($key == 'alias' && !empty($posted_data['shipping_address'][$key])) {
                         $sql = 'select * from ' . _DB_PREFIX_ . 'address
-                            where id_address = ' . (int) $id_delivery_address
-                            . ' AND alias = "' . pSQL($posted_data['shipping_address'][$key]) . '"  AND id_customer = "'.(int)$id_customer.'"';
+                            where id_address = ' . (int)$id_delivery_address
+                            . ' AND alias = "' . pSQL($posted_data['shipping_address'][$key]) . '"  AND id_customer = "' . (int)$id_customer . '"';
                         $is_alias_onsame_id = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
                         if (!count($is_alias_onsame_id)) {
                             $is_alias_overriden = $this->aliasExistOveridden(
                                 $posted_data['shipping_address'][$key],
-                                (int) $id_delivery_address,
+                                (int)$id_delivery_address,
                                 $id_customer
                             );
                             if ($is_alias_overriden) {
@@ -1507,7 +1503,7 @@ class SupercheckoutCore extends ModuleFrontController
                 /* Start - Code Added by Raghu on 22-Aug-2017 for fixing 'VAT Number Required Validation' issue */
                 if ($key == 'vat_number' && $this->isNeedVat() && empty($posted_data['shipping_address'][$key])) {
                     $response['error']['shipping_address'][$loop_index] = array('key' => $key,
-                                'error' => $this->module->l('Required Field', 'SupercheckoutCore'));
+                        'error' => $this->module->l('Required Field', 'SupercheckoutCore'));
                 }
                 /* End - Code Added by Raghu on 22-Aug-2017 for fixing 'VAT Number Required Validation' issue */
 
@@ -1520,7 +1516,7 @@ class SupercheckoutCore extends ModuleFrontController
             $loop_index = 0;
             if (!$this->context->cart->isVirtualCart() && $posted_data['payment_address']['id_customer_address'] == 'new') {
                 foreach ($posted_data['payment_address'] as $key => $value) {
-                    if($key == 'id_customer_address' || $key == 'payment_address_id'){
+                    if ($key == 'id_customer_address' || $key == 'payment_address_id') {
                         continue;
                     }
 
@@ -1577,7 +1573,7 @@ class SupercheckoutCore extends ModuleFrontController
 
                     if (($key == 'phone_mobile' || $key == 'phone')
                         && !empty($posted_data['payment_address'][$key])
-                        && !(boolean) Validate::isPhoneNumber($posted_data['payment_address'][$key])
+                        && !(boolean)Validate::isPhoneNumber($posted_data['payment_address'][$key])
                     ) {
                         $response['error']['payment_address'][$loop_index] = array(
                             'key' => $key,
@@ -1593,9 +1589,9 @@ class SupercheckoutCore extends ModuleFrontController
                                 'key' => $key,
                                 'error' => $this->module->l('Required Field', 'SupercheckoutCore')
                             );
-                        } elseif ((int) $country->contains_states
+                        } elseif ((int)$country->contains_states
                             && (isset($posted_data['payment_address']['id_state'])
-                            && !(int) $posted_data['payment_address']['id_state'])
+                                && !(int)$posted_data['payment_address']['id_state'])
                         ) {
                             $response['error']['payment_address'][$loop_index] = array(
                                 'key' => $key,
@@ -1620,7 +1616,7 @@ class SupercheckoutCore extends ModuleFrontController
                         ) {
                             if (isset($posted_data['payment_address']['dni'])
                                 && $country->isNeedDni() && ($posted_data['payment_address']['dni'] == ''
-                                || !Validate::isDniLite($posted_data['payment_address']['dni']))
+                                    || !Validate::isDniLite($posted_data['payment_address']['dni']))
                             ) {
                                 $response['error']['payment_address'][$loop_index] = array(
                                     'key' => 'dni',
@@ -1631,7 +1627,7 @@ class SupercheckoutCore extends ModuleFrontController
                     }
 
                     if ($key == 'id_state' && $posted_data['payment_address'][$key] == 0) {
-                        if (Country::containsStates((int) $posted_data['payment_address']['id_country'])) {
+                        if (Country::containsStates((int)$posted_data['payment_address']['id_country'])) {
                             $response['error']['payment_address'][$loop_index] = array(
                                 'key' => $key,
                                 'error' => $this->module->l('Required Field', 'SupercheckoutCore')
@@ -1641,13 +1637,13 @@ class SupercheckoutCore extends ModuleFrontController
                     if ($id_customer != 0) {
                         if ($key == 'alias' && !empty($posted_data['payment_address'][$key])) {
                             $sql = 'select * from ' . _DB_PREFIX_ . 'address
-                                where id_address = ' . (int) $id_invoice_address
-                                . ' AND alias = "' . pSQL($posted_data['payment_address'][$key]) . '"  AND id_customer = "'.(int)$id_customer.'"';
+                                where id_address = ' . (int)$id_invoice_address
+                                . ' AND alias = "' . pSQL($posted_data['payment_address'][$key]) . '"  AND id_customer = "' . (int)$id_customer . '"';
                             $is_alias_onsame_id = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
                             if (!count($is_alias_onsame_id)) {
                                 $is_alias_overriden = $this->aliasExistOveridden(
                                     $posted_data['payment_address'][$key],
-                                    (int) $id_invoice_address,
+                                    (int)$id_invoice_address,
                                     $id_customer
                                 );
                                 if ($is_alias_overriden) {
@@ -1664,7 +1660,7 @@ class SupercheckoutCore extends ModuleFrontController
                     /* Start - Code Added by Raghu on 22-Aug-2017 for fixing 'VAT Number Required Validation' issue */
                     if ($key == 'vat_number' && $this->isNeedVat() && empty($posted_data['payment_address'][$key])) {
                         $response['error']['payment_address'][$loop_index] = array('key' => $key,
-                                    'error' => $this->module->l('Required Field', 'SupercheckoutCore'));
+                            'error' => $this->module->l('Required Field', 'SupercheckoutCore'));
                     }
                     /* End - Code Added by Raghu on 22-Aug-2017 for fixing 'VAT Number Required Validation' issue */
 
@@ -1704,7 +1700,7 @@ class SupercheckoutCore extends ModuleFrontController
             $delivery_address->phone_mobile = (!empty($posted_data['shipping_address']['phone_mobile']))
                 ? $posted_data['shipping_address']['phone_mobile'] : ' ';
             $delivery_address->id_country = (!empty($posted_data['shipping_address']['id_country']))
-                ? $posted_data['shipping_address']['id_country'] : (int) Configuration::get('PS_COUNTRY_DEFAULT');
+                ? $posted_data['shipping_address']['id_country'] : (int)Configuration::get('PS_COUNTRY_DEFAULT');
             $delivery_address->postcode = (!empty($posted_data['shipping_address']['postcode']))
                 ? $posted_data['shipping_address']['postcode'] : 0;
             if (!Country::getNeedZipCode($delivery_address->id_country)) {
@@ -1735,12 +1731,11 @@ class SupercheckoutCore extends ModuleFrontController
             $delivery_address->other = (!empty($posted_data['shipping_address']['other']))
                 ? $posted_data['shipping_address']['other'] : ' ';
 
-            if(isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0){
+            if (isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0) {
                 $delivery_address->id_customer = (int)$posted_data['on_credit_customer_select'];
             } else {
                 $delivery_address->id_customer = $id_customer;
             }
-
 
 
             $validate_address = $delivery_address->validateController();
@@ -1769,7 +1764,7 @@ class SupercheckoutCore extends ModuleFrontController
 
         if (isset($posted_data['use_for_invoice']) && $posted_data['use_for_invoice'] == 'on'
             && ((isset($posted_data['shipping_address']['id_customer_address']) && $posted_data['shipping_address']['id_customer_address'] == 'new')
-            || !isset($posted_data['shipping_address']['id_customer_address']))
+                || !isset($posted_data['shipping_address']['id_customer_address']))
         ) {
             $invoice_address = $delivery_address;
             $id_invoice_address = $id_delivery_address;
@@ -1805,7 +1800,7 @@ class SupercheckoutCore extends ModuleFrontController
             $invoice_address->phone_mobile = (!empty($posted_data['payment_address']['phone_mobile']))
                 ? $posted_data['payment_address']['phone_mobile'] : ' ';
             $invoice_address->id_country = (!empty($posted_data['payment_address']['id_country']))
-                ? $posted_data['payment_address']['id_country'] : (int) Configuration::get('PS_COUNTRY_DEFAULT');
+                ? $posted_data['payment_address']['id_country'] : (int)Configuration::get('PS_COUNTRY_DEFAULT');
             $invoice_address->postcode = (!empty($posted_data['payment_address']['postcode']))
                 ? $posted_data['payment_address']['postcode'] : 0;
 
@@ -1834,12 +1829,11 @@ class SupercheckoutCore extends ModuleFrontController
 
             $invoice_address->other = (!empty($posted_data['payment_address']['other']))
                 ? $posted_data['payment_address']['other'] : ' ';
-            if(isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0){
+            if (isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0) {
                 $invoice_address->id_customer = (int)$posted_data['on_credit_customer_select'];
             } else {
                 $invoice_address->id_customer = $id_customer;
             }
-
 
 
             $validate_address = $invoice_address->validateController();
@@ -1873,7 +1867,7 @@ class SupercheckoutCore extends ModuleFrontController
         }
 
         $customer = null;
-        $isloggedkb = (bool) ($this->context->customer->id && Customer::customerIdExistsStatic((int) $this->context->cookie->id_customer));
+        $isloggedkb = (bool)($this->context->customer->id && Customer::customerIdExistsStatic((int)$this->context->cookie->id_customer));
 
         if (!$isloggedkb) {
             $original_password = '';
@@ -1961,7 +1955,7 @@ class SupercheckoutCore extends ModuleFrontController
 
             $flag = false;
             if ($this->is_logged && $this->context->cookie->is_guest) {
-                $customer = new Customer((int) $this->context->cookie->id_customer);
+                $customer = new Customer((int)$this->context->cookie->id_customer);
                 $flag = true;
             } else {
                 $customer = new Customer();
@@ -2043,13 +2037,13 @@ class SupercheckoutCore extends ModuleFrontController
                     $customer->cleanGroups();
                     if (!$customer->is_guest) {
                         // we add the guest customer in the default customer group
-                        $customer->addGroups(array((int) Configuration::get('PS_CUSTOMER_GROUP')));
+                        $customer->addGroups(array((int)Configuration::get('PS_CUSTOMER_GROUP')));
 
                         if (!$this->sendConfirmationMail($customer, $original_password)) {
                             $response['warning'][] = $this->module->l('An error ocurred while sending account confirmation email', 'SupercheckoutCore');
                         }
                     } else {
-                        $customer->addGroups(array((int) Configuration::get('PS_GUEST_GROUP')));
+                        $customer->addGroups(array((int)Configuration::get('PS_GUEST_GROUP')));
                     }
 
                     Hook::exec('actionCustomerAccountAdd', array(
@@ -2065,7 +2059,7 @@ class SupercheckoutCore extends ModuleFrontController
 
         if (!isset($response['error'])) {
             if (Validate::isLoadedObject($delivery_address) && $delivery_address != null) {
-                if(isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0){
+                if (isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0) {
                     $delivery_address->id_customer = (int)$posted_data['on_credit_customer_select'];
                 } else {
                     $delivery_address->id_customer = $id_customer;
@@ -2080,7 +2074,7 @@ class SupercheckoutCore extends ModuleFrontController
             }
 
             if (Validate::isLoadedObject($invoice_address) && $invoice_address != null) {
-                if(isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0){
+                if (isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0) {
                     $invoice_address->id_customer = (int)$posted_data['on_credit_customer_select'];
                 } else {
                     $invoice_address->id_customer = $id_customer;
@@ -2096,7 +2090,6 @@ class SupercheckoutCore extends ModuleFrontController
         }
 
 
-
         if (isset($response['error'])) {
             return $response;
         }
@@ -2105,7 +2098,7 @@ class SupercheckoutCore extends ModuleFrontController
             // Add customer to the context
             if (!$this->is_logged) {
                 $this->context->customer = $customer;
-                $this->context->cookie->id_customer = (int) $customer->id;
+                $this->context->cookie->id_customer = (int)$customer->id;
                 $this->context->cookie->customer_lastname = $customer->lastname;
                 $this->context->cookie->customer_firstname = $customer->firstname;
                 $this->context->cookie->logged = 1;
@@ -2133,13 +2126,13 @@ class SupercheckoutCore extends ModuleFrontController
 
             if (Configuration::get('PS_CART_FOLLOWING')
                 && (empty($this->context->cookie->id_cart)
-                || Cart::getNbProducts($this->context->cookie->id_cart) == 0)
+                    || Cart::getNbProducts($this->context->cookie->id_cart) == 0)
             ) {
-                $this->context->cookie->id_cart = (int) Cart::lastNoneOrderedCart($this->context->customer->id);
+                $this->context->cookie->id_cart = (int)Cart::lastNoneOrderedCart($this->context->customer->id);
             }
 
             $this->updateCartDeliveryAddress($id_current_address_delivery, $id_delivery_address);
-            if(isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0){
+            if (isset($posted_data['on_credit_customer_select']) && (int)$posted_data['on_credit_customer_select'] > 0) {
                 $selectedCreditCustomer = (int)$posted_data['on_credit_customer_select'];
 
                 $creditCustomer = new Customer($selectedCreditCustomer);
@@ -2154,7 +2147,7 @@ class SupercheckoutCore extends ModuleFrontController
                 $this->context->cookie->on_credit_reference = $posted_data['on_credit_reference'];
                 $this->context->cookie->on_credit_buyer = $posted_data['on_credit_buyer'];
             } else {
-                $this->context->cart->id_customer = (int) $id_customer;
+                $this->context->cart->id_customer = (int)$id_customer;
                 $this->context->cart->secure_key = $this->context->customer->secure_key;
 
                 $this->context->cookie->selected_customer_secure_key = '';
@@ -2169,7 +2162,7 @@ class SupercheckoutCore extends ModuleFrontController
             $this->context->cart->id_address_invoice = $id_invoice_address;
 
             $this->context->cart->save();
-            $this->context->cookie->id_cart = (int) $this->context->cart->id;
+            $this->context->cookie->id_cart = (int)$this->context->cart->id;
             $this->context->cookie->write();
             //As there is no multishipping, set each product delivery address with main delivery address
             $this->context->cart->setNoMultishipping();
@@ -2191,7 +2184,7 @@ class SupercheckoutCore extends ModuleFrontController
             $this->context->cookie->supercheckout_perm_address_delivery = $id_delivery_address;
             $this->context->cookie->supercheckout_perm_address_invoice = $id_invoice_address;
 
-            $response['is_free_order'] = ((float) $order_total <= 0) ? true : false;
+            $response['is_free_order'] = ((float)$order_total <= 0) ? true : false;
             $response['success'] = true;
         }
         return $response;
@@ -2210,7 +2203,7 @@ class SupercheckoutCore extends ModuleFrontController
         $query = 'SELECT * FROM ' . _DB_PREFIX_ . 'velsof_supercheckout_custom_fields cf ';
         $query = $query . 'JOIN ' . _DB_PREFIX_ . 'velsof_supercheckout_custom_fields_lang cfl ';
         $query = $query . 'ON cf.id_velsof_supercheckout_custom_fields = cfl.id_velsof_supercheckout_custom_fields ';
-        $query = $query . 'WHERE active = 1 AND cfl.id_lang = '.(int)$id_lang;
+        $query = $query . 'WHERE active = 1 AND cfl.id_lang = ' . (int)$id_lang;
 
         $result_array = Db::getInstance()->executeS($query);
         foreach ($result_array as $array_id) {
@@ -2226,7 +2219,7 @@ class SupercheckoutCore extends ModuleFrontController
             $id_velsof_supercheckout_custom_fields = $array_id['id_velsof_supercheckout_custom_fields'];
             // Get the validation details of the field from database
             $query = 'SELECT required, validation_type, position, type FROM '
-                    . _DB_PREFIX_ . 'velsof_supercheckout_custom_fields WHERE
+                . _DB_PREFIX_ . 'velsof_supercheckout_custom_fields WHERE
 				id_velsof_supercheckout_custom_fields = ' . (int)$id_velsof_supercheckout_custom_fields;
             $result_field_data = Db::getInstance()->executeS($query);
             $type = $result_field_data[0]['type'];
@@ -2263,7 +2256,7 @@ class SupercheckoutCore extends ModuleFrontController
                 }
                 if ($validation_type != '0') {
                     $field_value = trim($field_value);
-                    if (isset($field_value) && !empty($field_value) && $field_value!= "" && $validation_type != '' && !Validate::$validation_type($field_value)) { //Modified by Anshul Mittal
+                    if (isset($field_value) && !empty($field_value) && $field_value != "" && $validation_type != '' && !Validate::$validation_type($field_value)) { //Modified by Anshul Mittal
                         $message = '';
                         if ($validation_type == 'isInt') {
                             $message = $this->module->l('Only digits are allowed.', 'SupercheckoutCore');
@@ -2297,11 +2290,11 @@ class SupercheckoutCore extends ModuleFrontController
     {
         $errors = $this->validateCustomFieldsData($custom_field_values, $use_for_invoice);
         if ($errors['error_occured'] == 0) {
-            $id_cart = (int) $this->context->cookie->id_cart;
+            $id_cart = (int)$this->context->cookie->id_cart;
             // Delete all the values from a table where cart id is same. Delets previously saved values from same cart
             if (!empty($custom_field_values)) {
                 // Start: Modified by Anshul for not deleting the entries for FILES type
-                $where_delete = "id_cart = " . (int) $id_cart ." and id_velsof_supercheckout_custom_fields NOT IN (Select id_velsof_supercheckout_custom_fields from "._DB_PREFIX_."velsof_supercheckout_custom_fields where type = 'file')";
+                $where_delete = "id_cart = " . (int)$id_cart . " and id_velsof_supercheckout_custom_fields NOT IN (Select id_velsof_supercheckout_custom_fields from " . _DB_PREFIX_ . "velsof_supercheckout_custom_fields where type = 'file')";
                 // End: Modified by Anshul for not deleting the entries for FILES type
                 Db::getInstance()->delete('velsof_supercheckout_fields_data', $where_delete);
                 // Each field value

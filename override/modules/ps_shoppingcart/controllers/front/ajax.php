@@ -47,9 +47,9 @@ class Ps_ShoppingcartAjaxModuleFrontControllerOverride extends Ps_ShoppingcartAj
         if ($this->module instanceof Ps_Shoppingcart && Tools::getValue('action') === 'add-to-cart') {
             $modal = $this->module->renderModal(
                 $this->context->cart,
-                (int) Tools::getValue('id_product'),
-                (int) Tools::getValue('id_product_attribute'),
-                (int) Tools::getValue('id_customization')
+                (int)Tools::getValue('id_product'),
+                (int)Tools::getValue('id_product_attribute'),
+                (int)Tools::getValue('id_customization')
             );
         }
 
@@ -100,12 +100,44 @@ class Ps_ShoppingcartAjaxModuleFrontControllerOverride extends Ps_ShoppingcartAj
                 ]));
             }
 
+            $remainder = (float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS);
+            $remainder_excl = (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS);
+
+
+            if ($remainder > 0) {
+                $totalTax = Context::getContext()->currentLocale->formatPrice($remainder_excl - $remainder, 'EUR');
+                $total = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR');
+                $totalWithTax = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR');
+            } else {
+                $totalTax = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR');
+                $total = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::BOTH), 'EUR');
+                $totalWithTax = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::BOTH), 'EUR');
+            }
+
+
+            $productTotal = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS), 'EUR');
+            $productTotalWithTax = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR');
+            $totalShipping = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING), 'EUR');
+            $totalShippingWithTax = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING), 'EUR');
+            $totalDiscount = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS), 'EUR');
+            $totalDiscountWithTax = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS), 'EUR');
+            $totalDiscountNoCalculation = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR');
+            $totalDiscountNoCalculationWithTax = Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR');
+
+
             die(json_encode([
                 'cart' => $this->context->cart,
-                'total_shipping_with_tax' => Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING), 'EUR'),
-                'total_shipping' => Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING), 'EUR'),
-                'total_tax' => Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true)-(float)Context::getContext()->cart->getOrderTotal(false), 'EUR'),
-                'total_with_taxes' => Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true), 'EUR'),
+                'total_shipping_with_tax' => $totalShippingWithTax,
+                'total_shipping' => $totalShipping,
+                'total_products_with_tax' => $productTotalWithTax,
+                'total_products' => $productTotal,
+                'total_discount_with_tax' => $totalDiscountWithTax,
+                'total_discount' => $totalDiscount,
+                'total_remainder_with_tax' => $totalDiscountNoCalculationWithTax,
+                'total_remainder' => $totalDiscountNoCalculation,
+                'total_tax' => $totalTax,
+                'total' => $total,
+                'total_with_taxes' => $totalWithTax,
                 'success' => true,
                 'error' => null,
                 'modal' => $this->module->renderList($this->context->cart),
@@ -113,10 +145,10 @@ class Ps_ShoppingcartAjaxModuleFrontControllerOverride extends Ps_ShoppingcartAj
             ]));
         }
 
-        if(Tools::getValue('action') === 'toggle_cart'){
+        if (Tools::getValue('action') === 'toggle_cart') {
             $checked = Tools::getValue('checked');
             $this->context->cookie->__set('cart_toggle', $checked);
-            die(json_encode(['cart_toggle'=>$checked]));
+            die(json_encode(['cart_toggle' => $checked]));
         }
 
         $modal = $this->module->renderList($this->context->cart);

@@ -132,7 +132,7 @@
                 <tr>
                   <td class="border-0"></td>
                   <td colspan="2" class="border-0">Korting</td>
-                  <td class="border-0 text-right">- {Context::getContext()->currentLocale->formatPrice($discount, 'EUR')}</td>
+                  <td class="border-0 text-right">{Context::getContext()->currentLocale->formatPrice(0-$discount, 'EUR')}</td>
                 </tr>
             {/if}
             <tr>

@@ -249,22 +249,33 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplate
 
         $cart_rules = $this->order->getCartRules($this->order_invoice->id);
         $free_shipping = false;
+        $total_discount_tax_excl = 0;
+        $total_discount_tax_incl = 0;
+        $total_remainder_tax_excl = 0;
+        $total_remainder_tax_incl = 0;
+
         foreach ($cart_rules as $key => $cart_rule) {
             //Add return amount by balie orders
             $cartRuleData = new CartRule($cart_rule['id_cart_rule']);
 
             $cart_rules[$key]['reduction_amount'] = $cartRuleData->reduction_amount;
 
-            if($cartRuleData->group_restriction) {
+            if ($cartRuleData->group_restriction) {
                 $cartRuleGroup = Db::getInstance()->executeS('SELECT id_group FROM ' . _DB_PREFIX_ . 'cart_rule_group WHERE id_cart_rule = ' . (int)$cart_rule['id_cart_rule']);
-                if (isset($cartRuleGroup[0]['id_group']) && $cartRuleGroup[0]['id_group'] == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_BALIE_GROUP',
-                        null, null, null, 5)) {
-                    $cart_rules[$key]['remaining_amount'] = (float)$this->order_invoice->getOrder()->total_shipping_tax_excl - ((float)$cartRuleData->reduction_amount - (float)$cart_rule['value_tax_excl']);
-                    if($cart_rules[$key]['remaining_amount'] > 0){
-                        $cart_rules[$key]['remaining_amount'] = $cart_rules[$key]['remaining_amount']*1.21;
-                    }
-                }
+
             }
+
+            $cart_rules[$key]['remaining_amount'] = (float)$this->order_invoice->getOrder()->total_shipping_tax_excl - ((float)$cartRuleData->reduction_amount - (float)$cart_rule['value_tax_excl']);
+            if ($cart_rules[$key]['remaining_amount'] > 0) {
+                $cart_rules[$key]['remaining_amount'] = $cart_rules[$key]['remaining_amount'] * 1.21;
+            }
+
+            $total_discount_tax_excl = $total_discount_tax_excl + ((float)$cartRuleData->reduction_amount / 1.21);
+            $total_discount_tax_incl = $total_discount_tax_incl + (float)$cartRuleData->reduction_amount;
+            $total_remainder_tax_excl = $this->order_invoice->total_products + $this->order_invoice->getOrder()->total_shipping_tax_excl - $total_discount_tax_excl;
+            $total_remainder_tax_incl = $this->order_invoice->total_products_wt + $this->order_invoice->total_shipping_tax_incl - $total_discount_tax_incl;
+
+
             if ($cart_rule['free_shipping']) {
                 $free_shipping = true;
                 /*
@@ -306,6 +317,9 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplate
         $wrapping_taxes = $this->order_invoice->total_wrapping_tax_incl - $this->order_invoice->total_wrapping_tax_excl;
 
         $total_taxes = $this->order_invoice->total_paid_tax_incl - $this->order_invoice->total_paid_tax_excl;
+        if (abs($total_remainder_tax_excl) > 0) {
+            $total_taxes = $total_remainder_tax_incl - $total_remainder_tax_excl;
+        }
 
         $footer = [
             'products_before_discounts_tax_excl' => $this->order_invoice->total_products,
@@ -325,6 +339,10 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplate
             'total_taxes' => $total_taxes,
             'total_paid_tax_excl' => $this->order_invoice->total_paid_tax_excl,
             'total_paid_tax_incl' => $this->order_invoice->total_paid_tax_incl,
+            'total_discount_tax_excl' => $total_discount_tax_excl,
+            'total_discount_tax_incl' => $total_discount_tax_incl,
+            'total_remainder_tax_excl' => $total_remainder_tax_excl,
+            'total_remainder_tax_incl' => $total_remainder_tax_incl
         ];
 
         foreach ($footer as $key => $value) {

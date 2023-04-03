@@ -11,13 +11,9 @@
                     Totaal ({if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if} producten, incl verzending & btw)
                     {elseif Context::getContext()->cart->nbProducts() && (int)Context::getContext()->cart->nbProducts() == 1}Totaal ({if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if} product, incl verzending & btw){else}<br>{/if}
                 </div>
-                {assign var='totalForAllProductsNoTaxNoReduct' value=0}
                 <div class="col-sm-8 float-left">
-                    <div class="shoppingcart-header-total-price font-weight-bold">{foreach from=Context::getContext()->cart->getProducts() item=product}
-                        {assign var='productTotalNoTaxNoReduct' value=$product.price_without_reduction_without_tax * $product.quantity}
-                        {assign var='totalForAllProductsNoTaxNoReduct' value=$totalForAllProductsNoTaxNoReduct + $productTotalNoTaxNoReduct}
-                        {/foreach}
-                        {Context::getContext()->currentLocale->formatPrice(floatval(Context::getContext()->cart->getOrderTotal()), 'EUR' )}
+                    <div class="shoppingcart-header-total-price font-weight-bold">
+                        {Context::getContext()->currentLocale->formatPrice(floatval(Context::getContext()->cart->getOrderTotal(true, Cart::BOTH)), 'EUR' )}
                     </div>
                 </div>
                 <div class="shoppingcart-top-checkout col-sm-4 float-right">
@@ -33,12 +29,8 @@
         <div class="col-12" id="shoppingcart-list-items">
             {if Context::getContext()->cart->nbProducts()}
             <ul class="list-unstyled small_cart_product_list pt-3 mb-4 pb-4">
-                {assign var='totalReductionValue' value=0}
                 {foreach from=Context::getContext()->cart->getProducts() item=product}
-                <li class="pb-1">{include file='./ps_shoppingcart-product-line.tpl' product=$product cart_url=$cart_url}
-                    {assign var='productReduction' value=($product.price_without_reduction_without_tax - $product.price_with_reduction_without_tax) * $product.quantity}
-                      {assign var='totalReductionValue' value=(double)$totalReductionValue + (double)$productReduction}
-                </li>
+                <li class="pb-1">{include file='./ps_shoppingcart-product-line.tpl' product=$product cart_url=$cart_url}</li>
                 {/foreach}
                 {foreach from=Context::getContext()->cart->getDiscounts() item=voucher}
                 <li class="pb-1">
@@ -56,15 +48,12 @@
         <div class="cart_dark p-1 pt-2">
             <div class="col-12">
                 {assign var="products_count" value=Context::getContext()->cart->nbProducts()}
-                {assign var="total_discount" value=($totalReductionValue)}
                 {assign var="tax" value=array('Btw (21%)', Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true)-(float)Context::getContext()->cart->getOrderTotal(false), 'EUR'))}
                 {assign var="products_subtotal" value=array("Producten",Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS), 'EUR'))}
                 <div class="cart_price_details p-2" {if Context::getContext()->cookie->cart_toggle === 'false'}style="display:none;"{/if}>
                     <div class="border-bottom-0 pb-1 row">
-                        <span class="col-5">{$products_subtotal.0} ({if $products_count > 99}99+{else}{$products_count}{/if}) {if $totalReductionValue > 0}<span class="info-icon-with-showhide" data-id="cart-info-1"><i class="icon-info cart-info-btn ml-2"></i></span>{/if}</span>
-                        <span class="col-7 text-right price">{if $totalReductionValue > 0}
-                            <span class="regular-price">{Context::getContext()->currentLocale->formatPrice($totalForAllProductsNoTaxNoReduct, 'EUR')}</span>
-                            {/if} {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS), 'EUR')}</span>
+                        <span class="col-5">{$products_subtotal.0} ({if $products_count > 99}99+{else}{$products_count}{/if}) {if (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS) > 0}<span class="info-icon-with-showhide" data-id="cart-info-1"><i class="icon-info cart-info-btn ml-2"></i></span>{/if}</span>
+                        <span class="col-7 text-right price"> {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS), 'EUR')}</span>
                     </div>
                     <div style="display:none;" class="border-bottom-0 pb-1 row" id="cart-info-1">
                         <span class="col-12 text-left width-100" style="color:blue">
@@ -89,40 +78,31 @@
                         </span><span class="col-6 text-right price pt-2 pt-sm-0">{if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}{Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING), 'EUR')}{else}€ 0,00{/if}</span>
                     </div>
                   {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS) > 0}
-                    {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE')}
-                        {assign var="discounts" value=0}
-                          {foreach Context::getContext()->cart->getCartRules() as $rule}
-                              {assign var="discounts" value=$discounts+$rule['value_tax_exc']}
-                          {/foreach}
-
                       <div class="border-bottom-0 pb-1 row">
-                        <span class="col-5">Korting</span><span class="col-7 text-right price">- {Context::getContext()->currentLocale->formatPrice($discounts, 'EUR')}</span>
+                        <span class="col-5">Korting</span><span class="col-7 text-right price">{Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR')}</span>
                       </div>
-                    {else}
-                      <div class="border-bottom-0 pb-1 row">
-                        <span class="col-5">Korting</span><span class="col-7 text-right price">- {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS), 'EUR')}</span>
-                      </div>
-                    {/if}
                   {/if}
                     <div class="border-bottom-0 pb-1 row">
-                        <span class="col-5">{$tax.0}</span><span class="col-7 text-right price">{$tax.1}</span>
+                        <span class="col-5">{$tax.0}</span><span class="col-7 text-right price">
+                            {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0}
+                              {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS)-Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS),'EUR')}
+                            {else}
+                              {$tax.1}
+                            {/if}
+                      </span>
                     </div>
-
-                    {if Module::isEnabled('smallorderfee') && (Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) <= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20)) && Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) !== 0}
-                        <div class="border-bottom-0 pb-1 row">
-                            <span class="col-5">{Configuration::get('SMALLORDERFEE_ORDER_FEE_LABEL','Kleine order toeslag')}</span><span class="col-7 text-right price">{Context::getContext()->currentLocale->formatPrice((double)Configuration::get('SMALLORDERFEE_ORDER_FEE',20), 'EUR')}</span>
-                        </div>
-                        {/if}
                         <div class="border-bottom-0 pb-1 row">
                             <span class="col-5"></span><span class="col-7"><span class="position-absolute text-dark" style="right:5px;">_________________ +</span></span>
                         </div>
                 </div>
                 {/if}
                 <div class="border-bottom-0 pb-1 p-2 row">
-                    {if !Module::isEnabled('smallorderfee') || (Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) >= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20)) || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) === 0}
-                    <span class="col-5">Totaal (incl. btw)</span><span class="col-7 text-right price font-weight-bold">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(), 'EUR')}</span>
+                    {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0}
+
+                      <span class="col-5">Totaal (incl. btw)</span><span class="col-7 text-right price font-weight-bold">{Context::getContext()->currentLocale->formatPrice(0-Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR')}</span>
                     {else}
-                    {hook h="shoppingCartOrderFee"}
+
+                      <span class="col-5">Totaal (incl. btw)</span><span class="col-7 text-right price font-weight-bold">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::BOTH), 'EUR')}</span>
                     {/if}
                 </div>
                 <div class="mt-3">

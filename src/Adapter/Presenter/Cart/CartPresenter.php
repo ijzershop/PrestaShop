@@ -163,8 +163,8 @@ class CartPresenter implements PresenterInterface
 
         $rawProduct['total'] = $this->priceFormatter->format(
             $this->includeTaxes() ?
-            $rawProduct['total_wt'] :
-            $rawProduct['total']
+                $rawProduct['total_wt'] :
+                $rawProduct['total']
         );
 
         $rawProduct['quantity_wanted'] = $rawProduct['cart_quantity'];
@@ -195,13 +195,13 @@ class CartPresenter implements PresenterInterface
         return array_map(function ($product) use ($cart) {
             $customizations = [];
 
-            $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int) $product['id_customization']);
+            $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int)$product['id_customization']);
 
             if (!$data) {
                 $data = [];
             }
-            $id_product = (int) $product['id_product'];
-            $id_product_attribute = (int) $product['id_product_attribute'];
+            $id_product = (int)$product['id_product'];
+            $id_product_attribute = (int)$product['id_product_attribute'];
             if (array_key_exists($id_product, $data)) {
                 if (array_key_exists($id_product_attribute, $data[$id_product])) {
                     foreach ($data[$id_product] as $byAddress) {
@@ -342,6 +342,25 @@ class CartPresenter implements PresenterInterface
             'value' => $this->priceFormatter->format($totalCartAmount),
         ];
 
+
+        if (!$cart->isVirtualCart()) {
+            $shippingCost = $cart->getTotalShippingCost(null, $this->includeTaxes());
+            $shippingCostWithoutTax = $cart->getTotalShippingCost(null, false);
+        } else {
+            $shippingCost = 0;
+        }
+
+        /***
+         * Added amount_without_tax for better shoppingcart calulation
+         */
+        $subtotals['shipping'] = [
+            'type' => 'shipping',
+            'label' => $this->translator->trans('Shipping', [], 'Shop.Theme.Checkout'),
+            'amount' => $shippingCost,
+            'amount_without_tax' => $shippingCostWithoutTax,
+            'value' => $this->getShippingDisplayValue($cart, $shippingCost),
+        ];
+
         if ($total_discount) {
             $subtotals['discounts'] = [
                 'type' => 'discount',
@@ -368,22 +387,6 @@ class CartPresenter implements PresenterInterface
             ];
         }
 
-        if (!$cart->isVirtualCart()) {
-            $shippingCost = $cart->getTotalShippingCost(null, $this->includeTaxes());
-            $shippingCostWithoutTax = $cart->getTotalShippingCost(null, false);
-        } else {
-            $shippingCost = 0;
-        }
-        /***
-         * Added amount_without_tax for better shoppingcart calulation
-         */
-        $subtotals['shipping'] = [
-            'type' => 'shipping',
-            'label' => $this->translator->trans('Shipping', [], 'Shop.Theme.Checkout'),
-            'amount' => $shippingCost,
-            'amount_without_tax' => $shippingCostWithoutTax,
-            'value' => $this->getShippingDisplayValue($cart, $shippingCost),
-        ];
 
         $subtotals['tax'] = null;
         if (Configuration::get('PS_TAX_DISPLAY')) {
@@ -429,7 +432,7 @@ class CartPresenter implements PresenterInterface
             $this->translator->trans('1 item', [], 'Shop.Theme.Checkout') :
             $this->translator->trans('%count% items', ['%count%' => $products_count], 'Shop.Theme.Checkout');
 
-        $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
+        $minimalPurchase = $this->priceFormatter->convertAmount((float)Configuration::get('PS_PURCHASE_MINIMUM'));
 
         Hook::exec('overrideMinimalPurchasePrice', [
             'minimalPurchase' => &$minimalPurchase,
@@ -456,7 +459,7 @@ class CartPresenter implements PresenterInterface
         ));
 
         $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds, $cart) {
-            $voucherCustomerId = (int) $discount['id_customer'];
+            $voucherCustomerId = (int)$discount['id_customer'];
             $voucherIsRestrictedToASingleCustomer = ($voucherCustomerId !== 0);
             $voucherIsEmptyCode = empty($discount['code']);
             if ($voucherIsRestrictedToASingleCustomer && $cart->id_customer !== $voucherCustomerId && $voucherIsEmptyCode) {
@@ -525,7 +528,7 @@ class CartPresenter implements PresenterInterface
             $defaultCountry = null;
 
             if (isset(Context::getContext()->cookie->id_country)) {
-                $defaultCountry = new Country((int) Context::getContext()->cookie->id_country);
+                $defaultCountry = new Country((int)Context::getContext()->cookie->id_country);
             }
 
             $deliveryOptionList = $cart->getDeliveryOptionList($defaultCountry);
@@ -559,7 +562,7 @@ class CartPresenter implements PresenterInterface
             $vouchers[$cartVoucher['id_cart_rule']]['code'] = $cartVoucher['code'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_percent'] = $cartVoucher['reduction_percent'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_currency'] = $cartVoucher['reduction_currency'];
-            $vouchers[$cartVoucher['id_cart_rule']]['free_shipping'] = (bool) $cartVoucher['free_shipping'];
+            $vouchers[$cartVoucher['id_cart_rule']]['free_shipping'] = (bool)$cartVoucher['free_shipping'];
 
             // Voucher reduction depending of the cart tax rule
             // if $cartHasTax & voucher is tax excluded, set amount voucher to tax included
@@ -611,7 +614,7 @@ class CartPresenter implements PresenterInterface
         }
 
         return [
-            'allowed' => (int) CartRule::isFeatureActive(),
+            'allowed' => (int)CartRule::isFeatureActive(),
             'added' => $vouchers,
         ];
     }
@@ -691,13 +694,13 @@ class CartPresenter implements PresenterInterface
             $this->settings = new ProductPresentationSettings();
 
             $this->settings->catalog_mode = Configuration::isCatalogMode();
-            $this->settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
+            $this->settings->catalog_mode_with_prices = (int)Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
             $this->settings->include_taxes = $this->includeTaxes();
-            $this->settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
+            $this->settings->allow_add_variant_to_cart_from_listing = (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
             $this->settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
             $this->settings->showPrices = Configuration::showPrices();
-            $this->settings->showLabelOOSListingPages = (bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
-            $this->settings->lastRemainingItems = (int) Configuration::get('PS_LAST_QTIES');
+            $this->settings->showLabelOOSListingPages = (bool)Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
+            $this->settings->lastRemainingItems = (int)Configuration::get('PS_LAST_QTIES');
         }
 
         return $this->settings;

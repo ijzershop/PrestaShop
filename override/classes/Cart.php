@@ -1,5 +1,7 @@
 <?php
+
 use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
+
 class Cart extends CartCore
 {
     public $added_to_order;
@@ -30,6 +32,7 @@ class Cart extends CartCore
     );
     public const ONLY_DISCOUNTS_NO_CALCULATION = 9;
     public const ONLY_REMAINDER_OF_DISCOUNTS = 10;
+
     public
     function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
@@ -60,6 +63,7 @@ class Cart extends CartCore
         }
         return ($use_tax) ? $_total_shipping['with_tax'] + $extraShippingFee : $_total_shipping['without_tax'] + $extraShippingFee;
     }
+
     public
     function getPackageShippingCost(
         $id_carrier = null,
@@ -305,6 +309,7 @@ class Cart extends CartCore
         Cache::store($cache_id, $shipping_cost);
         return $shipping_cost;
     }
+
     public
     function deleteProduct(
         $id_product,
@@ -382,6 +387,7 @@ class Cart extends CartCore
         }
         return false;
     }
+
     public
     function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
     {
@@ -400,6 +406,7 @@ class Cart extends CartCore
         }
         return ['quantity' => $result['quantity']];
     }
+
     public
     function updateQty(
         $quantity,
@@ -574,6 +581,7 @@ class Cart extends CartCore
         }
         return true;
     }
+
     public
     function checkQuantities($returnProductOnFailure = false)
     {
@@ -636,7 +644,7 @@ class Cart extends CartCore
         }
         return true;
     }
-    
+
     /*
     * module: klcartruleextender
     * date: 2023-04-03 12:08:24
@@ -649,7 +657,8 @@ class Cart extends CartCore
         $products = null,
         $id_carrier = null,
         $keepOrderPrices = false
-    ) {
+    )
+    {
         $result = parent::getCartRules($filter, $autoAdd, $useOrderPrices);
         if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
             || !($moduleClass instanceof KlCartRuleExtender)
@@ -660,7 +669,7 @@ class Cart extends CartCore
         ) {
             return $result;
         }
-        if ((int) $id_carrier <= 0) {
+        if ((int)$id_carrier <= 0) {
             $id_carrier = null;
         }
         if (null === $products) {
@@ -677,7 +686,7 @@ class Cart extends CartCore
         }
         return $result;
     }
-    
+
     /*
     * module: klcartruleextender
     * date: 2023-04-03 12:08:24
@@ -690,16 +699,113 @@ class Cart extends CartCore
         $id_carrier = null,
         $use_cache = false,
         $keepOrderPrices = false
-    ) {
-        $value = parent::getOrderTotal(
-            $withTaxes,
-            $type,
-            $products,
-            $id_carrier,
-            $use_cache,
-            $keepOrderPrices
-        );
-        if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
+    )
+    {
+        $moduleClass = Module::getInstanceByName('klcartruleextender');
+        if ($type === Cart::ONLY_DISCOUNTS_NO_CALCULATION || $type === Cart::ONLY_REMAINDER_OF_DISCOUNTS) {
+//            $calculator = $moduleClass->getCalculator();
+//            switch ($type) {
+//                case
+//                Cart::ONLY_DISCOUNTS_NO_CALCULATION:
+//                    $value = new AmountImmutable();
+//                    $cartRules = $calculator->getCartRules();
+//                    $includeShippingFeeWithDiscount = 0;
+//                    $totalDiscountPercentage = 0;
+//                    foreach ($calculator->getCartRules() as $cartRule) {
+//                        $includeShippingFeeWithDiscount = $cartRule['reduction_include_shipping'];
+//                        if ($cartRule['reduction_amount'] > 0) {
+//                            $valueToAdd = new AmountImmutable($cartRule['reduction_amount'], $cartRule['reduction_amount'] / 1.21);
+//                            $value = $value->add($valueToAdd);
+//                        }
+//                        if ($cartRule['reduction_percent'] > 0) {
+//                            $totalDiscountPercentage = $cartRule['reduction_percent'];
+//                        }
+//                    }
+//
+//                    if ($totalDiscountPercentage > 0) {
+//                        $rowDiscount = $calculator->getRowTotalWithoutDiscount()->getTaxExcluded() / 100 * $totalDiscountPercentage;
+//
+//                        if ($includeShippingFeeWithDiscount !== 0) {
+//                            $shippingFees = $calculator->getFees()->getFinalShippingFees();
+//
+//                            $shippingDiscount = $shippingFees->getTaxExcluded() / 100 * $totalDiscountPercentage;
+//                            $discountAmount = $shippingDiscount + $rowDiscount;
+//                        } else {
+//                            $discountAmount = $rowDiscount;
+//                        }
+//                        $valueDiscountTotal = new AmountImmutable($discountAmount * 1.21, $discountAmount);
+//                        $value = $value->add($valueDiscountTotal);
+//
+//                    }
+//                    break;
+//                case
+//                Cart::ONLY_REMAINDER_OF_DISCOUNTS:
+//                    //Get discounts total
+//                    $calculator->processCalculation();
+////                $valueDiscountTotal = $calculator->getDiscountTotal();
+//                    $valueTotalReduction = new AmountImmutable(0, 0);
+//
+//                    $includeShippingFeeWithDiscount = 0;
+//                    $totalDiscountPercentage = 0;
+//
+//                    $totalAmount = $calculator->getRowTotalWithoutDiscount()->getTaxExcluded();
+//
+//
+//                    foreach ($calculator->getCartRules() as $cartRule) {
+//
+//                        if ($cartRule['reduction_include_shipping'] === 1) {
+//                            $includeShippingFeeWithDiscount = $cartRule['reduction_include_shipping'];
+//                        }
+//
+//                        if ($cartRule['reduction_amount'] > 0) {
+//                            $valueToAdd = new AmountImmutable($cartRule['reduction_amount'], $cartRule['reduction_amount'] / 1.21);
+//                            $valueTotalReduction = $valueTotalReduction->add($valueToAdd);
+//                        }
+//
+//                        if ($cartRule['reduction_percent'] > 0) {
+//                            $totalDiscountPercentage = $cartRule['reduction_percent'];
+//                        }
+//                    }
+//
+//
+//                    if ($totalDiscountPercentage > 0) {
+//                        $rowDiscount = $calculator->getRowTotalWithoutDiscount()->getTaxExcluded() / 100 * $totalDiscountPercentage;
+//
+//                        if ($includeShippingFeeWithDiscount !== 0) {
+//                            $shippingFees = $calculator->getFees()->getFinalShippingFees();
+//
+//                            $shippingDiscount = $shippingFees->getTaxExcluded() / 100 * $totalDiscountPercentage;
+//                            $discountAmount = $shippingDiscount + $rowDiscount;
+//                        } else {
+//                            $discountAmount = $rowDiscount;
+//                        }
+//                        $valueDiscountTotal = new AmountImmutable($discountAmount * 1.21, $discountAmount);
+//                    }
+//
+//
+//                    if ($includeShippingFeeWithDiscount !== 0) {
+//                        $totalAmount = $totalAmount + $calculator->getFees()->getFinalShippingFees()->getTaxExcluded();
+//                    }
+//
+//                    $totalReduction = $valueTotalReduction->add($valueDiscountTotal);
+//                    $value = new AmountImmutable(($totalAmount - $totalReduction->getTaxExcluded()) * 1.21, ($totalAmount - $totalReduction->getTaxExcluded()));
+//                    break;
+//            }
+//            $value = $withTaxes ? $value->getTaxIncluded() : $value->getTaxExcluded();
+
+            $value = 0;
+        } else {
+            $value = parent::getOrderTotal(
+                $withTaxes,
+                $type,
+                $products,
+                $id_carrier,
+                $use_cache,
+                $keepOrderPrices
+            );
+        }
+
+        if (!$moduleClass
             || !($moduleClass instanceof KlCartRuleExtender)
             || !$moduleClass->isEnabledForShopContext()
             || (!Configuration::get('KL_CART_RULE_EXTENDER_SHIPPING_FEES') && !Configuration::get('KL_CART_RULE_EXTENDER_WRAPPING_FEES'))
@@ -708,7 +814,7 @@ class Cart extends CartCore
         ) {
             return $value;
         }
-        if ((int) $id_carrier <= 0) {
+        if ((int)$id_carrier <= 0) {
             $id_carrier = null;
         }
         $this->getCartRules(CartRule::FILTER_ACTION_ALL, false, false, $products, $id_carrier, $keepOrderPrices);
@@ -718,8 +824,7 @@ class Cart extends CartCore
         }
         $amount = $type == Cart::BOTH
             ? $calculator->getTotal()
-            : $calculator->getDiscountTotal()
-        ;
+            : $calculator->getDiscountTotal();
         $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
         if ($type == Cart::BOTH) {
             $value = max(0, $value);

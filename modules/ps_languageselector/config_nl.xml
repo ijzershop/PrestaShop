@@ -2,10 +2,10 @@
 <module>
     <name>ps_languageselector</name>
     <displayName><![CDATA[Taal keuze blok]]></displayName>
-    <version><![CDATA[2.1.0]]></version>
-    <description><![CDATA[Voegt een blok toe waarmee klanten een taal kunnen kiezen voor de inhoud van je winkel.]]></description>
+    <version><![CDATA[2.1.3]]></version>
+    <description><![CDATA[Go international and display a language selector in the header of your store so that customers can shop in their own language.]]></description>
     <author><![CDATA[PrestaShop]]></author>
-    <tab><![CDATA[]]></tab>
+    <tab><![CDATA[front_office_features]]></tab>
     <is_configurable>0</is_configurable>
     <need_instance>0</need_instance>
 </module>

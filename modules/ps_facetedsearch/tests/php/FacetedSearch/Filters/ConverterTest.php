@@ -27,12 +27,12 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PrestaShop\Module\FacetedSearch\Filters\Converter;
 use PrestaShop\Module\FacetedSearch\Filters\DataAccessor;
+use PrestaShop\Module\FacetedSearch\Filters\Provider;
 use PrestaShop\Module\FacetedSearch\URLSerializer;
 use PrestaShop\PrestaShop\Core\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Product\Search\Filter;
 use Shop;
 use stdClass;
-use Tools;
 
 class ConverterTest extends MockeryTestCase
 {
@@ -72,17 +72,6 @@ class ConverterTest extends MockeryTestCase
         $this->contextMock->language->id = 2;
 
         $this->dbMock = Mockery::mock(Db::class);
-        $toolsMock = Mockery::mock(Tools::class);
-        $toolsMock->shouldReceive('getValue')
-            ->andReturnUsing(function ($arg) {
-                $valueMap = [
-                    'id_category' => 12,
-                    'id_category_layered' => 11,
-                ];
-
-                return $valueMap[$arg];
-            });
-        Tools::setStaticExpectations($toolsMock);
 
         $this->shopMock = Mockery::mock(Shop::class);
         Shop::setStaticExpectations($this->shopMock);
@@ -91,7 +80,8 @@ class ConverterTest extends MockeryTestCase
             $this->contextMock,
             $this->dbMock,
             new URLSerializer(),
-            new DataAccessor($this->dbMock)
+            new DataAccessor($this->dbMock),
+            new Provider($this->dbMock)
         );
     }
 
@@ -427,11 +417,11 @@ class ConverterTest extends MockeryTestCase
                 ],
             ],
 
-            // Quantity
+            // Availability
             [
                 [
-                    'type_lite' => 'quantity',
-                    'type' => 'quantity',
+                    'type_lite' => 'availability',
+                    'type' => 'availability',
                     'id_key' => 0, 'name' => 'Availability',
                     'values' => [
                         0 => [

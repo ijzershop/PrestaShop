@@ -2,8 +2,8 @@
 <module>
     <name>contactform</name>
     <displayName><![CDATA[Contact formulier]]></displayName>
-    <version><![CDATA[4.3.0]]></version>
-    <description><![CDATA[Voegt een contactformulier toe aan de pagina &#039;Contact met ons opnemen&#039;.]]></description>
+    <version><![CDATA[4.4.1]]></version>
+    <description><![CDATA[Help your customers get in touch when they need, add a contact form on your store.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[front_office_features]]></tab>
     <is_configurable>1</is_configurable>

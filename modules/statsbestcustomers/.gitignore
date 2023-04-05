@@ -1,4 +1,4 @@
-config_*.xml
-translations/
-vendor/
-.php_cs.cache
+/config_*
+/node_modules
+/vendor
+/.php_cs.cache

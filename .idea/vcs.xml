@@ -2,7 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/modules/ModerneSmidMailTheme/mails/themes/modernesmid" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/modules/addtoorder" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/modules/customdeliveryslipsexport" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/modules/modernesmiddynamicproduct" vcs="Git" />

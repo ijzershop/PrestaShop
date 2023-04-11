@@ -119,7 +119,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             return $this->_getKoopmanInitRetour();
         }
 
-
         if (Tools::getValue('method') == 'orderretoursubmit') {
             return $this->_getKoopmanSubmitRetour();
         }
@@ -383,7 +382,17 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->active = 1;
             $credit->add(true);
 
-//            $creditGroupRestiction = Db::getInstance()->insert('cart_rule_group', ['id_cart_rule' => (int)$credit->id, 'id_group' => Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_BALIE_GROUP')]);
+            $values = [
+                'id_cart_rule' => (int)$credit->id,
+            ];
+
+            Db::getInstance()->insert(
+                'cart_rule_fees',
+                $values,
+                false,
+                true,
+                DB::INSERT_IGNORE
+            );
 
             $cart->addCartRule($credit->id);
 
@@ -1472,10 +1481,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
      */
     private function _getDeliverySlipMessage($id)
     {
-
         $order = new Order($id);
         $firstMessage = $order->getFirstMessageWithId();
-
 
         if ($firstMessage) {
             $message = $firstMessage['message'];
@@ -1511,7 +1518,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
             $db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 
-            if ($id_message == "") {
+            if ($id_message == 0) {
                 $db->insert('message', [
                     'id_employee' => 0,
                     'id_customer' => $id_customer,
@@ -1533,7 +1540,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                     'private' => 0,
                     'date_add' => date('NOW'),
                 ], '`id_message` = ' . $id_message);
-
 
                 return die(json_encode(['msg' => $db->Affected_Rows() . ' pakbon bericht van de bestelling is gewijzigd', 'success' => true]));
             }

@@ -60,9 +60,8 @@ class Ps_ShoppingcartAjaxModuleFrontControllerOverride extends Ps_ShoppingcartAj
             $cartObject = new Cart($id_cart);
             $delivery_option_list = $cartObject->getDeliveryOptionList($this->context->country);
 
-            $shipping_config = unserialize(Configuration::get('koopmanOrderExport'));
-            $shippingCarrier = (int)$shipping_config['select_carrier'];
-            $pickupCarrier = (int)$shipping_config['select_pickup_carrier'];
+            $shippingCarrier = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER');
+            $pickupCarrier = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER');
 
             try {
                 switch ($carrier) {

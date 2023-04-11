@@ -165,21 +165,30 @@ class DmsAdminOrderController extends FrameworkBundleAdminController
         $priceFormatter = new PriceFormatter();
 
         foreach ($orderForViewing->getDiscounts()->getDiscounts() as $key => $discount) {
+
             $orderCartRule = new OrderCartRule($discount->getOrderCartRuleId());
             if ($orderCartRule) {
                 $cartRule = new CartRule($orderCartRule->id_cart_rule);
-                $orderForViewing->getDiscounts()->getDiscounts()[$key]->reduction_amount_formatted_tax_excl = $priceFormatter->format($orderCartRule->value_tax_excl);
-                $orderForViewing->getDiscounts()->getDiscounts()[$key]->orig_reduction_amount = (float)$cartRule->reduction_amount;
-                $orderForViewing->getDiscounts()->getDiscounts()[$key]->orig_reduction_amount_formatted = $priceFormatter->format($cartRule->reduction_amount);
-                $reductionAmountPrice += $cartRule->reduction_amount;
-                $reductionAmountPriceProduct += $orderCartRule->value_tax_excl;
+                $orderForViewing->getDiscounts()->getDiscounts()[$key]->reduction_amount_formatted_tax_excl = $priceFormatter->format($orderCartRule->value);
+
+                if((float)$cartRule->reduction_amount > 0){
+                    $orderForViewing->getDiscounts()->getDiscounts()[$key]->orig_reduction_amount = (float)$cartRule->reduction_amount;
+                    $orderForViewing->getDiscounts()->getDiscounts()[$key]->orig_reduction_amount_formatted = $priceFormatter->format($cartRule->reduction_amount);
+                    $reductionAmountPrice += $cartRule->reduction_amount;
+                } else {
+                    $orderForViewing->getDiscounts()->getDiscounts()[$key]->orig_reduction_amount = (float)$orderCartRule->value;
+                    $orderForViewing->getDiscounts()->getDiscounts()[$key]->orig_reduction_amount_formatted = $priceFormatter->format((float)$orderCartRule->value);
+                    $reductionAmountPrice += (float)$orderCartRule->value;
+                }
+                $reductionAmountPriceProduct += $orderCartRule->value;
             }
         }
+
         $orderForViewing->getPrices()->originalReductionAmount = $reductionAmountPrice;
         $orderForViewing->getPrices()->originalReductionAmountFormatted = $priceFormatter->format($reductionAmountPrice);
-        $orderForViewing->getPrices()->discountsAmountFormattedTaxExcl = $priceFormatter->format($reductionAmountPriceProduct);
-        $orderForViewing->getPrices()->discountsAmountFormattedTaxIncl = $priceFormatter->format($reductionAmountPriceProduct * 1.21);
-        $orderForViewing->getPrices()->remainderTotalAmount = $priceFormatter->format($reductionAmountPrice - ($reductionAmountPriceProduct * 1.21));
+        $orderForViewing->getPrices()->discountsAmountFormattedTaxExcl = $priceFormatter->format($reductionAmountPriceProduct/1.21);
+        $orderForViewing->getPrices()->discountsAmountFormattedTaxIncl = $priceFormatter->format($reductionAmountPriceProduct);
+        $orderForViewing->getPrices()->remainderTotalAmount = $priceFormatter->format($reductionAmountPrice - $reductionAmountPriceProduct);
         $formFactory = $this->get('form.factory');
 
         $updateOrderStatusForm = $formFactory->createNamed(

@@ -94,12 +94,12 @@
     {/if}
     <tr class="discount">
       <td class="white left" colspan="3">{$cart_rule.name}</td>
-      {if $cart_rule.reduction_amount != '0.000000'}
+      {if (float)$cart_rule.reduction_amount > 0}
       <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=$cart_rule.reduction_amount}</td>
       <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=($cart_rule.reduction_amount/1.21)}</td>
       {else}
-      <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=$cart_rule.value_tax_excl}</td>
-      <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=($cart_rule.value_tax_excl/1.21)}</td>
+      <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=$cart_rule.value}</td>
+      <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=($cart_rule.value_tax_excl)}</td>
       {/if}
     </tr>
   {/foreach}

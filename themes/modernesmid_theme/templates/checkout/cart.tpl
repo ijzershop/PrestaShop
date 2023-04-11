@@ -62,10 +62,15 @@
         {/block}
       </div>
       <div class="cart-grid-right col-xs-12 col-lg-4">
+{*        <div class="card cart-summary">*}
+{*          <div class="card-body">*}
+{*              <b>Bestel nog {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getTotalBeforeNextAutoDiscount(false, 'amount'),'EUR')} extra {Context::getContext()->cart->getTotalBeforeNextAutoDiscount(true, 'name')}</b>*}
+{*          </div>*}
+{*        </div>*}
+
         {block name='cart_summary'}
           <div class="card cart-summary">
             <div class="card-body">
-
             {block name='cart_totals'}
               {include file='checkout/_partials/cart-detailed-totals.tpl' cart=$cart}
             {/block}

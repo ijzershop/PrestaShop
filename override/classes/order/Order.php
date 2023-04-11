@@ -34,6 +34,8 @@ class Order extends OrderCore
             'total_paid' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
             'total_paid_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
             'total_paid_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_refunded_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_refunded_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
             'total_paid_real' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
             'total_products' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
             'total_products_wt' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
@@ -238,5 +240,55 @@ class Order extends OrderCore
             FROM `' . _DB_PREFIX_ . 'message`
             WHERE `id_order` = ' . (int) $this->id . '
             ORDER BY `id_message`');
+    }
+
+
+    protected function setInvoiceDetails($order_invoice)
+    {
+        if (!$order_invoice || !is_object($order_invoice)) {
+            return;
+        }
+
+        $address = new Address((int) $this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+        $carrier = new Carrier((int) $this->id_carrier);
+        $tax_calculator = (Configuration::get('PS_ATCP_SHIPWRAP')) ? ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id) : $carrier->getTaxCalculator($address);
+        $order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
+        $order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
+        $order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
+        $order_invoice->total_paid_tax_incl = $this->total_paid_tax_incl;
+        $order_invoice->total_refunded_tax_excl = $this->total_refunded_tax_excl;
+        $order_invoice->total_refunded_tax_incl = $this->total_refunded_tax_incl;
+        $order_invoice->total_products = $this->total_products;
+        $order_invoice->total_products_wt = $this->total_products_wt;
+        $order_invoice->total_shipping_tax_excl = $this->total_shipping_tax_excl;
+        $order_invoice->total_shipping_tax_incl = $this->total_shipping_tax_incl;
+        $order_invoice->shipping_tax_computation_method = $tax_calculator->computation_method;
+        $order_invoice->total_wrapping_tax_excl = $this->total_wrapping_tax_excl;
+        $order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
+        $order_invoice->save();
+
+        if (Configuration::get('PS_ATCP_SHIPWRAP')) {
+            $wrapping_tax_calculator = ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
+        } else {
+            $wrapping_tax_manager = TaxManagerFactory::getManager($address, (int) Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
+            $wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();
+        }
+
+        $order_invoice->saveCarrierTaxCalculator(
+            $tax_calculator->getTaxesAmount(
+                $order_invoice->total_shipping_tax_excl,
+                $order_invoice->total_shipping_tax_incl,
+                Context::getContext()->getComputingPrecision(),
+                $this->round_mode
+            )
+        );
+        $order_invoice->saveWrappingTaxCalculator(
+            $wrapping_tax_calculator->getTaxesAmount(
+                $order_invoice->total_wrapping_tax_excl,
+                $order_invoice->total_wrapping_tax_incl,
+                Context::getContext()->getComputingPrecision(),
+                $this->round_mode
+            )
+        );
     }
 }

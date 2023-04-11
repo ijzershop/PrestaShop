@@ -1483,6 +1483,8 @@ class OrderCore extends ObjectModel
         $order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
         $order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
         $order_invoice->total_paid_tax_incl = $this->total_paid_tax_incl;
+        $order_invoice->total_refunded_tax_excl = $this->total_refunded_tax_excl;
+        $order_invoice->total_refunded_tax_incl = $this->total_refunded_tax_incl;
         $order_invoice->total_products = $this->total_products;
         $order_invoice->total_products_wt = $this->total_products_wt;
         $order_invoice->total_shipping_tax_excl = $this->total_shipping_tax_excl;

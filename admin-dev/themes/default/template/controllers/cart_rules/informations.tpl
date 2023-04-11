@@ -162,23 +162,6 @@
   </div>
 </div>
 
-{*-------------------------------------    START  Toegevoegd keuze voor inclusief verzendkosten     ------------------------------------------------*}
-<div class="form-group">
-  <label class="control-label col-lg-3">{l s='Inclusief Verzending' d='Admin.Global'}</label>
-  <div class="col-lg-9">
-		<span class="switch prestashop-switch fixed-width-lg">
-			<input type="radio" name="reduction_include_shipping" id="reduction_include_shipping_on" value="1"
-             {if $currentTab->getFieldValue($currentObject, 'reduction_include_shipping')|intval}checked="checked"{/if} />
-			<label class="t" for="reduction_include_shipping_on">{l s='Yes' d='Admin.Global'}</label>
-			<input type="radio" name="reduction_include_shipping" id="reduction_include_shipping_off" value="0"
-             {if !$currentTab->getFieldValue($currentObject, 'reduction_include_shipping')|intval}checked="checked"{/if} />
-			<label class="t" for="active_off">{l s='No' d='Admin.Global'}</label>
-			<a class="slide-button btn"></a>
-		</span>
-  </div>
-</div>
-{*-------------------------------------    EIND  Toegevoegd keuze voor inclusief verzendkosten     ------------------------------------------------*}
-
 
 <script type="text/javascript">
   $(".textarea-autosize").autosize();

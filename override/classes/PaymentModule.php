@@ -533,11 +533,11 @@ class PaymentModule extends PaymentModuleCore
             $computingPrecision
         );
         $order->total_discounts_tax_excl = Tools::ps_round(
-            (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $order->product_list, $carrierId)),
+            (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION, $order->product_list, $carrierId)),
             $computingPrecision
         );
         $order->total_discounts_tax_incl = Tools::ps_round(
-            (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $order->product_list, $carrierId)),
+            (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS_NO_CALCULATION, $order->product_list, $carrierId)),
             $computingPrecision
         );
         $order->total_discounts = $order->total_discounts_tax_incl;
@@ -570,6 +570,17 @@ class PaymentModule extends PaymentModuleCore
             (float) $cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $carrierId),
             $computingPrecision
         );
+
+        $order->total_refunded_tax_excl = abs(Tools::ps_round(
+            (float) $cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS, $order->product_list, $carrierId),
+            $computingPrecision
+        ));
+
+        $order->total_refunded_tax_incl = abs(Tools::ps_round(
+            (float) $cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS, $order->product_list, $carrierId),
+            $computingPrecision
+        ));
+
         $order->total_paid = $order->total_paid_tax_incl;
         $order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
         $order->round_type = Configuration::get('PS_ROUND_TYPE');
@@ -579,6 +590,7 @@ class PaymentModule extends PaymentModuleCore
         if ($debug) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order is about to be added', 1, null, 'Cart', (int) $cart->id, true);
         }
+
         $result = $order->add();
         if (!$result) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order cannot be created', 3, null, 'Cart', (int) $cart->id, true);
@@ -616,7 +628,7 @@ class PaymentModule extends PaymentModuleCore
     }
     /*
     * module: klcartruleextender
-    * date: 2023-04-03 12:08:25
+    * date: 2023-04-05 08:02:35
     * version: 1.0.1
     */
     protected function createOrderCartRules(

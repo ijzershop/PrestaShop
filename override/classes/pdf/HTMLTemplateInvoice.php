@@ -182,18 +182,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      */
     public function getContent()
     {
-        // $invoiceAddressPatternRules = json_decode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
-        // $deliveryAddressPatternRules = json_decode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
-
-        // $invoice_address = new Address((int) $this->order->id_address_invoice);
-        // $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
-
         $delivery_address = null;
-        // $formatted_delivery_address = '';
-        // if (isset($this->order->id_address_delivery) && $this->order->id_address_delivery) {
-        //     $delivery_address = new Address((int) $this->order->id_address_delivery);
-        //     $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
-        // }
+
         $invoice_address = new Address((int)$this->order->id_address_invoice);
         $country = new Country((int)$invoice_address->id_country);
         $formatted_invoice_address = $invoice_address->firstname . ' ' . $invoice_address->lastname . '<br />';
@@ -306,7 +296,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             unset($order_detail); // don't overwrite the last order_detail later
         }
 
-        $cart_rules = $this->order->getCartRules($this->order_invoice->id);
+        $cart_rules = $this->order->getCartRules();
         $free_shipping = false;
 
         $total_discount_tax_excl = 0;
@@ -315,26 +305,15 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $total_remainder_tax_incl = 0;
 
         foreach ($cart_rules as $key => $cart_rule) {
-            //Add return amount by balie orders
+//            //Add return amount by balie orders
             $cartRuleData = new CartRule($cart_rule['id_cart_rule']);
 
             $cart_rules[$key]['reduction_amount'] = $cartRuleData->reduction_amount;
-
-            if ($cartRuleData->group_restriction) {
-                $cartRuleGroup = Db::getInstance()->executeS('SELECT id_group FROM ' . _DB_PREFIX_ . 'cart_rule_group WHERE id_cart_rule = ' . (int)$cart_rule['id_cart_rule']);
-
-            }
-
-            $cart_rules[$key]['remaining_amount'] = (float)$this->order_invoice->getOrder()->total_shipping_tax_excl - ((float)$cartRuleData->reduction_amount - (float)$cart_rule['value_tax_excl']);
-            if ($cart_rules[$key]['remaining_amount'] > 0) {
-                $cart_rules[$key]['remaining_amount'] = $cart_rules[$key]['remaining_amount'] * 1.21;
-            }
-
-            $total_discount_tax_excl = $total_discount_tax_excl + ((float)$cartRuleData->reduction_amount / 1.21);
-            $total_discount_tax_incl = $total_discount_tax_incl + (float)$cartRuleData->reduction_amount;
-            $total_remainder_tax_excl = $this->order_invoice->total_products + $this->order_invoice->getOrder()->total_shipping_tax_excl - $total_discount_tax_excl;
-            $total_remainder_tax_incl = $this->order_invoice->total_products_wt + $this->order_invoice->total_shipping_tax_incl - $total_discount_tax_incl;
-
+//
+//            if ($cartRuleData->group_restriction) {
+//                $cartRuleGroup = Db::getInstance()->executeS('SELECT id_group FROM ' . _DB_PREFIX_ . 'cart_rule_group WHERE id_cart_rule = ' . (int)$cart_rule['id_cart_rule']);
+//
+//            }
 
             if ($cart_rule['free_shipping']) {
                 $free_shipping = true;
@@ -383,6 +362,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         }
 
 
+
+
+
         $footer = array(
             'products_before_discounts_tax_excl' => $this->order_invoice->total_products,
             'product_discounts_tax_excl' => $product_discounts_tax_excl,
@@ -401,11 +383,13 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'total_taxes' => $total_taxes,
             'total_paid_tax_excl' => $this->order_invoice->total_paid_tax_excl,
             'total_paid_tax_incl' => $this->order_invoice->total_paid_tax_incl,
-            'total_discount_tax_excl' => $total_discount_tax_excl,
-            'total_discount_tax_incl' => $total_discount_tax_incl,
-            'total_remainder_tax_excl' => $total_remainder_tax_excl,
-            'total_remainder_tax_incl' => $total_remainder_tax_incl
+            'total_discount_tax_excl' => $this->order_invoice->total_discount_tax_excl,
+            'total_discount_tax_incl' => $this->order_invoice->total_discount_tax_incl,
+            'total_refunded_tax_excl' => $this->order_invoice->total_refunded_tax_excl,
+            'total_refunded_tax_incl' => $this->order_invoice->total_refunded_tax_incl
         );
+
+//        dd($footer);
         foreach ($footer as $key => $value) {
             $footer[$key] = Tools::ps_round($value, _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
         }
@@ -457,7 +441,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'tax_tab' => $this->getTaxTabContent(),
             'customer' => $customer,
             'footer' => $footer,
-            'ps_price_compute_precision' => _PS_PRICE_COMPUTE_PRECISION_,
+            'ps_price_compute_precision' => Context::getContext()->getComputingPrecision(),
             'round_type' => $round_type,
             'legal_free_text' => $legal_free_text,
         );

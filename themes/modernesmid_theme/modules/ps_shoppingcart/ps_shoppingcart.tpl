@@ -22,7 +22,7 @@
   * @license https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
   * International Registered Trademark & Property of PrestaShop SA
   *}
-{assign var='deliveryMethodCarriers' value=unserialize(Configuration::get('koopmanOrderExport'))}
+
 <div class="js-cart pl-0" style="padding-left: calc(100% - 345px) !important;"
      data-refresh-url="{$refresh_url}">{*{strip}*}
   <div id="top-header-shoppingcart-box">
@@ -37,7 +37,7 @@
         </td>
       </tr>
       <tr>
-        <td class="pt-1"> Bezorging</td>
+        <td class="pt-1">Bezorging</td>
         <td class="pt-1 text-right" id="header-cart-shipping">
             {assign var="customerCountry" value=Context::getContext()->country->name}
             {if Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING) > 0}
@@ -72,7 +72,7 @@
                   class="align-text-bottom d-inline-block d-lg-none d-xl-inline-block">Bestel</span>
                 <span class="float-right text-right" id="header-cart-total">
                       {if (float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0 && (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE')}
-                          {Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR' )}
+                          {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR' )}
                       {else}
                           {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::BOTH), 'EUR' )}
                       {/if}

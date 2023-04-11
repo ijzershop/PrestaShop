@@ -88,7 +88,6 @@
             {/if}
           </td>
           <td class="text-center">
-            {* {print_r($product)} *}
               {if $product.original_product_price > $product.product_price}
                 <div class="price">{Context::getContext()->currentLocale->formatPrice($product.product_price, 'EUR')}</div>
                 <div class="regular-price">{Context::getContext()->currentLocale->formatPrice($product.original_product_price, 'EUR')}</div>
@@ -100,62 +99,47 @@
         </tr>
       {/foreach}
       <tfoot>
-        {* {foreach $order.subtotals as $line}
-          {if $line.value}
-            <tr class="text-xs-right line-{$line.type}">
-              <td class="border-0"></td>
-              <td colspan="2">{$line.label}</td>
-              <td>{$line.value}</td>
-            </tr>
-          {/if}
-        {/foreach} *}
         <tr class="text-xs-right">
               <td class="border-0"></td>
-              <td colspan="2" >{if (int)$order.products_count > 1}Producten{else}Product{/if} ({$order.products_count}) {if $product.reduction_amount > 0 && $totalReductionValue > 0}<span class="info-icon-with-showhide" data-id="cart-info-6"><i class="icon-info cart-info-btn ml-2"></i></span>{/if}</td>
-                      <td class="text-right">{Context::getContext()->currentLocale->formatPrice(floatval($totalForAllProducts), 'EUR')}</span>
-                        <div style="display:none;" class="border-bottom-0 pb-1 row" id="cart-info-6">
-                            <span class="col-12 text-left width-100" style="color:blue">
-                              Bij sommige producten ontvangt u korting als u meer dan 5 of 10 bestelt.<br>Dit is de staffelkorting.
-                            </span>
-                          </div>
+              <td colspan="2" >{if (int)$order.products_count > 1}Producten{else}Product{/if} ({$order.products_count})</td>
+                  <td class="text-right">{Context::getContext()->currentLocale->formatPrice(floatval($totalForAllProducts), 'EUR')}</span>
               </td>
             </tr>
-
             <tr>
               <td class="border-0"></td>
               <td colspan="2" class="border-0">Verzending</td>
               <td class="border-0 text-right">{if $order.subtotals.shipping.amount > 0}{Context::getContext()->currentLocale->formatPrice($order.subtotals.shipping.amount, 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice(0.00, 'EUR')}{/if}</td>
             </tr>
-
-        {assign var="discount" value="{(float)Order::getDiscountRuleFromOrder($order.details.id)}"}
-        {if $discount > 0}
+            {if $orderObject->total_discounts_tax_excl > 0}
                 <tr>
                   <td class="border-0"></td>
                   <td colspan="2" class="border-0">Korting</td>
-                  <td class="border-0 text-right">{Context::getContext()->currentLocale->formatPrice(0-$discount, 'EUR')}</td>
+                  <td class="border-0 text-right">{Context::getContext()->currentLocale->formatPrice(0-$orderObject->total_discounts_tax_excl, 'EUR')}</td>
                 </tr>
             {/if}
             <tr>
               <td class="border-0"></td>
               <td colspan="2" class="border-0" style="padding:0.75rem 0.75rem 0rem 0.75rem;">Btw (21%)</td>
-              <td class="border-0 text-right"{if !Module::isEnabled('smallorderfee') ||  $totalForAllProducts >= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20)}style="border-bottom:1px solid #c0c0c0c0;padding:0.75rem 0.75rem 0rem 0.75rem;"{/if}>{$order.subtotals.tax.value}{if $totalForAllProducts >= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20)}<span style="position: absolute;right:-5px;">+</span>{/if}</td>
+              <td class="border-0 text-right" style="border-bottom:1px solid #c0c0c0c0;padding:0.75rem 0.75rem 0rem 0.75rem;">
+                  {if $orderObject->total_discounts_tax_excl > 0}
+                  {Context::getContext()->currentLocale->formatPrice(0-($orderObject->total_refunded_tax_incl-$orderObject->total_refunded_tax_excl), 'EUR')}
+                {else}
+                {$order.subtotals.tax.value}
+                {/if}
+              </td>
+
+              </td>
             </tr>
-            {if Module::isEnabled('smallorderfee') && $totalForAllProducts <= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20)}
-              <tr>
-                  <td class="border-0"></td>
-                  <td colspan="2" class="border-0">{Configuration::get('SMALLORDERFEE_ORDER_FEE_LABEL','Kleine order toeslag')}</td>
-                  <td class="border-0 text-right"{if $totalForAllProducts <= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20)}style="border-bottom:1px solid #c0c0c0c0;"{/if}>{Context::getContext()->currentLocale->formatPrice((double)Configuration::get('SMALLORDERFEE_ORDER_FEE',5), 'EUR')}</td>
-              </tr>
-            {/if}
 
             <tr class="text-xs-right line-{$order.totals.total.type}">
               <td class="border-0"></td>
               <td colspan="2" class="border-0">{$order.totals.total.label}</td>
-              {if Module::isEnabled('smallorderfee') && $totalForAllProducts <= (double)Configuration::get('SMALLORDERFEE_MIN_AMOUNT',20)}
-                    <td class="text-right h4 text-dark" style="border-width-top:2px">{Context::getContext()->currentLocale->formatPrice($order.totals.total.amount+(double)Configuration::get('SMALLORDERFEE_ORDER_FEE',5), 'EUR')}</td>
-              {else}
-                    <td class="text-right h4 text-dark">{Context::getContext()->currentLocale->formatPrice($order.totals.total.amount, 'EUR')}</td>
-              {/if}
+                    <td class="text-right h4 text-dark">
+                        {if $orderObject->total_discounts_tax_excl > 0}
+                            {Context::getContext()->currentLocale->formatPrice(0-$orderObject->total_refunded_tax_incl, 'EUR')}</td>
+                            {else}
+                            {Context::getContext()->currentLocale->formatPrice($order.totals.total.amount, 'EUR')}</td>
+                        {/if}
             </tr>
       </tfoot>
     </table>

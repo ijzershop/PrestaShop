@@ -24,7 +24,6 @@
  *}
 {block name='cart_detailed_totals'}
 <div class="cart-detailed-totals">
-  {assign var='deliveryMethodCarriers' value=unserialize(Configuration::get('koopmanOrderExport'))}
   <div class="card-block">
     <div class="cart-summary-line clearfix cart-total products-total">
         <span class="label">{if (int)$cart.products_count > 1}Producten{else}Product{/if} ({$cart.products_count})</span>
@@ -33,14 +32,15 @@
     </div>
     <div class="cart-summary-line clearfix cart-total shipping-total">
         <span class="label">
-            <div class="form-check form-check-inline p-0 m-0 justify-content-start">
-              <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_checkout_cart" id="carrier_selection_checkout_cart1" value="shipping" {if Context::getContext()->cart->id_carrier == (int)$deliveryMethodCarriers['select_carrier'] || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}checked{/if}>
-              <label class="form-check-label carrier-selection-label" for="carrier_selection_checkout_cart1">Verzenden</label>
-            </div>
-            <div class="form-check form-check-inline p-0 m-0 pl-2 justify-content-start">
-              <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_checkout_cart" id="carrier_selection_checkout_cart2" value="pickup" {if Context::getContext()->cart->id_carrier == (int)$deliveryMethodCarriers['select_pickup_carrier']|| Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) == 0}checked{/if}>
-              <label class="form-check-label carrier-selection-label" for="carrier_selection_checkout_cart2">Afhalen</label>
-            </div>
+            Bezorging
+{*            <div class="form-check form-check-inline p-0 m-0 justify-content-start">*}
+{*              <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_checkout_cart" id="carrier_selection_checkout_cart1" value="shipping" {if Context::getContext()->cart->id_carrier == (int)$deliveryMethodCarriers['select_carrier'] || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}checked{/if}>*}
+{*              <label class="form-check-label carrier-selection-label" for="carrier_selection_checkout_cart1">Verzenden</label>*}
+{*            </div>*}
+{*            <div class="form-check form-check-inline p-0 m-0 pl-2 justify-content-start">*}
+{*              <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_checkout_cart" id="carrier_selection_checkout_cart2" value="pickup" {if Context::getContext()->cart->id_carrier == (int)$deliveryMethodCarriers['select_pickup_carrier']|| Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) == 0}checked{/if}>*}
+{*              <label class="form-check-label carrier-selection-label" for="carrier_selection_checkout_cart2">Afhalen</label>*}
+{*            </div>*}
         </span>
         <span class="value price justify-content-end">
           {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}

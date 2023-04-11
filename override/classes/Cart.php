@@ -32,6 +32,7 @@ class Cart extends CartCore
     );
     public const ONLY_DISCOUNTS_NO_CALCULATION = 9;
     public const ONLY_REMAINDER_OF_DISCOUNTS = 10;
+    public const ONLY_REMAINDER_UNTIL_STORE_DISCOUNT = 11;
 
     public
     function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
@@ -647,7 +648,7 @@ class Cart extends CartCore
 
     /*
     * module: klcartruleextender
-    * date: 2023-04-03 12:08:24
+    * date: 2023-04-05 08:02:35
     * version: 1.0.1
     */
     public function getCartRules(
@@ -689,7 +690,7 @@ class Cart extends CartCore
 
     /*
     * module: klcartruleextender
-    * date: 2023-04-03 12:08:24
+    * date: 2023-04-05 08:02:35
     * version: 1.0.1
     */
     public function getOrderTotal(
@@ -701,100 +702,10 @@ class Cart extends CartCore
         $keepOrderPrices = false
     )
     {
-        $moduleClass = Module::getInstanceByName('klcartruleextender');
-        if ($type === Cart::ONLY_DISCOUNTS_NO_CALCULATION || $type === Cart::ONLY_REMAINDER_OF_DISCOUNTS) {
-//            $calculator = $moduleClass->getCalculator();
-//            switch ($type) {
-//                case
-//                Cart::ONLY_DISCOUNTS_NO_CALCULATION:
-//                    $value = new AmountImmutable();
-//                    $cartRules = $calculator->getCartRules();
-//                    $includeShippingFeeWithDiscount = 0;
-//                    $totalDiscountPercentage = 0;
-//                    foreach ($calculator->getCartRules() as $cartRule) {
-//                        $includeShippingFeeWithDiscount = $cartRule['reduction_include_shipping'];
-//                        if ($cartRule['reduction_amount'] > 0) {
-//                            $valueToAdd = new AmountImmutable($cartRule['reduction_amount'], $cartRule['reduction_amount'] / 1.21);
-//                            $value = $value->add($valueToAdd);
-//                        }
-//                        if ($cartRule['reduction_percent'] > 0) {
-//                            $totalDiscountPercentage = $cartRule['reduction_percent'];
-//                        }
-//                    }
-//
-//                    if ($totalDiscountPercentage > 0) {
-//                        $rowDiscount = $calculator->getRowTotalWithoutDiscount()->getTaxExcluded() / 100 * $totalDiscountPercentage;
-//
-//                        if ($includeShippingFeeWithDiscount !== 0) {
-//                            $shippingFees = $calculator->getFees()->getFinalShippingFees();
-//
-//                            $shippingDiscount = $shippingFees->getTaxExcluded() / 100 * $totalDiscountPercentage;
-//                            $discountAmount = $shippingDiscount + $rowDiscount;
-//                        } else {
-//                            $discountAmount = $rowDiscount;
-//                        }
-//                        $valueDiscountTotal = new AmountImmutable($discountAmount * 1.21, $discountAmount);
-//                        $value = $value->add($valueDiscountTotal);
-//
-//                    }
-//                    break;
-//                case
-//                Cart::ONLY_REMAINDER_OF_DISCOUNTS:
-//                    //Get discounts total
-//                    $calculator->processCalculation();
-////                $valueDiscountTotal = $calculator->getDiscountTotal();
-//                    $valueTotalReduction = new AmountImmutable(0, 0);
-//
-//                    $includeShippingFeeWithDiscount = 0;
-//                    $totalDiscountPercentage = 0;
-//
-//                    $totalAmount = $calculator->getRowTotalWithoutDiscount()->getTaxExcluded();
-//
-//
-//                    foreach ($calculator->getCartRules() as $cartRule) {
-//
-//                        if ($cartRule['reduction_include_shipping'] === 1) {
-//                            $includeShippingFeeWithDiscount = $cartRule['reduction_include_shipping'];
-//                        }
-//
-//                        if ($cartRule['reduction_amount'] > 0) {
-//                            $valueToAdd = new AmountImmutable($cartRule['reduction_amount'], $cartRule['reduction_amount'] / 1.21);
-//                            $valueTotalReduction = $valueTotalReduction->add($valueToAdd);
-//                        }
-//
-//                        if ($cartRule['reduction_percent'] > 0) {
-//                            $totalDiscountPercentage = $cartRule['reduction_percent'];
-//                        }
-//                    }
-//
-//
-//                    if ($totalDiscountPercentage > 0) {
-//                        $rowDiscount = $calculator->getRowTotalWithoutDiscount()->getTaxExcluded() / 100 * $totalDiscountPercentage;
-//
-//                        if ($includeShippingFeeWithDiscount !== 0) {
-//                            $shippingFees = $calculator->getFees()->getFinalShippingFees();
-//
-//                            $shippingDiscount = $shippingFees->getTaxExcluded() / 100 * $totalDiscountPercentage;
-//                            $discountAmount = $shippingDiscount + $rowDiscount;
-//                        } else {
-//                            $discountAmount = $rowDiscount;
-//                        }
-//                        $valueDiscountTotal = new AmountImmutable($discountAmount * 1.21, $discountAmount);
-//                    }
-//
-//
-//                    if ($includeShippingFeeWithDiscount !== 0) {
-//                        $totalAmount = $totalAmount + $calculator->getFees()->getFinalShippingFees()->getTaxExcluded();
-//                    }
-//
-//                    $totalReduction = $valueTotalReduction->add($valueDiscountTotal);
-//                    $value = new AmountImmutable(($totalAmount - $totalReduction->getTaxExcluded()) * 1.21, ($totalAmount - $totalReduction->getTaxExcluded()));
-//                    break;
-//            }
-//            $value = $withTaxes ? $value->getTaxIncluded() : $value->getTaxExcluded();
 
-            $value = 0;
-        } else {
+
+        if (!in_array($type, [CART::ONLY_DISCOUNTS_NO_CALCULATION, CART::ONLY_REMAINDER_OF_DISCOUNTS, CART::ONLY_REMAINDER_UNTIL_STORE_DISCOUNT])) {
+
             $value = parent::getOrderTotal(
                 $withTaxes,
                 $type,
@@ -803,13 +714,16 @@ class Cart extends CartCore
                 $use_cache,
                 $keepOrderPrices
             );
+
+        } else {
+
         }
 
-        if (!$moduleClass
+        if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
             || !($moduleClass instanceof KlCartRuleExtender)
             || !$moduleClass->isEnabledForShopContext()
             || (!Configuration::get('KL_CART_RULE_EXTENDER_SHIPPING_FEES') && !Configuration::get('KL_CART_RULE_EXTENDER_WRAPPING_FEES'))
-            || !in_array($type, [Cart::BOTH, Cart::ONLY_DISCOUNTS])
+            || !in_array($type, [Cart::BOTH, Cart::ONLY_DISCOUNTS, CART::ONLY_REMAINDER_OF_DISCOUNTS, CART::ONLY_DISCOUNTS_NO_CALCULATION, CART::ONLY_REMAINDER_UNTIL_STORE_DISCOUNT])
             || $this->getNbOfPackages() > 1
         ) {
             return $value;
@@ -822,13 +736,62 @@ class Cart extends CartCore
         if (!$calculator->isProcessed) {
             return $value;
         }
-        $amount = $type == Cart::BOTH
-            ? $calculator->getTotal()
-            : $calculator->getDiscountTotal();
+
+        switch ($type) {
+            case CART::BOTH:
+                $amount = $calculator->getTotal(false, true);
+                break;
+            case CART::ONLY_DISCOUNTS:
+                $amount = $calculator->getDiscountTotal();
+                break;
+            case CART::ONLY_DISCOUNTS_NO_CALCULATION:
+                $amount = $calculator->getDiscountTotal(true);
+                break;
+            case CART::ONLY_REMAINDER_OF_DISCOUNTS:
+                $discount = $calculator->getDiscountTotal(true);
+                if($discount->getTaxExcluded() > 0){
+                    $amount = $calculator->getTotal(false, true);
+                } else {
+                    $amount= new AmountImmutable(0,0);
+                }
+
+                break;
+        }
+
         $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
         if ($type == Cart::BOTH) {
             $value = max(0, $value);
         }
         return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
+    }
+
+    /**
+     * Get the to order total before auto add discount rules shopping cart
+     *
+     * @param $withTaxes
+     * @return array
+     */
+    public function getTotalBeforeNextAutoDiscount($withTaxes = true, $parts = 'all')
+    {
+        $cartRulesCheck = CartRule::getAutoAddToCartRules(Context::getContext(), true);
+        $amount = new AmountImmutable($cartRulesCheck['remaining_amount'] * 1.21, $cartRulesCheck['remaining_amount']);
+        $rule =  new CartRule($cartRulesCheck['cart_rule']->id);
+
+        $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
+
+        switch ($parts){
+            case 'name':
+                return $rule->getFieldByLang('name',  $this->id_lang);
+                break;
+            case 'rule':
+                return $cartRulesCheck['cart_rule'];
+                break;
+            case 'amount':
+                return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
+                break;
+            default:
+                return ['cart_rule_name' => $rule->getFieldByLang('name',  $this->id_lang),'cart_rule' => $cartRulesCheck['cart_rule'], 'amount' => Tools::ps_round($value, Context::getContext()->getComputingPrecision())];
+                break;
+        }
     }
 }

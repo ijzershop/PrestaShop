@@ -1,4 +1,3 @@
-{assign var='deliveryMethodCarriers' value=unserialize(Configuration::get('koopmanOrderExport'))}
 <div class="shoppingcart-list-block">
     <div class="menu-title" id="shoppingcart-list-title"><a class="text-white text-decoration-none" id="shoppingcart-chevron-close"><i class="float-left mt-1 mb-1 ml-1 fasr fa-chevron-right"></i> Winkelwagen</a>
         <a href="/mijn-account" id="my-account-link" title="Mijn Account" class="float-right text-white pr-2"><i class="fasr fa-user-circle"></i></a>
@@ -32,15 +31,15 @@
                 {foreach from=Context::getContext()->cart->getProducts() item=product}
                 <li class="pb-1">{include file='./ps_shoppingcart-product-line.tpl' product=$product cart_url=$cart_url}</li>
                 {/foreach}
-                {foreach from=Context::getContext()->cart->getDiscounts() item=voucher}
-                <li class="pb-1">
-                    <div class="row">
-                        <span class="mar_r4">{$voucher.name}</span>
-                        <span class="mar_r4">{Context::getContext()->currentLocale->formatPrice((float)$voucher.reduction_amount, 'EUR')}</span>
-                        <a href="javascript:void(0)" onclick="removeDiscount({{$voucher.id_cart_rule}})" data-link-action="remove-voucher" class="flex_child" title="{l s='Remove' d='Shop.Theme.Actions'}"><i class="fasr fa-trash mar_l4"></i></a>
-                    </div>
-                </li>
-                {/foreach}
+{*                {foreach from=Context::getContext()->cart->getDiscounts() item=voucher}*}
+{*                <li class="pb-1">*}
+{*                    <div class="row">*}
+{*                        <span class="mar_r4">{$voucher.name}</span>*}
+{*                        <span class="mar_r4">{Context::getContext()->currentLocale->formatPrice((float)$voucher.reduction_amount, 'EUR')}</span>*}
+{*                        <a href="javascript:void(0)" onclick="removeDiscount({{$voucher.id_cart_rule}})" data-link-action="remove-voucher" class="flex_child" title="{l s='Remove' d='Shop.Theme.Actions'}"><i class="fasr fa-trash mar_l4"></i></a>*}
+{*                    </div>*}
+{*                </li>*}
+{*                {/foreach}*}
             </ul>
         </div>
     </div>
@@ -67,11 +66,11 @@
                         <span class="col-6">
                           <div class="row">
                             <div class="form-check form-check-inline col-12 col-sm-6 p-0 m-0 pl-2 pl-sm-2 mb-1 mb-sm-0 justify-content-start">
-                              <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_bottom_cart" id="carrier_selection_bottom_cart1" value="shipping" {if Context::getContext()->cart->id_carrier == (int)$deliveryMethodCarriers['select_carrier']  || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}checked{/if}>
+                              <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_bottom_cart" id="carrier_selection_bottom_cart1" value="shipping" {if Context::getContext()->cart->id_carrier == (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER')  || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}checked{/if}>
                               <label class="form-check-label carrier-selection-label" for="carrier_selection_bottom_cart1">Verzenden</label>
                             </div>
                             <div class="form-check form-check-inline col-12 col-sm-6 p-0 m-0 pl-2 justify-content-start">
-                              <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_bottom_cart" id="carrier_selection_bottom_cart2" value="pickup" {if Context::getContext()->cart->id_carrier == (int)$deliveryMethodCarriers['select_pickup_carrier']  || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) == 0}checked{/if}>
+                              <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_bottom_cart" id="carrier_selection_bottom_cart2" value="pickup" {if Context::getContext()->cart->id_carrier == (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER')  || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) == 0}checked{/if}>
                               <label class="form-check-label carrier-selection-label" for="carrier_selection_bottom_cart2">Afhalen</label>
                             </div>
                           </div>
@@ -99,7 +98,7 @@
                 <div class="border-bottom-0 pb-1 p-2 row">
                     {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0}
 
-                      <span class="col-5">Totaal (incl. btw)</span><span class="col-7 text-right price font-weight-bold">{Context::getContext()->currentLocale->formatPrice(0-Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR')}</span>
+                      <span class="col-5">Totaal (incl. btw)</span><span class="col-7 text-right price font-weight-bold">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR')}</span>
                     {else}
 
                       <span class="col-5">Totaal (incl. btw)</span><span class="col-7 text-right price font-weight-bold">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::BOTH), 'EUR')}</span>

@@ -31,7 +31,7 @@
         {if $footer.products_before_discounts_tax_excl > 0}
             {displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}
         {else}
-            {displayPrice currency=$order->id_currency price=0-$footer.total_remainder_tax_excl}
+            {displayPrice currency=$order->id_currency price=0-$footer.total_refunded_tax_excl}
         {/if}
     </td>
   </tr>
@@ -76,32 +76,32 @@
         {l s='Total (Tax excl.)' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white">
-        {if abs($footer.total_remainder_tax_excl) > 0}
-            {displayPrice currency=$order->id_currency price=$footer.total_remainder_tax_excl}
+        {if abs($footer.total_refunded_tax_excl) > 0}
+            {displayPrice currency=$order->id_currency price=0-$footer.total_refunded_tax_excl}
         {else}
             {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_excl}
         {/if}
     </td>
   </tr>
-
-
   <tr class="bold">
     <td class="grey">
         {l s='Total Tax' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white">
-        {displayPrice currency=$order->id_currency price=$footer.total_taxes}
+        {if abs($footer.total_refunded_tax_excl) > 0}
+            {displayPrice currency=$order->id_currency price=0-($footer.total_refunded_tax_incl-$footer.total_refunded_tax_excl)}
+        {else}
+            {displayPrice currency=$order->id_currency price=$footer.total_taxes}
+        {/if}
     </td>
   </tr>
-
-
   <tr class="bold big">
     <td class="grey">
         {l s='Total' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white">
-        {if abs($footer.total_remainder_tax_incl) > 0}
-            {displayPrice currency=$order->id_currency price=$footer.total_remainder_tax_incl}
+        {if abs($footer.total_refunded_tax_excl) > 0}
+            {displayPrice currency=$order->id_currency price=0-$footer.total_refunded_tax_incl}
         {else}
             {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}
         {/if}

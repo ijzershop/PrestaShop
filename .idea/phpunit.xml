@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PHPUnit">
+    <option name="directories">
+      <list>
+        <option value="$PROJECT_DIR$/modules/autoupgrade/tests" />
+        <option value="$PROJECT_DIR$/modules/autoupgrade/tests" />
+        <option value="$PROJECT_DIR$/modules/autoupgrade/tests" />
+        <option value="$PROJECT_DIR$/modules/ps_distributionapiclient/tests" />
+        <option value="$PROJECT_DIR$/modules/gamification/tests/unit" />
+        <option value="$PROJECT_DIR$/modules/gamification/tests/functional" />
+        <option value="$PROJECT_DIR$/modules/ps_facetedsearch/tests" />
+        <option value="$PROJECT_DIR$/modules/autoupgrade/tests" />
+        <option value="$PROJECT_DIR$/modules/ps_eventbus/tests/unit" />
+        <option value="$PROJECT_DIR$/tools/build/tests/Unit" />
+        <option value="$PROJECT_DIR$/tests" />
+      </list>
+    </option>
+  </component>
+</project>

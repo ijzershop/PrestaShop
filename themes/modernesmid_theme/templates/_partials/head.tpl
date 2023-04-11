@@ -87,10 +87,6 @@
         content="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/ms-icon-144x144.png">
   <meta name="theme-color" content="#3b56ad"/>
 {/block}
-{*Fotawesome kit*}
-{*<script src="https://kit.fontawesome.com/ad689d7060.js" crossorigin="anonymous" async></script>*}
-
-
 <link rel="manifest"
       href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/manifest.json"
       crossorigin="use-credentials">
@@ -105,7 +101,6 @@
 {block name='hook_header'}
     {$HOOK_HEADER nofilter}
 {/block}
-
 
 <script type="text/javascript">
   let clarityKey = "{Configuration::get('MSTHEMECONFIG_CLARITY_ID', null, null,  null, '7bu3k08a1u')}";

@@ -178,7 +178,7 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
             $offer->min_cut_remainder = 0;
             $offer->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
             $offer->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
-
+            $offer->out_of_stock = 0;
             $offer->save();
 
             $qty = (int)Tools::getValue('offer-qty', 0);

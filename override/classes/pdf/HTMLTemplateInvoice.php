@@ -361,10 +361,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             $total_taxes = $total_remainder_tax_incl - $total_remainder_tax_excl;
         }
 
-
-
-
-
         $footer = array(
             'products_before_discounts_tax_excl' => $this->order_invoice->total_products,
             'product_discounts_tax_excl' => $product_discounts_tax_excl,
@@ -389,7 +385,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'total_refunded_tax_incl' => $this->order_invoice->total_refunded_tax_incl
         );
 
-//        dd($footer);
         foreach ($footer as $key => $value) {
             $footer[$key] = Tools::ps_round($value, _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
         }

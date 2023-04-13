@@ -187,8 +187,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             "Apikey: ". $api_key,
         );
 
-dd($query);
-
 
         curl_setopt_array($curlCard, array(
             CURLOPT_URL => "https://api.informer.eu/v1/salesorder",
@@ -670,10 +668,10 @@ dd($query);
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
             }
 
-            $resultApi = $this->addToInformerApi($order);
-            $resultProjectMessage = $this->addProjectAndEmployeeToMessages($order);
+//            $resultApi = $this->addToInformerApi($order);
+//            $resultProjectMessage = $this->addProjectAndEmployeeToMessages($order);
 
-            $this->sendAdministrationMsg($order, $resultApi);
+//            $this->sendAdministrationMsg($order, $resultApi);
 
 
             return true;

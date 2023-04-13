@@ -55,13 +55,11 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
             }
         }
 
-
         if (true === (bool) Tools::getValue('free_order')) {
             $this->checkFreeOrder();
         }
 
         $this->id_cart = (int) (Tools::getValue('id_cart', 0));
-
         $this->id_module = (int) (Tools::getValue('id_module', 0));
         $this->id_order = Order::getIdByCartId((int) ($this->id_cart));
         $this->secure_key = Tools::getValue('key', false);
@@ -71,9 +69,6 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
         $this->reference = (string) $this->order->reference;
 
         $redirectLink = $this->context->link->getPageLink('history', $this->ssl);
-
-
-
 //        && (int)$this->id_module !== (int)Module::getModuleIdByName('ps_creditpayment')
         // The confirmation link must contain a unique order secure key matching the key saved in database,
         // this prevents user to view other customer's order confirmations
@@ -82,19 +77,16 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
         }
         $this->reference = $this->order->reference;
 
-
         if(isset($this->context->cookie->selected_customer_id_customer) && !empty($this->context->cookie->selected_customer_id_customer) && (int)Context::getContext()->customer->id == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') && Module::getModuleIdByName('ps_creditpayment') == $this->id_module){
             if (!Validate::isLoadedObject($this->order) || $this->order->id_customer != (int)$this->context->cookie->selected_customer_id_customer || $this->context->cookie->selected_customer_secure_key != $this->order->secure_key) {
 
                 Tools::redirect($redirectLink);
             }
         } else {
-
             if (!Validate::isLoadedObject($this->order) || $this->order->id_customer != $this->context->customer->id || $this->secure_key != $this->order->secure_key) {
                 Tools::redirect($redirectLink);
             }
         }
-
 
 
         // Free order uses -1 as id_module, it has a special check here
@@ -105,6 +97,7 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
         } else {
             // Otherwise we run a normal check that module matches
             $module = Module::getInstanceById((int) ($this->id_module));
+
             if ($this->order->module !== $module->name) {
                 Tools::redirect($redirectLink);
             }

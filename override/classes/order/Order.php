@@ -7,6 +7,10 @@ class Order extends OrderCore
 {
     public $added_to_order;
 
+
+public $total_refunded_tax_incl;
+public $total_refunded_tax_excl;
+
     public static $definition = [
         'table' => 'orders',
         'primary' => 'id_order',

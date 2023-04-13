@@ -185,7 +185,7 @@ let tinySetup = function(config) {
   $.each(default_config, function(index, el) {
     if (config[index] === undefined) config[index] = el;
   });
-console.log(config);
+
   var plugins_arr = config['plugins'];
   var old_plugins_array = ['iespell', 'inlinepopups', 'style', 'xhtmlxtras', 'safari'];
   $.each(plugins_arr, function(index, data) {

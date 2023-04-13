@@ -668,10 +668,10 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
             }
 
-//            $resultApi = $this->addToInformerApi($order);
-//            $resultProjectMessage = $this->addProjectAndEmployeeToMessages($order);
+            $resultApi = $this->addToInformerApi($order);
+            $resultProjectMessage = $this->addProjectAndEmployeeToMessages($order);
 
-//            $this->sendAdministrationMsg($order, $resultApi);
+            $this->sendAdministrationMsg($order, $resultApi);
 
 
             return true;

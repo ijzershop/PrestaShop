@@ -5,6 +5,7 @@ namespace MsThemeConfig\Controller\Admin;
 
 use MsThemeConfig\Class\Offer;
 use mysqli_result;
+use PrestaShop\PrestaShop\Adapter\Entity\Category;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\Carrier;
 use PrestaShop\PrestaShop\Adapter\Entity\Context;
@@ -119,6 +120,14 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
 
         $this->setCurrencyValue();
 
+        $catID = Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID');
+        $categoryArray = [$catID];
+
+
+        if((int)$catID > 0){
+            $category = new Category($catID);
+            $categoryArray[] = $category->id_parent;
+        }
 
         if (Tools::getValue('offer-new') === "false") {
             $id_product = Tools::getValue('offer-row-id');
@@ -132,14 +141,17 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
             $offer->min_cut_remainder = 0;
             $offer->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
             $offer->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
-
+            $offer->id_category_default = $catID;
             $offer->update();
 
             $qty = (int)Tools::getValue('offer-qty', 0);
             StockAvailable::setQuantity((int)$id_product, 0, $qty);
+            StockAvailable::setProductOutOfStock((int)$offer->id, false);
+            $offer->addToCategories($categoryArray);
 
             $offer->quantity = $qty;
             $offer->id_product = $id_product;
+
 
             return Response::create(json_encode(['msg' => 'Offer updated', 'offer' => $offer, 'error' => false]));
 
@@ -179,10 +191,14 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
             $offer->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
             $offer->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
             $offer->out_of_stock = 0;
+            $offer->id_category_default = $catID;
             $offer->save();
+
+            $offer->addToCategories($categoryArray);
 
             $qty = (int)Tools::getValue('offer-qty', 0);
             StockAvailable::setQuantity((int)$offer->id, 0, $qty);
+            StockAvailable::setProductOutOfStock((int)$offer->id, false);
 
             $this->afterAdd($offer);
 

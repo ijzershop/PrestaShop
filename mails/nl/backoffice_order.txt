@@ -2,7 +2,7 @@
 
 Een nieuwe bestelling is voor u aangemaakt.
 
-Ga a.u.b. naar [betalen]({order_link}) om uw bestelling af te ronden.
+Please go on [payment link]({order_link}) to complete the payment.
 
 Werkt de knop niet kopieëer dan de onderstaande link en plak deze in uw browser..
 {order_link}

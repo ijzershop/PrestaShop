@@ -47,7 +47,7 @@
 			<table style="width: 100%">
 				<tr>
 					<td style="font-weight: bold; font-size: 18pt; color: #000; width: 100%;">{if isset($reference)}{$reference}<br>
-              {$invoice_date|date_format:"%d-%m-%Y"}{/if}</td>
+              {$invoice_date|date_format:"d-m-Y"}{/if}</td>
 				</tr>
 			</table>
 		</td>

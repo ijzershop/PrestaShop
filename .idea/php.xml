@@ -329,6 +329,7 @@
       <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/react/promise" />
       <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/composer" />
       <path value="$PROJECT_DIR$/modules/seoexpert/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/apache-pack" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

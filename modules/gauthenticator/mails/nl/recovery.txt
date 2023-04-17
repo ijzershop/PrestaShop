@@ -1,10 +1,10 @@
 {shop_url}
 
-Een Google Authenticator recovery code is aangevraagd door uw admin account. U kunt de volgende code gebruiken om weer toegang tot uw account te krijgen:
+A Google Authenticator recovery code has been requested by your Back Office account. You can use the following code to regain access to your Back Office:
 
 {recovery_token}
 
-Deze code werkt eenmaal, en zal geblokkeerd worden na een geslaagde aanmelding met een account die gebruik maakt van de Google Authenticator.
+This code will only work once, and it will be disabled by any successful Back Office login by any account using Google Authenticator.
 
 [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 

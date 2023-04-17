@@ -1,6 +1,6 @@
 {shop_url}
 
-U heeft gekozen om te betalen middels bankoverschrijving voor bestelling: {order_name}.
+You have decided to pay order: {order_name} by bank wire.
 
 Bedrag:  {total_paid}
 
@@ -8,7 +8,7 @@ Rekeninggegevens: {bankwire_details}
 
 Ten name van:  {bankwire_owner}
 
-Omschrijving: {order_name}
+Description: {order_name}
 
 Iets vergeten te bestellen?Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.
 

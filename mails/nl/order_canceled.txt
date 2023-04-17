@@ -1,6 +1,6 @@
 {shop_url}
 
-Uw bestelling met referentie {order_name} is door ons geannuleerd.
+Your order with the reference {order_name} has been canceled by us.
 
 Ga naar uw klantaccount voor meer info hieromtrent.
 

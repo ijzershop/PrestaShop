@@ -2,7 +2,7 @@
 
 Een creditnota is aangemaakt op uw naam voor uw bestelling met referentie {order_name}.
 
-Bekijk deze retourbon na en download uw nieuwe factuur van onze webshop, ga naar [> Retour bonnen]({history_url}) tab van uw klant account.
+Review this credit slip and download your invoice on our shop, go to the [> credit slips]({history_url}) section of your customer account.
 
 Iets vergeten te bestellen?Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.
 

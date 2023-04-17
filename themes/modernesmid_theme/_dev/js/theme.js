@@ -1328,7 +1328,7 @@ $(function () {
             '<span style="font-size:16px;" class="col-6 badge badge-success">' + e[0].postcode + '</span>' +
             '<span class="info-icon-add-to-order" data-id="add_to_order_info"><i class="icon-info ml-2"></i></span>' +
             '<br/>' +
-            '<div style="display:none;" class="border-bottom-0 pb-1 row" id="add_to_order_info">' +
+            '<div style="display:none;" class="border-bottom-0 pb-1 pt-2 col" id="add_to_order_info">' +
             '<span class="col-12 text-left width-100" style="color:blue;">Vanwege de AVG regels kunnen wij u niet meer informatie verschaffen dan de postcode. Kijk daarom de postcode en uw referentie goed na voordat u deze bestelling er aan toevoegd.</span>' +
             '</div><br/>'
             + '<div class="btn-group w-100"><a id="searchOrderByReferenceAgain" class="btn btn-sm btn-primary text-white" href="#"><i class="fasr fa-magnifying-glass"></i> Opnieuw Zoeken</a>';

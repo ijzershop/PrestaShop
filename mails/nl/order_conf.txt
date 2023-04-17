@@ -8,13 +8,11 @@ Vervoerder: {carrier}
 
 Klant: {firstname} {lastname} - ({email})
 
-Adres:
+Address:
 {delivery_block_html}
 
-Referentie	Product	Stukprijs	Aantal	Totaalprijs  {products_txt} {discounts_txt}
-Verzending	{total_shipping_tax_excl}
-Totaal belasting inbegrepen	{total_tax_paid}
-Totaal betaald	{total_paid}
+Uw factuur is als bijlage toegevoegd.
+[Wilt u hem graag online bekijken, klik dan op deze link.]({shop_url}index.php?controller=pdf-invoice&id_order={id_order})
 
 Iets vergeten te bestellen?Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.
 

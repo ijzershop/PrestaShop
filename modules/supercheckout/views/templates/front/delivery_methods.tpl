@@ -168,7 +168,7 @@
                               </div>
                               <span class="col" id="desired_reference_error"></span>
                             </div>
-                            <div class="row" style="display:none;" id="order_number_show">
+                            <div class="col" style="display:none;" id="order_number_show">
                                 <div class="col" id="order_number_show_block">
                               </div>
                             </div>

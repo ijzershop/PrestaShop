@@ -106,7 +106,6 @@ class OrderSlipGenerator
     {
 
         $order_invoice_collection = $this->fetchPaidAndReadyOrders();
-
         if (! count($order_invoice_collection)) {
             return false;
         }
@@ -121,22 +120,22 @@ class OrderSlipGenerator
         }
 
 
-        $loginCall = $this->doApiCall('api-auth', ['email'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER'), 'password'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS')]);
-        if(!empty($loginCall)){
-            $message = [];
-            $message['text'] = 'pakbonnen_'.$this->slipTime.'.pdf';
-            $message['status'] = 'success';
-            $message['error_records'] = $this->errorRecords;
-            $message['success_records'] = $this->completedSuccessRecords;
-            $message['time'] = $this->slipTime;
-
-           $this->doApiCall('log-message', [
-                'profile'     => 'ijzershop.nl',
-                'type'        =>  'cron-job',
-                'version'     => _PS_VERSION_,
-                'message'     => json_encode($message),
-            ], ['Content-Type' => 'application/x-www-form-urlencoded', 'Authorization: Bearer '.$loginCall->access_token]);
-        }
+//        $loginCall = $this->doApiCall('api-auth', ['email'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER'), 'password'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS')]);
+//        if(!empty($loginCall)){
+//            $message = [];
+//            $message['text'] = 'pakbonnen_'.$this->slipTime.'.pdf';
+//            $message['status'] = 'success';
+//            $message['error_records'] = $this->errorRecords;
+//            $message['success_records'] = $this->completedSuccessRecords;
+//            $message['time'] = $this->slipTime;
+//
+//           $this->doApiCall('log-message', [
+//                'profile'     => 'ijzershop.nl',
+//                'type'        =>  'cron-job',
+//                'version'     => _PS_VERSION_,
+//                'message'     => json_encode($message),
+//            ], ['Content-Type' => 'application/x-www-form-urlencoded', 'Authorization: Bearer '.$loginCall->access_token]);
+//        }
         return true;
     }
 
@@ -150,35 +149,32 @@ class OrderSlipGenerator
      */
     private function fetchPaidAndReadyOrders() : array
     {
-        $date_from = date('Y-m-d H:i:s', strtotime('-14 days'));
         $date_to = date('Y-m-d H:i:s', strtotime('-5 minutes'));
 
         if($this->debug){
-            $last_updated_date = date('Y-m-d H:i:s');
+            $last_updated_date = date('Y-m-d H:i:s', strtotime('-1 year'));
         } else {
-            $last_updated_date = date('Y-m-d H:i:s', strtotime('-1 minute'));
+            $last_updated_date = date('Y-m-d H:i:s', strtotime('-1 year'));
         }
 
         $sql_query = new DbQuery();
-        $sql_query->select('oi.*');
-        $sql_query->from('order_invoice', 'oi');
+        $sql_query->select('oi.id_order_invoice, oi.id_order, oi.number, oi.delivery_number, oi.delivery_date, oi.total_discount_tax_excl, oi.total_discount_tax_incl, oi.total_paid_tax_excl, oi.total_paid_tax_incl, oi.total_refunded_tax_excl, oi.total_refunded_tax_incl, oi.total_products, oi.total_products_wt, oi.total_shipping_tax_excl, oi.total_shipping_tax_incl, oi.shipping_tax_computation_method, oi.total_wrapping_tax_excl, oi.total_wrapping_tax_incl, oi.shop_address, oi.note, oi.date_add');
+        $sql_query->from('orders', 'o');
+        $sql_query->leftJoin('order_invoice', 'oi', 'oi.id_order = o.id_order');
         $sql_query->where('o.current_state = \''.$this->paidStatus.'\''.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
-        $sql_query->leftJoin('orders', 'o', 'o.id_order = oi.id_order');
+        $sql_query->where('o.date_upd >= \''.pSQL($last_updated_date).'\'');
         $sql_query->where('oi.date_add <= \''.pSQL($date_to).'\'');
-        $sql_query->where('oi.date_add >= \''.pSQL($date_from).'\'');
-        $sql_query->where('o.date_upd <= \''.pSQL($last_updated_date).'\'');
+        $sql_query->orderBy('oi.id_order_invoice ASC');
         $sql_query->orderBy('oi.delivery_date ASC');
 
-         if($this->debug){
+        if($this->debug){
              echo $sql_query->__toString();
          }
-
         $order_invoice_list = Db::getInstance()->executeS($sql_query);
 
         if($this->debug){
             var_export($order_invoice_list);
         }
-
         return ObjectModel::hydrateCollection('OrderInvoice', $order_invoice_list);
     }
 
@@ -231,13 +227,18 @@ class OrderSlipGenerator
 
         $delivery_slip_pdf = $pdf_file->render(false);
         $this->slipTime = time();
+
         file_put_contents(dirname(__FILE__, 4).'/upload/pakbonnen/pakbonnen_'.$this->slipTime.'.pdf', $delivery_slip_pdf);
     }
 }
 
 try {
     $batch = new OrderSlipGenerator(false);
+
     $batch->generateOrderSlips();
+    dd($batch);
+
+
 } catch (PrestaShopDatabaseException | PrestaShopException $exeption) {
     return $exeption;
 }

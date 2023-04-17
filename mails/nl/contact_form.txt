@@ -1,7 +1,7 @@
 {shop_url}
 
-Uw bericht is succesvol verzonden.
-Wij reageren binnen één werkdag op uw bericht.
+Your message has been sent successfully!
+We will respond within one work day.
 
 [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 

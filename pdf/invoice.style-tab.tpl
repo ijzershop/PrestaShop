@@ -60,6 +60,10 @@
 		padding: {$table_padding};
 		border: 1pt solid {$color_border};
 	}
+  table.no-padding {
+    padding: 0!important;
+    border-spacing: 0;
+  }
 	table#note-tab {
 		padding: {$table_padding};
 		border: 1px solid {$color_border};

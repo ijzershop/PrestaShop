@@ -1,7 +1,9 @@
-Hi {firstName} {lastName},
+{shop_url}
 
-Thank you for shopping with {shop_name}!
+Bedankt voor het winkelen bij {shop_name}!
+U kunt nu uw bestelling afronden door nu te [betalen.]({checkoutUrl})
 
-You can now finish your order by clicking on: [here]({checkoutUrl}).
+Werkt de knop niet kopieëer dan de onderstaande link en plak deze in uw browser..
+{checkoutUrl}
 
-[{shop_name}]({shop_url})
+ijzershop.local | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

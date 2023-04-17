@@ -174,15 +174,14 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                         $order_detail['product_desc_short'] = reset($descProduct->description);
                     }
                 }
+                if(!is_null($order_detail['customizedDatas'])){
+                    foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
+                        if(!is_null($customization)){
 
-                 if(!is_null($order_detail['customizedDatas'])){
-                     foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
-                         if(!is_null($customization)){
+                            foreach ($customization as $customizationId => $customized) {
 
-                             foreach ($customization as $customizationId => $customized) {
-
-                                 if(isset($customized['datas'])){
-                                     if(extension_loaded('imagick') || class_exists("Imagick"))
+                                if(isset($customized['datas'])){
+                                    if(extension_loaded('imagick') || class_exists("Imagick"))
                                      {
                                          if(isset($customized['datas'][1][0]['technical_image'])){
                                              $file = $customized['datas'][1][0]['technical_image'];

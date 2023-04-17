@@ -120,22 +120,22 @@ class OrderSlipGenerator
         }
 
 
-//        $loginCall = $this->doApiCall('api-auth', ['email'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER'), 'password'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS')]);
-//        if(!empty($loginCall)){
-//            $message = [];
-//            $message['text'] = 'pakbonnen_'.$this->slipTime.'.pdf';
-//            $message['status'] = 'success';
-//            $message['error_records'] = $this->errorRecords;
-//            $message['success_records'] = $this->completedSuccessRecords;
-//            $message['time'] = $this->slipTime;
-//
-//           $this->doApiCall('log-message', [
-//                'profile'     => 'ijzershop.nl',
-//                'type'        =>  'cron-job',
-//                'version'     => _PS_VERSION_,
-//                'message'     => json_encode($message),
-//            ], ['Content-Type' => 'application/x-www-form-urlencoded', 'Authorization: Bearer '.$loginCall->access_token]);
-//        }
+        $loginCall = $this->doApiCall('api-auth', ['email'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER'), 'password'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS')]);
+        if(!empty($loginCall)){
+            $message = [];
+            $message['text'] = 'pakbonnen_'.$this->slipTime.'.pdf';
+            $message['status'] = 'success';
+            $message['error_records'] = $this->errorRecords;
+            $message['success_records'] = $this->completedSuccessRecords;
+            $message['time'] = $this->slipTime;
+
+           $this->doApiCall('log-message', [
+                'profile'     => 'ijzershop.nl',
+                'type'        =>  'cron-job',
+                'version'     => _PS_VERSION_,
+                'message'     => json_encode($message),
+            ], ['Content-Type' => 'application/x-www-form-urlencoded', 'Authorization: Bearer '.$loginCall->access_token]);
+        }
         return true;
     }
 

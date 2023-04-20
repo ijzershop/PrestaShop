@@ -142,11 +142,12 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
             $offer->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
             $offer->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
             $offer->id_category_default = $catID;
+            $offer->out_of_stock = 0;
             $offer->update();
 
             $qty = (int)Tools::getValue('offer-qty', 0);
             StockAvailable::setQuantity((int)$id_product, 0, $qty);
-            StockAvailable::setProductOutOfStock((int)$offer->id, false);
+            StockAvailable::setProductOutOfStock((int)$offer->id, false, Context::getContext()->shop->id, 0);
             $offer->addToCategories($categoryArray);
 
             $offer->quantity = $qty;
@@ -198,7 +199,7 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
 
             $qty = (int)Tools::getValue('offer-qty', 0);
             StockAvailable::setQuantity((int)$offer->id, 0, $qty);
-            StockAvailable::setProductOutOfStock((int)$offer->id, false);
+            StockAvailable::setProductOutOfStock((int)$offer->id, false, Context::getContext()->shop->id, 0);
 
             $this->afterAdd($offer);
 

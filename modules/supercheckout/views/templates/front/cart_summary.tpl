@@ -108,7 +108,8 @@
                     <input min="1" onclick="this.select()" autocomplete="off" type="text" id="quantity"
                            class="form-control input-number quantitybox"
                            name="quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}"
-                           value="{$product.quantity|intval}">
+                           value="{$product.quantity|intval}"
+                           {if $product.out_of_stock == 0}max="{$product.stock_quantity}"{/if}>
                     <span class="input-group-append">
                                                 <button type="button"
                                                         class="input-group-text cart_quantity_down qty-btn decrease_button quantity-right-plus btn btn-primary btn-number"
@@ -121,7 +122,8 @@
                     <input min="1" onclick="this.select()" autocomplete="off" type="text" id="quantity"
                            class="form-control input-number quantitybox kb_text_update_qty"
                            name="quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}"
-                           value="{$product.quantity|intval}">
+                           value="{$product.quantity|intval}"
+                           {if $product.out_of_stock == 0}max="{$product.stock_quantity}"{/if}>>
                     <a href="javascript:void(0)" id="demo_2_s" class="kb_update_link"
                        title="{l s='update quantity' mod='supercheckout'}"
                        onclick="updateQtyByBtn('quantity_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}_{$product.id_customization|intval}')"><small>{l s='Update' mod='supercheckout'}</small></a>

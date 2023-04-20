@@ -21,14 +21,21 @@
 
         <h3><i class="icon-code"></i>&nbsp;{l s='Google Analytics 4 tracking' mod='ganalyticspro'}</h3>
 
+
+        {if !empty($bUpdate)}
+            {include file="`$sConfirmInclude`"}
+        {elseif !empty($aErrors)}
+            {include file="`$sErrorInclude`"}
+        {/if}
+
         <div class="alert alert-warning">
-            {l s='Before enabling Google Analytics 4 (GA4) tracking, you must create a GA4 property in your Google Analytics account by following' mod='ganalyticspro'}&nbsp;<a class="badge badge-info" href="{$smarty.const._GAP_BT_FAQ_MAIN_URL|escape:'htmlall':'UTF-8'}{$sFaqLang|escape:'htmlall':'UTF-8'}/faq/467" target="_blank"><i class="icon icon-link"/></i>&nbsp;{l s='this FAQ' mod='ganalyticspro'}</a>
+            {l s='Before enabling Google Analytics 4 (GA4) tracking, you must create a GA4 property in your Google Analytics account by following' mod='ganalyticspro'}&nbsp;<a class="badge badge-info" href="{$sFaqURL|escape:'htmlall':'UTF-8'}{$sFaqLang|escape:'htmlall':'UTF-8'}/faq/467" target="_blank"><i class="icon icon-link"/></i>&nbsp;{l s='this FAQ' mod='ganalyticspro'}</a>
             <div class="clr_10"></div>
-            {l s='If you were using a Universal Analytics (UA) property, you just need to associate it with this new property following' mod='ganalyticspro'}&nbsp;<a class="badge badge-info" href="{$smarty.const._GAP_BT_FAQ_MAIN_URL|escape:'htmlall':'UTF-8'}{$sFaqLang|escape:'htmlall':'UTF-8'}/faq/466" target="_blank"><i class="icon icon-link"/></i>&nbsp;{l s='this FAQ' mod='ganalyticspro'}</a>&nbsp;{l s='The UA property will continue to collect data (provided that you enter its tracking ID in the next tab) and you will still be able to access it. To know more, please visit' mod='ganalyticspro'}&nbsp;<a href="https://support.google.com/analytics/answer/9744165?hl=fr&ref_topic=9303319" target="_blank">{l s='the Google official documentation' mod='ganalyticspro'}</a>
+            {l s='If you were using a Universal Analytics (UA) property, you just need to associate it with this new property following' mod='ganalyticspro'}&nbsp;<a class="badge badge-info" href="{$sFaqURL|escape:'htmlall':'UTF-8'}{$sFaqLang|escape:'htmlall':'UTF-8'}/faq/466" target="_blank"><i class="icon icon-link"/></i>&nbsp;{l s='this FAQ' mod='ganalyticspro'}</a>&nbsp;{l s='The UA property will continue to collect data (provided that you enter its tracking ID in the next tab) and you will still be able to access it. To know more, please visit' mod='ganalyticspro'}&nbsp;<a href="https://support.google.com/analytics/answer/9744165?hl=fr&ref_topic=9303319" target="_blank">{l s='the Google official documentation' mod='ganalyticspro'}</a>
             <div class="clr_10"></div>
             {l s='Once your GA4 property is created, select "Yes" for the "Enable GA4 tracking" option below.' mod='ganalyticspro'}
         </div>
-        
+
         <div class="clr_10"></div>
 
         <div>
@@ -64,7 +71,7 @@
                         </div>
                     </div>
                     <span class="label-tooltip" data-toggle="tooltip" title data-original-title="{l s='Enter the measurement ID of your GA4 property. It is an alpha-numeric code prefixed by "G-".' mod='ganalyticspro'}">&nbsp;<i class="icon-question-sign"></i></span>
-                    &nbsp;<a class="badge badge-info" href="{$smarty.const._GAP_BT_FAQ_MAIN_URL|escape:'htmlall':'UTF-8'}{$sFaqLang|escape:'htmlall':'UTF-8'}/faq/468" target="_blank"><i class="icon icon-link"/></i>&nbsp;{l s='FAQ about GA4 measurement ID' mod='ganalyticspro'}</a>
+                    &nbsp;<a class="badge badge-info" href="{$sFaqURL|escape:'htmlall':'UTF-8'}{$sFaqLang|escape:'htmlall':'UTF-8'}/faq/468" target="_blank"><i class="icon icon-link"/></i>&nbsp;{l s='FAQ about GA4 measurement ID' mod='ganalyticspro'}</a>
                 </div>
             </div>
         </div>
@@ -75,11 +82,8 @@
 
 		<div class="center">
 			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-11 col-lg-11">
-					<div id="bt_error-gfour"></div>
-				</div>
-				<div class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
-					<button  class="btn btn-default pull-right" onclick="oGap.form('bt_gfour_form', '{$sURI|escape:'htmlall':'UTF-8'}', null, 'bt_gfour_settings', 'bt_gfour_settings', false, false, null, 'gfour', 'gfour');return false;"><i class="process-icon-save"></i>{l s='Save' mod='ganalyticspro'}</button>
+				<div class="navbar navbar-default navbar-fixed-bottom text-center">
+					<button class="btn btn_submit" onclick="oGap.form('bt_gfour_form', '{$sURI|escape:'htmlall':'UTF-8'}', null, 'bt_gfour_settings', 'bt_gfour_settings', false, false, null, 'gfour', 'gfour');return false;">{l s='Save' mod='ganalyticspro'}</button>
 				</div>
 			</div>
 		</div>

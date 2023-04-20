@@ -85,7 +85,7 @@
                         data-current-value="{$product.quantity}"
                         name="product-quantity-spin"
                         min="{$product.minimal_quantity}"
-                        {if  $has_remaining_stock->is_orderable && $has_remaining_stock->remaining_qty_msg != ''}max="{$has_remaining_stock->remaining_stock}"{/if}
+                        {if  $product.out_of_stock === 0}max="{$has_remaining_stock->remaining_stock}"{/if}
                         pattern="\d*"
                       />
                     {/if}

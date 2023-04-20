@@ -3,9 +3,10 @@
  * Google Analytics : GA4 and Universal-Analytics
  *
  * @author    businesstech.fr <modules@businesstech.fr> - https://www.businesstech.fr/
- * @copyright Business Tech 2022 - https://www.businesstech.fr/
+ * @copyright Business Tech 2023 - https://www.businesstech.fr/
  * @license   see file: LICENSE.txt
- * @version 2.0.4
+ *
+ * @version 2.1.6
  *
  *           ____    _______
  *          |  _ \  |__   __|
@@ -14,87 +15,100 @@
  *          | |_) |    | |
  *          |____/     |_|
  */
-
 if (!defined('_PS_VERSION_')) {
     exit(1);
 }
 
+require_once dirname(__FILE__) . '/vendor/autoload.php';
+
+use GanalyticsPro\Hook\hookController;
+use GanalyticsPro\Admin\baseController;
+use GanalyticsPro\ModuleLib\moduleTools;
+use GanalyticsPro\ModuleLib\moduleUpdate;
+use GanalyticsPro\Install\installController;
+use GanalyticsPro\Configuration\moduleConfiguration;
+
 class GAnalyticsPro extends Module
 {
     /**
-     * @var array $aConfiguration : array of set configuration
+     * @var array : array of set configuration
      */
-    public static $aConfiguration = array();
+    public static $aConfiguration = [];
 
     /**
-     * @var int $iCurrentLang : store id of default lang
+     * @var int : store id of default lang
      */
     public static $iCurrentLang = null;
 
     /**
-     * @var int $sCurrentLang : store iso of default lang
+     * @var int : store iso of default lang
      */
     public static $sCurrentLang = null;
 
     /**
-     * @var obj $oCookie : store cookie obj
+     * @var obj : store cookie obj
      */
     public static $oCookie = null;
 
     /**
-     * @var obj $oModule : obj module itself
+     * @var obj : obj module itself
      */
-    public static $oModule = array();
+    public static $oModule = [];
 
     /**
-     * @var string $sQueryMode : query mode - detect XHR
+     * @var string : query mode - detect XHR
      */
     public static $sQueryMode = null;
 
     /**
-     * @var string $sBASE_URI : base of URI in prestashop
+     * @var string : base of URI in prestashop
      */
     public static $sBASE_URI = null;
 
     /**
-     * @var array $aErrors : array get error
+     * @var array : array get error
      */
     public $aErrors = null;
 
     /**
-     * @var int $iShopId : shop id used for 1.5 and for multi shop
+     * @var int : shop id used for 1.5 and for multi shop
      */
     public static $iShopId = 1;
 
     /**
-     * @var bool $bCompare17 : get compare version for PS 1.7
+     * @var bool : get compare version for PS 1.7
      */
     public static $bCompare17 = false;
 
     /**
-     * @var bool $bCompare1750 : get compare version for PS 1.7.5.0
+     * @var bool
      */
     public static $bCompare1750 = false;
 
     /**
-     * @var bool $bCompare1780 : get compare version for PS 1.7.5.0
+     * @var bool
      */
     public static $bCompare1780 = false;
+
+    /**
+     * @var bool
+     */
+    public static $bCompare80 = false;
+
+    /**
+     * @var obj : get context object
+     */
+    public static $oContext;
 
     /**
      * Magic Method __construct assigns few information about module and instantiate parent class
      */
     public function __construct()
     {
-        require_once(dirname(__FILE__) . '/conf/common.conf.php');
-        require_once(dirname(__FILE__) . '/conf/admin.conf.php');
-        require_once(_GAP_PATH_LIB . 'warning_class.php');
-        require_once(_GAP_PATH_LIB . 'module-tools_class.php');
-
         $this->name = 'ganalyticspro';
         $this->module_key = '7814804ce39cacda037743a3b29ee2af';
         $this->tab = 'analytics_stats';
-        $this->version = '2.0.4';
+        $this->version = '2.1.6';
         $this->author = 'Business Tech';
         $this->ps_versions_compliancy['min'] = '1.7.4.0';
         $this->need_instance = 1;
@@ -105,35 +119,19 @@ class GAnalyticsPro extends Module
         $this->description = $this->l('Install the Google Analytics 4 (GA4) tag on your site and collect data for your GA4 and Universal Analytics (UA), with enhanced e-commerce, reports in your Google Analytics account');
 
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall the module Google Analytics : GA4 and Universal-Analytics (your configuration will be lost)?');
-
-        // get shop id
         self::$iShopId = $this->context->shop->id;
-
-        // get current  lang id
         self::$iCurrentLang = $this->context->cookie->id_lang;
-
-        // get current lang iso
-        self::$sCurrentLang = BT_GapModuleTools::getLangIso();
-
-        // get cookie obj
         self::$oCookie = $this->context->cookie;
-
-        // compare PS versions
         self::$bCompare17 = version_compare(_PS_VERSION_, '1.7', '>=');
         self::$bCompare1750 = version_compare(_PS_VERSION_, '1.7.5.0', '>=');
         self::$bCompare1780 = version_compare(_PS_VERSION_, '1.7.8.0', '>=');
-
-        // stock itself obj
+        self::$bCompare80 = version_compare(_PS_VERSION_, '8.0.0', '>=');
         self::$oModule = $this;
-
-        // set base of URI
         self::$sBASE_URI = $this->_path;
-
-        // get configuration options
-        BT_GapModuleTools::getConfiguration();
-
-        // get call mode - Ajax or dynamic - used for clean headers and footer in ajax request
-        self::$sQueryMode = Tools::getValue('sMode');
+        moduleTools::getConfiguration();
+        self::$sCurrentLang = moduleTools::getLangIso();
+        self::$sQueryMode = \Tools::getValue('sMode');
+        self::$oContext = $this->context;
     }
 
     /**
@@ -143,16 +141,13 @@ class GAnalyticsPro extends Module
      */
     public function install()
     {
-        require_once(_GAP_PATH_CONF . 'install.conf.php');
-        require_once(_GAP_PATH_LIB_INSTALL . 'install-ctrl_class.php');
-
         // set return
         $bReturn = true;
 
-        if ( !parent::install()
-            || !BT_InstallCtrl::run('install', 'sql', _GAP_PATH_SQL . _GAP_INSTALL_SQL_FILE)
-            || !BT_InstallCtrl::run('install', 'config')
-            || !BT_InstallCtrl::run('install', 'tab')
+        if (
+            !parent::install()
+            || !installController::run('install', 'sql', moduleConfiguration::GAP_PATH_SQL . moduleConfiguration::GAP_INSTALL_SQL_FILE)
+            || !installController::run('install', 'config', ['bConfigOnly' => true])
         ) {
             $bReturn = false;
         }
@@ -167,16 +162,13 @@ class GAnalyticsPro extends Module
      */
     public function uninstall()
     {
-        require_once(_GAP_PATH_CONF . 'install.conf.php');
-        require_once(_GAP_PATH_LIB_INSTALL . 'install-ctrl_class.php');
-
         // set return
         $bReturn = true;
 
-        if ( !parent::uninstall()
-            || !BT_InstallCtrl::run('uninstall', 'sql', _GAP_PATH_SQL . _GAP_UNINSTALL_SQL_FILE)
-            || !BT_InstallCtrl::run('uninstall', 'config')
-            || !BT_InstallCtrl::run('uninstall', 'tab')
+        if (
+            !parent::uninstall()
+            || !installController::run('uninstall', 'sql', moduleConfiguration::GAP_PATH_SQL . moduleConfiguration::GAP_UNINSTALL_SQL_FILE)
+            || !installController::run('uninstall', 'config')
         ) {
             $bReturn = false;
         }
@@ -191,47 +183,26 @@ class GAnalyticsPro extends Module
      */
     public function getContent()
     {
-        require_once(_GAP_PATH_CONF . 'admin.conf.php');
-        require_once(_GAP_PATH_LIB_ADMIN . 'base-ctrl_class.php');
-        require_once(_GAP_PATH_LIB_ADMIN . 'admin-ctrl_class.php');
-
-        if (empty(GAnalyticsPro::$aConfiguration['GAP_UPDATE_HTML_ELEM'])) {
-
-            // use case 1.7.0 to 1.7.8
-            if (!empty(GAnalyticsPro::$bCompare17)) {
-                Configuration::updateValue('GAP_JS_CATEGORY_PROD', 'li.product-miniature');
-                Configuration::updateValue('GAP_JS_REMOVE_CART', 'a.remove-from-cart');
-                Configuration::updateValue('GAP_JS_SHIPPING', 'input[type=radio]');
-                Configuration::updateValue('GAP_JS_PAYMENT', '.ps-shown-by-js');
-                Configuration::updateValue('GAP_JS_LOGIN', 'button#submit-login');
-                Configuration::updateValue('GAP_JS_SIGNUP', 'div.no-account');
-                Configuration::updateValue('GAP_JS_WISH_CAT', 'button.wishlist-button-add');
-                Configuration::updateValue('GAP_JS_WISH_PROD', 'button.wishlist-button-add');
-                Configuration::updateValue('GAP_UPDATE_HTML_ELEM', true);
-            }
-
-            if (!empty(GAnalyticsPro::$bCompare1780)) {
-                Configuration::updateValue('GAP_JS_CATEGORY_PROD', 'article.product-miniature');
-                Configuration::updateValue('GAP_JS_REMOVE_CART', 'a.remove-from-cart');
-                Configuration::updateValue('GAP_JS_SHIPPING', 'input[type=radio]');
-                Configuration::updateValue('GAP_JS_PAYMENT', '.ps-shown-by-js');
-                Configuration::updateValue('GAP_JS_LOGIN', 'button#submit-login');
-                Configuration::updateValue('GAP_JS_SIGNUP', 'div.no-account');
-                Configuration::updateValue('GAP_JS_WISH_CAT', 'button.wishlist-button-add');
-                Configuration::updateValue('GAP_JS_WISH_PROD', 'button.wishlist-button-add');
-                Configuration::updateValue('GAP_UPDATE_HTML_ELEM', true);
-            }
+        if (empty(\GAnalyticsPro::$aConfiguration['GAP_UPDATE_HTML_ELEM'])) {
+            \Configuration::updateValue('GAP_JS_CATEGORY_PROD', 'article.product-miniature');
+            \Configuration::updateValue('GAP_JS_SHIPPING', 'input[type=radio]');
+            \Configuration::updateValue('GAP_JS_PAYMENT', '.ps-shown-by-js');
+            \Configuration::updateValue('GAP_JS_LOGIN', 'button#submit-login');
+            \Configuration::updateValue('GAP_JS_SIGNUP', 'div.no-account');
+            \Configuration::updateValue('GAP_JS_WISH_CAT', 'button.wishlist-button-add');
+            \Configuration::updateValue('GAP_JS_WISH_PROD', 'button.wishlist-button-add');
+            \Configuration::updateValue('GAP_UPDATE_HTML_ELEM', true);
         }
 
         // set
-        $aUpdateModule = array();
+        $aUpdateModule = [];
 
         try {
             // get controller type
-            $sControllerType = (!Tools::getIsset(_GAP_PARAM_CTRL_NAME) || (Tools::getIsset(_GAP_PARAM_CTRL_NAME) && 'admin' == Tools::getValue(_GAP_PARAM_CTRL_NAME))) ? (Tools::getIsset(_GAP_PARAM_CTRL_NAME) ? Tools::getValue(_GAP_PARAM_CTRL_NAME) : 'admin') : Tools::getValue(_GAP_PARAM_CTRL_NAME);
+            $sControllerType = (!\Tools::getIsset(moduleConfiguration::GAP_PARAM_CTRL_NAME) || (\Tools::getIsset(moduleConfiguration::GAP_PARAM_CTRL_NAME) && 'admin' == \Tools::getValue(moduleConfiguration::GAP_PARAM_CTRL_NAME))) ? (\Tools::getIsset(moduleConfiguration::GAP_PARAM_CTRL_NAME) ? \Tools::getValue(moduleConfiguration::GAP_PARAM_CTRL_NAME) : 'admin') : \Tools::getValue(moduleConfiguration::GAP_PARAM_CTRL_NAME);
 
             // instantiate matched controller object
-            $oCtrl = BT_GapBaseCtrl::get($sControllerType);
+            $oCtrl = baseController::get($sControllerType);
 
             // execute good action in admin
             // only displayed with key : tpl and assign in order to display good smarty template
@@ -241,10 +212,10 @@ class GAnalyticsPro extends Module
             unset($oCtrl);
 
             if (!empty($aDisplay)) {
-                $aDisplay['assign'] = array_merge($aDisplay['assign'], array(
+                $aDisplay['assign'] = array_merge($aDisplay['assign'], [
                     'aUpdateErrors' => $aUpdateModule,
-                    'oJsTranslatedMsg' => BT_GapModulejson_encode($GLOBALS[_GAP_MODULE_NAME . '_JS_MSG'])
-                ));
+                    'oJsTranslatedMsg' => json_encode(moduleConfiguration::getJsMessage()),
+                ]);
 
                 // get content
                 $sContent = $this->displayModule($aDisplay['tpl'], $aDisplay['assign']);
@@ -255,10 +226,10 @@ class GAnalyticsPro extends Module
                     return $sContent;
                 }
             } else {
-                throw new Exception('action returns empty content', 110);
+                throw new \Exception('action returns empty content', 110);
             }
-        } catch (Exception $e) {
-            $this->aErrors[] = array('msg' => $e->getMessage(), 'code' => $e->getCode());
+        } catch (\Exception $e) {
+            $this->aErrors[] = ['msg' => $e->getMessage(), 'code' => $e->getCode()];
 
             // get content
             $sContent = $this->displayErrorModule();
@@ -282,7 +253,7 @@ class GAnalyticsPro extends Module
      */
     public function hookDisplayHeader()
     {
-        return ($this->_execHook('display', 'header'));
+        return $this->_execHook('display', 'header');
     }
 
     /**
@@ -292,18 +263,19 @@ class GAnalyticsPro extends Module
      */
     public function hookDisplayHome()
     {
-        return ($this->_execHook('display', 'home'));
+        return $this->_execHook('display', 'home');
     }
 
     /**
      * hookActionOrderStatusUpdate() method displays Google Analytics
      *
      * @param array $aParams
+     *
      * @return string
      */
     public function hookActionOrderStatusUpdate(array $aParams)
     {
-        return ($this->_execHook('action', 'orderStatusUpdate', $aParams));
+        return $this->_execHook('action', 'orderStatusUpdate', $aParams);
     }
 
     /**
@@ -311,17 +283,14 @@ class GAnalyticsPro extends Module
      *
      * @param string $sHookType
      * @param array $aParams
+     *
      * @return string
      */
-    private function _execHook($sHookType, $sAction, array $aParams = array())
+    private function _execHook($sHookType, $sAction, array $aParams = [])
     {
-        // include
-        require_once(_GAP_PATH_CONF . 'hook.conf.php');
-        require_once(_GAP_PATH_LIB_HOOK . 'hook-ctrl_class.php');
-
         try {
             // define which hook class is executed in order to display good content in good zone in shop
-            $oHook = new BT_GAPHookCtrl($sHookType, $sAction);
+            $oHook = new hookController($sHookType, $sAction);
 
             // displays good block content
             $aDisplay = $oHook->run($aParams);
@@ -329,67 +298,18 @@ class GAnalyticsPro extends Module
             // free memory
             unset($oHook);
 
-            //execute good action in admin
-            //only displayed with key : tpl and assign in order to display good smarty template
+            // execute good action in admin
+            // only displayed with key : tpl and assign in order to display good smarty template
             if (!empty($aDisplay)) {
                 return $this->displayModule($aDisplay['tpl'], $aDisplay['assign']);
             } else {
-                throw new Exception('Choosen hook returns empty content', 110);
+                throw new \Exception('Choosen hook returns empty content', 110);
             }
-        } catch (Exception $e) {
-            $this->aErrors[] = array('msg' => $e->getMessage(), 'code' => $e->getCode());
+        } catch (\Exception $e) {
+            $this->aErrors[] = ['msg' => $e->getMessage(), 'code' => $e->getCode()];
 
             return $this->displayErrorModule();
         }
-    }
-
-    /**
-     * setErrorHandler() method manages module error
-     *
-     * @param string $sTplName
-     * @param array $aAssign
-     */
-    public function setErrorHandler($iErrno, $sErrstr, $sErrFile, $iErrLine, $aErrContext)
-    {
-        switch ($iErrno) {
-            case E_USER_ERROR:
-                $this->aErrors[] = array(
-                    'msg' => 'Fatal error <b>' . $sErrstr . '</b>',
-                    'code' => $iErrno,
-                    'file' => $sErrFile,
-                    'line' => $iErrLine,
-                    'context' => $aErrContext
-                );
-                break;
-            case E_USER_WARNING:
-                $this->aErrors[] = array(
-                    'msg' => 'Warning <b>' . $sErrstr . '</b>',
-                    'code' => $iErrno,
-                    'file' => $sErrFile,
-                    'line' => $iErrLine,
-                    'context' => $aErrContext
-                );
-                break;
-            case E_USER_NOTICE:
-                $this->aErrors[] = array(
-                    'msg' => 'Notice <b>' . $sErrstr . '</b>',
-                    'code' => $iErrno,
-                    'file' => $sErrFile,
-                    'line' => $iErrLine,
-                    'context' => $aErrContext
-                );
-                break;
-            default:
-                $this->aErrors[] = array(
-                    'msg' => 'Unknow error <b>' . $sErrstr . '</b>',
-                    'code' => $iErrno,
-                    'file' => $sErrFile,
-                    'line' => $iErrLine,
-                    'context' => $aErrContext
-                );
-                break;
-        }
-        return ($this->displayErrorModule());
     }
 
     /**
@@ -399,24 +319,27 @@ class GAnalyticsPro extends Module
      * @param array $aAssign
      * @param bool $bUseCache
      * @param int $iICacheId
+     *
      * @return string html
      */
     public function displayModule($sTplName, $aAssign, $bUseCache = false, $iICacheId = null)
     {
-        if (file_exists(_GAP_PATH_TPL . $sTplName) && is_file(_GAP_PATH_TPL . $sTplName)) {
+        if (file_exists(_PS_MODULE_DIR_ . 'ganalyticspro/views/templates/' . $sTplName) && is_file(_PS_MODULE_DIR_ . 'ganalyticspro/views/templates/' . $sTplName)) {
             $aAssign = array_merge(
                 $aAssign,
-                array('sModuleName' => Tools::strtolower(_GAP_MODULE_NAME), 'bDebug' => _GAP_DEBUG)
+                ['sModuleName' => \Tools::strtolower(moduleConfiguration::GAP_MODULE_NAME), 'bDebug' => moduleConfiguration::GAP_DEBUG]
             );
 
             // use cache
             if (!empty($bUseCache) && !empty($iICacheId)) {
-                return ($this->display(__FILE__, $sTplName, $this->getCacheId($iICacheId)));
+                return $this->display(__FILE__, $sTplName, $this->getCacheId($iICacheId))
+                ;
             } // not use cache
             else {
-                $this->context->smarty->assign($aAssign);
+                self::$oContext->smarty->assign($aAssign);
 
-                return ($this->display(__FILE__, _GAP_PATH_TPL_NAME . $sTplName));
+                return $this->display(__FILE__, 'views/templates/' . $sTplName)
+                ;
             }
         } else {
             throw new Exception('Template "' . $sTplName . '" doesn\'t exists', 120);
@@ -428,47 +351,45 @@ class GAnalyticsPro extends Module
      *
      * @param string $sTplName
      * @param array $aAssign
+     *
      * @return string html
      */
     public function displayErrorModule()
     {
         $this->context->smarty->assign(
-            array(
-                'sHomeURI' => BT_GapModuleTools::truncateUri(),
+            [
+                'sHomeURI' => moduleTools::truncateUri(),
                 'aErrors' => $this->aErrors,
-                'sModuleName' => Tools::strtolower(_GAP_MODULE_NAME),
-                'bDebug' => _GAP_DEBUG,
-            )
+                'sModuleName' => \Tools::strtolower(moduleConfiguration::GAP_MODULE_NAME),
+                'bDebug' => moduleConfiguration::GAP_DEBUG,
+            ]
         );
 
-        $sSubpath = (Tools::getValue('token')) ? _GAP_TPL_ADMIN_PATH : _GAP_TPL_HOOK_PATH;
-
-        return ($this->display(__FILE__, _GAP_PATH_TPL_NAME . $sSubpath . _GAP_TPL_ERROR));
+        return $this->display(__FILE__, 'views/templates/admin/error.tpl');
     }
 
     /**
      * updateModule() method updates module as necessary
+     *
      * @return array
      */
     public function updateModule()
     {
-        require(_GAP_PATH_LIB . 'module-update_class.php');
-
         // check if update tables
-        BT_GapModuleUpdate::create()->run('tables');
+        moduleUpdate::create()->run('tables');
 
         // check if update fields
-        BT_GapModuleUpdate::create()->run('fields');
+        moduleUpdate::create()->run('fields');
 
         // check if update hooks
-        BT_GapModuleUpdate::create()->run('hooks');
+        moduleUpdate::create()->run('hooks');
 
         // check if update templates
-        BT_GapModuleUpdate::create()->run('templates');
+        moduleUpdate::create()->run('templates');
 
         // check if update admin tab
-        BT_GapModuleUpdate::create()->run('moduleAdminTab');
+        moduleUpdate::create()->run('moduleAdminTab');
 
-        return (BT_GapModuleUpdate::create()->aErrors);
+        return moduleUpdate::create()->aErrors;
     }
 }

@@ -13,9 +13,12 @@
  *          |____/     |_|
  *}
 
-<link rel="stylesheet" type="text/css" href="{$smarty.const._GAP_URL_CSS|escape:'htmlall':'UTF-8'}admin.css">
-<link rel="stylesheet" type="text/css" href="{$smarty.const._GAP_URL_CSS|escape:'htmlall':'UTF-8'}font-awesome.css">
-<script type="text/javascript" src="{$smarty.const._GAP_URL_JS|escape:'htmlall':'UTF-8'}module.js"></script>
+<link rel="stylesheet" type="text/css" href="{$moduleCssPath}admin.css">
+<link rel="stylesheet" type="text/css" href="{$moduleCssPath}font-awesome.css">
+<link rel="stylesheet" type="text/css" href="{$moduleCssPath|escape:'htmlall':'UTF-8'}toastr.min.css">
+<script type="text/javascript" src="{$moduleJsPath}module.js"></script>
+<script type="text/javascript" src="{$moduleJsPath|escape:'htmlall':'UTF-8'}toastr.js"></script>
+
 <script type="text/javascript">
 	// instantiate object
 	var oGap = oGap || new GapModule('{$sModuleName|escape:'htmlall':'UTF-8'}');
@@ -26,7 +29,7 @@
 	{/if}
 
 	// set URL of admin img
-	oGap.sImgUrl = '{$smarty.const._GAP_URL_IMG|escape:'htmlall':'UTF-8'}';
+	oGap.sImgUrl = '{$imagePath|escape:'htmlall':'UTF-8'}';
 
 	{if !empty($sModuleURI)}
 	// set URL of module's web service

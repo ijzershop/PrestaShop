@@ -98,6 +98,24 @@ var GapModule = function(sName){
 		// set bIsError
 		var bIsError = false;
 
+		toastr.options = {
+			closeButton: true,
+			debug: false,
+			newestOnTop: false,
+			progressBar: true,
+			positionClass: "toast-top-right",
+			preventDuplicates: false,
+			onclick: null,
+			showDuration: "5000",
+			hideDuration: "1000",
+			timeOut: "5000",
+			extendedTimeOut: "1000",
+			showEasing: "swing",
+			hideEasing: "linear",
+			showMethod: "fadeIn",
+			hideMethod: "fadeOut",
+		};
+
 		// check element form
 		jQuery.each(fields, function(i, field) {
 			bIsError = false;
@@ -106,51 +124,45 @@ var GapModule = function(sName){
 				case 'bt_gfour-id' :
 					if (field.value == '') {
 						oThis.aError[iCounter] = oThis.msgs.gaId;
-						bIsError = true;
-					}
-					break;
-				case 'bt_code_addtocart_product' :
-					if (field.value == '') {
-						oThis.aError[iCounter] = oThis.msgs.htmlElement;
+						toastr.error(oThis.msgs.gaId);
 						bIsError = true;
 					}
 					break;
 				case 'bt_code_category_product' :
 					if (field.value == '') {
 						oThis.aError[iCounter] = oThis.msgs.htmlElement;
-						bIsError = true;
-					}
-					break;
-				case 'bt_code_remove_cart' :
-					if (field.value == '') {
-						oThis.aError[iCounter] = oThis.msgs.htmlElement;
+						toastr.error(oThis.msgs.htmlElement);
 						bIsError = true;
 					}
 					break;
 				case 'bt_code_shipping' :
 					if (field.value == '') {
 						oThis.aError[iCounter] = oThis.msgs.htmlElement;
+						toastr.error(oThis.msgs.htmlElement);
 						bIsError = true;
 					}
 					break;
 				case 'bt_code_payment' :
 					if (field.value == '') {
 						oThis.aError[iCounter] = oThis.msgs.htmlElement;
+						toastr.error(oThis.msgs.htmlElement);
 						bIsError = true;
 					}
 					break;
 				case 'bt_code_login' :
 					if (field.value == '') {
 						oThis.aError[iCounter] = oThis.msgs.htmlElement;
+						toastr.error(oThis.msgs.htmlElement);
 						bIsError = true;
 					}
 					break;
 				case 'bt_code_signup' :
 					if (field.value == '') {
 						oThis.aError[iCounter] = oThis.msgs.htmlElement;
+						toastr.error(oThis.msgs.htmlElement);
 						bIsError = true;
 					}
-					break;					
+					break;
 				default:
 					break;
 			}

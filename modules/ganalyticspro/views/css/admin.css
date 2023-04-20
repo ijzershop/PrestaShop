@@ -72,3 +72,36 @@
 	font-size: 14px;
 	padding-top: 7px;
 }
+
+#gap span.label-tooltip>b {
+    background-color: #EDF7FB;
+    border: none;
+    border-bottom: 1px solid #D8EDF7;
+    border-radius: 3px;
+    color: #3586AE;
+    font-size: 13px;
+    padding: 0 5px;
+    text-decoration: none;
+}
+
+#gap .btn_submit {
+    background-color: #8dc153;
+	border-color:#198754;
+    color: #fff;
+    margin-left: auto;
+    margin-right: auto;
+    width: 15%;
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    font-size: 16px !important;
+    margin-bottom: 15px;
+}
+
+#gap .bootstrap .navbar-default {
+	margin-top: 20px;
+    background-color: #f8f8f8;
+	padding-top: 15px;
+	border-top: 1px solid #8dc153;
+}

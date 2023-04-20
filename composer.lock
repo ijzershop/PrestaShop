@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5f9fb2a19683a7353984442d5a5cb1ca",
+    "content-hash": "1f732e6d058c0c6cf1d1069c762fdc98",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -5120,6 +5120,46 @@
                 "source": "https://github.com/PrestaShop/pagesnotfound/tree/v2.0.2"
             },
             "time": "2022-01-11T07:53:21+00:00"
+        },
+        {
+            "name": "prestashop/prestashop-accounts-installer",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShopCorp/prestashop-accounts-installer.git",
+                "reference": "b69a6a0d1f2ecbb1e53e61b22a4140462e77bdf7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShopCorp/prestashop-accounts-installer/zipball/b69a6a0d1f2ecbb1e53e61b22a4140462e77bdf7",
+                "reference": "b69a6a0d1f2ecbb1e53e61b22a4140462e77bdf7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "fzaninotto/faker": "^1.9",
+                "phpunit/phpunit": "^5.7",
+                "prestashop/php-dev-tools": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\PsAccountsInstaller\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Utility package to install `ps_accounts` module or present data to trigger manual install from psx configuration page.",
+            "support": {
+                "issues": "https://github.com/PrestaShopCorp/prestashop-accounts-installer/issues",
+                "source": "https://github.com/PrestaShopCorp/prestashop-accounts-installer/tree/v1.0.3"
+            },
+            "time": "2023-04-18T11:54:57+00:00"
         },
         {
             "name": "prestashop/productcomments",

@@ -1,22 +1,25 @@
 <?php
+
 /**
- * 2007-2020 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
+declare(strict_types=1);
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -26,106 +29,47 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
-use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
+use LanguageCore as Language;
+use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
+use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
+use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
+use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Dotenv\Dotenv;
+use TabCore as Tab;
 
 class ps_mbo extends Module
 {
-    const TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
-        'AdminProducts',
-        'AdminCategories',
-        'AdminTracking',
-        'AdminAttributesGroups',
-        'AdminFeatures',
-        'AdminManufacturers',
-        'AdminSuppliers',
-        'AdminTags',
-        'AdminOrders',
-        'AdminInvoices',
-        'AdminReturn',
-        'AdminDeliverySlip',
-        'AdminSlip',
-        'AdminStatuses',
-        'AdminOrderMessage',
-        'AdminCustomers',
-        'AdminAddresses',
-        'AdminGroups',
-        'AdminCarts',
-        'AdminCustomerThreads',
-        'AdminContacts',
-        'AdminCartRules',
-        'AdminSpecificPriceRule',
-        'AdminShipping',
-        'AdminLocalization',
-        'AdminZones',
-        'AdminCountries',
-        'AdminCurrencies',
-        'AdminTaxes',
-        'AdminTaxRulesGroup',
-        'AdminTranslations',
-        'AdminPreferences',
-        'AdminOrderPreferences',
-        'AdminPPreferences',
-        'AdminCustomerPreferences',
-        'AdminThemes',
-        'AdminMeta',
-        'AdminCmsContent',
-        'AdminImages',
-        'AdminSearchConf',
-        'AdminGeolocation',
-        'AdminInformation',
-        'AdminPerformance',
-        'AdminEmails',
-        'AdminImport',
-        'AdminBackup',
-        'AdminRequestSql',
-        'AdminLogs',
-        'AdminAdminPreferences',
-        'AdminStats',
-        'AdminSearchEngines',
-        'AdminReferrers',
+    use PrestaShop\Module\Mbo\Traits\HaveTabs;
+    use PrestaShop\Module\Mbo\Traits\UseHooks;
+    use PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService;
+
+    public const DEFAULT_ENV = '';
+
+    /**
+     * @var string
+     */
+    public const VERSION = '4.4.1';
+
+    public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
+        'AdminPsMboModule',
+        'AdminModulesManage',
+        'AdminModulesSf',
     ];
 
-    const TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
-        'AdminMarketing',
-        'AdminPayment',
-        'AdminCarriers',
+    public const CONTROLLERS_WITH_CDC_SCRIPT = [
+        'AdminModulesNotifications',
+        'AdminModulesUpdates',
+        'AdminModulesManage',
     ];
 
-    const ADMIN_CONTROLLERS = [
-        'AdminPsMboModule' => [
-            'name' => 'Module catalog',
-            'visible' => true,
-            'class_name' => 'AdminPsMboModule',
-            'parent_class_name' => 'AdminParentModulesCatalog',
-            'core_reference' => 'AdminModulesCatalog',
-        ],
-        'AdminPsMboAddons' => [
-            'name' => 'Module selection',
-            'visible' => true,
-            'class_name' => 'AdminPsMboAddons',
-            'parent_class_name' => 'AdminParentModulesCatalog',
-            'core_reference' => 'AdminAddonsCatalog',
-        ],
-        'AdminPsMboRecommended' => [
-            'name' => 'Module recommended',
-            'visible' => true,
-            'class_name' => 'AdminPsMboRecommended',
-        ],
-        'AdminPsMboTheme' => [
-            'name' => 'Theme catalog',
-            'visible' => true,
-            'class_name' => 'AdminPsMboTheme',
-            'parent_class_name' => 'AdminParentThemes',
-            'core_reference' => 'AdminThemesCatalog',
-        ],
-    ];
-
-    const HOOKS = [
-        'actionAdminControllerSetMedia',
-        'displayDashboardTop',
+    public $configurationList = [
+        'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
+        'PS_MBO_SHOP_ADMIN_MAIL' => '',
+        'PS_MBO_LAST_PS_VERSION_API_CONFIG' => '',
     ];
 
     /**
@@ -134,25 +78,54 @@ class ps_mbo extends Module
     protected $container;
 
     /**
+     * @var \PrestaShop\Module\Mbo\DependencyInjection\ServiceContainer
+     */
+    private $serviceContainer;
+
+    /**
+     * @var PermissionCheckerInterface
+     */
+    protected $permissionChecker;
+
+    /**
+     * @var string
+     */
+    public $imgPath;
+
+    /**
+     * @var string
+     */
+    public $moduleCacheDir;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.0.1';
+        $this->version = '4.4.1';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
-            'min' => '1.7.5.0',
+            'min' => '8.0.0',
             'max' => _PS_VERSION_,
         ];
 
         parent::__construct();
 
-        $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
-        $this->description = $this->l('Discover the best PrestaShop modules to optimize your online store.');
+        $this->imgPath = $this->_path . 'views/img/';
+        $this->moduleCacheDir = sprintf('%s/var/modules/%s/', rtrim(_PS_ROOT_DIR_, '/'), $this->name);
+
+        $this->displayName = $this->trans('PrestaShop Marketplace in your Back Office', [], 'Modules.Mbo.Global');
+        $this->description = $this->trans('Browse the Addons marketplace directly from your back office to better meet your needs.', [], 'Modules.Mbo.Global');
+
+        if (self::checkModuleStatus()) {
+            $this->bootHooks();
+        }
+
+        $this->loadEnv();
     }
 
     /**
@@ -160,98 +133,70 @@ class ps_mbo extends Module
      *
      * @return bool
      */
-    public function install()
+    public function install(): bool
     {
-        return parent::install()
-            && $this->registerHook(static::HOOKS)
-            && $this->installTabs();
+        try {
+            $this->getService('mbo.ps_accounts.installer')->install();
+        } catch (Exception $e) {
+            // For now, do nothing
+        }
+
+        $this->installTables();
+        if (parent::install() && $this->registerHook($this->getHooksNames())) {
+            // Do come extra operations on modules' registration like modifying orders
+            $this->installHooks();
+
+            $this->getAdminAuthenticationProvider()->clearCache();
+            $this->getAdminAuthenticationProvider()->createApiUser();
+            $this->postponeTabsTranslations();
+
+            return true;
+        }
+
+        // If installation fails, we remove the tables previously created
+        $this->uninstallTables();
+
+        return false;
     }
 
     /**
-     * Install all Tabs.
-     *
-     * @return bool
-     */
-    public function installTabs()
-    {
-        foreach (static::ADMIN_CONTROLLERS as $adminTab) {
-            if (false === $this->installTab($adminTab)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Install Tab.
-     * Used in upgrade script.
-     *
-     * @param array $tabData
-     *
-     * @return bool
-     */
-    public function installTab(array $tabData)
-    {
-        $position = 0;
-        $tabNameByLangId = array_fill_keys(
-            Language::getIDs(false),
-            $tabData['name']
-        );
-
-        if (isset($tabData['core_reference'])) {
-            $tabCoreId = Tab::getIdFromClassName($tabData['core_reference']);
-
-            if ($tabCoreId !== false) {
-                $tabCore = new Tab($tabCoreId);
-                $tabNameByLangId = $tabCore->name;
-                $position = $tabCore->position;
-                $tabCore->active = false;
-                $tabCore->save();
-            }
-        }
-
-        $tab = new Tab();
-        $tab->module = $this->name;
-        $tab->class_name = $tabData['class_name'];
-        $tab->position = (int) $position;
-        $tab->id_parent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
-        $tab->name = $tabNameByLangId;
-
-        if (false === (bool) $tab->add()) {
-            return false;
-        }
-
-        if (Validate::isLoadedObject($tab)) {
-            // Updating the id_parent will override the position, that's why we save 2 times
-            $tab->position = (int) $position;
-            $tab->save();
-        }
-
-        return true;
-    }
-
-    /**
-     * Uninstall Module.
-     *
-     * @return bool
+     * @inerhitDoc
      */
     public function uninstall()
     {
-        return parent::uninstall()
-            && $this->uninstallTabs();
-    }
+        if (!parent::uninstall()) {
+            return false;
+        }
 
-    /**
-     * Uninstall all Tabs.
-     *
-     * @return bool
-     */
-    public function uninstallTabs()
-    {
-        foreach (static::ADMIN_CONTROLLERS as $adminTab) {
-            if (false === $this->uninstallTab($adminTab)) {
-                return false;
+        $this->getAdminAuthenticationProvider()->deletePossibleApiUser();
+        $this->getAdminAuthenticationProvider()->clearCache();
+
+        $lockFiles = ['registerShop', 'updateShop'];
+        foreach ($lockFiles as $lockFile) {
+            if (file_exists($this->moduleCacheDir . $lockFile . '.lock')) {
+                unlink($this->moduleCacheDir . $lockFile . '.lock');
+            }
+        }
+
+        foreach (array_keys($this->configurationList) as $name) {
+            Configuration::deleteByName($name);
+        }
+
+        // This will reset cached configuration values (uuid, mail, ...) to avoid reusing them
+        Config::resetConfigValues();
+
+        $this->uninstallTables();
+
+        /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher */
+        $eventDispatcher = $this->get('event_dispatcher');
+        if (!$eventDispatcher->hasListeners(ModuleManagementEvent::UNINSTALL)) {
+            return true;
+        }
+
+        foreach ($eventDispatcher->getListeners(ModuleManagementEvent::UNINSTALL) as $listener) {
+            if ($listener[0] instanceof ModuleManagementEventSubscriber) {
+                $eventDispatcher->removeSubscriber($listener[0]);
+                break;
             }
         }
 
@@ -259,140 +204,83 @@ class ps_mbo extends Module
     }
 
     /**
-     * Uninstall Tab.
-     * Can be used in upgrade script.
+     * Enable Module.
      *
-     * @param array $tabData
+     * @param bool $force_all
      *
      * @return bool
      */
-    public function uninstallTab(array $tabData)
+    public function enable($force_all = false): bool
     {
-        $tabId = Tab::getIdFromClassName($tabData['class_name']);
-        $tab = new Tab($tabId);
+        // Store previous context
+        $previousContextType = Shop::getContext();
+        $previousContextShopId = Shop::getContextShopID();
 
-        if (false === Validate::isLoadedObject($tab)) {
-            return false;
-        }
+        $allShops = Shop::getShops(true, null, true);
 
-        if (false === (bool) $tab->delete()) {
-            return false;
-        }
-
-        if (isset($tabData['core_reference'])) {
-            $tabCoreId = Tab::getIdFromClassName($tabData['core_reference']);
-            $tabCore = new Tab($tabCoreId);
-
-            if (Validate::isLoadedObject($tabCore)) {
-                $tabCore->active = true;
-            }
-
-            if (false === (bool) $tabCore->save()) {
+        foreach ($allShops as $shop) {
+            if (!$this->enableByShop($shop)) {
                 return false;
             }
         }
 
+        // Restore previous context
+        Shop::setContext($previousContextType, $previousContextShopId);
+
+        // Install tab before registering shop, we need the tab to be active to create the good token
+        $this->handleTabAction('install');
+        $this->postponeTabsTranslations();
+
+        // Register online services
+        $this->registerShop();
+
         return true;
     }
 
-    /**
-     * Hook actionAdminControllerSetMedia.
-     */
-    public function hookActionAdminControllerSetMedia()
+    private function enableByShop(int $shopId)
     {
-        // has to be loaded in header to prevent flash of content
-        $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
+        // Force context to all shops
+        Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
 
-        if ($this->shouldAttachRecommendedModulesButton()
-            || $this->shouldAttachRecommendedModulesAfterContent()
-        ) {
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
-            $this->context->controller->addJs(
-                rtrim(__PS_BASE_URI__, '/')
-                . str_ireplace(
-                    _PS_CORE_DIR_,
-                    '',
-                    _PS_BO_ALL_THEMES_DIR_
-                )
-                . 'default/js/bundle/module/module_card.js?v='
-                . _PS_VERSION_
-            );
-        }
+        return parent::enable(true);
     }
 
     /**
-     * Hook displayDashboardTop.
-     * Includes content just below the toolbar.
+     * Disable Module.
      *
-     * @return string
-     */
-    public function hookDisplayDashboardTop()
-    {
-        /** @var UrlGeneratorInterface $router */
-        $router = $this->get('router');
-
-        try {
-            $recommendedModulesUrl = $router->generate(
-                'admin_mbo_recommended_modules',
-                [
-                    'tabClassName' => Tools::getValue('controller'),
-                ]
-            );
-        } catch (Exception $exception) {
-            // Avoid fatal errors on ServiceNotFoundException
-            return '';
-        }
-
-        $this->smarty->assign([
-            'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModulesAfterContent(),
-            'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModulesButton(),
-            'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
-            'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services'),
-            'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
-            'recommendedModulesUrl' => $recommendedModulesUrl,
-        ]);
-
-        return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
-    }
-
-    /**
-     * Indicates if the recommended modules should be attached after content in this page
+     * @param bool $force_all
      *
      * @return bool
      */
-    private function shouldAttachRecommendedModulesAfterContent()
+    public function disable($force_all = false): bool
     {
-        // AdminLogin should not call TabCollectionProvider
-        if (Validate::isLoadedObject($this->context->employee)) {
-            /** @var TabCollectionProvider $tabCollectionProvider */
-            $tabCollectionProvider = $this->get('mbo.tab.collection.provider');
-            if ($tabCollectionProvider->isTabCollectionCached()) {
-                return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->shouldDisplayAfterContent()
-                    || 'AdminCarriers' === Tools::getValue('controller');
+        // Store previous context
+        $previousContextType = Shop::getContext();
+        $previousContextShopId = Shop::getContextShopID();
+
+        $allShops = Shop::getShops(true, null, true);
+
+        foreach ($allShops as $shop) {
+            if (!$this->disableByShop($shop)) {
+                return false;
             }
         }
 
-        return in_array(Tools::getValue('controller'), static::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT, true);
+        // Restore previous context
+        Shop::setContext($previousContextType, $previousContextShopId);
+
+        // Unregister from online services
+        $this->unregisterShop();
+
+        return $this->handleTabAction('uninstall');
     }
 
-    /**
-     * Indicates if the recommended modules button should be attached in this page
-     *
-     * @return bool
-     */
-    private function shouldAttachRecommendedModulesButton()
+    private function disableByShop(int $shopId)
     {
-        // AdminLogin should not call TabCollectionProvider
-        if (Validate::isLoadedObject($this->context->employee)) {
-            /** @var TabCollectionProvider $tabCollectionProvider */
-            $tabCollectionProvider = $this->get('mbo.tab.collection.provider');
-            if ($tabCollectionProvider->isTabCollectionCached()) {
-                return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->shouldDisplayButton()
-                    && 'AdminCarriers' !== Tools::getValue('controller');
-            }
-        }
+        // Force context to all shops
+        Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
 
-        return in_array(Tools::getValue('controller'), static::TABS_WITH_RECOMMENDED_MODULES_BUTTON, true);
+        return parent::disable(true);
     }
 
     /**
@@ -407,5 +295,184 @@ class ps_mbo extends Module
         }
 
         return $this->container->get($serviceName);
+    }
+
+    /**
+     * @param string $serviceName
+     *
+     * @return object|null
+     */
+    public function getService($serviceName)
+    {
+        if ($this->serviceContainer === null) {
+            $this->serviceContainer = new \PrestaShop\Module\Mbo\DependencyInjection\ServiceContainer(
+                $this->name . str_replace('.', '', $this->version),
+                $this->getLocalPath()
+            );
+        }
+
+        return $this->serviceContainer->getService($serviceName);
+    }
+
+    /**
+     * @inerhitDoc
+     */
+    public function isUsingNewTranslationSystem(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Used to correctly check if the module is enabled or not whe registering services
+     *
+     * @return bool
+     */
+    public static function checkModuleStatus(): bool
+    {
+        // First if the module have active=0 in the DB, the module is inactive
+        $result = Db::getInstance()->getRow('SELECT `active`
+        FROM `' . _DB_PREFIX_ . 'module`
+        WHERE `name` = "ps_mbo"');
+        if ($result && false === (bool) $result['active']) {
+            return false;
+        }
+
+        // If active = 1 in the module table, the module must be associated to at least one shop to be considered as active
+        $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
+        FROM `' . _DB_PREFIX_ . 'module` m
+        LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
+        WHERE `name` = "ps_mbo"');
+        if ($result) {
+            return $result['active'] && $result['shop_active'];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Get an existing or build an instance of AdminAuthenticationProvider
+     *
+     * @return \PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider
+     *
+     * @throws \Exception
+     */
+    public function getAdminAuthenticationProvider(): AdminAuthenticationProvider
+    {
+        if (null === $this->container) {
+            $this->container = SymfonyContainer::getInstance();
+        }
+
+        return $this->container->has('mbo.security.admin_authentication.provider') ?
+            $this->get('mbo.security.admin_authentication.provider') :
+            new AdminAuthenticationProvider(
+                $this->get('doctrine.dbal.default_connection'),
+                $this->context,
+                $this->get('prestashop.core.crypto.hashing'),
+                $this->get('doctrine.cache.provider'),
+                $this->container->getParameter('database_prefix')
+            );
+    }
+
+    public function installTables(?string $table = null): bool
+    {
+        $sqlQueries = [];
+
+        if (null === $table || 'mbo_api_config' === $table) {
+            $sqlQueries[] = ' CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'mbo_api_config` (
+                `id_mbo_api_config` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `config_key` varchar(255) NULL,
+                `config_value` varchar(255) NULL,
+                `ps_version` varchar(255) NULL,
+                `mbo_version` varchar(255) NULL,
+                `applied` TINYINT(1) NOT NULL DEFAULT \'0\',
+                `date_add` datetime NOT NULL,
+                PRIMARY KEY (`id_mbo_api_config`)
+            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;';
+        }
+
+        foreach ($sqlQueries as $query) {
+            if (!Db::getInstance()->execute($query)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function uninstallTables(): bool
+    {
+        $sqlQueries[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'mbo_api_config`';
+
+        foreach ($sqlQueries as $query) {
+            if (!Db::getInstance()->execute($query)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function getAccountsDataProvider(): AccountsDataProvider
+    {
+        return $this->getService('mbo.accounts.data_provider');
+    }
+
+    /**
+     * @return void
+     */
+    private function loadEnv(): void
+    {
+        $dotenv = new Dotenv(true);
+        $dotenv->loadEnv(__DIR__ . '/.env');
+    }
+
+    public function postponeTabsTranslations(): void
+    {
+        /**it'
+         * There is an issue for translating tabs during installation :
+         * Active modules translations files are loaded during the kernel boot. So the installing module translations are not known
+         * So, we postpone the tabs translations for the first time the module's code is executed.
+         */
+        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+        if (!file_exists($lockFile)) {
+            if (!is_dir($this->moduleCacheDir)) {
+                mkdir($this->moduleCacheDir);
+            }
+            $f = fopen($lockFile, 'w+');
+            fclose($f);
+        }
+    }
+
+    private function translateTabsIfNeeded(): void
+    {
+        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+        if (!file_exists($lockFile)) {
+            return;
+        }
+
+        $moduleTabs = Tab::getCollectionFromModule($this->name);
+        $languages = Language::getLanguages(false);
+
+        /**
+         * @var Tab $tab
+         */
+        foreach ($moduleTabs as $tab) {
+            if (!empty($tab->wording) && !empty($tab->wording_domain)) {
+                $tabNameByLangId = [];
+                foreach ($languages as $language) {
+                    $tabNameByLangId[$language['id_lang']] = $this->trans(
+                        $tab->wording,
+                        [],
+                        $tab->wording_domain,
+                        $language['locale']
+                    );
+                }
+
+                $tab->name = $tabNameByLangId;
+                $tab->save();
+            }
+        }
+
+        @unlink($lockFile);
     }
 }

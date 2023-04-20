@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>ps_mbo</name>
-    <displayName><![CDATA[Prestashop marktplaats in uw backoffice]]></displayName>
-    <version><![CDATA[2.0.1]]></version>
-    <description><![CDATA[Vind de beste prestashop modules om uw winkel te optimaliseren]]></description>
+    <displayName><![CDATA[PrestaShop Marketplace in your Back Office]]></displayName>
+    <version><![CDATA[4.4.1]]></version>
+    <description><![CDATA[Browse the Addons marketplace directly from your back office to better meet your needs.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[administration]]></tab>
     <is_configurable>0</is_configurable>
     <need_instance>0</need_instance>
-	<limited_countries></limited_countries>
 </module>

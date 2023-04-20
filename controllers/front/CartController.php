@@ -135,6 +135,8 @@ class CartControllerCore extends FrontController
         $updatedProduct = reset($updatedProducts);
         $productQuantity = $updatedProduct['quantity'] ?? 0;
 
+
+
         if (!$this->errors) {
             $cartPresenter = new CartPresenter();
             $presentedCart = $cartPresenter->present($this->context->cart);
@@ -486,17 +488,18 @@ class CartControllerCore extends FrontController
                 );
             }
 
-            $update_quantity = $this->context->cart->updateQty(
-                $this->qty,
-                $this->id_product,
-                $this->id_product_attribute,
-                $this->customization_id,
-                Tools::getValue('op', 'up'),
-                $this->id_address_delivery,
-                null,
-                true,
-                true
-            );
+                $update_quantity = $this->context->cart->updateQty(
+                    $this->qty,
+                    $this->id_product,
+                    $this->id_product_attribute,
+                    $this->customization_id,
+                    Tools::getValue('op', 'up'),
+                    $this->id_address_delivery,
+                    null,
+                    true,
+                    true
+                );
+
             if ($update_quantity < 0) {
                 // If product has attribute, minimal quantity is set with minimal quantity of attribute
                 $minimal_quantity = ($this->id_product_attribute)

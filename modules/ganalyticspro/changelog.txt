@@ -4,9 +4,85 @@ Module: Google Analytics : GA4 and Universal-Analytics
 Change history for "Google Analytics : GA4 and Universal-Analytics"
 ---------------------------------------------------------------
 ===========================
+Version 2.1.6 (13/04/2023)|
+===========================
+- Fix to detected the good combination price for cart and purchase event
+
+===========================
+Version 2.1.5 (10/03/2023)|
+===========================
+- Stop using Carbon
+
+===========================
+Version 2.1.4 (06/03/2023)|
+===========================
+- Fix for format for order amount with new prerequistes
+
+===========================
+Version 2.1.3 (01/02/2023)|
+===========================
+- Fix for double add_to_cart hit when a theme has add to cart button on category pages
+- JS fix for delete cart event on product id detection
+
+===========================
+Version 2.1.2 (04/01/2023)|
+===========================
+- Added option to deduct discount on purchase tag
+- Core fix for PHP 8.1 and lower
+- Added quantity tag value for cart and purchase event (new value for the tag)
+
+
+===========================
+Version 2.1.1 (28/11/2022)|
+===========================
+- Fix for PHP 8.0 error on order confirmation
+
+===========================
+Version 2.1.0 (21/11/2022)|
+===========================
+- Reworked module and use namespace
+- Use models
+- Replace some internal module function by default PS functions
+- Use new moduleConfiguration class instead of Globals
+- Factorise some code to get generic function about tag building
+- Modernize some old code in PHP
+- Modernize some old code in JS
+- Added truncate on product title to prevent GA warnings
+- Handle combination selector to send accurate data to Google
+- Handle accurate combination data on cart and purchase event
+- Optimize addToCart event with Prestashop event and handle add to cart button from page list pages, and quickview
+- Handle view item event on quickview display
+- Added size limit on item_name to prevent warning on Google
+- Added option to handle second accept button from third party cookie banner module
+
+
+===========================
+Version 2.0.7 (07/10/2022)|
+===========================
+Added
+-----
+- Management of referrer with Presta-module Advanced cookie banner
+
+===========================
+Version 2.0.6 (20/09/2022)|
+===========================
+Added
+-----
+- CORE improve SQL request security
+
+===========================
+Version 2.0.5 (25/07/2022)|
+===========================
+Added
+-----
+- Prevent addToCart event send on page loading
+- Optimize the tag consent loading
+- Added option to select order id or order reference on purchase and refund tag
+
+===========================
 Version 2.0.4 (20/06/2022)|
 ===========================
-Added   
+Added
 -----
 - Fix some PHP notice
 - Use PS JS event for addToCart event
@@ -17,7 +93,7 @@ Added
 ===========================
 Version 2.0.3 (04/04/2022)|
 ===========================
-Added   
+Added
 -----
 Improve the tad add on consent
 Only sends purchase event on the valid payment
@@ -27,22 +103,22 @@ Removed PS 1.6 compatibility
 ===========================
 Version 2.0.2 (10/11/2021)|
 ===========================
-Added   
+Added
 -----
 Improve order id detection
 
 ==========================
 Version 2.0.1 (11/10/2021)|
 ===========================
-Added   
+Added
 -----
-Fix for purchase tag calculation whithout shipping 
+Fix for purchase tag calculation whithout shipping
 Fix for manufacturer page tag
 
 ===========================
 Version 2.0.0 (24/09/2021)|
 ===========================
-Added   
+Added
 -----
 Handle GA4 tag
 Rework module
@@ -56,7 +132,7 @@ Version 1.1.5 (01/07/2020)|
 ===========================
 Fixed
 -----
-- Removed useless option 
+- Removed useless option
 - Apply some minor fix
 
 

@@ -30,12 +30,12 @@
 		<div class="alert alert-info">
 			{l s='Universal Analytics refers to the previous generation of Google Analytics for measuring website traffic. If you have been using Universal Analytics until now, you can continue to fill out reports for your UA property, and access its history, provided you:' mod='ganalyticspro'}
 			<ul>
-				<li>{l s='associate your existing UA property with a GA4 property following' mod='ganalyticspro'}&nbsp;<a class="badge badge-info" href="{$smarty.const._GAP_BT_FAQ_MAIN_URL|escape:'htmlall':'UTF-8'}{$sFaqLang|escape:'htmlall':'UTF-8'}/faq/466" target="_blank"><i class="icon icon-link"/></i>&nbsp;{l s='this FAQ' mod='ganalyticspro'}</a>&nbsp;</li>
+				<li>{l s='associate your existing UA property with a GA4 property following' mod='ganalyticspro'}&nbsp;<a class="badge badge-info" href="{$sFaqURL|escape:'htmlall':'UTF-8'}{$sFaqLang|escape:'htmlall':'UTF-8'}/faq/466" target="_blank"><i class="icon icon-link"/></i>&nbsp;{l s='this FAQ' mod='ganalyticspro'}</a>&nbsp;</li>
 				<li>{l s='enter the measurement ID of your GA4 property in the previous tab' mod='ganalyticspro'}</li>
 				<li>{l s='enter the tracking ID of your existing UA property below' mod='ganalyticspro'}</li>
-			</ul>			
+			</ul>
 			<div class="clr_10"></div>
-			{l s='If you just have a GA4 property, the activation of the UA tracking is not manadatory for the use of the module. However, know that you can trigger it at any time by creating a UA property, enter below its tracking ID, and associating it with your existing GA4 property. You can follow the procedure in' mod='ganalyticspro'}&nbsp;<a class="badge badge-info" href="{$smarty.const._GAP_BT_FAQ_MAIN_URL|escape:'htmlall':'UTF-8'}{$sFaqLang|escape:'htmlall':'UTF-8'}/faq/470" target="_blank"><i class="icon icon-link"/></i>&nbsp;{l s='this FAQ' mod='ganalyticspro'}</a>
+			{l s='If you just have a GA4 property, the activation of the UA tracking is not manadatory for the use of the module. However, know that you can trigger it at any time by creating a UA property, enter below its tracking ID, and associating it with your existing GA4 property. You can follow the procedure in' mod='ganalyticspro'}&nbsp;<a class="badge badge-info" href="{$sFaqURL|escape:'htmlall':'UTF-8'}{$sFaqLang|escape:'htmlall':'UTF-8'}/faq/470" target="_blank"><i class="icon icon-link"/></i>&nbsp;{l s='this FAQ' mod='ganalyticspro'}</a>
 		</div>
 
 		<div class="clr_20"></div>
@@ -72,7 +72,7 @@
 					</div>
 				</div>
 				<span class="label-tooltip" data-toggle="tooltip" title data-original-title="{l s='Enter the tracking ID of your UA property. It is an alpha-numeric code prefixed by "UA-".' mod='ganalyticspro'}">&nbsp;<i class="icon-question-sign"></i></span>
-				&nbsp;<a class="badge badge-info" href="{$smarty.const._GAP_BT_FAQ_MAIN_URL|escape:'htmlall':'UTF-8'}{$sFaqLang|escape:'htmlall':'UTF-8'}/faq/472" target="_blank"><i class="icon icon-link"></i>&nbsp;{l s='FAQ about UA tracking ID' mod='ganalyticspro'}</a>
+				&nbsp;<a class="badge badge-info" href="{$sFaqURL|escape:'htmlall':'UTF-8'}{$sFaqLang|escape:'htmlall':'UTF-8'}/faq/472" target="_blank"><i class="icon icon-link"></i>&nbsp;{l s='FAQ about UA tracking ID' mod='ganalyticspro'}</a>
 			</div>
 		</div>
 
@@ -82,11 +82,8 @@
 
 		<div class="center">
 			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-11 col-lg-11">
-					<div id="bt_error-ua"></div>
-				</div>
-				<div class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
-					<button  class="btn btn-default pull-right" onclick="oGap.form('bt_ua-form', '{$sURI|escape:'htmlall':'UTF-8'}', null, 'bt_ua-settings', 'bt_ua-settings', false, false, null, 'ua', 'ua');return false;"><i class="process-icon-save"></i>{l s='Save' mod='ganalyticspro'}</button>
+				<div class="navbar navbar-default navbar-fixed-bottom text-center">
+					<button  class="btn btn_submit" onclick="oGap.form('bt_ua-form', '{$sURI|escape:'htmlall':'UTF-8'}', null, 'bt_ua-settings', 'bt_ua-settings', false, false, null, 'ua', 'ua');return false;">{l s='Save' mod='ganalyticspro'}</button>
 				</div>
 			</div>
 		</div>

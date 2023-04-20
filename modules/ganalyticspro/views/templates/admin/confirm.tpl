@@ -12,12 +12,27 @@
  *          | |_) |    | |
  *          |____/     |_|
  *}
- 
-<div class="alert alert-success validate-message" id="confirm"><button type="button" class="close" data-dismiss="alert">×</button>
-	{l s='Settings updated' mod='ganalyticspro'}
-</div>
+
 {literal}
 	<script type="text/javascript">
-		$(".validate-message").delay(3000).slideUp();
+		toastr.options = {
+			closeButton: true,
+			debug: false,
+			newestOnTop: false,
+			progressBar: true,
+			positionClass: "toast-top-right",
+			preventDuplicates: false,
+			onclick: null,
+			showDuration: "300",
+			hideDuration: "1000",
+			timeOut: "5000",
+			extendedTimeOut: "1000",
+			showEasing: "swing",
+			hideEasing: "linear",
+			showMethod: "fadeIn",
+			hideMethod: "fadeOut",
+		};
+
+		toastr.success('{/literal}{l s='Settings updated' mod='ganalyticspro'}{literal}');
 	</script>
 {/literal}

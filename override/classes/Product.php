@@ -196,6 +196,7 @@ class Product extends ProductCore {
             $row['price_tax_inc'] = Product::getPriceStatic($row['id_product'], true, null, 2);
             $row['price_tax_exc'] = Product::getPriceStatic($row['id_product'], false, null, 2);
             $row['quantity'] = (int)StockAvailable::getQuantityAvailableByProduct($row['id_product'], null);
+            $row['out_of_stock'] = (int)StockAvailable::outOfStock($row['id_product'], null);
             $results_array[] = $row;
         }
         return $results_array;

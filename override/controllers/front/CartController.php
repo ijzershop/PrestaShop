@@ -199,11 +199,17 @@ class CartController extends CartControllerCore
 
         // Check product quantity availability
         if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
-            $this->{$ErrorKey}[] = $this->trans(
-                'The product is no longer available in this quantity.',
-                [],
+            $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
+                $this->id_product,
+                $this->id_product_attribute
+            );
+            $this->errors[] = $this->trans(
+                'The available purchase order quantity for this product is %quantity%.',
+                ['%quantity%' => $availableProductQuantity],
                 'Shop.Notifications.Error'
             );
+
+            return;
         }
 
         // Check minimal_quantity
@@ -281,17 +287,21 @@ class CartController extends CartControllerCore
                     'Shop.Notifications.Error'
                 );
             } elseif ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
-                // check quantity after cart quantity update
+                $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
+                    $this->id_product,
+                    $this->id_product_attribute
+                );
                 $this->{$ErrorKey}[] = $this->trans(
-                    'The product is no longer available in this quantity.',
-                    [],
+                    'The available purchase order quantity for this product is %quantity%.',
+                    ['%quantity%' => $availableProductQuantity],
                     'Shop.Notifications.Error'
                 );
             }
         }
 
-        $removed = CartRule::autoRemoveFromCart();
+        CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
     }
+
 
 }

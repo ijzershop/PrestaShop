@@ -37,10 +37,10 @@
                         <img class="psacc-mb-12" src="/modules/ps_accounts/views/img/slide1.png" />
                         <div class="psacc-max-w-sm">
                             <h2 class="puik-h2 psacc-font-primary psacc-text-center psacc-mb-4 psacc-text-font-main">
-                                {l s='A modular interface' mod='ps_accounts'}
+                                {l s='An easy-to-use back office' mod='ps_accounts'}
                             </h2>
                             <p class="puik-body-default psacc-font-secondary psacc-text-center psacc-text-base">
-                                {l s='Manage your entire business in one place: product catalog, orders, payments, delivery and much more.' mod='ps_accounts'}
+                                {l s='Manage your entire business in one place: product catalog, orders, payments, deliveries and much more.' mod='ps_accounts'}
                             </p>
                         </div>
                     </li>
@@ -51,7 +51,7 @@
                                 {l s='All the essentials for your business' mod='ps_accounts'}
                             </h2>
                             <p class="puik-body-default psacc-font-secondary psacc-text-center psacc-text-base">
-                                {l s='GMarketing, payment and performance analysis: the PrestaShop Essentials suite includes all the features you need to make your store successful.' mod='ps_accounts'}
+                                {l s='Marketing, payment and performance analysis: the PrestaShop Essentials suite includes all the features you need to make your store successful.' mod='ps_accounts'}
                             </p>
                         </div>
                     </li>
@@ -81,8 +81,7 @@
                             <span class="puik-alert__description">
                                 {if $loginError eq 'employee_not_found'}
                                     {l
-                                        s='You cannot access the back office with this account. Try another account or contact your administrator. [1]Go to Help Center[/1]'
-                                        tags=["<a class=\"puik-link\" href=\"{$uriHelpCenter}\" target=\"_blank\">"]
+                                        s='You cannot access the back office with this account. Try another account or contact your administrator.'
                                         mod='ps_accounts'
                                     }
                                 {elseif $loginError eq 'email_not_verified'}
@@ -152,7 +151,8 @@
     document.addEventListener("DOMContentLoaded", function() {
         const returnTo = '{$redirect}';
         const redirectUri = "{$oauthRedirectUri}";
-        const oauth2Uri = redirectUri + '&return_to=' + encodeURIComponent(returnTo);
+        const locale = (navigator.language || navigator.userLanguage || 'en').slice(0, 2);
+        const oauth2Uri = redirectUri + '&return_to=' + encodeURIComponent(returnTo) + '&locale=' + encodeURIComponent(locale);
 
         document.querySelector('#ps-accounts-login').addEventListener('click', function() {
             document.location = oauth2Uri;

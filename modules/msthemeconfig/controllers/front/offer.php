@@ -14,6 +14,8 @@ use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 class MsThemeConfigOfferModuleFrontController extends ModuleFrontController {
 
     private array $products = [];
+
+    private array $offer = [];
     private	$date_exp = '';
     private	$date_exp_days = '';
 
@@ -29,6 +31,7 @@ class MsThemeConfigOfferModuleFrontController extends ModuleFrontController {
             if ($result != null && count($result) == 1) {
                 $offer_id = $result[0]['id_oi_offer'];
                 $offer = Offer::getOfferByID($offer_id);
+                $this->offer = $offer;
                 $this->date_exp = $offer['date_exp'];
 
                 $earlier = date_create_from_format('Y-m-d', date('Y-m-d'))->setTime(0,0,0,0);
@@ -72,6 +75,7 @@ class MsThemeConfigOfferModuleFrontController extends ModuleFrontController {
         parent::initContent();
 
         $this->context->smarty->assign([
+            'offer' =>  $this->offer,
             'products' =>  $this->products,
             'date_exp' =>  $this->date_exp,
             'date_exp_days' =>  $this->date_exp_days

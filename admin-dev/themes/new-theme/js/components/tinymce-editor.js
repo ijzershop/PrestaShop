@@ -159,6 +159,7 @@ class TinyMCEEditor {
         title: 'nofollow',
         value: 'nofollow'
       }],
+      automatic_uploads: false,
       images_upload_handler: function (blobInfo, success, failure) {
         var xhr, formData;
         xhr = new XMLHttpRequest();

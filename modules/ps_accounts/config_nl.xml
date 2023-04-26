@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>ps_accounts</name>
-    <displayName><![CDATA[PrestaShop Account]]></displayName>
-    <version><![CDATA[6.0.4]]></version>
+    <displayName><![CDATA[PrestaShop-account]]></displayName>
+    <version><![CDATA[6.1.6]]></version>
     <description><![CDATA[Koppel uw winkel aan uw PrestaShop account om uw abonnementen te activeren en te beheren in uw backoffice. De-installeer deze module niet als u een lopend abonnement hebt.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[administration]]></tab>

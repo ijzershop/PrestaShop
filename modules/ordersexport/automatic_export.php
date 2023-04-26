@@ -44,7 +44,7 @@ try{
       $id_shop_group = Shop::getGroupFromShop($id_shop);
       $limit = !empty(Tools::getValue('limit')) ? Tools::getValue('limit') : 0;
 
-      Module::getInstanceByName('ordersexport')->autoExport($config, null, $config_name, $secureKey, $id_shop, $id_lang, $limit);
+      Module::getInstanceByName('ordersexport')->autoExport($config, $config_name, null, $secureKey, $id_shop, $id_lang, $limit);
       echo Module::getInstanceByName('ordersexport')->l('Export Report sent on your email (if you set up it in settings)!','automatic_export');
     } else{
       echo (Module::getInstanceByName('ordersexport')->l('Secure key is wrong','automatic_export'));

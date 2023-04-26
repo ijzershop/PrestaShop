@@ -299,7 +299,7 @@ class Ordersexport extends Module {
         'name' => $this->l('Delivery date'),
         'tab'   => 'exportTabOrdersData'
       ),
-      
+
       array(
         'id' => 'credit_number',
         'val' => 'credit_number',
@@ -1300,7 +1300,7 @@ class Ordersexport extends Module {
 
           if (in_array($id_order_state, $order_status_for_autoexport)) {
             try {
-              $this->autoExport($config, $id_order, $key, null, $config['shop_id'], null, 0);
+              $this->autoExport($config, $key, $id_order, null, $config['shop_id'], null, 0);
             } catch(Exception $e) {
               if ($e->getCode() != 777 || ($e->getCode() == 777 && $config['email_on_no_orders'] == 1)) {
                 $this->sendEmail($config, $e->getMessage());
@@ -1314,7 +1314,18 @@ class Ordersexport extends Module {
     return true;
   }
 
-  public function autoExport($config, $id_order = null, $config_name, $secure_key = null, $id_shop = null, $id_lang = null, $limit = 0)
+    /**
+     * @param $config
+     * @param $config_name
+     * @param $id_order
+     * @param $secure_key
+     * @param $id_shop
+     * @param $id_lang
+     * @param $limit
+     * @return bool
+     * @throws Exception
+     */
+    public function autoExport($config, $config_name, $id_order = null, $secure_key = null, $id_shop = null, $id_lang = null, $limit = 0)
   {
     require_once _PS_MODULE_DIR_.'ordersexport/export.php';
 
@@ -2176,7 +2187,7 @@ class Ordersexport extends Module {
           'desc' => 'To add current date/time to file name, put <strong>{DATE PATTERN}</strong> variable into name field and replace "DATE_PATTERN" with valid PHP date pattern."<br>
                       <strong>Example: You type - "exported_orders_{d-m-Y H:i:s}" and your file name will be "exported_orders_17-09-2017 12:30:00".</strong><br>
                      Learn more about PHP date on official documentation page: <a>http://php.net/manual/en/function.date.php</a><br><br>
-                      
+
                     <span id="append_id_order_to_file_name_desc">
                     To add id_order or reference of newly created order, put following variables in file name.<br>
                     <strong>[$ID_ORDER]</strong>-for id_order, <strong>[$ORDER_REFERENCE]</strong>-for order_reference. </span><br>',
@@ -3066,7 +3077,7 @@ class Ordersexport extends Module {
   {
     if( Tools::getValue('id_task') && $formValues ){
       $sql = '
-      SELECT * 
+      SELECT *
       FROM ' . _DB_PREFIX_ . 'ordersexport_tasks as t
       WHERE id_task = "'.(int)Tools::getValue('id_task').'"
     ';
@@ -3090,7 +3101,7 @@ class Ordersexport extends Module {
     $id_shop_group = (int)Context::getContext()->shop->id_shop_group;
 
     $sql = '
-      SELECT * 
+      SELECT *
       FROM ' . _DB_PREFIX_ . 'ordersexport_tasks as t
       WHERE id_shop = ' . $id_shop . '
       AND id_shop_group = ' . $id_shop_group . '
@@ -3165,7 +3176,7 @@ class Ordersexport extends Module {
       'exportTabInvoiceAddress'    => $this->_exportTabInvoiceAddress,
       'exportTabPayment'           => $this->_exportTabPayment,
     );
-      
+
     $this->context->smarty->assign(
       array(
         'url_base'              => AdminController::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminModules').'&configure=ordersexport',

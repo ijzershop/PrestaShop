@@ -2397,7 +2397,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
             $calc1 = ($free_shipping_amount - $total_cart_amount) / ($free_shipping_amount);
             $calc2 = $calc1 * 100;
             $amount = $free_shipping_amount - $total_cart_amount;
-            $remaining_amount = Tools::displayPrice($amount, $this->context->currency->id);
+            $remaining_amount = Context::getContext()->currentLocale->formatPrice($amount, 'EUR');
         }
         $percent = 100 - $calc2;
         $this->context->smarty->assign('kb_free_shipping_percent', round($percent, 1));

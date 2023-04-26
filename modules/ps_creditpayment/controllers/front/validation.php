@@ -484,14 +484,14 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                             'id_product' => $product['id_product'],
                             'reference' => $product['reference'],
                             'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
-                            'price' => Tools::displayPrice($product_price * $product['quantity'], $this->context->currency, false),
+                            'price' => Context::getContext()->currentLocale->formatPrice($product_price * $product['quantity'], 'EUR'),
                             'quantity' => $product['quantity'],
                             'customization' => array(),
                         );
 
                         if (isset($product['price']) && $product['price']) {
-                            $product_var_tpl['unit_price'] = Tools::displayPrice($product_price, $this->context->currency, false);
-                            $product_var_tpl['unit_price_full'] = Tools::displayPrice($product_price, $this->context->currency, false)
+                            $product_var_tpl['unit_price'] = Context::getContext()->currentLocale->formatPrice($product_price, 'EUR');
+                            $product_var_tpl['unit_price_full'] = Context::getContext()->currentLocale->formatPrice($product_price, 'EUR')
                                 . ' ' . $product['unity'];
                         } else {
                             $product_var_tpl['unit_price'] = $product_var_tpl['unit_price_full'] = '';
@@ -517,7 +517,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                                 $product_var_tpl['customization'][] = array(
                                     'customization_text' => $customization_text,
                                     'customization_quantity' => $customization_quantity,
-                                    'quantity' => Tools::displayPrice($customization_quantity * $product_price, $this->context->currency, false),
+                                    'quantity' => Context::getContext()->currentLocale->formatPrice($customization_quantity * $product_price, 'EUR'),
                                 );
                             }
                         }
@@ -991,7 +991,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                     $orderLanguage = new Language((int) $order->id_lang);
 
                     $params = array(
-                        '{voucher_amount}' => Tools::displayPrice($voucher->reduction_amount, $this->context->currency, false),
+                        '{voucher_amount}' => Context::getContext()->currentLocale->formatPrice($voucher->reduction_amount, 'EUR'),
                         '{voucher_num}' => $voucher->code,
                         '{firstname}' => $this->context->customer->firstname,
                         '{lastname}' => $this->context->customer->lastname,
@@ -1037,7 +1037,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 
             $cart_rules_list[] = array(
                 'voucher_name' => $cartRule->name,
-                'voucher_reduction' => ($values['tax_incl'] != 0.00 ? '-' : '') . Tools::displayPrice($values['tax_incl'], $this->context->currency, false),
+                'voucher_reduction' => ($values['tax_incl'] != 0.00 ? '-' : '') . Context::getContext()->currentLocale->formatPrice($values['tax_incl'], 'EUR'),
             );
         }
         return $cart_rules_list;

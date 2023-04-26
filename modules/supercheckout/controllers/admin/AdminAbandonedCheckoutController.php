@@ -170,7 +170,7 @@ class AdminAbandonedCheckoutController extends ModuleAdminController
         }
         $context->currency = $currency;
         $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
-        return Tools::displayPrice($value);
+        return Context::getContext()->currentLocale->formatPrice($value, 'EUR');
     }
 
     /*

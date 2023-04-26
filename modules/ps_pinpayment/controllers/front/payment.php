@@ -38,7 +38,7 @@ class Ps_PinpaymentPaymentModuleFrontController extends ModuleFrontController
 
 		$total = sprintf(
 			$this->getTranslator()->trans('%1$s (tax incl.)', array(), 'Modules.Pinpayment.Shop'),
-			Tools::displayPrice($cart->getOrderTotal(true, Cart::BOTH))
+            Context::getContext()->currentLocale->formatPrice($cart->getOrderTotal(true, Cart::BOTH), 'EUR')
 		);
 
 		$this->context->smarty->assign(array(

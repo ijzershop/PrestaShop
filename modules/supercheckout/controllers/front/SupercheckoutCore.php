@@ -1203,10 +1203,10 @@ class SupercheckoutCore extends ModuleFrontController
 
         if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase) {
             $msg = $this->module->l('A minimum purchase total of %1s (tax excl.) is required in order to validate your order, current purchase is %2s (tax excl.).', 'SupercheckoutCore');
-            $formatted_min_purchse = Tools::displayPrice($minimal_purchase, $currency);
-            $order_total = Tools::displayPrice(
+            $formatted_min_purchse = Context::getContext()->currentLocale->formatPrice($minimal_purchase, 'EUR');
+            $order_total = Context::getContext()->currentLocale->formatPrice(
                 $this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS),
-                $currency
+                'EUR'
             );
             $response['error']['general'][] = sprintf($msg, $formatted_min_purchse, $order_total);
             return $response;

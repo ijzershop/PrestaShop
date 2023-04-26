@@ -196,7 +196,7 @@ class DynamicTools
             if ($id_cart) {
                 /** @noinspection UnnecessaryCastingInspection */
                 Db::getInstance()->execute(
-                    'UPDATE `' . _DB_PREFIX_ . 'customization` 
+                    'UPDATE `' . _DB_PREFIX_ . 'customization`
                     SET `id_address_delivery` = ' . (int) $id_address_delivery
                     . ' WHERE `id_cart` = ' . (int) $id_cart . ' AND `id_address_delivery`=0'
                 );
@@ -309,7 +309,7 @@ class DynamicTools
         if ($locale) {
             return $locale->formatPrice($price, $context->currency->iso_code);
         }
-        return Tools::displayPrice($price);
+        return Context::getContext()->currentLocale->formatPrice($price, 'EUR');
     }
 
     public static function capitalizeFilename($name)

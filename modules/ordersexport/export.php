@@ -220,7 +220,7 @@ class exportOrders
 
 
     //if ($this->_checkAttributeValues($config)) {
-      $attributeGroups = $this->_model->getOrdersIds($id_shop, $limit, false, $not_exported, $name_settings, $limitN, $orderby, $orderway, true, $id_order, $export_filters);
+      $attributeGroups = $this->_model->getOrdersIds($name_settings, $export_filters, $not_exported, $limit, $id_order, $orderby, true, $limitN, false, $orderway, $id_shop);
       $config = $this->_getHeadFields($config, $attributeGroups);
     //}
 
@@ -229,7 +229,7 @@ class exportOrders
      * Remove empty customization field columns if there is any.
      */
     if ($this->isActiveExportCustomizationInSeparateCols($config['field'])) {
-      $ordersIdsWithoutLimit = $this->_model->getOrdersIds($id_shop, $limit, false, $not_exported, $name_settings, $limitN, $orderby, $orderway, false, $id_order, $export_filters);
+      $ordersIdsWithoutLimit = $this->_model->getOrdersIds($name_settings, $export_filters, $not_exported, $limit, $id_order, $orderby, false, $limitN, false, $orderway, $id_shop);
       $used_customization_fields = $this->getAllUsedCustomizationFields(explode(',', $ordersIdsWithoutLimit), $id_lang);
       $config['field'] = $this->removeUnusedCustomizationFields($config['field'], $used_customization_fields);
       $config['field_name'] = $this->removeUnusedCustomizationFields($config['field_name'], $used_customization_fields);
@@ -258,10 +258,10 @@ class exportOrders
 
     }
 
-    $orderIds = $this->_model->getOrdersIds($id_shop, $limit, false, $not_exported, $name_settings, $limitN, $orderby, $orderway, false, $id_order, $export_filters);
+    $orderIds = $this->_model->getOrdersIds($name_settings, $export_filters, $not_exported, $limit, $id_order, $orderby, false, $limitN, false, $orderway, $id_shop);
 
     if (!$limit) {
-      $ordersCount = $this->_model->getOrdersIds($id_shop, $limit, true, $not_exported, $name_settings, 1, false, false, false, $id_order, $export_filters);
+      $ordersCount = $this->_model->getOrdersIds($name_settings, $export_filters, $not_exported, $limit, $id_order, false, false, 1, true, false, $id_shop);
       Configuration::updateValue('EXPORT_ORDERS_COUNT', $ordersCount, false, $this->ordersExport->default_shop_group_id, $this->ordersExport->default_shop_id);
       Configuration::updateValue('EXPORT_ORDERS_CURRENT_COUNT', 0, false, $this->ordersExport->default_shop_group_id, $this->ordersExport->default_shop_id);
     } else {
@@ -269,9 +269,9 @@ class exportOrders
     }
 
     if ($config['separate']) {
-      $orders = $this->_model->getOrdersSeparate($id_lang, $id_shop, $orderIds, $export_filters);
+      $orders = $this->_model->getOrdersSeparate($orderIds, $export_filters, $id_lang, $id_shop);
     } else {
-      $orders = $this->_model->getOrders($id_lang, $id_shop, $orderIds, $export_filters);
+      $orders = $this->_model->getOrders($orderIds, $export_filters, $id_lang, $id_shop);
     }
 
     if (!$orders) {
@@ -931,7 +931,7 @@ class exportOrders
     }
 
     if ($automatic && $not_exported) {
-      $orders_ids = $this->_model->getOrdersIds($id_shop, false, false, $not_exported, $name_settings, 100000, $orderby, $orderway, false, $id_order, $export_filters);
+      $orders_ids = $this->_model->getOrdersIds($name_settings, $export_filters, $not_exported, false, $id_order, $orderby, false, 100000, false, $orderway, $id_shop);
       $this->setInDbExportedOrders($name_settings, $orders_ids);
     }
 

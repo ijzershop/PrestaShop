@@ -12,7 +12,15 @@ class ordersExportDataModel
     }
 
 
-    public function getOrders($idLang = false, $idShop = false, $orderIds, $export_filters)
+    /**
+     * @param $orderIds
+     * @param $export_filters
+     * @param $idLang
+     * @param $idShop
+     * @return array|bool|mysqli_result|PDOStatement|resource
+     * @throws PrestaShopDatabaseException
+     */
+    public function getOrders($orderIds, $export_filters, $idLang = false, $idShop = false)
     {
         $join_product = '';
         $and_product = 'WHERE 1 ';
@@ -56,9 +64,9 @@ class ordersExportDataModel
         $new_osd2_fields = '';
 
         if (version_compare(_PS_VERSION_, '1.6.1.0', '>=')) {
-            $new_slip_fields = 'slip.total_products_tax_excl as total_products_tax_excl_slip, 
+            $new_slip_fields = 'slip.total_products_tax_excl as total_products_tax_excl_slip,
                       slip.total_products_tax_incl as total_products_tax_incl_slip,
-                      slip.total_shipping_tax_excl as total_shipping_tax_excl_slip, 
+                      slip.total_shipping_tax_excl as total_shipping_tax_excl_slip,
                       slip.total_shipping_tax_incl as total_shipping_tax_incl_slip,';
 
             $new_osd2_fields = '(SELECT GROUP_CONCAT(unit_price_tax_excl) as unit_price_tax_excl_slip FROM (
@@ -68,9 +76,9 @@ class ordersExportDataModel
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
-           ) as unit_price_tax_excl_slip, 
-           
+              WHERE id_order = o.id_order
+           ) as unit_price_tax_excl_slip,
+
            (SELECT GROUP_CONCAT(unit_price_tax_incl) as unit_price_tax_incl_slip FROM (
               SELECT osd2.unit_price_tax_incl, od2.id_order
                       FROM ' . _DB_PREFIX_ . 'order_detail as od2
@@ -78,9 +86,9 @@ class ordersExportDataModel
                       ' . $join_product . '
                       ' . $and_product . '
                     ) as pnm
-                    WHERE id_order = o.id_order 
-           ) as unit_price_tax_incl_slip,  
-               
+                    WHERE id_order = o.id_order
+           ) as unit_price_tax_incl_slip,
+
            (SELECT GROUP_CONCAT(total_price_tax_excl) as total_price_tax_excl_slip FROM (
         SELECT osd2.total_price_tax_excl, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
@@ -88,9 +96,9 @@ class ordersExportDataModel
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
-           ) as total_price_tax_excl_slip, 
-           
+              WHERE id_order = o.id_order
+           ) as total_price_tax_excl_slip,
+
           (SELECT GROUP_CONCAT(total_price_tax_incl) as total_price_tax_incl_slip FROM (
         SELECT osd2.total_price_tax_incl, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
@@ -98,7 +106,7 @@ class ordersExportDataModel
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as total_price_tax_incl_slip,';
         }
 
@@ -107,7 +115,7 @@ class ordersExportDataModel
          */
         if (version_compare(_PS_VERSION_, '1.7.0.0', '>=')) {
             $cust_select = '(SELECT GROUP_CONCAT(id_customization) as id_customization FROM (
-                SELECT od2.id_customization, od2.id_order  
+                SELECT od2.id_customization, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
@@ -120,9 +128,9 @@ class ordersExportDataModel
             $customization_and_product = 'WHERE 1 ';
 
             if ($export_filters['product_supplier'] || $export_filters['product_manufacturer']) {
-                $customization_join_product .= ' 
+                $customization_join_product .= '
                 LEFT JOIN ' . _DB_PREFIX_ . 'orders as o2 ON cart.id_cart = o2.id_cart
-                LEFT JOIN ' . _DB_PREFIX_ . 'order_detail as od2 ON o2.id_order = od2.id_order 
+                LEFT JOIN ' . _DB_PREFIX_ . 'order_detail as od2 ON o2.id_order = od2.id_order
                 LEFT JOIN ' . _DB_PREFIX_ . 'product as prod ON od2.product_id = prod.id_product ';
 
                 if ($export_filters['product_supplier']) {
@@ -140,8 +148,8 @@ class ordersExportDataModel
             $cust_select = '(SELECT GROUP_CONCAT(id_customization) as id_customization FROM (
                 SELECT cart.id_cart, cust.id_customization
                 FROM ' . _DB_PREFIX_ . 'cart as cart
-                LEFT JOIN ' . _DB_PREFIX_ . 'customization cust 
-                ON cart.id_cart = cust.id_cart 
+                LEFT JOIN ' . _DB_PREFIX_ . 'customization cust
+                ON cart.id_cart = cust.id_cart
                 ' . $customization_join_product . '
                 ' . $customization_and_product . '
               ) as pnm
@@ -154,68 +162,68 @@ class ordersExportDataModel
 
         $sql = '
         SELECT oi.note,
-            oi.id_order_invoice, 
-            oc.tracking_number, 
-            oh.date_add as date_add_state, 
-            o.*,carr.name as carrier_name, 
+            oi.id_order_invoice,
+            oc.tracking_number,
+            oh.date_add as date_add_state,
+            o.*,carr.name as carrier_name,
             (o.total_products_wt - o.total_products) as total_products_tax,
             (o.total_paid_tax_incl - o.total_paid_tax_excl) as total_paid_tax,
-            c.firstname as customer_firstname, 
+            c.firstname as customer_firstname,
             c.email as customer_email,
-            c.company as customer_company, 
-            c.lastname as customer_lastname, 
+            c.company as customer_company,
+            c.lastname as customer_lastname,
             c.birthday as customer_birthday,
-            c.note as private_note, 
+            c.note as private_note,
             c.newsletter,
             c.is_guest as customer_is_guest,
             c.website as customer_website,
             gl.name as default_customer_group,
-            st.iso_code as shipping_state_iso, 
+            st.iso_code as shipping_state_iso,
             osl.name as status_order,
-            ad.lastname as shipping_customer_lastname, 
+            ad.lastname as shipping_customer_lastname,
             ad.firstname as shipping_customer_firstname,
-            ad.alias as shipping_alias, 
-            ad.company as shipping_company, 
+            ad.alias as shipping_alias,
+            ad.company as shipping_company,
             ad.id_country as shipping_id_country,
-            ad.vat_number as shipping_vat_number, 
+            ad.vat_number as shipping_vat_number,
             cl.name as shipping_name_country,
-            con.iso_code as shipping_iso_country, 
-            ad.id_state as shipping_id_state, 
+            con.iso_code as shipping_iso_country,
+            ad.id_state as shipping_id_state,
             st.name as shipping_name_state,
             ad.address1 as shipping_address1,
-            ad.address2 as shipping_address2, 
+            ad.address2 as shipping_address2,
             ad.postcode as shipping_postcode,
-            ad.city as shipping_city, 
-            ad.other as shipping_other, 
+            ad.city as shipping_city,
+            ad.other as shipping_other,
             ad.phone as shipping_phone,
-            ad.phone_mobile as shipping_phone_mobile, 
+            ad.phone_mobile as shipping_phone_mobile,
             ad.dni as shipping_customer_dni,
-            od.product_supplier_reference as supplier_reference, 
+            od.product_supplier_reference as supplier_reference,
             od.id_warehouse as id_warehouse,
-            slip.id_order_slip, 
+            slip.id_order_slip,
             ' . $new_slip_fields . '
-            slip.shipping_cost as shipping_cost_slip, 
-            slip.amount as amount_slip, 
-            slip.shipping_cost_amount as shipping_cost_amount_slip,  
-            slip.date_add as date_add_slip, 
+            slip.shipping_cost as shipping_cost_slip,
+            slip.amount as amount_slip,
+            slip.shipping_cost_amount as shipping_cost_amount_slip,
+            slip.date_add as date_add_slip,
             adi.lastname as invoice_customer_lastname,
-            adi.firstname as invoice_customer_firstname, 
-            adi.alias as invoice_alias, 
-            adi.company as invoice_company, 
+            adi.firstname as invoice_customer_firstname,
+            adi.alias as invoice_alias,
+            adi.company as invoice_company,
             adi.id_country as invoice_id_country,
-            adi.vat_number as invoice_vat_number, 
-            cli.name as invoice_name_country, 
-            coni.iso_code as invoice_iso_country, 
-            adi.id_state as invoice_id_state, 
-            sti.name as invoice_name_state, 
+            adi.vat_number as invoice_vat_number,
+            cli.name as invoice_name_country,
+            coni.iso_code as invoice_iso_country,
+            adi.id_state as invoice_id_state,
+            sti.name as invoice_name_state,
             sti.iso_code as invoice_state_iso,
-            adi.address1 as invoice_address1, 
-            adi.address2 as invoice_address2, 
-            adi.postcode as invoice_postcode, 
-            adi.city as invoice_city, 
-            adi.other as invoice_other, 
-            adi.phone as invoice_phone, 
-            adi.phone_mobile as invoice_phone_mobile, 
+            adi.address1 as invoice_address1,
+            adi.address2 as invoice_address2,
+            adi.postcode as invoice_postcode,
+            adi.city as invoice_city,
+            adi.other as invoice_other,
+            adi.phone as invoice_phone,
+            adi.phone_mobile as invoice_phone_mobile,
             adi.dni as invoice_customer_dni,
             cm.message as order_customer_message,
            (SELECT  GROUP_CONCAT( gl2.name ) FROM ' . _DB_PREFIX_ . 'customer_group as cg2   LEFT JOIN ' . _DB_PREFIX_ . 'group_lang gl2 ON gl2.id_group = cg2.id_group AND gl2.id_lang = ' . (int)$idLang . '  WHERE c.id_customer = cg2.id_customer) as customer_groups,
@@ -223,56 +231,56 @@ class ordersExportDataModel
            (SELECT  GROUP_CONCAT( ocr.value) FROM ' . _DB_PREFIX_ . 'order_cart_rule as ocr WHERE ocr.id_order = o.id_order) as voucher_tax_incl,
            (SELECT  GROUP_CONCAT( ocr.value_tax_excl) FROM ' . _DB_PREFIX_ . 'order_cart_rule as ocr WHERE ocr.id_order = o.id_order) as voucher_tax_exc,
            (SELECT  GROUP_CONCAT( cr2.code) FROM ' . _DB_PREFIX_ . 'order_cart_rule as ocr  LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule cr2 ON cr2.id_cart_rule = ocr.id_cart_rule  WHERE ocr.id_order = o.id_order) as voucher_code,
-           
+
             (SELECT GROUP_CONCAT(product_id) as product_id FROM (
-                SELECT od2.product_id, od2.id_order 
-                FROM ' . _DB_PREFIX_ . 'order_detail as od2  
-                ' . $join_product . ' 
+                SELECT od2.product_id, od2.id_order
+                FROM ' . _DB_PREFIX_ . 'order_detail as od2
+                ' . $join_product . '
                 ' . $and_product . '
-              ) as pid 
+              ) as pid
               WHERE id_order = o.id_order
             ) as product_id,
-            
+
             (SELECT GROUP_CONCAT(purchase_supplier_price) as supplier_price FROM (
-                SELECT od2.purchase_supplier_price, od2.id_order 
-                FROM ' . _DB_PREFIX_ . 'order_detail as od2  
-                ' . $join_product . ' 
+                SELECT od2.purchase_supplier_price, od2.id_order
+                FROM ' . _DB_PREFIX_ . 'order_detail as od2
+                ' . $join_product . '
                 ' . $and_product . '
-              ) as pid 
+              ) as pid
               WHERE id_order = o.id_order
             ) as supplier_price,
-            
+
            (SELECT GROUP_CONCAT(product_attribute_id) as product_attribute_id FROM (
-                SELECT od2.product_attribute_id, od2.id_order  
+                SELECT od2.product_attribute_id, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as paid
               WHERE id_order = o.id_order
            ) as product_attribute_id,
-           
+
            (SELECT GROUP_CONCAT(product_name) as product_name FROM (
-                SELECT od2.product_name, od2.id_order  
+                SELECT od2.product_name, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
               WHERE id_order = o.id_order
            ) as product_name,
-           
+
            (SELECT GROUP_CONCAT(name) as product_category FROM (
                 SELECT catl.name, od2.id_order, catl.id_shop, catl.id_lang
                 FROM ' . _DB_PREFIX_ . 'category_lang as catl
-                LEFT JOIN ' . _DB_PREFIX_ . 'product p ON catl.id_category = p.id_category_default 
+                LEFT JOIN ' . _DB_PREFIX_ . 'product p ON catl.id_category = p.id_category_default
                 LEFT JOIN ' . _DB_PREFIX_ . 'order_detail as od2 ON od2.product_id = p.id_product
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
-              AND id_shop = o.id_shop 
+              WHERE id_order = o.id_order
+              AND id_shop = o.id_shop
               AND id_lang = ' . (int)$idLang . '
            ) as product_category,
-           
+
            (SELECT GROUP_CONCAT(name) as product_name_clean FROM (
                 SELECT pl.name, pl.id_shop, pl.id_lang, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'product_lang as pl
@@ -280,123 +288,123 @@ class ordersExportDataModel
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
-              AND id_shop = o.id_shop 
+              WHERE id_order = o.id_order
+              AND id_shop = o.id_shop
               AND id_lang = ' . (int)$idLang . '
            ) as product_name_clean,
-           
+
            (SELECT GROUP_CONCAT(product_quantity) as product_quantity FROM (
                 SELECT od2.product_quantity, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_quantity,
-           
+
            ' . $cust_select . '
-           
+
            (SELECT GROUP_CONCAT(quantity) as product_quantity_in_stock FROM (
                 SELECT sa.quantity, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
-                LEFT JOIN ' . _DB_PREFIX_ . 'stock_available sa ON sa.id_product = od2.product_id 
+                LEFT JOIN ' . _DB_PREFIX_ . 'stock_available sa ON sa.id_product = od2.product_id
                 AND sa.id_product_attribute = od2.product_attribute_id
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_quantity_in_stock,
-           
+
            (SELECT GROUP_CONCAT(product_quantity_refunded) as product_quantity_refunded FROM (
                 SELECT od2.product_quantity_refunded, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_quantity_refunded,
-           
+
            (SELECT GROUP_CONCAT(product_quantity_return) as product_quantity_return FROM (
                 SELECT od2.product_quantity_return, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_quantity_return,
-           
+
            (SELECT GROUP_CONCAT(product_quantity_reinjected) as product_quantity_reinjected FROM (
                 SELECT od2.product_quantity_reinjected, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
-           ) as product_quantity_reinjected, 
-          
+              WHERE id_order = o.id_order
+           ) as product_quantity_reinjected,
+
            (SELECT GROUP_CONCAT(unit_price_tax_excl) as unit_product_price_tax_excl FROM (
                 SELECT od2.unit_price_tax_excl, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
-           ) as unit_product_price_tax_excl, 
-           
+              WHERE id_order = o.id_order
+           ) as unit_product_price_tax_excl,
+
            (SELECT GROUP_CONCAT(unit_price_tax_incl) as unit_product_price_tax_incl FROM (
                 SELECT od2.unit_price_tax_incl, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as unit_product_price_tax_incl,
-           
+
            (SELECT GROUP_CONCAT(total_price_tax_excl) as total_product_price_tax_excl FROM (
                 SELECT od2.total_price_tax_excl, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as total_product_price_tax_excl,
-           
+
            (SELECT GROUP_CONCAT(total_price_tax_incl) as total_product_price_tax_incl FROM (
                 SELECT od2.total_price_tax_incl, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
-           ) as total_product_price_tax_incl, 
-          
+              WHERE id_order = o.id_order
+           ) as total_product_price_tax_incl,
+
            (SELECT GROUP_CONCAT(product_reference) as product_reference FROM (
                 SELECT od2.product_reference, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
-           ) as product_reference, 
-           
+              WHERE id_order = o.id_order
+           ) as product_reference,
+
            (SELECT GROUP_CONCAT(product_weight) as product_weight FROM (
                 SELECT od2.product_weight, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
-           ) as product_weight,  
-           
-           (SELECT GROUP_CONCAT(product_weight) as product_weight FROM (
-                SELECT od2.product_weight, od2.id_order
-                FROM ' . _DB_PREFIX_ . 'order_detail as od2
-                ' . $join_product . '
-                ' . $and_product . '
-              ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_weight,
-           
+
+           (SELECT GROUP_CONCAT(product_weight) as product_weight FROM (
+                SELECT od2.product_weight, od2.id_order
+                FROM ' . _DB_PREFIX_ . 'order_detail as od2
+                ' . $join_product . '
+                ' . $and_product . '
+              ) as pnm
+              WHERE id_order = o.id_order
+           ) as product_weight,
+
            (SELECT GROUP_CONCAT(product_quantity) as product_quantity_slip FROM (
                 SELECT osd2.product_quantity, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
@@ -404,11 +412,11 @@ class ordersExportDataModel
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
-           ) as product_quantity_slip,  
-           
+              WHERE id_order = o.id_order
+           ) as product_quantity_slip,
+
            ' . $new_osd2_fields . '
-          
+
           (SELECT GROUP_CONCAT(amount_tax_excl) as amount_tax_excl_slip FROM (
                 SELECT osd2.amount_tax_excl, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
@@ -416,9 +424,9 @@ class ordersExportDataModel
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as amount_tax_excl_slip,
-          
+
           (SELECT GROUP_CONCAT(amount_tax_incl) as amount_tax_incl_slip FROM (
                 SELECT osd2.amount_tax_incl, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
@@ -426,88 +434,88 @@ class ordersExportDataModel
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as amount_tax_incl_slip,
-          
+
           (SELECT GROUP_CONCAT(width) as product_width FROM (
                 SELECT p.width, od2.id_order
-                FROM ' . _DB_PREFIX_ . 'product as p 
-                LEFT JOIN ' . _DB_PREFIX_ . 'order_detail as od2 ON od2.product_id = p.id_product 
+                FROM ' . _DB_PREFIX_ . 'product as p
+                LEFT JOIN ' . _DB_PREFIX_ . 'order_detail as od2 ON od2.product_id = p.id_product
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_width,
-           
+
            (SELECT GROUP_CONCAT(height) as product_height FROM (
                 SELECT p.height, od2.id_order
-                FROM ' . _DB_PREFIX_ . 'product as p 
-                LEFT JOIN ' . _DB_PREFIX_ . 'order_detail as od2 ON od2.product_id = p.id_product 
+                FROM ' . _DB_PREFIX_ . 'product as p
+                LEFT JOIN ' . _DB_PREFIX_ . 'order_detail as od2 ON od2.product_id = p.id_product
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_height,
-          
+
            (SELECT GROUP_CONCAT(depth) as product_depth FROM (
                 SELECT p.depth, od2.id_order
-                FROM ' . _DB_PREFIX_ . 'product as p 
-                LEFT JOIN ' . _DB_PREFIX_ . 'order_detail as od2 ON od2.product_id = p.id_product 
+                FROM ' . _DB_PREFIX_ . 'product as p
+                LEFT JOIN ' . _DB_PREFIX_ . 'order_detail as od2 ON od2.product_id = p.id_product
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_depth,
-           
+
            (SELECT GROUP_CONCAT(product_ean13) as product_ean13 FROM (
                 SELECT od2.product_ean13, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_ean13,
-           
+
            (SELECT GROUP_CONCAT(ecotax) as product_ecotax_tax_excl FROM (
                 SELECT od2.ecotax, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_ecotax_tax_excl,
-           
+
            (SELECT GROUP_CONCAT(product_ecotax) as product_ecotax FROM (
                 SELECT od2.ecotax*(1+od2.ecotax_tax_rate/100) product_ecotax, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_ecotax,
-           
+
            (SELECT GROUP_CONCAT(product_upc) as product_upc FROM (
                 SELECT od2.product_upc, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_upc,
-           
-    
-           
+
+
+
            (SELECT GROUP_CONCAT(rate) as product_tax_rate FROM (
                 SELECT t.rate, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
-                LEFT JOIN ' . _DB_PREFIX_ . 'order_detail_tax odt ON odt.id_order_detail = od2.id_order_detail 
-                LEFT JOIN ' . _DB_PREFIX_ . 'tax t ON t.id_tax = odt.id_tax 
+                LEFT JOIN ' . _DB_PREFIX_ . 'order_detail_tax odt ON odt.id_order_detail = od2.id_order_detail
+                LEFT JOIN ' . _DB_PREFIX_ . 'tax t ON t.id_tax = odt.id_tax
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_tax_rate,
-           
+
            (SELECT GROUP_CONCAT(unit_amount) as product_unit_tax_amount FROM (
                 SELECT odt.unit_amount, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
@@ -515,9 +523,9 @@ class ordersExportDataModel
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_unit_tax_amount,
-           
+
            (SELECT GROUP_CONCAT(total_amount) as product_total_tax_amount FROM (
                 SELECT odt.total_amount, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
@@ -525,38 +533,38 @@ class ordersExportDataModel
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_total_tax_amount,
-           
+
            (SELECT GROUP_CONCAT(reduction_percent) as product_reduction_percent FROM (
                 SELECT od2.reduction_percent, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_reduction_percent,
-           
+
            (SELECT GROUP_CONCAT(reduction_amount_tax_incl) as product_reduction_amount_tax_incl FROM (
                 SELECT od2.reduction_amount_tax_incl, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_reduction_amount_tax_incl,
-           
+
            (SELECT GROUP_CONCAT(reduction_amount_tax_excl) as product_reduction_amount_tax_excl FROM (
                 SELECT od2.reduction_amount_tax_excl, od2.id_order
                 FROM ' . _DB_PREFIX_ . 'order_detail as od2
                 ' . $join_product . '
                 ' . $and_product . '
               ) as pnm
-              WHERE id_order = o.id_order 
+              WHERE id_order = o.id_order
            ) as product_reduction_amount_tax_excl,
-           
-           
-           
+
+
+
            (SELECT  GROUP_CONCAT( op.amount ) FROM ' . _DB_PREFIX_ . 'order_payment as op WHERE op.order_reference = o.reference) as payment_amount,
            (SELECT  GROUP_CONCAT( op.payment_method ) FROM ' . _DB_PREFIX_ . 'order_payment as op WHERE op.order_reference = o.reference) as payment_method,
            (SELECT  GROUP_CONCAT( op.transaction_id ) FROM ' . _DB_PREFIX_ . 'order_payment as op WHERE op.order_reference = o.reference) as payment_transaction_id,
@@ -572,17 +580,17 @@ class ordersExportDataModel
         LEFT JOIN ' . _DB_PREFIX_ . 'order_history as oh
         ON o.id_order = oh.id_order AND o.current_state =  oh.id_order_state
         LEFT JOIN ' . _DB_PREFIX_ . 'order_carrier as oc
-        ON o.id_order = oc.id_order 
+        ON o.id_order = oc.id_order
         LEFT JOIN ' . _DB_PREFIX_ . 'order_invoice as oi
-        ON o.id_order = oi.id_order 
+        ON o.id_order = oi.id_order
         LEFT JOIN ' . _DB_PREFIX_ . 'order_slip as slip
-        ON o.id_order = slip.id_order 
+        ON o.id_order = slip.id_order
         LEFT JOIN ' . _DB_PREFIX_ . 'customer as c
         ON o.id_customer= c.id_customer
         LEFT JOIN ' . _DB_PREFIX_ . 'customer_group as cg
         ON cg.id_customer= o.id_customer
         LEFT JOIN ' . _DB_PREFIX_ . 'group_lang gl
-        ON gl.id_group = c.id_default_group AND gl.id_lang = ' . (int)$idLang . '  
+        ON gl.id_group = c.id_default_group AND gl.id_lang = ' . (int)$idLang . '
         LEFT JOIN ' . _DB_PREFIX_ . 'address as ad
         ON o.id_address_delivery= ad.id_address
         LEFT JOIN ' . _DB_PREFIX_ . 'country_lang as cl
@@ -673,7 +681,7 @@ class ordersExportDataModel
     }
 
 
-    public function getOrdersSeparate($idLang = false, $idShop = false, $orderIds, $export_filters)
+    public function getOrdersSeparate($orderIds, $export_filters, $idLang = false, $idShop = false)
     {
         if ($idShop === false) {
             $idShop = $this->_context->shop->id;
@@ -707,9 +715,9 @@ class ordersExportDataModel
         $new_osd2_fields = '';
 
         if (version_compare(_PS_VERSION_, '1.6.1.0', '>=')) {
-            $new_slip_fields = 'slip.total_products_tax_excl as total_products_tax_excl_slip, 
+            $new_slip_fields = 'slip.total_products_tax_excl as total_products_tax_excl_slip,
                           slip.total_products_tax_incl as total_products_tax_incl_slip,
-                          slip.total_shipping_tax_excl as total_shipping_tax_excl_slip, 
+                          slip.total_shipping_tax_excl as total_shipping_tax_excl_slip,
                           slip.total_shipping_tax_incl as total_shipping_tax_incl_slip,';
 
             $new_osd2_fields = 'osd.unit_price_tax_excl as unit_price_tax_excl_slip,
@@ -735,62 +743,62 @@ class ordersExportDataModel
 
         $sql = '
         SELECT oi.note,
-             oi.id_order_invoice, 
+             oi.id_order_invoice,
              oc.tracking_number ,
-             oh.date_add as date_add_state, 
-             o.*,carr.name as carrier_name, 
+             oh.date_add as date_add_state,
+             o.*,carr.name as carrier_name,
              (o.total_products_wt - o.total_products) as total_products_tax,
              (o.total_paid_tax_incl - o.total_paid_tax_excl) as total_paid_tax,
-             c.newsletter, 
-             c.firstname as customer_firstname, 
-             c.email as customer_email, 
-             c.company as customer_company, 
-             c.lastname as customer_lastname, 
-             c.birthday as customer_birthday, 
-             c.note as private_note, 
-             c.is_guest as customer_is_guest, 
+             c.newsletter,
+             c.firstname as customer_firstname,
+             c.email as customer_email,
+             c.company as customer_company,
+             c.lastname as customer_lastname,
+             c.birthday as customer_birthday,
+             c.note as private_note,
+             c.is_guest as customer_is_guest,
              c.website as customer_website,
              gl.name as default_customer_group,
-             st.iso_code as shipping_state_iso, 
+             st.iso_code as shipping_state_iso,
              osl.name as status_order,
-             ad.lastname as shipping_customer_lastname, 
-             ad.firstname as shipping_customer_firstname, 
-             ad.alias as shipping_alias, 
-             ad.company as shipping_company, 
-             ad.id_country as shipping_id_country, 
-             ad.vat_number as shipping_vat_number, 
-             cl.name as shipping_name_country, 
-             con.iso_code as shipping_iso_country, 
-             ad.id_state as shipping_id_state, 
+             ad.lastname as shipping_customer_lastname,
+             ad.firstname as shipping_customer_firstname,
+             ad.alias as shipping_alias,
+             ad.company as shipping_company,
+             ad.id_country as shipping_id_country,
+             ad.vat_number as shipping_vat_number,
+             cl.name as shipping_name_country,
+             con.iso_code as shipping_iso_country,
+             ad.id_state as shipping_id_state,
              st.name as shipping_name_state,
-             ad.address1 as shipping_address1, 
-             ad.address2 as shipping_address2, 
-             ad.postcode as shipping_postcode, 
-             ad.city as shipping_city, 
-             ad.other as shipping_other, 
-             ad.phone as shipping_phone, 
-             ad.phone_mobile as shipping_phone_mobile, 
-             ad.dni as shipping_customer_dni, 
-             od.product_supplier_reference as supplier_reference, 
+             ad.address1 as shipping_address1,
+             ad.address2 as shipping_address2,
+             ad.postcode as shipping_postcode,
+             ad.city as shipping_city,
+             ad.other as shipping_other,
+             ad.phone as shipping_phone,
+             ad.phone_mobile as shipping_phone_mobile,
+             ad.dni as shipping_customer_dni,
+             od.product_supplier_reference as supplier_reference,
              od.purchase_supplier_price as supplier_price,
-             adi.lastname as invoice_customer_lastname, 
-             adi.firstname as invoice_customer_firstname, 
-             adi.alias as invoice_alias, 
-             adi.company as invoice_company, 
-             adi.id_country as invoice_id_country, 
-             adi.vat_number as invoice_vat_number, 
-             cli.name as invoice_name_country, 
-             coni.iso_code as invoice_iso_country, 
-             adi.id_state as invoice_id_state, 
+             adi.lastname as invoice_customer_lastname,
+             adi.firstname as invoice_customer_firstname,
+             adi.alias as invoice_alias,
+             adi.company as invoice_company,
+             adi.id_country as invoice_id_country,
+             adi.vat_number as invoice_vat_number,
+             cli.name as invoice_name_country,
+             coni.iso_code as invoice_iso_country,
+             adi.id_state as invoice_id_state,
              sti.name as invoice_name_state,
              sti.iso_code as invoice_state_iso,
-             adi.address1 as invoice_address1, 
-             adi.address2 as invoice_address2, 
-             adi.postcode as invoice_postcode, 
-             adi.city as invoice_city, 
-             adi.other as invoice_other, 
-             adi.phone as invoice_phone, 
-             adi.phone_mobile as invoice_phone_mobile, 
+             adi.address1 as invoice_address1,
+             adi.address2 as invoice_address2,
+             adi.postcode as invoice_postcode,
+             adi.city as invoice_city,
+             adi.other as invoice_other,
+             adi.phone as invoice_phone,
+             adi.phone_mobile as invoice_phone_mobile,
              adi.dni as invoice_customer_dni,
              od.product_id as product_id ,
              od.product_attribute_id as product_attribute_id ,
@@ -812,10 +820,10 @@ class ordersExportDataModel
              ' . $cust_select . '
              slip.id_order_slip,
              ' . $new_slip_fields . '
-             slip.shipping_cost as shipping_cost_slip, 
-             slip.amount as amount_slip, 
-             slip.shipping_cost_amount as shipping_cost_amount_slip,  
-             slip.date_add as date_add_slip, 
+             slip.shipping_cost as shipping_cost_slip,
+             slip.amount as amount_slip,
+             slip.shipping_cost_amount as shipping_cost_amount_slip,
+             slip.date_add as date_add_slip,
              p.width as product_width,
              p.height as product_height,
              p.depth as product_depth,
@@ -835,7 +843,7 @@ class ordersExportDataModel
              od.reduction_percent as product_reduction_percent,
              od.reduction_amount_tax_incl as product_reduction_amount_tax_incl,
              od.reduction_amount_tax_excl as product_reduction_amount_tax_excl,
-             cm.message as order_customer_message,   
+             cm.message as order_customer_message,
             (SELECT  GROUP_CONCAT( gl2.name ) FROM ' . _DB_PREFIX_ . 'customer_group as cg2   LEFT JOIN ' . _DB_PREFIX_ . 'group_lang gl2 ON gl2.id_group = cg2.id_group AND gl2.id_lang = ' . (int)$idLang . '  WHERE c.id_customer = cg2.id_customer) as customer_groups,
             (SELECT  GROUP_CONCAT( op.amount ) FROM ' . _DB_PREFIX_ . 'order_payment as op WHERE op.order_reference = o.reference) as payment_amount,
             (SELECT  GROUP_CONCAT( op.payment_method ) FROM ' . _DB_PREFIX_ . 'order_payment as op WHERE op.order_reference = o.reference) as payment_method,
@@ -858,11 +866,11 @@ class ordersExportDataModel
         LEFT JOIN ' . _DB_PREFIX_ . 'tax as t
         ON t.id_tax = odt.id_tax
         LEFT JOIN ' . _DB_PREFIX_ . 'order_carrier as oc
-        ON o.id_order = oc.id_order 
+        ON o.id_order = oc.id_order
         LEFT JOIN ' . _DB_PREFIX_ . 'order_invoice as oi
-        ON o.id_order = oi.id_order 
+        ON o.id_order = oi.id_order
         LEFT JOIN ' . _DB_PREFIX_ . 'order_slip as slip
-        ON o.id_order = slip.id_order 
+        ON o.id_order = slip.id_order
         LEFT JOIN ' . _DB_PREFIX_ . 'product as p
         ON p.id_product = od.product_id
         LEFT JOIN ' . _DB_PREFIX_ . 'product_supplier as ps
@@ -886,7 +894,7 @@ class ordersExportDataModel
         LEFT JOIN ' . _DB_PREFIX_ . 'customer_group as cg
         ON cg.id_customer= o.id_customer
         LEFT JOIN ' . _DB_PREFIX_ . 'group_lang gl
-        ON gl.id_group = c.id_default_group AND gl.id_lang = ' . (int)$idLang . '  
+        ON gl.id_group = c.id_default_group AND gl.id_lang = ' . (int)$idLang . '
         LEFT JOIN ' . _DB_PREFIX_ . 'address as ad
         ON o.id_address_delivery= ad.id_address
         LEFT JOIN ' . _DB_PREFIX_ . 'country_lang as cl
@@ -918,7 +926,22 @@ class ordersExportDataModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
-    public function getOrdersIds($idShop = false, $limit, $count = false, $not_exported, $setting, $limitN = 2, $orderby = false, $orderway = false, $separateAttribute = false, $id_order = null, $export_filters)
+    /**
+     * @param $setting
+     * @param $export_filters
+     * @param $not_exported
+     * @param $limit
+     * @param $id_order
+     * @param $orderby
+     * @param $separateAttribute
+     * @param $limitN
+     * @param $count
+     * @param $orderway
+     * @param $idShop
+     * @return array|bool|mixed|mysqli_result|PDOStatement|resource|string|null
+     * @throws PrestaShopDatabaseException
+     */
+    public function getOrdersIds($setting, $export_filters, $not_exported, $limit, $id_order = null, $orderby = false, $separateAttribute = false, $limitN = 2, $count = false, $orderway = false, $idShop = false)
     {
         $ids = '';
 

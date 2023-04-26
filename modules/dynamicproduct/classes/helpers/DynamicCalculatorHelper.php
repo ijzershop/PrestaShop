@@ -434,10 +434,10 @@ class DynamicCalculatorHelper
     public function formatPrices($final_prices)
     {
         return array(
-            'price_ht'     => Tools::displayPrice($final_prices['price_ht']),
-            'price_ht_nr'  => Tools::displayPrice($final_prices['price_ht_nr']),
-            'price_ttc'    => Tools::displayPrice($final_prices['price_ttc']),
-            'price_ttc_nr' => Tools::displayPrice($final_prices['price_ttc_nr']),
+            'price_ht'     => Context::getContext()->currentLocale->formatPrice($final_prices['price_ht'], 'EUR'),
+            'price_ht_nr'  => Context::getContext()->currentLocale->formatPrice($final_prices['price_ht_nr'], 'EUR'),
+            'price_ttc'    => Context::getContext()->currentLocale->formatPrice($final_prices['price_ttc'], 'EUR'),
+            'price_ttc_nr' => Context::getContext()->currentLocale->formatPrice($final_prices['price_ttc_nr'], 'EUR'),
         );
     }
 

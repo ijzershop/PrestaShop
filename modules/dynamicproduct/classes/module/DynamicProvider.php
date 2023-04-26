@@ -458,7 +458,7 @@ class DynamicProvider
         if ($locale) {
             return $locale->formatPrice($price, $this->context->currency->iso_code);
         }
-        return Tools::displayPrice($price);
+        return Context::getContext()->currentLocale->formatPrice($price, 'EUR');
     }
 
     public function convertAndFormatPrice($price)

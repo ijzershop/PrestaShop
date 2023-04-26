@@ -28,10 +28,10 @@
                 <div class="prices col-sm-12 col-md-4 col-lg-4">
                   <!-- Price -->
                   <div class="price product-price incl w-100 text-left text-md-right">
-                      {Tools::displayPrice($product.price_tax_inc)} incl. BTW
+                      {Context::getContext()->currentLocale->formatPrice($product.price_tax_inc, 'EUR')} incl. BTW
                   </div>
                   <div class="price product-price excl  w-100 text-left text-md-right" style="font-weight:100;">
-                      {Tools::displayPrice($product.price_tax_exc)} excl. BTW
+                      {Context::getContext()->currentLocale->formatPrice($product.price_tax_exc, 'EUR')} excl. BTW
                   </div>
                 </div>
                 <div class="col-12 d-block d-md-none">

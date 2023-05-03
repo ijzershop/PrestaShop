@@ -61,14 +61,31 @@
             </td>
           </tr>
             {foreach $order_detail.customizedDatas as $customizationPerAddress}
-                {foreach $customizationPerAddress as $customizationId => $customization}
-                  <tr class="customization_data {$bgcolor_class}">
-                    <td class="product left" colspan="7">{if array_key_exists($smarty.const._CUSTOMIZE_TEXTFIELD_, $customization.datas) && count($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) > 0}{foreach $customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_] as $customization_infos}{if !empty($customization_infos.value)}<b>{$customization_infos.name|string_format:{l s='%s:' d='Shop.Pdf' pdf='true'}}</b> <span style="font-style:italic;">{if (int)$customization_infos.id_module}{$customization_infos.value nofilter}{else}{$customization_infos.value}{/if}</span>{/if}{/foreach}{/if}
-                        {if array_key_exists($smarty.const._CUSTOMIZE_FILE_, $customization.datas) && count($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) > 0}{l s='image(s):' d='Shop.Pdf' pdf='true'}{count($customization.datas[$smarty.const._CUSTOMIZE_FILE_])}{/if}
-                    </td>
-                  </tr>
-                  <!--if !$smarty.foreach.custo_foreach.last-->
-                {/foreach}
+                    {foreach $customizationPerAddress as $customizationId => $customization}
+                        {if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
+                            {foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}{if !empty($customization_infos.value)}
+                                {if !empty($customization_infos.technical_image)}
+                                  <tr>
+                                    <td colspan="4" style="padding:0;margin:0">{$customization_infos.value|strip_tags:true|strip}</td>
+                                      <td class="right" colspan="2">
+                                        <img
+                                          src="{Context::getContext()->shop->getBaseURL(false, false)}{$customization_infos.technical_image}.png"
+                                          width="150"/>
+                                      </td>
+                                      </tr>
+                                {else}
+                                  <tr>
+                                    <td colspan="4">{$customization_infos.value|strip_tags:true|strip}</td>
+                                  </tr>
+                                {/if}
+                            {/if}
+                            {/foreach}
+                        {/if}
+                        {if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
+                            {count($customization.datas[Product::CUSTOMIZE_FILE])}
+                        {/if}
+                    {/foreach}
+
             {/foreach}
         </table>
       </td>

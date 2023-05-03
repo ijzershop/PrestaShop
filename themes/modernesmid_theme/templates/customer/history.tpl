@@ -72,7 +72,7 @@
               {if $order.details.invoice_url}
               {if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}
                 <a target="_blank" href="/index.php?controller=pdf-physical-on-credit-order-slip&id_order={$order.details.id}" id="printShoppingCartOnCreditByEmployeeAfterCheckout" data-order="{$order.details.id}"  class="btn btn-link text-dark float-right" alt="Winkelwagen als pdf opslaan">Credit Bon</a><br/>
-                <a target="_blank" hp?controller=pdf-physical-order-slip&id_order={$order.details.id}" id="printShoppingCartByEmployeeAfterCheckout" data-order="{$order.details.id}"  class="btn btn-link text-dark float-right" alt="Winkelwagen als pdf opslaan">Balie Bon</a><br/>
+                <a target="_blank" href="/index.php?controller=pdf-physical-order-slip&id_order={$order.details.id}" id="printShoppingCartByEmployeeAfterCheckout" data-order="{$order.details.id}"  class="btn btn-link text-dark float-right" alt="Winkelwagen als pdf opslaan">Balie Bon</a><br/>
               {/if}
                 <a target="_blank" href="{$order.details.invoice_url}">{l s='Factuur downloaden' d='Shop.Theme.Actions'}</a>
                 <br>

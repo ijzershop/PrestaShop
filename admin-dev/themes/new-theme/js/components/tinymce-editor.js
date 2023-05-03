@@ -118,9 +118,9 @@ class TinyMCEEditor {
 
     const cfg = {
       selector: '.autoload_rte',
-      plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
+      plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager', 'paste'],
       browser_spellcheck: true,
-      toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
+      toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print paste | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments |  bootstrap",
       language: window.iso_user,
       contextmenu: "bootstrap",
       image_advtab: true ,
@@ -159,22 +159,38 @@ class TinyMCEEditor {
         title: 'nofollow',
         value: 'nofollow'
       }],
-      automatic_uploads: false,
+      paste_data_images: true,
+      paste_preprocess: function(plugin, args) {
+        let m;
+        const content = args.content;
+        const regex = new RegExp('^<img.*?src=\"(.*?)\"');
+        if(regex.test(content))
+        {
+          //is an image do nothing
+          return false;
+        } else {
+          //is text strip all
+          m = content.replace(/(<([^>]+)>)/gi, "");
+          args.content = m;
+        }
+      },
+      paste_postprocess: function(plugin, args) {
+        args.node.setAttribute('id', '42');
+      },
+      automatic_uploads: true,
+      images_upload_url: '/custom_uploader/upload.php',
       images_upload_handler: function (blobInfo, success, failure) {
         var xhr, formData;
         xhr = new XMLHttpRequest();
         xhr.withCredentials = false;
         xhr.open('POST', '/custom_uploader/upload.php');
-
-        var file = document.querySelectorAll('.tox-form input')[0].files[0];
         formData = new FormData();
         formData.append('path','');
         formData.append('path_thumb','');
-        formData.append('file', file, file.name);
+        formData.append('file', blobInfo.blob(), blobInfo.filename());
         xhr.send(formData);
         xhr.onload = function() {
           var json;
-
           if (xhr.status !== 200) {
             failure('HTTP Error: ' + xhr.status);
             return;

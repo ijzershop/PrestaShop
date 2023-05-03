@@ -3,6 +3,7 @@ $_SESSION['verify'] = 'RESPONSIVEfilemanager';
 
 include $_SERVER['DOCUMENT_ROOT'].'/admin-dev/filemanager/config/config.php';
 include $_SERVER['DOCUMENT_ROOT'].'/admin-dev/filemanager/include/utils.php';
+//include $_SERVER['DOCUMENT_ROOT'].'/js/filemanager/include/utils.php';
 $current_path = $_SERVER['DOCUMENT_ROOT'].'/upload/';
 $thumbs_base_path = $_SERVER['DOCUMENT_ROOT'].'/upload/thumbs/';
 
@@ -71,7 +72,9 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
             $is_img = false;
         }
 
-        if ($is_img) {
+//        dd($is_img, $tempFile, $targetFile);
+
+        if($is_img) {
             move_uploaded_file($tempFile, $targetFile);
             chmod($targetFile, 0755);
 
@@ -137,8 +140,6 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
     exit();
 }
 
-
-
 if (isset($_POST['submit'])) {
     $query = http_build_query(
         array(
@@ -151,4 +152,4 @@ if (isset($_POST['submit'])) {
     );
     header('location: dialog.php?'.$query);
 }
-echo json_encode(array('location' => '/upload/'.$filename));
+echo json_encode(['location' => '/upload/'.$filename]);

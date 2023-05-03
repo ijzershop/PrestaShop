@@ -81,12 +81,12 @@ class AdminLoginController extends AdminLoginControllerCore
     /* @phpstan-ignore-next-line */
     public function setMedia($isNewTheme = false)
     {
-        if ($this->psAccountsLoginEnabled) {
-            $this->addCss(_PS_MODULE_DIR_ . 'ps_accounts/views/css/login.css');
-            $this->addJS(_PS_MODULE_DIR_ . '/ps_accounts/views/js/login.js');
-
-            return;
-        }
+//        if ($this->psAccountsLoginEnabled) {
+//            $this->addCss(_PS_MODULE_DIR_ . 'ps_accounts/views/css/login.css');
+//            $this->addJS(_PS_MODULE_DIR_ . '/ps_accounts/views/js/login.js');
+//
+//            return;
+//        }
 
         parent::setMedia();
     }
@@ -113,9 +113,9 @@ class AdminLoginController extends AdminLoginControllerCore
                 $this->analyticsService->pageLocalBoLogin($userId);
         }
 
-        if ($this->psAccountsLoginEnabled && $tpl_name === $this->template) {
-            return $this->createPsAccountsLoginTemplate();
-        }
+//        if ($this->psAccountsLoginEnabled && $tpl_name === $this->template) {
+//            return $this->createPsAccountsLoginTemplate();
+//        }
 
         return parent::createTemplate($tpl_name);
     }

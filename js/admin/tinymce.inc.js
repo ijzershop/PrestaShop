@@ -141,6 +141,8 @@ let tinySetup = function(config) {
     valid_children: '+*[*]',
     valid_elements: '*[*]',
     rel_list: [{title: 'nofollow', value: 'nofollow'}],
+    automatic_uploads: true,
+    images_upload_url: '/custom_uploader/upload.php',
     images_upload_handler: function (blobInfo, success, failure, progress) {
       let xhr, formData;
       const url = '/index.php?fc=module&module=modernesmidthemeconfigurator&controller=ajax&id_lang=1';

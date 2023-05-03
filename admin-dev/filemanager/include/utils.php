@@ -1,8 +1,8 @@
 <?php
 
-if ($_SESSION["verify"] != "RESPONSIVEfilemanager") {
-    die('forbiden');
-}
+//if ($_SESSION["verify"] != "RESPONSIVEfilemanager") {
+//    die('forbiden');
+//}
 
 function deleteDir($dir)
 {
@@ -381,5 +381,21 @@ function stopIfSameDir($sourcePath, array $paths)
         if (realpath($sourcePath) === realpath($path)) {
             die('wrong_path');
         }
+    }
+}
+
+/**
+ * Correct strtolower handling
+ *
+ * @param string $str
+ *
+ * @return  string
+ */
+function fix_strtolower($str)
+{
+    if (function_exists('mb_strtolower')) {
+        return mb_strtolower($str);
+    } else {
+        return strtolower($str);
     }
 }

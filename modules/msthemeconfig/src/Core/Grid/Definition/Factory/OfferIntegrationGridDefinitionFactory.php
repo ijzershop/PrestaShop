@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\HtmlColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
@@ -145,7 +146,7 @@ class OfferIntegrationGridDefinitionFactory extends AbstractGridDefinitionFactor
                     'sortable' => true,
                 ]))
 
-            ->add((new DataColumn('message'))
+            ->add((new HtmlColumn('message'))
                 ->setName($this->trans('Message', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'message',

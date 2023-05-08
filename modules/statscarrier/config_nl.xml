@@ -3,7 +3,7 @@
     <name>statscarrier</name>
     <displayName><![CDATA[Vervoerdersverdeling]]></displayName>
     <version><![CDATA[2.0.1]]></version>
-    <description><![CDATA[Enrich your stats, add a pie chart illustrating your carriers&rsquo; distribution.]]></description>
+    <description><![CDATA[Verrijk uw statistieken, voeg een cirkeldiagram toe dat de distributie van uw vervoerders illustreert.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

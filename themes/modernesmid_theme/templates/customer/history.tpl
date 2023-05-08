@@ -53,10 +53,7 @@
             <td class="text-xs-right">{$order.totals.total.value}</td>
             <td class="d-sm-none d-none">{$order.details.payment}</td>
             <td>
-              <span
-                class="label label-pill {$order.history.current.contrast}"
-                {* style="background-color:{$order.history.current.color}" *}
-              >
+              <span class="label label-pill {$order.history.current.contrast}">
                 {$order.history.current.ostate_name}
               </span>
             </td>
@@ -68,7 +65,6 @@
               {/if}
             </td>
             <td class="text-sm-center order-actions">
-
               {if $order.details.invoice_url}
               {if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}
                 <a target="_blank" href="/index.php?controller=pdf-physical-on-credit-order-slip&id_order={$order.details.id}" id="printShoppingCartOnCreditByEmployeeAfterCheckout" data-order="{$order.details.id}"  class="btn btn-link text-dark float-right" alt="Winkelwagen als pdf opslaan">Credit Bon</a><br/>
@@ -86,7 +82,7 @@
                 <a href="{$order.details.reorder_url}">{l s='Opnieuw bestellen' d='Shop.Theme.Actions'}</a>
               {/if}
             </td>
-{*             <td class="text-center">
+        {*  <td class="text-center">
               <button data-history="{json_encode($order.history)}" data-order-reference="{$order.details.reference}" data-toggle="modal" data-target="#trackingModal" class="btn-link btn text-dark showOrderTracking"><i class="fasr fa-truck fa-2x"></i></a>
             </td> *}
           </tr>
@@ -135,10 +131,7 @@
         </div>
       {/foreach}
     </div>
-
   {/if}
-
-
 
 <div class="modal fade" id="trackingModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="trackingModalLabel" aria-hidden="true">
   <div class="modal-dialog">

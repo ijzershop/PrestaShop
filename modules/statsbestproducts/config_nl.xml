@@ -3,7 +3,7 @@
     <name>statsbestproducts</name>
     <displayName><![CDATA[Beste producten]]></displayName>
     <version><![CDATA[2.0.1]]></version>
-    <description><![CDATA[Enrich your stats with a small list of your best-sellers to better know your customers.]]></description>
+    <description><![CDATA[Verrijk uw statistieken met een kleine lijst van uw bestsellers om uw klanten beter te leren kennen.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

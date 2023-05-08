@@ -9,17 +9,11 @@
  * @copyright Since 2021 JB Stoker
  * @license   https://opensource.org/licenses/MIT
  */
-declare(strict_types=1);
 
 namespace MsThemeConfig\Core\Repository;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -32,7 +26,6 @@ class OfferIntegrationRepository extends EntityRepository
      *
      * @param int $id_oi_offer
      * @return float|int|mixed|string
-     * @throws NoResultException
      * @throws NonUniqueResultException
      */
     public function findOneById(int $id_oi_offer)

@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
 
-namespace PrestaShop\Module\ProductComment\Entity;
+namespace PrestaShop\Module\ProductComment\DBEntity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,46 +32,39 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity()
  */
-class ProductCommentGrade
+class ProductCommentReport
 {
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="ProductComment")
      * @ORM\JoinColumn(name="id_product_comment", referencedColumnName="id_product_comment")
+     *
+     * @var ProductComment
      */
     private $comment;
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="ProductCommentCriterion")
-     * @ORM\JoinColumn(name="id_product_comment_criterion", referencedColumnName="id_product_comment_criterion")
-     */
-    private $criterion;
-
-    /**
-     * @var int
+     * @ORM\Column(name="id_customer", type="integer")
      *
-     * @ORM\Column(name="grade", type="integer")
+     * @var int
      */
-    private $grade;
+    private $customerId;
 
     /**
      * @param ProductComment $comment
-     * @param ProductCommentCriterion $criterion
-     * @param int $grade
+     * @param int $customerId
      */
     public function __construct(
         ProductComment $comment,
-        ProductCommentCriterion $criterion,
-        $grade
+        $customerId
     ) {
         $this->comment = $comment;
-        $this->criterion = $criterion;
-        $this->grade = $grade;
+        $this->customerId = $customerId;
     }
 
     /**
-     * @return mixed
+     * @return ProductComment
      */
     public function getComment()
     {
@@ -79,10 +72,10 @@ class ProductCommentGrade
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getCriterion()
+    public function getCustomerId()
     {
-        return $this->criterion;
+        return $this->customerId;
     }
 }

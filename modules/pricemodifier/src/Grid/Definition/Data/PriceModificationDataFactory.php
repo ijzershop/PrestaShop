@@ -29,7 +29,7 @@ namespace Modernesmid\Module\Pricemodifier\Grid\Definition\Data;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManager;
 use Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsAjaxController;
-use Modernesmid\Module\Pricemodifier\Entity\PriceModification;
+use Modernesmid\Module\Pricemodifier\DBEntity\PriceModification;
 use Modernesmid\Module\Pricemodifier\Repository\PriceModificationRepository;
 use PDO;
 use PrestaShop\PrestaShop\Adapter\Entity\Category;

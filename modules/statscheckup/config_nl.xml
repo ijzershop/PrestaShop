@@ -3,7 +3,7 @@
     <name>statscheckup</name>
     <displayName><![CDATA[Winkel evaluatie]]></displayName>
     <version><![CDATA[2.0.2]]></version>
-    <description><![CDATA[Enrich your stats, give your catalog a quick evaluation to better analyze your activity.]]></description>
+    <description><![CDATA[Verrijk uw statistieken, geef uw catalogus een snelle evaluatie om uw activiteit beter te analyseren.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

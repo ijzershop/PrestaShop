@@ -223,10 +223,10 @@ services:
       - "@modernesmid.form.identifiable_object.data_handler.offer_integrations_form_data_handler"
 
   modernesmid.repository.offer_integrations_repository:
-    class: MsThemeConfig\Core\Repository\OfferIntegrationRepository
-    factory: ["@doctrine.orm.default_entity_manager", getRepository]
+    class: 'MsThemeConfig\Core\Repository\OfferIntegrationRepository'
+    factory: ["@doctrine.orm.container_repository_factory", "getRepository"]
     arguments:
-      - 'MsThemeConfig\Entity\OfferIntegration'
+      - 'MsThemeConfig\DBEntity\OfferIntegration'
 
   prestashop.core.grid.query_builder.customer_address:
     class: 'MsThemeConfig\Core\Grid\Query\CustomerAddressQueryBuilder'

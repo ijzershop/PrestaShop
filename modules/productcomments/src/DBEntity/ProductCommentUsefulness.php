@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
 
-namespace PrestaShop\Module\ProductComment\Entity;
+namespace PrestaShop\Module\ProductComment\DBEntity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,39 +32,47 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity()
  */
-class ProductCommentReport
+class ProductCommentUsefulness
 {
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="ProductComment")
      * @ORM\JoinColumn(name="id_product_comment", referencedColumnName="id_product_comment")
-     *
-     * @var ProductComment
      */
     private $comment;
 
     /**
+     * @var int
+     *
      * @ORM\Id
      * @ORM\Column(name="id_customer", type="integer")
-     *
-     * @var int
      */
     private $customerId;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="usefulness", type="boolean")
+     */
+    private $usefulness;
+
+    /**
      * @param ProductComment $comment
      * @param int $customerId
+     * @param bool $usefulness
      */
     public function __construct(
         ProductComment $comment,
-        $customerId
+        $customerId,
+        $usefulness
     ) {
         $this->comment = $comment;
         $this->customerId = $customerId;
+        $this->usefulness = $usefulness;
     }
 
     /**
-     * @return ProductComment
+     * @return mixed
      */
     public function getComment()
     {
@@ -77,5 +85,25 @@ class ProductCommentReport
     public function getCustomerId()
     {
         return $this->customerId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUsefulness()
+    {
+        return $this->usefulness;
+    }
+
+    /**
+     * @param bool $usefulness
+     *
+     * @return ProductCommentUsefulness
+     */
+    public function setUsefulness($usefulness)
+    {
+        $this->usefulness = $usefulness;
+
+        return $this;
     }
 }

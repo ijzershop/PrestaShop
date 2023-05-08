@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
 
-namespace PrestaShop\Module\ProductComment\Entity;
+namespace PrestaShop\Module\ProductComment\DBEntity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,7 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity()
  */
-class ProductCommentUsefulness
+class ProductCommentGrade
 {
     /**
      * @ORM\Id
@@ -42,33 +42,32 @@ class ProductCommentUsefulness
     private $comment;
 
     /**
-     * @var int
-     *
      * @ORM\Id
-     * @ORM\Column(name="id_customer", type="integer")
+     * @ORM\ManyToOne(targetEntity="ProductCommentCriterion")
+     * @ORM\JoinColumn(name="id_product_comment_criterion", referencedColumnName="id_product_comment_criterion")
      */
-    private $customerId;
+    private $criterion;
 
     /**
-     * @var bool
+     * @var int
      *
-     * @ORM\Column(name="usefulness", type="boolean")
+     * @ORM\Column(name="grade", type="integer")
      */
-    private $usefulness;
+    private $grade;
 
     /**
      * @param ProductComment $comment
-     * @param int $customerId
-     * @param bool $usefulness
+     * @param ProductCommentCriterion $criterion
+     * @param int $grade
      */
     public function __construct(
         ProductComment $comment,
-        $customerId,
-        $usefulness
+        ProductCommentCriterion $criterion,
+        $grade
     ) {
         $this->comment = $comment;
-        $this->customerId = $customerId;
-        $this->usefulness = $usefulness;
+        $this->criterion = $criterion;
+        $this->grade = $grade;
     }
 
     /**
@@ -80,30 +79,10 @@ class ProductCommentUsefulness
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getCustomerId()
+    public function getCriterion()
     {
-        return $this->customerId;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUsefulness()
-    {
-        return $this->usefulness;
-    }
-
-    /**
-     * @param bool $usefulness
-     *
-     * @return ProductCommentUsefulness
-     */
-    public function setUsefulness($usefulness)
-    {
-        $this->usefulness = $usefulness;
-
-        return $this;
+        return $this->criterion;
     }
 }

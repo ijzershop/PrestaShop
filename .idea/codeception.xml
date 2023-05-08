@@ -4,10 +4,13 @@
     <option name="configurations">
       <list>
         <Configuration>
+          <option name="path" value="$PROJECT_DIR$/modules/autoupgrade/tests" />
+        </Configuration>
+        <Configuration>
           <option name="path" value="$PROJECT_DIR$/tests" />
         </Configuration>
         <Configuration>
-          <option name="path" value="$PROJECT_DIR$/modules/autoupgrade/tests" />
+          <option name="path" value="$PROJECT_DIR$/modules/ps_shoppingcart/tests" />
         </Configuration>
       </list>
     </option>

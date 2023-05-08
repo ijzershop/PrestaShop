@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Modernesmid\Module\Pricemodifier\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Modernesmid\Module\Pricemodifier\Entity\PriceModification;
+use Modernesmid\Module\Pricemodifier\DBEntity\PriceModification;
 use Modernesmid\Module\Pricemodifier\Repository\PriceModificationRepository;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 

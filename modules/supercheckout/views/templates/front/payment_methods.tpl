@@ -23,7 +23,7 @@
 
           <li>
                 <div class="radio">
-                    <input type="radio" name="payment_method" data-module-name="{$option.module_name nofilter}{*escape not required as contains html*}" value="{$option.id}" id="{$option.id}" {if (Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id && $option.action|strstr:"ideal") || (Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id && $option.action|strstr:"pinpayment")} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>
+                    <input type="radio" name="payment_method" data-module-name="{$option.module_name nofilter}{*escape not required as contains html*}" value="{$option.id}" id="{$option.id}" {if (Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id && $option.action|substr:"ideal") || (Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id && $option.action|substr:"pinpayment")} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>
                   <label id="payment_lbl_{$option.id_module|intval}" for="{$option.id}">
                         {if $display_payment_style neq 0}
                             {if $option.payment_image_url neq ''}

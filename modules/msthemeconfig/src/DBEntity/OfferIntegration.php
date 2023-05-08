@@ -1,6 +1,6 @@
 <?php
 /**
- * Price Modifier
+ * Offer intergation
  * Copyright since 2021 JB Stoker and Contributors
  * <JB Stoker> Property
  *
@@ -8,22 +8,20 @@
  * @copyright Since 2021 JB Stoker
  * @license   https://opensource.org/licenses/MIT
  */
-declare(strict_types=1);
-
-namespace MsThemeConfig\Entity;
+namespace MsThemeConfig\DBEntity;
 
 use DateTime;
 use Doctrine\DBAL\Types\DateTimeType;
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="MsThemeConfig\Core\Repository\OfferIntegrationRepository")
- * @ORM\HasLifecycleCallbacks
+ * @ORM\Entity()
  * @UniqueEntity("code")
  */
-class OfferIntegration
+class OfferIntegration extends EntityManager
 {
     /**
      * @var int
@@ -100,9 +98,8 @@ class OfferIntegration
     }
 
     /**
-     * @return OfferIntegration
      */
-    public function setId($id_oi_offer): OfferIntegration
+    public function setId($id_oi_offer)
     {
         $this->id_oi_offer = $id_oi_offer;
 
@@ -120,9 +117,8 @@ class OfferIntegration
     /**
      * @param string $code
      *
-     * @return OfferIntegration
      */
-    public function setCode(string $code): OfferIntegration
+    public function setCode(string $code)
     {
         $this->code = $code;
 
@@ -140,9 +136,8 @@ class OfferIntegration
     /**
      * @param string $name
      *
-     * @return OfferIntegration
      */
-    public function setName(string $name): OfferIntegration
+    public function setName(string $name)
     {
         $this->name = $name;
 
@@ -161,9 +156,8 @@ class OfferIntegration
     /**
      * @param string $email
      *
-     * @return OfferIntegration
      */
-    public function setEmail(string $email): OfferIntegration
+    public function setEmail(string $email)
     {
         $this->email = $email;
 
@@ -181,9 +175,8 @@ class OfferIntegration
     /**
      * @param string|null $phone
      *
-     * @return OfferIntegration
      */
-    public function setPhone(?string $phone): OfferIntegration
+    public function setPhone(?string $phone)
     {
         $this->phone = $phone;
 
@@ -201,9 +194,8 @@ class OfferIntegration
     /**
      * @param string|null $message
      *
-     * @return OfferIntegration
      */
-    public function setMessage(?string $message): OfferIntegration
+    public function setMessage(?string $message)
     {
         $this->message = $message;
 
@@ -221,9 +213,8 @@ class OfferIntegration
     /**
      * @param DateTime $date_exp
      *
-     * @return OfferIntegration
      */
-    public function setDateExp(DateTime $date_exp): OfferIntegration
+    public function setDateExp(DateTime $date_exp)
     {
         $this->date_exp = $date_exp;
 
@@ -241,9 +232,8 @@ class OfferIntegration
     /**
      * @param DateTimeType $date_upd
      *
-     * @return OfferIntegration
      */
-    public function setUpdatedAt(DateTime $date_upd): OfferIntegration
+    public function setUpdatedAt(DateTime $date_upd)
     {
         $this->date_upd = $date_upd;
 

@@ -3,7 +3,7 @@
     <name>pagesnotfound</name>
     <displayName><![CDATA[Niet gevonden pagina&#039;s]]></displayName>
     <version><![CDATA[2.0.2]]></version>
-    <description><![CDATA[Enrich your stats, display the pages requested by your visitors that could not be found.]]></description>
+    <description><![CDATA[Verrijk uw statistieken, toon de door uw bezoekers gevraagde pagina&#039;s die niet gevonden konden worden.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

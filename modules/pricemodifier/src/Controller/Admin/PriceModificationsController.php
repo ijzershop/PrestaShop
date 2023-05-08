@@ -19,7 +19,7 @@ use Modernesmid\Module\Pricemodifier\Domain\PriceModification\Command\ToggleIsAc
 use Modernesmid\Module\Pricemodifier\Domain\PriceModification\Exception\CannotToggleActivePriceModificationStatusException;
 use Modernesmid\Module\Pricemodifier\Domain\PriceModification\Exception\PriceModificationException;
 use Modernesmid\Module\Pricemodifier\Domain\PriceModification\Query\GetPriceModificationIsActive;
-use Modernesmid\Module\Pricemodifier\Entity\PriceModification;
+use Modernesmid\Module\Pricemodifier\DBEntity\PriceModification;
 use Modernesmid\Module\Pricemodifier\Grid\Definition\Factory\PriceModificationGridDefinitionFactory;
 use Modernesmid\Module\Pricemodifier\Grid\Filters\PriceModificationFilters;
 use PhpOffice\PhpSpreadsheet\Calculation\Financial\Securities\Price;

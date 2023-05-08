@@ -3,7 +3,7 @@
     <name>statspersonalinfos</name>
     <displayName><![CDATA[Geregistreerde klanten overzicht]]></displayName>
     <version><![CDATA[2.0.4]]></version>
-    <description><![CDATA[Enrich your stats, add information about your registered customers and learn more about them!]]></description>
+    <description><![CDATA[Verrijk uw statistieken, voeg informatie toe over uw geregistreerde klanten en leer meer over hen!]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[analytics_stats]]></tab>
     <is_configurable>0</is_configurable>

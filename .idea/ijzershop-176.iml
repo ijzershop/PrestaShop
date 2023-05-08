@@ -15,6 +15,8 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_facetedsearch/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tools/build/tests/Unit" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/autoupgrade/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/ps_shoppingcart/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/ps_shoppingcart/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/doctrine/collections" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/symfony/filesystem" />
@@ -123,7 +125,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/lexer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/orm" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/persistence" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/sql-formatter" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/egulias/email-validator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ergebnis/composer-normalize" />
@@ -178,11 +179,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/manifest" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/version" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/php-cs-fixer/diff" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpdocumentor/reflection-common" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpdocumentor/reflection-docblock" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpdocumentor/type-resolver" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpoffice/phpspreadsheet" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpspec/prophecy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/phpstan" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-code-coverage" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-file-iterator" />
@@ -242,7 +239,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/tijsverkoyen/css-to-inline-styles" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/tubalmartin/cssmin" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/twig/twig" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/willdurand/jsonp-callback-validator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/apache-pack" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/doctrine/instantiator" />
@@ -309,6 +305,8 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_mbo/vendor/symfony/string" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_mbo/vendor/symfony/workflow" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/prestashop/prestashop-accounts-installer" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_shoppingcart/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/persistence_old" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

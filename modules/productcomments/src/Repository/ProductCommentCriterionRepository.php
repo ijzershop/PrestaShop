@@ -28,7 +28,7 @@ namespace PrestaShop\Module\ProductComment\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\Module\ProductComment\Entity\ProductCommentCriterion;
+use PrestaShop\Module\ProductComment\DBEntity\ProductCommentCriterion;
 
 class ProductCommentCriterionRepository
 {

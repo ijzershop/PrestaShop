@@ -28,7 +28,7 @@
 		<i class="icon-puzzle-piece"></i> {l s='TIPS & UPDATES' mod='psaddonsconnect'}
 	</div>
 
-    {if $logged_on_addons17 == 0 && $logged_on_addons == 0}
+    {if isset($logged_on_addons17) && $logged_on_addons17 == 0 && isset($logged_on_addons) && $logged_on_addons == 0}
     	<span> {l s='Connect to your account right now to enjoy updates (security and features) on all of your modules.' mod='psaddonsconnect'} </span>  <p><br>
 		<span> {l s='Once you are connected, you will also enjoy weekly tips directly from your back office.' mod='psaddonsconnect'} </span> <p><br>
 

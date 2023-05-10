@@ -12,6 +12,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content_header %}
+  <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/select2/dist/css/select2.css') }}"/>
   <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/views/css/price_modifications.css') }}"/>
   <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/datatables.net-dt/css/jquery.dataTables.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/chartist/dist/chartist.css') }}"/>
@@ -137,23 +138,22 @@
     </div>
   </div>
 
-  {% block price_modifications_list_panel %}
+      {% block price_modifications_list_panel %}
+          <div class="col-12">
+            {% include '@Modules/pricemodifier/views/templates/admin/grid/grid_panel.html.twig' with {'grid': price_modificationGrid} %}
+          </div>
+        </div>
+      {% endblock %}
+{% endblock %}
+{% block javascripts %}
+  <script src="{{ asset('../modules/pricemodifier/node_modules/select2/dist/js/select2.js') }}"></script>
+  <script src="{{ asset('../modules/pricemodifier/node_modules/chartist/dist/chartist.js') }}"></script>
+  <script src="{{ asset('../modules/pricemodifier/node_modules/chartist-plugin-tooltips-updated/dist/chartist-plugin-tooltip.js') }}"></script>
+  <script src="{{ asset('../modules/pricemodifier/views/js/barChartLabelPlugin.js') }}"></script>
+  <script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net/js/jquery.dataTables.js') }}"></script>
 
 
 
-
-      <div class="col-12">
-        {% include '@Modules/pricemodifier/views/templates/admin/grid/grid_panel.html.twig' with {'grid': price_modificationGrid} %}
-      </div>
-    </div>
-
-  {% endblock %}
-
-
-{#  <script src="{{ asset('../modules/pricemodifier/node_modules/chartist/dist/chartist.js') }}"></script>#}
-{#  <script src="{{ asset('../modules/pricemodifier/node_modules/chartist-plugin-tooltips-updated/dist/chartist-plugin-tooltip.js') }}"></script>#}
-{#  <script src="{{ asset('../modules/pricemodifier/views/js/barChartLabelPlugin.js') }}"></script>#}
-{#  <script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net/js/jquery.dataTables.js') }}"></script>#}
   <script src="{{ asset('../admin-dev/themes/new-theme/public/product_price_modification.bundle.js') }}"></script>
 {% endblock %}
 

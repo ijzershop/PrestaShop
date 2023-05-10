@@ -15,7 +15,7 @@ namespace Modernesmid\Module\Pricemodifier\Form;
 use Doctrine\ORM\EntityManagerInterface;
 use Modernesmid\Module\Pricemodifier\Controller\Admin\Classes\ConvertUploadedFile;
 
-use Modernesmid\Module\Pricemodifier\DBEntity\PriceModification;
+use Modernesmid\Module\Pricemodifier\Entity\PriceModification;
 use Modernesmid\Module\Pricemodifier\Repository\PriceModificationRepository;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException;
 use PrestaShop\PrestaShop\Core\File\Exception\FileException;

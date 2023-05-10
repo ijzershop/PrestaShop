@@ -16,7 +16,7 @@ namespace MsThemeConfig\Core\Form;
 use Doctrine\ORM\EntityManagerInterface;
 use MsThemeConfig\Class\Offer;
 use MsThemeConfig\Core\Repository\OfferIntegrationRepository;
-use MsThemeConfig\DBEntity\OfferIntegration;
+use MsThemeConfig\Entity\OfferIntegration;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 
 /**

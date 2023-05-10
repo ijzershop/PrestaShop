@@ -28,7 +28,7 @@ namespace MsThemeConfig\Core\Grid\Definition\Data;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManager;
-use MsThemeConfig\DBEntity\OfferIntegration;
+use MsThemeConfig\Entity\OfferIntegration;
 use MsThemeConfig\Core\Repository\OfferIntegrationRepository;
 use PDO;
 

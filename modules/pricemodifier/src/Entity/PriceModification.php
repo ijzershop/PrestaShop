@@ -10,7 +10,7 @@
  */
 declare(strict_types=1);
 
-namespace Modernesmid\Module\Pricemodifier\DBEntity;
+namespace Modernesmid\Module\Pricemodifier\Entity;
 
 use DateTime;
 use Doctrine\DBAL\Types\ArrayType;

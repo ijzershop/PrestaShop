@@ -88,6 +88,7 @@ class dashactivity extends Module
 
     public function hookDashboardData($params)
     {
+
         if (Tools::strlen($params['date_from']) == 10) {
             $params['date_from'] .= ' 00:00:00';
         }
@@ -146,6 +147,7 @@ class dashactivity extends Module
             WHERE `date_add` BETWEEN "' . pSQL($params['date_from']) . '" AND "' . pSQL($params['date_to']) . '"
             ' . Shop::addSqlRestriction(false)
         );
+
         extract($row);
 
         if ($maintenance_ips = Configuration::get('PS_MAINTENANCE_IP')) {
@@ -175,6 +177,7 @@ class dashactivity extends Module
 					' . ($maintenance_ips ? 'AND c.ip_address NOT IN (' . preg_replace('/[^,0-9]/', '', $maintenance_ips) . ')' : '') . '
 					ORDER BY c.date_add DESC';
         }
+        dd($sql);
         Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($sql);
         $online_visitor = Db::getInstance()->NumRows();
 

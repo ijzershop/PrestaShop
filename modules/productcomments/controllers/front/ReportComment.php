@@ -24,8 +24,8 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
 use Doctrine\ORM\EntityManagerInterface;
-use PrestaShop\Module\ProductComment\DBEntity\ProductComment;
-use PrestaShop\Module\ProductComment\DBEntity\ProductCommentReport;
+use PrestaShop\Module\ProductComment\Entity\ProductComment;
+use PrestaShop\Module\ProductComment\Entity\ProductCommentReport;
 
 class ProductCommentsReportCommentModuleFrontController extends ModuleFrontController
 {

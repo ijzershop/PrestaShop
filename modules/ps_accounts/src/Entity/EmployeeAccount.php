@@ -18,7 +18,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\PsAccounts\DBEntity;
+namespace PrestaShop\Module\PsAccounts\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;

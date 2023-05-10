@@ -139,6 +139,7 @@ class AdminOfferController extends FrameworkBundleAdminController {
      */
     public function createAction(Request $request): Response
     {
+
         $offerFormOptions = [
 
         ];
@@ -150,7 +151,7 @@ class AdminOfferController extends FrameworkBundleAdminController {
         } catch (Exception $exception) {
             $this->addFlash(
                 'error',
-                $this->getErrorMessageForException($exception, $exception->getMessage())
+                $this->getErrorMessageForException($exception, [$exception->getMessage()])
             );
 
             return $this->redirectToRoute('offerintegration_index');

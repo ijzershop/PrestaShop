@@ -37,7 +37,7 @@ class AdminLoginController extends AdminLoginControllerCore
         $this->context->smarty->assign($gauthVars);
         return parent::setMedia($isNewTheme);
     }
-    
+
     /*
     * module: gauthenticator
     * date: 2020-04-06 09:13:01
@@ -56,6 +56,7 @@ class AdminLoginController extends AdminLoginControllerCore
             include_once(_PS_MODULE_DIR_.'gauthenticator/classes/GAuthenticatedEmployee.php');
             $gaHelperClass = new Gauthenticator();      //GAuthenticator: Class Loaded for translations
             $gauth = new GAuth;
+
             if ($is_employee_loaded && $gauth->importData($employee->gatoken) && $gauth->getEnabledStatus()) {
                 $gauthCode = Tools::getValue('gauthcode');
                 $recoveryCode = $gauth->getUserData('recovery');

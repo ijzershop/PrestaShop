@@ -8,20 +8,20 @@
  * @copyright Since 2021 JB Stoker
  * @license   https://opensource.org/licenses/MIT
  */
-namespace MsThemeConfig\DBEntity;
+namespace MsThemeConfig\Entity;
 
 use DateTime;
 use Doctrine\DBAL\Types\DateTimeType;
 use Doctrine\ORM\Mapping as ORM;
-use PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table()
  * @ORM\Entity()
  * @UniqueEntity("code")
+ * @ORM\Entity(repositoryClass="MsThemeConfig\Core\Repository\OfferIntegrationRepository")
  */
-class OfferIntegration extends EntityManager
+class OfferIntegration
 {
     /**
      * @var int

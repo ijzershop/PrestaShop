@@ -203,7 +203,7 @@ class statscheckup extends Module
         $this->html .= '</table>
 			<button type="submit" name="submitCheckup" class="btn btn-default pull-right">
 				<i class="icon-save"></i> '.$this->trans('Save', array(), 'Admin.Actions').'
-			</button> 
+			</button>
 		</form>
 		<form action="'.Tools::safeOutput(AdminController::$currentIndex.'&token='.Tools::getValue('token').'&module='.$this->name).'" method="post" class="form-horizontal alert">
 			<div class="row">
@@ -256,6 +256,7 @@ class statscheckup extends Module
 					ON pl.id_lang = l.id_lang
 				WHERE id_product = '.(int)$row['id_product'].Shop::addSqlRestrictionOnLang('pl'));
             foreach ($descriptions as $description) {
+                $row['desclength_'.$description['iso_code']] = "";
                 if (isset($description['iso_code']) && isset($description['description'])) {
                     $row['desclength_'.$description['iso_code']] = Tools::strlen(strip_tags($description['description']));
                 }
@@ -270,7 +271,7 @@ class statscheckup extends Module
             $this->html .= '
 				<tr>
 					<td>'.$row['id_product'].'</td>
-					<td><a href="'.Tools::safeOutput('index.php?tab=AdminProducts&updateproduct&id_product='.$row['id_product'].'&token='.$token_products).'">'.Tools::substr($row['name'], 0, 42).'</a></td>
+					<td><a href="'.Tools::safeOutput('index.php?tab=AdminProducts&updateproduct&id_product='.$row['id_product'].'&token='.$token_products).'">'.Tools::substr((string)$row['name'], 0, 42).'</a></td>
 					<td class="center">'.$array_colors[$scores['active']].'</td>';
             foreach ($languages as $language) {
                 if (isset($row['desclength_'.$language['iso_code']])) {

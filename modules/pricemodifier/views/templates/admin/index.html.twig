@@ -155,6 +155,18 @@
 
 
   <script src="{{ asset('../admin-dev/themes/new-theme/public/product_price_modification.bundle.js') }}"></script>
+
+  <script>
+
+    $('ul.pagination > li > input[name="paginator_jump_page"]').on('keyup', function (e) {
+      if (e.which === 13) { // ENTER
+        e.preventDefault();
+        const val = parseInt($(e.target).val(), 10);
+        const limit = $(e.target).attr('pslimit');
+        window.location = $(this).attr('psurl').replace(/999999/, (val - 1) * limit);
+      }
+    });
+  </script>
 {% endblock %}
 
 

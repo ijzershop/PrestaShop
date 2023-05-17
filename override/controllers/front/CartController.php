@@ -1,56 +1,21 @@
 <?php
-/**
- * 2007-2019 PrestaShop and Contributors
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
-
 class CartController extends CartControllerCore
 {
-
-    /**
-     * @see FrontController::initContent()
-     */
+    
     public function initContent()
     {
         if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show') {
             Tools::redirect('index.php');
         }
-
         $presenter = new CartPresenter();
         $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true);
-
-        //add tinyMCE for text editing
         $this->context->controller->registerJavascript('tinyMCE',__PS_BASE_URI__.'js/tiny_mce/tinymce.min.js');
-//        $this->context->controller->registerJavascript('tinyMCE_2',__PS_BASE_URI__.'js/tinymce.inc.js');
-
-
         $this->context->smarty->assign([
             'cart' => $presented_cart,
             'static_token' => Tools::getToken(false),
         ]);
-
         if (count($presented_cart['products']) > 0) {
             $this->setTemplate('checkout/cart');
         } else {
@@ -61,12 +26,8 @@ class CartController extends CartControllerCore
         }
         parent::initContent();
     }
-
-
-
     protected function updateCart()
     {
-        // Update the cart ONLY if $this->cookies are available, in order to avoid ghost carts created by bots
         if ($this->context->cookie->exists()
             && !$this->errors
             && !($this->context->customer->isLogged() && !$this->isTokenValid())
@@ -121,27 +82,21 @@ class CartController extends CartControllerCore
             Tools::redirect('index.php');
         }
     }
-
-    /**
-     * This process add or update a product in the cart.
-     */
+    
     protected function processChangeProductInCart()
     {
         $ssa = Module::getInstanceByName('singlestockattributespoco');
         if (!$ssa || !$ssa->active || !$ssa->useSSA($this->id_product)) {
             return parent::processChangeProductInCart();
         }
-
         $mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
         $ErrorKey = ('update' === $mode) ? 'updateOperationError' : 'errors';
-
         if (Tools::getIsset('group')) {
             $this->id_product_attribute = (int) Product::getIdProductAttributeByIdAttributes(
                 $this->id_product,
                 Tools::getValue('group')
             );
         }
-
         if ($this->qty == 0) {
             $this->{$ErrorKey}[] = $this->trans(
                 'Null quantity.',
@@ -155,7 +110,6 @@ class CartController extends CartControllerCore
                 'Shop.Notifications.Error'
             );
         }
-
         $product = new Product($this->id_product, true, $this->context->language->id);
         if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer)) {
             $this->{$ErrorKey}[] = $this->trans(
@@ -163,41 +117,32 @@ class CartController extends CartControllerCore
                 ['%product%' => $product->name],
                 'Shop.Notifications.Error'
             );
-
             return;
         }
-
         if (!$this->id_product_attribute && $product->hasAttributes()) {
             $minimum_quantity = ($product->out_of_stock == OutOfStockType::OUT_OF_STOCK_DEFAULT)
                 ? !Configuration::get('PS_ORDER_OUT_OF_STOCK')
                 : !$product->out_of_stock;
             $this->id_product_attribute = Product::getDefaultAttribute($product->id, (int) $minimum_quantity);
-            // @todo do something better than a redirect admin !!
             if (!$this->id_product_attribute) {
                 Tools::redirectAdmin($this->context->link->getProductLink($product));
             }
         }
-
         $qty_to_check = $this->qty;
         $cart_products = $this->context->cart->getProducts();
-
         if (is_array($cart_products)) {
             foreach ($cart_products as $cart_product) {
                 if ($this->productInCartMatchesCriteria($cart_product)) {
                     $qty_to_check = $cart_product['cart_quantity'];
-
                     if (Tools::getValue('op', 'up') == 'down') {
                         $qty_to_check -= $this->qty;
                     } else {
                         $qty_to_check += $this->qty;
                     }
-
                     break;
                 }
             }
         }
-
-        // Check product quantity availability
         if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
             $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
                 $this->id_product,
@@ -208,11 +153,8 @@ class CartController extends CartControllerCore
                 ['%quantity%' => $availableProductQuantity],
                 'Shop.Notifications.Error'
             );
-
             return;
         }
-
-        // Check minimal_quantity
         if (!$this->id_product_attribute) {
             if ($qty_to_check < $product->minimal_quantity) {
                 $this->errors[] = $this->trans(
@@ -220,7 +162,6 @@ class CartController extends CartControllerCore
                     ['%product%' => $product->name, '%quantity%' => $product->minimal_quantity],
                     'Shop.Notifications.Error'
                 );
-
                 return;
             }
         } else {
@@ -231,14 +172,10 @@ class CartController extends CartControllerCore
                     ['%product%' => $product->name, '%quantity%' => $combination->minimal_quantity],
                     'Shop.Notifications.Error'
                 );
-
                 return;
             }
         }
-
-        // If no errors, process product addition
         if (!$this->errors) {
-            // Add cart if no cart found
             if (!$this->context->cart->id) {
                 if (Context::getContext()->cookie->id_guest) {
                     $guest = new Guest((int) Context::getContext()->cookie->id_guest);
@@ -249,8 +186,6 @@ class CartController extends CartControllerCore
                     $this->context->cookie->id_cart = (int) $this->context->cart->id;
                 }
             }
-
-            // Check customizable fields
             if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id) {
                 $this->{$ErrorKey}[] = $this->trans(
                     'Please fill in all of the required fields, and then save your customizations.',
@@ -258,7 +193,6 @@ class CartController extends CartControllerCore
                     'Shop.Notifications.Error'
                 );
             }
-
             $update_quantity = $this->context->cart->updateQty(
                 $this->qty,
                 $this->id_product,
@@ -271,7 +205,6 @@ class CartController extends CartControllerCore
                 true
             );
             if ($update_quantity < 0) {
-                // If product has attribute, minimal quantity is set with minimal quantity of attribute
                 $minimal_quantity = ($this->id_product_attribute)
                     ? ProductAttribute::getAttributeMinimalQty($this->id_product_attribute)
                     : $product->minimal_quantity;
@@ -298,10 +231,51 @@ class CartController extends CartControllerCore
                 );
             }
         }
-
         CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
     }
-
-
+    /*
+    * module: advancedvatmanager
+    * date: 2023-05-17 12:12:42
+    * version: 1.6.1
+    */
+    public function displayAjaxUpdate()
+    {
+        if (Module::isEnabled('advancedvatmanager')) {
+            $advancedvatmanager = Module::getInstanceByName('advancedvatmanager');
+            $checkNotAllowCheckout = $advancedvatmanager->checkNotAllowCheckout();
+            if ($checkNotAllowCheckout !== false && !$advancedvatmanager->opc_presteamshop_enabled) {
+                if (isset($this->updateOperationError)) {
+                    $this->updateOperationError[] = $checkNotAllowCheckout;
+                }
+                else {
+                    $this->errors[] = $checkNotAllowCheckout;     
+                }   
+            }
+        }      
+        parent::displayAjaxUpdate();
+    }
+    /*
+    * module: advancedvatmanager
+    * date: 2023-05-17 12:12:42
+    * version: 1.6.1
+    */
+    public function postProcess()
+    {
+        if (Module::isEnabled('advancedvatmanager')) {
+            $advancedvatmanager = Module::getInstanceByName('advancedvatmanager');
+            $checkNotAllowCheckout = $advancedvatmanager->checkNotAllowCheckout();
+            if (!Tools::getValue('ajax') && $checkNotAllowCheckout !== false && !$advancedvatmanager->opc_presteamshop_enabled) {
+                if (version_compare(_PS_VERSION_, '1.7.0.0', '>=')) {
+                    $this->errors[] =  $checkNotAllowCheckout;
+                }
+                else {
+                    if (!Tools::getIsset('add') || !Tools::getIsset('update')) {
+                        $this->errors[] =  $checkNotAllowCheckout;    
+                    }    
+                }
+            }
+        }
+        parent::postProcess();
+    }
 }

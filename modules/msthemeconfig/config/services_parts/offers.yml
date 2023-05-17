@@ -1,0 +1,80 @@
+services:
+  _defaults:
+    public: true
+
+  modernesmid.grid.definition.factory.offer_integration:
+    class: 'MsThemeConfig\Core\Grid\Definition\Factory\OfferIntegrationGridDefinitionFactory'
+    parent: "prestashop.core.grid.definition.factory.abstract_grid_definition"
+    public: true
+    arguments:
+      - "@=service('router').generate('admin_common_reset_search', {'controller': 'admin_offer', 'action': 'index'})"
+      - "@=service('router').generate('offerintegration_index')"
+
+  modernesmid.grid.query_builder.offer_integration:
+    class: 'MsThemeConfig\Core\Grid\Query\OfferIntegrationQueryBuilder'
+    parent: "prestashop.core.grid.abstract_query_builder"
+    public: true
+    arguments:
+      - "@prestashop.core.query.doctrine_search_criteria_applicator"
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+
+
+
+  modernesmid.grid.factory.offer_integrations:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - "@modernesmid.grid.definition.factory.offer_integration" # our definition factory
+      - "@modernesmid.grid.data_provider.offer_integrations"
+      - "@prestashop.core.grid.filter.form_factory" # core service needed by grid factory
+      - "@prestashop.core.hook.dispatcher" # core service needed by grid factory
+
+  modernesmid.grid.data_provider.offer_integrations:
+    class: 'MsThemeConfig\Core\Grid\Definition\Data\OfferIntegrationDataFactory'
+    arguments:
+      - "@modernesmid.grid.query_builder.offer_integration"
+      - "@prestashop.core.hook.dispatcher"
+      - "@prestashop.core.grid.query.doctrine_query_parser"
+      - "oi_offer"
+
+  # Form services
+  modernesmid.type.offer_integrations:
+    class: 'MsThemeConfig\Core\Form\OfferIntegrationType'
+    parent: "form.type.translatable.aware"
+    public: true
+    arguments:
+      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+    tags:
+      - { name: form.type }
+
+  modernesmid.form.identifiable_object.data_provider.offer_integrations_form_data_provider:
+    class: 'MsThemeConfig\Core\Form\OfferIntegrationFormDataProvider'
+    arguments:
+      - "@modernesmid.repository.offer_integrations_repository"
+
+  modernesmid.form.identifiable_object.builder.offer_integrations_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    public: true,
+    factory: "prestashop.core.form.builder.form_builder_factory:create"
+    arguments:
+      - 'MsThemeConfig\Core\Form\OfferIntegrationType'
+      - "@modernesmid.form.identifiable_object.data_provider.offer_integrations_form_data_provider"
+
+  modernesmid.form.identifiable_object.data_handler.offer_integrations_form_data_handler:
+    class: 'MsThemeConfig\Core\Form\OfferIntegrationFormDataHandler'
+    arguments:
+      - "@modernesmid.repository.offer_integrations_repository"
+      - '@doctrine.orm.default_entity_manager'
+
+  modernesmid.form.identifiable_object.handler.offer_integrations_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: "prestashop.core.form.identifiable_object.handler.form_handler_factory:create"
+    arguments:
+      - "@modernesmid.form.identifiable_object.data_handler.offer_integrations_form_data_handler"
+
+  modernesmid.repository.offer_integrations_repository:
+    class: 'MsThemeConfig\Core\Repository\OfferIntegrationRepository'
+    public: true
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    arguments:
+      - 'MsThemeConfig\Entity\OfferIntegration'

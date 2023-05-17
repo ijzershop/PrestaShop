@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    public: true
+
+  modernesmid.dms_admin_order_preview_service:
+    class: 'MsThemeConfig\Service\DmsAdminOrderPreviewService'
+    public: false
+    decorates: prestashop.adapter.order.query_handler.get_order_preview_handler
+    arguments:
+      - "@prestashop.core.localization.locale.repository"
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.getLocale()"
+      - "@prestashop.adapter.address.formatter"

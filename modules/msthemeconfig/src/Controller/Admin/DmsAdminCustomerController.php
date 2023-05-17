@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace MsThemeConfig\Controller\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
-use PrestaShop\PrestaShop\Adapter\Entity\Context;
-use PrestaShop\PrestaShop\Adapter\Entity\Order;
+use MsThemeConfig\Core\Domain\Customer\Query\GetCustomerForEditing;
+use MsThemeConfig\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Adapter\Entity\Customer;
@@ -13,28 +12,11 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
-use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerDiscountFilters;
-use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Controller\Admin\Sell\Order\ActionsBarButtonsCollection;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType;
-use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
-use PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType;
-use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType;
-use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
-use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
-use PrestaShopBundle\Form\Admin\Sell\Order\EditProductRowType;
-use PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType;
-use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
-use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
-use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,10 +46,10 @@ class DmsAdminCustomerController extends FrameworkBundleAdminController
 
         $this->addGroupSelectionToRequest($request);
 
-        $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
+        $customerForm = $this->get('modernesmid.core.form.identifiable_object.builder.customer_form_builder')->getForm();
         $customerForm->handleRequest($request);
 
-        $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
+        $customerFormHandler = $this->get('modernesmid.core.form.identifiable_object.handler.customer_form_handler');
 
         try {
             $result = $customerFormHandler->handle($customerForm);
@@ -110,22 +92,20 @@ class DmsAdminCustomerController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editAction($customerId, Request $request)
+    public function editAction(int $customerId, Request $request)
     {
 
         $this->addGroupSelectionToRequest($request);
-        /** @var ViewableCustomer $customerInformation */
-
-        $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+        /** @var EditableCustomer $customerInformation */
+        $customerInformation = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
         $customerFormOptions = [
             'is_password_required' => false,
         ];
 
         try {
-            $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
+            $customerForm = $this->get('modernesmid.core.form.identifiable_object.builder.customer_form_builder')
                 ->getFormFor((int) $customerId, [], $customerFormOptions);
         } catch (Exception $exception) {
-            
             $this->addFlash(
                 'error',
                 $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
@@ -134,15 +114,13 @@ class DmsAdminCustomerController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_customers_index');
         }
 
-
-
-
         try {
             $customerForm->handleRequest($request);
-            $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
+            $customerFormHandler = $this->get('modernesmid.core.form.identifiable_object.handler.customer_form_handler');
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
+//            dd('saving', $customerForm);
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_customers_index');
             }

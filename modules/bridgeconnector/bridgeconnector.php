@@ -70,10 +70,10 @@ class Bridgeconnector extends Module
 
         $this->displayName = $this->l('eMagicOne Store Manager Bridge Connector');
         $this->description = $this->l(
-            'Install eMagicOne Bridge Connector module to fluently connect Store Manager desktop application to 
-            PrestaShop database and connect to Mobile Assistant app installed on your mobile device. Increase 
-            speed of data management, take advantage of simplicity and reliability with all-in-one Store 
-            Manager and have access to the real-time store data reports at your fingertips from your Android 
+            'Install eMagicOne Bridge Connector module to fluently connect Store Manager desktop application to
+            PrestaShop database and connect to Mobile Assistant app installed on your mobile device. Increase
+            speed of data management, take advantage of simplicity and reliability with all-in-one Store
+            Manager and have access to the real-time store data reports at your fingertips from your Android
             device wherever you are.'
         );
 
@@ -150,7 +150,7 @@ class Bridgeconnector extends Module
         if ($bridge_options['bridge_hash'] === md5('11')) {
             $output .= $this->displayError(
                 $this->l(
-                    'Store Manager Bridge Connector: Default login and password are "1". 
+                    'Store Manager Bridge Connector: Default login and password are "1".
                     Change them because of security reasons, please!'
                 )
             );
@@ -1234,7 +1234,7 @@ class Bridgeconnector extends Module
 
     private function addEmployeeIdColumnToMATableUsers()
     {
-        $sql = 'ALTER TABLE `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_USERS . '` 
+        $sql = 'ALTER TABLE `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_USERS . '`
                 ADD COLUMN `employee_id` VARCHAR(5)';
 
         return Db::getInstance()->execute($sql);

@@ -104,7 +104,6 @@ $(document).ready(function () {
   let adminSelect2DataLink = $('#select2_data_link').attr('data-link');
   let adminDataTableMissedLink = $('#datatable_missed_data_link').attr('data-link');
 
-
   $('.calculate_new_price').on('click', function (e) {
     e.preventDefault();
     let link = $(this).attr('data-link');
@@ -281,7 +280,6 @@ $(document).ready(function () {
     });
   });
 
-
   $('#product_price_modification_id_store_product').select2({
     matcher: matchCustom,
     allowClear: true,
@@ -353,13 +351,11 @@ $(document).ready(function () {
     });
   });
 
-
   $(document).on('select2:open', (e) => {
     setTimeout(function () {
       $('.select2-search__field').first().focus();
     }, 200)
   });
-
 
   $(document).on('click', '.history_price_row', function (e) {
     let hisDate = e.currentTarget.dataset.date;
@@ -484,5 +480,4 @@ $(document).ready(function () {
         });
     },
   });
-
 });

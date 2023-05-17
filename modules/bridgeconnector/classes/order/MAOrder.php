@@ -858,7 +858,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
         // Execute query after build it
         return self::getQueryResult(
             $dbQuery->select(
-                'o.`id_order`, 
+                'o.`id_order`,
                 COUNT(od.`id_order_detail`) AS items_count'
             )
                 ->from('orders', 'o')
@@ -910,7 +910,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
 
         return /** @lang MySQL */
             " AND (
-          CONCAT(c.`firstname`, ' ', c.`lastname`) LIKE '%" . pSQL($searchPhrase) . "%' 
+          CONCAT(c.`firstname`, ' ', c.`lastname`) LIKE '%" . pSQL($searchPhrase) . "%'
           OR c.`email` LIKE '%" . pSQL($searchPhrase) . "%'
           OR o.`reference` LIKE '%" . pSQL($searchPhrase) . "%'
         ) ";
@@ -1063,7 +1063,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
 
         return self::getQueryRow(
             $dbQuery->select(
-                'IFNULL(SUM(' . $total_field . '), 0) AS orders_total, 
+                'IFNULL(SUM(' . $total_field . '), 0) AS orders_total,
                 COUNT(o.`id_order`) AS orders_count'
             )
                 ->leftJoin('customer', 'c', 'c.`id_customer` = o.`id_customer`')

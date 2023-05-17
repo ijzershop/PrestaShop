@@ -640,7 +640,7 @@ class Uri implements UriInterface
     /**
      * @param UriInterface $uri
      * @param array        $keys
-     * 
+     *
      * @return array
      */
     private static function getFilteredQueryString(UriInterface $uri, array $keys)
@@ -661,7 +661,7 @@ class Uri implements UriInterface
     /**
      * @param string      $key
      * @param string|null $value
-     * 
+     *
      * @return string
      */
     private static function generateQueryString($key, $value)

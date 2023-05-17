@@ -1789,6 +1789,7 @@ class ModernHook
         ]);
         $info = curl_getinfo($curlCard);
         $response = curl_exec($curlCard);
+
         if (!curl_errno($curlCard)) {
             $returnData = json_decode($response);
             $arrayList = [];
@@ -1843,7 +1844,7 @@ class ModernHook
         return [
             (new FormField())
                 ->setName('informer_identification')
-                ->setType('text')
+                ->setType('select')
                 ->setRequired(false)
                 ->setLabel($this->context->getTranslator()->trans('Informer Identification',[],'MsThemeConfig.Hooks')),
         ];
@@ -1856,9 +1857,9 @@ class ModernHook
      * @param array $params
      *
      */
-    public function hookActionAfterUpdateCustomerFormHandler(array $params): void
+    public function hookActionAfterUpdateCustomerFormHandler(array $params)
     {
-        $this->updateCustomCustomerFields($params);
+//        return $this->updateCustomCustomerFields($params);
     }
 
     /**
@@ -1867,12 +1868,9 @@ class ModernHook
      * @param array $params
      *
      */
-    public function hookActionAfterCreateCustomerFormHandler(array $params): void
+    public function hookActionAfterCreateCustomerFormHandler(array $params)
     {
-        try {
-            $this->updateCustomCustomerFields($params);
-        } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
-        }
+//        return $this->updateCustomCustomerFields($params);
     }
 
     /**
@@ -1883,7 +1881,7 @@ class ModernHook
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    private function updateCustomCustomerFields(array $params): void
+    private function updateCustomCustomerFields(array $params): array
     {
         $customerId = (int)$params['id'];
         /** @var array $customerFormData */
@@ -1895,9 +1893,10 @@ class ModernHook
         }
         $customer = new Customer($customerId);
         $customer->informer_identification = $informer_identification;
-        $customer->update();
-    }
+        $customer->update(false);
 
+        return $params;
+    }
 
     /**
      * @param $value
@@ -1911,7 +1910,6 @@ class ModernHook
             return '<button class="btn btn-primary">Retour aanmaken</button>';
         }
     }
-
 
     /**
      *
@@ -2121,7 +2119,6 @@ class ModernHook
         throw new ColumnNotFoundException(sprintf('Column with id "%s" not found', $id));
     }
 
-
     /**
      * @param $gridDefinition
      * @return ColumnInterface
@@ -2131,7 +2128,6 @@ class ModernHook
     {
         return $this->getColumnById($gridDefinition,'actions');
     }
-
 
     /**
      * @param array $params
@@ -2182,9 +2178,6 @@ class ModernHook
             }
         }
     }
-
-
-
 
     /**
      * @param array $hookParams

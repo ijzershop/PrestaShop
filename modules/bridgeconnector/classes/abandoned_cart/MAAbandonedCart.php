@@ -443,7 +443,7 @@ class MAAbandonedCart extends EM1Main implements EM1AbandonedCartInterface
         // Execute query after build it
         return self::getQueryResult(
             $dbQuery->select(
-                'cart.id_cart, 
+                'cart.id_cart,
                 SUM(
                     (product_shop.price + IFNULL(product_attribute_shop.price, 0)) * cart_product.quantity
                 ) AS cart_total,
@@ -460,7 +460,7 @@ class MAAbandonedCart extends EM1Main implements EM1AbandonedCartInterface
                 ->leftJoin(
                     'product_attribute_shop',
                     'product_attribute_shop',
-                    'product_attribute_shop.id_product_attribute = cart_product.id_product_attribute 
+                    'product_attribute_shop.id_product_attribute = cart_product.id_product_attribute
                         AND product_attribute_shop.id_shop = cart_product.id_shop'
                 )
                 ->leftJoin('orders', 'orders', 'orders.id_cart = cart.id_cart')
@@ -484,17 +484,17 @@ class MAAbandonedCart extends EM1Main implements EM1AbandonedCartInterface
         // Execute query after build it
         return self::getQueryRow(
             'SELECT COUNT(sum.`id_cart`) AS cart_count, SUM(sum.`cart_total`) AS cart_total FROM (
-                    SELECT cart.id_cart, 
+                    SELECT cart.id_cart,
                            SUM(
                                (product_shop.price + IFNULL(product_attribute_shop.price, 0)) * cart_product.quantity
-                           ) AS cart_total 
+                           ) AS cart_total
                     FROM ' . _DB_PREFIX_ . 'cart cart
                     INNER JOIN ' . _DB_PREFIX_ . 'cart_product cart_product ON cart_product.id_cart = cart.id_cart
-                    LEFT JOIN ' . _DB_PREFIX_ . 'product_shop product_shop 
-                        ON product_shop.id_product = cart_product.id_product 
+                    LEFT JOIN ' . _DB_PREFIX_ . 'product_shop product_shop
+                        ON product_shop.id_product = cart_product.id_product
                         AND product_shop.id_shop = cart_product.id_shop
-                    LEFT JOIN ' . _DB_PREFIX_ . 'product_attribute_shop product_attribute_shop 
-                        ON product_attribute_shop.id_product_attribute = cart_product.id_product_attribute 
+                    LEFT JOIN ' . _DB_PREFIX_ . 'product_attribute_shop product_attribute_shop
+                        ON product_attribute_shop.id_product_attribute = cart_product.id_product_attribute
                         AND product_attribute_shop.id_shop = cart_product.id_shop
                     LEFT JOIN ' . _DB_PREFIX_ . 'orders orders ON orders.id_cart = cart.id_cart
                     LEFT JOIN ' . _DB_PREFIX_ . 'customer customer ON customer.id_customer = cart.id_customer
@@ -536,7 +536,7 @@ class MAAbandonedCart extends EM1Main implements EM1AbandonedCartInterface
             ->leftJoin(
                 'product_attribute_shop',
                 'product_attribute_shop',
-                'product_attribute_shop.id_product_attribute = cart_product.id_product_attribute 
+                'product_attribute_shop.id_product_attribute = cart_product.id_product_attribute
                                     AND product_attribute_shop.id_shop = cart_product.id_shop'
             )
             ->leftJoin('orders', 'orders', 'orders.id_cart = cart.id_cart')
@@ -642,7 +642,7 @@ class MAAbandonedCart extends EM1Main implements EM1AbandonedCartInterface
         }
 
         return /** @lang MySQL */ " AND (
-          CONCAT(customer.`firstname`, ' ', customer.`lastname`) LIKE '%" . pSQL($searchPhrase) . "%' OR 
+          CONCAT(customer.`firstname`, ' ', customer.`lastname`) LIKE '%" . pSQL($searchPhrase) . "%' OR
           customer.`email` LIKE '%" . pSQL($searchPhrase) . "%'
         ) ";
     }

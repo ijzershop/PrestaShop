@@ -406,7 +406,7 @@ class MACustomer extends EM1Main implements EM1CustomerInterface
         // Execute query after build it
         return self::getQueryRow(
             $dbQuery->select(
-                'COUNT(*) AS orders_count, 
+                'COUNT(*) AS orders_count,
                  IFNULL(SUM(' . $total_field . '), 0) AS orders_total'
             )
                 ->from('orders', 'o')
@@ -433,8 +433,8 @@ class MACustomer extends EM1Main implements EM1CustomerInterface
         // Execute query after build it
         return self::getQueryResult(
             $dbQuery->select('
-                c.`id_customer`, 
-                COUNT(o.`id_order`) AS orders_count, 
+                c.`id_customer`,
+                COUNT(o.`id_order`) AS orders_count,
                 SUM(' . $total_field . ') AS orders_total
             ')
                 ->from('customer', 'c')
@@ -501,7 +501,7 @@ class MACustomer extends EM1Main implements EM1CustomerInterface
         // Execute query after build it
         return self::getQueryResult(
             $dbQuery->select('
-                o.`id_order`, 
+                o.`id_order`,
                 COUNT(od.`id_order_detail`) AS items_count
             ')
             ->from('orders', 'o')
@@ -587,7 +587,7 @@ class MACustomer extends EM1Main implements EM1CustomerInterface
         }
 
         return /** @lang MySQL */
-            " AND (CONCAT(c.`firstname`, ' ', c.`lastname`) LIKE '%" . pSQL($searchPhrase) . "%'  
+            " AND (CONCAT(c.`firstname`, ' ', c.`lastname`) LIKE '%" . pSQL($searchPhrase) . "%'
                OR c.`email` LIKE '%" . pSQL($searchPhrase) . "%') AND c.active = 1";
     }
 
@@ -697,10 +697,10 @@ class MACustomer extends EM1Main implements EM1CustomerInterface
         try {
             $customers = self::getQueryResult(
                 $dbQuery->select('
-                c.`id_customer`, 
-                c.`firstname`, 
-                c.`lastname`, 
-                c.`email` 
+                c.`id_customer`,
+                c.`firstname`,
+                c.`lastname`,
+                c.`email`
                 ')
                     ->from('customer', 'c')
                     ->where($this->whereQuery)

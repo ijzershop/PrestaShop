@@ -15,7 +15,7 @@ $(document).ready(function(){
 });
 
 function validateVATNumber()
-{    
+{
     var success = false;
     $.ajax({
         url: admin_ajax_url_advancedvatmanager,
@@ -32,7 +32,8 @@ function validateVATNumber()
             vat_number: $('[name="customer_address[vat_number]"]').val(),
             id_customer: $('[name="customer_address[id_customer]"]').val(),
             company: $('[name="customer_address[company]"]').val(),
-            address: id_address
+            address: id_address,
+            token: token
     	},
         beforeSend : function () {
             $('.invalid-feedback-container').remove();

@@ -949,8 +949,8 @@ class AdvancedVatManager extends Module
                             'label' => $this->l('Disable validation in modules'),
                             'width' => '300px',
                             'class' => 'advancedvatmanager_modules_selector',
-                            'desc' => $this->l('Select the available modules to disable the validation. In this list is displayed marketplace modules installed in your shop that perform imports/synchronization of customers and orders. These modules manage customer data and orders from their platforms, inserting this data directly into the database (taxes, order amount), so for reasons of maintaining the integrity of this data, the validation of the data must be deactivated from module during the sync/import process. If the list is empty means that you have not those modules installed.'),
-                            'hint' => $this->l('CTRL and click or click and drag for multiple options selection.'),
+                            'desc' => $this->l("Select the available modules to disable the validation. In this list is displayed marketplace modules installed in your shop that perform imports/synchronization of customers and orders. These modules manage customer data and orders from their platforms, inserting this data directly into the database (taxes, order amount), so for reasons of maintaining the integrity of this data, the validation of the data must be deactivated from module during the sync/import process. If the list is empty means that you have not those modules installed."),
+                            'hint' => $this->l("CTRL and click or click and drag for multiple options selection."),
                             'name' => 'ADVANCEDVATMANAGER_DISABLE_FORMODULES[]',
                             'multiple' => true,
                             'options' => array(
@@ -2593,6 +2593,7 @@ class AdvancedVatManager extends Module
     {
         $order = new Order($params['order_invoice_list'][0]->id_order);
         $note = Configuration::get('ADVANCEDVATMANAGER_INVOICE_NOTE', (int)$this->context->language->id, null, (int)$order->id_shop);
+
         if ($vatOrder =  CustomersOrders::getVATOrderInDB($order->id)) {
             if ((bool)$vatOrder['notax']) {
                 // Inserts Note in invoice
@@ -2929,6 +2930,7 @@ class AdvancedVatManager extends Module
      */
     public function hookActionAdminControllerSetMedia()
     {
+
         if (Module::isEnabled($this->name)) {
             if (version_compare(_PS_VERSION_, '1.7.0.0', '<')) {
                 $this->context->controller->addCSS($this->_path . 'views/css/tab_icon.css');
@@ -2957,6 +2959,7 @@ class AdvancedVatManager extends Module
      */
     public function hookActionFrontControllerSetMedia()
     {
+
         if (Module::isEnabled($this->name) && Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION')== 1) {
             Media::addJsDef(array(
                 'ps16' => version_compare(_PS_VERSION_, '1.7.0.0', '<'),
@@ -2996,8 +2999,8 @@ class AdvancedVatManager extends Module
         if (Module::isEnabled($this->name) && Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION')== 1) {
             //Display product price labels without taxes and custom text block
             if(ValidationEngine::$notax_customer) {
-                if ($params['type'] == 'after_price') {
-                    return $this->display(__FILE__, 'views/templates/hook/displayProductPriceBlock.tpl');
+            if ($params['type'] == 'before_price') {
+                return $this->display(__FILE__, 'views/templates/hook/displayProductPriceBlock.tpl');
                 }
             }
         }

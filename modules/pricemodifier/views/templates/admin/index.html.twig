@@ -166,6 +166,17 @@
         window.location = $(this).attr('psurl').replace(/999999/, (val - 1) * limit);
       }
     });
+
+
+    /*
+* Link action on the select list in the navigator toolbar.
+* When change occurs, the page is refreshed (location.href redirection)
+*/
+    $('select[name="paginator_select_page_limit"]').change(function () {
+      const url = $(this).attr('psurl').replace(/_limit/, $('option:selected', this).val());
+      window.location.href = url;
+      return false;
+    });
   </script>
 {% endblock %}
 

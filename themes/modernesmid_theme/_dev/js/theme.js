@@ -242,7 +242,7 @@ $(function () {
     let iconSvg = $this.find('.opener > svg');
     let icon = iconSvg.attr('data-icon');
 
-    console.log([iconSvg]);
+    // console.log([iconSvg]);
 
     if(icon === 'plus'){
       iconSvg.attr('data-icon', 'minus');
@@ -778,8 +778,8 @@ $(function () {
   });
 
   const updateHeaderCart = function (cart) {
-    console.log(['update header cart', cart]);
-    console.log(cart.subtotals);
+    // console.log(['update header cart', cart]);
+    // console.log(cart.subtotals);
     $('#header-cart-vat').text(renderMoneyString(cart.subtotals.tax.amount));
     $('#header-cart-total').text(renderMoneyString(cart.totals.total.amount));
 

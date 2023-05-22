@@ -47,7 +47,7 @@ class CustomerAddressFormCore extends AbstractForm
 
     private $address;
 
-    private $persister;
+    protected $persister;
 
     public function __construct(
         Smarty $smarty,

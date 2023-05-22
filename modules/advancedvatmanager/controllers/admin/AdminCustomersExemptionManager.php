@@ -14,7 +14,7 @@ class AdminCustomersExemptionManagerController extends ModuleAdminController
 {
     /**
      * AdminCustomersExemptionManagerController::__construct()
-     * 
+     *
      * @return
      */
     public function __construct()
@@ -36,26 +36,26 @@ class AdminCustomersExemptionManagerController extends ModuleAdminController
         $this->explicitSelect = true;
 
         $this->_orderWay = 'ASC';
-        $this->_defaultOrderBy = 'customer_name';        
+        $this->_defaultOrderBy = 'customer_name';
         $this->addRowAction('edit');
         $this->addRowAction('viewCustomer');
         $this->addRowAction('delete');
-        
+
         $this->bulk_actions = array(
             'delete' => array('text' => $this->l('Delete','AdminCustomersExemptionManager'), 'icon' => 'far fa-trash-alt','confirm' => $this->l('Would you like to delete selected items from the list?','AdminCustomersExemptionManager'))
         );
-        
+
         $this->_select = 'CONCAT(c.`firstname`,\' \',c.`lastname`) `customer_name`,c.`email`, a.`active`';
-        
+
         $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (c.`id_customer` = a.`id_customer`)';
-        
+
         $this->_where = Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
 
         $shops_name = array();
         foreach (Shop::getShops() as $shop) {
             $shops_name[$shop['id_shop']] = $shop['name'];
         }
-        
+
         $this->fields_list = array(
             'id_advancedvatmanager_customers_exemption' => array('title' => $this->l('ID','AdminCustomersExemptionManager'), 'type' => 'text', 'align' => 'text-center', 'class' => 'fixed-width-xs'),
             'id_customer' => array('title' => $this->l('ID Customer','AdminCustomersExemptionManager'), 'filter_key' => 'a!id_customer', 'align' => 'text-center', 'class' => 'fixed-width-xs'),
@@ -69,80 +69,80 @@ class AdminCustomersExemptionManagerController extends ModuleAdminController
         Shop::addTableAssociation('advancedvatmanager_customers_exemption', array('type' => 'shop'));
         parent::__construct();
     }
-    
+
     /**
      * AdminCustomersExemptionManagerController::showValidateIcons()
-     * 
+     *
      * @param mixed $value
      * @return
      */
     public function showValidateIcons($value)
     {
         if ($value == 1) {
-            $content = '<i style="font-size:20px;color:#32db1d;" class="fal fa-badge-percent" data-toggle="tooltip" data-placement="top" title="'.$this->l('VAT exemption', 'AdminCustomersExemptionManager').'"></i>'; 
+            $content = '<i style="font-size:20px;color:#32db1d;" class="fal fa-badge-percent" data-toggle="tooltip" data-placement="top" title="'.$this->l('VAT exemption', 'AdminCustomersExemptionManager').'"></i>';
         }
         else if ($value == 0) {
-            $content ='<i style="font-size:20px;color:#f92727;" class="fal fa-badge-percent" data-toggle="tooltip" data-placement="top" title="'.$this->l('Force VAT collection', 'AdminCustomersExemptionManager').'"></i>';     
+            $content ='<i style="font-size:20px;color:#f92727;" class="fal fa-badge-percent" data-toggle="tooltip" data-placement="top" title="'.$this->l('Force VAT collection', 'AdminCustomersExemptionManager').'"></i>';
         }
         return $content;
     }
-    
+
     /**
      * AdminCustomersExemptionManagerController::getShop()
-     * 
+     *
      * @param mixed $value
      * @return
      */
     public function getShop($value)
     {
         return Shop::getShop($value)['name'];
-    } 
-    
+    }
+
     /**
      * AdminCustomersExemptionManagerController::initContent()
-     * 
+     *
      * @return
      */
     public function initContent()
     {
-        parent::initContent();           
+        parent::initContent();
     }
-    
+
     /**
      * AdminCustomersExemptionManagerController::setMedia()
-     * 
+     *
      * @param bool $isNewTheme
      * @return
      */
     public function setMedia($isNewTheme = true)
     {
-        parent::setMedia(); 
+        parent::setMedia();
         Media::addJsDef(array(
             'ajax_url_avm_search_customers' => $this->context->link->getAdminLink('AdminCustomersExemptionManager'),
             'no_found' => $this->l('No customer found!','AdminCustomersExemptionManager')
         ));
-        
+
         //Fontawesome
-        $this->addCSS('https://pro.fontawesome.com/releases/v5.15.4/css/all.css'); 
-        
-        $this->addCSS(_PS_MODULE_DIR_ . 'advancedvatmanager/views/css/admin/AdminCustomersExemptionManager/customers_exemption.css');
-        $this->addJS(_PS_MODULE_DIR_ . 'advancedvatmanager/views/js/admin/AdminCustomersExemptionManager/customers_exemption.js');
+        $this->addCSS('https://pro.fontawesome.com/releases/v5.15.4/css/all.css');
+
+        $this->addCSS('/modules/advancedvatmanager/views/css/admin/AdminCustomersExemptionManager/customers_exemption.css');
+        $this->addJS('/modules/advancedvatmanager/views/js/admin/AdminCustomersExemptionManager/customers_exemption.js');
     }
 
     /**
      * AdminCustomersExemptionManagerController::initToolbar()
-     * 
+     *
      * @return
      */
     public function initToolbar()
     {
         parent::initToolbar();
-        $this->toolbar_title = $this->meta_title;              
+        $this->toolbar_title = $this->meta_title;
     }
 
     /**
      * AdminCustomersExemptionManagerController::initPageHeaderToolbar()
-     * 
+     *
      * @return
      */
     public function initPageHeaderToolbar()
@@ -166,17 +166,17 @@ class AdminCustomersExemptionManagerController extends ModuleAdminController
 
     /**
      * AdminCustomersExemptionManagerController::initProcess()
-     * 
+     *
      * @return
      */
     public function initProcess()
     {
         parent::initProcess();
     }
-    
+
     /**
      * AdminCustomersExemptionManagerController::renderForm()
-     * 
+     *
      * @return
      */
     public function renderForm()
@@ -188,10 +188,10 @@ class AdminCustomersExemptionManagerController extends ModuleAdminController
             if (!empty($customer_saved)) {
                 // Avoid to display already customer saved
                 if (in_array($customer['id_customer'], $customer_saved)){
-                    continue;   
-                }    
+                    continue;
+                }
             }
-            $customers[] = array('id' => $customer['id_customer'], 'name' => 'ID#'.$customer['id_customer'].' '.$customer['firstname'].' '.$customer['lastname'].' - '.$customer['email']);    
+            $customers[] = array('id' => $customer['id_customer'], 'name' => 'ID#'.$customer['id_customer'].' '.$customer['firstname'].' '.$customer['lastname'].' - '.$customer['email']);
         }
         $this->fields_form = array(
             'legend' => array('title' => $this->l('Add/Edit customer for VAT force/exemption', 'AdminCustomersExemptionManager'),
@@ -253,11 +253,11 @@ class AdminCustomersExemptionManagerController extends ModuleAdminController
 
     /**
      * AdminCustomersExemptionManagerController::renderList()
-     * 
+     *
      * @return
      */
     public function renderList()
-    {   
+    {
         $helper = new HelperList();
         $helper->module = $this;
         $this->toolbar_title = $this->l('Customer VAT Exemption list','AdminCustomersExemptionManager'); // title
@@ -268,37 +268,37 @@ class AdminCustomersExemptionManagerController extends ModuleAdminController
 
     /**
      * AdminCustomersExemptionManagerController::renderView()
-     * 
+     *
      * @return
      */
     public function renderView()
     {
-        return parent::renderView();  
+        return parent::renderView();
     }
 
     /**
      * AdminCustomersExemptionManagerController::postProcess()
-     * 
+     *
      * @return
      */
     public function postProcess()
     {
         parent::postProcess();
-    }   
-    
+    }
+
     /**
      * AdminCustomersExemptionManagerController::processBulkDelete()
-     * 
+     *
      * @return
      */
-    public function processBulkDelete() 
+    public function processBulkDelete()
     {
-        parent::processBulkDelete();  
+        parent::processBulkDelete();
     }
-    
+
     /**
      * AdminCustomersExemptionManagerController::displayViewCustomerLink()
-     * 
+     *
      * @param mixed $token
      * @param mixed $id
      * @return
@@ -311,28 +311,28 @@ class AdminCustomersExemptionManagerController extends ModuleAdminController
 				'href' => '?tab=AdminCustomers&id_customer='.(int)$customer.'&viewcustomer&token='.Tools::getAdminTokenLite('AdminCustomers'),
 				'action' => $this->l('View customer details', 'AdminCustomersExemptionManager'),
 		));
-	
+
 		return $tpl->fetch();
     }
-    
+
     /**
      * AdminCustomersExemptionManagerController::ajaxProcessSearchCustomer()
-     * 
+     *
      * @return
      */
     public function ajaxProcessSearchCustomer()
     {
-        if (Tools::getValue('token')) {         
+        if (Tools::getValue('token')) {
             $customers = self::searchByName(Tools::getValue('search_str'));
             die(json_encode(array(
-                'customers' => $customers, 
+                'customers' => $customers,
             )));
         }
         else {
             die('Token is not valid!');
         }
     }
-    
+
     /**
      * Light back office search for customers.
      *
@@ -346,8 +346,8 @@ class AdminCustomersExemptionManagerController extends ModuleAdminController
     public static function searchByName($query, $limit = null)
     {
         $customer_saved = array_column(CustomersExemption::getIdCustomersSaved(), 'id_customer');
-        $customer_saved = implode(',', $customer_saved);    
-  
+        $customer_saved = implode(',', $customer_saved);
+
         $sql = 'SELECT c.id_customer, c.firstname, c.lastname, c.email
                 FROM `' . _DB_PREFIX_ . 'customer` c
                 WHERE 1 '.(!empty($customer_saved)?'AND c.id_customer NOT IN ('.$customer_saved.')':'');
@@ -374,20 +374,20 @@ class AdminCustomersExemptionManagerController extends ModuleAdminController
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
-    
+
     /**
      * AdminCustomersExemptionManagerController::getCustomerId()
-     * 
+     *
      * @param mixed $id
      * @return
      */
     protected static function getCustomerId($id)
     {
-        $sql = 'SELECT id_customer FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers_exemption` WHERE id_advancedvatmanager_customers_exemption = '.(int)$id; 
+        $sql = 'SELECT id_customer FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers_exemption` WHERE id_advancedvatmanager_customers_exemption = '.(int)$id;
         $id_customer = Db::getInstance()->getValue($sql);
         return (int)$id_customer;
     }
-    
+
     /**
      * AdminCustomersExemptionManagerController::l()
      * Implements translations compatibility
@@ -404,5 +404,5 @@ class AdminCustomersExemptionManagerController extends ModuleAdminController
         } else {
             return parent::l($string, $class, $addslashes, $htmlentities);
         }
-    } 
+    }
 }

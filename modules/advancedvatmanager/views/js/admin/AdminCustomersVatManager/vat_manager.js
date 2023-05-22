@@ -24,15 +24,15 @@ var invalid_company, empty_company = [];
 var valid_vat = [];
 var valid_vat_skipping_validation = [];
 var customer_toassigngroup;
-var ajaxCheckTotalAddress, ajaxCheckVATNumber, ajaxremoveEmptyVAT, ajaxremoveInvalidVAT, ajaxCreateFile, ajaxsendEmail, ajaxProcess, ajaxResetListTable, ajaxremoveDuplicatedVAT, ajaxCheckCustomerVAT; 
+var ajaxCheckTotalAddress, ajaxCheckVATNumber, ajaxremoveEmptyVAT, ajaxremoveInvalidVAT, ajaxCreateFile, ajaxsendEmail, ajaxProcess, ajaxResetListTable, ajaxremoveDuplicatedVAT, ajaxCheckCustomerVAT;
 
-$(document).ready(function(e){  
-    
+$(document).ready(function(e){
+
     $('[data-toggle="tooltip"]').tooltip();// Tooltip
-    
+
     // Toggle checkbox
     $(".avm_switch").bootstrapSwitch();
-    
+
     // Slick modal before performing actions
     $('.avm_modal_perform_actions').SlickModals({
         popup_animation: 'zoomIn',
@@ -51,7 +51,7 @@ $(document).ready(function(e){
         },
         popup_enableESC: false,
         popup_closeButtonEnable: false,
-        overlay_isVisible: true,        
+        overlay_isVisible: true,
         overlay_css: {
             'background': 'rgba(0, 0, 0, 0.4)'
         },
@@ -66,7 +66,7 @@ $(document).ready(function(e){
             'background': '#fff'
         }
     });
-    
+
     // Slick modal to check VAT by VIES or GOV.UK
     $('.avm_modal_check_vat').SlickModals({
         popup_animation: 'zoomIn',
@@ -88,7 +88,7 @@ $(document).ready(function(e){
         popup_closeButtonStyle: 'cancel simple',
         popup_closeButtonAlign: 'right',
         popup_closeButtonPlace: 'outside',
-        overlay_isVisible: true,        
+        overlay_isVisible: true,
         overlay_css: {
             'background': 'rgba(0, 0, 0, 0.4)'
         },
@@ -103,7 +103,7 @@ $(document).ready(function(e){
             'background': '#fff'
         }
     });
-    
+
     // Progress bar circle
     $('.avm_process_container .progress_circle').circleProgress({
         max: 100,
@@ -111,7 +111,7 @@ $(document).ready(function(e){
         size: 170,
         thickness: '15',
         fill: {
-            gradient: [['#3498db']], 
+            gradient: [['#3498db']],
         },
         startAngle: -Math.PI/4*2,
         value: 0,
@@ -120,19 +120,19 @@ $(document).ready(function(e){
     });
     // Reset progress bar percent
     $('.avm_process_container .percent_progress').text('0%');
-    
+
     // Scan process
     $('#open_scan_btn').on('click', function(){
-        $('#avm_perform_scan').SlickModals('openPopup', 'instant');// Open modal 
+        $('#avm_perform_scan').SlickModals('openPopup', 'instant');// Open modal
         manageOptions();
-         
+
         $('button[name="submit_cancel_scan"]').on('click', function(){
-            $('#avm_perform_scan').SlickModals('closePopup', 'instant');// Close modal       
-        }); 
-        
+            $('#avm_perform_scan').SlickModals('closePopup', 'instant');// Close modal
+        });
+
         $('button[name="submit_scan"]').on('click', function(){
             startProcess('open_scan_btn');
-            $('#avm_perform_scan').SlickModals('closePopup', 'instant');// Close modal  
+            $('#avm_perform_scan').SlickModals('closePopup', 'instant');// Close modal
             options['remove_empty_mode'] = $('input[name="remove_empty_mode"]').is(':checked');
             options['remove_duplicated_mode'] = $('input[name="remove_duplicated_mode"]').is(':checked');
             options['remove_invalid_mode'] = $('input[name="remove_invalid_mode"]').is(':checked');
@@ -145,22 +145,22 @@ $(document).ready(function(e){
             options['sendEmail_emptycompany_mode'] = $('input[name="sendEmail_emptycompany_mode"]').is(':checked');
             options['scanfromlast_mode'] = $('input[name="scanfromlast_mode"]').is(':checked');
             options['skip_apisystemfails'] = $('input[name="skip_apisystemfails"]').is(':checked');
-            
+
             scanProcess();
-        }); 
+        });
         $('button[name="reload_page"]').on('click', function(){
-            location.reload(); 
-        });                                
+            location.reload();
+        });
     });
-    
+
     $('a.checkCustomerVAT').on('click', function(){
         var vat = $(this).prev().val();
         var customer_vat = $(this).prev().prev().val();
         var country_iso = $(this).prev().prev().prev().val();
-        $('#avm_checkCustomerVAT').SlickModals('openPopup', 'instant');// Open modal    
-        checkCustomerVAT(vat, customer_vat, country_iso);                         
+        $('#avm_checkCustomerVAT').SlickModals('openPopup', 'instant');// Open modal
+        checkCustomerVAT(vat, customer_vat, country_iso);
     });
-    
+
     $(document).ajaxSend(function(e, xhr, opt){
         // Prevent notifications ajax (defaul Prestashop process) to avoid overload system.
         if (opt.url.toLowerCase().indexOf("notifications") >= 0) {
@@ -172,11 +172,11 @@ $(document).ready(function(e){
             if (opt.id == 'checkVATNumber') {
                 stopProcess(xhr);
             }
-        });       
+        });
     });
 });
 
-/** 
+/**
 * Perform Check total address
 */
 function checkTotalAddress()
@@ -195,7 +195,7 @@ function checkTotalAddress()
         	action: 'checkTotalAddress',
             scanFromLastMode: options['scanfromlast_mode']
         },
-        beforeSend : function () { 
+        beforeSend : function () {
             SetprogressBar(2)
             $('.avm_scanstatus').html(get_total_addresses+'...').fadeIn(300);
             finish = false;
@@ -205,10 +205,10 @@ function checkTotalAddress()
                 total_addresses = jsonData['total'];
                 addresses = jsonData['addresses'];
                 displayMessageOnLive(jsonData['message']);
-                setTimeout(function(){ 
+                setTimeout(function(){
                     SetprogressBar(8);
                     $('.avm_scanstatus').html(total_addresses+' '+addresses_found).fadeIn(300);
-                    $('.results_data .total_value').html(total_addresses).fadeIn(300);                 
+                    $('.results_data .total_value').html(total_addresses).fadeIn(300);
                 }, 3000);
             }
             else {
@@ -225,7 +225,7 @@ function checkTotalAddress()
 }
 
 
-    /** 
+    /**
     * Perform Check VAT in VIES or GOV.UK
     */
     function checkCustomerVAT(vat, customer, country_iso)
@@ -246,7 +246,7 @@ function checkTotalAddress()
                 customer: customer,
                 country_iso: country_iso,
             },
-            beforeSend : function () { 
+            beforeSend : function () {
                 $('.loading_container').show();
                 $('.vat-result .invalid, .vat-result .valid, .vat-result').hide();
                 $('span.customer').html('');
@@ -255,19 +255,19 @@ function checkTotalAddress()
                 $('span.company').html('');
                 $('span.address').html('');
                 $('span.request_date').html('');
-                $('span.check_system').html(''); 
-                $('span.valid_message span.invalid_message').html('');       
+                $('span.check_system').html('');
+                $('span.valid_message span.invalid_message').html('');
             },
             success : function (jsonData) {
                 $('.loading_container').hide();
-                $('.vat-result').show();    
+                $('.vat-result').show();
                 if (jsonData['valid'] === true) {
                     $('span.valid_message').html(jsonData['message']);
                     $('.vat-result .valid').show();
                 }
                 else {
                     $('span.invalid_message').html(jsonData['message']);
-                    $('.vat-result .invalid').show();    
+                    $('.vat-result .invalid').show();
                 }
                 $('span.customer').html(jsonData['customer']);
                 $('span.vat_number').html(jsonData['vat_iso']+jsonData['vat_number']);
@@ -275,18 +275,18 @@ function checkTotalAddress()
                 $('span.company').html(jsonData['company']);
                 $('span.address').html(jsonData['address']);
                 $('span.request_date').html(jsonData['request_date']);
-                $('span.check_system').html(jsonData['check_system']);  
+                $('span.check_system').html(jsonData['check_system']);
             },
             error : function (jqXHR, textStatus, errorThrown) {
                 $('.loading_container').hide();
                 $('span.invalid_message').html(errorThrown);
                 $('.vat-result').show();
-                $('.vat-result .invalid').show();   
+                $('.vat-result .invalid').show();
             }
         });
     }
 
-/** 
+/**
 * Perform Check total address
 */
 function cleanCache()
@@ -304,7 +304,7 @@ function cleanCache()
             ajax: true,
         	action: 'cleanCache',
         },
-        beforeSend : function () { 
+        beforeSend : function () {
         },
         success : function (jsonData) {
             if (jsonData['success']) {
@@ -317,7 +317,7 @@ function cleanCache()
     });
 }
 
-/** 
+/**
 * Perform Check VAT number
 */
 function checkVATNumber()
@@ -338,7 +338,7 @@ function checkVATNumber()
             autofillcompany: Number(options['fill_company_name']),
             skip_apisystemfails: Number(options['skip_apisystemfails']),
         },
-        beforeSend : function () { 
+        beforeSend : function () {
             $('#stop_scan_btn').show();// Show stop scan button
             $('.avm_scanstatus').html(checking_vat_numbers+'... <br />['+(Object.keys(addresses).length - query)+'] '+remaining_addresses).fadeIn(300);
             finish = false;
@@ -350,33 +350,33 @@ function checkVATNumber()
             displayMessageOnLive(jsonData['message_onlive']);
             if (Object.keys(jsonData['empty_vat']).length > 0) {
                 insertMessageContainer('warning', jsonData['message']);
-                empty_vat.push(jsonData['empty_vat']); 
+                empty_vat.push(jsonData['empty_vat']);
             }
             else if (Object.keys(jsonData['duplicated_vat']).length > 0) {
                 insertMessageContainer((allow_duplicated?'info':'warning'), jsonData['message']);
-                duplicated_vat.push(jsonData['duplicated_vat']);    
+                duplicated_vat.push(jsonData['duplicated_vat']);
             }
             else if (Object.keys(jsonData['invalid_vat']).length > 0) {
                 insertMessageContainer('danger', jsonData['message']);
-                invalid_vat.push(jsonData['invalid_vat']);    
+                invalid_vat.push(jsonData['invalid_vat']);
             }
             else if (Object.keys(jsonData['invalid_company']).length > 0) {
                 insertMessageContainer('warning', jsonData['message']);
-                invalid_company.push(jsonData['invalid_company']);    
+                invalid_company.push(jsonData['invalid_company']);
             }
             else if (Object.keys(jsonData['empty_company']).length > 0) {
                 insertMessageContainer('warning', jsonData['message']);
-                empty_company.push(jsonData['empty_company']);    
+                empty_company.push(jsonData['empty_company']);
             }
             else if (Object.keys(jsonData['valid_vat']).length > 0) {
-                insertMessageContainer('success', jsonData['message']);                   
-                valid_vat.push(jsonData['valid_vat']); 
-                customer_toassigngroup.push(jsonData['valid_vat']);                   
+                insertMessageContainer('success', jsonData['message']);
+                valid_vat.push(jsonData['valid_vat']);
+                customer_toassigngroup.push(jsonData['valid_vat']);
             }
             else if (Object.keys(jsonData['valid_vat_skipping_validation']).length > 0) {
                 insertMessageContainer('warning', jsonData['message']);
-                valid_vat_skipping_validation.push(jsonData['valid_vat']); 
-                customer_toassigngroup.push(jsonData['valid_vat_skipping_validation']);      
+                valid_vat_skipping_validation.push(jsonData['valid_vat']);
+                customer_toassigngroup.push(jsonData['valid_vat_skipping_validation']);
             }
             $('.results_data .empty_value').html(Object.keys(empty_vat).length).fadeIn(300);
             $('.results_data .duplicated_value').html(Object.keys(duplicated_vat).length).fadeIn(300);
@@ -402,13 +402,13 @@ function checkVATNumber()
                 finishProcess(false, true);
                 $('#open_scan_btn').html(getButtonContent('open_scan_btn')).hide();
                 insertMessageContainer('error', errorThrown);
-                cleanCache(); 
-            } 
+                cleanCache();
+            }
         }
     });
 }
 
-/** 
+/**
 * Perform Rese List table
 */
 function resetListTable()
@@ -424,7 +424,8 @@ function resetListTable()
         data : {
             controller: 'AdminCustomersVatManager',
             ajax: true,
-        	action: 'resetListTable',
+        	  action: 'resetListTable',
+            token: $('[name="token"]').val()
         },
         beforeSend : function () {
             SetprogressBar(2);
@@ -435,7 +436,7 @@ function resetListTable()
             displayMessageOnLive(jsonData['message']);
             SetprogressBar(3);
             $('.avm_scanstatus').html(reset_tablelist+'... ').fadeIn(300);
-            finish = true;               
+            finish = true;
         },
         error : function (jqXHR, textStatus, errorThrown) {
             finishProcess(false);
@@ -443,7 +444,7 @@ function resetListTable()
     });
 }
 
-/** 
+/**
 * Perform Create Excel file
 */
 function createFile()
@@ -470,7 +471,7 @@ function createFile()
             displayMessageOnLive(jsonData['message']);
             SetprogressBar(3);
             $('.avm_scanstatus').html(create_file+'... ').fadeIn(300);
-            finish = true;               
+            finish = true;
         },
         error : function (jqXHR, textStatus, errorThrown) {
             finishProcess(false);
@@ -478,7 +479,7 @@ function createFile()
     });
 }
 
-/** 
+/**
 * Perform Remove empty VAT numbers
 */
 function removeEmptyVAT()
@@ -497,7 +498,7 @@ function removeEmptyVAT()
         	action: 'removeVAT',
             address: empty_vat[query],
         },
-        beforeSend : function () { 
+        beforeSend : function () {
             $('#stop_scan_btn').show();// Show stop scan button
             $('.avm_scanstatus').html(deleting_empty+'... <br />['+(Object.keys(empty_vat).length - query)+'] '+remaining_addresses).fadeIn(300);
             finish = false;
@@ -521,7 +522,7 @@ function removeEmptyVAT()
     });
 }
 
-/** 
+/**
 * Perform Remove duplicated VAT numbers
 */
 function removeDuplicatedVAT()
@@ -541,7 +542,7 @@ function removeDuplicatedVAT()
             duplicated: true,
             address: duplicated_vat,
         },
-        beforeSend : function () { 
+        beforeSend : function () {
             SetprogressBar(10);
             $('#stop_scan_btn').show();// Show stop scan button
             $('.avm_scanstatus').html(deleting_duplicated).fadeIn(300);
@@ -563,7 +564,7 @@ function removeDuplicatedVAT()
     });
 }
 
-/** 
+/**
 * Perform Remove Invalid VAT numbers
 */
 function removeInvalidVAT()
@@ -582,7 +583,7 @@ function removeInvalidVAT()
         	action: 'removeVAT',
             address: invalid_vat[query],
         },
-        beforeSend : function () { 
+        beforeSend : function () {
             $('#stop_scan_btn').show();// Show stop scan button
             $('.avm_scanstatus').html(deleting_invalid+'... <br />['+(Object.keys(invalid_vat).length - query)+'] '+remaining_addresses).fadeIn(300);
             finish = false;
@@ -606,7 +607,7 @@ function removeInvalidVAT()
     });
 }
 
-/** 
+/**
 * Perform Assign Customer groups
 */
 function assignCustomerGroup()
@@ -625,7 +626,7 @@ function assignCustomerGroup()
         	action: 'assignCustomerGroup',
             address: customer_toassigngroup[query],
         },
-        beforeSend : function () { 
+        beforeSend : function () {
             $('#stop_scan_btn').show();// Show stop scan button
             $('.avm_scanstatus').html(assign_customerGroups+'... <br />['+(Object.keys(customer_toassigngroup).length - query)+'] '+remaining_addresses).fadeIn(300);
             finish = false;
@@ -649,28 +650,28 @@ function assignCustomerGroup()
     });
 }
 
-/** 
+/**
 * Perform Send email
 */
 function sendEmail(mode)
 {
     var customer_address;
     if (mode == 2) {
-        customer_address = empty_vat    
+        customer_address = empty_vat
     }
     else if (mode == 3) {
-        customer_address = invalid_vat        
+        customer_address = invalid_vat
     }
     else if (mode == 5) {
-        customer_address = duplicated_vat        
+        customer_address = duplicated_vat
     }
     else if (mode == 6) {
-        customer_address = invalid_company        
+        customer_address = invalid_company
     }
     else if (mode == 7) {
-        customer_address = empty_company    
+        customer_address = empty_company
     }
-    
+
     ajaxProcess = ajaxsendEmail = $.ajax({
         url: ajax_url_avm_scanner,
         id: 'sendEmail',
@@ -701,19 +702,19 @@ function sendEmail(mode)
             else {
                 $('.avm_scanstatus').html(send_email+'... <br />[0] '+remaining_addresses).fadeIn(300);
                 if (mode == 2) {
-                    empty_vat = [];    
+                    empty_vat = [];
                 }
                 else if (mode == 3) {
-                    invalid_vat = [];       
+                    invalid_vat = [];
                 }
                 else if (mode == 5) {
-                    duplicated_vat = [];       
+                    duplicated_vat = [];
                 }
                 else if (mode == 6) {
-                   invalid_company = [];       
+                   invalid_company = [];
                 }
                 else if (mode == 7) {
-                    empty_company = [];       
+                    empty_company = [];
                 }
                 finish = true;
             }
@@ -735,7 +736,7 @@ function getButtonContent(id_button)
     return button_content[id_button];
 }
 
-/** 
+/**
 * Finish process
 */
 function finishProcess(completed = false, stopped = false)
@@ -750,12 +751,12 @@ function finishProcess(completed = false, stopped = false)
     }
     else {
         if (stopped === true) {
-            $('.avm_scanstatus').addClass('error').html(cancel_process).fadeIn(300);    
+            $('.avm_scanstatus').addClass('error').html(cancel_process).fadeIn(300);
         }
         else {
             $('#reload_btn').show();
-            $('.avm_scanstatus').addClass('error').html(process_finished_error).fadeIn(300);    
-        }    
+            $('.avm_scanstatus').addClass('error').html(process_finished_error).fadeIn(300);
+        }
     }
     SetprogressBar(100);
     // Change color of percent to green
@@ -763,7 +764,7 @@ function finishProcess(completed = false, stopped = false)
     $('#open_scan_btn').html(getButtonContent('open_scan_btn'));
 }
 
-/** 
+/**
 * Start process
 */
 function startProcess(button_id)
@@ -785,12 +786,12 @@ function startProcess(button_id)
         $('#avm_process_timer').html('<i class="fal fa-stopwatch"></i> '+timer.getTimeValues().toString());
     });
     if ($('input[name="skip_apisystemfails"]').is(':checked')) {
-        $('div.valid_skipping_validation').show();    
+        $('div.valid_skipping_validation').show();
     }
     else {
-       $('div.valid_skipping_validation').hide();   
+       $('div.valid_skipping_validation').hide();
     }
-    
+
     $('.avm_scanstatus').removeClass('success').removeClass('error');
     $('.avm_results').html('');
     $('#avm_results_container').show();
@@ -800,7 +801,7 @@ function startProcess(button_id)
     $('#reload_btn').hide();// Hide reload button
 }
 
-/** 
+/**
 * Reset progress bar
 */
 function resetProgressBar()
@@ -817,18 +818,18 @@ function resetProgressBar()
 function SetprogressBar(progress = null)
 {
     if (progress !== null) {
-        progress_bar += progress;    
+        progress_bar += progress;
     }
     else {
         progress_bar = Number.parseFloat(step_progress + progress_bar);
     }
     if (progress_bar >= 100) {
         progress_bar = 100;
-    } 
+    }
     $('.avm_process_container .progress_circle').circleProgress('value' , (progress_bar/100).toFixed(2)).on('circle-animation-progress', function(event, animationProgress, stepValue){
-        $('.avm_process_container .percent_progress').text((progress_bar).toFixed(1)+'%');      
+        $('.avm_process_container .percent_progress').text((progress_bar).toFixed(1)+'%');
     });
-      
+
 }
 
 /** Calculate percent per action
@@ -838,18 +839,18 @@ function calculateStepProgress(elements = 0)
 {
     query = 0;
     total_request = elements;
-    step_progress = Number.parseFloat((100-progress_bar)/elements);      
+    step_progress = Number.parseFloat((100-progress_bar)/elements);
 }
 
-/** 
+/**
 * Insert Message container
 */
 function insertMessageContainer(type, message)
 {
-    $('.avm_results').append('<div class="alert alert-'+type+'">'+message+'</div>');    
+    $('.avm_results').append('<div class="alert alert-'+type+'">'+message+'</div>');
 }
 
-/** 
+/**
 * Stop Process
 */
 function stopProcess(xhr)
@@ -859,7 +860,7 @@ function stopProcess(xhr)
     xhr.abort();
 }
 
-/** 
+/**
 * Reset Values
 */
 function resetValues()
@@ -882,12 +883,12 @@ function resetValues()
     customer_toassigngroup = [];
 }
 
-/** 
+/**
 * Scan process
 */
 function scanProcess()
 {
-    resetListTable(); 
+    resetListTable();
     $(document).ajaxSuccess(function(event, request, settings) {
         // After Initial database check
         if (settings.id == 'checkTotalAddress') {
@@ -907,38 +908,38 @@ function scanProcess()
                     checkTotalAddress();
                 }, 2000);
             }
-        } 
+        }
         else if (settings.id == 'checkVATNumber') {
             if (finish === true) {
                 setTimeout(function(){
                     createFile();
                 }, 3000);
-                
+
             }
-        } 
+        }
         else if (settings.id == 'createFile' || settings.id == 'removeEmptyVAT' || settings.id == 'removeInvalidVAT' || settings.id == 'removeDuplicatedVAT' || settings.id == 'sendEmail' || settings.id == 'assignCustomerGroup') {
             if (finish === true) {
                 if (Object.keys(empty_vat).length > 0 && options['remove_empty_mode'] === true) {
                     resetProgressBar();
-                    setTimeout(function(){ 
+                    setTimeout(function(){
                         calculateStepProgress(Object.keys(empty_vat).length);
                         removeEmptyVAT();
-                    }, 5000); 
+                    }, 5000);
                 }
                 else if (Object.keys(invalid_vat).length > 0 && options['remove_invalid_mode'] === true) {
                     resetProgressBar();
-                    setTimeout(function(){ 
+                    setTimeout(function(){
                         calculateStepProgress(Object.keys(invalid_vat).length);
                         removeInvalidVAT();
-                    }, 5000); 
-                    
+                    }, 5000);
+
                 }
                 else if (Object.keys(duplicated_vat).length > 0 && options['remove_duplicated_mode'] === true) {
                     resetProgressBar();
-                    setTimeout(function(){ 
+                    setTimeout(function(){
                         removeDuplicatedVAT();
-                    }, 5000); 
-                    
+                    }, 5000);
+
                 }
                 else if (Object.keys(invalid_vat).length > 0 && options['sendEmail_invalid_mode'] === true) {
                     resetProgressBar();
@@ -967,44 +968,44 @@ function scanProcess()
                 }
                 else if (Object.keys(customer_toassigngroup).length > 0 && options['assign_group_mode'] === true) {
                     resetProgressBar();
-                    setTimeout(function(){ 
+                    setTimeout(function(){
                         calculateStepProgress(Object.keys(customer_toassigngroup).length);
                         assignCustomerGroup();
-                    }, 5000); 
+                    }, 5000);
                 }
                 else {
                     finishProcess(true);
                 }
-            }    
+            }
         }
         settings.id = null;
     });
 }
 
-/** 
+/**
 * Manage options with Bootstrap switches
 */
 function manageOptions()
-{     
+{
     $('input[name="remove_empty_mode"]').on('switchChange.bootstrapSwitch', function(){
         if ($('input[name="remove_empty_mode"]').bootstrapSwitch('state') && $('input[name="sendEmail_empty_mode"]').bootstrapSwitch('state')) {
             $('input[name="sendEmail_empty_mode"]').bootstrapSwitch('state', false);
-        }    
+        }
     });
     $('input[name="sendEmail_empty_mode"]').on('switchChange.bootstrapSwitch', function(){
         if ($('input[name="sendEmail_empty_mode"]').bootstrapSwitch('state') && $('input[name="remove_empty_mode"]').bootstrapSwitch('state')) {
             $('input[name="remove_empty_mode"]').bootstrapSwitch('state', false);
-        }   
+        }
     });
     $('input[name="remove_duplicated_mode"]').on('switchChange.bootstrapSwitch', function(){
         if ($('input[name="remove_duplicated_mode"]').bootstrapSwitch('state') && $('input[name="sendEmail_duplicated_mode"]').bootstrapSwitch('state')) {
             $('input[name="sendEmail_duplicated_mode"]').bootstrapSwitch('state', false);
-        }    
+        }
     });
     $('input[name="sendEmail_duplicated_mode"]').on('switchChange.bootstrapSwitch', function(){
         if ($('input[name="sendEmail_duplicated_mode"]').bootstrapSwitch('state') && $('input[name="remove_duplicated_mode"]').bootstrapSwitch('state')) {
             $('input[name="remove_duplicated_mode"]').bootstrapSwitch('state', false);
-        }   
+        }
     });
     $('input[name="remove_invalid_mode"]').on('switchChange.bootstrapSwitch', function(){
         if ($('input[name="remove_invalid_mode"]').bootstrapSwitch('state') && $('input[name="sendEmail_invalid_mode"]').bootstrapSwitch('state')) {
@@ -1015,7 +1016,7 @@ function manageOptions()
         if ($('input[name="sendEmail_invalid_mode"]').bootstrapSwitch('state') && $('input[name="remove_invalid_mode"]').bootstrapSwitch('state')) {
             $('input[name="remove_invalid_mode"]').bootstrapSwitch('state', false);
         }
-    });  
+    });
     $('input[name="fill_company_name"]').on('switchChange.bootstrapSwitch', function(){
         if ($('input[name="sendEmail_invalidcompany_mode"]').bootstrapSwitch('state') && $('input[name="fill_company_name"]').bootstrapSwitch('state')) {
             $('input[name="sendEmail_invalidcompany_mode"]').bootstrapSwitch('state', false);
@@ -1023,34 +1024,34 @@ function manageOptions()
         if ($('input[name="sendEmail_emptycompany_mode"]').bootstrapSwitch('state') && $('input[name="fill_company_name"]').bootstrapSwitch('state')) {
             $('input[name="sendEmail_emptycompany_mode"]').bootstrapSwitch('state', false);
         }
-    });   
+    });
     $('input[name="fill_company_name"]').on('switchChange.bootstrapSwitch', function(){
         if ($('input[name="sendEmail_invalidcompany_mode"]').bootstrapSwitch('state') && $('input[name="fill_company_name"]').bootstrapSwitch('state')) {
             $('input[name="sendEmail_invalidcompany_mode"]').bootstrapSwitch('state', false);
             $('input[name="sendEmail_emptycompany_mode"]').bootstrapSwitch('state', false);
         }
-    });    
+    });
     $('input[name="sendEmail_invalidcompany_mode"]').on('switchChange.bootstrapSwitch', function(){
         if ($('input[name="sendEmail_invalidcompany_mode"]').bootstrapSwitch('state') && $('input[name="fill_company_name"]').bootstrapSwitch('state')) {
             $('input[name="fill_company_name"]').bootstrapSwitch('state', false);
             $('input[name="sendEmail_emptycompany_mode"]').bootstrapSwitch('state', false);
         }
-    });    
+    });
     $('input[name="sendEmail_invalidcompany_mode"]').on('switchChange.bootstrapSwitch', function(){
         if ($('input[name="sendEmail_invalidcompany_mode"]').bootstrapSwitch('state') && $('input[name="fill_company_name"]').bootstrapSwitch('state')) {
             $('input[name="fill_company_name"]').bootstrapSwitch('state', false);
             $('input[name="sendEmail_emptycompany_mode"]').bootstrapSwitch('state', false);
         }
-    });   
+    });
     if (!company_validation) {
         $('input[name="sendEmail_invalidcompany_mode"]').bootstrapSwitch('disabled', true);
         $('input[name="sendEmail_emptycompany_mode"]').bootstrapSwitch('disabled', true)
-    }  
+    }
 }
 
 /*
 * Build modal messages
-*  
+*
 */
 function displayModalMessage(title = null, message = null, type, id = null, time = false)
 {
@@ -1059,13 +1060,13 @@ function displayModalMessage(title = null, message = null, type, id = null, time
     if (id === null) {
         id = $.now();
     }
-    if (message !== null) {   
+    if (message !== null) {
         if (modal_count >= 1) {
             position = (modal_count * 220);
             if (!$.isEmptyObject(position_available) && modal_count >= 1) {
                 position = Math.min.apply(Math, position_available);
-                position_available.splice($.inArray(position, position_available), 1);    
-            }   
+                position_available.splice($.inArray(position, position_available), 1);
+            }
         }
         else {
             position_available = [];
@@ -1073,28 +1074,28 @@ function displayModalMessage(title = null, message = null, type, id = null, time
         }
         // If modal exists, only add content
         if ($('#avm_modal_messages_'+id).length > 0) {
-            $('#avm_modal_messages_'+id+' .content').append(message+'<br /><br />');      
+            $('#avm_modal_messages_'+id+' .content').append(message+'<br /><br />');
         }
         // Create new modal
         else {
-            $('body').append('<div id="avm_modal_messages_'+id+'" class="avm_modal_messages" data-sm-init="true" data-state="'+type+'"><div class="title"></div><div class="content"></div></div>');            
+            $('body').append('<div id="avm_modal_messages_'+id+'" class="avm_modal_messages" data-sm-init="true" data-state="'+type+'"><div class="title"></div><div class="content"></div></div>');
             $('#avm_modal_messages_'+id+' .content').html(message+'<br /><br />');
-            $('#avm_modal_messages_'+id).attr('data-state', type);  
+            $('#avm_modal_messages_'+id).attr('data-state', type);
             if (title === null) {
                 if (type == 'success') {
                     title = success;
                 }
                 else if (type == 'warning') {
-                    title = warning;    
+                    title = warning;
                 }
                 else if (type == 'danger') {
-                    title = danger;    
+                    title = danger;
                 }
                 else if (type == 'info') {
-                    title = info;    
+                    title = info;
                 }
             }
-            $('#avm_modal_messages_'+id+' .title').html(title); 
+            $('#avm_modal_messages_'+id+' .title').html(title);
         }
         // Clean spaces
         //$('#avm_modal_messages_'+id+' .content').html($('#avm_modal_messages_'+id+' .content').html().trim());
@@ -1136,19 +1137,19 @@ function displayModalMessage(title = null, message = null, type, id = null, time
                 'top': position+'px'
             },
             callback_afterClose: function () {
-                position_available.push($('#avm_modal_messages_'+id).parent('.sm-popup').position().top);  
-                $('#avm_modal_messages_'+id).parent().parent('.sm-wrapper').remove();  
-                $('#avm_modal_messages_'+id).SlickModals('destroy');                
+                position_available.push($('#avm_modal_messages_'+id).parent('.sm-popup').position().top);
+                $('#avm_modal_messages_'+id).parent().parent('.sm-wrapper').remove();
+                $('#avm_modal_messages_'+id).SlickModals('destroy');
             },
         });
         $('#avm_modal_messages_'+id).SlickModals('openPopup', 'instant');
-    }   
+    }
 }
 
 
 /*
 * Display messages
-*  
+*
 */
 function displayMessages(content, time = false)
 {
@@ -1162,18 +1163,18 @@ function displayMessages(content, time = false)
                         // Remove duplicated messages.
                         if ($.inArray(string, aux) == -1) {
                             aux.push(string);
-                            displayModalMessage(null, string.trim(), type, type, time);  
+                            displayModalMessage(null, string.trim(), type, type, time);
                         }
                     });
                 });
             });
-        });     
-    }    
+        });
+    }
 }
 
 /*
 * Display message on live meanwhile processes are working
-*  
+*
 */
 function displayMessageOnLive(messages_content = false)
 {
@@ -1181,8 +1182,8 @@ function displayMessageOnLive(messages_content = false)
     if (messages_content !== false && !$.isEmptyObject(messages_content)) {
         $.each(messages_content, function(type, message){
             if ($.inArray(message, messages) === -1) {
-                displayModalMessage(null, message , type, type, false);      
-            }                
+                displayModalMessage(null, message , type, type, false);
+            }
         });
     }
 }

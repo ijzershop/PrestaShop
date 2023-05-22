@@ -220,6 +220,7 @@ class AdminCustomersVatManagerController extends ModuleAdminController
     public function setMedia($isNewTheme = true)
     {
         parent::setMedia();
+
         Media::addJsDef(array(
             'ajax_url_avm_scanner' => $this->context->link->getAdminLink('AdminCustomersVatManager'),
             'scanning' => $this->l('Processing', 'AdminCustomersVatManager'),
@@ -245,26 +246,25 @@ class AdminCustomersVatManagerController extends ModuleAdminController
             'info' => $this->l('Information'),
             'company_validation' => (bool)Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION'),
         ));
-
         //Fontawesome
-        $this->addCSS('https://pro.fontawesome.com/releases/v5.15.4/css/all.css');
+        $this->addCSS('https://pro.fontawesome.com/releases/v5.15.4/css/all.css', 'all');
 
         // Slick modal
-        $this->addCSS(_PS_MODULE_DIR_ . 'advancedvatmanager/libs/slickmodal/css/slickmodal.min.css');
-        $this->addJS(_PS_MODULE_DIR_ . 'advancedvatmanager/libs/slickmodal/js/jquery.slickmodal.min.js');
+        $this->addCSS('/modules/advancedvatmanager/libs/slickmodal/css/slickmodal.min.css', );
+        $this->addJS('/modules/advancedvatmanager/libs/slickmodal/js/jquery.slickmodal.min.js');
 
         // Progress circle
-        $this->addJS(_PS_MODULE_DIR_ . 'advancedvatmanager/libs/circle-progress/js/circle-progress.min.js');
+        $this->addJS('/modules/advancedvatmanager/libs/circle-progress/js/circle-progress.min.js');
 
         // Timer
-        $this->addJS(_PS_MODULE_DIR_ . 'advancedvatmanager/libs/easytimer/easytimer.min.js');
+        $this->addJS('/modules/advancedvatmanager/libs/easytimer/easytimer.min.js');
 
         // Bootstrap switches
-        $this->addCSS(_PS_MODULE_DIR_ . 'advancedvatmanager/libs/bootstrap-switch/css/bootstrap-switch.min.css');
-        $this->addJS(_PS_MODULE_DIR_ . 'advancedvatmanager/libs/bootstrap-switch/js/bootstrap-switch.min.js');
+        $this->addCSS('/modules/advancedvatmanager/libs/bootstrap-switch/css/bootstrap-switch.min.css');
+        $this->addJS('/modules/advancedvatmanager/libs/bootstrap-switch/js/bootstrap-switch.min.js');
 
-        $this->addCSS(_PS_MODULE_DIR_ . 'advancedvatmanager/views/css/admin/AdminCustomersVatManager/vat_manager.css');
-        $this->addJS(_PS_MODULE_DIR_ . 'advancedvatmanager/views/js/admin/AdminCustomersVatManager/vat_manager.js');
+        $this->addCSS('/modules/advancedvatmanager/views/css/admin/AdminCustomersVatManager/vat_manager.css');
+        $this->addJS('/modules/advancedvatmanager/views/js/admin/AdminCustomersVatManager/vat_manager.js');
     }
 
     /**
@@ -275,11 +275,10 @@ class AdminCustomersVatManagerController extends ModuleAdminController
     public function initToolbar()
     {
         parent::initToolbar();
-
         $this->toolbar_title = $this->meta_title;
 
         // Remove add new button
-         unset($this->toolbar_btn['new']);
+        unset($this->toolbar_btn['new']);
     }
 
     /**

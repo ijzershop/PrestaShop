@@ -24,13 +24,13 @@
  *}
 
 
- {* {var_export($field)} *}
+
 {if $field.type == 'hidden'}
   {block name='form_field_item_hidden'}
   <input type="hidden" name="{$field.name}" value="{$field.value}">
   {/block}
 {else}
-  <div class="form-group form-group-small 
+  <div class="form-group form-group-small
       {if $field.name == 'company'}
         col-12 col-sm-12
       {elseif $field.name == 'alias'}
@@ -78,7 +78,7 @@
           {$field.label nofilter}
           {block name='form_field_comment'}
             {if (!$field.required && !in_array($field.type, ['radio-buttons', 'checkbox']))}
-              {if $field.name != 'phone'} 
+              {if $field.name != 'phone'}
                  {l s='(Optional)' d='Shop.Forms.Labels'}
               {/if}
             {/if}
@@ -91,7 +91,7 @@
 
     {include file='_partials/form-fields-list.tpl' countryId=$countryId}
 
-    </div> 
+    </div>
   </div>
-  
+
 {/if}

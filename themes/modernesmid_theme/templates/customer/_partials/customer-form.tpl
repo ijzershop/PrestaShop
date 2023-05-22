@@ -42,7 +42,6 @@
 
   <form action="{block name='customer_form_actionurl'}{$action}{/block}" id="customer-form" class="js-customer-form" autocomplete="off" method="post">
     <section>
-{*       {var_dump($action)} *}
       {block "form_fields"}
       {foreach from=$formFields item="field"}
         {if $field.name != 'informer_identification'}

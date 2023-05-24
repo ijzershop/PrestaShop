@@ -104,7 +104,6 @@ class OrderSlipGenerator
      */
     public function generateOrderSlips() : bool
     {
-
         $order_invoice_collection = $this->fetchPaidAndReadyOrders();
         if (! count($order_invoice_collection)) {
             return false;
@@ -118,7 +117,6 @@ class OrderSlipGenerator
                 FILE_APPEND,
                 true);
         }
-
 
         $loginCall = $this->doApiCall('api-auth', ['email'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER'), 'password'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS')]);
         if(!empty($loginCall)){
@@ -191,8 +189,19 @@ class OrderSlipGenerator
         }
 
         try {
-            $this->generateBatchFile($order_invoice_collection, $this->pdfDeliverySlipTemplate);
+            $chunk_size = 2;
+            $splitted_order_invoice_collection = array_chunk($order_invoice_collection, $chunk_size);
 
+            if(count($order_invoice_collection) % $chunk_size) {
+                $leftovers = array_pop($splitted_order_invoice_collection);
+                $last      = array_pop($splitted_order_invoice_collection);
+                array_push($splitted_order_invoice_collection, array_merge($last, $leftovers));
+            }
+
+            foreach($splitted_order_invoice_collection as $chunked_order_invoice_collection){
+                $this->generateBatchFile($chunked_order_invoice_collection, $this->pdfDeliverySlipTemplate);
+                sleep(10);
+            }
 
             foreach ($order_invoice_collection as $order) {
                 try {
@@ -207,7 +216,6 @@ class OrderSlipGenerator
         } catch (PrestaShopException $exception) {
             return false;
         }
-
         return true;
     }
 
@@ -215,12 +223,10 @@ class OrderSlipGenerator
      * Generate Batch PDF file with all to printed delivery slips.
      *
      * Branch of function in controllers/admin/AdminPDFController.
-     *
      * @throws PrestaShopException
      */
-    public function generateBatchFile($object, $template) : void
+    public function generateBatchFile($object, $template)
     {
-
     	$context = Context::getContext();
     	$context->currency = new Currency(1, 1, 1);
         $pdf_file = new PDF($object, $template, $context->smarty);
@@ -229,16 +235,13 @@ class OrderSlipGenerator
         $this->slipTime = time();
 
         file_put_contents(dirname(__FILE__, 4).'/upload/pakbonnen/pakbonnen_'.$this->slipTime.'.pdf', $delivery_slip_pdf);
+        return true;
     }
 }
 
 try {
     $batch = new OrderSlipGenerator(false);
-
     $batch->generateOrderSlips();
-    dd($batch);
-
-
 } catch (PrestaShopDatabaseException | PrestaShopException $exeption) {
     return $exeption;
 }

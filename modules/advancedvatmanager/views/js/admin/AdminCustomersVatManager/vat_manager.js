@@ -193,7 +193,8 @@ function checkTotalAddress()
             controller: 'AdminCustomersVatManager',
             ajax: true,
         	action: 'checkTotalAddress',
-            scanFromLastMode: options['scanfromlast_mode']
+            scanFromLastMode: options['scanfromlast_mode'],
+          token: $('[name="token"]').val()
         },
         beforeSend : function () {
             SetprogressBar(2)
@@ -245,6 +246,7 @@ function checkTotalAddress()
                 vat_number: vat,
                 customer: customer,
                 country_iso: country_iso,
+              token: $('[name="token"]').val()
             },
             beforeSend : function () {
                 $('.loading_container').show();
@@ -303,6 +305,7 @@ function cleanCache()
             controller: 'AdminCustomersVatManager',
             ajax: true,
         	action: 'cleanCache',
+          token: $('[name="token"]').val()
         },
         beforeSend : function () {
         },
@@ -337,6 +340,7 @@ function checkVATNumber()
             address: addresses[query],
             autofillcompany: Number(options['fill_company_name']),
             skip_apisystemfails: Number(options['skip_apisystemfails']),
+          token: $('[name="token"]').val()
         },
         beforeSend : function () {
             $('#stop_scan_btn').show();// Show stop scan button
@@ -461,6 +465,7 @@ function createFile()
             controller: 'AdminCustomersVatManager',
             ajax: true,
         	action: 'createFile',
+          token: $('[name="token"]').val()
         },
         beforeSend : function () {
             SetprogressBar(3);
@@ -497,6 +502,7 @@ function removeEmptyVAT()
             ajax: true,
         	action: 'removeVAT',
             address: empty_vat[query],
+          token: $('[name="token"]').val()
         },
         beforeSend : function () {
             $('#stop_scan_btn').show();// Show stop scan button
@@ -541,6 +547,7 @@ function removeDuplicatedVAT()
         	action: 'removeVAT',
             duplicated: true,
             address: duplicated_vat,
+          token: $('[name="token"]').val()
         },
         beforeSend : function () {
             SetprogressBar(10);
@@ -582,6 +589,7 @@ function removeInvalidVAT()
             ajax: true,
         	action: 'removeVAT',
             address: invalid_vat[query],
+          token: $('[name="token"]').val()
         },
         beforeSend : function () {
             $('#stop_scan_btn').show();// Show stop scan button
@@ -625,6 +633,7 @@ function assignCustomerGroup()
             ajax: true,
         	action: 'assignCustomerGroup',
             address: customer_toassigngroup[query],
+          token: $('[name="token"]').val()
         },
         beforeSend : function () {
             $('#stop_scan_btn').show();// Show stop scan button
@@ -686,6 +695,7 @@ function sendEmail(mode)
         	action: 'sendEmail',
             mode: mode,
             address: customer_address[query],
+          token: $('[name="token"]').val()
         },
         beforeSend : function () {
             $('#stop_scan_btn').show();// Show stop scan button

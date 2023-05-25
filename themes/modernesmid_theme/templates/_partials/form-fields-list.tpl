@@ -49,6 +49,16 @@
           {/foreach}
         </select>
         {/block}
+{elseif $field.name == 'vat_number'}
+  <input
+    id="vat_number"
+    autocomplete="off"
+    class="form-control"
+    name="{$field.name}"
+    type="{$field.type}"
+    value="{$field.value}"
+    {if isset($field.availableValues.placeholder)}placeholder="{$field.availableValues.placeholder}"{/if}
+    required>
       {elseif $field.type === 'radio-buttons'}
         {block name='form_field_item_radio'}
         {foreach from=$field.availableValues item="label" key="value"}

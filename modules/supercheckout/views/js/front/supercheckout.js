@@ -4249,7 +4249,11 @@ function validateMessage(s) {
 function validatePhoneNumber(s) {
   // var reg = /^[+0-9. ()-].{9,14}$/;
   var reg = /^((\+|00(\s|\s?\-\s?)?)31(\s|\s?\-\s?)?(\(0\)[\-\s]?)?|0)[1-9]((\s|\s?\-\s?)?[0-9])((\s|\s?-\s?)?[0-9])((\s|\s?-\s?)?[0-9])\s?[0-9]\s?[0-9]\s?[0-9]\s?[0-9]\s?[0-9]$/;
-  return reg.test(s);
+  var reg2 = /^(((\+|00)32[ ]?(?:\(0\)[ ]?)?)|0){1}(4(60|[789]\d)\/?(\s?\d{2}\.?){2}(\s?\d{2})|(\d\/?\s?\d{3}|\d{2}\/?\s?\d{2})(\.?\s?\d{2}){2})$/;
+  if(reg.test(s) || reg2.test(s)){
+    return true;
+  }
+  return false;
 }
 
 function validateEmail(s) {

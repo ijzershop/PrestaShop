@@ -3180,19 +3180,20 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
     {
         $payment_methods = array();
         $available_payments = array();
-
+        $context = Context::getContext();
         if ($this->context->cart->getOrderTotal(true) == 0) {
             $payment_methods['payment_method_not_required'] = true;
         } else {
             $finder = new PaymentOptionsFinder();
             $available_payments = $finder->present();
+
         }
 
+        if (!empty($available_payments)) {
 
-        if ($available_payments) {
             $payment_settings_data = unserialize(Configuration::get('VELOCITY_SUPERCHECKOUT_DATA'));
-
             $delivery_option = $this->getSelectedSupercheckoutDeliveryOption();
+            $user_accepted_payments = array_column(Module::getPaymentModules(), 'id_module');
 
             $custom_ssl_var = 0;
             if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
@@ -3201,6 +3202,10 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
 
             foreach ($available_payments as $module_name => $module_options) {
                 $module_instance = Module::getInstanceByName($module_name);
+                if(!in_array($module_instance->id, $user_accepted_payments) && $context->customer->isLogged(true)){
+                    continue;
+                }
+
                 //BOC - Check for Ship to Pay
                 $not_include_count = 0;
 
@@ -3290,7 +3295,13 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
             $payment_methods['payment_methods'] = array();
         }
 
-        $payment_methods['selected_payment_method'] = $selected_payment_method;
+
+        if($this->context->cookie->payment_method){
+            $payment_methods['selected_payment_method'] = $this->context->cookie->payment_method;
+        } else {
+            $payment_methods['selected_payment_method'] = $selected_payment_method;
+        }
+
         $payment_methods['display_payment_style'] = $this->supercheckout_settings['payment_method']['display_style'];
 
 
@@ -3454,6 +3465,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
         } else {
             $selected_payment_method = Tools::getValue('selected_payment_method_id', 0);
         }
+        $this->context->cookie->payment_method = $selected_payment_method;
 
         $content = '';
         $finder = new PaymentOptionsFinder();

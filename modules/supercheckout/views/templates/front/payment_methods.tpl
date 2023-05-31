@@ -16,14 +16,23 @@
         {assign var="id_module_pin" value=Module::getModuleIdByName('ps_pinpayment')}
         {if (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') === (int)Context::getContext()->customer->id}
             {assign var="selected_payment_method" value=$id_module_pin}
-        {else}
-            {assign var="selected_payment_method" value=$id_module_mollie}
         {/if}
-        {foreach from=$payment_methods item="option"}
+        {if Context::getContext()->cookie->payment_method}
+            {assign var="cookie_selected_payment_method" value=Context::getContext()->cookie->payment_method}
+        {/if}
 
+
+
+{*        {if $selected_payment_method === ""}*}
+{*            {assign var="selected_payment_method" value=$id_module_mollie}*}
+{*        {/if}*}
+
+        {foreach from=$payment_methods item="option"}
           <li>
-                <div class="radio">
-                    <input type="radio" name="payment_method" data-module-name="{$option.module_name nofilter}{*escape not required as contains html*}" value="{$option.id}" id="{$option.id}" {if (Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id && strpos($option.action, "ideal") !== null) || (Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id &&  strpos($option.action, "pinpayment") !== null)} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>
+            <div class="radio">
+                    <input type="radio" name="payment_method" data-module-name="{$option.module_name nofilter}{*escape not required as contains html*}"
+                           value="{$option.id}" id="{$option.id}"
+                            {if ($cookie_selected_payment_method === $option.id && (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') !== (int)Context::getContext()->customer->id) || $selected_payment_method === $option.id_module} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>
                   <label id="payment_lbl_{$option.id_module|intval}" for="{$option.id}">
                         {if $display_payment_style neq 0}
                             {if $option.payment_image_url neq ''}

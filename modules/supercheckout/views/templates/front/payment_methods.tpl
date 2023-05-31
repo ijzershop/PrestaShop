@@ -14,10 +14,11 @@
     <ul>
         {assign var="id_module_mollie" value=Module::getModuleIdByName('mollie')}
         {assign var="id_module_pin" value=Module::getModuleIdByName('ps_pinpayment')}
+        {assign var="cookie_selected_payment_method" value=""}
         {if (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') === (int)Context::getContext()->customer->id}
             {assign var="selected_payment_method" value=$id_module_pin}
         {/if}
-        {if Context::getContext()->cookie->payment_method}
+        {if isset(Context::getContext()->cookie->payment_method)}
             {assign var="cookie_selected_payment_method" value=Context::getContext()->cookie->payment_method}
         {/if}
 

@@ -3453,7 +3453,42 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
     public function fetchCustomerCreditInfo($id_customer){
         $customer = new Customer($id_customer);
         $customerAddresses = $customer->getAddresses(Context::getContext()->language->id);
-        return $customerAddresses;
+        $newAddressArray= [];
+        foreach ($customerAddresses as $address){
+            $newAddressArray[$address['postcode'].$address['house_number'].$address['house_number_extension']] = [
+                "id_address" => $address['id_address'],
+                "id_country" => $address['id_country'],
+                "id_state" => $address['id_state'],
+                "id_customer" => $address['id_customer'],
+                "id_manufacturer" => $address['id_manufacturer'],
+                "id_supplier" => $address['id_supplier'],
+                "id_warehouse" => $address['id_warehouse'],
+                "alias" => $address['alias'],
+                "company" => $address['company'],
+                "lastname" => $address['lastname'],
+                "firstname" => $address['firstname'],
+                "address1" => $address['address1'],
+                "address2" => $address['address2'],
+                "house_number" => $address['house_number'],
+                "house_number_extension" => $address['house_number_extension'],
+                "postcode" => $address['postcode'],
+                "city" => $address['city'],
+                "other" => $address['other'],
+                "phone" => $address['phone'],
+                "phone_mobile" => $address['phone_mobile'],
+                "vat_number" => $address['vat_number'],
+                "dni" => $address['dni'],
+                "date_add" => $address['date_add'],
+                "date_upd" => $address['date_upd'],
+                "active" => $address['active'],
+                "deleted" => $address['deleted'],
+                "country" => $address['country'],
+                "state" => $address['state'],
+                "state_iso" => $address['state_iso']
+            ];
+        }
+
+        return array_values($newAddressArray);
     }
 
 

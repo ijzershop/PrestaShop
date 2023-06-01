@@ -1035,8 +1035,7 @@ $(function () {
       const postcode = $('[name="postcode"]').val().replace(' ', '');
       const houseNumber = $('[name="house_number"]').val().replace(' ', '');
       const extension = $('[name="house_number_extension"]').val().replace(' ', '');
-      // const street = encodeURIComponent($('[name="address1"]').val());
-      const street = '';
+      const street = encodeURIComponent($('[name="address1"]').val());
       const id_country = $('[name="id_country"]').val().replace(' ', '');
       if (postcode.length > 3 || houseNumber.length > 0) {
         validateAddressApi(postcode, street, houseNumber, extension, id_country, event);
@@ -1081,14 +1080,14 @@ $(function () {
 
 
   function validateAddressApi(postcode, street, houseNumber, extension, country, event) {
-    var postC = postcode.replace(' ', '');
-    var houseN = houseNumber.replace(' ', '');
+    let postC = postcode.replace(' ', '');
+    let houseN = houseNumber.replace(' ', '');
     if (extension) {
       extension = extension.replace(' ', '');
     }
 
     $.ajax({
-      url: postcodeApiUrl,
+      url: '/module/msthemeconfig/ajax',
       type: 'GET',
       dataType: 'json',
       data: {
@@ -1102,21 +1101,22 @@ $(function () {
       },
     })
       .done(function (e) {
-        var isValidForConfirm = false;
+        let isValidForConfirm = false;
         $('.address-error-msg').text(null);
 
-        if (e.valid != false && e.address.length > 0 && e.address[0].hasOwnProperty('nl_sixpp')) { // is een nederlands adres
+        if (e.valid != false &&  e.address.countryCode === 'NL') { // is een nederlands adres
 
           $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
           $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
           $('[name="city"]').removeClass('is-invalid').addClass('was-validated is-valid');
 
-          if (e.address[0].city != undefined) {
-            $('[name="city"]').val(e.address[0].city).removeClass('is-invalid').addClass('was-validated is-valid');
+
+          if (e.address.settlement != undefined) {
+            $('[name="city"]').val(e.address.settlement).removeClass('is-invalid').addClass('was-validated is-valid');
           }
 
-          if (e.address[0].street != 'undefined') {
-            $('[name="address1"]').val(e.address[0].street).removeClass('is-invalid').addClass('was-validated is-valid');
+          if (e.address.street != 'undefined') {
+            $('[name="address1"]').val(e.address.street).removeClass('is-invalid').addClass('was-validated is-valid');
             isValidForConfirm = true;
           } else {
             $('[name="address1"]').val('').removeClass('was-validated is-valid').addClass('is-invalid');
@@ -1134,78 +1134,82 @@ $(function () {
           }
 
 
-        } else if (e.valid != false && e.address.length > 0 && e.address[0].hasOwnProperty('be_fourpp')) {
-
-          if (e.address[0].city_nl != undefined) {
-            $('[name="city"]').val(e.address[0].city_nl).removeClass('is-invalid').addClass('was-validated is-valid');
+        } else if (e.valid !== false && e.address.countryCode === 'BE') {
+          if (e.address.settlement !== undefined) {
+            $('[name="city"]').val(e.address.settlement).removeClass('is-invalid').addClass('was-validated is-valid');
           }
-          $('[name="address1"]').val(e.address[0].street_nl).removeClass('is-invalid').removeClass('was-validated is-valid');
+          $('[name="address1"]').val(e.address.street).removeClass('is-invalid').addClass('was-validated is-valid');
           isValidForConfirm = true;
 
           // is een belgisch adres
-          $('[name="postcode"]').removeClass('is-invalid').removeClass('was-validated is-valid');
-
-          $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
-          $('[name="house_number"]').removeClass('is-invalid').removeClass('was-validated is-valid');
-
-          $('[name="house_number_extension"]').removeClass('is-invalid').removeClass('was-validated is-valid');
-
-
-        } else if (e.valid != false && e.address.length == 1 && e.address[0].hasOwnProperty('street_nl')) {
-
-
-          $('[name="address1"]').val(e.address[0].street_nl).removeClass('is-invalid').addClass('was-validated is-valid');
-          if ($('[name="house_number"]').val().length > 0) {
-            $('[name="house_number"]').removeClass('is-invalid').addClass('was-validated is-valid');
-            $('[name="house_number_extension"]').removeClass('is-invalid').addClass('was-validated is-valid');
-            isValidForConfirm = true;
-          } else {
-            $('[name="house_number"]').addClass('is-invalid');
-
-            $('[name="house_number_extension"]').addClass('is-invalid');
-            isValidForConfirm = false;
-          }
-          // is een belgisch adres
-        } else if (e.valid != false && e.address.length > 1) {
-          isValidForConfirm = false;
-          var htmlList = '<ul>';
-          for (var i = 0; i < e.address.length; i++) {
-            htmlList += '<li class="selectStreetAutoFill">' + e.address[i].street_nl + '</li>';
-          }
-          htmlList += '</ul>';
-          $('#suggesstion-box-street').html(htmlList);
-          // is een belgisch adres
-        } else {
-          if (e.msg == 'Fetching address failed') {
-            $('[name="address1"]').val('').addClass('is-invalid').removeClass('was-validated is-valid');
-            isValidForConfirm = false;
-          }
-
-          if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field !== undefined) {
-            isValidForConfirm = false;
-          }
           $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
 
-          $('[name="house_number"]').removeClass('is-invalid').removeClass('was-validated is-valid');
-          $('[name="house_number_extension"]').removeClass('is-invalid').removeClass('was-validated is-valid');
-          $('[name="address1"]').removeClass('is-invalid').removeClass('was-validated is-valid');
-
           $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
+          $('[name="house_number"]').removeClass('is-invalid').addClass('was-validated is-valid');
 
-          $('[name="city"]').removeClass('is-invalid').addClass('is-valid');
+          $('[name="house_number_extension"]').removeClass('is-invalid').addClass('was-validated is-valid');
 
-          if (e.msg !== 'ok') {
-            if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field) {
-              if (e.msg.field === 'house_number') {
-                $('[name="house_number_extension"]').removeClass('is-valid').addClass('is-invalid');
-                $('[name="address1"]').removeClass('is-valid').addClass('is-invalid');
-                $('[name="address1"]').siblings('.address-error-msg').text(null).text('Het huisnummer kan niet gevonden worden mogelijk is de straat onjuist');
-              }
-              $('[name="' + e.msg.field + '"]').removeClass('is-valid').addClass('is-invalid');
-              $('[name="' + e.msg.field + '"]').siblings('.address-error-msg').text(null).text(e.msg.msg);
-              isValidForConfirm = false;
-            }
-          } else if (e.msg === 'ok' && e.valid) {
+
+        }
+
+
+
+        // else if (e.valid != false && e.address.length == 1 && e.address[0].hasOwnProperty('street_nl')) {
+        //
+        //
+        //   $('[name="address1"]').val(e.address.street).removeClass('is-invalid').addClass('was-validated is-valid');
+        //   if ($('[name="house_number"]').val().length > 0) {
+        //     $('[name="house_number"]').removeClass('is-invalid').addClass('was-validated is-valid');
+        //     $('[name="house_number_extension"]').removeClass('is-invalid').addClass('was-validated is-valid');
+        //     isValidForConfirm = true;
+        //   } else {
+        //     $('[name="house_number"]').addClass('is-invalid');
+        //
+        //     $('[name="house_number_extension"]').addClass('is-invalid');
+        //     isValidForConfirm = false;
+        //   }
+        //   // is een belgisch adres
+        // } else if (e.valid != false && e.address.length > 1) {
+        //   isValidForConfirm = false;
+        //   var htmlList = '<ul>';
+        //   for (var i = 0; i < e.address.length; i++) {
+        //     htmlList += '<li class="selectStreetAutoFill">' + e.address[i].street + '</li>';
+        //   }
+        //   htmlList += '</ul>';
+        //   $('#suggesstion-box-street').html(htmlList);
+        //   // is een belgisch adres
+        // } else {
+        //   if (e.msg == 'Fetching address failed') {
+        //     $('[name="address1"]').val('').addClass('is-invalid').removeClass('was-validated is-valid');
+        //     isValidForConfirm = false;
+        //   }
+        //
+        //   if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field !== undefined) {
+        //     isValidForConfirm = false;
+        //   }
+        //   $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
+        //
+        //   $('[name="house_number"]').removeClass('is-invalid').removeClass('was-validated is-valid');
+        //   $('[name="house_number_extension"]').removeClass('is-invalid').removeClass('was-validated is-valid');
+        //   $('[name="address1"]').removeClass('is-invalid').removeClass('was-validated is-valid');
+        //
+        //   $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
+        //
+        //   $('[name="city"]').removeClass('is-invalid').addClass('is-valid');
+        //
+        //   if (e.msg !== 'ok') {
+        //     if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field) {
+        //       if (e.msg.field === 'house_number') {
+        //         $('[name="house_number_extension"]').removeClass('is-valid').addClass('is-invalid');
+        //         $('[name="address1"]').removeClass('is-valid').addClass('is-invalid');
+        //         $('[name="address1"]').siblings('.address-error-msg').text(null).text('Het huisnummer kan niet gevonden worden mogelijk is de straat onjuist');
+        //       }
+        //       $('[name="' + e.msg.field + '"]').removeClass('is-valid').addClass('is-invalid');
+        //       $('[name="' + e.msg.field + '"]').siblings('.address-error-msg').text(null).text(e.msg.msg);
+        //       isValidForConfirm = false;
+        //     }
+          //}
+          else if (e.msg === 'ok' && e.valid) {
             $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
             $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
 
@@ -1220,11 +1224,10 @@ $(function () {
             $('[name="address1"]').removeClass('is-invalid').addClass('was-validated is-valid');
             isValidForConfirm = true;
           }
-        }
+        // }
 
         if (isValidForConfirm) {
           disEnConfirmButtonAddress(false);
-
           $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
           $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
           $('[name="city"]').removeClass('is-invalid').addClass('was-validated is-valid');
@@ -1237,8 +1240,7 @@ $(function () {
           $('[name="city"]').addClass('is-invalid').removeClass('was-validated is-valid');
           $('[name="id_country"]').addClass('is-invalid').removeClass('was-validated is-valid');
         }
-      })
-      .fail(function (e) {
+      }).fail(function (e) {
         disEnConfirmButtonAddress(true);
         $('[name="address1"]').addClass('is-invalid').removeClass('was-validated is-valid');
         $('[name="house_number"]').addClass('is-invalid').removeClass('was-validated is-valid');
@@ -1264,10 +1266,10 @@ $(function () {
 
 
   $('.delivery-option input[type=radio]').on('click', function (event) {
-    if (!$(this).hasClass('add2order') && (parseInt($(this).val()) == shoppingcart.add2order_carrier)) {
+    if (!$(this).hasClass('add2order') && (parseInt($(this).val()) === shoppingcart.add2order_carrier)) {
       $('#added_to_order').val($(this).attr('data-order-reference'));
     }
-    if (!$(this).hasClass('add2order') && (parseInt($(this).val()) != shoppingcart.add2order_carrier)) {
+    if (!$(this).hasClass('add2order') && (parseInt($(this).val()) !== shoppingcart.add2order_carrier)) {
       $('#added_to_order').val(null);
     }
 

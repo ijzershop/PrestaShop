@@ -718,17 +718,17 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
         $('.address-error-msg').text(null);
         var shortType = type.replace('_address', '');
         $('#' + shortType + '-new').find('.errorsmall').remove();
-        if (e.valid != false && e.hasOwnProperty('address') && e.address.length > 0 && e.address[0].hasOwnProperty('nl_sixpp')) { // is een nederlands adres
+        if (e.valid != false && e.hasOwnProperty('address') && e.address.countryCode === 'NL') { // is een nederlands adres
           $('[name="' + type + '[id_country]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
           $('[name="' + type + '[postcode]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
           $('[name="' + type + '[city]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
 
-          if (e.address[0].city != undefined) {
-            $('[name="' + type + '[city]"]').val(e.address[0].city).removeClass('error-form warning-form').addClass('was-validated is-valid');
+          if (e.address.settlement != undefined) {
+            $('[name="' + type + '[city]"]').val(e.address.settlement).removeClass('error-form warning-form').addClass('was-validated is-valid');
           }
 
-          if (e.address[0].street != 'undefined') {
-            $('[name="' + type + '[address1]"]').val(e.address[0].street).removeClass('error-form warning-form').addClass('was-validated is-valid');
+          if (e.address.street != 'undefined') {
+            $('[name="' + type + '[address1]"]').val(e.address.street).removeClass('error-form warning-form').addClass('was-validated is-valid');
             isValidForConfirm = true;
           } else {
             $('[name="' + type + '[address1]"]').val('').removeClass('was-validated is-valid').addClass('error-form');
@@ -741,8 +741,8 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
             isValidForConfirm = true;
           } else {
             $('#' + shortType + '-new').find('.errorsmall').remove();
-            if (e.address[0].streetnumbers) {
-              $('#' + shortType + '-new').append('<span class="errorsmall text-warning">Bij deze postcode zijn de volgende nummers ' + e.address[0].streetnumbers + ' beschikbaar</span>');
+            if (e.address.streetnumbers) {
+              $('#' + shortType + '-new').append('<span class="errorsmall text-warning">Bij deze postcode zijn de volgende nummers ' + e.address.streetnumbers + ' beschikbaar</span>');
             }
             if ($('[name="' + type + '[house_number]"]').val() === '') {
               $('[name="' + type + '[house_number]"]').addClass('warning-form');
@@ -752,10 +752,10 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
           }
 
 
-        } else if (e.valid != false && e.hasOwnProperty('address') && e.address.length > 0 && e.address[0].hasOwnProperty('fourpp')) {
-// console.log(['belgium address', type]);
-          if (e.address[0].city_nl != undefined) {
-            $('[name="' + type + '[city]"]').val(e.address[0].city_nl).removeClass('error-form warning-form').addClass('was-validated is-valid');
+        } else if (e.valid != false && e.hasOwnProperty('address') && e.address.countryCode === 'BE') {
+console.log(['belgium address', type]);
+          if (e.address.settlement != undefined) {
+            $('[name="' + type + '[city]"]').val(e.address.settlement).removeClass('error-form warning-form').addClass('was-validated is-valid');
           }
 
 
@@ -768,8 +768,8 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
           $('[name="' + type + '[house_number_extension]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
 
 
-          if(e.address[0].street !== undefined){
-            $('[name="' + type + '[address1]"]').val(e.address[0].street).removeClass('error-form warning-form').addClass('was-validated is-valid');
+          if(e.address.street !== undefined){
+            $('[name="' + type + '[address1]"]').val(e.address.street).removeClass('error-form warning-form').addClass('was-validated is-valid');
           }
 
           if($('[name="' + type + '[address1]"]').val().length === 0){
@@ -778,45 +778,21 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
 
           isValidForConfirm = true;
 
-        } else if (e.valid != false && e.address.length == 1 && e.address[0].hasOwnProperty('street_nl')) {
+        }
+        else if (e.valid === false || e.address.length === 0){
 
-          $('[name="' + type + '[address1]"]').val(e.address[0].street_nl).removeClass('error-form warning-form').addClass('was-validated is-valid');
-          if ($('[name="' + type + '[house_number]"]').val().length > 0) {
-            $('[name="' + type + '[house_number]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
-            $('[name="' + type + '[house_number_extension]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
-            isValidForConfirm = true;
-          } else {
-            $('[name="' + type + '[house_number]"]').addClass('warning-form');
-            $('#' + shortType + '-new').find('.errorsmall').remove();
-
-            $('[name="' + type + '[house_number_extension]"]').addClass('warning-form');
-            isValidForConfirm = false;
-          }
-          // is een belgisch adres
-        } else if (e.valid != false && e.address.length > 1) {
+          $('[name="' + type + '[address1]"]').val('').addClass('warning-form').removeClass('was-validated is-valid');
           isValidForConfirm = false;
-          let htmlList = '<ul>';
-          for (let i = 0; i < e.address.length; i++) {
-            htmlList += '<li class="selectStreetAutoFill">' + e.address[i].street_nl + '</li>';
-          }
-          htmlList += '</ul>';
-          $('#suggesstion-box-street').html(htmlList);
-          // is een belgisch adres
-        } else {
 
-          if (e.msg == 'Fetching address failed') {
-            $('[name="' + type + '[address1]"]').val('').addClass('warning-form').removeClass('was-validated is-valid');
-            isValidForConfirm = false;
-          }
 
-          $('[name="' + type + '[postcode]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
+          $('[name="' + type + '[postcode]"]').addClass('error-form warning-form').removeClass('was-validated is-valid');
 
-          $('[name="' + type + '[house_number]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
-          $('[name="' + type + '[house_number_extension]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
-          $('[name="' + type + '[address1]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
+          $('[name="' + type + '[house_number]"]').addClass('error-form warning-form').removeClass('was-validated is-valid');
+          $('[name="' + type + '[house_number_extension]"]').addClass('error-form warning-form').removeClass('was-validated is-valid');
+          $('[name="' + type + '[address1]"]').addClass('error-form warning-form').removeClass('was-validated is-valid');
 
-          $('[name="' + type + '[id_country]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
-          $('[name="' + type + '[city]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
+          $('[name="' + type + '[id_country]"]').addClass('error-form warning-form').removeClass('was-validated is-valid');
+          $('[name="' + type + '[city]"]').addClass('error-form warning-form').removeClass('was-validated is-valid');
 
           if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field !== undefined) {
             $('[name="' + type + '[' + e.msg.field + ']"]').removeClass('is-valid').addClass('warning-form');
@@ -824,7 +800,7 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
             $('#' + shortType + '-new').append('<span class="errorsmall text-warning">' + e.msg.msg + '</span>');
             isValidForConfirm = false;
           }
-
+        }
 
           if (e.msg === 'ok' && e.valid) {
             $('[name="' + type + '[id_country]"]').removeClass('error-form warning-form').addClass('was-validated is-valid');
@@ -842,7 +818,7 @@ function validateAddressApiCheckout(postcode, street, houseNumber, extension, co
             $('#' + shortType + '-new').find('.errorsmall').remove();
             isValidForConfirm = true;
           }
-        }
+
 
         resolve(isValidForConfirm);
       })

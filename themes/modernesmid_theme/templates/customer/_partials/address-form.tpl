@@ -69,9 +69,10 @@
     </form>
   </div>
 {/block}
-<script>
-  if(typeof postcodeApiUrl === 'undefined'){
-    const postcodeApiUrl= "{url entity='module' name='msthemeconfig' controller='ajax'}";
+<script type="text/javascript">
+
+  if(typeof postcodeApiUrl === "undefined"){
+    let postcodeApiUrl= "{url entity='module' name='msthemeconfig' controller='ajax'}";
   }
 
 

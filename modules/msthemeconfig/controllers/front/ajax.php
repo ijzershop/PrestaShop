@@ -28,7 +28,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     {
         require_once _PS_ROOT_DIR_ . '/app/AppKernel.php';
         $this->token = 'JNtOUInXJD27nRgH';
-        $this->apiPath = 'https://api.pro6pp.nl/v1/autocomplete?auth_key=' . $this->token;
+        $this->apiPath = 'https://api.pro6pp.nl/v2/autocomplete';
         $this->kernel = new \AppKernel('dev', true);
         $this->kernel->boot();
 
@@ -151,19 +151,16 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
 
         $postcode = Tools::getValue('postcode');
+        $street = Tools::getValue('street');
         $houseNumber = Tools::getValue('houseNumber');
         $extension = Tools::getValue('extension');
         $id_country = Tools::getValue('id_country');
-        $street = str_replace(' ', '%', Tools::getValue('street'));
         $city = str_replace(' ', '%', Tools::getValue('city'));
 
-        $urlNl = $this->apiPath . '&nl_sixpp=' . $postcode . '&streetnumber=' . $houseNumber . '&extension=' . $extension;
-
-        $urlBe = $this->apiPath . '&be_fourpp=' . $postcode . '&streetnumber=' . $houseNumber . '&subaddress=' . $extension . '&language=nl';
-
+        $urlNl = $this->apiPath . '/nl?authKey=' . $this->token . '&postalCode=' . $postcode . '&streetNumber=' . $houseNumber . '&premise=' . $extension;
+        $urlBe = $this->apiPath . '/be?authKey=' . $this->token . '&postalCode=' . $postcode. '&street=' . $street . '&streetNumber=' . $houseNumber ;
 
         $valid = false;
-
         $zip_code_format = Country::getZipCodeFormat((int)$id_country);
 
         if (Country::getNeedZipCode((int)$id_country)) {
@@ -211,22 +208,18 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
         $result = curl_exec($curl);
-
-
+        curl_close($curl);
         if (!$result) {
             die(json_encode(['warning' => 'connection failed']));
         } else {
             $data = json_decode($result);
-
             if (!is_null($data)) {
-                if ($data->status == 'error') {
-                    $returnedAddressMsg = $this->getMatchingMessage(strtolower($data->error->message));
+                if (isset($data->errors)) {
+                    $returnedAddressMsg = $this->getMatchingMessage(strtolower($data->error_id));
                     $returnedAddress = [];
-                }
-
-                if ($data->status == 'ok') {
+                } else {
                     $returnedAddressMsg = 'ok';
-                    $returnedAddress = (array)$data->results;
+                    $returnedAddress = (array)$data;
 
                     $valid = true;
                 }
@@ -234,14 +227,14 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 $returnedAddressMsg = 'Fetching address failed';
                 $returnedAddress = [];
             }
-            curl_close($curl);
 
-            if ($this->testCountry($id_country) == 'be' && !empty($street)) {
-                $streetData = $this->fetchStreetForBelgicAddress($city, $postcode, $street);
-                if (isset($streetData[0]->street)) {
-                    $returnedAddress[0]->street = $streetData[0]->street;
-                }
-            }
+//
+//            if ($this->testCountry($id_country) == 'be' && !empty($street)) {
+//                $streetData = $this->fetchStreetForBelgicAddress($city, $postcode, $street);
+//                if (isset($streetData[0]->street)) {
+//                    $returnedAddress[0]->street = $streetData[0]->street;
+//                }
+//            }
 
 
             header('Content-Type: application/json');
@@ -693,6 +686,10 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $msgArray = [
             'invalid nl_sixpp format' => [
                 'msg' => 'Het formaat dient te bestaan uit 4 cijfers en 2 letters. Extra spatiëring en gebruik van hoofd- of kleine letters worden automatisch gecorrigeerd.',
+                'field' => 'postcode'
+            ],
+            'NO_RESULTS_FOUND' => [
+                'msg' => 'Er zijn geen resultaten gevonden in de database',
                 'field' => 'postcode'
             ],
             'nl_sixpp not found' => [

@@ -18,6 +18,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 
 if (!defined('_PS_VERSION_')) {
@@ -55,7 +56,7 @@ class Ps_Cashpayment extends PaymentModule
 
     public function install()
     {
-        if (!parent::install() || !$this->registerHook('paymentReturn') || !$this->registerHook('paymentOptions') || !$this->addOrderState($this->trans('Cash Payment',  array(), 'Modules.Cashpayment.Admin'))) {
+        if (!parent::install() || !$this->registerHook('displayPaymentReturn') || !$this->registerHook('paymentOptions') || !$this->addOrderState($this->trans('Cash Payment',  array(), 'Modules.Cashpayment.Admin'))) {
             return false;
         }
         return true;
@@ -149,6 +150,10 @@ public function addOrderState($name)
         return $this->_html;
     }
 
+    /**
+     * @param $params
+     * @return array|PaymentOption[]
+     */
     public function hookPaymentOptions($params)
     {
         if (!$this->active) {
@@ -176,7 +181,14 @@ public function addOrderState($name)
         return $payment_options;
     }
 
-    public function hookPaymentReturn($params)
+    /**
+     * @param $params
+     * @return string
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws LocalizationException
+     */
+    public function hookDisplayPaymentReturn($params)
     {
         $state = $params['order']->getCurrentState();
 

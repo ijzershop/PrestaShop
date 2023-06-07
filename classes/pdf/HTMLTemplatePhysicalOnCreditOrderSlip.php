@@ -410,7 +410,7 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
         ];
         $this->smarty->assign($tpls);
 
-        return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code));
+        return $this->smarty->fetch($this->getTemplate('physical-on-credit-order-slip'));
     }
 
     /**
@@ -448,7 +448,7 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
 
         $this->smarty->assign($data);
 
-        return $this->smarty->fetch($this->getTemplate('physical-order-slip.tax-tab'));
+        return $this->smarty->fetch($this->getTemplate('physical-on-credit-order-slip.tax-tab'));
     }
 
     /**
@@ -509,7 +509,7 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
         if (!$template) {
             $template = $this->getTemplate($file);
         }
-
+dd($template);
         return $template;
     }
 

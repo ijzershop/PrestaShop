@@ -1,6 +1,6 @@
 {shop_url}
 
-Er zijn nu minder dan {last_qty} producten op voorraad.
+Er zijn nu minder dan {last_qty} producten van {product} op voorraad.
 
 Resterende voorraad: {qty}
 

@@ -509,7 +509,7 @@ class HTMLTemplatePhysicalOnCreditOrderSlip extends HTMLTemplate
         if (!$template) {
             $template = $this->getTemplate($file);
         }
-dd($template);
+
         return $template;
     }
 

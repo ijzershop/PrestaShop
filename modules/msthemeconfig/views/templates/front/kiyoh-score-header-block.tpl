@@ -13,9 +13,10 @@ let kiyohDataTotal =  "{$attr['totalReviews']}";
       "@context": "https://schema.org/",
       "@type": "Product",
       "image": "",
-      "name": "{$name}",
-      "aggregateRating": {$attr['rating'] nofilter},
-      "review": {$attr['reviews'] nofilter}
+      "name": "Ijzershop.nl",
+      "sameAs": "https://www.Ijzershop.nl",
+      "aggregateRating":"{$attr['rating'] nofilter}",
+      "review":"{$attr['reviews'] nofilter}"
 }
 </script>
 

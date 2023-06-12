@@ -147,13 +147,13 @@ class ModernHook
         }
 
         if($this->controller->controller_name == 'AdminModules' && Tools::getValue('configure') == 'offerrow') {
-                $this->context->controller->addJquery();
-                $this->context->controller->addJS(_MODULE_DIR_.'/'.$this->module->name.'/views/templates/admin/js/oi_admin.js');
+            $this->context->controller->addJquery();
+            $this->context->controller->addJS(_MODULE_DIR_.'/'.$this->module->name.'/views/templates/admin/js/oi_admin.js');
         }
 
         if($this->controller->controller_name == 'AdminOrders') {
-                $this->context->controller->addCSS(_MODULE_DIR_.'/'.$this->module->name.'/views/css/koopman-order-grid.css');
-                $this->context->controller->addJS(_MODULE_DIR_.'/'.$this->module->name.'/views/js/koopman.js');
+            $this->context->controller->addCSS(_MODULE_DIR_.'/'.$this->module->name.'/views/css/koopman-order-grid.css');
+            $this->context->controller->addJS(_MODULE_DIR_.'/'.$this->module->name.'/views/js/koopman.js');
         }
 
         if ($this->context->controller->controller_name == 'AdminCustomers') {
@@ -162,7 +162,7 @@ class ModernHook
     }
 
 
-        /**
+    /**
      * Hook Homepage
      *
      * Show categorie jsonld on homepage
@@ -1118,33 +1118,33 @@ class ModernHook
         if($liveMode){
             $min='.min';
         }
-            if (Dispatcher::getInstance()->getController() == 'cms') {
+        if (Dispatcher::getInstance()->getController() == 'cms') {
 
-                if ((int)$this->controller->cms->id == (int)$reviewPage) {
-                    $this->controller->registerJavascript(
-                        'module-msthemeconfig-kiyohxmlconvertjs',
-                        'modules/' . $this->module->name . '/views/js/xmlconvert' . $min . '.js',
-                        [
-                            'priority' => 200,
-                            'attribute' => 'async',
-                        ]
-                    );
+            if ((int)$this->controller->cms->id == (int)$reviewPage) {
+                $this->controller->registerJavascript(
+                    'module-msthemeconfig-kiyohxmlconvertjs',
+                    'modules/' . $this->module->name . '/views/js/xmlconvert' . $min . '.js',
+                    [
+                        'priority' => 200,
+                        'attribute' => 'async',
+                    ]
+                );
 
-                    $this->controller->registerJavascript(
-                        'msthemeconfig-kiyohjs',
-                        'modules/' . $this->module->name . '/views/js/ijzershopkiyoh' . $min . '.js',
-                        [
-                            'priority' => 200,
-                            'attribute' => 'async'
-                        ]
-                    );
+                $this->controller->registerJavascript(
+                    'msthemeconfig-kiyohjs',
+                    'modules/' . $this->module->name . '/views/js/ijzershopkiyoh' . $min . '.js',
+                    [
+                        'priority' => 200,
+                        'attribute' => 'async'
+                    ]
+                );
 
-                    $this->controller->registerStyleSheet(
-                        'module-msthemeconfig-kiyohstyle',
-                        'modules/' . $this->module->name . '/views/css/ijzershopkiyoh' . $min . '.css');
-                }
+                $this->controller->registerStyleSheet(
+                    'module-msthemeconfig-kiyohstyle',
+                    'modules/' . $this->module->name . '/views/css/ijzershopkiyoh' . $min . '.css');
             }
-            return true;
+        }
+        return true;
     }
 
     /**
@@ -1247,7 +1247,7 @@ class ModernHook
                     '@context' => 'https://schema.org/',
                     '@type' => 'Person',
                     'name' => $productComment['reviewAuthor'],
-                    ],
+                ],
                 'reviewBody' => $productComment['reviewContent']['reviewContent'][1]['rating'] . ', ' . $productComment['reviewContent']['reviewContent'][2]['rating'],
                 'publisher' => [
                     '@context' => 'https://schema.org/',
@@ -1287,15 +1287,19 @@ class ModernHook
         $streamContext = stream_context_create(['https' => ['header' => 'Accept: application/xml']]);
         $url = 'https://www.kiyoh.com/v1/review/feed.xml?hash=' . $token . '&pageNumber=0&limit=1';
         try {
-            $xml = file_get_contents($url, false, $streamContext);
-            $response = simplexml_load_string($xml);
+            $xml = @file_get_contents($url, false, $streamContext);
+            if($xml !== false){
+                $response = simplexml_load_string($xml);
 
-            if ($response) {
-                return [
-                    'averageRating' => $response->averageRating[0]->__toString(),
-                    'totalReviews' => $response->numberReviews[0]->__toString(),
-                    'percentageRecommendation' => $response->percentageRecommendation[0]->__toString(),
-                ];
+                if ($response) {
+                    return [
+                        'averageRating' => $response->averageRating[0]->__toString(),
+                        'totalReviews' => $response->numberReviews[0]->__toString(),
+                        'percentageRecommendation' => $response->percentageRecommendation[0]->__toString(),
+                    ];
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
@@ -1632,9 +1636,9 @@ class ModernHook
 
 
 
-/**
- * All needed function
- */
+    /**
+     * All needed function
+     */
 
 
     private function createCategoryJSONLD($cat, $withProducts=true, $withSubCats = true): array
@@ -1649,7 +1653,7 @@ class ModernHook
         if (isset($cat->description_short[$this->idLang])) {
             $catDescription .= trim(strip_tags($cat->description_short[$this->idLang]));
         } elseif(isset($cat->description[$this->idLang])){
-                $catDescription .= trim(strip_tags($cat->description[$this->idLang]));
+            $catDescription .= trim(strip_tags($cat->description[$this->idLang]));
         }
 
         $catTotalItems = 0;
@@ -1948,7 +1952,7 @@ class ModernHook
                 'pickup_label' => $pickC->name,
                 'added' => $addedCarrier,
                 'added_label' => $addC->name
-                ],
+            ],
             'stateType' => [
                 'ready' => $readyForShippingState,
                 'shipping' => $shippingState,
@@ -2280,7 +2284,7 @@ class ModernHook
         if(!isset($value[$idLang])){
             return '';
         } else {
-           return $value[$idLang];
+            return $value[$idLang];
         }
 
     }

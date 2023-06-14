@@ -1157,105 +1157,22 @@ class ModernHook
     {
         $query = 'SELECT * FROM `' . _DB_PREFIX_ . 'kiyoh_custom`';
         $results = Db::getInstance()->executeS($query);
-        $interval = Configuration::get('IJZERSHOPKIYOH_UPDATE_INTERVAL', $this->idLang, $this->idShop, $this->idShopGroup);
-        $reviewPage = Context::getContext()->link->getCMSLink(Configuration::get('IJZERSHOPKIYOH_REVIEW_PAGE', $this->idLang, $this->idShop, $this->idShopGroup), null, null, $this->idLang, $this->idShop);
 
         if (empty($results)) {
-            //table is empty set first record
-            $data = $this->getXMLDataFromKiyohServer();
-            if ($data != false) {
-                $attr = [
-                    'averageRating' => $data['averageRating'],
-                    'averageRatingPercentage' => $data['percentageRecommendation'],
-                    'totalReviews' => $data['totalReviews'],
-                    'reviewPage' => $reviewPage,
-                ];
-                Media::addJsDef(['kiyohData' => $attr]);
-                //set new values in database
-                $query = 'INSERT INTO `' . _DB_PREFIX_ . 'kiyoh_custom` (`kiyoh_comments_total`, `kiyoh_average`, `kiyoh_average_percentage`, `kiyoh_updated`) VALUES (' . $attr['totalReviews'] . ',"' . $attr['averageRating'] . '",' . $attr['averageRatingPercentage'] . ', NOW())';
-                $results = Db::getInstance()->execute($query);
-            } else {
                 $attr = [
                     'averageRating' => 10,
                     'averageRatingPercentage' => 99,
                     'totalReviews' => 2400,
                     'reviewPage' => $reviewPage,
                 ];
-            }
         } else {
-            $updatedDate = $results[0]['kiyoh_updated'];
-            $checkDate = new DateTime();
-
-            $diff = abs(strtotime($updatedDate) - strtotime($checkDate->format('Y-m-d H:i:s')));
-            $years = floor($diff / (365 * 60 * 60 * 24));
-            $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
-            $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
-            $hours = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24) / (60 * 60));
-
-            if ((int)$hours >= (int)$interval) {
-                $data = $this->getXMLDataFromKiyohServer();
-                if ($data != false) {
-                    $attr = [
-                        'averageRating' => $data['averageRating'],
-                        'averageRatingPercentage' => $data['percentageRecommendation'],
-                        'totalReviews' => $data['totalReviews'],
-                        'reviewPage' => $reviewPage,
-                    ];
-                    //set new values in database
-                    $query = 'UPDATE `' . _DB_PREFIX_ . 'kiyoh_custom` SET `kiyoh_comments_total`=' . $attr['totalReviews'] . ',  `kiyoh_average`="' . $attr['averageRating'] . '", `kiyoh_average_percentage`= ' . $attr['averageRatingPercentage'] . ', `kiyoh_updated`= NOW() WHERE `id`=1';
-                    $results = Db::getInstance()->execute($query);
-                } else {
-                    $attr = [
-                        'averageRating' => 10,
-                        'averageRatingPercentage' => 99,
-                        'totalReviews' => 2400,
-                        'reviewPage' => $reviewPage,
-                    ];
-                }
-
-            } else {
-                $attr = [
-                    'averageRating' => $results[0]['kiyoh_average'],
-                    'averageRatingPercentage' => $results[0]['kiyoh_average_percentage'],
-                    'totalReviews' => $results[0]['kiyoh_comments_total'],
-                    'reviewPage' => $reviewPage,
-                ];
-            }
-        }
-
-        $reviews = [];
-        if(isset($results[0]['kiyoh_latest_feed'])){
-            $productComments = json_decode($results[0]['kiyoh_latest_feed'], true);
-        } else {
-            $productComments = [];
-            $productComments['reviews']['reviews'] = [];
-        }
-
-        foreach ($productComments['reviews']['reviews'] as $key => $productComment) {
-
-            $reviews[] = [
-                '@context' => 'https://schema.org/',
-                '@type' => 'Review',
-                'reviewRating' => [
-                    '@context' => 'https://schema.org/',
-                    '@type' => 'Rating',
-                    'ratingValue' => $productComment['rating'],
-                    'bestRating' => '10'
-                ],
-                'datePublished' => $productComment['dateSince'],
-                'author' => [
-                    '@context' => 'https://schema.org/',
-                    '@type' => 'Person',
-                    'name' => $productComment['reviewAuthor'],
-                ],
-                'reviewBody' => $productComment['reviewContent']['reviewContent'][1]['rating'] . ', ' . $productComment['reviewContent']['reviewContent'][2]['rating'],
-                'publisher' => [
-                    '@context' => 'https://schema.org/',
-                    '@type' => 'Person',
-                    'name' => 'De Moderne Smid'
-                ]
+            $attr = [
+                'averageRating' => $results[0]['kiyoh_average'],
+                'averageRatingPercentage' => $results[0]['kiyoh_average_percentage'],
+                'totalReviews' => $results[0]['kiyoh_comments_total']
             ];
         }
+
         if ($attr['averageRating'] == 0) {
             $grade = 10;
         } else {
@@ -1270,67 +1187,11 @@ class ModernHook
 
         $attr['shippingPage'] = Context::getContext()->link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FIRST_LINK', $this->idLang, $this->idShop, $this->idShopGroup), null, null, $this->idLang, $this->idShop);
         $attr['rating'] = json_encode($rating, JSON_UNESCAPED_SLASHES);
-        $attr['reviews'] = json_encode($reviews, JSON_UNESCAPED_SLASHES);
         $this->smarty->assign('attr', $attr);
 
         return $this->smarty->fetch(_PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->module->name . '/views/templates/front/kiyoh-score-header-block.tpl');
-
     }
 
-    /**
-     * @return array|false
-     */
-    public function getXMLDataFromKiyohServer(): bool|array
-    {
-        $token = Configuration::get('IJZERSHOPKIYOH_TOKEN', $this->idLang, $this->idShop, $this->idShopGroup);
-
-        $streamContext = stream_context_create(['https' => ['header' => 'Accept: application/xml']]);
-        $url = 'https://www.kiyoh.com/v1/review/feed.xml?hash=' . $token . '&pageNumber=0&limit=1';
-        try {
-            $xml = @file_get_contents($url, false, $streamContext);
-            if($xml !== false){
-                $response = simplexml_load_string($xml);
-
-                if ($response) {
-                    return [
-                        'averageRating' => $response->averageRating[0]->__toString(),
-                        'totalReviews' => $response->numberReviews[0]->__toString(),
-                        'percentageRecommendation' => $response->percentageRecommendation[0]->__toString(),
-                    ];
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } catch (Exception $ex) {
-            PrestaShopLogger::addLog($ex->getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * @throws PrestaShopDatabaseException
-     * @throws SmartyException|\PrestaShopDatabaseException
-     */
-    public function hookDisplayCMSDisputeInformation()
-    {
-        $reviewPage = Configuration::get('IJZERSHOPKIYOH_REVIEW_PAGE', $this->idLang, $this->idShop, $this->idShopGroup);
-
-        if ((int)$this->controller->cms->id_cms == (int)$reviewPage) {
-            $query = 'SELECT `kiyoh_comments_total`, `kiyoh_latest_feed` FROM `' . _DB_PREFIX_ . 'kiyoh_custom`';
-            $results = Db::getInstance()->executeS($query);
-
-            $attr = [
-                'latestSavedFeed' => addslashes($results[0]['kiyoh_latest_feed']),
-                'totalReviewsInDatabase' => (int)$results[0]['kiyoh_comments_total'],
-                'reviewsPerPage' => Configuration::get('IJZERSHOPKIYOH_TOTAL_PER_PAGE', $this->idLang, $this->idShop, $this->idShopGroup, '10'),
-            ];
-
-            $this->smarty->assign('attr', $attr);
-            echo $this->smarty->fetch(_PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->module->name . '/views/templates/front/reviews.tpl');
-        }
-    }
 
     /**
      * @throws Exception

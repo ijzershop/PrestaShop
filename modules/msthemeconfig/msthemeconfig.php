@@ -847,17 +847,6 @@ class MsThemeConfig extends Module
         }
     }
 
-    /**
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     * @throws SmartyException
-     * @throws PrestaShopDatabaseException
-     */
-    public function hookDisplayCMSDisputeInformation(): void
-    {
-        $hookClass = $this->getModernHooks();
-        $hookClass->hookDisplayCMSDisputeInformation();
-    }
 
     /**
      * @throws PrestaShopException

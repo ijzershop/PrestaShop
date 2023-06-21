@@ -123,8 +123,16 @@ class ModernAjax
             $panel_name = 'home';
         }
 
+
         try {
-            $panelData = $this->fetchData($panel_name);
+            if($panel_name == 'vat'){
+                $from = $request->get('from');
+                $to = $request->get('to');
+                $panelData = $this->fetchVatDataFromOrderTable($from, $to);
+            } else {
+                $panelData = $this->fetchData($panel_name);
+            }
+
             $panelData['admin_token'] = Tools::getAdminToken('AdminModules');
             $container = SymfonyContainer::getInstance()->get('twig');
             return Response::create($container->render(
@@ -517,8 +525,74 @@ class ModernAjax
                 $dataArray['KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS'] = $this->getSelect2SelectedOptions(Configuration::get('KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS' , $this->idLang, $this->idShopGroup, $this->idShop,  "9"),'order_states');
                 break;
         }
+
         return $dataArray;
     }
+
+
+    private function fetchVatDataFromOrderTable($from, $to){
+        if($from === null){
+            $dtfrom = new \DateTime('first day of this month 00:00:00');
+            $from = $dtfrom->format('Y-m-d 00:00:00');
+        } else {
+            $dtfrom =  \DateTime::createFromFormat('Y-m-d', $from);
+            $from = $dtfrom->format('Y-m-d 00:00:00');
+        }
+
+        if($to === null){
+            $dtto = new \DateTime('last day of this month 12:59:59');
+            $to = $dtto->format('Y-m-d 12:59:59');
+        } else {
+            $dtto = \DateTime::createFromFormat('Y-m-d', $to);
+            $to = $dtto->format('Y-m-d 12:59:59');
+        }
+
+        $vatData = [
+            'from' => $dtfrom->format('Y-m-d'),
+            'to' => $dtto->format('Y-m-d'),
+            'total_dutch_orders' => 0,
+            'total_dutch_order_amount_excl' => 0,
+            'total_dutch_order_amount_incl' => 0,
+            'total_dutch_vat' => 0,
+            'total_belgium_orders' => 0,
+            'total_belgium_order_amount_excl' => 0,
+            'total_belgium_order_amount_incl' => 0,
+            'total_belgium_vat' => 0,
+            'total_amount_excl' => 0,
+            'total_amount_incl' => 0,
+            'total_vat' => 0,
+        ];
+
+        $sqlBelgium = "SELECT `" . _DB_PREFIX_ . "orders`.`id_address_delivery`, `" . _DB_PREFIX_ . "orders`.`id_order`, count(`" . _DB_PREFIX_ . "orders`.`id_order`) as order_total_be,  SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_excl`) as total_be_tax_excl, SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_incl`) as total_be_tax_incl FROM `" . _DB_PREFIX_ . "orders` LEFT JOIN `" . _DB_PREFIX_ . "address` ON `" . _DB_PREFIX_ . "orders`.`id_address_delivery` = `" . _DB_PREFIX_ . "address`.`id_address`
+                WHERE `" . _DB_PREFIX_ . "address`.`id_country` = '3' AND `" . _DB_PREFIX_ . "orders`.`date_add` BETWEEN '".$from."' AND '".$to."'";
+
+
+        $sqlNetherlands = "SELECT `" . _DB_PREFIX_ . "orders`.`id_address_delivery`, `" . _DB_PREFIX_ . "orders`.`id_order`, count(`" . _DB_PREFIX_ . "orders`.`id_order`) as order_total_nl,  SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_excl`) as total_nl_tax_excl, SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_incl`) as total_nl_tax_incl FROM `" . _DB_PREFIX_ . "orders` LEFT JOIN `" . _DB_PREFIX_ . "address` ON `" . _DB_PREFIX_ . "orders`.`id_address_delivery` = `" . _DB_PREFIX_ . "address`.`id_address`
+                WHERE `" . _DB_PREFIX_ . "address`.`id_country` = '13' AND `" . _DB_PREFIX_ . "orders`.`date_add` BETWEEN '".$from."' AND '".$to."'";
+
+        $resultBE = Db::getInstance()->executeS($sqlBelgium);
+        $resultNL = Db::getInstance()->executeS($sqlNetherlands);
+
+        $fmt = numfmt_create('nl_NL', \NumberFormatter::CURRENCY);
+
+        if($resultNL && $resultBE) {
+            $vatData['total_dutch_orders'] = (int)$resultNL[0]['order_total_nl'];
+            $vatData['total_dutch_order_amount_excl'] = numfmt_format_currency($fmt, (float)$resultNL[0]['total_nl_tax_excl'], "EUR");
+            $vatData['total_dutch_order_amount_incl'] = numfmt_format_currency($fmt, (float)$resultNL[0]['total_nl_tax_incl'], "EUR");
+            $vatData['total_dutch_vat'] = numfmt_format_currency($fmt, (float)$resultNL[0]['total_nl_tax_incl'] - (float)$resultNL[0]['total_nl_tax_excl'], "EUR");
+            $vatData['total_belgium_orders'] = (int)$resultBE[0]['order_total_be'];
+            $vatData['total_belgium_order_amount_excl'] = numfmt_format_currency($fmt, (float)$resultBE[0]['total_be_tax_excl'], "EUR");
+            $vatData['total_belgium_order_amount_incl'] = numfmt_format_currency($fmt, (float)$resultBE[0]['total_be_tax_incl'], "EUR");
+            $vatData['total_belgium_vat'] = numfmt_format_currency($fmt, (float)$resultBE[0]['total_be_tax_incl'] - (float)$resultBE[0]['total_be_tax_excl'], "EUR");
+         }
+
+        $vatData['total_vat'] = numfmt_format_currency($fmt, ((float)$resultNL[0]['total_nl_tax_incl'] - (float)$resultNL[0]['total_nl_tax_excl']) + ((float)$resultBE[0]['total_be_tax_incl'] - (float)$resultBE[0]['total_be_tax_excl']), "EUR");
+        $vatData['total_amount_excl'] = numfmt_format_currency($fmt, (float)$resultNL[0]['total_nl_tax_excl'] + (float)$resultBE[0]['total_be_tax_excl'], "EUR");
+        $vatData['total_amount_incl'] = numfmt_format_currency($fmt, (float)$resultNL[0]['total_nl_tax_incl'] + (float)$resultBE[0]['total_be_tax_incl'], "EUR");
+
+        return $vatData;
+    }
+
     /**
      *
      * Get the default option list for select2 inputs

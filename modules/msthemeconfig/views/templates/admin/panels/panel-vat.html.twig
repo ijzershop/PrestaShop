@@ -1,0 +1,90 @@
+<div class="card">
+  <div class="card-header">
+    BTW Per Land Weergave
+  </div>
+  <div class="card-body">
+    <br>
+    {#   Van Datum text   #}
+    <div class="form-group col-xs-5">
+      <label class="control-label col-xs-2">
+        Vanaf
+      </label>
+      <div class="col-xs-10">
+        <input type="date" name="from"
+               id="from_vat"
+               value="{{ from }}" class="form-control">
+        <p class="help-block">Vul de start datum in vanaf u de berekening wilt doen</p>
+      </div>
+    </div>
+    {#   Tot Datum text   #}
+    <div class="form-group col-xs-5">
+      <label class="control-label col-xs-2">
+        Tot
+      </label>
+      <div class="col-xs-10">
+        <input type="date" name="to"
+               id="to_vat"
+               value="{{ to }}" class="form-control">
+        <p class="help-block">Vul de eind datum in tot wanneer u de berekening wilt doen</p>
+      </div>
+    </div>
+    <div class="col-xs-2">
+      <button type="button" id="updateVatPanelData" class="btn btn-primary col-xs-12 p-0">OK</button>
+    </div>
+    <div class="col-xs-12">
+      <table class="table w-100">
+        <thead>
+        <tr>
+          <td>Land</td>
+          <td class="text-center">Aantal bestellingen</td>
+          <td class="text-center">Bestelbedrag incl. btw</td>
+          <td class="text-center">Bestelbedrag excl. btw</td>
+          <td class="text-right">Totaal btw</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><h2>Nederland</h2></td>
+          <td class="text-center" id="total_dutch">{{ total_dutch_orders }}</td>
+          <td class="text-center" id="total_amount_dutch">{{ total_dutch_order_amount_incl }}</td>
+          <td class="text-center" id="total_amount_dutch">{{ total_dutch_order_amount_excl }}</td>
+          <td class="text-right" id="total_vat_dutch" class="h2"><h2>{{ total_dutch_vat }}</h2></td>
+        </tr>
+        <tr>
+          <td><h2>België</h2></td>
+          <td class="text-center" id="total_belgium">{{ total_belgium_orders }}</td>
+          <td class="text-center" id="total_amount_belgium">{{ total_belgium_order_amount_incl }}</td>
+          <td class="text-center" id="total_amount_belgium">{{ total_belgium_order_amount_excl }}</td>
+          <td class="text-right" id="total_vat_belgium" class="h2"><h2>{{ total_belgium_vat }}</h2></td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+          <td><b>Totaal</b></td>
+          <td class="text-center">{{ total_dutch_orders+total_belgium_orders }}</td>
+          <td class="text-center">{{ total_amount_incl }}</td>
+          <td class="text-center">{{ total_amount_excl }}</td>
+          <td class="text-right">{{ total_vat }}</td>
+        </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+{% block javascripts %}
+<script type="application/javascript">
+ $('#updateVatPanelData').on('click', function(e){
+   let from = $('#from_vat').val();
+   let to = $('#to_vat').val();
+   $.ajax({
+     url: window.msThemeConfigAjaxUrl + 'vat?from='+from+'&to='+to,
+   }).done(function (e) {
+     $('#v-pills-vat').html(e);
+   });
+ });
+
+
+</script>
+{% endblock %}

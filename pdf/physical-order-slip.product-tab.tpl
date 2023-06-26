@@ -25,7 +25,8 @@
 <table class="product" width="100%" cellpadding="4" cellspacing="0">
   <thead>
   <tr>
-    <th class="product header small" width="40%"  style="text-align: left;">{l s='Product' d='Shop.Pdf' pdf='true'}</th>
+    <th class="product header" width="5%"  style="text-align: left;"></th>
+    <th class="product header small" width="35%"  style="text-align: left;">{l s='Product' d='Shop.Pdf' pdf='true'}</th>
     <th class="product header center small" width="10%">{l s='BTW' d='Shop.Pdf' pdf='true'}</th>
     <th class="product header center small" width="10%">{l s='Unit Price' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
     <th class="product header center small" width="10%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
@@ -38,10 +39,18 @@
   {foreach $order_details as $order_detail}
       {cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
     <tr class="product {$bgcolor_class}">
-      <td {if isset($layout.before_discount)} colspan="7" {else} colspan="6" {/if}>
+      <td {if isset($layout.before_discount)} colspan="8" {else} colspan="7" {/if}>
         <table width="100%">
           <tr class="{$bgcolor_class}">
-            <td class="product left" width="40%">{AttributeGroup::stripSawCutModuleAttributeGroupName($order_detail.product_name)} <span style="color:#000;">{if isset($order_detail.product_desc_short)}{if (int)$order_detail.id_category_default != (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY')}{$order_detail.product_desc_short|strip_tags}{else}{$order_detail.product_desc_short nofilter}{/if}{/if}</span><br/></td>
+            <td class="product left" width="5%">
+                {if empty($order_detail.product_reference)}
+                  ---
+                {else}
+                    {$order_detail.product_reference}
+                {/if}
+              <br/>
+            </td>
+            <td class="product left" width="35%">{AttributeGroup::stripSawCutModuleAttributeGroupName($order_detail.product_name)} <span style="color:#000;">{if isset($order_detail.product_desc_short)}{if (int)$order_detail.id_category_default != (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY')}{$order_detail.product_desc_short|strip_tags}{else}{$order_detail.product_desc_short nofilter}{/if}{/if}</span><br/></td>
             <td class="product center" width="10%">21%</td>
             <td class="product center" width="10%">
                 {displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl_including_ecotax}
@@ -66,7 +75,7 @@
                             {foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}{if !empty($customization_infos.value)}
                                 {if !empty($customization_infos.technical_image)}
                                   <tr>
-                                    <td colspan="4" style="padding:0;margin:0">{$customization_infos.value|strip_tags:true|strip}</td>
+                                    <td colspan="5" style="padding:0;margin:0">{$customization_infos.value|strip_tags:true|strip}</td>
                                       <td class="right" colspan="2">
                                         <img
                                           src="{Context::getContext()->shop->getBaseURL(false, false)}{$customization_infos.technical_image}.png"

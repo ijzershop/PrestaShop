@@ -33,6 +33,7 @@ use Mollie\Repository\PaymentMethodRepositoryInterface;
 use Mollie\Utility\MollieStatusUtility;
 use Mollie\Utility\NumberUtility;
 use Mollie\Utility\OrderNumberUtility;
+use Mollie\Utility\SecureKeyUtility;
 use Mollie\Utility\TextGeneratorUtility;
 use Mollie\Utility\TransactionUtility;
 use MolPaymentMethod;
@@ -116,34 +117,50 @@ class TransactionService
 
             throw new TransactionException('Transaction failed', HttpStatusCode::HTTP_BAD_REQUEST);
         }
+        $orderDescription = $apiPayment->description ?? $apiPayment->orderNumber;
+
+        $paymentMethod = $this->paymentMethodRepository->getPaymentBy('transaction_id', $apiPayment->id);
+
+        if (!$paymentMethod) {
+            $this->mollieOrderCreationService->createMolliePayment($apiPayment, (int) $apiPayment->metadata->cart_id, $orderDescription);
+        }
+
         /** @var int $orderId */
         $orderId = Order::getOrderByCartId((int) $apiPayment->metadata->cart_id);
 
         $cart = new Cart($apiPayment->metadata->cart_id);
 
-        $key = Mollie\Utility\SecureKeyUtility::generateReturnKey(
+        $key = SecureKeyUtility::generateReturnKey(
             $cart->id_customer,
             $cart->id,
             $this->module->name
         );
 
         // remove after few releases
-        $deprecatedKey = Mollie\Utility\SecureKeyUtility::deprecatedGenerateReturnKey(
+        $deprecatedKey = SecureKeyUtility::deprecatedGenerateReturnKey(
             $cart->secure_key,
             $cart->id_customer,
             $cart->id,
             $this->module->name
         );
 
-        $orderDescription = $apiPayment->description ?? $apiPayment->orderNumber;
         $isGeneratedOrderNumber = strpos($orderDescription, OrderNumberUtility::ORDER_NUMBER_PREFIX) === 0;
         $isPaymentFinished = MollieStatusUtility::isPaymentFinished($apiPayment->status);
+
         if (!$isPaymentFinished && $isGeneratedOrderNumber) {
             return $apiPayment;
         }
 
         switch ($apiPayment->resource) {
             case Config::MOLLIE_API_STATUS_PAYMENT:
+                PrestaShopLogger::addLog(__METHOD__ . ' said: Starting to process PAYMENT transaction.', Config::NOTICE);
+
+                $paymentMethod = $this->paymentMethodRepository->getPaymentBy('transaction_id', $apiPayment->id);
+
+                if ($paymentMethod && $apiPayment->mandateId && $paymentMethod['mandate_id'] !== $apiPayment->mandateId) {
+                    $this->mollieOrderCreationService->addTransactionMandate($apiPayment->id, $apiPayment->mandateId);
+                }
+
                 if ($key !== $apiPayment->metadata->secure_key && $deprecatedKey !== $apiPayment->metadata->secure_key) {
                     throw new TransactionException('Security key is incorrect.', HttpStatusCode::HTTP_UNAUTHORIZED);
                 }
@@ -180,6 +197,8 @@ class TransactionService
                 }
                 break;
             case Config::MOLLIE_API_STATUS_ORDER:
+                PrestaShopLogger::addLog(__METHOD__ . ' said: Starting to process ORDER transaction.', Config::NOTICE);
+
                 if ($key !== $apiPayment->metadata->secure_key && $deprecatedKey !== $apiPayment->metadata->secure_key) {
                     throw new TransactionException('Security key is incorrect.', HttpStatusCode::HTTP_UNAUTHORIZED);
                 }
@@ -197,7 +216,7 @@ class TransactionService
                     $apiPayment = $this->updateOrderDescription($apiPayment, $orderId);
                     $this->savePaymentStatus($apiPayment->id, $apiPayment->status, $orderId);
                     $order = new Order($orderId);
-                    $this->shipmentSenderHandler->handleShipmentSender($this->module->api, $order, new \OrderState($order->current_state));
+                    $this->shipmentSenderHandler->handleShipmentSender($this->module->getApiClient(), $order, new \OrderState($order->current_state));
                 } elseif ($apiPayment->amountRefunded) {
                     if (strpos($apiPayment->orderNumber, OrderNumberUtility::ORDER_NUMBER_PREFIX) === 0) {
                         if (!MollieStatusUtility::isPaymentFinished($apiPayment->status)) {
@@ -240,13 +259,9 @@ class TransactionService
         if (!$orderId) {
             return 'Order with given transaction was not found';
         }
-        $paymentMethod = $this->paymentMethodRepository->getPaymentBy('transaction_id', $apiPayment->id);
         $order = new Order($orderId);
-        if (!$paymentMethod) {
-            $this->mollieOrderCreationService->createMolliePayment($apiPayment, $cart->id, $order->reference);
-        } else {
-            $this->mollieOrderCreationService->updateMolliePaymentReference($apiPayment->id, $order->reference);
-        }
+
+        $this->mollieOrderCreationService->updateMolliePaymentReference($apiPayment->id, $order->reference);
 
         $this->updateTransaction($orderId, $apiPayment);
         // Store status in database
@@ -265,7 +280,7 @@ class TransactionService
         $transactionInfos = [];
         $isOrder = TransactionUtility::isOrderTransaction($transactionId);
         if ($isOrder) {
-            $transaction = $this->module->api->orders->get($transactionId, ['embed' => 'payments']);
+            $transaction = $this->module->getApiClient()->orders->get($transactionId, ['embed' => 'payments']);
             /** @var PaymentCollection|null $payments */
             $payments = $transaction->payments();
 
@@ -278,7 +293,7 @@ class TransactionService
                 }
             }
         } else {
-            $transaction = $this->module->api->payments->get($transactionId);
+            $transaction = $this->module->getApiClient()->payments->get($transactionId);
             $transactionInfos = $this->getPaymentTransactionInfo($transaction, $transactionInfos);
         }
 
@@ -413,12 +428,13 @@ class TransactionService
         }
     }
 
-    private function updateOrderDescription(MollieOrderAlias $apiPayment, int $orderId)
+    private function updateOrderDescription($apiPayment, int $orderId)
     {
         $environment = (int) Configuration::get(Mollie\Config\Config::MOLLIE_ENVIRONMENT);
         $paymentMethodId = $this->paymentMethodRepository->getPaymentMethodIdByMethodId($apiPayment->method, $environment);
         $paymentMethodObj = new MolPaymentMethod((int) $paymentMethodId);
         $orderNumber = TextGeneratorUtility::generateDescriptionFromCart($paymentMethodObj->description, $orderId);
+        $apiPayment->orderNumber = $orderNumber;
         $payments = $apiPayment->payments();
 
         /** @var Payment $payment */
@@ -426,12 +442,7 @@ class TransactionService
             $payment->description = 'Order ' . $orderNumber;
             $payment->update();
         }
-        $this->module->api->orders->update(
-            $apiPayment->id,
-            [
-                'orderNumber' => $orderNumber,
-            ]
-        );
+        $apiPayment->update();
 
         return $apiPayment;
     }

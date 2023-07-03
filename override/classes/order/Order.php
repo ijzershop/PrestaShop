@@ -10,6 +10,7 @@ class Order extends OrderCore
 
 public $total_refunded_tax_incl;
 public $total_refunded_tax_excl;
+public $shipping_number;
 
     public static $definition = [
         'table' => 'orders',
@@ -59,6 +60,7 @@ public $total_refunded_tax_excl;
             'delivery_date' => ['type' => self::TYPE_DATE],
             'valid' => ['type' => self::TYPE_BOOL],
             'reference' => ['type' => self::TYPE_STRING],
+            'shipping_number' => ['type' => self::TYPE_STRING],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'note' => ['type' => self::TYPE_HTML],

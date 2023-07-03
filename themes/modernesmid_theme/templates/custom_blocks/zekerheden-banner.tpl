@@ -8,7 +8,7 @@
                     <div class="row">
                         <div class="col-4 pr-0 certainty-icon text-right pl-0">
                             <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FIRST_LINK'))}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_TITLE')}">
-                                <img rel="preload" is="image" src="../upload/{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_TITLE')}" class="hover_effect_target img-fluid">
+                                <img rel="preload" is="image" src="https://new.ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_TITLE')}" class="hover_effect_target img-fluid">
                             </a>
                         </div>
                         <div class="col-8 pl-0 pr-0 certainty-text">
@@ -31,7 +31,7 @@
                     <div class="row">
                         <div class="col-4 pr-0 certainty-icon text-right">
                             <a href="/{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_LINK')}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_TITLE')}">
-                                <img rel="preload" is="image" src="../upload/{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_TITLE')}" class="hover_effect_target img-fluid">
+                                <img rel="preload" is="image" src="https://new.ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_TITLE')}" class="hover_effect_target img-fluid">
                             </a>
                         </div>
                         <div class="col-8 pl-0 pr-0 certainty-text">
@@ -54,7 +54,7 @@
                     <div class="row">
                         <div class="col-4 pr-0 certainty-icon text-right">
                             <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_THIRD_LINK'))}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_TITLE')}">
-                                <img rel="preload" is="image" src="../upload/{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_TITLE')}" class="hover_effect_target img-fluid">
+                                <img rel="preload" is="image" src="https://new.ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_TITLE')}" class="hover_effect_target img-fluid">
                             </a>
                         </div>
                         <div class="col-8 pl-0 pr-0 certainty-text">
@@ -80,12 +80,12 @@
                             {assign var="transmissionCarrier" value=Carrier::getCarrierByReference(2,Context::getContext()->cookie->id_lang)}
                             {* By changing zone the banner item gets updated belgium is 9, Germany 10 *}
                                 {assign var="customerCountry" value=Context::getContext()->country->name}
-                                {assign var="defaultShippingPrice" value=$transmissionCarrier->getMaxDeliveryPriceByPrice(Context::getContext()->country->id_zone)}
+                                {assign var="defaultShippingPrice" value=$transmissionCarrier->getMaxDeliveryPriceByPrice(Context::getContext()->country->id_zone)*1.21}
                                     {if is_array($customerCountry)}
                                         {assign var="customerCountry" value=$customerCountry[1]}
                                     {/if}
-                            <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_LINK'))}" class="zekerheden-banner-img" title="{sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TITLE'), $customerCountry, number_format(Tools::convertPrice($defaultShippingPrice),2,',','.'))}">
-                                <img rel="preload" is="image" src="../upload/{Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_IMAGE')}" alt="{sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TITLE'), $customerCountry, number_format(Tools::convertPrice($defaultShippingPrice),2,',','.'))}" class="hover_effect_target img-fluid">
+                            <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_LINK'))}" class="zekerheden-banner-img" title="{sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TITLE'), $customerCountry, number_format(Tools::convertPrice($defaultShippingPrice),0,',','.'))}">
+                                <img rel="preload" is="image" src="https://new.ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_IMAGE')}" alt="{sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TITLE'), $customerCountry, number_format(Tools::convertPrice($defaultShippingPrice),0,',','.'))}" class="hover_effect_target img-fluid">
                             </a>
                         </div>
                         <div class="col-8 pl-0 pr-0 certainty-text">
@@ -94,7 +94,7 @@
                                     <span>
                                         <a class="text-decoration-none" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_LINK'))}">
                                             <span class="zekerheden-banner-text text-dark">
-                                        {sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TEXT'), $customerCountry, number_format(Tools::convertPrice($defaultShippingPrice),2,',','.'))}</span>
+                                        {sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TEXT'), $customerCountry, number_format(Tools::convertPrice($defaultShippingPrice),0,',','.'))}</span>
                                         </a>
                                     </span>
                                 </span>
@@ -109,7 +109,7 @@
                     <div class="row">
                         <div class="col-4 pr-0 certainty-icon text-right">
                             <a href="/{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_LINK')}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_TITLE')}">
-                                <img rel="preload" is="image" src="../upload/{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_TITLE')}" class="hover_effect_target img-fluid">
+                                <img rel="preload" is="image" src="https://new.ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_TITLE')}" class="hover_effect_target img-fluid">
                             </a>
                         </div>
                         <div class="col-8 pl-0 pr-0 certainty-text">

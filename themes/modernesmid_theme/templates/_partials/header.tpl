@@ -26,33 +26,6 @@
   <div class="header-banner">
     {hook h='displayBanner'}
   </div>
-
-{*      <ul class="list-group">*}
-
-{*        <li class="list-group-item"><b class="col-4">DISCOUNTS EXL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS)}</span></li>*}
-{*        <li class="list-group-item"><b class="col-4">DISCOUNTS INCL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS)}</span></li>*}
-
-{*        <li class="list-group-item"><b class="col-4">TOTAL EXL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(false, Cart::BOTH)}</span></li>*}
-{*        <li class="list-group-item"><b class="col-4">TOTAL INCL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(true, Cart::BOTH)}</span></li>*}
-
-
-{*        <li class="list-group-item"><b class="col-4">PRODUCTS EXL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS)}</span></li>*}
-{*        <li class="list-group-item"><b class="col-4">PRODUCTS INCL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS)}</span></li>*}
-
-{*        <li class="list-group-item"><b class="col-4">SHIPPING EXL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING)}</span></li>*}
-{*        <li class="list-group-item"><b class="col-4">SHIPPING INCL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING)}</span></li>*}
-
-{*        <li class="list-group-item"><b class="col-4">WRAPPING EXL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_WRAPPING)}</span></li>*}
-{*        <li class="list-group-item"><b class="col-4">WRAPPING INCL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_WRAPPING)}</span></li>*}
-
-
-
-{*        <li class="list-group-item"><b class="col-4">TOTAL_WITHOUT_SHIPPING EXL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(false, Cart::BOTH_WITHOUT_SHIPPING)}</span></li>*}
-{*        <li class="list-group-item"><b class="col-4">TOTAL_WITHOUT_SHIPPING INCL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING)}</span></li>*}
-
-{*        <li class="list-group-item"><b class="col-4">REMAINDER EXL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION)}</span></li>*}
-{*        <li class="list-group-item"><b class="col-4">REMAINDER INCL</b><span class="col-8">{Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS_NO_CALCULATION)}</span></li>*}
-{*      </ul>*}
   {/block}
 
   {block name='header_top'}

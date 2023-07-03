@@ -924,8 +924,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
         }
         $data['collies'] = $colliesData;
-
-        die($this->kernel->getContainer()->get('twig')->render('@Modules/koopmanorderexport/views/templates/admin/shipping_state_form.html.twig', $data));
+        die($this->kernel->getContainer()->get('twig')->render('@Modules/msthemeconfig/views/templates/admin/shipping_state_form.html.twig', $data));
 
     }
 
@@ -1025,7 +1024,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             ]
         );
 
-        die($this->context->smarty->fetch(_PS_MODULE_DIR_ . 'koopmanorderexport/views/templates/admin/retourform.tpl'));
+        die($this->context->smarty->fetch(_PS_MODULE_DIR_ . '/views/templates/admin/retourform.tpl'));
     }
 
     /**

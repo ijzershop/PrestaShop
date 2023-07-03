@@ -16,7 +16,6 @@ use Address;
 use Country;
 use JsonSerializable;
 use Mollie\DTO\Object\Amount;
-use ReturnTypeWillChange;
 
 class OrderData implements JsonSerializable
 {
@@ -109,6 +108,11 @@ class OrderData implements JsonSerializable
      * @var string
      */
     private $billingStreetAndNumber;
+
+    /**
+     * @var string
+     */
+    private $sequenceType;
 
     public function __construct(
         Amount $amount,
@@ -368,14 +372,17 @@ class OrderData implements JsonSerializable
         $this->payment = $payment;
     }
 
-    /**
-     * Specify data which should be serialized to JSON
-     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4
-     */
-    #[ReturnTypeWillChange] public function jsonSerialize()
+    public function getSequenceType(): string
+    {
+        return $this->sequenceType;
+    }
+
+    public function setSequenceType(string $sequenceType): void
+    {
+        $this->sequenceType = $sequenceType;
+    }
+
+    public function jsonSerialize()
     {
         $lines = [];
         foreach ($this->getLines() as $line) {
@@ -425,6 +432,10 @@ class OrderData implements JsonSerializable
 
         if ($this->deliveryPhoneNumber) {
             $result['shippingAddress']['phone'] = $this->deliveryPhoneNumber;
+        }
+
+        if ($this->sequenceType) {
+            $result['sequenceType'] = $this->sequenceType;
         }
 
         return $result;

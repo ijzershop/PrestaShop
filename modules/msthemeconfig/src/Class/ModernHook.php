@@ -1153,7 +1153,7 @@ class ModernHook
      * @throws SmartyException
      * @throws \PrestaShopDatabaseException
      */
-    public function hookKiyohBanner(): bool|string
+    public function hookKiyohBanner()
     {
         $query = 'SELECT * FROM `' . _DB_PREFIX_ . 'kiyoh_custom`';
         $results = Db::getInstance()->executeS($query);
@@ -1850,6 +1850,7 @@ class ModernHook
      */
     public function hookActionOrderGridDefinitionModifier(array $params): void
     {
+
         /** @var GridDefinitionInterface $definition */
         $definition = $params['definition'];
 
@@ -1888,7 +1889,8 @@ class ModernHook
         $columns->addBefore('date_add', $retourColumn);
 
         //Profile 3 is werkplaats medewerkers admin is 1
-        $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES');
+        $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES', null, null, 1, "5,6,7");
+     
         $profiles = [];
         if (!empty($workshopProfiles)) {
             $profiles = explode(',', $workshopProfiles);

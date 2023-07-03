@@ -173,8 +173,8 @@ if ((workingDays.indexOf(currentDay) !== -1 && (currentHour >= startHour && curr
 } else {
   document.getElementById('info-row-mail').style.display = 'table-row';
   document.getElementById('info-row-maps').style.display = 'table-row';
-  document.getElementById('info-row-phone').style.display = 'none';
-  document.getElementById('info-row-whatsapp').style.display = 'none';
+  document.getElementById('info-row-phone').style.display = 'table-row';
+  document.getElementById('info-row-whatsapp').style.display = 'table-row';
   document.getElementById('info-row-chat').style.display = 'none';
 }
   }, false);

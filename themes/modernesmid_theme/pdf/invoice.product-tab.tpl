@@ -27,13 +27,13 @@
   <tr>
     <th class="product header small" width="40%" style="text-align: left;">{l s='Product' d='Shop.Pdf' pdf='true'}</th>
     <th class="product header center small" width="10%">{l s='BTW' d='Shop.Pdf' pdf='true'}</th>
-    <th class="product header center small" width="10%">{l s='Unit Price' d='Shop.Pdf' pdf='true'}
-      <br/> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
-    <th class="product header center small" width="10%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
-    <th class="product header-right small" width="15%">{l s='Total' d='Shop.Pdf' pdf='true'}
+    <th class="product header center small" width="10%">{l s='Prijs/Stuk' d='Shop.Pdf' pdf='true'}
+      <br/> {l s='(excl. btw)' d='Shop.Pdf' pdf='true'}</th>
+    <th class="product header center small" width="10%">{l s='Aantal' d='Shop.Pdf' pdf='true'}</th>
+    <th class="product header-right small" width="15%">{l s='Totaal' d='Shop.Pdf' pdf='true'}
       <br/> {l s='(incl. btw)' d='Shop.Pdf' pdf='true'}</th>
-    <th class="product header-right small" width="15%">{l s='Total' d='Shop.Pdf' pdf='true'}
-      <br/> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
+    <th class="product header-right small" width="15%">{l s='Totaal' d='Shop.Pdf' pdf='true'}
+      <br/> {l s='(excl. btw)' d='Shop.Pdf' pdf='true'}</th>
   </tr>
   </thead>
   <tbody>

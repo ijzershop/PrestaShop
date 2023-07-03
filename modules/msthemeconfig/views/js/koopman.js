@@ -256,7 +256,7 @@ $(function () {
         }
         let d = new Date();
         let n = d.getDay();
-
+console.log(link);
         location.href = link;
       }
     });

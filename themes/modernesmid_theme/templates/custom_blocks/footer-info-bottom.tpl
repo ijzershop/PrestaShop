@@ -10,7 +10,7 @@
                                         <div class="row">
                                             <div class="col-4 pr-0 certainty-icon text-right">
                                                 <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TITLE')}">
-                                                    <img rel="preload" is="image" src="/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TITLE')}" class="hover_effect_target img-fluid">
+                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TITLE')}" class="hover_effect_target img-fluid">
                                                 </a>
                                             </div>
                                             <div class="col-8 pl-0 certainty-text">
@@ -30,7 +30,7 @@
                                         <div class="row">
                                             <div class="col-4 pr-0 certainty-icon text-right">
                                                 <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TITLE')}">
-                                                    <img rel="preload" is="image" src="/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TITLE')}" class="hover_effect_target img-fluid">
+                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TITLE')}" class="hover_effect_target img-fluid">
                                                 </a>
                                             </div>
                                             <div class="col-8 pl-0 pr-0 certainty-text">
@@ -50,7 +50,7 @@
                                         <div class="row">
                                             <div class="col-12 certainty-icon text-center">
                                                 <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TITLE')}">
-                                                    <img rel="preload" is="image" src="/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TITLE')}" class="hover_effect_target img-fluid">
+                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TITLE')}" class="hover_effect_target img-fluid">
                                                 </a>
                                             </div>
                                         </div>
@@ -65,7 +65,7 @@
                                         <div class="row">
                                             <div class="col-4 certainty-icon pr-0 text-right">
                                                 <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE')}">
-                                                    <img rel="preload" is="image" src="/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE')}" class="hover_effect_target img-fluid">
+                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE')}" class="hover_effect_target img-fluid">
                                                 </a>
                                             </div>
                                             <div class="col-8 pl-0 certainty-text">
@@ -85,7 +85,7 @@
                                         <div class="row">
                                             <div class="col-4 pr-0 certainty-icon text-right">
                                                 <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TITLE')}">
-                                                    <img rel="preload" is="image" src="/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TITLE')}" class="hover_effect_target img-fluid">
+                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TITLE')}" class="hover_effect_target img-fluid">
                                                 </a>
                                             </div>
                                             <div class="col-8 pl-0 pr-0 certainty-text">

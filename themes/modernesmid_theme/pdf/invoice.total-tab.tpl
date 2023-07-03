@@ -25,7 +25,7 @@
 <table nobr="true" id="total-tab" width="100%">
   <tr>
     <td class="grey" width="60%">
-        {l s='Total Products' d='Shop.Pdf' pdf='true'}
+        {l s='Totaal Producten' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white" width="40%">
         {if $footer.products_before_discounts_tax_excl > 0}
@@ -39,7 +39,7 @@
     {if !$order->isVirtual()}
       <tr>
         <td class="grey" width="60%">
-            {l s='Shipping' d='Shop.Pdf' pdf='true'}
+            {l s='Verzending' d='Shop.Pdf' pdf='true'}
         </td>
         <td class="white" width="40%">
             {if $footer.shipping_tax_excl > 0}
@@ -64,7 +64,7 @@
     {if $footer.wrapping_tax_excl > 0}
       <tr>
         <td class="grey">
-            {l s='Wrapping Costs' d='Shop.Pdf' pdf='true'}
+            {l s='Verpakking' d='Shop.Pdf' pdf='true'}
         </td>
         <td class="white">{displayPrice currency=$order->id_currency price=$footer.wrapping_tax_excl}</td>
       </tr>
@@ -73,7 +73,7 @@
 
   <tr class="bold">
     <td class="grey">
-        {l s='Total (Tax excl.)' d='Shop.Pdf' pdf='true'}
+        {l s='Totaal (excl. btw)' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white">
         {if abs($footer.total_refunded_tax_excl) > 0}
@@ -85,7 +85,7 @@
   </tr>
   <tr class="bold">
     <td class="grey">
-        {l s='Total Tax' d='Shop.Pdf' pdf='true'}
+        {l s='BTW' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white">
         {if abs($footer.total_refunded_tax_excl) > 0}
@@ -97,7 +97,7 @@
   </tr>
   <tr class="bold big">
     <td class="grey">
-        {l s='Total' d='Shop.Pdf' pdf='true'}
+        {l s='Totaal' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white">
         {if abs($footer.total_refunded_tax_excl) > 0}

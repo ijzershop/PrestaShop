@@ -16,7 +16,7 @@
   <div class="row">
     {#     Shipping Carrier#}
     {% if record.carrier is same as column.options.stateCarrier.shipping or record.carrier is same as column.options.stateCarrier.added %}
-      <div class="cc-koopman koopman w-100" data-href="' + link + '" title="Koopman label afdrukken">
+      <div class="cc-koopman koopman w-100" data-href="{{getAdminLink('koopmanOrderExportAdmin')}}" title="Koopman label afdrukken">
 
         <input id="envelope_{{ record.id_order }}" type="radio" name="koopman-package" value="envelope"/>
         <label class="type-cc btn btn-primary envelope float-left" for="envelope_{{ record.id_order }}" style="border-left:0px;"></label>

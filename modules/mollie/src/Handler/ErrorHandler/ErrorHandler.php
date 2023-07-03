@@ -14,113 +14,138 @@ namespace Mollie\Handler\ErrorHandler;
 
 use Configuration;
 use Exception;
-use Module;
 use Mollie;
 use Mollie\Config\Config;
 use Mollie\Config\Env;
-use Raven_Client;
+use Mollie\Factory\ModuleFactory;
+use Sentry\ClientBuilder;
+use Sentry\ClientInterface;
+use Sentry\SentrySdk;
+use Sentry\State\Scope;
+use Sentry\UserDataBag;
 
 /**
  * Handle Error.
  */
 class ErrorHandler
 {
-    /**
-     * @var ?Raven_Client
-     */
-    protected $client;
-
-    /**
-     * @var ErrorHandler
-     */
+    /** @var ErrorHandler */
     private static $instance;
+    /** @var ClientInterface */
+    private $client;
 
-    public function __construct($module)
+    /** @var Scope */
+    private $exceptionContext;
+
+    public function __construct(Mollie $module, Env $env = null)
     {
-        /** @var Env $env */
-        $env = $module->getMollieContainer(Env::class);
-
-        try {
-            $this->client = new ModuleFilteredRavenClient(
-                Config::SENTRY_KEY,
-                [
-                    'level' => Raven_Client::ERROR,
-                    'tags' => [
-                        'php_version' => phpversion(),
-                        'mollie_version' => $module->version,
-                        'prestashop_version' => _PS_VERSION_,
-                        'mollie_is_enabled' => \Module::isEnabled('mollie'),
-                        'mollie_is_installed' => \Module::isInstalled('mollie'),
-                        'env' => $env->get('SENTRY_ENV'),
-                    ],
-                ]
-            );
-            $this->client->set_user_data($this->getServerVariable('SERVER_NAME'), Configuration::get('PS_SHOP_EMAIL'));
-        } catch (Exception $e) {
+        /* We need to add this check and make env = null because when upgrading module the old constructor logic is called, and it breaks upgrade */
+        if (!$env || !class_exists('Sentry\ClientBuilder')) {
             return;
         }
 
-        // We use realpath to get errors even if module is behind a symbolic link
-        $this->client->setAppPath(realpath(_PS_MODULE_DIR_ . $module->name . '/'));
+        //TODO in PS8 sentry_env is not passed for some reason, fix this.
+        $client = ClientBuilder::create([
+            'dsn' => Config::SENTRY_KEY,
+            'release' => $module->version,
+            'environment' => $env->get('SENTRY_ENV'),
+            'max_breadcrumbs' => 50,
+        ]);
 
-        $this->client->setExcludedAppPaths([
+        $client->getOptions()->setBeforeSendCallback(function ($event) use ($module) {
+            if ($this->shouldSkipError($event, $module)) {
+                return null;
+            }
+
+            return $event;
+        });
+
+        $userData = new UserDataBag();
+
+        $userData->setId($_SERVER['SERVER_NAME']);
+        $userData->setEmail(Configuration::get('PS_SHOP_EMAIL'));
+
+        $hub = SentrySdk::getCurrentHub();
+
+        $hub->configureScope(function ($scope) use ($userData) {
+            $scope->setUser($userData);
+        });
+
+        $client->getOptions()->setInAppIncludedPaths([
+            realpath(_PS_MODULE_DIR_ . $module->name . '/'),
+        ]);
+
+        $client->getOptions()->setInAppExcludedPaths([
             realpath(_PS_MODULE_DIR_ . $module->name . '/vendor/'),
         ]);
-        // Useless as it will exclude everything even if specified in the app path
-        //$this->client->setExcludedAppPaths([_PS_ROOT_DIR_]);
-        $this->client->install();
+
+        $this->client = $client->getClient();
+
+        $scope = new Scope();
+
+        $scope->setTags([
+            'mollie_version' => $module->version,
+            'prestashop_version' => _PS_VERSION_,
+            'mollie_is_enabled' => (string) Mollie::isEnabled('mollie'),
+            'mollie_is_installed' => (string) Mollie::isInstalled('mollie'), //TODO this is deprecated since 1.7, rewrite someday
+        ]);
+
+        $this->exceptionContext = $scope;
     }
 
     /**
-     * @param Exception $error
-     * @param mixed $code
-     * @param bool|null $throw
-     *
-     * @return void
-     *
      * @throws Exception
      */
-    public function handle($error, $code = null, $throw = true)
+    public function handle(Exception $error, ?int $code = null, ?bool $throw = true): void
     {
-        if (!$this->client) {
-            return;
-        }
+        $this->client->captureException($error, $this->exceptionContext);
 
-        $this->client->captureException($error);
         if ($code && true === $throw) {
             http_response_code($code);
             throw $error;
         }
     }
 
-    /**
-     * @return ErrorHandler
-     */
-    public static function getInstance()
+    public static function getInstance(Mollie $module = null): ErrorHandler
     {
-        /** @var Mollie */
-        $module = Module::getInstanceByName('mollie');
+        if (!$module) {
+            $module = (new ModuleFactory())->getModule();
+        }
 
         if (self::$instance === null) {
-            self::$instance = new ErrorHandler($module);
+            self::$instance = new ErrorHandler($module, new Env());
         }
 
         return self::$instance;
     }
 
-    /**
-     * @return void
-     */
-    private function __clone()
+    private function shouldSkipError(\Sentry\Event $event, Mollie $module): bool
     {
-    }
+        $result = true;
 
-    private function getServerVariable($key)
-    {
-        if (isset($_SERVER[$key])) {
-            return $_SERVER[$key];
+        foreach ($event->getExceptions() as $exception) {
+            if (!$exception->getStacktrace()) {
+                continue;
+            }
+
+            foreach ($exception->getStacktrace()->getFrames() as $frame) {
+                $filePath = $frame->getAbsoluteFilePath();
+
+                if (!$filePath) {
+                    continue;
+                }
+
+                if (strpos($filePath, '/' . $module->name . '/') !== false) {
+                    $result = false;
+                    break;
+                }
+            }
+
+            if (!$result) {
+                break;
+            }
         }
 
-        return '';
+        return $result;
     }
 }

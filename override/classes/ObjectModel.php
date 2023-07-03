@@ -27,7 +27,7 @@ class ObjectModel extends ObjectModelCore
 {
     /*
     * module: advancedvatmanager
-    * date: 2023-05-17 12:12:41
+    * date: 2023-06-29 09:33:31
     * version: 1.6.1
     */
     public function cacheFieldsRequiredDatabase($all = true)

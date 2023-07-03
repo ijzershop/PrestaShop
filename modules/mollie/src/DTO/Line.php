@@ -13,7 +13,6 @@ namespace Mollie\DTO;
 
 use JsonSerializable;
 use Mollie\DTO\Object\Amount;
-use ReturnTypeWillChange;
 
 class Line implements JsonSerializable
 {
@@ -342,7 +341,7 @@ class Line implements JsonSerializable
         return $this;
     }
 
-    #[ReturnTypeWillChange] public function jsonSerialize()
+    public function jsonSerialize()
     {
         return [
             'sku' => $this->getSku(),

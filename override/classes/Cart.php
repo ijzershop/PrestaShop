@@ -1,7 +1,5 @@
 <?php
-
 use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
-
 class Cart extends CartCore
 {
     public $added_to_order;
@@ -33,7 +31,6 @@ class Cart extends CartCore
     public const ONLY_DISCOUNTS_NO_CALCULATION = 9;
     public const ONLY_REMAINDER_OF_DISCOUNTS = 10;
     public const ONLY_REMAINDER_UNTIL_STORE_DISCOUNT = 11;
-
     public
     function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
@@ -64,7 +61,6 @@ class Cart extends CartCore
         }
         return ($use_tax) ? $_total_shipping['with_tax'] + $extraShippingFee : $_total_shipping['without_tax'] + $extraShippingFee;
     }
-
     public
     function getPackageShippingCost(
         $id_carrier = null,
@@ -310,7 +306,6 @@ class Cart extends CartCore
         Cache::store($cache_id, $shipping_cost);
         return $shipping_cost;
     }
-
     public
     function deleteProduct(
         $id_product,
@@ -388,7 +383,6 @@ class Cart extends CartCore
         }
         return false;
     }
-
     public
     function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
     {
@@ -407,7 +401,6 @@ class Cart extends CartCore
         }
         return ['quantity' => $result['quantity']];
     }
-
     public
     function updateQty(
         $quantity,
@@ -582,7 +575,6 @@ class Cart extends CartCore
         }
         return true;
     }
-
     public
     function checkQuantities($returnProductOnFailure = false)
     {
@@ -645,7 +637,6 @@ class Cart extends CartCore
         }
         return true;
     }
-
     /*
     * module: klcartruleextender
     * date: 2023-04-05 08:02:35
@@ -687,7 +678,6 @@ class Cart extends CartCore
         }
         return $result;
     }
-
     /*
     * module: klcartruleextender
     * date: 2023-04-05 08:02:35
@@ -702,10 +692,7 @@ class Cart extends CartCore
         $keepOrderPrices = false
     )
     {
-
-
         if (!in_array($type, [CART::ONLY_DISCOUNTS_NO_CALCULATION, CART::ONLY_REMAINDER_OF_DISCOUNTS, CART::ONLY_REMAINDER_UNTIL_STORE_DISCOUNT])) {
-
             $value = parent::getOrderTotal(
                 $withTaxes,
                 $type,
@@ -714,11 +701,8 @@ class Cart extends CartCore
                 $use_cache,
                 $keepOrderPrices
             );
-
         } else {
-
         }
-
         if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
             || !($moduleClass instanceof KlCartRuleExtender)
             || !$moduleClass->isEnabledForShopContext()
@@ -736,7 +720,6 @@ class Cart extends CartCore
         if (!$calculator->isProcessed) {
             return $value;
         }
-
         switch ($type) {
             case CART::BOTH:
                 $amount = $calculator->getTotal(false, true);
@@ -754,31 +737,21 @@ class Cart extends CartCore
                 } else {
                     $amount= new AmountImmutable(0,0);
                 }
-
                 break;
         }
-
         $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
         if ($type == Cart::BOTH) {
             $value = max(0, $value);
         }
         return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
     }
-
-    /**
-     * Get the to order total before auto add discount rules shopping cart
-     *
-     * @param $withTaxes
-     * @return array
-     */
+    
     public function getTotalBeforeNextAutoDiscount($withTaxes = true, $parts = 'all')
     {
         $cartRulesCheck = CartRule::getAutoAddToCartRules(Context::getContext(), true);
         $amount = new AmountImmutable($cartRulesCheck['remaining_amount'] * 1.21, $cartRulesCheck['remaining_amount']);
         $rule =  new CartRule($cartRulesCheck['cart_rule']->id);
-
         $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
-
         switch ($parts){
             case 'name':
                 return $rule->getFieldByLang('name',  $this->id_lang);
@@ -793,5 +766,26 @@ class Cart extends CartCore
                 return ['cart_rule_name' => $rule->getFieldByLang('name',  $this->id_lang),'cart_rule' => $cartRulesCheck['cart_rule'], 'amount' => Tools::ps_round($value, Context::getContext()->getComputingPrecision())];
                 break;
         }
+    }
+    /*
+    * module: dynamicproduct
+    * date: 2023-06-14 15:56:08
+    * version: 2.43.11
+    */
+    public function duplicate()
+    {
+        $id_cart_old = (int) $this->id;
+        $result = parent::duplicate();
+        $id_cart_new = (int) $result['cart']->id;
+        Module::getInstanceByName('dynamicproduct');
+        if (Module::isEnabled('dynamicproduct')) {
+            
+            $module = Module::getInstanceByName('dynamicproduct');
+            $module->hookCartDuplicated(array(
+                'id_cart_old' => $id_cart_old,
+                'id_cart_new' => $id_cart_new,
+            ));
+        }
+        return $result;
     }
 }

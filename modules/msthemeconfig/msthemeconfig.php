@@ -301,7 +301,6 @@ class MsThemeConfig extends Module
             'displayAdditionalRootCategoryFields',
             'displayAdminProductsSeoStepBottom',
             'displayBackOfficeHeader',
-            'displayCMSDisputeInformation',
             'displayFooter',
             'displayHeader',
             'displayHome',
@@ -333,8 +332,6 @@ class MsThemeConfig extends Module
      */
     public function getContent(): string
     {
-
-
         /**
          * If values have been submitted in the form, process.
          */

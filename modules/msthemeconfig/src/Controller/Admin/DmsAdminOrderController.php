@@ -77,7 +77,8 @@ class DmsAdminOrderController extends FrameworkBundleAdminController
         $isOrderPicker = false;
         $extraStyling = '#order_grid_table .column-filters td:first-child div.md-checkbox{display:none;}#order_grid_table td.column-id_order, #order_grid_table tr.column-headers th:nth-of-type(2), #order_grid_table tr.column-filters td:nth-of-type(2){display: none;}';
 
-        $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES');
+        $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES', null, null, 1, "5,6,7");
+        
         if (!empty($workshopProfiles)) {
             $profiles = explode(',', $workshopProfiles);
 

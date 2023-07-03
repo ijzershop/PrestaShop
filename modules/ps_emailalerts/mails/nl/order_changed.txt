@@ -1,0 +1,19 @@
+{shop_url}
+
+Uw bestelling met referentie {order_name} van {shop_name} is gewijzigd door de verkoper.
+
+Ga naar uw klantaccount voor meer info hieromtrent.
+
+Met een gast account kunt de bestelling volgen via ["Bestelling volgen"]({guest_tracking_url}) in onze online shop.
+
+Wat is de status van uw bestelling?
+Volg de status en details in uw eigen    [> klantaccount](http://ijzershop8.local/mijn-account)
+Geen account? Volg dan uw bestelling via    [> bestelling volgen](http://ijzershop8.local/bestelling-volgen-als-gast)
+
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
+
+[telefoon: 058-2123138](tel://0900-2502500)
+
+[email: info@v15.nl](mailto:info@v15.nl)
+
+ijzershop.local | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

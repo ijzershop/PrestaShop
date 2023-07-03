@@ -1,8 +1,8 @@
 {shop_url}
 
-There are now less than {last_qty} items of product {product} in stock.
+Er zijn nu minder dan {last_qty} producten op voorraad.
 
-Resterende voorraad: {qty}
+Resterende voorraad: {qty} - {product}
 
 Vul uw inventaris aan, ga naar het gedeelte Catalogus> Voorraad van uw backoffice om uw voorraad te beheren.
 

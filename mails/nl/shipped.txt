@@ -2,8 +2,6 @@
 
 Uw bestelling met referentie {order_name} is verzonden.
 
-Iets vergeten te bestellen?Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.
-
 Heeft u een vraag?
 Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
 [> veel gestelde vragen](http://ijzershop8.local/content/51-FAQ)

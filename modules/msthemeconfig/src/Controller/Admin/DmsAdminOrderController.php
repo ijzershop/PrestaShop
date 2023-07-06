@@ -74,11 +74,12 @@ class DmsAdminOrderController extends FrameworkBundleAdminController
          * start change order overview based on employee type login.
          */
         $orderPickEmployee = Context::getContext()->cookie->profile;
+        $loggedInEmployee = Context::getContext()->cookie->id_employee;
         $isOrderPicker = false;
-        $extraStyling = '#order_grid_table .column-filters td:first-child div.md-checkbox{display:none;}#order_grid_table td.column-id_order, #order_grid_table tr.column-headers th:nth-of-type(2), #order_grid_table tr.column-filters td:nth-of-type(2){display: none;}';
+        $extraStyling = '#order_grid_table .column-filters td:nth-of-type(6), #order_grid_table .column-filters td:first-child div.md-checkbox{display:none;}#order_grid_table td.column-id_order,#order_grid_table td.column-company, #order_grid_table tr.column-headers th:nth-of-type(2),#order_grid_table tr.column-headers th:nth-of-type(6), #order_grid_table tr.column-filters td:nth-of-type(2){display: none;}';
 
         $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES', null, null, 1, "5,6,7");
-        
+
         if (!empty($workshopProfiles)) {
             $profiles = explode(',', $workshopProfiles);
 
@@ -99,6 +100,7 @@ class DmsAdminOrderController extends FrameworkBundleAdminController
             '@Modules/msthemeconfig/views/templates/admin/index.html.twig',
             [
                 'isOrderPicker' => $isOrderPicker, //Added value for check if loggedInUser is orderpicker
+                'idProfile' => $loggedInEmployee, //Added value for profile is usage in ajax and other classes outside the symfony data objects
                 'extraStyling' => $extraStyling, //Added value for adding extra css rules
                 'orderGrid' => $this->presentGrid($orderGrid),
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),

@@ -4,7 +4,7 @@
  *
  * @author    Rinku Kazeno <development@kazeno.co>
  *
- * @copyright Copyright (c) 2012-2017, Rinku Kazeno
+ * @copyright Copyright since 2012 Rinku Kazeno
  * @license   This module is licensed to the user, upon purchase
  *   from either Prestashop Addons or directly from the author,
  *   for use on a single commercial Prestashop install, plus an

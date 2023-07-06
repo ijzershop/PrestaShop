@@ -484,6 +484,9 @@ class ConfigurationCore extends ObjectModel
                         'value' => pSQL($value, $html),
                         'date_upd' => date('Y-m-d H:i:s'),
                     ], '`name` = \'' . pSQL($key) . '\'' . Configuration::sqlRestriction($idShopGroup, $idShop), 1, true);
+
+
+
                 } else {
                     // Update multi lang
                     $sql = 'UPDATE `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl

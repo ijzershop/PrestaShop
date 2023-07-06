@@ -24,6 +24,9 @@ class MsAdminThemeConfController extends FrameworkBundleAdminController {
     public function __construct()
     {
         $this->context = Context::getContext();
+        $this->idLang = $this->context->language->id;
+        $this->idShop = $this->context->shop->id;
+        $this->idShopGroup = $this->context->shop->id_shop_group;
         $this->moduleName = 'msthemeconfig';
 
         parent::__construct();
@@ -46,12 +49,12 @@ class MsAdminThemeConfController extends FrameworkBundleAdminController {
      */
     public function ajaxProcessCreateInformerRelation()
     {
-        $payment_condition_id = Configuration::get('CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID', null, null, null,
+        $payment_condition_id = Configuration::get('CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID', $this->idLang, $this->idShopGroup, $this->idShop,
             444438);
-        $template_id = Configuration::get('CREDITPAYMENT_INFORMER_TEMPLATE_ID', null, null, null, 274888);
+        $template_id = Configuration::get('CREDITPAYMENT_INFORMER_TEMPLATE_ID', $this->idLang, $this->idShopGroup, $this->idShop, 274888);
 
-        $security_code = Configuration::get('CREDITPAYMENT_INFORMER_SECURITY_CODE', null, null, null, "62356");
-        $api_key = Configuration::get('CREDITPAYMENT_INFORMER_API_KEY', null, null, null,
+        $security_code = Configuration::get('CREDITPAYMENT_INFORMER_SECURITY_CODE', $this->idLang, $this->idShopGroup, $this->idShop, "62356");
+        $api_key = Configuration::get('CREDITPAYMENT_INFORMER_API_KEY', $this->idLang, $this->idShopGroup, $this->idShop,
             "MEUGbrj3nT8Z4orUVznSQRMCYFxP6SySePckp0tVfJPrcB1DjO2");
 
 

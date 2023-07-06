@@ -1,4 +1,5 @@
 $(function () {
+  let profileId = $('#employee-profile-id').val();
 
   $('.createRetour').on('click', function (event) {
     event.stopImmediatePropagation();
@@ -8,7 +9,7 @@ $(function () {
       width: 800,
       height: 800,
       autoSize: false,
-      href: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&method=orderretourinit&id_order=' + orderId + '&token=' + token,
+      href: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=orderretourinit&id_order=' + orderId + '&token=' + token,
       cache: false,
       type: 'ajax'
     });
@@ -24,7 +25,7 @@ $(function () {
     }
 
     $.ajax({
-      url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&method=orderretoursubmit&id_order=' + orderId + '&token=' + token,
+      url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=orderretoursubmit&id_order=' + orderId + '&token=' + token,
       type: 'GET',
       data: data,
     }).done(function (e) {
@@ -43,7 +44,7 @@ $(function () {
         width: 800,
         height: 800,
         autoSize: false,
-        href: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&method=orderstatus&render_template=true&reference=' + reference + '&token=' + token,
+        href: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=orderstatus&render_template=true&reference=' + reference + '&token=' + token,
         cache: false,
         type: 'ajax'
       });
@@ -62,7 +63,7 @@ $(function () {
       let type = $input.val();
 
       $.ajax({
-        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&method=beingprepared_status&id_order=' + order + '&token=' + token,
+        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=beingprepared_status&id_order=' + order + '&token=' + token,
         type: 'GET'
       })
         .done(function (data) {
@@ -101,7 +102,7 @@ $(function () {
       let trello_order = $('#trello_order').val();
 
       $.ajax({
-        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&method=workshop_status&id_order=' + trello_order + '&token=' + token,
+        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=workshop_status&id_order=' + trello_order + '&token=' + token,
         type: 'GET',
         data: {
           'type': 'status',
@@ -120,7 +121,7 @@ $(function () {
       let trello_title = $('#trello_card_title').val();
 
       $.ajax({
-        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&method=workshop_status&id_order=' + trello_order + '&token=' + token,
+        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=workshop_status&id_order=' + trello_order + '&token=' + token,
         type: 'GET',
         data: {
           'type': 'statusandcard',
@@ -146,7 +147,7 @@ $(function () {
       let type = $input.val();
 
       $.ajax({
-        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&method=backorder_status&id_order=' + order + '&token=' + token,
+        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=backorder_status&id_order=' + order + '&token=' + token,
         type: 'GET'
       })
         .done(function (data) {
@@ -163,7 +164,7 @@ $(function () {
       let order = $btnRow.attr('data-order');
 
       $.ajax({
-        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&method=afhalen&id_order=' + order + '&token=' + token,
+        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=afhalen&id_order=' + order + '&token=' + token,
         type: 'GET'
       })
         .done(function (data) {
@@ -182,7 +183,7 @@ $(function () {
       let type = $input.val();
 
       $.ajax({
-        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&method=afgehaald&id_order=' + order + '&token=' + token,
+        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=afgehaald&id_order=' + order + '&token=' + token,
         type: 'GET'
       })
         .done(function (data) {
@@ -201,7 +202,7 @@ $(function () {
       let type = $input.val();
 
       $.ajax({
-        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&method=toegevoegd&id_order=' + order + '&token=' + token,
+        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=toegevoegd&id_order=' + order + '&token=' + token,
         type: 'GET'
       })
         .done(function (data) {
@@ -216,7 +217,7 @@ $(function () {
       let $input = $clickedLabel.prev('input');
       let $btnRow = $clickedLabel.closest('div.koopman');
       let $tr = $clickedLabel.closest('TR');
-      let link = $btnRow.attr('data-href');
+      let orderId = $input.attr('data-id-order');
       let type = $input.val();
       let gewicht = 0;
 
@@ -235,31 +236,122 @@ $(function () {
         switch (type) {
           case 'envelope':
             gewicht = 1;
-            link += '&gewicht=' + gewicht + '&type=envelope';
             break;
           case 'plaat':
             gewicht = 15;
-            link += '&gewicht=' + gewicht + '&type=plaat';
             break;
           case '1-meter':
             gewicht = 10;
-            link += '&gewicht=' + gewicht + '&type=1-meter';
             break;
           case '2-meter-smaller':
             gewicht = 14;
-            link += '&gewicht=' + gewicht + '&type=2-meter-smaller';
             break;
           case '2-meter-larger':
             gewicht = 30;
-            link += '&gewicht=' + gewicht + '&type=2-meter-larger';
             break;
         }
-        let d = new Date();
-        let n = d.getDay();
-console.log(link);
-        location.href = link;
+
+
+        $.ajax({
+          url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=print-label&id_order=' + orderId + '&weight='+gewicht+'&type='+type+'&token=' + token,
+          type: 'GET'
+        })
+          .done(function (data) {
+            if(data === 'printed'){
+              location.reload();
+            } else {
+              $('#updateAddressModal .modal-content').html(data);
+              $('#updateAddressModal').modal('show');
+            }
+          });
       }
     });
 
+  $(document).on('click', '.updateAddress',function () {
+    let orderId = $('#updateAddressKoopman [name="id_order"]').val();
+    let profileId = $('#updateAddressKoopman [name="profile"]').val();
+    let type = $('#updateAddressKoopman [name="type"]').val();
+    let gewicht = $('#updateAddressKoopman [name="weight"]').val();
+    let token = $('#updateAddressKoopman [name="token"]').val();
+
+    let address1 = $('.address-input-text#address1').val();
+    let house_number = $('.address-input-text#house_number').val();
+    let house_number_extension = $('.address-input-text#house_number_extension').val();
+    let postcode = $('.address-input-text#postcode').val();
+    let city = $('.address-input-text#city').val();
+
+    /*
+    *  Gewijzigd door JB Stoker - Moderne Smid
+    *  Pakket maten en soorten aangepast, tevens type pakket toegevoegd voor maatvoering
+    *  1 -Envelop : (50 x 30 x 1=1Kg) / value = envelope
+    *  2 -Plaat : (50 x 30 x 1=15Kg) / value = plaat
+    *  3 -1 Meter : (50 x 30 x 1=15Kg) / value = 1-meter
+    *  4 -2 Meter < 15 : (50 x 30 x 1= 14Kg) / value = 2-meter-smaller
+    *  5 -2 Meter > 15 : (50 x 30 x 1= 30Kg) / value = 2-meter-larger
+    */
+
+    if (type !== -1) {
+      switch (type) {
+        case 'envelope':
+          gewicht = 1;
+          break;
+        case 'plaat':
+          gewicht = 15;
+          break;
+        case '1-meter':
+          gewicht = 10;
+          break;
+        case '2-meter-smaller':
+          gewicht = 14;
+          break;
+        case '2-meter-larger':
+          gewicht = 30;
+          break;
+      }
+
+      let data = {
+        '_token': token,
+        'profile': profileId,
+        'id_order': orderId,
+        'type': type,
+        'weight': gewicht,
+        'address1': address1,
+        'house_number': house_number,
+        'house_number_extension': house_number_extension,
+        'postcode': postcode,
+        'city': city,
+        'updateAddress': 1,
+      }
+
+      $.ajax({
+        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=print-label',
+        type: 'POST',
+        data: data
+      })
+        .done(function (data) {
+          console.log([data === 'printed', data])
+          if(data === 'printed'){
+            location.reload();
+          } else {
+            $('#updateAddressModal .modal-content').html(data);
+            $('#updateAddressModal').modal('show');
+          }
+        });
+    }
+  });
+
+
+  $(document).on('click', 'button#dag-afsluiting',function () {
+console.log('succes');
+    $.ajax({
+      url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=dag-afsluiting&token=' + token,
+      type: 'GET'
+    })
+      .done(function (data) {
+console.log(data);
+        // location.reload();
+      });
+
+  });
 
 });

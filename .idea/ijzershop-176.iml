@@ -17,26 +17,13 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/autoupgrade/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_shoppingcart/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_shoppingcart/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/mollie_backup/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/mollie/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/doctrine/collections" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/symfony/filesystem" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/twig/twig" />
       <excludeFolder url="file://$MODULE_DIR$/modules/gamification/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/mollie/mollie-api-php" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/nikic/php-parser" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/phpoption/phpoption" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/prestashop/autoindex" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/prestashop/decimal" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/psr/log" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/segmentio/analytics-php" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/sentry/sentry" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/symfony/console" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/symfony/debug" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/symfony/finder" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/symfony/polyfill-ctype" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/symfony/polyfill-mbstring" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/mollie/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/doctrine/annotations" />
@@ -91,13 +78,6 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_mbo/vendor/prestashop/circuit-breaker" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_mbo/vendor/react/promise" />
       <excludeFolder url="file://$MODULE_DIR$/modules/psaddonsconnect/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/psaddonsconnect/vendor/doctrine/cache" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/psaddonsconnect/vendor/guzzlehttp/cache-subscriber" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/psaddonsconnect/vendor/guzzlehttp/guzzle" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/psaddonsconnect/vendor/guzzlehttp/ringphp" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/psaddonsconnect/vendor/guzzlehttp/streams" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/psaddonsconnect/vendor/prestashop/circuit-breaker" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/psaddonsconnect/vendor/react/promise" />
       <excludeFolder url="file://$MODULE_DIR$/modules/seoexpert/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/tests/Resources/modules/cronjobs/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/tests/Resources/modules/demo/vendor/composer" />
@@ -307,6 +287,21 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/prestashop/prestashop-accounts-installer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_shoppingcart/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/persistence_old" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/mollie/mollie-api-php" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/nikic/php-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/phpoption/phpoption" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/prestashop/autoindex" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/prestashop/decimal" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/segmentio/analytics-php" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/sentry/sentry" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/symfony/console" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/symfony/debug" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/symfony/finder" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/symfony/polyfill-ctype" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/symfony/polyfill-mbstring" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/vlucas/phpdotenv" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

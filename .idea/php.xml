@@ -100,13 +100,6 @@
       <path value="$PROJECT_DIR$/modules/mollie/vendor/sentry/sentry" />
       <path value="$PROJECT_DIR$/tests/Resources/modules/demo/vendor/composer" />
       <path value="$PROJECT_DIR$/modules/gamification/vendor/composer" />
-      <path value="$PROJECT_DIR$/modules/psaddonsconnect/vendor/guzzlehttp/streams" />
-      <path value="$PROJECT_DIR$/modules/psaddonsconnect/vendor/guzzlehttp/ringphp" />
-      <path value="$PROJECT_DIR$/modules/psaddonsconnect/vendor/guzzlehttp/cache-subscriber" />
-      <path value="$PROJECT_DIR$/modules/psaddonsconnect/vendor/prestashop/circuit-breaker" />
-      <path value="$PROJECT_DIR$/modules/psaddonsconnect/vendor/guzzlehttp/guzzle" />
-      <path value="$PROJECT_DIR$/modules/psaddonsconnect/vendor/doctrine/cache" />
-      <path value="$PROJECT_DIR$/modules/psaddonsconnect/vendor/react/promise" />
       <path value="$PROJECT_DIR$/modules/psaddonsconnect/vendor/composer" />
       <path value="$PROJECT_DIR$/tests/Resources/modules/xlftranslatedmodule/vendor/composer" />
       <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/composer" />

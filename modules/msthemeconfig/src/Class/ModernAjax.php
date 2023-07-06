@@ -610,7 +610,7 @@ class ModernAjax
 
                 foreach ($selectedOptions as $selectedOption){
                     foreach ($data->results as $option) {
-                        if ((int)$option->id === (int)$selectedOption) {
+                        if ((int)$option->id == (int)$selectedOption) {
                             $selectedOptionList[] = '<option value="' . $option->id . '" selected>' . $option->text . '</option>';
                         }
                     }
@@ -619,9 +619,6 @@ class ModernAjax
         } else {
             $selectedOptionList = [];
         }
-
-
-
         return implode("", $selectedOptionList);
     }
     /**

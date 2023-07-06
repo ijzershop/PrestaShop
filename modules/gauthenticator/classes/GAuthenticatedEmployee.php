@@ -4,7 +4,7 @@
  *
  * @author    Rinku Kazeno <development@kazeno.co>
  *
- * @copyright Copyright (c) 2012-2017, Rinku Kazeno
+ * @copyright Copyright since 2012 Rinku Kazeno
  * @license   This module is licensed to the user, upon purchase
  *   from either Prestashop Addons or directly from the author,
  *   for use on a single commercial Prestashop install, plus an
@@ -17,7 +17,7 @@
  *   own business needs, as long as no distribution of either the
  *   original module or the user-modified version is made.
  *
- *  @file-version 1.21
+ *  @file-version 1.25
  */
 
 class GAuthenticatedEmployee extends ObjectModel
@@ -50,9 +50,6 @@ class GAuthenticatedEmployee extends ObjectModel
     public function update($null_values = false)
     {
         require_once(_PS_ROOT_DIR_.'/modules/gauthenticator/lib/gauth.php');
-        if ($null_values)       //workaround for PS 1.6.0.5 Addons validator
-            $this->null_values = true;
-        //Tools::dieObject([$this->gatoken, $this->getFields()]);
         $fields = $this->getFields();
         $query = GAuth::interpolateSql(
             "UPDATE `{TABLE}`
@@ -78,17 +75,21 @@ class GAuthenticatedEmployee extends ObjectModel
             $disabled = '0';
             $enabled = '1';
         }
-        if ($gatoken == '')
+        if ($gatoken == '') {
             return $disabled;
+        }
         $data = unserialize(GAuth::base64($gatoken, 'decode'));
+
         return $data['data']['status'] ? $enabled : $disabled;
     }
     
     public static function getAuthType($gatoken)
     {
         require_once(_PS_ROOT_DIR_.'/modules/gauthenticator/lib/gauth.php');
-        if ($gatoken == '')
+        if ($gatoken == '') {
             return '--';
+        }
+
         $data = unserialize(GAuth::base64($gatoken, 'decode'));
         return $data['type'];
     }

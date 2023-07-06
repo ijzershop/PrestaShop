@@ -4,7 +4,7 @@
  *
  * @author    Rinku Kazeno <development@kazeno.co>
  *
- * @copyright Copyright (c) 2012-2017, Rinku Kazeno
+ * @copyright Copyright since 2012 Rinku Kazeno
  * @license   This module is licensed to the user, upon purchase
  *   from either Prestashop Addons or directly from the author,
  *   for use on a single commercial Prestashop install, plus an
@@ -17,14 +17,15 @@
  *   own business needs, as long as no distribution of either the
  *   original module or the user-modified version is made.
  *
- *  @file-version 1.21
+ *  @file-version 1.25
  */
 
 if (!defined('_PS_ADMIN_DIR_')) {
-    if (defined('PS_ADMIN_DIR'))
+    if (defined('PS_ADMIN_DIR')) {
         define('_PS_ADMIN_DIR_', PS_ADMIN_DIR);
-    else
+    } else {
         exit;
+    }
 }
  
 class AdminGauthController extends ModuleAdminController
@@ -50,27 +51,65 @@ class AdminGauthController extends ModuleAdminController
         $this->_select = 'pl.`name` AS profile, IFNULL(gatoken, \'\') AS type, IFNULL(gatoken, \'\') AS enabled';
         $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile`
         LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '.(int)$this->context->language->id.')';
-        if ($this->context->cookie->profile != 1)          //show only own account if not admin
-            $this->_where = 'AND `id_employee` = '.(int)$this->context->employee->id;
+        if ($this->context->cookie->profile != 1) {     //show only own account if not admin
+            $this->_where = 'AND `id_employee` = ' . (int)$this->context->employee->id;
+        }
         $this->identifier = 'id_employee';
-        $this->id = $this->context->employee->id;
-        $this->optionTitle = $this->l('Google Authenticator');
         $profiles = Profile::getProfiles((int)$this->context->language->id);
         foreach ($profiles AS $profile) {
             $this->profilesArray[$profile['name']] = $profile['name'];
         }
         $gauthe = new GAuthenticatedEmployee();
         $this->fields_list = array(
-            'id_employee' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-            'lastname' => array('title' => $this->l('Last name'), 'width' => 130),
-            'firstname' => array('title' => $this->l('First name'), 'width' => 130),
-            'email' => array('title' => $this->l('E-mail address'), 'width' => 180),
-            'profile' => array('title' => $this->l('Profile'), 'width' => 90, 'type' => 'select', 'list' => $this->profilesArray, 'filter_key' => 'pl!name'),
-            'enabled' => array('title' => $this->l('Enabled'), 'width' => 60, 'align' => 'center', 'type' => 'bool', 'filter_key' => 'gatoken', 'orderby' => false, 'search' => false, 'callback' => 'getEnabledStatus', 'callback_object' => $gauthe),
-            'type' => array('title' => $this->l('Type'), 'width' => 60, 'type' => 'select', 'list' => $this->authTypes, 'filter_key' => 'gatoken', 'orderby' => false, 'search' => false, 'callback' => 'getAuthType', 'callback_object' => $gauthe),
+            'id_employee' => array(
+                'title' => $this->l('ID'),
+                'align' => 'center',
+                'width' => 25
+            ),
+            'lastname' => array(
+                'title' => $this->l('Last name'),
+                'width' => 130
+            ),
+            'firstname' => array(
+                'title' => $this->l('First name'),
+                'width' => 130
+            ),
+            'email' => array(
+                'title' => $this->l('E-mail address'),
+                'width' => 180
+            ),
+            'profile' => array(
+                'title' => $this->l('Profile'),
+                'width' => 90,
+                'type' => 'select',
+                'list' => $this->profilesArray,
+                'filter_key' => 'pl!name'
+            ),
+            'enabled' => array(
+                'title' => $this->l('Enabled'),
+                'width' => 60,
+                'align' => 'center',
+                'type' => 'bool',
+                'filter_key' => 'gatoken',
+                'orderby' => false,
+                'search' => false,
+                'callback' => 'getEnabledStatus',
+                'callback_object' => $gauthe
+            ),
+            'type' => array(
+                'title' => $this->l('Type'),
+                'width' => 60,
+                'type' => 'select',
+                'list' => $this->authTypes,
+                'filter_key' => 'gatoken',
+                'orderby' => false,
+                'search' => false,
+                'callback' => 'getAuthType',
+                'callback_object' => $gauthe
+            ),
         );
 
-        if (_PS_VERSION_ < '1.7') {
+        /*if (_PS_VERSION_ < '1.7') {
             $home_tab = Tab::getInstanceFromClassName('adminHome');
             $this->tabs_list[$home_tab->id] = array(
                 'name' => $home_tab->name[$this->context->language->id],
@@ -90,19 +129,26 @@ class AdminGauthController extends ModuleAdminController
                     'name' => $home_tab->name
                 ))
             );
-        }
+        }*/
 
         
         if ($this->context->employee->id == Tools::getValue('id_employee')) {
             $this->tabAccess['view'] = '1';
-            if (!isset($this->tabAccess['edit']) || !$this->tabAccess['edit'])
+            if (!isset($this->tabAccess['edit']) || !$this->tabAccess['edit']) {
                 $this->restrict_edition = true;
+            }
             $this->tabAccess['edit'] = '1';
         }
-        if (!Module::isEnabled('gauthenticator'))
+        if (!Module::isEnabled('gauthenticator')) {
             $this->warnings[] = $this->l('The Google Authenticator module is currently disabled. Your Back Office will not be protected until you re-enable it in the Modules section.');
+        }
+        if (!file_exists(_PS_ROOT_DIR_.'/override/controllers/admin/templates/login/content.tpl')) {
+            $this->errors[] = $this->l("The Google Authenticator module has been installed, but the login template was not copied successfully during install. Please follow the instructions in the module's manual for copying the template manually.");
+        }
+
     }
-    
+
+
     public function initToolbar() {         //Override to prevent displaying "add new" button on toolbar
         if ($this->display == 'edit') {
             $back = Tools::safeOutput(Tools::getValue('back', ''));
@@ -127,26 +173,27 @@ class AdminGauthController extends ModuleAdminController
         return parent::initContent();
     }
 
+    /**
+     * @throws Exception
+     */
     public function renderForm()
     {
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return null;
-        require_once(_PS_ROOT_DIR_.'/modules/gauthenticator/lib/gauth.php');
-        require_once(_PS_ROOT_DIR_.'/modules/gauthenticator/lib/phpqrcode.php');
+        }
 
-        if (!file_exists(_PS_ROOT_DIR_.'/override/controllers/admin/templates/login/content.tpl'))
-            $this->errors[] = Translate::getModuleTranslation('Gauthenticator', 'File content.tpl was not copied successfully, Please copy it manually from gauthenticator/override/controllers/admin/templates/login/content.tpl to the corresponding path inside the "override" folder that\'s in your Prestashop root.', 'Gauthenticator');
-
+        require_once(_PS_MODULE_DIR_.'gauthenticator/lib/gauth.php');
 
         $this->enabled = FALSE;     //if no gatoken, it's disabled
         $name = $this->getFieldValue($obj, 'firstname') . ' ' . $this->getFieldValue($obj, 'lastname');
+        $tkey = '';
+        $qrcode = '';
+        $url = '';
         if ($this->getFieldValue($obj, 'gatoken')) {
             $gauth = new GAuth();
             $gauth->importData($this->getFieldValue($obj, 'gatoken'));
             $url = $gauth->createURL($name);
-            ob_start();
-                QRcode::png($url, false, QR_ECLEVEL_H, 4, 2, false, TRUE);
-            $qrcode = ob_get_clean();
+            $qrcode = $this->getQrCode($url);
             $tkey = $gauth->getKey();
             $this->type = $gauth->getType();
             $this->enabled = $gauth->getUserData('status');
@@ -242,12 +289,15 @@ class AdminGauthController extends ModuleAdminController
             $this->fields_value['enabled'] = '0';   // this is to disable in case of reset
             $this->fields_value['rectoken'] = $recovery;
             $this->fields_value['rectext'] = '<div class="alert alert-info">'.$this->l('Please write down and store the following Recovery Code somewhere safe. In case you lose access to your device you can use this Code to get a single-use recovery token sent to your email.').'<br/><div class="text-center" style="font-size: 14px">'.$this->l('Recovery Code:').' <strong>'.$recovery.'</strong></div></div>';
-            $this->context->smarty->assign(  array(
+            $this->context->smarty->assign(array(
                 'requiredTxt' => $this->l('Two consecutive Verification Codes are required in order to sync your device.'),
                 'differentTxt' => $this->l('The two Verification Codes must be different and generated consecutively.'),
-                'showReset' => _PS_VERSION_ < '1.6' ? true : false
-            ) );
-            $this->fields_value['submitAndJs'] = $this->module->display(_PS_MODULE_DIR_.$this->module->name.DIRECTORY_SEPARATOR.$this->module->name.'.php', 'views/templates/admin/displayVerifyForm.tpl');
+                'showReset' => (_PS_VERSION_ < '1.6')
+            ));
+            $this->fields_value['submitAndJs'] = $this->module->display(
+                _PS_MODULE_DIR_.$this->module->name.DIRECTORY_SEPARATOR.$this->module->name.'.php',
+                'views/templates/admin/displayVerifyForm.tpl'
+            );
         } else {            //main settings screen
             $this->fields_form = array(
                 'legend' => array(
@@ -327,30 +377,38 @@ class AdminGauthController extends ModuleAdminController
                     )
                 );
             }
-            $this->context->smarty->assign(  array(
+            $this->context->smarty->assign(array(
                 'type' => $this->type,
                 'retypeConf' => $this->l('You have changed the Authentication Type. This will make the current key stop working, and generate a new one. Continue?'),
                 'resetConf' => $this->l('This will make the current key stop working, and generate a new one. Continue?'),
                 'disableConf' => $this->l('This will disable and delete the current key. Continue?'),
-                'showReset' => _PS_VERSION_ < '1.6' ? true : false
-
-            ) );
+                'showReset' => (_PS_VERSION_ < '1.6')
+            ));
             $this->fields_value['changed'] = !$this->type ? '1' : '0';
-            $this->fields_value['submitAndJs'] = $this->module->display(_PS_MODULE_DIR_.$this->module->name.DIRECTORY_SEPARATOR.$this->module->name.'.php', 'views/templates/admin/displayMainForm.tpl');
+            $this->fields_value['submitAndJs'] = $this->module->display(
+                _PS_MODULE_DIR_.$this->module->name.DIRECTORY_SEPARATOR.$this->module->name.'.php',
+                'views/templates/admin/displayMainForm.tpl'
+            );
         }
 
         return implode("\n", $this->errors).parent::renderForm();
     }
-    
+
+    /**
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
+     */
     public function postProcess()
     {
         if (!$this->id_object) {
             return false;
         }
+
         $this->object = $this->loadObject(true);
         if (!$this->id_object) {
             return false;
         }
+
         require_once(_PS_ROOT_DIR_.'/modules/gauthenticator/lib/gauth.php');
         $gauth = new GAuth();
         $gauth->importData($this->object->gatoken);
@@ -359,11 +417,13 @@ class AdminGauthController extends ModuleAdminController
                 $this->errors[] = $this->l('Error matching email recovery token');
                 return false;
             }
+
             if (!preg_match('/^\d{6}$/', Tools::getValue('key1', '')) || !preg_match('/^\d{6}$/', Tools::getValue('key2', ''))) {
                 $this->errors[] = $this->l('Key format error, each key should be comprised of 6 digits');
                 $this->display = 'edit';
                 return false;
             }
+
             if ($gauth->resync(Tools::getValue('key1'), Tools::getValue('key2')))  {
                 $gauth->setUserData('status', true);
                 $gauth->setUserData('recovery', Tools::getValue('rectoken'));
@@ -374,26 +434,45 @@ class AdminGauthController extends ModuleAdminController
                 $this->display = 'edit';
                 return false;
             }
-        } elseif (Tools::getValue('enabled', 0) && (Tools::getIsset('submitReset') || (Tools::getIsset('submitSave') && Tools::getValue('changed', 0)))) {
+
+        } elseif (
+            Tools::getValue('enabled', 0)
+            && (
+                Tools::getIsset('submitReset')
+                || (
+                    Tools::getIsset('submitSave')
+                    && Tools::getValue('changed', 0)
+                )
+            )
+        ) {
             if (!in_array(Tools::getValue('type', ''), array('HOTP', 'TOTP'))) {
                 $this->errors[] = $this->l('Selected authentication type error');
                 return false;
             }
+
             $gauth->createUser(Tools::getValue('type'));
             $gauth->setUserData('status', false);
             $gauth->setUserData('sync', true);
             $this->object->gatoken = pSQL($gauth->exportData());
         } elseif (Tools::getIsset('submitSave')) {
-            if (!$gauth->getUserData('sync') && Tools::getValue('enabled', 0))
+            if (
+                !$gauth->getUserData('sync')
+                && Tools::getValue('enabled', 0)
+            ) {
                 $gauth->setUserData('status', true);
-            else
+            } else {
                 $gauth->setUserData('status', false);
+            }
             $this->object->gatoken = pSQL($gauth->exportData());
         } elseif (Tools::getIsset('submitReset')) {
             $this->object->gatoken = '';
         }
 
-        if (Tools::getIsset('submitSave') || Tools::getIsset('submitReset') || Tools::getIsset('submitSync')) {
+        if (
+            Tools::getIsset('submitSave')
+            || Tools::getIsset('submitReset')
+            || Tools::getIsset('submitSync')
+        ) {
             $result = $this->object->update();
             $this->afterUpdate($this->object);
             if (!$result) {
@@ -401,6 +480,7 @@ class AdminGauthController extends ModuleAdminController
                 $this->display = 'edit';
                 return false;
             }
+
             return $this->object;
         }
 
@@ -418,11 +498,11 @@ class AdminGauthController extends ModuleAdminController
     /**
      * Surcharge de la fonction de traduction sur PS 1.7 et supérieur.
      * La fonction globale ne fonctionne pas
-     * @param type $string
-     * @param type $class
-     * @param type $addslashes
-     * @param type $htmlentities
-     * @return type
+     * @param $string
+     * @param $class
+     * @param $addslashes
+     * @param $htmlentities
+     * @return string
      */
     protected function l($string, $class = null, $addslashes = false, $htmlentities = true)
     {
@@ -430,6 +510,87 @@ class AdminGauthController extends ModuleAdminController
             return Context::getContext()->getTranslator()->trans($string);
         } else {
             return parent::l($string, $class, $addslashes, $htmlentities);
+        }
+    }
+
+
+    /**
+     * @param $url
+     * @return false|string
+     */
+    protected function getQrCode($url)
+    {
+        if (file_exists(_PS_ROOT_DIR_.'/vendor/tecnickcom/tcpdf/include/barcodes/qrcode.php')) {
+            require_once(_PS_ROOT_DIR_.'/vendor/tecnickcom/tcpdf/include/barcodes/qrcode.php');
+        } else {
+            require_once(_PS_ROOT_DIR_.'/tools/tcpdf/qrcode.php');
+        }
+
+        $qrcode = new QRcode($url, 'H');
+        $this->barcode_array = $qrcode->getBarcodeArray();
+        $this->barcode_array['code'] = $url;
+
+        return $this->getBarcodePngData();
+    }
+
+
+    /**
+     * Return a PNG image representation of barcode (requires GD or Imagick library).
+     * @param int $w Width of a single rectangle element in pixels.
+     * @param int $h Height of a single rectangle element in pixels.
+     * @param array $color RGB (0-255) foreground color for bar elements (background is transparent).
+     * @return string|Imagick|false image or false in case of error.
+     */
+    protected function getBarcodePngData($w=3, $h=3, $color=array(0,0,0)) {
+        // calculate image size
+        $width = ($this->barcode_array['num_cols'] * $w);
+        $height = ($this->barcode_array['num_rows'] * $h);
+        if (function_exists('imagecreate')) {
+            // GD library
+            $imagick = false;
+            $png = imagecreate($width, $height);
+            $bgcol = imagecolorallocate($png, 255, 255, 255);
+            imagecolortransparent($png, $bgcol);
+            $fgcol = imagecolorallocate($png, $color[0], $color[1], $color[2]);
+        } elseif (extension_loaded('imagick')) {
+            $imagick = true;
+            $bgcol = new imagickpixel('rgb(255,255,255');
+            $fgcol = new imagickpixel('rgb('.$color[0].','.$color[1].','.$color[2].')');
+            $png = new Imagick();
+            $png->newImage($width, $height, 'none', 'png');
+            $bar = new imagickdraw();
+            $bar->setfillcolor($fgcol);
+        } else {
+            return false;
+        }
+        // print barcode elements
+        $y = 0;
+        // for each row
+        for ($r = 0; $r < $this->barcode_array['num_rows']; ++$r) {
+            $x = 0;
+            // for each column
+            for ($c = 0; $c < $this->barcode_array['num_cols']; ++$c) {
+                if ($this->barcode_array['bcode'][$r][$c] == 1) {
+                    // draw a single barcode cell
+                    if ($imagick) {
+                        $bar->rectangle($x, $y, ($x + $w - 1), ($y + $h - 1));
+                    } else {
+                        imagefilledrectangle($png, $x, $y, ($x + $w - 1), ($y + $h - 1), $fgcol);
+                    }
+                }
+                $x += $w;
+            }
+            $y += $h;
+        }
+        if ($imagick) {
+            $png->drawimage($bar);
+            return $png;
+        } else {
+            ob_start();
+            imagepng($png);
+            $imagedata = ob_get_clean();
+            imagedestroy($png);
+            return $imagedata;
         }
     }
 }

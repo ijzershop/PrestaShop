@@ -11,6 +11,7 @@ use MsThemeConfig\Class\ModernAjax;
 use MsThemeConfig\Class\ModernHook;
 use MsThemeConfig\Class\MailTheme;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
+use PrestaShop\PrestaShop\Adapter\Entity\Context;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\Module;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopDatabaseException;
@@ -123,7 +124,7 @@ class MsThemeConfig extends Module
             'max' => '8.99.99'
         ];
 
-        if (!Configuration::get('MSTHEMECONFIG_NAME')) {
+        if (!Configuration::get('MSTHEMECONFIG_NAME', $this->idLang, $this->idShopGroup, $this->idShop)) {
             $this->warning = $this->trans('No name provided', [], $this->transDomain);
         }
 
@@ -335,7 +336,7 @@ class MsThemeConfig extends Module
         /**
          * If values have been submitted in the form, process.
          */
-        if ((Tools::isSubmit('submitMsThemeConfig')) == true) {
+        if (Tools::getValue('submitMsThemeConfig') == 1) {
             $this->postProcess();
         }
 
@@ -345,6 +346,7 @@ class MsThemeConfig extends Module
             $ajaxUrl = $modernAjax->getAjaxUrl();
             $select2Url = str_replace('%20','', $modernAjax->getSelect2Url());
             $symlinkMailthemeUrl = str_replace('%20','', $modernAjax->getSymlinkMailthemeUrl());
+
             $access =  $modernConfig->getAccessiblePanelsUser($this->context->employee->id_profile);
 
             $viewData = [
@@ -398,6 +400,11 @@ class MsThemeConfig extends Module
      */
     protected function postProcess()
     {
+        $context = Context::getContext();
+        $idLang = $context->language->getId();
+        $idShop = $context->shop->id;
+        $idShopGroup = $context->shop->getGroup()->id;
+
         $imgKeys = [
             'MSTHEMECONFIG_BANNER_FIRST_IMAGE',
             'MSTHEMECONFIG_BANNER_SECOND_IMAGE',
@@ -437,7 +444,6 @@ class MsThemeConfig extends Module
 
         $form_values = Tools::getAllValues();
 
-
         foreach (array_keys($form_values) as $key) {
             if(!preg_match('/^[A-Z0-9_]+$/', $key)){
                 continue;
@@ -452,10 +458,16 @@ class MsThemeConfig extends Module
                     $arrayString = str_replace(['[',']', '"'],['','',''], $value);
                 }
 
+
                 if($key === 'MSTHEMECONFIG_HOMEPAGE_CATEGORIES_SORTED'){
-                    Configuration::updateValue('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES', $arrayString);
+                    Configuration::updateValue('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES', [$idLang => $arrayString], false, $idShopGroup, $idShop);
+                    continue;
+                }else{
+                    Configuration::updateValue($key, [$idLang => $arrayString], false, $idShopGroup, $idShop);
+                    continue;
                 }
-                Configuration::updateValue($key, $arrayString);
+
+
             }
 
             if (in_array($key, $imgKeys)) {
@@ -464,9 +476,12 @@ class MsThemeConfig extends Module
                 }
 
                 $file = $this->uploadFiles($_FILES[$key]);
-                Configuration::updateValue($key, $file);
+                Configuration::updateValue($key, [$idLang => $file], false, $idShopGroup, $idShop);
+                continue;
+
             } elseif (in_array($key, $textareaKeys)) {
-                Configuration::updateValue($key, Tools::getValue($key), true);
+                Configuration::updateValue($key, [$idLang => Tools::getValue($key)], true, $idShopGroup, $idShop);
+                continue;
             } elseif ($key == 'MSTHEMECONFIG_ORDERSTATE_SENDMAIL_JSON') {
                 $orderStateIds = Tools::getValue('SENDMAIL_ORDER_STATUS');
                 $orderStateFirstEmails = Tools::getValue('SENDMAIL_ORDER_STATUS_FIRST_EMAIL');
@@ -484,66 +499,14 @@ class MsThemeConfig extends Module
 
                     $orderStateJSON = json_encode($orderStateIdEmailArr);
                 }
-                Configuration::updateValue($key, $orderStateJSON);
+                Configuration::updateValue($key, [$idLang => $orderStateJSON], false, $idShopGroup, $idShop);
+                continue;
             } else {
                 //is only text
-                Configuration::updateValue($key, Tools::getValue($key));
+                Configuration::updateValue($key, [$idLang => Tools::getValue($key)], false, $idShopGroup, $idShop);
+                continue;
             }
         }
-
-
-
-
-//        include_once _PS_MODULE_DIR_. '/autoupgrade/upgrade/php/add_new_tab.php';
-//        $tabs = [
-//            ['AdminParentSecurity', 'en:Security', 0, false, 'AdminAdvancedParameters'],
-//            ['AdminSecurity', 'en:Security', 0, false, 'AdminParentSecurity'],
-//            ['AdminSecuritySessionEmployee', 'en:Employee Sessions', 0, false, 'AdminParentSecurity'],
-//            ['AdminSecuritySessionCustomer', 'en:Customer Sessions', 0, false, 'AdminParentSecurity'],
-//        ];
-//        $tabsData = [
-//            'AdminParentSecurity' => [
-//                'active' => 1,
-//                'enabled' => 1,
-//                'wording' => '\'Security\'',
-//                'wording_domain' => '\'Admin.Navigation.Menu\'',
-//            ],
-//            'AdminSecurity' => [
-//                'active' => 1,
-//                'enabled' => 1,
-//                'wording' => '\'Security\'',
-//                'wording_domain' => '\'Admin.Navigation.Menu\'',
-//                'route_name' => '\'admin_security\'',
-//            ],
-//            'AdminSecuritySessionEmployee' => [
-//                'active' => 1,
-//                'enabled' => 1,
-//                'wording' => '\'Employee Sessions\'',
-//                'wording_domain' => '\'Admin.Navigation.Menu\'',
-//                'route_name' => '\'admin_security_sessions_employee_list\'',
-//            ],
-//            'AdminSecuritySessionCustomer' => [
-//                'active' => 1,
-//                'enabled' => 1,
-//                'wording' => '\'Customer Sessions\'',
-//                'wording_domain' => '\'Admin.Navigation.Menu\'',
-//                'route_name' => '\'admin_security_sessions_customer_list\'',
-//            ],
-//        ];
-//
-//        foreach ($tabs as $tab) {
-//            add_new_tab_17(...$tab);
-//            $data = [];
-//            foreach ($tabsData[$tab[0]] as $key => $value) {
-//                $data[] = '`' . $key . '` = ' . $value;
-//            }
-//            Db::getInstance()->execute(
-//                'UPDATE `' . _DB_PREFIX_ . 'tab` SET ' . implode(', ', $data) . ' WHERE `class_name` = \'' . $tab[0] . '\''
-//            );
-//        }
-
-
-
     }
 
 
@@ -556,7 +519,7 @@ class MsThemeConfig extends Module
      */
     public function createOfferIntegrationCategory(): bool
     {
-        $check = Category::searchByName((int)Configuration::get('PS_LANG_DEFAULT'), 'Offertes', true);
+        $check = Category::searchByName((int)Configuration::get('PS_LANG_DEFAULT', $this->idLang, $this->idShopGroup, $this->idShop), 'Offertes', true);
 
         if (empty($check)) {
             $category = new Category();

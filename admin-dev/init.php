@@ -91,6 +91,7 @@ try {
             }
         }
         $context->employee->update();
+
     }
 
     // Change shop context ?
@@ -135,6 +136,8 @@ try {
             $context->shop = new Shop($shop_id);
         }
     }
+
+    dd($context->employee);
 } catch (PrestaShopException $e) {
     $e->displayMessage();
 }

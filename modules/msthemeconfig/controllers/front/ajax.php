@@ -7,6 +7,9 @@ require_once _PS_CORE_DIR_ . '/config/config.inc.php';
 require_once _PS_CORE_DIR_ . '/init.php';
 
 
+use MsThemeConfig\Class\ExportOrders;
+use PrestaShop\PrestaShop\Adapter\Entity\Context;
+use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -67,6 +70,9 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     public function initContent()
     {
         $this->ajax = true;
+        $employeeId = Tools::getValue('profile');
+        $this->context->employee = new Employee($employeeId);
+
         if ($this->errors) {
             die(json_encode(['hasError' => true, 'errors' => $this->errors]));
         }
@@ -140,6 +146,14 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         }
         if (Tools::getValue('method') == 'backorder_status') {
             return $this->_getKoopmanBackOrderStatus();
+        }
+
+        if (Tools::getValue('method') == 'print-label') {
+            return $this->_getKoopmanPrintedLabel();
+        }
+
+        if (Tools::getValue('method') == 'dag-afsluiting') {
+            return $this->_runKoopmanDayClosing();
         }
 
 
@@ -1215,6 +1229,51 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
+    private function _getKoopmanPrintedLabel()
+    {
+        if(Tools::getIsset('updateAddress')){
+            $this->updateOrderDeliveryAddress(Tools::getAllValues());
+        }
+
+        $id_order = Tools::getValue('id_order');
+        $type = Tools::getValue('type');
+        $weight = Tools::getValue('weight');
+
+        $export = new ExportOrders($id_order, $weight, $type);
+        $export->export();
+
+        if($export->redirect){
+            $readyForShippingStatus = Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS');
+
+            $history = new OrderHistory();
+            $history->id_order = (int)$id_order;
+            $history->changeIdOrderState((int)$new_status, (int)$id_order);
+            $history->add();
+
+            $this->makeApiCallToDashboard('set-label-printed', $id_order, Order::getUniqReferenceOf($id_order));
+            die('printed');
+        } else {
+            die($export->output);
+        }
+    }
+
+    /**
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    private function _runKoopmanDayClosing()
+    {
+        $export = new ExportOrders(0, 0, 0);
+        $export->dagafsluiting();
+
+        die('done');
+    }
+
+
+    /**
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     private function _getKoopmanToegevoegd()
     {
         $id_order = Tools::getValue('id_order');
@@ -1404,6 +1463,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             CURLOPT_URL => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_URL') . '/api/' . $route,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_MAXREDIRS => 10,
+            CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_TIMEOUT => 10,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_POSTFIELDS => $params,
@@ -1417,6 +1477,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         } else {
             $returnData = [];
         }
+
         curl_close($curl);
         return $returnData;
     }
@@ -1459,7 +1520,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $message['time'] = date("Y-m-d H:i:s");
 
             $call = $this->doApiCall('log-message', [
-                'profile' => Context::getContext()->shop->getUrls()[0]['domain'],
+                'profile' => Context::getContext()->shop->getUrls()[0]['domain'].'test',
                 'type' => "koopman-actions",
                 'version' => _PS_VERSION_,
                 'message' => json_encode($message),
@@ -1497,6 +1558,30 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         ];
 
         die($this->kernel->getContainer()->get('twig')->render('@Modules/msthemeconfig/views/templates/admin/delivery_slip_message_form.html.twig', $data));
+    }
+
+    /**
+     */
+    private function updateOrderDeliveryAddress($getAllValues)
+    {
+        try {
+            $order = new Order($getAllValues['id_order']);
+
+            if(!is_null($order->id_address_delivery)){
+                $address = new Address($order->id_address_delivery);
+                $address->address1 = $getAllValues['address1'];
+                $address->house_number = $getAllValues['house_number'];
+                $address->house_number_extension = $getAllValues['house_number_extension'];
+                $address->postcode = $getAllValues['postcode'];
+                $address->city = $getAllValues['city'];
+
+                $address->update(false);
+            }
+        } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
+        return false;
+        }
+
+        return true;
     }
 
     /**

@@ -2,13 +2,13 @@
 declare(strict_types=1);
 
 return [
-  'parameters' => 
+  'parameters' =>
   [
     'database_host' => '127.0.0.1',
     'database_port' => '',
-    'database_name' => 'ijzershop14_6_23',
-    'database_user' => 'ijzershop_8',
-    'database_password' => 'bv9Sv9^81',
+    'database_name' => 'ijzershop8',
+    'database_user' => 'root',
+    'database_password' => '',
     'database_prefix' => 'ps176_',
     'database_engine' => 'InnoDB',
     'mailer_transport' => 'smtp',

@@ -261,7 +261,6 @@ class AdminLoginControllerCore extends AdminController
                 }
 
                 $cookie->write();
-
                 $this->get(SessionRenewer::class)->renew();
 
                 // If there is a valid controller name submitted, redirect to it
@@ -280,6 +279,10 @@ class AdminLoginControllerCore extends AdminController
                         'redirect' => $url,
                     ]
                 );
+
+
+                $this->context->cookie->employee_id = $cookie->id_employee;
+//                dd('test', $cookie, $this->context->cookie->employee_id);
 
                 if (Tools::isSubmit('ajax')) {
                     die(json_encode(['hasErrors' => false, 'redirect' => $url]));

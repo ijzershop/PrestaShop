@@ -9,7 +9,8 @@
   ],
   "require": {
     "php": ">=8.0.0",
-    "ext-intl": "*"
+    "ext-intl": "*",
+    "ext-soap": "*"
   },
   "autoload": {
     "psr-4": {

@@ -2,6 +2,10 @@
 namespace MsThemeConfig\Class;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\Context;
+use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
+use SoapClient;
+use stdClass;
 
 /**
  * Class ExportOrders.
@@ -9,20 +13,41 @@ use PrestaShop\PrestaShop\Adapter\Entity\Context;
 class ExportOrders
 {
     public $configuration;
-    public $labels_folder;
-    public $orders_ok;
+    public string|array $labelsFolder;
+    public array $ordersOk;
 
-    public $status_shipped = 4; //Verzonden status waar de orders na dagafsluiting op worden gezet
+    //Verzonden status waar de orders na dagafsluiting op worden gezet
+    public int $statusShipped = 4;
 
-    public $soapoptions;
+    public array $soapoptions;
 
-    public $redirect = true;
-    public $output = '';
+    public bool $redirect = true;
+    public string $output = '';
 
-    public function __construct()
+    public $id_order;
+    public $weight;
+    public $type;
+    public int|null $idShop;
+    public int|null $idShopGroup;
+    public int|null $idLang;
+    public ?\Context $context;
+
+    /**
+     * @param $id_order
+     * @param $weight
+     * @param $type
+     */
+    public function __construct($id_order, $weight, $type)
     {
-        $this->orders_ok = [];
-
+        $this->id_order = $id_order;
+        $this->weight = $weight;
+        $this->type = $type;
+        $this->context = Context::getContext();
+        $this->ordersOk = [];
+        $this->idLang = $this->context->language->id;
+        $this->idShop = $this->context->shop->id;
+        $this->idShopGroup = $this->context->shop->id_shop_group;
+        $this->statusShipped = (int)Configuration::get('KOOPMANORDEREXPORT_STATUS_TRANSFERRED', $this->idLang, $this->idShopGroup, $this->idShop)
         $this->soapoptions = [
             'stream_context' => stream_context_create(
                 [
@@ -33,8 +58,10 @@ class ExportOrders
                 ]
             ),
         ];
-        $this->labels_folder = str_replace('private_html', 'public_html',
-            $_SERVER['DOCUMENT_ROOT'] . '/upload/' . Configuration::get('KOOPMANORDEREXPORT_LABELS_FOLDER',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id));
+        $folder = Configuration::get('KOOPMANORDEREXPORT_LABELS_FOLDER', $this->idLang, $this->idShopGroup, $this->idShop);
+        $this->labelsFolder = str_replace('private_html',
+            'public_html',
+            $_SERVER['DOCUMENT_ROOT'] . 'upload/' . $folder);
     }
 
     /**
@@ -42,19 +69,16 @@ class ExportOrders
      */
     private function _getLaneFolder()
     {
-        $lane_1 = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PACKAGELANE_1_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-        $lane_2 = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PACKAGELANE_2_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-        $lane_3 = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PACKAGELANE_3_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-
-        switch ((int)Context::getContext()->employee->id_profile) {
-            case $lane_1:
-                return $this->labels_folder . '/lane_1';
+        $lane_1 = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PACKAGELANE_1_PROFILE', $this->idLang, $this->idShopGroup, $this->idShop);
+        $lane_2 = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PACKAGELANE_2_PROFILE', $this->idLang, $this->idShopGroup, $this->idShop);
+        $lane_3 = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PACKAGELANE_3_PROFILE', $this->idLang, $this->idShopGroup, $this->idShop);
+        switch ((int)$this->context->employee->id_profile) {
             case $lane_2:
-                return $this->labels_folder . '/lane_2';
+                return $this->labelsFolder . '/lane_2';
             case $lane_3:
-                return $this->labels_folder . '/lane_3';
+                return $this->labelsFolder . '/lane_3';
             default:
-                return $this->labels_folder . '/lane_1';
+                return $this->labelsFolder . '/lane_1';
         }
     }
 
@@ -63,56 +87,37 @@ class ExportOrders
      **/
     public function export()
     {
-        if (!empty($_GET['id_order'])) {
-            $orders = $this->_getOrders(Configuration::get('KOOPMANORDEREXPORT_SELECT_STATUS',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id), Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id),
-                1, $_GET['id_order']);
-        } else {
-            $orders = $this->_getOrders(Configuration::get('KOOPMANORDEREXPORT_SELECT_STATUS',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id), Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id));
-        }
-
+        $orders = $this->_getOrders(Configuration::get('KOOPMANORDEREXPORT_SELECT_STATUS', $this->idLang, $this->idShopGroup, $this->idShop), Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop), 1, $this->id_order);
         if (empty($orders)) {
             return false;
         }
 
-        /*
-        old GLS code:
-        $conversion = $this->_convertOrders($orders);
-
-        $ok = $this->_saveAsCSV($conversion);
-        */
-
         $this->_prepareLabelsFolder();
-
-        if (!empty($_GET['id_order'])) {
-            if (isset($_GET['gewicht'])) {
-                $gewicht = (int)$_GET['gewicht'];
+        if (!empty($this->id_order)) {
+            if (isset($this->weight)) {
+                $gewicht = (int)$this->weight;
                 if ($gewicht == 0) {
                     $gewicht = 1;
                 }
             }
 
-            if (isset($_GET['type'])) {
-                $type = $_GET['type'];
+            if (isset($this->type)) {
+                $type = $this->type;
                 if ($type == '') {
                     $type = 'envelope';
                 }
             }
 
-            $this->_processOrdersNew($orders, $type,
-                $gewicht);  //met adreskeuze indien meer dan 1 koopman straat/plaats
+
+            $this->_processOrdersNew($orders, $type, $gewicht);  //met adreskeuze indien meer dan 1 koopman straat/plaats
         } else {
             $this->_processOrdersNew($orders);  //met adreskeuze indien meer dan 1 koopman straat/plaats
         }
 
         //Update orders when selected and uploaded
-        if (Configuration::get('KOOPMANORDEREXPORT_UPDATE_BOOL',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id) && is_numeric(Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id)) && count($this->orders_ok) > 0) {
-            $this->_setNewStateForOrders($orders, Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id));
+        if (Configuration::get('KOOPMANORDEREXPORT_UPDATE_BOOL', $this->idLang, $this->idShopGroup, $this->idShop) && is_numeric(Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS', $this->idLang, $this->idShopGroup, $this->idShop)) && count($this->ordersOk) > 0) {
+            $this->_setNewStateForOrders($orders, Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS', $this->idLang, $this->idShopGroup, $this->idShop));
         }
-    }
-
-    private function _isDuracom()
-    {
-        return ($_SERVER['REMOTE_ADDR'] == '46.144.108.162');
     }
 
     /*
@@ -136,7 +141,7 @@ class ExportOrders
         $code .= '  break; //alleen de eerste' . PHP_EOL;
         $code .= '}' . PHP_EOL;
         $code .= '?' . '>';
-        @file_put_contents($this->_getLaneFolder() . '/labels.php', $code);
+        file_put_contents($this->_getLaneFolder() . '/labels.php', $code);
     }
 
 
@@ -145,7 +150,7 @@ class ExportOrders
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_URL') . '/api/' . $route,
+            CURLOPT_URL => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_URL', $this->idLang, $this->idShopGroup, $this->idShop) . '/api/' . $route,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 10,
@@ -169,7 +174,7 @@ class ExportOrders
     public function dagafsluiting()
     {
         try {
-            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id), $this->soapoptions);
+            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL', $this->idLang, $this->idShopGroup, $this->idShop), $this->soapoptions);
         } catch (Exception $e) {
             echo 'error (new SoapClient) - ' . $e->getMessage();
 
@@ -177,17 +182,16 @@ class ExportOrders
         }
 
         $login = new stdClass();
-        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
+        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME', $this->idLang, $this->idShopGroup, $this->idShop);
+        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD', $this->idLang, $this->idShopGroup, $this->idShop);
+        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT', $this->idLang, $this->idShopGroup, $this->idShop);
+        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER', $this->idLang, $this->idShopGroup, $this->idShop);
 
         //verzendlijst ophalen en als pdf opslaan
         try {
             $verzendlijst = $client->getVerzendlijst($login);
         } catch (Exception $e) {
         }
-
         if ($verzendlijst) {
             file_put_contents(str_replace('private_html', 'public_html',
                     $_SERVER['DOCUMENT_ROOT']) . '/upload/pakbonnen/verzendlijst_' . time() . '.pdf',
@@ -198,19 +202,19 @@ class ExportOrders
         $client->sendOpdrachten($login);
 
         //orders op verzonden zetten..
-        if (Configuration::get('KOOPMANORDEREXPORT_UPDATE_BOOL',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id) && is_numeric(Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id))) {
+        if (Configuration::get('KOOPMANORDEREXPORT_UPDATE_BOOL', $this->idLang, $this->idShopGroup, $this->idShop) && is_numeric(Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS', $this->idLang, $this->idShopGroup, $this->idShop))) {
             //orders selecteren die met eerdere acties op 'Ligt klaar voor verzenden' staan (of andere update_status)
-            $orders = $this->_getOrders(Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id), Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id));
+            $orders = $this->_getOrders(Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS', $this->idLang, $this->idShopGroup, $this->idShop), Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop));
             foreach ($orders as $order) {
-                $this->orders_ok[] = $order['id_order'];
+                $this->ordersOk[] = $order['id_order'];
             }
-            $this->_setNewStateForOrders($orders, $this->status_shipped);
+            $this->_setNewStateForOrders($orders, $this->statusShipped);
         }
         //Send api call to the dashboard
         $closure_time = date("Y-m-d H:i:s");
         $loginCall = $this->doApiCall('api-auth', [
-            'email' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER'),
-            'password' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS')
+            'email' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER', $this->idLang, $this->idShopGroup, $this->idShop),
+            'password' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS', $this->idLang, $this->idShopGroup, $this->idShop)
         ]);
         if (!empty($loginCall)) {
             $message = [];
@@ -221,7 +225,7 @@ class ExportOrders
             $message['time'] = $closure_time;
 
             $this->doApiCall('log-message', [
-                'profile' => Context::getContext()->shop->getUrls()[0]['domain'],
+                'profile' => $this->context->shop->getUrls()[0]['domain'],
                 'type' => 'dagafsluiting',
                 'version' => _PS_VERSION_,
                 'message' => json_encode($message),
@@ -237,7 +241,9 @@ class ExportOrders
      * @param current order state
      * @param maximum number of records
      * @return array of orders
-     **/
+     *
+     * @throws \PrestaShopDatabaseException
+     */
     private function _getOrders($state, $carrier, $max = 300, $id_order = null)
     {
         if (!is_numeric($state)) {
@@ -267,6 +273,11 @@ class ExportOrders
     * get first public message (from the client)
     * Toegevoegd om afleverinstructies van de klant door te geven aan koopman. GDU 28-8-2017
     */
+    /**
+     * @param $id_order
+     * @return array|bool|\mysqli_result|\PDOStatement|resource|null
+     * @throws \PrestaShopDatabaseException
+     */
     private function _getFirstClientMessage($id_order)
     {
         if (!is_numeric($id_order)) {
@@ -294,7 +305,7 @@ class ExportOrders
     {
         //get order object for each order and change status
         foreach ($orders as $order) {
-            if (in_array($order['id_order'], $this->orders_ok)) {
+            if (in_array($order['id_order'], $this->ordersOk)) {
                 $orderObject = new Order($order['id_order']);
                 $orderObject->setCurrentState($state, 0);
             }
@@ -310,32 +321,32 @@ class ExportOrders
         }
 
         try {
-            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id), $this->soapoptions);
+            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL', $this->idLang, $this->idShopGroup, $this->idShop), $this->soapoptions);
         } catch (Exception $e) {
             //echo "error (new SoapClient) - ".$e->getMessage();
             return false;
         }
 
         $login = new stdClass();
-        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
+        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME', $this->idLang, $this->idShopGroup, $this->idShop);
+        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD', $this->idLang, $this->idShopGroup, $this->idShop);
+        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT', $this->idLang, $this->idShopGroup, $this->idShop);
+        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER', $this->idLang, $this->idShopGroup, $this->idShop);
 
         foreach ($orders as $row) {
             $opdracht = new stdClass();
             $opdracht->type = 'T'; // T = Stukgoed Levering
             $opdracht->nrorder = $row['reference'];
 //            Verzender gegevens
-            $opdracht->afzender = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDER',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
+            $opdracht->afzender = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDER', $this->idLang, $this->idShopGroup, $this->idShop);
 
-            $opdracht->afznaam = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-            $opdracht->afznaam2 = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM2',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-            $opdracht->afzastraat = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERSTRAAT',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-            $opdracht->afzhuisnr = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERHUISNR',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-            $opdracht->afzpostcode = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPOSTCODE',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-            $opdracht->afzplaats = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPLAATS',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
-            $opdracht->afzland = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERLAND',Context::getContext()->language->id, Context::getContext()->shop->getGroup()->id, Context::getContext()->shop->id);
+            $opdracht->afznaam = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM', $this->idLang, $this->idShopGroup, $this->idShop);
+            $opdracht->afznaam2 = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM2', $this->idLang, $this->idShopGroup, $this->idShop);
+            $opdracht->afzastraat = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERSTRAAT', $this->idLang, $this->idShopGroup, $this->idShop);
+            $opdracht->afzhuisnr = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERHUISNR', $this->idLang, $this->idShopGroup, $this->idShop);
+            $opdracht->afzpostcode = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPOSTCODE', $this->idLang, $this->idShopGroup, $this->idShop);
+            $opdracht->afzplaats = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPLAATS', $this->idLang, $this->idShopGroup, $this->idShop);
+            $opdracht->afzland = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERLAND', $this->idLang, $this->idShopGroup, $this->idShop);
 //            Klant gegevens
             $opdracht->geanaam = $row['firstname'] . ' ' . $row['lastname'];
             $opdracht->geanaam2 = $row['company'];
@@ -350,12 +361,10 @@ class ExportOrders
 
             $msg = $this->_getFirstClientMessage($row['id_order']);
 
-
             if (!empty($msg)) {
                 $opdracht->instructie = $msg[0]['message'];
             }
             if ($opdracht->gealand == 'NL') { // haal straat + plaats op bij koopman voor NL
-
 
                 try {
                     $adressen = $client->getAdresNL_2($login, $row['postcode']);
@@ -366,18 +375,17 @@ class ExportOrders
 
                         $this->redirect = false;
 
-                        $this->output .= '<div class="container">
-                                                <div class="row mt-5">
-                                                    <div class="col-8 offset-2">
+                        $this->output .= '<div class="w-100">
+                                                    <div class="col-12">
                                                         <div class="card row">
                                                           <div class="card-header">
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                             Wijzig het adres van deze bestelling
                                                           </div>
                                                           <div class="card-body">
                                                             <p class="card-text">' . $e->getMessage() . '. Controleer en wijzig het adres.</p>';
 
-                        $this->output .= '<br/><form method="post" action="' . Context::getContext()->link->getAdminLink('MsThemeConfigAdmin',
-                                true) . '&id_order=' . $_GET['id_order'] . '&gewicht=' . $_GET['gewicht'] . '&type=' . $_GET['type'] . '" id="updateAddressKoopman">' . PHP_EOL;
+                        $this->output .= '<br/><form id="updateAddressKoopman">' . PHP_EOL;
 
                         foreach ($_GET as $key => $value) {
                             $this->output .= "<input type='hidden' name='$key' value='$value'/>" . PHP_EOL;
@@ -419,15 +427,14 @@ class ExportOrders
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-12">
-                                                                        <button type="submit" class="btn btn-lg btn-success w-100">Wijzig adres & print label</button>
+                                                                        <button type="button" class="btn btn-lg btn-success w-100 updateAddress">Wijzig adres & print label</button>
                                                                     </div>
                                                                 </div>
                                                             </form>
                                                           </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>';
+                                                </div>';
 
                         $this->output .= '</form>' . PHP_EOL;
                     }
@@ -450,11 +457,11 @@ class ExportOrders
                             $this->redirect = false;
 
 
-                            $this->output = '<div class="container">
-                                <div class="row mt-5">
-                                    <div class="col-10 offset-1">
+                            $this->output = '<div class="w-100">
+                                    <div class="col-12">
                                         <div class="card row">
                                             <div class="card-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                 Adres van klant en ingevoerde postcode komen niet overeen.
                                             </div>
                                             <div class="card-body">
@@ -477,8 +484,7 @@ class ExportOrders
 
                             $this->output .= '<div class="row mt-5"><div class="col-12"><b>Pas het adres aan</b></div></div>';
 
-                            $this->output .= '<form class="mt-2" method="post" action="' . Context::getContext()->link->getAdminLink('MsThemeConfigAdmin',
-                                    true) . '&id_order=' . $_GET['id_order'] . '&gewicht=' . $_GET['gewicht'] . '&type=' . $_GET['type'] . '" id="updateAddressKoopman">' . PHP_EOL;
+                            $this->output .= '<form class="mt-2" method="post" id="updateAddressKoopman">' . PHP_EOL;
 
                             foreach ($_GET as $key => $value) {
                                 $this->output .= "<input type='hidden' name='$key' value='$value'/>" . PHP_EOL;
@@ -521,7 +527,7 @@ class ExportOrders
                                                             </div>
                                                             <div class="row mt-5">
                                                                 <div class="col-12">
-                                                                    <button type="submit" class="btn btn-lg btn-success w-100">Wijzig adres & print label</button>
+                                                                    <button type="button" class="btn btn-lg btn-success w-100 updateAddress">Wijzig adres & print label</button>
                                                                 </div>
                                                             </div>
                                                         </form>
@@ -529,9 +535,7 @@ class ExportOrders
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>';
-
+                                    </div>';
                         }
                     } else {
                         $opdracht->geastraat = $adressen[0]->straat;
@@ -551,8 +555,8 @@ class ExportOrders
                 $regel = new stdClass();
                 $regel->nrcollo = 1;
                 /*
-                *  Gewijzigd door JB Stoker - Moderne Smid
-                *  Pakket maten en soorten aangepast en type optie toegevoegd
+                * Gewijzigd door JB Stoker - Moderne Smid
+                * Pakket maten en soorten aangepast en type optie toegevoegd
                 *  -Envelop : (50 x 30 x 1=1Kg) / value = envelope
                 *  -Plaat : (50 x 30 x 1=15Kg) / value = plaat
                 *  -1 Meter : (50 x 30 x 1=15Kg) / value = 1-meter
@@ -580,12 +584,8 @@ class ExportOrders
                         $regel->breedte = 20;
                         $regel->hoogte = 20;
                         break;
-                    case '2-meter-smaller':
-                        $regel->lengte = 199;
-                        $regel->breedte = 15;
-                        $regel->hoogte = 15;
-                        break;
                     case '2-meter-larger':
+                    case '2-meter-smaller':
                         $regel->lengte = 199;
                         $regel->breedte = 15;
                         $regel->hoogte = 15;
@@ -599,6 +599,7 @@ class ExportOrders
 
 
                 $opdracht->aRegel[1] = $regel;
+
                 $transport = false;
                 try {
                     $transport = $client->addOpdracht($login, $opdracht);
@@ -620,12 +621,12 @@ class ExportOrders
                     if (file_put_contents($this->_getLaneFolder() . '/' . $zendingnr . '.pdf',
                         trim(base64_decode($labels)))) {
 
-                        $this->orders_ok[] = $row['id_order'];
+                        $this->ordersOk[] = $row['id_order'];
 
                         //Add new labels Api call
                         $loginCall = $this->doApiCall('api-auth', [
-                            'email' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER'),
-                            'password' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS')
+                            'email' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER', $this->idLang, $this->idShopGroup, $this->idShop),
+                            'password' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS', $this->idLang, $this->idShopGroup, $this->idShop)
                         ]);
                         if (!empty($loginCall)) {
 
@@ -651,7 +652,7 @@ class ExportOrders
                             $message['time'] = date("Y-m-d H:i:s");
 
                             $this->doApiCall('log-message', [
-                                'profile' => Context::getContext()->shop->getUrls()[0]['domain'],
+                                'profile' => $this->context->shop->getUrls()[0]['domain'],
                                 'type' => 'koopman-actions',
                                 'version' => _PS_VERSION_,
                                 'message' => json_encode($message),

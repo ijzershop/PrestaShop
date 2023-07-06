@@ -4,7 +4,7 @@
  *
  * @author    Rinku Kazeno <development@kazeno.co>
  *
- * @copyright Copyright (c) 2012-2017, Rinku Kazeno
+ * @copyright Copyright since 2012 Rinku Kazeno
  * @license   This module is licensed to the user, upon purchase
  *   from either Prestashop Addons or directly from the author,
  *   for use on a single commercial Prestashop install, plus an
@@ -36,14 +36,17 @@ class GAuth
     
     public function importData($enc)
     {
-        if (!$enc)
-            return FALSE;
+        if (!$enc) {
+            return false;
+        }
+
         $data = unserialize(base64_decode($enc));
         $this->key = $data['key'];
         $this->tokenType = $data['type'];
         $this->tokenOffset = $data['offset'];
         $this->userData = $data['data'];
-        return TRUE;
+
+        return true;
     }
     
     public function exportData()
@@ -53,7 +56,6 @@ class GAuth
             'type' => $this->tokenType,
             'offset' => $this->tokenOffset,
             'data' => $this->userData,
-            //'timer' => $this->timer,
         )));
     }
     
@@ -62,13 +64,14 @@ class GAuth
     
     public function getUserData($key)
     {
-        return isset($this->userData[$key]) ? $this->userData[$key] : NULL;
+        return isset($this->userData[$key]) ? $this->userData[$key] : null;
     }
     
     public function setUserData($key, $data)
     {
-        if (!isset($this->userData[$key]) || $this->userData[$key] != $data)
+        if (!isset($this->userData[$key]) || $this->userData[$key] != $data) {
             $this->setModified();
+        }
         $this->userData[$key] = $data;
     }
     
@@ -85,6 +88,7 @@ class GAuth
         $this->key = $key == ''  ?  $this->createBase32Key()  :  $key;
         $this->tokenType = Tools::strtoupper($type);
         $this->setModified();
+
         return $this->key;
     }
     
@@ -93,6 +97,7 @@ class GAuth
         $name = urlencode(str_replace(' ','_',Tools::replaceAccentedChars($username)));
         $type = Tools::strtolower($this->tokenType);
         $offset = $this->tokenOffset+1;
+
         return $this->tokenType == 'HOTP' ? "otpauth://{$type}/{$name}?secret={$this->key}&counter={$offset}" : "otpauth://{$type}/{$name}?secret={$this->key}";
     }
     
@@ -130,6 +135,7 @@ class GAuth
             return FALSE;
         }
         $this->_errors[] = 'Auth type not set';
+
         return FALSE;
     }
     
@@ -182,8 +188,10 @@ class GAuth
     protected function createBase32Key($length = 16) {
         $b32 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
         $key = '';
-        for ($i = 0; $i < $length; $i++)
-            $key .= $b32[mt_rand(0,31)];
+        for ($i = 0; $i < $length; $i++) {
+            $key .= $b32[mt_rand(0, 31)];
+        }
+
         return $key;
     }
     
@@ -213,12 +221,9 @@ class GAuth
     
     protected function oath_hotp($key, $counter)
     {
-        /*if (Tools::strlen($key) < 8) {
-            $this->_errors[] = 'Secret key must be at least 16 base32 characters in length, current key: '.$key;
-            return FALSE;
-        }*/
         $bin_counter = pack('N*', 0) . pack('N*', $counter);		// Counter must be 64-bit int
         $hash  = hash_hmac('sha1', $bin_counter, $key, true);
+
         return str_pad($this->oath_truncate($hash), 6, '0', STR_PAD_LEFT);
     }
     
@@ -232,9 +237,6 @@ class GAuth
             (ord($hash[$offset+3]) & 0xff)
         ) % pow(10, 6);
     }
-
-    
-    /*******customizations*******/
     
     
     public function loadDataFromDb($employeeId)
@@ -261,6 +263,7 @@ class GAuth
         foreach ($replacements as $var => $repl) {
             $replacements[$var] = pSQL($repl);
         }
+
         return str_replace(array_keys($replacements), array_values($replacements), $sql);
     }
     

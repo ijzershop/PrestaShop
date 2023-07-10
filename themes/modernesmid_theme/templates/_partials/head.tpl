@@ -54,41 +54,41 @@
   <link rel="icon" type="image/vnd.microsoft.icon" href="{$shop.favicon}?{$shop.favicon_update_time}">
   <link rel="shortcut icon" type="image/x-icon" href="{$shop.favicon}?{$shop.favicon_update_time}">
   <link rel="apple-touch-icon" sizes="57x57"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/apple-icon-57x57.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/apple-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="60x60"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/apple-icon-60x60.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/apple-icon-60x60.png">
   <link rel="apple-touch-icon" sizes="72x72"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/apple-icon-72x72.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/apple-icon-72x72.png">
   <link rel="apple-touch-icon" sizes="76x76"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/apple-icon-76x76.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/apple-icon-76x76.png">
   <link rel="apple-touch-icon" sizes="114x114"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/apple-icon-114x114.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/apple-icon-114x114.png">
   <link rel="apple-touch-icon" sizes="120x120"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/apple-icon-120x120.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/apple-icon-120x120.png">
   <link rel="apple-touch-icon" sizes="144x144"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/apple-icon-144x144.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/apple-icon-144x144.png">
   <link rel="apple-touch-icon" sizes="152x152"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/apple-icon-152x152.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/apple-icon-152x152.png">
   <link rel="apple-touch-icon" sizes="180x180"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/apple-icon-180x180.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/apple-icon-180x180.png">
   <link rel="icon" type="image/png" sizes="192x192"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/android-icon-192x192.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/android-icon-192x192.png">
   <link rel="icon" type="image/png" sizes="32x32"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/favicon-32x32.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="96x96"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/favicon-96x96.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="16x16"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/favicon-16x16.png">
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/favicon-16x16.png">
   <link rel="manifest"
-        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/manifest.json"
+        href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/manifest.json"
         crossorigin="use-credentials">
   <meta name="msapplication-TileColor" content="#3b56ad">
   <meta name="msapplication-TileImage"
-        content="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/ms-icon-144x144.png">
+        content="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/ms-icon-144x144.png">
   <meta name="theme-color" content="#3b56ad"/>
 {/block}
 <link rel="manifest"
-      href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP')}_favicons/manifest.json"
+      href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/manifest.json"
       crossorigin="use-credentials">
 {block name='stylesheets'}
     {include file="_partials/stylesheets.tpl" stylesheets=$stylesheets}
@@ -103,7 +103,7 @@
 {/block}
 
 <script type="text/javascript">
-  let clarityKey = "{Configuration::get('MSTHEMECONFIG_CLARITY_ID', null, null,  null, '7bu3k08a1u')}";
+  let clarityKey = "{Configuration::get('MSTHEMECONFIG_CLARITY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '7bu3k08a1u')}";
   let isDebug = false;
   {literal}
   //Clarity function to pass data to clarity server
@@ -185,7 +185,7 @@ if ((workingDays.indexOf(currentDay) !== -1 && (currentHour >= startHour && curr
 
 <style type="text/css">
   [class*="bg-primary"] {
-    background-color: {Configuration::get('MSTHEMECONFIG_PRIMARY_COLOR')} !important;
+    background-color: {Configuration::get('MSTHEMECONFIG_PRIMARY_COLOR', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)} !important;
   }
 </style>
 <div id="contact-info-box" class="d-none">
@@ -204,11 +204,11 @@ if ((workingDays.indexOf(currentDay) !== -1 && (currentHour >= startHour && curr
       </td>
     </tr>
     <table width="100%" height="100%">
-    <tr id="info-row-mail"><td><a class="btn btn-primary rounded-0 w-100" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE')}"><i class="fasr fa-envelope float-left fa-2x"></i> Mail met ons</a></td></tr>
-    <tr style="display: none;" id="info-row-phone"><td><a class="btn btn-primary rounded-0 w-100" href="tel://{str_replace(' ','',Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_PHONE'))}"><i class="fasr fa-phone float-left fa-2x"></i> Bel met ons</a></td></tr>
-    <tr style="display: none;" id="info-row-whatsapp"><td><a target="_blank" class="btn btn-primary rounded-0 w-100" href="{str_replace(' ','',Configuration::get('MSTHEMECONFIG_HEADER_WHATSAPP_LINK'))}"><i class="fab fa-whatsapp float-left fa-2x"></i> App met ons</a></td></tr>
+    <tr id="info-row-mail"><td><a class="btn btn-primary rounded-0 w-100" href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"><i class="fasr fa-envelope float-left fa-2x"></i> Mail met ons</a></td></tr>
+    <tr style="display: none;" id="info-row-phone"><td><a class="btn btn-primary rounded-0 w-100" href="tel://{str_replace(' ','',Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_PHONE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}"><i class="fasr fa-phone float-left fa-2x"></i> Bel met ons</a></td></tr>
+    <tr style="display: none;" id="info-row-whatsapp"><td><a target="_blank" class="btn btn-primary rounded-0 w-100" href="{str_replace(' ','',Configuration::get('MSTHEMECONFIG_HEADER_WHATSAPP_LINK', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}"><i class="fab fa-whatsapp float-left fa-2x"></i> App met ons</a></td></tr>
     <tr style="display: none;" id="info-row-chat"><td><a class="btn btn-primary rounded-0 w-100" href="#"><i class="fa-tawkto-bubble float-left"></i> Chat met ons</a></td></tr>
-    <tr id="info-row-maps"><td><a class="btn btn-primary rounded-0 w-100" target="_blank" href="https://www.google.com/maps/place/{Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_GOOGLE_STRING')}"><i class="fasr fa-location-dot fa-2x float-left"></i> Vind ons</a></td></tr>
+    <tr id="info-row-maps"><td><a class="btn btn-primary rounded-0 w-100" target="_blank" href="https://www.google.com/maps/place/{Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_GOOGLE_STRING',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"><i class="fasr fa-location-dot fa-2x float-left"></i> Vind ons</a></td></tr>
   </table>
 </div>
 

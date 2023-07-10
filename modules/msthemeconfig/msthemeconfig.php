@@ -523,10 +523,10 @@ class MsThemeConfig extends Module
 
         if (empty($check)) {
             $category = new Category();
-            $category->name = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Offertes'];
-            $category->second_name = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Offerte Category'];
-            $category->link_rewrite = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Offerte'];
-            $category->description = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Speciale Categorie voor Offertes'];
+            $category->name = [(int)Configuration::get('PS_LANG_DEFAULT', $this->idLang, $this->idShopGroup, $this->idShop) => 'Offertes'];
+            $category->second_name = [(int)Configuration::get('PS_LANG_DEFAULT', $this->idLang, $this->idShopGroup, $this->idShop) => 'Offerte Category'];
+            $category->link_rewrite = [(int)Configuration::get('PS_LANG_DEFAULT', $this->idLang, $this->idShopGroup, $this->idShop) => 'Offerte'];
+            $category->description = [(int)Configuration::get('PS_LANG_DEFAULT', $this->idLang, $this->idShopGroup, $this->idShop) => 'Speciale Categorie voor Offertes'];
             $category->active = 1;
             $category->is_root_category = 0;
             $category->position = 1;
@@ -538,10 +538,10 @@ class MsThemeConfig extends Module
             }
         } else {
             $category = new Category((int)$check['id_category']);
-            $category->name = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Offertes'];
-            $category->second_name = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Offerte Category'];
-            $category->link_rewrite = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Offerte'];
-            $category->description = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Speciale Categorie voor Offertes'];
+            $category->name = [(int)Configuration::get('PS_LANG_DEFAULT', $this->idLang, $this->idShopGroup, $this->idShop) => 'Offertes'];
+            $category->second_name = [(int)Configuration::get('PS_LANG_DEFAULT', $this->idLang, $this->idShopGroup, $this->idShop) => 'Offerte Category'];
+            $category->link_rewrite = [(int)Configuration::get('PS_LANG_DEFAULT', $this->idLang, $this->idShopGroup, $this->idShop) => 'Offerte'];
+            $category->description = [(int)Configuration::get('PS_LANG_DEFAULT', $this->idLang, $this->idShopGroup, $this->idShop) => 'Speciale Categorie voor Offertes'];
             $category->active = 1;
             $category->is_root_category = 0;
             $category->position = 1;

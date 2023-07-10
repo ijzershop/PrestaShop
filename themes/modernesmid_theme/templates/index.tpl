@@ -33,7 +33,7 @@
 
 
             <div class="row">
-              {assign var="selectedCategories" value=explode(',',Configuration::get('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES'))}
+              {assign var="selectedCategories" value=explode(',',Configuration::get('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}
 
              {if is_array($selectedCategories) && count($selectedCategories) >= 1 && $selectedCategories[0] != ''}
               {assign var="categoriesInfo" value=Category::getCategoryInformation($selectedCategories)}
@@ -57,10 +57,10 @@
               {/foreach}
               {/if}
             </div>
-            {if strlen(Configuration::get('MSTHEMECONFIG_HOMEPAGE_TEXT')) > 3}
-            <div class="row mt-3" style="background-color:{Configuration::get('MSTHEMECONFIG_HOMEPAGE_BACKGROUND_COLOR', null, null,  null, '#efefef')};">
+            {if strlen(Configuration::get('MSTHEMECONFIG_HOMEPAGE_TEXT',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)) > 3}
+            <div class="row mt-3" style="background-color:{Configuration::get('MSTHEMECONFIG_HOMEPAGE_BACKGROUND_COLOR', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '#efefef')};">
               <div class="col-12 p-4">
-                {Configuration::get('MSTHEMECONFIG_HOMEPAGE_TEXT') nofilter}
+                {Configuration::get('MSTHEMECONFIG_HOMEPAGE_TEXT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) nofilter}
               </div>
             </div>
             {/if}

@@ -31,7 +31,7 @@
   <div class="col bg-light p-3">
     <div class="row bg-light p-2">
       <div class="col-12 col-sm-12 col-md-5">
-        {Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTRETOUR_TEXT') nofilter}
+        {Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTRETOUR_TEXT',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) nofilter}
       </div>
       <div class="col-12 col-sm-12 col-md-7">
         {widget name="contactform"}

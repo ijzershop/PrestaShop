@@ -33,7 +33,7 @@
   <div class="col-12">
       <div class="h4">Welkom {$customer->firstname} {$customer->lastname}</div>
       <p>
-        {Configuration::get('MSTHEMECONFIG_MY_ACCOUNT_LANDING_TEXT')}
+        {Configuration::get('MSTHEMECONFIG_MY_ACCOUNT_LANDING_TEXT',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
       </p>
   </div>
 {/block}

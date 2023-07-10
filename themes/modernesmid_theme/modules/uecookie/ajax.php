@@ -272,8 +272,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $paid = $_POST['switchinput'];
         $withTax = (bool)$_POST['with_tax'];
 
-        $reference = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE');
-        $category = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY');
+        $reference = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $category = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
         $cart = Context::getContext()->cart;
 
@@ -378,7 +378,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->active = 1;
             $credit->add(true);
 
-            $creditGroupRestiction = Db::getInstance()->insert('cart_rule_group',  ['id_cart_rule' => (int)$credit->id, 'id_group' => Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_BALIE_GROUP')]);
+            $creditGroupRestiction = Db::getInstance()->insert('cart_rule_group',  ['id_cart_rule' => (int)$credit->id, 'id_group' => Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_BALIE_GROUP', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)]);
 
             $cart->addCartRule($credit->id);
             die(Tools::jsonEncode(['valid' => true]));

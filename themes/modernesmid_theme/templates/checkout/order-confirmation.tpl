@@ -8,7 +8,7 @@
             {block name='order_confirmation_header'}
               <h3 class="card-title p-2">
                 <i class="fasr fa-check rtl-no-flip done text-success"></i> {l s='Your order is confirmed' d='Shop.Theme.Checkout'}
-                {if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}
+                {if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id}
                   {* Show print cart button *}
                   {if isset(Tools::getValue('oncredit')) && Tools::getValue('oncredit') == 'true'}
                     <a target="_blank" href="/index.php?controller=pdf-physical-on-credit-order-slip&id_order={$order.details.id}" id="printShoppingCartOnCreditByEmployeeAfterCheckout" data-order="{$order.details.id}"  class="btn btn-link text-dark float-right" alt="Winkelwagen als pdf opslaan"><i class="fa-2x fasr fa-file-pdf"></i></a>
@@ -116,7 +116,7 @@
 
 
 {block name='javascript_bottom' append}
-    {if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}
+    {if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id}
   <script type="text/javascript">
     window.onload = function() {
 

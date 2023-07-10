@@ -32,7 +32,7 @@
      <div class="col-12 ">
       <div class="row justify-content-center">
       <div class="mx-auto col-12">
-      <div class="h5 w-100 text-center">{if Context::getContext()->controller->php_self == 'search'}Uw zoekopdracht heeft geen resultaten opgeleverd. Wilt u weten of de {Configuration::get('PS_SHOP_NAME')} een alternatief kan leveren?{else}Mist u een product of wilt u weten of de {Configuration::get('PS_SHOP_NAME')} een alternatief kan leveren?{/if} Vraag het ons via het onderstaande formulier.</div>
+      <div class="h5 w-100 text-center">{if Context::getContext()->controller->php_self == 'search'}Uw zoekopdracht heeft geen resultaten opgeleverd. Wilt u weten of de {Configuration::get('PS_SHOP_NAME', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)} een alternatief kan leveren?{else}Mist u een product of wilt u weten of de {addJS('/modules/advancedvatmanager('PS_SHOP_NAME',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)} een alternatief kan leveren?{/if} Vraag het ons via het onderstaande formulier.</div>
       </div>
         <div class="col-12 text-left">
 {/if}

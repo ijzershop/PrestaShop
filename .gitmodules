@@ -4,9 +4,6 @@ url=git@github.com:ijzershop/sawandcutmodule.git
 [submodule "modules/koopmanorderexport"]
 	path = modules/koopmanorderexport
 url=git@github.com:ijzershop/koopmanorderexport.git
-[submodule "modules/customdeliveryslipsexport"]
-	path = modules/customdeliveryslipsexport
-url=git@github.com:ijzershop/customdeliveryslipsexport.git
 [submodule "modules/addtoorder"]
 	path = modules/addtoorder
 url=git@github.com:ijzershop/addtoorder.git

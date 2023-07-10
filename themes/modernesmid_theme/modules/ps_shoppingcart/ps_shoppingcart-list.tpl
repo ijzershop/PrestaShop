@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <div class="shoppingcart-top-checkout col-sm-4 float-right">
-                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}{$cart_url}{else}{if isset($urls.pages['order'])}{$urls.pages['order']}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Bestellen' d='Shop.Theme.Actions'}">{l s='Bestellen' d='Shop.Theme.Actions'}</a>
+                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id}{$cart_url}{else}{if isset($urls.pages['order'])}{$urls.pages['order']}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Bestellen' d='Shop.Theme.Actions'}">{l s='Bestellen' d='Shop.Theme.Actions'}</a>
                 </div>
             </div>
         </div>
@@ -66,11 +66,11 @@
                         <span class="col-6">
                           <div class="row">
                             <div class="form-check form-check-inline col-12 col-sm-6 p-0 m-0 pl-2 pl-sm-2 mb-1 mb-sm-0 justify-content-start">
-                              <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_bottom_cart" id="carrier_selection_bottom_cart1" value="shipping" {if Context::getContext()->cart->id_carrier == (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER')  || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}checked{/if}>
+                              <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_bottom_cart" id="carrier_selection_bottom_cart1" value="shipping" {if Context::getContext()->cart->id_carrier == (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)  || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}checked{/if}>
                               <label class="form-check-label carrier-selection-label" for="carrier_selection_bottom_cart1">Verzenden</label>
                             </div>
                             <div class="form-check form-check-inline col-12 col-sm-6 p-0 m-0 pl-2 justify-content-start">
-                              <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_bottom_cart" id="carrier_selection_bottom_cart2" value="pickup" {if Context::getContext()->cart->id_carrier == (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER')  || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) == 0}checked{/if}>
+                              <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_bottom_cart" id="carrier_selection_bottom_cart2" value="pickup" {if Context::getContext()->cart->id_carrier == (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)  || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) == 0}checked{/if}>
                               <label class="form-check-label carrier-selection-label" for="carrier_selection_bottom_cart2">Afhalen</label>
                             </div>
                           </div>
@@ -105,7 +105,7 @@
                     {/if}
                 </div>
                 <div class="mt-3">
-                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}{$cart_url}{else}{if isset($urls.pages['order'])}{$urls.pages['order']}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Verder naar bestellen' d='Shop.Theme.Actions'}">{l s='Verder naar bestellen' d='Shop.Theme.Actions'}</a>
+                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id}{$cart_url}{else}{if isset($urls.pages['order'])}{$urls.pages['order']}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Verder naar bestellen' d='Shop.Theme.Actions'}">{l s='Verder naar bestellen' d='Shop.Theme.Actions'}</a>
                 </div>
                 {if Context::getContext()->cart->getOrderTotal() > 0}
                 <div class="text-center mt-3 p-1">Toon details (verzendkosten, korting & btw.) <label class="switch">

@@ -174,7 +174,7 @@ class SupercheckoutSupercheckoutModuleFrontController extends SupercheckoutCore
                         'supercheckout',
                         'supercheckout',
                         array(),
-                        (bool) Configuration::get('PS_SSL_ENABLED')
+                        (bool) Configuration::get('PS_SSL_ENABLED', $this->idLang, $this->idShopGroup, $this->idShop)
                     )
                 );
             }

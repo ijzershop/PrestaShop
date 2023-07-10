@@ -32,7 +32,7 @@
         <div class="col-xs-12 psgdprinfo17">
             <h2>{l s='Wijziging & Verwijdering verzamelde gegevens' mod='psgdpr'}</h2>
             <p>U kunt uw gegevens op ieder moment wijzigen in uw account omgeving. Voor alle andere wijzigingen en/of verwijderen van uw verzamelde gegevens kunt u > <a class="text-decoration-none text-dark" href="{$psgdpr_contactUrl|escape:'htmlall':'UTF-8'}">{l s='contact' mod='psgdpr'}</a> met ons opnemen, wij voeren uw aanvraag z.s.m. voor u door.</p>
-            <p><a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_AVG_INFO_PAGE'))}">> Voor meer informatie over de gegevens die van u verzameld worden klik dan hier</a></p>
+            <p><a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_AVG_INFO_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}">> Voor meer informatie over de gegevens die van u verzameld worden klik dan hier</a></p>
         </div>
     </section>
 </div>

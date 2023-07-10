@@ -66,7 +66,7 @@
         <tr class="row">
           <td class="col col-xs-6 col-sm-6  col-lg-4 p-0">
               {*      Header column      *}
-                {if in_array($urls.base_url, explode(',', Configuration::get('MSTHEMECONFIG_TEST_WEBSITES', Context::getContext()->language->id, null , Context::getContext()->shop->id, [])))}
+                {if in_array($urls.base_url, explode(',', Configuration::get('MSTHEMECONFIG_TEST_WEBSITES', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, [])))}
                   <style type="text/css">
                     img.logo{
                       transform: rotate(180deg);
@@ -113,7 +113,7 @@
         <li id="navbar-brand-item-mobile" class="nav-item p-0 text-center col">
           <a class="navbar-brand d-block d-lg-none col p-0 m-0 pt-1" href="/"><img  rel="preload" as="image" src="/themes/modernesmid_theme/assets/logo/{strtolower($shop.name)}_mobile_white.svg" style="height:30px;width: auto;float: left;margin-left: 15px;" alt="Home" title="Ga naar de startpagina"></a>
         </li>
-        {if Module::isEnabled('ps_categorytree') || (int)Configuration::get('MSTHEMECONFIG_HEADER_PHONENUMBER_LINK', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '') == 1}
+        {if Module::isEnabled('ps_categorytree') || (int)Configuration::get('MSTHEMECONFIG_HEADER_PHONENUMBER_LINK', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '') == 1}
         <li class="nav-item p-0 text-center col">
           <button class="navbar-toggler nav-link mx-auto" data-toggle="dropdown" type="button" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon">
@@ -123,7 +123,7 @@
         </li>
         {/if}
         <li class="nav-item p-0 text-center col d-none d-sm-block">
-            <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="/{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fasr fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"> Offerte Aanvraag</span></a>
+            <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="/{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasr fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"> Offerte Aanvraag</span></a>
         </li>
           {if Module::isEnabled('ps_searchbar')}
             <li class="nav-item p-0 text-center col"><a aria-label="Zoeken" class="nav-link text-white navbar-search-icon" href="#"><i class="fasr fa-2x fa-magnifying-glass"></i></a></li>
@@ -133,7 +133,7 @@
           {/if}
       </ul>
       <div class="row collapse navbar-collapse">
-        {if Module::isEnabled('ps_categorytree') || (int)Configuration::get('MSTHEMECONFIG_HEADER_PHONENUMBER_LINK', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '') == 1}
+        {if Module::isEnabled('ps_categorytree') || (int)Configuration::get('MSTHEMECONFIG_HEADER_PHONENUMBER_LINK', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '') == 1}
         <button class="navbar-toggler nav-link nav-item pl-3 float-md-left d-md-block" data-toggle="dropdown" type="button" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon desktop">
             <i class="fasr fa-menu-burger"></i>
@@ -142,7 +142,7 @@
         {/if}
         <ul class="navbar-nav mr-2">
           <li id="request-offer-button" class="ml-2">
-            <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="/{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fasr fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"> Offerte Aanvragen</span></a>
+            <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="/{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasr fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"> Offerte Aanvragen</span></a>
         </li>
         </ul>
         {if Module::isEnabled('ps_searchbar')}
@@ -162,7 +162,7 @@
     <span aria-hidden="true">&times;</span>
   </button>
     <p>{$geoip_msg}</p>
-    <p class="mb-0">Hulp nodig of een offerte aanvragen? neem dan contact met ons op via het <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')}"><i class="fasr fa-chevron-right"></i> Offerte formulier</a></p>
+    <p class="mb-0">Hulp nodig of een offerte aanvragen? neem dan contact met ons op via het <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasr fa-chevron-right"></i> Offerte formulier</a></p>
   </div>
 </div>
 {/if}

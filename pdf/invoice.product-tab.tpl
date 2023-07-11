@@ -114,7 +114,7 @@
         {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl_including_ecotax}
       </td>
     </tr>
-      {if $order_detail.id_category_default == (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY') && $order_detail.description_short != ""}
+      {if $order_detail.id_category_default == (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) && $order_detail.description_short != ""}
         <tr>
           <td colspan="4">
               {$order_detail.description_short nofilter}

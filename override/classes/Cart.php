@@ -56,7 +56,7 @@ class Cart extends CartCore
         foreach (Context::getContext()->cart->getProducts() as $key => $prod) {
             $prodObj = new Product($prod['id_product']);
             if ($prodObj->oi_offer_extra_shipping > 0 && $extraShippingFee == 0) {
-                $extraShippingFee = $_total_shipping['without_tax'] / 100 * Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING') - $_total_shipping['without_tax'];
+                $extraShippingFee = $_total_shipping['without_tax'] / 100 * Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) - $_total_shipping['without_tax'];
             }
         }
         return ($use_tax) ? $_total_shipping['with_tax'] + $extraShippingFee : $_total_shipping['without_tax'] + $extraShippingFee;
@@ -299,7 +299,7 @@ class Cart extends CartCore
         foreach (Context::getContext()->cart->getProducts() as $key => $prod) {
             $prodObj = new Product($prod['id_product']);
             if ($prodObj->oi_offer_extra_shipping > 0 && $extraShippingFee == 0) {
-                $extraShippingFee = $shipping_cost / 100 * Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING') - $shipping_cost;
+                $extraShippingFee = $shipping_cost / 100 * Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) - $shipping_cost;
             }
         }
         $shipping_cost = (float)Tools::ps_round((float)$shipping_cost + $extraShippingFee, 2);
@@ -745,7 +745,7 @@ class Cart extends CartCore
         }
         return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
     }
-    
+
     public function getTotalBeforeNextAutoDiscount($withTaxes = true, $parts = 'all')
     {
         $cartRulesCheck = CartRule::getAutoAddToCartRules(Context::getContext(), true);
@@ -779,7 +779,7 @@ class Cart extends CartCore
         $id_cart_new = (int) $result['cart']->id;
         Module::getInstanceByName('dynamicproduct');
         if (Module::isEnabled('dynamicproduct')) {
-            
+
             $module = Module::getInstanceByName('dynamicproduct');
             $module->hookCartDuplicated(array(
                 'id_cart_old' => $id_cart_old,

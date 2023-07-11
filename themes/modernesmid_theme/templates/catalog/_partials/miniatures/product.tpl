@@ -27,7 +27,7 @@
     <div class="thumbnail-container col-12">
       <div class="row">
         {block name='product_thumbnail'}
-        <div class="col-12 {Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE','col-sm-4 col-md-2')} pl-0 pr-2" {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE')=='col-sm-4 col-md-2'}style="max-width: 110px;margin:0 auto;"{/if}>
+        <div class="col-12 {Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE','col-sm-4 col-md-2')} pl-0 pr-2" {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)=='col-sm-4 col-md-2'}style="max-width: 110px;margin:0 auto;"{/if}>
           {if $product}
           <a href="{$product.url}" class="thumbnail product-thumbnail">
             <img data-product-id="{$product.id_product}" class="w-100 thumb" src="{$product.cover.bySize.medium_default.url}" alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}" data-full-size-image-url="{$product.cover.large.url}" />
@@ -48,7 +48,7 @@
         </div>
         {/block}
         {assign var="productFeatures" value=unserialize(Configuration::get('SAWANDCUTMODULE'))}
-        <div class="product-description col-12 {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes()))}col-sm-8 col-md-5{else} {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE') == 'col-sm-4 col-md-2'}col-sm-8 col-md-7{else}col-sm-4 col-md-5{/if}{/if} pl-0 pr-0">
+        <div class="product-description col-12 {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes()))}col-sm-8 col-md-5{else} {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == 'col-sm-4 col-md-2'}col-sm-8 col-md-7{else}col-sm-4 col-md-5{/if}{/if} pl-0 pr-0">
           {block name='product_name'}
           <table class="h-100 w-100">
             <tr>
@@ -110,7 +110,7 @@
           </table>
         </div>
         <div class="product_buttons col-12 {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes()))}col-sm-4{else}col-sm-6{/if} col-md-1 pt-2 pt-sm-0 p-md-0 pl-0 pr-md-0">
-          <table class="h-100 w-100" {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE') == 'col-sm-8 col-md-4'}style="margin-right:0px"{/if}>
+          <table class="h-100 w-100" {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == 'col-sm-8 col-md-4'}style="margin-right:0px"{/if}>
             <tr>
               {if Module::isEnabled('dynamicproduct') && Product::isDynamicProduct($product)}
               <td class="align-middle">

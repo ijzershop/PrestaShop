@@ -9,13 +9,13 @@
                                     <div class="col-12">
                                         <div class="row">
                                             <div class="col-4 pr-0 certainty-icon text-right">
-                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TITLE')}">
-                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TITLE')}" class="hover_effect_target img-fluid">
+                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
+                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid">
                                                 </a>
                                             </div>
                                             <div class="col-8 pl-0 certainty-text">
-                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TITLE')}">
-                                                    <span style="color: #777777;">{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TEXT')}</span>
+                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
+                                                    <span style="color: #777777;">{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIRST_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -29,13 +29,13 @@
                                     <div class="col-12">
                                         <div class="row">
                                             <div class="col-4 pr-0 certainty-icon text-right">
-                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TITLE')}">
-                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TITLE')}" class="hover_effect_target img-fluid">
+                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
+                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid">
                                                 </a>
                                             </div>
                                             <div class="col-8 pl-0 pr-0 certainty-text">
-                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TITLE')}">
-                                                    <span style="color: #777777;">{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TEXT')}</span>
+                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
+                                                    <span style="color: #777777;">{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_SECOND_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -49,8 +49,8 @@
                                     <div class="col-12">
                                         <div class="row">
                                             <div class="col-12 certainty-icon text-center">
-                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TITLE')}">
-                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TITLE')}" class="hover_effect_target img-fluid">
+                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
+                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_THIRD_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid">
                                                 </a>
                                             </div>
                                         </div>
@@ -64,13 +64,13 @@
                                     <div class="col-12">
                                         <div class="row">
                                             <div class="col-4 certainty-icon pr-0 text-right">
-                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE')}">
-                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE')}" class="hover_effect_target img-fluid">
+                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
+                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid">
                                                 </a>
                                             </div>
                                             <div class="col-8 pl-0 certainty-text">
-                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE')}">
-                                                    <span style="color: #777777;">{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TEXT')}</span>
+                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
+                                                    <span style="color: #777777;">{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -84,13 +84,13 @@
                                     <div class="col-12">
                                         <div class="row">
                                             <div class="col-4 pr-0 certainty-icon text-right">
-                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TITLE')}">
-                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE')}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TITLE')}" class="hover_effect_target img-fluid">
+                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
+                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid">
                                                 </a>
                                             </div>
                                             <div class="col-8 pl-0 pr-0 certainty-text">
-                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_LINK'))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TITLE')}">
-                                                    <span style="color: #777777;">{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TEXT')}</span>
+                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
+                                                    <span style="color: #777777;">{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FIFTH_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}</span>
                                                 </a>
                                             </div>
                                         </div>

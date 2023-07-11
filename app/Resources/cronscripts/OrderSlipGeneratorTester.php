@@ -74,7 +74,7 @@ class OrderSlipGenerator
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_URL').'/api/'.$route,
+            CURLOPT_URL => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_URL',1,1,1).'/api/'.$route,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 10,
@@ -121,7 +121,7 @@ class OrderSlipGenerator
         }
 
 
-        $loginCall = $this->doApiCall('api-auth', ['email'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER'), 'password'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS')]);
+        $loginCall = $this->doApiCall('api-auth', ['email'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER',1,1,1), 'password'=>Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS',1,1,1)]);
         if(!empty($loginCall)){
             $message = [];
             $message['text'] = 'pakbonnen_'.$this->slipTime.'.pdf';

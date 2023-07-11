@@ -184,7 +184,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
         }
 
         //Profile 3 is werplaats medewerkers admin is 1
-        $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES');
+        $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
         $profiles = array();
         if(!empty($workshopProfiles)){
             $profiles = explode(',', $workshopProfiles);

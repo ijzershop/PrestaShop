@@ -279,8 +279,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $paid = $_POST['switchinput'];
         $withTax = $_POST['with_tax'];
 
-        $reference = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE');
-        $category = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY');
+        $reference = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $category = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
         $cart = Context::getContext()->cart;
 
@@ -1298,9 +1298,9 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $type = Tools::getValue('type');
         $id_order = Tools::getValue('id_order');
         if ($type == 'statusandcard') {
-            $trello_url = Configuration::get('MSTHEMECONFIG_TRELLO_URL');
-            $trello_secret = Configuration::get('MSTHEMECONFIG_TRELLO_SECRET');
-            $trello_token = Configuration::get('MSTHEMECONFIG_TRELLO_TOKEN');
+            $trello_url = Configuration::get('MSTHEMECONFIG_TRELLO_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+            $trello_secret = Configuration::get('MSTHEMECONFIG_TRELLO_SECRET',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+            $trello_token = Configuration::get('MSTHEMECONFIG_TRELLO_TOKEN',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
             $action_type = '';
             $trello_card_lane = '';
@@ -1460,7 +1460,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_URL => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_URL') . '/api/' . $route,
+            CURLOPT_URL => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) . '/api/' . $route,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_SSL_VERIFYPEER => false,
@@ -1493,8 +1493,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     {
         //Add new labels Api call
         $loginCall = $this->doApiCall('api-auth', [
-            'email' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER'),
-            'password' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS')
+            'email' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
+            'password' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)
         ], []);
 
         $firstname = "";

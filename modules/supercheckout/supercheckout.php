@@ -1389,7 +1389,7 @@ class Supercheckout extends Module
             if (!Tools::getValue('klarna_supercheckout')) {
                 if (isset($settings['super_test_mode']) && $settings['super_test_mode'] != 1) {
                     $page_name = $this->context->controller->php_self;
-                    if ($page_name == 'order-opc' || $page_name == 'order' || $page_name == 'checkout' || (isset($settings['disable_cart_page']) && $settings['disable_cart_page'] == 1 && $page_name == 'cart' && !isset($_SERVER['HTTP_X_REQUESTED_WITH']) && Context::getContext()->customer->isLogged()) && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') != Context::getContext()->customer->id) {
+                    if ($page_name == 'order-opc' || $page_name == 'order' || $page_name == 'checkout' || (isset($settings['disable_cart_page']) && $settings['disable_cart_page'] == 1 && $page_name == 'cart' && !isset($_SERVER['HTTP_X_REQUESTED_WITH']) && Context::getContext()->customer->isLogged()) && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != Context::getContext()->customer->id) {
                         if ($settings['enable'] == 1) {
                             $current_page_url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                             $query_string = parse_url($current_page_url);

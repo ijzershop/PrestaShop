@@ -32,7 +32,7 @@
 {if ($showNotification > 0 || in_array('all', $showOnPages)) && strlen(Configuration::get('MSTHEMECONFIG_SHOP_NOTIFICATION_TEXT',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)) > 3}
 	<div class="row">
 		<div class="alert alert-{Configuration::get('MSTHEMECONFIG_SHOP_NOTIFICATION_TYPE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)} rounded-0 p-3 text-center w-100" role="alert">
-		  {Configuration::get('MSTHEMECONFIG_SHOP_NOTIFICATION_TEXT') nofilter}
+		  {Configuration::get('MSTHEMECONFIG_SHOP_NOTIFICATION_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) nofilter}
 		</div>
 	</div>
 {/if}

@@ -144,7 +144,7 @@
           </tr>
         {else}
 
-          {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE')}
+          {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
             {if  $discount_check < 0}
               <tr class="total-value font-weight-bold">
                 <td><span>Terugbetaling</span></td>

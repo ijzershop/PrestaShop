@@ -114,7 +114,7 @@ class PDFGenerator extends PDFGeneratorCore
                 $reference = Order::getUniqReferenceOf($id_order);
             }
 
-            $this->write2DBarcode('FOL/'.Configuration::get('MSTHEMECONFIG_TOKEN').'/'.$reference, 'QRCODE,H', 160, 39, 40, 40, $barcodeStyle, 'R');
+            $this->write2DBarcode('FOL/'.Configuration::get('MSTHEMECONFIG_TOKEN',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id).'/'.$reference, 'QRCODE,H', 160, 39, 40, 40, $barcodeStyle, 'R');
         }
 
         $this->writeHTML($this->content, true, false, true, false, '');

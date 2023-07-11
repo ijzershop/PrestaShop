@@ -497,10 +497,10 @@ class Mail extends MailCore
             /**
              * Start adding template vars
              */
-            $templateVars['{custom_footer_html}'] = Tools::safeOutput(Configuration::get('MSTHEMECONFIG_EMAIL_FOOTER_TEXT', ''));
-            $templateVars['{custom_footer_txt}'] = Tools::safeOutput(Configuration::get('MSTHEMECONFIG_EMAIL_FOOTER_TEXT_TXT', ''));
+            $templateVars['{custom_footer_html}'] = Tools::safeOutput(Configuration::get('MSTHEMECONFIG_EMAIL_FOOTER_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
+            $templateVars['{custom_footer_txt}'] = Tools::safeOutput(Configuration::get('MSTHEMECONFIG_EMAIL_FOOTER_TEXT_TXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
             $templateVars['{faq_page}'] = Tools::safeOutput(Context::getContext()->link->getCMSLink(
-                Configuration::get('MSTHEMECONFIG_CONTACTPAGE_FAQ'),
+                Configuration::get('MSTHEMECONFIG_CONTACTPAGE_FAQ',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
                 null,
                 true,
                 $idLang,

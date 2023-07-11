@@ -14,7 +14,7 @@
     <ul>
         {assign var="id_module_mollie" value=Module::getModuleIdByName('mollie')}
         {assign var="id_module_pin" value=Module::getModuleIdByName('ps_pinpayment')}
-        {if Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') == Context::getContext()->customer->id}
+        {if Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id}
             {assign var="selected_payment_method" value=$id_module_pin}
         {else}
             {assign var="selected_payment_method" value=$id_module_mollie}

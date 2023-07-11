@@ -182,7 +182,7 @@
                     </div>
                     {if !$product.add_to_cart_url || !$product.available_for_order}
                       <div class="col-12">
-                        <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE')}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE')}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>
+                        <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>
                       </div>
                     {/if}
                   </div>
@@ -285,7 +285,7 @@
                 <div class="table-responsive">
                   <table class="table table-striped table-hover table-sm">
                     <tbody>
-                    {assign var="enabledFeatures" value=Configuration::get('MSTHEMECONFIG_FEATURE_ENABLED')}
+                    {assign var="enabledFeatures" value=Configuration::get('MSTHEMECONFIG_FEATURE_ENABLED',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
                     {assign var="enabledFeaturesList" value=""}
                     {if $enabledFeatures}
                       {assign var="enabledFeaturesList" value=explode(",", $enabledFeatures)}
@@ -297,15 +297,15 @@
                     {assign var="length" value=""}
                     {foreach from=$product.grouped_features item=feature}
                       {if is_array($enabledFeaturesList) && in_array($feature.id_feature, $enabledFeaturesList) || empty($enabledFeaturesList)}
-                        {if $feature.id_feature == Configuration::get('MSTHEMECONFIG_FEATURE_WIDTH')}
+                        {if $feature.id_feature == Configuration::get('MSTHEMECONFIG_FEATURE_WIDTH',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
                           {assign var="width" value=$feature.value}
-                        {elseif $feature.id_feature == Configuration::get('MSTHEMECONFIG_FEATURE_HEIGHT')}
+                        {elseif $feature.id_feature == Configuration::get('MSTHEMECONFIG_FEATURE_HEIGHT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
                           {assign var="height" value=$feature.value}
 
-                        {elseif $feature.id_feature == Configuration::get('MSTHEMECONFIG_FEATURE_LENGTH')}
+                        {elseif $feature.id_feature == Configuration::get('MSTHEMECONFIG_FEATURE_LENGTH',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
                           {assign var="length" value=$feature.value}
 
-                        {elseif $feature.id_feature == Configuration::get('MSTHEMECONFIG_FEATURE_WEIGHT')}
+                        {elseif $feature.id_feature == Configuration::get('MSTHEMECONFIG_FEATURE_WEIGHT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
                           {assign var="weight" value=$feature.value}
                         {else}
                           <tr>
@@ -376,11 +376,11 @@
     {/if}
     {/block}
       {hook h='displayFooterProduct' product=$product}
-            {if Configuration::get('MSTHEMECONFIG_CATEGORY_SHOW_PRODUCT_PAGE') && Configuration::get('MSTHEMECONFIG_CATEGORY_BOTTOM_TEXT') != ""}
+            {if Configuration::get('MSTHEMECONFIG_CATEGORY_SHOW_PRODUCT_PAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) && Configuration::get('MSTHEMECONFIG_CATEGORY_BOTTOM_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != ""}
               <div class="row bg-info mt-4">
                 <div  class="col-12">
 
-                      {Configuration::get('MSTHEMECONFIG_CATEGORY_BOTTOM_TEXT') nofilter}
+                      {Configuration::get('MSTHEMECONFIG_CATEGORY_BOTTOM_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) nofilter}
                 </div>
               </div>
               {/if}

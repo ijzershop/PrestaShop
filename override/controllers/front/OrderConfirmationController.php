@@ -77,7 +77,7 @@ class OrderConfirmationController extends OrderConfirmationControllerCore
         }
         $this->reference = $this->order->reference;
 
-        if(isset($this->context->cookie->selected_customer_id_customer) && !empty($this->context->cookie->selected_customer_id_customer) && (int)Context::getContext()->customer->id == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') && Module::getModuleIdByName('ps_creditpayment') == $this->id_module){
+        if(isset($this->context->cookie->selected_customer_id_customer) && !empty($this->context->cookie->selected_customer_id_customer) && (int)Context::getContext()->customer->id == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) && Module::getModuleIdByName('ps_creditpayment') == $this->id_module){
             if (!Validate::isLoadedObject($this->order) || $this->order->id_customer != (int)$this->context->cookie->selected_customer_id_customer || $this->context->cookie->selected_customer_secure_key != $this->order->secure_key) {
 
                 Tools::redirect($redirectLink);

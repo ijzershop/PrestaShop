@@ -112,9 +112,9 @@
         {urldecode($settings['custom_js']) nofilter}  {*escape not required as contains JS*}
         {*      Custom added variables by ijzershop      *}
 
-        var shippingCarrier = parseInt("{Configuration::get('MSTHEMECONFIG_SHIPPING_CARRIER')}");
-        var pickupCarrier = parseInt("{Configuration::get('MSTHEMECONFIG_PICKUP_CARRIER')}");
-        var add2OrderCarrier = parseInt("{Configuration::get('MSTHEMECONFIG_ADD2ORDER_CARRIER')}");
+        var shippingCarrier = parseInt("{Configuration::get('MSTHEMECONFIG_SHIPPING_CARRIER',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}");
+        var pickupCarrier = parseInt("{Configuration::get('MSTHEMECONFIG_PICKUP_CARRIER',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}");
+        var add2OrderCarrier = parseInt("{Configuration::get('MSTHEMECONFIG_ADD2ORDER_CARRIER',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}");
 
         {*      Custom added variables by ijzershop      *}
       </script>

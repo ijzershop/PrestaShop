@@ -27,7 +27,7 @@
     <div class="thumbnail-container col-12">
       <div class="row">
         {block name='product_thumbnail'}
-          <div class="col-12 {Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id,'col-sm-4 col-md-2')} pl-0 pr-2" {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE')=='col-sm-4 col-md-2'}style="max-width: 110px;margin:0 auto;"{/if}>
+          <div class="col-12 {Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id,'col-sm-4 col-md-2')} pl-0 pr-2" {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)=='col-sm-4 col-md-2'}style="max-width: 110px;margin:0 auto;"{/if}>
             {if $product}
               <a href="{$product.url}" class="thumbnail product-thumbnail"  data-id-product="{$product.id_product}">
                 <img data-product-id="{$product.id_product}" class="w-100 thumb" src="{$product.cover.bySize.medium_default.url}" alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}" data-full-size-image-url="{$product.cover.large.url}" />
@@ -139,7 +139,7 @@
               <td>
                 {if !Product::productIsOrderable($product.id_product)}
                   <div class="w-100">
-                    <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE')}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>
+                    <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>
                   </div>
                 {/if}
               </td>

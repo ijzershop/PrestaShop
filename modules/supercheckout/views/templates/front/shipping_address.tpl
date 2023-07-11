@@ -4,7 +4,7 @@
 
 {assign var='existing_address' value=[]}
 {if !isset($guest_information)}
-    {if $customer.addresses && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') != $customer['id']}
+    {if $customer.addresses && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != $customer['id']}
       {assign var='existing_address' value=reset($customer.addresses)}
     {/if}
 {/if}

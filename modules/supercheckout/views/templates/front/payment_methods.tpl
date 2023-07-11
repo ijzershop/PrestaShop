@@ -15,7 +15,7 @@
         {assign var="id_module_mollie" value=Module::getModuleIdByName('mollie')}
         {assign var="id_module_pin" value=Module::getModuleIdByName('ps_pinpayment')}
         {assign var="cookie_selected_payment_method" value=""}
-        {if (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') === (int)Context::getContext()->customer->id}
+        {if (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) === (int)Context::getContext()->customer->id}
             {assign var="selected_payment_method" value=$id_module_pin}
         {/if}
         {if isset(Context::getContext()->cookie->payment_method)}
@@ -33,7 +33,7 @@
             <div class="radio">
                     <input type="radio" name="payment_method" data-module-name="{$option.module_name nofilter}{*escape not required as contains html*}"
                            value="{$option.id}" id="{$option.id}"
-                            {if ($cookie_selected_payment_method === $option.id && (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE') !== (int)Context::getContext()->customer->id) || $selected_payment_method === $option.id_module} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>
+                            {if ($cookie_selected_payment_method === $option.id && (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) !== (int)Context::getContext()->customer->id) || $selected_payment_method === $option.id_module} checked="checked"{/if} class="{if $option.binary}binary{/if}"/>
                   <label id="payment_lbl_{$option.id_module|intval}" for="{$option.id}">
                         {if $display_payment_style neq 0}
                             {if $option.payment_image_url neq ''}

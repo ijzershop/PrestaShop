@@ -6,9 +6,7 @@
         <div class="row">
             <div class="col-12" id="shoppingcart-list-header-totals">
                 <div class="shoppingcart-header-totals col-12 pt-2">
-                    {if Context::getContext()->cart->nbProducts() && (int)Context::getContext()->cart->nbProducts() > 1}
-                    Totaal ({if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if} producten, incl verzending & btw)
-                    {elseif Context::getContext()->cart->nbProducts() && (int)Context::getContext()->cart->nbProducts() == 1}Totaal ({if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if} product, incl verzending & btw){else}<br>{/if}
+                    Totaal incl. btw
                 </div>
                 <div class="col-sm-8 float-left">
                     <div class="shoppingcart-header-total-price font-weight-bold">
@@ -63,18 +61,19 @@
                         <span class="col-5"></span><span class="col-7 text-right"></span>
                     </div>
                     <div class="border-bottom-0 pb-1 row">
-                        <span class="col-6">
-                          <div class="row">
-                            <div class="form-check form-check-inline col-12 col-sm-6 p-0 m-0 pl-2 pl-sm-2 mb-1 mb-sm-0 justify-content-start">
+                        <span class="col-5">
+                            Verzending
+                          <!-- <div class="row"> -->
+                            <!-- <div class="form-check form-check-inline col-12 col-sm-6 p-0 m-0 pl-2 pl-sm-2 mb-1 mb-sm-0 justify-content-start">
                               <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_bottom_cart" id="carrier_selection_bottom_cart1" value="shipping" {if Context::getContext()->cart->id_carrier == (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)  || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}checked{/if}>
                               <label class="form-check-label carrier-selection-label" for="carrier_selection_bottom_cart1">Verzenden</label>
                             </div>
                             <div class="form-check form-check-inline col-12 col-sm-6 p-0 m-0 pl-2 justify-content-start">
                               <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_bottom_cart" id="carrier_selection_bottom_cart2" value="pickup" {if Context::getContext()->cart->id_carrier == (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)  || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) == 0}checked{/if}>
                               <label class="form-check-label carrier-selection-label" for="carrier_selection_bottom_cart2">Afhalen</label>
-                            </div>
-                          </div>
-                        </span><span class="col-6 text-right price pt-2 pt-sm-0">{if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}{Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING), 'EUR')}{else}€ 0,00{/if}</span>
+                            </div> -->
+                          <!-- </div> -->
+                        </span><span class="col-7 text-right price pt-2 pt-sm-0">{if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}{Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING), 'EUR')}{else}€ 0,00{/if}</span>
                     </div>
                   {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS) > 0}
                       <div class="border-bottom-0 pb-1 row">

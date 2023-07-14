@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,9 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
+
+<div class="col-12 pl-0 pr-0 navbar">
 
   {{ form_start(updateOrderStatusActionBarForm, {
     'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
@@ -40,24 +42,25 @@
         {% set isBright = choice.attr['data-is-bright'] %}
       {% endif %}
     {% endfor %}
-{#    <span class="select-status{% if isBright %} is-bright{% endif %}" id="update_order_status_action_input_wrapper" style="background-color:{{ backgroundColor }};">#}
-        {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {
-          'attr': {
-            'class': 'select-status-colored form-control',
-            'style': 'border-color: {{ backgroundColor }}'
-          },
-          'id': 'update_order_status_action_input',
-        }) }}
-{#    </span>#}
-<div class="input-group-append">
-    <button class="btn btn-action"
-            id="update_order_status_action_btn"
-            disabled
-            data-order-status-id="{{ orderForViewing.history.currentOrderStatusId }}"
-    >
-      {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
-    </button>
-</div>
+    {#    <span class="select-status{% if isBright %} is-bright{% endif %}" id="update_order_status_action_input_wrapper" style="background-color:{{ backgroundColor }};"> #}
+    {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {
+      'attr': {
+        'class': 'select-status-colored form-control',
+        'style': 'border-color: {{ backgroundColor }}',
+        'data-width': '300px'
+      },
+      'id': 'update_order_status_action_input',
+    }) }}
+    {#    </span> #}
+    <div class="input-group-append">
+      <button class="btn btn-action"
+              id="update_order_status_action_btn"
+              disabled
+              data-order-status-id="{{ orderForViewing.history.currentOrderStatusId }}"
+      >
+        {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </div>
   </div>
 
   <div class="d-none">
@@ -65,6 +68,58 @@
   </div>
   {{ form_end(updateOrderStatusActionBarForm) }}
 
+
+
+
+
+
+  {# Pakbon bericht #}
+  <form class="order-actions-shipping-status">
+    <div class="input-group">
+      <button type="button" id="showDeliverySlipMessageBtn" data-order-id="{{ order.id }}" data-toggle="modal"
+              data-target="#showDeliverySlipMessageModal"
+              class="btn btn-action">
+        <i class="material-icons">local_shipping</i>
+        {{ 'Pakbon Bericht'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </div>
+  </form>
+
+
+  {# Start add buttons to order view #}
+
+  {# Start desired delivery date #}
+  <form class="order-action-desired-delivery-date mt-3">
+    <div class="input-group">
+      <input class="form-control" type="date" min="{{ "now"|date("Y/m/d") }}" name="desired_delivery_date"
+             id="desired_delivery_date"
+             value="{% if order.desired_delivery_date == '0000-00-00' %}{{ "now"|date("Y/m/d") }}{% else %}{{ order.desired_delivery_date }}{% endif %}"
+             aria-describedby="desiredDeliveryHelpBlock">
+      <div class="input-group-append">
+        <button type="button" id="clearDesiredDeliveryDate" class="btn btn-primary">Clear</button>
+        <button type="button" id="submitDesiredDeliveryDate" class="btn btn-success">Submit</button>
+      </div>
+    </div>
+    <small id="desiredDeliveryHelpBlock" class="form-text text-muted">Gewenste leverdatum voor bestelling</small>
+  </form>
+
+  {# Migrate Customer Button #}
+  <form class="order-actions-migrate-to-customer mt-3" id="migrateToCustomer">
+    <div class="input-group ui-widget">
+      <input type="text" class="form-control" style="width:150px;" id="selectCustomerToMigrate"
+             placeholder="Selecteer een klant" aria-describedby="switchOrderToUserHelpBlock">
+      <div class="input-group-append">
+        <button type="button" id="migrateOrder" class="btn btn-secondary btn-primary"><i class="material-icons">transfer_within_a_station</i>
+        </button>
+      </div>
+    </div>
+    <small id="switchOrderToUserHelpBlock" class="form-text text-muted">Koppel bestelling aan andere gebruiker</small>
+  </form>
+
+
+</div>
+
+<div class="col-12 pl-0 pr-0 navbar">
   {% if orderForViewing.documents.canGenerateInvoice %}
     <form class="order-actions-invoice">
       <div class="input-group">
@@ -100,19 +155,34 @@
 
 
 
+  {# Shipping Status Button #}
+  <form class="order-actions-shipping-status">
+    <div class="input-group">
+      <button type="button" id="showShippingStatusBtn" data-history="{{ history|json_encode }}"
+              data-order-reference="{{ orderForViewing.reference }}" data-toggle="modal"
+              data-target="#showShippingStatusModal"
+              class="btn btn-action">
+        <i class="material-icons">local_shipping</i>
+        {{ 'Verzend Status'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </div>
+  </form>
+
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
 
 
 
 
-{% if merchandiseReturnEnabled %}
+  {% if merchandiseReturnEnabled %}
     {% if orderForViewing.isDelivered() %}
-      <button class="btn-secondary btn btn-action return-product-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+      <button class="btn-secondary btn btn-action return-product-display"
+              type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
         <i class="material-icons">swap_horiz</i>
         {{ 'Return products'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </button>
     {% elseif orderForViewing.hasBeenPaid() or orderForViewing.hasPayments() %}
-      <button class="btn-secondary btn btn-action standard-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+      <button class="btn-secondary btn btn-action standard-refund-display"
+              type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
         <i class="material-icons">swap_horiz</i>
         {{ 'Standard refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </button>
@@ -124,65 +194,24 @@
   {% endif %}
 
   {% if orderForViewing.hasBeenPaid() or orderForViewing.hasPayments() %}
-      <button class="btn-secondary btn btn-action partial-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
-        <i class="material-icons">swap_horiz</i>
-        {{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
-      </button>
+    <button class="btn-secondary btn btn-action partial-refund-display"
+            type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+      <i class="material-icons">swap_horiz</i>
+      {{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    </button>
   {% endif %}
 
   {% include '@Modules/msthemeconfig/views/templates/admin/order_navigation.html.twig' %}
 
-{# Start add buttons to order view #}
-
-{# Shipping Status Button #}
-<form class="order-actions-shipping-status">
-  <div class="input-group">
-    <button type="button" id="showShippingStatusBtn" data-history="{{ history|json_encode }}" data-order-reference="{{ orderForViewing.reference }}"  data-toggle="modal" data-target="#showShippingStatusModal"
-            class="btn btn-action">
-      <i class="material-icons">local_shipping</i>
-      {{ 'Verzend Status'|trans({}, 'Admin.Orderscustomers.Feature') }}
-    </button>
-  </div>
-</form>
-{# Start desired delivery date #}
-<form class="order-action-desired-delivery-date mt-3">
-  <div class="input-group">
-    <input class="form-control" type="date" min="{{ "now"|date("Y/m/d") }}" name="desired_delivery_date" id="desired_delivery_date" value="{% if order.desired_delivery_date == '0000-00-00'%}{{ "now"|date("Y/m/d") }}{% else %}{{ order.desired_delivery_date }}{% endif %}" aria-describedby="desiredDeliveryHelpBlock">
-    <div class="input-group-append">
-      <button type="button" id="clearDesiredDeliveryDate" class="btn btn-primary">Clear</button>
-      <button type="button" id="submitDesiredDeliveryDate" class="btn btn-success">Submit</button>
-    </div>
-  </div>
-  <small id="desiredDeliveryHelpBlock" class="form-text text-muted">Gewenste leverdatum voor bestelling</small>
-</form>
-
-{# Migrate Customer Button #}
-<form class="order-actions-migrate-to-customer mt-3" id="migrateToCustomer">
-  <div class="input-group ui-widget">
-    <input type="text" class="form-control" style="width:150px;" id="selectCustomerToMigrate" placeholder="Selecteer een klant"  aria-describedby="switchOrderToUserHelpBlock">
-    <div class="input-group-append">
-      <button type="button" id="migrateOrder" class="btn btn-secondary btn-primary"><i class="material-icons">transfer_within_a_station</i></button>
-    </div>
-  </div>
-  <small id="switchOrderToUserHelpBlock" class="form-text text-muted">Koppel bestelling aan andere gebruiker</small>
-</form>
-
-<form class="order-actions-shipping-status">
-  <div class="input-group">
-    <button type="button" id="showDeliverySlipMessageBtn" data-order-id="{{ order.id }}"  data-toggle="modal" data-target="#showDeliverySlipMessageModal"
-            class="btn btn-action">
-      <i class="material-icons">local_shipping</i>
-      {{ 'Pakbon Bericht'|trans({}, 'Admin.Orderscustomers.Feature') }}
-    </button>
-  </div>
-</form>
+</div>
 
 
 {# End add buttons to order view #}
 
 
 {#  ShippingStatusModal Start  #}
-<div class="modal fade" id="showShippingStatus" tabindex="-1" role="dialog" aria-labelledby="showShippingStatus" aria-hidden="true">
+<div class="modal fade" id="showShippingStatus" tabindex="-1" role="dialog" aria-labelledby="showShippingStatus"
+     aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -203,7 +232,8 @@
 
 
 {#  DeliverySlipMessageModal Start  #}
-<div class="modal fade" id="showDeliverySlipMessageModal" tabindex="-1" role="dialog" aria-labelledby="showDeliverySlipMessage" aria-hidden="true">
+<div class="modal fade" id="showDeliverySlipMessageModal" tabindex="-1" role="dialog"
+     aria-labelledby="showDeliverySlipMessage" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header"><h4>Pakbon Bericht</h4>
@@ -225,126 +255,119 @@
 {#  DeliverySlipMessageModal End  #}
 {% block javascripts %}
   <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function () {
 
 
+      $('#migrateOrder').on('click', function (event) {
+        event.preventDefault();
+        var customerEmail = $('#selectCustomerToMigrate').val().split('#');
 
-
-
-
-
-    $('#migrateOrder').on('click', function(event) {
-      event.preventDefault();
-      var customerEmail = $('#selectCustomerToMigrate').val().split('#');
-
-      var postdata = {
-        customer_email:customerEmail[0],
-        customer:customerEmail[1],
-        order: {{ orderForViewing.id }}
-      };
-      $.ajax({
-        type: 'GET',
-        url: 'index.php?ajax=1&controller=AdminOrders&action=migrateOrderToCustomer&token='+token,
-        data: postdata,
-        success: function(r){
-          r = JSON.parse(r);
-          if(r.success){
-            $.growl({ title: "Geslaagd!", message: r.msg });
-            window.location.reload(true);
-          } else {
-            $.growl.error({ title: "Fout!", message: r.msg});
+        var postdata = {
+          customer_email: customerEmail[0],
+          customer: customerEmail[1],
+          order: {{ orderForViewing.id }}
+        };
+        $.ajax({
+          type: 'GET',
+          url: 'index.php?ajax=1&controller=AdminOrders&action=migrateOrderToCustomer&token=' + token,
+          data: postdata,
+          success: function (r) {
+            r = JSON.parse(r);
+            if (r.success) {
+              $.growl({title: "Geslaagd!", message: r.msg});
+              window.location.reload(true);
+            } else {
+              $.growl.error({title: "Fout!", message: r.msg});
+            }
           }
-        }
+        });
       });
-    });
 
 
-    $('#submitDesiredDeliveryDate').on('click', function(event) {
-      event.preventDefault();
-      var date = $('#desired_delivery_date').val();
-      $.ajax({
-        type: 'GET',
-        url: 'index.php?ajax=1&controller=AdminOrders&action=setDesiredDeliveryDate&token='+token,
-        data: { date:date, id_order: {{ orderForViewing.id }}},
-        success: function(r){
-          r = JSON.parse(r);
-          if(r.success){
-            $.growl({ title: "Gewenste leverdatum ingesteld!", message: r.msg });
-            window.location.reload(true);
-          } else {
-            $.growl.error({ title: "Fout bij instellen gewenste leverdatum!", message: r.msg});
+      $('#submitDesiredDeliveryDate').on('click', function (event) {
+        event.preventDefault();
+        var date = $('#desired_delivery_date').val();
+        $.ajax({
+          type: 'GET',
+          url: 'index.php?ajax=1&controller=AdminOrders&action=setDesiredDeliveryDate&token=' + token,
+          data: {date: date, id_order: {{ orderForViewing.id }}},
+          success: function (r) {
+            r = JSON.parse(r);
+            if (r.success) {
+              $.growl({title: "Gewenste leverdatum ingesteld!", message: r.msg});
+              window.location.reload(true);
+            } else {
+              $.growl.error({title: "Fout bij instellen gewenste leverdatum!", message: r.msg});
+            }
           }
-        }
+        });
       });
-    });
 
-    $('#clearDesiredDeliveryDate').on('click', function(event) {
-      event.preventDefault();
-      $('#desired_delivery_date').val(null);
-      $.ajax({
-        type: 'GET',
-        url: 'index.php?ajax=1&controller=AdminOrders&action=setDesiredDeliveryDate&token='+token,
-        data: { date:null, id_order: {{ orderForViewing.id }}},
-        success: function(r){
-          r = JSON.parse(r);
-          if(r.success){
-            $.growl({ title: "Gewenste leverdatum gewijzigd!", message: 'Leverdatum is geleegd, deze word niet meer op de pakbon getoond'});
-            window.location.reload(true);
-          } else {
-            $.growl.error({ title: "Fout bij legen van leverdatum!", message: r.msg});
+      $('#clearDesiredDeliveryDate').on('click', function (event) {
+        event.preventDefault();
+        $('#desired_delivery_date').val(null);
+        $.ajax({
+          type: 'GET',
+          url: 'index.php?ajax=1&controller=AdminOrders&action=setDesiredDeliveryDate&token=' + token,
+          data: {date: null, id_order: {{ orderForViewing.id }}},
+          success: function (r) {
+            r = JSON.parse(r);
+            if (r.success) {
+              $.growl({
+                title: "Gewenste leverdatum gewijzigd!",
+                message: 'Leverdatum is geleegd, deze word niet meer op de pakbon getoond'
+              });
+              window.location.reload(true);
+            } else {
+              $.growl.error({title: "Fout bij legen van leverdatum!", message: r.msg});
+            }
           }
-        }
+        });
       });
-    });
 
 
+      $('#showShippingStatusBtn').on('click', function (event) {
+        event.preventDefault();
+        $('#showShippingStatus').modal('show');
+        $('#showShippingStatus .loading-icon').show();
+        var ref = $(this).attr('data-order-reference');
+        $.ajax({
+          url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1',
+          type: 'GET',
+          data: {
+            reference: ref,
+            method: 'orderstatus',
+            ajax: true,
+            render_template: true
+          },
+        }).done((e) => {
+          $('#showShippingStatus .modal-body').html(e);
+
+        });
+      });
 
 
+      $('#showDeliverySlipMessageBtn').on('click', function (event) {
+        event.preventDefault();
+        $('#showDeliverySlipMessageModal').modal('show');
+        var ref = $(this).attr('data-order-id');
+        $.ajax({
+          url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1',
+          type: 'GET',
+          data: {
+            id: ref,
+            method: 'delivery_message',
+            ajax: true,
+            render_template: true
+          },
+        }).done((e) => {
+          $('#showDeliverySlipMessageModal .modal-body').html(e);
 
-    $('#showShippingStatusBtn').on('click', function(event){
-      event.preventDefault();
-      $('#showShippingStatus').modal('show');
-      $('#showShippingStatus .loading-icon').show();
-      var ref = $(this).attr('data-order-reference');
-      $.ajax({
-        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1',
-        type: 'GET',
-        data: {
-          reference: ref,
-          method: 'orderstatus',
-          ajax: true,
-          render_template:true
-        },
-      }).done((e) => {
-        $('#showShippingStatus .modal-body').html(e);
-
-    });
-    });
+        });
+      });
 
 
-
-    $('#showDeliverySlipMessageBtn').on('click', function(event){
-      event.preventDefault();
-      $('#showDeliverySlipMessageModal').modal('show');
-      var ref = $(this).attr('data-order-id');
-      $.ajax({
-        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1',
-        type: 'GET',
-        data: {
-          id: ref,
-          method: 'delivery_message',
-          ajax: true,
-          render_template:true
-        },
-      }).done((e) => {
-        $('#showDeliverySlipMessageModal .modal-body').html(e);
-
-    });
-    });
-
-
-
-      $('#save-delivery-message-btn').on('click', function(event) {
+      $('#save-delivery-message-btn').on('click', function (event) {
         event.preventDefault();
         let orderId = $('form#delivery-slip-message-form [name="id_order"]').val();
         let deliverySlipMessage = $('form#delivery-slip-message-form [name="delivery_slip_message"]').val();
@@ -353,11 +376,11 @@
         let idCart = $('form#delivery-slip-message-form [name="id_cart"]').val();
 
         let postdata = {
-          id_order:orderId,
-          id_message:idDeliverySlipMessage,
-          message:deliverySlipMessage,
-          customer:idCustomer,
-          cart:idCart,
+          id_order: orderId,
+          id_message: idDeliverySlipMessage,
+          message: deliverySlipMessage,
+          customer: idCustomer,
+          cart: idCart,
           ajax: true,
           method: 'save_delivery_message'
         };
@@ -365,15 +388,15 @@
           type: 'GET',
           url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1',
           data: postdata,
-          success: function(r){
+          success: function (r) {
             r = JSON.parse(r);
             console.log(r)
 
-            if(r.success){
-              $.growl({ title: "Geslaagd!", message: r.msg });
+            if (r.success) {
+              $.growl({title: "Geslaagd!", message: r.msg});
               window.location.reload(true);
             } else {
-              $.growl.error({ title: "Fout!", message: r.msg});
+              $.growl.error({title: "Fout!", message: r.msg});
             }
           }
         });

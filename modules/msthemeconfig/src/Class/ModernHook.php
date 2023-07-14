@@ -1857,6 +1857,10 @@ class ModernHook
         /** @var ColumnCollection */
         $columns = $definition->getColumns();
 
+        $f = $definition->getFilters();
+        $osNameFillter = $f->all()['osname'];
+        $osNameFillter->setAssociatedColumn('label');
+
         $this->generateKoopmanLabelButtons($columns);
 
         $addedToOrderColumn = new DataColumn('added_to_order');

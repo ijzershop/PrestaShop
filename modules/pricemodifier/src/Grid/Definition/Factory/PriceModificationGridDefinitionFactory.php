@@ -269,7 +269,9 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
     {
         $id_lang = $this->context->language->id;
 
-        $customCategory = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', null);
+        $customCategory = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '382');
+
+
 
         $sqlProducts = new DbQuery();
         $sqlProducts->select('p.`id_product` as id, p.`id_category_default`, CONCAT(pl.`name`, " - " , clp.`name`," ", cl.`name`) as text');

@@ -692,6 +692,12 @@ class Cart extends CartCore
         $keepOrderPrices = false
     )
     {
+
+            if(!is_numeric($id_carrier) && (int)Context::getContext()->cart->id_carrier > 0){
+                $id_carrier = (int)Context::getContext()->cart->id_carrier;
+            }
+
+        
         if (!in_array($type, [CART::ONLY_DISCOUNTS_NO_CALCULATION, CART::ONLY_REMAINDER_OF_DISCOUNTS, CART::ONLY_REMAINDER_UNTIL_STORE_DISCOUNT])) {
             $value = parent::getOrderTotal(
                 $withTaxes,

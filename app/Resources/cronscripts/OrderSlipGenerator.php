@@ -67,6 +67,14 @@ class OrderSlipGenerator
         $this->debug = $debug;
         $this->paidStatus = Configuration::get('MSTHEMECONFIG_ORDERSTATE_PAID', 1,1,1, '2');
         $this->processedStatus = Configuration::get('MSTHEMECONFIG_ORDERSTATE_PROCESSED', 1,1,1, '3');
+
+        global $kernel;
+            if(!$kernel){ 
+              require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
+              $kernel = new \AppKernel('prod', false);
+              $kernel->boot(); 
+          }
+
     }
 
 
@@ -195,7 +203,7 @@ class OrderSlipGenerator
             if(count($order_invoice_collection) % $chunk_size) {
                 $leftovers = array_pop($splitted_order_invoice_collection);
                 $last      = array_pop($splitted_order_invoice_collection);
-                array_push($splitted_order_invoice_collection, array_merge($last, $leftovers));
+                array_push($splitted_order_invoice_collection, array_merge((array)$last, (array)$leftovers));
             }
 
             foreach($splitted_order_invoice_collection as $chunked_order_invoice_collection){

@@ -1,3 +1,8 @@
+td.koopman_label_button-type.column-label{
+  min-width: 550px;
+}
+
+
 .column-customer a, .column-reference {
   color: #000 !important;
   font-weight: 700;

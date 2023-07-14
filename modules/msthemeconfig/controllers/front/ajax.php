@@ -1067,7 +1067,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     {
         $id_order = Tools::getValue('id_order');
         $order = new Order($id_order);
-        $new_status = Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_STATUS');
+        $new_status = Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
         $history = new OrderHistory();
         $history->id_order = (int)$id_order;
@@ -1084,7 +1084,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     private function _getKoopmanBackOrderStatus()
     {
         $id_order = Tools::getValue('id_order');
-        $new_status = Configuration::get('KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS');
+        $new_status = Configuration::get('KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
         $history = new OrderHistory();
         $history->id_order = (int)$id_order;
@@ -1105,7 +1105,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     private function _getKoopmanBeingPreparedStatus()
     {
         $id_order = Tools::getValue('id_order');
-        $new_status = Configuration::get('KOOPMANORDEREXPORT_SELECT_STATUS');
+        $new_status = Configuration::get('KOOPMANORDEREXPORT_SELECT_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
         $history = new OrderHistory();
         $history->id_order = (int)$id_order;
@@ -1128,7 +1128,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $orderId = Tools::getValue('id_order');
         $orderMsg = Tools::getValue('order_msg');
         try {
-            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL'), $this->soapoptions);
+            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $this->soapoptions);
         } catch (Exception $e) {
             echo 'error (new SoapClient) - ' . $e->getMessage();
 
@@ -1139,15 +1139,15 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $deliveryAddress = new Address($order->id_address_delivery);
 
         $login = new stdClass();
-        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME');
-        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD');
-        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT');
-        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER');
+        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
         $opdracht = new stdClass();
         $opdracht->type = 'A'; // A = retour
         $opdracht->nrorder = $reference;
-        $opdracht->afzender = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDER');
+        $opdracht->afzender = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
         $opdracht->afznaam = 'De Moderne Smid';
         $opdracht->afzastraat = 'Venusweg';
         $opdracht->afzhuisnr = '15';
@@ -1243,11 +1243,11 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $export->export();
 
         if($export->redirect){
-            $readyForShippingStatus = Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS');
+            $readyForShippingStatus = Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
             $history = new OrderHistory();
             $history->id_order = (int)$id_order;
-            $history->changeIdOrderState((int)$new_status, (int)$id_order);
+            $history->changeIdOrderState((int)$readyForShippingStatus, (int)$id_order);
             $history->add();
 
             $this->makeApiCallToDashboard('set-label-printed', $id_order, Order::getUniqReferenceOf($id_order));
@@ -1277,7 +1277,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     private function _getKoopmanToegevoegd()
     {
         $id_order = Tools::getValue('id_order');
-        $new_status = Configuration::get('KOOPMANORDEREXPORT_SELECT_ADDEDORDER_STATUS');
+        $new_status = Configuration::get('KOOPMANORDEREXPORT_SELECT_ADDEDORDER_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
         $history = new OrderHistory();
         $history->id_order = (int)$id_order;
@@ -1298,9 +1298,9 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $type = Tools::getValue('type');
         $id_order = Tools::getValue('id_order');
         if ($type == 'statusandcard') {
-            $trello_url = Configuration::get('MSTHEMECONFIG_TRELLO_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-            $trello_secret = Configuration::get('MSTHEMECONFIG_TRELLO_SECRET',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-            $trello_token = Configuration::get('MSTHEMECONFIG_TRELLO_TOKEN',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+            $trello_url = Configuration::get('MSTHEMECONFIG_TRELLO_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+            $trello_secret = Configuration::get('MSTHEMECONFIG_TRELLO_SECRET', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id,  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+            $trello_token = Configuration::get('MSTHEMECONFIG_TRELLO_TOKEN', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id,  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
             $action_type = '';
             $trello_card_lane = '';
@@ -1404,7 +1404,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             }
         }
 
-        $new_status = Configuration::get('KOOPMANORDEREXPORT_SELECT_WORKSHOP_STATUS');
+        $new_status = Configuration::get('KOOPMANORDEREXPORT_SELECT_WORKSHOP_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
         $history = new OrderHistory();
         $history->id_order = (int)$id_order;

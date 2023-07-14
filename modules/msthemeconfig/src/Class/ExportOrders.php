@@ -48,7 +48,7 @@ class ExportOrders
         $this->idLang = $this->context->language->id;
         $this->idShop = $this->context->shop->id;
         $this->idShopGroup = $this->context->shop->id_shop_group;
-        $this->statusShipped = (int)Configuration::get('KOOPMANORDEREXPORT_STATUS_TRANSFERRED', $this->idLang, $this->idShopGroup, $this->idShop)
+        $this->statusShipped = (int)Configuration::get('KOOPMANORDEREXPORT_STATUS_TRANSFERRED', $this->idLang, $this->idShopGroup, $this->idShop);
         $this->soapoptions = [
             'stream_context' => stream_context_create(
                 [
@@ -59,10 +59,14 @@ class ExportOrders
                 ]
             ),
         ];
+
         $folder = Configuration::get('KOOPMANORDEREXPORT_LABELS_FOLDER', $this->idLang, $this->idShopGroup, $this->idShop);
+        
+
         $this->labelsFolder = str_replace('private_html',
             'public_html',
             $_SERVER['DOCUMENT_ROOT'] . 'upload/' . $folder);
+
     }
 
     /**
@@ -71,6 +75,7 @@ class ExportOrders
     private function _getLaneFolder()
     {
         $lane_1 = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PACKAGELANE_1_PROFILE', $this->idLang, $this->idShopGroup, $this->idShop);
+
         $lane_2 = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PACKAGELANE_2_PROFILE', $this->idLang, $this->idShopGroup, $this->idShop);
         $lane_3 = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PACKAGELANE_3_PROFILE', $this->idLang, $this->idShopGroup, $this->idShop);
         switch ((int)$this->context->employee->id_profile) {
@@ -89,11 +94,11 @@ class ExportOrders
     public function export()
     {
         $orders = $this->_getOrders(Configuration::get('KOOPMANORDEREXPORT_SELECT_STATUS', $this->idLang, $this->idShopGroup, $this->idShop), Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop), 1, $this->id_order);
+
+
         if (empty($orders)) {
             return false;
         }
-
-        $this->_prepareLabelsFolder();
         if (!empty($this->id_order)) {
             if (isset($this->weight)) {
                 $gewicht = (int)$this->weight;
@@ -302,13 +307,14 @@ class ExportOrders
      * @param new state
      * @return success
      **/
-    private function _setNewStateForOrders($orders, $state)
+    public function _setNewStateForOrders($orders, $state)
     {
         //get order object for each order and change status
         foreach ($orders as $order) {
+     
             if (in_array($order['id_order'], $this->ordersOk)) {
-                $orderObject = new Order($order['id_order']);
-                $orderObject->setCurrentState($state, 0);
+                $orderObject = new Order((int)$order['id_order']);
+                $orderObject->setCurrentState((int)$state, 0);
             }
         }
 
@@ -327,6 +333,7 @@ class ExportOrders
             //echo "error (new SoapClient) - ".$e->getMessage();
             return false;
         }
+
 
         $login = new stdClass();
         $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME', $this->idLang, $this->idShopGroup, $this->idShop);
@@ -612,6 +619,7 @@ class ExportOrders
                     $_SESSION['koopmanError'] = $e->getMessage();
                 }
 
+
                 if ($transport) {
                     $zendingnr = $transport->zendingnr;
                     $zendingnr = 'T' . substr($zendingnr, 1); //T98
@@ -629,6 +637,7 @@ class ExportOrders
                             'email' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER', $this->idLang, $this->idShopGroup, $this->idShop),
                             'password' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS', $this->idLang, $this->idShopGroup, $this->idShop)
                         ]);
+
                         if (!empty($loginCall)) {
 
                             $firstname = "";

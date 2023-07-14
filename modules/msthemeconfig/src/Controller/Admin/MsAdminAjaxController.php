@@ -142,6 +142,7 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
             $offer->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
             $offer->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
             $offer->id_category_default = $catID;
+            $offer->id_tax_rules_group = 1;
             $offer->out_of_stock = 0;
             $offer->update();
 
@@ -193,6 +194,7 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
             $offer->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
             $offer->out_of_stock = 0;
             $offer->id_category_default = $catID;
+            $offer->id_tax_rules_group = 1;
             $offer->save();
 
             $offer->addToCategories($categoryArray);

@@ -343,3 +343,4 @@ install.lock
 docker-compose.override.yml
 modules/backup_ps_metrics/
 /app/config/parameters.php
+/app/config/

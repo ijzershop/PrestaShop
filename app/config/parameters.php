@@ -8,7 +8,7 @@ return [
     'database_port' => '',
     'database_name' => 'ijzershop8',
     'database_user' => 'root',
-    'database_password' => '',
+    'database_password' => ' ',
     'database_prefix' => 'ps176_',
     'database_engine' => 'InnoDB',
     'mailer_transport' => 'smtp',

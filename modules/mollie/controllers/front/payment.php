@@ -123,11 +123,11 @@ class MolliePaymentModuleFrontController extends ModuleFrontController
             $paymentData = $orderCreationHandler->createBankTransferOrder($paymentData, $cart);
         }
 
+
         try {
             $apiPayment = $mollieOrderCreationService->createMollieOrder($paymentData, $paymentMethodObj);
         } catch (OrderCreationException $e) {
             $this->setTemplate('error.tpl');
-
             if (Configuration::get(Mollie\Config\Config::MOLLIE_DISPLAY_ERRORS)) {
                 $message = 'Cart Dump: ' . $e->getMessage() . ' json: ' . json_encode($paymentData, JSON_PRETTY_PRINT);
             } else {

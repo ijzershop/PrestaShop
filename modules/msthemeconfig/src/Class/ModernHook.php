@@ -1857,8 +1857,11 @@ class ModernHook
         /** @var ColumnCollection */
         $columns = $definition->getColumns();
 
-        $this->generateKoopmanLabelButtons($columns);
+        $f = $definition->getFilters();
+        $osNameFillter = $f->all()['osname'];
+        $osNameFillter->setAssociatedColumn('label');
 
+        $this->generateKoopmanLabelButtons($columns);
         $addedToOrderColumn = new DataColumn('added_to_order');
         $addedToOrderColumn->setOptions(['sortable' => false, 'clickable' => false, 'field' => 'added_to_order']);
         $addedToOrderColumn->setName('Toegevoegd');
@@ -1890,7 +1893,7 @@ class ModernHook
 
         //Profile 3 is werkplaats medewerkers admin is 1
         $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES', null, null, 1, "5,6,7");
-     
+
         $profiles = [];
         if (!empty($workshopProfiles)) {
             $profiles = explode(',', $workshopProfiles);

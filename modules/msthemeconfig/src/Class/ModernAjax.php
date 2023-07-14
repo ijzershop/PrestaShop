@@ -899,7 +899,7 @@ class ModernAjax
      */
     private function sortSearchResult($searchArray): array
     {
-        $tempArray = $searchArray['results'];
+        $tempArray = (array)$searchArray['results'];
         $sortedArray = [];
         $textColumn = array_column($tempArray, 'text');
         if (array_multisort($textColumn, SORT_NATURAL | SORT_FLAG_CASE, $tempArray)) {

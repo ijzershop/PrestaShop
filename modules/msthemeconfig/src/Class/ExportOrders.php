@@ -4,6 +4,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\Context;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
+use PrestaShop\PrestaShop\Adapter\Entity\Order;
 use SoapClient;
 use stdClass;
 

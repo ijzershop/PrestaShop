@@ -80,12 +80,13 @@
         <option value="$PROJECT_DIR$/modules/mollie/tests" />
         <option value="$PROJECT_DIR$/modules/autoupgrade/tests" />
         <option value="$PROJECT_DIR$/modules/mollie/tests" />
+        <option value="$PROJECT_DIR$/modules/autoupgrade/tests" />
+        <option value="$PROJECT_DIR$/modules/mollie/tests" />
+        <option value="$PROJECT_DIR$/tools/build/tests/Unit" />
         <option value="$PROJECT_DIR$/modules/gamification/tests/unit" />
         <option value="$PROJECT_DIR$/modules/gamification/tests/functional" />
         <option value="$PROJECT_DIR$/modules/ps_facetedsearch/tests" />
         <option value="$PROJECT_DIR$/modules/autoupgrade/tests" />
-        <option value="$PROJECT_DIR$/tools/build/tests/Unit" />
-        <option value="$PROJECT_DIR$/modules/mollie/tests" />
         <option value="$PROJECT_DIR$/modules/ps_distributionapiclient/tests" />
         <option value="$PROJECT_DIR$/tests" />
       </list>

@@ -185,17 +185,17 @@ class AdminOfferController extends FrameworkBundleAdminController {
     }
 
     /**
-     * Delete price_modification
+     * Delete Offer
      *
-     * @param int $price_modificationId
+     * @param int $offer_id
      *
      * @return Response
      */
-    public function deleteAction($price_modificationId)
+    public function deleteAction($offer_id)
     {
-        $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');
+        $repository = $this->get('modernesmid.repository.offer_integrations_repository');
         try {
-            $price_modification = $repository->findOneById($price_modificationId);
+            $price_modification = $repository->findOneById($offer_id);
         } catch (EntityNotFoundException $e) {
             $price_modification = null;
         }
@@ -214,14 +214,14 @@ class AdminOfferController extends FrameworkBundleAdminController {
             $this->addFlash(
                 'error',
                 $this->trans(
-                    'Cannot find price_modification %price_modification%',
+                    'Cannot find offer %offer_id%',
                     'Modules.Pricemodifier.Admin',
-                    ['%price_modification%' => $price_modificationId]
+                    ['%offer_id%' => $offer_id]
                 )
             );
         }
 
-        return $this->redirectToRoute('modernesmid_pricemodifier_price_modification_index');
+        return $this->redirectToRoute('offerintegration_index');
     }
 
     /**
@@ -233,18 +233,18 @@ class AdminOfferController extends FrameworkBundleAdminController {
      */
     public function deleteBulkAction(Request $request)
     {
-        $price_modificationIds = $request->request->get('price_modification_bulk');
-        $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');
+        $offer_ids = $request->request->get('oi_offer_bulk');
+        $repository = $this->get('modernesmid.repository.offer_integrations_repository');
         try {
-            $price_modifications = $repository->findById($price_modificationIds);
+            $offer_integrations = $repository->findByIds($offer_ids);
         } catch (EntityNotFoundException $e) {
-            $price_modifications = null;
+            $offer_integrations = null;
         }
-        if (!empty($price_modifications)) {
+        if (!empty($offer_integrations)) {
             /** @var EntityManagerInterface $em */
             $em = $this->get('doctrine.orm.entity_manager');
-            foreach ($price_modifications as $price_modification) {
-                $em->remove($price_modification);
+            foreach ($offer_integrations as $offer_integration) {
+                $em->remove($offer_integration);
             }
             $em->flush();
 
@@ -253,7 +253,7 @@ class AdminOfferController extends FrameworkBundleAdminController {
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         }
-        return $this->redirectToRoute('modernesmid_pricemodifier_price_modification_index');
+        return $this->redirectToRoute('offerintegration_index');
     }
 
 

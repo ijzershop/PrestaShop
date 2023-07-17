@@ -42,6 +42,22 @@ class OfferIntegrationRepository extends EntityRepository
        return $qb->getQuery()->getOneOrNullResult();
     }
 
+    /**
+     * Find one item by ID.
+     *
+     * @param array $id_oi_offer
+     * @throws NonUniqueResultException
+     */
+    public function findByIds(array $id_oi_offers)
+    {
+        $qb = $this->createQueryBuilder('q')        ;
+
+        $qb->andWhere("q.id_oi_offer IN (:id_oi_offer)")
+            ->setParameter('id_oi_offer', $id_oi_offers);
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function getRandom($langId = 0, $limit = 0)
     {
         /** @var QueryBuilder $qb */

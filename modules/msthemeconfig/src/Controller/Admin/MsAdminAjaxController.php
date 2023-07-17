@@ -120,7 +120,7 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
 
         $this->setCurrencyValue();
 
-        $catID = Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID', $this->idLang, $this->idShopGroup, $this->idShop);
+        $catID = Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
         $categoryArray = [$catID];
 
 

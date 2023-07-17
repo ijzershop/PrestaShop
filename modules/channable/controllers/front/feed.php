@@ -387,6 +387,8 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
         header('Page-Size: ' . Configuration::get('CHANNABLE_DEFAULT_PAGE_SIZE'));
 
         if ($results = Db::getInstance()->ExecuteS($sql)) {
+
+
             foreach ($results as $row) {
 
                 $defaultCategory = new Category($row['id_category_default']);
@@ -718,6 +720,8 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
             }
         } else {
         }
+
+
         echo json_encode($items);
         die();
     }

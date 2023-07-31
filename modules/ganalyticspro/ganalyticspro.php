@@ -6,7 +6,7 @@
  * @copyright Business Tech 2023 - https://www.businesstech.fr/
  * @license   see file: LICENSE.txt
  *
- * @version 2.1.6
+ * @version 2.2.0
  *
  *           ____    _______
  *          |  _ \  |__   __|
@@ -108,17 +108,17 @@ class GAnalyticsPro extends Module
         $this->name = 'ganalyticspro';
         $this->module_key = '7814804ce39cacda037743a3b29ee2af';
         $this->tab = 'analytics_stats';
-        $this->version = '2.1.6';
+        $this->version = '2.2.0';
         $this->author = 'Business Tech';
-        $this->ps_versions_compliancy['min'] = '1.7.4.0';
+        $this->ps_versions_compliancy['min'] = '1.7.6.0';
         $this->need_instance = 1;
 
         parent::__construct();
 
-        $this->displayName = $this->l('Google Analytics : GA4 and Universal-Analytics');
-        $this->description = $this->l('Install the Google Analytics 4 (GA4) tag on your site and collect data for your GA4 and Universal Analytics (UA), with enhanced e-commerce, reports in your Google Analytics account');
-
-        $this->confirmUninstall = $this->l('Are you sure you want to uninstall the module Google Analytics : GA4 and Universal-Analytics (your configuration will be lost)?');
+        $this->displayName = $this->l('Google Analytics : Google-Analytics 4 (GA4) tag');
+        $this->description = $this->l('Install the Google Analytics 4 (GA4) tag on your site and collect data for your GA4 reports in your Google Analytics account');
+        
+        $this->confirmUninstall = $this->l('Are you sure you want to uninstall the module Google Analytics : Google-Analytics 4 (GA4) tag (your configuration will be lost)?');
         self::$iShopId = $this->context->shop->id;
         self::$iCurrentLang = $this->context->cookie->id_lang;
         self::$oCookie = $this->context->cookie;
@@ -257,16 +257,6 @@ class GAnalyticsPro extends Module
     }
 
     /**
-     * hookDisplayHome() method displays Google Analytics
-     *
-     * @return string
-     */
-    public function hookDisplayHome()
-    {
-        return $this->_execHook('display', 'home');
-    }
-
-    /**
      * hookActionOrderStatusUpdate() method displays Google Analytics
      *
      * @param array $aParams
@@ -389,6 +379,9 @@ class GAnalyticsPro extends Module
 
         // check if update admin tab
         moduleUpdate::create()->run('moduleAdminTab');
+
+        // stop handle ua vars
+        moduleTools::stopUsingUa();
 
         return moduleUpdate::create()->aErrors;
     }

@@ -15,7 +15,7 @@ let kiyohDataTotal =  "{$attr['totalReviews']}";
       "image": "",
       "name": "Ijzershop.nl",
       "sameAs": "https://www.Ijzershop.nl",
-      "aggregateRating":"{$attr['rating'] nofilter}"
+      "aggregateRating":{$attr['rating'] nofilter}
 }
 </script>
 

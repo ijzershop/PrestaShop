@@ -13,7 +13,8 @@
  *          |____/     |_|
  */
 
-$(document).ready(function () {
+
+document.addEventListener('DOMContentLoaded', function () {
 
     window.dataLayer = window.dataLayer || [];
 
@@ -24,148 +25,147 @@ $(document).ready(function () {
     // Use case consent mode
     if (btGapTag.bUseConsent == true) {
 
-        // Handle the consent on click
-        function handleConsent() {
-            $.ajax({
-                type: "POST",
-                url: btGapTag.ajaxUrl,
-                dataType: "json",
-                data: {
-                    ajax: 1,
-                    action: "updateConsent",
-                    token: btGapTag.token,
-                },
-                success: function (jsonData, textStatus, jqXHR) {
-                    // Use case to send directly the event after the ajax and not wait the page reload
-                    // Init the tag after the consent
-                    gtag("js", new Date());
-                    gtag("config", btGapTag.gaId, {
-                        'cookie_update': false
-                    });
+        if (btGapTag.bUseAxeption == 1) {
+            function launchGoogleAnalytics() {
+                gtag("js", new Date());
+                gtag("config", btGapTag.gaId);
+            }
 
-                    gtag("consent", "default", {
-                        ad_storage: "granted",
-                        analytics_storage: "granted",
-                    });
-
-                    if (btGapTag.bEnableUa != false && btGapTag.sUAcode != "") {
-                        gtag("config", btGapTag.sUAcode);
+            void 0 === window._axcb && (window._axcb = []);
+            window._axcb.push(function (axeptio) {
+                axeptio.on("cookies:complete", function (choices) {
+                    if (choices.google_analytics) {
+                        launchGoogleAnalytics();
                     }
-                },
-            });
-        }
-
-        // use case not consent has been done
-        if (btGapTag.iConsentConsentLvl == 0) {
-
-            gtag("js", new Date());
-            gtag("config", btGapTag.gaId);
-
-            gtag("consent", "default", {
-                ad_storage: "denied",
-                analytics_storage: "denied",
+                });
             });
 
-            if (btGapTag.referer != null) {
-                gtag('set', 'page_referrer', btGapTag.referer);
+        } else if (btGapTag.bUseAxeption == 0) {
+            // Handle the consent on click
+            function handleConsent() {
+                $.ajax({
+                    type: "POST",
+                    url: btGapTag.ajaxUrl,
+                    dataType: "json",
+                    data: {
+                        ajax: 1,
+                        action: "updateConsent",
+                        token: btGapTag.token,
+                    },
+                    success: function (jsonData, textStatus, jqXHR) {
+                        // Use case to send directly the event after the ajax and not wait the page reload
+                        // Init the tag after the consent
+                        gtag("js", new Date());
+                        gtag("config", btGapTag.gaId, {
+                            'cookie_update': false
+                        });
+
+                        gtag("consent", "default", {
+                            ad_storage: "granted",
+                            analytics_storage: "granted",
+                        });
+                    },
+                });
             }
 
-            if (btGapTag.bEnableUa != false && btGapTag.sUAcode != "") {
-                gtag("config", btGapTag.sUAcode);
+            // use case not consent has been done
+            if (btGapTag.iConsentConsentLvl == 0) {
+
+                gtag("js", new Date());
+                gtag("config", btGapTag.gaId);
+
+                gtag("consent", "default", {
+                    ad_storage: "denied",
+                    analytics_storage: "denied",
+                });
+
+                if (btGapTag.referer != null) {
+                    gtag('set', 'page_referrer', btGapTag.referer);
+                }
+
+            } else if (btGapTag.iConsentConsentLvl == 1) {
+                gtag("js", new Date());
+                gtag("config", btGapTag.gaId);
+
+                gtag("consent", "default", {
+                    ad_storage: "denied",
+                    analytics_storage: "granted",
+                });
+
+                if (btGapTag.referer != null) {
+                    gtag('set', 'page_referrer', btGapTag.referer);
+                }
+
+            } else if (btGapTag.iConsentConsentLvl == 2) {
+
+                gtag("js", new Date());
+                gtag("config", btGapTag.gaId);
+
+                gtag("consent", "default", {
+                    ad_storage: "granted",
+                    analytics_storage: "denied",
+                });
+
+                if (btGapTag.referer != null) {
+                    gtag('set', 'page_referrer', btGapTag.referer);
+                }
+            } else if (btGapTag.iConsentConsentLvl == 3) {
+
+                gtag("js", new Date());
+                gtag("config", btGapTag.gaId);
+
+                gtag("consent", "default", {
+                    ad_storage: "granted",
+                    analytics_storage: "granted",
+                });
+
+                if (btGapTag.referer != null) {
+                    gtag('set', 'page_referrer', btGapTag.referer);
+                }
             }
 
-        } else if (btGapTag.iConsentConsentLvl == 1) {
-            gtag("js", new Date());
-            gtag("config", btGapTag.gaId);
-
-            gtag("consent", "default", {
-                ad_storage: "denied",
-                analytics_storage: "granted",
-            });
-
-            if (btGapTag.referer != null) {
-                gtag('set', 'page_referrer', btGapTag.referer);
+            // Use case to delete acb cookie referrer
+            if (btGapTag.acbIsInstalled == true) {
+                $.ajax({
+                    type: "POST",
+                    url: btGapTag.ajaxUrl,
+                    dataType: "json",
+                    data: {
+                        ajax: 1,
+                        action: "removedAcbReferrer",
+                        token: btGapTag.token,
+                    },
+                });
             }
 
-            if (btGapTag.bEnableUa != false && btGapTag.sUAcode != "") {
-                gtag("config", btGapTag.sUAcode);
+            // use case trigger click on accept cookies
+            if (btGapTag.bConsentHtmlElement != "") {
+                $(btGapTag.bConsentHtmlElement).on("click", function (event) {
+                    handleConsent();
+                });
             }
-
-        } else if (btGapTag.iConsentConsentLvl == 2) {
-
+            // use case trigger click on accept cookies
+            if (btGapTag.bConsentHtmlElementSecond != "") {
+                $(btGapTag.bConsentHtmlElementSecond).on("click", function (event) {
+                    handleConsent();
+                });
+            }
+        } else {
             gtag("js", new Date());
             gtag("config", btGapTag.gaId);
 
             gtag("consent", "default", {
                 ad_storage: "granted",
-                analytics_storage: "denied",
-            });
-
-            if (btGapTag.referer != null) {
-                gtag('set', 'page_referrer', btGapTag.referer);
-            }
-
-            if (btGapTag.bEnableUa != false && btGapTag.sUAcode != "") {
-                gtag("config", btGapTag.sUAcode);
-            }
-
-        } else if (btGapTag.iConsentConsentLvl == 3) {
-
-            gtag("js", new Date());
-            gtag("config", btGapTag.gaId);
-
-            gtag("consent", "default", {
-                ad_storage: "granted",
                 analytics_storage: "granted",
             });
-
-            if (btGapTag.referer != null) {
-                gtag('set', 'page_referrer', btGapTag.referer);
-            }
-
-            if (btGapTag.bEnableUa != false && btGapTag.sUAcode != "") {
-                gtag("config", btGapTag.sUAcode);
-            }
         }
+    }
 
-        // Use case to delete acb cookie referrer
-        if (btGapTag.acbIsInstalled == true) {
-            $.ajax({
-                type: "POST",
-                url: btGapTag.ajaxUrl,
-                dataType: "json",
-                data: {
-                    ajax: 1,
-                    action: "removedAcbReferrer",
-                    token: btGapTag.token,
-                },
-            });
-        }
-
-        // use case trigger click on accept cookies
-        if (btGapTag.bConsentHtmlElement != "") {
-            $(btGapTag.bConsentHtmlElement).on("click", function (event) {
-                handleConsent();
-            });
-        }
-        // use case trigger click on accept cookies
-        if (btGapTag.bConsentHtmlElementSecond != "") {
-            $(btGapTag.bConsentHtmlElementSecond).on("click", function (event) {
-                handleConsent();
-            });
-        }
-    } else {
-        gtag("js", new Date());
-        gtag("config", btGapTag.gaId);
-
-        gtag("consent", "default", {
-            ad_storage: "granted",
-            analytics_storage: "granted",
+    //use case for user id
+    if (btGapTag.gaUserId != 0) {
+        gtag('config', btGapTag.gaId, {
+            'user_id': '' + btGapTag.gaUserId + '',
         });
-
-        if (btGapTag.bEnableUa != false && btGapTag.sUAcode != "") {
-            gtag("config", btGapTag.sUAcode);
-        }
     }
 
     // if refund has been detected
@@ -231,6 +231,7 @@ $(document).ready(function () {
     }
 
     if (typeof btGapTag.tagContent.tracking_type !== "undefined" && typeof btGapTag.tagContent.contents !== "undefined") {
+
         // Handle the case for category page
         if (btGapTag.tagContent.tracking_type.value == "view_item_list") {
             let aData = [];
@@ -636,5 +637,39 @@ $(document).ready(function () {
                 gtag("event", "video_start");
             });
         });
+    }
+
+    // Use case for theme with addToCart on homepage to trigger the event and send information to Google
+    if (typeof btGapTag.tagContent.tracking_type !== "undefined") {
+        if (btGapTag.tagContent.tracking_type.value == "view_home_page") {
+            if (typeof prestashop !== 'undefined') {
+                prestashop.on(
+                    'updateCart',
+                    function (event) {
+                        if (event && event.reason && event.reason.linkAction == "add-to-cart") {
+                            $.ajax({
+                                type: "POST",
+                                url: btGapTag.ajaxUrl,
+                                dataType: "json",
+                                data: {
+                                    ajax: 1,
+                                    action: "cartPageList",
+                                    id_product: event.reason.idProduct,
+                                    id_product_attribute: event.reason.idProductAttribute,
+                                    token: btGapTag.token,
+                                },
+                                success: function (jsonData, textStatus, jqXHR) {
+                                    gtag("event", "add_to_cart", {
+                                        currency: "" + jsonData.currency + "",
+                                        value: jsonData.value,
+                                        items: jsonData.data,
+                                    });
+                                },
+                            });
+                        }
+                    }
+                );
+            }
+        }
     }
 });

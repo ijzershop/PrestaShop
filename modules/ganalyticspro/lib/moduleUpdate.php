@@ -81,10 +81,10 @@ class moduleUpdate
                     // use case - KO update
                     if (!installController::run('install', 'sql', moduleConfiguration::GAP_PATH_SQL . $sSqlFile)) {
                         $this->aErrors[] = [
-                            'msg' => \GanalyticsPro::$oModule->l('There is an error around the SQL table update', 'moduleUpdate'),
+                            'msg' => \GanalyticsPro::$oModule->l('An error occurred while updating the SQL table', 'moduleUpdate'),
                             'code' => intval(190 + $iCount),
                             'file' => $sSqlFile,
-                            'context' => \GanalyticsPro::$oModule->l('Issue around table update for: ', 'moduleUpdate') . $sTable,
+                            'context' => \GanalyticsPro::$oModule->l('SQL table involved: ', 'moduleUpdate') . $sTable,
                         ];
                         $iCount++;
                     }
@@ -126,10 +126,10 @@ class moduleUpdate
                             'file' => $aOption['file'],
                         ];
                         $this->aErrors[] = [
-                            'msg' => \GanalyticsPro::$oModule->l('There is an error around the SQL field update', 'moduleUpdate'),
+                            'msg' => \GanalyticsPro::$oModule->l('An error occurred while updating the SQL field', 'moduleUpdate'),
                             'code' => intval(180 + $iCount),
                             'file' => $aOption['file'],
-                            'context' => \GanalyticsPro::$oModule->l('Issue around field update for: ', 'moduleUpdate') . $sFieldName,
+                            'context' => \GanalyticsPro::$oModule->l('SQL field involved: ', 'moduleUpdate') . $sFieldName,
                         ];
                         $iCount++;
                     }
@@ -154,10 +154,10 @@ class moduleUpdate
         // use case - hook register ko
         if (!installController::run('install', 'config', ['bHookOnly' => true])) {
             $this->aErrors[] = [
-                'msg' => \GanalyticsPro::$oModule->l('There is an error around the hooks update', 'moduleUpdate'),
+                'msg' => \GanalyticsPro::$oModule->l('An error occurred while updating the hooks', 'moduleUpdate'),
                 'code' => 170,
-                'file' => \GanalyticsPro::$oModule->l('There is an error around the hooks update', 'moduleUpdate'),
-                'context' => \GanalyticsPro::$oModule->l('Issue around hook update', 'moduleUpdate'),
+                'file' => \GanalyticsPro::$oModule->l('An error occurred while updating the hooks', 'moduleUpdate'),
+                'context' => \GanalyticsPro::$oModule->l('An error occurred while updating the hooks', 'moduleUpdate'),
             ];
         }
     }

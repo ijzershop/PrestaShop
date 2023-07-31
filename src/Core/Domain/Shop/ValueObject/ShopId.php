@@ -47,7 +47,7 @@ class ShopId implements ShopIdInterface
     {
 //        $this->assertIsGreaterThanZero($shopId);
         if (0 >= $shopId) {
-            $shopId = Context::getContext()->shop->id;
+            $shopId = 1;
         }
 
         $this->shopId = $shopId;

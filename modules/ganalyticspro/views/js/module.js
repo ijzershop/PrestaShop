@@ -14,7 +14,7 @@
  */
 
 // declare main object of module
-var GapModule = function(sName){
+var GapModule = function (sName) {
 	// set name
 	this.name = sName;
 
@@ -42,7 +42,7 @@ var GapModule = function(sName){
 	 * @param string sId : container to show in
 	 * @param string sHtml : HTML to display
 	 */
-	this.show = function(sId, sHtml){
+	this.show = function (sId, sHtml) {
 		$("#" + sId).html(sHtml).css('style', 'none');
 		$("#" + sId).show('fast');
 	};
@@ -52,7 +52,7 @@ var GapModule = function(sName){
 	 *
 	 * @param string sId : container to hide in
 	 */
-	this.hide = function(sId, bOnlyHide){
+	this.hide = function (sId, bOnlyHide) {
 		$('#' + sId).hide('fast');
 		if (bOnlyHide == null) {
 			$('#' + sId).empty();
@@ -80,10 +80,10 @@ var GapModule = function(sName){
 	 * @param string sScrollTo :
 	 * @return string : HTML returned by smarty
 	 */
-	this.form = function(sForm, sURI, sRequestParam, sToDisplay, sToHide, bSubmit, bFancyBox, oCallBack, sErrorType, sLoadBar, sScrollTo){
+	this.form = function (sForm, sURI, sRequestParam, sToDisplay, sToHide, bSubmit, bFancyBox, oCallBack, sErrorType, sLoadBar, sScrollTo) {
 		// set loading bar
 		if (sLoadBar) {
-			$('#bt_loading-div-'+sLoadBar).show();
+			$('#bt_loading-div-' + sLoadBar).show();
 		}
 
 		// set return validation
@@ -117,46 +117,46 @@ var GapModule = function(sName){
 		};
 
 		// check element form
-		jQuery.each(fields, function(i, field) {
+		jQuery.each(fields, function (i, field) {
 			bIsError = false;
 
-			switch(field.name) {
-				case 'bt_gfour-id' :
+			switch (field.name) {
+				case 'bt_gfour-id':
 					if (field.value == '') {
 						oThis.aError[iCounter] = oThis.msgs.gaId;
 						toastr.error(oThis.msgs.gaId);
 						bIsError = true;
 					}
 					break;
-				case 'bt_code_category_product' :
+				case 'bt_code_category_product':
 					if (field.value == '') {
 						oThis.aError[iCounter] = oThis.msgs.htmlElement;
 						toastr.error(oThis.msgs.htmlElement);
 						bIsError = true;
 					}
 					break;
-				case 'bt_code_shipping' :
+				case 'bt_code_shipping':
 					if (field.value == '') {
 						oThis.aError[iCounter] = oThis.msgs.htmlElement;
 						toastr.error(oThis.msgs.htmlElement);
 						bIsError = true;
 					}
 					break;
-				case 'bt_code_payment' :
+				case 'bt_code_payment':
 					if (field.value == '') {
 						oThis.aError[iCounter] = oThis.msgs.htmlElement;
 						toastr.error(oThis.msgs.htmlElement);
 						bIsError = true;
 					}
 					break;
-				case 'bt_code_login' :
+				case 'bt_code_login':
 					if (field.value == '') {
 						oThis.aError[iCounter] = oThis.msgs.htmlElement;
 						toastr.error(oThis.msgs.htmlElement);
 						bIsError = true;
 					}
 					break;
-				case 'bt_code_signup' :
+				case 'bt_code_signup':
 					if (field.value == '') {
 						oThis.aError[iCounter] = oThis.msgs.htmlElement;
 						toastr.error(oThis.msgs.htmlElement);
@@ -213,7 +213,7 @@ var GapModule = function(sName){
 			else {
 				// hide loading bar
 				if (sLoadBar) {
-					$('#bt_loading-div-'+sLoadBar).hide();
+					$('#bt_loading-div-' + sLoadBar).hide();
 				}
 				document.forms[sForm].submit();
 				return true;
@@ -224,7 +224,7 @@ var GapModule = function(sName){
 
 		// set loading bar
 		if (sLoadBar) {
-			$('#bt_loading-div-'+sLoadBar).hide();
+			$('#bt_loading-div-' + sLoadBar).hide();
 		}
 
 		return false;
@@ -245,19 +245,19 @@ var GapModule = function(sName){
 	 * @param obj oCallBack : used only for callback to execute as ajax request
 	 * @return string : HTML returned by smarty
 	 */
-	this.ajax = function(sURI, sParams, sToShow, sToHide, bFancyBox, bFancyBoxActivity, sLoadBar, sScrollTo, oCallBack){
-		sParams = 'sMode=xhr' + ((sParams == null || sParams == undefined) ? '' : '&' + sParams) ;
+	this.ajax = function (sURI, sParams, sToShow, sToHide, bFancyBox, bFancyBoxActivity, sLoadBar, sScrollTo, oCallBack) {
+		sParams = 'sMode=xhr' + ((sParams == null || sParams == undefined) ? '' : '&' + sParams);
 
 		// configure XHR
 		$.ajax({
-			type : 'POST',
-			url : sURI,
-			data : sParams,
-			dataType : 'html',
-			success: function(data) {
+			type: 'POST',
+			url: sURI,
+			data: sParams,
+			dataType: 'html',
+			success: function (data) {
 				// hide loading bar
 				if (sLoadBar) {
-					$('#bt_loading-div-'+sLoadBar).hide();
+					$('#bt_loading-div-' + sLoadBar).hide();
 				}
 				if (bFancyBox) {
 					// update fancybox content
@@ -284,8 +284,8 @@ var GapModule = function(sName){
 				}
 
 				if (sScrollTo !== null && typeof sScrollTo !== 'undefined' && $(sScrollTo).length != 0) {
-					var iPosTop = $(sScrollTo).offset().top-30;
-					if(iPosTop < 0) iPosTop = 0;
+					var iPosTop = $(sScrollTo).offset().top - 30;
+					if (iPosTop < 0) iPosTop = 0;
 
 					$(document).scrollTop(iPosTop);
 				}
@@ -293,11 +293,11 @@ var GapModule = function(sName){
 				// execute others ajax request if needed. In this case, we can update any other tab from the module in the same time
 				if (oCallBack != null && oCallBack.length != 0) {
 					for (var fx in oCallBack) {
-						oThis.ajax(oCallBack[fx].url, oCallBack[fx].params, oCallBack[fx].toShow, oCallBack[fx].toHide, oCallBack[fx].bFancybox, oCallBack[fx].bFancyboxActivity, oCallBack[fx].sLoadbar, oCallBack[fx].sScrollTo , oCallBack[fx].oCallBack);
+						oThis.ajax(oCallBack[fx].url, oCallBack[fx].params, oCallBack[fx].toShow, oCallBack[fx].toHide, oCallBack[fx].bFancybox, oCallBack[fx].bFancyboxActivity, oCallBack[fx].sLoadbar, oCallBack[fx].sScrollTo, oCallBack[fx].oCallBack);
 					}
 				}
 			},
-			error: function(xhr, ajaxOptions, thrownError) {
+			error: function (xhr, ajaxOptions, thrownError) {
 				$("#" + oThis.name + "FormError").addClass('alert alert-danger');
 				oThis.show("#" + oThis.name + "FormError", '<h3>internal error</h3>');
 			}
@@ -310,10 +310,10 @@ var GapModule = function(sName){
 	 * @param string sType : type of container
 	 * @return bool
 	 */
-	this.displayError = function(sType){
+	this.displayError = function (sType) {
 		if (oThis.aError.length != 0) {
 			var sError = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">×</button><ul class="list-unstyled">';
-			for (var i = 0; i < oThis.aError.length;++i) {
+			for (var i = 0; i < oThis.aError.length; ++i) {
 				sError += '<li>' + oThis.aError[i] + '</li>';
 			}
 			sError += '</ul></div>';
@@ -338,7 +338,7 @@ var GapModule = function(sName){
 	 * @param bool bForce
 	 * @param bool mVal
 	 */
-	this.changeSelect = function(sId, mDestId, sDestId2, sDestIdToHide, bForce, mVal){
+	this.changeSelect = function (sId, mDestId, sDestId2, sDestIdToHide, bForce, mVal) {
 		if (bForce) {
 			if (typeof mDestId == 'string') {
 				mDestId = [mDestId];
@@ -346,7 +346,7 @@ var GapModule = function(sName){
 
 			for (var i = 0; i < mDestId.length; ++i) {
 				if (mVal) {
-					$("#" + mDestId[i]).fadeIn('fast', function() {$("#" + mDestId[i]).css('display', 'block')});
+					$("#" + mDestId[i]).fadeIn('fast', function () { $("#" + mDestId[i]).css('display', 'block') });
 				}
 				else {
 					$("#" + mDestId[i]).fadeOut('fast');
@@ -354,12 +354,12 @@ var GapModule = function(sName){
 			}
 		}
 		else {
-			$("#" + sId).bind('change', function (event){
-				$("#" + sId + " input:checked").each(function (){
+			$("#" + sId).bind('change', function (event) {
+				$("#" + sId + " input:checked").each(function () {
 					switch ($(this).val()) {
-						case 'true' :
+						case 'true':
 							// display option features
-							$("#" + sDestId).fadeIn('fast', function() {$("#" + sDestId).css('display', 'block')});
+							$("#" + sDestId).fadeIn('fast', function () { $("#" + sDestId).css('display', 'block') });
 							break;
 						default:
 							// hide option features
@@ -367,18 +367,18 @@ var GapModule = function(sName){
 
 							// set to false
 							if (sDestId2 && sDestIdToHide) {
-								$("#" + sDestId2 + " input").each(function (){
-										switch ($(this).val()) {
-											case 'false' :
-												$(this).attr('checked', 'checked');
-												// hide option features
-												$("#" + sDestIdToHide).fadeOut('fast');
-												break;
-											default:
-												$(this).attr('checked', '');
-												break;
-										}
+								$("#" + sDestId2 + " input").each(function () {
+									switch ($(this).val()) {
+										case 'false':
+											$(this).attr('checked', 'checked');
+											// hide option features
+											$("#" + sDestIdToHide).fadeOut('fast');
+											break;
+										default:
+											$(this).attr('checked', '');
+											break;
 									}
+								}
 								);
 							}
 							break;
@@ -394,11 +394,11 @@ var GapModule = function(sName){
 	 * @param string sId : type of container
 	 * @param string sCible : all checkbox to process
 	 */
-	this.selectAll = function(sCible, sType){
+	this.selectAll = function (sCible, sType) {
 		if (sType == 'check') {
 			$(sCible).attr('checked', true);
 		}
-		else{
+		else {
 			$(sCible).attr('checked', false);
 		}
 	};
@@ -413,7 +413,7 @@ var GapModule = function(sName){
 	 * @param string sHiddenField
 	 * @param string sFieldValue
 	 */
-	this.handleButtonDisplay = function(idButton, idElt, aBtnToHide, aDivToHide, sHiddenField, sFieldValue) {
+	this.handleButtonDisplay = function (idButton, idElt, aBtnToHide, aDivToHide, sHiddenField, sFieldValue) {
 
 		if (!$("#" + idButton).hasClass('active')) {
 			$("#" + idButton).addClass('active');

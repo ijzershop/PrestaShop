@@ -95,7 +95,7 @@ class productTag extends baseTag
      */
     public function setValue()
     {
-        $this->fValue = \Product::getPriceStatic($this->iProductId, true, false, 2, null, false, true);
+        $this->fValue = (float)\Product::getPriceStatic($this->iProductId, true, false, 2, null, false, true);
     }
 
     /**

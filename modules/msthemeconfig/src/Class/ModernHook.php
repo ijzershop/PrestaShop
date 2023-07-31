@@ -175,9 +175,11 @@ class ModernHook
         $selectedCats = explode(',', Configuration::get('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES'));
         $itemList = [];
 
+        $position = 0;
         foreach ($selectedCats as $catId){
             $subCat = new Category($catId);
-            $itemList[] =  $this->createCategoryJSONLD($subCat, false, true);
+            $itemList[] =  $this->createCategoryJSONLD($subCat, false, true, $position);
+            $position++;
         }
 
         $cat = new Category(2);
@@ -488,68 +490,6 @@ class ModernHook
 
         $availableStock = 'https://schema.org/InStock';
 
-//        $productCommentRepository = $this->controller->getContainer()->get('product_comment_repository');
-//        $productComments = $productCommentRepository->paginate(
-//            $product->id,
-//            1,
-//            500,
-//            true
-//        );
-//        $averageGrade = $productCommentRepository->getAverageGrade($product->id, true);
-//        $totalComments = $productCommentRepository->getCommentsNumber($product->id, true);
-//
-//        $reviews = [];
-//        $reviews[] = [
-//            '@context' => 'https://schema.org/',
-//            '@type' => 'Review',
-//            'reviewRating' => ['@type' => 'Rating',
-//                'ratingValue' => '5',
-//                'bestRating' => '5'
-//            ],
-//            'author' => [
-//                '@context' => 'https://schema.org/',
-//                '@type' => 'Person',
-//                'name' => 'De Moderne Smid'
-//            ],
-//            'reviewBody' => 'Prima product, zorgvuldig voor u uitgezocht'
-//        ];
-//
-//        foreach ($productComments as $productComment) {
-//            $reviews[] = [
-//                '@context' => 'https://schema.org/',
-//                '@type' => 'Review',
-//                'reviewRating' => [
-//                    '@context' => 'https://schema.org/',
-//                    '@type' => 'Rating',
-//                    'ratingValue' => $productComment['grade'],
-//                    'bestRating' => '5'
-//                ],
-//                'datePublished' => $productComment['date_add'],
-//                'author' => [
-//                    '@context' => 'https://schema.org/',
-//                    '@type' => 'Person',
-//                    'name' => $productComment['firstname'] . ' ' . $productComment['lastname']
-//                ],
-//                'reviewBody' => $productComment['content'],
-//                'publisher' => [
-//                    '@context' => 'https://schema.org/',
-//                    '@type' => 'Person',
-//                    'name' => 'De Moderne Smid'
-//                ]
-//            ];
-//        }
-//        if ($averageGrade == 0) {
-//            $grade = 5;
-//        } else {
-//            $grade = $averageGrade;
-//        }
-//        $rating = [
-//            '@context' => 'https://schema.org/',
-//            '@type' => 'AggregateRating',
-//            'ratingValue' => $grade,
-//            'reviewCount' => $totalComments + 1
-//        ];
-
         $store = new Store($this->idShop, $this->idLang);
 
         $contacts = [];
@@ -575,7 +515,7 @@ class ModernHook
             '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'sku' => $this->shopName . '-' . $product->reference,
-            'gtin14' => $this->shopName . '-' . $product->id,
+//            'gtin14' => (int)$this->shopName . '-' . $product->id,
             'image' => $images,
             'name' => $product->name[$this->idLang],
             'alternateName' => $product->alternate_name,
@@ -591,7 +531,27 @@ class ModernHook
             'brand' => ['@type' => 'Brand',
                 'name' => $this->shopName
             ],
+            "review" => [],
+              "aggregateRating" => [
+                "@type" => "AggregateRating",
+                "ratingValue" => 5,
+                "reviewCount" => 1
+            ],
             'offers' => [
+                "hasMerchantReturnPolicy" => [
+                    "@type" => "MerchantReturnPolicy",
+                    "applicableCountry" => "NL",
+                    "returnPolicyCategory" => "https://schema.org/MerchantReturnFiniteReturnWindow",
+                    "merchantReturnDays" => 30,
+                    "returnMethod" => "https://schema.org/ReturnByMail",
+                    "returnShippingFeesAmount" => [
+                        '@type' => 'MonetaryAmount',
+                        'minValue' => '10',
+                        'maxValue' => '250',
+                        'value' => '35',
+                        'currency' => 'EUR'
+                    ],
+                ],
                 '@context' => 'http://schema.org',
                 '@type' => 'Offer',
                 'url' => $this->link->getProductLink($product->id),
@@ -667,13 +627,15 @@ class ModernHook
                         'handlingTime' => [
                             '@type' => 'QuantitativeValue',
                             'minValue' => '0',
-                            'maxValue' => '1'
+                            'maxValue' => '1',
+                            'unitCode' => 'd'
                         ],
                         'transitTime' => [
                             '@context' => 'https://schema.org/',
                             '@type' => 'QuantitativeValue',
                             'minValue' => '1',
-                            'maxValue' => '7'
+                            'maxValue' => '7',
+                            'unitCode' => 'd'
                         ],
                         'cutoffTime' => '17:00-08:00',
                         'businessDays' => [
@@ -1181,7 +1143,7 @@ class ModernHook
         $rating = [
             '@context' => 'https://schema.org/',
             '@type' => 'AggregateRating',
-            'ratingValue' => $grade,
+            'ratingValue' => (float)$grade/2,
             'reviewCount' => $attr['totalReviews'] + 1
         ];
 
@@ -1502,7 +1464,7 @@ class ModernHook
      */
 
 
-    private function createCategoryJSONLD($cat, $withProducts=true, $withSubCats = true): array
+    private function createCategoryJSONLD($cat, $withProducts=true, $withSubCats = true, $position=0): array
     {
         $catImages = [$this->link->getCatImageLink($cat->link_rewrite, $cat->id_category)];
 
@@ -1533,9 +1495,11 @@ class ModernHook
         } elseif ($withSubCats) {
             $subCategories = $cat->getSubCategories($this->idLang, true);
             $catTotalItems = count($subCategories);
+            $subPos = 0;
             foreach ($subCategories as $category) {
                 $cat = new Category($category['id_category']);
-                $jsonLD[] = $this->createCategoryJSONLD($cat, $withProducts, false);
+                $jsonLD[] = $this->createCategoryJSONLD($cat, $withProducts, false, $subPos);
+                $subPos++;
             }
         }
 
@@ -1550,6 +1514,7 @@ class ModernHook
             $jsonLDCategory = [
                 '@context' => 'https://schema.org',
                 '@type' => 'ItemList',
+                'position' => $position,
                 'url' => $this->link->getCategoryLink($cat->id),
                 'numberOfItems' => $catTotalItems,
                 'name' => $cat->name[$this->idLang],

@@ -95,7 +95,7 @@
         {l s='Total (Tax excl.)' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white">
-        {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_excl}
+        {displayPrice currency=$order->id_currency price=(float)$footer.total_paid_tax_excl}
     </td>
   </tr>
 
@@ -126,7 +126,7 @@
         {l s='Total' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white">
-        {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}
+        {displayPrice currency=$order->id_currency price=(float)$footer.total_paid_tax_incl}
     </td>
   </tr>
 

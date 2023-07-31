@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Google Analytics : GA4 and Universal-Analytics
  *
@@ -39,38 +40,47 @@ class purchaseTag extends baseTag
             $iOrderId = $aParams['iOrderId'];
             $this->oCart = new \Cart((int) $iCartId);
 
-            // Use case to handle module payement doesn't return order id on
-            if (!empty(\GAnalyticsPro::$bCompare17)) {
-                if (!empty($iOrderId)) {
+            if (!empty($iOrderId)) {
+                $this->oOrder = new \Order((int) $iOrderId);
+                if (\Validate::isLoadedObject($this->oOrder)) {
                     $this->iOrderId = $iOrderId;
-                } elseif (!empty($iCartId)) {
-                    $this->iOrderId = \Order::getIdByCartId($iCartId);
+                    $aProductInfo['order_information'] = $this->oOrder;
+                    $aProductInfo['products'] = $this->oOrder->getCartProducts();
+                    $this->bValid = true;
+                } else {
+                    if (!empty($iCartId)) {
+                        $this->iOrderId = \Order::getIdByCartId($iCartId);
+                        $this->oOrder = new \Order((int) $this->iOrderId);
+                        $aProductInfo['order_information'] = $this->oOrder;
+                        $aProductInfo['products'] = $this->oOrder->getCartProducts();
+                        $this->bValid = true;
+                    }
                 }
-            } else {
-                if (!empty($iOrderId)) {
-                    $this->iOrderId = $iOrderId;
-                } elseif (!empty($iCartId)) {
-                    $this->iOrderId = moduleTools::getIdByCartId($iCartId);
-                }
-            }
-
-            if (!empty($this->iOrderId)) {
+            } elseif (!empty($iCartId)) {
+                $this->iOrderId = \Order::getIdByCartId($iCartId);
                 $this->oOrder = new \Order((int) $this->iOrderId);
                 $aProductInfo['order_information'] = $this->oOrder;
                 $aProductInfo['products'] = $this->oOrder->getCartProducts();
+                $this->bValid = true;
             }
 
-            // Use case set the valid to false and do not send the tag if this is PS order status error
-            if ($this->oOrder->getCurrentState() == \Configuration::get('PS_OS_ERROR')) {
-                $this->bValid = false;
+            if (\Validate::isLoadedObject($this->oOrder)) {
+                // Use case set the valid to false and do not send the tag if this is PS order status error
+                if ($this->oOrder->getCurrentState() == \Configuration::get('PS_OS_ERROR')) {
+                    $this->bValid = false;
+                }
+
+                if (!empty(\GAnalyticsPro::$aConfiguration['GAP_ORDER_ID_MIN']) && ($this->oOrder->id < \GAnalyticsPro::$aConfiguration['GAP_ORDER_ID_MIN'])) {
+                    $this->bValid = false;
+                }
+
+                // get context information
+                $this->sCurrentLang = new \Language((int) \Context::getContext()->cookie->id_lang);
+
+                // build the tag
+                $this->aProducts = !empty($aProductInfo['products']) ? $aProductInfo['products'] : [];
+                $this->oOrder = !empty($aProductInfo['order_information']) ? $aProductInfo['order_information'] : [];
             }
-
-            // get context information
-            $this->sCurrentLang = new \Language((int) \Context::getContext()->cookie->id_lang);
-
-            // build the tag
-            $this->aProducts = !empty($aProductInfo['products']) ? $aProductInfo['products'] : [];
-            $this->oOrder = !empty($aProductInfo['order_information']) ? $aProductInfo['order_information'] : [];
         } catch (\Exception $e) {
             \PrestaShopLogger::addLog($e->getMessage(), 2, $e->getCode(), null, null, true);
         }
@@ -142,7 +152,7 @@ class purchaseTag extends baseTag
     public function setValue()
     {
         if (!empty($this->bValid)) {
-            $this->fValue = moduleTools::getOrderPrice($this->oOrder, \GAnalyticsPro::$aConfiguration['GAP_USE_TAX'], \GAnalyticsPro::$aConfiguration['GAP_USE_SHIPPING'], \GAnalyticsPro::$aConfiguration['GAP_USE_WRAPPING']);
+            $this->fValue = (float)moduleTools::getOrderPrice($this->oOrder, \GAnalyticsPro::$aConfiguration['GAP_USE_TAX'], \GAnalyticsPro::$aConfiguration['GAP_USE_SHIPPING'], \GAnalyticsPro::$aConfiguration['GAP_USE_WRAPPING']);
         }
     }
 
@@ -153,9 +163,9 @@ class purchaseTag extends baseTag
     {
         if (!empty($this->bValid)) {
             if (!empty(\GAnalyticsPro::$aConfiguration['GAP_USE_TAX'])) {
-                $this->fValueShipping = number_format($this->oOrder->total_shipping_tax_incl, 2, ',', '');
+                $this->fValueShipping = number_format($this->oOrder->total_shipping_tax_incl, 2, '.', '');
             } else {
-                $this->fValueShipping = number_format($this->oOrder->total_shipping_tax_excl, 2, ',', '');
+                $this->fValueShipping = number_format($this->oOrder->total_shipping_tax_excl, 2, '.', '');
             }
         }
     }
@@ -166,7 +176,7 @@ class purchaseTag extends baseTag
     public function setValueTax()
     {
         if (!empty($this->bValid)) {
-            $this->fValueTax = number_format($this->oOrder->total_paid_tax_incl - $this->oOrder->total_paid_tax_excl, 2, ',', '');
+            $this->fValueTax = number_format($this->oOrder->total_paid_tax_incl - $this->oOrder->total_paid_tax_excl, 2, '.', '');
         }
     }
 

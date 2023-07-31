@@ -174,23 +174,38 @@
             </div>
 
             <div class="col-xs-12">
-                <div class="alert alert-info">{l s='The option below will let you decide what information you want to use for your Google Analytics purchase reporting.' mod='ganalyticspro'}
+                <div class="alert alert-info">{l s='The option below lets you choose how to identify an order in your Google Analytics reports:' mod='ganalyticspro'}
                     <ul>
-                        <li>{l s='Order id (id of the order)'  mod='ganalyticspro'}</li>
-                        <li>{l s='Order reference (PrestaShop order reference)'  mod='ganalyticspro'}</li>
+                        <li>{l s='using the order ID'  mod='ganalyticspro'}</li>
+                        <li>{l s='using the order reference'  mod='ganalyticspro'}</li>
                     </ul>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-xs-12 col-md-3 col-lg-4">
-                    <b>{l s='Choose your order tag preference' mod='ganalyticspro'}</b> :
+                    <b>{l s='Choose how to identify orders:' mod='ganalyticspro'}</b>
                 </label>
                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
                     <select name="bt_purchase-tag-id" id="bt_purchase-tag-id" class="col-xs-8 col-md-8 col-lg-8">
-                        <option value="order-reference" {if $purchaseTagId == 'order-reference' }selected="selected" {/if}>{l s='Use order reference' mod='ganalyticspro'}</option>
-                        <option value="order-id" {if $purchaseTagId == 'order-id'}selected="selected" {/if}>{l s='Use order id' mod='ganalyticspro'}</option>
+                        <option value="order-reference" {if $purchaseTagId == 'order-reference' }selected="selected" {/if}>{l s='Use order references' mod='ganalyticspro'}</option>
+                        <option value="order-id" {if $purchaseTagId == 'order-id'}selected="selected" {/if}>{l s='Use order IDs' mod='ganalyticspro'}</option>
                     </select>
                 </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-md-3 col-lg-4">
+                    <span class="label-tooltip" data-toggle="tooltip" title data-original-title="{l s='Indicate the ID at which the module should start sending orders. If an order has an ID lower than this value, it will not be sent to Google Analytics.' mod='ganalyticspro'}">
+                        <strong>{l s='Send orders from ID' mod='ganalyticspro'}</strong>
+                    </span>
+                </label>
+                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-2">
+                    <div class="input-group">
+                        <span class="input-group-addon">#</span>
+                        <input type="text" id="bt_ordermin" name="bt_ordermin" size="35" value="{if !empty($orderMin)}{$orderMin|escape:'htmlall':'UTF-8'}{/if}" />
+                    </div>
+                </div>
+                <span class="label-tooltip" data-toggle="tooltip" title data-original-title="{l s='Indicate the ID at which the module should start sending orders. If an order has an ID lower than this value, it will not be sent to Google Analytics.' mod='ganalyticspro'}">&nbsp;<i class="icon-question-sign"></i></span>
             </div>
 
             <div class="clr_30"></div>

@@ -789,18 +789,19 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     private function _getKoopmanOrderStatus()
     {
         try {
-            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL'), $this->soapoptions);
+            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $this->soapoptions);
         } catch (Exception $e) {
+
             echo 'error (new SoapClient) - ' . $e->getMessage();
 
             return false;
         }
 
         $login = new stdClass();
-        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME');
-        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD');
-        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT');
-        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER');
+        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
         $date = date('YYYY-MM-DD hh:mm');
         $zendingnr = null;
@@ -954,7 +955,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $order = new Order($orderId);
 
         try {
-            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL'), $this->soapoptions);
+            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $this->soapoptions);
         } catch (Exception $e) {
             echo 'error (new SoapClient) - ' . $e->getMessage();
 
@@ -962,10 +963,10 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         }
 
         $login = new stdClass();
-        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME');
-        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD');
-        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT');
-        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER');
+        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
         $ref = $order->reference;
 //        $ref = 'YS-091779';
@@ -1048,7 +1049,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     private function _getKoopmanAfgehaald()
     {
         $id_order = Tools::getValue('id_order');
-        $new_status = Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKEDUP_STATUS');
+        $new_status = Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKEDUP_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
         $history = new OrderHistory();
         $history->id_order = (int)$id_order;

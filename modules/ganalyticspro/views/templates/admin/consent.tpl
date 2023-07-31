@@ -35,7 +35,7 @@
         <div class="clr_20"></div>
 
         <div class="form-group">
-            <label class="control-label col-xs-12 col-md-3 col-lg-3"><span class="label-tooltip" data-toggle="tooltip" title data-original-title="{l s='Select "Yes" to activate the consent mode' mod='ganalyticspro'}"><b>{l s='Enable consent mode?' mod='ganalyticspro'}</b></span></label>
+            <label class="control-label col-xs-12 col-md-4 col-lg-4"><span class="label-tooltip" data-toggle="tooltip" title data-original-title="{l s='Select "Yes" to activate the consent mode' mod='ganalyticspro'}"><b>{l s='Enable consent mode?' mod='ganalyticspro'}</b></span></label>
             <div class="col-xs-12 col-md-5 col-lg-6">
                 <span class="switch prestashop-switch fixed-width-lg">
                     <input type="radio" name="bt_activate_consent" id="bt_activate_consent_on" value="1" {if !empty($bActivateConsent|escape:'htmlall':'UTF-8')}checked="checked" {/if} onclick="javascript: oGap.changeSelect('consent_config', 'consent_config', null, null, true, true);" />
@@ -60,41 +60,66 @@
                     {l s='We\'ve detected that the module "Advanced Cookie Banner" is installed. Your two modules are now synchronized to respect your visitor preferences.' mod='ganalyticspro'}
                 </div>
             {else}
-                <div class="alert alert-info">
-                    {l s='Indicate in the option below the ID or CLASS of the button that allows your visitors to authorize the installation of cookies, and save.' mod='ganalyticspro'}
-                    <br />
-                    {l s='For a complete management of your visitors\' consent regarding cookies, discover' mod='ganalyticspro'}&nbsp;<a href="https://addons.prestashop.com/{$sFaqLang|escape:'htmlall':'UTF-8'}/24853-advanced-cookie-banner-loi-cookies-mars-2021-cnil-rgpd.html">{l s='Advanced Cookie Banner' mod='ganalyticspro'}</a>
-                </div>
-
-                <div class="clr_20"></div>
 
                 <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-12 col-md-5 col-lg-3">
-                        <span>
-                            <strong>{l s='HTML element of the button that allows cookies' mod='ganalyticspro'}</strong>
+                    <label class="control-label col-xs-12 col-md-4 col-lg-4"><span class="label-tooltip" data-toggle="tooltip" title data-original-title="{l s='Select "Yes" if you use the Axeptio module' mod='ganalyticspro'}"><b>{l s='Do you use the Axeptio module?' mod='ganalyticspro'}</b></span></label>
+                    <div class="col-xs-12 col-md-5 col-lg-6">
+                        <span class="switch prestashop-switch fixed-width-lg">
+                            <input type="radio" name="bt_activate_axeptio" id="bt_activate_axeptio_on" value="1" {if !empty($bActivateAxeptio|escape:'htmlall':'UTF-8')}checked="checked" {/if} onclick="javascript: oGap.changeSelect('axeptio_config', 'axeptio_config', null, null, true, false);oGap.changeSelect('axeptio_config_info', 'axeptio_config_info', null, null, true, true);" />
+                            <label for="bt_activate_axeptio_on" class="radioCheck">
+                                {l s='Yes' mod='ganalyticspro'}
+                            </label>
+                            <input type="radio" name="bt_activate_axeptio" id="bt_activate_axeptio_off" value="0" {if empty($bActivateAxeptio|escape:'htmlall':'UTF-8')}checked="checked" {/if} onclick="javascript: oGap.changeSelect('axeptio_config', 'axeptio_config', null, null, true, true);oGap.changeSelect('axeptio_config_info', 'axeptio_config_info', null, null, true, false);" />
+                            <label for="bt_activate_axeptio_off" class="radioCheck">
+                                {l s='No' mod='ganalyticspro'}
+                            </label>
+                            <a class="slide-button btn"></a>
                         </span>
-                    </label>
-                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-2">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="icon-link"></i></span>
-                            <input type="text" id="bt_accept_element-id" name="bt_accept_element-id" size="35" value="{if !empty($sAcceptElement)}{$sAcceptElement|escape:'htmlall':'UTF-8'}{/if}" placeholder="# for id and . for class" />
-                        </div>
-                        <p class="help-block">{l s='Don\'t forget to enter a "#" for an id and a "." for a class' mod='ganalyticspro'}</p>
+                        <span class="label-tooltip" data-toggle="tooltip" title data-original-title="{l s='Select "Yes" if you use the Axeptio module' mod='ganalyticspro'}">&nbsp;<span class="icon-question-sign"></span></span>
                     </div>
                 </div>
+                <div id="axeptio_config_info" {if empty($bActivateAxeptio)}style="display: none;" {/if}>
+                    <div class="alert alert-info">
+                        {l s='Our module is fully compliant with the Axeptio module, so you don\'t need to configure anything regarding the collection of consent.' mod='ganalyticspro'}
+                    </div>
+                </div>
+                <div id="axeptio_config" {if !empty($bActivateAxeptio)}style="display: none;" {/if}>
+                    <div class="alert alert-info">
+                        {l s='Indicate in the field(s) below the ID or CLASS of the button(s) that allow(s) your visitors to authorize the installation of cookies, and save.' mod='ganalyticspro'}
+                        <br /><br />
+                        {l s='For an automatic retrieval of consent, and to avoid having to specify the HTML elements of cookie buttons yourself, combine this Google Analytics module with' mod='ganalyticspro'}&nbsp;<a href="https://addons.prestashop.com/{$sFaqLang|escape:'htmlall':'UTF-8'}/24853-advanced-cookie-banner-loi-cookies-mars-2021-cnil-rgpd.html">{l s='Advanced Cookie Banner' mod='ganalyticspro'}</a>
+                    </div>
 
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-12 col-md-5 col-lg-3">
-                        <span>
-                            <strong>{l s='Second available cookie button' mod='ganalyticspro'}</strong>
-                        </span>
-                    </label>
-                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-2">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="icon-link"></i></span>
-                            <input type="text" id="bt_accept_element-id-second" name="bt_accept_element-id-second" size="35" value="{if !empty($sAcceptElementSecond)}{$sAcceptElementSecond|escape:'htmlall':'UTF-8'}{/if}" placeholder="# for id and . for class" />
+                    <div class="clr_20"></div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-12 col-md-5 col-lg-4">
+                            <span>
+                                <strong>{l s='HTML element of the button that allows cookies' mod='ganalyticspro'}</strong>
+                            </span>
+                        </label>
+                        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon-link"></i></span>
+                                <input type="text" id="bt_accept_element-id" name="bt_accept_element-id" size="35" value="{if !empty($sAcceptElement)}{$sAcceptElement|escape:'htmlall':'UTF-8'}{/if}" placeholder="# for id and . for class" />
+                            </div>
+                            <p class="help-block">{l s='Don\'t forget to enter a "#" for an id and a "." for a class' mod='ganalyticspro'}</p>
                         </div>
-                        <p class="help-block">{l s='Don\'t forget to enter a "#" for an id and a "." for a class, this option have to be used if your cookie banner allow multiple button for consent' mod='ganalyticspro'}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-12 col-md-5 col-lg-4">
+                            <span>
+                                <strong>{l s='HTML element of the second available button, if any' mod='ganalyticspro'}</strong>
+                            </span>
+                        </label>
+                        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon-link"></i></span>
+                                <input type="text" id="bt_accept_element-id-second" name="bt_accept_element-id-second" size="35" value="{if !empty($sAcceptElementSecond)}{$sAcceptElementSecond|escape:'htmlall':'UTF-8'}{/if}" placeholder="# for id and . for class" />
+                            </div>
+                            <p class="help-block">{l s='This field has to be used if your cookie banner includes a second button for managing cookie consent.' mod='ganalyticspro'}<br />{l s='Don\'t forget to enter a "#" for an id and a "." for a class' mod='ganalyticspro'}</p>
+                        </div>
                     </div>
                 </div>
             {/if}
@@ -117,15 +142,15 @@
 
 <div class="clr_20"></div>
 
-<div id="bt_error-ua"></div>
+<div id="bt_error-consent"></div>
 
 {literal}
     <script type="text/javascript">
         //bootstrap components init
-        {/literal}
-            {if !empty($bAjaxMode)}
-                {literal}
-                    $('.label-tooltip, .help-tooltip').tooltip();
-                    {/literal}{/if}{literal}
-                </script>
-            {/literal}
+    {/literal}
+    {if !empty($bAjaxMode)}
+        {literal}
+            $('.label-tooltip, .help-tooltip').tooltip();
+            {/literal}{/if}{literal}
+        </script>
+    {/literal}

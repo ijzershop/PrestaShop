@@ -35,6 +35,9 @@
   <meta name="keywords" content="{block name='head_seo_keywords'}{$page.meta.keywords}{/block}">
     {if $page.meta.robots !== 'index'}
       <meta name="robots" content="{$page.meta.robots}">
+      {else}
+      <meta name="robots" content="INDEX, FOLLOW">
+      <meta name="googlebot" content="index,follow">
     {/if}
     {if $page.canonical}
       <link rel="canonical" href="{$page.canonical}">
@@ -103,20 +106,20 @@
 {/block}
 
 <script type="text/javascript">
-  let clarityKey = "{Configuration::get('MSTHEMECONFIG_CLARITY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '7bu3k08a1u')}";
-  let isDebug = false;
-  {literal}
-  //Clarity function to pass data to clarity server
-  (function (c, l, a, r, i, t, y) {
-    c[a] = c[a] || function () {
-      (c[a].q = c[a].q || []).push(arguments)
-    };
-    t = l.createElement(r);
-    t.async = 1;
-    t.src = "https://www.clarity.ms/tag/" + i;
-    y = l.getElementsByTagName(r)[0];
-    y.parentNode.insertBefore(t, y);
-  })(window, document, "clarity", "script", clarityKey);
+  // let clarityKey = "{Configuration::get('MSTHEMECONFIG_CLARITY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '7bu3k08a1u')}";
+  // let isDebug = false;
+  // {literal}
+  // //Clarity function to pass data to clarity server
+  // (function (c, l, a, r, i, t, y) {
+  //   c[a] = c[a] || function () {
+  //     (c[a].q = c[a].q || []).push(arguments)
+  //   };
+  //   t = l.createElement(r);
+  //   t.async = 1;
+  //   t.src = "https://www.clarity.ms/tag/" + i;
+  //   y = l.getElementsByTagName(r)[0];
+  //   y.parentNode.insertBefore(t, y);
+  // })(window, document, "clarity", "script", clarityKey);
 
 
 
@@ -143,28 +146,28 @@ let currentDay = currentTime.getUTCDay();
   let pageStatus = 'away';
 
 if ((workingDays.indexOf(currentDay) !== -1 && (currentHour >= startHour && currentHour < endHour))) {
-  // CHAT BUTTON CODE
-  (function(d, src, c) {
-      var t=d.scripts[d.scripts.length - 1],
-          s=d.createElement('script');
-          s.id='la_x2s6df8d';
-          s.async=true;
-          s.src=src;
-          s.setAttribute('cross-origin', '*');
-          s.onload=s.onreadystatechange=function(){
-            var rs=this.readyState;
-            if(rs&&(rs!='complete')&&(rs!='loaded')){
-              return;
-            }
+  // // CHAT BUTTON CODE
+  // (function(d, src, c) {
+  //     var t=d.scripts[d.scripts.length - 1],
+  //         s=d.createElement('script');
+  //         s.id='la_x2s6df8d';
+  //         s.async=true;
+  //         s.src=src;
+  //         s.setAttribute('cross-origin', '*');
+  //         s.onload=s.onreadystatechange=function(){
+  //           var rs=this.readyState;
+  //           if(rs&&(rs!='complete')&&(rs!='loaded')){
+  //             return;
+  //           }
 
-            c(this);
-          };
-          t.parentElement.insertBefore(s,t.nextSibling);
-    })(document, 'https://demodernesmid.ladesk.com/scripts/track.js',
-    function(e){
-      let LiveAgentChatButton = LiveAgent.createButton('c0ns68q0', e);
-      document.getElementById('info-row-chat').setAttribute('onclick', "javascript:void(document.getElementById('"+LiveAgentChatButton.elementId+"').click())");
-    });
+  //           c(this);
+  //         };
+  //         t.parentElement.insertBefore(s,t.nextSibling);
+  //   })(document, 'https://demodernesmid.ladesk.com/scripts/track.js',
+  //   function(e){
+  //     let LiveAgentChatButton = LiveAgent.createButton('c0ns68q0', e);
+  //     document.getElementById('info-row-chat').setAttribute('onclick', "javascript:void(document.getElementById('"+LiveAgentChatButton.elementId+"').click())");
+  //   });
   document.getElementById('info-row-mail').style.display = 'table-row';
   document.getElementById('info-row-maps').style.display = 'table-row';
   document.getElementById('info-row-phone').style.display = 'table-row';

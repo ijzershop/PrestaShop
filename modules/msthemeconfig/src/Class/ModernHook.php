@@ -488,68 +488,6 @@ class ModernHook
 
         $availableStock = 'https://schema.org/InStock';
 
-//        $productCommentRepository = $this->controller->getContainer()->get('product_comment_repository');
-//        $productComments = $productCommentRepository->paginate(
-//            $product->id,
-//            1,
-//            500,
-//            true
-//        );
-//        $averageGrade = $productCommentRepository->getAverageGrade($product->id, true);
-//        $totalComments = $productCommentRepository->getCommentsNumber($product->id, true);
-//
-//        $reviews = [];
-//        $reviews[] = [
-//            '@context' => 'https://schema.org/',
-//            '@type' => 'Review',
-//            'reviewRating' => ['@type' => 'Rating',
-//                'ratingValue' => '5',
-//                'bestRating' => '5'
-//            ],
-//            'author' => [
-//                '@context' => 'https://schema.org/',
-//                '@type' => 'Person',
-//                'name' => 'De Moderne Smid'
-//            ],
-//            'reviewBody' => 'Prima product, zorgvuldig voor u uitgezocht'
-//        ];
-//
-//        foreach ($productComments as $productComment) {
-//            $reviews[] = [
-//                '@context' => 'https://schema.org/',
-//                '@type' => 'Review',
-//                'reviewRating' => [
-//                    '@context' => 'https://schema.org/',
-//                    '@type' => 'Rating',
-//                    'ratingValue' => $productComment['grade'],
-//                    'bestRating' => '5'
-//                ],
-//                'datePublished' => $productComment['date_add'],
-//                'author' => [
-//                    '@context' => 'https://schema.org/',
-//                    '@type' => 'Person',
-//                    'name' => $productComment['firstname'] . ' ' . $productComment['lastname']
-//                ],
-//                'reviewBody' => $productComment['content'],
-//                'publisher' => [
-//                    '@context' => 'https://schema.org/',
-//                    '@type' => 'Person',
-//                    'name' => 'De Moderne Smid'
-//                ]
-//            ];
-//        }
-//        if ($averageGrade == 0) {
-//            $grade = 5;
-//        } else {
-//            $grade = $averageGrade;
-//        }
-//        $rating = [
-//            '@context' => 'https://schema.org/',
-//            '@type' => 'AggregateRating',
-//            'ratingValue' => $grade,
-//            'reviewCount' => $totalComments + 1
-//        ];
-
         $store = new Store($this->idShop, $this->idLang);
 
         $contacts = [];
@@ -575,7 +513,7 @@ class ModernHook
             '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'sku' => $this->shopName . '-' . $product->reference,
-            'gtin14' => $this->shopName . '-' . $product->id,
+//            'gtin14' => (int)$this->shopName . '-' . $product->id,
             'image' => $images,
             'name' => $product->name[$this->idLang],
             'alternateName' => $product->alternate_name,
@@ -592,6 +530,14 @@ class ModernHook
                 'name' => $this->shopName
             ],
             'offers' => [
+                "hasMerchantReturnPolicy" => [
+                    "@type" => "MerchantReturnPolicy",
+                    "applicableCountry" => "NL",
+                    "returnPolicyCategory" => "https://schema.org/MerchantReturnFiniteReturnWindow",
+                    "merchantReturnDays" => 30,
+                    "returnMethod" => "https://schema.org/ReturnByMail",
+                    "returnFees" => "https://schema.org/ReturnFeesCustomerResponsibility"
+                ],
                 '@context' => 'http://schema.org',
                 '@type' => 'Offer',
                 'url' => $this->link->getProductLink($product->id),
@@ -667,13 +613,15 @@ class ModernHook
                         'handlingTime' => [
                             '@type' => 'QuantitativeValue',
                             'minValue' => '0',
-                            'maxValue' => '1'
+                            'maxValue' => '1',
+                            'unitCode' => 'd'
                         ],
                         'transitTime' => [
                             '@context' => 'https://schema.org/',
                             '@type' => 'QuantitativeValue',
                             'minValue' => '1',
-                            'maxValue' => '7'
+                            'maxValue' => '7',
+                            'unitCode' => 'd'
                         ],
                         'cutoffTime' => '17:00-08:00',
                         'businessDays' => [
@@ -1181,7 +1129,7 @@ class ModernHook
         $rating = [
             '@context' => 'https://schema.org/',
             '@type' => 'AggregateRating',
-            'ratingValue' => $grade,
+            'ratingValue' => $grade/2,
             'reviewCount' => $attr['totalReviews'] + 1
         ];
 
@@ -1894,7 +1842,7 @@ class ModernHook
 
         //Profile 3 is werkplaats medewerkers admin is 1
         $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES', null, null, 1, "5,6,7");
-     
+
         $profiles = [];
         if (!empty($workshopProfiles)) {
             $profiles = explode(',', $workshopProfiles);

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 
 /**

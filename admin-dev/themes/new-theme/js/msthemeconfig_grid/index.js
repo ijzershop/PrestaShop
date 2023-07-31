@@ -44,6 +44,13 @@ $(() => {
       extraShippingSelectYes = 'checked="true';
     }
 
+    let idProduct = 0;
+    if(data.id_product !== undefined){
+      idProduct = data.id_product;
+    } else {
+      idProduct = data.id;
+    }
+
     return `<div class="card" id="offer-row-card" data-link="${data.link}">
     <div class="card-header">
       Offer row
@@ -53,7 +60,7 @@ $(() => {
       <p class="card-text">
       <form method="POST" id="offer-row-form">
       <input type="hidden" name="offer-id" value="${data.id_oi_offer}"/>
-      <input type="hidden" name="offer-row-id" value="${data.id_product}"/>
+      <input type="hidden" name="offer-row-id" value="${idProduct}"/>
       <input type="hidden" name="offer-new" value="${data.new}"/>
         <div class="form-group">
           <label for="store-products">Product</label>
@@ -259,7 +266,7 @@ $(() => {
 
         if (offer.new === true) {
           let newRowHtml = `
-          <tr data-row-id="${offer.id_product}">
+          <tr data-row-id="${idProduct}">
               <td>${offer.name}</td>
               <td>
                 <div style="max-height: 150px;overflow: scroll">
@@ -273,13 +280,13 @@ $(() => {
               <td>
                 <button data-offer='${JSON.stringify(offer).toString()}' type="button"
                           class="btn btn-sm btn-warning update-offer-row w-100"
-                          data-row-id="${offer.id_product}"
-                          id="button_${offer.id_product}">Wijzig</button>
+                          data-row-id="${idProduct}"
+                          id="button_${idProduct}">Wijzig</button>
                 <button type="button"
                         class="btn btn-sm btn-danger delete-offer-row w-100"
-                        data-link="/admin-dev/index.php/modules/modernesmid/offerintegration/admin-offer/row/${offer.id_product}/delete"
-                        data-row-id="${offer.id_product}"
-                        id="delete_button_${offer.id_product}">Delete</button>
+                        data-link="/admin-dev/index.php/modules/modernesmid/offerintegration/admin-offer/row/${idProduct}/delete"
+                        data-row-id="${idProduct}"
+                        id="delete_button_${idProduct}">Delete</button>
               </td>
             </tr>
           `;

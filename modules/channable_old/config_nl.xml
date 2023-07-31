@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>channable</name>
+    <displayName><![CDATA[Channable]]></displayName>
+    <version><![CDATA[2.5.9]]></version>
+    <description><![CDATA[channable Module om je winkel te verbinden met channable service]]></description>
+    <author><![CDATA[patworx multimedia GmbH]]></author>
+    <tab><![CDATA[market_place]]></tab>
+	<confirmUninstall><![CDATA[Weet u zeker dat u deze module wilt verwijderen?]]></confirmUninstall>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+</module>

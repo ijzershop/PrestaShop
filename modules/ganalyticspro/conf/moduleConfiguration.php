@@ -54,9 +54,6 @@ class moduleConfiguration
     public static function getConfVar()
     {
         return [
-            'GAP_MODULE_VERSION' => '1.0.0',
-            'GAP_GA_ID' => '',
-            'GAP_USE_UA' => false,
             'GAP_GFOUR_ID' => '',
             'GAP_USE_GFOUR' => false,
             'GAP_UPDATE_HTML_ELEM' => false,
@@ -72,6 +69,7 @@ class moduleConfiguration
             'GAP_USE_WRAPPING' => false,
             'GAP_CAT_LABEL_FORMAT' => 'short',
             'GAP_USE_CONSENT' => false,
+            'GAP_USE_AXEPTIO' => false,
             'GAP_ELEMENT_HTML_ID' => '',
             'GAP_ELEMENT_HTML_ID_SECOND' => '',
             'GAP_STATUS_SELECTION' => serialize([6, 7]),
@@ -79,13 +77,14 @@ class moduleConfiguration
             'GAP_PURCHASE_ID_PREF' => 'order-reference',
             'GAP_STEP_CHECKOUT' => serialize(['selector' => ['.standard-checkout']]),
             'GAP_DEDUCT_DISCOUNT' => true,
+            'GAP_USER_ID' => true,
+            'GAP_ORDER_ID_MIN' => true,
         ];
     }
 
     /* defines variable to hooks settings */
     const GAP_HOOKS = [
         ['name' => 'displayHeader', 'use' => false, 'title' => 'Header'],
-        ['name' => 'displayHome', 'use' => false, 'title' => 'Home'],
         ['name' => 'actionOrderStatusUpdate', 'use' => false, 'title' => 'Admin Order Status Update'],
     ];
 
@@ -112,8 +111,8 @@ class moduleConfiguration
     public static function getJsMessage()
     {
         return [
-            'gaId' => \GAnalyticsPro::$oModule->l('You have not filled out your Google Analytics ID option', 'module-tools_class'),
-            'htmlElement' => \GAnalyticsPro::$oModule->l('You have not filled the html element', 'module-tools_class'),
+            'gaId' => \GAnalyticsPro::$oModule->l('You have not filled in your GA4 measurement ID', 'module-tools_class'),
+            'htmlElement' => \GAnalyticsPro::$oModule->l('You have not filled in the HTML element', 'module-tools_class'),
         ];
     }
 
@@ -140,7 +139,6 @@ class moduleConfiguration
     public static function getRequestParams()
     {
         return [
-            'ua' => ['action' => 'update', 'type' => 'ua'],
             'gfour' => ['action' => 'update', 'type' => 'gfour'],
             'advanced' => ['action' => 'update', 'type' => 'advanced'],
             'consent' => ['action' => 'update', 'type' => 'consent'],

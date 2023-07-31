@@ -4,6 +4,18 @@ Module: Google Analytics : GA4 and Universal-Analytics
 Change history for "Google Analytics : GA4 and Universal-Analytics"
 ---------------------------------------------------------------
 ===========================
+Version 2.2.0 (01/07/2023)| => MAJOR
+===========================
+- Handle user_id for Google tag
+- Removed UA
+- Handle addToCart from button add to cart on homepage
+
+===========================
+Version 2.1.7 (28/04/2023)|
+===========================
+- Fix for format on order line price
+
+===========================
 Version 2.1.6 (13/04/2023)|
 ===========================
 - Fix to detected the good combination price for cart and purchase event

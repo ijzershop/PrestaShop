@@ -187,7 +187,7 @@ modernesmid_config_page:
 #Offerintegration
 offerintegration_index:
   path: /modernesmid/offerintegration/admin-offer
-  methods: [ GET ]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\AdminOfferController::indexAction'
     _legacy_controller: AdminOfferController

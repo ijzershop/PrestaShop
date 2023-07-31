@@ -61,10 +61,6 @@ class hookDisplay implements hookInterface
                 // use case - display in header
                 $aDisplayHook = call_user_func([$this, 'displayHeader']);
                 break;
-            case 'home':
-                // use case - display in home
-                $aDisplayHook = call_user_func([$this, 'displayHome']);
-                break;
             default:
                 break;
         }
@@ -82,7 +78,7 @@ class hookDisplay implements hookInterface
         $aAssign = [];
 
         // Use case for G4 code and the value is set
-        if (!empty(\GAnalyticsPro::$aConfiguration['GAP_USE_GFOUR']) || !empty(\GAnalyticsPro::$aConfiguration['GAP_USE_UA'])) {
+        if (!empty(\GAnalyticsPro::$aConfiguration['GAP_USE_GFOUR'])) {
             $aAssign['btGtagSource'] = 'https://www.googletagmanager.com/gtag/js?id=' . \GAnalyticsPro::$aConfiguration['GAP_GFOUR_ID'] . '';
             $aAssign['btUseGFour'] = \GAnalyticsPro::$aConfiguration['GAP_USE_GFOUR'];
 
@@ -91,19 +87,5 @@ class hookDisplay implements hookInterface
         }
 
         return ['tpl' => moduleConfiguration::GAP_TPL_HOOK_PATH . 'header.tpl', 'assign' => $aAssign];
-    }
-
-    /**
-     * _displayHome() method display home elements
-     *
-     * @return array
-     */
-    private function displayHome()
-    {
-        // set
-        $aAssign = ['bActive' => false];
-        $iPosition = 1;
-
-        return ['tpl' => moduleConfiguration::GAP_TPL_HOOK_PATH . 'home.tpl', 'assign' => $aAssign];
     }
 }

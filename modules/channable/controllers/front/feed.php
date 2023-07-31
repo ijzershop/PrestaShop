@@ -104,7 +104,6 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
         $limit_string = false;
         
         $sql_optimization_mode = Configuration::get('CHANNABLE_SQL_OPTIMIZATION_MODE');
-        
         if (Tools::getValue('limit')) {
             $limit_string = ' LIMIT ' . pSQL(Tools::getValue('limit'));
         } else {
@@ -127,6 +126,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
         	           ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\')  ' : '1') . '
                        ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
             		   ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (sav.quantity > 0) ' : '') . '
+                       ' . $this->sqlHook('product_ids_where') . '
               GROUP BY p.id_product
               ORDER BY p.id_product ' . $limit_string;
                 
@@ -157,6 +157,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                    AND (pas.id_shop = \'' . (int)Context::getContext()->shop->id . '\' OR pas.id_shop IS NULL)
                        ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
                        ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (pq.quantity > 0) ' : '') . '
+                       ' . $this->sqlHook('product_ids_where') . '
               GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
               ORDER BY p.id_product ' . $limit_string;
                 
@@ -677,11 +678,23 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
 
                     ChannableProductsQueue::deleteById($row['parent_id']);
 
-                    if ($this->track_cached) {
-                        $tracked_cache_new[] = (int)$row['parent_id'];
-                    }
+                    $add_product_to_feed = true;
 
-                    $items[] = $row;
+                    Hook::exec(
+                        'channableAddProductToFeedCheck',
+                        [
+                            'add_product_to_feed' => &$add_product_to_feed,
+                            'item' => &$row
+                        ]
+                    );
+
+                    if ($add_product_to_feed) {
+                        if ($this->track_cached) {
+                            $tracked_cache_new[] = (int)$row['parent_id'];
+                        }
+
+                        $items[] = $row;
+                    }
                     unset($product);
 
                     if (isset($cart)) {
@@ -699,6 +712,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
             header('CachedIDs: ' . join(',', $tracked_cache));
             header('NonCachedIDs: ' . join(',', $tracked_cache_new));
         }
+
         echo json_encode(
             $items
         );
@@ -918,6 +932,9 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
         if ((int)$cache->id > 0) {
             return json_decode($cache->cache_value, true);
         } else {
+            if (!isset($allCategories[$id_category])) {
+                return [];
+            }
             $tree = [];
             $tree[] = $allCategories[$id_category];
             $count = 0;
@@ -1281,5 +1298,15 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
             return ' AND pa.id_product_attribute < -1 ';
         }
         return;
+    }
+
+    protected function sqlHook($location)
+    {
+        return Hook::exec(
+            'channableSql',
+            [
+                'location' => $location
+            ]
+        );
     }
 }

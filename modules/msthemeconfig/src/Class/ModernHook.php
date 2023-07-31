@@ -175,9 +175,11 @@ class ModernHook
         $selectedCats = explode(',', Configuration::get('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES'));
         $itemList = [];
 
+        $position = 0;
         foreach ($selectedCats as $catId){
             $subCat = new Category($catId);
-            $itemList[] =  $this->createCategoryJSONLD($subCat, false, true);
+            $itemList[] =  $this->createCategoryJSONLD($subCat, false, true, $position);
+            $position++;
         }
 
         $cat = new Category(2);
@@ -529,6 +531,12 @@ class ModernHook
             'brand' => ['@type' => 'Brand',
                 'name' => $this->shopName
             ],
+            "review" => [],
+              "aggregateRating" => [
+                "@type" => "AggregateRating",
+                "ratingValue" => 5,
+                "reviewCount" => 1
+            ],
             'offers' => [
                 "hasMerchantReturnPolicy" => [
                     "@type" => "MerchantReturnPolicy",
@@ -536,7 +544,13 @@ class ModernHook
                     "returnPolicyCategory" => "https://schema.org/MerchantReturnFiniteReturnWindow",
                     "merchantReturnDays" => 30,
                     "returnMethod" => "https://schema.org/ReturnByMail",
-                    "returnFees" => "https://schema.org/ReturnFeesCustomerResponsibility"
+                    "returnShippingFeesAmount" => [
+                        '@type' => 'MonetaryAmount',
+                        'minValue' => '10',
+                        'maxValue' => '250',
+                        'value' => '35',
+                        'currency' => 'EUR'
+                    ],
                 ],
                 '@context' => 'http://schema.org',
                 '@type' => 'Offer',
@@ -1129,7 +1143,7 @@ class ModernHook
         $rating = [
             '@context' => 'https://schema.org/',
             '@type' => 'AggregateRating',
-            'ratingValue' => $grade/2,
+            'ratingValue' => (float)$grade/2,
             'reviewCount' => $attr['totalReviews'] + 1
         ];
 
@@ -1450,7 +1464,7 @@ class ModernHook
      */
 
 
-    private function createCategoryJSONLD($cat, $withProducts=true, $withSubCats = true): array
+    private function createCategoryJSONLD($cat, $withProducts=true, $withSubCats = true, $position=0): array
     {
         $catImages = [$this->link->getCatImageLink($cat->link_rewrite, $cat->id_category)];
 
@@ -1481,9 +1495,11 @@ class ModernHook
         } elseif ($withSubCats) {
             $subCategories = $cat->getSubCategories($this->idLang, true);
             $catTotalItems = count($subCategories);
+            $subPos = 0;
             foreach ($subCategories as $category) {
                 $cat = new Category($category['id_category']);
-                $jsonLD[] = $this->createCategoryJSONLD($cat, $withProducts, false);
+                $jsonLD[] = $this->createCategoryJSONLD($cat, $withProducts, false, $subPos);
+                $subPos++;
             }
         }
 
@@ -1498,6 +1514,7 @@ class ModernHook
             $jsonLDCategory = [
                 '@context' => 'https://schema.org',
                 '@type' => 'ItemList',
+                'position' => $position,
                 'url' => $this->link->getCategoryLink($cat->id),
                 'numberOfItems' => $catTotalItems,
                 'name' => $cat->name[$this->idLang],
@@ -1842,7 +1859,7 @@ class ModernHook
 
         //Profile 3 is werkplaats medewerkers admin is 1
         $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES', null, null, 1, "5,6,7");
-
+     
         $profiles = [];
         if (!empty($workshopProfiles)) {
             $profiles = explode(',', $workshopProfiles);

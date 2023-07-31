@@ -59,7 +59,6 @@ class adminDisplay implements adminInterface
 
         switch ($sType) {
             case 'tabs': // use case - display first page with all tabs
-            case 'ua': // use case - display ua settings form
             case 'gfour': // use case - g4 settings form
             case 'advanced': // use case - display fancybox advice layout
             case 'consent': // use case - display fancybox advice layout
@@ -112,7 +111,6 @@ class adminDisplay implements adminInterface
             'imagePath' => moduleConfiguration::GAP_URL_IMG,
             'useJs' => moduleConfiguration::GAP_USE_JS,
             'sFaqURL' => moduleConfiguration::GAP_BT_FAQ_MAIN_URL,
-            'hideService' => false,
         ];
 
         return $aAssign;
@@ -135,11 +133,6 @@ class adminDisplay implements adminInterface
             'sCurrentIso' => \Language::getIsoById(\GAnalyticsPro::$iCurrentLang),
         ];
 
-        // use case - get display data of basics settings
-        $aData = $this->displayUa($aPost);
-
-        $aAssign = array_merge($aAssign, $aData['assign']);
-
         // use case - get display data of advanced settings
         $aData = $this->displayAdvanced($aPost);
 
@@ -156,7 +149,6 @@ class adminDisplay implements adminInterface
         $aAssign = array_merge($aAssign, $aData['assign']);
 
         // assign all included templates files
-        $aAssign['sUaInclude'] = moduleTools::getTemplatePath('views/templates/admin/ua.tpl');
         $aAssign['sG4Include'] = moduleTools::getTemplatePath('views/templates/admin/g4.tpl');
         $aAssign['sAdvancedInclude'] = moduleTools::getTemplatePath('views/templates/admin/advanced.tpl');
         $aAssign['sConsentInclude'] = moduleTools::getTemplatePath('views/templates/admin/consent.tpl');
@@ -168,26 +160,6 @@ class adminDisplay implements adminInterface
         return [
             'tpl' => 'admin/body.tpl',
             'assign' => array_merge($aAssign, $GLOBALS['GAP_USE_JS_CSS']),
-        ];
-    }
-
-    /**
-     * displayUa() method displays basic settings
-     *
-     * @param array $aPost
-     *
-     * @return array
-     */
-    private function displayUa(array $aPost = null)
-    {
-        $aAssign = [
-            'sGaId' => \GAnalyticsPro::$aConfiguration['GAP_GA_ID'],
-            'bActivateUa' => \GAnalyticsPro::$aConfiguration['GAP_USE_UA'],
-        ];
-
-        return [
-            'tpl' => 'admin/ua.tpl',
-            'assign' => $aAssign,
         ];
     }
 
@@ -225,6 +197,7 @@ class adminDisplay implements adminInterface
             'bDeductDiscount' => \GAnalyticsPro::$aConfiguration['GAP_DEDUCT_DISCOUNT'],
             'aSelectorDefault' => moduleTools::resetHtmlSelector(),
             'purchaseTagId' => \GAnalyticsPro::$aConfiguration['GAP_PURCHASE_ID_PREF'],
+            'orderMin' => \GAnalyticsPro::$aConfiguration['GAP_ORDER_ID_MIN'],
         ];
 
         return [
@@ -245,6 +218,7 @@ class adminDisplay implements adminInterface
         $aAssign = [
             'sGfourId' => \GAnalyticsPro::$aConfiguration['GAP_GFOUR_ID'],
             'bActivateGfour' => \GAnalyticsPro::$aConfiguration['GAP_USE_GFOUR'],
+            'bUserId' => \GAnalyticsPro::$aConfiguration['GAP_USER_ID'],
         ];
 
         return [
@@ -264,6 +238,7 @@ class adminDisplay implements adminInterface
     {
         $aAssign = [
             'bActivateConsent' => \GAnalyticsPro::$aConfiguration['GAP_USE_CONSENT'],
+            'bActivateAxeptio' => \GAnalyticsPro::$aConfiguration['GAP_USE_AXEPTIO'],
             'bPmCookieBanner' => moduleTools::isInstalled('pm_advancedcookiebanner'),
             'sAcceptElement' => \GAnalyticsPro::$aConfiguration['GAP_ELEMENT_HTML_ID'],
             'sAcceptElementSecond' => \GAnalyticsPro::$aConfiguration['GAP_ELEMENT_HTML_ID_SECOND'],

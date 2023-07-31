@@ -48,7 +48,6 @@ class adminUpdate implements adminInterface
         $aDisplayData = [];
 
         switch ($sType) {
-            case 'ua': // use case - update ua settings
             case 'gfour': // use case - update ga4 settings
             case 'advanced': // use case - update advanced settings
             case 'consent': // use case - update consent
@@ -59,46 +58,6 @@ class adminUpdate implements adminInterface
                 break;
         }
         return $aDisplayData;
-    }
-
-    /**
-     * updateUa() method update basic settings
-     *
-     * @param array $aPost
-     *
-     * @return array
-     */
-    private function updateUa(array $aPost)
-    {
-        // clean headers
-        @ob_end_clean();
-
-        // set
-        $aData = [];
-
-        try {
-            \Configuration::updateValue('GAP_GA_ID', \Tools::getValue('bt_ga-id'));
-            \Configuration::updateValue('GAP_USE_UA', \Tools::getValue('bt_activate_ua'));
-        } catch (\Exception $e) {
-            $aData['aErrors'][] = ['msg' => $e->getMessage(), 'code' => $e->getCode()];
-        }
-
-        // get configuration options
-        moduleTools::getConfiguration();
-
-        // get run of admin display in order to display first page of admin with basics settings updated
-        $aDisplay = adminDisplay::create()->run('ua');
-
-        // use case - empty error and updating status
-        $aDisplay['assign'] = array_merge($aDisplay['assign'], [
-            'bAjaxMode' => \GAnalyticsPro::$sQueryMode,
-            'bUpdate' => (empty($aData['aErrors']) ? true : false),
-        ], $aData);
-
-        // destruct
-        unset($aData);
-
-        return $aDisplay;
     }
 
     /**
@@ -119,6 +78,7 @@ class adminUpdate implements adminInterface
         try {
             \Configuration::updateValue('GAP_GFOUR_ID', \Tools::getValue('bt_gfour-id'));
             \Configuration::updateValue('GAP_USE_GFOUR', \Tools::getValue('bt_activate_gfour'));
+            \Configuration::updateValue('GAP_USER_ID', \Tools::getValue('bt_user_id'));
         } catch (\Exception $e) {
             $aData['aErrors'][] = ['msg' => $e->getMessage(), 'code' => $e->getCode()];
         }
@@ -158,6 +118,7 @@ class adminUpdate implements adminInterface
 
         try {
             \Configuration::updateValue('GAP_USE_CONSENT', \Tools::getValue('bt_activate_consent'));
+            \Configuration::updateValue('GAP_USE_AXEPTIO', \Tools::getValue('bt_activate_axeptio'));
             \Configuration::updateValue('GAP_ELEMENT_HTML_ID', \Tools::getValue('bt_accept_element-id'));
             \Configuration::updateValue('GAP_ELEMENT_HTML_ID_SECOND', \Tools::getValue('bt_accept_element-id-second'));
         } catch (\Exception $e) {
@@ -212,6 +173,7 @@ class adminUpdate implements adminInterface
             \Configuration::updateValue('GAP_USE_SHIPPING', \Tools::getValue('bt_use-shipping'));
             \Configuration::updateValue('GAP_USE_WRAPPING', \Tools::getValue('bt_use-wrapping'));
             \Configuration::updateValue('GAP_PURCHASE_ID_PREF', \Tools::getValue('bt_purchase-tag-id'));
+            \Configuration::updateValue('GAP_ORDER_ID_MIN', \Tools::getValue('bt_ordermin'));
             \Configuration::updateValue('GAP_DEDUCT_DISCOUNT', \Tools::getValue('bt_deduct_discount'));
         } catch (\Exception $e) {
             $aData['aErrors'][] = ['msg' => $e->getMessage(), 'code' => $e->getCode()];

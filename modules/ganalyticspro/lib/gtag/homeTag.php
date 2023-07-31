@@ -32,7 +32,7 @@ class homeTag extends baseTag
      */
     public function setTrackingType()
     {
-        $this->sTrakingType = 'view_page';
+        $this->sTrakingType = 'view_home_page';
     }
 
     /**

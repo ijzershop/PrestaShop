@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Google Analytics : GA4 and Universal-Analytics
  *
@@ -37,8 +38,10 @@ class moduleTools
         elseif (\Tools::getValue('controller') == 'search' && empty(\Context::getContext()->controller->module)) {
             $sCurrentTypePage = 'search';
         } // use case - order page
-        elseif (\Tools::getValue('controller') == 'order'
-            || \Tools::getValue('controller') == 'orderopc') {
+        elseif (
+            \Tools::getValue('controller') == 'order'
+            || \Tools::getValue('controller') == 'orderopc'
+        ) {
             if (isset(\Context::getContext()->controller->page_name)) {
                 if (\Context::getContext()->controller->page_name == 'checkout') {
                     $sCurrentTypePage = 'checkout';
@@ -574,19 +577,19 @@ class moduleTools
         $jsDefs['elementWishProd'] = $dynTags['js']['elementWishProd'];
         $jsDefs['gaId'] = \GAnalyticsPro::$aConfiguration['GAP_GFOUR_ID'];
         $jsDefs['gaEnable'] = \GAnalyticsPro::$aConfiguration['GAP_USE_GFOUR'];
-        $jsDefs['bEnableUa'] = \GAnalyticsPro::$aConfiguration['GAP_USE_UA'];
-        $jsDefs['sUAcode'] = \GAnalyticsPro::$aConfiguration['GAP_GA_ID'];
         $jsDefs['ajaxUrl'] = \Context::getContext()->link->getModuleLink('ganalyticspro', 'ajax', []);
         $jsDefs['token'] = \Tools::getToken(false);
         $jsDefs['bRefund'] = orderRefund::hasRefundToHandle(\GAnalyticsPro::$iShopId);
         $jsDefs['bPartialRefund'] = orderPartialRefund::hasRefundPartialToHandle(\GAnalyticsPro::$iShopId);
         $jsDefs['bUseConsent'] = \GAnalyticsPro::$aConfiguration['GAP_USE_CONSENT'];
+        $jsDefs['bUseAxeption'] = \GAnalyticsPro::$aConfiguration['GAP_USE_AXEPTIO'];
         $jsDefs['bConsentHtmlElement'] = !empty(\GAnalyticsPro::$aConfiguration['GAP_ELEMENT_HTML_ID']) ? \GAnalyticsPro::$aConfiguration['GAP_ELEMENT_HTML_ID'] : '';
         $jsDefs['bConsentHtmlElementSecond'] = !empty(\GAnalyticsPro::$aConfiguration['GAP_ELEMENT_HTML_ID_SECOND']) ? \GAnalyticsPro::$aConfiguration['GAP_ELEMENT_HTML_ID_SECOND'] : '';
         $jsDefs['iConsentConsentLvl'] = moduleTools::getConsentStatus();
         $jsDefs['referer'] = null;
         $jsDefs['acbIsInstalled'] = $acbIsInstalled;
         $jsDefs['tagCurrency'] = \Context::getContext()->currency->iso_code;
+        $jsDefs['gaUserId'] = self::getUserIdWithModuleOption(\Context::getContext());
 
         if ($acbIsInstalled) {
             $acb = moduleTools::isInstalled('pm_advancedcookiebanner', [], true);
@@ -608,12 +611,11 @@ class moduleTools
      */
     public static function buildJsTagContent($page_type, $product)
     {
-        $useUa = \GAnalyticsPro::$aConfiguration['GAP_USE_UA'];
         $data = [];
         $combination = '';
 
         if ($page_type == 'product') {
-            $itemId = $product->id;
+            $itemId = (string)$product->id;
             $price = \Product::getPriceStatic($product->id, true, false, 2, null, false, true);
             $idDefaultCombibation = \Product::getDefaultAttribute($product->id);
 
@@ -621,31 +623,14 @@ class moduleTools
                 $itemId .= '_' . $idDefaultCombibation;
                 $combination = moduleTools::getProductCombinationName($idDefaultCombibation, \Context::getContext()->language->id, \Context::getContext()->shop->id);
             }
-
-            if (!empty($useUa)) {
-                $data[] = [
-                    'item_id' => $itemId,
-                    'item_name' => substr(str_replace('\'', '', $product->name[\GAnalyticsPro::$iCurrentLang] . ' ' . $combination), 0, 149),
-                    'currency' => \Context::getContext()->currency->iso_code,
-                    'item_category' => moduleTools::getCategoryName((int) $product->id_category_default, \GAnalyticsPro::$iCurrentLang),
-                    'price' => $price,
-                    'item_brand' => !empty($product->manufacturer_name) ? $product->manufacturer_name : 'No brand',
-                    'id' => $itemId,
-                    'name' => substr(str_replace('\'', '', $product->name[\GAnalyticsPro::$iCurrentLang]), 0, 149),
-                    'brand' => !empty($product->manufacturer_name) ? $product->manufacturer_name : 'No brand',
-                    'category' => moduleTools::getCategoryName((int) $product->id_category_default, \GAnalyticsPro::$iCurrentLang),
-                    'list_name' => moduleTools::getCategoryName((int) $product->id_category_default, \GAnalyticsPro::$iCurrentLang),
-                ];
-            } else {
-                $data[] = [
-                    'item_id' => $itemId,
-                    'item_name' => substr(str_replace('\'', '', $product->name[\GAnalyticsPro::$iCurrentLang] . ' ' . $combination), 0, 149),
-                    'currency' => \Context::getContext()->currency->iso_code,
-                    'item_category' => moduleTools::getCategoryName((int) $product->id_category_default, \GAnalyticsPro::$iCurrentLang),
-                    'price' => $price,
-                    'item_brand' => !empty($product->manufacturer_name) ? $product->manufacturer_name : 'No brand',
-                ];
-            }
+            $data[] = [
+                'item_id' => $itemId,
+                'item_name' => substr(str_replace('\'', '', $product->name[\GAnalyticsPro::$iCurrentLang] . ' ' . $combination), 0, 149),
+                'currency' => \Context::getContext()->currency->iso_code,
+                'item_category' => moduleTools::getCategoryName((int) $product->id_category_default, \GAnalyticsPro::$iCurrentLang),
+                'price' => (float)number_format($price, 2, '.', ''),
+                'item_brand' => !empty($product->manufacturer_name) ? $product->manufacturer_name : 'No brand',
+            ];
         } elseif ($page_type == 'page_list') {
             if (!empty($product) && is_array($product)) {
                 reset($product);
@@ -687,32 +672,15 @@ class moduleTools
                         $combination = moduleTools::getProductCombinationName($idDefaultCombibation, \Context::getContext()->language->id, \Context::getContext()->shop->id);
                     }
 
-                    if (!empty(\GAnalyticsPro::$aConfiguration['GAP_USE_UA'])) {
-                        $data[$key] = [
-                            'item_id' => $itemId,
-                            'item_name' => substr(str_replace('\'', '', $oProduct->name[\GAnalyticsPro::$iCurrentLang] . ' ' . $combination), 0, 149),
-                            'currency' => \Context::getContext()->currency->iso_code,
-                            'item_category' => moduleTools::getCategoryName((int) $oProduct->id_category_default, \GAnalyticsPro::$iCurrentLang),
-                            'price' => number_format($quantity * $price, 2, ',', ''),
-                            'item_brand' => !empty($oProduct->manufacturer_name) ? $oProduct->manufacturer_name : 'No brand',
-                            'id' => $itemId,
-                            'name' => substr(str_replace('\'', '', $oProduct->name[\GAnalyticsPro::$iCurrentLang]), 0, 149),
-                            'brand' => !empty($oProduct->manufacturer_name) ? $oProduct->manufacturer_name : 'No brand',
-                            'category' => moduleTools::getCategoryName((int) $oProduct->id_category_default, \GAnalyticsPro::$iCurrentLang),
-                            'list_name' => moduleTools::getCategoryName((int) $oProduct->id_category_default, \GAnalyticsPro::$iCurrentLang),
-                            'quantity' => $quantity,
-                        ];
-                    } else {
-                        $data[$key] = [
-                            'item_id' => $itemId,
-                            'item_name' => substr(str_replace('\'', '', $oProduct->name[\GAnalyticsPro::$iCurrentLang] . ' ' . $combination), 0, 149),
-                            'currency' => \Context::getContext()->currency->iso_code,
-                            'item_category' => moduleTools::getCategoryName((int) $oProduct->id_category_default, \GAnalyticsPro::$iCurrentLang),
-                            'price' => number_format($quantity * $price, 2, ',', ''),
-                            'item_brand' => !empty($oProduct->manufacturer_name) ? $oProduct->manufacturer_name : 'No brand',
-                            'quantity' => $quantity,
-                        ];
-                    }
+                    $data[$key] = [
+                        'item_id' => $itemId,
+                        'item_name' => substr(str_replace('\'', '', $oProduct->name[\GAnalyticsPro::$iCurrentLang] . ' ' . $combination), 0, 149),
+                        'currency' => \Context::getContext()->currency->iso_code,
+                        'item_category' => moduleTools::getCategoryName((int) $oProduct->id_category_default, \GAnalyticsPro::$iCurrentLang),
+                        'price' => (float)number_format($quantity * $price, 2, '.', ''),
+                        'item_brand' => !empty($oProduct->manufacturer_name) ? $oProduct->manufacturer_name : 'No brand',
+                        'quantity' => $quantity,
+                    ];
                 }
             }
         }
@@ -747,5 +715,37 @@ class moduleTools
         unset($combinationValues);
 
         return $formattedProductName;
+    }
+
+    /**
+     * return the user_id according to the module option
+     *
+     * @param object $context
+     *
+     * @return string
+     */
+    public static function getUserIdWithModuleOption($context)
+    {
+        $userId = 0;
+
+        if (empty((int)\GanalyticsPro::$aConfiguration['GAP_USER_ID'])) {
+            return $userId;
+        }
+
+        $userId = $context->customer->logged == 1 ? $context->customer->id : 0;
+
+        return $userId;
+    }
+
+    /**
+     * method removed UA conf values
+     *
+     * @return string
+     */
+    public static function stopUsingUa()
+    {
+        // Clean conf
+        \Configuration::deleteByName('GAP_USE_UA');
+        \Configuration::deleteByName('GAP_GA_ID');
     }
 }

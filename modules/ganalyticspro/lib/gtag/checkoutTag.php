@@ -104,7 +104,7 @@ class checkoutTag extends baseTag
      */
     public function setValue()
     {
-        $this->fValue = parent::$sQuote . $this->oCart->getOrderTotal() . parent::$sQuote;
+        $this->fValue = (float)$this->oCart->getOrderTotal();
     }
 
     /**

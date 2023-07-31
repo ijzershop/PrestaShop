@@ -57,9 +57,6 @@
 
 				<div class="list-group workTabs">
 					<a class="list-group-item active" id="tab-2"><span class="icon-code"></span>&nbsp;{l s='Google Analytics 4 tracking' mod='ganalyticspro'}</a>
-					{if empty($hideService)}
-						<a class="list-group-item" id="tab-1"><span class="icon-code"></span>&nbsp;{l s='Universal Analytics tracking' mod='ganalyticspro'}</a>
-					{/if}
 					<a class="list-group-item" id="tab-3"><span class="icon-plus"></span>&nbsp;{l s='Advanced settings' mod='ganalyticspro'}</a>
 					<a class="list-group-item" id="tab-4"><span class="fa fa-check"></span>&nbsp;{l s='Consent mode' mod='ganalyticspro'}</a>
 				</div>
@@ -87,31 +84,6 @@
 				{*START TAB CONTENT*}
 				<div class="tab-content">
 
-					{* START UA SETTINGS *}
-					<div id="content-tab-1" class="tab-pane panel ">
-						{if !empty($bMultiShop)}
-							<div class="alert alert-danger">
-								{l s='Attention: you cannot configure the module in a "all shops" or "group of shops" context. Please select only one shop to configure the module.' mod='ganalyticspro'}
-							</div>
-						{else}
-							<div id="bt_ua-settings">
-								{if empty($bHideConfiguration)}
-									{include file="`$sUaInclude`"}
-								{else}
-									<div class="clr_20"></div>
-								{/if}
-							</div>
-							<div class="clr_20"></div>
-							<div id="bt_loading-div-ua" style="display: none;">
-								<div class="alert alert-info">
-									<p style="text-align: center !important;"><img src="{$sLoadingImg|escape:'htmlall':'UTF-8'}" alt="Loading" /></p>
-									<div class="clr_20"></div>
-									<p style="text-align: center !important;">{l s='The update of your configuration is in progress...' mod='ganalyticspro'}</p>
-								</div>
-							</div>
-						{/if}
-					</div>
-					{* END UA SETTINGS *}
 
 					{* G4 SETTINGS *}
 					<div id="content-tab-2" class="tab-pane panel in active information">

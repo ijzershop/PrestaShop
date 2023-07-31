@@ -236,7 +236,7 @@ class ModernAjax
                 $dataArray[$this->prefix . 'DASHBOARD_API_USER'] = Configuration::get($this->prefix . 'DASHBOARD_API_USER', $this->idLang, $this->idShopGroup, $this->idShop, 52);
                 $dataArray[$this->prefix . 'DASHBOARD_API_PASS'] = Configuration::get($this->prefix . 'DASHBOARD_API_PASS', $this->idLang, $this->idShopGroup, $this->idShop, 52);
                 //Channable
-                $dataArray[$this->prefix . 'CHANNABLE_CATEGORIES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'CHANNABLE_SELECTED_CATEGORIES', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'categories_home');
+                $dataArray[$this->prefix . 'CHANNABLE_CATEGORIES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'CHANNABLE_CATEGORIES', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'categories_home');
                 break;
             //Start Footer
             case 'footer':

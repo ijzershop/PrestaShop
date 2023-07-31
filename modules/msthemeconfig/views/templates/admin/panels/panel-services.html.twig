@@ -214,7 +214,9 @@
           {{ MSTHEMECONFIG_CHANNABLE_CATEGORIES|raw }}
         </select>
         <p class="help-block">
-          Select all categories you would like to send to the channable feed
+          Select all categories you would like to send to the channable feed<br/>
+          To clear the field paste the string below in the console of your webbrowser
+          Paste:  $('#MSTHEMECONFIG_CHANNABLE_CATEGORIES').val("").trigger("change.select2");
         </p>
       </div>
     </div>

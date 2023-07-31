@@ -458,16 +458,8 @@ class MsThemeConfig extends Module
                     $arrayString = str_replace(['[',']', '"'],['','',''], $value);
                 }
 
-
-                if($key === 'MSTHEMECONFIG_HOMEPAGE_CATEGORIES_SORTED'){
-                    Configuration::updateValue('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES', [$idLang => $arrayString], false, $idShopGroup, $idShop);
-                    continue;
-                }else{
-                    Configuration::updateValue($key, [$idLang => $arrayString], false, $idShopGroup, $idShop);
-                    continue;
-                }
-
-
+                Configuration::updateValue($key, [$idLang => $arrayString], false, $idShopGroup, $idShop);
+                continue;
             }
 
             if (in_array($key, $imgKeys)) {

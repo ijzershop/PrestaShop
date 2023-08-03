@@ -18,7 +18,6 @@ use PrestaShop\PrestaShop\Adapter\Entity\Profile;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\HttpFoundation\Request;
-
 /**
  *
  */
@@ -66,25 +65,26 @@ class ModernConfigurator
     public function getAccessiblePanelsUser($profile): array
     {
         $accessiblePanels = [];
-        switch ($profile){
-            case '1':
+        switch ((int)$profile){
+            case 1:
                 $accessiblePanels = ['home', 'pages', 'alert', 'main', 'user', 'dev', 'email', 'mail-theme', 'footer', 'kiyoh', 'koopman', 'offer', 'services'];
                 break;
-            case '2':
+            case 2:
                 $accessiblePanels = ['home', 'pages', 'alert', 'email','mail-theme', 'footer', 'kiyoh', 'koopman'];
                 break;
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
+            case 3:
+            case 4:
+                $accessiblePanels = ['home', 'pages', 'alert', 'main', 'user', 'dev', 'email', 'mail-theme', 'footer', 'kiyoh', 'koopman', 'offer', 'services'];
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
                     $accessiblePanels = ['alert'];
                 break;
         }
         return $accessiblePanels;
     }
-
 
     /**
      * @param array $viewData

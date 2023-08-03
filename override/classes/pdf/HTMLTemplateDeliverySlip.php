@@ -168,7 +168,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                 }
 
 
-                if($order_detail['product_reference'] == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')){
+                if($order_detail['product_reference'] == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)){
                     $descProduct = new Product($order_detail['product_id']);
                     if($descProduct){
                         $order_detail['product_desc_short'] = reset($descProduct->description);

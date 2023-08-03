@@ -7,11 +7,11 @@
 					"name": "De Moderne Smid",
 					"url": "https://www.modernesmid.nl/",
 					"logo": "https://www.demodernesmid.nl/img/my-shop-logo-1565161756.jpg",
-					'image' => [
-                        'https://demodernesmid.nl/upload/uploaded_files/jota-570.png',
-                        'https://ijzershop.nl/upload/supportdesk.png',
-                        'https://constructiebalk.nl/upload/IJzershop-corten.png'
-                    ],
+					"image": {
+                        "https://demodernesmid.nl/upload/uploaded_files/jota-570.png",
+                        "https://ijzershop.nl/upload/supportdesk.png",
+                        "https://constructiebalk.nl/upload/IJzershop-corten.png"
+                    },
 					"foundingDate": "1954-04-01",
 					"address": {
 						"@type": "PostalAddress",

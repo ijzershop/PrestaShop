@@ -78,7 +78,7 @@ class EditableCustomerAddress
     private $houseNumber;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $houseNumberExtension;
 
@@ -183,7 +183,7 @@ class EditableCustomerAddress
         string|null $vatNumber,
         string|null $address2,
         $stateId,
-        string $homePhone,
+        string|null $homePhone,
         string|null $mobilePhone,
         string|null $other,
         array $requiredFields
@@ -372,9 +372,9 @@ class EditableCustomerAddress
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getHouseNumberExtension(): string
+    public function getHouseNumberExtension(): ?string
     {
         return $this->houseNumberExtension;
     }

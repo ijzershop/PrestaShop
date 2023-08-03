@@ -1,6 +1,10 @@
 {extends file='page.tpl'}
-{block name="page_content"}
 
+
+
+
+
+{block name="page_content"}
 <div class="card mt-3">
   <div class="card-header"><h1>{l s='Uw offerte'}</h1></div>
   <div class="card-body">

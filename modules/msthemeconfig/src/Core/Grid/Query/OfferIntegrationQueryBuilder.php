@@ -62,6 +62,7 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
             ->select('q.id_oi_offer,
@@ -87,6 +88,7 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
+
         return $this->getQueryBuilder($searchCriteria->getFilters())
             ->select('COUNT(DISTINCT q.id_oi_offer)');
     }
@@ -100,6 +102,7 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters): QueryBuilder
     {
+
         $allowedFilters = [
             'id_oi_offer',
             'code',
@@ -114,8 +117,8 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
             'id_oi_offer' => 'q.id_oi_offer',
             'code' => 'q.code',
             'name' => 'q.name',
-            'email' => 'p.email',
-            'phone' => 'cl.phone',
+            'email' => 'q.email',
+            'phone' => 'q.phone',
             'message' => 'q.message',
             'date_exp' => 'q.date_exp',
             'date_upd' => 'q.date_upd'
@@ -125,7 +128,7 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->from($this->dbPrefix . 'offer_integration', 'q');
         $qb->setParameter('shopId', $this->shopId);
         $qb->setParameter('langId', $this->languageId);
-
+//dd($filters);
         foreach ($filters as $name => $value) {
             if (!in_array($name, $allowedFilters, true)) {
                 continue;
@@ -143,8 +146,8 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
                 $searchTerms = explode(" ", $value);
 
                 foreach ($searchTerms as $i => $term){
-                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name.'_'.$i);
-                    $qb->setParameter($name.'_'.$i, '%' . $term . '%');
+                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
+                    $qb->setParameter($name, '%' . $term . '%');
                 }
                 continue;
             }
@@ -153,8 +156,8 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
                 $searchTerms = explode(" ", $value);
 
                 foreach ($searchTerms as $i => $term){
-                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name.'_'.$i);
-                    $qb->setParameter($name.'_'.$i, '%' . $term . '%');
+                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
+                    $qb->setParameter($name, '%' . $term . '%');
                 }
                 continue;
             }
@@ -163,8 +166,8 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
                 $searchTerms = explode(" ", $value);
 
                 foreach ($searchTerms as $i => $term){
-                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name.'_'.$i);
-                    $qb->setParameter($name.'_'.$i, '%' . $term . '%');
+                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
+                    $qb->setParameter($name, '%' . $term . '%');
                 }
                 continue;
             }
@@ -173,8 +176,8 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
                 $searchTerms = explode(" ", $value);
 
                 foreach ($searchTerms as $i => $term){
-                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name.'_'.$i);
-                    $qb->setParameter($name.'_'.$i, '%' . $term . '%');
+                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
+                    $qb->setParameter($name, '%' . $term . '%');
                 }
                 continue;
             }
@@ -183,8 +186,8 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
                 $searchTerms = explode(" ", $value);
 
                 foreach ($searchTerms as $i => $term){
-                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name.'_'.$i);
-                    $qb->setParameter($name.'_'.$i, '%' . $term . '%');
+                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
+                    $qb->setParameter($name, '%' . $term . '%');
                 }
                 continue;
             }
@@ -213,7 +216,7 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
             $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
             $qb->setParameter($name, '%' . $value . '%');
         }
-
+//dd($qb);
         return $qb;
     }
 }

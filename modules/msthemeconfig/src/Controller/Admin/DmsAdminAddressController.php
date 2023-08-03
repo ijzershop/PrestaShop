@@ -228,6 +228,7 @@ class DmsAdminAddressController extends FrameworkBundleAdminController{
                 break;
         }
 
+
         /** @var EditableCustomerAddress $editableAddress */
         $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
 
@@ -270,7 +271,6 @@ class DmsAdminAddressController extends FrameworkBundleAdminController{
             $result = $addressFormHandler->handleFor($orderId, $addressForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
                 if ($request->query->has('submitFormAjax')) {

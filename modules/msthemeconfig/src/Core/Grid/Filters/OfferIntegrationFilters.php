@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace MsThemeConfig\Core\Grid\Filters;
 
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -20,8 +21,16 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 class OfferIntegrationFilters extends Filters
 {
-    protected $filterId = 'id_oi_offer';
-
+    protected $filterId = 'oi_offer';
+    /**
+     * @param array $filters
+     * @param string $filterId
+     */
+    public function __construct(array $filters = [], $filterId = '')
+    {
+        parent::__construct($filters);
+        $this->filterId = !empty($filterId) ? $filterId : $this->filterId;
+    }
     /**
      * {@inheritdoc}
      */
@@ -34,6 +43,18 @@ class OfferIntegrationFilters extends Filters
             'sortOrder' => 'desc',
             'filters' => [],
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOrderBy()
+    {
+        $orderBy = 'id_oi_offer';
+        if (!Validate::isOrderBy($orderBy)) {
+            return null;
+        }
+        return $orderBy;
     }
 
     /**

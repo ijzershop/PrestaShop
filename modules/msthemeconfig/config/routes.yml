@@ -136,11 +136,13 @@ admin_configuration_symlink_mailtheme_put:
 
 admin_addresses_index:
   path: /sell/addresses/
-  methods: GET
+  methods: [ GET, POST ]
   defaults:
     _controller: 'MsThemeConfig\Controller\Admin\DmsAdminAddressController::indexAction'
     _legacy_controller: AdminAddresses
     _legacy_link: 'AdminAddresses'
+  options:
+    expose: true
 
 admin_addresses_create:
   path: /sell/addresses/new

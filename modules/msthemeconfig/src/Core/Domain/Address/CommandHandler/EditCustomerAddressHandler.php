@@ -56,7 +56,6 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
     {
         try {
             $editedAddress = $this->getAddressFromCommand($command);
-
             $this->validateAddress($editedAddress);
 
             // The address is used by an order so it is not edited directly, instead a copy is created and

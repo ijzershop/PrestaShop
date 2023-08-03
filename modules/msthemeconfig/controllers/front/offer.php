@@ -75,6 +75,7 @@ class MsThemeConfigOfferModuleFrontController extends ModuleFrontController {
         parent::initContent();
 
         $this->context->smarty->assign([
+            'robots_follow' => 'nofollow',
             'offer' =>  $this->offer,
             'products' =>  $this->products,
             'date_exp' =>  $this->date_exp,

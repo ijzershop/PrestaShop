@@ -46,7 +46,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         // But no DB save required here to avoid massive updates for bulk PDF generation case.
         // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
         if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
-            $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int) $this->order->id_shop);
+            $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int)$this->order->id_shop);
             if (!$bulk_mode) {
                 OrderInvoice::fixAllShopAddresses();
             }
@@ -58,7 +58,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $this->title = sprintf(HTMLTemplateDeliverySlip::l('%1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
 
         // footer informations
-        $this->shop = new Shop((int) $this->order->id_shop);
+        $this->shop = new Shop((int)$this->order->id_shop);
     }
 
     /**
@@ -72,13 +72,13 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $total_weight = 0;
         $order_details = $this->order_invoice->getProducts();
         foreach ($order_details as $product) {
-            $total_weight = (double)$total_weight+((double)$product['product_weight']*(int)$product['product_quantity']);
+            $total_weight = (double)$total_weight + ((double)$product['product_weight'] * (int)$product['product_quantity']);
         }
 
         $carrier = $this->order->id_carrier;
         $carrierObj = new Carrier($carrier, 1);
 
-        if(empty($carrierObj->name)){
+        if (empty($carrierObj->name)) {
             $shipCarrierId = Configuration::get('MSTHEMECONFIG_SHIPPING_CARRIER', $this->order->id_lang, $this->order->id_shop_group, $this->order->id_shop, 10);;
 
             $carrierObj = new Carrier($shipCarrierId);
@@ -86,7 +86,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
         $this->smarty->assign(
             array('header' => $carrierObj->name,
-                'reference'=> $this->order->reference,
+                'reference' => $this->order->reference,
                 'delivery_date' => $this->order->delivery_date,
                 'invoice_date' => $this->order->invoice_date,
                 'total_weight' => $total_weight,
@@ -94,16 +94,6 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         );
 
         return $this->smarty->fetch($this->getTemplate('header'));
-    }
-
-    private function get_contents($URL){
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_URL, $URL);
-        $data = curl_exec($ch);
-        curl_close($ch);
-        return $data;
     }
 
     /**
@@ -118,35 +108,35 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $customer = new Customer((int)$this->order->id_customer);
         $customer_contact['email'] = $customer->email;
 
-        $delivery_address = new Address((int) $this->order->id_address_delivery);
-            $formatted_delivery_address = $delivery_address->firstname .' '. $delivery_address->lastname.'<br />';
-            if(!empty($invoice_address->company) && $invoice_address->company != ' '){
-                $formatted_invoice_address .= $invoice_address->company.'<br />';
-            }
-            $formatted_delivery_address .= $delivery_address->address1.' '.$delivery_address->house_number.' '.$delivery_address->house_number_extension.'<br />';
-            if(!empty($invoice_address->address2) && $invoice_address->address2 != ' '){
-                $formatted_invoice_address .= $invoice_address->address2.'<br />';
-            }
-            $formatted_delivery_address .= ucwords($delivery_address->postcode). ' ' . $delivery_address->city .'<br />';
-            $formatted_delivery_address .= $delivery_address->country .'<br />';
+        $delivery_address = new Address((int)$this->order->id_address_delivery);
+        $formatted_delivery_address = $delivery_address->firstname . ' ' . $delivery_address->lastname . '<br />';
+        if (!empty($invoice_address->company) && $invoice_address->company != ' ') {
+            $formatted_invoice_address .= $invoice_address->company . '<br />';
+        }
+        $formatted_delivery_address .= $delivery_address->address1 . ' ' . $delivery_address->house_number . ' ' . $delivery_address->house_number_extension . '<br />';
+        if (!empty($invoice_address->address2) && $invoice_address->address2 != ' ') {
+            $formatted_invoice_address .= $invoice_address->address2 . '<br />';
+        }
+        $formatted_delivery_address .= ucwords($delivery_address->postcode) . ' ' . $delivery_address->city . '<br />';
+        $formatted_delivery_address .= $delivery_address->country . '<br />';
 
         $customer_contact['phone'] = $delivery_address->phone;
         $customer_contact['mobile'] = $delivery_address->phone_mobile;
         $formatted_invoice_address = '';
 
         if ($this->order->id_address_delivery != $this->order->id_address_invoice) {
-            $invoice_address = new Address((int) $this->order->id_address_invoice);
+            $invoice_address = new Address((int)$this->order->id_address_invoice);
 
-            $formatted_invoice_address .= $invoice_address->firstname .' '. $invoice_address->lastname .'<br />';
-            if(!empty($delivery_address->company) && $delivery_address->company != ' '){
-                $formatted_delivery_address .= $delivery_address->company.'<br />';
+            $formatted_invoice_address .= $invoice_address->firstname . ' ' . $invoice_address->lastname . '<br />';
+            if (!empty($delivery_address->company) && $delivery_address->company != ' ') {
+                $formatted_delivery_address .= $delivery_address->company . '<br />';
             }
-            $formatted_invoice_address .= $invoice_address->address1.' '.$invoice_address->house_number.' '.$invoice_address->house_number_extension.'<br />';
-            if(!empty($delivery_address->address2) && $delivery_address->address2 != ' '){
-                $formatted_delivery_address .= $delivery_address->address2.'<br />';
+            $formatted_invoice_address .= $invoice_address->address1 . ' ' . $invoice_address->house_number . ' ' . $invoice_address->house_number_extension . '<br />';
+            if (!empty($delivery_address->address2) && $delivery_address->address2 != ' ') {
+                $formatted_delivery_address .= $delivery_address->address2 . '<br />';
             }
-            $formatted_invoice_address .= ucwords($invoice_address->postcode). ' ' . $invoice_address->city .'<br />';
-            $formatted_invoice_address .= $invoice_address->country .'<br />';
+            $formatted_invoice_address .= ucwords($invoice_address->postcode) . ' ' . $invoice_address->city . '<br />';
+            $formatted_invoice_address .= $invoice_address->country . '<br />';
 
             $customer_contact['phone'] = $invoice_address->phone;
             $customer_contact['mobile'] = $invoice_address->phone_mobile;
@@ -154,86 +144,72 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
         $carrier = new Carrier($this->order->id_carrier);
         $carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
-
         $order_details = $this->order_invoice->getProducts();
 
 
-
-            foreach ($order_details as &$order_detail) {
-                if(!is_null($order_detail['id_oi_offer'])){
-                    $descProduct = new Product($order_detail['product_id']);
-                    if($descProduct){
-                        $order_detail['product_desc_short'] = reset($descProduct->description_short);
-                    }
+        foreach ($order_details as &$order_detail) {
+            if (!is_null($order_detail['id_oi_offer'])) {
+                $descProduct = new Product($order_detail['product_id']);
+                if ($descProduct) {
+                    $order_detail['product_desc_short'] = reset($descProduct->description_short);
                 }
-
-
-                if($order_detail['product_reference'] == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')){
-                    $descProduct = new Product($order_detail['product_id']);
-                    if($descProduct){
-                        $order_detail['product_desc_short'] = reset($descProduct->description);
-                    }
-                }
-                if(!is_null($order_detail['customizedDatas'])){
-                    foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
-                        if(!is_null($customization)){
-
-                            foreach ($customization as $customizationId => $customized) {
-
-                                if(isset($customized['datas'])){
-                                    if(extension_loaded('imagick') || class_exists("Imagick"))
-                                     {
-                                         if(isset($customized['datas'][1][0]['technical_image'])){
-                                             $file = $customized['datas'][1][0]['technical_image'];
-                                             if(!is_null($file) && !empty($file)){
-
-                                                 $fileContents = $this->get_contents(Context::getContext()->shop->getBaseURL(true, false).$file);
-
-                                                 if($fileContents != false){
-
-
-                                                     try {
-                                                         $doc = new SimpleXMLElement($fileContents);
-                                                         foreach($doc->g as $seg)
-                                                         {
-                                                             if($seg->attributes()->id[0] == 'cutline') {
-                                                                 $dom=dom_import_simplexml($seg);
-                                                                 $dom->parentNode->removeChild($dom);
-                                                             }
-                                                         }
-
-                                                         try {
-                                                             $im = new Imagick();
-                                                             $im->readImageBlob($doc->asXml());
-                                                             $im->setImageFormat('png24');
-                                                             $im->writeImage(_PS_CORE_DIR_.'/'.$file . '.png');
-                                                             $im->clear();
-                                                             $im->destroy();
-                                                         } catch (Exception $e){
-
-                                                         }
-
-                                                     } catch(Exception $e){
-
-                                                     }
-
-                                                 }
-                                             }
-                                         }
-
-                                     }
-                                 }
-                             }
-                         }
-                     }
-                 }
             }
 
+            if ($order_detail['product_reference'] == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')) {
+                $descProduct = new Product($order_detail['product_id']);
+                if ($descProduct) {
+                    $order_detail['product_desc_short'] = reset($descProduct->description);
+                }
+            }
+
+            if (!is_null($order_detail['customizedDatas'])) {
+                foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
+                    if (!is_null($customization)) {
+
+                        foreach ($customization as $customizationId => $customized) {
+                            if (isset($customized['datas'])) {
+                                if (extension_loaded('imagick') || class_exists("Imagick")) {
+                                    if (isset($customized['datas'][1][0]['technical_image'])) {
+                                        $file = $customized['datas'][1][0]['technical_image'];
+                                        if (!is_null($file) && !empty($file)) {
+                                            $fileContents = $this->get_contents($file);
+                                            if ($fileContents != false) {
+
+                                                try {
+                                                    $doc = new SimpleXMLElement($fileContents);
+                                                    foreach ($doc->g as $seg) {
+                                                        if ($seg->attributes()->id[0] == 'cutline') {
+                                                            $dom = dom_import_simplexml($seg);
+                                                            $dom->parentNode->removeChild($dom);
+                                                        }
+                                                    }
+
+                                                    try {
+                                                        $im = new Imagick();
+                                                        $im->readImageBlob($doc->asXml());
+                                                        $im->setImageFormat('png24');
+                                                        $im->writeImage(_PS_CORE_DIR_ . '/' . $file . '.png');
+                                                        $im->clear();
+                                                        $im->destroy();
+                                                    } catch (Exception $e) {
+
+                                                    }
+                                                } catch (Exception $e) {}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         if (Configuration::get('PS_PDF_IMG_DELIVERY')) {
             foreach ($order_details as &$order_detail) {
                 if ($order_detail['image'] != null) {
-                    $name = 'product_mini_' . (int) $order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int) $order_detail['product_attribute_id'] : '') . '.jpg';
+                    $name = 'product_mini_' . (int)$order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int)$order_detail['product_attribute_id'] : '') . '.jpg';
                     $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
 
                     $order_detail['image_tag'] = preg_replace(
@@ -277,6 +253,22 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $this->smarty->assign($tpls);
 
         return $this->smarty->fetch($this->getTemplate('delivery-slip'));
+    }
+
+    private function get_contents($URL)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_URL, Context::getContext()->shop->getBaseURL(true, false) . $URL);
+        $data = curl_exec($ch);
+        curl_close($ch);
+
+        if ($data == "" && ini_get('allow_url_fopen')) {
+            $data = file_get_contents(_PS_ROOT_DIR_ . $URL);
+        }
+        return $data;
     }
 
     /**

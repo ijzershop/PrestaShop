@@ -190,6 +190,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         if (!empty($invoice_address->company) && $invoice_address->company != ' ') {
             $formatted_invoice_address .= $invoice_address->company . '<br />';
         }
+        if (!empty($invoice_address->vat_number) && $invoice_address->vat_number != ' ') {
+            $formatted_invoice_address .= $invoice_address->vat_number . '<br />';
+        }
         $formatted_invoice_address .= $invoice_address->address1 . ' ' . $invoice_address->house_number . ' ' . $invoice_address->house_number_extension . '<br />';
         if (!empty($invoice_address->address2) && $invoice_address->address2 != ' ') {
             $formatted_invoice_address .= $invoice_address->address2 . '<br />';
@@ -206,6 +209,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             if (!empty($delivery_address->company) && $delivery_address->company != ' ') {
                 $formatted_delivery_address .= $delivery_address->company . '<br />';
             }
+
+            if (!empty($delivery_address->vat_number) && $delivery_address->vat_number != ' ') {
+                $formatted_delivery_address .= $delivery_address->vat_number . '<br />';
+            }
+
             $formatted_delivery_address .= $delivery_address->address1 . ' ' . $delivery_address->house_number . ' ' . $delivery_address->house_number_extension . '<br />';
             if (!empty($delivery_address->address2) && $delivery_address->address2 != ' ') {
                 $formatted_delivery_address .= $delivery_address->address2 . '<br />';

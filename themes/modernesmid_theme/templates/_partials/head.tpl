@@ -35,8 +35,14 @@
   <meta name="keywords" content="{block name='head_seo_keywords'}{$page.meta.keywords}{/block}">
     {if $page.meta.robots !== 'index'}
       <meta name="robots" content="{$page.meta.robots}">
-      {else}
-      <meta name="robots" content="INDEX, FOLLOW">
+      {elseif (isset($robots_follow) && $robots_follow === 'nofollow') ||
+      $page.page_name === 'contactinformation' ||
+      $page.page_name === 'contactoffer'
+      }
+      <meta name="googlebot" content="noindex,nofollow"/>
+      <meta name="robots" content="noindex,nofollow"/>
+    {else}
+      <meta name="robots" content="index,follow">
       <meta name="googlebot" content="index,follow">
     {/if}
     {if $page.canonical}

@@ -341,7 +341,7 @@ class PaymentData implements JsonSerializable
         $this->sequenceType = $sequenceType;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $result = [
             'amount' => [

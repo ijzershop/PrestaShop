@@ -30,19 +30,19 @@ use ValidateCore;
  */
 class AdminOfferController extends FrameworkBundleAdminController {
 
-	public array $filter = array();
-	public string $orderby = "";
-	public bool $orderway = true;
-    private string $orderBy;
-    private string $orderWay;
-    private \Context $context;
-
-    public function __construct()
-	{
-		$this->context = Context::getContext();
-
-		parent::__construct();
-	}
+//	public array $filter = array();
+//	public string $orderby = "";
+//	public bool $orderway = true;
+//    private string $orderBy;
+//    private string $orderWay;
+//    private \Context $context;
+//
+//    public function __construct()
+//	{
+//		Context::getContext() = Context::getContext();
+//
+//		parent::__construct();
+//	}
 
     /**
      * List offer_integrations
@@ -54,6 +54,12 @@ class AdminOfferController extends FrameworkBundleAdminController {
      */
     public function indexAction(Request $request, OfferIntegrationFilters $filters): Response
     {
+//        dd(, $filters);
+//        $filters->addFilter($request->request->all());
+        if($request->getMethod() == 'POST'){
+            $filter = $request->request->get('oi_offer');
+            $filters->addFilter($filter);
+        }
         $offerIntegrationGridFactory = $this->get('modernesmid.grid.factory.offer_integrations');
         $offerIntegrationGrid = $offerIntegrationGridFactory->getGrid($filters);
 
@@ -61,7 +67,7 @@ class AdminOfferController extends FrameworkBundleAdminController {
             '@Modules/msthemeconfig/views/templates/admin/offer_integration_index.html.twig',
             [
                 'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Offer Integration', 'Modules.Pricemodifier.Admin'),
+                'layoutTitle' => $this->trans('Offer Integration', 'Modules.MsThemeConfig.Admin'),
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'offerIntegrationGrid' => $this->presentGrid($offerIntegrationGrid)
             ]
@@ -117,10 +123,10 @@ class AdminOfferController extends FrameworkBundleAdminController {
             '{message}' => $offer->message,
             '{offer_code}' => $offer->code,
             '{date_exp}' => date('d-m-Y H:m',strtotime($offer->date_exp)),
-            '{url}' => $this->context->link->getModuleLink('msthemeconfig', 'offer', ['offer_code' => $offer->code])
+            '{url}' => Context::getContext()->link->getModuleLink('msthemeconfig', 'offer', ['offer_code' => $offer->code])
         ];
 
-        if (Mail::send($this->context->language->id, $template, $subject, $vars, $offer->email, $offer->name, null, null, null, null, $template_path, false, null, $bcc)) {
+        if (Mail::send(Context::getContext()->language->id, $template, $subject, $vars, $offer->email, $offer->name, null, null, null, null, $template_path, false, null, $bcc)) {
             $this->addFlash('success', 'Offerte '. $offer->code . ' is verstuurd naar ' . $offer->email);
         }
         else {
@@ -317,7 +323,7 @@ class AdminOfferController extends FrameworkBundleAdminController {
         $toolbarButtons = [];
 
         $toolbarButtons['new_offer'] = [
-            'desc' => $this->context->getTranslator()->trans('Maak nieuwe offerte'),
+            'desc' => Context::getContext()->getTranslator()->trans('Maak nieuwe offerte'),
             'href' => $this->generateUrl('offerintegration_create'),
         ];
         return $toolbarButtons;

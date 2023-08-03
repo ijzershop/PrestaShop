@@ -159,7 +159,7 @@ class AddCustomerCommand
         $isEnabled = true,
         $isPartnerOffersSubscribed = false,
         $birthday = null,
-        $informerIdentification
+        $informerIdentification = null
     ) {
         $this->firstName = new FirstName($firstName);
         $this->lastName = new LastName($lastName);

@@ -106,12 +106,23 @@
                         {if $paymentMethod.id === 'applepay'}
                             <div class="form-group">
                                 <label class="control-label col-lg-3">
-                                    {l s='Apple Pay Direct' mod='mollie'}
+                                    {l s='Apple Pay Direct product page' mod='mollie'}
                                 </label>
                                 <div class="col-lg-9">
-                                    <select name="MOLLIE_APPLE_PAY_DIRECT_ENABLED" class="fixed-width-xl">
-                                        <option value="0" {if $input.applePayDirect == 0} selected {/if}>{l s='No' mod='mollie'}</option>
-                                        <option value="1" {if $input.applePayDirect == 1} selected {/if}>{l s='Yes' mod='mollie'}</option>
+                                    <select name="MOLLIE_APPLE_PAY_DIRECT_PRODUCT_ENABLED" class="fixed-width-xl">
+                                        <option value="0" {if $input.applePayDirectProduct == 0} selected {/if}>{l s='No' mod='mollie'}</option>
+                                        <option value="1" {if $input.applePayDirectProduct == 1} selected {/if}>{l s='Yes' mod='mollie'}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-3">
+                                    {l s='Apple Pay Direct cart page' mod='mollie'}
+                                </label>
+                                <div class="col-lg-9">
+                                    <select name="MOLLIE_APPLE_PAY_DIRECT_CART_ENABLED" class="fixed-width-xl">
+                                        <option value="0" {if $input.applePayDirectCart == 0} selected {/if}>{l s='No' mod='mollie'}</option>
+                                        <option value="1" {if $input.applePayDirectCart == 1} selected {/if}>{l s='Yes' mod='mollie'}</option>
                                     </select>
                                 </div>
                             </div>
@@ -126,7 +137,7 @@
                                                  style="width: 100%;" alt="Black">
                                             <label>
                                                 <input type="radio" name="MOLLIE_APPLE_PAY_DIRECT_STYLE"
-                                                       value="0" {if $input.applePayDIrectStyle == 0} checked{/if}>
+                                                       value="0" {if $input.applePayDirectStyle == 0} checked{/if}>
                                             </label>
                                         </div>
                                         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-9 text-center">
@@ -134,7 +145,7 @@
                                                  style="width: 100%;" alt="White with Outline">
                                             <label>
                                                 <input type="radio" name="MOLLIE_APPLE_PAY_DIRECT_STYLE"
-                                                       value="1" {if $input.applePayDIrectStyle == 1} checked{/if}>
+                                                       value="1" {if $input.applePayDirectStyle == 1} checked{/if}>
                                             </label>
                                         </div>
                                         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-9 text-center">
@@ -142,7 +153,7 @@
                                                  style="width: 100%;" alt="White">
                                             <label>
                                                 <input type="radio" name="MOLLIE_APPLE_PAY_DIRECT_STYLE"
-                                                       value="2" {if $input.applePayDIrectStyle == 2} checked{/if}>
+                                                       value="2" {if $input.applePayDirectStyle == 2} checked{/if}>
                                             </label>
                                         </div>
                                     </div>
@@ -294,14 +305,42 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label col-lg-3">
-                                {l s='Fixed fee' mod='mollie'}
+                                {l s='Fixed fee (tax incl)' mod='mollie'}
                             </label>
                             <div class="col-lg-9">
-                                <input type="text"
-                                       name="MOLLIE_METHOD_SURCHARGE_FIXED_AMOUNT_{$paymentMethod.id|escape:'html':'UTF-8'}"
-                                       class="fixed-width-xl js-mollie-amount"
-                                       value="{$methodObj->surcharge_fixed_amount|escape:'html':'UTF-8'}">
+                              <input type="text"
+                                     name="MOLLIE_METHOD_SURCHARGE_FIXED_AMOUNT_TAX_INCL_{$paymentMethod.id|escape:'html':'UTF-8'}"
+                                     class="fixed-width-xl js-mollie-amount"
+                                     value="{$paymentMethod.surcharge_fixed_amount_tax_incl|escape:'html':'UTF-8'}"
+                              >
                             </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label col-lg-3">
+                              {l s='Fixed fee (tax excl)' mod='mollie'}
+                          </label>
+                          <div class="col-lg-9">
+                            <input type="text"
+                                   name="MOLLIE_METHOD_SURCHARGE_FIXED_AMOUNT_TAX_EXCL_{$paymentMethod.id|escape:'html':'UTF-8'}"
+                                   class="fixed-width-xl js-mollie-amount"
+                                   value="{$methodObj->surcharge_fixed_amount_tax_excl|escape:'html':'UTF-8'}"
+                            >
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label col-lg-3">
+                              {l s='Tax rules group for fixed fee' mod='mollie'}
+                          </label>
+                          <div class="col-lg-9">
+                            <select name="MOLLIE_METHOD_TAX_RULES_GROUP_ID_{$paymentMethod.id|escape:'html':'UTF-8'}"
+                                    class="fixed-width-xl">
+                                {foreach $input.taxRulesGroups as $taxRulesGroup}
+                                  <option value="{$taxRulesGroup.id|intval}"
+                                          {if $taxRulesGroup.id == $methodObj->tax_rules_group_id}selected{/if}>{$taxRulesGroup.name|escape:'html':'UTF-8'}
+                                  </option>
+                                {/foreach}
+                            </select>
+                          </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-lg-3">

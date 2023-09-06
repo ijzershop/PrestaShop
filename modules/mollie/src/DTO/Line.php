@@ -341,7 +341,7 @@ class Line implements JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
         return [
             'sku' => $this->getSku(),

@@ -14,10 +14,17 @@ use Mollie\Adapter\ConfigurationAdapter;
 use Mollie\Adapter\Link;
 use Mollie\Adapter\ProductAttributeAdapter;
 use Mollie\Adapter\ToolsAdapter;
+use Mollie\Api\Exceptions\ApiException;
+use Mollie\Api\MollieApiClient;
 use Mollie\Config\Config;
+use Mollie\Exception\ShipmentCannotBeSentException;
 use Mollie\Handler\ErrorHandler\ErrorHandler;
+use Mollie\Handler\Shipment\ShipmentSenderHandlerInterface;
+use Mollie\Logger\PrestaLoggerInterface;
 use Mollie\Provider\ProfileIdProviderInterface;
+use Mollie\Repository\MolOrderPaymentFeeRepositoryInterface;
 use Mollie\Repository\PaymentMethodRepositoryInterface;
+use Mollie\Service\ExceptionService;
 use Mollie\ServiceProvider\LeagueServiceContainerProvider;
 use Mollie\Subscription\Exception\ProductValidationException;
 use Mollie\Subscription\Exception\SubscriptionProductValidationException;
@@ -32,6 +39,8 @@ use Mollie\Subscription\Repository\RecurringOrderRepositoryInterface;
 use Mollie\Subscription\Validator\CanProductBeAddedToCartValidator;
 use Mollie\Subscription\Verification\HasSubscriptionProductInCart;
 use Mollie\Utility\PsVersionUtility;
+use Mollie\Verification\IsPaymentInformationAvailable;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -73,7 +82,7 @@ class Mollie extends PaymentModule
     {
         $this->name = 'mollie';
         $this->tab = 'payments_gateways';
-        $this->version = '6.0.0';
+        $this->version = '6.0.3';
         $this->author = 'Mollie B.V.';
         $this->need_instance = 1;
         $this->bootstrap = true;
@@ -104,10 +113,10 @@ class Mollie extends PaymentModule
         return $this->containerProvider->getService($serviceName);
     }
 
-    public function getApiClient()
+    public function getApiClient(int $shopId = null, bool $subscriptionOrder = false): ?MollieApiClient
     {
         if (!$this->api) {
-            $this->setApiKey();
+            $this->setApiKey($shopId, $subscriptionOrder);
         }
 
         return $this->api;
@@ -158,20 +167,10 @@ class Mollie extends PaymentModule
         }
 
 //        TODO inject base install and subscription services
-        $installer = new \Mollie\Install\Installer(
-            $this,
-            new \Mollie\Service\OrderStateImageService(),
-            new \Mollie\Install\DatabaseTableInstaller(),
-            new \Mollie\Tracker\Segment(
-                new \Mollie\Adapter\Shop(),
-                new \Mollie\Adapter\Language(),
-                new \Mollie\Config\Env()
-            ),
-            new \Mollie\Adapter\ConfigurationAdapter()
-        );
+        $coreInstaller = $this->getService(Mollie\Install\Installer::class);
 
-        if (!$installer->install()) {
-            $this->_errors = array_merge($this->_errors, $installer->getErrors());
+        if (!$coreInstaller->install()) {
+            $this->_errors = array_merge($this->_errors, $coreInstaller->getErrors());
 
             return false;
         }
@@ -331,23 +330,20 @@ class Mollie extends PaymentModule
     {
         /** @var \Mollie\Service\ErrorDisplayService $errorDisplayService */
         $errorDisplayService = $this->getService(\Mollie\Service\ErrorDisplayService::class);
+
         /** @var PaymentMethodRepositoryInterface $methodRepository */
         $methodRepository = $this->getService(PaymentMethodRepositoryInterface::class);
 
-        $isCartController = $this->context->controller instanceof CartControllerCore;
-        if ($isCartController) {
+        /** @var ConfigurationAdapter $configuration */
+        $configuration = $this->getService(ConfigurationAdapter::class);
+
+        $controller = $this->context->controller;
+
+        if ($controller instanceof CartControllerCore) {
             $errorDisplayService->showCookieError('mollie_payment_canceled_error');
         }
-        /** @var ?MolPaymentMethod $paymentMethod */
-        $paymentMethod = $methodRepository->findOneBy(
-            [
-                'id_method' => Config::MOLLIE_METHOD_ID_APPLE_PAY,
-                'live_environment' => Configuration::get(Config::MOLLIE_ENVIRONMENT),
-            ]
-        );
 
-        $isProductController = $this->context->controller instanceof ProductControllerCore;
-        if ($isProductController) {
+        if ($controller instanceof ProductControllerCore) {
             $this->context->controller->addJS("{$this->_path}views/js/front/subscription/product.js");
             $this->context->controller->addJqueryPlugin('growl');
 
@@ -356,32 +352,47 @@ class Mollie extends PaymentModule
                 'isVersionGreaterOrEqualTo177' => PsVersionUtility::isPsVersionGreaterOrEqualTo(_PS_VERSION_, '1.7.7.0'),
             ]);
         }
+
+        /** @var ?MolPaymentMethod $paymentMethod */
+        $paymentMethod = $methodRepository->findOneBy(
+            [
+                'id_method' => Config::MOLLIE_METHOD_ID_APPLE_PAY,
+                'live_environment' => (int) $configuration->get(Config::MOLLIE_ENVIRONMENT),
+            ]
+        );
+
         if (!$paymentMethod || !$paymentMethod->enabled) {
             return;
         }
 
-        $isApplePayEnabled = Configuration::get(Config::MOLLIE_APPLE_PAY_DIRECT);
-        if ($isApplePayEnabled) {
-            $controller = $this->context->controller;
-            if ($controller instanceof ProductControllerCore || $controller instanceof CartControllerCore) {
-                Media::addJsDef([
-                    'countryCode' => $this->context->country->iso_code,
-                    'currencyCode' => $this->context->currency->iso_code,
-                    'totalLabel' => $this->context->shop->name,
-                    'customerId' => $this->context->customer->id ?? 0,
-                    'ajaxUrl' => $this->context->link->getModuleLink('mollie', 'applePayDirectAjax'),
-                    'cartId' => $this->context->cart->id,
-                    'applePayButtonStyle' => (int) Configuration::get(Config::MOLLIE_APPLE_PAY_DIRECT_STYLE),
-                ]);
-                $this->context->controller->addCSS($this->getPathUri() . 'views/css/front/apple_pay_direct.css');
+        $isApplePayDirectProductEnabled = (int) $configuration->get(Config::MOLLIE_APPLE_PAY_DIRECT_PRODUCT);
+        $isApplePayDirectCartEnabled = (int) $configuration->get(Config::MOLLIE_APPLE_PAY_DIRECT_CART);
 
-                if ($controller instanceof ProductControllerCore) {
-                    $this->context->controller->addJS($this->getPathUri() . 'views/js/front/applePayDirect/applePayDirectProduct.js');
-                }
-                if ($controller instanceof CartControllerCore) {
-                    $this->context->controller->addJS($this->getPathUri() . 'views/js/front/applePayDirect/applePayDirectCart.js');
-                }
-            }
+        $canDisplayInProductPage = $controller instanceof ProductControllerCore && $isApplePayDirectProductEnabled;
+        $canDisplayInCartPage = $controller instanceof CartControllerCore && $isApplePayDirectCartEnabled;
+
+        if (!$canDisplayInProductPage && !$canDisplayInCartPage) {
+            return;
+        }
+
+        Media::addJsDef([
+            'countryCode' => $this->context->country->iso_code,
+            'currencyCode' => $this->context->currency->iso_code,
+            'totalLabel' => $this->context->shop->name,
+            'customerId' => $this->context->customer->id ?? 0,
+            'ajaxUrl' => $this->context->link->getModuleLink('mollie', 'applePayDirectAjax'),
+            'cartId' => $this->context->cart->id,
+            'applePayButtonStyle' => (int) $configuration->get(Config::MOLLIE_APPLE_PAY_DIRECT_STYLE),
+        ]);
+
+        $this->context->controller->addCSS($this->getPathUri() . 'views/css/front/apple_pay_direct.css');
+
+        if ($controller instanceof ProductControllerCore) {
+            $this->context->controller->addJS($this->getPathUri() . 'views/js/front/applePayDirect/applePayDirectProduct.js');
+        }
+
+        if ($controller instanceof CartControllerCore) {
+            $this->context->controller->addJS($this->getPathUri() . 'views/js/front/applePayDirect/applePayDirectCart.js');
         }
     }
 
@@ -410,6 +421,12 @@ class Mollie extends PaymentModule
 
         // We are on module configuration page
         if ('AdminMollieSettings' === $currentController) {
+            Media::addJsDef([
+                'paymentMethodTaxRulesGroupIdConfig' => Config::MOLLIE_METHOD_TAX_RULES_GROUP_ID,
+                'paymentMethodSurchargeFixedAmountTaxInclConfig' => Config::MOLLIE_METHOD_SURCHARGE_FIXED_AMOUNT_TAX_INCL,
+                'paymentMethodSurchargeFixedAmountTaxExclConfig' => Config::MOLLIE_METHOD_SURCHARGE_FIXED_AMOUNT_TAX_EXCL,
+            ]);
+
             $this->context->controller->addJqueryPlugin('sortable');
             $this->context->controller->addJS($this->getPathUri() . 'views/js/admin/payment_methods.js');
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/admin/payment_methods.css');
@@ -499,6 +516,7 @@ class Mollie extends PaymentModule
         if (version_compare(_PS_VERSION_, '1.7.0.0', '<')) {
             return [];
         }
+
         $paymentOptions = [];
 
         /** @var PaymentMethodRepositoryInterface $paymentMethodRepository */
@@ -510,6 +528,9 @@ class Mollie extends PaymentModule
         /** @var \Mollie\Service\PaymentMethodService $paymentMethodService */
         $paymentMethodService = $this->getService(\Mollie\Service\PaymentMethodService::class);
 
+        /** @var PrestaLoggerInterface $logger */
+        $logger = $this->getService(PrestaLoggerInterface::class);
+
         $methods = $paymentMethodService->getMethodsForCheckout();
 
         foreach ($methods as $method) {
@@ -519,8 +540,16 @@ class Mollie extends PaymentModule
             if (!$paymentMethod) {
                 continue;
             }
+
             $paymentMethod->method_name = $method['method_name'];
-            $paymentOptions[] = $paymentOptionsHandler->handle($paymentMethod);
+
+            try {
+                $paymentOptions[] = $paymentOptionsHandler->handle($paymentMethod);
+            } catch (Exception $exception) {
+                // TODO handle payment fee exception and other exceptions with custom exception throw
+
+                $logger->error($exception->getMessage());
+            }
         }
 
         return $paymentOptions;
@@ -578,9 +607,9 @@ class Mollie extends PaymentModule
      *
      * @since 3.3.0
      */
-    public function hookActionOrderStatusUpdate($params = [])
+    public function hookActionOrderStatusUpdate(array $params): void
     {
-        if (!isset($params['newOrderStatus']) || !isset($params['id_order'])) {
+        if (!isset($params['newOrderStatus'], $params['id_order'])) {
             return;
         }
 
@@ -589,6 +618,7 @@ class Mollie extends PaymentModule
         } else {
             $orderStatus = new OrderState((int) $params['newOrderStatus']);
         }
+
         $order = new Order($params['id_order']);
 
         if (!Validate::isLoadedObject($orderStatus)) {
@@ -599,32 +629,40 @@ class Mollie extends PaymentModule
             return;
         }
 
-        $idOrder = $params['id_order'];
-        $order = new Order($idOrder);
-        $checkStatuses = [];
-        if (Configuration::get(Mollie\Config\Config::MOLLIE_AUTO_SHIP_STATUSES)) {
-            $checkStatuses = @json_decode(Configuration::get(Mollie\Config\Config::MOLLIE_AUTO_SHIP_STATUSES));
-        }
-        if (!is_array($checkStatuses)) {
-            $checkStatuses = [];
-        }
-        if (!(Configuration::get(Mollie\Config\Config::MOLLIE_AUTO_SHIP_MAIN) && in_array($orderStatus->id, $checkStatuses))
-        ) {
-            return;
-        }
-
-        /** @var \Mollie\Handler\Shipment\ShipmentSenderHandlerInterface $shipmentSenderHandler */
-        $shipmentSenderHandler = $this->getService(
-            Mollie\Handler\Shipment\ShipmentSenderHandlerInterface::class
-        );
-
         if (!$this->getApiClient()) {
             return;
         }
+
+        /** @var IsPaymentInformationAvailable $isPaymentInformationAvailable */
+        $isPaymentInformationAvailable = $this->getService(IsPaymentInformationAvailable::class);
+
+        if (!$isPaymentInformationAvailable->verify((int) $order->id)) {
+            return;
+        }
+
+        /** @var ShipmentSenderHandlerInterface $shipmentSenderHandler */
+        $shipmentSenderHandler = $this->getService(ShipmentSenderHandlerInterface::class);
+
+        /** @var ExceptionService $exceptionService */
+        $exceptionService = $this->getService(ExceptionService::class);
+
+        /** @var PrestaLoggerInterface $logger */
+        $logger = $this->getService(PrestaLoggerInterface::class);
+
         try {
             $shipmentSenderHandler->handleShipmentSender($this->getApiClient(), $order, $orderStatus);
-        } catch (Exception $e) {
-            //todo: we logg error in handleShipment
+        } catch (ShipmentCannotBeSentException $exception) {
+            $logger->error($exceptionService->getErrorMessageForException(
+                $exception,
+                [],
+                ['orderReference' => $order->reference]
+            ));
+
+            return;
+        } catch (ApiException $exception) {
+            $logger->error($exception->getMessage());
+
+            return;
         }
     }
 
@@ -642,9 +680,15 @@ class Mollie extends PaymentModule
         $cart = new Cart($params['cart']->id);
         $orderId = Order::getOrderByCartId($cart->id);
         $order = new Order($orderId);
+
+        if (!Validate::isLoadedObject($order)) {
+            return true;
+        }
+
         if ($order->module !== $this->name) {
             return true;
         }
+
         /** @var \Mollie\Validator\OrderConfMailValidator $orderConfMailValidator */
         $orderConfMailValidator = $this->getService(\Mollie\Validator\OrderConfMailValidator::class);
 
@@ -669,26 +713,40 @@ class Mollie extends PaymentModule
             'outofstock' === $template ||
             'bankwire' === $template ||
             'refund' === $template) {
-            $orderId = Order::getOrderByCartId($cart->id);
-            $order = new Order($orderId);
-            if (!Validate::isLoadedObject($order)) {
-                return true;
-            }
-            try {
-                /** @var \Mollie\Repository\OrderFeeRepository $orderFeeRepo */
-                $orderFeeRepo = $this->getService(\Mollie\Repository\OrderFeeRepository::class);
-                $orderFeeId = $orderFeeRepo->getOrderFeeIdByCartId($cart->id);
-                $orderFee = new MolOrderFee($orderFeeId);
-            } catch (Exception $e) {
-                PrestaShopLogger::addLog(__METHOD__ . ' said: ' . $e->getMessage(), Mollie\Config\Config::CRASH);
+            /** @var MolOrderPaymentFeeRepositoryInterface $molOrderPaymentFeeRepository */
+            $molOrderPaymentFeeRepository = $this->getService(MolOrderPaymentFeeRepositoryInterface::class);
 
-                return true;
-            }
-            if ($orderFee->order_fee) {
-                $params['templateVars']['{payment_fee}'] = Tools::displayPrice($orderFee->order_fee);
+            $orderCurrency = new Currency($order->id_currency);
+
+            /** @var MolOrderPaymentFee|null $molOrderPaymentFee */
+            $molOrderPaymentFee = $molOrderPaymentFeeRepository->findOneBy([
+                'id_order' => (int) $order->id,
+            ]);
+
+            /**
+             * NOTE: Locale in context is set at init() method but in this case init() doesn't always get executed first.
+             */
+            /** @var Repository $localeRepo */
+            $localeRepo = $this->get('prestashop.core.localization.locale.repository');
+
+            /**
+             * NOTE: context language is set based on customer/employee context
+             */
+            $locale = $localeRepo->getLocale($this->context->language->getLocale());
+
+            if (!$molOrderPaymentFee) {
+                $orderFee = $locale->formatPrice(
+                    0,
+                    $orderCurrency->iso_code
+                );
             } else {
-                $params['templateVars']['{payment_fee}'] = Tools::displayPrice(0);
+                $orderFee = $locale->formatPrice(
+                    $molOrderPaymentFee->fee_tax_incl,
+                    $orderCurrency->iso_code
+                );
             }
+
+            $params['templateVars']['{payment_fee}'] = $orderFee;
         }
 
         if ('order_conf' === $template) {
@@ -698,24 +756,37 @@ class Mollie extends PaymentModule
         return true;
     }
 
-    public function hookDisplayPDFInvoice($params)
+    public function hookDisplayPDFInvoice($params): string
     {
         if (!isset($params['object'])) {
-            return;
+            return '';
         }
+
         if (!$params['object'] instanceof OrderInvoice) {
-            return;
+            return '';
         }
+
+        $localeRepo = $this->get('prestashop.core.localization.locale.repository');
+
+        if (!$localeRepo) {
+            return '';
+        }
+
+        /**
+         * NOTE: context language is set based on customer/employee context
+         */
+        $locale = $localeRepo->getLocale($this->context->language->getLocale());
 
         /** @var \Mollie\Builder\InvoicePdfTemplateBuilder $invoiceTemplateBuilder */
         $invoiceTemplateBuilder = $this->getService(\Mollie\Builder\InvoicePdfTemplateBuilder::class);
 
         $templateParams = $invoiceTemplateBuilder
             ->setOrder($params['object']->getOrder())
+            ->setLocale($locale)
             ->buildParams();
 
         if (empty($templateParams)) {
-            return;
+            return '';
         }
 
         $this->context->smarty->assign($templateParams);
@@ -978,7 +1049,7 @@ class Mollie extends PaymentModule
         return $orderListActionBuilder->buildOrderPaymentResendButton($orderId);
     }
 
-    public function updateApiKey($shopId = null)
+    public function updateApiKey(int $shopId = null): void
     {
         $this->setApiKey($shopId);
     }
@@ -1030,7 +1101,7 @@ class Mollie extends PaymentModule
         ));
     }
 
-    private function setApiKey($shopId = null)
+    private function setApiKey(int $shopId = null, bool $subscriptionOrder = false): void
     {
         /** @var \Mollie\Repository\ModuleRepository $moduleRepository */
         $moduleRepository = $this->getService(\Mollie\Repository\ModuleRepository::class);
@@ -1053,7 +1124,8 @@ class Mollie extends PaymentModule
             return;
         }
         try {
-            $this->api = $apiKeyService->setApiKey($apiKey, $this->version);
+            // TODO handle api key set differently. Throw error and don't let do further actions.
+            $this->api = $apiKeyService->setApiKey($apiKey, $this->version, $subscriptionOrder);
         } catch (\Mollie\Api\Exceptions\IncompatiblePlatform $e) {
             $errorHandler = \Mollie\Handler\ErrorHandler\ErrorHandler::getInstance();
             $errorHandler->handle($e, $e->getCode(), false);
@@ -1070,7 +1142,7 @@ class Mollie extends PaymentModule
         }
     }
 
-    private function isPhpVersionCompliant()
+    private function isPhpVersionCompliant(): bool
     {
         return self::SUPPORTED_PHP_VERSION <= PHP_VERSION_ID;
     }

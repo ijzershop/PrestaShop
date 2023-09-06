@@ -4,19 +4,22 @@
 import Grid from '@components/grid/grid';
 import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import FormSubmitButton from '@components/form-submit-button';
 import SortingExtension from '@components/grid/extension/sorting-extension';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
-import SubmitGridExtension from "@components/grid/extension/submit-grid-action-extension";
 
 import "select2";
+import initPrestashopComponents from "@app/utils/init-components";
 
 
-const $ = window.$;
+
+const {$} = window;
 
 $(() => {
 // 2. initialize the grid component by providing grid id
@@ -28,17 +31,18 @@ $(() => {
   // offerIntegrationGrid.addExtension(new ColumnTogglingExtension());
   offerIntegrationGrid.addExtension(new SubmitRowActionExtension());
   offerIntegrationGrid.addExtension(new SubmitBulkExtension());
+  offerIntegrationGrid.addExtension(new SubmitGridExtension());
   offerIntegrationGrid.addExtension(new BulkActionCheckboxExtension());
   offerIntegrationGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
   offerIntegrationGrid.addExtension(new LinkRowActionExtension());
-  offerIntegrationGrid.addExtension(new SubmitGridExtension());
 
   // new TranslatableInput();
   new window.prestashop.component.TinyMCEEditor();
-
-  const offerFormTemplate = function (data) {
+  initPrestashopComponents();
+  const offerFormTemplate = function (data: any[]) {
     let extraShippingSelectNo = 'checked="true"';
     let extraShippingSelectYes = '';
+    // @ts-ignore
     if (parseInt(data.oi_offer_extra_shipping) === 1) {
       extraShippingSelectNo = '';
       extraShippingSelectYes = 'checked="true';
@@ -46,6 +50,7 @@ $(() => {
 
     let idProduct = 0;
     if(data.id_product !== undefined){
+      // @ts-ignore
       idProduct = data.id_product;
     } else {
       idProduct = data.id;
@@ -119,7 +124,7 @@ $(() => {
   </div>`;
   };
 
-  let initSelect2 = function (url, readonly = false) {
+  let initSelect2 = function (url: string | number | string[] | undefined, readonly = false) {
     jQuery('#store-products').select2({
       dropdownParent: $('#offer-row-form'),
       disabled: readonly,
@@ -127,7 +132,7 @@ $(() => {
       ajax: {
         dataType: 'json',
         type: "GET",
-        url: url, processResults: function (data) {
+        url: url, processResults: function (data: { items: any; }) {
           // Transforms the top-level key of the response object from 'items' to 'results'
           return {
             results: data.items
@@ -140,6 +145,7 @@ $(() => {
   $(document).on('click', '.update-offer-row', function (e) {
     let id = $(this).attr('data-row-id');
     let putLink = $('#offer-put-url').val();
+    // @ts-ignore
     let offer = JSON.parse($(this).attr('data-offer'));
     offer.formTitle = 'Update offer';
     offer.link = putLink;
@@ -150,14 +156,17 @@ $(() => {
       width: '800',
       height: '800',
       autoDimensions: false,
-      afterShow: function (e) {
+      afterShow: function () {
         let url = $('#select2-url').val();
         initSelect2(url, true);
 
+        // @ts-ignore
         if (typeof window.tinyMCE != 'undefined' && $(window.tinyMCE.editors).length > 0) {
+          // @ts-ignore
           $(window.tinyMCE.editors).each(function (idx) {
             try {
-              tinyMCE.remove(idx);
+              // @ts-ignore
+              window.tinyMCE.remove(idx);
             } catch (e) {
             }
           });
@@ -167,49 +176,56 @@ $(() => {
     });
   });
 
-  $(document).on('click', '#add-new-product', function (e) {
-    if(checkIfRequiredFieldsFilled()){
+  $(document).on('click',
+    '#add-new-product',
+    function (e) {
+      if (checkIfRequiredFieldsFilled()) {
 
 
-    let id = $(this).attr('data-offer-id');
-    let putLink = $('#offer-put-url').val();
+        let id = $(this).attr('data-offer-id');
+        let putLink = $('#offer-put-url').val();
 
-    let offer = [];
-    offer.formTitle = 'Create offer';
-    offer.id_product = '';
-    offer.id_oi_offer = id;
-    offer.name = '';
-    offer.price = '';
-    offer.quantity = '';
-    offer.extra_shipping = '';
-    offer.weight = '';
-    offer.description_short = '';
-    offer.link = putLink;
-    offer.new = true;
+        let offer: any[];
+        offer = [];
+        offer.formTitle = 'Create offer';
+        // @ts-ignore
+        offer.id_product = '';
+        offer.id_oi_offer = id;
+        offer.name = '';
+        offer.price = '';
+        offer.quantity = '';
+        offer.extra_shipping = '';
+        offer.weight = '';
+        offer.description_short = '';
+        offer.link = putLink;
+        offer.new = true;
 
-    $.fancybox.open(offerFormTemplate(offer), {
-      dropdownParent: $('#offer-row-form'),
-      width: '800',
-      height: '800',
-      autoDimensions: false,
-      afterShow: function (e) {
-        let url = $('#select2-url').val();
-        initSelect2(url, false);
+        $.fancybox.open(offerFormTemplate(offer), {
+          dropdownParent: $('#offer-row-form'),
+          width: '800',
+          height: '800',
+          autoDimensions: false,
+          afterShow: function () {
+            let url = $('#select2-url').val();
+            initSelect2(url, false);
 
-        if (typeof window.tinyMCE != 'undefined' && $(window.tinyMCE.editors).length > 0) {
-          $(window.tinyMCE.editors).each(function (idx) {
-            try {
-              tinyMCE.remove(idx);
-            } catch (e) {
+            // @ts-ignore
+            if (typeof window.tinyMCE != 'undefined' && $(window.tinyMCE.editors).length > 0) {
+              // @ts-ignore
+              $(window.tinyMCE.editors).each(function (idx) {
+                try {
+                  // @ts-ignore
+                  window.tinyMCE.remove(idx);
+                } catch (e) {
+                }
+              });
             }
-          });
-        }
-        new window.prestashop.component.TinyMCEEditor();
+            new window.prestashop.component.TinyMCEEditor();
+          }
+        });
+
       }
     });
-
-    }
-  });
 
   function checkIfRequiredFieldsFilled(){
     let name = $('#offer_integration_name');
@@ -329,4 +345,8 @@ $(() => {
       });
 
   });
+
+  new FormSubmitButton();
+
+
 });

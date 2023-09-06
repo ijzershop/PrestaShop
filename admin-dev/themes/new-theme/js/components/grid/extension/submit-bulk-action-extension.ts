@@ -107,7 +107,6 @@ export default class SubmitBulkActionExtension {
    */
   private postForm($submitBtn: JQuery<Element>, grid: Grid): void {
     const $form = $(GridMap.filterForm(grid.getId()));
-
     $form.attr('action', $submitBtn.data('form-url'));
     $form.attr('method', $submitBtn.data('form-method'));
     $form.submit();

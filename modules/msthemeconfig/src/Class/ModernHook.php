@@ -1841,10 +1841,12 @@ class ModernHook
         $columns = $definition->getColumns();
 
         $f = $definition->getFilters();
-        $osNameFillter = $f->all()['osname'];
-        $osNameFillter->setAssociatedColumn('label');
-
+        if(array_key_exists('osname',  $f->all())){
+            $osNameFilter = $f->all()['osname'];
+            $osNameFilter->setAssociatedColumn('label');
+        }
         $this->generateKoopmanLabelButtons($columns);
+
 
         $addedToOrderColumn = new DataColumn('added_to_order');
         $addedToOrderColumn->setOptions(['sortable' => false, 'clickable' => false, 'field' => 'added_to_order']);

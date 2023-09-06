@@ -28,8 +28,10 @@ class OfferIntegrationFilters extends Filters
      */
     public function __construct(array $filters = [], $filterId = '')
     {
-        parent::__construct($filters);
+
+//        dd($filters, $filterId);
         $this->filterId = !empty($filterId) ? $filterId : $this->filterId;
+        parent::__construct($filters);
     }
     /**
      * {@inheritdoc}

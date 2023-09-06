@@ -81,7 +81,17 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
             $repository = $em->getRepository(PriceModification::class);
 
             foreach ($xmlData as $product) {
-                $supplier_name = preg_replace('/ +/', ' ','<b>' . $product['naam'] . '</b><br>' . $product['type']);
+
+                if(!empty($product['kwaliteit'])){
+                    $old_supplier_nameA = preg_replace('/ +/', ' ','<b>' . $product['naam'].'('. $product['kwaliteit'] . ')' . '</b><br>' . $product['type']);
+                    $old_supplier_nameB = preg_replace('/ +/', ' ','<b>' . $product['naam']. '</b><br>' . $product['type']);
+                    $supplier_name = preg_replace('/ +/', ' ','<b>' . $product['naam'] . '</b><br>' . $product['type'] .' ('. $product['kwaliteit'] . ')');
+                } else {
+                    $old_supplier_nameA = preg_replace('/ +/', ' ','<b>' . $product['naam'] . '</b><br>' . $product['type']);
+                    $old_supplier_nameB = preg_replace('/ +/', ' ','<b>' . $product['naam'] . '</b><br>' . $product['type']);
+                    $supplier_name = preg_replace('/ +/', ' ','<b>' . $product['naam'] . '</b><br>' . $product['type']);
+                }
+
 
                 $active = false;
                 $supplier_data = [];
@@ -137,7 +147,19 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
                 $supplier_data['prices']['verven_per_m1'] = $product['verven_per_m1'];
                 $supplier_data['prices']['haaks_zagen'] = $product['haaks_zagen'];
 
-                $priceMod = $repository->findBy(['name_supplier' => $supplier_name, 'file_supplier' => $supplier], null, 1);
+                $priceModOldA = $repository->findBy(['name_supplier' => $old_supplier_nameA, 'file_supplier' => $supplier], null, 1);
+                $priceModOldB = $repository->findBy(['name_supplier' => $old_supplier_nameB, 'file_supplier' => $supplier], null, 1);
+
+                foreach ([$priceModOldA, $priceModOldB] as $value){
+                    if(!empty($value)){
+                        $priceMod = $value;
+                    continue;
+                    }
+                }
+
+                 if(empty($priceMod)){
+                    $priceMod = $repository->findBy(['name_supplier' => $supplier_name, 'file_supplier' => $supplier], null, 1);
+                }
 
                 if (empty($priceMod)) {
                     $priceMod = new PriceModification();
@@ -149,6 +171,7 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
                     $priceMod->setUpdatedAt();
                     $em->persist($priceMod);
                 } else {
+                    $priceMod[0]->setNameSupplier($supplier_name);
                     $priceMod[0]->setSupplierData(json_encode($supplier_data));
                     $priceMod[0]->setUpdatedAt();
                 }

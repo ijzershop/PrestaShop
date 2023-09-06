@@ -773,6 +773,7 @@ class ConvertUploadedFile
     {
 
         $new_data_list = [];
+        $quality = '';
         foreach ($worksheet->getRowIterator() as $row) {// this is where you do your database stuff
 
 
@@ -786,8 +787,14 @@ class ConvertUploadedFile
                 $cell_data = $cell->getValue();
                 //Naam veld
                 if ($index == 'A' && is_string($cell_data)) {
+                    if($cell->getParent()->getCurrentCoordinate() == 'A5'){
+                        if(preg_match('~\(([^()]*)\)~', $cell_data, $matches)){
+                            $quality = str_replace(['(',')'],['',''],$matches[0]);
+                        }
+                    }
                     $new_row_data['type'] = $sheet_name;
                     $new_row_data['naam'] = $cell_data;
+                    $new_row_data['kwaliteit'] = $quality;
                 }
 
                 #handels lengte
@@ -867,6 +874,7 @@ class ConvertUploadedFile
                 $new_data_list[] = $new_row_data;
             }
         }
+
         return $new_data_list;
     }
 
@@ -887,6 +895,11 @@ class ConvertUploadedFile
                 $cell_data = $cell->getValue();
                 //Naam veld
                 if ($index == 'A' && is_string($cell_data)) {
+                    if($cell->getParent()->getCurrentCoordinate() == 'A5'){
+                        if(preg_match('~\(([^()]*)\)~', $cell_data, $matches)){
+                            $new_row_data['kwaliteit'] = str_replace(['(',')'],['',''],$matches[0]);
+                        }
+                    }
                     $new_row_data['type'] = $sheet_name;
                     $new_row_data['naam'] = $cell_data;
                 }
@@ -1003,6 +1016,11 @@ class ConvertUploadedFile
                 $cell_data = $cell->getValue();
                 //Naam veld
                 if ($index == 'A' && is_string($cell_data)) {
+                    if($cell->getParent()->getCurrentCoordinate() == 'A5'){
+                        if(preg_match('~\(([^()]*)\)~', $cell_data, $matches)){
+                            $new_row_data['kwaliteit'] = str_replace(['(',')'],['',''],$matches[0]);
+                        }
+                    }
                     $new_row_data['type'] = $sheet_name;
                     $new_row_data['naam'] = $cell_data;
                 }
@@ -1255,6 +1273,11 @@ class ConvertUploadedFile
 
                 //Naam veld
                 if ($index == 'A' && is_string($cell_data)) {
+                    if($cell->getParent()->getCurrentCoordinate() == 'A5'){
+                        if(preg_match('~\(([^()]*)\)~', $cell_data, $matches)){
+                            $new_row_data['kwaliteit'] = str_replace(['(',')'],['',''],$matches[0]);
+                        }
+                    }
                     $new_row_data['type'] = $sheet_name;
                     $new_row_data['naam'] = $cell_data;
                 }
@@ -1339,6 +1362,11 @@ class ConvertUploadedFile
                 $cell_data = $cell->getValue();
                 //Naam veld
                 if ($index == 'A' && is_string($cell_data)) {
+                    if($cell->getParent()->getCurrentCoordinate() == 'A5'){
+                        if(preg_match('~\(([^()]*)\)~', $cell_data, $matches)){
+                            $new_row_data['kwaliteit'] = str_replace(['(',')'],['',''],$matches[0]);
+                        }
+                    }
                     $new_row_data['type'] = $sheet_name;
                     $new_row_data['naam'] = $cell_data;
                 }

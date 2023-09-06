@@ -9,7 +9,7 @@
  * @copyright Since 2021 JB Stoker
  * @license   https://opensource.org/licenses/MIT
  */
-declare(strict_types=1);
+
 
 namespace MsThemeConfig\Core\Grid\Query;
 
@@ -135,14 +135,14 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
 
-            if ('id_oi_offer' === $name) {
-                $qb->andWhere($allowedFiltersMap[$name] . ' = :' . $name);
-                $qb->setParameter($name, $value);
+            if ('id_oi_offer' === $name && !empty($value)) {
+                $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
+                $qb->setParameter($name, '%' . $value . '%');
 
                 continue;
             }
 
-            if ('code' === $name) {
+            if ('code' === $name && !empty($value)) {
                 $searchTerms = explode(" ", $value);
 
                 foreach ($searchTerms as $i => $term){
@@ -152,7 +152,7 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('name' === $name) {
+            if ('name' === $name && !empty($value)) {
                 $searchTerms = explode(" ", $value);
 
                 foreach ($searchTerms as $i => $term){
@@ -162,7 +162,7 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('email' === $name) {
+            if ('email' === $name && !empty($value)) {
                 $searchTerms = explode(" ", $value);
 
                 foreach ($searchTerms as $i => $term){
@@ -172,7 +172,7 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('phone' === $name) {
+            if ('phone' === $name && !empty($value)) {
                 $searchTerms = explode(" ", $value);
 
                 foreach ($searchTerms as $i => $term){
@@ -182,7 +182,7 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('message' === $name) {
+            if ('message' === $name && !empty($value)) {
                 $searchTerms = explode(" ", $value);
 
                 foreach ($searchTerms as $i => $term){
@@ -193,7 +193,7 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
 
-            if ('date_exp' === $name) {
+            if ('date_exp' === $name && (!empty($from) && !empty($to))) {
                 $from  = $value['from'] ?? '0000-00-00';
                 $to  = $value['to'] ?? date('yyyy-mm-dd');
 
@@ -203,7 +203,7 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('date_upd' === $name) {
+            if ('date_upd' === $name && (!empty($from) && !empty($to))) {
                 $from  = $value['from'] ?? '0000-00-00';
                 $to  = $value['to'] ?? date('yyyy-mm-dd');
 
@@ -213,8 +213,8 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
-            $qb->setParameter($name, '%' . $value . '%');
+//            $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
+//            $qb->setParameter($name, '%' . $value . '%');
         }
 //dd($qb);
         return $qb;

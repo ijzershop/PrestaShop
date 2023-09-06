@@ -7,8 +7,9 @@ services:
     parent: "prestashop.core.grid.definition.factory.abstract_grid_definition"
     public: true
     arguments:
-      - "@=service('router').generate('admin_common_reset_search', {'controller': 'admin_offer', 'action': 'index'})"
+      - '@=service("request_stack").getCurrentRequest()'
       - "@=service('router').generate('offerintegration_index')"
+      - "@=service('router').generate('admin_common_reset_search', {'controller': 'admin_offer', 'action': 'index'})"
 
   modernesmid.grid.query_builder.offer_integration:
     class: 'MsThemeConfig\Core\Grid\Query\OfferIntegrationQueryBuilder'

@@ -409,6 +409,20 @@ class DmsAdminAddressController extends FrameworkBundleAdminController{
     public function indexAction(Request $request, AddressFilters $filters): Response
     {
         $addressGridFactory = $this->get('prestashop.core.grid.grid_factory.address');
+
+        if($request->getMethod() == 'POST'){
+            $filter = $request->request->get('address');
+
+            foreach($filter as $key => $value){
+                if(empty($value)){
+                    unset($filter[$key]);
+                }
+            }
+            unset($filter['_token']);
+
+            $filters->addFilter($filter);
+        }
+
         $addressGrid = $addressGridFactory->getGrid($filters);
         $requiredFieldsForm = $this->getRequiredFieldsForm();
 

@@ -30,19 +30,17 @@ use ValidateCore;
  */
 class AdminOfferController extends FrameworkBundleAdminController {
 
-//	public array $filter = array();
-//	public string $orderby = "";
-//	public bool $orderway = true;
-//    private string $orderBy;
-//    private string $orderWay;
-//    private \Context $context;
-//
-//    public function __construct()
-//	{
-//		Context::getContext() = Context::getContext();
-//
-//		parent::__construct();
-//	}
+	public array $filter = array();
+	public string $orderby = "";
+	public bool $orderway = true;
+    private string $orderBy;
+    private string $orderWay;
+    private \Context $context;
+
+    public function __construct()
+	{
+		parent::__construct();
+	}
 
     /**
      * List offer_integrations
@@ -54,14 +52,14 @@ class AdminOfferController extends FrameworkBundleAdminController {
      */
     public function indexAction(Request $request, OfferIntegrationFilters $filters): Response
     {
-//        dd(, $filters);
-//        $filters->addFilter($request->request->all());
         if($request->getMethod() == 'POST'){
             $filter = $request->request->get('oi_offer');
+            unset($filter['_token']);
             $filters->addFilter($filter);
         }
         $offerIntegrationGridFactory = $this->get('modernesmid.grid.factory.offer_integrations');
         $offerIntegrationGrid = $offerIntegrationGridFactory->getGrid($filters);
+
 
         return $this->render(
             '@Modules/msthemeconfig/views/templates/admin/offer_integration_index.html.twig',

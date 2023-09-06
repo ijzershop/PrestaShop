@@ -12,10 +12,12 @@
 
 namespace Mollie\Adapter;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Context;
+
 class Customer
 {
     public function getCustomer(): \Customer
     {
-        return \Context::getContext()->customer;
+        return Context::getContext()->customer;
     }
 }

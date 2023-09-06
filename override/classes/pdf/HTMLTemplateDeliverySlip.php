@@ -228,8 +228,9 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             }
         }
         //Sorting by reference of products
-        $referenceColumn = array_column($order_details, 'reference');
-        array_multisort($referenceColumn, SORT_ASC, $order_details);
+        $referenceColumnA = array_column($order_details, 'reference');
+        $referenceColumnB = array_column($order_details, 'product_name');
+        array_multisort($referenceColumnA, SORT_ASC, SORT_STRING, $referenceColumnB, SORT_ASC, SORT_STRING,  $order_details);
 
         $this->smarty->assign(array(
             'order' => $this->order,

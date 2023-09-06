@@ -345,3 +345,4 @@ modules/backup_ps_metrics/
 /app/config/parameters.php
 /app/config/
 modules/pricemodifier/uploads/
+/modules/mollie_bc/

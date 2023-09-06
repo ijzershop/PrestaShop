@@ -1025,37 +1025,19 @@ class ModernHook
      * @param array $params
      *
      */
-    private function updateCustomAddressFields(array $params): string|int|bool
+    private function updateCustomAddressFields(array $params): void
     {
-//dd($params);
-        if(array_key_exists( 'address_type', $params['form_data'])){
-            try {
-                $order = new Order((int)$params['id']);
-            } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
-                return false;
-            }
-            if($params['form_data']['address_type'] === 'delivery_address'){
-                $addressId = $order->id_address_delivery;
-            } else {
-                $addressId = $order->id_address_invoice;
-            }
-        } else {
-                $addressId = (int)$params['id'];
-        }
-
-        /** @var array $addressFormData */
-        $addressFormData = $params['form_data'];
-        $house_number = $addressFormData['house_number'];
-        $house_number_extension = $addressFormData['house_number_extension'];
-
-        $address = Address::initialize($addressId, false);
-        $address->house_number = $house_number;
-        $address->house_number_extension = $house_number_extension;
-
-        if(!$address->update()){
-            return false;
-        }
-        return true;
+//        $addressId = (int)$params['id'];
+//
+//        /** @var array $addressFormData */
+//        $addressFormData = $params['form_data'];
+//        $house_number = $addressFormData['house_number'];
+//        $house_number_extension = $addressFormData['house_number_extension'];
+//
+//        $address = new Address($addressId);
+//        $address->house_number = $house_number;
+//        $address->house_number_extension = $house_number_extension;
+//        $address->update();
     }
 
     /**
@@ -1809,7 +1791,7 @@ class ModernHook
             ]
         ]);
         $object->addBefore('osname', $labelColumn);
-        $object->remove('osname');
+        // $object->remove('osname');
         return $object;
     }
 
@@ -1845,8 +1827,8 @@ class ModernHook
             $osNameFilter = $f->all()['osname'];
             $osNameFilter->setAssociatedColumn('label');
         }
-        $this->generateKoopmanLabelButtons($columns);
 
+        $this->generateKoopmanLabelButtons($columns);
 
         $addedToOrderColumn = new DataColumn('added_to_order');
         $addedToOrderColumn->setOptions(['sortable' => false, 'clickable' => false, 'field' => 'added_to_order']);
@@ -1879,7 +1861,7 @@ class ModernHook
 
         //Profile 3 is werkplaats medewerkers admin is 1
         $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES', null, null, 1, "5,6,7");
-
+     
         $profiles = [];
         if (!empty($workshopProfiles)) {
             $profiles = explode(',', $workshopProfiles);

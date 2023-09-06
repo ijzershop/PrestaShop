@@ -76,22 +76,32 @@ class MolliePaymentModuleFrontController extends ModuleFrontController
             true,
             Cart::BOTH
         );
+
+        // $originalAmount = $cart->getOrderTotal(
+        //     true,
+        //     Cart::BOTH,
+        //     null,
+        //     (int)$cart->id_carrier
+        // );
+        
         $amount = $originalAmount;
         if (!$amount) {
             Tools::redirectLink('index.php');
         }
 
-        /** @var PaymentMethodRepositoryInterface $paymentMethodRepository */
-        $paymentMethodRepository = $this->module->getService(PaymentMethodRepositoryInterface::class);
+        /** @var PaymentMethodRepositoryInterface $paymentMethodRepo */
+        $paymentMethodRepo = $this->module->getService(PaymentMethodRepositoryInterface::class);
         /** @var PaymentMethodService $transactionService */
         $transactionService = $this->module->getService(PaymentMethodService::class);
         /** @var MollieOrderCreationService $mollieOrderCreationService */
         $mollieOrderCreationService = $this->module->getService(MollieOrderCreationService::class);
+        /** @var PaymentMethodRepositoryInterface $paymentMethodRepository */
+        $paymentMethodRepository = $this->module->getService(PaymentMethodRepositoryInterface::class);
         /** @var SubscriptionOrderValidator $subscriptionOrderValidator */
         $subscriptionOrderValidator = $this->module->getService(SubscriptionOrderValidator::class);
 
         $environment = (int) Configuration::get(Mollie\Config\Config::MOLLIE_ENVIRONMENT);
-        $paymentMethodId = $paymentMethodRepository->getPaymentMethodIdByMethodId($method, $environment);
+        $paymentMethodId = $paymentMethodRepo->getPaymentMethodIdByMethodId($method, $environment);
         $paymentMethodObj = new MolPaymentMethod((int) $paymentMethodId);
 
         /* if its subscription order only payment API is allowed */
@@ -122,6 +132,7 @@ class MolliePaymentModuleFrontController extends ModuleFrontController
         }
 
         try {
+            // dd($paymentData, $paymentMethodObj);
             $apiPayment = $mollieOrderCreationService->createMollieOrder($paymentData, $paymentMethodObj);
         } catch (OrderCreationException $e) {
             $this->setTemplate('error.tpl');
@@ -131,7 +142,7 @@ class MolliePaymentModuleFrontController extends ModuleFrontController
             } else {
                 /** @var ExceptionService $exceptionService */
                 $exceptionService = $this->module->getService(ExceptionService::class);
-                $message = $exceptionService->getErrorMessageForException($e);
+                $message = $exceptionService->getErrorMessageForException($e, $exceptionService->getErrorMessages());
             }
             $this->errors[] = $message;
 
@@ -153,7 +164,7 @@ class MolliePaymentModuleFrontController extends ModuleFrontController
             if ($method === PaymentMethod::BANKTRANSFER) {
                 $orderId = Order::getOrderByCartId($cart->id);
                 $order = new Order($orderId);
-                $paymentMethodRepository->addOpenStatusPayment(
+                $paymentMethodRepo->addOpenStatusPayment(
                     $cart->id,
                     $apiPayment->method,
                     $apiPayment->id,

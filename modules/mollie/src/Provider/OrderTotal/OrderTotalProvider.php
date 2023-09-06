@@ -34,7 +34,7 @@
  * @codingStandardsIgnoreStart
  */
 
-namespace Mollie\Provider\OrderTotal;
+namespace Mollie\Provider;
 
 use Exception;
 use Mollie\Adapter\LegacyContext;
@@ -56,7 +56,7 @@ class OrderTotalProvider implements OrderTotalProviderInterface
      *
      * @throws Exception
      */
-    public function getOrderTotal(): float
+    public function getOrderTotal()
     {
         return (float) $this->context->getCart()->getOrderTotal();
     }

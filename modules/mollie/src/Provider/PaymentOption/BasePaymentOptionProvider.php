@@ -39,7 +39,6 @@ namespace Mollie\Provider\PaymentOption;
 use Mollie;
 use Mollie\Adapter\LegacyContext;
 use Mollie\Provider\CreditCardLogoProvider;
-use Mollie\Provider\OrderTotal\OrderTotalProviderInterface;
 use Mollie\Provider\PaymentFeeProviderInterface;
 use Mollie\Service\LanguageService;
 use MolPaymentMethod;
@@ -74,32 +73,27 @@ class BasePaymentOptionProvider implements PaymentOptionProviderInterface
      * @var LanguageService
      */
     private $languageService;
-    /** @var OrderTotalProviderInterface */
-    private $orderTotalProvider;
 
     public function __construct(
         Mollie $module,
         LegacyContext $context,
         CreditCardLogoProvider $creditCardLogoProvider,
         PaymentFeeProviderInterface $paymentFeeProvider,
-        LanguageService $languageService,
-        OrderTotalProviderInterface $orderTotalProvider
+        LanguageService $languageService
     ) {
         $this->module = $module;
         $this->context = $context;
         $this->creditCardLogoProvider = $creditCardLogoProvider;
         $this->paymentFeeProvider = $paymentFeeProvider;
         $this->languageService = $languageService;
-        $this->orderTotalProvider = $orderTotalProvider;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getPaymentOption(MolPaymentMethod $paymentMethod): PaymentOption
+    public function getPaymentOption(MolPaymentMethod $paymentMethod)
     {
         $paymentOption = new PaymentOption();
-
         $paymentOption->setCallToActionText(
             $paymentMethod->title ?:
                 $this->languageService->lang($paymentMethod->method_name)
@@ -112,29 +106,20 @@ class BasePaymentOptionProvider implements PaymentOptionProviderInterface
             true
         ));
         $paymentOption->setLogo($this->creditCardLogoProvider->getMethodOptionLogo($paymentMethod));
+        $paymentFee = $this->paymentFeeProvider->getPaymentFee($paymentMethod);
 
-        $paymentFeeData = $this->paymentFeeProvider->getPaymentFee($paymentMethod, $this->orderTotalProvider->getOrderTotal());
-
-        if ($paymentFeeData->isActive()) {
+        if ($paymentFee) {
             $paymentOption->setInputs(
                 [
                     [
                         'type' => 'hidden',
                         'name' => 'payment-fee-price',
-                        'value' => $paymentFeeData->getPaymentFeeTaxIncl(),
+                        'value' => $paymentFee,
                     ],
                     [
                         'type' => 'hidden',
                         'name' => 'payment-fee-price-display',
-                        'value' => sprintf(
-                            $this->module->l('Payment Fee: %1s', self::FILE_NAME),
-                            Tools::displayPrice($paymentFeeData->getPaymentFeeTaxIncl())
-                        ),
-                    ],
-                    [
-                        'type' => 'hidden',
-                        'name' => 'payment-method-id',
-                        'value' => $paymentMethod->id,
+                        'value' => sprintf($this->module->l('Payment Fee: %1s', self::FILE_NAME), Tools::displayPrice($paymentFee)),
                     ],
                 ]
             );

@@ -12,74 +12,48 @@
 
 namespace Mollie\Builder;
 
+use Cart;
 use Currency;
-use Mollie\Repository\CurrencyRepositoryInterface;
-use Mollie\Repository\MolOrderPaymentFeeRepositoryInterface;
-use MolOrderPaymentFee;
+use Mollie\Repository\OrderFeeRepository;
+use MolOrderFee;
 use Order;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
+use Tools;
 
 final class InvoicePdfTemplateBuilder implements TemplateBuilderInterface
 {
+    private $orderFeeRepository;
+
     /**
      * @var Order
      */
     private $order;
-    /** @var MolOrderPaymentFeeRepositoryInterface */
-    private $molOrderPaymentFeeRepository;
-    /** @var Locale */
-    private $locale;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepository;
 
-    public function __construct(
-        MolOrderPaymentFeeRepositoryInterface $molOrderPaymentFeeRepository,
-        CurrencyRepositoryInterface $currencyRepository
-    ) {
-        $this->molOrderPaymentFeeRepository = $molOrderPaymentFeeRepository;
-        $this->currencyRepository = $currencyRepository;
+    public function __construct(OrderFeeRepository $orderFeeRepository)
+    {
+        $this->orderFeeRepository = $orderFeeRepository;
     }
 
-    public function setOrder(Order $order): InvoicePdfTemplateBuilder
+    public function setOrder(Order $order)
     {
         $this->order = $order;
 
         return $this;
     }
 
-    public function setLocale(Locale $locale): InvoicePdfTemplateBuilder
+    public function buildParams()
     {
-        $this->locale = $locale;
+        $orderFeeId = $this->orderFeeRepository->getOrderFeeIdByCartId(Cart::getCartIdByOrderId($this->order->id));
 
-        return $this;
-    }
+        $orderFee = new MolOrderFee($orderFeeId);
 
-    public function buildParams(): array
-    {
-        /** @var MolOrderPaymentFee|null $molOrderPaymentFee */
-        $molOrderPaymentFee = $this->molOrderPaymentFeeRepository->findOneBy([
-            'id_order' => (int) $this->order->id,
-        ]);
-
-        if (!$molOrderPaymentFee) {
-            return [];
-        }
-
-        /** @var Currency|null $orderCurrency */
-        $orderCurrency = $this->currencyRepository->findOneBy([
-            'id_currency' => $this->order->id_currency,
-            'deleted' => 0,
-            'active' => 1,
-        ]);
-
-        if (!$orderCurrency) {
+        if (!$orderFee->order_fee) {
             return [];
         }
 
         return [
-            'orderFeeAmountDisplay' => $this->locale->formatPrice(
-                $molOrderPaymentFee->fee_tax_incl,
-                $orderCurrency->iso_code
+            'orderFeeAmountDisplay' => Tools::displayPrice(
+                $orderFee->order_fee,
+                new Currency($this->order->id_currency)
             ),
         ];
     }

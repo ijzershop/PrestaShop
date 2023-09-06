@@ -12,15 +12,14 @@
 
 namespace Mollie\Service\Shipment;
 
-use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Order;
 
 interface ShipmentInformationSenderInterface
 {
     /**
-     * @throws ApiException
-     * @throws \Exception
+     * @param MollieApiClient|null $apiGateway
+     * @param Order $order
      */
-    public function sendShipmentInformation(?MollieApiClient $apiGateway, Order $order): void;
+    public function sendShipmentInformation($apiGateway, Order $order);
 }

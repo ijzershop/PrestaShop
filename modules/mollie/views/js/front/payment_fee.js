@@ -33,38 +33,24 @@ $(document).ready(function () {
     }
 
     $('input[name="payment-option"]').on('change', function () {
-        const $nextDiv = $(this).closest('.payment-option').parent().next();
-
-        let paymentMethodId = 0;
-        let $paymentMethodId;
-
+        var $nextDiv = $(this).closest('.payment-option').parent().next();
+        var paymentFee;
         if ($nextDiv.hasClass('js-payment-option-form')) {
-          $paymentMethodId = $nextDiv.find('input[name="payment-method-id"]');
+            paymentFee = $nextDiv.find('input[name="payment-fee-price"]').val();
         } else {
-          $paymentMethodId = $nextDiv.next().find('input[name="payment-method-id"]');
-        }
-
-        if ($paymentMethodId.length > 0) {
-          paymentMethodId = $paymentMethodId.val();
+            paymentFee = $nextDiv.next().find('input[name="payment-fee-price"]').val();
         }
 
         $.ajax({
             url: ajaxUrl,
             method: 'GET',
             data: {
-                paymentMethodId: paymentMethodId,
+                'paymentFee': paymentFee,
                 ajax: 1,
                 action: 'getTotalCartPrice'
             },
             success: function (response) {
                 response = jQuery.parseJSON(response);
-
-                if (response.error) {
-                  console.error(response.message);
-
-                  return;
-                }
-
                 $('.card-block.cart-summary-totals').replaceWith(response.cart_summary_totals);
             }
         })

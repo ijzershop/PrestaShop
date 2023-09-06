@@ -12,28 +12,10 @@
 
 namespace Mollie\Utility;
 
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Number;
-use PrestaShop\Decimal\Operation\Rounding;
 
 class NumberUtility
 {
-    public const DECIMAL_PRECISION = 2;
-    public const FLOAT_PRECISION = 6;
-    private const ROUNDING = Rounding::ROUND_HALF_UP;
-
-    // TODO make all methods consistent: either pass string/float as parameter or cast members to Number/DecimalNumber class beforehand.
-
-    public static function toPrecision(
-        float $number,
-        int $precision = self::DECIMAL_PRECISION,
-        string $roundingMode = self::ROUNDING
-    ): float {
-        $decimalNumber = self::getNumber($number);
-
-        return (float) $decimalNumber->toPrecision($precision, $roundingMode);
-    }
-
     /**
      * Decreases number by its given percentage
      * E.g 75/1.5 = 50.
@@ -50,9 +32,9 @@ class NumberUtility
         if (!$percentage || $percentage <= 0) {
             return $number;
         }
-        $numberTransformed = self::getNumber($number);
+        $numberTransformed = self::toObject($number);
         $totalDecrease = self::toPercentageIncrease($percentage);
-        $decrement = (string) $numberTransformed->dividedBy(self::getNumber($totalDecrease));
+        $decrement = (string) $numberTransformed->dividedBy(self::toObject($totalDecrease));
 
         return (float) $decrement;
     }
@@ -62,9 +44,9 @@ class NumberUtility
         if (!$percentage || $percentage <= 0) {
             return $number;
         }
-        $numberTransformed = self::getNumber($number);
+        $numberTransformed = self::toObject($number);
         $percentageIncrease = self::toPercentageIncrease($percentage);
-        $percentageIncreaseTransformed = self::getNumber($percentageIncrease);
+        $percentageIncreaseTransformed = self::toObject($percentageIncrease);
         $result = (string) $numberTransformed->times($percentageIncreaseTransformed);
 
         return (float) $result;
@@ -79,85 +61,86 @@ class NumberUtility
      */
     public static function toPercentageIncrease($percentage)
     {
-        $percentageNumber = self::getNumber($percentage);
-        $smallerNumber = $percentageNumber->dividedBy(self::getNumber(100));
-        $result = (string) $smallerNumber->plus(self::getNumber(1));
+        $percentageNumber = self::toObject($percentage);
+        $smallerNumber = $percentageNumber->dividedBy(self::toObject(100));
+        $result = (string) $smallerNumber->plus(self::toObject(1));
 
         return (float) $result;
     }
 
-    public static function times(
-        float $target,
-        float $factor,
-        int $precision = self::FLOAT_PRECISION,
-        string $roundingMode = self::ROUNDING
-    ): float {
-        $firstNumber = self::getNumber($target);
-        $secondNumber = self::getNumber($factor);
+    /**
+     * ($a*$b).
+     *
+     * @param float $a
+     * @param float $b
+     *
+     * @return float
+     */
+    public static function times($a, $b)
+    {
+        $firstNumber = self::toObject($a);
+        $secondNumber = self::toObject($b);
+        $result = (string) $firstNumber->times($secondNumber);
 
-        $result = $firstNumber->times($secondNumber);
-
-        return (float) $result->toPrecision($precision, $roundingMode);
+        return (float) $result;
     }
 
-    public static function divide(
-        float $target,
-        float $divisor,
-        int $precision = self::FLOAT_PRECISION,
-        string $roundingMode = self::ROUNDING
-    ): float {
-        $firstNumber = self::getNumber($target);
-        $secondNumber = self::getNumber($divisor);
+    /**
+     * ($a/$b).
+     *
+     * @param float $a
+     * @param float $b
+     * @param int $precision
+     *
+     * @return float
+     *
+     * @throws \PrestaShop\Decimal\Exception\DivisionByZeroException
+     */
+    public static function divide($a, $b, $precision = 20)
+    {
+        $firstNumber = self::toObject($a);
+        $secondNumber = self::toObject($b);
+        $result = (string) $firstNumber->dividedBy($secondNumber, $precision);
 
-        $result = $firstNumber->dividedBy($secondNumber, $precision);
-
-        return (float) $result->toPrecision($precision, $roundingMode);
+        return (float) $result;
     }
 
     public static function isEqual($a, $b)
     {
-        $firstNumber = self::getNumber($a);
-        $secondNumber = self::getNumber($b);
+        $firstNumber = self::toObject($a);
+        $secondNumber = self::toObject($b);
 
         return $firstNumber->equals($secondNumber);
     }
 
     public static function isLowerThan($a, $b)
     {
-        $firstNumber = self::getNumber($a);
-        $secondNumber = self::getNumber($b);
+        $firstNumber = self::toObject($a);
+        $secondNumber = self::toObject($b);
 
         return $firstNumber->isLowerThan($secondNumber);
     }
 
     public static function isLowerOrEqualThan($a, $b)
     {
-        $firstNumber = self::getNumber($a);
-        $secondNumber = self::getNumber($b);
+        $firstNumber = self::toObject($a);
+        $secondNumber = self::toObject($b);
 
         return $firstNumber->isLowerOrEqualThan($secondNumber);
     }
 
-    public static function isGreaterThan(float $target, float $comparison): bool
-    {
-        $firstNumber = self::getNumber($target);
-        $secondNumber = self::getNumber($comparison);
-
-        return $firstNumber->isGreaterThan($secondNumber);
-    }
-
     public static function minus($a, $b)
     {
-        $firstNumber = self::getNumber($a);
-        $secondNumber = self::getNumber($b);
+        $firstNumber = self::toObject($a);
+        $secondNumber = self::toObject($b);
 
         return (float) ((string) $firstNumber->minus($secondNumber));
     }
 
     public static function plus($a, $b)
     {
-        $firstNumber = self::getNumber($a);
-        $secondNumber = self::getNumber($b);
+        $firstNumber = self::toObject($a);
+        $secondNumber = self::toObject($b);
 
         return (float) ((string) $firstNumber->plus($secondNumber));
     }
@@ -165,14 +148,10 @@ class NumberUtility
     /**
      * @param float $number
      *
-     * @return Number|DecimalNumber
+     * @return Number
      */
-    private static function getNumber(float $number)
+    private static function toObject($number)
     {
-        if (is_subclass_of(Number::class, DecimalNumber::class)) {
-            return new DecimalNumber((string) $number);
-        }
-
         return new Number((string) $number);
     }
 }

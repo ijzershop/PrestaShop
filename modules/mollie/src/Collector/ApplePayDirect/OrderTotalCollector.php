@@ -15,16 +15,16 @@ namespace Mollie\Collector\ApplePayDirect;
 use Cart;
 use Mollie\Config\Config;
 use Mollie\DTO\ApplePay\Carrier\Carrier as AppleCarrier;
-use Mollie\Service\OrderPaymentFeeService;
+use Mollie\Service\OrderFeeService;
 
 class OrderTotalCollector
 {
-    /** @var OrderPaymentFeeService */
-    private $orderPaymentFeeService;
+    /** @var OrderFeeService */
+    private $orderFeeService;
 
-    public function __construct(OrderPaymentFeeService $orderPaymentFeeService)
+    public function __construct(OrderFeeService $orderFeeService)
     {
-        $this->orderPaymentFeeService = $orderPaymentFeeService;
+        $this->orderFeeService = $orderFeeService;
     }
 
     /**
@@ -39,10 +39,7 @@ class OrderTotalCollector
     {
         return array_map(function (AppleCarrier $carrier) use ($cart) {
             $orderTotal = (float) number_format($cart->getOrderTotal(true, Cart::BOTH, null, $carrier->getCarrierId()), 2, '.', '');
-
-            $paymentFeeData = $this->orderPaymentFeeService->getPaymentFee($orderTotal, Config::APPLEPAY);
-
-            $paymentFee = $paymentFeeData->getPaymentFeeTaxIncl();
+            $paymentFee = $this->orderFeeService->getPaymentFee($orderTotal, Config::APPLEPAY);
 
             return [
                 'type' => 'final',

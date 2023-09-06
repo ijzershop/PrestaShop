@@ -1,5 +1,10 @@
 # Changelog
 
+### 3.1.0
+
+- Compatibility PrestaShop 8.1
+- Added additional hooks for feed generation (channableSql, channableAddProductToFeedCheck)
+
 ### 3.0.2
 
 - Compatibility 8.0.2

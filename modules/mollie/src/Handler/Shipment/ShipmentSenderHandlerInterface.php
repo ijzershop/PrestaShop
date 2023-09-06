@@ -12,17 +12,16 @@
 
 namespace Mollie\Handler\Shipment;
 
-use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
-use Mollie\Exception\ShipmentCannotBeSentException;
 use Order;
 use OrderState;
 
 interface ShipmentSenderHandlerInterface
 {
     /**
-     * @throws ShipmentCannotBeSentException
-     * @throws ApiException
+     * @param MollieApiClient $apiClient
+     * @param Order $order
+     * @param OrderState $orderState
      */
-    public function handleShipmentSender(?MollieApiClient $apiClient, Order $order, OrderState $orderState);
+    public function handleShipmentSender(MollieApiClient $apiClient, Order $order, OrderState $orderState);
 }

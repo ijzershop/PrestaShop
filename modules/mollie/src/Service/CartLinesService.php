@@ -13,12 +13,10 @@
 namespace Mollie\Service;
 
 use Cart;
-use Mollie\Adapter\Context;
 use Mollie\Adapter\ToolsAdapter;
 use Mollie\Config\Config;
 use Mollie\DTO\Line;
 use Mollie\DTO\Object\Amount;
-use Mollie\DTO\PaymentFeeData;
 use Mollie\Utility\CalculationUtility;
 use Mollie\Utility\CartPriceUtility;
 use Mollie\Utility\NumberUtility;
@@ -40,19 +38,17 @@ class CartLinesService
      * @var ToolsAdapter
      */
     private $tools;
-    private $context;
 
-    public function __construct(LanguageService $languageService, VoucherService $voucherService, ToolsAdapter $tools, Context $context)
+    public function __construct(LanguageService $languageService, VoucherService $voucherService, ToolsAdapter $tools)
     {
         $this->voucherService = $voucherService;
         $this->languageService = $languageService;
         $this->tools = $tools;
-        $this->context = $context;
     }
 
     /**
      * @param float $amount
-     * @param PaymentFeeData $paymentFeeData
+     * @param float $paymentFee
      * @param string $currencyIsoCode
      * @param array $cartSummary
      * @param float $shippingCost
@@ -66,7 +62,7 @@ class CartLinesService
      */
     public function getCartLines(
         $amount,
-        $paymentFeeData,
+        $paymentFee,
         $currencyIsoCode,
         $cartSummary,
         $shippingCost,
@@ -74,8 +70,6 @@ class CartLinesService
         $psGiftWrapping,
         $selectedVoucherCategory
     ) {
-        // TODO refactor whole service, split order line append into separate services and test them individually at least!!!
-
         $apiRoundingPrecision = Config::API_ROUNDING_PRECISION;
         $vatRatePrecision = Config::VAT_RATE_ROUNDING_PRECISION;
 
@@ -114,7 +108,7 @@ class CartLinesService
         $orderLines = $this->addWrappingLine($wrappingPrice, $cartSummary, $vatRatePrecision, $apiRoundingPrecision, $orderLines);
 
         // Add fee
-        $orderLines = $this->addPaymentFeeLine($paymentFeeData, $apiRoundingPrecision, $orderLines);
+        $orderLines = $this->addPaymentFeeLine($paymentFee, $apiRoundingPrecision, $orderLines);
 
         // Ungroup all the cart lines, just one level
         $newItems = $this->ungroupLines($orderLines);
@@ -200,8 +194,6 @@ class CartLinesService
                         'unitPrice' => 0,
                         'totalAmount' => 0,
                         'category' => '',
-                        'product_url' => $this->context->getProductLink($cartItem['id_product']),
-                        'image_url' => $this->context->getImageLink($cartItem['link_rewrite'], $cartItem['id_image']),
                     ];
                     continue;
                 }
@@ -220,8 +212,6 @@ class CartLinesService
                 'unitPrice' => round($cartItem['price_wt'], $apiRoundingPrecision),
                 'totalAmount' => (float) $roundedTotalWithTax,
                 'category' => $this->voucherService->getVoucherCategory($cartItem, $selectedVoucherCategory),
-                'product_url' => $this->context->getProductLink($cartItem['id_product']),
-                'image_url' => $this->context->getImageLink($cartItem['link_rewrite'], $cartItem['id_image']),
             ];
             $remaining -= $roundedTotalWithTax;
         }
@@ -344,8 +334,6 @@ class CartLinesService
                     'totalAmount' => round($totalAmount, $apiRoundingPrecision),
                     'vatRate' => round($actualVatRate, $apiRoundingPrecision),
                     'vatAmount' => round($vatAmount, $apiRoundingPrecision),
-                    'product_url' => $line['product_url'] ?? null,
-                    'image_url' => $line['image_url'] ?? null,
                 ];
                 if (isset($line['sku'])) {
                     $newItem['sku'] = $line['sku'];
@@ -422,29 +410,27 @@ class CartLinesService
     }
 
     /**
-     * @param PaymentFeeData $paymentFeeData
+     * @param float $paymentFee
      * @param int $apiRoundingPrecision
      * @param array $orderLines
      *
      * @return array
      */
-    private function addPaymentFeeLine($paymentFeeData, $apiRoundingPrecision, array $orderLines)
+    private function addPaymentFeeLine($paymentFee, $apiRoundingPrecision, array $orderLines)
     {
-        if (!$paymentFeeData->isActive()) {
-            return $orderLines;
+        if ($paymentFee) {
+            $orderLines['surcharge'] = [
+                [
+                    'name' => $this->languageService->lang('Payment fee'),
+                    'sku' => Config::PAYMENT_FEE_SKU,
+                    'quantity' => 1,
+                    'unitPrice' => round($paymentFee, $apiRoundingPrecision),
+                    'totalAmount' => round($paymentFee, $apiRoundingPrecision),
+                    'vatAmount' => 0,
+                    'vatRate' => 0,
+                ],
+            ];
         }
-
-        $orderLines['surcharge'] = [
-            [
-                'name' => $this->languageService->lang('Payment fee'),
-                'sku' => Config::PAYMENT_FEE_SKU,
-                'quantity' => 1,
-                'unitPrice' => round($paymentFeeData->getPaymentFeeTaxIncl(), $apiRoundingPrecision),
-                'totalAmount' => round($paymentFeeData->getPaymentFeeTaxIncl(), $apiRoundingPrecision),
-                'vatAmount' => NumberUtility::minus($paymentFeeData->getPaymentFeeTaxIncl(), $paymentFeeData->getPaymentFeeTaxExcl()),
-                'vatRate' => $paymentFeeData->getTaxRate(),
-            ],
-        ];
 
         return $orderLines;
     }
@@ -511,8 +497,6 @@ class CartLinesService
             }
 
             $line->setVatRate(TextFormatUtility::formatNumber($item['vatRate'], $apiRoundingPrecision, '.', ''));
-            $line->setProductUrl($item['product_url'] ?? null);
-            $line->setImageUrl($item['image_url'] ?? null);
 
             $newItems[$index] = $line;
         }

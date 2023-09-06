@@ -13,8 +13,9 @@
 namespace Mollie\Logger;
 
 use Mollie\Exception\NotImplementedException;
+use Psr\Log\LoggerInterface;
 
-class PrestaLogger implements PrestaLoggerInterface
+class PrestaLogger implements LoggerInterface
 {
     public function emergency($message, array $context = [])
     {

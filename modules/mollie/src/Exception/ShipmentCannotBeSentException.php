@@ -16,9 +16,13 @@ use Exception;
 
 class ShipmentCannotBeSentException extends Exception
 {
-    public const NO_SHIPPING_INFORMATION = 1;
-    public const ORDER_HAS_NO_PAYMENT_INFORMATION = 2;
-    public const PAYMENT_IS_NOT_ORDER = 3;
+    const NO_SHIPPING_INFORMATION = 1;
+
+    const AUTOMATIC_SHIPMENT_SENDER_IS_NOT_AVAILABLE = 2;
+
+    const ORDER_HAS_NO_PAYMENT_INFORMATION = 3;
+
+    const PAYMENT_IS_NOT_ORDER = 4;
 
     /**
      * @var string

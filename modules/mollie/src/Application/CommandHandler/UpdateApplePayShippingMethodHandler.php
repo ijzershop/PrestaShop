@@ -15,41 +15,35 @@ namespace Mollie\Application\CommandHandler;
 use Cart;
 use Mollie\Application\Command\UpdateApplePayShippingMethod;
 use Mollie\Config\Config;
-use Mollie\Service\OrderPaymentFeeService;
+use Mollie\Service\OrderFeeService;
 
 final class UpdateApplePayShippingMethodHandler
 {
     /**
-     * @var OrderPaymentFeeService
+     * @var OrderFeeService
      */
-    private $orderPaymentFeeService;
+    private $orderFeeService;
 
-    public function __construct(OrderPaymentFeeService $orderPaymentFeeService)
+    public function __construct(OrderFeeService $orderFeeService)
     {
-        $this->orderPaymentFeeService = $orderPaymentFeeService;
+        $this->orderFeeService = $orderFeeService;
     }
 
     public function handle(UpdateApplePayShippingMethod $command): array
     {
         $cart = new Cart($command->getCartId());
-
         $cart->id_carrier = $command->getCarrierId();
         $cart->setDeliveryOption([
            $cart->id_address_delivery => $command->getCarrierId() . ',',
        ]);
-
         $cart->update();
-
-        $orderTotal = (float) $cart->getOrderTotal(true, Cart::BOTH, null, $command->getCarrierId());
-
-        $paymentFeeData = $this->orderPaymentFeeService->getPaymentFee($orderTotal, Config::APPLEPAY);
-
-        $paymentFee = $paymentFeeData->getPaymentFeeTaxIncl();
+        $orderTotal = $cart->getOrderTotal(true, Cart::BOTH, null, $command->getCarrierId());
+        $fee = $this->orderFeeService->getPaymentFee($orderTotal, Config::APPLEPAY);
 
         return [
            'success' => true,
-           'data' => [// TODO use calculator
-               'amount' => $orderTotal + $paymentFee,
+           'data' => [
+               'amount' => $orderTotal + $fee,
            ],
        ];
     }

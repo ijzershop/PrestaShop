@@ -1791,7 +1791,7 @@ class ModernHook
             ]
         ]);
         $object->addBefore('osname', $labelColumn);
-        // $object->remove('osname');
+        $object->remove('osname');
         return $object;
     }
 
@@ -1861,7 +1861,7 @@ class ModernHook
 
         //Profile 3 is werkplaats medewerkers admin is 1
         $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES', null, null, 1, "5,6,7");
-     
+
         $profiles = [];
         if (!empty($workshopProfiles)) {
             $profiles = explode(',', $workshopProfiles);

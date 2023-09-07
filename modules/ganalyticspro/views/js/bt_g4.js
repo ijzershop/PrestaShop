@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             });
 
+
         } else if (btGapTag.bUseAxeption == 0) {
             // Handle the consent on click
             function handleConsent() {
@@ -159,13 +160,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 analytics_storage: "granted",
             });
         }
-    }
+    } else {
+        //use case for user id
+        if (btGapTag.gaUserId != 0) {
+            gtag("js", new Date());
+            gtag("config", btGapTag.gaId);
+            gtag("user_id", btGapTag.gaUserId);
 
-    //use case for user id
-    if (btGapTag.gaUserId != 0) {
-        gtag('config', btGapTag.gaId, {
-            'user_id': '' + btGapTag.gaUserId + '',
-        });
+            gtag("consent", "default", {
+                ad_storage: "granted",
+                analytics_storage: "granted",
+            });
+
+        } else {
+            gtag("js", new Date());
+            gtag("config", btGapTag.gaId);
+
+            gtag("consent", "default", {
+                ad_storage: "granted",
+                analytics_storage: "granted",
+            });
+
+        }
     }
 
     // if refund has been detected
@@ -229,7 +245,6 @@ document.addEventListener('DOMContentLoaded', function () {
             },
         });
     }
-
     if (typeof btGapTag.tagContent.tracking_type !== "undefined" && typeof btGapTag.tagContent.contents !== "undefined") {
 
         // Handle the case for category page

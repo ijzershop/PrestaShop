@@ -27,8 +27,8 @@ class ObjectModel extends ObjectModelCore
 {
     /*
     * module: advancedvatmanager
-    * date: 2023-06-29 09:33:31
-    * version: 1.6.1
+    * date: 2023-09-07 12:09:31
+    * version: 1.6.2.2
     */
     public function cacheFieldsRequiredDatabase($all = true)
     {
@@ -40,10 +40,10 @@ class ObjectModel extends ObjectModelCore
                     if ($fields) {
                         foreach ($fields as $row) {
                             if ($row['field_name'] != 'vat_number') {
-                                self::$fieldsRequiredDatabase[$row['object_name']][(int) $row['id_required_field']] = pSQL($row['field_name']);
+                                self::$fieldsRequiredDatabase[$row['object_name']][(int) $row['id_required_field']] = pSQL($row['field_name']);       
                             }
                         }
-                    }
+                    } 
                     else {
                         self::$fieldsRequiredDatabase = [];
                     }
@@ -54,7 +54,7 @@ class ObjectModel extends ObjectModelCore
             }
         }
         else {
-            return parent::cacheFieldsRequiredDatabase($all);
+            return parent::cacheFieldsRequiredDatabase($all);    
         }
     }
  }

@@ -41,12 +41,6 @@ class AddressController extends AddressControllerCore
                     }
                 }
             }
-            else if (Module::isEnabled('dniverificator')) {
-                    if (Configuration::get('DNIVERIFICATOR_FO') == 1) {  
-                        $module = new Dniverificator();
-                        return $module->verifyDocument();          
-                    }
-            }
         }
         return parent::processSubmitAddress();
     }

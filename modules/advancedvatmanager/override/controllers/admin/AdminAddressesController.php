@@ -40,13 +40,6 @@ class AdminAddressesController extends AdminAddressesControllerCore
                 }
             }
         }
-        // Only for DNI Verificator module
-        else if (Module::isEnabled('dniverificator')) {
-            if (Configuration::get('DNIVERIFICATOR_BO') == 1) {  
-                $module = new Dniverificator();
-                $module->verifyDocument();                
-            }
-        }
         return parent::processSave();   
     }
 
@@ -62,12 +55,6 @@ class AdminAddressesController extends AdminAddressesControllerCore
                 else if (!ValidationEngine::getVATValidation() && ValidationEngine::$skip_validation_process === false) {
                     $this->context->controller->errors[] = $module->getMessage();      
                 }
-            }
-        }
-        if (Module::isEnabled('dniverificator')) {
-            if (Configuration::get('DNIVERIFICATOR_BO') == 1) {  
-                $module = new Dniverificator();
-                $module->verifyDocument();                
             }
         }
         return parent::processAdd(); 

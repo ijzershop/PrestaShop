@@ -61,6 +61,16 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $this->shop = new Shop((int)$this->order->id_shop);
     }
 
+
+    private function checkIsCronTab(){
+        $sapi_type = php_sapi_name();
+        if(substr($sapi_type, 0, 3) == 'cli' || empty($_SERVER['REMOTE_ADDR'])) {
+            return Context::getContext()->shop->domain_ssl.DIRECTORY_SEPARATOR;
+        } else {
+            return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR;
+        }
+    }
+
     /**
      * Returns the template's HTML header.
      *
@@ -155,55 +165,56 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                 }
             }
 
-            if ($order_detail['product_reference'] == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')) {
+            if ($order_detail['product_reference'] == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE', $this->order->id_lang, $this->order->id_shop_group, $this->order->id_shop,'CP')) {
                 $descProduct = new Product($order_detail['product_id']);
                 if ($descProduct) {
                     $order_detail['product_desc_short'] = reset($descProduct->description);
                 }
             }
 
-            if (!is_null($order_detail['customizedDatas'])) {
-                foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
-                    if (!is_null($customization)) {
 
-                        foreach ($customization as $customizationId => $customized) {
-                            if (isset($customized['datas'])) {
-                                if (extension_loaded('imagick') || class_exists("Imagick")) {
-                                    if (isset($customized['datas'][1][0]['technical_image'])) {
-                                        $file = $customized['datas'][1][0]['technical_image'];
-                                        if (!is_null($file) && !empty($file)) {
-                                            $fileContents = $this->get_contents($file);
-                                            if ($fileContents != false) {
-
-                                                try {
-                                                    $doc = new SimpleXMLElement($fileContents);
-                                                    foreach ($doc->g as $seg) {
-                                                        if ($seg->attributes()->id[0] == 'cutline') {
-                                                            $dom = dom_import_simplexml($seg);
-                                                            $dom->parentNode->removeChild($dom);
-                                                        }
-                                                    }
-
-                                                    try {
-                                                        $im = new Imagick();
-                                                        $im->readImageBlob($doc->asXml());
-                                                        $im->setImageFormat('png24');
-                                                        $im->writeImage(_PS_CORE_DIR_ . '/' . $file . '.png');
-                                                        $im->clear();
-                                                        $im->destroy();
-                                                    } catch (Exception $e) {
-
-                                                    }
-                                                } catch (Exception $e) {}
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+//            if (!is_null($order_detail['customizedDatas'])) {
+//                foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
+//                    if (!is_null($customization)) {
+//
+//                        foreach ($customization as $customizationId => $customized) {
+//                            if (isset($customized['datas'])) {
+//                                if (extension_loaded('imagick') || class_exists("Imagick")) {
+//                                    if (isset($customized['datas'][1][0]['technical_image'])) {
+//                                        $file = $customized['datas'][1][0]['technical_image'];
+//                                        if (!is_null($file) && !empty($file)) {
+//                                            $fileContents = $this->get_contents($file);
+//                                            if ($fileContents != false) {
+//
+//                                                try {
+//                                                    $doc = new SimpleXMLElement($fileContents);
+//                                                    foreach ($doc->g as $seg) {
+//                                                        if ($seg->attributes()->id[0] == 'cutline') {
+//                                                            $dom = dom_import_simplexml($seg);
+//                                                            $dom->parentNode->removeChild($dom);
+//                                                        }
+//                                                    }
+//
+//                                                    try {
+//                                                        $im = new Imagick();
+//                                                        $im->readImageBlob($doc->asXml());
+//                                                        $im->setImageFormat('png24');
+//                                                        $im->writeImage(_PS_CORE_DIR_ . '/' . $file . '.png');
+//                                                        $im->clear();
+//                                                        $im->destroy();
+//                                                    } catch (Exception $e) {
+//
+//                                                    }
+//                                                } catch (Exception $e) {}
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
 
         if (Configuration::get('PS_PDF_IMG_DELIVERY')) {
@@ -233,6 +244,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         array_multisort($referenceColumnA, SORT_ASC, SORT_STRING, $referenceColumnB, SORT_ASC, SORT_STRING,  $order_details);
 
         $this->smarty->assign(array(
+            'webroot' => $this->checkIsCronTab(),
             'order' => $this->order,
             'order_details' => $order_details,
             'customer_contact' => $customer_contact,

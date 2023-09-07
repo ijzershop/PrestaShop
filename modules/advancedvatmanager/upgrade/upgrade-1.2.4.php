@@ -43,6 +43,8 @@ function upgrade_module_1_2_4($module)
     }
     $module->uninstallOverrides();
     $module->installOverrides();
-    $module->removeModulesMainOverrides();
+    if (method_exists($module, 'removeModulesMainOverrides')) {
+        $module->removeModulesMainOverrides();
+    } 
     return true; 
 }

@@ -1,3 +1,16 @@
+#1.6.2.2 (01/08/2023)
+- [FIX] Issue with JS variables in product page.
+
+#1.6.2 (05/07/2023)
+- [FIX] Minor Bugs.
+- [FIX] Bug when customer has not a group assigned during scanning process.
+- [FIX] Bug allowing purchases for Brexit when user is register as guest instead customer.
+- [FIX] Bug not calling back CustomersExemption class.
+- [FIX] Bug in PHP code main file causing not VAT validation in adminAddress controllers.
+- [ADD] Custom label and legend in vat_number field in AdminAddresses controller.
+- [ADD] Compatibility with module Advanced Invoice Builder and Custom Number.
+- [ADD] Integration with module DNI/NIE/NIF/CIF Verificator developed by us.
+
 #1.6.1 (03/04/2023)
 - [FIX] Minor issues in overrides files.
 - [FIX] Minor Bug in invoices showing a 0 character at the end.

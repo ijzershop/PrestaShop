@@ -56,7 +56,7 @@ class AdminCustomersVatManagerController extends ModuleAdminController
                     'validateAPI' => array('text' => $this->l('Validate VAT with VIES/GOV.UK API system','AdminCustomersVatManager'), 'icon' => 'fas fa-user-cog','confirm' => $this->l('Would you like to validate VAT number for the selected customers?','AdminCustomersVatManager')),
                     'sendValidationEmail' => array('text' => $this->l('Send VAT validation email request','AdminCustomersVatManager'), 'icon' => 'far fa-envelope','confirm' => $this->l('Would you like to send email to request validate VAT number for the selected customers?','AdminCustomersVatManager')),
                     'deleteVAT' => array('text' => $this->l('Delete VAT','AdminCustomersVatManager'), 'icon' => 'fas fa-user-times','confirm' => $this->l('Would you like to delete VAT number for the selected items?','AdminCustomersVatManager')),
-                    'delete' => array('text' => $this->l('Delete','AdminCustomersVatManager'), 'icon' => 'far fa-trash-alt','confirm' => $this->l('Would you like to delete selected items from the list?','AdminCustomersVatManager'))
+                    'delete' => array('text' => $this->l('Delete','AdminCustomersVatManager'), 'icon' => 'far fa-trash-alt','confirm' => $this->l("Would you like to delete selected items from the list?','AdminCustomersVatManager"))
         );
 
         $this->_select = 'CONCAT(LEFT(ad.`firstname`,1),\'.\',ad.`lastname`) `customer_name`,c.`email`, CONCAT(ad.`address1`,\' \', ad.`address2`) `address`, ad.`company`, cl.`name` as country, co.`iso_code`, gl.`name` as group_name, c.`id_shop`';
@@ -220,7 +220,6 @@ class AdminCustomersVatManagerController extends ModuleAdminController
     public function setMedia($isNewTheme = true)
     {
         parent::setMedia();
-
         Media::addJsDef(array(
             'ajax_url_avm_scanner' => $this->context->link->getAdminLink('AdminCustomersVatManager'),
             'scanning' => $this->l('Processing', 'AdminCustomersVatManager'),
@@ -246,25 +245,26 @@ class AdminCustomersVatManagerController extends ModuleAdminController
             'info' => $this->l('Information'),
             'company_validation' => (bool)Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION'),
         ));
+
         //Fontawesome
-        $this->addCSS('https://pro.fontawesome.com/releases/v5.15.4/css/all.css', 'all');
+        $this->addCSS('https://pro.fontawesome.com/releases/v5.15.4/css/all.css');
 
         // Slick modal
-        $this->addCSS('/modules/advancedvatmanager/libs/slickmodal/css/slickmodal.min.css', );
-        $this->addJS('/modules/advancedvatmanager/libs/slickmodal/js/jquery.slickmodal.min.js');
+        $this->addCSS(_PS_MODULE_DIR_ . 'advancedvatmanager/libs/slickmodal/css/slickmodal.min.css');
+        $this->addJS(_PS_MODULE_DIR_ . 'advancedvatmanager/libs/slickmodal/js/jquery.slickmodal.min.js');
 
         // Progress circle
-        $this->addJS('/modules/advancedvatmanager/libs/circle-progress/js/circle-progress.min.js');
+        $this->addJS(_PS_MODULE_DIR_ . 'advancedvatmanager/libs/circle-progress/js/circle-progress.min.js');
 
         // Timer
-        $this->addJS('/modules/advancedvatmanager/libs/easytimer/easytimer.min.js');
+        $this->addJS(_PS_MODULE_DIR_ . 'advancedvatmanager/libs/easytimer/easytimer.min.js');
 
         // Bootstrap switches
-        $this->addCSS('/modules/advancedvatmanager/libs/bootstrap-switch/css/bootstrap-switch.min.css');
-        $this->addJS('/modules/advancedvatmanager/libs/bootstrap-switch/js/bootstrap-switch.min.js');
+        $this->addCSS(_PS_MODULE_DIR_ . 'advancedvatmanager/libs/bootstrap-switch/css/bootstrap-switch.min.css');
+        $this->addJS(_PS_MODULE_DIR_ . 'advancedvatmanager/libs/bootstrap-switch/js/bootstrap-switch.min.js');
 
-        $this->addCSS('/modules/advancedvatmanager/views/css/admin/AdminCustomersVatManager/vat_manager.css');
-        $this->addJS('/modules/advancedvatmanager/views/js/admin/AdminCustomersVatManager/vat_manager.js');
+        $this->addCSS(_PS_MODULE_DIR_ . 'advancedvatmanager/views/css/admin/AdminCustomersVatManager/vat_manager.css');
+        $this->addJS(_PS_MODULE_DIR_ . 'advancedvatmanager/views/js/admin/AdminCustomersVatManager/vat_manager.js');
     }
 
     /**
@@ -275,10 +275,11 @@ class AdminCustomersVatManagerController extends ModuleAdminController
     public function initToolbar()
     {
         parent::initToolbar();
+
         $this->toolbar_title = $this->meta_title;
 
         // Remove add new button
-        unset($this->toolbar_btn['new']);
+         unset($this->toolbar_btn['new']);
     }
 
     /**
@@ -382,7 +383,7 @@ class AdminCustomersVatManagerController extends ModuleAdminController
         $tpl_statistics = $this->context->smarty->createTemplate(_PS_MODULE_DIR_ .'advancedvatmanager/views/templates/admin/AdminCustomersVatManager/vat_statistics.tpl');
         $tpl_popup = $this->context->smarty->createTemplate(_PS_MODULE_DIR_ .'advancedvatmanager/views/templates/admin/AdminCustomersVatManager/checkCustomerVAT.tpl');
 
-        $countries_ID = json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true);
+        $countries_ID = CustomersVAT::getCountriesIDForValidation();
         if (!empty($countries_ID)) {
             $countries = array();
             foreach ($countries_ID as $country_id) {
@@ -807,7 +808,13 @@ class AdminCustomersVatManagerController extends ModuleAdminController
         if (Tools::getValue('token')) {
             $results = CustomersVAT::getCustomerAddresses();
             if (filter_var(Tools::getValue('scanFromLastMode'), FILTER_VALIDATE_BOOLEAN) === true) {
-                $results = CustomersVAT::getCustomerAddresses(CustomersVAT::getLastCustomerAddressChecked());
+                $remaining_address = CustomersVAT::getRemainCustomersAddressToCheck();
+                if ($remaining_address) {
+                    $results = CustomersVAT::getCustomerAddresses($remaining_address);
+                }
+                else {
+                    $results = false;
+                }
             }
             else {
                 $results = CustomersVAT::getCustomerAddresses();
@@ -860,7 +867,7 @@ class AdminCustomersVatManagerController extends ModuleAdminController
                 }
                 else {
                     CustomersVAT::deleteByIDAddress($vat_address['id_address']);
-                    if ($result = Db::getInstance()->update('address', array('deleted' => '1'), 'id_address ='.(int)$id_address)) {
+                    if ($result = Db::getInstance()->update('address', array('deleted' => '1'), 'id_address ='.(int)$vat_address['id_address'])) {
                         $this->message['success'] = sprintf($this->l('The address with ID#%s has been deleted','AdminCustomersVatManager'),$vat_address['id_address']);
                     }
                     else {

@@ -153,7 +153,7 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
                 foreach ([$priceModOldA, $priceModOldB] as $value){
                     if(!empty($value)){
                         $priceMod = $value;
-                    continue;
+                        continue;
                     }
                 }
 

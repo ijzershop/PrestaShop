@@ -1,25 +1,25 @@
 <?php
 /**
- * 2022 - Keyrnel
- *
- * NOTICE OF LICENSE
- *
- * The source code of this module is under a commercial license.
- * Each license is unique and can be installed and used on only one shop.
- * Any reproduction or representation total or partial of the module, one or more of its components,
- * by any means whatsoever, without express permission from us is prohibited.
- * If you have not received this module from us, thank you for contacting us.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future.
- *
- * @author    Keyrnel
- * @copyright 2022 - Keyrnel
- * @license   commercial
- * International Registered Trademark & Property of Keyrnel
- */
+* 2022 - Keyrnel
+*
+* NOTICE OF LICENSE
+*
+* The source code of this module is under a commercial license.
+* Each license is unique and can be installed and used on only one shop.
+* Any reproduction or representation total or partial of the module, one or more of its components,
+* by any means whatsoever, without express permission from us is prohibited.
+* If you have not received this module from us, thank you for contacting us.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade this module to newer
+* versions in the future.
+*
+* @author    Keyrnel
+* @copyright 2022 - Keyrnel
+* @license   commercial
+* International Registered Trademark & Property of Keyrnel
+*/
 
 namespace Keyrnel\CartRuleExtender\Core\Cart;
 
@@ -167,14 +167,14 @@ class Calculator
      *
      * @throws \Exception
      */
-    public function getTotal($ignoreProcessedFlag = false, $total_discounts = false)
+    public function getTotal($ignoreProcessedFlag = false)
     {
         if (!$this->isProcessed && !$ignoreProcessedFlag) {
             throw new \Exception('Cart must be processed before getting its total');
         }
 
         $amount = $this->calculator->getRowTotalWithoutDiscount();
-        $amount = $amount->sub($this->rounded($this->getDiscountTotal($total_discounts)));
+        $amount = $amount->sub($this->rounded($this->getDiscountTotal()));
         $shippingFees = $this->calculator->getFees()->getInitialShippingFees();
         if (null !== $shippingFees) {
             $amount = $amount->add($this->rounded($shippingFees));
@@ -192,12 +192,12 @@ class Calculator
      *
      * @throws \Exception
      */
-    public function getDiscountTotal($total_discounts = false)
+    public function getDiscountTotal()
     {
         $amount = new AmountImmutable();
         $isFreeShippingAppliedToAmount = false;
         foreach ($this->cartRuleCalculator->getCartRulesData() as $cartRule) {
-            if ((bool)$cartRule->getRuleData()['free_shipping']) {
+            if ((bool) $cartRule->getRuleData()['free_shipping']) {
                 if ($isFreeShippingAppliedToAmount) {
                     $initialShippingFees = $this->calculator->getFees()->getInitialShippingFees();
                     $amount = $amount->sub($initialShippingFees);
@@ -205,21 +205,16 @@ class Calculator
                 $isFreeShippingAppliedToAmount = true;
             }
 
-            if ($total_discounts && $cartRule->getRuleData()['reduction_product'] === 0 && (float)$cartRule->getRuleData()['reduction_amount'] > 0) {
-                $reductionAmount = (float)$cartRule->getRuleData()['reduction_amount'];
-                $amount = $amount->add(new AmountImmutable($reductionAmount, $reductionAmount / 1.21));
-            } else {
-                $amount = $amount->add($cartRule->getDiscountApplied());
-            }
+            $amount = $amount->add($cartRule->getDiscountApplied());
         }
-        if (!$total_discounts) {
-            $allowedMaxDiscount = $this->calculator->getRowTotalWithoutDiscount()
-                ->add($this->cartRuleCalculator->getAllowedMaxDiscountFees());
 
-            // discount cannot be above total cart price
-            if ($amount > $allowedMaxDiscount) {
-                $amount = $allowedMaxDiscount;
-            }
+        $allowedMaxDiscount = $this->calculator->getRowTotalWithoutDiscount()
+            ->add($this->cartRuleCalculator->getAllowedMaxDiscountFees())
+        ;
+
+        // discount cannot be above total cart price
+        if ($amount > $allowedMaxDiscount) {
+            $amount = $allowedMaxDiscount;
         }
 
         return $amount;
@@ -235,7 +230,7 @@ class Calculator
         $computePrecision = $this->getComputePrecision();
 
         if (null === $computePrecision) {
-            $currency = new \Currency((int)$this->calculator->getCart()->id_currency);
+            $currency = new \Currency((int) $this->calculator->getCart()->id_currency);
             $computePrecision = (new ComputingPrecision())->getPrecision($currency->precision);
         }
 

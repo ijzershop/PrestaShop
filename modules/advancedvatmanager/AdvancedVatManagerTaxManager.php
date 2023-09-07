@@ -35,8 +35,8 @@ class AdvancedVatManagerTaxManager implements TaxManagerInterface
             else {
                 $noTax = ValidationEngine::checkNoTax($cached_address->id_customer, $cached_address->id, $cached_address->id_country);
             } 
-            // Change customer default group when address is selected by customer (delivery address)).
-            if (Configuration::get('ADVANCEDVATMANAGER_CHANGE_DEFAULT_GROUP_WITHADDRESS') == 1) {
+            // Change customer default group when address is selected by customer (delivery address)) except when address is deleted.
+            if (Configuration::get('ADVANCEDVATMANAGER_CHANGE_DEFAULT_GROUP_WITHADDRESS') == 1 && !Tools::getValue('deleteAddress') && !Tools::isSubmit('delete')) {
                 ValidationEngine::changeCustomerGroupsByAddress($cached_address->id, $cached_address->id_customer);
             }
             // Save customer vat data in cookie to get it in some places where static variables are not executed.

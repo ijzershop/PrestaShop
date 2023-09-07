@@ -1,25 +1,25 @@
 <?php
 /**
-* 2022 - Keyrnel
-*
-* NOTICE OF LICENSE
-*
-* The source code of this module is under a commercial license.
-* Each license is unique and can be installed and used on only one shop.
-* Any reproduction or representation total or partial of the module, one or more of its components,
-* by any means whatsoever, without express permission from us is prohibited.
-* If you have not received this module from us, thank you for contacting us.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade this module to newer
-* versions in the future.
-*
-* @author    Keyrnel
-* @copyright 2022 - Keyrnel
-* @license   commercial
-* International Registered Trademark & Property of Keyrnel
-*/
+ * 2022 - Keyrnel
+ *
+ * NOTICE OF LICENSE
+ *
+ * The source code of this module is under a commercial license.
+ * Each license is unique and can be installed and used on only one shop.
+ * Any reproduction or representation total or partial of the module, one or more of its components,
+ * by any means whatsoever, without express permission from us is prohibited.
+ * If you have not received this module from us, thank you for contacting us.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future.
+ *
+ * @author    Keyrnel
+ * @copyright 2022 - Keyrnel
+ * @license   commercial
+ * International Registered Trademark & Property of Keyrnel
+ */
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -27,13 +27,6 @@ if (!defined('_PS_VERSION_')) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Keyrnel\CartRuleExtender\Core\Cart\Calculator;
-use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
-use PrestaShop\PrestaShop\Adapter\Entity\Db;
-use PrestaShop\PrestaShop\Adapter\Entity\HelperForm;
-use PrestaShop\PrestaShop\Adapter\Entity\Language;
-use PrestaShop\PrestaShop\Adapter\Entity\Media;
-use PrestaShop\PrestaShop\Adapter\Entity\Module;
-use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 
 class KlCartRuleExtender extends Module
 {
@@ -43,7 +36,7 @@ class KlCartRuleExtender extends Module
     {
         $this->name = 'klcartruleextender';
         $this->tab = 'others';
-        $this->version = '1.0.1';
+        $this->version = '1.0.2';
         $this->author = 'Keyrnel';
         $this->module_key = '5648da966a09f9f48cce03a931b84cfe';
         $this->bootstrap = true;
@@ -412,7 +405,7 @@ class KlCartRuleExtender extends Module
             $values,
             false,
             true,
-            DB::INSERT_IGNORE
+            Db::INSERT_IGNORE
         );
     }
 
@@ -450,7 +443,7 @@ class KlCartRuleExtender extends Module
             $values,
             false,
             true,
-            DB::INSERT_IGNORE
+            Db::INSERT_IGNORE
         );
     }
 
@@ -523,19 +516,27 @@ class KlCartRuleExtender extends Module
 
     public function hookActionAdminControllerSetMedia($params)
     {
-        $controller = Tools::getValue('controller');
-
-        if ('AdminCartRules' != $controller) {
+        if ('AdminCartRules' != Tools::getValue('controller')
+            || !($id_cart_rule = (int) Tools::getValue('id_cart_rule'))
+        ) {
             return;
         }
 
-        $id_cart_rule = (int) Tools::getValue('id_cart_rule');
         $cart_rule_fees = [
             'value' => (int) $this->isCartRuleIncludingFees($id_cart_rule),
             'disabled' => (int) $this->isCartRuleIncludingFees($id_cart_rule, false),
         ];
 
-        Media::addJsDefL('cart_rule_fees', json_encode($cart_rule_fees));
+        $trans = [
+            'yes' => $this->l('Yes'),
+            'no' => $this->l('No'),
+            'label' => $this->l('Include shipping and wrapping costs'),
+            'tooltip' => $this->l('Include shipping and wrapping costs'),
+        ];
+
+        Media::addJsDefL('klCartRuleExtenderFees', json_encode($cart_rule_fees));
+        Media::addJsDefL('klCartRuleExtenderTrans', json_encode($trans));
+
         $this->context->controller->addJS($this->_path . 'views/js/admin/bo-cart-rule.js');
     }
 }

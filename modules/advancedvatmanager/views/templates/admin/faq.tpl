@@ -17,7 +17,7 @@
 </div> 
 <div class="faq_item">
     <h4 class="faq_title">{l s='Whenever I run the CRON task to check customer VAT numbers, does the process check all the addresses in the database again?' mod='advancedvatmanager'}</h4>
-    <p>{l s='The system will check all customer addresses stored in the database unless the "Continue scanning process from last scanned address" option is enabled in the CRON settings section.' mod='advancedvatmanager'}</p>
+    <p>{l s='The system will check all customer addresses stored in the database unless the "Continue scanning process from last scanned address" option is enabled in the CRON settings section. This option allows the system to check addresses that could not be scanned before and scan them to validate their VAT numbers. It is very useful when the scanning system is interrupted for some reason or does not finish scanning all the addresses that meet the scan requirements.' mod='advancedvatmanager'}</p>
 </div>
 <div class="faq_item">
     <h4 class="faq_title">{l s='I am using a Marketplaces module that imports customer data and orders generated on the platform. However, this platform controls the prices and tax allocation of these orders. How can I configure the module so that it does not try to validate the VAT numbers of the imported customer data by the marketplace module and allows the marketplace to manage the taxes and prices of the orders that are imported?' mod='advancedvatmanager'}</h4>

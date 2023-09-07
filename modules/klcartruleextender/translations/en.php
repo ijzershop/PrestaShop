@@ -1,25 +1,25 @@
 <?php
 /**
-* 2022 - Keyrnel
-*
-* NOTICE OF LICENSE
-*
-* The source code of this module is under a commercial license.
-* Each license is unique and can be installed and used on only one shop.
-* Any reproduction or representation total or partial of the module, one or more of its components,
-* by any means whatsoever, without express permission from us is prohibited.
-* If you have not received this module from us, thank you for contacting us.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade this module to newer
-* versions in the future.
-*
-* @author    Keyrnel
-* @copyright 2022 - Keyrnel
-* @license   commercial
-* International Registered Trademark & Property of Keyrnel
-*/
+ * 2022 - Keyrnel
+ *
+ * NOTICE OF LICENSE
+ *
+ * The source code of this module is under a commercial license.
+ * Each license is unique and can be installed and used on only one shop.
+ * Any reproduction or representation total or partial of the module, one or more of its components,
+ * by any means whatsoever, without express permission from us is prohibited.
+ * If you have not received this module from us, thank you for contacting us.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future.
+ *
+ * @author    Keyrnel
+ * @copyright 2022 - Keyrnel
+ * @license   commercial
+ * International Registered Trademark & Property of Keyrnel
+ */
 global $_MODULE;
 $_MODULE = [];
 $_MODULE['<{klcartruleextender}prestashop>klcartruleextender_d776421a2786e8b99b164a87fda2ce61'] = 'Cart rule extender - Add shipping and wrapping cost';
@@ -36,3 +36,4 @@ $_MODULE['<{klcartruleextender}prestashop>klcartruleextender_b5f8980ef3f37f0150f
 $_MODULE['<{klcartruleextender}prestashop>klcartruleextender_c9cc8cce247e49bae79f15173ce97354'] = 'Save';
 $_MODULE['<{klcartruleextender}prestashop>klcartruleextender_eb7d61eac6ad940a9b79ecce7a60be37'] = 'Automatically applied to gift cards';
 $_MODULE['<{klcartruleextender}prestashop>klcartruleextender_35aa1a5a6ba0dfd57b610bf16ff189f9'] = 'Enable this option to automatically include shipping or/and wrapping cost for gift cards.';
+$_MODULE['<{klcartruleextender}prestashop>klcartruleextender_1eaedba09d418618e120282669312e78'] = 'Include shipping and wrapping costs';

@@ -41,7 +41,7 @@ class AdvancedVatManager extends Module
     {
         $this->name = 'advancedvatmanager';
         $this->tab = 'checkout';
-        $this->version = '1.6.1';
+        $this->version = '1.6.2.2';
         $this->author = 'Liewebs';
         $this->module_key = 'a0ec580e4f441fe99e13f86d087bf8a7';
         $this->author_address = '0xFA5b20b21D2663724fd15b77aBa7B209F032D2cC';
@@ -111,6 +111,7 @@ class AdvancedVatManager extends Module
             'SYSTEM_FAILS_WITH_ALIAS' => $this->l('The address with alias [%s] has the VAT number [%s] pending to be validated because the API system failed at the time of registration of this address and could not be validated correctly. Please go to the mentioned address and save the data of this address again to proceed to the validation of the VAT number again.')
         );
 
+
         // Check if the module OPC by Presteamshop is enabled and interface V5 activated.
         $this->opc_presteamshop_enabled = Module::isEnabled('onepagecheckoutps') && method_exists(Module::getInstanceByName('onepagecheckoutps'), 'isCheckoutBetaEnabled') && Module::getInstanceByName('onepagecheckoutps')->isCheckoutBetaEnabled() && (Configuration::get('OPC_ENABLE_DEBUG_NEW_CHECKOUT') == 0 || Configuration::get('OPC_ENABLE_DEBUG_NEW_CHECKOUT') == 1 && in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('OPC_IP_CHECKOUT_BETA'))));
     }
@@ -168,6 +169,7 @@ class AdvancedVatManager extends Module
             !Configuration::updateValue('ADVANCEDVATMANAGER_DISABLE_FORMODULES', '') ||
             !Configuration::updateValue('ADVANCEDVATMANAGER_DISPLAY_WARNING_MESSAGE_ADDRESS', 1) ||
             !Configuration::updateValue('ADVANCEDVATMANAGER_NOTALLOW_CHECKOUT_WITHOUT_VALIDATION', 1) ||
+            !Configuration::updateValue('ADVANCEDVATMANAGER_DISPLAY_VATEXEMPT_LABEL_PRODUCT', 1) ||
             !Configuration::updateValue('ADVANCEDVATMANAGER_EMAIL_ADDRESS', Configuration::get('PS_SHOP_EMAIL')) ||
             !Configuration::updateValue('ADVANCEDVATMANAGER_SENDAPIALERT', 0) ||
             !Configuration::updateValue('ADVANCEDVATMANAGER_SEND_CUSTOMER_EMAIL_API_FAIL_ORDER', 0) ||
@@ -222,7 +224,7 @@ class AdvancedVatManager extends Module
             !$this->registerHook('displayExpressCheckout') ||
             !$this->registerHook('displayInvoiceLegalFreeText') ||
             !$this->registerHook('displayProductPriceBlock') ||
-            !$this->registerHook('displayCustomerAccountForm') ||
+            !$this->registerHook('createAccountForm') ||
             !$this->registerHook('actionAdminControllerSetMedia') ||
             !$this->registerHook('actionFrontControllerSetMedia') ||
             !$this->registerHook('actionValidateCustomerAddressForm') ||
@@ -250,7 +252,7 @@ class AdvancedVatManager extends Module
             return false;
         }
         /* Install configuration values for Customer group assignation by countries */
-        $countries = json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true);
+        $countries = CustomersVAT::getCountriesIDForValidation();
         if (!empty($countries)) {
             foreach ($countries as $country) {
                 Configuration::updateValue('ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_COUNTRY_'.$country, 0);
@@ -261,11 +263,6 @@ class AdvancedVatManager extends Module
         include(dirname(__file__) . '/sql/install.php');
         include(dirname(__file__) . '/sql/install_uk.php');// Install UK states
         include(dirname(__file__) . '/sql/install_no.php');// Install Norwegian states
-
-        // Remove override OrderController and use Hook actionCheckoutRender instead
-        if (version_compare(_PS_VERSION_, '1.7.8.0', '>=')) {
-            $this->removeOverride('OrderController');
-        }
 
         // Remove override TaxRulesTaxManager
         if (version_compare(_PS_VERSION_, '1.7.0.0', '>=')) {
@@ -292,6 +289,7 @@ class AdvancedVatManager extends Module
             !Configuration::deleteByName('ADVANCEDVATMANAGER_DISABLE_FORMODULES') ||
             !Configuration::deleteByName('ADVANCEDVATMANAGER_DISPLAY_WARNING_MESSAGE_ADDRESS') ||
             !Configuration::deleteByName('ADVANCEDVATMANAGER_NOTALLOW_CHECKOUT_WITHOUT_VALIDATION') ||
+            !Configuration::deleteByName('ADVANCEDVATMANAGER_DISPLAY_VATEXEMPT_LABEL_PRODUCT') ||
             !Configuration::deleteByName('ADVANCEDVATMANAGER_COUNTRY') ||
             !Configuration::deleteByName('ADVANCEDVATMANAGER_EMAIL_ADDRESS') ||
             !Configuration::deleteByName('ADVANCEDVATMANAGER_SENDAPIALERT') ||
@@ -384,6 +382,11 @@ class AdvancedVatManager extends Module
             $oc = new AdvancedVatManagerOC();
             $oc->removeModuleOverride('advancedantispamsystem', 'OrderController', 'postProcess');
         }
+        if (Module::isEnabled('dniverificator') && version_compare(_PS_VERSION_, '1.7.7.0', '<')) {
+            $oc = new AdvancedVatManagerOC();
+            $oc->removeModuleOverride('dniverificator', 'AdminAddressesController', 'processSave');
+            $oc->removeModuleOverride('dniverificator', 'AdminAddressesController', 'processAdd');
+        }
         return parent::disable() && $this->installThirtyPartyModulesOverridesForCompatibility();
     }
 
@@ -396,10 +399,12 @@ class AdvancedVatManager extends Module
     {
         if (Module::isEnabled('dniverificator')) {
             $dniVerificator = Module::getInstanceByName('dniverificator');
-            $dniVerificator->removeOverride('AddressController');
             $dniVerificator->removeOverride('CustomerAddressForm');
-            $dniVerificator->addOverride('AddressController');
             $dniVerificator->addOverride('CustomerAddressForm');
+            if (version_compare(_PS_VERSION_, '1.7.7.0', '<')) {
+                $dniVerificator->removeOverride('AdminAddressesController');
+                $dniVerificator->addOverride('AdminAddressesController');
+            }
         }
 
         // Compatiblity between our modules and OPC by Presteamshop
@@ -444,6 +449,17 @@ class AdvancedVatManager extends Module
             $hideprice->removeOverride('OrderController');
             $hideprice->addOverride('OrderController');
         }
+        if (Module::isEnabled('gwadvancedinvoice')) {
+            $gwadvancedinvoice = Module::getInstanceByName('gwadvancedinvoice');
+            $gwadvancedinvoice->removeOverride('HTMLTemplateInvoice');
+            $gwadvancedinvoice->addOverride('HTMLTemplateInvoice');
+        }
+        if (Module::isEnabled('ets_payment_with_fee') && version_compare(Module::getInstanceByName('ets_payment_with_fee')->version, '2.3.9', '>=')) {
+            $ets_payment_with_fee = Module::getInstanceByName('ets_payment_with_fee');
+            $ets_payment_with_fee->removeOverride('HTMLTemplateInvoice');
+            $ets_payment_with_fee->addOverride('HTMLTemplateInvoice');
+        }
+
         ValidationEngine::cleanCache();
         return true;
     }
@@ -457,10 +473,6 @@ class AdvancedVatManager extends Module
     {
         $oc = new AdvancedVatManagerOC();
         if (Module::isEnabled('dniverificator')) {
-            $oc->removeModuleOverride('dniverificator', 'AddressController', 'processSubmitAddress');
-            $oc->removeModuleOverride('dniverificator', 'AdminAddressesController', 'processSave');
-            $oc->removeModuleOverride('dniverificator', 'AdminAddressesController', 'processAdd');
-            $oc->removeModuleOverride('dniverificator', 'Address', 'validateField');
             $oc->removeModuleOverride('dniverificator', 'CustomerAddressForm', 'getTemplateVariables');
         }
         // Compatibility with another modules by Liewebs
@@ -488,6 +500,12 @@ class AdvancedVatManager extends Module
         }
         if (Module::isEnabled('hideprice')) {
             $oc->removeModuleOverride('hideprice', 'OrderController', 'postProcess');
+        }
+        if (Module::isEnabled('gwadvancedinvoice')) {
+            $oc->removeModuleOverride('gwadvancedinvoice', 'HTMLTemplateInvoice', 'getTaxTabContent');
+        }
+        if (Module::isEnabled('ets_payment_with_fee') && version_compare(Module::getInstanceByName('ets_payment_with_fee')->version, '2.3.9', '>=')) {
+            $oc->removeModuleOverride('ets_payment_with_fee', 'HTMLTemplateInvoice', 'getTaxTabContent');
         }
         ValidationEngine::cleanCache();
         return true;
@@ -525,6 +543,7 @@ class AdvancedVatManager extends Module
             $tab->id_parent = 0;
         }
         $tab->module = $this->name;
+        $tab->enabled = true;
         return $tab->save();
     }
 
@@ -730,6 +749,12 @@ class AdvancedVatManager extends Module
         $this->output = '';
         $this->checkAddressFormat();
         $this->checkAvailableCurrency();
+        if (Module::isEnabled($this->name) && Configuration::get('ADVANCEDVATMANAGER_ADMINVALIDATION')== 1 || Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION')== 1) {
+            // Checks if scan process has been performed first time.
+            if (CustomersVAT::getCustomerAddresses() && CustomersVAT::isEmptyVATList()) {
+                $this->adminDisplayWarning('<strong>[Advanced VAT Manager]</strong> '.$this->l('The VAT number scan has not yet been carried out in the section [customers -> VAT Management]. Scanning is required to verify and validate VAT numbers which are already in the database before the module was installed.'));
+            }
+        }
         /**
          * If values have been submitted in the form, process.
          */
@@ -750,7 +775,7 @@ class AdvancedVatManager extends Module
         $this->context->smarty->assign(array(
             'module_dir' => $this->_path,
             'changelog' => file(_PS_MODULE_DIR_.$this->name.'/Changelog.txt'),
-            'checkvat_cron_url' => Tools::getShopDomainSsl(true) . _MODULE_DIR_ . 'advancedvatmanager/checkcustomervat-cron'.(version_compare(_PS_VERSION_, '1.7.0.0', '>=')?'17':'16').'.php?token=' . Tools::substr(Tools::encrypt('advancedvatmanager'), 0, 12) . '&id_shop=' . $this->context->shop->id.'&id_lang='.$this->context->language->id,
+            'checkvat_cron_url' => Tools::getShopDomainSsl(true) . _MODULE_DIR_ . 'advancedvatmanager/checkcustomervat-cron.php?token=' . Tools::substr(Tools::encrypt('advancedvatmanager'), 0, 12) . '&id_shop=' . $this->context->shop->id.'&id_lang='.$this->context->language->id,
             'getGBPThreshold' => $this->getCurrencyAmount('GBP', AVM_BREXIT_LIMIT).(method_exists('Currency', 'getSymbol')?$this->context->currency->getSymbol():$this->context->currency->sign),
             'getNOKThreshold' => $this->getCurrencyAmount('NOK', AVM_NOK_YEAR_LIMIT).(method_exists('Currency', 'getSymbol')?$this->context->currency->getSymbol():$this->context->currency->sign),
             'getNOKProductThreshold' => $this->getCurrencyAmount('NOK', AVM_NOK_PRODUCT_LIMIT).(method_exists('Currency', 'getSymbol')?$this->context->currency->getSymbol():$this->context->currency->sign),
@@ -758,7 +783,7 @@ class AdvancedVatManager extends Module
             'faq_content' => $this->context->smarty->fetch($this->local_path . 'views/templates/admin/faq.tpl'),
             'troubleshooting_content' => $this->context->smarty->fetch($this->local_path . 'views/templates/admin/troubleshooting.tpl'),
             'opc_presteamshop_enabled' => $this->opc_presteamshop_enabled,
-            'currency_cron_update' => Tools::getShopDomainSsl(true) . _MODULE_DIR_ . 'advancedvatmanager/currencyrateupdate-cron'.(version_compare(_PS_VERSION_, '1.7.0.0', '>=')?'17':'16').'.php?token=' . Tools::substr(Tools::encrypt('advancedvatmanager'), 0, 12) . '&id_shop=' . $this->context->shop->id.'&id_lang='.$this->context->language->id,
+            'currency_cron_update' => Tools::getShopDomainSsl(true) . _MODULE_DIR_ . 'advancedvatmanager/currencyrateupdate-cron.php?token=' . Tools::substr(Tools::encrypt('advancedvatmanager'), 0, 12) . '&id_shop=' . $this->context->shop->id.'&id_lang='.$this->context->language->id,
             'currencies_installed' => Currency::getCurrencies()
         ));
         Media::addJsDef(array(
@@ -854,7 +879,8 @@ class AdvancedVatManager extends Module
         foreach (Country::getCountries($this->context->language->id, false) as $country) {
             $countries[] = array('id' => $country['id_country'], 'name' => $country['name']);
             $countries_2[] = array('id' => $country['id_country'], 'name' => $country['name']);
-            if (Configuration::get('ADVANCEDVATMANAGER_COUNTRY') && in_array($country['id_country'], json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true))) {
+
+            if (in_array($country['id_country'], CustomersVAT::getCountriesIDForValidation())) {
                 $groupAssignment[] = array('type' => 'select','label' => sprintf($this->l('%s'),$country['name']),'desc' => sprintf($this->l('Customer group assignation for %s.'),$country['name']),'name' => 'ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_COUNTRY_'.$country['id_country'],'options' => array('query' => $customer_groups_2,'id' => 'id','name' => 'name'));
             }
         }
@@ -908,6 +934,7 @@ class AdvancedVatManager extends Module
                         'icon' => 'fas fa-power-off'
                     ),
                     'description' => $this->l('The correct countries for validation are selected by default except the default country of the store, due to the fact that, following the regulation of intra-community operations, the validation of VAT numbers must be carried out for customers who reside outside the country where the store is located and also belong to the Union european. If still, you want to also validate the VAT numbers of customers who reside within the country where the store is located, you must add it to the list of countries for validation. In a normal situation, that option is predefined and should not be changed. Take in consideration that North of Ireland is included for intra-communitary operations and belongs to United Kingdom (England). If you have enabled VOEC operations, Norway country will be selected in this option.'),
+                    'warning' => $this->l('IMPORTANT: This module controls the exemption or collection of taxes depending on the conditions of the client according to the legislation in intra-community operations, VOEC, Brexit, etc...However, it does not manage the types of taxes, their names and the amount of their percentage. You must try to have the tax rules applied to each of the countries well configured so that this module and the application of taxes in the store work correctly.'),
                     'input' => array(
                         array(
                             'type' => 'switch',
@@ -949,8 +976,8 @@ class AdvancedVatManager extends Module
                             'label' => $this->l('Disable validation in modules'),
                             'width' => '300px',
                             'class' => 'advancedvatmanager_modules_selector',
-                            'desc' => $this->l("Select the available modules to disable the validation. In this list is displayed marketplace modules installed in your shop that perform imports/synchronization of customers and orders. These modules manage customer data and orders from their platforms, inserting this data directly into the database (taxes, order amount), so for reasons of maintaining the integrity of this data, the validation of the data must be deactivated from module during the sync/import process. If the list is empty means that you have not those modules installed."),
-                            'hint' => $this->l("CTRL and click or click and drag for multiple options selection."),
+                            'desc' => $this->l('Select the available modules to disable the validation. In this list is displayed marketplace modules installed in your shop that perform imports/synchronization of customers and orders. These modules manage customer data and orders from their platforms, inserting this data directly into the database (taxes, order amount), so for reasons of maintaining the integrity of this data, the validation of the data must be deactivated from module during the sync/import process. If the list is empty means that you have not those modules installed.'),
+                            'hint' => $this->l('CTRL and click or click and drag for multiple options selection.'),
                             'name' => 'ADVANCEDVATMANAGER_DISABLE_FORMODULES[]',
                             'multiple' => true,
                             'options' => array(
@@ -1011,6 +1038,15 @@ class AdvancedVatManager extends Module
                                 'is_bool' => true,
                                 'desc' => $this->l('This option does not allow the customer to continue with the purchase process if the selected address has the VAT number or company name field that must be validated or filled in (Depending on the validation and VAT field configuration options selected). Useful option for clients who already had registered addresses in the database'),
                                 'hint' => $this->l('Only works in Prestashop 1.7 or higher'),
+                                'identifier' => 'id',
+                                'values' => $switch
+                            ),
+                            array(
+                                'type' => 'switch',
+                                'label' => $this->l('Display Tax exempt label'),
+                                'name' => 'ADVANCEDVATMANAGER_DISPLAY_VATEXEMPT_LABEL_PRODUCT',
+                                'is_bool' => true,
+                                'desc' => $this->l('Displays the [Tax Exempt] label on the price on the product page when a customer is exempt from tax because they meet the conditions.'),
                                 'identifier' => 'id',
                                 'values' => $switch
                             ),
@@ -1250,6 +1286,7 @@ class AdvancedVatManager extends Module
                         'title' => $this->l('Invoice settings'),
                         'icon' => 'fal fa-file-invoice'
                     ),
+                    'description' => $this->l('When a custom text for invoices is configured from this section, the module will include these texts in the orders that it detects are tax exempt and whenever that order has been generated after the installation of the module. If you want the module to include the texts in invoices of previous orders, you must import the orders from the [Orders Management] section.'),
                     'input' => array(
                         array(
                             'type' => 'textarea',
@@ -1598,7 +1635,7 @@ class AdvancedVatManager extends Module
             $custom_text_product_price[$language['id_lang']] = Tools::getValue('ADVANCEDVATMANAGER_PRODUCT_CUSTOM_LABEL_' . $language['id_lang'], Configuration::get('ADVANCEDVATMANAGER_PRODUCT_CUSTOM_LABEL', $language['id_lang']));
         }
 
-        $countries = json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true);
+        $countries = CustomersVAT::getCountriesIDForValidation();
         if (!empty($countries)) {
             foreach ($countries as $country) {
                 $config_fields_2['ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_COUNTRY_'.$country] = Configuration::get('ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_COUNTRY_'.$country);
@@ -1611,6 +1648,7 @@ class AdvancedVatManager extends Module
             'ADVANCEDVATMANAGER_DISABLE_FORMODULES[]' => json_decode(Configuration::get('ADVANCEDVATMANAGER_DISABLE_FORMODULES'), true),
             'ADVANCEDVATMANAGER_DISPLAY_WARNING_MESSAGE_ADDRESS' => Configuration::get('ADVANCEDVATMANAGER_DISPLAY_WARNING_MESSAGE_ADDRESS'),
             'ADVANCEDVATMANAGER_NOTALLOW_CHECKOUT_WITHOUT_VALIDATION' => Configuration::get('ADVANCEDVATMANAGER_NOTALLOW_CHECKOUT_WITHOUT_VALIDATION'),
+            'ADVANCEDVATMANAGER_DISPLAY_VATEXEMPT_LABEL_PRODUCT' => Configuration::get('ADVANCEDVATMANAGER_DISPLAY_VATEXEMPT_LABEL_PRODUCT'),
             'ADVANCEDVATMANAGER_COUNTRY[]' => json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true),
             'ADVANCEDVATMANAGER_EMAIL_ADDRESS' => Configuration::get('ADVANCEDVATMANAGER_EMAIL_ADDRESS'),
             'ADVANCEDVATMANAGER_SENDAPIALERT' => Configuration::get('ADVANCEDVATMANAGER_SENDAPIALERT'),
@@ -1946,7 +1984,7 @@ class AdvancedVatManager extends Module
     public function checkAddressFormat()
     {
         if (Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION') ||Configuration::get('ADVANCEDVATMANAGER_ADMINVALIDATION')) {
-            $countries = json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true);
+            $countries = CustomersVAT::getCountriesIDForValidation();
             if (!empty($countries)) {
                 foreach ($countries as $idCountry) {
                     $country_name = Country::getNameById($this->context->language->id, $idCountry);
@@ -2061,10 +2099,8 @@ class AdvancedVatManager extends Module
                         (int)$this->context->shop->id,
                         null,
                         null)
-                    !== false) {
-                        return true;
-                }
-                else {
+                    === false) {
+
                     PrestaShopLoggerCore::addLog('Advanced VAT Manager - '.$this->l('There is an error while was sending email. The email has not been sent.'));
                     return false;
                 }
@@ -2116,7 +2152,6 @@ class AdvancedVatManager extends Module
             $checkoutWarning = [];
             $address = new Address($id_address);
             if ($id_address) {
-                $advancedvatmanager = Module::getInstanceByName('advancedvatmanager');
                 if (Configuration::get('ADVANCEDVATMANAGER_VATFIELD') == 'required') {
                     if (CustomersVAT::checkCustomerVATInvalid($this->context->customer->id, $address->id) ) {
                         $checkoutWarning = ['id_address' => $address->id, 'exception' => $address->vat_number?sprintf($this->controller_msg['VAT_NOT_VALID_REQUIRED_WITH_NUMBER'], $this->l('VAT number'), $address->vat_number):$this->controller_msg['VAT_EMPTY_REQUIRED']];
@@ -2407,13 +2442,15 @@ class AdvancedVatManager extends Module
      */
      public function hookActionOpcValidatePayment()
      {
-        $message = $this->checkNotAllowCheckout();
-        if ($message) {
-            return array($this->checkNotAllowCheckout());
-        }
-        $message = $this->checkNotAllowCheckoutByVATandCompanyValidation();
-        if ($message) {
-            return $message;
+        if (Module::isEnabled($this->name)) {
+            $message = $this->checkNotAllowCheckout();
+            if ($message) {
+                return array($this->checkNotAllowCheckout());
+            }
+            $message = $this->checkNotAllowCheckoutByVATandCompanyValidation();
+            if ($message) {
+                return $message;
+            }
         }
      }
 
@@ -2424,8 +2461,13 @@ class AdvancedVatManager extends Module
      */
      public function hookActionStepBeforePaymentOPC()
      {
-        if ($this->hookActionNotAllowCheckout) {
-            return array('errors' => array($this->context->controller->errors));
+        if (Module::isEnabled($this->name)) {
+            if ($this->getCustomerAddressWithError($this->context->cart->id_address_delivery)) {
+                return array('errors' => array($this->getCustomerAddressWithError($this->context->cart->id_address_delivery)['exception']));
+            }
+            if ($this->getCustomerAddressWithError($this->context->cart->id_address_invoice)) {
+                return array('errors' => array($this->getCustomerAddressWithError($this->context->cart->id_address_invoice)['exception']));
+            }
         }
      }
 
@@ -2448,15 +2490,19 @@ class AdvancedVatManager extends Module
         if (Module::isEnabled($this->name) && version_compare(_PS_VERSION_, '1.7.0.0', '>=') && Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION') == 1) {
             $formFields = $params['formFields'];
             if (!ValidationEngine::skipVATFieldBycountry($formFields['id_country']->getValue())) {
-                $label = Configuration::get('ADVANCEDVATMANAGER_FIELD_LABEL', $this->context->language->id);
-                $legend = Configuration::get('ADVANCEDVATMANAGER_FIELD_LEGEND', $this->context->language->id);
-                if ($label) {
-                    $formFields['vat_number']->setLabel($label);
+                if (isset($formFields['vat_number'])) {
+                    $label = Configuration::get('ADVANCEDVATMANAGER_FIELD_LABEL', $this->context->language->id);
+                    $legend = Configuration::get('ADVANCEDVATMANAGER_FIELD_LEGEND', $this->context->language->id);
+                    if ($label) {
+                        $formFields['vat_number']->setLabel($label);
+                    }
+                    if ($legend) {
+                        $formFields['vat_number']->addAvailableValue('comment', $legend);
+                    }
                 }
-                if ($legend) {
-                    $formFields['vat_number']->addAvailableValue('comment', $legend);
+                if (isset($formFields['company'])) {
+                    $formFields['company']->addAvailableValue('comment', (Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION')?$this->controller_msg['COMPANY_VALIDATION_COMMENT']:'').' '.(Configuration::get('ADVANCEDVATMANAGER_DISPLAY_WITH_COMPANY')?$this->controller_msg['COMPANY_DISPLAY_COMMENT']:''));
                 }
-                $formFields['company']->addAvailableValue('comment', (Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION')?$this->controller_msg['COMPANY_VALIDATION_COMMENT']:'').' '.(Configuration::get('ADVANCEDVATMANAGER_DISPLAY_WITH_COMPANY')?$this->controller_msg['COMPANY_DISPLAY_COMMENT']:''));
             }
         }
     }
@@ -2494,6 +2540,7 @@ class AdvancedVatManager extends Module
                     if (Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION') == 1) {
                         if ($addresses = CustomersVAT::getCustomerAddressHasCompanyInvalid($this->context->cookie->id_customer)) {
                             foreach ($addresses as $idaddress) {
+                                $address = new Address($idaddress['id_address']);
                                 $alias = $address->alias;
                                 $company = $address->company;
                                 $this->context->controller->warning[] = sprintf($this->controller_msg[$company?'COMPANY_INVALID_WITH_ALIAS':'COMPANY_EMPTY_WITH_ALIAS'],$alias, $company);
@@ -2558,28 +2605,30 @@ class AdvancedVatManager extends Module
      */
     public function hookDisplayInvoiceLegalFreeText($params)
     {
-        $order = $params['order'];
-        $reverseCharge = '';
-        $voec_info = '';
-        $legal_text = '';
-        if ($vatOrder = CustomersOrders::getVATOrderInDB($order->id)) {
-            $brexit = $vatOrder['brexit'];
-            $voec = $vatOrder['voec'];
-            if ((bool)$vatOrder['notax']) {
-                // Inserts Legal free text in invoice
+        if (Module::isEnabled($this->name)) {
+            $order = $params['order'];
+            $reverseCharge = '';
+            $voec_info = '';
+            $legal_text = '';
+            if ($vatOrder = CustomersOrders::getVATOrderInDB($order->id)) {
+                $brexit = $vatOrder['brexit'];
+                $voec = $vatOrder['voec'];
                 if ((bool)$vatOrder['notax']) {
-                    $legal_text = Configuration::get('ADVANCEDVATMANAGER_LEGAL_TEXT', (int)$this->context->language->id, null, (int)$order->id_shop);
+                    // Inserts Legal free text in invoice
+                    if ((bool)$vatOrder['notax']) {
+                        $legal_text = Configuration::get('ADVANCEDVATMANAGER_LEGAL_TEXT', (int)$this->context->language->id, null, (int)$order->id_shop);
+                    }
+                    // Inserts Legal free text in invoice for Brexit
+                    if (Configuration::get('ADVANCEDVATMANAGER_BREXIT_ENABLED') == 1 && $brexit && Configuration::get('ADVANCEDVATMANAGER_BREXIT_VATEXEMPT_LESSTHAN135GBP') == 1) {
+                        $reverseCharge = PHP_EOL.$this->l('Reverse charge: customer to account for VAT to HMRC');
+                    }
                 }
-                // Inserts Legal free text in invoice for Brexit
-                if (Configuration::get('ADVANCEDVATMANAGER_BREXIT_ENABLED') == 1 && $brexit && Configuration::get('ADVANCEDVATMANAGER_BREXIT_VATEXEMPT_LESSTHAN135GBP') == 1) {
-                    $reverseCharge = PHP_EOL.$this->l('Reverse charge: customer to account for VAT to HMRC');
+                // Inserts Legal free text in invoice for VOEC
+                if (Configuration::get('ADVANCEDVATMANAGER_VOEC_ENABLED') == 1 && $voec) {
+                    $voec_info = PHP_EOL.$this->l('Invoice taxed with the tax of the country of destination as it is subject to the regulation of the VOEC scheme.');
                 }
+                return Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int)$this->context->language->id, null, (int)$order->id_shop).$reverseCharge.$voec_info.PHP_EOL.$legal_text;
             }
-            // Inserts Legal free text in invoice for VOEC
-            if (Configuration::get('ADVANCEDVATMANAGER_VOEC_ENABLED') == 1 && $voec) {
-                $voec_info = PHP_EOL.$this->l('Invoice taxed with the tax of the country of destination as it is subject to the regulation of the VOEC scheme.');
-            }
-            return Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int)$this->context->language->id, null, (int)$order->id_shop).$reverseCharge.$voec_info.PHP_EOL.$legal_text;
         }
     }
 
@@ -2591,14 +2640,15 @@ class AdvancedVatManager extends Module
      */
     public function hookActionPDFInvoiceRender($params)
     {
-        $order = new Order($params['order_invoice_list'][0]->id_order);
-        $note = Configuration::get('ADVANCEDVATMANAGER_INVOICE_NOTE', (int)$this->context->language->id, null, (int)$order->id_shop);
-
-        if ($vatOrder =  CustomersOrders::getVATOrderInDB($order->id)) {
-            if ((bool)$vatOrder['notax']) {
-                // Inserts Note in invoice
-                if ($note) {
-                    $params['order_invoice_list'][0]->note = $note.PHP_EOL.$params['order_invoice_list'][0]->note;
+        if (Module::isEnabled($this->name)) {
+            $order = new Order($params['order_invoice_list'][0]->id_order);
+            $note = Configuration::get('ADVANCEDVATMANAGER_INVOICE_NOTE', (int)$this->context->language->id, null, (int)$order->id_shop);
+            if ($vatOrder =  CustomersOrders::getVATOrderInDB($order->id)) {
+                if ((bool)$vatOrder['notax']) {
+                    // Inserts Note in invoice
+                    if ($note) {
+                        $params['order_invoice_list'][0]->note = $note.PHP_EOL.$params['order_invoice_list'][0]->note;
+                    }
                 }
             }
         }
@@ -2643,11 +2693,11 @@ class AdvancedVatManager extends Module
     {
         if (Module::isEnabled($this->name)) {
             $object = $params['object'];
-            if ($object instanceof Address) {
+            if ($object instanceof Address || $object instanceof CustomerAddress) {
                 if (CustomersVAT::checkCustomerAddressExists($object->id_customer, $object->id)) {
                     CustomersVAT::deleteByIDAddress($object->id);
                     // Manage Customer groups
-                    ValidationEngine::manageCustomerGroups($object->id_country, $object->id_customer);
+                    ValidationEngine::manageCustomerGroups($object->id_country, $object->id_customer, $object->id);
                 }
             }
             // Deletes customer from module table
@@ -2669,32 +2719,7 @@ class AdvancedVatManager extends Module
     public function hookActionObjectAddAfter($params)
     {
         if (Module::isEnabled($this->name)) {
-            if (Configuration::get('ADVANCEDVATMANAGER_ADMINVALIDATION')== 1 || Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION')== 1) {
-                $object = $params['object'];
-                if ($object instanceof Address) {
-                    $cv = new CustomersVAT();
-                    // If validation process was inited
-                    if (ValidationEngine::$init_validation_process && ValidationEngine::$skip_validation_process === false) {
-                        $cv->addCustomersVAT(ValidationEngine::getVat(), $object->id_customer, $object->id, (int)ValidationEngine::getVATValidation(), ValidationEngine::$company_valid, ValidationEngine::getStatus(), Configuration::get('ADVANCEDVATMANAGER_COMPANY_AUTOINSERT') ? ValidationEngine::getRegisteredCompanyName() : null, ValidationEngine::getSystemFail());
-                    }
-                    // If validation process was not inited
-                    else if (!ValidationEngine::$init_validation_process) {
-                        // Ajax process not saving static mehtods
-                        $ve = new ValidationEngine($object->vat_number);
-                        $result = $ve->VATValidationProcess($object->id_country, $object->id_customer, $object->id, $object->company);
-                        if (ValidationEngine::$skip_validation_process === false) {
-                            return $cv->addCustomersVAT(ValidationEngine::getVat(), $object->id_customer, $object->id, (int)$result, ValidationEngine::$company_valid, ValidationEngine::getStatus(), Configuration::get('ADVANCEDVATMANAGER_COMPANY_AUTOINSERT') ? ValidationEngine::getRegisteredCompanyName() : null, ValidationEngine::getSystemFail());
-                        }
-                        else {
-                            if (CustomersVAT::checkCustomerAddressExists($object->id_customer, $object->id)) {
-                                CustomersVAT::deleteByIDAddress($object->id);
-                                // Manage Customer groups
-                                ValidationEngine::manageCustomerGroups($object->id_country, $object->id_customer);
-                            }
-                        }
-                    }
-                }
-            }
+            return $this->hookActionObjectUpdateAfter($params);
         }
     }
 
@@ -2707,21 +2732,21 @@ class AdvancedVatManager extends Module
     public function hookActionObjectUpdateAfter($params)
     {
         if (Module::isEnabled($this->name)) {
-            if ((Configuration::get('ADVANCEDVATMANAGER_ADMINVALIDATION')== 1 && $this->context->controller instanceof AdmintController) || (Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION')== 1 && $this->context->controller instanceof FrontController)) {
+            if ((Configuration::get('ADVANCEDVATMANAGER_ADMINVALIDATION')== 1 && $this->context->controller instanceof AdminController) || (Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION')== 1 && $this->context->controller instanceof FrontController)) {
                 $object = $params['object'];
-                if ($object instanceof Address) {
+                if ($object instanceof Address || $object instanceof CustomerAddress) {
                     $cv = new CustomersVAT();
                     // Delete address
                     if ($object->deleted == 1) {
                         if (CustomersVAT::checkCustomerAddressExists($object->id_customer, $object->id)) {
                             CustomersVAT::deleteByIDAddress($object->id);
                             // Manage Customer groups
-                            ValidationEngine::manageCustomerGroups($object->id_country, $object->id_customer);
+                            ValidationEngine::manageCustomerGroups($object->id_country, $object->id_customer, $object->id);
                         }
                     }
                     // If validation process was inited
                     else if (ValidationEngine::$init_validation_process && ValidationEngine::$skip_validation_process === false) {
-                        $cv->addCustomersVAT(ValidationEngine::getVat(), $object->id_customer, $object->id, (int)ValidationEngine::getVATValidation(), ValidationEngine::$company_valid, ValidationEngine::getStatus(), Configuration::get('ADVANCEDVATMANAGER_COMPANY_AUTOINSERT') ? ValidationEngine::getRegisteredCompanyName() : null, ValidationEngine::getSystemFail());
+                        return $cv->addCustomersVAT(ValidationEngine::getVat(), $object->id_customer, $object->id, (int)ValidationEngine::getVATValidation(), ValidationEngine::$company_valid, ValidationEngine::getStatus(), Configuration::get('ADVANCEDVATMANAGER_COMPANY_AUTOINSERT') ? ValidationEngine::getRegisteredCompanyName() : null, ValidationEngine::getSystemFail());
                     }
                     // If address is skipped and should be deleted from table
                     else if (ValidationEngine::$init_validation_process && ValidationEngine::$skip_validation_process) {
@@ -2739,7 +2764,7 @@ class AdvancedVatManager extends Module
                             if (CustomersVAT::checkCustomerAddressExists($object->id_customer, $object->id)) {
                                 CustomersVAT::deleteByIDAddress($object->id);
                                 // Manage Customer groups
-                                ValidationEngine::manageCustomerGroups($object->id_country, $object->id_customer);
+                                ValidationEngine::manageCustomerGroups($object->id_country, $object->id_customer, $object->id);
                             }
                         }
                     }
@@ -2749,11 +2774,11 @@ class AdvancedVatManager extends Module
     }
 
     /**
-     * AdvancedVatManager::hookDisplayCustomerAccountForm()
+     * AdvancedVatManager::hookcreateAccountForm()
      * ONLY FOR PS 1.6
      * @return
      */
-    public function hookDisplayCustomerAccountForm()
+    public function hookcreateAccountForm()
     {
         if (Module::isEnabled($this->name) && version_compare(_PS_VERSION_, '1.7.0.0', '<')) {
             $this->hookActionFrontControllerSetMedia();
@@ -2816,27 +2841,29 @@ class AdvancedVatManager extends Module
      */
     public function hookActionCartSave($params)
     {
-        if ($this->context->controller instanceof FrontController) {
-            if (Module::isEnabled($this->name) && $this->context->customer->isLogged() && (Configuration::get('ADVANCEDVATMANAGER_BREXIT_ENABLED') == 1 || Configuration::get('ADVANCEDVATMANAGER_VOEC_ENABLED') == 1)) {
-                if (is_object($params['cart'])) {
-                    $cart =  $params['cart'];
-                    if ($this->context->cart && $cart->nbProducts()) {
-                        $product_price = array();
-                        $total_cart = $cart->getOrderTotal(false,Cart::ONLY_PRODUCTS);
-                        // Save cookie of total product prices in cart and price per product unit without tax.
-                        $products = $cart->getProducts(true);
-                        foreach ($products as $product) {
-                            $product_price[] = $product['price_with_reduction_without_tax'];
+        if (Module::isEnabled($this->name)) {
+            if ($this->context->controller instanceof FrontController) {
+                if (Module::isEnabled($this->name) && ($this->context->customer->isLogged() || $this->context->customer->isGuest()) && (Configuration::get('ADVANCEDVATMANAGER_BREXIT_ENABLED') == 1 || Configuration::get('ADVANCEDVATMANAGER_VOEC_ENABLED') == 1)) {
+                    if (is_object($params['cart'])) {
+                        $cart =  $params['cart'];
+                        if ($this->context->cart && $cart->nbProducts()) {
+                            $product_price = array();
+                            $total_cart = $cart->getOrderTotal(false,Cart::ONLY_PRODUCTS);
+                            // Save cookie of total product prices in cart and price per product unit without tax.
+                            $products = $cart->getProducts(true);
+                            foreach ($products as $product) {
+                                $product_price[] = $product['price_with_reduction_without_tax'];
+                            }
+                            $this->context->cookie->__set('avm_cart', json_encode(array('total' => $total_cart, 'products' => $product_price)));
                         }
-                        $this->context->cookie->__set('avm_cart', json_encode(array('total' => $total_cart, 'products' => $product_price)));
-                    }
-                    else {
-                        $this->context->cookie->__unset('avm_cart');
+                        else {
+                            $this->context->cookie->__unset('avm_cart');
+                        }
                     }
                 }
-            }
-            else {
-                $this->context->cookie->__unset('avm_cart');
+                else {
+                    $this->context->cookie->__unset('avm_cart');
+                }
             }
         }
     }
@@ -2875,15 +2902,17 @@ class AdvancedVatManager extends Module
 
     public function hookActionOrderHistoryAddAfter($params)
     {
-        if ($this->context->employee === null) {
-            // Change order state when system fails and send email to customer.
-            if (Configuration::get('ADVANCEDVATMANAGER_SKIPAPISYSTEMFAIL') && CustomersVAT::checkVATWithSystemFails(ValidationEngine::$id_address_used)) {
-                if (Configuration::get('ADVANCEDVATMANAGER_DISPLAY_VAT_VALIDATION_PENDING_STATUS') != 0) {
-                    $history = $params['order_history'];
-                    $order = new Order($history->id_order);
-                    if (Validate::isLoadedObject($order->getCurrentOrderState())) {
-                        if ($order->current_state != (int)Configuration::get('ADVANCEDVATMANAGER_DISPLAY_VAT_VALIDATION_PENDING_STATUS')) {
-                            $order->setCurrentState((int)Configuration::get('ADVANCEDVATMANAGER_DISPLAY_VAT_VALIDATION_PENDING_STATUS'));
+        if (Module::isEnabled($this->name)) {
+            if ($this->context->employee === null) {
+                // Change order state when system fails and send email to customer.
+                if (Configuration::get('ADVANCEDVATMANAGER_SKIPAPISYSTEMFAIL') && CustomersVAT::checkVATWithSystemFails(ValidationEngine::$id_address_used)) {
+                    if (Configuration::get('ADVANCEDVATMANAGER_DISPLAY_VAT_VALIDATION_PENDING_STATUS') != 0) {
+                        $history = $params['order_history'];
+                        $order = new Order($history->id_order);
+                        if (Validate::isLoadedObject($order->getCurrentOrderState())) {
+                            if ($order->current_state != (int)Configuration::get('ADVANCEDVATMANAGER_DISPLAY_VAT_VALIDATION_PENDING_STATUS')) {
+                                $order->setCurrentState((int)Configuration::get('ADVANCEDVATMANAGER_DISPLAY_VAT_VALIDATION_PENDING_STATUS'));
+                            }
                         }
                     }
                 }
@@ -2923,6 +2952,44 @@ class AdvancedVatManager extends Module
         }
     }
 
+    private function JSVariables()
+    {
+        // JS variables
+        $advancedvatmanagerJS = array('advancedvatmanager' => array(
+            'admin_ajax_url_advancedvatmanager' => $this->context->link->getAdminLink('AdminVATValidation'),
+            'id_customer' => (isset($this->context->customer->id)?$this->context->customer->id:Tools::getValue('id_customer')),
+            'id_customer_field' => version_compare(_PS_VERSION_, '1.7.7.0', '>=')?'customer_address[id_customer]':'id_customer',
+            'id_address' => (isset($this->context->address->id)?$this->context->address->id:Tools::getValue('id_address')),
+            'input_name_avm' => version_compare(_PS_VERSION_, '1.7.7.0', '>=')?'customer_address[vat_number]':'vat_number',
+            'country_name' => version_compare(_PS_VERSION_, '1.7.7.0', '>=')?'customer_address[id_country]':'id_country',
+            'company_name' => version_compare(_PS_VERSION_, '1.7.7.0', '>=')?'customer_address[company]':'company',
+            'error_msg' => $this->l('Error checking VAT number.'),
+            'PS1770' => version_compare(_PS_VERSION_, '1.7.7.0', '>='),
+            'ps16' => version_compare(_PS_VERSION_, '1.7.0.0', '<'),
+            'controller' => $this->context->controller && property_exists($this->context->controller, 'php_self')?$this->context->controller->php_self:Tools::getValue('controller'),
+            'ajax_url_addressVAT' => $this->context->link->getModuleLink('advancedvatmanager','AddressVAT'),
+            'vat_field' => configuration::get('ADVANCEDVATMANAGER_VATFIELD'),
+            'display_with_company' => (bool)Configuration::get('ADVANCEDVATMANAGER_DISPLAY_WITH_COMPANY'),
+            'company_validation' => (bool)Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION'),
+            'label' => Configuration::get('ADVANCEDVATMANAGER_FIELD_LABEL', $this->context->language->id),
+            'legend' => Configuration::get('ADVANCEDVATMANAGER_FIELD_LEGEND', $this->context->language->id),
+            'company_legend' => (Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION') == 1?$this->l('The company name must match the one registered in the VIES or GOV.UK system in case of inserting a VAT number.'):null).(Configuration::get('ADVANCEDVATMANAGER_DISPLAY_WITH_COMPANY') == 1?$this->l('If you fill in this field, the VAT field will be displayed.'):null),
+            'vat_number_label' => $this->l('VAT number'),
+            'NOTALLOW_CHECKOUT_WITHOUT_VALIDATION' => Configuration::get('ADVANCEDVATMANAGER_NOTALLOW_CHECKOUT_WITHOUT_VALIDATION'),
+            'opc_presteamshop_enabled' => $this->opc_presteamshop_enabled,
+            'price_label' => $this->l('Tax exempt'),
+        ));
+
+        // For compatiblity purposes with OPC module older than 4.1.8 (Remove after passing some months)
+        $advancedvatmanagerRetroCompatibilityJS = array(
+            'ajax_url_addressVAT' => $this->context->link->getModuleLink('advancedvatmanager','AddressVAT'),
+            'vat_field' => configuration::get('ADVANCEDVATMANAGER_VATFIELD'),
+            'display_with_company' => (bool)Configuration::get('ADVANCEDVATMANAGER_DISPLAY_WITH_COMPANY'),
+        );
+
+        return array_merge($advancedvatmanagerRetroCompatibilityJS, $advancedvatmanagerJS);
+    }
+
     /**
      * AdvancedVatManager::hookActionAdminControllerSetMedia()
      * Add the CSS & JavaScript files you want to be loaded in the BO.
@@ -2930,19 +2997,12 @@ class AdvancedVatManager extends Module
      */
     public function hookActionAdminControllerSetMedia()
     {
-
         if (Module::isEnabled($this->name)) {
             if (version_compare(_PS_VERSION_, '1.7.0.0', '<')) {
                 $this->context->controller->addCSS($this->_path . 'views/css/tab_icon.css');
             }
-            // Ajax validation in AdminAddress from PS 1.7.7.0
-            if (Configuration::get('ADVANCEDVATMANAGER_ADMINVALIDATION')== 1 && Tools::getValue('controller') == 'AdminAddresses' && version_compare(_PS_VERSION_, '1.7.7.0', '>=')) {
-                Media::addJsDef(array(
-                    'admin_ajax_url_advancedvatmanager' => $this->context->link->getAdminLink('AdminVATValidation'),
-                    'id_address' => Tools::getValue('id_address'),
-                    'error_msg' => $this->l('Error checking VAT number.'),
-                    )
-                );
+            if (Configuration::get('ADVANCEDVATMANAGER_ADMINVALIDATION')== 1 && Tools::getValue('controller') == 'AdminAddresses') {
+                Media::addJsDef($this->JSVariables());
                 $this->context->controller->addJS($this->_path.'/views/js/admin/vatverificator_adminaddresses.js');
             }
             if (in_array(Tools::getValue('controller'), $this->controllers) || Tools::getValue('module_name') == $this->name) {
@@ -2959,36 +3019,21 @@ class AdvancedVatManager extends Module
      */
     public function hookActionFrontControllerSetMedia()
     {
-
         if (Module::isEnabled($this->name) && Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION')== 1) {
-            Media::addJsDef(array(
-                'ps16' => version_compare(_PS_VERSION_, '1.7.0.0', '<'),
-                'controller' => $this->context->controller->php_self?$this->context->controller->php_self:Tools::getValue('controller'),
-            ));
             if ($this->context->controller instanceof AddressController || $this->context->controller instanceof AddressesController || $this->context->controller instanceof AuthController || $this->context->controller instanceof OrderOpcController || $this->context->controller instanceof OrderController) {
-                Media::addJsDef(array(
-                    'ajax_url_addressVAT' => $this->context->link->getModuleLink('advancedvatmanager','AddressVAT'),
-                    'vat_field' => configuration::get('ADVANCEDVATMANAGER_VATFIELD'),
-                    'display_with_company' => (bool)Configuration::get('ADVANCEDVATMANAGER_DISPLAY_WITH_COMPANY'),
-                    'company_validation' => (bool)Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION'),
-                    'label' => Configuration::get('ADVANCEDVATMANAGER_FIELD_LABEL', $this->context->language->id),
-                    'legend' => Configuration::get('ADVANCEDVATMANAGER_FIELD_LEGEND', $this->context->language->id),
-                    'company_legend' => (Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION') == 1?$this->l('The company name must match the one registered in the VIES or GOV.UK system in case of inserting a VAT number.'):null).(Configuration::get('ADVANCEDVATMANAGER_DISPLAY_WITH_COMPANY') == 1?$this->l('If you fill in this field, the VAT field will be displayed.'):null),
-                    'vat_number_label' => $this->l('VAT number'),
-                    'NOTALLOW_CHECKOUT_WITHOUT_VALIDATION' => Configuration::get('ADVANCEDVATMANAGER_NOTALLOW_CHECKOUT_WITHOUT_VALIDATION'),
-                    'opc_presteamshop_enabled' => $this->opc_presteamshop_enabled
-                    )
-                );
-
+                Media::addJsDef($this->JSVariables());
                 if ( version_compare(_PS_VERSION_, '1.7.0.0', '>=')) {
-                    $this->context->controller->addJS($this->_path.'/views/js/addressManagement.js');
+                    $this->context->controller->registerJavascript('addressVATManagement', 'modules/' . $this->name . '/views/js/front/addressVATManagement.js', array('position' => 'bottom', 'priority' => 20));
+                    $this->context->controller->registerStylesheet('front', 'modules/' . $this->name . '/views/css/front.css', array('media' => 'all', 'priority' => 10));
                 }
-                $this->context->controller->addCSS($this->_path.'/views/css/front.css');
+                else {
+                    $this->context->controller->addJS($this->_path.'/views/js/front/addressVATManagement.js');
+                    $this->context->controller->addCSS($this->_path.'/views/css/front.css');
+                }
+
             }
-            if($this->context->controller instanceof ProductController && ValidationEngine::$notax_customer) {
-                Media::addJsDef(array(
-                    'price_label' => $this->l('Tax exempt'),
-                ));
+            if(Configuration::get('ADVANCEDVATMANAGER_DISPLAY_VATEXEMPT_LABEL_PRODUCT') && $this->context->controller instanceof ProductController && ValidationEngine::$notax_customer) {
+                Media::addJsDef($this->JSVariables());
                 $this->context->controller->addJS($this->_path.'/views/js/hook/displayProductPriceBlock/fix_price_label.js');
             }
         }
@@ -2999,8 +3044,8 @@ class AdvancedVatManager extends Module
         if (Module::isEnabled($this->name) && Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION')== 1) {
             //Display product price labels without taxes and custom text block
             if(ValidationEngine::$notax_customer) {
-            if ($params['type'] == 'before_price') {
-                return $this->display(__FILE__, 'views/templates/hook/displayProductPriceBlock.tpl');
+                if ($params['type'] == 'after_price') {
+                    return $this->display(__FILE__, 'views/templates/hook/displayProductPriceBlock.tpl');
                 }
             }
         }
@@ -3023,14 +3068,6 @@ class AdvancedVatManager extends Module
 
     public function hookDisplayBackOfficeHeader()
     {
-        if (Module::isEnabled($this->name) && Configuration::get('ADVANCEDVATMANAGER_ADMINVALIDATION')== 1 || Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION')== 1) {
-            $this->checkAddressFormat();
-            $this->checkAvailableCurrency();
-            // Checks if scan process has been performed first time.
-            if (CustomersVAT::getCustomerAddresses() && CustomersVAT::isEmptyVATList()) {
-                $this->adminDisplayWarning('<strong>[Advanced VAT Manager]</strong> '.$this->l('The VAT number scan has not yet been carried out in the section [customers -> VAT Management]. Scanning is required to verify and validate VAT numbers which are already in the database before the module was installed.'));
-            }
-        }
     }
 
     public function hookDisplayFooter()

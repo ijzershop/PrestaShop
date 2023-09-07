@@ -69,6 +69,27 @@ class HTMLTemplateInvoice extends HTMLTemplateInvoiceCore
                 return $data;
             }
             $this->smarty->assign($data);
+            // Compatibility with module gwadvancedinvoice
+            if (Module::isEnabled('gwadvancedinvoice')) {
+                $this->smarty->assign(array(
+                    'taxdetail_label'=>Configuration::get('GINVOICE_LABEL_TAXDETAIL',(int)Context::getContext()->language->id),
+                    'taxrate_label'=>Configuration::get('GINVOICE_LABEL_TAXRATE',(int)Context::getContext()->language->id),
+                    'taxtotal_label'=>Configuration::get('GINVOICE_LABEL_TOTAL',(int)Context::getContext()->language->id),
+                    'taxtotalexcl_label'=>Configuration::get('GINVOICE_LABEL_TOTALEXCL',(int)Context::getContext()->language->id),
+                    'taxproduct_label'=>Configuration::get('GINVOICE_LABEL_PRODUCT',(int)Context::getContext()->language->id),
+                    'taxecotax_label'=>Configuration::get('GINVOICE_LABEL_SHIPPING',(int)Context::getContext()->language->id),
+                    'taxshipping_label'=>Configuration::get('GINVOICE_LABEL_ECOTAX',(int)Context::getContext()->language->id),
+                    'taxexempt_label'=>Configuration::get('GINVOICE_LABEL_EXEMPT',(int)Context::getContext()->language->id),
+                    'taxbaseprice_label'=>Configuration::get('GINVOICE_LABEL_BASEPRICE',(int)Context::getContext()->language->id),
+                    'taxwrapping_label'=>Configuration::get('GINVOICE_LABEL_WRAPPING',(int)Context::getContext()->language->id),
+                    'notax_label'=>Configuration::get('GINVOICE_LABEL_NOTAX',(int)Context::getContext()->language->id),
+                ));
+                return $this->smarty->fetch(_PS_MODULE_DIR_.'gwadvancedinvoice/views/templates/admin/tpltemplates/base/tax-tab.tpl');
+            }
+            // Compatibility with module ets_payment_with_fee
+            if (Module::isEnabled('ets_payment_with_fee')) {
+                return $this->smarty->fetch(_PS_MODULE_DIR_.'ets_payment_with_fee/views/templates/hook/invoice.tax-tab.tpl');
+            }
             return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
         }
         else {

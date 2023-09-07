@@ -69,10 +69,10 @@ class OrderSlipGenerator
         $this->processedStatus = Configuration::get('MSTHEMECONFIG_ORDERSTATE_PROCESSED', 1,1,1, '3');
 
         global $kernel;
-            if(!$kernel){ 
+            if(!$kernel){
               require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
               $kernel = new \AppKernel('prod', false);
-              $kernel->boot(); 
+              $kernel->boot();
           }
 
     }

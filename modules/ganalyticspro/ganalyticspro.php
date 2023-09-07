@@ -6,7 +6,7 @@
  * @copyright Business Tech 2023 - https://www.businesstech.fr/
  * @license   see file: LICENSE.txt
  *
- * @version 2.2.0
+ * @version 2.2.3
  *
  *           ____    _______
  *          |  _ \  |__   __|
@@ -108,7 +108,7 @@ class GAnalyticsPro extends Module
         $this->name = 'ganalyticspro';
         $this->module_key = '7814804ce39cacda037743a3b29ee2af';
         $this->tab = 'analytics_stats';
-        $this->version = '2.2.0';
+        $this->version = '2.2.3';
         $this->author = 'Business Tech';
         $this->ps_versions_compliancy['min'] = '1.7.6.0';
         $this->need_instance = 1;
@@ -117,7 +117,7 @@ class GAnalyticsPro extends Module
 
         $this->displayName = $this->l('Google Analytics : Google-Analytics 4 (GA4) tag');
         $this->description = $this->l('Install the Google Analytics 4 (GA4) tag on your site and collect data for your GA4 reports in your Google Analytics account');
-        
+
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall the module Google Analytics : Google-Analytics 4 (GA4) tag (your configuration will be lost)?');
         self::$iShopId = $this->context->shop->id;
         self::$iCurrentLang = $this->context->cookie->id_lang;

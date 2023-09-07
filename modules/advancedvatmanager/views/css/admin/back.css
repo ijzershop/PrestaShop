@@ -120,15 +120,16 @@ h5.module_compatible_item {
 }
 .integration_mod_container {
     border: 2px solid #ddd;
-    width: max-content;  
+    max-width: 450px;
+    margin-bottom: 10px;
+    width: auto;
 }
 .integration_mod_container .integration_body {
     padding: 10px;    
 }
 .integration_header {
     background: #ddd;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 5px 10px 5px 10px;
 }
 .advancedvatmanager_form span.label-tooltip {
     font-weight: 600;

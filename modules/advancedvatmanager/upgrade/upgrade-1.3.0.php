@@ -43,7 +43,9 @@ function upgrade_module_1_3_0($module)
     }
     $module->uninstallOverrides();
     $module->installOverrides();
-    $module->removeModulesMainOverrides();
+    if (method_exists($module, 'removeModulesMainOverrides')) {
+        $module->removeModulesMainOverrides();
+    } 
     Configuration::updateValue('ADVANCEDVATMANAGER_BREXIT_NOTALLOWORDERS_MORETHAN135GBP', 0);
     $module->registerHook('actionCheckoutRender');
     return true; 

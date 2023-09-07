@@ -49,7 +49,7 @@
                     <tr>
                       <td colspan="2">
                         <br/>
-                        <img src="{_PS_ROOT_DIR_}{$customization_infos.technical_image}.png" width="200"  alt=""/>
+                        <img src="{$webroot}{$customization_infos.technical_image}" width="200"  alt=""/>
                         <br/>
 {*                        <img src="{Context::getContext()->shop->getBaseURL(false, false)}{$customization_infos.technical_image}.png" width="200"  alt=""/>*}
                       </td>

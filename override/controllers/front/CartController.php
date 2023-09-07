@@ -236,8 +236,8 @@ class CartController extends CartControllerCore
     }
     /*
     * module: advancedvatmanager
-    * date: 2023-06-29 09:33:31
-    * version: 1.6.1
+    * date: 2023-09-07 12:09:32
+    * version: 1.6.2.2
     */
     public function displayAjaxUpdate()
     {
@@ -257,8 +257,8 @@ class CartController extends CartControllerCore
     }
     /*
     * module: advancedvatmanager
-    * date: 2023-06-29 09:33:31
-    * version: 1.6.1
+    * date: 2023-09-07 12:09:32
+    * version: 1.6.2.2
     */
     public function postProcess()
     {

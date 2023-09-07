@@ -59,18 +59,6 @@ class CustomersVAT extends ObjectModel
     }
 
     /**
-     * CustomersVAT::isEmptyVATList()
-     * Checks if table is empty
-     * @return
-     */
-    public static function isEmptyVATList()
-    {
-        $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` WHERE 1'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
-        $result = Db::getInstance()->getValue($sql);
-        return !(bool)$result;
-    }
-
-    /**
      * CustomersVAT::addCustomersVAT()
      * Add Elements to table
      * @param mixed $vat
@@ -133,6 +121,18 @@ class CustomersVAT extends ObjectModel
             }
             return $insert->add();
         }
+    }
+
+    /**
+     * CustomersVAT::isEmptyVATList()
+     * Checks if table is empty
+     * @return
+     */
+    public static function isEmptyVATList()
+    {
+        $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` WHERE 1'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
+        $result = Db::getInstance()->getValue($sql);
+        return !(bool)$result;
     }
 
     /**
@@ -204,10 +204,27 @@ class CustomersVAT extends ObjectModel
      */
     public static function checkCustomerHasVATValidByCountry($id_customer, $id_country)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address)
 WHERE ac.id_customer = '.(int)$id_customer.' AND a.id_country ='.pSQL($id_country).($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND ac.validated = 1 AND a.active = 1 AND a.deleted = 0';
+        $result = Db::getInstance()->getValue($sql);
+        return (bool)$result;
+    }
+
+    /**
+     * CustomersVAT::checkCustomerHasVATValidByCountryWithAddressExemption()
+     * Checks if customer has a valid VAT number by country address but with id_address exemption to avoid check in it
+     * @param int $id_customer
+     * @param int $id_country
+     * @param int $id_address
+     * @return
+     */
+    public static function checkCustomerHasVATValidByCountryWithAddressExemption($id_customer, $id_country, $id_address)
+    {
+        $countries = self::getCountriesIDListForValidation();
+
+        $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address) WHERE ac.id_customer = '.(int)$id_customer.' AND a.id_country ='.pSQL($id_country).($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND a.id_address != '.(int)$id_address.' AND ac.validated = 1 AND a.active = 1 AND a.deleted = 0';
         $result = Db::getInstance()->getValue($sql);
         return (bool)$result;
     }
@@ -220,7 +237,7 @@ WHERE ac.id_customer = '.(int)$id_customer.' AND a.id_country ='.pSQL($id_countr
      */
     public static function checkCustomerHasVATInvalid($id_customer)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address)
 WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND ac.validated = 0 AND a.active = 1 AND a.deleted = 0';
@@ -236,7 +253,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function getCustomerAddressHasVATInvalid($id_customer)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT ac.`id_address` FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address)
 WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND ac.validated = 0 AND a.active = 1 AND a.deleted = 0';
@@ -253,7 +270,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function checkCustomerVATValid($id_customer, $id_address)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address)
 WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND ac.id_address = '.(int)$id_address.' AND ac.validated = 1 AND a.active = 1 AND a.deleted = 0';
@@ -269,7 +286,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function getCountryAddressWithValidVAT($id_customer)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT a.id_address, a.id_country FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address) WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND ac.validated = 1 AND a.active = 1 AND a.deleted = 0 ORDER BY a.id_address DESC;';
         $result = Db::getInstance()->executeS($sql);
@@ -285,7 +302,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function checkCustomerVATInvalid($id_customer, $id_address)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address)
 WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND ac.id_address = '.(int)$id_address.' AND ac.validated = 0 AND a.active = 1 AND a.deleted = 0';
@@ -301,7 +318,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function checkCustomerHasAddressWithoutValidation($id_customer)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'address` a WHERE a.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND a.active = 1 AND a.deleted = 0 AND a.id_address NOT IN (SELECT ac.id_address FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac)';
         $result = Db::getInstance()->getValue($sql);
@@ -317,7 +334,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function checkCustomerAddressWithoutValidation($id_customer, $id_address)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'address` a WHERE a.id_customer = '.(int)$id_customer.' AND a.id_address = '.(int)$id_address.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND a.active = 1 AND a.deleted = 0 AND a.id_address NOT IN (SELECT ac.id_address FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac)';
         $result = Db::getInstance()->getValue($sql);
@@ -332,7 +349,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function getCustomerAddressWithoutValidation($id_customer)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT a.`id_address` FROM `' . _DB_PREFIX_ . 'address` a WHERE id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND a.`active` = 1 AND a.`deleted` = 0 AND  a.`id_address` NOT IN (SELECT ac.`id_address` FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac)';
         $result = Db::getInstance()->executeS($sql);
@@ -347,7 +364,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function checkCustomerHasCompanyInvalid($id_customer)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address)
 WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND ac.validated_company = 0 AND a.active = 1 AND a.deleted = 0';
@@ -363,7 +380,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function getCustomerAddressHasCompanyWithoutValidation($id_customer)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT ac.id_address FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address)
 WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND ac.validated_company = 2 AND a.active = 1 AND a.deleted = 0';
@@ -379,7 +396,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function getCustomerAddressHasCompanyInvalid($id_customer)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT ac.id_address FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address)
 WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND ac.validated_company = 0 AND a.active = 1 AND a.deleted = 0';
@@ -396,7 +413,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function checkCustomerCompanyValid($id_customer, $id_address)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address)
 WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND ac.id_address = '.(int)$id_address.' AND ac.validated_company = 1 AND a.active = 1 AND a.deleted = 0';
@@ -413,7 +430,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function checkCustomerCompanyInvalid($id_customer, $id_address)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address)
 WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND ac.id_address = '.(int)$id_address.' AND ac.validated_company = 0 AND a.active = 1 AND a.deleted = 0';
@@ -430,7 +447,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function checkCustomerCompanyWithoutValidation($id_customer, $id_address)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (ac.id_address = a.id_address)
 WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND ac.id_address = '.(int)$id_address.' AND a.active = 1 AND a.deleted = 0 AND ac.validated_company = 2 OR a.id_address NOT IN (SELECT ac.id_address FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac)';
@@ -455,14 +472,18 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
     /**
      * CustomersVAT::getCustomerAddresses()
      * Gets all customer addresses filtering if they should be validated with VAT number
-     * @param int $minIdAddress
+     * @param array $idAddresses
      * @return
      */
-    public static function getCustomerAddresses($minIdAddress = false)
+    public static function getCustomerAddresses($idAddresses = false)
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
-        $sql = 'SELECT a.*, c.firstname, c.lastname, c.email FROM `' . _DB_PREFIX_ . 'address` a LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (a.id_customer = c.id_customer) WHERE a.id_customer != 0'.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND a.active = 1 AND a.deleted = 0'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c').($minIdAddress?' AND a.id_address > '.(int)$minIdAddress:'').(Configuration::get('ADVANCEDVATMANAGER_VATFIELD') == 'optional'?' AND vat_number != "" AND vat_number IS NOT NULL':'').' ORDER BY c.id_customer ASC;';
+        if ($idAddresses) {
+            $idAddresses = implode(',', $idAddresses);
+        }
+
+        $sql = 'SELECT a.*, c.firstname, c.lastname, c.email FROM `' . _DB_PREFIX_ . 'address` a LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (a.id_customer = c.id_customer) WHERE a.id_customer != 0'.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND a.active = 1 AND a.deleted = 0'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c').($idAddresses?' AND a.id_address IN ('.pSQL($idAddresses).')':'').(Configuration::get('ADVANCEDVATMANAGER_VATFIELD') == 'optional'?' AND vat_number != "" AND vat_number IS NOT NULL':'').' ORDER BY c.id_customer ASC;';
         if ($addresses = Db::getInstance()->executeS($sql)) {
             return $addresses;
         }
@@ -470,15 +491,19 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
     }
 
     /**
-     * CustomersVAT::getLastCustomerAddressChecked()
-     * Gets last customer address checked
+     * CustomersVAT::getRemainCustomersAddressToCheck()
+     * Gets remain customer addresses ID checked
      * @return
      */
-    public static function getLastCustomerAddressChecked()
+    public static function getRemainCustomersAddressToCheck()
     {
-        $sql = 'SELECT MAX(id_address) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers`';
-        $maxIdAddress = Db::getInstance()->getValue($sql);
-        return $maxIdAddress;
+        $countries = self::getCountriesIDListForValidation();
+
+        $sql = 'SELECT id_address FROM `' . _DB_PREFIX_ . 'address` a LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (a.id_customer = c.id_customer) WHERE a.id_customer != 0'.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND a.active = 1 AND a.deleted = 0'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c').' AND a.id_address NOT IN (SELECT id_address FROM ' . _DB_PREFIX_ . 'advancedvatmanager_customers) ORDER BY a.id_address ASC';
+        if ($addresses = Db::getInstance()->executeS($sql)) {
+            return array_values(array_filter(array_column($addresses, 'id_address')));
+        }
+        return false;
     }
 
     /**
@@ -502,7 +527,7 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
      */
     public static function getCustomerAddressesWithValidationInfo()
     {
-        $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        $countries = self::getCountriesIDListForValidation();
 
         $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'advancedvatmanager_customers` ac LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (ac.id_customer = c.id_customer) LEFT JOIN `' . _DB_PREFIX_ . 'address` a ON (a.id_address = ac.id_address) WHERE a.id_customer != 0'.($countries?' AND a.id_country IN ('.pSQL($countries).')':'').' AND a.active = 1 AND a.deleted = 0';
         if ($results = Db::getInstance()->executeS($sql)) {
@@ -743,5 +768,36 @@ WHERE ac.id_customer = '.(int)$id_customer.($countries?' AND a.id_country IN ('.
     {
         $sql = 'TRUNCATE TABLE `'._DB_PREFIX_.'advancedvatmanager_customers`;';
         return Db::getInstance()->execute($sql);
+    }
+
+    /**
+     * CustomersDNI::getCountriesIDForValidation()
+     * Get a list of countries ID with commas for validation
+     * @return string
+     */
+    public static function getCountriesIDListForValidation()
+    {
+        $countries = json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true);
+        if (is_array($countries)) {
+            $countries = implode(',', json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true));
+        }
+        return $countries;
+    }
+
+    /**
+     * CustomersDNI::getCountriesIDForValidation()
+     * Get a list of countries ID in a array for validation
+     * @return array
+     */
+    public static function getCountriesIDForValidation()
+    {
+        if (Configuration::get('ADVANCEDVATMANAGER_COUNTRY')) {
+            $countries = json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true);
+            if (!is_array($countries)) {
+                $countries = array($countries);
+            }
+            return $countries;
+        }
+        return false;
     }
 }

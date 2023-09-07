@@ -4,6 +4,22 @@ Module: Google Analytics : GA4 and Universal-Analytics
 Change history for "Google Analytics : GA4 and Universal-Analytics"
 ---------------------------------------------------------------
 ===========================
+Version 2.2.3 (28/07/2023)|
+===========================
+- Some fix for some tags value
+- Improve the tag call
+
+===========================
+Version 2.2.2 (27/07/2023)|
+===========================
+- Fix fot tag constent
+
+===========================
+Version 2.2.1 (17/07/2023)|
+===========================
+- Fix for order amount value
+
+===========================
 Version 2.2.0 (01/07/2023)| => MAJOR
 ===========================
 - Handle user_id for Google tag

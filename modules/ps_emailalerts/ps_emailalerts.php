@@ -689,6 +689,7 @@ class Ps_EmailAlerts extends Module
                 '{qty}' => $quantity,
                 '{last_qty}' => $ma_last_qties,
                 '{product}' => $product_name,
+                '{id_product}' => $id_product,
             ];
 
             // Do not send mail if multiples product are created / imported.

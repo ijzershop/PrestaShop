@@ -274,7 +274,7 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
 
 
         $sqlProducts = new DbQuery();
-        $sqlProducts->select('p.`id_product` as id, p.`id_category_default`, CONCAT(pl.`name`, " - " , clp.`name`," ", cl.`name`) as text');
+        $sqlProducts->select('p.`id_product` as id, p.`id_category_default`, CONCAT(LOWER(pl.`name`), " - " , LOWER(clp.`name`)," ", LOWER(cl.`name`)) as text');
         $sqlProducts->from('product', 'p');
         $sqlProducts->join(Shop::addSqlAssociation('product', 'p'));
         $sqlProducts->leftJoin(
@@ -299,7 +299,7 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
 
 
         $sqlCategories = new DbQuery();
-        $sqlCategories->select('c.`id_category` as id, CONCAT(clp.`name`," - ", cl.`name`) as text');
+        $sqlCategories->select('c.`id_category` as id, CONCAT(LOWER(clp.`name`)," - ", LOWER(cl.`name`)) as text');
         $sqlCategories->from('category', 'c');
         $sqlCategories->leftJoin('category_lang', 'cl', 'cl.`id_category` = c.`id_category`');
         $sqlCategories->leftJoin('category_lang', 'clp', 'clp.`id_category` = c.`id_parent`');

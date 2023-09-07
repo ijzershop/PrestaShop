@@ -252,7 +252,7 @@ $(() => {
       formData['offer-code'] = $('#offer_integration_code').val();
       formData['offer-name'] = $('#offer_integration_name').val();
       formData['offer-email'] = $('#offer_integration_email').val();
-      formData['offer-message'] = $('#offer_integration_message').val();
+      formData['offer-message'] = $('#offer-message').val();
       formData['offer-phone'] = $('#offer_integration_phone').val();
       formData['offer-date-exp'] = $('#offer_integration_date_exp_date').val();
     }

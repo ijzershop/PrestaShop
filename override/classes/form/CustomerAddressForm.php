@@ -28,8 +28,8 @@ class CustomerAddressForm extends CustomerAddressFormCore
 {
     /*
     * module: advancedvatmanager
-    * date: 2023-06-29 09:33:31
-    * version: 1.6.1
+    * date: 2023-09-07 12:09:31
+    * version: 1.6.2.2
     */
     public function getTemplateVariables()
     {
@@ -50,6 +50,65 @@ class CustomerAddressForm extends CustomerAddressFormCore
             },
             $this->formFields
         );
+        if (empty($formFields['firstname']['value'])) {
+            $formFields['firstname']['value'] = $context->customer->firstname;
+        }
+        if (empty($formFields['lastname']['value'])) {
+            $formFields['lastname']['value'] = $context->customer->lastname;
+        }
+        if (Module::isEnabled('dniverificator') && Configuration::get('DNIVERIFICATOR_FO') && in_array('dni', AddressFormat::getOrderedAddressFields($formFields['id_country']['value']))) {
+            require_once(_PS_MODULE_DIR_.'/dniverificator/classes/VerificationEngine.php');
+            $module = Module::getInstanceByName('dniverificator');
+            $default_dnifield = false;
+            $default_companyfield = false;
+            if (isset($formFields['dni'])) {
+                $default_dnifield = $formFields['dni']['required'];    
+            }
+            if (isset($formFields['company'])) {
+                $default_companyfield = $formFields['company']['required'];    
+            }
+            if (!VerificationEngine::skipDNIFieldBycountry($formFields['id_country']['value'])) {
+                $label = Configuration::get('DNIVERIFICATOR_LABEL', $context->language->id);
+                $legend = Configuration::get('DNIVERIFICATOR_LEGEND', $context->language->id);
+                if ($label) {
+                    $formFields['dni']['label'] = $label;    
+                }
+                if ($legend) {
+                    $formFields['dni']['availableValues']['comment'] = $legend;    
+                }
+                if (Configuration::get('DNIVERIFICATOR_FIELD') == 'required') {
+                    $formFields['dni']['required'] = true;  
+                    $dni_number = CustomersDNI::getDNIInCustomerForm($context->customer->id);
+                    if ($dni_number && empty($formFields['dni']['value'])) {
+                        $formFields['dni']['value'] = $dni_number;    
+                    }
+                }
+                else {
+                    $formFields['dni']['required'] = false;               
+                }
+                
+                $formFields['company']['availableValues']['comment'] = (Configuration::get('DNIVERIFICATOR_COMPANY_VALIDATION')?$module->controller_msg['COMPANY_VALIDATION_COMMENT']:'').' '.(Configuration::get('DNIVERIFICATOR_DISPLAY_WITH_COMPANY')?$module->controller_msg['COMPANY_DISPLAY_COMMENT']:'');
+                
+                if (Configuration::get('DNIVERIFICATOR_DISPLAY_WITH_COMPANY') == 1) {
+                    if (empty($formFields['company']['value'])){
+                        CustomersDNI::updateDNIAddress(Tools::getValue('id_address'), '');
+                        unset($formFields['dni']);
+                    }
+                }
+                if (Configuration::get('DNIVERIFICATOR_COMPANY_VALIDATION') == 1) {
+                    if (!empty($formFields['dni']['value'])) {
+                        $formFields['company']['required'] = true;    
+                    }
+                    else {
+                        $formFields['company']['required'] = false;
+                    }
+                } 
+            }
+            else {
+                $formFields['dni']['required'] = $default_dnifield;
+                $formFields['company']['required'] = $default_companyfield;   
+            }
+        }
         if (Module::isEnabled('advancedvatmanager') && Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION')) {
             $default_vatfield = false;
             $default_companyfield = false;
@@ -59,7 +118,7 @@ class CustomerAddressForm extends CustomerAddressFormCore
                     $default_vatfield = $formFields['vat_number']['required'];    
                 }
                 if (isset($formFields['company'])) {
-                    $default_vatfield = $formFields['company']['required'];    
+                    $default_companyfield = $formFields['company']['required'];    
                 }
             }
             if (!ValidationEngine::skipVATFieldBycountry($formFields['id_country']['value'])) {
@@ -110,13 +169,8 @@ class CustomerAddressForm extends CustomerAddressFormCore
                     $formFields['company']['required'] = $default_companyfield;
                 }    
             }
-        
-            if (empty($formFields['firstname']['value'])) {
-                $formFields['firstname']['value'] = $context->customer->firstname;
-            }
-            if (empty($formFields['lastname']['value'])) {
-                $formFields['lastname']['value'] = $context->customer->lastname;
-            }
+        }
+        if (Module::isEnabled('advancedvatmanager') || Module::isEnabled('dniverificator')) {
             return [
                 'id_address' => ($this->getAddress()) ? $this->getAddress()->id : 0,
                 'action' => $this->action,

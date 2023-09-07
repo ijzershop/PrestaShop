@@ -8,14 +8,14 @@
  */
 
 $(document).ready(function(){
-    if (ps16) {
+    if (advancedvatmanager.ps16) {
         let price_container = $('p.our_price_display').html();
         let price_text = $('div p.our_price_display').first().contents().eq(2).text();
-        let fix_content = price_container.replace(price_text, '<br />'+price_label);
+        let fix_content = price_container.replace(price_text, '<br />'+advancedvatmanager.price_label);
         $('p.our_price_display').html(fix_content);
     }
     else {
         var custom_content = $('.tax-shipping-delivery-label').children();
-        $('.tax-shipping-delivery-label').html(price_label).append(custom_content);
+        $('.tax-shipping-delivery-label').html(advancedvatmanager.price_label).append(custom_content);
     }
 });

@@ -152,7 +152,7 @@ class purchaseTag extends baseTag
     public function setValue()
     {
         if (!empty($this->bValid)) {
-            $this->fValue = (float)moduleTools::getOrderPrice($this->oOrder, \GAnalyticsPro::$aConfiguration['GAP_USE_TAX'], \GAnalyticsPro::$aConfiguration['GAP_USE_SHIPPING'], \GAnalyticsPro::$aConfiguration['GAP_USE_WRAPPING']);
+            $this->fValue = moduleTools::getOrderPrice($this->oOrder, \GAnalyticsPro::$aConfiguration['GAP_USE_TAX'], \GAnalyticsPro::$aConfiguration['GAP_USE_SHIPPING'], \GAnalyticsPro::$aConfiguration['GAP_USE_WRAPPING']);
         }
     }
 
@@ -176,7 +176,7 @@ class purchaseTag extends baseTag
     public function setValueTax()
     {
         if (!empty($this->bValid)) {
-            $this->fValueTax = number_format($this->oOrder->total_paid_tax_incl - $this->oOrder->total_paid_tax_excl, 2, '.', '');
+            $this->fValueTax = (float)number_format($this->oOrder->total_paid_tax_incl - $this->oOrder->total_paid_tax_excl, 2, '.', '');
         }
     }
 

@@ -465,7 +465,7 @@ class moduleTools
             }
         }
 
-        return number_format($fOderAmount, 2, '.', '');
+        return (float)number_format($fOderAmount, 2, '.', '');
     }
 
     /**

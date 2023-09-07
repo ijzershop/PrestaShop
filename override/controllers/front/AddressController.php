@@ -27,8 +27,8 @@ class AddressController extends AddressControllerCore
 {
     /*
     * module: advancedvatmanager
-    * date: 2023-06-29 09:33:30
-    * version: 1.6.1
+    * date: 2023-09-07 12:09:32
+    * version: 1.6.2.2
     */
     public function processSubmitAddress()
     {
@@ -44,12 +44,6 @@ class AddressController extends AddressControllerCore
                         return $this->context->controller->errors[] = $module->getMessage();      
                     }
                 }
-            }
-            else if (Module::isEnabled('dniverificator')) {
-                    if (Configuration::get('DNIVERIFICATOR_FO') == 1) {  
-                        $module = new Dniverificator();
-                        return $module->verifyDocument();          
-                    }
             }
         }
         return parent::processSubmitAddress();

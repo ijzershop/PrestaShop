@@ -83,9 +83,16 @@ function upgrade_module_1_4_0($module)
     Configuration::updateValue('ADVANCEDVATMANAGER_NOTALLOW_CHECKOUT_WITHOUT_VALIDATION', 1); 
     
     // Remove old methods
-    $module->removeModuleClassMethodOverride($module->name, 'getDeliveryOptionList', 'Cart');
-    $module->removeModuleClassMethodOverride($module->name, 'getCartRules', 'Cart');
-    $module->removeModuleClassMethodOverride($module->name, 'getPackageList', 'Cart');
+    if (method_exists($module, 'removeModuleClassMethodOverride')) {
+		$module->removeModuleClassMethodOverride($module->name, 'getDeliveryOptionList', 'Cart');
+		$module->removeModuleClassMethodOverride($module->name, 'getCartRules', 'Cart');
+		$module->removeModuleClassMethodOverride($module->name, 'getPackageList', 'Cart');
+    }
+	else if (method_exists($module, 'removeModuleOverride')) {
+		$module->removeModuleOverride($module->name, 'getDeliveryOptionList', 'Cart');
+		$module->removeModuleOverride($module->name, 'getCartRules', 'Cart');
+		$module->removeModuleOverride($module->name, 'getPackageList', 'Cart');
+	}
     @unlink(_PS_MODULE_DIR_.'/advancedvatmanager/override/classes/Cart_(methods_removed_from_1.4.0).php');
     @unlink(_PS_ROOT_DIR_.'/override/modules/onepagecheckoutps/onepagecheckoutps.php');
     

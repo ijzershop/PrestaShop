@@ -553,7 +553,7 @@ $_MODULE['<{advancedvatmanager}prestashop>displayexpresscheckout_4008075d86c1dbe
 $_MODULE['<{advancedvatmanager}prestashop>displayexpresscheckout_85e876a882def93bda90363e59224705'] = 'Non sono consentiti acquisti inferiori %s';
 $_MODULE['<{advancedvatmanager}prestashop>displayexpresscheckout_27b66313beb82abac213f9831454d7fa'] = 'Non è consentito aggiungere al carrello prodotti con un prezzo unitario uguale o superiore a %s combinati con altri prodotti con un prezzo unitario inferiore, secondo il regolamento VOEC in Norvegia. Dovrai effettuare acquisti separati.';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersexemptionmanager_f2a6c498fb90ee345d997f888fce3b18'] = 'Eliminare';
-$_MODULE['<{advancedvatmanager}prestashop>admincustomersexemptionmanager_097a901a0d6a7e9ca20f650ae37c1c61'] = 'Eliminare gli elementi selezionati dall\'elenco?';
+$_MODULE['<{advancedvatmanager}prestashop>admincustomersexemptionmanager_097a901a0d6a7e9ca20f650ae37c1c61'] = 'Eliminare gli elementi selezionati?';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersexemptionmanager_b718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersexemptionmanager_dd2e2558399f80bf6bf65e8fc2933b19'] = 'ID Cliente';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersexemptionmanager_b8e97dd2df718b18ba0111008a745c57'] = 'Nome del cliente';
@@ -578,7 +578,7 @@ $_MODULE['<{advancedvatmanager}prestashop>admincustomersexemptionmanager_5bcbf73
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersexemptionmanager_ed867a3cfa0e8cc10d5d38b20cef36fa'] = 'Elenco di esenzione IVA clienti';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersexemptionmanager_21c411dbe2b2a636f05d20fd4bfa8129'] = 'Visualizza i dettagli del cliente';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersordersmanager_f2a6c498fb90ee345d997f888fce3b18'] = 'Eliminare';
-$_MODULE['<{advancedvatmanager}prestashop>admincustomersordersmanager_097a901a0d6a7e9ca20f650ae37c1c61'] = 'Eliminare gli elementi selezionati dall\'elenco?';
+$_MODULE['<{advancedvatmanager}prestashop>admincustomersordersmanager_097a901a0d6a7e9ca20f650ae37c1c61'] = 'Eliminare gli elementi selezionati?';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersordersmanager_5fde470e78d8f75e778801d4ec4bd91b'] = 'Scarica le fatture';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersordersmanager_b718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersordersmanager_25fe9fafd66051f9c35a8f2bf6602fdf'] = 'ID cliente';
@@ -625,7 +625,7 @@ $_MODULE['<{advancedvatmanager}prestashop>admincustomersvatmanager_c9a6f6a36f68c
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersvatmanager_a1b0c2829a3eece262c98c7e74cd33cd'] = 'Eliminare l\'IVA';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersvatmanager_69a214b25aaf25388577319922535919'] = 'Vuoi eliminare la partita IVA per gli articoli selezionati?';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersvatmanager_f2a6c498fb90ee345d997f888fce3b18'] = 'Eliminare';
-$_MODULE['<{advancedvatmanager}prestashop>admincustomersvatmanager_097a901a0d6a7e9ca20f650ae37c1c61'] = 'Eliminare gli elementi selezionati dall\'elenco?';
+$_MODULE['<{advancedvatmanager}prestashop>admincustomersvatmanager_097a901a0d6a7e9ca20f650ae37c1c61'] = 'Eliminare gli elementi selezionati?';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersvatmanager_4bbb8f967da6d1a610596d7257179c2b'] = 'Non valido';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersvatmanager_3ac705f2acd51a4613f9188c05c91d0d'] = 'Valido';
 $_MODULE['<{advancedvatmanager}prestashop>admincustomersvatmanager_73fad034c4b86dd13318ffef21eea085'] = 'Non ancora convalidato';

@@ -31,3 +31,9 @@
         <li>{l s='Check that in the "Countries for validation" option in the "activation" section, the local country of the store is not selected.' mod='advancedvatmanager'}</li>
     </ul>    
 </div>
+<div class="troubleshooting_item">
+    <h4 class="troubleshooting_title">{l s='When performing the address scanning process from the "Customer VAT Number Management" section, for some reason, it does not finish the process of scanning all eligible addresses.' mod='advancedvatmanager'}</h4>
+    <ul class="troubleshooting_list">
+        <li>{l s='One of the reasons why the scanning process may not finish successfully is because the server cannot continue the process due to some performance reason, misconfiguration or because some limits in its values ??have been exceeded. It may also happen that there is a problem within the dabase. The system has an option to continue scanning from the last address scanned. Try to perform the scanning process again by choosing the option [Continue the scanning process from the last address scanned] so that the system only tries to scan the addresses that have been left pending in the database.'  mod='advancedvatmanager'}</li>
+    </ul>    
+</div>

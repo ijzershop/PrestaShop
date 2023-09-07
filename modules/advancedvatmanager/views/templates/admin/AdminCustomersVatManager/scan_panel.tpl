@@ -22,6 +22,7 @@
             <li>{l s='The VAT number field is set as' mod='advancedvatmanager'} <strong>{l s='%s' sprintf=[$field_condition]  mod='advancedvatmanager'}</strong></li>
             {if $show_with_company}<li>{l s='The VAT number field is displayed and validated only when customers have filled the company field' mod='advancedvatmanager'}</li>{/if}
             {if $allow_duplicated}<li>{l s='Duplicated VAT numbers are allowed' mod='advancedvatmanager'}</li>{else}<li>{l s='Duplicated VAT numbers are not allowed' mod='advancedvatmanager'}</li>{/if}
+            <li>{l s='Company validation:' mod='advancedvatmanager'} <strong>{if $company_validation}{l s='Enabled' mod='advancedvatmanager'}{else}{l s='Disabled' mod='advancedvatmanager'}{/if}</strong></li>
         </ul>
     </div>
     <div class="alert alert-warning">

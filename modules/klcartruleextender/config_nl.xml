@@ -2,7 +2,7 @@
 <module>
     <name>klcartruleextender</name>
     <displayName><![CDATA[Cart rule extender - Add shipping and wrapping cost]]></displayName>
-    <version><![CDATA[1.0.1]]></version>
+    <version><![CDATA[1.0.2]]></version>
     <description><![CDATA[Let the possibility to your customers to include shipping and wrapping cost with their discount codes.]]></description>
     <author><![CDATA[Keyrnel]]></author>
     <tab><![CDATA[others]]></tab>

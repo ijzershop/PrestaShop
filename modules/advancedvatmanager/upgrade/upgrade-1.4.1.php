@@ -45,9 +45,16 @@ function upgrade_module_1_4_1($module)
     $module->installOverrides();
     
     // Remove old methods
-    $module->removeModuleClassMethodOverride($module->name, 'getDeliveryOptionList', 'Cart');
-    $module->removeModuleClassMethodOverride($module->name, 'getCartRules', 'Cart');
-    $module->removeModuleClassMethodOverride($module->name, 'getPackageList', 'Cart');
+    if (method_exists($module, 'removeModuleClassMethodOverride')) {
+		$module->removeModuleClassMethodOverride($module->name, 'getDeliveryOptionList', 'Cart');
+		$module->removeModuleClassMethodOverride($module->name, 'getCartRules', 'Cart');
+		$module->removeModuleClassMethodOverride($module->name, 'getPackageList', 'Cart');
+    }
+	else if (method_exists($module, 'removeModuleOverride')) {
+		$module->removeModuleOverride($module->name, 'getDeliveryOptionList', 'Cart');
+		$module->removeModuleOverride($module->name, 'getCartRules', 'Cart');
+		$module->removeModuleOverride($module->name, 'getPackageList', 'Cart');
+	}
     
     @unlink(_PS_MODULE_DIR_.'/views/js/admin/admin_module.js'); 
     

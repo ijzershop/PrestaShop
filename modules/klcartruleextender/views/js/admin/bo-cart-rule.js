@@ -27,19 +27,19 @@ $(function() {
 var KlCartRuleExtender_CartRule = (function() {
 	var includeFees = (function() {
 		var _settings = {};
-
+		
 		function initFormInput() {
 			var html = '<div id="include_fees" class="form-group">';
 			html += '<label class="control-label col-lg-3">';
-			html += '<span class="label-tooltip" data-toggle="tooltip" title data-original-title="Include shipping and wrapping costs">';
-			html += 'Include shipping and wrapping costs';
+			html += '<span class="label-tooltip" data-toggle="tooltip" title data-original-title="'+_settings.trans.tooltip+'">';
+			html += _settings.trans.label;
 			html += '</span></label>';
 			html += '<div class="col-lg-9">';
 			html += '<span class="switch prestashop-switch fixed-width-lg">';
 			html += '<input type="radio" name="include_fees" id="include_fees_on" value="1">';
-			html += '<label class="t" for="include_fees_on">Oui</label>';
+			html += '<label class="t" for="include_fees_on">'+_settings.trans.yes+'</label>';
 			html += '<input type="radio" name="include_fees" id="include_fees_off" value="0">';
-			html += '<label class="t" for="include_fees_off">Non</label>';
+			html += '<label class="t" for="include_fees_off">'+_settings.trans.no+'</label>';
 			html += '<a class="slide-button btn"></a>';
 			html += '</span></div></div>';
 
@@ -71,7 +71,14 @@ var KlCartRuleExtender_CartRule = (function() {
 		return {
 			init: function(cart_rule_fees) {
 				_settings = $.extend({}, _settings, {
-					formHook : '#apply_discount_to_div'
+					formHook : '#apply_discount_to_div',
+					trans: {
+						label: 'Include shipping and wrapping costs',
+						tooltip: 'Include shipping and wrapping costs',
+						yes: 'Yes',
+						no: 'No',
+						...JSON.parse(klCartRuleExtenderTrans)
+					}
 				});
 
 				initFormInput();
@@ -83,8 +90,8 @@ var KlCartRuleExtender_CartRule = (function() {
 
 	return {
 		init: function() {
-			if (typeof cart_rule_fees !== 'undefined' && cart_rule_fees) {
-				includeFees.init(JSON.parse(cart_rule_fees));
+			if (typeof klCartRuleExtenderFees !== 'undefined' && klCartRuleExtenderFees) {
+				includeFees.init(JSON.parse(klCartRuleExtenderFees));
 			}
 		}
 	}

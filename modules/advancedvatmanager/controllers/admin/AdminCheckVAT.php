@@ -16,7 +16,7 @@ class AdminCheckVATController extends ModuleAdminController
 
     /**
      * AdminCheckVATControllerController::__construct()
-     *
+     * 
      * @return
      */
     public function __construct()
@@ -26,38 +26,38 @@ class AdminCheckVATController extends ModuleAdminController
         $this->show_toolbar = true;
         $this->module = Module::getInstanceByName('advancedvatmanager');
         $this->controller_name = $this->controller_name;
-
+        
         parent::__construct();
     }
-
+    
     /**
      * AdminCheckVATControllerController::initContent()
-     *
+     * 
      * @return
      */
     public function initContent()
-    {
-        parent::initContent();
+    {       
+        parent::initContent();           
     }
-
+    
     /**
      * AdminCheckVATControllerController::initToolbar()
-     *
+     * 
      * @return
      */
     public function initToolbar()
     {
         parent::initToolbar();
 
-        $this->toolbar_title = $this->meta_title;
-
+        $this->toolbar_title = $this->meta_title;              
+        
         // Remove add new button
          unset($this->toolbar_btn);
     }
 
     /**
      * AdminCheckVATControllerController::initPageHeaderToolbar()
-     *
+     * 
      * @return
      */
     public function initPageHeaderToolbar()
@@ -67,21 +67,21 @@ class AdminCheckVATController extends ModuleAdminController
 
     /**
      * AdminCheckVATControllerController::initProcess()
-     *
+     * 
      * @return
      */
     public function initProcess()
     {
         parent::initProcess();
     }
-
+    
     /**
      * AdminCheckVATControllerController::renderList()
-     *
+     * 
      * @return
      */
     public function renderList()
-    {
+    {   
         $helper = new HelperList();
         $helper->module = $this;
         $this->toolbar_title = $this->l('Check VAT Tool',$this->controller_name); // title
@@ -92,50 +92,50 @@ class AdminCheckVATController extends ModuleAdminController
 
     /**
      * AdminCheckVATControllerController::renderView()
-     *
+     * 
      * @return
      */
     public function renderView()
     {
-        return parent::renderView();
+        return parent::renderView();  
     }
-
+    
     /**
      * AdminCheckVATControllerController::setMedia()
-     *
+     * 
      * @param bool $isNewTheme
      * @return
      */
     public function setMedia($isNewTheme = true)
     {
-        parent::setMedia();
-
+        parent::setMedia(); 
+        
         Media::addJsDef(array(
             'ajax_url_checkVAT' => $this->context->link->getAdminLink($this->controller_name),
             'vat_number_desc' => $this->l('Insert full VAT number included country ISO code (Ex: FR12325448)',$this->controller_name),
             'norway_number_desc' => $this->l('Norway company identification number is 9 digits number with no ISO code (Ex: 914778271)',$this->controller_name)
         ));
-
+        
         //Fontawesome
-        $this->addCSS('https://pro.fontawesome.com/releases/v5.15.4/css/all.css');
+        $this->addCSS('https://pro.fontawesome.com/releases/v5.15.4/css/all.css');                   
 
-        $this->addCSS('/modules/advancedvatmanager/views/css/admin/AdminCheckVAT/checkVATTool.css');
-        $this->addJS('/modules/advancedvatmanager/views/js/admin/AdminCheckVAT/checkVATTool.js');
+        $this->addCSS(_PS_MODULE_DIR_ . 'advancedvatmanager/views/css/admin/AdminCheckVAT/checkVATTool.css');
+        $this->addJS(_PS_MODULE_DIR_ . 'advancedvatmanager/views/js/admin/AdminCheckVAT/checkVATTool.js');       
     }
-
+    
     /**
      * AdminCheckVATControllerController::postProcess()
-     *
+     * 
      * @return
      */
     public function postProcess()
     {
         parent::postProcess();
     }
-
+    
     /**
      * AdminCheckVATControllerController::ajaxProcessCheckCustomerVAT()
-     *
+     * 
      * @return
      */
     public function ajaxProcessCheckVATTool()
@@ -150,19 +150,19 @@ class AdminCheckVATController extends ModuleAdminController
                 }
                 else if ($ve->ISOCodeValidation($ve->getVatNumber(),$ve->getVatIso())) {
                     if ($ve->getVatIso() == 'GB') {
-                        $ve->validationForUKVAT();
-                        $check_system =  'HMRC GOV.UK';
+                        $ve->validationForUKVAT(); 
+                        $check_system =  'HMRC GOV.UK';  
                     }
                     else {
                         $ve->vatValidationViesOneWay();
-                        $check_system =  'VIES';
+                        $check_system =  'VIES';     
                     }
                     $country_id = Country::getByIso($ve->getVatIso());
                     $country_name = Country::getNameById($this->context->language->id, $country_id);
-                    $country_iso = Country::getIsoById($country_id);
+                    $country_iso = Country::getIsoById($country_id); 
                 }
                 else {
-                    ValidationEngine::setVATValidation(false);
+                    ValidationEngine::setVATValidation(false);    
                 }
             }
             else if (Tools::getValue('vat_select') == 'norw_vat') {
@@ -170,10 +170,10 @@ class AdminCheckVATController extends ModuleAdminController
                 $check_system =  'data.brreg.no';
                 $country_id = Country::getByIso('NO');
                 $country_name = Country::getNameById($this->context->language->id, $country_id);
-                $country_iso = Country::getIsoById($country_id);
+                $country_iso = Country::getIsoById($country_id);   
             }
             die(json_encode(array(
-                'valid' => ValidationEngine::getVATValidation(),
+                'valid' => ValidationEngine::getVATValidation(), 
                 'vat_number' => $ve->getVatNumber(),
                 'vat_iso' => $ve->getVatIso(),
                 'country' => $country_name,
@@ -183,13 +183,13 @@ class AdminCheckVATController extends ModuleAdminController
                 'request_date' => $ve->getRequestDate(),
                 'check_system' => $check_system,
                 'message' => $ve->getMessage()
-            )));
+            )));   
         }
         else {
             die('Token is not valid!');
         }
     }
-
+    
     /**
      * AdminCheckVATControllerController::l()
      * Implements translations compatibility
@@ -206,5 +206,5 @@ class AdminCheckVATController extends ModuleAdminController
         } else {
             return parent::l($string, $class, $addslashes, $htmlentities);
         }
-    }
+    } 
 }

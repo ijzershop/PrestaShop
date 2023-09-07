@@ -13,6 +13,7 @@ if (!defined('_PS_VERSION_')) {
 };
 
 require_once(_PS_MODULE_DIR_.'advancedvatmanager/classes/CustomersVAT.php');
+require_once(_PS_MODULE_DIR_.'advancedvatmanager/classes/CustomersExemption.php');
 require_once(_PS_MODULE_DIR_.'advancedvatmanager/classes/AdvancedVatManagerOC.php');
 
 class ValidationEngine extends Module
@@ -32,7 +33,7 @@ class ValidationEngine extends Module
     private $error_code;
     
     protected $eu_prefix = array();
-    
+    // Add more ISO code to update European countries
     public static $european_countries_iso = array('AT','BE','BG','CY','CZ','DE','DK','EE','ES','FI','FR','GR','HR','HU','IE','IT','LT','LU','LV','MT','NL','PL','PT','RO','SE','SI','SK');
     public static $brexit_countries_iso = array('GB');
     public static $voec_countries_iso = array('NO');
@@ -88,8 +89,8 @@ class ValidationEngine extends Module
             'INTERNAL_SERVER_ERROR' => $this->l('Internal server error', 'ValidationEngine'),
         );
         // Save countries ISO code for VAT
-        if (Configuration::get('ADVANCEDVATMANAGER_COUNTRY')) {
-            $countries_id = json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true);
+        $countries_id = CustomersVAT::getCountriesIDForValidation();
+        if (!empty($countries_id)) {
             foreach ($countries_id as $id) {
                 // Fix brexit with Nord of Ireland
                 if (Country::getIsoById($id) == 'GB') {
@@ -101,7 +102,7 @@ class ValidationEngine extends Module
                 else {
                     $this->eu_prefix[Country::getIsoById($id)] = Country::getIsoById($id);
                 }
-            }
+            }    
         }
         // Register merchant VAT as requester
         if (Tools::getValue('ADVANCEDVATMANAGER_MERCHANT_VAT')) {
@@ -365,10 +366,11 @@ class ValidationEngine extends Module
      */
     public static function skipVATFieldBycountry($country_id = null)
     {
+        $countries = CustomersVAT::getCountriesIDForValidation();
         // Checks countries to skip validation
-        if ($country_id && !in_array($country_id, json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true))) {
+        if (!$countries || ($country_id && !in_array($country_id, $countries))) {
             return true;    
-        }     
+        }   
         return false;
     }
     /**
@@ -406,15 +408,16 @@ class ValidationEngine extends Module
                 }    
             }    
         }
+        
+        // Checks if country is selected to verify VAT numbers.
+        if (self::skipVATFieldBycountry($country_id)) {
+            return true;
+        } 
 
         // Checks Front validation enabled
         if (Context::getContext()->controller instanceof FrontController) {
             if (Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION') == 0 && self::$admin_scan === false) {
                 return true;
-            }
-            // Checks countries to skip validation
-            if ((Configuration::get('ADVANCEDVATMANAGER_COUNTRY') && $country_id && !in_array($country_id, json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true))) || Configuration::get('ADVANCEDVATMANAGER_COUNTRY') == '') {
-                return true;    
             }
             // Checks if VAT number is empty and field is optional
             if (empty($vat_number) && Configuration::get('ADVANCEDVATMANAGER_VATFIELD') == 'optional') {
@@ -440,10 +443,6 @@ class ValidationEngine extends Module
             if (empty($vat_number) && Configuration::get('ADVANCEDVATMANAGER_VATFIELD') == 'optional') {
                 return true;        
             }            
-            // Checks countries to skip validation
-            if ((Configuration::get('ADVANCEDVATMANAGER_COUNTRY') && $country_id && !in_array($country_id, json_decode(Configuration::get('ADVANCEDVATMANAGER_COUNTRY'), true))) || Configuration::get('ADVANCEDVATMANAGER_COUNTRY') == '') {
-                return true;    
-            }  
         }
         return false;
     }
@@ -587,7 +586,7 @@ class ValidationEngine extends Module
             }
             
             // Assign customer group after validating
-            self::manageCustomerGroups($country_id, $id_customer, self::$valid);
+            self::manageCustomerGroups($country_id, $id_customer, $id_address, self::$valid);
             
             // Save static values
             self::$validation_process = true;
@@ -599,6 +598,10 @@ class ValidationEngine extends Module
             // Save static values
             self::$validation_process = false;
             self::$skip_validation_process = true;
+            
+            // Assign customer group after validating
+            self::manageCustomerGroups($country_id, $id_customer, $id_address, self::$valid);
+            
             return false;
         }
     }
@@ -1274,7 +1277,7 @@ class ValidationEngine extends Module
                 self::$brexit_customer = true;
                 $module = Module::getInstanceByName('advancedvatmanager');
                 $cookie_cart = json_decode(Context::getContext()->cookie->__get('avm_cart'), true);
-                if ($module->checkNotAllowCheckoutBrexit($cookie_cart['total'])) {
+                if ($cookie_cart && $module->checkNotAllowCheckoutBrexit($cookie_cart['total'])) {
                     self::$allow_checkout = false;     
                 }
                 // More than 135GBP no tax in any case
@@ -1410,18 +1413,19 @@ class ValidationEngine extends Module
      * @param bool $vat_valid
      * @return $output_msg (Displays message in Cron task and Customer VAT scanner)
      */
-    public static function manageCustomerGroups($id_country, $id_customer, $vat_valid = false)
+    public static function manageCustomerGroups($id_country, $id_customer, $id_address, $vat_valid = false)
     {
         $group_assignation_bycountry = Configuration::get('ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_COUNTRY_'.$id_country);
-        $customer_vat_countries = CustomersVAT::getCountryAddressWithValidVAT($id_customer);
+        $countries_with_valid_vat = CustomersVAT::getCountryAddressWithValidVAT($id_customer);
         $customer = new Customer($id_customer);
         $customer_groups = $customer->getGroups();
         $assigned_groups = array();
         $output_msg = '';
-        
-        if (!empty($customer_vat_countries)) {
+
+        // Checks countries address with valid VAT
+        if (!empty($countries_with_valid_vat)) {
             // All groups by country set in this module by customer except the current country
-            foreach ($customer_vat_countries as $country) {
+            foreach ($countries_with_valid_vat as $country) {
                 if ($country['id_country'] == $id_country) {
                     continue;    
                 }
@@ -1430,13 +1434,14 @@ class ValidationEngine extends Module
                 } 
             }
         }
+        
         if (!empty($group_assignation_bycountry)) {
             if ($vat_valid) {
                 if (Configuration::get('ADVANCEDVATMANAGER_DELETE_PREVIOUS_GROUPS')) {
                     // Removes customer previous groups and only add the group by country selected in this module.
                     $customer->cleanGroups();
                     $customer->addGroups(array($group_assignation_bycountry));
-                    // Set by default Group
+                    // Set by default Group to avoid issues with no default group assignation after deleting all previous customer groups.
                     self::setDefaultCustomerGroup($id_customer, (int)$group_assignation_bycountry);
                 }
                 else {
@@ -1452,35 +1457,50 @@ class ValidationEngine extends Module
                 }
             }
             else {
-                // Remove from this group
-                if (!CustomersVAT::checkCustomerHasVATValidByCountry($id_customer, $id_country)) {                   
-                    // Assign Prestashop customer default group if it is empty
-                    if (count($customer_groups) == 1 && $customer_groups == array($group_assignation_bycountry)) {
-                         $customer->addGroups(array((int)Configuration::get('PS_CUSTOMER_GROUP')));
-                         self::setDefaultCustomerGroup($id_customer, (int)Configuration::get('PS_CUSTOMER_GROUP'));
-                         self::removeCustomerGroup($id_customer, $group_assignation_bycountry);    
-                    }
-                    else {
-                        self::removeCustomerGroup($id_customer, $group_assignation_bycountry);
-                        if (!empty($assigned_groups)) {
-                            // Set one default group by country configured in this module by customer
-                            self::setDefaultCustomerGroup($id_customer, (int)max($assigned_groups));
-                            $output_msg .= sprintf(Translate::getModuleTranslation('advancedvatmanager', 'The client with ID#%s has been assigned to the default group %s','ValidationEngine'),$id_customer, self::getGroupAssignation((int)$assigned_groups[0]));   
+                // Remove customer group if the customer has not a valid VAT in this country
+                if (!CustomersVAT::checkCustomerHasVATValidByCountryWithAddressExemption($id_customer, $id_country, $id_address)) {  
+                    // If customer is assigned into a group
+                    if ($customer_groups) {
+                        if (in_array($group_assignation_bycountry, $customer_groups)) {
+                            self::removeCustomerGroup($id_customer, $group_assignation_bycountry);
+                            // If customer group is only one and this is the same as assigned by module, then remove it and assign default customer group by configuration
+                            if (count($customer_groups) == 1) {
+                                $customer->addGroups(array((int)Configuration::get('PS_CUSTOMER_GROUP')));
+                                self::setDefaultCustomerGroup($id_customer, (int)Configuration::get('PS_CUSTOMER_GROUP'));   
+                            }
+                            else if (count($customer_groups) > 1) {                            
+                                // If customer is assigned to another groups from module configuration, then assign as default group
+                                if (!empty($assigned_groups)) {
+                                    // Set one default group by country configured in this module by customer
+                                    self::setDefaultCustomerGroup($id_customer, (int)max($assigned_groups));
+                                    $output_msg .= sprintf(Translate::getModuleTranslation('advancedvatmanager', 'The client with ID#%s has been assigned to the default group %s','ValidationEngine'),$id_customer, self::getGroupAssignation((int)$assigned_groups[0]));   
+                                } 
+                                // Assign to Prestashop default group another group from Prestashop
+                                else {
+                                    if ($pos = array_search($group_assignation_bycountry, $customer_groups)) {
+                                        unset($customer_groups[$pos]);  
+                                    }
+                                    self::setDefaultCustomerGroup((int)$id_customer, (int)max($customer_groups));  
+                                }  
+                            }
                         }
                         else {
-                            if ($pos = array_search($group_assignation_bycountry, $customer_groups)) {
-                                unset($customer_groups[$pos]);    
-                            }
-                            self::setDefaultCustomerGroup($id_customer, (int)max($customer_groups));  
-                        }     
+                            // Set the newest groups as default customer groups
+                            self::setDefaultCustomerGroup((int)$id_customer, (int)max($customer_groups));        
+                        }   
+                    }
+                    else {
+                        // Set customer into a default customer group to avoid issues
+                        $customer->addGroups(array((int)Configuration::get('PS_CUSTOMER_GROUP')));
+                        self::setDefaultCustomerGroup((int)$id_customer, (int)Configuration::get('PS_CUSTOMER_GROUP'));
                     }
                 }    
             } 
-            if (empty($output_msg)) {
-                $output_msg = sprintf(Translate::getModuleTranslation('advancedvatmanager', 'The client with ID#%s has not been assigned to any customer groups','ValidationEngine'),$id_customer);       
-            }
-            return $output_msg; 
         }
+        if (empty($output_msg)) {
+            $output_msg = sprintf(Translate::getModuleTranslation('advancedvatmanager', 'The client with ID#%s has not been assigned to any customer groups','ValidationEngine'),$id_customer);       
+        }
+        return $output_msg; 
     }
     
     /**
@@ -1516,9 +1536,10 @@ class ValidationEngine extends Module
         if ($group_assignation_bycountry && in_array($group_assignation_bycountry, $customer_groups)) {
             if (CustomersVAT::checkCustomerVATValid($id_customer, $id_address)) {
                 return self::setDefaultCustomerGroup($id_customer, $group_assignation_bycountry);// Set default customer group.
-            } 
+            }
         }
-        return self::setDefaultCustomerGroup($id_customer, (int)max($customer_groups));
+        // Assign default customer group if VAt is not valid or group is not assigned within customer groups
+        return self::setDefaultCustomerGroup((int)$id_customer, (int)Configuration::get('PS_CUSTOMER_GROUP'));
     }  
     
     /**

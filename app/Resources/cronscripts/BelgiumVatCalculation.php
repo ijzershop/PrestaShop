@@ -29,6 +29,8 @@ class CalculateBelgiumVat
     private $debug;
 
     private $fmt;
+    
+    private $address;
 
     /**
      * OrderSlipGenerator constructor.
@@ -43,7 +45,8 @@ class CalculateBelgiumVat
         $this->debug = $debug;
 
         $this->fmt = numfmt_create('nl_NL', \NumberFormatter::CURRENCY);
-        }
+        $this->address = 'jelmer@ijzershop.nl';
+    }
 
     /**
      * @return false|string
@@ -52,6 +55,7 @@ class CalculateBelgiumVat
      */
     public function calculateVat(){
         $record = $this->fetchVatDataFromOrderTable($this->from_date, $this->to_date);
+
         $newVatRecord = [
                             "date_from" => $record['from'],
                             "date_to" => $record['to'],
@@ -113,7 +117,6 @@ class CalculateBelgiumVat
     {
         $from = date('M Y', strtotime($record['date_from']));
         $to = date('M Y', strtotime($record['date_to']));
-        $address = 'jelmer@ijzershop.nl';
 
         $template = 'belgium_vat_calc';
         $template_path = _PS_MODULE_DIR_ . 'msthemeconfig/mails/';
@@ -131,8 +134,8 @@ class CalculateBelgiumVat
             '{reference_list}' => $record['reference_list']
         ];
 
-        if (Mail::send(Context::getContext()->language->id, $template, $subject, $vars, $address, 'Financiële administratie', 'ijzershop nl', 'Webshop Ijzershop', null, null, $template_path, false, null)) {
-            $message = ''.$total_vat.' Belgische BTW berekend van periode '. $from . ' tot ' . $to . ' is verstuurd naar ' . $address;
+        if (Mail::send(Context::getContext()->language->id, $template, $subject, $vars, $this->address, 'Financiële administratie', 'ijzershop nl', 'Webshop Ijzershop', null, null, $template_path, false, null)) {
+            $message = ''.$total_vat.' Belgische BTW berekend van periode '. $from . ' tot ' . $to . ' is verstuurd naar ' . $this->address;
         }
         else {
             $message = 'Er is een fout opgetreden bij het verzenden van de email!';

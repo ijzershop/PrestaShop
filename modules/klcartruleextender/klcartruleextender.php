@@ -370,19 +370,19 @@ class KlCartRuleExtender extends Module
         }
 
         return (bool) Db::getInstance()->getValue('
-      		SELECT crf.`id_cart_rule`
+      		SELECT `crf`.`id_cart_rule`
       		FROM `' . _DB_PREFIX_ . 'cart_rule_fees` crf
-      		WHERE crf.`id_cart_rule` = ' . (int) $id_cart_rule
+      		WHERE `crf`.`id_cart_rule` = ' . (int) $id_cart_rule
         );
     }
 
     public function getOrderFeesById($id_order)
     {
-        return Db::getInstance()->getRow('
-          SELECT of.`include_shipping`, of.`include_wrapping`
-          FROM `' . _DB_PREFIX_ . 'order_fees` of
-          WHERE of.`id_order` = ' . (int) $id_order
-        );
+        return Db::getInstance()->getRow("
+          SELECT `of`.`include_shipping`, `of`.`include_wrapping`
+          FROM `" . _DB_PREFIX_ . "order_fees` `of`
+          WHERE `of`.`id_order` = '". (int) $id_order."'"
+        , false);
     }
 
     public function addOrderFees($order_fees_values = [])
@@ -414,7 +414,7 @@ class KlCartRuleExtender extends Module
         $ids = [];
 
         $cart_rules = Db::getInstance()->executeS('
-          SELECT crf.`id_cart_rule`
+          SELECT `crf`.`id_cart_rule`
           FROM `' . _DB_PREFIX_ . 'cart_rule_fees` crf'
         );
 

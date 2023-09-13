@@ -29,7 +29,7 @@ class CalculateBelgiumVat
     private $debug;
 
     private $fmt;
-    
+
     private $address;
 
     /**

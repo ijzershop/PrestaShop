@@ -343,7 +343,7 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
                     return;
                 }
 
-                $supPrice = $supplierData['prices']->{$supplier_price};
+                $supPrice = (float)$supplierData['prices']->{$supplier_price};
                 $supplier_price_value = $supPrice;
                 return round($supPrice, 2);
             },

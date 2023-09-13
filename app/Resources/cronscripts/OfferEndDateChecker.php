@@ -110,7 +110,7 @@ class OfferEndDateChecker
 }
 
 try {
-    $batch = new OfferEndDateChecker(true);
+    $batch = new CalculateBelgiumVat(true);
     $batch->checkOfferDates();
 } catch (PrestaShopDatabaseException | PrestaShopException $exeption) {
     return $exeption;

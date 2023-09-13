@@ -51,6 +51,7 @@
                         <br/>
                         <img src="{$webroot}{$customization_infos.technical_image}" width="200"  alt=""/>
                         <br/>
+                          {$webroot}{$customization_infos.technical_image}
 {*                        <img src="{Context::getContext()->shop->getBaseURL(false, false)}{$customization_infos.technical_image}.png" width="200"  alt=""/>*}
                       </td>
                     </tr>

@@ -129,6 +129,10 @@ class ModernAjax
                 $from = $request->get('from');
                 $to = $request->get('to');
                 $panelData = $this->fetchVatDataFromOrderTable($from, $to);
+
+                $sqlHistoryVat = "SELECT * FROM `" . _DB_PREFIX_ . "modernesmid_vat_history` ORDER BY `" . _DB_PREFIX_ . "modernesmid_vat_history`.`id`";
+                $resultHistory = Db::getInstance()->executeS($sqlHistoryVat);
+                $panelData['vat_history'] = $resultHistory;
             } else {
                 $panelData = $this->fetchData($panel_name);
             }
@@ -550,44 +554,25 @@ class ModernAjax
         $vatData = [
             'from' => $dtfrom->format('Y-m-d'),
             'to' => $dtto->format('Y-m-d'),
-            'total_dutch_orders' => 0,
-            'total_dutch_order_amount_excl' => 0,
-            'total_dutch_order_amount_incl' => 0,
-            'total_dutch_vat' => 0,
             'total_belgium_orders' => 0,
             'total_belgium_order_amount_excl' => 0,
             'total_belgium_order_amount_incl' => 0,
             'total_belgium_vat' => 0,
-            'total_amount_excl' => 0,
-            'total_amount_incl' => 0,
-            'total_vat' => 0,
         ];
 
         $sqlBelgium = "SELECT `" . _DB_PREFIX_ . "orders`.`id_address_delivery`, `" . _DB_PREFIX_ . "orders`.`id_order`, count(`" . _DB_PREFIX_ . "orders`.`id_order`) as order_total_be,  SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_excl`) as total_be_tax_excl, SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_incl`) as total_be_tax_incl FROM `" . _DB_PREFIX_ . "orders` LEFT JOIN `" . _DB_PREFIX_ . "address` ON `" . _DB_PREFIX_ . "orders`.`id_address_delivery` = `" . _DB_PREFIX_ . "address`.`id_address`
                 WHERE `" . _DB_PREFIX_ . "address`.`id_country` = '3' AND `" . _DB_PREFIX_ . "orders`.`date_add` BETWEEN '".$from."' AND '".$to."'";
 
-        $sqlNetherlands = "SELECT `" . _DB_PREFIX_ . "orders`.`id_address_delivery`, `" . _DB_PREFIX_ . "orders`.`id_order`, count(`" . _DB_PREFIX_ . "orders`.`id_order`) as order_total_nl,  SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_excl`) as total_nl_tax_excl, SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_incl`) as total_nl_tax_incl FROM `" . _DB_PREFIX_ . "orders` LEFT JOIN `" . _DB_PREFIX_ . "address` ON `" . _DB_PREFIX_ . "orders`.`id_address_delivery` = `" . _DB_PREFIX_ . "address`.`id_address`
-                WHERE `" . _DB_PREFIX_ . "address`.`id_country` = '13' AND `" . _DB_PREFIX_ . "orders`.`date_add` BETWEEN '".$from."' AND '".$to."'";
 
         $resultBE = Db::getInstance()->executeS($sqlBelgium);
-        $resultNL = Db::getInstance()->executeS($sqlNetherlands);
-
         $fmt = numfmt_create('nl_NL', \NumberFormatter::CURRENCY);
 
-        if($resultNL && $resultBE) {
-            $vatData['total_dutch_orders'] = (int)$resultNL[0]['order_total_nl'];
-            $vatData['total_dutch_order_amount_excl'] = numfmt_format_currency($fmt, (float)$resultNL[0]['total_nl_tax_excl'], "EUR");
-            $vatData['total_dutch_order_amount_incl'] = numfmt_format_currency($fmt, (float)$resultNL[0]['total_nl_tax_incl'], "EUR");
-            $vatData['total_dutch_vat'] = numfmt_format_currency($fmt, (float)$resultNL[0]['total_nl_tax_incl'] - (float)$resultNL[0]['total_nl_tax_excl'], "EUR");
+        if($resultBE) {
             $vatData['total_belgium_orders'] = (int)$resultBE[0]['order_total_be'];
             $vatData['total_belgium_order_amount_excl'] = numfmt_format_currency($fmt, (float)$resultBE[0]['total_be_tax_excl'], "EUR");
             $vatData['total_belgium_order_amount_incl'] = numfmt_format_currency($fmt, (float)$resultBE[0]['total_be_tax_incl'], "EUR");
             $vatData['total_belgium_vat'] = numfmt_format_currency($fmt, (float)$resultBE[0]['total_be_tax_incl'] - (float)$resultBE[0]['total_be_tax_excl'], "EUR");
          }
-
-        $vatData['total_vat'] = numfmt_format_currency($fmt, ((float)$resultNL[0]['total_nl_tax_incl'] - (float)$resultNL[0]['total_nl_tax_excl']) + ((float)$resultBE[0]['total_be_tax_incl'] - (float)$resultBE[0]['total_be_tax_excl']), "EUR");
-        $vatData['total_amount_excl'] = numfmt_format_currency($fmt, (float)$resultNL[0]['total_nl_tax_excl'] + (float)$resultBE[0]['total_be_tax_excl'], "EUR");
-        $vatData['total_amount_incl'] = numfmt_format_currency($fmt, (float)$resultNL[0]['total_nl_tax_incl'] + (float)$resultBE[0]['total_be_tax_incl'], "EUR");
 
         return $vatData;
     }

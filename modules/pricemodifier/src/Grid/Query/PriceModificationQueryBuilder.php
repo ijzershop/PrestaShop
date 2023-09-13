@@ -166,7 +166,7 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('name_supplier' === $name) {
-                $searchTerms = explode(" ", $value);
+                $searchTerms = explode("|", $value);
 
                 foreach ($searchTerms as $i => $term){
                     $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name.'_'.$i);

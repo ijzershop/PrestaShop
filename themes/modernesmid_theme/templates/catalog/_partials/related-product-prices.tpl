@@ -38,8 +38,8 @@
     {block name='product_price'}
     <div class="product-price {if $product.reduction > 0}has-discount{/if}">
       <div class="current-price">
-        <span content="{$productPrices.final_prices.price_ttc}"><span class="inclusive-price">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc, 'EUR')} {l s='Incl btw' d='Shop.Theme.Catalog'}</span></span><br>
-        <span class="exclusive-price">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht, 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+        <span content="{$productPrices.final_prices.price_ttc}"><span class="inclusive-price">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc, 'EUR')}</span></span><br>
+{*        <span class="exclusive-price">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht, 'EUR')}</span>*}
       </div>
       {block name='product_unit_price'}
       {if $displayUnitPrice}
@@ -75,8 +75,8 @@
     {block name='product_price'}
     <div class="product-price {if $product.reduction > 0}has-discount{/if}">
       <div class="current-price">
-        <span content="{$product.orderprice}"><span class="inclusive-price">{Context::getContext()->currentLocale->formatPrice($product.price, 'EUR')} {l s='Incl btw' d='Shop.Theme.Catalog'}</span></span><br>
-        <span class="exclusive-price">{Context::getContext()->currentLocale->formatPrice($product.price_tax_exc, 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+        <span content="{$product.orderprice}"><span class="inclusive-price">{Context::getContext()->currentLocale->formatPrice($product.price, 'EUR')}</span></span><br>
+{*        <span class="exclusive-price">{Context::getContext()->currentLocale->formatPrice($product.price_tax_exc, 'EUR')}</span>*}
       </div>
       {block name='product_unit_price'}
       {if $displayUnitPrice}

@@ -16,7 +16,7 @@
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
   <sodipodi:namedview
      pagecolor="#ffffff"
-     bordercolor="#666666"
+     bordercolor="#3b56ad"
      borderopacity="1"
      objecttolerance="10"
      gridtolerance="10"
@@ -51,15 +51,15 @@
   <g
      transform="translate(-99.428431,-106.13641)"
      id="layer1"
-     style="fill:#666666;fill-opacity:1">
+     style="fill:#3b56ad;fill-opacity:1">
     <g
        id="text1379"
-       style="font-style:normal;font-weight:normal;font-size:254.38793945px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:6.35969782"
+       style="font-style:normal;font-weight:normal;font-size:254.38793945px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#3b56ad;fill-opacity:1;stroke:none;stroke-width:6.35969782"
        transform="matrix(-0.6322666,0,0,1.5816113,220.77619,0)"
        aria-label="&lt;">
       <path
          id="path1381"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace;stroke-width:3.17984891;fill:#666666;fill-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace;stroke-width:3.17984891;fill:#3b56ad;fill-opacity:1"
          d="m 157.25713,94.304324 25.57788,-27.197817 9.08997,0.03327 -24.46612,27.164552 23.42795,27.210411 -9.52119,0.0332 z"
          inkscape:connector-curvature="0" />
     </g>

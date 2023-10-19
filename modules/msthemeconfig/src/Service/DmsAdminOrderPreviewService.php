@@ -3,6 +3,7 @@
 namespace MsThemeConfig\Service;
 
 use MsThemeConfig\QueryResult\DmsOrderPreviewProductDetail;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\AttributeGroup;
 use PrestaShop\PrestaShop\Adapter\Entity\Carrier;
 use PrestaShop\PrestaShop\Adapter\Entity\Country;
@@ -24,6 +25,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewInvoiceDetai
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewProductDetail;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewShippingDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Adapter\Entity\State;
 use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
@@ -61,6 +63,7 @@ final class DmsAdminOrderPreviewService implements GetOrderPreviewHandlerInterfa
     ) {
         $this->localeRepository = $localeRepository;
         $this->locale = $locale;
+        $this->configuration = new Configuration();
         $this->addressFormatter = $addressFormatter ?? new AddressFormatter();
     }
 
@@ -108,7 +111,17 @@ final class DmsAdminOrderPreviewService implements GetOrderPreviewHandlerInterfa
     private function getInvoiceDetails(Order $order): OrderPreviewInvoiceDetails
     {
         $customer = new Customer($order->id_customer);
-        $address = new Address($order->id_address_invoice);
+        if(Address::addressExists($order->id_address_invoice)){
+            $address = new Address($order->id_address_invoice);
+        } else {
+            $failingAddressId = $this->configuration->get(
+                'MSTHEMECONFIG_CUSTOM_ADDRESS_WHEN_FAIL',
+                1,
+                ShopConstraint::shop((int) $order->id_shop)
+            );
+
+            $address = new Address($failingAddressId);
+        }
         $country = new Country($address->id_country);
         $state = new State($address->id_state);
         $stateName = Validate::isLoadedObject($state) ? $state->name : null;
@@ -136,7 +149,17 @@ final class DmsAdminOrderPreviewService implements GetOrderPreviewHandlerInterfa
      */
     private function getShippingDetails(Order $order): OrderPreviewShippingDetails
     {
-        $address = new Address($order->id_address_delivery);
+        if(Address::addressExists($order->id_address_delivery)){
+            $address = new Address($order->id_address_delivery);
+        } else {
+            $failingAddressId = $this->configuration->get(
+                'MSTHEMECONFIG_CUSTOM_ADDRESS_WHEN_FAIL',
+                1,
+                ShopConstraint::shop((int) $order->id_shop)
+            );
+
+            $address = new Address($failingAddressId);
+        }
         $country = new Country($address->id_country);
         $carrier = new Carrier($order->id_carrier);
         $state = new State($address->id_state);

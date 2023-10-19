@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace MsThemeConfig\Class;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Carrier;
+use PrestaShop\PrestaShop\Adapter\Entity\CartRule;
 use PrestaShop\PrestaShop\Adapter\Entity\Category;
 use PrestaShop\PrestaShop\Adapter\Entity\CMS;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
@@ -12,6 +13,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\Feature;
 use PrestaShop\PrestaShop\Adapter\Entity\Group;
 use PrestaShop\PrestaShop\Adapter\Entity\OrderState;
+use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
 use PrestaShop\PrestaShop\Adapter\Entity\Profile;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
@@ -177,7 +179,7 @@ class ModernAjax
                 $dataArray[$this->prefix . 'OFFER_LINK'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'OFFER_LINK', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'pages');
                 $dataArray[$this->prefix . 'PRIMARY_COLOR'] = Configuration::get($this->prefix . 'PRIMARY_COLOR', $this->idLang, $this->idShopGroup, $this->idShop, '#3b56ad');
                 //Homepage variables
-                $dataArray[$this->prefix . 'HOMEPAGE_CATEGORIES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'HOMEPAGE_SELECTED_CATEGORIES', null, null, null, []), 'categories_home', false);
+                $dataArray[$this->prefix . 'HOMEPAGE_CATEGORIES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'HOMEPAGE_CATEGORIES_SORTED', $this->idLang, $this->idShopGroup, $this->idShop, []), 'categories_home', false);
                 $dataArray[$this->prefix . 'HOMEPAGE_TEXT'] = Configuration::get($this->prefix . 'HOMEPAGE_TEXT', $this->idLang, $this->idShopGroup, $this->idShop, '');
                 $dataArray[$this->prefix . 'HOMEPAGE_BACKGROUND_COLOR'] = Configuration::get($this->prefix . 'HOMEPAGE_BACKGROUND_COLOR', $this->idLang, $this->idShopGroup, $this->idShop, '#efefef');
                 //Category variables
@@ -387,6 +389,8 @@ class ModernAjax
                 $dataArray[$this->prefix . 'SHIPPING_CARRIER'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'SHIPPING_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop, '10'), 'carriers');
                 $dataArray[$this->prefix . 'PICKUP_CARRIER'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'PICKUP_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop, '7'), 'carriers');
                 $dataArray[$this->prefix . 'ADD2ORDER_CARRIER'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'ADD2ORDER_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop, '8'), 'carriers');
+
+                $dataArray[$this->prefix . 'CUSTOM_ADDRESS_WHEN_FAIL'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'CUSTOM_ADDRESS_WHEN_FAIL', $this->idLang, $this->idShopGroup, $this->idShop, '1'), 'addresses');
                 break;
             case 'config-user':
                 $dataArray[$this->prefix . 'EMPLOYEE_WORKSHOP_PROFILES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'EMPLOYEE_WORKSHOP_PROFILES', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'profiles');
@@ -528,6 +532,12 @@ class ModernAjax
                 $dataArray['KOOPMANORDEREXPORT_SELECT_WORKSHOP_STATUS'] = $this->getSelect2SelectedOptions(Configuration::get('KOOPMANORDEREXPORT_SELECT_WORKSHOP_STATUS' , $this->idLang, $this->idShopGroup, $this->idShop,  "30"),'order_states');
                 $dataArray['KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS'] = $this->getSelect2SelectedOptions(Configuration::get('KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS' , $this->idLang, $this->idShopGroup, $this->idShop,  "9"),'order_states');
                 break;
+            case 'sell':
+                $dataArray['MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME'] =  Configuration::get('MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME', $this->idLang, $this->idShopGroup, $this->idShop,  '16:00:00');
+                $dataArray['MSTHEMECONFIG_DISCOUNT_RULE_FIRST'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_FIRST', $this->idLang, $this->idShopGroup, $this->idShop,  0),'discounts');
+                $dataArray['MSTHEMECONFIG_DISCOUNT_RULE_SECOND'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_SECOND', $this->idLang, $this->idShopGroup, $this->idShop,  0),'discounts');
+                $dataArray['MSTHEMECONFIG_DISCOUNT_RULE_THIRD'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_THIRD', $this->idLang, $this->idShopGroup, $this->idShop,  0),'discounts');
+                break;
         }
 
         return $dataArray;
@@ -561,7 +571,7 @@ class ModernAjax
         ];
 
         $sqlBelgium = "SELECT `" . _DB_PREFIX_ . "orders`.`id_address_delivery`, `" . _DB_PREFIX_ . "orders`.`id_order`, count(`" . _DB_PREFIX_ . "orders`.`id_order`) as order_total_be,  SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_excl`) as total_be_tax_excl, SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_incl`) as total_be_tax_incl FROM `" . _DB_PREFIX_ . "orders` LEFT JOIN `" . _DB_PREFIX_ . "address` ON `" . _DB_PREFIX_ . "orders`.`id_address_delivery` = `" . _DB_PREFIX_ . "address`.`id_address`
-                WHERE `" . _DB_PREFIX_ . "address`.`id_country` = '3' AND `" . _DB_PREFIX_ . "orders`.`date_add` BETWEEN '".$from."' AND '".$to."'";
+                WHERE `" . _DB_PREFIX_ . "address`.`id_country` = '3' AND `" . _DB_PREFIX_ . "orders`.`date_add` BETWEEN '".$from."' AND '".$to."' AND `" . _DB_PREFIX_ . "orders`.`current_state` IN ('4','21','25','38')";
 
 
         $resultBE = Db::getInstance()->executeS($sqlBelgium);
@@ -806,6 +816,57 @@ class ModernAjax
                 $customerList['results'] = Db::getInstance()->executeS($sql);
 
                 return JsonResponse::fromJsonString(json_encode($customerList));
+                case 'addresses':
+                $addressList = [];
+                $searchArray = explode(' ', $search);
+                $likeList = '';
+                if (is_array($searchArray)) {
+                    foreach ($searchArray as $index => $searchValue) {
+                        if ($index != 0) {
+                            $likeList .= 'OR ';
+                        }
+                        $likeList .= "firstname LIKE '%" . $searchValue . "%' OR
+                                        alias LIKE '%" . $searchValue . "%' OR
+                                        lastname LIKE '%" . $searchValue . "%' OR
+                                        address1 LIKE '%" . $searchValue . "%' OR
+                                        address2 LIKE '%" . $searchValue . "%' OR
+                                        house_number LIKE '%" . $searchValue . "%' OR
+                                        house_number_extension LIKE '%" . $searchValue . "%' OR
+                                        postcode LIKE '%" . $searchValue . "%' OR
+                                        city LIKE '%" . $searchValue . "%' OR
+                                        other LIKE '%" . $searchValue . "%' OR
+                                        phone LIKE '%" . $searchValue . "%' OR
+                                        phone_mobile LIKE '%" . $searchValue . "%' OR
+                                        vat_number LIKE '%" . $searchValue . "%'";
+                    }
+                } else {
+                    $likeList = "firstname LIKE '%" . $search . "%' OR
+                                        alias LIKE '%" . $search . "%' OR
+                                        lastname LIKE '%" . $search . "%' OR
+                                        address1 LIKE '%" . $search . "%' OR
+                                        address2 LIKE '%" . $search . "%' OR
+                                        house_number LIKE '%" . $search . "%' OR
+                                        house_number_extension LIKE '%" . $search . "%' OR
+                                        postcode LIKE '%" . $search . "%' OR
+                                        city LIKE '%" . $search . "%' OR
+                                        other LIKE '%" . $search . "%' OR
+                                        phone LIKE '%" . $search . "%' OR
+                                        phone_mobile LIKE '%" . $search . "%' OR
+                                        vat_number LIKE '%" . $search . "%'";
+                }
+
+                $sql = "SELECT id_address AS id, CONCAT(alias,': ', firstname, ' ', lastname,' - ', address1, ' ', house_number, house_number_extension,' ', postcode, ' ', city) AS text FROM `" . _DB_PREFIX_ . "address`";
+                if (!empty($search)) {
+                    $sql .= " WHERE " . $likeList . " AND";
+                } else {
+                    $sql .= " WHERE";
+                }
+
+                $sql .= " `active` = '1' ORDER BY `lastname` LIMIT 0,10";
+
+                $addressList['results'] = Db::getInstance()->executeS($sql);
+
+                return JsonResponse::fromJsonString(json_encode($addressList));
             case 'groups':
                 $groups = Group::getGroups($this->idLang, $this->idShop);
                 $groupsList = [];
@@ -825,6 +886,25 @@ class ModernAjax
                 } else {
                     $list = $groupsList;
                 }
+                return JsonResponse::fromJsonString(json_encode($list));
+            case 'discounts':
+                $cartRules = new PrestaShopCollection('CartRule', 1);
+                $cartRules->where('active', '=', 1);
+                $cartRules->orderBy('date_upd', 'desc');
+                $cartRulesList = [];
+                $cartRulesList['results'][] = ['id' => 0, 'text' => 'Geen korting regel'];
+                foreach ($cartRules as $cartRule) {
+                    $title = $cartRule->name . '   ('. $cartRule->date_from . '-'. $cartRule->date_to.')';
+                    $id = $cartRule->id;
+                    if (!empty($search)) {
+                        if (!preg_match('(' . strtolower($search) . ')', strtolower($title))) {
+                            continue;
+                        }
+                    }
+                    $cartRulesList['results'][] = ['id' => $id, 'text' => $title];
+                }
+                    $list = $cartRulesList;
+
                 return JsonResponse::fromJsonString(json_encode($list));
 
 

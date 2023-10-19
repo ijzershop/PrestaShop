@@ -69,7 +69,7 @@
                           {assign var="availableOrders" value=[]}
                           {assign var="availableOrdersLinks" value=[]}
                           {foreach from=Order::getCustomerOrders(Context::getContext()->customer->id, false, Context::getContext()) item=order}
-                            {if in_array($order.id_order_state, $acceptedOrderStatusIds)}
+                            {if in_array($order.id_order_state, $acceptedOrderStatusIds) && (int)$order.id_carrier !== (int)Configuration::get('ADDTOORDER_DELIVERY_METHOD')}
                               {* $acceptedOrderStatusIds options are
                                 2 - [Betaling ontvangen]
                                 3 - Order afhalen
@@ -163,7 +163,7 @@
                                 <input type="text" class="form-control" id="desired_reference" placeholder="YS-000000" autocomplete="des-reference">
                                 <input type="hidden" name="added_to_order" id="added_to_order" value="">
                                 <div class="input-group-append">
-                                  <button id="search_order_for_shipping" class="btn btn-sm btn-success"><i class="fasr fa-magnifying-glass"></i></button>
+                                  <button id="search_order_for_shipping" class="btn btn-sm btn-success"><i class="fasl fa-magnifying-glass"></i></button>
                                 </div>
                               </div>
                               <span class="col" id="desired_reference_error"></span>

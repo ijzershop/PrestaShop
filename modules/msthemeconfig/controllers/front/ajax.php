@@ -1232,6 +1232,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
      */
     private function _getKoopmanPrintedLabel()
     {
+
         if(Tools::getIsset('updateAddress')){
             $this->updateOrderDeliveryAddress(Tools::getAllValues());
         }
@@ -1246,10 +1247,14 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         if($export->redirect){
             $readyForShippingStatus = Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
-            $history = new OrderHistory();
-            $history->id_order = (int)$id_order;
-            $history->changeIdOrderState((int)$readyForShippingStatus, (int)$id_order);
-            $history->add();
+            $order = new Order($id_order);
+
+            if((int)$readyForShippingStatus !== (int)$order->current_state){
+                $history = new OrderHistory();
+                $history->id_order = (int)$id_order;
+                $history->changeIdOrderState((int)$readyForShippingStatus, (int)$id_order);
+                $history->add();
+            }
 
             $this->makeApiCallToDashboard('set-label-printed', $id_order, Order::getUniqReferenceOf($id_order));
             die('printed');

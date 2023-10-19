@@ -110,7 +110,7 @@ class DmsOrderPreviewProductDetail extends OrderPreviewProductDetail
             if(is_file($_SERVER['DOCUMENT_ROOT'] .$this->technical_image)){
                 $domainUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'];
 
-                $techImage = '<img src="'.$domainUrl.$this->technical_image.'" width="auto" height="55">';
+                $techImage = '<img src="'.$domainUrl.'/'.$this->technical_image.'" width="auto" height="55">';
             }
         }
         return $techImage;

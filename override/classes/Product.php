@@ -9,6 +9,11 @@ class Product extends ProductCore {
     * version: 1.0.9.1
     */
     public $min_cut_remainder;
+    public $saw_loss;
+
+    public $min_saw_size;
+
+    public $min_cut_size;
     /*
     * module: offerintegration
     * date: 2020-08-21 11:00:54
@@ -18,6 +23,8 @@ class Product extends ProductCore {
     public $seo_keywords;
     public $alternate_name;
     public $jsonld;
+    public $id_oi_offer;
+    public $oi_offer_extra_shipping;
     public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
     {
         self::$definition['fields']['saw_loss'] = array('type' => self::TYPE_INT,
@@ -48,7 +55,7 @@ class Product extends ProductCore {
         self::$definition['fields']['name'] = array('type' => self::TYPE_STRING,
                                                                  'lang' => true,
                                                                  'validate' => 'isCatalogName',
-                                                                 'required' => true, 'size' => 255);
+                                                                 'required' => false, 'size' => 255);
         self::$definition['fields']['alternate_name'] = array('type' => self::TYPE_STRING, 'required' => false);
         self::$definition['fields']['seo_keywords'] = array('type' => self::TYPE_STRING, 'required' => false);
         self::$definition['fields']['jsonld'] = array('type' => self::TYPE_STRING, 'required' => false);
@@ -56,6 +63,7 @@ class Product extends ProductCore {
             'lang' => true,
             'validate' => 'isString',
             'required' => false, 'size' => 255);
+
         parent::__construct($id_product, $full, $id_lang, $id_shop);
     }
     public function getAttributesGroups($id_lang, $id_product_attribute = null)
@@ -295,7 +303,7 @@ class Product extends ProductCore {
     public static function getProductProperties($id_lang, $row, Context $context = null)
     {
         $result = parent::getProductProperties($id_lang, $row, $context);
-        
+
         $module = Module::getInstanceByName('dynamicproduct');
         if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
             $id_product = (int) $row['id_product'];

@@ -24,8 +24,8 @@
  *}
 {assign var="products" value=$category->getProductsNoCurrent(Context::getContext()->language->id, 0, 11, $product.id_product)}
 {if count($products) > 1}
-<section class="featured-products clearfix mt-3 col-12">
-  <span style="font-size:15px;font-weight:bold;color:#777777;font-family:Helvetica, Tahoma, sans-serif, Arial;">Producten uit dezelfde categorie</span>
+<section class="featured-products clearfix mt-3 row">
+  <span class="col  font-weight-bold h5" >Producten uit dezelfde categorie</span>
               <div class="products col-12 p-0 mx-auto my-auto">
                   <div id="you-like-carousel" class="carousel slide w-100" data-ride="false">
                   <ol class="carousel-indicators">
@@ -64,10 +64,10 @@
 	                     {/if}
                     {/foreach}
                   </div>
-                  <a class="carousel-control-prev" href="#you-like-carousel" role="button" data-slide="prev">
+                  <a style="left:-10px;" class="carousel-control-prev" href="#you-like-carousel" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                   </a>
-                  <a class="carousel-control-next" href="#you-like-carousel" role="button" data-slide="next">
+                  <a style="right:-10px;" class="carousel-control-next" href="#you-like-carousel" role="button" data-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                   </a>
                 </div>

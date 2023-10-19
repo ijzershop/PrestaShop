@@ -90,8 +90,8 @@ class CalculateBelgiumVat
             'total_belgium_vat' => 0
         ];
 
-        $sqlBelgium = "SELECT `" . _DB_PREFIX_ . "orders`.`id_address_delivery`, `" . _DB_PREFIX_ . "orders`.`id_order`,GROUP_CONCAT(DISTINCT `" . _DB_PREFIX_ . "orders`.`reference`) as reference_list, count(`" . _DB_PREFIX_ . "orders`.`id_order`) as order_total_be,  SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_excl`) as total_be_tax_excl, SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_incl`) as total_be_tax_incl FROM `" . _DB_PREFIX_ . "orders` LEFT JOIN `" . _DB_PREFIX_ . "address` ON `" . _DB_PREFIX_ . "orders`.`id_address_delivery` = `" . _DB_PREFIX_ . "address`.`id_address`
-                WHERE `" . _DB_PREFIX_ . "address`.`id_country` = '3' AND `" . _DB_PREFIX_ . "orders`.`date_add` BETWEEN '".$from."' AND '".$to."'";
+        $sqlBelgium = "SELECT `" . _DB_PREFIX_ . "orders`.`id_address_delivery`, `" . _DB_PREFIX_ . "orders`.`id_order`, GROUP_CONCAT(DISTINCT `" . _DB_PREFIX_ . "orders`.`reference`) as reference_list, count(`" . _DB_PREFIX_ . "orders`.`id_order`) as order_total_be,  SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_excl`) as total_be_tax_excl, SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_incl`) as total_be_tax_incl FROM `" . _DB_PREFIX_ . "orders` LEFT JOIN `" . _DB_PREFIX_ . "address` ON `" . _DB_PREFIX_ . "orders`.`id_address_delivery` = `" . _DB_PREFIX_ . "address`.`id_address`
+                WHERE `" . _DB_PREFIX_ . "address`.`id_country` = '3' AND `" . _DB_PREFIX_ . "orders`.`date_add` BETWEEN '".$from."' AND '".$to."' AND `" . _DB_PREFIX_ . "orders`.`current_state` IN ('4','21','25','38')";
 
         $resultBE = Db::getInstance()->executeS($sqlBelgium);
 
@@ -102,6 +102,7 @@ class CalculateBelgiumVat
             $vatData['total_belgium_vat'] = (float)$resultBE[0]['total_be_tax_incl'] - (float)$resultBE[0]['total_be_tax_excl'];
             $vatData['reference_list'] = $resultBE[0]['reference_list'];
         }
+
         return $vatData;
     }
 

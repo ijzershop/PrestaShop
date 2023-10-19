@@ -28,6 +28,9 @@ namespace MsThemeConfig\Adapter\Address\QueryHandler;
 
 use Customer;
 use PrestaShop\PrestaShop\Adapter\Address\AbstractCustomerAddressHandler;
+use PrestaShop\PrestaShop\Adapter\Entity\Address;
+use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
+use PrestaShop\PrestaShop\Adapter\Entity\Context;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
@@ -39,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
@@ -62,7 +66,13 @@ final class GetCustomerAddressForEditingHandler extends AbstractCustomerAddressH
     public function handle(GetCustomerAddressForEditing $query): EditableCustomerAddress
     {
         $addressId = $query->getAddressId();
-        $address = $this->getAddress($addressId);
+
+        if(Address::addressExists((int)$addressId->getValue())){
+            $address = $this->getAddress($addressId);
+        } else {
+            throw new CustomerException('Failing to load adres, please select an other or create an new adres', 0, null);
+        }
+
 
         try {
             $customerId = new CustomerId((int) $address->id_customer);

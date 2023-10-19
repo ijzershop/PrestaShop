@@ -29,7 +29,7 @@
     {include file='custom_blocks/notification.tpl'}
     {block name='product_list_header'}
     <div class="row">
-      <h2 id="js-product-list-header" class="h2 mb-4 col-12">{if !empty($category.second_name)}{$category.second_name}{else}{$category.name}{/if}</h2>
+      <h2 id="js-product-list-header" class="h2 mb-4 col-12 text-center">{if !empty($category.second_name)}{$category.second_name}{else}{$category.name}{/if}</h2>
        <div class="block-category-inner col-12">
                 {if $category.top_description != ''}
                     <div class="row">

@@ -212,7 +212,7 @@ $(function () {
     });
 
 
-    $(document).on('click', 'div.koopman label',function () {
+    $(document).on('click', 'div.koopman label',function (e) {
       let $clickedLabel = $(this);
       let $input = $clickedLabel.prev('input');
       let $btnRow = $clickedLabel.closest('div.koopman');
@@ -220,6 +220,9 @@ $(function () {
       let orderId = $input.attr('data-id-order');
       let type = $input.val();
       let gewicht = 0;
+
+      $clickedLabel.toggleClass('temp_disabled', "");
+      $tr.toggleClass('temp_disabled_row', "");
 
       /*
       *  Gewijzigd door JB Stoker - Moderne Smid
@@ -259,6 +262,7 @@ $(function () {
           .done(function (data) {
             if(data === 'printed'){
               location.reload();
+
             } else {
               $('#updateAddressModal .modal-content').html(data);
               $('#updateAddressModal').modal('show');

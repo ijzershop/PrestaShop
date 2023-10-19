@@ -145,7 +145,7 @@
                 data-text-show="{l s='Show' d='Shop.Theme.Actions'}"
                 data-text-hide="{l s='Hide' d='Shop.Theme.Actions'}"
               >
-                <i class="fasr fa-eye-slash"></i>
+                <i class="fasl fa-eye-slash"></i>
               </button>
             </span>
           </div>

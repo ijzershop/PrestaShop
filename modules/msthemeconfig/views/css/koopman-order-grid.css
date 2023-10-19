@@ -177,3 +177,26 @@ td.koopman_label_button-type.column-label{
 .koopman-current-status-badge.status_10 {
   color: #fff
 }
+
+.reverse {
+  transform: rotate(180deg);
+}
+
+.temp_disabled {
+  cursor: not-allowed!important;
+  pointer-events: none!important;
+  animation-duration: 3s;
+  animation-iteration-count: 100;
+  animation-name: rotatingDisabled;
+  animation-timing-function: linear;
+}
+
+.temp_disabled_row {
+  cursor: not-allowed!important;
+  pointer-events: none!important;
+}
+
+@keyframes rotatingDisabled {
+  from { transform: rotate(  0deg); }
+  to   { transform: rotate(360deg); }
+}

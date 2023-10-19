@@ -52,7 +52,7 @@
         </li>
       {/if}
     {/foreach}
-  </ol>
+</ol>
 
   {if $control_check > 0}
   <a class="carousel-control-prev" href="#product-images-carousel" role="button" data-slide="prev">

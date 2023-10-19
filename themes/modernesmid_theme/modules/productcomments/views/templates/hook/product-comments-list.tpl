@@ -28,24 +28,19 @@
   var productCommentAbuseReportErrorMessage = '{l s='Sorry, your abuse report cannot be sent.' d='Modules.Productcomments.Shop' js=1}';
 </script>
 
-<div class="row mt-5" id="product-comments-block">
-  <div class="col-12">
-    <div class="col-12 border-top" style="padding-top: 18px;">
-      <span style="font-size:15px;font-weight:bold;color:#777777;font-family:Helvetica, Tahoma, sans-serif, Arial;padding-top:15px;">Product opmerkingen</span>
-    </div>
-  </div>
+<div  class="col-12" style="padding-top: 18px;" id="product-comments-block">
+  <span class="font-weight-bold h5">Product opmerkingen</span>
 </div>
 {include file='module:productcomments/views/templates/hook/product-comment-item-prototype.tpl' assign="comment_prototype"}
 {include file='module:productcomments/views/templates/hook/empty-product-comment.tpl'}
-<div class="row">
-  <div class="col-md-12 col-sm-12"
+<div class="col-md-12 col-sm-12"
        id="product-comments-list"
        data-list-comments-url="{$list_comments_url nofilter}"
        data-update-comment-usefulness-url="{$update_comment_usefulness_url nofilter}"
        data-report-comment-url="{$report_comment_url nofilter}"
        data-comment-item-prototype="{$comment_prototype|escape:'html'}">
-  </div>
 </div>
+
 
 
 {* Appreciation post error modal *}

@@ -1,0 +1,49 @@
+clicdata:
+  icons:
+    - list-radio
+  label: ClicData
+  url: 'https://www.clicdata.com'
+harvard-medical-school:
+  icons:
+    - heart
+    - plus
+  label: Harvard Medical School
+  url: 'https://hms.harvard.edu'
+hire-a-helper:
+  icons:
+    - person-dolly
+  label: HireAHelper
+  url: 'https://www.hireahelper.com'
+rocket-chat:
+  icons:
+    - comment
+    - phone
+  label: Rocket.Chat
+  url: 'https://rocket.chat'
+stay-linked:
+  icons:
+    - cart-flatbed
+    - cart-flatbed-boxes
+    - cart-flatbed-empty
+    - conveyor-belt
+    - dolly
+    - forklift
+    - pallet-boxes
+    - scanner-gun
+    - truck
+    - truck-clock
+    - truck-fast
+    - warehouse
+  label: StayLinked
+  url: 'https://www.staylinked.com'
+supple:
+  icons:
+    - badge-percent
+    - envelope-open-dollar
+  label: Supple
+  url: 'https://supple.com.au'
+un-ocha:
+  icons:
+    - boxes-packing
+  label: United Nations OCHA
+  url: 'https://www.unocha.org'

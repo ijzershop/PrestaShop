@@ -327,10 +327,10 @@ class Cart extends CartCore
                 return false;
             }
         }
-        $productItem = new Product($id_product);
-        if ($productItem && $productItem->reference == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')) {
-            $productItem->delete();
-        }
+//        $productItem = new Product($id_product);
+//        if ($productItem && $productItem->reference == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')) {
+//            $productItem->delete();
+//        }
         $result = Db::getInstance()->getRow('
             SELECT SUM(`quantity`) AS \'quantity\'
             FROM `' . _DB_PREFIX_ . 'customization`
@@ -697,7 +697,7 @@ class Cart extends CartCore
                 $id_carrier = (int)Context::getContext()->cart->id_carrier;
             }
 
-        
+
         if (!in_array($type, [CART::ONLY_DISCOUNTS_NO_CALCULATION, CART::ONLY_REMAINDER_OF_DISCOUNTS, CART::ONLY_REMAINDER_UNTIL_STORE_DISCOUNT])) {
             $value = parent::getOrderTotal(
                 $withTaxes,

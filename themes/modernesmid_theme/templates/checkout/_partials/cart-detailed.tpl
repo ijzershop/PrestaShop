@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='cart_detailed_product'}
-  <div class="cart-overview js-cart row" data-refresh-url="{url entity='cart' params=['ajax' => true, 'action' => 'refresh']}">
+  <div class="cart-overview js-cart" data-refresh-url="{url entity='cart' params=['ajax' => true, 'action' => 'refresh']}">
     {if $cart.products}
-    <ul class="cart-items list-unstyled col-12">
+    <ul class="cart-items list-unstyled col-12 p-0">
       {foreach from=$cart.products item=product}
         <li class="cart-item row">
           {block name='cart_detailed_product_line'}
@@ -36,7 +36,7 @@
       {/foreach}
     </ul>
     {else}
-      <span class="no-items col-12 text-center m-4">{l s='There are no more items in your cart' d='Shop.Theme.Checkout'}</span>
+      <span class="no-items col-12 text-center mt-4">{l s='There are no more items in your cart' d='Shop.Theme.Checkout'}</span>
     {/if}
   </div>
 {/block}

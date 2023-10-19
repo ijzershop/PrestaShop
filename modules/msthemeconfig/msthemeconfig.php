@@ -276,7 +276,7 @@ class MsThemeConfig extends Module
             'actionAfterCreateCustomerAddressFormHandler',
             'actionAfterCreateCustomerFormHandler',
             'actionAfterCreateRootCategoryFormHandler',
-            'actionAfterUpdateCategoryFormHandler',
+            'actionObjectCategoryUpdateAfter',
             'actionAfterUpdateCustomerAddressFormHandler',
             'actionAfterUpdateCustomerFormHandler',
             'actionAfterUpdateOrderAddressFormHandler',
@@ -456,6 +456,10 @@ class MsThemeConfig extends Module
                     $arrayString = implode(',', $value);
                 } else {
                     $arrayString = str_replace(['[',']', '"'],['','',''], $value);
+                }
+
+                if($key=='MSTHEMECONFIG_CHANNABLE_CATEGORIES'){
+//                    dd($arrayString);
                 }
 
                 Configuration::updateValue($key, [$idLang => $arrayString], false, $idShopGroup, $idShop);
@@ -832,10 +836,11 @@ class MsThemeConfig extends Module
      * @throws PrestaShopException
      * @throws ModuleErrorException
      */
-    public function hookActionAfterUpdateCategoryFormHandler($params): void
+    public function hookActionObjectCategoryUpdateAfter($params)
     {
         $hookClass = $this->getModernHooks();
-        $hookClass->hookActionAfterUpdateCategoryFormHandler($params);
+        $hookClass->hookActionObjectCategoryUpdateAfter($params);
+        return true;
     }
 
     /**

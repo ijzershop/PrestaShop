@@ -4,7 +4,7 @@
       <div class="footer_block border-bottom pb-mb-4 col-lg-5 col-md-12 col-12 pr-md-5">
             <div class="title_block">
                 <div class="title_block_inner text-dark pb-mb-1" style="font-size:16px;"> {Configuration::get('MSTHEMECONFIG_FOOTERTOP_ABOUTUS_HEADER',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
-                    <div class="opener float-right d-sm-flex d-md-none"><i class="fasr fa-plus plus_sign"></i></div>
+                    <div class="opener float-right d-sm-flex d-md-none"><i class="fasl fa-plus plus_sign"></i></div>
                 </div>
             </div>
             <div class="footer_block_content d-sm-none d-none d-md-flex">
@@ -21,7 +21,7 @@
       <div class="footer_block border-bottom pb-mb-4 {if Configuration::get('MSTHEMECONFIG_ABOUT_FOOTERTOP_BOX_ACTIVE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, true)}col-12 col-md-4 col-lg-2{else}col{/if} pl-lg-0 pt-0 pt-md-1 pt-lg-0">
             <div class="title_block ">
                 <div class="title_block_inner text-dark pb-mb-1" style="font-size:16px;"> {Configuration::get('MSTHEMECONFIG_FOOTERTOP_INFORMATION_HEADER',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
-                    <div class="opener float-right d-sm-flex d-md-none"><i class="fasr fa-plus plus_sign"></i></div>
+                    <div class="opener float-right d-sm-flex d-md-none"><i class="fasl fa-plus plus_sign"></i></div>
                 </div>
             </div>
              {Configuration::get('MSTHEMECONFIG_FOOTERTOP_INFORMATION',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) nofilter}
@@ -31,7 +31,7 @@
       <div class="footer_block border-bottom pb-mb-4 {if Configuration::get('MSTHEMECONFIG_ABOUT_FOOTERTOP_BOX_ACTIVE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, true)}col-12 col-md-4 col-lg-2{else}col{/if} pt-0 pt-md-1 pt-lg-0 pl-md-0">
             <div class="title_block ">
                 <div class="title_block_inner text-dark pb-mb-1" style="font-size:16px;"> {Configuration::get('MSTHEMECONFIG_FOOTERTOP_PARTNERS_HEADER',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
-                    <div class="opener float-right d-sm-flex d-md-none"><i class="fasr fa-plus plus_sign"></i></div>
+                    <div class="opener float-right d-sm-flex d-md-none"><i class="fasl fa-plus plus_sign"></i></div>
                 </div>
             </div>
              {Configuration::get('MSTHEMECONFIG_FOOTERTOP_PARTNERS',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) nofilter}
@@ -45,23 +45,23 @@
       <div class="footer_block border-bottom pb-mb-4 {if Configuration::get('MSTHEMECONFIG_ABOUT_FOOTERTOP_BOX_ACTIVE', true)}col-12 col-md-4 col-lg-3{else}col{/if} pr-lg-0 pt-0 pt-md-1 pt-lg-0">
             <div class="title_block ">
                 <div class="title_block_inner text-dark pb-mb-1" style="font-size:16px;"> {l s="Store Information" d='Shop.Modernesmid'}
-                    <div class="opener float-right d-sm-flex d-md-none"><i class="fasr fa-plus plus_sign"></i></div>
+                    <div class="opener float-right d-sm-flex d-md-none"><i class="fasl fa-plus plus_sign"></i></div>
                 </div>
             </div>
             <ul class="footer_block_content bullet custom_links_list  list-unstyled d-sm-none d-none d-md-block">
                 <li>
                     <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="dropdown_list_item text-decoration-none text-dark" title="{l s="Daily opened from %s" sprintf=[Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_OPENED',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)] d='Shop.Modernesmid'}">
-                        <i class="fasr fa-clock  list_arrow  st_custom_link_icon"></i> &nbsp;{Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_OPENED',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
+                        <i class="fasl fa-clock  list_arrow  st_custom_link_icon"></i> &nbsp;{Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_OPENED',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
                     </a>
                 </li>
                 <li>
                     <a href="https://www.google.com/maps/place/{Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_GOOGLE_STRING',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="dropdown_list_item text-decoration-none text-dark" title="{Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_ADDRESS')}" rel="noopener" target="_blank">
-                        <i class="fasr fa-location-dot  list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_ADDRESS',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
+                        <i class="fasl fa-location-dot  list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_ADDRESS',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
                     </a>
                 </li>
                 <li>
                     <a href="tel://{str_replace(' ','',Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_PHONE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="dropdown_list_item text-decoration-none text-dark" title="{l s="Call us:" d='Shop.Modernesmid'} {Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_PHONE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
-                        <i class="fasr fa-phone  list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s="Call us:" d='Shop.Modernesmid'} {Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_PHONE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
+                        <i class="fasl fa-phone  list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s="Call us:" d='Shop.Modernesmid'} {Configuration::get('MSTHEMECONFIG_FOOTERTOP_STOREINFO_PHONE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
                     </a>
                 </li>
                 <li>
@@ -71,7 +71,7 @@
                 </li>
                 <li>
                     <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="dropdown_list_item text-decoration-none text-dark" title="Contactformulier">
-                        <i class="fasr fa-envelope  list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s="Mail ons: contactformulier:" d='Shop.Modernesmid'}
+                        <i class="fasl fa-envelope  list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s="Mail ons: contactformulier:" d='Shop.Modernesmid'}
                     </a>
                 </li>
             </ul>
@@ -82,28 +82,28 @@
               {if Context::getContext()->cookie->logged}
                 <li>
                   <a href="{$urls.pages.my_account}" class="dropdown_list_item text-decoration-none text-dark" title="Uw account">
-                    <i class="fasr fa-user list_arrow st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Your account' d='Shop.Theme.Customeraccount'}
+                    <i class="fasl fa-user list_arrow st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Your account' d='Shop.Theme.Customeraccount'}
                   </a>
                 </li>
                 <li>
                   <a href="{$urls.pages.history}" class="dropdown_list_item text-decoration-none text-dark" title="Uw bestellingen">
-                    <i class="fasr fa-lock list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;Uw Bestellingen
+                    <i class="fasl fa-lock list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;Uw Bestellingen
                   </a>
                 </li>
                 <li>
                   <a href="{$urls.actions.logout}" class="dropdown_list_item text-decoration-none text-dark" title="Afmelden">
-                    <i class="fasr fa-lock list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Logout' d='Shop.Theme.Customeraccount'}
+                    <i class="fasl fa-lock list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Logout' d='Shop.Theme.Customeraccount'}
                   </a>
                 </li>
               {else}
                 <li>
                   <a href="{$urls.pages.guest_tracking}" class="dropdown_list_item text-decoration-none text-dark" title="Gast bestelling status opvragen">
-                    <i class="fasr fa-magnifying-glass list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;Gast bestelling status opvragen
+                    <i class="fasl fa-magnifying-glass list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;Gast bestelling status opvragen
                   </a>
                 </li>
                 <li>
                   <a href="{$urls.pages.authentication}" class="dropdown_list_item text-decoration-none text-dark" title="Aanmelden">
-                    <i class="fasr fa-lock list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Login' d='Shop.Theme.Customeraccount'}
+                    <i class="fasl fa-lock list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Login' d='Shop.Theme.Customeraccount'}
                   </a>
                 </li>
               {/if}
@@ -115,7 +115,7 @@
         <div class="footer_block border-bottom pb-mb-4 d-block d-md-none col">
           <div class="title_block ">
             <div class="title_block_inner text-dark pb-mb-1" style="font-size:16px;"> Mijn Account
-              <div class="opener float-right d-sm-flex d-md-none"><i class="fasr fa-plus plus_sign"></i></div>
+              <div class="opener float-right d-sm-flex d-md-none"><i class="fasl fa-plus plus_sign"></i></div>
             </div>
           </div>
 
@@ -123,28 +123,28 @@
             {if Context::getContext()->cookie->logged}
             <li>
               <a href="{$urls.pages.my_account}" class="dropdown_list_item text-decoration-none text-dark" title="Uw account">
-                <i class="fasr fa-user list_arrow st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Your account' d='Shop.Theme.Customeraccount'}
+                <i class="fasl fa-user list_arrow st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Your account' d='Shop.Theme.Customeraccount'}
               </a>
             </li>
               <li>
                 <a href="{$urls.pages.history}" class="dropdown_list_item text-decoration-none text-dark" title="Uw bestellingen">
-                  <i class="fasr fa-lock list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;Uw Bestellingen
+                  <i class="fasl fa-lock list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;Uw Bestellingen
                 </a>
               </li>
             <li>
               <a href="{$urls.actions.logout}" class="dropdown_list_item text-decoration-none text-dark" title="Afmelden">
-                <i class="fasr fa-lock list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Logout' d='Shop.Theme.Customeraccount'}
+                <i class="fasl fa-lock list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Logout' d='Shop.Theme.Customeraccount'}
               </a>
             </li>
               {else}
               <li>
                 <a href="{$urls.pages.guest_tracking}" class="dropdown_list_item text-decoration-none text-dark" title="Gast bestelling status opvragen">
-                  <i class="fasr fa-magnifying-glass list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;Gast bestelling status opvragen
+                  <i class="fasl fa-magnifying-glass list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;Gast bestelling status opvragen
                 </a>
               </li>
               <li>
                 <a href="{$urls.pages.authentication}" class="dropdown_list_item text-decoration-none text-dark" title="Aanmelden">
-                  <i class="fasr fa-lock list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Login' d='Shop.Theme.Customeraccount'}
+                  <i class="fasl fa-lock list_arrow  st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Login' d='Shop.Theme.Customeraccount'}
                 </a>
               </li>
             {/if}

@@ -4,13 +4,13 @@
     <p>{l s='Click below to view the supercheckout demo in different layouts' mod='supercheckout'}</p>
     <div class="kb-super-demo-content col-lg-12">
         <div class="col-lg-4 col-md-4 col-sm-4">
-            <a class="btn btn-warning kb-demo-btn" href="{$one_column_link}{*Variable contains url, escape not required*}"><i class="fasr fa-square"></i>{l s='Layout 1: One Column' mod='supercheckout'}</a>
+            <a class="btn btn-warning kb-demo-btn" href="{$one_column_link}{*Variable contains url, escape not required*}"><i class="fasl fa-square"></i>{l s='Layout 1: One Column' mod='supercheckout'}</a>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4">
-            <a class="btn btn-warning kb-demo-btn" href="{$two_column_link}{*Variable contains url, escape not required*}"><i class="fasr fa-table-cells-large"></i>{l s='Layout 2: Two Column' mod='supercheckout'}</a>
+            <a class="btn btn-warning kb-demo-btn" href="{$two_column_link}{*Variable contains url, escape not required*}"><i class="fasl fa-table-cells-large"></i>{l s='Layout 2: Two Column' mod='supercheckout'}</a>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4">
-            <a class="btn btn-warning kb-demo-btn" href="{$three_column_link}{*Variable contains url, escape not required*}"><i class="fasr fa-table-cells"></i>{l s='Layout 3: Three Column' mod='supercheckout'}</a>
+            <a class="btn btn-warning kb-demo-btn" href="{$three_column_link}{*Variable contains url, escape not required*}"><i class="fasl fa-table-cells"></i>{l s='Layout 3: Three Column' mod='supercheckout'}</a>
         </div>
     </div>
 </div>

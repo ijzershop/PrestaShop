@@ -143,9 +143,9 @@
                 class="input-group-text h5 text-muted btn btn-link border-left-0 border-top border-right border-bottom"
                 type="button"
                 data-action="show-password"
-                data-text-show="<i class='fasr fa-eye pr-1'></i>"
-                data-text-hide="<i class='fasr fa-eye-slash pr-1'></i>"
-              ><i class='fasr fa-eye pr-1'></i>  </button>
+                data-text-show="<i class='fasl fa-eye pr-1'></i>"
+                data-text-hide="<i class='fasl fa-eye-slash pr-1'></i>"
+              ><i class='fasl fa-eye pr-1'></i>  </button>
             </span>
           </div>
         {/block}

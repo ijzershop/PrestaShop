@@ -23,11 +23,11 @@
   * International Registered Trademark & Property of PrestaShop SA
   *}
 {block name='product_miniature_item'}
-  <article class="product-miniature js-product-miniature border-bottom row pt-2 pt-sm-1 pb-1" id="product_{$product.id_product}" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}">
+  <article class="product-miniature js-product-miniature border-bottom row pt-2 pt-sm-1 pb-1 ml-sm-1 mr-sm-2 m-0" id="product_{$product.id_product}" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}">
     <div class="thumbnail-container col-12">
-      <div class="row">
+      <div class="row d-block d-md-flex">
         {block name='product_thumbnail'}
-          <div class="col-12 {Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id,'col-sm-4 col-md-2')} pl-0 pr-2" {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)=='col-sm-4 col-md-2'}style="max-width: 110px;margin:0 auto;"{/if}>
+          <div class="col-12 {Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id,'col-sm-4 col-md-2')} pl-0 pr-2 float-left" {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)=='col-sm-4 col-md-1'}style="max-width: 110px;margin:0 auto;"{/if}>
             {if $product}
               <a href="{$product.url}" class="thumbnail product-thumbnail"  data-id-product="{$product.id_product}">
                 <img data-product-id="{$product.id_product}" class="w-100 thumb" src="{$product.cover.bySize.medium_default.url}" alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}" data-full-size-image-url="{$product.cover.large.url}" />
@@ -48,31 +48,42 @@
           </div>
         {/block}
         {assign var="productFeatures" value=unserialize(Configuration::get('SAWANDCUTMODULE'))}
-        <div class="product-description col-12 {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}col-sm-8 {if Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')}col-md-7{elseif Configuration::get('PS_CATALOG_MODE') && !Configuration::get('PS_CATALOG_MODE_WITH_PRICES')}col-md-9{else}col-md-5{/if}{else} {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == 'col-sm-4 col-md-2'}col-sm-8 col-md-7{else}col-sm-4 col-md-5{/if}{/if} pl-0 pr-0">
+        {assign var="sawButtonVisible" value=in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}
+        <div style="{if $sawButtonVisible}min-height: 55px;{else}min-height: 105px;{/if}" class="product-description col-12 {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}col-sm-8 {if Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')}col-md-7{elseif Configuration::get('PS_CATALOG_MODE') && !Configuration::get('PS_CATALOG_MODE_WITH_PRICES')}col-md-9{else}col-md-4{/if}{else} {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == 'col-sm-4 col-md-2'}col-sm-8 col-md-7{else}col-sm-4 col-md-4{/if}{/if} pl-0  pl-sm-2 pr-0 mb-3 mb-sm-3 mb-md-0 float-right">
           {block name='product_name'}
             <table class="h-100 w-100">
               <tr>
                 <td class="align-middle">
                   {if Module::isEnabled('dynamicproduct') && Product::isDynamicProduct($product)}
                     {assign var="dynamicProductConfig" value=Module::getInstanceByName('modernesmiddynamicproduct')->returnProductInitData($product)}
-                    <span class="h6 product-title p-0"  data-id-product="{$product.id_product}"><a class="text-decoration-none text-dark" href="{$product.url}">{$product.name}</a></span><br /><a class="help-text product-description-short">Indicatie prijs € {$dynamicProductConfig.default_price} is op basis van {$dynamicProductConfig.lengte}mm {$dynamicProductConfig.behandeling} {$product.name}</a><br /><span class="product-description-short">{$product.description_short nofilter}</span>
+                    <span class="h6 product-title p-0"  data-id-product="{$product.id_product}"><a class="text-decoration-none text-black" href="{$product.url}">{$product.name}</a></span><br /><a class="help-text product-description-short">Indicatie prijs € {$dynamicProductConfig.default_price} is op basis van {$dynamicProductConfig.lengte}mm {$dynamicProductConfig.behandeling} {$product.name}</a><br /><span class="product-description-short">{$product.description_short nofilter}</span>
                   {else}
-                    <span class="h6 product-title p-0"  data-id-product="{$product.id_product}"><a class="text-decoration-none text-dark" href="{$product.url}">{$product.name}</a></span><br /><span class="product-description-short">{$product.description_short nofilter}</span>
+                    <span class="h6 product-title p-0"  data-id-product="{$product.id_product}"><a class="text-decoration-none text-black" href="{$product.url}">{$product.name}</a></span><br /><span class="product-description-short">{$product.description_short nofilter}</span>
                   {/if}
                 </td>
               </tr>
             </table>
           {/block}
         </div>
-        {if !Configuration::get('PS_CATALOG_MODE')}
+        <div class="pl-0 pl-sm-2 pr-0 col-sm-8 mb-3 mb-sm-3 mb-md-0 float-right d-flex d-sm-flex d-md-none">
+          <a href="{$product.url}" type="button" class="btn staffel-button text-center">
+            <i class="fasl fa-info-circle"></i> Bekijk info
+          </a>
+        </div>
+          {if !Configuration::get('PS_CATALOG_MODE')}
           {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}
-            <div class="pl-0 pr-0 col-12 col-sm-6 col-md-2" style="pointer-events:{if !$product.add_to_cart_url}none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') &&  (int)$product.quantity <= 0 && (int)$product.out_of_stock == 0}none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') && (int)$product.quantity != 0 && (int)$product.quantity < 100 && (int)$product.quantity < 0 && (int)$product.out_of_stock == 0}none;{/if}">
+            <div class="pl-0 pl-sm-2 pr-0 col-12 col-sm-8 col-md-1 float-right mb-3 mb-sm-3 mb-md-0" style="pointer-events:{if !$product.add_to_cart_url}none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') &&  (int)$product.quantity <= 0 && (int)$product.out_of_stock == 0}none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') && (int)$product.quantity != 0 && (int)$product.quantity < 100 && (int)$product.quantity < 0 && (int)$product.out_of_stock == 0}none;{/if}">
               {hook h='displayProductSawAndCutButtons' product=$product}
             </div>
           {/if}
         {/if}
-        {if (Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) || !Configuration::get('PS_CATALOG_MODE')}
-          <div  class="product-price col-12 {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}col-sm-6{else}col-sm-6{/if} col-md-2 pr-2">
+
+
+
+
+
+          {if (Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) || !Configuration::get('PS_CATALOG_MODE')}
+          <div  class="product-price col-12 d-flex d-sm-none d-md-block {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}col-sm-8{/if} col-md-2 pr-2 float-right text-center text-sm-right">
             <table class="h-100 w-100">
               <tr>
                 <td class="align-middle">
@@ -83,24 +94,24 @@
                           {assign var="productPrices" value=Module::getInstanceByName('modernesmiddynamicproduct')->fetchDefaultDynamicProductPrice($product, $product.id_attribute)}
                           {if $product.has_discount}
                             {hook h='displayProductPriceBlock' product=$product type="old_price"}
-                            <span class="regular-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc_nr, 'EUR')} </span><span class="inclusive-price" data-product-id="{$product.id_product}"> {Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc ,'EUR')} {l s='Incl btw' d='Shop.Theme.Catalog'}</span><br>
-                            <span class="exclusive-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht_nr, 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+                            <span class="regular-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc_nr, 'EUR')} </span><span class="inclusive-price" data-product-id="{$product.id_product}"> {Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc ,'EUR')} </span><br>
+                            <span class="exclusive-price d-none" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht_nr, 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
                           {else}
                             {hook h='displayProductPriceBlock' product=$product type="before_price"}
-                            <span class="regular-price" data-product-id="{$product.id_product}"></span><span class="inclusive-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc_nr, 'EUR')} {l s='Incl btw' d='Shop.Theme.Catalog'}</span><br>
-                            <span class="exclusive-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht_nr, 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+                            <span class="regular-price" data-product-id="{$product.id_product}"></span><span class="inclusive-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc_nr, 'EUR')} </span><br>
+                            <span class="exclusive-price d-none" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht_nr, 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
                             {hook h='displayProductPriceBlock' product=$product type='unit_price'}
                             {hook h='displayProductPriceBlock' product=$product type='weight'}
                           {/if}
                         {else}
                           {if $product.has_discount}
                             {hook h='displayProductPriceBlock' product=$product type="old_price"}
-                            <span class="regular-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction, 'EUR')} </span><span class="inclusive-price" data-product-id="{$product.id_product}"> {$product.price} {l s='Incl btw' d='Shop.Theme.Catalog'}</span><br>
-                            <span class="exclusive-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+                            <span class="regular-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction, 'EUR')} </span><span class="inclusive-price" data-product-id="{$product.id_product}"> {$product.price} </span><br>
+                            <span class="exclusive-price d-none" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
                           {else}
                             {hook h='displayProductPriceBlock' product=$product type="before_price"}
-                            <span class="regular-price" data-product-id="{$product.id_product}"></span><span class="inclusive-price" data-product-id="{$product.id_product}">{$product.regular_price} {l s='Incl btw' d='Shop.Theme.Catalog'}</span><br>
-                            <span class="exclusive-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+                            <span class="regular-price" data-product-id="{$product.id_product}"></span><span class="inclusive-price" data-product-id="{$product.id_product}">{$product.regular_price} </span><br>
+                            <span class="exclusive-price d-none" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
                             {hook h='displayProductPriceBlock' product=$product type='unit_price'}
                             {hook h='displayProductPriceBlock' product=$product type='weight'}
                           {/if}
@@ -120,7 +131,7 @@
             </table>
              </div>
         {/if}
-        <div class="product_buttons col-12 {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}col-sm-12{else}col-sm-12{/if} col-md-1 p-0 pt-2 pt-sm-2">
+        <div class="product_buttons col-12 col-sm-8 col-md-3 p-0 pt-2 pt-sm-2 pt-md-0  float-right">
           <table class="h-100 w-100" {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == 'col-sm-8 col-md-4'}style="margin-right:0px"{/if}>
             <tr>
               {if Module::isEnabled('dynamicproduct') && Product::isDynamicProduct($product)}
@@ -135,25 +146,25 @@
                 </td>
               {/if}
             </tr>
-            <tr class="d-block d-md-none">
+              {if !Product::productIsOrderable($product.id_product)}
+                <tr class="d-block d-md-none">
               <td>
-                {if !Product::productIsOrderable($product.id_product)}
                   <div class="w-100">
                     <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>
                   </div>
-                {/if}
               </td>
             </tr>
+              {/if}
           </table>
         </div>
-        <div class="col-12 d-none d-md-block">
-          {if !Product::productIsOrderable($product.id_product)}
+            {if !Product::productIsOrderable($product.id_product)}
+          <div class="col-12 d-none d-md-block">
             <div class="w-100">
               <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>
             </div>
-          {/if}
         </div>
-        <div class="product_variations col-12">
+            {/if}
+          <div class="product_variations col-12">
           <div class="highlighted-informations{if !$product.main_variants} no-variants{/if} hidden-sm-down">
             {block name='product_variants'}
               {if $product.main_variants}
@@ -162,6 +173,62 @@
             {/block}
           </div>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+          {if (Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) || !Configuration::get('PS_CATALOG_MODE')}
+            <div class="product-price col-12 d-none d-sm-flex d-md-none pt-1 col-sm-4 col-md-2 pr-0 float-left text-center text-sm-right">
+              <table class="h-100 w-100">
+                <tr>
+                  <td class="align-middle text-center text-sm-right">
+                      {block name='product_price_and_shipping'}
+                          {if $product.show_price}
+                            <div class="product-price-and-shipping">
+                                {if Module::isEnabled('dynamicproduct') && Product::isDynamicProduct($product)}
+                                    {assign var="productPrices" value=Module::getInstanceByName('modernesmiddynamicproduct')->fetchDefaultDynamicProductPrice($product, $product.id_attribute)}
+                                    {if $product.has_discount}
+                                        {hook h='displayProductPriceBlock' product=$product type="old_price"}
+                                      <span class="regular-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc_nr, 'EUR')} </span><span class="inclusive-price" data-product-id="{$product.id_product}"> {Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc ,'EUR')} </span><br>
+                                      <span class="exclusive-price d-none" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht_nr, 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+                                    {else}
+                                        {hook h='displayProductPriceBlock' product=$product type="before_price"}
+                                      <span class="regular-price" data-product-id="{$product.id_product}"></span><span class="inclusive-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc_nr, 'EUR')} </span><br>
+                                      <span class="exclusive-price d-none" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht_nr, 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+                                        {hook h='displayProductPriceBlock' product=$product type='unit_price'}
+                                        {hook h='displayProductPriceBlock' product=$product type='weight'}
+                                    {/if}
+                                {else}
+                                    {if $product.has_discount}
+                                        {hook h='displayProductPriceBlock' product=$product type="old_price"}
+                                      <span class="regular-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction, 'EUR')} </span><span class="inclusive-price" data-product-id="{$product.id_product}"> {$product.price} </span><br>
+                                      <span class="exclusive-price d-none" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+                                    {else}
+                                        {hook h='displayProductPriceBlock' product=$product type="before_price"}
+                                      <span class="regular-price" data-product-id="{$product.id_product}"></span><span class="inclusive-price" data-product-id="{$product.id_product}">{$product.regular_price} </span><br>
+                                      <span class="exclusive-price d-none" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+                                        {hook h='displayProductPriceBlock' product=$product type='unit_price'}
+                                        {hook h='displayProductPriceBlock' product=$product type='weight'}
+                                    {/if}
+                                {/if}
+                            </div>
+                          {/if}
+                      {/block}
+                  </td>
+                </tr>
+              </table>
+            </div>
+          {/if}
+
+
+
       </div>
     </div>
   </article>

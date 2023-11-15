@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace Modernesmid\Module\Pricemodifier\Controller\Admin;
 
+use DateTime;
+use Modernesmid\Module\Pricemodifier\Entity\PriceModification;
 use ParseError;
+use PrestaShop\OAuth2\Client\Provider\PrestaShop;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Entity\Feature;
@@ -15,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Exception;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  *
@@ -100,6 +104,90 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
         return $result;
     }
 
+    /**
+     * @return Response
+     * @throws \PrestaShopDatabaseException
+     */
+    public function generateNewRulesForProducts(): Response
+    {
+        $products = Tools::getValue('products');
+        $supplier_data = [];
+
+        $supplier_data['attributes']['diameter'] = "";
+        $supplier_data['attributes']['kwaliteit'] = "";
+        $supplier_data['attributes']['uitvoering'] = "";
+        $supplier_data['attributes']['handelslengte'] = "";
+        $supplier_data['attributes']['kilo_per_meter'] = "";
+        $supplier_data['attributes']['gewicht'] = "";
+        $supplier_data['attributes']['korting'] = "";
+        $supplier_data['attributes']['min_afname'] = "";
+        $supplier_data['attributes']['eenheid'] = "";
+        $supplier_data['attributes']['artikel_nummer'] = "";
+        $supplier_data['attributes']['artikel_groep'] = "";
+        $supplier_data['attributes']['barcode'] = "";
+        $supplier_data['attributes']['oud_artikel'] = "";
+        $supplier_data['attributes']['nieuw_artikel'] = "";
+
+        $supplier_data['prices']['basis_prijs'] = "";
+        $supplier_data['prices']['staffel_aantal_1'] = "";
+        $supplier_data['prices']['staffel_prijs_1'] = "";
+        $supplier_data['prices']['staffel_aantal_2'] = "";
+        $supplier_data['prices']['staffel_prijs_2'] = "";
+        $supplier_data['prices']['staffel_aantal_3'] = "";
+        $supplier_data['prices']['staffel_prijs_3'] = "";
+        $supplier_data['prices']['staffel_aantal_4'] = "";
+        $supplier_data['prices']['staffel_prijs_4'] = "";
+        $supplier_data['prices']['staffel_aantal_5'] = "";
+        $supplier_data['prices']['staffel_prijs_5'] = "";
+        $supplier_data['prices']['staffel_aantal_6'] = "";
+        $supplier_data['prices']['staffel_prijs_6'] = "";
+        $supplier_data['prices']['staffel_aantal_7'] = "";
+        $supplier_data['prices']['staffel_prijs_7'] = "";
+
+        $supplier_data['prices']['bruto_prijs_per_stuk'] = "";
+        $supplier_data['prices']['netto_prijs_per_stuk'] = "";
+        $supplier_data['prices']['prijs_per_meter'] = "";
+        $supplier_data['prices']['prijs_tot_75'] = "";
+        $supplier_data['prices']['prijs_tot_100'] = "";
+        $supplier_data['prices']['prijs_tot_150'] = "";
+        $supplier_data['prices']['prijs_tot_200'] = "";
+        $supplier_data['prices']['prijs_tot_250'] = "";
+        $supplier_data['prices']['prijs_tot_300'] = "";
+        $supplier_data['prices']['prijs_tot_500'] = "";
+        $supplier_data['prices']['prijs_tot_1000'] = "";
+        $supplier_data['prices']['prijs_vanaf_500'] = "";
+        $supplier_data['prices']['prijs_vanaf_300'] = "";
+        $supplier_data['prices']['prijs_vanaf_1000'] = "";
+        $supplier_data['prices']['stralen_menieen_per_meter'] = "";
+        $supplier_data['prices']['stralen_menieen_per_100'] = "";
+        $supplier_data['prices']['stralen_per_meter'] = "";
+        $supplier_data['prices']['stralen_per_100'] = "";
+        $supplier_data['prices']['verven_per_m1'] = "";
+        $supplier_data['prices']['haaks_zagen'] = "";
+
+        $newRules = [];
+        $xml_date = new DateTime('NOW');
+        $qb = Db::getInstance();
+
+        foreach ($products as $product){
+            $qb->insert('price_modification', [
+                'name_supplier' => $product['product_name'],
+                'file_supplier' => "HANDMATIG",
+                'supplier_data' => addslashes(json_encode($supplier_data)),
+                'xml_upload_date' => $xml_date->format('Y-m-d H:m:s'),
+                'id_store_product' => (int)$product['id'],
+                'active' => 0
+            ],
+                false,
+                false
+            );
+
+            $newRules[] = $qb->Insert_ID();
+        }
+
+        return Response::create(json_encode($newRules));
+    }
+
 
     /**
      */
@@ -108,13 +196,15 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
         $store_product = $request->get('product');
         $supplier_price = $request->get('selected_formule_item');
         $formula = $request->get('formula');
+        $sup_formula = $request->get('sup_formula');
+        $incr_formula = $request->get('incr_formula');
         $supplier_id = $request->get('row');
 
 
         $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');
         $priceMod = $repository->findOneById($supplier_id);
         try {
-            $result = $this->calculateFormula($formula, $store_product, $priceMod, $supplier_price);
+            $result = $this->calculateFormula($formula, $store_product, $priceMod, $supplier_price, $sup_formula, $incr_formula);
         } catch (Exception $exception) {
             $result = json_encode(['msg' => 'Er ging iets fout tijdens het genereren van de formule']);
         }
@@ -134,15 +224,20 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
         $draw = Tools::getValue('draw');
         $page = Tools::getValue('start');
         $length = Tools::getValue('length');
-        $search = Tools::getValue('search');
         $order = Tools::getValue('order');
         $columns = Tools::getValue('columns');
 
 
+        $sqlCheck = new DbQuery();
+        $sqlCheck->select('GROUP_CONCAT(id_store_product) as id_store_product');
+        $sqlCheck->from('price_modification', 'pm');
+        $sqlCheck->where('pm.`id_store_product` > 0');
+        $db->execute($sqlCheck);
+        $ids = $db->getValue($sqlCheck);
+
         $sql = new DbQuery();
-        $sql->select('mp.`name_supplier` as name_supplier, mp.`file_supplier` as file_supplier,mp.`active` as active, mp.`old_price_update` as old_price_update ,mp.`updated_at` as updated_at,CONCAT_WS(" - ", cl.`name`,pl.`name`) as product_name, p.`price`');
+        $sql->select('CONCAT_WS(" - ", cl.`name`,pl.`name`) as product_name, p.`price`, p.`active` as active, p.`reference` as reference, p.`id_product` as id');
         $sql->from('product', 'p');
-        $sql->leftJoin('price_modification', 'mp', 'p.`id_product` = mp.`id_store_product`');
         $sql->leftJoin(
             'product_lang',
             'pl',
@@ -150,35 +245,19 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
             AND pl.`id_lang` = ' . (int)$id_lang . Shop::addSqlRestrictionOnLang('pl')
         );
         $sql->leftJoin('category_lang', 'cl', 'cl.`id_category` = p.`id_category_default`');
-
-        $db->execute($sql);
+        $sql->where('p.`id_product` NOT IN ('.$ids.')');
+        $sql->where('p.`id_category_default` NOT IN (6, 382)');
+        $sql->where('p.`reference` != "CP"');
+        $sql->groupBy('p.`id_product`');
+        $db->executeS($sql);
 
         $totalRecords = $db->numRows();
-
 
         $where = ' 1 = 1 ';
         $items = [];
         foreach ($columns as $item) {
             if (!empty($item['search']['value'])) {
                 switch ($item['data']) {
-                    case 'name_supplier':
-                        $term = $item['search']['value'];
-
-                        $search_items = explode(' ', $term);
-
-                        $items = [];
-                        foreach ($search_items as $searchItem) {
-                            if (!empty($searchItem)) {
-                                $items[$searchItem][] = 'mp.`name_supplier` LIKE \'%' . pSQL($searchItem) . '%\' ';
-                            }
-                        }
-
-                        foreach ($items as $likes) {
-                            $where .= ' AND (' . implode(' OR ', $likes) . ') ';
-                        }
-
-                        $items[$item['data']][] = $where;
-                        break;
                     case 'product_name':
                         $term = $item['search']['value'];
 
@@ -201,68 +280,20 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
                     case 'price':
                         $items[$item['data']][] = 'pl.`price` LIKE \'%' . pSQL($item['search']['value']) . '%\' ';
                         break;
-                    case 'old_price_update':
-                        $date = explode(',', $item['search']['value']);
-
-
-                        if (empty($date[0])) {
-                            $from = date('Y-m-d H:i', strtotime('1999-01-01 00:00:00'));
-                        } else {
-                            $from = date('Y-m-d H:i', strtotime($date[0]));
-                        }
-
-                        if (empty($date[1])) {
-                            $to = date('Y-m-d 23:59:59');
-                        } else {
-                            $to = date('Y-m-d H:i', strtotime($date[1]));
-                        }
-
-                        $items[$item['data']][] = '(mp.`old_price_update` BETWEEN \'' . pSQL($from) . '\' AND \'' . pSQL($to) . '\') ';
-                        break;
-                    case 'updated_at':
-                        $date = explode(',', $item['search']['value']);
-
-                        if (empty($date[0])) {
-                            $from = date('Y-m-d H:i', strtotime('1999-01-01 00:00:00'));
-                        } else {
-                            $from = date('Y-m-d 00:00:00', strtotime($date[0]));
-                        }
-
-                        if (empty($date[1])) {
-                            $to = date('Y-m-d 23:59:59');
-                        } else {
-                            $to = date('Y-m-d 23:59:59', strtotime($date[1]));
-                        }
-
-                        $items[$item['data']][] = '(mp.`updated_at` BETWEEN \'' . pSQL($from) . '\' AND \'' . pSQL($to) . '\') ';
-                        break;
                 }
-
             }
         }
-
 
         foreach ($items as $likes) {
             $where .= ' AND (' . implode(' OR ', $likes) . ') ';
         }
-        //first draw no search values
-        if($draw == '1' && count($items) == 0){
-            $baseFrom = date('Y-m-d H:i', strtotime('1999-01-01 00:00:00'));
-            $baseTo = date('Y-m-d 23:59:59', strtotime('-16 weeks'));
-            $where .= ' AND (mp.`updated_at` BETWEEN \'' . pSQL($baseFrom) . '\' AND \'' . pSQL($baseTo) . '\') ';
-        }
 
-        $where .= ' AND mp.`active` = 1 ';
         $sql->where($where);
 
-        $sql->limit($length, (int)$length * (int)$page);
-
         $columnArray = [
-          'mp.`name_supplier`',
-          'product_name',
-          'p.`price`',
-          'mp.`old_price_update`',
-          'mp.`updated_at`'
+            'p.`id_product`',
+            'product_name',
+            'p.`price`'
         ];
 
         $orderBy = '';
@@ -274,20 +305,18 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
             }
         }
         $sql->orderBy($orderBy);
-
         $result = $db->executeS($sql);
         $totalFilteredRecords = $db->numRows();
 
+//        $sql->limit($length, (int)$page);
+
         $returnDataArray = [
-            'start' => $page,
-            'length' => $length,
-            'columns' => $columns,
-            'search' => $search,
             'draw' => $draw,
-            'recordsTotal' => $totalRecords,
-            'recordsFiltered' => $totalFilteredRecords,
-            'data' => $result
+            'recordsTotal' => (int)$totalRecords,
+            'recordsFiltered' => (int)$totalFilteredRecords,
+            'data' => array_slice($result,(int)$page, (int)$length)
         ];
+
         return die(json_encode($returnDataArray));
     }
 
@@ -320,32 +349,32 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
      * @param $id_product
      * @return false|string|JsonResponse
      */
-    public function calculateFormula($formula, $id_product, $priceMod, $supplier_price)
+    public function calculateFormula($formula, $id_product, $priceMod, $supplier_price, $sup_formula=null, $incr_formula=null)
     {
-
         $supplierData = $priceMod->getSupplierData();
+
+        $prices = (array)$supplierData['prices'];
+        $attributes = (array)$supplierData['attributes'];
         $supplier_price_value = 0;
         $patterns = [
-            '({HL})' => function () use ($supplierData) { //is Handelslengte van leverancier
-                $supLength = $supplierData['attributes']->{'handelslengte'} ?? 0;
+            '({HL})' => function () use ($attributes) { //is Handelslengte van leverancier
+                $supLength = $attributes['handelslengte'] ?? 0;
                 return (float)$supLength;
             },
-            '({GHL})' => function () use ($supplierData) { //is gewicht van leverancier
-                $supWeight = $supplierData['attributes']->{'gewicht'} ?? 0;
+            '({GHL})' => function () use ($attributes) { //is gewicht van leverancier
+                $supWeight = $attributes['gewicht'] ?? 0;
                 return (float)$supWeight;
             },
-            '({GML})' => function () use ($supplierData) { //is gewicht van leverancier
-                $supWeightPerMeter = $supplierData['attributes']->{'kilo_per_meter'} ?? 0;
+            '({GML})' => function () use ($attributes) { //is gewicht van leverancier
+                $supWeightPerMeter = $attributes['kilo_per_meter'] ?? 0;
                 return (float)$supWeightPerMeter;
             },
-            '({PL})' => function () use ($supplier_price, $supplierData) { //is de geslecteerde prijs van leverancier
-                if (!isset($supplierData['prices']->{$supplier_price})) {
-                    return;
+            '({PL})' => function () use ($supplier_price, $prices) { //is de geslecteerde prijs van leverancier
+                $supPrice = 0;
+                if (!isset($prices[$supplier_price])) {
+                    return 0;
                 }
-
-                $supPrice = (float)$supplierData['prices']->{$supplier_price};
-                $supplier_price_value = $supPrice;
-                return round($supPrice, 2);
+                return round((float)$prices[$supplier_price], 2);
             },
             '({HW})' => function () use ($id_product) {
 
@@ -360,19 +389,33 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
         ];
         $result = preg_replace_callback_array($patterns, $formula);
 
+
         $total = 0;
-
-
+        $supFormulaTotal = 0;
+        $incrFormulaTotal = 0;
+        $sup_result = $sup_formula;
+        $incr_result = $incr_formula;
         if ($this->validateGeneratedFormula($result)) {
             $math_string = 'return ' . $result . ';';
 
             try {
                 $total = eval($math_string);
+
+                if($sup_formula){
+                    $sup_result = preg_replace_callback_array($patterns, $sup_formula);
+                    $incr_result = preg_replace_callback_array($patterns, $incr_formula);
+
+                    if ($this->validateGeneratedFormula($sup_result)) {
+                        $sup_math_string = 'return ' . $sup_result . ';';
+                        $supFormulaTotal = eval($sup_math_string);
+                        $incrFormulaTotal = $total - $supFormulaTotal;
+                    }
+                }
             } catch (ParseError $err) {
-                return json_encode(['msg' => $err->getMessage(), 'total' => 0, 'supplier_price' => $supplier_price_value, 'generated_formula' => $result]);
+                return json_encode(['msg' => $err->getMessage(), 'total' => $total,'sup_total' => $supFormulaTotal,'incr_total' => $incrFormulaTotal, 'supplier_price' => $supplier_price_value, 'generated_formula' => $result, 'generated_sub_formula' => $sup_result, 'generated_incr_formula' => $incr_result]);
             }
         }
-        return json_encode(['msg' => 'formule berekend', 'total' => $total, 'supplier_price' => $supplier_price_value, 'generated_formula' => $result]);
+        return json_encode(['msg' => 'formule berekend', 'total' => $total,'sup_total' => $supFormulaTotal,'incr_total' => $incrFormulaTotal, 'supplier_price' => $supplier_price_value, 'generated_formula' => $result, 'generated_sub_formula' => $sup_result, 'generated_incr_formula' => $incr_result]);
     }
 
     /**

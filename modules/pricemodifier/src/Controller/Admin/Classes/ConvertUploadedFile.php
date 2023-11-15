@@ -47,6 +47,12 @@ class ConvertUploadedFile
     }
 
 
+    /**
+     * @param $file_obj
+     * @param $supplier_name
+     * @param $file_type
+     * @return array|void
+     */
     private function processXmlToArray($file_obj, $supplier_name, $file_type)
     {
         switch ($supplier_name) {
@@ -56,6 +62,7 @@ class ConvertUploadedFile
                     $new_data_array = [];
 
                     $sheets = $file_obj->getSheetNames();
+
                     foreach ($sheets as $sheet_name) {
                         $worksheet = $file_obj->getSheetByName($sheet_name);
                         $sheetName = preg_replace(["/^([0-9]\s*-\s*)/", " /\s\s+/"], ["", " "], rtrim($sheet_name));
@@ -112,14 +119,12 @@ class ConvertUploadedFile
                         ];
                         if (in_array((string)$sheetName, $tabArray)) {
                             $result = $this->processDoumaXmlCells($worksheet, $sheetName);
-                            if (!is_null($result)) {
-                                array_push($new_data_array, $result);
+                            if (!is_null($result) && count($result) > 0) {
+                                $new_data_array[] = $result;
                             }
                         }
                     }
-
-                    $data = $this->formatArray($new_data_array);
-                    return $data;
+                    return $this->formatArray($new_data_array);
                 }
                 //End Douma xml file
                 break;
@@ -170,6 +175,30 @@ class ConvertUploadedFile
                 }
                 //End Indi xml file
                 break;
+            case 'FISHER':
+                //Start Indi xml file
+
+                if ($file_type == 'Xls' || $file_type == 'Xlsx') {
+                    $new_data_array = [];
+
+                    $sheets = $file_obj->getSheetNames();
+                    foreach ($sheets as $sheet_name) {
+                        $worksheet = $file_obj->getSheetByName($sheet_name);
+                        $sheetName = preg_replace(["/^([0-9]\s*-\s*)/", " /\s\s+/"], ["", " "], rtrim($sheet_name));
+
+                        $result = $this->processFisherXmlCells($worksheet, $sheetName);
+
+                        if (!is_null($result)) {
+                            $new_data_array[] = $result;
+                        }
+                    }
+
+                    $data = $this->formatArray($new_data_array);
+
+                    return $data;
+                }
+                //End Indi xml file
+                break;
         }
     }
 
@@ -187,7 +216,8 @@ class ConvertUploadedFile
                         $worksheet = $file_obj->getSheetByName($sheet_name);
                         $sheetName = preg_replace(["/^([0-9]\s*-\s*)/", " /\s\s+/"], ["", " "], rtrim($sheet_name));
 
-                        $tabArray = ["WGW RONDSTAAL",
+                        $tabArray = [
+                            "WGW RONDSTAAL",
                             "WGW RONDSTAAL - S355J2",
                             "WGW VIERKANTSTAAL",
                             "WGW VIERKANTSTAAL - S355J2",
@@ -240,7 +270,6 @@ class ConvertUploadedFile
                         if (in_array((string)$sheetName, $tabArray)) {
 
                             $result = $this->processDoumaXmlCells($worksheet, $sheetName);
-
                             if (!is_null($result)) {
                                 array_push($new_data_array, $result);
                             }
@@ -250,10 +279,10 @@ class ConvertUploadedFile
 
                     $data = $this->formatArray($new_data_array);
 
-                    $this->createXlsFile($data, $supplier_name);
-
-                    print("<pre>XML is gedownload</pre>");
-                    print("<pre>" . print_r($data, true) . "</pre>");
+////                    $this->createXlsFile($data, $supplier_name);
+//
+//                    print("<pre>XML is gedownload</pre>");
+//                    print("<pre>" . print_r($data, true) . "</pre>");
                 }
                 //End Douma xml file
                 break;
@@ -372,12 +401,15 @@ class ConvertUploadedFile
                 $arr['prijs_per_meter'] = isset($sheet_array[$i]['prijs_per_meter']) ? $sheet_array[$i]['prijs_per_meter'] : '';
                 $arr['kilo_per_meter'] = isset($sheet_array[$i]['kilo_per_meter']) ? $sheet_array[$i]['kilo_per_meter'] : '';
                 $arr['prijs_tot_75'] = isset($sheet_array[$i]['prijs_tot_75']) ? $sheet_array[$i]['prijs_tot_75'] : '';
+                $arr['prijs_tot_100'] = isset($sheet_array[$i]['prijs_tot_100']) ? $sheet_array[$i]['prijs_tot_100'] : '';
                 $arr['prijs_tot_150'] = isset($sheet_array[$i]['prijs_tot_150']) ? $sheet_array[$i]['prijs_tot_150'] : '';
+                $arr['prijs_tot_200'] = isset($sheet_array[$i]['prijs_tot_200']) ? $sheet_array[$i]['prijs_tot_200'] : '';
                 $arr['prijs_tot_250'] = isset($sheet_array[$i]['prijs_tot_250']) ? $sheet_array[$i]['prijs_tot_250'] : '';
                 $arr['prijs_tot_300'] = isset($sheet_array[$i]['prijs_tot_300']) ? $sheet_array[$i]['prijs_tot_300'] : '';
                 $arr['prijs_tot_500'] = isset($sheet_array[$i]['prijs_tot_500']) ? $sheet_array[$i]['prijs_tot_500'] : '';
                 $arr['prijs_tot_1000'] = isset($sheet_array[$i]['prijs_tot_1000']) ? $sheet_array[$i]['prijs_tot_1000'] : '';
                 $arr['prijs_vanaf_300'] = isset($sheet_array[$i]['prijs_vanaf_300']) ? $sheet_array[$i]['prijs_vanaf_300'] : '';
+                $arr['prijs_vanaf_500'] = isset($sheet_array[$i]['prijs_vanaf_500']) ? $sheet_array[$i]['prijs_vanaf_500'] : '';
                 $arr['prijs_vanaf_1000'] = isset($sheet_array[$i]['prijs_vanaf_1000']) ? $sheet_array[$i]['prijs_vanaf_1000'] : '';
                 $arr['stralen_menieen_per_meter'] = isset($sheet_array[$i]['stralen_menieen_per_meter']) ? $sheet_array[$i]['stralen_menieen_per_meter'] : '';
                 $arr['stralen_menieen_per_100'] = isset($sheet_array[$i]['stralen_menieen_per_100']) ? $sheet_array[$i]['stralen_menieen_per_100'] : '';
@@ -420,15 +452,10 @@ class ConvertUploadedFile
                 if(!empty($arr['artikel_nummer']) && !empty($arr['artikel_groep'])){
                     $arr['type'] = $arr['artikel_groep'] . ' - ' . $arr['artikel_nummer'];
                 }
-
-                array_push($new_data, $arr);
+                $new_data[] = $arr;
             }
         }
-
-
-        $arrdat = array_map("unserialize", array_unique(array_map("serialize", $new_data)));
-
-        return $arrdat;
+        return array_map("unserialize", array_unique(array_map("serialize", $new_data)));
     }
 
 
@@ -1455,23 +1482,21 @@ class ConvertUploadedFile
     private function doumaBlankStaalIterator($worksheet, string $sheet_name = "DOUMA")
     {
         $new_data_list = [];
-
         $temp_type_name = '';
 
         foreach ($worksheet->getRowIterator() as $row) {// this is where you do your database stuff
             $cell_iterator = $row->getCellIterator();
             $cell_iterator->setIterateOnlyExistingCells(true);
-
             $new_row_data = [];
             foreach ($cell_iterator as $index => $cell) {
                 $cell_data = $cell->getValue();
 
-                if ($index == 'A' && in_array($cell_data, ['GELIJKZIJDIG', 'ONGELIJKZIJDIG', 'GESLEPEN'])) {
+
+                if ($index == 'A' && in_array($cell_data, ['ONGELIJKZIJDIG', 'GELIJKZIJDIG', 'GESLEPEN'])) {
                     $temp_type_name = ' - ' . $cell_data;
                 }
 
-                //Naam veld
-                if ($index == 'A' && is_string($cell_data)) {
+                if ($index == 'A' && (str_contains($cell_data, 'X') || is_int($cell_data))) {
                     $new_row_data['type'] = substr($sheet_name, 4) . $temp_type_name;
                     $new_row_data['naam'] = $cell_data;
                 }
@@ -1486,68 +1511,49 @@ class ConvertUploadedFile
                 #prijs < 75
                 if ($index == 'D') {
                     if (floatval($cell_data) > 0) {
-                        $new_row_data['prijs_tot_75'] = floatval($cell_data);
+                        $new_row_data['prijs_tot_100'] = floatval($cell_data);
                     }
                     if ($this->moneyFormatter->parse($cell_data) > 0) {
-                        $new_row_data['prijs_tot_75'] = $this->moneyFormatter->parse($cell_data);
+                        $new_row_data['prijs_tot_100'] = $this->moneyFormatter->parse($cell_data);
                     }
                 }
 
                 #prijs < 150
                 if ($index == 'E') {
                     if (floatval($cell_data) > 0) {
-                        $new_row_data['prijs_tot_150'] = floatval($cell_data);
+                        $new_row_data['prijs_tot_200'] = floatval($cell_data);
                     }
                     if ($this->moneyFormatter->parse($cell_data) > 0) {
-                        $new_row_data['prijs_tot_150'] = $this->moneyFormatter->parse($cell_data);
+                        $new_row_data['prijs_tot_200'] = $this->moneyFormatter->parse($cell_data);
                     }
                 }
 
                 #prijs < 300
                 if ($index == 'F') {
                     if (floatval($cell_data) > 0) {
-                        $new_row_data['prijs_tot_300'] = floatval($cell_data);
+                        $new_row_data['prijs_tot_500'] = floatval($cell_data);
                     }
                     if ($this->moneyFormatter->parse($cell_data) > 0) {
-                        $new_row_data['prijs_tot_300'] = $this->moneyFormatter->parse($cell_data);
+                        $new_row_data['prijs_tot_500'] = $this->moneyFormatter->parse($cell_data);
                     }
                 }
 
                 #prijs 300+
                 if ($index == 'G') {
                     if (floatval($cell_data) > 0) {
-                        $new_row_data['prijs_vanaf_300'] = floatval($cell_data);
+                        $new_row_data['prijs_vanaf_500'] = floatval($cell_data);
                     }
                     if ($this->moneyFormatter->parse($cell_data) > 0) {
-                        $new_row_data['prijs_vanaf_300'] = $this->moneyFormatter->parse($cell_data);
-                    }
-                }
-
-                #stalen per 100kg
-                if ($index == 'H') {
-                    if (floatval($cell_data) > 0) {
-                        $new_row_data['stralen_per_100'] = floatval($cell_data);
-                    }
-                    if ($this->moneyFormatter->parse($cell_data) > 0) {
-                        $new_row_data['stralen_per_100'] = $this->moneyFormatter->parse($cell_data);
-                    }
-                }
-
-                #stalen + menieen per 100kg
-                if ($index == 'I') {
-                    if (floatval($cell_data) > 0) {
-                        $new_row_data['stralen_menieen_per_100'] = floatval($cell_data);
-                    }
-                    if ($this->moneyFormatter->parse($cell_data) > 0) {
-                        $new_row_data['stralen_menieen_per_100'] = $this->moneyFormatter->parse($cell_data);
+                        $new_row_data['prijs_vanaf_500'] = $this->moneyFormatter->parse($cell_data);
                     }
                 }
 
             }
-            if (count($new_row_data) > 6) {
+            if (count($new_row_data) > 5) {
                 $new_data_list[] = $new_row_data;
             }
         }
+
         return $new_data_list;
     }
 
@@ -1622,15 +1628,10 @@ class ConvertUploadedFile
 
         $new_data_list = [];
         foreach ($worksheet->getRowIterator() as $rowIndex => $row) {// this is where you do your database stuff
-
-
             $cell_iterator = $row->getCellIterator();
-//            var_export([$cell_iterator,'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT##############################################TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT']);
-
             $cell_iterator->setIterateOnlyExistingCells(true);
 
             $new_row_data = [];
-
 
             foreach ($cell_iterator as $index => $cell) {
                 $cell_data = $cell->getValue();
@@ -1722,6 +1723,60 @@ class ConvertUploadedFile
             }
         }
                 return $new_data_list;
+    }
+
+    /**
+     * @param mixed $worksheet
+     * @param array|string|null $sheetName
+     * @return array
+     */
+    private function processFisherXmlCells(mixed $worksheet, array|string|null $sheetName)
+    {
+        $new_data_list = [];
+        foreach ($worksheet->getRowIterator() as $rowIndex => $row) {// this is where you do your database stuff
+
+
+            $cell_iterator = $row->getCellIterator();
+            $cell_iterator->setIterateOnlyExistingCells(true);
+
+            $new_row_data = [];
+
+            foreach ($cell_iterator as $index => $cell) {
+                $cell_data = $cell->getValue();
+
+                #Artikelnummer met Leestekens
+                if ($index == 'B' && $rowIndex > 3) {
+                    if(strlen($cell_data) > 0 && $cell_data !== "Artikelnr.") {
+                        $new_row_data['artikel_nummer'] = $cell_data;
+                    }
+                }
+
+                #naam
+                if ($index == 'C' && $rowIndex > 3 && $cell_data !== "Klant") {
+                    if(strlen($cell_data) > 0) {
+                        $new_row_data['naam'] = 'RVS '. $cell_data;
+                    }
+                }
+
+                #bruto prijs
+                if ($index == 'E' && $rowIndex > 3) {
+                    if(strlen($cell_data) > 0 && (float)$cell_data > 0) {
+                        $new_row_data['prijs_per_meter'] = filter_var(str_replace(',', '.', $cell_data), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+                    }
+                }
+
+                #eenheid
+                if ($index == 'F' && $rowIndex > 3) {
+                    if(strlen($cell_data) > 0) {
+                        $new_row_data['eenheid'] = $cell_data;
+                    }
+                }
+            }
+            if (count($new_row_data) >= 4) {
+                $new_data_list[] = $new_row_data;
+            }
+        }
+        return $new_data_list;
     }
 
 }

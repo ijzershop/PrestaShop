@@ -121,6 +121,13 @@ class PriceModification
      */
     private $updated_at;
 
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="xml_upload_date", type="datetime", nullable=false)
+     */
+    private $xml_upload_date;
+
 
     public function __construct()
     {
@@ -301,17 +308,15 @@ class PriceModification
      */
     public function setOldStorePrice(string $old_store_price): PriceModification
     {
+
         $priceList = [];
-        $array = ['date' => date('Y-m-d H:i:s'), 'price' => $old_store_price];
+        $array = ['date' => date('Y-m-d H:i:s'), 'price' => $old_store_price, 'xml_date'=> $this->getXmlUploadedAt()->format('Y-m-d H:i:s')];
         if(!is_null($this->old_store_price)) {
             $priceList = json_decode($this->old_store_price);
 
             if (json_last_error() === 0 && is_array($priceList)) {
                 array_unshift($priceList,  $array);
-            } elseif(floatval($priceList) > 0){
-                    $array2 = ['date' => date('Y-m-d H:i:s'), 'price' => $priceList];
-                    $priceList = [];
-                    array_unshift($priceList, $array2);
+            } elseif(is_countable($priceList) && count($priceList) > 0){
                     array_unshift($priceList, $array);
             } else {
                     $priceList = [];
@@ -320,7 +325,7 @@ class PriceModification
             array_unshift($priceList, $array);
         }
 
-        if(count($priceList) > 10){
+        if(is_countable($priceList) && count($priceList) > 10){
             array_pop($priceList);
         }
         $this->old_store_price = json_encode($priceList);
@@ -368,7 +373,6 @@ class PriceModification
     public function setActive(bool $active): PriceModification
     {
         $this->active = $active;
-
         return $this;
     }
 
@@ -377,8 +381,13 @@ class PriceModification
      */
     public function getSupplierData(): array
     {
-        return (array)json_decode($this->supplier_data);
+        $supData = $this->supplier_data;
+        if(is_array($supData)){
+            return $supData;
+        }
+        return (array)json_decode($supData);
     }
+
 
     /**
      * @param string $supplier_data
@@ -388,16 +397,18 @@ class PriceModification
     public function setSupplierData(string $supplier_data): PriceModification
     {
         $this->supplier_data = $supplier_data;
-
         return $this;
     }
 
 
     /**
-     * @return array
+     * @return DateTime
      */
-    public function getUpdatedAt(): array
+    public function getUpdatedAt(): DateTime
     {
+        if(is_null($this->updated_at)){
+            return new DateTime();
+        }
         return $this->updated_at;
     }
 
@@ -409,6 +420,29 @@ class PriceModification
         $dateTime = new DateTime('NOW');
 
         $this->updated_at = $dateTime;
+        return $this;
+    }
+
+
+    /**
+     * @return DateTime
+     */
+    public function getXmlUploadedAt(): DateTime
+    {
+        if(is_null($this->xml_upload_date)){
+            return new DateTime();
+        }
+        return $this->xml_upload_date;
+    }
+
+    /**
+     * @return PriceModification
+     */
+    public function setXmlUploadedAt(): PriceModification
+    {
+        $dateTime = new DateTime('NOW');
+
+        $this->xml_upload_date = $dateTime;
         return $this;
     }
 }

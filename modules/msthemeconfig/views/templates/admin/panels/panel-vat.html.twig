@@ -49,9 +49,9 @@
           <tr class="prev_row history-row" data-references="{{ history_vat_record.reference_list }}">
             <td><small>{{ history_vat_record.date_from|date("M - Y") }}</small></td>
             <td class="text-center" id="total_belgium">{{ history_vat_record.total_orders }}</td>
-            <td class="text-center" id="total_amount_belgium">{{ history_vat_record.total_incl }}</td>
-            <td class="text-center" id="total_amount_belgium">{{ history_vat_record.total_excl }}</td>
-            <td class="text-right h2" id="total_vat_belgium">{{ history_vat_record.total_vat }}</td>
+            <td class="text-center" id="total_amount_belgium">{{ history_vat_record.total_incl|number_format(2, '.', ',')  }}</td>
+            <td class="text-center" id="total_amount_belgium">{{ history_vat_record.total_excl|number_format(2, '.', ',') }}</td>
+            <td class="text-right h2" id="total_vat_belgium">{{ history_vat_record.total_vat|number_format(2, '.', ',') }}</td>
           </tr>
         {% endfor %}
 

@@ -124,8 +124,10 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
         }
 
         //Custom selected categories shown in channable feed
-        $shownCategories = Configuration::get('MSTHEMECONFIG_CHANNABLE_SELECTED_CATEGORIES', (int)Context::getContext()->language->id, (int)Context::getContext()->shop->id_shop_group, (int)Context::getContext()->shop->id, '6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,286,282,383,384,385');
+        $shownCategories = Configuration::get('MSTHEMECONFIG_CHANNABLE_CATEGORIES', (int)Context::getContext()->language->id, (int)Context::getContext()->shop->id_shop_group, (int)Context::getContext()->shop->id, '6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,286,282,383,384,385');
 
+
+// dd($shownCategories);
 
         $product_ids_in = array();
         if ($sql_optimization_mode) {
@@ -143,8 +145,8 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                  WHERE
                        ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\')  ' : '1') . '
                        ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
-                       ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (sav.quantity > 0) ' : '') . '
-                 AND p.id_category_default IN ('. $shownCategories .')
+                       ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (sav.quantity > 0) ' : '') . ' 
+                 AND p.id_category_default IN ('. $shownCategories .') 
               GROUP BY p.id_product
               ORDER BY p.id_product ' . $limit_string;
 
@@ -175,7 +177,8 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                        ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\')  ' : '1') . '
                    AND (pas.id_shop = \'' . (int)Context::getContext()->shop->id . '\' OR pas.id_shop IS NULL)
                        ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
-                       ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (pq.quantity > 0) ' : '') . '
+                       ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (pq.quantity > 0) ' : '') . ' 
+              AND p.id_category_default IN ('. $shownCategories .') 
               GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
               ORDER BY p.id_product ' . $limit_string;
 
@@ -184,7 +187,7 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                         $product_ids_in[] = '\'' . $product_ids_row['product_id_in'] . '\'';
                     }
                 }
-            }
+            } 
             if (sizeof($product_ids_in) == 0) {
                 $product_ids_in[] = '12345678987654321'; // dummy ID to receive empty result
             }
@@ -218,6 +221,7 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
         $tracked_cache_new = array();
 
         if ($results = Db::getInstance()->ExecuteS($sql)) {
+
             foreach ($results as $row) {
                 $productJsonCache = ChannableCache::getByKey('PRODUCT_JSON_' . $row['id'], self::$cache_lifetime_products, true, (int)Context::getContext()->language->id);
                 if ((int)$productJsonCache->id > 0 && !isset($_GET['rebuild_cache']) && $productJsonCache->cache_value != '' && !is_null(json_decode($productJsonCache->cache_value, true))) {
@@ -1071,6 +1075,9 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
      */
     protected function getDefaultMode($full, $product_ids_in, $limit_string, $default_country)
     {
+ //Custom selected categories shown in channable feed
+        $shownCategories = Configuration::get('MSTHEMECONFIG_CHANNABLE_CATEGORIES', (int)Context::getContext()->language->id, (int)Context::getContext()->shop->id_shop_group, (int)Context::getContext()->shop->id, '6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,286,282,383,384,385');
+
         if ($full) {
             return 'SELECT
                 if(pa.id_product_attribute IS NULL,
@@ -1202,7 +1209,8 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                 ' . $this->getPossibleCategoriesWhere() . '
                 ' . $this->getPossibleFeaturesWhere() . '
                 ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
-                ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (pq.quantity > 0) ' : '') . '
+                ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (pq.quantity > 0) ' : '') . ' 
+            AND p.id_category_default IN ('. $shownCategories .')
             GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
             ORDER BY p.id_product, pac.id_attribute ' . ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? '' : $limit_string);
         } else {
@@ -1222,7 +1230,8 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
             WHERE
                 ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product_and_attribute') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' if(pa.id_product_attribute IS NULL, p.id_product, concat(p.id_product, \'_\', pa.id_product_attribute)) IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
-                ' . (($this->sql_optimization_mode == 'id_product') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' p.id_product IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
+                ' . (($this->sql_optimization_mode == 'id_product') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' p.id_product IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . ' 
+                AND p.id_category_default IN ('. $shownCategories .') 
                 1
             GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
             ORDER BY p.id_product ' . ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? '' : $limit_string);
@@ -1236,6 +1245,10 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
      */
     protected function getMultiqueryMode($full, $product_ids_in, $limit_string)
     {
+ //Custom selected categories shown in channable feed
+        $shownCategories = Configuration::get('MSTHEMECONFIG_CHANNABLE_CATEGORIES', (int)Context::getContext()->language->id, (int)Context::getContext()->shop->id_shop_group, (int)Context::getContext()->shop->id, '6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,286,282,383,384,385');
+
+
         if ($full) {
 
             return 'SELECT
@@ -1300,6 +1313,7 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                 pl.id_shop = \'' .  (int)Context::getContext()->shop->id . '\'
                 ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
                 ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (' . (Configuration::get('PS_STOCK_MANAGEMENT') ? 'sav.quantity' : 'pq.quantity') . ' > 0) ' : '') . '
+            AND p.id_category_default IN ('. $shownCategories .') 
             GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
             ORDER BY p.id_product ' . ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? '' : $limit_string);
         } else {
@@ -1321,6 +1335,7 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                 ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product_and_attribute') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' if(pa.id_product_attribute IS NULL, p.id_product, concat(p.id_product, \'_\', pa.id_product_attribute)) IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' p.id_product IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
+                 AND p.id_category_default IN ('. $shownCategories .')                 
                 1
             GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
             ORDER BY p.id_product ' . ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? '' : $limit_string);

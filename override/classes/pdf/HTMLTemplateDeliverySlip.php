@@ -173,48 +173,28 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             }
 
 
-//            if (!is_null($order_detail['customizedDatas'])) {
-//                foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
-//                    if (!is_null($customization)) {
-//
-//                        foreach ($customization as $customizationId => $customized) {
-//                            if (isset($customized['datas'])) {
-//                                if (extension_loaded('imagick') || class_exists("Imagick")) {
-//                                    if (isset($customized['datas'][1][0]['technical_image'])) {
-//                                        $file = $customized['datas'][1][0]['technical_image'];
-//                                        if (!is_null($file) && !empty($file)) {
-//                                            $fileContents = $this->get_contents($file);
-//                                            if ($fileContents != false) {
-//
-//                                                try {
-//                                                    $doc = new SimpleXMLElement($fileContents);
-//                                                    foreach ($doc->g as $seg) {
-//                                                        if ($seg->attributes()->id[0] == 'cutline') {
-//                                                            $dom = dom_import_simplexml($seg);
-//                                                            $dom->parentNode->removeChild($dom);
-//                                                        }
-//                                                    }
-//
-//                                                    try {
-//                                                        $im = new Imagick();
-//                                                        $im->readImageBlob($doc->asXml());
-//                                                        $im->setImageFormat('png24');
-//                                                        $im->writeImage(_PS_CORE_DIR_ . '/' . $file . '.png');
-//                                                        $im->clear();
-//                                                        $im->destroy();
-//                                                    } catch (Exception $e) {
-//
-//                                                    }
-//                                                } catch (Exception $e) {}
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+           if (!is_null($order_detail['customizedDatas'])) {
+               foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
+                   if (!is_null($customization)) {
+
+                       foreach ($customization as $customizationId => $customized) {
+                           if (isset($customized['datas'])) {
+                                   if (isset($customized['datas'][1][0]['technical_image'])) {
+                                       $file = $customized['datas'][1][0]['technical_image'];
+                                       // dd(exif_imagetype('https://ijzershop.nl/'.$file));
+                                       if (!exif_imagetype('https://ijzershop.nl/'.$file)) {
+                                            $order_detail['customizedDatas'][$addressId][$customizationId]['datas'][1][0]['technical_image'] = "";
+
+                                       }
+                                   }
+                               }
+                       }
+                   }
+               }
+           }
+
+
+
         }
 
         if (Configuration::get('PS_PDF_IMG_DELIVERY')) {

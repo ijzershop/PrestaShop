@@ -230,8 +230,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $has_discount = false;
         foreach ($order_details as $id => &$order_detail) {
 
+            if(Product::existsInDatabase($order_detail['product_id'])){
             if (!is_null($order_detail['id_oi_offer'])) {
                 $descProduct = new Product($order_detail['product_id']);
+
                 if ($descProduct) {
                     $order_detail['product_desc_short'] = reset($descProduct->description_short);
                 }
@@ -242,6 +244,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                 if ($descProduct) {
                     $order_detail['product_desc_short'] = reset($descProduct->description);
                 }
+            }
+            } else {
+                $order_detail['product_desc_short'] = '';
             }
 
             // Find out if column 'price before discount' is required

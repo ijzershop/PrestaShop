@@ -13,10 +13,15 @@ declare(strict_types=1);
 
 namespace Modernesmid\Module\Pricemodifier\Repository;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
+use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
+use PrestaShop\PrestaShop\Adapter\Entity\Tools;
+use PrestaShopDatabaseException;
 
 /**
  *
@@ -90,20 +95,53 @@ class PriceModificationRepository extends EntityRepository
      *
      * @param int $id
      *
-     * @return array
      */
     public function findBySupplier($name_supplier, $file_supplier)
     {
-        $qb = $this->createQueryBuilder('q')
-            ->addSelect('q');
-        $qb
-            ->andWhere('q.name_supplier = :name_supplier')
-            ->setParameter('name_supplier', $name_supplier)
-            ->andWhere('q.file_supplier = :file_supplier')
-            ->setParameter('file_supplier', $file_supplier);
 
-        return $qb->getQuery()->getFirstResult();
 
+    }
+
+
+    /**
+     * @throws PrestaShopDatabaseException
+     */
+    public function findOrCreateBySupplier(array $name_supplier, mixed $supplier_data, string $file_supplier, $xml_date): bool|string
+    {
+        try {
+            $name = end($name_supplier);
+            $qb = Db::getInstance();
+            $qb->update('price_modification',
+                [
+                'name_supplier' => $name,
+                'file_supplier' => $file_supplier,
+                'supplier_data' => addslashes($supplier_data),
+                'xml_upload_date' => $xml_date->format('Y-m-d H:m:s')
+                ],
+                "`name_supplier` IN ('".implode("','", $name_supplier). "') AND `file_supplier` = '". $file_supplier . "'",
+                100,
+                false,
+                false,
+                true
+            );
+            if(!$qb->Affected_Rows()){
+                $qb->insert('price_modification', [
+                    'name_supplier' => $name,
+                    'file_supplier' => $file_supplier,
+                    'supplier_data' => addslashes($supplier_data),
+                    'xml_upload_date' => $xml_date->format('Y-m-d H:m:s'),
+                    'id_store_product' => 0,
+                    'active' => 0
+                ],
+                    false,
+                    false
+                );
+            
+            }
+            return $name;
+        } catch (PrestaShopDatabaseException $exception){
+            return $exception->getMessage();
+        }
     }
 
 }

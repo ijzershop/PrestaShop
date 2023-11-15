@@ -27,7 +27,7 @@ class TaxRulesTaxManager extends TaxRulesTaxManagerCore
 {
     /*
     * module: advancedvatmanager
-    * date: 2023-09-07 12:09:31
+    * date: 2023-10-02 07:45:25
     * version: 1.6.2.2
     */
     public function getTaxCalculator()

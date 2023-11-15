@@ -39,7 +39,7 @@
           {foreach $customizationPerAddress as $customizationId => $customization}
           {if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
           {foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}{if !empty($customization_infos.value)}
-            {if !empty($customization_infos.technical_image)}
+            {if !empty($customization_infos.technical_image) }
                   <table>
                     <tr>
                       <td colspan="2">
@@ -49,9 +49,8 @@
                     <tr>
                       <td colspan="2">
                         <br/>
-                        <img src="{$webroot}{$customization_infos.technical_image}" width="200"  alt=""/>
-                        <br/>
-                          {$webroot}{$customization_infos.technical_image}
+                       {* {$customization_infos.technical_image} *}
+                        <img src="https://ijzershop.nl/{$customization_infos.technical_image}" width="200"  alt=""/>
 {*                        <img src="{Context::getContext()->shop->getBaseURL(false, false)}{$customization_infos.technical_image}.png" width="200"  alt=""/>*}
                       </td>
                     </tr>

@@ -167,7 +167,7 @@ class OrderSlipGenerator
         $sql_query->select('oi.id_order_invoice, oi.id_order, oi.number, oi.delivery_number, oi.delivery_date, oi.total_discount_tax_excl, oi.total_discount_tax_incl, oi.total_paid_tax_excl, oi.total_paid_tax_incl, oi.total_refunded_tax_excl, oi.total_refunded_tax_incl, oi.total_products, oi.total_products_wt, oi.total_shipping_tax_excl, oi.total_shipping_tax_incl, oi.shipping_tax_computation_method, oi.total_wrapping_tax_excl, oi.total_wrapping_tax_incl, oi.shop_address, oi.note, oi.date_add');
         $sql_query->from('orders', 'o');
         $sql_query->leftJoin('order_invoice', 'oi', 'oi.id_order = o.id_order');
-        $sql_query->where('o.current_state = \''.$this->paidStatus.'\''.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
+        $sql_query->where('o.current_state IN (\''.$this->paidStatus.'\', \'9\')'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o'));
         $sql_query->where('o.date_upd >= \''.pSQL($last_updated_date).'\'');
         $sql_query->where('oi.date_add <= \''.pSQL($date_to).'\'');
         $sql_query->orderBy('oi.id_order_invoice ASC');

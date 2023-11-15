@@ -327,10 +327,10 @@ class Cart extends CartCore
                 return false;
             }
         }
-        $productItem = new Product($id_product);
-        if ($productItem && $productItem->reference == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')) {
-            $productItem->delete();
-        }
+        // $productItem = new Product($id_product);
+        // if ($productItem && $productItem->reference == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')) {
+        //     $productItem->delete();
+        // }
         $result = Db::getInstance()->getRow('
             SELECT SUM(`quantity`) AS \'quantity\'
             FROM `' . _DB_PREFIX_ . 'customization`
@@ -693,7 +693,7 @@ class Cart extends CartCore
     )
     {
 
-            if(!is_numeric($id_carrier) && (int)Context::getContext()->cart->id_carrier > 0){
+            if(!is_numeric($id_carrier) && isset(Context::getContext()->cart->id_carrier) && (int)Context::getContext()->cart->id_carrier > 0){
                 $id_carrier = (int)Context::getContext()->cart->id_carrier;
             }
 

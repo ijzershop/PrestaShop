@@ -42,7 +42,8 @@ class PriceListUploadType extends CommonAbstractType
                 'choices' => [
                     'Douma' => 'douma',
                     'MCB' => 'mcb',
-                    'Indi' => 'indi'
+                    'Indi' => 'indi',
+                    'Fisher' => 'fisher'
                 ],
             ])
             ->add('uploaded_file', FileType::class, [
@@ -54,10 +55,6 @@ class PriceListUploadType extends CommonAbstractType
                     new NotBlank(),
                     new File([
                         'maxSize' => '6024k',
-//                        'mimeTypes' => [
-//                            'application/xls',
-//                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-//                        ],
                         'mimeTypesMessage' => 'Please upload a valid Excel document',
                     ])
                 ],

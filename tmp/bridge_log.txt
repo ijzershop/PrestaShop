@@ -1,4 +1,595 @@
-[Fri, 08 Sep 2023 15:40:05 +0200]Intializing
-[Fri, 08 Sep 2023 15:40:05 +0200]Connecting to database
-[Fri, 08 Sep 2023 15:40:05 +0200]Creating tmp file
-[Fri, 08 Sep 2023 15:40:05 +0200]Opening tmp file
+[Wed, 15 Nov 2023 07:53:55 +0100]Intializing
+[Wed, 15 Nov 2023 07:53:55 +0100]Connecting to database
+[Wed, 15 Nov 2023 07:53:55 +0100]Creating backup file em1_bridge_db_dump001.sql
+[Wed, 15 Nov 2023 07:53:55 +0100]Selecting tables
+[Wed, 15 Nov 2023 07:53:55 +0100]Handling table `ps176_access` [2 997].
+[Wed, 15 Nov 2023 07:53:55 +0100]-SELECT * FROM `ps176_access` LIMIT 38131
+[Wed, 15 Nov 2023 07:53:55 +0100]Handling table `ps176_accessory` [21].
+[Wed, 15 Nov 2023 07:53:55 +0100]-SELECT * FROM `ps176_accessory` LIMIT 2686
+[Wed, 15 Nov 2023 07:53:55 +0100]Handling table `ps176_address` [134 408].
+[Wed, 15 Nov 2023 07:53:55 +0100]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 0, 13708) t2
+                ON t1.id_address = t2.id_address
+[Wed, 15 Nov 2023 07:53:55 +0100]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 13708, 13708) t2
+                ON t1.id_address = t2.id_address
+[Wed, 15 Nov 2023 07:53:56 +0100]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 27416, 13708) t2
+                ON t1.id_address = t2.id_address
+[Wed, 15 Nov 2023 07:53:56 +0100]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 41124, 13708) t2
+                ON t1.id_address = t2.id_address
+[Wed, 15 Nov 2023 07:53:56 +0100]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 54832, 13708) t2
+                ON t1.id_address = t2.id_address
+[Wed, 15 Nov 2023 07:53:56 +0100]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 68540, 13708) t2
+                ON t1.id_address = t2.id_address
+[Wed, 15 Nov 2023 07:53:57 +0100]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 82248, 13708) t2
+                ON t1.id_address = t2.id_address
+[Wed, 15 Nov 2023 07:53:57 +0100]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 95956, 13708) t2
+                ON t1.id_address = t2.id_address
+[Wed, 15 Nov 2023 07:53:57 +0100]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 109664, 13708) t2
+                ON t1.id_address = t2.id_address
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 123372, 13708) t2
+                ON t1.id_address = t2.id_address
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 137080, 13708) t2
+                ON t1.id_address = t2.id_address
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 150788, 13708) t2
+                ON t1.id_address = t2.id_address
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_address_format` [244].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_address_format` LIMIT 10383
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_attachment` [0].
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_attachment_lang` [0].
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_attribute` [23].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_attribute` LIMIT 2942
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_attribute_group` [3].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_attribute_group` LIMIT 385
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_attribute_group_lang` [3].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_attribute_group_lang` LIMIT 385
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_attribute_group_shop` [3].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_attribute_group_shop` LIMIT 385
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_attribute_impact` [406].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_attribute_impact` LIMIT 17191
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_attribute_lang` [23].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_attribute_lang` LIMIT 2942
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_attribute_shop` [23].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_attribute_shop` LIMIT 2942
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_authorization_role` [1 228].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_authorization_role` LIMIT 19601
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_carrier` [12].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_carrier` LIMIT 1536
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_carrier_group` [53].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_carrier_group` LIMIT 6766
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_carrier_lang` [12].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_carrier_lang` LIMIT 1536
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_carrier_shop` [12].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_carrier_shop` LIMIT 1536
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_carrier_tax_rules_group_shop` [12].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_carrier_tax_rules_group_shop` LIMIT 1536
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_carrier_zone` [28].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_carrier_zone` LIMIT 3580
+[Wed, 15 Nov 2023 07:53:58 +0100]Handling table `ps176_cart` [94 316].
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_cart` LIMIT 5154
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_cart` LIMIT 5154, 5154
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_cart` LIMIT 10308, 5154
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_cart` LIMIT 15462, 5154
+[Wed, 15 Nov 2023 07:53:58 +0100]-SELECT * FROM `ps176_cart` LIMIT 20616, 5154
+[Wed, 15 Nov 2023 07:53:59 +0100]-SELECT * FROM `ps176_cart` LIMIT 25770, 5154
+[Wed, 15 Nov 2023 07:53:59 +0100]-SELECT * FROM `ps176_cart` LIMIT 30924, 5154
+[Wed, 15 Nov 2023 07:53:59 +0100]-SELECT * FROM `ps176_cart` LIMIT 36078, 5154
+[Wed, 15 Nov 2023 07:53:59 +0100]-SELECT * FROM `ps176_cart` LIMIT 41232, 5154
+[Wed, 15 Nov 2023 07:53:59 +0100]-SELECT * FROM `ps176_cart` LIMIT 46386, 5154
+[Wed, 15 Nov 2023 07:53:59 +0100]-SELECT * FROM `ps176_cart` LIMIT 51540, 5154
+[Wed, 15 Nov 2023 07:53:59 +0100]-SELECT * FROM `ps176_cart` LIMIT 56694, 5154
+[Wed, 15 Nov 2023 07:53:59 +0100]-SELECT * FROM `ps176_cart` LIMIT 61848, 5154
+[Wed, 15 Nov 2023 07:53:59 +0100]-SELECT * FROM `ps176_cart` LIMIT 67002, 5154
+[Wed, 15 Nov 2023 07:54:00 +0100]-SELECT * FROM `ps176_cart` LIMIT 72156, 5154
+[Wed, 15 Nov 2023 07:54:00 +0100]-SELECT * FROM `ps176_cart` LIMIT 77310, 5154
+[Wed, 15 Nov 2023 07:54:00 +0100]-SELECT * FROM `ps176_cart` LIMIT 82464, 5154
+[Wed, 15 Nov 2023 07:54:00 +0100]-SELECT * FROM `ps176_cart` LIMIT 87618, 5154
+[Wed, 15 Nov 2023 07:54:00 +0100]-SELECT * FROM `ps176_cart` LIMIT 92772, 5154
+[Wed, 15 Nov 2023 07:54:00 +0100]-SELECT * FROM `ps176_cart` LIMIT 97926, 5154
+[Wed, 15 Nov 2023 07:54:01 +0100]Handling table `ps176_cart_cart_rule` [24].
+[Wed, 15 Nov 2023 07:54:01 +0100]-SELECT * FROM `ps176_cart_cart_rule` LIMIT 3072
+[Wed, 15 Nov 2023 07:54:01 +0100]Handling table `ps176_cart_product` [296 033].
+[Wed, 15 Nov 2023 07:54:01 +0100]-SELECT * FROM `ps176_cart_product` LIMIT 31776
+[Wed, 15 Nov 2023 07:54:01 +0100]-SELECT * FROM `ps176_cart_product` LIMIT 31776, 31776
+[Wed, 15 Nov 2023 07:54:01 +0100]-SELECT * FROM `ps176_cart_product` LIMIT 63552, 31776
+[Wed, 15 Nov 2023 07:54:01 +0100]-SELECT * FROM `ps176_cart_product` LIMIT 95328, 31776
+[Wed, 15 Nov 2023 07:54:01 +0100]-SELECT * FROM `ps176_cart_product` LIMIT 127104, 31776
+[Wed, 15 Nov 2023 07:54:02 +0100]-SELECT * FROM `ps176_cart_product` LIMIT 158880, 31776
+[Wed, 15 Nov 2023 07:54:02 +0100]-SELECT * FROM `ps176_cart_product` LIMIT 190656, 31776
+[Wed, 15 Nov 2023 07:54:02 +0100]-SELECT * FROM `ps176_cart_product` LIMIT 222432, 31776
+[Wed, 15 Nov 2023 07:54:02 +0100]-SELECT * FROM `ps176_cart_product` LIMIT 254208, 31776
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cart_product` LIMIT 285984, 31776
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cart_product` LIMIT 317760, 31776
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cart_rule` [31].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cart_rule` LIMIT 1983
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cart_rule_carrier` [0].
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cart_rule_combination` [0].
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cart_rule_country` [0].
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cart_rule_fees` [3].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cart_rule_fees` LIMIT 385
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cart_rule_group` [10].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cart_rule_group` LIMIT 1281
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cart_rule_lang` [32].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cart_rule_lang` LIMIT 4089
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cart_rule_product_rule` [0].
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cart_rule_product_rule_group` [0].
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cart_rule_product_rule_value` [0].
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cart_rule_shop` [0].
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_category` [398].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_category` LIMIT 12711
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_category_group` [1 950].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_category_group` LIMIT 48772
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_category_lang` [323].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_category_lang` LIMIT 258
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_category_lang` LIMIT 258, 258
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_category_product` [3 950].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_category_product` LIMIT 49933
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_category_shop` [387].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_category_shop` LIMIT 48772
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cms` [31].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cms` LIMIT 3965
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cms_category` [5].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cms_category` LIMIT 641
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cms_category_lang` [6].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cms_category_lang` LIMIT 769
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cms_category_shop` [5].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cms_category_shop` LIMIT 641
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cms_lang` [44].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cms_lang` LIMIT 59
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cms_role` [7].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cms_role` LIMIT 897
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cms_role_lang` [0].
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_cms_shop` [31].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_cms_shop` LIMIT 3965
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_configuration` [1 482].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_configuration` LIMIT 14565
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_configuration_kpi` [144].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_configuration_kpi` LIMIT 18397
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_configuration_kpi_lang` [8].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_configuration_kpi_lang` LIMIT 1025
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_configuration_lang` [206].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_configuration_lang` LIMIT 6575
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_contact` [3].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_contact` LIMIT 385
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_contact_lang` [3].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_contact_lang` LIMIT 385
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_contact_shop` [3].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_contact_shop` LIMIT 385
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_country` [244].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_country` LIMIT 30841
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_country_lang` [244].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_country_lang` LIMIT 30841
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_country_shop` [244].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_country_shop` LIMIT 30841
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_currency` [0].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_currency` LIMIT 2097153
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_currency_lang` [1].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_currency_lang` LIMIT 129
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_currency_shop` [1].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_currency_shop` LIMIT 129
+[Wed, 15 Nov 2023 07:54:03 +0100]Handling table `ps176_customer` [84 186].
+[Wed, 15 Nov 2023 07:54:03 +0100]-SELECT * FROM `ps176_customer` LIMIT 8193
+[Wed, 15 Nov 2023 07:54:04 +0100]-SELECT * FROM `ps176_customer` LIMIT 8193, 8193
+[Wed, 15 Nov 2023 07:54:04 +0100]-SELECT * FROM `ps176_customer` LIMIT 16386, 8193
+[Wed, 15 Nov 2023 07:54:04 +0100]-SELECT * FROM `ps176_customer` LIMIT 24579, 8193
+[Wed, 15 Nov 2023 07:54:04 +0100]-SELECT * FROM `ps176_customer` LIMIT 32772, 8193
+[Wed, 15 Nov 2023 07:54:05 +0100]-SELECT * FROM `ps176_customer` LIMIT 40965, 8193
+[Wed, 15 Nov 2023 07:54:05 +0100]-SELECT * FROM `ps176_customer` LIMIT 49158, 8193
+[Wed, 15 Nov 2023 07:54:05 +0100]-SELECT * FROM `ps176_customer` LIMIT 57351, 8193
+[Wed, 15 Nov 2023 07:54:05 +0100]-SELECT * FROM `ps176_customer` LIMIT 65544, 8193
+[Wed, 15 Nov 2023 07:54:06 +0100]-SELECT * FROM `ps176_customer` LIMIT 73737, 8193
+[Wed, 15 Nov 2023 07:54:06 +0100]-SELECT * FROM `ps176_customer` LIMIT 81930, 8193
+[Wed, 15 Nov 2023 07:54:06 +0100]-SELECT * FROM `ps176_customer` LIMIT 90123, 8193
+[Wed, 15 Nov 2023 07:54:06 +0100]Handling table `ps176_customer_group` [86 017].
+[Wed, 15 Nov 2023 07:54:06 +0100]-SELECT * FROM `ps176_customer_group` LIMIT 48772
+[Wed, 15 Nov 2023 07:54:06 +0100]-SELECT * FROM `ps176_customer_group` LIMIT 48772, 48772
+[Wed, 15 Nov 2023 07:54:07 +0100]Handling table `ps176_customer_message` [9 616].
+[Wed, 15 Nov 2023 07:54:07 +0100]-SELECT * FROM `ps176_customer_message` LIMIT 7627
+[Wed, 15 Nov 2023 07:54:07 +0100]-SELECT * FROM `ps176_customer_message` LIMIT 7627, 7627
+[Wed, 15 Nov 2023 07:54:07 +0100]Handling table `ps176_customer_message_sync_imap` [0].
+[Wed, 15 Nov 2023 07:54:07 +0100]Handling table `ps176_customer_session` [32 441].
+[Wed, 15 Nov 2023 07:54:07 +0100]-SELECT * FROM `ps176_customer_session` LIMIT 25576
+[Wed, 15 Nov 2023 07:54:07 +0100]-SELECT * FROM `ps176_customer_session` LIMIT 25576, 25576
+[Wed, 15 Nov 2023 07:54:07 +0100]Handling table `ps176_customer_thread` [9 235].
+[Wed, 15 Nov 2023 07:54:07 +0100]-SELECT * FROM `ps176_customer_thread` LIMIT 12123
+[Wed, 15 Nov 2023 07:54:07 +0100]Handling table `ps176_customization` [25 158].
+[Wed, 15 Nov 2023 07:54:07 +0100]-SELECT * FROM `ps176_customization` LIMIT 19974
+[Wed, 15 Nov 2023 07:54:07 +0100]-SELECT * FROM `ps176_customization` LIMIT 19974, 19974
+[Wed, 15 Nov 2023 07:54:07 +0100]Handling table `ps176_customization_field` [983].
+[Wed, 15 Nov 2023 07:54:07 +0100]-SELECT * FROM `ps176_customization_field` LIMIT 31302
+[Wed, 15 Nov 2023 07:54:07 +0100]Handling table `ps176_customization_field_lang` [961].
+[Wed, 15 Nov 2023 07:54:07 +0100]-SELECT * FROM `ps176_customization_field_lang` LIMIT 30395
+[Wed, 15 Nov 2023 07:54:07 +0100]Handling table `ps176_customized_data` [23 105].
+[Wed, 15 Nov 2023 07:54:07 +0100]-SELECT * FROM `ps176_customized_data` LIMIT 13108
+[Wed, 15 Nov 2023 07:54:07 +0100]-SELECT * FROM `ps176_customized_data` LIMIT 13108, 13108
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_date_range` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_delivery` [24].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_delivery` LIMIT 3072
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_employee` [10].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_employee` LIMIT 641
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_employee_account` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_employee_session` [3 597].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_employee_session` LIMIT 25576
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_employee_shop` [12].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_employee_shop` LIMIT 1536
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_feature` [32].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_feature` LIMIT 4089
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_feature_flag` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_feature_flag` LIMIT 2097153
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_feature_lang` [32].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_feature_lang` LIMIT 4089
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_feature_product` [12 907].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_feature_product` LIMIT 59920
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_feature_shop` [32].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_feature_shop` LIMIT 4089
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_feature_value` [7 292].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_feature_value` LIMIT 58255
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_feature_value_lang` [7 292].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_feature_value_lang` LIMIT 38837
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_gender` [2].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_gender` LIMIT 257
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_gender_lang` [2].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_gender_lang` LIMIT 257
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_group` [6].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_group` LIMIT 769
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_group_lang` [6].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_group_lang` LIMIT 769
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_group_reduction` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_group_shop` [6].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_group_shop` LIMIT 769
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_hook` [859].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_hook` LIMIT 10981
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_hook_alias` [88].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_hook_alias` LIMIT 11216
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_hook_module` [536].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_hook_module` LIMIT 22796
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_hook_module_exceptions` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_image` [2 280].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_image` LIMIT 41122
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_image_lang` [2 280].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_image_lang` LIMIT 32265
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_image_shop` [2 280].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_image_shop` LIMIT 47664
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_image_type` [7].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_image_type` LIMIT 897
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_lang` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_lang` LIMIT 2097153
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_lang_shop` [1].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_lang_shop` LIMIT 129
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_layered_category` [282].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_layered_category` LIMIT 17925
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_layered_filter` [3].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_layered_filter` LIMIT 385
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_layered_filter_block` [324].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_layered_filter_block` LIMIT 13798
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_layered_filter_shop` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_layered_indexable_attribute_group` [5].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_layered_indexable_attribute_group` LIMIT 641
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_layered_indexable_attribute_group_lang_value` [1].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_layered_indexable_attribute_group_lang_value` LIMIT 129
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_layered_indexable_attribute_lang_value` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_layered_indexable_feature` [33].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_layered_indexable_feature` LIMIT 4221
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_layered_indexable_feature_lang_value` [40].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_layered_indexable_feature_lang_value` LIMIT 5116
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_layered_indexable_feature_value_lang_value` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_layered_price_index` [8 251].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_layered_price_index` LIMIT 12867
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_layered_product_attribute` [2 687].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_layered_product_attribute` LIMIT 42800
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_manufacturer` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_manufacturer_lang` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_manufacturer_shop` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_message` [6 407].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_message` LIMIT 8423
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_message_readed` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_module` [102].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_module` LIMIT 13027
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_module_access` [733].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_module_access` LIMIT 30841
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_module_carrier` [18].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_module_carrier` LIMIT 2303
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_module_country` [13].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_module_country` LIMIT 1664
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_module_currency` [8].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_module_currency` LIMIT 1025
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_module_group` [641].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_module_group` LIMIT 27237
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_module_history` [179].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_module_history` LIMIT 22796
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_module_preference` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_module_seohelping_objects` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_module_seohelping_patterns` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_module_seohelping_rules` [0].
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_module_shop` [69].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_module_shop` LIMIT 8813
+[Wed, 15 Nov 2023 07:54:08 +0100]Handling table `ps176_order_carrier` [92 412].
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_order_carrier` LIMIT 24386
+[Wed, 15 Nov 2023 07:54:08 +0100]-SELECT * FROM `ps176_order_carrier` LIMIT 24386, 24386
+[Wed, 15 Nov 2023 07:54:09 +0100]-SELECT * FROM `ps176_order_carrier` LIMIT 48772, 24386
+[Wed, 15 Nov 2023 07:54:09 +0100]-SELECT * FROM `ps176_order_carrier` LIMIT 73158, 24386
+[Wed, 15 Nov 2023 07:54:09 +0100]-SELECT * FROM `ps176_order_carrier` LIMIT 97544, 24386
+[Wed, 15 Nov 2023 07:54:09 +0100]Handling table `ps176_order_cart_rule` [63].
+[Wed, 15 Nov 2023 07:54:09 +0100]-SELECT * FROM `ps176_order_cart_rule` LIMIT 8036
+[Wed, 15 Nov 2023 07:54:09 +0100]Handling table `ps176_order_detail` [159 127].
+[Wed, 15 Nov 2023 07:54:09 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 0, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:09 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 5715, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:10 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 11430, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:10 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 17145, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:10 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 22860, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:10 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 28575, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:10 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 34290, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:10 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 40005, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:11 +0100]Connecting to database
+[Wed, 15 Nov 2023 07:54:11 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 45720, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:11 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 51435, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:11 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 57150, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:11 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 62865, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:12 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 68580, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:12 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 74295, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:12 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 80010, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:12 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 85725, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:13 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 91440, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:13 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 97155, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:13 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 102870, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:14 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 108585, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:14 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 114300, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:14 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 120015, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:14 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 125730, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:15 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 131445, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:15 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 137160, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:15 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 142875, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:15 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 148590, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:16 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 154305, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:16 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 160020, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:16 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 165735, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:16 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 171450, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:17 +0100]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 177165, 5715) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Wed, 15 Nov 2023 07:54:17 +0100]Handling table `ps176_order_detail_tax` [162 109].
+[Wed, 15 Nov 2023 07:54:17 +0100]-SELECT * FROM `ps176_order_detail_tax` LIMIT 37450
+[Wed, 15 Nov 2023 07:54:17 +0100]-SELECT * FROM `ps176_order_detail_tax` LIMIT 37450, 37450
+[Wed, 15 Nov 2023 07:54:17 +0100]-SELECT * FROM `ps176_order_detail_tax` LIMIT 74900, 37450
+[Wed, 15 Nov 2023 07:54:17 +0100]-SELECT * FROM `ps176_order_detail_tax` LIMIT 112350, 37450
+[Wed, 15 Nov 2023 07:54:18 +0100]-SELECT * FROM `ps176_order_detail_tax` LIMIT 149800, 37450
+[Wed, 15 Nov 2023 07:54:18 +0100]Handling table `ps176_order_fees` [6 054].
+[Wed, 15 Nov 2023 07:54:18 +0100]-SELECT * FROM `ps176_order_fees` LIMIT 63551
+[Wed, 15 Nov 2023 07:54:18 +0100]Handling table `ps176_order_history` [187 062].
+[Wed, 15 Nov 2023 07:54:18 +0100]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 0, 43692) t2
+                ON t1.id_order_history = t2.id_order_history
+[Wed, 15 Nov 2023 07:54:18 +0100]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 43692, 43692) t2
+                ON t1.id_order_history = t2.id_order_history
+[Wed, 15 Nov 2023 07:54:19 +0100]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 87384, 43692) t2
+                ON t1.id_order_history = t2.id_order_history
+[Wed, 15 Nov 2023 07:54:19 +0100]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 131076, 43692) t2
+                ON t1.id_order_history = t2.id_order_history
+[Wed, 15 Nov 2023 07:54:19 +0100]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 174768, 43692) t2
+                ON t1.id_order_history = t2.id_order_history
+[Wed, 15 Nov 2023 07:54:20 +0100]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 218460, 43692) t2
+                ON t1.id_order_history = t2.id_order_history
+[Wed, 15 Nov 2023 07:54:20 +0100]Handling table `ps176_order_invoice` [89 979].
+[Wed, 15 Nov 2023 07:54:20 +0100]-SELECT * FROM `ps176_order_invoice` LIMIT 9665
+[Wed, 15 Nov 2023 07:54:20 +0100]-SELECT * FROM `ps176_order_invoice` LIMIT 9665, 9665
+[Wed, 15 Nov 2023 07:54:20 +0100]-SELECT * FROM `ps176_order_invoice` LIMIT 19330, 9665
+[Wed, 15 Nov 2023 07:54:20 +0100]-SELECT * FROM `ps176_order_invoice` LIMIT 28995, 9665
+[Wed, 15 Nov 2023 07:54:20 +0100]-SELECT * FROM `ps176_order_invoice` LIMIT 38660, 9665
+[Wed, 15 Nov 2023 07:54:21 +0100]-SELECT * FROM `ps176_order_invoice` LIMIT 48325, 9665
+[Wed, 15 Nov 2023 07:54:21 +0100]-SELECT * FROM `ps176_order_invoice` LIMIT 57990, 9665
+[Wed, 15 Nov 2023 07:54:21 +0100]-SELECT * FROM `ps176_order_invoice` LIMIT 67655, 9665
+[Wed, 15 Nov 2023 07:54:21 +0100]-SELECT * FROM `ps176_order_invoice` LIMIT 77320, 9665
+[Wed, 15 Nov 2023 07:54:22 +0100]-SELECT * FROM `ps176_order_invoice` LIMIT 86985, 9665
+[Wed, 15 Nov 2023 07:54:22 +0100]-SELECT * FROM `ps176_order_invoice` LIMIT 96650, 9665
+[Wed, 15 Nov 2023 07:54:22 +0100]Handling table `ps176_order_invoice_payment` [40 421].
+[Wed, 15 Nov 2023 07:54:22 +0100]-SELECT * FROM `ps176_order_invoice_payment` LIMIT 52430
+[Wed, 15 Nov 2023 07:54:22 +0100]Handling table `ps176_order_invoice_tax` [40 180].
+[Wed, 15 Nov 2023 07:54:22 +0100]-SELECT * FROM `ps176_order_invoice_tax` LIMIT 31776
+[Wed, 15 Nov 2023 07:54:22 +0100]-SELECT * FROM `ps176_order_invoice_tax` LIMIT 31776, 31776
+[Wed, 15 Nov 2023 07:54:22 +0100]Handling table `ps176_order_message` [0].
+[Wed, 15 Nov 2023 07:54:22 +0100]-SELECT * FROM `ps176_order_message` LIMIT 2097153
+[Wed, 15 Nov 2023 07:54:22 +0100]Handling table `ps176_order_message_lang` [1].
+[Wed, 15 Nov 2023 07:54:22 +0100]-SELECT * FROM `ps176_order_message_lang` LIMIT 129
+[Wed, 15 Nov 2023 07:54:22 +0100]Handling table `ps176_order_payment` [42 713].
+[Wed, 15 Nov 2023 07:54:22 +0100]-SELECT * FROM `ps176_order_payment` LIMIT 18894
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_order_payment` LIMIT 18894, 18894
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_order_payment` LIMIT 37788, 18894
+[Wed, 15 Nov 2023 07:54:23 +0100]Handling table `ps176_order_return` [22].
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_order_return` LIMIT 2816
+[Wed, 15 Nov 2023 07:54:23 +0100]Handling table `ps176_order_return_detail` [22].
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_order_return_detail` LIMIT 2816
+[Wed, 15 Nov 2023 07:54:23 +0100]Handling table `ps176_order_return_state` [5].
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_order_return_state` LIMIT 641
+[Wed, 15 Nov 2023 07:54:23 +0100]Handling table `ps176_order_return_state_lang` [5].
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_order_return_state_lang` LIMIT 641
+[Wed, 15 Nov 2023 07:54:23 +0100]Handling table `ps176_order_slip` [173].
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_order_slip` LIMIT 7359
+[Wed, 15 Nov 2023 07:54:23 +0100]Handling table `ps176_order_slip_detail` [220].
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_order_slip_detail` LIMIT 9363
+[Wed, 15 Nov 2023 07:54:23 +0100]Handling table `ps176_order_slip_detail_tax` [0].
+[Wed, 15 Nov 2023 07:54:23 +0100]Handling table `ps176_order_state` [43].
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_order_state` LIMIT 5491
+[Wed, 15 Nov 2023 07:54:23 +0100]Handling table `ps176_order_state_lang` [44].
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_order_state_lang` LIMIT 5623
+[Wed, 15 Nov 2023 07:54:23 +0100]Handling table `ps176_orders` [96 613].
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_orders` LIMIT 5579
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_orders` LIMIT 5579, 5579
+[Wed, 15 Nov 2023 07:54:23 +0100]-SELECT * FROM `ps176_orders` LIMIT 11158, 5579
+[Wed, 15 Nov 2023 07:54:24 +0100]-SELECT * FROM `ps176_orders` LIMIT 16737, 5579
+[Wed, 15 Nov 2023 07:54:24 +0100]-SELECT * FROM `ps176_orders` LIMIT 22316, 5579
+[Wed, 15 Nov 2023 07:54:24 +0100]-SELECT * FROM `ps176_orders` LIMIT 27895, 5579
+[Wed, 15 Nov 2023 07:54:24 +0100]-SELECT * FROM `ps176_orders` LIMIT 33474, 5579
+[Wed, 15 Nov 2023 07:54:24 +0100]-SELECT * FROM `ps176_orders` LIMIT 39053, 5579
+[Wed, 15 Nov 2023 07:54:25 +0100]-SELECT * FROM `ps176_orders` LIMIT 44632, 5579
+[Wed, 15 Nov 2023 07:54:25 +0100]-SELECT * FROM `ps176_orders` LIMIT 50211, 5579
+[Wed, 15 Nov 2023 07:54:25 +0100]-SELECT * FROM `ps176_orders` LIMIT 55790, 5579
+[Wed, 15 Nov 2023 07:54:25 +0100]-SELECT * FROM `ps176_orders` LIMIT 61369, 5579
+[Wed, 15 Nov 2023 07:54:26 +0100]-SELECT * FROM `ps176_orders` LIMIT 66948, 5579
+[Wed, 15 Nov 2023 07:54:26 +0100]-SELECT * FROM `ps176_orders` LIMIT 72527, 5579
+[Wed, 15 Nov 2023 07:54:26 +0100]-SELECT * FROM `ps176_orders` LIMIT 78106, 5579
+[Wed, 15 Nov 2023 07:54:26 +0100]-SELECT * FROM `ps176_orders` LIMIT 83685, 5579
+[Wed, 15 Nov 2023 07:54:27 +0100]-SELECT * FROM `ps176_orders` LIMIT 89264, 5579
+[Wed, 15 Nov 2023 07:54:27 +0100]Connecting to database
+[Wed, 15 Nov 2023 07:54:27 +0100]-SELECT * FROM `ps176_orders` LIMIT 94843, 5579
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_pack` [0].
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product` [3 682].
+[Wed, 15 Nov 2023 07:54:27 +0100]-SELECT * FROM `ps176_product` LIMIT 4856
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_attachment` [0].
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_attribute` [2 681].
+[Wed, 15 Nov 2023 07:54:27 +0100]-SELECT * FROM `ps176_product_attribute` LIMIT 17925
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_attribute_combination` [2 707].
+[Wed, 15 Nov 2023 07:54:27 +0100]-SELECT * FROM `ps176_product_attribute_combination` LIMIT 56681
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_attribute_image` [0].
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_attribute_shop` [2 681].
+[Wed, 15 Nov 2023 07:54:27 +0100]-SELECT * FROM `ps176_product_attribute_shop` LIMIT 20166
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_carrier` [0].
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_comment` [4].
+[Wed, 15 Nov 2023 07:54:27 +0100]-SELECT * FROM `ps176_product_comment` LIMIT 513
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_comment_criterion` [0].
+[Wed, 15 Nov 2023 07:54:27 +0100]-SELECT * FROM `ps176_product_comment_criterion` LIMIT 2097153
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_comment_criterion_category` [0].
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_comment_criterion_lang` [1].
+[Wed, 15 Nov 2023 07:54:27 +0100]-SELECT * FROM `ps176_product_comment_criterion_lang` LIMIT 129
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_comment_criterion_product` [0].
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_comment_grade` [4].
+[Wed, 15 Nov 2023 07:54:27 +0100]-SELECT * FROM `ps176_product_comment_grade` LIMIT 513
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_comment_report` [0].
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_comment_usefulness` [0].
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_country_tax` [0].
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_download` [0].
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_group_reduction_cache` [0].
+[Wed, 15 Nov 2023 07:54:27 +0100]Handling table `ps176_product_lang` [3 686].
+[Wed, 15 Nov 2023 07:54:27 +0100]-SELECT * FROM `ps176_product_lang` LIMIT 2930
+[Wed, 15 Nov 2023 07:54:27 +0100]-SELECT * FROM `ps176_product_lang` LIMIT 2930, 2930
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_product_sale` [2 810].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_product_sale` LIMIT 44621
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_product_shop` [3 864].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_product_shop` LIMIT 5141
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_product_supplier` [6 572].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_product_supplier` LIMIT 34954
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_product_tag` [5 566].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_product_tag` LIMIT 53774
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_profile` [9].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_profile` LIMIT 1153
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_profile_lang` [9].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_profile_lang` LIMIT 1153
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_range_price` [8].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_range_price` LIMIT 1025
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_range_weight` [0].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_range_weight` LIMIT 2097153
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_search_engine` [38].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_search_engine` LIMIT 4856
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_search_index` [13 549].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_search_index` LIMIT 23832
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_search_word` [2 182].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_search_word` LIMIT 39570
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_shop` [0].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_shop` LIMIT 2097153
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_shop_group` [0].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_shop_group` LIMIT 2097153
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_shop_url` [0].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_shop_url` LIMIT 2097153
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_sm_picker` [1].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_sm_picker` LIMIT 129
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_sm_picker_items` [2].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_sm_picker_items` LIMIT 257
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_specific_price` [573].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_specific_price` LIMIT 12194
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_specific_price_priority` [127].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_specific_price_priority` LIMIT 16133
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_specific_price_rule` [0].
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_specific_price_rule_condition` [0].
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_specific_price_rule_condition_group` [0].
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_state` [569].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_state` LIMIT 18080
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_stock` [0].
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_stock_available` [6 775].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_stock_available` LIMIT 33289
+[Wed, 15 Nov 2023 07:54:28 +0100]Handling table `ps176_stock_mvt` [89 845].
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_stock_mvt` LIMIT 18726
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_stock_mvt` LIMIT 18726, 18726
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_stock_mvt` LIMIT 37452, 18726
+[Wed, 15 Nov 2023 07:54:28 +0100]-SELECT * FROM `ps176_stock_mvt` LIMIT 56178, 18726
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_stock_mvt` LIMIT 74904, 18726
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_stock_mvt_reason` [12].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_stock_mvt_reason` LIMIT 1536
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_stock_mvt_reason_lang` [12].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_stock_mvt_reason_lang` LIMIT 1536
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_store` [0].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_store` LIMIT 2097153
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_store_lang` [1].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_store_lang` LIMIT 129
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_store_shop` [1].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_store_shop` LIMIT 129
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_supplier` [11].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_supplier` LIMIT 1408
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_supplier_lang` [11].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_supplier_lang` LIMIT 1408
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_supplier_shop` [11].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_supplier_shop` LIMIT 1408
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_supply_order` [0].
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_supply_order_detail` [0].
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_supply_order_history` [0].
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_supply_order_receipt_history` [0].
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_supply_order_state` [6].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_supply_order_state` LIMIT 769
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_supply_order_state_lang` [6].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_supply_order_state_lang` LIMIT 769
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tab` [199].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_tab` LIMIT 25268
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tab_advice` [187].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_tab_advice` LIMIT 23832
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tab_lang` [213].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_tab_lang` LIMIT 27237
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tab_module_preference` [0].
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tag` [1 657].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_tag` LIMIT 34954
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tag_count` [1 051].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_tag_count` LIMIT 26888
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tax` [29].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_tax` LIMIT 3713
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tax_lang` [29].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_tax_lang` LIMIT 3713
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tax_rule` [244].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_tax_rule` LIMIT 30841
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tax_rules_group` [5].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_tax_rules_group` LIMIT 641
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tax_rules_group_shop` [5].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_tax_rules_group_shop` LIMIT 641
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tax_state` [0].
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_tax_zone` [0].
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_warehouse` [0].
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_warehouse_carrier` [0].
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_warehouse_product_location` [0].
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_warehouse_shop` [0].
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_zone` [10].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_zone` LIMIT 1281
+[Wed, 15 Nov 2023 07:54:29 +0100]Handling table `ps176_zone_shop` [10].
+[Wed, 15 Nov 2023 07:54:29 +0100]-SELECT * FROM `ps176_zone_shop` LIMIT 1281

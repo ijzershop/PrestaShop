@@ -33,7 +33,7 @@
 
 
             <div class="row">
-              {assign var="selectedCategories" value=explode(',',Configuration::get('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}
+              {assign var="selectedCategories" value=explode(',',Configuration::get('MSTHEMECONFIG_HOMEPAGE_CATEGORIES_SORTED',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}
 
              {if is_array($selectedCategories) && count($selectedCategories) >= 1 && $selectedCategories[0] != ''}
               {assign var="categoriesInfo" value=Category::getCategoryInformation($selectedCategories)}

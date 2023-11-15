@@ -15,9 +15,11 @@
   <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/select2/dist/css/select2.css') }}"/>
   <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/views/css/price_modifications.css') }}"/>
   <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/datatables.net-dt/css/jquery.dataTables.min.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/chartist/dist/chartist.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/datatables.net-select-bs4/css/select.bootstrap4.css') }}"/>
   <link rel="stylesheet" href="{{ asset('../js/jquery/ui/jquery-ui.css') }}">
 {% endblock %}
+
 
 {% block content %}
   <div class="row">
@@ -35,11 +37,11 @@
     </div>
   </div>
   <div class="row">
-  <div class="col-12 col-lg-6">
+  <div class="col-12 col-lg-12">
     {#    Infoblock start    #}
-
     <div id="select2_data_link" data-link="{{ admin_select2_data_link }}"></div>
     <div id="datatable_missed_data_link" data-link="{{ admin_datatable_missed }}"></div>
+    <div id="datatable_new_rules_link" data-link="{{ admin_new_rules }}"></div>
     <div class="collapse card p-2" id="show_hide_info_formule">
       <div class="col">
         <div class="row">
@@ -48,7 +50,7 @@
             <p>De formules kunnen ingevoerd worden als een som, om de formule te testen hoeft deze niet opgeslagen
               worden. Doormiddel van het klikken op de knop naast het nieuw prijs veld word er een berekening gedaan op
               basis van de ingevoerde gegevens.
-              De gerenderde formule word getoond onder het fomule vak, en de nieuwe berekende prijs word in het veld van
+              De gerenderde formule word getoond onder het formule vak, en de nieuwe berekende prijs word in het veld van
               nieuwe prijs geladen.</p>
           </div>
         </div>
@@ -87,34 +89,32 @@
     </div>
     {#    Infoblock end    #}
   </div>
-  <div class="col-12 col-lg-6">
+  <div class="col-12 col-lg-12">
     <div class="collapse card p-2" id="show_hide_missed_products">
       <table id="missed-products-table" class="table w-100">
         <thead>
           <tr>
-            <th>Leverancier naam</th>
+            <th>Id</th>
+            <th>Actief</th>
             <th>Winkel Product</th>
             <th>Huidige prijs</th>
-            <th>Laatste update modifier</th>
-            <th>Laatste update product</th>
           </tr>
         </thead>
         <tbody>
 
         </tbody>
         <tfoot>
-        <th><input class="form-control" type="text" placeholder="Zoek naam lev." /></th>
+        <th><input class="form-control" type="text" placeholder="Zoek id." /></th>
+        <th></th>
         <th><input class="form-control" type="text" placeholder="Zoek naam shop" /></th>
         <td></td>
-        <th><input id="missing_records_from" class="form-control" type="text" placeholder="Zoek record wijziging" /><input id="missing_records_to" class="form-control" type="text" placeholder="Zoek record wijziging" /></th>
-        <th><input id="price_update_from" class="form-control" type="text" placeholder="Zoek prijs wijziging" /><input id="price_update_to" class="form-control" type="text" placeholder="Zoek prijs wijziging" /></th>
         </tfoot>
       </table>
     </div>
   </div>
 
-  <div class="col-12 offset-lg-6 col-lg-6 mt-2">
-    <div class="card pb-3 pt-3 ">
+  <div class="col-12 col-lg-12 mt-2">
+    <div class="card pb-3 pt-3 bg-primary">
       <div class="col-12 p-0 d-flex justify-content-center">
         <form action="#" id="bulk-update-formula-form"  class="form-inline">
           <div class="input-group">
@@ -151,6 +151,10 @@
   <script src="{{ asset('../modules/pricemodifier/node_modules/chartist-plugin-tooltips-updated/dist/chartist-plugin-tooltip.js') }}"></script>
   <script src="{{ asset('../modules/pricemodifier/views/js/barChartLabelPlugin.js') }}"></script>
   <script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net/js/jquery.dataTables.js') }}"></script>
+  <script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net-buttons/js/dataTables.buttons.js') }}"></script>
+  <script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net-select/js/dataTables.select.js') }}"></script>
+  <script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net-select-bs4/js/select.bootstrap4.js') }}"></script>
+  <script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.js') }}"></script>
 
 
 
@@ -177,6 +181,62 @@
       window.location.href = url;
       return false;
     });
+
+
+    //revert changes from localstorage or clear field of they were empty
+    $(document).on('click', '#bulk-update-clear', function (e){
+
+      let bulkInputArray = localStorage.getItem('priceModifierBackup');
+      if(bulkInputArray == null){
+        bulkInputArray = {};
+      } else {
+        bulkInputArray = JSON.parse(bulkInputArray);
+      }
+      let checkedItems = [];
+      $('#product_price_modification_filter_form .js-bulk-action-checkbox:checked').map(function (index, el) {
+        checkedItems.push(parseInt($(el).val()));
+      });
+
+      for(let item in bulkInputArray) {
+          if(in_array(parseInt(bulkInputArray[item].id), checkedItems)){
+              let rowId = bulkInputArray[item].id;
+              let formula = bulkInputArray[item].formula;
+              let incrementFormula = bulkInputArray[item].increment_formula;
+              $('[name="formula_' + rowId + '"]').val(formula);
+              $('[name="increment_formula_' + rowId + '"]').val(incrementFormula);
+          }
+        }
+    });
+
+
+    $(document).on('click', '#bulk-update-update', function (e){
+      let formula = $('#price-formula-bulk-input').val();
+      let increment = $('#increment-formula-bulk-input').val();
+
+      let bulkInputArray = {};
+      $('#product_price_modification_filter_form .js-bulk-action-checkbox:checked').map(function (index, el) {
+        let rowId = $(el).val();
+        let rowArray = {};
+        let formulaInput = $('[name="formula_' + rowId + '"]');
+        let incrementInput = $('[name="increment_formula_' + rowId + '"]');
+
+        rowArray.id = rowId;
+        rowArray.formula = formulaInput.val();
+        rowArray.increment_formula = incrementInput.val();
+        bulkInputArray[index] = rowArray;
+
+        formulaInput.val(formula);
+        incrementInput.val(increment);
+      });
+
+      let prevBackupString = localStorage.getItem('priceModifierBackup');
+      let backupString = JSON.stringify(bulkInputArray);
+
+      if(prevBackupString !== backupString){
+        localStorage.setItem('priceModifierBackup', JSON.stringify(bulkInputArray));
+      }
+    });
+
   </script>
 {% endblock %}
 

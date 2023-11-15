@@ -1,10 +1,11 @@
 {**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,119 +16,101 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 <table class="product" width="100%" cellpadding="4" cellspacing="0">
+
   <thead>
-  <tr>
-    <th class="product header" width="5%"  style="text-align: left;"></th>
-    <th class="product header small" width="35%"  style="text-align: left;">{l s='Product' d='Shop.Pdf' pdf='true'}</th>
-    <th class="product header center small" width="10%">{l s='BTW' d='Shop.Pdf' pdf='true'}</th>
-    <th class="product header center small" width="10%">{l s='Unit Price' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
-    <th class="product header center small" width="10%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
-    <th class="product header-right small" width="15%">{l s='Total' d='Shop.Pdf' pdf='true'} <br /> {l s='(incl. btw)' d='Shop.Pdf' pdf='true'}</th>
-    <th class="product header-right small" width="15%">{l s='Total' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
-  </tr>
+    <tr>
+      <th class="product header small" width="25%">{l s='Reference' d='Shop.Pdf' pdf='true'}</th>
+      <th class="product header small" width="65%">{l s='Product' d='Shop.Pdf' pdf='true'}</th>
+      <th class="product header small" width="10%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
+    </tr>
   </thead>
+
   <tbody>
-  <!-- PRODUCTS -->
-  {foreach $order_details as $order_detail}
+    <!-- PRODUCTS -->
+    {foreach $order_details as $order_detail}
       {cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
-    <tr class="product {$bgcolor_class}">
-      <td {if isset($layout.before_discount)} colspan="8" {else} colspan="7" {/if}>
-        <table width="100%">
-          <tr class="{$bgcolor_class}">
-            <td class="product left" width="5%">
-                {if empty($order_detail.product_reference)}
-                  ---
-                {else}
-                    {$order_detail.product_reference}
-                {/if}
-              <br/>
+      <tr class="product {$bgcolor_class}">
+
+        <td class="product left">
+          {if empty($order_detail.product_reference)}
+            ---
+          {else}
+            {$order_detail.product_reference}
+          {/if}
+        </td>
+        <td class="product left">
+          {if $display_product_images}
+            <table width="100%">
+              <tr>
+                <td width="15%">
+                  {if isset($order_detail.image) && $order_detail.image->id}
+                    {$order_detail.image_tag}
+                  {/if}
+                </td>
+                <td width="5%">&nbsp;</td>
+                <td width="80%">
+                  {$order_detail.product_name}
+                </td>
+              </tr>
+            </table>
+          {else}
+            {$order_detail.product_name}
+          {/if}
+        </td>
+        <td class="product center">
+          {$order_detail.product_quantity}
+        </td>
+
+      </tr>
+
+      {foreach $order_detail.customizedDatas as $customizationPerAddress}
+        {foreach $customizationPerAddress as $customizationId => $customization}
+          <tr class="customization_data {$bgcolor_class}">
+            <td class="center"> &nbsp;</td>
+
+            <td>
+              {if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
+                <table style="width: 100%;">
+                  {foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
+                    <tr>
+                      <td style="width: 30%;">
+                        {$customization_infos.name|string_format:{l s='%s:' d='Shop.Pdf' pdf='true'}}
+                      </td>
+                      <td>{$customization_infos.value}</td>
+                    </tr>
+                  {/foreach}
+                </table>
+              {/if}
+
+              {if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
+                <table style="width: 100%;">
+                  <tr>
+                    <td style="width: 30%;">{l s='image(s):' d='Shop.Pdf' pdf='true'}</td>
+                    <td>{count($customization.datas[Product::CUSTOMIZE_FILE])}</td>
+                  </tr>
+                </table>
+              {/if}
             </td>
-            <td class="product left" width="35%">{AttributeGroup::stripSawCutModuleAttributeGroupName($order_detail.product_name)} <span style="color:#000;">{if isset($order_detail.product_desc_short)}{if (int)$order_detail.id_category_default != (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}{$order_detail.product_desc_short|strip_tags}{else}{$order_detail.product_desc_short nofilter}{/if}{/if}</span><br/></td>
-            <td class="product center" width="10%">21%</td>
-            <td class="product center" width="10%">
-                {displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl_including_ecotax}
-                {if $order_detail.ecotax_tax_excl > 0}
-                  <br>
-                  <small>{{displayPrice currency=$order->id_currency price=$order_detail.ecotax_tax_excl}|string_format:{l s='ecotax: %s' d='Shop.Pdf' pdf='true'}}</small>
-                {/if}
+
+            <td class="center">
+              ({if $customization.quantity == 0}1{else}{$customization.quantity}{/if})
             </td>
-            <td class="product center" width="10%">
-                {$order_detail.product_quantity}
-            </td>
-            <td  class="product right" width="15%">
-                {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_incl_including_ecotax}
-            </td>
-            <td  class="product right" width="15%">
-                {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl_including_ecotax}
-            </td>
+
           </tr>
-            {foreach $order_detail.customizedDatas as $customizationPerAddress}
-                {foreach $customizationPerAddress as $customizationId => $customization}
-                    {if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
-                        {foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}{if !empty($customization_infos.value)}
-                            {if !empty($customization_infos.technical_image)}
-                              <tr>
-                                <td colspan="5" style="padding:0;margin:0">{$customization_infos.value|strip_tags:true|strip}</td>
-                                <td class="right" colspan="2">
-                                  <img
-                                    src="{Context::getContext()->shop->getBaseURL(false, false)}{$customization_infos.technical_image}.png"
-                                    width="150"/>
-                                </td>
-                              </tr>
-                            {else}
-                              <tr>
-                                <td colspan="4">{$customization_infos.value|strip_tags:true|strip}</td>
-                              </tr>
-                            {/if}
-                        {/if}
-                        {/foreach}
-                    {/if}
-                    {if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
-                        {count($customization.datas[Product::CUSTOMIZE_FILE])}
-                    {/if}
-                {/foreach}
+        {/foreach}
+      {/foreach}
 
-            {/foreach}
-        </table>
-      </td>
-    </tr>
-  {/foreach}
-  <!-- END PRODUCTS -->
 
-  <!-- CART RULES -->
-  {assign var="shipping_discount_tax_incl" value="0"}
-  {foreach from=$cart_rules item=cart_rule name="cart_rules_loop"}
-      {if $smarty.foreach.cart_rules_loop.first}
-        <tr class="discount">
-          <th class="header" colspan="3" style="text-align: left;">{l s='Korting' d='Shop.Pdf' pdf='true'}</th>
-          <th class="header header-right" colspan="2">
-            Totaal<br>
-            (incl. btw)
-          </th>
-          <th class="header header-right" colspan="2">
-            Totaal<br>
-            (excl. btw)
-          </th>
-        </tr>
-      {/if}
-    <tr class="discount">
-      <td class="white left" colspan="3">{$cart_rule.name}</td>
-        {if (float)$cart_rule.reduction_amount > 0}
-          <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=$cart_rule.reduction_amount}</td>
-          <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=($cart_rule.reduction_amount/1.21)}</td>
-        {else}
-          <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=$cart_rule.value}</td>
-          <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=($cart_rule.value_tax_excl)}</td>
-        {/if}
-    </tr>
-  {/foreach}
+
+    {/foreach}
+    <!-- END PRODUCTS -->
   </tbody>
+
 </table>

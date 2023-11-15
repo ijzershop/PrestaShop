@@ -115,78 +115,62 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                 ])
             )
             ->add((new DataColumn('name_supplier'))
-                ->setName($this->trans('Name', [], 'Modules.Pricemodifier.Admin'))
+                ->setName($this->trans('Leverancier product', [], 'Modules.Pricemodifier.Admin'))
                 ->setOptions([
                     'field' => 'name_supplier',
                 ])
             )
             ->add((new DataColumn('id_store_product'))
-                ->setName($this->trans('Product', [], 'Modules.Pricemodifier.Admin'))
+                ->setName($this->trans('Webshop product', [], 'Modules.Pricemodifier.Admin'))
                 ->setOptions([
                     'field' => 'id_store_product',
                     'sortable' => false,
                 ])
             )
             ->add((new DataColumn('id_category_default'))
-                ->setName($this->trans('Store Category', [], 'Modules.Pricemodifier.Admin'))
+                ->setName($this->trans('Categorie', [], 'Modules.Pricemodifier.Admin'))
                 ->setOptions([
                     'field' => 'id_category_default',
                     'sortable' => true,
                 ])
             )
             ->add((new DataColumn('supplier_data'))
-                ->setName($this->trans('Uploaded XML Prices', [], 'Admin.Global'))
+                ->setName($this->trans('Huidige prijs tabel', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'supplier_data',
                     'sortable' => false,
                 ]))
 
             ->add((new DataColumn('price_formula'))
-                ->setName($this->trans('Price Formula', [], 'Admin.Global'))
+                ->setName($this->trans('Kostprijs berekening', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id',
                     'sortable' => false,
                 ])
             )
             ->add((new DataColumn('increment_formula'))
-                ->setName($this->trans('Increment Formula', [], 'Admin.Global'))
+                ->setName($this->trans('Toeslag berekening', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id',
                     'sortable' => false,
                 ])
             )
             ->add((new DataColumn('store_price'))
-                ->setName($this->trans('Store Price', [], 'Admin.Global'))
+                ->setName($this->trans('Huidige winkelprijs', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id',
                     'sortable' => false,
                 ])
             )
             ->add((new DataColumn('new_price'))
-                ->setName($this->trans('New Price', [], 'Admin.Global'))
+                ->setName($this->trans('Winkel prijs na update', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id',
                     'sortable' => false,
-                ])
-            )
-            ->add((new DataColumn('chart'))
-                ->setName($this->trans('Chart', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id',
-                    'sortable' => false,
-                ])
-            )
-
-
-            ->add((new DateTimeColumn('old_price_update'))
-                ->setName($this->trans('Updated Store Price', [], 'Modules.Pricemodifier.Admin'))
-                ->setOptions([
-                    'field' => 'old_price_update',
-                    'sortable' => true,
                 ])
             )
             ->add((new DataColumn('file_supplier'))
-                ->setName($this->trans('File', [], 'Modules.Pricemodifier.Admin'))
+                ->setName($this->trans('Leverancier', [], 'Modules.Pricemodifier.Admin'))
                 ->setOptions([
                     'field' => 'file_supplier',
                     'sortable' => true,
@@ -202,8 +186,8 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                     'sortable' => true,
                 ])
             )
-            ->add((new DateTimeColumn('updated_at'))
-                ->setName($this->trans('Updated record', [], 'Modules.Pricemodifier.Admin'))
+            ->add((new DateTimeColumn('xml_upload_date'))
+                ->setName($this->trans('Xml upload datum', [], 'Modules.Pricemodifier.Admin'))
                 ->setOptions([
                     'field' => 'updated_at',
                     'sortable' => true,
@@ -358,7 +342,8 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                     'choices' => [
                         'Douma' => 'douma',
                         'MCB' => 'mcb',
-                        'Indi' => 'indi'
+                        'Indi' => 'indi',
+                        'Fisher' => 'fisher'
                     ],
                     'attr' => [
                         'placeholder' => $this->trans('File from', [], 'Modules.Pricemodifier.Admin'),
@@ -368,13 +353,6 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
             )
 
 
-            ->add((new Filter('old_price_update', DateRangeType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'date_format' => 'YYYY-MM-DD',
-                ])
-                ->setAssociatedColumn('old_price_update')
-            )
 
             ->add((new Filter('updated_at', DateRangeType::class))
                 ->setTypeOptions([
@@ -452,21 +430,21 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                 ])
             )
             ->add((new SubmitBulkAction('set_active_bulk'))
-                ->setName($this->trans('Activeer producten', [], 'Admin.Actions'))
+                ->setName($this->trans('Producten inschakelen', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'modernesmid_pricemodifier_price_modification_save_bulk_product_active',
                     'confirm_message' => $this->trans('Activate all selected products?', [], 'Admin.Notifications.Warning'),
                 ])
             )
             ->add((new SubmitBulkAction('set_deactive_bulk'))
-                ->setName($this->trans('De-activeer producten', [], 'Admin.Actions'))
+                ->setName($this->trans('Producten uitschakelen', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'modernesmid_pricemodifier_price_modification_save_bulk_product_deactive',
                     'confirm_message' => $this->trans('Deactivate all selected products?', [], 'Admin.Notifications.Warning'),
                 ])
             )
             ->add((new SubmitBulkAction('delete_bulk'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                ->setName($this->trans('Verwijder geselecteerde producten', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'modernesmid_pricemodifier_price_modification_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),

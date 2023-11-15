@@ -177,7 +177,7 @@ class ModernAjax
                 $dataArray[$this->prefix . 'OFFER_LINK'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'OFFER_LINK', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'pages');
                 $dataArray[$this->prefix . 'PRIMARY_COLOR'] = Configuration::get($this->prefix . 'PRIMARY_COLOR', $this->idLang, $this->idShopGroup, $this->idShop, '#3b56ad');
                 //Homepage variables
-                $dataArray[$this->prefix . 'HOMEPAGE_CATEGORIES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'HOMEPAGE_SELECTED_CATEGORIES', null, null, null, []), 'categories_home', false);
+                $dataArray[$this->prefix . 'HOMEPAGE_CATEGORIES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'HOMEPAGE_CATEGORIES_SORTED', $this->idLang, $this->idShopGroup, $this->idShop, []), 'categories_home', false);
                 $dataArray[$this->prefix . 'HOMEPAGE_TEXT'] = Configuration::get($this->prefix . 'HOMEPAGE_TEXT', $this->idLang, $this->idShopGroup, $this->idShop, '');
                 $dataArray[$this->prefix . 'HOMEPAGE_BACKGROUND_COLOR'] = Configuration::get($this->prefix . 'HOMEPAGE_BACKGROUND_COLOR', $this->idLang, $this->idShopGroup, $this->idShop, '#efefef');
                 //Category variables
@@ -561,7 +561,7 @@ class ModernAjax
         ];
 
         $sqlBelgium = "SELECT `" . _DB_PREFIX_ . "orders`.`id_address_delivery`, `" . _DB_PREFIX_ . "orders`.`id_order`, count(`" . _DB_PREFIX_ . "orders`.`id_order`) as order_total_be,  SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_excl`) as total_be_tax_excl, SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_incl`) as total_be_tax_incl FROM `" . _DB_PREFIX_ . "orders` LEFT JOIN `" . _DB_PREFIX_ . "address` ON `" . _DB_PREFIX_ . "orders`.`id_address_delivery` = `" . _DB_PREFIX_ . "address`.`id_address`
-                WHERE `" . _DB_PREFIX_ . "address`.`id_country` = '3' AND `" . _DB_PREFIX_ . "orders`.`date_add` BETWEEN '".$from."' AND '".$to."'";
+                WHERE `" . _DB_PREFIX_ . "address`.`id_country` = '3' AND `" . _DB_PREFIX_ . "orders`.`date_add` BETWEEN '".$from."' AND '".$to."' AND `" . _DB_PREFIX_ . "orders`.`current_state` IN ('4','5','18','21','25','26','38')";
 
 
         $resultBE = Db::getInstance()->executeS($sqlBelgium);

@@ -221,6 +221,9 @@ $(function () {
       let type = $input.val();
       let gewicht = 0;
 
+      $clickedLabel.toggleClass('temp_disabled', "");
+      $tr.toggleClass('temp_disabled_row', "");
+
       /*
       *  Gewijzigd door JB Stoker - Moderne Smid
       *  Pakket maten en soorten aangepast, tevens type pakket toegevoegd voor maatvoering

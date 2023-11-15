@@ -69,7 +69,7 @@
                           {assign var="availableOrders" value=[]}
                           {assign var="availableOrdersLinks" value=[]}
                           {foreach from=Order::getCustomerOrders(Context::getContext()->customer->id, false, Context::getContext()) item=order}
-                            {if in_array($order.id_order_state, $acceptedOrderStatusIds)}
+                             {if in_array($order.id_order_state, $acceptedOrderStatusIds) && (int)$order.id_carrier !== (int)Configuration::get('ADDTOORDER_DELIVERY_METHOD')}
                               {* $acceptedOrderStatusIds options are
                                 2 - [Betaling ontvangen]
                                 3 - Order afhalen

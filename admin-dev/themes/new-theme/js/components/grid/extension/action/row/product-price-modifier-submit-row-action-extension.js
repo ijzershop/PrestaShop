@@ -43,7 +43,6 @@ export default class ProductPriceModifierSubmitRowActionExtension {
       const $button = $(event.currentTarget);
       const confirmMessage = $button.data('confirmMessage');
       const confirmTitle = $button.data('title');
-      console.log([]);
       const method = $button.data('method');
 
       if (confirmTitle) {
@@ -53,15 +52,22 @@ export default class ProductPriceModifierSubmitRowActionExtension {
           return;
         }
 
-        this.postForm($button, method);
+        ProductPriceModifierSubmitRowActionExtension.postForm($button, method);
       }
     });
   }
 
-  postForm($button, method) {
+  static postForm($button, method) {
     const isGetOrPostMethod = ['GET', 'POST'].includes(method);
 
     let clickedRow = $button.closest('tr');
+
+    //custom product waarden
+    let customPrice = clickedRow.find('.basis-prijs-input').val();
+    let customWeight = clickedRow.find('.gewicht-input').val();
+    let customWeightPerKilo = clickedRow.find('.kilo-per-meter-input').val();
+    let customHandelsLengte = clickedRow.find('.handelslengte-input').val();
+    //xml uploaded waarden
     let conProduct = clickedRow.find('.supplier_connected_product_selection').val();
     let selectedSupplierPrice = clickedRow.find('.selected_formule_item:checked').attr('data-type');
     let formula = clickedRow.find('.formula').val();
@@ -75,6 +81,31 @@ export default class ProductPriceModifierSubmitRowActionExtension {
     }).appendTo('body');
 
 
+    $form.append($('<input>', {
+      type: 'hidden',
+      name: 'basis_prijs',
+      value: customPrice,
+    }));
+
+
+    $form.append($('<input>', {
+      type: 'hidden',
+      name: 'gewicht',
+      value: customWeight,
+    }));
+
+
+    $form.append($('<input>', {
+      type: 'hidden',
+      name: 'gewicht_per_kilo',
+      value: customWeightPerKilo,
+    }));
+
+    $form.append($('<input>', {
+      type: 'hidden',
+      name: 'handels_lengte',
+      value: customHandelsLengte,
+    }));
 
     $form.append($('<input>', {
       type: 'hidden',
@@ -143,7 +174,7 @@ export default class ProductPriceModifierSubmitRowActionExtension {
       confirmButtonLabel,
       closeButtonLabel,
       confirmButtonClass,
-    }, () => this.postForm($submitBtn, method));
+    }, () => ProductPriceModifierSubmitRowActionExtension.postForm($submitBtn, method));
 
     modal.show();
   }

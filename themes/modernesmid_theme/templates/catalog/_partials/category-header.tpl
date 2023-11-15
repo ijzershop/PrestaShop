@@ -24,7 +24,7 @@
  *}
 <div id="js-category-list-header">
     {if $listing.pagination.items_shown_from == 1}
-      <h2 class="h2 mb-4">{$category.name}</h2>
+      <h2 class="h2 mb-4 text-center">{$category.name}</h2>
             {if !empty($listing.products)}
             <div class="block-category-inner">
                 {if $category.top_description}

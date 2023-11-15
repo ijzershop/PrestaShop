@@ -318,8 +318,6 @@ class PriceModification
                 array_unshift($priceList,  $array);
             } elseif(is_countable($priceList) && count($priceList) > 0){
                     array_unshift($priceList, $array);
-            } else {
-                    $priceList = [];
             }
         } else {
             array_unshift($priceList, $array);

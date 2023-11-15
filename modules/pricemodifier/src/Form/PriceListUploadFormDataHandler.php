@@ -141,7 +141,9 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
 
 
         try {
-//                $namesList = [];
+
+                $namesList = [];
+
                 foreach ($xmlDataFile as $product) {
                     $priceMod = 0;
                     if (!empty($product['kwaliteit'])) {
@@ -156,10 +158,9 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
 
                     $supplier_data = $this->renderArray($product);
                     $result = $repository->findOrCreateBySupplier([$old_supplier_nameA, $old_supplier_nameB, $supplier_name], json_encode($supplier_data), $supplier, $xml_date);
-//                    $namesList[] = $result;
-//                    if(!$result){
-//                        dd($result);
-//                    }
+
+                    $namesList[] = $result;
+
             }
 
 

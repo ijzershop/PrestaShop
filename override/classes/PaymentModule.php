@@ -286,10 +286,13 @@ class PaymentModule extends PaymentModuleCore
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status is about to be added', 1, null, 'Cart', (int) $id_cart, true);
             }
-            $new_history = new OrderHistory();
-            $new_history->id_order = (int) $order->id;
-            $new_history->changeIdOrderState((int) $id_order_state, $order, true);
-            $new_history->addWithemail(true, $extra_vars);
+
+            if($order->current_state !== $id_order_state){
+                $new_history = new OrderHistory();
+                $new_history->id_order = (int) $order->id;
+                $new_history->changeIdOrderState((int) $id_order_state, $order, true);
+                $new_history->addWithemail(true, $extra_vars);
+            }
             if (Configuration::get('PS_STOCK_MANAGEMENT') &&
                     ($order_detail->getStockState() ||
                     $order_detail->product_quantity_in_stock < 0)) {

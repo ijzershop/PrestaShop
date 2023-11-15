@@ -64,6 +64,7 @@ class Product extends ProductCore {
             'lang' => true,
             'validate' => 'isString',
             'required' => false, 'size' => 255);
+
         parent::__construct($id_product, $full, $id_lang, $id_shop);
     }
     public function getAttributesGroups($id_lang, $id_product_attribute = null)
@@ -303,7 +304,7 @@ class Product extends ProductCore {
     public static function getProductProperties($id_lang, $row, Context $context = null)
     {
         $result = parent::getProductProperties($id_lang, $row, $context);
-        
+
         $module = Module::getInstanceByName('dynamicproduct');
         if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
             $id_product = (int) $row['id_product'];

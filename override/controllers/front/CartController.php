@@ -1,9 +1,11 @@
 <?php
+
+use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 class CartController extends CartControllerCore
 {
-    
+
     public function initContent()
     {
         if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show') {
@@ -20,12 +22,13 @@ class CartController extends CartControllerCore
             $this->setTemplate('checkout/cart');
         } else {
             $this->context->smarty->assign([
-                'allProductsLink' => $this->context->link->getCategoryLink(Configuration::get('PS_HOME_CATEGORY')),
+                'allProductsLink' => $this->context->link->getCategoryLink(Configuration::get('PS_HOME_CATEGORY'))
             ]);
             $this->setTemplate('checkout/cart-empty');
         }
         parent::initContent();
     }
+
     protected function updateCart()
     {
         if ($this->context->cookie->exists()
@@ -82,7 +85,7 @@ class CartController extends CartControllerCore
             Tools::redirect('index.php');
         }
     }
-    
+
     protected function processChangeProductInCart()
     {
         $ssa = Module::getInstanceByName('singlestockattributespoco');
@@ -249,10 +252,10 @@ class CartController extends CartControllerCore
                     $this->updateOperationError[] = $checkNotAllowCheckout;
                 }
                 else {
-                    $this->errors[] = $checkNotAllowCheckout;     
-                }   
+                    $this->errors[] = $checkNotAllowCheckout;
+                }
             }
-        }      
+        }
         parent::displayAjaxUpdate();
     }
     /*
@@ -271,8 +274,8 @@ class CartController extends CartControllerCore
                 }
                 else {
                     if (!Tools::getIsset('add') || !Tools::getIsset('update')) {
-                        $this->errors[] =  $checkNotAllowCheckout;    
-                    }    
+                        $this->errors[] =  $checkNotAllowCheckout;
+                    }
                 }
             }
         }

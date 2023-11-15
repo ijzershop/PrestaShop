@@ -110,6 +110,11 @@ class PriceModificationRepository extends EntityRepository
     {
         try {
             $name = end($name_supplier);
+
+            if($name === "<b>Klant</b><br>"){
+                return "";
+            }
+
             $qb = Db::getInstance();
             $qb->update('price_modification',
                 [
@@ -136,7 +141,7 @@ class PriceModificationRepository extends EntityRepository
                     false,
                     false
                 );
-            
+
             }
             return $name;
         } catch (PrestaShopDatabaseException $exception){

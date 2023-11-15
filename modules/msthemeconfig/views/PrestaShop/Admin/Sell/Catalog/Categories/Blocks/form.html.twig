@@ -72,15 +72,22 @@
       </div>
       {% endif %}
 
-{#      {{ ps.form_group_row(categoryForm.top_description, {}, {#}
-{#        'label': 'Top Description'|trans({}, 'Admin.Global'),#}
-{#        'help': 'Top description is shown at the top of a category page'|trans({}, 'Admin.Notifications.Info')#}
-{#      }) }}#}
+
 
 
       {{ ps.form_group_row(categoryForm.description, {}, {
         'label': 'Description'|trans({}, 'Admin.Global'),
         'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+      }) }}
+
+      {{ ps.form_group_row(categoryForm.additional_description, {}, {
+        'label': 'Aditional Description'|trans({}, 'Admin.Global'),
+        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+      }) }}
+
+      {{ ps.form_group_row(categoryForm.top_description, {}, {
+        'label': 'Top Description'|trans({}, 'Admin.Global'),
+        'help': 'Top description is shown at the top of a category page'|trans({}, 'Admin.Notifications.Info')
       }) }}
 
       <div class="form-group row">

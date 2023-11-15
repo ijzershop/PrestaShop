@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Store;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 use PrestaShop\PrestaShop\Adapter\Entity\Zone;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -58,6 +59,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollectionInterface;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use SmartyException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -65,6 +67,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use AppKernel;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  *
@@ -1154,6 +1157,85 @@ class ModernHook
         return $this->smarty->fetch(_PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->module->name . '/views/templates/front/kiyoh-score-header-block.tpl');
     }
 
+    protected function getDiscountAdvertisement(){
+        $maxReductionPercent = 0;
+        $idLang = Context::getContext()->language->id;
+        $idShopGroup = Context::getContext()->shop->id_shop_group;
+        $idShop = Context::getContext()->shop->id;
+
+        $first = Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_FIRST', $idLang, $idShopGroup, $idShop,  0);
+        $second = Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_SECOND', $idLang, $idShopGroup, $idShop,  0);
+        $third = Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_THIRD', $idLang, $idShopGroup, $idShop,  0);
+
+        $firstRule = new CartRule($first);
+        $secondRule = new CartRule($second);
+        $thirdRule = new CartRule($third);
+
+        $isElegibleForDiscount = 0;
+
+        $currentCartValue = $this->context->cart->getOrderTotal(false, CART::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING);
+        $activeMatchingRule = null;
+        $activeDiscountRules = [];
+        $discountText = [];
+        foreach ([$firstRule, $secondRule, $thirdRule] as $index => $matchingRule){
+
+            if(isset($matchingRule->name[(int)$idLang])){
+                $name = $matchingRule->name[(int)$idLang];
+            } else {
+                $name = '';
+            }
+
+            $activeDiscountRules[$index] = [
+                'id_cart_rule' => $matchingRule->id,
+                'order' => $index,
+                'name' => $name,
+                'minimum_amount' => $matchingRule->minimum_amount,
+                'discount' => $matchingRule->reduction_percent,
+                'next_discount' => 0
+            ];
+
+
+            if((float)$currentCartValue < (float)$matchingRule->minimum_amount){
+                $activeDiscountRules[$index]['next_discount'] = 1;
+                $discountText[] = (int)$matchingRule->reduction_percent.'% korting vanaf '.(int)$matchingRule->minimum_amount.' euro<br/>';
+                $isElegibleForDiscount = 1;
+            }
+
+            if((int)$matchingRule->reduction_percent > (int)$maxReductionPercent){
+                $maxReductionPercent = $matchingRule->reduction_percent;
+            }
+        }
+        if($isElegibleForDiscount){
+            $message = 'Ontvang '.implode(' of ',$discountText);
+        } else {
+            $message = 'U heeft de maximale korting van '.(int)$maxReductionPercent.'% al in uw winkelwagen! <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'">Toch graag een aanbod op maat,<br/> neem dan contact met ons op.</a>';
+        }
+
+        $remainingMessage = $this->getRemainingAmountBeforeNextDiscount($activeDiscountRules);
+
+        return ['rules' => $activeDiscountRules, 'message' => $message.$remainingMessage['msg'], 'order_total' => $remainingMessage['current_order_total']];
+    }
+
+
+
+    private function getRemainingAmountBeforeNextDiscount($discounts){
+        $currentOrderTotal = Context::getContext()->cart->getOrderTotal(false, CART::ONLY_PRODUCTS);
+        $msgSet = 0;
+        $msg = '';
+        for ($i = 0; $i < count($discounts); $i++) {
+            if((float)$discounts[$i]['minimum_amount'] >= (float)$currentOrderTotal && $msgSet === 0){
+
+                $fmt = numfmt_create('nl_NL', \NumberFormatter::CURRENCY);
+                $remainingTotal =  numfmt_format_currency($fmt, (float)$discounts[$i]['minimum_amount'] - (float)$currentOrderTotal, "EUR");
+
+                $msg = '<b id="next-discount-message">Bestel nog <span id="total-until-discount">'.$remainingTotal;
+                $msg .='</span> extra voor <span id="percentage-next-discount">'.(int)$discounts[$i]['discount'].'%</span> korting!</b>';
+                $msgSet = 1;
+            }
+            continue;
+        }
+        return ['msg' => $msg, 'current_order_total' => $currentOrderTotal];
+    }
 
     /**
      * @throws Exception
@@ -1162,6 +1244,8 @@ class ModernHook
     {
         $filterManager = $this->module->get('prestashop.core.filter.front_end_object.search_result_product');
         $filterManager->whitelist(['quantity', 'minimal_quantity', 'out_of_stock', 'depends_on_stock']);
+
+        Context::getContext()->smarty->assign(['discount_add' => $this->getDiscountAdvertisement()]);
     }
 
     /**
@@ -1175,14 +1259,34 @@ class ModernHook
         /** @var FormBuilderInterface $formBuilder */
         $formBuilder = $params['form_builder'];
 
-        $formBuilder->add('top_description', TranslatableType::class, [
-            'label' => $this->module->getTranslator()->trans('Top Description', [],
-                'Modules.MsThemeConfig'),
-            'required' => false,
-            'auto_initialize' => true,
-            'type' => FormattedTextareaType::class,
-            'attr' => ['class' => 'rte w-100 '],
-        ]);
+        $formBuilder->add('top_description', TranslateType::class, [
+                'type' => FormattedTextareaType::class,
+                'locales' => [
+                  0 =>  [
+                    "id_lang" => 1,
+                    "name" => "Nederlands (Dutch)",
+                    "active" => 1,
+                    "iso_code" => "nl",
+                    "language_code" => "nl-nl",
+                    "locale" => "nl-NL",
+                    "date_format_lite" => "d-m-Y",
+                    "date_format_full" => "d-m-Y H:i:s",
+                    "is_rtl" => 0,
+                    "id_shop" => 1,
+                    "shops" => [
+                      1 => true,
+                    ]
+                  ]
+                ],
+                'hideTabs' => false,
+                'required' => false,
+                'options' => [
+                    'limit' => 100,
+                    'constraints' => [
+            new CleanHtml([
+                'message' => $this->module->getTranslator()->trans('This field is invalid',[], 'Admin.Notifications.Error'),
+            ]),
+        ]]]);
 
         $formBuilder->add('second_name', TranslatableType::class, [
             'label' => $this->module->getTranslator()->trans('Second Name', [],
@@ -1243,65 +1347,80 @@ class ModernHook
     /**
      * Hook allows to modify Category's form and add additional form fields as well as modify or add new data to the forms.
      *
-     * @TODO check function
      *
      * @param array $params
      *
-     * @throws ModuleErrorException
      */
-    public function hookActionAfterUpdateCategoryFormHandler(array $params): void
+    public function hookActionObjectCategoryUpdateAfter(array $params)
     {
-        $this->updateCustomCategoryFields($params);
+        return $this->updateCustomCategoryFields($params);
     }
 
     /**
      * Update / Create
      *
-     * @TODO check function
-     *
      * @param array $params
      *
      * @throws ModuleErrorException
      */
-    private function updateCustomCategoryFields(array $params): void
+    private function updateCustomCategoryFields(array $params)
     {
-        $customerId = (int)$params['id'];
-        /** @var array $customerFormData */
-        $customerFormData = $params['form_data'];
+        $idLang = Context::getContext()->language->id;
+        $form_values = Tools::getAllValues();
 
-        $top_description = $customerFormData['top_description'];
-        if (!$top_description) {
+        if(isset($params['object'])){
+            $object = $params['object'];
+        } else {
+            $object = new Category($params['id']);
+        }
+
+
+
+        if(isset($form_values['category'])){
+            $categoryFormData = $form_values['category'];
+        }
+
+        if(isset($form_values['root_category'])){
+            $categoryFormData = $form_values['root_category'];
+        }
+
+        if(empty($categoryFormData)){
+            return $params;
+        }
+
+        if (!isset($categoryFormData['top_description'][$idLang])) {
             $top_description = '';
+        } else {
+            $top_description = $categoryFormData['top_description'][$idLang];
         }
 
-
-
-
-        $second_name = $customerFormData['second_name'];
-        if (!empty($second_name)) {
+        if (!isset($categoryFormData['second_name'][$idLang])) {
             $second_name = '';
+        } else {
+            $second_name = $categoryFormData['second_name'][$idLang];
         }
 
-
-        $jsonld = $customerFormData['jsonld'];
-        if (!$jsonld) {
+        if (!isset($categoryFormData['jsonld'][$idLang])) {
             $jsonld = '';
+        } else {
+            $jsonld = $categoryFormData['jsonld'][$idLang];
         }
 
+        $fields = [
+            'top_description' => $top_description,
+            'second_name' => $second_name,
+            'jsonld' => $jsonld,
+        ];
 
-        try {
-
-            $customer = new Category($customerId);
-            $customer->top_description = $top_description;
-            $customer->second_name = $second_name;
-            $customer->jsonld = $jsonld;
-            $customer->update();
-
-        } catch (PrestaShopException $exception) {
-            throw new ModuleErrorException($exception->getMessage());
-        } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
-            throw new ModuleErrorException($e->getMessage());
+        if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'category_lang WHERE id_category=' . $object->id .' AND id_lang='.$idLang)) {
+            $result = Db::getInstance()->update('category_lang', $fields,  'id_category=' . $object->id .' AND id_lang='.$idLang);
+        } else {
+            $result = Db::getInstance()->insert('category_lang', $fields);
         }
+
+        $object->clearCache();
+
+        return $params;
     }
 
     /**
@@ -1319,10 +1438,6 @@ class ModernHook
     }
 
 
-
-
-
-
     /**
      * Add category extra description
      */
@@ -1331,14 +1446,34 @@ class ModernHook
         /** @var FormBuilderInterface $formBuilder */
         $formBuilder = $params['form_builder'];
 
-        $formBuilder->add('top_description', TranslatableType::class, [
-            'label' => $this->module->getTranslator()->trans('Top Description', [],
-                'Modules.ModernesSmidThemeConfigurator'),
-            'required' => false,
-            'auto_initialize' => true,
+        $formBuilder->add('top_description', TranslateType::class, [
             'type' => FormattedTextareaType::class,
-            'attr' => ['class' => 'autoload_rte rte '],
-        ]);
+            'locales' => [
+                0 =>  [
+                    "id_lang" => 1,
+                    "name" => "Nederlands (Dutch)",
+                    "active" => 1,
+                    "iso_code" => "nl",
+                    "language_code" => "nl-nl",
+                    "locale" => "nl-NL",
+                    "date_format_lite" => "d-m-Y",
+                    "date_format_full" => "d-m-Y H:i:s",
+                    "is_rtl" => 0,
+                    "id_shop" => 1,
+                    "shops" => [
+                        1 => true,
+                    ]
+                ]
+            ],
+            'hideTabs' => false,
+            'required' => false,
+            'options' => [
+                'limit' => 100,
+                'constraints' => [
+                    new CleanHtml([
+                        'message' => $this->module->getTranslator()->trans('This field is invalid',[], 'Admin.Notifications.Error'),
+                    ]),
+                ]]]);
 
         $formBuilder->add('second_name', TranslatableType::class, [
             'label' => $this->module->getTranslator()->trans('Second Name', [],

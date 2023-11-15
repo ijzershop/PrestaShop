@@ -231,20 +231,20 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         foreach ($order_details as $id => &$order_detail) {
 
             if(Product::existsInDatabase($order_detail['product_id'])){
-            if (!is_null($order_detail['id_oi_offer'])) {
-                $descProduct = new Product($order_detail['product_id']);
+                if (!is_null($order_detail['id_oi_offer'])) {
+                    $descProduct = new Product($order_detail['product_id']);
 
-                if ($descProduct) {
-                    $order_detail['product_desc_short'] = reset($descProduct->description_short);
+                    if ($descProduct) {
+                        $order_detail['product_desc_short'] = reset($descProduct->description_short);
+                    }
                 }
-            }
 
-            if ($order_detail['product_reference'] == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')) {
-                $descProduct = new Product($order_detail['product_id']);
-                if ($descProduct) {
-                    $order_detail['product_desc_short'] = reset($descProduct->description);
+                if ($order_detail['product_reference'] == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')) {
+                    $descProduct = new Product($order_detail['product_id']);
+                    if ($descProduct) {
+                        $order_detail['product_desc_short'] = reset($descProduct->description);
+                    }
                 }
-            }
             } else {
                 $order_detail['product_desc_short'] = '';
             }

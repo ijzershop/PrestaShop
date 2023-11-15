@@ -46,8 +46,8 @@
     <div class="menu_body d-block">
       <div class="side_panel d-none" id="menu-side-panel">
         <div class="menu-title">
-          <a class="text-white text-decoration-none d-none menu-chevron-close" href="#" id="navbar-menu-chevron"><i class="float-right mt-1 mb-1 mr-1 fasr fa-chevron-left"></i> Menu</a>
-          <a class="text-white text-decoration-none d-none menu-chevron-close" href="#" id="navbar-search-chevron"><i class="float-right mt-1 mb-1 mr-1 fasr fa-chevron-left"></i> Zoeken</a>
+          <span><i class="fasl fa-user-circle"></i>  Inloggen</span> <a class="text-white text-decoration-none d-none menu-chevron-close" href="#" id="navbar-menu-chevron"><i class="float-right mt-1 mb-1 mr-1 fasl fa-times"></i></a>
+          <a class="text-white text-decoration-none d-none menu-chevron-close" href="#" id="navbar-search-chevron"><i class="float-right mt-1 mb-1 mr-1 fasl fa-times"></i> Zoeken</a>
         </div>
         <div class="row m-0">
           <div class="col-12 d-none p-0" id="side-panel-menu-block">
@@ -64,7 +64,7 @@
     <div class="row">
       <table id="header-table" class="col m-0 ml-md-2 mr-md-2 ml-lg-3 mr-lg-3">
         <tr class="row">
-          <td class="col col-xs-6 col-sm-6  col-lg-4 p-0">
+          <td class="col d-none d-md-flex col-sm-6  col-lg-4 p-0">
               {*      Header column      *}
                 {if in_array($urls.base_url, explode(',', Configuration::get('MSTHEMECONFIG_TEST_WEBSITES', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, [])))}
                   <style type="text/css">
@@ -96,8 +96,6 @@
                 width: 100%;
               }
             </style>
-
-
               {hook h='displayShoppingCart'}
               {*   / Winkelwagen Column        *}
           </td>
@@ -117,39 +115,47 @@
         <li class="nav-item p-0 text-center col">
           <button class="navbar-toggler nav-link mx-auto" data-toggle="dropdown" type="button" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon">
-              <i class="fasr fa-menu-burger"></i>
+              <i class="fasl fa-menu-burger"></i>
             </span>
           </button>
         </li>
         {/if}
         <li class="nav-item p-0 text-center col d-none d-sm-block">
-            <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="/{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasr fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"> Offerte Aanvraag</span></a>
+            <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="/{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasl fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"> Offerte Aanvraag</span></a>
         </li>
           {if Module::isEnabled('ps_searchbar')}
-            <li class="nav-item p-0 text-center col"><a aria-label="Zoeken" class="nav-link text-white navbar-search-icon" href="#"><i class="fasr fa-2x fa-magnifying-glass"></i></a></li>
+            <li class="nav-item p-0 text-center col"><a aria-label="Zoeken" class="nav-link text-white navbar-search-icon" href="#"><i class="fasl fa-2x fa-magnifying-glass"></i></a></li>
           {/if}
           {if Module::isEnabled('ps_shoppingcart')}
-            <li class="nav-item p-0 col-5 col-sm-3"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile-1" href="#"><i class="fasr fa-cart-shopping"></i><span class="shoppingcart-header-total-price float-right text-white">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
+            <li class="nav-item p-0 col-5 col-sm-3"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile-1" href="#"><i class="fasl fa-cart-shopping"></i><span class="shoppingcart-header-total-price float-right text-white">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
           {/if}
       </ul>
       <div class="row collapse navbar-collapse">
         {if Module::isEnabled('ps_categorytree') || (int)Configuration::get('MSTHEMECONFIG_HEADER_PHONENUMBER_LINK', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '') == 1}
         <button class="navbar-toggler nav-link nav-item pl-3 float-md-left d-md-block" data-toggle="dropdown" type="button" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon desktop">
-            <i class="fasr fa-menu-burger"></i>
+            <i class="fasl fa-menu-burger"></i>
           </span>
         </button>
         {/if}
         <ul class="navbar-nav mr-2">
           <li id="request-offer-button" class="ml-2">
-            <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="/{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasr fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"> Offerte Aanvragen</span></a>
+            <a aria-label="Contact Opnemen?" class="nav-link text-white bg-success navbar-contact-icon" href="/{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasl fa-2x fa-envelope"></i><span class="d-none d-md-inline-block text"></span></a>
         </li>
         </ul>
         {if Module::isEnabled('ps_searchbar')}
         {hook h='displaySearch'}
         {/if}
+        <div class="btw-slider nav-link col">
+          <label class="toggle">
+            <input type="checkbox" id="vat_toggler" {if Context::getContext()->cookie->price_vat_settings_incl === "true"}checked="checked"{/if}>
+            <span class="slider"></span>
+            <span class="labels" data-on="Incl" data-off="Excl"></span>
+          </label>
+        </div>
+
         <ul id="navbar-cart-item-mobile"  class="navbar-nav float-right d-none  col-2 pr-0">
-        <li class="nav-item p-0 col"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile-2" href="#"><i style="font-size: 1.7em;padding-right: 5px;" class="fasr fa-cart-shopping"></i><span class="shoppingcart-header-total-price float-right text-white" style="font-size: 1.3em;">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
+        <li class="nav-item p-0 col"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile-2" href="#"><i style="font-size: 1.7em;padding-right: 5px;" class="fasl fa-cart-shopping"></i><span class="shoppingcart-header-total-price float-right text-white" style="font-size: 1.3em;">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
         </ul>
       </div>
     </div>
@@ -158,11 +164,11 @@
 {if isset($geoip_msg) && !empty($geoip_msg)}
 <div class="container mt-2">
   <div class="col-12 alert alert-warning alert-dismissible fade show" role="alert">
-    <h4 class="alert-heading"><i class="fasr fa-info-circle"></i> Uw locatie is niet zichtbaar!</h4><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <h4 class="alert-heading"><i class="fasl fa-info-circle"></i> Uw locatie is niet zichtbaar!</h4><button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
     <p>{$geoip_msg}</p>
-    <p class="mb-0">Hulp nodig of een offerte aanvragen? neem dan contact met ons op via het <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasr fa-chevron-right"></i> Offerte formulier</a></p>
+    <p class="mb-0">Hulp nodig of een offerte aanvragen? neem dan contact met ons op via het <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasl fa-chevron-right"></i> Offerte formulier</a></p>
   </div>
 </div>
 {/if}
@@ -173,11 +179,11 @@ const stickyObserver = new IntersectionObserver(function(){
 
   if(element.classList.contains('is-sticky')){
     document.getElementById('navbar-brand-item-lg').classList.add('d-lg-block');
-    document.getElementById('navbar-brand-item-mobile').classList.remove('d-none');
+    document.getElementById('navbar-brand-item-mobile').classList.remove('d-md-none');
     document.getElementById('navbar-cart-item-mobile').classList.remove('d-none');
   } else {
     document.getElementById('navbar-brand-item-lg').classList.remove('d-lg-block');
-    document.getElementById('navbar-brand-item-mobile').classList.add('d-none');
+    document.getElementById('navbar-brand-item-mobile').classList.add('d-md-none');
     document.getElementById('navbar-cart-item-mobile').classList.add('d-none');
   }
 

@@ -23,7 +23,7 @@
   * International Registered Trademark & Property of PrestaShop SA
   *}
   {if $product.show_price}
-  <div class="product-prices">
+  <div class="product-prices text-center text-sm-right">
     {block name='product_discount'}
     {if $product.has_discount}
     <div class="product-discount">
@@ -33,18 +33,17 @@
     {/if}
     {/block}
     {block name='product_price'}
-      <div class="product-price {if $product.has_discount}has-discount{/if}">
+      <div style="line-height: 1.3;" class="product-price {if $product.has_discount}has-discount{/if}">
         {if Module::isEnabled('dynamicproduct') && Product::isDynamicProduct($product)}
         <div class="current-price">
           <span class="regular-price" data-product-id="{$product.id_product}"></span>
-          <span><span class="inclusive-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc_nr, 'EUR')} {l s='Incl btw' d='Shop.Theme.Catalog'}</span></span><br>
-          <span class="exclusive-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht_nr, 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+          <span><span class="inclusive-price" style="font-size:1.5rem" data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}  {Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc_nr, 'EUR')} {else} {Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht_nr, 'EUR')} {/if}</span></span><br>
+
         </div>
         {else}
         <div class="current-price">
           <span class="regular-price" data-product-id="{$product.id_product}"></span>
-          <span><span class="inclusive-price" data-product-id="{$product.id_product}">{$product.regular_price} {l s='Incl btw' d='Shop.Theme.Catalog'}</span></span><br>
-          <span class="exclusive-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+          <span><span class="inclusive-price" style="font-size:1.5rem" data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{$product.regular_price}{else}{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')}{/if} </span></span><br>
         </div>
         {/if}
         {block name='product_unit_price'}

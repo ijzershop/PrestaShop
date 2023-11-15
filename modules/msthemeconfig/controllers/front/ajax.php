@@ -8,8 +8,7 @@ require_once _PS_CORE_DIR_ . '/init.php';
 
 
 use MsThemeConfig\Class\ExportOrders;
-use PrestaShop\PrestaShop\Adapter\Entity\Context;
-use PrestaShop\PrestaShop\Adapter\Entity\Tools;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -34,7 +33,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $this->apiPath = 'https://api.pro6pp.nl/v2/autocomplete';
         $this->kernel = new \AppKernel('dev', true);
         $this->kernel->boot();
-
+        $this->context = Context::getContext();
         $this->soapoptions = [
             'stream_context' => stream_context_create(
                 [
@@ -75,6 +74,12 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
         if ($this->errors) {
             die(json_encode(['hasError' => true, 'errors' => $this->errors]));
+        }
+
+        if (Tools::getValue('action') == 'set_vat_visibility') {
+            $vat = Tools::getValue('incl_vat');
+
+            $this->_setVatInclExclContext(filter_var($vat, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE));
         }
 
         if (Tools::getValue('action') == 'check_for_existing_email_address') {
@@ -1232,6 +1237,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
      */
     private function _getKoopmanPrintedLabel()
     {
+
         if(Tools::getIsset('updateAddress')){
             $this->updateOrderDeliveryAddress(Tools::getAllValues());
         }
@@ -1246,10 +1252,14 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         if($export->redirect){
             $readyForShippingStatus = Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
-            $history = new OrderHistory();
-            $history->id_order = (int)$id_order;
-            $history->changeIdOrderState((int)$readyForShippingStatus, (int)$id_order);
-            $history->add();
+            $order = new Order($id_order);
+
+            if((int)$readyForShippingStatus !== (int)$order->current_state){
+                $history = new OrderHistory();
+                $history->id_order = (int)$id_order;
+                $history->changeIdOrderState((int)$readyForShippingStatus, (int)$id_order);
+                $history->add();
+            }
 
             $this->makeApiCallToDashboard('set-label-printed', $id_order, Order::getUniqReferenceOf($id_order));
             die('printed');
@@ -1629,4 +1639,25 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             return die(json_encode(['msg' => $exception->getMessage(), 'success' => false]));
         }
     }
+
+
+    /**
+     * @param bool $vat
+     * @return void
+     */
+    private function _setVatInclExclContext(bool $vat = true){
+        try {
+            // Set new value for price_vat_settings_incl
+            $this->context->cookie->__set('price_vat_settings_incl', json_encode($vat));
+            // Persist cookie
+            $this->context->cookie->write();
+            // Clear cache
+            Tools::clearCache();
+
+            return die(json_encode(['msg' => 'Vat preference is set to '.json_encode($vat), 'success' => true]));
+        } catch (Exception $exception){
+            return die(json_encode(['msg' => $exception->getMessage(), 'success' => false]));
+        }
+    }
+
 }

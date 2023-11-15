@@ -4,7 +4,9 @@ namespace MsThemeConfig\Controller\Admin;
 use Exception;
 use MsThemeConfig\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use MsThemeConfig\Core\Domain\Address\QueryResult\EditableCustomerAddress;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
+use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Adapter\Entity\Order;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
@@ -17,12 +19,15 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -228,6 +233,14 @@ class DmsAdminAddressController extends FrameworkBundleAdminController{
                 break;
         }
 
+        try {
+            $addressId = $this->fixAddressWhenFailing($order->id_customer, $addressId, $orderId, $addressType);
+        } catch (AddressException|ShopException $e) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($e, $this->getErrorMessages($e))
+            );
+        }
 
         /** @var EditableCustomerAddress $editableAddress */
         $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
@@ -254,6 +267,7 @@ class DmsAdminAddressController extends FrameworkBundleAdminController{
             }
             // Address form is built based on address id to fill the data related to this address
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
+
         } catch (Exception $e) {
             $this->addFlash(
                 'error',
@@ -283,6 +297,8 @@ class DmsAdminAddressController extends FrameworkBundleAdminController{
                 return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
             }
         } catch (Exception $e) {
+
+            dd($e, new Order($orderId));
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -464,6 +480,73 @@ class DmsAdminAddressController extends FrameworkBundleAdminController{
         $requiredFields = $this->getQueryBus()->handle(new GetRequiredFieldsForAddress());
 
         return $this->createForm(RequiredFieldsAddressType::class, ['required_fields' => $requiredFields]);
+    }
+
+
+    /**
+     * Check address and fix when validation fails. To fix ghost orders when address is removed from the database
+     *
+     * @param $idCustomer
+     * @param $idOrder
+     * @param $idAddress
+     * @param string $addressType
+     * @return mixed
+     * @throws AddressException
+     * @throws ShopException
+     */
+    private function fixAddressWhenFailing($idCustomer, $idAddress, $idOrder = NULL, string $addressType = 'delivery'): mixed
+    {
+        if(!Address::addressExists((int)$idAddress)){
+            $failingAddressId = (new \PrestaShop\PrestaShop\Adapter\Configuration())->get(
+                'MSTHEMECONFIG_CUSTOM_ADDRESS_WHEN_FAIL',
+                1,
+                ShopConstraint::shop((int) 1)
+            );
+
+            try {
+                $OldAddress = new Address((int)$failingAddressId);
+
+                $address = new Address();
+                $address->id_customer = (int)$idCustomer;
+                $address->id_country = (int)$OldAddress->id_country;
+                $address->id_state = (int)$OldAddress->id_state;
+                $address->alias = $OldAddress->alias;
+                $address->company = $OldAddress->company;
+                $address->firstname = $OldAddress->firstname;
+                $address->lastname = $OldAddress->lastname;
+                $address->address1 = (string)$OldAddress->address1;
+                $address->address2 = $OldAddress->address2 ?? '';
+                $address->house_number = $OldAddress->house_number;
+                $address->house_number_extension = $OldAddress->house_number_extension;
+                $address->postcode = $OldAddress->postcode;
+                $address->city = $OldAddress->city;
+                $address->other = $OldAddress->other;
+                $address->phone = $OldAddress->phone;
+                $address->phone_mobile = $OldAddress->phone_mobile;
+                $address->vat_number = $OldAddress->vat_number;
+                $address->dni = $OldAddress->dni;
+                $address->active = 1;
+                $address->save(true);
+
+                if($idOrder !== NULL){
+                    $order = new Order((int)$idOrder);
+
+                    switch ($addressType){
+                        case 'delivery_address':
+                            $order->id_address_delivery = (int)$address->id;
+                            break;
+                        case 'invoice_address':
+                            $order->id_address_invoice = (int)$address->id;
+                            break;
+                    }
+                    $order->update(true);
+                }
+                return (int)$address->id;
+            } catch (PrestaShopDatabaseException|PrestaShopException $e) {
+                throw new AddressException('Failing to load address, please select an other or create an new address', 0, $e);
+            }
+        }
+        return (int)$idAddress;
     }
 }
 

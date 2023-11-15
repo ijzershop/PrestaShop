@@ -24,7 +24,7 @@
  *}
 
 <div class="product-comment-list-item row @COMMENT_LAST@" data-product-comment-id="@COMMENT_ID@" data-product-id="@PRODUCT_ID@">
-  <div class="col-md-3 col-sm-3 comment-infos text-right pr-5">
+  <div class="col-lg-2 col-md-3 col-sm-4 comment-infos text-right pr-5">
     <div class="grade-stars"></div>
     <div class="comment-date">
       @COMMENT_DATE@
@@ -34,17 +34,17 @@
     </div>
   </div>
 
-  <div class="col-md-9 col-sm-9 comment-content bubble">
+  <div class="col-lg-10 col-md-9 col-sm-8 comment-content bubble">
     <h4>@COMMENT_TITLE@</h4>
     <p>@COMMENT_COMMENT@</p>
     <div class="comment-buttons btn-group">
       {if $usefulness_enabled}
         <a class="useful-review">
-          <i class="fasr fa-thumbs-up"></i>
+          <i class="fasl fa-thumbs-up"></i>
           <span class="useful-review-value">@COMMENT_USEFUL_ADVICES@</span>
         </a>
         <a class="not-useful-review">
-          <i class="fasr fa-thumbs-down"></i>
+          <i class="fasl fa-thumbs-down"></i>
           <span class="not-useful-review-value">@COMMENT_NOT_USEFUL_ADVICES@</span>
         </a>
       {/if}

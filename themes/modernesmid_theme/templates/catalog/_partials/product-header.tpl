@@ -22,11 +22,38 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
+<style>
+  .block-category-inner{
+    height: 70px;
+    opacity: 0.4;
+    overflow: hidden;
+    -webkit-transition: all .3s linear;
+    -moz-transition: all .3s linear;
+    -o-transition: all .3s linear;
+    transition: all .3s linear;
+  }
+
+  .block-category-inner.active{
+    height: auto;
+    opacity: 1;
+    -webkit-transition: all .3s linear;
+    -moz-transition: all .3s linear;
+    -o-transition: all .3s linear;
+    transition: all .3s linear;
+  }
+  #toggle-cat-description{
+    /*-webkit-box-shadow: 0px -10px 40px 55px #fff;*/
+    /*-moz-box-shadow: 0px -10px 40px 55px #fff;*/
+    /*box-shadow: 0px -10px 40px 55px #fff;*/
+    padding-top: 12px;
+  }
+</style>
+
 <div id="js-product-list-header" class="col-12 pr-0 pl-0">
     {if $listing.pagination.items_shown_from == 1}
-      <h2 class="h2 mb-0">{if !empty($category.second_name)}{$category.second_name}{else}{$category.name}{/if}</h2>
+      <h2 class="h2 mb-0 text-center">{if !empty($category.second_name)}{$category.second_name}{else}{$category.name}{/if}</h2>
         {if !empty($listing.products)}
-            <div class="block-category-inner row">
+            <div id="block-category-inner" class="block-category-inner row">
                 <div class="col-12 col-sm-8">
                     {if $category.top_description}
                         <div id="category-description" class="text-muted">{html_entity_decode($category.top_description) nofilter}</div>
@@ -40,6 +67,24 @@
                     {/if}
                 </div>
             </div>
-            {/if}
+          <div class="row text-center"><a href="#" class="w-100 h5" id="toggle-cat-description" data-shown="0" onclick="toggleCategoryDescr(this)"> > Toon Alles</a></div>
+        {/if}
     {/if}
 </div>
+<script type="text/javascript">
+
+
+  function toggleCategoryDescr(e){
+    if(document.getElementById('block-category-inner').classList.contains('active')){
+        document.getElementById('block-category-inner').classList.remove('active');
+        document.getElementById('toggle-cat-description').textContent = '< Toon Alles';
+    } else {
+      document.getElementById('block-category-inner').classList.add('active');
+      document.getElementById('toggle-cat-description').textContent = '< Verberg Informatie';
+        }
+
+
+  }
+
+
+</script>

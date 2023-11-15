@@ -212,7 +212,7 @@ $(function () {
     });
 
 
-    $(document).on('click', 'div.koopman label',function () {
+    $(document).on('click', 'div.koopman label',function (e) {
       let $clickedLabel = $(this);
       let $input = $clickedLabel.prev('input');
       let $btnRow = $clickedLabel.closest('div.koopman');
@@ -262,6 +262,7 @@ $(function () {
           .done(function (data) {
             if(data === 'printed'){
               location.reload();
+
             } else {
               $('#updateAddressModal .modal-content').html(data);
               $('#updateAddressModal').modal('show');

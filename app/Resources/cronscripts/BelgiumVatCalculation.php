@@ -94,6 +94,7 @@ class CalculateBelgiumVat
         $sqlBelgium = "SELECT `" . _DB_PREFIX_ . "orders`.`id_address_delivery`, `" . _DB_PREFIX_ . "orders`.`id_order`,GROUP_CONCAT(DISTINCT `" . _DB_PREFIX_ . "orders`.`reference`) as reference_list, count(`" . _DB_PREFIX_ . "orders`.`id_order`) as order_total_be, SUM(`" . _DB_PREFIX_ . "orders`.`total_paid_tax_incl`) as total_be_tax_incl FROM `" . _DB_PREFIX_ . "orders` LEFT JOIN `" . _DB_PREFIX_ . "address` ON `" . _DB_PREFIX_ . "orders`.`id_address_delivery` = `" . _DB_PREFIX_ . "address`.`id_address`
                 WHERE `" . _DB_PREFIX_ . "address`.`id_country` = '3' AND `" . _DB_PREFIX_ . "orders`.`date_add` BETWEEN '".$from."' AND '".$to."' AND `" . _DB_PREFIX_ . "orders`.`current_state` IN ('4','5','18','21','25','26','38')";
 
+
         $resultBE = Db::getInstance()->executeS($sqlBelgium);
 
 
@@ -109,6 +110,7 @@ class CalculateBelgiumVat
             $vatData['total_belgium_vat'] = $total_tax_incl - $total_tax_excl;
             $vatData['reference_list'] = $resultBE[0]['reference_list'];
         }
+
         return $vatData;
     }
 

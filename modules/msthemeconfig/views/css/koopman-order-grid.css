@@ -178,7 +178,6 @@ td.koopman_label_button-type.column-label{
   color: #fff
 }
 
-
 .reverse {
   transform: rotate(180deg);
 }
@@ -201,3 +200,4 @@ td.koopman_label_button-type.column-label{
   from { transform: rotate(  0deg); }
   to   { transform: rotate(360deg); }
 }
+

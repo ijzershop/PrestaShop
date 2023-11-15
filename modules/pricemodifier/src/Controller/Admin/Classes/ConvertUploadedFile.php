@@ -570,16 +570,9 @@ class ConvertUploadedFile
     private function processMcbXmlCells($worksheet, $sheet_name)
     {
 
-//        CS WGW Ronde Buis overig
-//        CS WGW Ronde Buis S235
-//        CS Blank Naadloos Buis
-//        CS Blanke buis
-//        CS Kokers S235 + blank
-//        CS Kokers S275 - S355
-
         if (in_array($sheet_name,
          [
-            "CS WGW Ronde Buis overig",
+             "CS WGW Ronde Buis overig",
              "CS WGW Ronde Buis S235",
              "CS Blank Naadloos Buis",
              "CS Blanke buis",

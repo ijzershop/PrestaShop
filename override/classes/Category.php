@@ -31,6 +31,8 @@ class Category extends CategoryCore
 {
     public $top_description;
     public $second_name;
+
+    public $jsonld;
     /**
      * @see ObjectModel::$definition
      */

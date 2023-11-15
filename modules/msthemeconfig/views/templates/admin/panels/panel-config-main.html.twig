@@ -128,6 +128,20 @@
             </p>
           </div>
         </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            Replacement Address
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_CUSTOM_ADDRESS_WHEN_FAIL" class="w-100 form-control select2-data-input"
+                    data-type="addresses" id="MSTHEMECONFIG_CUSTOM_ADDRESS_WHEN_FAIL">
+              {{ MSTHEMECONFIG_CUSTOM_ADDRESS_WHEN_FAIL|raw }}
+            </select>
+            <p class="help-block">
+              Set the replacement address when address id is available but the address record is missing. This is mostly for viewing purposes, records will not be updated.
+            </p>
+          </div>
+        </div>
       </div>
 
   </div>

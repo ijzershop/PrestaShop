@@ -30,13 +30,13 @@
 
 {block name='continue_shopping' append}
   <a class="label btn btn-link" href="{$urls.pages.index}">
-    <i class="fasr fa-chevron-left"></i> {l s='Continue shopping' d='Shop.Theme.Actions'}
+    <i class="fasl fa-chevron-left"></i> {l s='Continue shopping' d='Shop.Theme.Actions'}
   </a>
 {/block}
 
 
 {block name='cart_actions'}
-<div class="card-footer">
+<div class="">
 	  <div class="checkout text-sm-center card-block">
 	    <button type="button" class="btn btn-dark disabled w-100" disabled>{l s='Checkout' d='Shop.Theme.Actions'}</button>
 	  </div>

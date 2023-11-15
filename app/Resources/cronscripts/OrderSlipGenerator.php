@@ -173,9 +173,12 @@ class OrderSlipGenerator
         $sql_query->orderBy('oi.id_order_invoice ASC');
         $sql_query->orderBy('oi.delivery_date ASC');
 
+
+
         if($this->debug){
              echo $sql_query->__toString();
-         }
+        }
+
         $order_invoice_list = Db::getInstance()->executeS($sql_query);
 
         if($this->debug){

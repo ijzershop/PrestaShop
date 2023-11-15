@@ -154,22 +154,14 @@
               <strong>
                 {if isset($product.is_gift) && $product.is_gift}
                   <span class="gift">{l s='Gift' d='Shop.Theme.Checkout'}</span>
-
-
-{else}
-
-
+                {else}
                   <span class="product-price">
-                    {Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax*$product.quantity, 'EUR')}
+                    {if Context::getContext()->cookie->price_vat_settings_incl === "true"}
+                        {Context::getContext()->currentLocale->formatPrice($product.price_without_reduction*$product.quantity, 'EUR')}
+                    {else}
+                        {Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax*$product.quantity, 'EUR')}
+                    {/if}
                   </span>
-
-
-{*{if $product.has_discount}*}
-{*                  <br>*}
-{*                  <span class="regular-price">*}
-{*                      {Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax*$product.quantity, 'EUR')}*}
-{*                    </span>*}
-{*                {/if}*}
                 {/if}
               </strong>
             </span>
@@ -179,13 +171,6 @@
                   {/if}
               </div>
             </div>
-              {*            <div class="col-2 text-xs-right pl-0 pt-2 d-none d-sm-block">*}
-              {*              <div class="cart-line-product-actions">*}
-              {*                  {block name='hook_cart_extra_product_actions'}*}
-              {*                      {hook h='displayCartExtraProductActions' product=$product}*}
-              {*                  {/block}*}
-              {*              </div>*}
-              {*            </div>*}
           </div>
         </div>
 

@@ -308,6 +308,7 @@
       <path value="$PROJECT_DIR$/vendor/sebastian/global-state" />
       <path value="$PROJECT_DIR$/modules/ps_shoppingcart/vendor/composer" />
       <path value="$PROJECT_DIR$/vendor/doctrine/persistence_old" />
+      <path value="$PROJECT_DIR$/vendor/pcloud/pcloud-php-sdk" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

@@ -37,14 +37,13 @@
         {if Module::isEnabled('dynamicproduct') && Product::isDynamicProduct($product)}
         <div class="current-price">
           <span class="regular-price" data-product-id="{$product.id_product}"></span>
-          <span><span class="inclusive-price" style="font-size:1.5rem" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc_nr, 'EUR')} </span></span><br>
-          <span class="exclusive-price d-none" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht_nr, 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+          <span><span class="inclusive-price" style="font-size:1.5rem" data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}  {Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc_nr, 'EUR')} {else} {Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht_nr, 'EUR')} {/if}</span></span><br>
+
         </div>
         {else}
         <div class="current-price">
           <span class="regular-price" data-product-id="{$product.id_product}"></span>
-          <span><span class="inclusive-price" style="font-size:1.5rem" data-product-id="{$product.id_product}">{$product.regular_price} </span></span><br>
-          <span class="exclusive-price d-none" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')} {l s='Excl btw' d='Shop.Theme.Catalog'}</span>
+          <span><span class="inclusive-price" style="font-size:1.5rem" data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{$product.regular_price}{else}{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')}{/if} </span></span><br>
         </div>
         {/if}
         {block name='product_unit_price'}

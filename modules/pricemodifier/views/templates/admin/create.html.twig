@@ -34,8 +34,6 @@
 {% block javascripts %}
   {{ parent() }}
 
-  <script src="{{ asset('../modules/pricemodifier/views/js/price_modification_form.bundle.js') }}"></script>
-
   <script>
     let msgList = [
       "Uploading XML document",
@@ -105,6 +103,13 @@
 
 
 
+    $(document).on('change','#price_list_upload_uploaded_file:file', function(e) {
+        let text = '';
+        if (e.target.files.length >= 0){
+          text = e.target.files[0].name;
+        }
+        $('.custom-file .custom-file-label').text(text);
+      });
 
 
 

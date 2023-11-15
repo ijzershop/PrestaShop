@@ -55,6 +55,7 @@
         "mobiledetect/mobiledetectlib": "~2.8.34",
         "mrclay/minify": "^3.0.11",
         "nikic/php-parser": "^4.0",
+        "pcloud/pcloud-php-sdk": "4.*",
         "pear/archive_tar": "^1.4.12",
         "pelago/emogrifier": "^v5.0.1",
         "phpoffice/phpspreadsheet": "~1.5",

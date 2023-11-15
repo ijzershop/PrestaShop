@@ -7,10 +7,10 @@
           <option name="path" value="$PROJECT_DIR$/modules/autoupgrade/tests" />
         </Configuration>
         <Configuration>
-          <option name="path" value="$PROJECT_DIR$/tests" />
+          <option name="path" value="$PROJECT_DIR$/modules/ps_shoppingcart/tests" />
         </Configuration>
         <Configuration>
-          <option name="path" value="$PROJECT_DIR$/modules/ps_shoppingcart/tests" />
+          <option name="path" value="$PROJECT_DIR$/tests" />
         </Configuration>
       </list>
     </option>

@@ -103,6 +103,7 @@ $(document).ready(function () {
 
   let adminSelect2DataLink = $('#select2_data_link').attr('data-link');
   let adminDataTableMissedLink = $('#datatable_missed_data_link').attr('data-link');
+  let generateNewPriceModificationRulesLink = $('#datatable_new_rules_link').attr('data-link');
 
   $('.calculate_new_price').on('click', function (e) {
     e.preventDefault();
@@ -128,11 +129,14 @@ $(document).ready(function () {
         row: rowId,
         product: idProduct,
         formula: completedFormula,
+        sup_formula: supFormula,
+        incr_formula: incrFormula,
         store_price: storePrice,
         selected_formule_item_price: selectedPrice,
         selected_formule_item: selectedType,
       },
       success: function (data) {
+
         $.growl({
           title: '',
           size: 'large',
@@ -140,6 +144,8 @@ $(document).ready(function () {
           duration: 500
         });
         $('#formula_result_' + rowId).text(data.generated_formula);
+        $('#sup_formula_result_' + rowId).html("<small>"+data.generated_sub_formula+"</small> = <b>"+data.sup_total+"</b>");
+        $('#increment_formula_result_' + rowId).html("<small>"+data.generated_incr_formula+"</small> = <b>"+data.incr_total+"</b>");
         $('[name="new_price_' + rowId + '"').val(data.total).trigger('change');
       },
       error: function (data) {
@@ -148,137 +154,137 @@ $(document).ready(function () {
     });
   });
 
-  $('.price_mod_cart').each(function (index, elem) {
-    let dataSet = elem.dataset;
-    let rowId = dataSet.id;
-    let oldSupPrice = Number(dataSet.old_supplier_price)
-    let oldStorPrice = [];
-    if (dataSet.old_store_price !== "") {
-      try {
-        oldStorPrice = JSON.parse(dataSet.old_store_price);
-      } catch (e) {
-        oldStorPrice = 0;
-      }
-    }
-    let newSupPrice = Number(dataSet.new_supplier_price)
-    let newStorPrice = Number($('[name="new_price_' + rowId + '"').val());
-
-    let lastOldStorePrice = Number(0);
-    if (oldStorPrice.length > 0 && oldStorPrice[0].hasOwnProperty('price')) {
-      lastOldStorePrice = Number(oldStorPrice[0].price);
-    }
-
-    new Chartist.Bar(elem, {
-      labels: ['Lever.', 'Winkel'],
-      series: [
-        [oldSupPrice, lastOldStorePrice],
-        [newSupPrice, newStorPrice],
-      ]
-    }, {
-      reverseData: true,
-      horizontalBars: true,
-      axisY: {
-        offset: 60,
-        position: 'start'
-      },
-      axisX: {
-        offset: 60,
-        position: 'start'
-      },
-      chartPadding: {
-        top: 0,
-        right: 100,
-        bottom: 0,
-        left: 10
-      },
-      plugins: [
-        Chartist.plugins.barChartLabel()
-      ]
-    }, {}).on('draw', function (data) {
-      if (data.type === 'bar') {
-        data.element.attr({
-          style: 'stroke-width: 10px'
-        });
-      }
-      $('th#supplier_diff_' + rowId).text(moneyFormat.format(newSupPrice - oldSupPrice));
-      $('th#store_diff_' + rowId).text(moneyFormat.format(newStorPrice - lastOldStorePrice));
-      $('th#store_profit_old_' + rowId).text(moneyFormat.format(lastOldStorePrice - oldSupPrice));
-      $('th#store_profit_new_' + rowId).text(moneyFormat.format(newStorPrice - newSupPrice));
-    });
-
-    $(document).on('change', '[name="selected_formule_item_' + rowId + '"],[name="new_price_' + rowId + '"]', function (e) {
-      let dataSet = elem.dataset;
-      let rowId = dataSet.id;
-      let oldSupPrice = Number(dataSet.old_supplier_price)
-      let oldStorPrice = Number(dataSet.old_store_price)
-
-      let link = $('.calculate_new_price[data-rowid="' + rowId + '"]').attr('data-link');
-
-      let idProduct = $('[name="selected_product_' + rowId + '"').val();
-      let supFormula = $('[name="formula_' + rowId + '"').val();
-      let incrFormula = $('[name="increment_formula_' + rowId + '"').val();
-      let storePrice = $('.store_price[data-id="' + rowId + '"]').text();
-      let selectedPrice = $('[name="selected_formule_item_' + rowId + '"]:checked').attr('data-value');
-      let selectedType = $('[name="selected_formule_item_' + rowId + '"]:checked').attr('data-type');
-      let newSupPrice = 0;
-      let newStorPrice = 0;
-      $.ajax({
-        type: 'POST',
-        cache: false,
-        dataType: 'json',
-        url: link,
-        data: {
-          ajax: 1,
-          row: rowId,
-          product: idProduct,
-          formula: supFormula,
-          store_price: storePrice,
-          selected_formule_item_price: selectedPrice,
-          selected_formule_item: selectedType,
-        },
-        success: function (data) {
-          let newSupPrice = data.total
-
-          $.ajax({
-            type: 'POST',
-            cache: false,
-            dataType: 'json',
-            url: link,
-            data: {
-              ajax: 1,
-              row: rowId,
-              product: idProduct,
-              formula: supFormula + '' + incrFormula,
-              store_price: storePrice,
-              selected_formule_item_price: selectedPrice,
-              selected_formule_item: selectedType,
-            },
-            success: function (data) {
-              let newStorPrice = Number(data.total);
-
-              chart.update({
-                labels: ['Lever.', 'Winkel'], series: [
-                  [oldSupPrice, oldStorPrice],
-                  [newSupPrice, newStorPrice],
-                ]
-              });
-
-              $('th#supplier_diff_' + rowId).text(moneyFormat.format(newSupPrice - oldSupPrice));
-              $('th#store_diff_' + rowId).text(moneyFormat.format(newStorPrice - oldStorPrice));
-              $('th#store_profit_old_' + rowId).text(moneyFormat.format(oldStorPrice - oldSupPrice));
-              $('th#store_profit_new_' + rowId).text(moneyFormat.format(newStorPrice - newSupPrice));
-            },
-            error: function (data) {
-              // console.log(data);
-            }
-          });
-        },
-        error: function (data) {
-          // console.log(data);
-        }
-      });
-    });
-  });
+  // $('.price_mod_cart').each(function (index, elem) {
+  //   let dataSet = elem.dataset;
+  //   let rowId = dataSet.id;
+  //   let oldSupPrice = Number(dataSet.old_supplier_price)
+  //   let oldStorPrice = [];
+  //   if (dataSet.old_store_price !== "") {
+  //     try {
+  //       oldStorPrice = JSON.parse(dataSet.old_store_price);
+  //     } catch (e) {
+  //       oldStorPrice = 0;
+  //     }
+  //   }
+  //   let newSupPrice = Number(dataSet.new_supplier_price)
+  //   let newStorPrice = Number($('[name="new_price_' + rowId + '"').val());
+  //
+  //   let lastOldStorePrice = Number(0);
+  //   if (oldStorPrice.length > 0 && oldStorPrice[0].hasOwnProperty('price')) {
+  //     lastOldStorePrice = Number(oldStorPrice[0].price);
+  //   }
+  //
+  //   new Chartist.Bar(elem, {
+  //     labels: ['Lever.', 'Winkel'],
+  //     series: [
+  //       [oldSupPrice, lastOldStorePrice],
+  //       [newSupPrice, newStorPrice],
+  //     ]
+  //   }, {
+  //     reverseData: true,
+  //     horizontalBars: true,
+  //     axisY: {
+  //       offset: 60,
+  //       position: 'start'
+  //     },
+  //     axisX: {
+  //       offset: 60,
+  //       position: 'start'
+  //     },
+  //     chartPadding: {
+  //       top: 0,
+  //       right: 100,
+  //       bottom: 0,
+  //       left: 10
+  //     },
+  //     plugins: [
+  //       Chartist.plugins.barChartLabel()
+  //     ]
+  //   }, {}).on('draw', function (data) {
+  //     if (data.type === 'bar') {
+  //       data.element.attr({
+  //         style: 'stroke-width: 10px'
+  //       });
+  //     }
+  //     $('th#supplier_diff_' + rowId).text(moneyFormat.format(newSupPrice - oldSupPrice));
+  //     $('th#store_diff_' + rowId).text(moneyFormat.format(newStorPrice - lastOldStorePrice));
+  //     $('th#store_profit_old_' + rowId).text(moneyFormat.format(lastOldStorePrice - oldSupPrice));
+  //     $('th#store_profit_new_' + rowId).text(moneyFormat.format(newStorPrice - newSupPrice));
+  //   });
+  //
+  //   $(document).on('change', '[name="selected_formule_item_' + rowId + '"],[name="new_price_' + rowId + '"]', function (e) {
+  //     let dataSet = elem.dataset;
+  //     let rowId = dataSet.id;
+  //     let oldSupPrice = Number(dataSet.old_supplier_price)
+  //     let oldStorPrice = Number(dataSet.old_store_price)
+  //
+  //     let link = $('.calculate_new_price[data-rowid="' + rowId + '"]').attr('data-link');
+  //
+  //     let idProduct = $('[name="selected_product_' + rowId + '"').val();
+  //     let supFormula = $('[name="formula_' + rowId + '"').val();
+  //     let incrFormula = $('[name="increment_formula_' + rowId + '"').val();
+  //     let storePrice = $('.store_price[data-id="' + rowId + '"]').text();
+  //     let selectedPrice = $('[name="selected_formule_item_' + rowId + '"]:checked').attr('data-value');
+  //     let selectedType = $('[name="selected_formule_item_' + rowId + '"]:checked').attr('data-type');
+  //     let newSupPrice = 0;
+  //     let newStorPrice = 0;
+  //     $.ajax({
+  //       type: 'POST',
+  //       cache: false,
+  //       dataType: 'json',
+  //       url: link,
+  //       data: {
+  //         ajax: 1,
+  //         row: rowId,
+  //         product: idProduct,
+  //         formula: supFormula,
+  //         store_price: storePrice,
+  //         selected_formule_item_price: selectedPrice,
+  //         selected_formule_item: selectedType,
+  //       },
+  //       success: function (data) {
+  //         let newSupPrice = data.total
+  //
+  //         $.ajax({
+  //           type: 'POST',
+  //           cache: false,
+  //           dataType: 'json',
+  //           url: link,
+  //           data: {
+  //             ajax: 1,
+  //             row: rowId,
+  //             product: idProduct,
+  //             formula: supFormula + '' + incrFormula,
+  //             store_price: storePrice,
+  //             selected_formule_item_price: selectedPrice,
+  //             selected_formule_item: selectedType,
+  //           },
+  //           success: function (data) {
+  //             let newStorPrice = Number(data.total);
+  //
+  //             chart.update({
+  //               labels: ['Lever.', 'Winkel'], series: [
+  //                 [oldSupPrice, oldStorPrice],
+  //                 [newSupPrice, newStorPrice],
+  //               ]
+  //             });
+  //
+  //             $('th#supplier_diff_' + rowId).text(moneyFormat.format(newSupPrice - oldSupPrice));
+  //             $('th#store_diff_' + rowId).text(moneyFormat.format(newStorPrice - oldStorPrice));
+  //             $('th#store_profit_old_' + rowId).text(moneyFormat.format(oldStorPrice - oldSupPrice));
+  //             $('th#store_profit_new_' + rowId).text(moneyFormat.format(newStorPrice - newSupPrice));
+  //           },
+  //           error: function (data) {
+  //             // console.log(data);
+  //           }
+  //         });
+  //       },
+  //       error: function (data) {
+  //         // console.log(data);
+  //       }
+  //     });
+  //   });
+  // });
 
   $('#product_price_modification_id_store_product').select2({
     matcher: matchCustom,
@@ -365,95 +371,87 @@ $(document).ready(function () {
     $('[name="new_price_' + rowId + '"]').val(hisPrice);
   });
 
+  var createPriceModifierRules = function(products){
+    $.ajax({
+      type: 'POST',
+      cache: false,
+      dataType: 'json',
+      url: generateNewPriceModificationRulesLink,
+      data: {
+        ajax: 1,
+        products: products
+      },
+      success: function (data) {
+        window.location = window.location.href + '?product_price_modification[orderBy]=id&product_price_modification[sortOrder]=desc';
+      },
+      error: function (data) {
+        console.log(data);
+      }
+    });
+
+  };
+
   let missingTable = $('#missed-products-table').DataTable({
     processing: true,
     serverSide: true,
+    stateSave: true,
+    select: true,
+    dom: "<'row'<'col-sm-12 col-md-3'l><'col-sm-12 col-md-9 text-right'fB>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+    buttons: [
+      {
+        text: 'Selecteer alle regels',
+        action: function (e, dt, node, config ) {
+          dt.rows().select();
+        }
+      },
+      {
+        text: 'De-selecteer alles',
+        action: function (e, dt, node, config ) {
+          dt.rows().deselect();
+        }
+      },
+      {
+        text: 'Voeg regels toe',
+        action: function (e, dt ) {
+          let products = dt.rows( { selected: true } ).data().toArray();
+
+          createPriceModifierRules(products);
+        }
+      }
+    ],
     ajax: {
       url: adminDataTableMissedLink,
       method: 'POST'
     },
-    pageLength: 5,
+    paging: true,
+    pagingType: 'full_numbers',
+    pageLength: 10,
     lengthMenu: [
-
       [5, 10, 25, 50, -1],
       [5, 10, 25, 50, 'All'],
     ],
     columns: [{
-      data: 'name_supplier',
+      data: 'id',
+      width: '100'
+    },{
+      data: 'active',
+      width: '100',
+      render: function (e, data, row) {
+        let checked = '';
+        if(e > 0){
+          checked = 'checked="checked"';
+        }
+        return '<input type="checkbox" disabled="true" '+checked+'>';
+      }
     }, {
       data: 'product_name',
     }, {
       data: 'price',
+      width: '100',
       render: function (data, type) {
         return priceFormat(data);
       }
-    }, {
-      data: 'old_price_update',
-    }, {
-      data: 'updated_at',
     }],
-    drawCallback: function () {
-      let tableData = missingTable.ajax.params();
-      if (tableData.draw === 1 && tableData.search.value === '') {
-        let dateFormatPrice = "yy-mm-dd";
-
-        function getDate(element) {
-          let date;
-          try {
-            date = $.datepicker.parseDate(dateFormatPrice, element.value);
-          } catch (error) {
-            date = null;
-          }
-
-          return date;
-        }
-
-        let today = new Date()
-        let days = 86400000
-        let filterDateTo = new Date(today - (16 * 7 * days))
-        document.getElementById('price_update_to').value = filterDateTo.getDate() + '/' + filterDateTo.getMonth() + '/' + filterDateTo.getFullYear();
-
-
-        let price_update_from = $("#price_update_from")
-            .datepicker({
-              defaultDate: "+1w",
-              changeMonth: true,
-              numberOfMonths: 1
-            })
-            .on("change", function () {
-              price_update_to.datepicker("option", "minDate", getDate(this));
-            }),
-          price_update_to = $("#price_update_to").datepicker({
-            defaultDate: filterDateTo,
-            changeMonth: true,
-            numberOfMonths: 1
-          })
-            .on("change", function () {
-              price_update_from.datepicker("option", "maxDate", getDate(this));
-            });
-
-        let missing_records_from = $("#missing_records_from")
-          .datepicker({
-            defaultDate: "+1w",
-            changeMonth: true,
-            numberOfMonths: 1
-          })
-          .on("change", function () {
-            price_update_to.datepicker("option", "minDate", getDate(this));
-          });
-
-        $("#missing_records_to").datepicker({
-          defaultDate: "+1w",
-          changeMonth: true,
-          numberOfMonths: 1
-        })
-          .on("change", function () {
-            missing_records_from.datepicker("option", "maxDate", getDate(this));
-          });
-
-
-      }
-    },
     initComplete: function (settings, json) {
       this.api()
         .columns()
@@ -461,18 +459,6 @@ $(document).ready(function () {
           let that = this;
           $('input', this.footer()).on('keyup change clear', function () {
             let searchValue = this.value;
-            if (that.index() === 3) {
-              //is modifier date
-              let from = document.getElementById('missing_records_from').value;
-              let to = document.getElementById('missing_records_to').value;
-              searchValue = from + ',' + to;
-            }
-            if (that.index() === 4) {
-              //is product date
-              let from = document.getElementById('price_update_from').value;
-              let to = document.getElementById('price_update_to').value;
-              searchValue = from + ',' + to;
-            }
             if (that.search() !== searchValue) {
               that.search(searchValue).draw();
             }

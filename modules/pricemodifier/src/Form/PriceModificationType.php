@@ -40,7 +40,8 @@ class PriceModificationType extends TranslatorAwareType
                 'choices' => [
                     'Douma' => 'douma',
                     'MCB' => 'mcb',
-                    'Indi' => 'indi'
+                    'Indi' => 'indi',
+                    'Fisher' => 'fisher'
                 ],
             ])
             ->add('uploaded_file', FileType::class, [

@@ -78,15 +78,14 @@
         {block name='product_price_and_shipping'}
           {if $product.show_price}
             <div class="product-price-and-shipping">
-              {if $product.has_discount}
-              {* {var_export($product)} *}
-                {hook h='displayProductPriceBlock' product=$product type="old_price"}
-                <span class="regular-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction, 'EUR')} </span><span class="inclusive-price" data-product-id="{$product.id_product}"> {$product.price}</span><br>
-                <span class="exclusive-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')} </span>
-              {else}
-              {hook h='displayProductPriceBlock' product=$product type="before_price"}
-              <span class="regular-price" data-product-id="{$product.id_product}"></span><span class="inclusive-price" data-product-id="{$product.id_product}">{$product.regular_price}</span><br>
-              <span class="exclusive-price" data-product-id="{$product.id_product}">{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')}</span>
+     {if $product.has_discount}
+                              {hook h='displayProductPriceBlock' product=$product type="old_price"}
+                            <span class="regular-price" data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction, 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')}{/if} </span><span class="inclusive-price" data-product-id="{$product.id_product}"> {Context::getContext()->currentLocale->formatPrice($product.price, 'EUR')} </span><br>
+                          {else}
+                              {hook h='displayProductPriceBlock' product=$product type="before_price"}
+                            <span class="inclusive-price" data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{$product.regular_price}{else}{Context::getContext()->currentLocale->formatPrice(Product::getPriceStatic($product.id_product, false), 'EUR')}{/if}  </span><br>
+                              {hook h='displayProductPriceBlock' product=$product type='unit_price'}
+                              {hook h='displayProductPriceBlock' product=$product type='weight'}
 
               {hook h='displayProductPriceBlock' product=$product type='unit_price'}
 

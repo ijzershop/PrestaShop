@@ -58,6 +58,8 @@ class PriceModificationsController extends FrameworkBundleAdminController
         $adminCalculateLink = $this->generateUrl('modernesmid_pricemodifier_price_modification_ajax_calculate_price');
         $adminSelect2DataLink = $this->generateUrl('modernesmid_pricemodifier_price_modification_ajax_select2_products_data');
         $adminDataTableMissed = $this->generateUrl('modernesmid_pricemodifier_price_modification_ajax_fetch_datatable_products');
+        $adminNewRules = $this->generateUrl('modernesmid_pricemodifier_price_modification_generate_new_rules_for_products');
+
 
         return $this->render(
             '@Modules/pricemodifier/views/templates/admin/index.html.twig',
@@ -70,6 +72,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 'admin_link' => $adminLink,
                 'admin_calculate_link' => $adminCalculateLink,
                 'admin_select2_data_link' => $adminSelect2DataLink,
+                'admin_new_rules' => $adminNewRules,
                 'admin_datatable_missed' => $adminDataTableMissed
             ]
         );
@@ -207,7 +210,6 @@ class PriceModificationsController extends FrameworkBundleAdminController
     public function bulkUpdateProductsAction(Request $request)
     {
         $data = \json_decode($request->get('bulk_selected_rows_data'), true);
-
         $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');
 
         try {
@@ -220,7 +222,10 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 $formula = $item['formula'];
                 $incr_formula = $item['increment_formula'];
                 $active = $item['active'] ?? 0;
-
+                $basisPrijs = $item['basis_prijs'] ?? 0;
+                $gewicht = $item['gewicht'] ?? 0;
+                $gewichtPerMeter = $item['gewicht_per_kilo'] ?? 0;
+                $handelsLengte = $item['handels_lengte'] ?? 0;
 
                 $priceMod = $repository->findOneById($item['id']);
 
@@ -232,6 +237,23 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 if ((int)$store_product > 0) {
                     $priceMod->setIdStoreProduct((int)$store_product);
                 }
+
+                $supData = $priceMod->getSupplierData();
+                if(is_object($supData['prices'])){
+                    $supData['prices']->{'basis_prijs'} = $basisPrijs;
+                    $supData['attributes']->{'gewicht'} = $gewicht;
+                    $supData['attributes']->{'kilo_per_meter'} = $gewichtPerMeter;
+                    $supData['attributes']->{'handelslengte'} = $handelsLengte;
+                } else {
+
+                    $supData['prices']['basis_prijs'] = $basisPrijs;
+                    $supData['attributes']['gewicht'] = $gewicht;
+                    $supData['attributes']['kilo_per_meter'] = $gewichtPerMeter;
+                    $supData['attributes']['handelslengte'] = $handelsLengte;
+                }
+
+                $priceMod->setSupplierData(json_encode($supData));
+
 
                 if ($supplier_price != "" && $store_product > 0) {
                     $storePrice = Product::getPriceStatic((int)$store_product, false, null, 6);
@@ -252,6 +274,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 $em->persist($priceMod);
                 $em->flush();
             }
+
 
         } catch (Exception $e) {
             $this->addFlash(
@@ -381,22 +404,20 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 $store_product = $item['store_product'];
                 $active = $item['active'] ?? 0;
                 $newPrice = round((float)str_replace(',','.', $item['new_price'] ?? 0), 6);
+                $priceMod = $repository->findOneById($item['id']);
 
-                if ($active != '1' || $store_product < 1) {
+                if($newPrice <= 0 ){
                     continue;
                 }
 
-                $priceMod = $repository->findOneById($item['id']);
 
                 $id_lang = Context::getContext()->language->id;
                 $priceMod->setOldStorePrice((string)$newPrice);
 
-                $product = new Product((int)$store_product);
-
-
-                $productName = $product->name[$id_lang];
-
-
+                if((int)$store_product > 0){
+                    $product = new Product((int)$store_product);
+                    $productName = $product->name[$id_lang];
+                }
 
                 $product->price = $newPrice;
                 $product->update();
@@ -435,17 +456,13 @@ class PriceModificationsController extends FrameworkBundleAdminController
     {
         $id_lang = Context::getContext()->language->id;
         $store_product = $request->get('store_product');
-        $active = $request->get('active');
         $newPrice = round((float)str_replace(',','.', $request->get('new_price') ?? 0), 6);
-        $supplier_id = $price_modificationId;
 
         $supplier_id = $price_modificationId;
         $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');
 
         $priceMod = $repository->findOneById($supplier_id);
-
         $priceMod->setOldStorePrice((string)$newPrice);
-
 
         $product = new Product((int)$store_product);
         $productName = $product->name[$id_lang];
@@ -486,6 +503,12 @@ class PriceModificationsController extends FrameworkBundleAdminController
 
     public function updateProductAction($price_modificationId, Request $request)
     {
+        $basisPrijs = $request->get('basis_prijs');
+        $gewicht = $request->get('gewicht');
+        $gewichtPerMeter = $request->get('gewicht_per_kilo');
+        $handelsLengte = $request->get('handels_lengte');
+
+
         $store_product = $request->get('store_product');
         $supplier_price = $request->get('supplier_price');
         $formula = $request->get('formula');
@@ -504,6 +527,23 @@ class PriceModificationsController extends FrameworkBundleAdminController
         if ((int)$store_product > 0) {
             $priceMod->setIdStoreProduct((int)$store_product);
         }
+        $supData = $priceMod->getSupplierData();
+        if(is_object($supData['prices'])){
+            $supData['prices']->{'basis_prijs'} = $basisPrijs;
+            $supData['attributes']->{'gewicht'} = $gewicht;
+            $supData['attributes']->{'kilo_per_meter'} = $gewichtPerMeter;
+            $supData['attributes']->{'handelslengte'} = $handelsLengte;
+        } else {
+
+            $supData['prices']['basis_prijs'] = $basisPrijs;
+            $supData['attributes']['gewicht'] = $gewicht;
+            $supData['attributes']['kilo_per_meter'] = $gewichtPerMeter;
+            $supData['attributes']['handelslengte'] = $handelsLengte;
+        }
+
+
+        $priceMod->setSupplierData(json_encode($supData));
+
 
         if ($supplier_price != "" && $store_product > 0) {
             $storePrice = Product::getPriceStatic((int)$store_product, false, null, 6);

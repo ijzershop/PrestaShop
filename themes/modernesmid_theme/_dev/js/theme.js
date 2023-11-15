@@ -95,6 +95,7 @@ import '../fontawesome/modified_files/sharp-regular';
 import '../fontawesome/modified_files/sharp-light';
 import '../fontawesome/modified_files/duotone';
 import '../fontawesome/modified_files/brands';
+import alert from "bootstrap/js/src/alert";
 
 /**
  *
@@ -2040,12 +2041,16 @@ $('.nav-contact').on('mouseleave',function() {
 
 
 
+
 $(function() {
+
   $.widget("custom.icon_select_menu", $.ui.selectmenu, {
     _renderItem: function (ul, item) {
 
+      console.log(item.element[0].dataset);
+
       let li = $("<li>");
-      let wrapper = $("<div>");
+      let wrapper = $("<li href='"+item.element.attr('data-url')+"'>");
       wrapper.html('<span class="product-name w-100">'+item.label+'<span class="float-right text-black price">'+item.element[0].dataset.price+'</span></span>');
 
       if (item.disabled) {
@@ -2058,19 +2063,57 @@ $(function() {
       })
         .appendTo(wrapper);
 
+
       return li.append(wrapper).appendTo(ul);
+    },
+    _select: function( item, event ) {
+      window.location.href = item.element.attr('data-url');
+
+      this.close( event );
     }
   });
+
 
   $("#related_products_select")
     .icon_select_menu()
     .icon_select_menu("menuWidget")
     .addClass("ui-menu-icons");
 
-
   $('.category-sub-menu').on('hidden.bs.collapse', function () {
     $(this).find('.submenu-chevron').html('<i class="fasl fa-chevron-down"></i>');
   }).on('show.bs.collapse', function () {
     $(this).find('.submenu-chevron').html('<i class="fasl fa-chevron-up"></i>');
-  })
+  });
+
+  $('#vat_toggler').on('change', function (e) {
+    var inclVat = $('#vat_toggler').prop('checked');
+    $('.btw-slider span.slider').addClass('active');
+    $('#wrapper').addClass('wait-vat-toggle');
+    if(inclVat){
+      let alertText = 'Price with vat is set';
+    } else {
+      let alertText = 'Price without vat is set';
+    }
+    const url = '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1';
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: {
+        _token: prestashop.static_token,
+        action: 'set_vat_visibility',
+        incl_vat: inclVat,
+      },
+    }).done(function (e) {
+          location.reload();
+    });
+  });
+
+
 });
+
+
+function redirectToCrosselProduct(){
+  console.log(this);
+  return true;
+}

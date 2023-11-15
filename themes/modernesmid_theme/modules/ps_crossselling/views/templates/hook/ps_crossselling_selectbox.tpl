@@ -30,10 +30,11 @@
     <select class="form-control-select" name="related_products_select" id="related_products_select">
         {foreach from=$products item=productItem key=productItemIndex}
             {assign var="imageId" value=explode('-',$productItem['id_image'])}
+{*          {dd($productItem)}*}
             <option data-class="avatar"
                     data-style="background-image: url('{$link->getImageLink($productItem['link_rewrite'][Context::getContext()->language->id], $imageId[1], 'medium_default')}')"
                     data-url="{Context::getContext()->link->getProductLink($productItem['id_product'])}"
-                    data-price="{Context::getContext()->currentLocale->formatPrice($productItem['price'], 'EUR')}">
+                    data-price="{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{Context::getContext()->currentLocale->formatPrice($productItem['price'], 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice($productItem['price_tax_exc'], 'EUR')}{/if}">
               <span class="product-title font-weight-bold text-dark">{$productItem.name}</span>
             </option>
         {/foreach}

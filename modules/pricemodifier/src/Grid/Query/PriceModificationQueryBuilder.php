@@ -77,6 +77,7 @@ class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
             q.old_store_price,
             q.old_price_update,
             q.updated_at,
+            q.xml_upload_date,
             json_unquote(q.supplier_data) as supplier_data,
             q.active')
             ->leftJoin('q', $this->dbPrefix.'product', 'p','p.id_product = q.id_store_product')

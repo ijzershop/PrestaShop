@@ -230,20 +230,24 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $has_discount = false;
         foreach ($order_details as $id => &$order_detail) {
 
-            if (!is_null($order_detail['id_oi_offer'])) {
-                $descProduct = new Product($order_detail['product_id']);
-                if ($descProduct) {
-                    $order_detail['product_desc_short'] = reset($descProduct->description_short);
-                }
-            }
+            if(Product::existsInDatabase($order_detail['product_id'])){
+                if (!is_null($order_detail['id_oi_offer'])) {
+                    $descProduct = new Product($order_detail['product_id']);
 
-            if ($order_detail['product_reference'] == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')) {
-                $descProduct = new Product($order_detail['product_id']);
-                if ($descProduct) {
-                    $order_detail['product_desc_short'] = reset($descProduct->description);
+                    if ($descProduct) {
+                        $order_detail['product_desc_short'] = reset($descProduct->description_short);
+                    }
                 }
-            }
 
+                if ($order_detail['product_reference'] == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')) {
+                    $descProduct = new Product($order_detail['product_id']);
+                    if ($descProduct) {
+                        $order_detail['product_desc_short'] = reset($descProduct->description);
+                    }
+                }
+            } else {
+                $order_detail['product_desc_short'] = '';
+            }
             // Find out if column 'price before discount' is required
             if ($order_detail['reduction_amount_tax_excl'] > 0) {
                 $has_discount = true;

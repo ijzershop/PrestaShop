@@ -20,6 +20,9 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/mollie_backup/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/mollie_bc/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/mollie/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/ps_distributionapiclient/tests/Unit" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/ps_facetedsearch/tests/php" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/Unit" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/doctrine/collections" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/symfony/filesystem" />
@@ -303,6 +306,7 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/symfony/polyfill-ctype" />
       <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/symfony/polyfill-mbstring" />
       <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/vlucas/phpdotenv" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pcloud/pcloud-php-sdk" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

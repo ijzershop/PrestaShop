@@ -27,6 +27,20 @@
     {block name='product_quantity'}
       <div class="product-quantity clearfix">
         <div class="qty col-6 float-left p-0 pr-sm-1 pl-sm-2">
+            {if !$product.add_to_cart_url || !$product.available_for_order}
+
+            <span class="help-text text-warning col-12 p-0">
+                      <span class="d-inline-block w-100" data-toggle="popover" data-title="Geen vooraad" data-content="Disabled popover">
+                        <button class="badge badge-danger w-100" style="pointer-events: none;font-size: 0.9rem;font-weight: inherit;" type="button" disabled>
+                         <i class="fasl fa-ban" Geen<br/>Vooraad
+                        </button>
+                      </span>
+                    </span>
+
+                  {*            <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>*}
+
+
+            {else}
           <input
             data-product-id="{$product.id_product}"
             type="number"
@@ -39,6 +53,7 @@
             aria-label="{l s='Quantity' d='Shop.Theme.Actions'}"
             style="{if !$product.add_to_cart_url}pointer-events:none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') &&  (int)$product.quantity <= 0 && (int)$product.out_of_stock == 0}pointer-events:none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') && (int)$product.quantity != 0 && (int)$product.quantity < 100 && (int)$product.quantity < 0 && (int)$product.out_of_stock == 0}pointer-events:none;{/if}"
           >
+            {/if}
         </div>
 
         <div class="add col-6 float-right p-0 pl-sm-1 pr-sm-0 pr-lg-2">
@@ -51,11 +66,7 @@
         </div>
         {hook h='displayProductActions' product=$product}
       </div>
-        {if !$product.add_to_cart_url || !$product.available_for_order}
-          <div class="col-12">
-            <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>
-          </div>
-        {/if}
+
     {/block}
   {/if}
 </div>

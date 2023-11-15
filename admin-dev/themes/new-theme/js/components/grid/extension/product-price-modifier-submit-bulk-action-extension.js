@@ -121,6 +121,12 @@ export default class ProductPriceModifierSubmitBulkActionExtension {
       rowArray.increment_formula = $('[name="increment_formula_' + rowId + '"]').val();
       rowArray.new_price = $('[name="new_price_' + rowId + '"]').val();
       rowArray.active = $('[name="input-modernesmid_pricemodifier_price_modification_toggle_status-' + rowId + '"]:checked').val();
+
+      //custom product waarden
+      rowArray.basis_prijs = $('.basis-prijs-input[data-id="'+rowId+'"]').val();
+      rowArray.gewicht = $('.gewicht-input[data-id="'+rowId+'"]').val();
+      rowArray.gewicht_per_kilo = $('.kilo-per-meter-input[data-id="'+rowId+'"]').val();
+      rowArray.handels_lengte = $('.handelslengte-input[data-id="'+rowId+'"]').val();
       bulkInputArray[index] = rowArray;
     });
 

@@ -80,12 +80,20 @@
                             {assign var="transmissionCarrier" value=Carrier::getCarrierByReference(2,Context::getContext()->cookie->id_lang)}
                             {* By changing zone the banner item gets updated belgium is 9, Germany 10 *}
                                 {assign var="customerCountry" value=Context::getContext()->country->name}
-                                {assign var="defaultShippingPrice" value=$transmissionCarrier->getMaxDeliveryPriceByPrice(Context::getContext()->country->id_zone)*1.21}
+
+                                    {if Context::getContext()->cookie->price_vat_settings_incl === "true"}
+                                        {assign var="defaultShippingPrice" value=$transmissionCarrier->getMaxDeliveryPriceByPrice(Context::getContext()->country->id_zone)*1.21}
+                                        {assign var="shippingPrice" value=number_format(Tools::convertPrice($defaultShippingPrice),0,',','.')}
+                                    {else}
+                                        {assign var="defaultShippingPrice" value=$transmissionCarrier->getMaxDeliveryPriceByPrice(Context::getContext()->country->id_zone)}
+                                        {assign var="shippingPrice" value=number_format(Tools::convertPrice($defaultShippingPrice),2,',','.')}
+                                    {/if}
+
                                     {if is_array($customerCountry)}
                                         {assign var="customerCountry" value=$customerCountry[1]}
                                     {/if}
-                            <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="zekerheden-banner-img" title="{sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $customerCountry, number_format(Tools::convertPrice($defaultShippingPrice),0,',','.'))}">
-                                <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $customerCountry, number_format(Tools::convertPrice($defaultShippingPrice),0,',','.'))}" class="hover_effect_target img-fluid">
+                            <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="zekerheden-banner-img" title="{sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $customerCountry, $shippingPrice)}">
+                                <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $customerCountry, $shippingPrice)}" class="hover_effect_target img-fluid">
                             </a>
                         </div>
                         <div class="col-8 pl-0 pr-0 certainty-text">
@@ -94,7 +102,7 @@
                                     <span>
                                         <a class="text-decoration-none" href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}">
                                             <span class="zekerheden-banner-text text-dark">
-                                        {sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $customerCountry, number_format(Tools::convertPrice($defaultShippingPrice),0,',','.'))}</span>
+                                            {sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $customerCountry, $shippingPrice)}</span>
                                         </a>
                                     </span>
                                 </span>

@@ -7,8 +7,11 @@
 {assign var='existing_address' value=[]}
 {if !isset($guest_information)}
   {assign var='existing_address' value=null}
-  {if $customer.addresses && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != $customer['id']}
-    {assign var='existing_address' value=reset($customer.addresses)}
+
+{*        {assign var='existing_address' value=reset($customer.addresses)}*}
+{*    {var_export($customer.addresses)}*}
+      {if $customer.addresses != $customer['id']}
+        {assign var='existing_address' value=reset($customer.addresses)}
   {/if}
 {/if}
 <div class="supercheckout-checkout-content"></div>
@@ -27,6 +30,9 @@
                         data-lastname="{$caddress['lastname']}"
                         data-phone="{$caddress['phone']}"
                         data-postcode="{$caddress['postcode']}"
+                        data-city="{$caddress['city']}"
+                        data-address="{$caddress['address1']}"
+                        data-country="{$caddress['id_country']}"
                         data-house_number="{$caddress['house_number']}"
                         data-houser_number_extension="{$caddress['house_number_extension']}" value="{$caddress['id']}" {if (int)$existing_address['id'] == (int)$caddress['id']}selected="selected"{/if}>
                   {$caddress['company']} {$caddress['firstname']} {$caddress['lastname']} -  {$caddress['address1']} {$caddress['postcode']} {$caddress['house_number']} {$caddress['house_number_extension']}

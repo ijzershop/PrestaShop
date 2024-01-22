@@ -167,7 +167,7 @@
 
         <div class="cart-summary-next-shipment mt-2 mb-2 text-black col-12">
           <div class="card-body bg-light text-bold"><span id="next-shipping-time-icon" class="fasl fa-truck-fast fa-3x float-right"></span>
-            Elke werkdag versturen we bestellingen.<br/> Eerstvolgende verzending over ongeveer <br/><b id="next-shipping-time"><span id="next-shipping-time-hours">1</span> uur en <span id="next-shipping-time-minutes">30</span> min</b>
+            Elke werkdag versturen we bestellingen.<br/> Eerstvolgende verzending is over <br/><b id="next-shipping-time"><span id="next-shipping-time-days"></span><span id="next-shipping-time-hours"></span><span id="next-shipping-time-minutes"></span></b>
           </div>
         </div>
 
@@ -369,13 +369,111 @@
 </section>
 {/block}
 {block name='page_footer_container'}
+
+  <script type="text/javascript">
+    let carrierPickupTime = "{{Configuration::get('MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME', Context::getContext()->language->id)}}";
+    let carrierPickupTimeSkippedDates = "{{Configuration::get('MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES', Context::getContext()->language->id)}}";
+
+    function setTimeUntilShipping(){
+      // Get current date and time
+      const now = new Date();
+
+      let fixedString = carrierPickupTimeSkippedDates.replace("/(\s+|\+|\")/", "");
+      const freedayArray = fixedString.split(', ');
+
+      let targetDate = new Date();
+      let timeArray = carrierPickupTime.split(':')
+      if(timeArray.length === 3){
+
+        targetDate.setHours(timeArray[0]);
+        targetDate.setMinutes(timeArray[1]);
+        targetDate.setSeconds(timeArray[2]);
+      } else {
+        targetDate.setHours(16);
+        targetDate.setMinutes(0);
+        targetDate.setSeconds(0);
+      }
+
+
+      // Skip Saturdays and Sundays
+      while(targetDate.getDay() === 0 ||
+       targetDate.getDay() === 6 || 
+       freedayArray.indexOf((targetDate.getMonth()+1)+'/'+targetDate.getDate()+'/'+targetDate.getFullYear()) > -1 ||
+      (targetDate.getTime() - now.getTime()) < 0)
+      {
+        targetDate.setDate(targetDate.getDate() + 1);
+      }
+
+      // get total seconds between the times
+      let difference = targetDate.getTime() - now.getTime();
+
+  
+      let diff = Math.abs(difference) / 1000;
+      // calculate (and subtract) whole days
+      let days = Math.floor(diff / 86400);
+      // calculate (and subtract) whole hours
+      let hours = Math.floor(diff / 3600) % 24;
+      // calculate (and subtract) whole minutes
+      let minutes = Math.floor(diff / 60) % 60;
+
+      let daysText = '';
+      let hoursText = '';
+      let minutesText = '';
+
+      if(days === 0){
+        daysText = '';
+      } else {
+        if(days === 1){
+          daysText = days + ' Dag ';
+        } else {
+          daysText = days + ' Dagen ';
+          if(minutes === 0){
+            daysText += ' en '
+          }
+        }
+      }
+
+      if(hours === 0){
+        hoursText = '';
+      } else {
+        if(hours === 1){
+          hoursText = hours + ' uur ';
+        } else {
+          hoursText = hours + ' uren ';
+        }
+        if(minutes > 0){
+          hoursText += 'en ';
+        }
+      }
+
+      if(minutes === 0){
+        minutesText = '';
+      } else {
+        if(minutes === 1){
+          minutesText = minutes + ' minuut ';
+        } else {
+          minutesText = minutes + ' minuten ';
+        }
+      }
+
+      document.getElementById('next-shipping-time-days').textContent = daysText;
+      document.getElementById('next-shipping-time-hours').textContent = hoursText;
+      document.getElementById('next-shipping-time-minutes').textContent = minutesText;
+    }
+
+
+    setTimeUntilShipping();
+    setInterval(setTimeUntilShipping, 60*1000);
+  </script>
+
+
 <footer class="page-footer">
   {block name='page_footer'}
 {*  Product data JSON+ld  *}
-<script type="application/ld+json">{$product->jsonld_product_seo nofilter}</script>
+  <script type="application/ld+json">{$product->jsonld_product_seo nofilter}</script>
 {*  Product questions JSON+ld  *}
 {if !empty($product->jsonld)}
-<script type="application/ld+json">{$product->jsonld nofilter}</script>
+  <script type="application/ld+json">{$product->jsonld nofilter}</script>
 {/if}
   {/block}
 </footer>

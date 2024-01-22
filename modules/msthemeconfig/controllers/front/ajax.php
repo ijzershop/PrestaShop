@@ -111,6 +111,12 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             return $this->_searchCustomer();
         }
 
+
+        if ($_POST['action'] == 'add_data_to_google_check_csv') {
+            return $this->_addGoogleDataToCsvForTesting();
+        }
+
+
         if (Tools::getValue('method') == 'delivery_message') {
             return $this->_getDeliverySlipMessage($_GET['id']);
         }
@@ -160,7 +166,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         if (Tools::getValue('method') == 'dag-afsluiting') {
             return $this->_runKoopmanDayClosing();
         }
-
 
         if (Tools::getValue('action') == 'fetch_products_for_retour') {
             $idOrder = $_POST['id_order'];
@@ -261,6 +266,105 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         }
     }
 
+
+    public function _addGoogleDataToCsvForTesting(){
+        $data = Tools::getValue('data');
+
+
+        if($data != null){
+            $event = $data['event'];
+            $idEvent = $data['eventId'];
+            $eventData = $data['data'];
+            $idCustomer = Context::getContext()->customer->id;
+            
+            $date = new DateTime();
+            $ip_customer = Tools::getRemoteAddr();
+
+            $headerArray = ['Datum', 'Event Naam', 'Event Id', 'Klant Id', 'Klant IP', 'Doorgestuurde Data'];
+            $dataArray = ['date'=>$date->format('D, d M Y H:i:s'),'event' => $event, 'id' => $idEvent, 'customer' => $idCustomer, 'ip_customer' => $ip_customer, 'data' => json_encode($eventData)];
+            $data2Array = ['date'=>$date->format('D, d M Y H:i:s'),'event' => $event, 'id' => $idEvent, 'customer' => $idCustomer, 'ip_customer' => $ip_customer, 'data' => json_encode($eventData)];
+
+
+            $dir = _PS_ROOT_DIR_.'/google_dumps/';
+            $filesPurchase = array();
+            $filesBulk = array();
+
+            $ignored = array('.', '..', 'index.php', '.htaccess');
+            
+            foreach (scandir($dir) as $file) {
+                if (in_array($file, $ignored)) continue;
+                if(str_contains($file, 'Purchases')){
+                    $filesPurchase[$file] = filemtime($dir . '/' . $file);
+                } else {
+                    $filesBulk[$file] = filemtime($dir . '/' . $file);
+                }
+            }
+            asort($filesBulk);
+            $filesBulk = array_keys($filesBulk);
+            $lengthBulk = count($filesBulk);
+
+            for ($i = $lengthBulk; $i > 15; $i--) {
+                unlink($dir.$filesBulk[$i]);
+            }
+
+            if(filesize($dir.end($filesBulk)) >= 524288){
+                $callback = function($matches) {
+                    return $matches[1] . ($matches[2] + 1);
+                };
+                $csvBulkName = preg_replace_callback('/(\D*)(\d+)/', $callback, end($filesBulk));
+                
+                $file = new SplFileObject($dir.$csvBulkName, 'a');
+                $file->fputcsv($headerArray);
+                $file->fputcsv($dataArray);
+                $file = null;
+            } else {
+                $csvBulkName = end($filesBulk);
+                $file = new SplFileObject($dir.$csvBulkName, 'a');
+                $file->fputcsv($dataArray);
+                $file = null;
+            }
+
+
+            asort($filesPurchase);
+            $filesPurchase = array_keys($filesPurchase);
+            $lengthPurch = count($filesPurchase);
+
+
+            for ($i = $lengthPurch; $i > 15; $i--) {
+                unlink($dir.$filesPurchase[$i]);
+            }
+
+
+
+
+            if($event === 'purchase' || $event === 'refund'){
+                if(filesize($dir.end($filesPurchase)) >= 524288){
+                    $callbackPurchase = function($matches) {
+                        return $matches[1] . ($matches[2] + 1);
+                    };
+
+                    $filesPurchaseName = preg_replace_callback('/(\D*)(\d+)/', $callbackPurchase, end($filesPurchase));
+                    
+                    $purchaseFile = new SplFileObject($dir . $filesPurchaseName, 'a');
+                    $purchaseFile->fputcsv($headerArray);
+                    $purchaseFile->fputcsv($data2Array);
+                    $purchaseFile = null;
+                } else {
+                    $filesPurchaseName = end($filesPurchase);
+                    $purchaseFile = new SplFileObject($dir . $filesPurchaseName, 'a');
+                    $purchaseFile->fputcsv($data2Array);
+                    $purchaseFile = null;
+                }
+
+
+            }
+        }
+
+        die();
+    }
+
+
+
     public function _checkForExistingEmailAddress($email)
     {
         $customerId = (int)Customer::customerExists($email, true);
@@ -302,7 +406,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
         if ($paid == 'true') {
             //is paid add product to cart
-            $product = new ProductCore();
+            $product = new Product();
             $product->ean13 = '';
             $product->name = [(int)Configuration::get('PS_LANG_DEFAULT') => $label];
             $product->link_rewrite = [(int)Configuration::get('PS_LANG_DEFAULT') => uniqid()];
@@ -322,7 +426,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $product->out_of_stock = '1';
             $product->location = 'CP';
             $product->product_type = 'standard';
-            $productAdded = $product->save(true);
+            $productAdded = $product->save(false, true);
             StockAvailable::setQuantity($product->id, (int)null, $qty + 10, Context::getContext()->shop->id);
 
 
@@ -1659,5 +1763,11 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             return die(json_encode(['msg' => $exception->getMessage(), 'success' => false]));
         }
     }
+
+
+
+
+
+
 
 }

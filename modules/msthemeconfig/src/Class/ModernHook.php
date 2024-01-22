@@ -132,14 +132,21 @@ class ModernHook
     {
         if($this->controller->controller_name == 'AdminModules' && Tools::getValue('configure') == 'msthemeconfig')
         {
-            $this->controller->addCSS(_MODULE_DIR_.'/'.$this->module->name.'/node_modules/select2/dist/css/select2.min.css');
-            $this->controller->addCss(_MODULE_DIR_.'/'.$this->module->name.'/views/css/msthemeconfig.css', 'all');
+
+            $this->context->controller->addCSS(_MODULE_DIR_.'/'.$this->module->name.'/node_modules/jquery-ui/themes/base/theme.css');
+            $this->context->controller->addCSS(_MODULE_DIR_.'/'.$this->module->name.'/node_modules/jquery-ui/themes/base/datepicker.css');
+            $this->context->controller->addCSS(_MODULE_DIR_.'/'.$this->module->name.'/node_modules/jquery-ui-multidatespicker/jquery-ui.multidatespicker.css');
+            $this->context->controller->addCSS(_MODULE_DIR_.'/'.$this->module->name.'/node_modules/select2/dist/css/select2.min.css');
+            $this->context->controller->addCss(_MODULE_DIR_.'/'.$this->module->name.'/views/css/msthemeconfig.css', 'all');
 
             $this->context->controller->addJqueryUI('ui.sortable');
+            $this->context->controller->addJqueryUI('ui.datepicker');
 
-            $this->controller->addJS('/admin-dev/themes/new-theme/public/main.bundle.js');
-            $this->controller->addJS('/admin-dev/themes/new-theme/public/msthemeconfig_offergrid.bundle.js');
-            $this->controller->addJS(_MODULE_DIR_.'/'.$this->module->name.'/node_modules/select2/dist/js/select2.min.js');
+            $this->context->controller->addJS('/admin-dev/themes/new-theme/public/main.bundle.js');
+            $this->context->controller->addJS('/admin-dev/themes/new-theme/public/msthemeconfig_offergrid.bundle.js');
+//            $this->context->controller->addJs(_MODULE_DIR_.'/'.$this->module->name.'/views/js/datepicker-nl.js');
+            $this->context->controller->addJS(_MODULE_DIR_.'/'.$this->module->name.'/node_modules/jquery-ui-multidatespicker/jquery-ui.multidatespicker.js');
+            $this->context->controller->addJS(_MODULE_DIR_.'/'.$this->module->name.'/node_modules/select2/dist/js/select2.full.js');
             $this->context->controller->addJs(_MODULE_DIR_.'/'.$this->module->name.'/views/js/msthemeconfig.js');
         }
 
@@ -1245,7 +1252,6 @@ class ModernHook
         $filterManager = $this->module->get('prestashop.core.filter.front_end_object.search_result_product');
         $filterManager->whitelist(['quantity', 'minimal_quantity', 'out_of_stock', 'depends_on_stock']);
 
-        Context::getContext()->smarty->assign(['discount_add' => $this->getDiscountAdvertisement()]);
     }
 
     /**
@@ -1702,6 +1708,8 @@ class ModernHook
     public function hookDisplayHeader($params): void
     {
         $this->context->controller->addCSS('modules/'.$this->module->name.'/views/css/ijzershopkiyoh.css', 'all');
+
+                Context::getContext()->smarty->assign(['discount_add' => $this->getDiscountAdvertisement()]);
     }
 
 

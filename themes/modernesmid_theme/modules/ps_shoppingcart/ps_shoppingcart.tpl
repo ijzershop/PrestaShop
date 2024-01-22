@@ -23,6 +23,8 @@
   * International Registered Trademark & Property of PrestaShop SA
   *}
 
+
+{assign var=withTax value=Context::getContext()->cookie->price_vat_settings_incl === "true"}
 <div class="js-cart pl-0" style="padding-left: calc(100% - 345px) !important;"
      data-refresh-url="{$refresh_url}">{*{strip}*}
   <div id="top-header-shoppingcart-box">
@@ -33,15 +35,15 @@
           ({if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if})
         </td>
         <td class="text-right" id="header-cart-subtotal">
-            {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING), 'EUR' )}
+            {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING), 'EUR' )}
         </td>
       </tr>
       <tr>
         <td class="pt-1">Bezorging</td>
         <td class="pt-1 text-right" id="header-cart-shipping">
             {assign var="customerCountry" value=Context::getContext()->country->name}
-            {if Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING) > 0}
-                {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_SHIPPING), 'EUR')}
+            {if Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_SHIPPING) > 0}
+                {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_SHIPPING), 'EUR')}
             {else}
                 {Context::getContext()->currentLocale->formatPrice(0.00, 'EUR')}
             {/if}
@@ -51,7 +53,7 @@
           <tr>
             <td width="60%" class="text-nowrap" id="header-cart-total-products">Korting</td>
             <td class="text-right" id="header-cart-subtotal">
-              {Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR')}
+              {Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR')}
             </td>
           </tr>
         {/if}
@@ -71,10 +73,11 @@
                                                       style="left: -48px;top: -12px;font-size: 10px;min-width: 15px;height: 15px;line-height: 11px;display: inline-block;position: relative;">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span><span
                   class="align-text-bottom d-inline-block d-lg-none d-xl-inline-block">Bestel</span>
                 <span class="float-right text-right" id="header-cart-total">
-                      {if (float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0 && (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
-                          {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR' )}
+                      {if (float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0 && (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
+
+                          {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR' )}
                       {else}
-                          {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(true, Cart::BOTH), 'EUR' )}
+                          {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal($withTax, Cart::BOTH), 'EUR' )}
                       {/if}
                   </span>
               </a>

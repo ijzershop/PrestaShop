@@ -440,6 +440,7 @@ class MsThemeConfig extends Module
             'KOOPMANORDEREXPORT_SHIPPED_ACCEPTED_STATUSSES',
             'KOOPMANORDEREXPORT_RETOUR_ACCEPTED_STATUSSES',
             'KOOPMANORDEREXPORT_RETOUR_CREATED_STATUSSES',
+            'KOOPMANORDEREXPORT_SELECT_STATUS',
         ];
 
         $form_values = Tools::getAllValues();

@@ -20,6 +20,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function gtag() {
         dataLayer.push(arguments);
+        
+        console.log(arguments);
+
+        if(arguments[0] === 'event'){
+          let dataArray = {'eventId':arguments["gtm.uniqueEventId"], 'event': arguments[1], 'data': arguments[2]};
+
+          $.ajax({
+            url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1',
+            type: 'POST',
+            data: {
+              _token: prestashop.static_token,
+              action: 'add_data_to_google_check_csv',
+              data: dataArray,
+            },
+          }).done(function (e) {
+            console.log(e);
+          }).error(function(e){
+            console.log(e);
+
+          });
+        }
+
     }
 
     // Use case consent mode

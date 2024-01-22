@@ -45,9 +45,20 @@
     </div>
     <div class="menu_body d-block">
       <div class="side_panel d-none" id="menu-side-panel">
-        <div class="menu-title">
-          <span><i class="fasl fa-user-circle"></i>  Inloggen</span> <a class="text-white text-decoration-none d-none menu-chevron-close" href="#" id="navbar-menu-chevron"><i class="float-right mt-1 mb-1 mr-1 fasl fa-times"></i></a>
-          <a class="text-white text-decoration-none d-none menu-chevron-close" href="#" id="navbar-search-chevron"><i class="float-right mt-1 mb-1 mr-1 fasl fa-times"></i> Zoeken</a>
+        <div class="menu-title row">
+          <div class="col-6">
+            <div class="btw-slider float-left" style="margin-top: -5px;">
+              <label class="toggle">
+                <input type="checkbox" id="vat_toggler_menu" class="vat_toggler" {if Context::getContext()->cookie->price_vat_settings_incl === "true"}checked="checked"{/if}>
+                <span class="slider"></span>
+                <span class="labels" data-on="Incl" data-off="Excl"></span>
+              </label>
+            </div>
+          </div>
+          <div class="col-6 pr-0">
+            <a class="text-white text-decoration-none" href="{$urls.pages.authentication}"><i class="fasl fa-user-circle"></i>  Inloggen </span>  <a class="text-white text-decoration-none d-none menu-chevron-close pl-2" href="#" id="navbar-menu-chevron"><i class="float-right mt-1 mb-1 mr-3 fasl fa-times"></i></a>
+            <a class="text-white text-decoration-none d-none menu-chevron-close" href="#" id="navbar-search-chevron"><i class="float-right mt-1 mb-1 mr-1 fasl fa-times"></i> Zoeken</a>
+          </div>
         </div>
         <div class="row m-0">
           <div class="col-12 d-none p-0" id="side-panel-menu-block">
@@ -127,7 +138,7 @@
             <li class="nav-item p-0 text-center col"><a aria-label="Zoeken" class="nav-link text-white navbar-search-icon" href="#"><i class="fasl fa-2x fa-magnifying-glass"></i></a></li>
           {/if}
           {if Module::isEnabled('ps_shoppingcart')}
-            <li class="nav-item p-0 col-5 col-sm-3"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile-1" href="#"><i class="fasl fa-cart-shopping"></i><span class="shoppingcart-header-total-price float-right text-white">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
+            <li class="nav-item p-0 col-5 col-sm-3"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile-1" href="https://ijzershop.nl/winkelmandje?action=show"><i class="fasl fa-cart-shopping"></i><span class="shoppingcart-header-total-price float-right text-white">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
           {/if}
       </ul>
       <div class="row collapse navbar-collapse">
@@ -148,14 +159,14 @@
         {/if}
         <div class="btw-slider nav-link col">
           <label class="toggle">
-            <input type="checkbox" id="vat_toggler" {if Context::getContext()->cookie->price_vat_settings_incl === "true"}checked="checked"{/if}>
+            <input type="checkbox" id="vat_toggler" class="vat_toggler" {if Context::getContext()->cookie->price_vat_settings_incl === "true"}checked="checked"{/if}>
             <span class="slider"></span>
             <span class="labels" data-on="Incl" data-off="Excl"></span>
           </label>
         </div>
 
         <ul id="navbar-cart-item-mobile"  class="navbar-nav float-right d-none  col-2 pr-0">
-        <li class="nav-item p-0 col"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile-2" href="#"><i style="font-size: 1.7em;padding-right: 5px;" class="fasl fa-cart-shopping"></i><span class="shoppingcart-header-total-price float-right text-white" style="font-size: 1.3em;">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
+        <li class="nav-item p-0 col"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile-2" href="https://ijzershop.nl/winkelmandje?action=show"><i style="font-size: 1.7em;padding-right: 5px;" class="fasl fa-cart-shopping"></i><span class="shoppingcart-header-total-price float-right text-white" style="font-size: 1.3em;">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
         </ul>
       </div>
     </div>

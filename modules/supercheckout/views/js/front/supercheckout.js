@@ -3334,11 +3334,34 @@ $(document).ready(function () {
     }, 10)
   }
 
+
+
+  function showBelgiumNoVatMessageWhenNeeded(){
+    if(($('[name="payment_address[id_country]"]').val() !== '13' ||
+        $('[name="shipping_address[id_country]"]').val() !== '13' ) &&
+        parseInt($('#accepted_no_vat_be').val()) <= 0){
+        $('#accepted_no_vat_be_modal').modal('show');
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  $('#accepted_no_vat_be_button').click(function(){
+    $('#accepted_no_vat_be').val(1)
+    $('#accepted_no_vat_be_modal').modal('hide');
+    $('#supercheckout_confirm_order').trigger('click');
+  });
+
   $("#supercheckout_confirm_order").click(function (event) {
     event.preventDefault();
 
     let breakCheckout = false;
 
+
+    if(!showBelgiumNoVatMessageWhenNeeded()){
+      return false;
+    }
 
 
     $('#desired_reference').parent().find('.errorsmall').remove();
@@ -4882,7 +4905,10 @@ function AutofillCustomerShippingAddress(e) {
 }
 
 function AutofillCustomerPaymentAddress(e) {
-  var val = $('#on-credit-customer-payment-address-selection select').find(':selected').val();
+  let selectedElement = $('#on-credit-customer-payment-address-selection select').find(':selected');
+
+  let val = selectedElement.val();
+
   if (val == 'new') {
     $('input[name="payment_address[id_customer_address]"]').removeClass('error-form is-valid').val('');
     $('input[name="payment_address[payment_address_id]"]').removeClass('error-form is-valid').val('');
@@ -4897,15 +4923,18 @@ function AutofillCustomerPaymentAddress(e) {
     $('input[name="payment_address[house_number]"]').removeClass('error-form is-valid').val('');
     $('input[name="payment_address[house_number_extension]"]').removeClass('error-form is-valid').val('');
   } else {
-    $('input[name="payment_address[id_customer_address]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').val());
-    $('input[name="payment_address[payment_address_id]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').val());
-    $('input[name="payment_address[company]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-company')).trigger('keyup');
-    $('input[name="payment_address[firstname]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-firstname')).trigger('keyup');
-    $('input[name="payment_address[lastname]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-lastname')).trigger('keyup');
-    $('input[name="payment_address[phone]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-phone'));
-    $('input[name="payment_address[house_number_extension]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-house_number_extension'));
-    $('input[name="payment_address[postcode]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-postcode')).trigger('keyup');
-    $('input[name="payment_address[house_number]"]').removeClass('error-form is-valid').val($('#on-credit-customer-payment-address-selection select').find(':selected').attr('data-house_number')).trigger('keyup');
+    $('input[name="payment_address[id_customer_address]"]').removeClass('error-form is-valid').val(val);
+    $('input[name="payment_address[payment_address_id]"]').removeClass('error-form is-valid').val(val);
+    $('input[name="payment_address[company]"]').removeClass('error-form is-valid').val(selectedElement.attr('data-company')).trigger('keyup');
+    $('input[name="payment_address[firstname]"]').removeClass('error-form is-valid').val(selectedElement.attr('data-firstname')).trigger('keyup');
+    $('input[name="payment_address[lastname]"]').removeClass('error-form is-valid').val(selectedElement.attr('data-lastname')).trigger('keyup');
+    $('input[name="payment_address[phone]"]').removeClass('error-form is-valid').val(selectedElement.attr('data-phone'));
+    $('input[name="payment_address[address1]"]').removeClass('error-form is-valid').val(selectedElement.attr('data-address')).trigger('keyup');
+    $('input[name="payment_address[postcode]"]').removeClass('error-form is-valid').val(selectedElement.attr('data-postcode')).trigger('keyup');
+    $('input[name="payment_address[house_number]"]').removeClass('error-form is-valid').val(selectedElement.attr('data-house_number')).trigger('keyup');
+    $('input[name="payment_address[house_number_extension]"]').removeClass('error-form is-valid').val(selectedElement.attr('data-house_number_extension'));
+    $('input[name="payment_address[city]"]').removeClass('error-form is-valid').val(selectedElement.attr('data-city')).trigger('keyup');
+    $('select[name="payment_address[id_country]"]').removeClass('error-form is-valid').val(selectedElement.attr('data-country')).trigger('change');
   }
   if($('#cart-postcode-check-toggle').prop('checked') === true){
     checkFormatAddressApiCheckout();

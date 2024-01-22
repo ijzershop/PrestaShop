@@ -23,17 +23,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='cart_detailed_totals'}
-
+    {assign var=withTax value=Context::getContext()->cookie->price_vat_settings_incl === "true"}
 <div class="cart-detailed-totals">
   <div class="cart-summary-line cart-total row m-0">
 <div class="col-6 pl-0">
     <span class="font-weight-bolder pt-3 text-black" style="font-size: 1.25rem;">
               {if (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0}
-                  {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR')}
+                  {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR')}
               {else}
-                  {$cart.totals.total.value}
+                  {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal($withTax, Cart::BOTH), 'EUR')}
               {/if}
         </span>
+  <br>
+  <b class="text-black">({if !$withTax}exclusief BTW{else}inclusief BTW{/if})</b>
     </div>
       <div class="col-6 pr-0">
 
@@ -55,10 +57,6 @@
         </div>
       {/if}
       </div>
-    <br>
-    <div class="col-12 p-0 pt-3 text-black">
-      <b>Alles! Inclusief btw en Bezorging</b>
-    </div>
   </div>
 </div>
 {/block}

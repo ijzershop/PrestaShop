@@ -26,13 +26,13 @@
   {if !$configuration.is_catalog}
     {block name='product_quantity'}
       <div class="product-quantity clearfix">
-        <div class="qty col-6 float-left p-0 pr-sm-1 pl-sm-2">
+        <div class="qty col-12 col-sm-6 float-left p-0 pr-sm-1 pl-sm-2">
             {if !$product.add_to_cart_url || !$product.available_for_order}
 
             <span class="help-text text-warning col-12 p-0">
-                      <span class="d-inline-block w-100" data-toggle="popover" data-title="Geen vooraad" data-content="Disabled popover">
-                        <button class="badge badge-danger w-100" style="pointer-events: none;font-size: 0.9rem;font-weight: inherit;" type="button" disabled>
-                         <i class="fasl fa-ban" Geen<br/>Vooraad
+                      <span class="d-inline-block w-100  mb-3 mb-md-0" data-toggle="popover" data-title="Geen vooraad" data-content="Disabled popover">
+                        <button class="badge badge-danger w-100 text-wrap border-0" style="min-height: 2.67em;pointer-events: none;font-size: 0.9rem;font-weight: inherit;" type="button" disabled>
+                         <i class="fasl fa-ban"></i> Geen vooraad
                         </button>
                       </span>
                     </span>
@@ -47,7 +47,7 @@
             name="qty"
             id="quantity_wanted_{$product.id_product}"
             value="1"
-            class="form-control input-group {if !$product.available_for_order}disabled{/if}"
+            class="form-control mb-3 mb-md-0 input-group {if !$product.available_for_order}disabled{/if}"
             min="{$product.minimal_quantity}"
             {if  $product.available_for_order && ($product.low_stock_threshold >= $product.quantity && $product.out_of_stock == 0)}max="{$product.quantity}"{/if}
             aria-label="{l s='Quantity' d='Shop.Theme.Actions'}"
@@ -56,7 +56,7 @@
             {/if}
         </div>
 
-        <div class="add col-6 float-right p-0 pl-sm-1 pr-sm-0 pr-lg-2">
+        <div class="add col-12 col-sm-6 float-right p-0 pl-sm-1 pr-sm-0 pr-lg-2 mb-3 mb-sm-0">
           <a alt="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" href="{$link->getPageLink('cart')}?token={$static_token}"
             data-product-id="{$product.id_product}"
             data-product-customization="{json_encode($product.id_customization)}"

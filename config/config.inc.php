@@ -241,6 +241,20 @@ if (!isset($language)) {
 
 $context->language = $language;
 
+/**
+ * START add custom code
+ */
+if(!array_key_exists('price_vat_settings_incl',  $context->cookie->getAll())){
+    $context->cookie->__set('price_vat_settings_incl', json_encode(true));
+    // Persist cookie
+    $context->cookie->write();
+}
+/**
+ * END add custom code
+ */
+
+
+
 /* Get smarty */
 require_once __DIR__ . '/smarty.config.inc.php';
 /* @phpstan-ignore-next-line */

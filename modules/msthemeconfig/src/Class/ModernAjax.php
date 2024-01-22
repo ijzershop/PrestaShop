@@ -531,9 +531,10 @@ class ModernAjax
                 $dataArray['KOOPMANORDEREXPORT_SELECT_PACKAGELANE_3_PROFILE'] = $this->getSelect2SelectedOptions(Configuration::get('KOOPMANORDEREXPORT_SELECT_PACKAGELANE_3_PROFILE' , $this->idLang, $this->idShopGroup, $this->idShop,  "8"),'profiles');
                 $dataArray['KOOPMANORDEREXPORT_SELECT_WORKSHOP_STATUS'] = $this->getSelect2SelectedOptions(Configuration::get('KOOPMANORDEREXPORT_SELECT_WORKSHOP_STATUS' , $this->idLang, $this->idShopGroup, $this->idShop,  "30"),'order_states');
                 $dataArray['KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS'] = $this->getSelect2SelectedOptions(Configuration::get('KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS' , $this->idLang, $this->idShopGroup, $this->idShop,  "9"),'order_states');
+                $dataArray['MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES'] = Configuration::get('MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES' , $this->idLang, $this->idShopGroup, $this->idShop,  "'12/25/2023', '01/01/2023'");
+                $dataArray['MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME'] =  Configuration::get('MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME', $this->idLang, $this->idShopGroup, $this->idShop,  '16:00:00');
                 break;
             case 'sell':
-                $dataArray['MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME'] =  Configuration::get('MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME', $this->idLang, $this->idShopGroup, $this->idShop,  '16:00:00');
                 $dataArray['MSTHEMECONFIG_DISCOUNT_RULE_FIRST'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_FIRST', $this->idLang, $this->idShopGroup, $this->idShop,  0),'discounts');
                 $dataArray['MSTHEMECONFIG_DISCOUNT_RULE_SECOND'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_SECOND', $this->idLang, $this->idShopGroup, $this->idShop,  0),'discounts');
                 $dataArray['MSTHEMECONFIG_DISCOUNT_RULE_THIRD'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_THIRD', $this->idLang, $this->idShopGroup, $this->idShop,  0),'discounts');
@@ -595,16 +596,21 @@ class ModernAjax
      */
     private function getSelect2SelectedOptions($options, $data_type, $sort=true): string
     {
-        if(!empty($options)){
+        if(!empty($options) || $options == '0'){
             $selectedOptionList = [];
             $optionList = $this->getSelect2Data($data_type, $sort)->getContent();
+
             $selectedOptions = explode(',', $options);
             if ($optionList) {
                 $data = json_decode($optionList);
 
                 foreach ($selectedOptions as $selectedOption){
                     foreach ($data->results as $option) {
-                        if ((int)$option->id == (int)$selectedOption) {
+                        if(is_string($option->id)){
+                            if ($option->id === $selectedOption) {
+                                $selectedOptionList[] = '<option value="' . $option->id . '" selected>' . $option->text . '</option>';
+                            }
+                        } elseif ((int)$option->id === (int)$selectedOption) {
                             $selectedOptionList[] = '<option value="' . $option->id . '" selected>' . $option->text . '</option>';
                         }
                     }
@@ -613,6 +619,7 @@ class ModernAjax
         } else {
             $selectedOptionList = [];
         }
+
         return implode("", $selectedOptionList);
     }
     /**

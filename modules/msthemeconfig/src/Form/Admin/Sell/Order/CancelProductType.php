@@ -45,14 +45,12 @@ class CancelProductType extends TranslatorAwareType
         $taxMethod = $options['data']['taxMethod'];
         $precision = $options['data']['precision'];
 
-        $builder->setAction('fygewuygweufygweyufgweuyfgweuyfwef.php');
-
         foreach ($products as $product) {
             $builder
                 ->add('selected_' . $product->getOrderDetailId(), CheckboxType::class,
                     [
                         'required' => false,
-                        'label' => false,
+                        'label' => $this->trans('Selecteer alles t.b.v. credit factuur', 'Admin.Global', []),
                         'attr' => [
                             'material_design' => true,
                         ],
@@ -60,7 +58,7 @@ class CancelProductType extends TranslatorAwareType
                 )
                 ->add('quantity_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getQuantity(), 'class' => 'refund-quantity'],
-                    'label' => $this->trans('Quantity', 'Admin.Global', []),
+                    'label' => $this->trans('Quantity', 'Admin.Global', []).' t.b.v. credit factuur' ,
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
                     'data' => 0,
@@ -70,7 +68,7 @@ class CancelProductType extends TranslatorAwareType
                     'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
                     'label' => sprintf(
                         '%s (%s)',
-                        $this->trans('Amount', 'Admin.Global', []),
+                        $this->trans('Bedrag t.b.v. credit factuur incl. btw', 'Admin.Global', []),
                         $taxMethod
                     ),
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),

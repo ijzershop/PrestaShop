@@ -59,24 +59,19 @@
                         </div>
                     {/if}
                     {if Configuration::get('MSTHEMECONFIG_FOURTH_FOOTERBOTTOM_BOX_ACTIVE', true)}
-                        <div class="col">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="col-4 certainty-icon pr-0 text-right">
-                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
-                                                    <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid">
-                                                </a>
-                                            </div>
-                                            <div class="col-8 pl-0 certainty-text">
-                                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
-                                                    <span style="color: #777777;">{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
+                      <div class="col">
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="row">
+                              <div class="col-12 certainty-icon text-center">
+                                <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="footer-info-bottom-icon text-decoration-none" title="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
+                                  <img style="opacity:.8;" rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_FOOTERBOTTOM_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid">
+                                </a>
+                              </div>
                             </div>
+                          </div>
                         </div>
+                      </div>
                     {/if}
                     {if Configuration::get('MSTHEMECONFIG_FIFTH_FOOTERBOTTOM_BOX_ACTIVE', true)}
                         <div class="col">

@@ -147,7 +147,7 @@
       <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="vat" id="v-pills-vat-tab" data-toggle="pill" data-target="#v-pills-vat" type="button" role="tab" aria-controls="v-pills-vat" aria-selected="false">BTW Weergave</button>
       <button class="tab-btn btn btn-primary col-xs-12 nav-link btn-lg" data-panel="sell" id="v-pills-sell-tab" data-toggle="pill" data-target="#v-pills-sell" type="button" role="tab" aria-controls="v-pills-sell" aria-selected="false">Korting regels</button>
     </div>
-    <form method="POST" action="">
+    <form method="POST" action=""  enctype="multipart/form-data">
     <div class="tab-content col-xs-9" id="modernesmid-config-tab-content">
       {% if 'home' in employee_access %}
       <div class="tab-pane fade active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0"></div>
@@ -205,11 +205,14 @@
 {% endblock %}
 
 {% block javascripts %}
+
   <script type="application/javascript">
     let debugModerneSmidThemeConfigurator = false;
     window.msThemeConfigAjaxUrl = '{{ ajax_url }}';
     window.msThemeConfigSelect2Url = '{{ select2_url }}';
     window.msThemeConfigSymLinkMailTheme = '{{ symlink_mailtheme_url }}';
+
+
   </script>
 {% endblock %}
 

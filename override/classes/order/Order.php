@@ -297,4 +297,81 @@ public $shipping_number;
             )
         );
     }
+
+
+
+     /**
+     * Get order history.
+     *
+     * @param int $id_lang Language id
+     * @param int|bool $id_order_state Filter a specific order status
+     * @param int|bool $no_hidden Filter no hidden status
+     * @param int $filters Flag to use specific field filter
+     *
+     * @return array History entries ordered by date DESC
+     */
+    public function getHistory($id_lang, $id_order_state = false, $no_hidden = false, $filters = 0, $withoutPreparating=false)
+    {
+        if (!$id_order_state) {
+            $id_order_state = 0;
+        }
+
+        $logable = false;
+        $delivery = false;
+        $paid = false;
+        $shipped = false;
+        if ($filters > 0) {
+            if ($filters & OrderState::FLAG_NO_HIDDEN) {
+                $no_hidden = true;
+            }
+            if ($filters & OrderState::FLAG_DELIVERY) {
+                $delivery = true;
+            }
+            if ($filters & OrderState::FLAG_LOGABLE) {
+                $logable = true;
+            }
+            if ($filters & OrderState::FLAG_PAID) {
+                $paid = true;
+            }
+            if ($filters & OrderState::FLAG_SHIPPED) {
+                $shipped = true;
+            }
+        }
+
+        $inPreparationStates = '';
+        if($withoutPreparating){
+            $inPreparationStates = Configuration::get('KOOPMANORDEREXPORT_SELECT_STATUS', $id_lang, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '3,9');
+        }
+
+        if (!isset(self::$_historyCache[$this->id . '_' . $id_order_state . '_' . $filters]) || $no_hidden) {
+            $id_lang = $id_lang ? (int) $id_lang : 'o.`id_lang`';
+            $result = Db::getInstance()->executeS('
+            SELECT os.*, oh.*, e.`firstname` as employee_firstname, e.`lastname` as employee_lastname, osl.`name` as ostate_name
+            FROM `' . _DB_PREFIX_ . 'orders` o
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_history` oh ON o.`id_order` = oh.`id_order`
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON os.`id_order_state` = oh.`id_order_state`
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) ($id_lang) . ')
+            LEFT JOIN `' . _DB_PREFIX_ . 'employee` e ON e.`id_employee` = oh.`id_employee`
+            WHERE oh.id_order = ' . (int) $this->id . '
+            ' . ($no_hidden ? ' AND os.hidden = 0' : '') . '
+            ' . ($logable ? ' AND os.logable = 1' : '') . '
+            ' . ($delivery ? ' AND os.delivery = 1' : '') . '
+            ' . ($withoutPreparating ? 'AND os.id_order_state NOT IN ('.$inPreparationStates.') ' : '') . '
+            ' . ($paid ? ' AND os.paid = 1' : '') . '
+            ' . ($shipped ? ' AND os.shipped = 1' : '') . '
+            ' . ((int) $id_order_state ? ' AND oh.`id_order_state` = ' . (int) $id_order_state : '') . '
+            ORDER BY oh.date_add DESC, oh.id_order_history DESC');
+            if ($no_hidden) {
+                return $result;
+            }
+            self::$_historyCache[$this->id . '_' . $id_order_state . '_' . $filters] = $result;
+        }
+
+        return self::$_historyCache[$this->id . '_' . $id_order_state . '_' . $filters];
+    }
+
+    public function hasBeenDelivered()
+    {
+        return count($this->getHistory((int) $this->id_lang, false, false, OrderState::FLAG_DELIVERY, true));
+    }
 }

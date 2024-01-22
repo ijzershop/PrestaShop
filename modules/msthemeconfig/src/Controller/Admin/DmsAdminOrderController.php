@@ -76,7 +76,19 @@ class DmsAdminOrderController extends FrameworkBundleAdminController
         $orderPickEmployee = Context::getContext()->cookie->profile;
         $loggedInEmployee = Context::getContext()->cookie->id_employee;
         $isOrderPicker = false;
-        $extraStyling = '#order_grid_table .column-filters td:nth-of-type(6), #order_grid_table .column-filters td:first-child div.md-checkbox{display:none;}#order_grid_table td.column-id_order,#order_grid_table td.column-company, #order_grid_table tr.column-headers th:nth-of-type(2),#order_grid_table tr.column-headers th:nth-of-type(6), #order_grid_table tr.column-filters td:nth-of-type(2){display: none;}';
+        $extraStyling = '#order_grid_table .column-filters td:nth-of-type(2),'.
+         '#order_grid_table .column-filters td:first-child div.md-checkbox,'.
+         '#order_grid_table .column-filters td:nth-of-type(15),'.
+         '#order_grid_table .column-filters td:nth-of-type(5),'.
+         '#order_grid_table tr.column-filters td:nth-of-type(9){display:none;} '.
+         '#order_grid_table tr.column-headers th:nth-of-type(2),'.
+         '#order_grid_table tr.column-headers th:nth-of-type(5),'.
+         '#order_grid_table tr.column-headers th:nth-of-type(15),'.
+         '#order_grid_table tr.column-headers th:nth-of-type(9){display: none;}'.
+         '#order_grid_table td.column-id_order,'.
+         '#order_grid_table td.column-orders_bulk,'.
+         '#order_grid_table td.column-company,'.
+         '#order_grid_table td.column-added_to_order{display:none;}';
 
         $workshopProfiles = Configuration::get('MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES', null, null, 1, "5,6,7");
 

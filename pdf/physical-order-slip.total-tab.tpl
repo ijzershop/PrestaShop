@@ -73,10 +73,10 @@
 
   <tr class="bold">
     <td class="grey">
-        {l s='Total (Tax excl.)' d='Shop.Pdf' pdf='true'}
+        {l s='Totaal (excl. btw)' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white">
-        {if abs($footer.total_refunded_tax_excl) > 0}
+        {if abs($footer.total_refunded_tax_excl) > $footer.total_paid_tax_excl}
             {displayPrice currency=$order->id_currency price=0-$footer.total_refunded_tax_excl}
         {else}
             {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_excl}
@@ -85,10 +85,10 @@
   </tr>
   <tr class="bold">
     <td class="grey">
-        {l s='Total Tax' d='Shop.Pdf' pdf='true'}
+        {l s='BTW' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white">
-        {if abs($footer.total_refunded_tax_excl) > 0}
+        {if abs($footer.total_refunded_tax_excl) > $footer.total_paid_tax_excl}
             {displayPrice currency=$order->id_currency price=0-($footer.total_refunded_tax_incl-$footer.total_refunded_tax_excl)}
         {else}
             {displayPrice currency=$order->id_currency price=$footer.total_taxes}
@@ -97,10 +97,10 @@
   </tr>
   <tr class="bold big">
     <td class="grey">
-        {l s='Total' d='Shop.Pdf' pdf='true'}
+        {l s='Totaal' d='Shop.Pdf' pdf='true'}
     </td>
     <td class="white">
-        {if abs($footer.total_refunded_tax_excl) > 0}
+        {if abs($footer.total_refunded_tax_excl) > $footer.total_paid_tax_excl}
             {displayPrice currency=$order->id_currency price=0-$footer.total_refunded_tax_incl}
         {else}
             {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}

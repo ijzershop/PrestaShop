@@ -129,9 +129,11 @@ class statsforecast extends Module
 			'.$date_from_ginvoice.' as fix_date,
 			COUNT(*) as countOrders,
 			SUM((SELECT SUM(od.product_quantity) FROM '._DB_PREFIX_.'order_detail od WHERE o.id_order = od.id_order)) as countProducts,
-			SUM(o.total_paid_tax_excl / o.conversion_rate) as totalSales
+			SUM((o.total_paid_tax_excl-o.total_shipping_tax_excl) / o.conversion_rate) as totalSales
+			-- SUM((o.total_paid_tax_excl-o.total_shipping_tax_excl) / 4) as totalSales
 		FROM '._DB_PREFIX_.'orders o
 		WHERE o.valid = 1
+		AND o.module NOT IN (\'ps_pinpayment\',\'ps_cashpayment\',\'ps_creditpayment\')
 		AND o.invoice_date BETWEEN '.ModuleGraph::getDateBetween().'
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 		GROUP BY '.$date_from_ginvoice);

@@ -13,7 +13,7 @@
  *  @copyright 2012-2021 eMagicOne
  *
  */
-define('BRIDGE_VERSION', '7.81');
+define('BRIDGE_VERSION', '7.82');
 
 
 // PLEASE CHANGE IMMEDIATELY ! It is security threat to leave these values as is !
@@ -2131,7 +2131,7 @@ class cMySQLBackUp
                 // Get primary key column for table
                 $tablePrimaryKeyColumn = self::getTablePrimaryKeyColumn($table, $tabinfo[$table]);
 
-                $i = 0;
+                $i = 0; $i_size = 0;
                 $query = self::generateSelectSqlStatement($table, $from, $limit, $tablePrimaryKeyColumn);
                 $result = $this->rLink->query($query);
                 $total = $this->rLink->num_rows($result);
@@ -2171,16 +2171,20 @@ class cMySQLBackUp
                             }
                         }
 
+						$row_full = implode(', ', $row);
+						$i_size = $i_size + strlen($row_full);
+
                         $row_ex = ',';
                         if ($i === 1) {
                             $row_ex = '';
                         }
-                        if ($i % 500 === 0 && $i > 0) {
+                        if ( (($i % 500 === 0) || ($i_size >= 10000000)) && $i > 0) {
                             $this->fn_write($fp, ";\nINSERT INTO `{$table}` VALUES");
                             $row_ex = '';
+							$i_size = 0;
                         }
 
-                        $this->fn_write($fp, $row_ex . "\n(" . implode(', ', $row) . ')');
+                        $this->fn_write($fp, $row_ex . "\n(" . $row_full . ')');
                         if ($i % $limit2 === 0) {
                             $this->_wake_server();
                         }

@@ -49,27 +49,27 @@ class CancelProductType extends TranslatorAwareType
                 ->add('selected_' . $product->getOrderDetailId(), CheckboxType::class,
                     [
                         'required' => false,
-                        'label' => false,
+                        'label' => $this->trans('Ander bedrag t.b.v. credit factuur', 'Admin.Global', []),
                         'attr' => [
                             'material_design' => true,
+                            'class' => 'total_amount_refund_checkbox',
+                            'data-id' => $product->getOrderDetailId(),
                         ],
                     ]
                 )
                 ->add('quantity_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getQuantity(), 'class' => 'refund-quantity'],
-                    'label' => $this->trans('Quantity', 'Admin.Global', []),
+                    'label' => $this->trans('Quantity', 'Admin.Global', []).' t.b.v. credit factuur' ,
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
                     'data' => 0,
                     'scale' => 0,
-                    'unit' => '/ ' . $product->getQuantity(),
                 ])
                 ->add('amount_' . $product->getOrderDetailId(), TextType::class, [
-                    'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
+                    'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount disabled','readonly'=>'readonly', 'data-id' => $product->getOrderDetailId()],
                     'label' => sprintf(
-                        '%s (%s)',
-                        $this->trans('Amount', 'Admin.Global', []),
-                        $taxMethod
+                        '%s',
+                        $this->trans('Bedrag t.b.v. credit factuur incl. btw', 'Admin.Global', [])
                     ),
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,

@@ -22,6 +22,8 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
+{assign var=withTax value=Context::getContext()->cookie->price_vat_settings_incl === "true"}
+
 <div class="card-block cart-summary-totals">
   {block name='cart_summary_tax'}
       {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION) > 0}
@@ -29,7 +31,7 @@
               <span class="label sub">Korting</span><span class="value sub">{Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR')}</span>
             </div>
       {/if}
-    {if $cart.subtotals.tax}
+    {if $cart.subtotals.tax > 0 && $withTax}
       <div class="cart-summary-line summary-total-tax">
         <span class="label sub">Btw (21%)</span>
         <span class="value sub" {if (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) == 0}style="border-bottom:1px solid #c0c0c0c0;"{/if}>
@@ -50,12 +52,12 @@
       </div>
     {else}
       <div class="cart-summary-line cart-total">
-                <span class="label">{$cart.totals.total.label}&nbsp;{if $configuration.taxes_enabled}{$cart.labels.tax_short}{/if}</span>
+                <span class="label">{$cart.totals.total.label}&nbsp;{if $configuration.taxes_enabled && $withTax}{$cart.labels.tax_short}{/if}</span>
                 <span class="value h6 font-weight-bolder">
               {if (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0}
                 {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR')}
               {else}
-                  {$cart.totals.total.value}
+                  {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal($withTax, Cart::BOTH), 'EUR')}
               {/if}
         </span>
       </div>

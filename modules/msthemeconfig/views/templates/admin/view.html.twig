@@ -60,8 +60,8 @@
       </div>
     </div>
 
-    <div class="row d-none mb-4">
-      <div class="col-12" id="orderProductsModificationPosition"></div>
+    <div class="row mb-4">
+      <div class="col-12 d-none " id="orderProductsModificationPosition"></div>
     </div>
 
     <div class="row d-none d-print-block mb-4">
@@ -127,6 +127,15 @@
 
 
     $(document).ready(function(){
+      $('.total_amount_refund_checkbox').on('click', function(){
+        let orderDetailId = $(this).attr('data-id');
+          console.log(orderDetailId);
+          $('#cancel_product_amount_'+orderDetailId).toggleClass('disabled');
+          $('#cancel_product_amount_'+orderDetailId).attr('readonly',!$('#cancel_product_amount_'+orderDetailId).attr('readonly'));
+      });
+
+
+
       $('#selectCustomerToMigrate').autocomplete({
         "classes": {
           "ui-autocomplete": "customer_search_input"

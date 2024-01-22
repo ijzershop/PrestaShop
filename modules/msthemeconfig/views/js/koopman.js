@@ -238,16 +238,16 @@ $(function () {
       if (type !== -1) {
         switch (type) {
           case 'envelope':
-            gewicht = 1;
+            gewicht = 5;
             break;
           case 'plaat':
-            gewicht = 15;
-            break;
-          case '1-meter':
             gewicht = 10;
             break;
+          case '1-meter':
+            gewicht = 15;
+            break;
           case '2-meter-smaller':
-            gewicht = 14;
+            gewicht = 20;
             break;
           case '2-meter-larger':
             gewicht = 30;
@@ -270,6 +270,9 @@ $(function () {
           });
       }
     });
+
+
+
 
   $(document).on('click', '.updateAddress',function () {
     let orderId = $('#updateAddressKoopman [name="id_order"]').val();
@@ -297,16 +300,16 @@ $(function () {
     if (type !== -1) {
       switch (type) {
         case 'envelope':
-          gewicht = 1;
+          gewicht = 5;
           break;
         case 'plaat':
-          gewicht = 15;
-          break;
-        case '1-meter':
           gewicht = 10;
           break;
+        case '1-meter':
+          gewicht = 15;
+          break;
         case '2-meter-smaller':
-          gewicht = 14;
+          gewicht = 20;
           break;
         case '2-meter-larger':
           gewicht = 30;
@@ -345,14 +348,25 @@ $(function () {
   });
 
 
+
+    $(document).on('click','.insert-address',function (e) {
+        let row = e.currentTarget.dataset.rowid;
+      let street = document.querySelector('.insert-address-street[data-rowid="'+row+'"]').innerText;
+        let city = document.querySelector('.insert-address-city[data-rowid="'+row+'"]').innerText;
+
+        $('#address1').val(street);
+        $('#city').val(city);
+
+        e.preventDefault();
+    });
+
+
   $(document).on('click', 'button#dag-afsluiting',function () {
-console.log('succes');
+
     $.ajax({
       url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=dag-afsluiting&token=' + token,
       type: 'GET'
-    })
-      .done(function (data) {
-console.log(data);
+    }).done(function (data) {
         // location.reload();
       });
 

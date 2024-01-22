@@ -1739,7 +1739,7 @@ class ConvertUploadedFile
 
                 #Artikelnummer met Leestekens
                 if ($index == 'B' && $rowIndex > 3) {
-                    if(strlen($cell_data) > 0 && $cell_data !== "Artikelnr.") {
+                    if(strlen($cell_data) > 0 && $cell_data !== "Artikelnr." && preg_match('/^((?!T316).)*$/', $cell_data)) {
                         $new_row_data['artikel_nummer'] = $cell_data;
                     }
                 }
@@ -1769,6 +1769,7 @@ class ConvertUploadedFile
                 $new_data_list[] = $new_row_data;
             }
         }
+
         return $new_data_list;
     }
 

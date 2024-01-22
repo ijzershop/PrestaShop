@@ -34,7 +34,7 @@
         <a class="nav-link btn-light {if $page.page_name == 'history'}active{/if}" id="history-link" href="{$urls.pages.history}">
           <span class="link-item">
             <i class="fasl fa-cart-shopping"></i>
-            {l s='Order history and details' d='Shop.Theme.Customeraccount'}
+            {l s='Mijn bestellingen en Facturen' d='Shop.Theme.Customeraccount'}
           </span>
         </a>
       </li>
@@ -51,16 +51,16 @@
       </li>
       {/if} *}
 
-   {if $configuration.voucher_enabled && !$configuration.is_catalog}
-        <li class="nav-item">
-        <a class="nav-link btn-light {if $page.page_name == 'discount'}active{/if}" id="discounts-link" href="{$urls.pages.discount}">
-          <span class="link-item">
-            <i class="fasl fa-tag"></i>
-            {l s='Vouchers' d='Shop.Theme.Customeraccount'}
-          </span>
-        </a>
-      </li>
-      {/if}
+{*   {if $configuration.voucher_enabled && !$configuration.is_catalog}*}
+{*        <li class="nav-item">*}
+{*        <a class="nav-link btn-light {if $page.page_name == 'discount'}active{/if}" id="discounts-link" href="{$urls.pages.discount}">*}
+{*          <span class="link-item">*}
+{*            <i class="fasl fa-tag"></i>*}
+{*            {l s='Vouchers' d='Shop.Theme.Customeraccount'}*}
+{*          </span>*}
+{*        </a>*}
+{*      </li>*}
+{*      {/if}*}
 
       {if $configuration.return_enabled && !$configuration.is_catalog}
         <li class="nav-item">
@@ -73,8 +73,8 @@
       </li>
       {/if}
 
-      {block name='display_customer_account'}
-        {hook h='displayCustomerAccount'}
-      {/block}
+{*      {block name='display_customer_account'}*}
+{*        {hook h='displayCustomerAccount'}*}
+{*      {/block}*}
     </ul>
 {/block}

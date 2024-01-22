@@ -61,7 +61,7 @@ class ExportOrders
         ];
 
         $folder = Configuration::get('KOOPMANORDEREXPORT_LABELS_FOLDER', $this->idLang, $this->idShopGroup, $this->idShop);
-        
+
 
         $this->labelsFolder = str_replace('private_html',
             'public_html',
@@ -95,7 +95,6 @@ class ExportOrders
     {
         $orders = $this->_getOrders(Configuration::get('KOOPMANORDEREXPORT_SELECT_STATUS', $this->idLang, $this->idShopGroup, $this->idShop), Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop), 1, $this->id_order);
 
-
         if (empty($orders)) {
             return false;
         }
@@ -113,7 +112,6 @@ class ExportOrders
                     $type = 'envelope';
                 }
             }
-
 
             $this->_processOrdersNew($orders, $type, $gewicht);  //met adreskeuze indien meer dan 1 koopman straat/plaats
         } else {
@@ -148,33 +146,6 @@ class ExportOrders
         $code .= '}' . PHP_EOL;
         $code .= '?' . '>';
         file_put_contents($this->_getLaneFolder() . '/labels.php', $code);
-    }
-
-
-    public function doApiCall($route, $params, $headerParams = [])
-    {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_URL', $this->idLang, $this->idShopGroup, $this->idShop) . '/api/' . $route,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 10,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $params,
-            CURLOPT_HTTPHEADER => $headerParams,
-        ));
-        $response = curl_exec($curl);
-        // Check if any error occurred
-        if (!curl_errno($curl)) {
-            $returnData = json_decode($response);
-        } else {
-            $returnData = [];
-        }
-        curl_close($curl);
-        return $returnData;
     }
 
     public function dagafsluiting()
@@ -216,30 +187,6 @@ class ExportOrders
             }
             $this->_setNewStateForOrders($orders, $this->statusShipped);
         }
-        //Send api call to the dashboard
-        $closure_time = date("Y-m-d H:i:s");
-        $loginCall = $this->doApiCall('api-auth', [
-            'email' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER', $this->idLang, $this->idShopGroup, $this->idShop),
-            'password' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS', $this->idLang, $this->idShopGroup, $this->idShop)
-        ]);
-        if (!empty($loginCall)) {
-            $message = [];
-            $message['text'] = 'Dagafsluiting gedraaid ' . date('d-m-Y H:i');
-            $message['status'] = 'success';
-            $message['error_records'] = null;
-            $message['success_records'] = null;
-            $message['time'] = $closure_time;
-
-            $this->doApiCall('log-message', [
-                'profile' => $this->context->shop->getUrls()[0]['domain'],
-                'type' => 'dagafsluiting',
-                'version' => _PS_VERSION_,
-                'message' => json_encode($message),
-            ], [
-                'Content-Type' => 'application/x-www-form-urlencoded',
-                'Authorization: Bearer ' . $loginCall->access_token
-            ]);
-        }
     }
 
     /**
@@ -250,12 +197,8 @@ class ExportOrders
      *
      * @throws \PrestaShopDatabaseException
      */
-    private function _getOrders($state, $carrier, $max = 300, $id_order = null)
+    private function _getOrders($state, $carrier, $max = 1000, $id_order = null)
     {
-        if (!is_numeric($state)) {
-            return false;
-        }
-
         $sql = new DbQuery();
         $sql->select('*');
         $sql->from('orders', 'o');
@@ -265,7 +208,7 @@ class ExportOrders
         if (isset($id_order)) { //als id is meegegeven dan maakt state en carrier niet meer uit
             $sql->where('o.id_order = ' . $id_order);
         } else {
-            $sql->where('o.current_state = ' . $state);
+            $sql->where('o.current_state IN (' . $state.')');
             //$sql->where('o.id_carrier = '.$carrier);
             //$sql->where('o.id_carrier NOT IN (SELECT id_carrier FROM `carrier` WHERE is_free = 1)'); //GDU 14-12-2015, knop tonen bij verzenden carrier (afhalen => isfree = 1)
         }
@@ -311,7 +254,7 @@ class ExportOrders
     {
         //get order object for each order and change status
         foreach ($orders as $order) {
-     
+
             if (in_array($order['id_order'], $this->ordersOk)) {
                 $orderObject = new Order((int)$order['id_order']);
                 $orderObject->setCurrentState((int)$state, 0);
@@ -319,6 +262,21 @@ class ExportOrders
         }
 
         return true;
+    }
+
+
+    private function sanitizeTextForTransmission($string){
+        $string = strtolower($string);
+        $string = preg_replace('/[áàãâä]/ui', 'a', $string);
+        $string = preg_replace('/[éèêë]/ui', 'e', $string);
+        $string = preg_replace('/[íìîï]/ui', 'i', $string);
+        $string = preg_replace('/[óòõôö]/ui', 'o', $string);
+        $string = preg_replace('/[úùûü]/ui', 'u', $string);
+        $string = preg_replace('/[ç]/ui', 'c', $string);
+
+        $sanitizedString =  trim($string);
+
+        return $sanitizedString;
     }
 
     private function _processOrdersNew($orders, $type = 'envelope', $gewicht = '0')
@@ -330,7 +288,7 @@ class ExportOrders
         try {
             $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL', $this->idLang, $this->idShopGroup, $this->idShop), $this->soapoptions);
         } catch (Exception $e) {
-            //echo "error (new SoapClient) - ".$e->getMessage();
+            echo "error (new SoapClient) - ".$e->getMessage();
             return false;
         }
 
@@ -344,7 +302,10 @@ class ExportOrders
         foreach ($orders as $row) {
             $opdracht = new stdClass();
             $opdracht->type = 'T'; // T = Stukgoed Levering
-            $opdracht->nrorder = $row['reference'];
+
+            $orderId = $row['id_order'];
+            $orderReference = $row['reference'];
+            $opdracht->nrorder = $orderReference;
 //            Verzender gegevens
             $opdracht->afzender = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDER', $this->idLang, $this->idShopGroup, $this->idShop);
 
@@ -356,27 +317,44 @@ class ExportOrders
             $opdracht->afzplaats = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPLAATS', $this->idLang, $this->idShopGroup, $this->idShop);
             $opdracht->afzland = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERLAND', $this->idLang, $this->idShopGroup, $this->idShop);
 //            Klant gegevens
-            $opdracht->geanaam = $row['firstname'] . ' ' . $row['lastname'];
-            $opdracht->geanaam2 = $row['company'];
-            $adres = $this->_splitAddress($row['address1']);
-            $opdracht->geastraat = $row['address1'];
-            $opdracht->geahuisnr = $row['house_number'] . ' ' . $row['house_number_extension'];
-            $opdracht->geapostcode = $row['postcode'];
-            $opdracht->geaplaats = $row['city'];
-            $opdracht->gealand = $row['iso_code'];
-            $opdracht->geatelefoon = $row['phone'];
-            $opdracht->geaemail = $row['email'];
 
-            $msg = $this->_getFirstClientMessage($row['id_order']);
+
+            $orderFirstName = $this->sanitizeTextForTransmission($row['firstname']);
+            $orderLastName = $this->sanitizeTextForTransmission($row['lastname']);
+            $orderCompany = $this->sanitizeTextForTransmission($row['company']);
+            $orderAddress1 = $this->sanitizeTextForTransmission($row['address1']);
+            $orderHouseNumber = $this->sanitizeTextForTransmission($row['house_number']);
+            $orderHouseNumberExt = $this->sanitizeTextForTransmission($row['house_number_extension']);
+            $orderPostcode = $this->sanitizeTextForTransmission($row['postcode']);
+            $orderCity = $this->sanitizeTextForTransmission($row['city']);
+            $orderIsoCode = $this->sanitizeTextForTransmission($row['iso_code']);
+            $orderPhone = $this->sanitizeTextForTransmission($row['phone']);
+            $orderEmail = $this->sanitizeTextForTransmission($row['email']);
+
+
+
+
+            $opdracht->geanaam = $orderFirstName . ' ' . $orderLastName;
+
+            $opdracht->geanaam2 = $orderCompany;
+            $opdracht->geastraat = $orderAddress1;
+            $opdracht->geahuisnr = $orderHouseNumber . ' ' . $orderHouseNumberExt;
+            $opdracht->geapostcode = $orderPostcode;
+            $opdracht->geaplaats = $orderCity;
+            $opdracht->gealand = $orderIsoCode;
+            $opdracht->geatelefoon = $orderPhone;
+            $opdracht->geaemail = $orderEmail;
+
+            $msg = $this->_getFirstClientMessage($orderId);
+
 
             if (!empty($msg)) {
                 $opdracht->instructie = $msg[0]['message'];
             }
-            if ($opdracht->gealand == 'NL') { // haal straat + plaats op bij koopman voor NL
+            if ($opdracht->gealand == 'nl') { // haal straat + plaats op bij koopman voor NL
 
                 try {
-                    $adressen = $client->getAdresNL_2($login, $row['postcode']);
-
+                    $adressen = $client->getAdresNL_2($login, $orderPostcode);
                 } catch (Exception $e) {
 
                     if ((int)$e->getCode() == 0) {
@@ -402,19 +380,19 @@ class ExportOrders
                         $this->output .= '<div class="row mb-3">
                                                                     <div class="col-6">
                                                                         <div class="form-floating">
-                                                                            <input type="text" class="form-control" name="address1" id="address1" placeholder="Straat naam" value="' . $row['address1'] . '">
+                                                                            <input type="text" class="form-control" name="address1" id="address1" placeholder="Straat naam" value="' . $orderAddress1 . '">
                                                                             <label for="address1">Straat</label>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-3">
                                                                         <div class="form-floating">
-                                                                            <input type="text" class="form-control" name="house_number" id="house_number" placeholder="Huisnummer" value="' . $row['house_number'] . '">
+                                                                            <input type="text" class="form-control" name="house_number" id="house_number" placeholder="Huisnummer" value="' . $orderHouseNumber . '">
                                                                             <label for="house_number">Huis Nr.</label>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-3">
                                                                         <div class="form-floating">
-                                                                            <input type="text" class="form-control" name="house_number_extension" id="house_number_extension" placeholder="Toevoeging" value="' . $row['house_number_extension'] . '">
+                                                                            <input type="text" class="form-control" name="house_number_extension" id="house_number_extension" placeholder="Toevoeging" value="' . $orderHouseNumberExt . '">
                                                                             <label for="house_number_extension">Toev.</label>
                                                                         </div>
                                                                     </div>
@@ -422,13 +400,13 @@ class ExportOrders
                                                                 <div class="row mb-3">
                                                                         <div class="col-5">
                                                                             <div class="form-floating">
-                                                                                <input type="text" class="form-control" name="postcode" id="postcode" placeholder="Postcode" value="' . $row['postcode'] . '">
+                                                                                <input type="text" class="form-control" name="postcode" id="postcode" placeholder="Postcode" value="' . $orderPostcode . '">
                                                                                 <label for="postcode">Postcode</label>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-7">
                                                                             <div class="form-floating">
-                                                                                <input type="text" class="form-control" name="city" id="city" placeholder="Stad" value="' . $row['city'] . '">
+                                                                                <input type="text" class="form-control" name="city" id="city" placeholder="Stad" value="' . $orderCity . '">
                                                                                 <label for="city">Stad</label>
                                                                             </div>
                                                                         </div>
@@ -447,6 +425,7 @@ class ExportOrders
                         $this->output .= '</form>' . PHP_EOL;
                     }
                 }
+
                 if (isset($adressen) && is_array($adressen)) {
                     $klant_straat = $opdracht->geastraat . ' ' . $opdracht->geahuisnr;
                     $klant_plaats = $opdracht->geaplaats;
@@ -481,10 +460,10 @@ class ExportOrders
                                                             <b>Straat en woonplaats, bij postcode:</b>
                                                             <ul id="street-list">';
 
-                            foreach ($adressen as $ix => $adres) {
-                                $this->output .= '<li class="large-text">' . $adres->straat . ', ' . $adres->plaats . '</li>' . PHP_EOL;
-                            }
 
+                            foreach ($adressen as $ix => $adres) {
+                                $this->output .= '<li class="large-text"><a href="#" class="text-decoration-none insert-address" data-rowid="'.$ix.'"><span class="insert-address-street"  data-rowid="'.$ix.'">' . $adres->straat . '</span> <span class="insert-address-city"  data-rowid="'.$ix.'">' . $adres->plaats . '</a></span></li>' . PHP_EOL;
+                            }
 
                             $this->output .= '</ul>
                                                             </div>
@@ -497,24 +476,23 @@ class ExportOrders
                             foreach ($_GET as $key => $value) {
                                 $this->output .= "<input type='hidden' name='$key' value='$value'/>" . PHP_EOL;
                             }
-
                             $this->output .= '<input type="hidden" name="updateAddress" value="1">';
                             $this->output .= '<div class="row mb-3">
                                                                 <div class="col-6">
                                                                     <div class="form-floating">
-                                                                        <input type="text" class="form-control address-input-text" name="address1" id="address1" placeholder="Straat naam" value="' . $row['address1'] . '">
+                                                                        <input type="text" class="form-control address-input-text" name="address1" id="address1" placeholder="Straat naam" value="' . $adressen[0]->straat . '">
                                                                         <label for="address1">Straat</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-3">
                                                                     <div class="form-floating">
-                                                                        <input type="text" class="form-control address-input-text" name="house_number" id="house_number" placeholder="Huisnummer" value="' . $row['house_number'] . '">
+                                                                        <input type="text" class="form-control address-input-text" name="house_number" id="house_number" placeholder="Huisnummer" value="' . $orderHouseNumber . '">
                                                                         <label for="house_number">Huis Nr.</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-3">
                                                                     <div class="form-floating">
-                                                                        <input type="text" class="form-control address-input-text" name="house_number_extension" id="house_number_extension" placeholder="Toevoeging" value="' . $row['house_number_extension'] . '">
+                                                                        <input type="text" class="form-control address-input-text" name="house_number_extension" id="house_number_extension" placeholder="Toevoeging" value="' . $orderHouseNumberExt . '">
                                                                         <label for="house_number_extension">Toev.</label>
                                                                     </div>
                                                                 </div>
@@ -522,13 +500,13 @@ class ExportOrders
                                                             <div class="row mb-3">
                                                                 <div class="col-5">
                                                                     <div class="form-floating">
-                                                                        <input type="text" class="form-control address-input-text" name="postcode" id="postcode" placeholder="Postcode" value="' . $row['postcode'] . '">
+                                                                        <input type="text" class="form-control address-input-text" name="postcode" id="postcode" placeholder="Postcode" value="'.$adressen[0]->postcode . '">
                                                                         <label for="postcode">Postcode</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-7">
                                                                     <div class="form-floating">
-                                                                        <input type="text" class="form-control address-input-text" name="city" id="city" placeholder="Stad" value="' . $row['city'] . '">
+                                                                        <input type="text" class="form-control address-input-text" name="city" id="city" placeholder="Stad" value="'.strtolower($adressen[0]->plaats).'">
                                                                         <label for="city">Stad</label>
                                                                     </div>
                                                                 </div>
@@ -552,7 +530,8 @@ class ExportOrders
                 }
             }
 
-            if (isset($_GET['zaterdag']) && (int)$_GET['zaterdag'] == 1 && $opdracht->gealand == 'NL') {
+
+            if (isset($_GET['zaterdag']) && (int)$_GET['zaterdag'] == 1 && $opdracht->gealand == 'nl') {
                 $opdracht->zaterdag = 1;
                 if (empty($opdracht->geatelefoon)) {
                     $opdracht->geatelefoon = '1234567890'; //zaterdaglevering = telefoon verplicht
@@ -575,44 +554,47 @@ class ExportOrders
 
                 $regel->vrzenh = 'COL';
                 $regel->gewicht = $gewicht;
+                $regel->lengte = 199;
+                $regel->breedte = 25;
+                $regel->hoogte = 25;
 
-                switch ($type) {
-                    case 'envelope':
-                        $regel->lengte = 50;
-                        $regel->breedte = 30;
-                        $regel->hoogte = 1;
-                        break;
-                    case 'plaat':
-                        $regel->lengte = 100;
-                        $regel->breedte = 50;
-                        $regel->hoogte = 1;
-                        break;
-                    case '1-meter':
-                        $regel->lengte = 100;
-                        $regel->breedte = 20;
-                        $regel->hoogte = 20;
-                        break;
-                    case '2-meter-larger':
-                    case '2-meter-smaller':
-                        $regel->lengte = 199;
-                        $regel->breedte = 15;
-                        $regel->hoogte = 15;
-                        break;
-                    default://envelope sizes
-                        $regel->lengte = 50;
-                        $regel->breedte = 30;
-                        $regel->hoogte = 1;
-                        break;
-                }
+//                switch ($type) {
+//                    case 'envelope':
+//                        $regel->lengte = 50;
+//                        $regel->breedte = 30;
+//                        $regel->hoogte = 1;
+//                        break;
+//                    case 'plaat':
+//                        $regel->lengte = 100;
+//                        $regel->breedte = 50;
+//                        $regel->hoogte = 1;
+//                        break;
+//                    case '1-meter':
+//                        $regel->lengte = 100;
+//                        $regel->breedte = 20;
+//                        $regel->hoogte = 20;
+//                        break;
+//                    case '2-meter-larger':
+//                    case '2-meter-smaller':
+//                        $regel->lengte = 199;
+//                        $regel->breedte = 15;
+//                        $regel->hoogte = 15;
+//                        break;
+//                    default://envelope sizes
+//                        $regel->lengte = 50;
+//                        $regel->breedte = 30;
+//                        $regel->hoogte = 1;
+//                        break;
+//                }
 
 
                 $opdracht->aRegel[1] = $regel;
 
                 $transport = false;
+
                 try {
                     $transport = $client->addOpdracht($login, $opdracht);
                 } catch (Exception $e) {
-                    //die("error - ".$e->getMessage());
                     if (session_status() == PHP_SESSION_NONE) {
 					      session_start();
 					   }
@@ -623,54 +605,14 @@ class ExportOrders
                 if ($transport) {
                     $zendingnr = $transport->zendingnr;
                     $zendingnr = 'T' . substr($zendingnr, 1); //T98
-                    $this->_addTrackingNumberToOrder($row['id_order'], $zendingnr);
+                    $this->_addTrackingNumberToOrder($orderId, $zendingnr);
 
                     $labels = $transport->labels;
                     $this->redirect = true;
                     if (file_put_contents($this->_getLaneFolder() . '/' . $zendingnr . '.pdf',
                         trim(base64_decode($labels)))) {
 
-                        $this->ordersOk[] = $row['id_order'];
-
-                        //Add new labels Api call
-                        $loginCall = $this->doApiCall('api-auth', [
-                            'email' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_USER', $this->idLang, $this->idShopGroup, $this->idShop),
-                            'password' => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_PASS', $this->idLang, $this->idShopGroup, $this->idShop)
-                        ]);
-
-                        if (!empty($loginCall)) {
-
-                            $firstname = "";
-                            if (isset($this->context->employee->firstname)) {
-                                $firstname = $this->context->employee->firstname;
-                            }
-                            if (isset($this->context->customer->firstname)) {
-                                $firstname = $this->context->customer->firstname;
-                            }
-
-                            $successRecord = $row['id_order'];
-                            if (isset($row['reference'])) {
-                                $successRecord = $row['reference'];
-                            }
-
-                            $message = [];
-                            $message['text'] = json_encode(['location' => $firstname, 'data' => $zendingnr]);
-                            $message['status'] = 'success';
-                            $message['sub-type'] = 'registered-at-transmission';
-                            $message['error_records'] = null;
-                            $message['success_records'] = $successRecord;
-                            $message['time'] = date("Y-m-d H:i:s");
-
-                            $this->doApiCall('log-message', [
-                                'profile' => $this->context->shop->getUrls()[0]['domain'],
-                                'type' => 'koopman-actions',
-                                'version' => _PS_VERSION_,
-                                'message' => json_encode($message),
-                            ], [
-                                'Content-Type' => 'application/x-www-form-urlencoded',
-                                'Authorization: Bearer ' . $loginCall->access_token
-                            ]);
-                        }
+                        $this->ordersOk[] = $orderId;
                     }
                 }
             }

@@ -4,6 +4,51 @@
   </div>
   <div class="card-body">
 
+    {# Testing Domains #}
+    <span class="col-xs-12 card-sub-header"><i class="star">*</i> Verzending
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseTest" aria-expanded="false" aria-controls="collapseTest">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+    <div class="collapse" id="collapseTest">
+      <div class="form-group col-xs-12">
+        <label class="control-label col-xs-4 text-right">
+          Tijd dagafsluiting
+        </label>
+        <div class="col-xs-8">
+          <input type="text" name="MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME"
+                 id="MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME"
+                 value="{{ MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME }}" class="form-control">
+          <p class="help-block">
+            Geef de richttijd voor dagafsluiting
+          </p>
+        </div>
+      </div>
+
+
+
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 pr-0 required text-right">
+            TransMission delivery skip days <button type="button" id="resetCalendar" class="btn btn-xs btn-primary">Reset</button>
+          </label>
+          <div class="col-xs-8 pl-0">
+            <input name="MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES" type="hidden"
+                   id="MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES"
+                   value="{{ MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES }}">
+            <div id="MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES_DIV"></div>
+            <p class="help-block">
+              Choose the days for when the delivery is not picked up
+            </p>
+          </div>
+        </div>
+
+
+    </div>
+
+
+
+
       <span class="col-xs-12 card-sub-header"><i class="star">*</i> Koopman Algemeen
         <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
                 data-target="#collapseKoopmanMain" aria-expanded="false" aria-controls="collapseKoopmanMain">
@@ -16,8 +61,8 @@
         Select status condition
       </label>
       <div class="col-xs-8">
-        <select name="KOOPMANORDEREXPORT_SELECT_STATUS"
-                class="w-100 form-control select2-data-input" data-type="order_states"
+        <select name="KOOPMANORDEREXPORT_SELECT_STATUS[]"
+                class="w-100 form-control select2-data-input" data-type="order_states" multiple="multiple"
                 id="KOOPMANORDEREXPORT_SELECT_STATUS">
           {{ KOOPMANORDEREXPORT_SELECT_STATUS|raw }}
         </select>
@@ -548,6 +593,67 @@
         </p>
       </div>
     </div>
-  </div>
+    </div>
+
   </div>
 </div>
+
+
+<script type="text/javascript">
+
+
+  $(document).ready(function() {
+
+    let today = new Date();
+    let year = today.getFullYear();
+
+    $.datepicker.regional['nl'] = {
+      closeText: "Sluiten",
+      prevText: "Vorig",
+      nextText: "Volgende",
+      currentText: "Vandaag",
+      monthNames: [ "januari", "februari", "maart", "april", "mei", "juni",
+        "juli", "augustus", "september", "oktober", "november", "december" ],
+      monthNamesShort: [ "jan", "feb", "mrt", "apr", "mei", "jun",
+        "jul", "aug", "sep", "okt", "nov", "dec" ],
+      dayNames: [ "zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag" ],
+      dayNamesShort: [ "zon", "maa", "din", "woe", "don", "vri", "zat" ],
+      dayNamesMin: [ "zo", "ma", "di", "wo", "do", "vr", "za" ],
+      weekHeader: "Wk",
+      isRTL: false,
+      showMonthAfterYear: true,
+      yearSuffix: "" };
+
+    $.datepicker.setDefaults($.datepicker.regional['nl']);
+
+    let pickedDatesDataString = $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val();
+    let pickedDatesArray = '';
+
+    try {
+      let fixedString = pickedDatesDataString.replace("/(\s+|\+|\")/", "");
+      pickedDatesArray = fixedString.split(', ');
+    } catch (e) {
+      pickedDatesArray = ['12/25/'+year, '01/01/'+year];
+    }
+    $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES_DIV').multiDatesPicker({
+      addDates: pickedDatesArray,
+      numberOfMonths: [3,4],
+      stepMonths: 12,
+      defaultDate: '1/01/'+year,
+      showWeek: true,
+      beforeShowDay: $.datepicker.noWeekends,
+      useCurrent: false,
+      minDate: 1,
+      onSelect: function () {
+        let data = $(this).val();
+
+        $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val(data.replace('"', ''));
+      }
+    });
+
+    $('#resetCalendar').on('click', function(e){
+      $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES_DIV').multiDatesPicker('resetDates', 'picked');
+    });
+
+  });
+</script>

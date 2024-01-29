@@ -1,0 +1,7 @@
+{shop_url}
+
+Your referred friend {sponsored_firstname} {sponsored_lastname} has placed his/her first order on [> {shop_name}]({shop_url})!
+
+We bieden u graag een waardebon aan ter waarde van {discount_display} (WAARDEBON# {discount_name}) die u bij uw volgende bestelling kunt gebruiken.
+
+ijzershop.local | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

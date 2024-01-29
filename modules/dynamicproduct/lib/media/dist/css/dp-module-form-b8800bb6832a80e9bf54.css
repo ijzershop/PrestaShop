@@ -1,0 +1,58 @@
+.dp_input_lang {
+  max-height: 40px;
+  padding-top: 1px;
+}
+
+.dp_lang_container {
+  padding: 0px;
+  margin: 0px;
+  transition: background-color 0.2s ease;
+  -webkit-transition: background-color 0.2s ease;
+  -moz-transition: background-color 0.2s ease;
+  display: block;
+}
+
+.dp_lang_container.expanded {
+  background-color: #DFEBF1;
+  padding: 1px;
+  border: 1px solid #4DBFFF;
+  margin-bottom: 3px;
+  margin-top: 3px;
+  margin-left: -3px;
+  z-index: 1001;
+  position: relative;
+  box-shadow: 0px 0px 35px #999999;
+}
+
+.dp_lang {
+  display: none;
+  margin-bottom: 1px;
+}
+
+.dp_lang_container .dp_lang:last-of-type {
+  margin-bottom: 0px !important;
+}
+
+.dp_lang_container .dp_lang:first-child {
+  display: block;
+  position: relative;
+}
+
+.dp_lang_container.expanded .dp_lang {
+  display: block;
+  position: relative;
+}
+
+.dp_lang input {
+  display: block !important;
+}
+
+.dp_lang_container img {
+  width: 16px;
+  height: 11px;
+  position: absolute;
+  top: 9px;
+  right: 11px;
+}
+
+/*# sourceMappingURL=dp-module-form-b8800bb6832a80e9bf54.css.map*/

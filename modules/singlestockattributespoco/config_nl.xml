@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>singlestockattributespoco</name>
+    <displayName><![CDATA[Enkel vooraad Attributen]]></displayName>
+    <version><![CDATA[2.1.0]]></version>
+    <description><![CDATA[Gebruik een enkel vooraad beheer voor producten met meerdere combinaties]]></description>
+    <author><![CDATA[Presto-changeo]]></author>
+    <tab><![CDATA[front_office_features]]></tab>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+</module>

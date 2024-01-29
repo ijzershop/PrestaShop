@@ -1,0 +1,35 @@
+.dp_seven_cart {
+  display: block;
+  font-size: 14px;
+}
+.dp_seven_cart p {
+  margin: 0;
+}
+
+.dp_input_div {
+  padding-left: 5px;
+  clear: both;
+}
+.dp_input_div ul {
+  list-style: inside square;
+  margin: 0;
+}
+
+.dp_preview_modal {
+  display: none;
+}
+
+.dp_thumb_view {
+  text-decoration: none !important;
+}
+
+.dp_url {
+  color: #22C4FF;
+}
+
+.dp_colorpicker_value span {
+  padding: 0px 4px;
+  border-radius: 5px;
+}
+
+/*# sourceMappingURL=dp-order-summary-dbdfc419845239dc37a3.css.map*/

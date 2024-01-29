@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
+    <body>
+      <trans-unit id="729a51874fe901b092899e9e8b31c97a">
+        <source>Are you sure?</source>
+        <target>Weet u het zeker?</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="34ddce12eacd79ced0e326360863888f">
+        <source>No module has been installed.</source>
+        <target>Geen module geinstalleerd</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
+        <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
+        <target>Prestashop is er niet in geslaagd om u aan te melden bij Addons, check uw gegevens en uw internet connectie.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="db26e10564e958809d798e8048fcbc0a">
+        <source>Invalid security token</source>
+        <target>Ongeldige beveiligingstoken</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="a4da6f31ab268a5310bc475e63ab92db">
+        <source>I understand the risks and I really want to display this page</source>
+        <target>Ik begrijp het risico maar wil de pagina toch bekijken</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="5196611ad1bf27e9cef5375b038c04db">
+        <source>Take me out of here!</source>
+        <target>Deze pagina verlaten</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
+        <source>Are you sure you want to uninstall this module?</source>
+        <target>Weet u zeker dat u deze module wilt deïnstalleren?</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="85265e940fbb820dd2475946e7bc48d9">
+        <source>Invalid configuration</source>
+        <target>Ongeldige configuratie</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
+        <source>Delete selected items?</source>
+        <target>Geselecteerde items verwijderen ?</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
+        <source>Delete selected item?</source>
+        <target>Verwijder geselecteerde item?</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="69163c4320b04b309f70f6ab6096657a">
+        <source>You cannot change the value of this configuration field in the context of this shop.</source>
+        <target>U kunt deze waarde van dit configuratie veld niet veranderen in de instellingen van deze winkel.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="5887e86df08049bc0eab95e975e057c4">
+        <source>Please select theme's import source.</source>
+        <target>Selecteer de importbron van het thema.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e8cf85cec621489ec026f7e06c67eb4e">
+        <source>Delete item</source>
+        <target>Item verwijderen</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="a157a50f5a421a7dfbdf280f3ff9d56e">
+        <source>You can't change the value of this configuration field in the context of this shop.</source>
+        <target>U kunt deze waarde van deze configuratie veranderen in de context van deze winkel</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="043f2b6920e5c8a140301051d18d8618">
+        <source>Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.</source>
+        <target>Sinds 30 december 2019 moet u zich registreren voor een [1] MaxMind [/1] -account om een licentiesleutel te krijgen om de geolocatiegegevens te kunnen downloaden. Eenmaal gedownload, extraheer de gegevens met Winrar of Gzip in de map /app / Resources /geoip /.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="71a0384942a58e7418c2098eaea4fe0f">
+        <source>Are you sure to delete this?</source>
+        <target>Wilt u deze verwijderen?</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
+        <source>Warning</source>
+        <target>Waarschuwing</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="80ebdccece38141cd9c0f9b3b623091f">
+        <source>Are you sure you want to delete this item?</source>
+        <target>Weet u zeker dat u dit item wilt verwijderen?</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="6557717352c9b5d28da3b96bf546a389">
+        <source>Leave anyway</source>
+        <target>Toch verlaten</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="f58375e52c1f1329c29c474cd8b34ec7">
+        <source>Your modifications are not saved yet. Do you wish to save it before leaving?</source>
+        <target>Uw wijzigingen zijn nog niet opgeslagen. Wilt u deze opslaan voordat u sluit?</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

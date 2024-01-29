@@ -1,0 +1,29 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.order.query_handler.get_order_for_viewing_handler:
+    class: 'MsThemeConfig\Service\DmsAdminGetOrderForViewingHandler'
+    arguments:
+      - '@translator'
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - "@prestashop.core.localization.locale.context_locale"
+      - '@=service("prestashop.adapter.legacy.context").getContext()'
+      - '@prestashop.adapter.data_provider.customer'
+      - '@prestashop.adapter.order.query_handler.get_order_products_for_viewing_handler'
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.address.formatter'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing
+
+  prestashop.adapter.order.query_handler.get_order_preview_handler:
+    class: 'MsThemeConfig\Service\DmsAdminOrderPreviewService'
+    public: false
+    arguments:
+      - '@prestashop.core.localization.locale.repository'
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.getLocale()"
+      - '@prestashop.adapter.address.formatter'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview'

@@ -1,0 +1,30 @@
+harvard-medical-school:
+  icons:
+    - heart
+    - plus
+  label: Harvard Medical School
+  url: 'https://hms.harvard.edu'
+rocket-chat:
+  icons:
+    - comment
+    - phone
+  label: Rocket.Chat
+  url: 'https://rocket.chat'
+stay-linked:
+  icons:
+    - dolly
+    - truck
+    - truck-fast
+    - warehouse
+  label: StayLinked
+  url: 'https://www.staylinked.com'
+supple:
+  icons:
+    - envelope-open-dollar
+  label: Supple
+  url: 'https://supple.com.au'
+un-ocha:
+  icons:
+    - boxes-packing
+  label: United Nations OCHA
+  url: 'https://www.unocha.org'

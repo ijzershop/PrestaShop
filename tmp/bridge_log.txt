@@ -1,0 +1,4 @@
+[Fri, 19 Jan 2024 12:05:25 +0100]Intializing
+[Fri, 19 Jan 2024 12:05:25 +0100]Connecting to database
+[Fri, 19 Jan 2024 12:05:25 +0100]Creating tmp file
+[Fri, 19 Jan 2024 12:05:25 +0100]Opening tmp file

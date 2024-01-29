@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/addtoorder" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/modernesmiddynamicproduct" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/ps_shoppingcart" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/sawandcutmodule" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/singlestockattributespoco" vcs="Git" />
+  </component>
+</project>

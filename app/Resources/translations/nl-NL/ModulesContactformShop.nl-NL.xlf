@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
+    <body>
+      <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3">
+        <source>Send</source>
+        <target>Versturen</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
+        <source>Message</source>
+        <target>Bericht</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="13d6078da2e6592822ede083931d6826">
+        <source>Attach File</source>
+        <target>Bestand toevoegen</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="863cf84b34def228394c03c156bff42c">
+        <source>Select reference</source>
+        <target>Selecteer referentie</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="5d4710f9a8250b13164a82c94d5b00d1">
+        <source>Order reference</source>
+        <target>Bestelling referentie</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
+        <source>Email address</source>
+        <target>Email adres</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="6c27c08f40e1b0d9901deb9ff5f722f7">
+        <source>Subject Heading</source>
+        <target>Onderwerp hoofd</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="d93651d012e77dac5581b08db33195b2">
+        <source>If you would like to add a comment about your order, please write it in the field below.</source>
+        <target>Indien u een opmerking wilt meegeven aan uw bestelling, plaats deze dan in het onderstaande tekst veld</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="2d0952c7dfad480fb4ffe2cb697c3582">
+        <source>Offer request</source>
+        <target>Offerte aanvraag</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="1aa92de79731bfcc60ab5f9e9c3e6676">
+        <source>Your name or Company name</source>
+        <target>Uw naam of bedrijfsnaam</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="3d2ce9ec6f439d0f6ee1cfe437f39bb3">
+        <source>Postalcode</source>
+        <target>Postcode</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="370703f6644a016785daa313150f5641">
+        <source>Phonenumber</source>
+        <target>Telefoon nummer</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

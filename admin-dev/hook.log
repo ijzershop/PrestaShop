@@ -1,0 +1,456 @@
+array (
+  'object' => 
+  CustomerThread::__set_state(array(
+     'id' => '10',
+     'id_shop' => 1,
+     'id_lang' => 1,
+     'id_contact' => 0,
+     'id_customer' => 45,
+     'id_order' => 13,
+     'id_product' => NULL,
+     'status' => 'open',
+     'email' => 'test@test1234.nl',
+     'token' => 'ADKLNvwsYxkm',
+     'date_add' => '2020-09-24 15:18:02',
+     'date_upd' => '2020-09-24 15:18:02',
+     'webserviceParameters' => 
+    array (
+      'fields' => 
+      array (
+        'id_lang' => 
+        array (
+          'xlink_resource' => 'languages',
+        ),
+        'id_shop' => 
+        array (
+          'xlink_resource' => 'shops',
+        ),
+        'id_customer' => 
+        array (
+          'xlink_resource' => 'customers',
+        ),
+        'id_order' => 
+        array (
+          'xlink_resource' => 'orders',
+        ),
+        'id_product' => 
+        array (
+          'xlink_resource' => 'products',
+        ),
+      ),
+      'associations' => 
+      array (
+        'customer_messages' => 
+        array (
+          'resource' => 'customer_message',
+          'id' => 
+          array (
+            'required' => true,
+          ),
+        ),
+      ),
+    ),
+     'id_shop_list' => 
+    array (
+    ),
+     'get_shop_from_context' => true,
+     'table' => 'customer_thread',
+     'identifier' => 'id_customer_thread',
+     'fieldsRequired' => 
+    array (
+      0 => 'id_lang',
+      1 => 'id_contact',
+      2 => 'token',
+    ),
+     'fieldsSize' => 
+    array (
+      'email' => 255,
+    ),
+     'fieldsValidate' => 
+    array (
+      'id_lang' => 'isUnsignedId',
+      'id_contact' => 'isUnsignedId',
+      'id_shop' => 'isUnsignedId',
+      'id_customer' => 'isUnsignedId',
+      'id_order' => 'isUnsignedId',
+      'id_product' => 'isUnsignedId',
+      'email' => 'isEmail',
+      'token' => 'isGenericName',
+      'date_add' => 'isDate',
+      'date_upd' => 'isDate',
+    ),
+     'fieldsRequiredLang' => 
+    array (
+    ),
+     'fieldsSizeLang' => 
+    array (
+    ),
+     'fieldsValidateLang' => 
+    array (
+    ),
+     'tables' => 
+    array (
+    ),
+     'image_dir' => NULL,
+     'image_format' => 'jpg',
+     'translator' => NULL,
+     'def' => 
+    array (
+      'table' => 'customer_thread',
+      'primary' => 'id_customer_thread',
+      'fields' => 
+      array (
+        'id_lang' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+          'required' => true,
+        ),
+        'id_contact' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+          'required' => true,
+        ),
+        'id_shop' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+        ),
+        'id_customer' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+        ),
+        'id_order' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+        ),
+        'id_product' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+        ),
+        'email' => 
+        array (
+          'type' => 3,
+          'validate' => 'isEmail',
+          'size' => 255,
+        ),
+        'token' => 
+        array (
+          'type' => 3,
+          'validate' => 'isGenericName',
+          'required' => true,
+        ),
+        'status' => 
+        array (
+          'type' => 3,
+        ),
+        'date_add' => 
+        array (
+          'type' => 5,
+          'validate' => 'isDate',
+        ),
+        'date_upd' => 
+        array (
+          'type' => 5,
+          'validate' => 'isDate',
+        ),
+      ),
+      'classname' => 'CustomerThread',
+    ),
+     'update_fields' => NULL,
+     'force_id' => false,
+  )),
+  'cookie' => 
+  Cookie::__set_state(array(
+     '_content' => 
+    array (
+      'date_add' => '2020-09-24 09:35:54',
+      'id_lang' => 1,
+      'detect_language' => '1',
+      'shopContext' => 's-1',
+      'id_employee' => '1',
+      'email' => 'jelmer@ijzershop.nl',
+      'profile' => '1',
+      'passwd' => '$2y$10$hit5hsM7T/HpVeAATgpm6.oN6BZzxMMH175/czF86jU1JKg0ntVje',
+      'remote_addr' => '0',
+      'session_id' => '129',
+      'session_token' => 'cd234787f253252b417a2127b277526001306398',
+      'checksum' => '675995209',
+    ),
+     '_name' => 'PrestaShop-5034285881263ebe6973ab0cab4e7904',
+     '_expire' => 1602681482,
+     '_domain' => 'ijzershop176.local',
+     '_path' => '/',
+     'cipherTool' => 
+    PhpEncryption::__set_state(array(
+    )),
+     '_modified' => false,
+     '_allow_writing' => true,
+     '_salt' => 'RYitkuu1',
+     '_standalone' => false,
+     '_secure' => false,
+  )),
+  'cart' => 
+  Cart::__set_state(array(
+     'added_to_order' => '',
+     'id' => 90,
+     'id_shop_group' => '1',
+     'id_shop' => '1',
+     'id_address_delivery' => '19',
+     'id_address_invoice' => '19',
+     'id_currency' => '1',
+     'id_customer' => '25',
+     'id_guest' => '1541',
+     'id_lang' => '1',
+     'recyclable' => '0',
+     'gift' => '0',
+     'gift_message' => '',
+     'mobile_theme' => '0',
+     'date_add' => '2020-08-18 11:10:03',
+     'secure_key' => 'b1edefb846d7640c370937032744b226',
+     'id_carrier' => '7',
+     'date_upd' => '2020-08-18 11:11:13',
+     'checkedTos' => false,
+     'pictures' => NULL,
+     'textFields' => NULL,
+     'delivery_option' => '{"19":"7,"}',
+     'allow_seperated_package' => '0',
+     '_products' => NULL,
+     '_taxCalculationMethod' => '0',
+     'webserviceParameters' => 
+    array (
+      'fields' => 
+      array (
+        'id_address_delivery' => 
+        array (
+          'xlink_resource' => 'addresses',
+        ),
+        'id_address_invoice' => 
+        array (
+          'xlink_resource' => 'addresses',
+        ),
+        'id_currency' => 
+        array (
+          'xlink_resource' => 'currencies',
+        ),
+        'id_customer' => 
+        array (
+          'xlink_resource' => 'customers',
+        ),
+        'id_guest' => 
+        array (
+          'xlink_resource' => 'guests',
+        ),
+        'id_lang' => 
+        array (
+          'xlink_resource' => 'languages',
+        ),
+      ),
+      'associations' => 
+      array (
+        'cart_rows' => 
+        array (
+          'resource' => 'cart_row',
+          'virtual_entity' => true,
+          'fields' => 
+          array (
+            'id_product' => 
+            array (
+              'required' => true,
+              'xlink_resource' => 'products',
+            ),
+            'id_product_attribute' => 
+            array (
+              'required' => true,
+              'xlink_resource' => 'combinations',
+            ),
+            'id_address_delivery' => 
+            array (
+              'required' => true,
+              'xlink_resource' => 'addresses',
+            ),
+            'id_customization' => 
+            array (
+              'required' => false,
+              'xlink_resource' => 'customizations',
+            ),
+            'quantity' => 
+            array (
+              'required' => true,
+            ),
+          ),
+        ),
+      ),
+    ),
+     'configuration' => 
+    PrestaShop\PrestaShop\Adapter\Configuration::__set_state(array(
+       'shop' => NULL,
+       'parameters' => NULL,
+    )),
+     'addressFactory' => 
+    PrestaShop\PrestaShop\Adapter\AddressFactory::__set_state(array(
+    )),
+     'shouldSplitGiftProductsQuantity' => false,
+     'shouldExcludeGiftsDiscount' => false,
+     'id_shop_list' => 
+    array (
+    ),
+     'get_shop_from_context' => true,
+     'table' => 'cart',
+     'identifier' => 'id_cart',
+     'fieldsRequired' => 
+    array (
+      0 => 'id_currency',
+      1 => 'id_lang',
+    ),
+     'fieldsSize' => 
+    array (
+      'secure_key' => 32,
+    ),
+     'fieldsValidate' => 
+    array (
+      'id_shop_group' => 'isUnsignedId',
+      'id_shop' => 'isUnsignedId',
+      'id_address_delivery' => 'isUnsignedId',
+      'id_address_invoice' => 'isUnsignedId',
+      'id_carrier' => 'isUnsignedId',
+      'id_currency' => 'isUnsignedId',
+      'id_customer' => 'isUnsignedId',
+      'id_guest' => 'isUnsignedId',
+      'id_lang' => 'isUnsignedId',
+      'recyclable' => 'isBool',
+      'gift' => 'isBool',
+      'gift_message' => 'isMessage',
+      'mobile_theme' => 'isBool',
+      'allow_seperated_package' => 'isBool',
+      'date_add' => 'isDate',
+      'date_upd' => 'isDate',
+    ),
+     'fieldsRequiredLang' => 
+    array (
+    ),
+     'fieldsSizeLang' => 
+    array (
+    ),
+     'fieldsValidateLang' => 
+    array (
+    ),
+     'tables' => 
+    array (
+    ),
+     'image_dir' => NULL,
+     'image_format' => 'jpg',
+     'translator' => NULL,
+     'def' => 
+    array (
+      'table' => 'cart',
+      'primary' => 'id_cart',
+      'fields' => 
+      array (
+        'id_shop_group' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+        ),
+        'id_shop' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+        ),
+        'id_address_delivery' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+        ),
+        'id_address_invoice' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+        ),
+        'id_carrier' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+        ),
+        'id_currency' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+          'required' => true,
+        ),
+        'id_customer' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+        ),
+        'id_guest' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+        ),
+        'id_lang' => 
+        array (
+          'type' => 1,
+          'validate' => 'isUnsignedId',
+          'required' => true,
+        ),
+        'recyclable' => 
+        array (
+          'type' => 2,
+          'validate' => 'isBool',
+        ),
+        'gift' => 
+        array (
+          'type' => 2,
+          'validate' => 'isBool',
+        ),
+        'gift_message' => 
+        array (
+          'type' => 3,
+          'validate' => 'isMessage',
+        ),
+        'mobile_theme' => 
+        array (
+          'type' => 2,
+          'validate' => 'isBool',
+        ),
+        'delivery_option' => 
+        array (
+          'type' => 3,
+        ),
+        'secure_key' => 
+        array (
+          'type' => 3,
+          'size' => 32,
+        ),
+        'allow_seperated_package' => 
+        array (
+          'type' => 2,
+          'validate' => 'isBool',
+        ),
+        'date_add' => 
+        array (
+          'type' => 5,
+          'validate' => 'isDate',
+        ),
+        'date_upd' => 
+        array (
+          'type' => 5,
+          'validate' => 'isDate',
+        ),
+        'added_to_order' => 
+        array (
+          'type' => 3,
+        ),
+      ),
+      'classname' => 'Cart',
+    ),
+     'update_fields' => NULL,
+     'force_id' => false,
+  )),
+  'altern' => 3,
+)

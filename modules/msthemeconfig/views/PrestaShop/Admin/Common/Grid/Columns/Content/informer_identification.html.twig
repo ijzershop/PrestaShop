@@ -1,0 +1,9 @@
+<div class="text-center">
+{% if record[column.options.field] is same as('0') %}
+-
+{% else %}
+  <span class="badge rounded badge-success">
+    {{ record[column.options.field] }}
+  </span>
+{% endif %}
+</div>

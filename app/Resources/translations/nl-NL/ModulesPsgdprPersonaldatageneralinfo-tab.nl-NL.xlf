@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
+    <body>
+      <trans-unit id="3bcfe5c02494f4ff326c5dbd1dcffa91">
+        <source>General info</source>
+        <target>Algemene informatie</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="019ec3132cdf8ee0f2e2a75cf5d3e459">
+        <source>Gender</source>
+        <target>Geslacht</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="49ee3087348e8d44e1feda1917443987">
+        <source>Name</source>
+        <target>Naam</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="4994a8ffeba4ac3140beb89e8d41f174">
+        <source>Language</source>
+        <target>Taal</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="c4aebdbba922c239df53567d2991e510">
+        <source>Creation account date</source>
+        <target>Account aanmaak datum</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="5e5914912e8d2f2765525840acf98bea">
+        <source>Last visit</source>
+        <target>Laatste bezoek</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
+        <source>Company</source>
+        <target>Bedrijf</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

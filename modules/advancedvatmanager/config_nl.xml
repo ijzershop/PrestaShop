@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>advancedvatmanager</name>
+    <displayName><![CDATA[Geavanceerde btw-manager]]></displayName>
+    <version><![CDATA[1.6.2.2]]></version>
+    <description><![CDATA[Controleer de geldigheid van de btw-nummers van de klanten die zich in de winkel registreren. Beheer klanten met btw-nummers en koppel ze automatisch aan klantgroepen. Verwijder belastingen in productprijzen, beheer het Brexit-belastingbeleid en nog veel meer opties.]]></description>
+    <author><![CDATA[Liewebs]]></author>
+    <tab><![CDATA[checkout]]></tab>
+	<confirmUninstall><![CDATA[Weet u zeker dat u de module wilt verwijderen?]]></confirmUninstall>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+</module>

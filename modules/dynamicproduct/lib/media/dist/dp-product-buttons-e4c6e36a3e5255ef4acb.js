@@ -1,0 +1,25 @@
+/*
+* 2010-2022 Tuni-Soft
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* It is available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade this module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please refer to
+* http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
+* for more information.
+*
+* @author    Tuni-Soft
+* @copyright 2010-2022 Tuni-Soft
+* @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*/!function(e){function t(t){for(var r,o,u=t[0],c=t[1],l=t[2],d=0,f=[];d<u.length;d++)o=u[d],Object.prototype.hasOwnProperty.call(i,o)&&i[o]&&f.push(i[o][0]),i[o]=0;for(r in c)Object.prototype.hasOwnProperty.call(c,r)&&(e[r]=c[r]);s&&s(t);while(f.length)f.shift()();return a.push.apply(a,l||[]),n()}function n(){for(var e,t=0;t<a.length;t++){for(var n=a[t],r=!0,o=1;o<n.length;o++){var c=n[o];0!==i[c]&&(r=!1)}r&&(a.splice(t--,1),e=u(u.s=n[0]))}return e}var r={},o={5:0},i={5:0},a=[];function u(t){if(r[t])return r[t].exports;var n=r[t]={i:t,l:!1,exports:{}};return e[t].call(n.exports,n,n.exports,u),n.l=!0,n.exports}u.e=function(e){var t=[];o[e]?t.push(o[e]):0!==o[e]&&{9:1,10:1}[e]&&t.push(o[e]=new Promise((function(t,n){for(var r="css/"+({}[e]||e)+"-e4c6e36a3e5255ef4acb.css",i=u.p+r,a=document.getElementsByTagName("link"),c=0;c<a.length;c++){var l=(s=a[c]).getAttribute("data-href")||s.getAttribute("href");if("stylesheet"===s.rel&&(l===r||l===i))return t()}var d=document.getElementsByTagName("style");for(c=0;c<d.length;c++){var s;if((l=(s=d[c]).getAttribute("data-href"))===r||l===i)return t()}var f=document.createElement("link");f.rel="stylesheet",f.type="text/css";f.onerror=f.onload=function(r){if(f.onerror=f.onload=null,"load"===r.type)t();else{var a=r&&("load"===r.type?"missing":r.type),u=r&&r.target&&r.target.href||i,c=new Error("Loading CSS chunk "+e+" failed.\n("+u+")");c.code="CSS_CHUNK_LOAD_FAILED",c.type=a,c.request=u,delete o[e],f.parentNode.removeChild(f),n(c)}},f.href=i,document.head.appendChild(f)})).then((function(){o[e]=0})));var n=i[e];if(0!==n)if(n)t.push(n[2]);else{var r=new Promise((function(t,r){n=i[e]=[t,r]}));t.push(n[2]=r);var a,c=document.createElement("script");c.charset="utf-8",c.timeout=120,u.nc&&c.setAttribute("nonce",u.nc),c.src=function(e){return u.p+""+({}[e]||e)+"-e4c6e36a3e5255ef4acb.js"}(e);var l=new Error;a=function(t){c.onerror=c.onload=null,clearTimeout(d);var n=i[e];if(0!==n){if(n){var r=t&&("load"===t.type?"missing":t.type),o=t&&t.target&&t.target.src;l.message="Loading chunk "+e+" failed.\n("+r+": "+o+")",l.name="ChunkLoadError",l.type=r,l.request=o,n[1](l)}i[e]=void 0}};var d=setTimeout((function(){a({type:"timeout",target:c})}),12e4);c.onerror=c.onload=a,document.head.appendChild(c)}return Promise.all(t)},u.m=e,u.c=r,u.d=function(e,t,n){u.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:n})},u.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},u.t=function(e,t){if(1&t&&(e=u(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(u.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var r in e)u.d(n,r,function(t){return e[t]}.bind(null,r));return n},u.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return u.d(t,"a",t),t},u.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},u.p="",u.oe=function(e){throw console.error(e),e};var c=window.dp_jsonpFunction=window.dp_jsonpFunction||[],l=c.push.bind(c);c.push=t,c=c.slice();for(var d=0;d<c.length;d++)t(c[d]);var s=l;a.push([28,0]),n()}({12:function(e,t){e.exports=jQuery},28:function(e,t,n){"use strict";n.r(t);var r=n(2),o=n(5),i=function(e,t,n,r){return new(n||(n=Promise))((function(o,i){function a(e){try{c(r.next(e))}catch(e){i(e)}}function u(e){try{c(r.throw(e))}catch(e){i(e)}}function c(e){var t;e.done?o(e.value):(t=e.value,t instanceof n?t:new n((function(e){e(t)}))).then(a,u)}c((r=r.apply(e,t||[])).next())}))};function a(){return i(this,void 0,void 0,(function*(){const e=yield $.ajax({url:window.dp.controllers.loader,method:"post",dataType:"json",data:Object.assign({action:"load_variables"},window.dp)});e.success&&(Object.keys(e.variables).forEach((t=>{window[t]=e.variables[t]})),function(){i(this,void 0,void 0,(function*(){yield Promise.all([n.e(10).then(n.bind(null,40)),n.e(8).then(n.bind(null,42))]),Object(r.h)(document,"dp-loaded"),yield Object(o.e)(),window.dp.loaded=!0}))}())}))}n.p=window.dp_public_path,$(window).on("load",(()=>{a()}))}});
+//# sourceMappingURL=https://prestalife.net/sourcemaps/dynamic/dp-product-buttons-4a98cef64729c3f61dae.js.map

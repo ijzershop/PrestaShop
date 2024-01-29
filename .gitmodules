@@ -1,0 +1,15 @@
+[submodule "modules/sawandcutmodule"]
+	path = modules/sawandcutmodule
+url=git@github.com:ijzershop/sawandcutmodule.git
+[submodule "modules/koopmanorderexport"]
+	path = modules/koopmanorderexport
+url=git@github.com:ijzershop/koopmanorderexport.git
+[submodule "modules/addtoorder"]
+	path = modules/addtoorder
+url=git@github.com:ijzershop/addtoorder.git
+[submodule "modules/ps_shoppingcart"]
+	path = modules/ps_shoppingcart
+	url = git@github.com:ijzershop/ps_shoppingcart.git
+[submodule "modules/modernesmiddynamicproduct"]
+	path = modules/modernesmiddynamicproduct
+	url = git@github.com:ijzershop/modernesmiddynamicproduct.git

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
+    <body>
+      <trans-unit id="5868129c4526891dddb05b8e59c33572">
+        <source>GDPR - Personal data</source>
+        <target>GDPR - Persoonlijke informatie</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="a8308387f3ffc2d045d2b6125e74317d">
+        <source>Access to my data</source>
+        <target>Toegang tot mijn persoonlijke informatie</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="915f4446a47b51378e37374cfbb72d7f">
+        <source>At any time, you have the right to retrieve the data you have provided to our site. Click on "Get my data" to automatically download a copy of your personal data on a pdf or csv file.</source>
+        <target>U heeft te allen tijde het recht om de door u verstrekte gegevens op onze site op te halen. Klik op "Mijn gegevens ophalen" om automatisch een kopie van uw persoonlijke gegevens te downloaden in een pdf- of csv-bestand.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="49b5d04f5f20820830f080d4674c8669">
+        <source>GET MY DATA TO CSV</source>
+        <target>Download mijn informatie in een csv bestand</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="7b0b06bfe69473081553bcccb12ca068">
+        <source>GET MY DATA TO PDF</source>
+        <target>Download mijn informatie in een pdf bestand</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="91a49c1d45a5d37e85658d01b6f37423">
+        <source><![CDATA[Rectification & Erasure requests]]></source>
+        <target><![CDATA[Rectificatie & verwijder aanvragen]]></target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="01cb324ae91e9bd16213cc2945334249">
+        <source>You have the right to modify all the personal information found in the "My Account" page. For any other request you might have regarding the rectification and/or erasure of your personal data, please contact us through our</source>
+        <target>U hebt het recht om alle persoonlijke informatie op de pagina "Mijn account" te wijzigen. Voor elk ander verzoek dat u heeft met betrekking tot de rectificatie en / of verwijdering van uw persoonlijke gegevens, neem dan contact met ons op via onze</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="af5efea250326c1c34d69aa9364b482c">
+        <source>contact page</source>
+        <target>contact pagina</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="332087a4991d8bc866abd3fd78a2e514">
+        <source>We will review your request and reply as soon as possible.</source>
+        <target>We zullen uw verzoek beoordelen en zo snel mogelijk antwoorden.</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

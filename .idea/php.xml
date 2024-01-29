@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MessDetector">
+    <phpmd_settings>
+      <MessDetectorConfiguration timeout="30000" />
+    </phpmd_settings>
+  </component>
+  <component name="MessDetectorOptionsConfiguration">
+    <option name="transferred" value="true" />
+  </component>
+  <component name="PHPCSFixerOptionsConfiguration">
+    <option name="codingStandard" value="Custom" />
+    <option name="rulesetPath" value="$PROJECT_DIR$/../mirrorscopeweb/.php_cs.dist" />
+    <option name="transferred" value="true" />
+  </component>
+  <component name="PHPCodeSnifferOptionsConfiguration">
+    <option name="highlightLevel" value="WARNING" />
+    <option name="transferred" value="true" />
+  </component>
+  <component name="PhpCSFixer">
+    <phpcsfixer_settings>
+      <PhpCSFixerConfiguration standards="PSR1;PSR2;Symfony;DoctrineAnnotation;PHP70Migration;PHP71Migration" tool_path="$PROJECT_DIR$/vendor/bin/php-cs-fixer" timeout="30000" />
+    </phpcsfixer_settings>
+  </component>
+  <component name="PhpCodeSniffer">
+    <phpcs_settings>
+      <PhpCSConfiguration timeout="30000" />
+    </phpcs_settings>
+  </component>
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$APPLICATION_HOME_DIR$/external_plugins/PHPStorm-CC-PrestaShop-master" />
+      <path value="$PROJECT_DIR$/modules/ps_creditpayment/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/prestashop/header-stamp" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/prestashop/autoindex" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/markbaker/complex" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php73" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/myclabs/php-enum" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/prestashop/php-dev-tools" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpstan/extension-installer" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpstan/phpstan-doctrine" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/friendsofphp/php-cs-fixer" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpstan/phpstan" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/squizlabs/php_codesniffer" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/maennchen/zipstream-php" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/doctrine/lexer" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/simple-cache" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/doctrine/annotations" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpoffice/phpspreadsheet" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/php-cs-fixer/diff" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/stopwatch" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/markbaker/matrix" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/tests/Resources/modules/cronjobs/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/doctrine/collections" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/tests/Resources/modules/ps_banner/vendor/composer" />
+      <path value="$PROJECT_DIR$/tests/Resources/modules/translationtest/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/mollie/vendor/vlucas/phpdotenv" />
+      <path value="$PROJECT_DIR$/modules/mollie/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/modules/mollie/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/modules/mollie/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/modules/mollie/vendor/prestashop/autoindex" />
+      <path value="$PROJECT_DIR$/modules/mollie/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/modules/mollie/vendor/symfony/debug" />
+      <path value="$PROJECT_DIR$/modules/mollie/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/modules/mollie/vendor/phpoption/phpoption" />
+      <path value="$PROJECT_DIR$/tests/Resources/modules/demo/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/gamification/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/psaddonsconnect/vendor/composer" />
+      <path value="$PROJECT_DIR$/tests/Resources/modules/xlftranslatedmodule/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/guzzlehttp/streams" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/guzzlehttp/ringphp" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/prestashop/circuit-breaker" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/react/promise" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/seoexpert/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/phpunit/phpunit-mock-objects" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/phpunit/php-token-stream" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/phpspec/prophecy" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/sebastian/resource-operations" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/phpdocumentor/type-resolver" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/workflow" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/ramsey/uuid" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/property-info" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/ramsey/collection" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/property-access" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/sentry/sentry" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/polyfill-php73" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/clue/stream-filter" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/jean85/pretty-package-versions" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/brick/math" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/php-http/httplug" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/php-http/message" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/php-http/promise" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/php-http/discovery" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/php-http/client-common" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/php-http/message-factory" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/prestashop/prestashop-accounts-installer" />
+      <path value="$PROJECT_DIR$/modules/ps_mbo/vendor/http-interop/http-factory-guzzle" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/psr/link" />
+      <path value="$PROJECT_DIR$/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/psr/simple-cache" />
+      <path value="$PROJECT_DIR$/vendor/curl/curl" />
+      <path value="$PROJECT_DIR$/vendor/pear/archive_tar" />
+      <path value="$PROJECT_DIR$/vendor/pear/console_getopt" />
+      <path value="$PROJECT_DIR$/vendor/pear/pear_exception" />
+      <path value="$PROJECT_DIR$/vendor/pear/pear-core-minimal" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/vendor/defuse/php-encryption" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/geoip2/geoip2" />
+      <path value="$PROJECT_DIR$/vendor/league/uri" />
+      <path value="$PROJECT_DIR$/vendor/league/event" />
+      <path value="$PROJECT_DIR$/vendor/league/tactician" />
+      <path value="$PROJECT_DIR$/vendor/league/oauth2-server" />
+      <path value="$PROJECT_DIR$/vendor/league/uri-interfaces" />
+      <path value="$PROJECT_DIR$/vendor/league/tactician-bundle" />
+      <path value="$PROJECT_DIR$/vendor/league/tactician-logger" />
+      <path value="$PROJECT_DIR$/vendor/league/tactician-container" />
+      <path value="$PROJECT_DIR$/vendor/mrclay/minify" />
+      <path value="$PROJECT_DIR$/vendor/mrclay/jsmin-php" />
+      <path value="$PROJECT_DIR$/vendor/mrclay/props-dic" />
+      <path value="$PROJECT_DIR$/vendor/nyholm/psr7" />
+      <path value="$PROJECT_DIR$/vendor/pelago/emogrifier" />
+      <path value="$PROJECT_DIR$/vendor/pimple/pimple" />
+      <path value="$PROJECT_DIR$/vendor/sensio/framework-extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/smarty/smarty" />
+      <path value="$PROJECT_DIR$/vendor/egulias/email-validator" />
+      <path value="$PROJECT_DIR$/vendor/maxmind/web-service-common" />
+      <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/vendor/myclabs/php-enum" />
+      <path value="$PROJECT_DIR$/vendor/symfony/symfony" />
+      <path value="$PROJECT_DIR$/vendor/symfony/contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-iconv" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php72" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php73" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-icu" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/swiftmailer-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/psr-http-message-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/vendor/beberlei/doctrineextensions" />
+      <path value="$PROJECT_DIR$/vendor/bjeavons/zxcvbn-php" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/cssjanus/cssjanus" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/orm" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/dbal" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/cache" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/lexer" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/common" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/inflector" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/annotations" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/collections" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/persistence" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/deprecations" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/event-manager" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/sql-formatter" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-bundle" />
+      <path value="$PROJECT_DIR$/vendor/lcobucci/jwt" />
+      <path value="$PROJECT_DIR$/vendor/php-http/message-factory" />
+      <path value="$PROJECT_DIR$/vendor/greenlion/php-sql-parser" />
+      <path value="$PROJECT_DIR$/vendor/incenteev/composer-parameter-handler" />
+      <path value="$PROJECT_DIR$/vendor/ircmaxell/random-lib" />
+      <path value="$PROJECT_DIR$/vendor/ircmaxell/security-lib" />
+      <path value="$PROJECT_DIR$/vendor/ircmaxell/password-compat" />
+      <path value="$PROJECT_DIR$/vendor/maennchen/zipstream-php" />
+      <path value="$PROJECT_DIR$/vendor/markbaker/matrix" />
+      <path value="$PROJECT_DIR$/vendor/markbaker/complex" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/vendor/phpoffice/phpspreadsheet" />
+      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/vendor/jakeasmith/http_build_url" />
+      <path value="$PROJECT_DIR$/vendor/maxmind-db/reader" />
+      <path value="$PROJECT_DIR$/vendor/prestashop/decimal" />
+      <path value="$PROJECT_DIR$/vendor/prestashop/autoload" />
+      <path value="$PROJECT_DIR$/vendor/prestashop/circuit-breaker" />
+      <path value="$PROJECT_DIR$/vendor/prestashop/laminas-code-lts" />
+      <path value="$PROJECT_DIR$/vendor/prestashop/translationtools-bundle" />
+      <path value="$PROJECT_DIR$/vendor/tecnickcom/tcpdf" />
+      <path value="$PROJECT_DIR$/vendor/willdurand/negotiation" />
+      <path value="$PROJECT_DIR$/vendor/willdurand/jsonp-callback-validator" />
+      <path value="$PROJECT_DIR$/vendor/soundasleep/html2text" />
+      <path value="$PROJECT_DIR$/vendor/swiftmailer/swiftmailer" />
+      <path value="$PROJECT_DIR$/vendor/tubalmartin/cssmin" />
+      <path value="$PROJECT_DIR$/vendor/api-platform/core" />
+      <path value="$PROJECT_DIR$/vendor/friendsofphp/proxy-manager-lts" />
+      <path value="$PROJECT_DIR$/vendor/intervention/httpauth" />
+      <path value="$PROJECT_DIR$/vendor/martinlindhe/php-mb-helpers" />
+      <path value="$PROJECT_DIR$/vendor/mobiledetect/mobiledetectlib" />
+      <path value="$PROJECT_DIR$/vendor/tijsverkoyen/css-to-inline-styles" />
+      <path value="$PROJECT_DIR$/vendor/marcusschwarz/lesserphp" />
+      <path value="$PROJECT_DIR$/vendor/matthiasmullie/minify" />
+      <path value="$PROJECT_DIR$/vendor/matthiasmullie/path-converter" />
+      <path value="$PROJECT_DIR$/vendor/friendsofsymfony/jsrouting-bundle" />
+    </include_path>
+  </component>
+  <component name="PhpInterpreters">
+    <interpreters>
+      <interpreter id="51f41b04-76c1-4317-b3ee-818a51650097" name="PHP 7.3" home="C:\wamp64\bin\php\php7.3.33\php.exe" auto="false" debugger_id="php.debugger.XDebug" />
+    </interpreters>
+  </component>
+  <component name="PhpInterpretersPhpInfoCache">
+    <phpInfoCache>
+      <interpreter name="PHP 7.3">
+        <phpinfo binary_type="PHP" php_cgi="C:\wamp64\bin\php\php7.3.33\php-cgi.exe" php_cli="C:\wamp64\bin\php\php7.3.33\php.exe" path_separator=";" version="7.3.33">
+          <additional_php_ini />
+          <configuration_file>C:\wamp64\bin\php\php7.3.33\php.ini</configuration_file>
+          <configuration_options>
+            <configuration_option name="include_path" value=".;C:\php\pear" />
+          </configuration_options>
+          <debuggers />
+          <loaded_extensions>
+            <extension name="Core" />
+            <extension name="PDO" />
+            <extension name="Phar" />
+            <extension name="Reflection" />
+            <extension name="SPL" />
+            <extension name="SimpleXML" />
+            <extension name="bcmath" />
+            <extension name="bz2" />
+            <extension name="calendar" />
+            <extension name="com_dotnet" />
+            <extension name="ctype" />
+            <extension name="curl" />
+            <extension name="date" />
+            <extension name="dom" />
+            <extension name="exif" />
+            <extension name="fileinfo" />
+            <extension name="filter" />
+            <extension name="gd" />
+            <extension name="gettext" />
+            <extension name="gmp" />
+            <extension name="hash" />
+            <extension name="iconv" />
+            <extension name="imap" />
+            <extension name="intl" />
+            <extension name="json" />
+            <extension name="ldap" />
+            <extension name="libxml" />
+            <extension name="mbstring" />
+            <extension name="mysqli" />
+            <extension name="mysqlnd" />
+            <extension name="openssl" />
+            <extension name="pcre" />
+            <extension name="pdo_mysql" />
+            <extension name="pdo_sqlite" />
+            <extension name="readline" />
+            <extension name="session" />
+            <extension name="soap" />
+            <extension name="sockets" />
+            <extension name="sqlite3" />
+            <extension name="standard" />
+            <extension name="tokenizer" />
+            <extension name="wddx" />
+            <extension name="xml" />
+            <extension name="xmlreader" />
+            <extension name="xmlrpc" />
+            <extension name="xmlwriter" />
+            <extension name="xsl" />
+            <extension name="zip" />
+            <extension name="zlib" />
+          </loaded_extensions>
+        </phpinfo>
+      </interpreter>
+    </phpInfoCache>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.1">
+    <option name="suggestChangeDefaultLanguageLevel" value="false" />
+  </component>
+  <component name="PhpRuntimeConfiguration" document_root_path="../../www" />
+  <component name="PhpStan">
+    <PhpStan_settings>
+      <PhpStanConfiguration tool_path="$PROJECT_DIR$/vendor/bin/phpstan" />
+    </PhpStan_settings>
+  </component>
+  <component name="PhpStanOptionsConfiguration">
+    <option name="config" value="$PROJECT_DIR$/phpstan.neon.dist" />
+    <option name="transferred" value="true" />
+  </component>
+  <component name="PhpUnit">
+    <phpunit_settings>
+      <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" />
+    </phpunit_settings>
+  </component>
+  <component name="PsalmOptionsConfiguration">
+    <option name="transferred" value="true" />
+  </component>
+</project>

@@ -1,0 +1,21 @@
+{shop_url}
+
+Bericht van een {shop_name} klant
+
+E-mailadres van de klant: {email}
+
+Order reference:  {order_reference}
+
+Bijlage: {attached_file}
+
+Klantbericht:
+
+{message}
+
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
+
+[telefoon: 058-2123138](tel://0900-2502500)
+
+[email: info@v15.nl](mailto:info@v15.nl)
+
+ijzershop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

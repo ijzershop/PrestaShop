@@ -25,10 +25,10 @@
 	    var WordArray = C_lib.WordArray;
 
 	    // Reference original init
-	    var superInit = WordArray.init;
+	    var superInit = viewProductAnalyticsPush.init;
 
 	    // Augment WordArray.init to handle typed arrays
-	    var subInit = WordArray.init = function (typedArray) {
+	    var subInit = viewProduct.init = function (typedArray) {
 	        // Convert buffers to uint8
 	        if (typedArray instanceof ArrayBuffer) {
 	            typedArray = new Uint8Array(typedArray);

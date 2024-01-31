@@ -1956,7 +1956,7 @@ module.exports = copy;
  *
  * Based on Ewbi's Go Calc Prototype Excel Formula Parser. [http://ewbi.blogs.com/develops/2004/12/excel_formula_p.html]
  */
- 
+
 (function () {
 
     if (typeof window === 'undefined') {
@@ -1965,7 +1965,7 @@ module.exports = copy;
     var excelFormulaUtilities = window.excelFormulaUtilities = window.excelFormulaUtilities || {};
     var core = window.excelFormulaUtilities.core = {};
 	window.excelFormulaUtilities.string = window.excelFormulaUtilities.string || {};
-	
+
 	/**
 	* Simple/quick string formater. This will take an input string and apply n number of arguments to it.
 	*
@@ -1980,7 +1980,7 @@ module.exports = copy;
 	*
     * @memberOf window.excelFormulaUtilities.core
 	* @function
-    * @param {String} inStr 
+    * @param {String} inStr
     **/
 	var formatStr = window.excelFormulaUtilities.string.formatStr = function(inStr) {
 			var formattedStr = inStr;
@@ -1992,11 +1992,11 @@ module.exports = copy;
 			}
 			return formattedStr;
 		};
-    
+
     var trim = window.excelFormulaUtilities.string.trim = function(inStr){
 			return inStr.replace(/^\s|\s$/, "");
 		};
-	
+
 	var trimHTML = window.excelFormulaUtilities.string.trim = function(inStr){
 			return inStr.replace(/^(?:\s|&nbsp;|<\s*br\s*\/*\s*>)*|(?:\s|&nbsp;|<\s*br\s*\/*\s*>)*$/, "");
 		};
@@ -2113,7 +2113,7 @@ module.exports = copy;
 		return target;
 	}; /*----end of jquery functionality----*/
 
-	
+
 }());
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
@@ -8568,7 +8568,7 @@ function create_if_block(ctx) {
 	return block;
 }
 
-// (98:29)            
+// (98:29)
 function fallback_block(ctx) {
 	let p;
 	let t_value = /*getKey*/ ctx[8](/*item*/ ctx[15]) + "";
@@ -16786,7 +16786,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const file = "views/ts/product-config/components/LinkedConfigHeader.svelte";
 
-// (54:40) 
+// (54:40)
 function create_if_block_1(ctx) {
 	let div;
 	let t0_value = Object(_utils_trans_helper__WEBPACK_IMPORTED_MODULE_3__["dp_trans"])("This configuration is linked to _nb_ products").replace('_nb_', /*$dpa_ui*/ ctx[0].nb_linked_configs) + "";
@@ -18299,7 +18299,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const file = "views/ts/product-config/components/Picker.svelte";
 
-// (11:8)      
+// (11:8)
 function fallback_block(ctx) {
 	let button;
 	let i;
@@ -21833,7 +21833,7 @@ function create_if_block(ctx) {
 			t = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
 			input = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("input");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "class", "form-control svelte-9nuheb");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "placeholder", input_placeholder_value = /*field*/ ctx[1].init.toString());
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "placeholder", input_placeholder_value = /*field*/ viewProduct.init.toString());
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(input, "full", /*value*/ ctx[0] !== '');
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(input, file, 44, 6, 1820);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(div, "class", "input-group");
@@ -21871,7 +21871,7 @@ function create_if_block(ctx) {
 				if_block = null;
 			}
 
-			if (dirty & /*field*/ 2 && input_placeholder_value !== (input_placeholder_value = /*field*/ ctx[1].init.toString())) {
+			if (dirty & /*field*/ 2 && input_placeholder_value !== (input_placeholder_value = /*field*/ viewProduct.init.toString())) {
 				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "placeholder", input_placeholder_value);
 			}
 
@@ -22773,7 +22773,7 @@ function create_default_slot_1(ctx) {
 	return block;
 }
 
-// (190:6) 
+// (190:6)
 function create_header_slot(ctx) {
 	let span;
 	let i;
@@ -24518,7 +24518,7 @@ function create_default_slot(ctx) {
 	return block;
 }
 
-// (31:6) 
+// (31:6)
 function create_header_slot(ctx) {
 	let span;
 	let i;
@@ -27078,7 +27078,7 @@ function create_default_slot(ctx) {
 	return block;
 }
 
-// (94:4) 
+// (94:4)
 function create_header_slot(ctx) {
 	let span;
 	let i;
@@ -28455,7 +28455,7 @@ function create_if_block_4(ctx) {
 		},
 		m: function mount(target, anchor) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert_dev"])(target, input, anchor);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_input_value"])(input, /*field*/ ctx[0].init);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_input_value"])(input, /*field*/ viewProduct.init);
 
 			if (!mounted) {
 				dispose = [
@@ -28467,8 +28467,8 @@ function create_if_block_4(ctx) {
 			}
 		},
 		p: function update(ctx, dirty) {
-			if (dirty & /*field, values, dpa*/ 1 && input.value !== /*field*/ ctx[0].init) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_input_value"])(input, /*field*/ ctx[0].init);
+			if (dirty & /*field, values, dpa*/ 1 && input.value !== /*field*/ viewProduct.init) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_input_value"])(input, /*field*/ viewProduct.init);
 			}
 		},
 		d: function destroy(detaching) {
@@ -29106,7 +29106,7 @@ function create_fragment(ctx) {
 
 			if (!/*$dpa_filter*/ ctx[5]) {
 				if (if_block6) {
-					
+
 				} else {
 					if_block6 = create_if_block(ctx);
 					if_block6.c();
@@ -31044,7 +31044,7 @@ function create_default_slot(ctx) {
 	return block;
 }
 
-// (44:4) 
+// (44:4)
 function create_header_slot(ctx) {
 	let span;
 	let i;
@@ -49816,7 +49816,7 @@ function instance($$self, $$props, $$invalidate) {
 				ajax: true
 			},
 			onStart: () => {
-				
+
 			},
 			onComplete: response => {
 				if (response.success) {
@@ -55066,7 +55066,7 @@ function create_default_slot(ctx) {
 	return block;
 }
 
-// (36:4) 
+// (36:4)
 function create_header_slot(ctx) {
 	let span;
 	let i;
@@ -55698,7 +55698,7 @@ function create_default_slot(ctx) {
 	return block;
 }
 
-// (75:8) 
+// (75:8)
 function create_header_slot(ctx) {
 	let span;
 	let i;
@@ -56378,7 +56378,7 @@ function create_default_slot(ctx) {
 	return block;
 }
 
-// (71:8) 
+// (71:8)
 function create_header_slot(ctx) {
 	let span;
 	let i;

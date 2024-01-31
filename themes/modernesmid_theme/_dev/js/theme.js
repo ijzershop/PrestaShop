@@ -29,6 +29,7 @@ import 'jquery-touchswipe';
 import './selectors';
 import './responsive';
 import './cookie-modal';
+import './tagmanager';
 
 // import './checkout';
 // import './customer';
@@ -44,6 +45,7 @@ import usePasswordPolicy from './components/usePasswordPolicy';
 import ProductMinitature from './components/product-miniature';
 import ProductSelect from './components/product-select';
 // import TopMenu from './components/top-menu';
+
 
 import './lib/bootstrap-filestyle.min';
 import './lib/jquery.scrollbox.min';
@@ -1768,7 +1770,7 @@ $(document).on('click', '#addCustomProductByEmployee', function (event) {
 
   tinymce.suffix = '.min';
   tinymce.baseURL = window.location.origin + '/js/tiny_mce';
-  tinymce.init({
+  viewProduct.init({
     theme_url: '/js/tiny_mce/themes/silver/theme.min.js',
     theme: 'silver',
     relative_urls: true,

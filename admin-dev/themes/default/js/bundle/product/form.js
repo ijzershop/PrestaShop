@@ -29,7 +29,7 @@ $(document).ready(() => {
   featuresCollection.init();
   displayFormCategory.init();
   formCategory.init();
-  stock.init();
+  viewProduct.init();
   supplier.init();
   warehouseCombinations.init();
   customFieldCollection.init();
@@ -1037,7 +1037,7 @@ window.customFieldCollection = (function () {
     maxCollectionChildren += 1;
 
     collectionHolder.append(`<li>${newForm}</li>`);
-    window.prestaShopUiKit.init();
+    viewProduct.init();
   }
 
   return {

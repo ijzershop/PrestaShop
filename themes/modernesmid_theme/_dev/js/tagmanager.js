@@ -1,195 +1,57 @@
-// product page view
-dataLayer.push({ ecommerce: null });
-dataLayer.push({
-  event: "view_item",
-  ecommerce: {
-    currency: "EUR",
-    value: 8.41, // bedrag product ex btw
-    items: [
-      {
-        item_id: "", //SKU / ID
-        item_name: "", // bv. Stalen koker 20x20x2mm
-        discount: 0, // number, indien van toepassing
-        index: 0,
-        item_category: "", // bv. Profielen
-        item_category2: "", // bv. Staal
-        price: 8.41, // non-discounted price. Dus value = price - discount
-        quantity: 1, // hier is het altijd 1
-      },
-    ],
-  },
-})
+import viewProductAnalyticsPush from "./tagmanager/view-product";
+import viewCartAnalyticsPush from "./tagmanager/view-cart";
+import startCheckoutAnalyticsPush from "./tagmanager/start-checkout";
+import prestashop from 'prestashop';
+import startCheckoutAddressAnalyticsPush from "./tagmanager/start-address";
+import selectCheckoutPaymentAnalyticsPush from "./tagmanager/select-payment";
+import removeFromCartAnalyticsPush from "./tagmanager/remove-cart";
+import purchaseAnalyticsPush from "./tagmanager/purchase";
+import addToCartAnalyticsPush from "./tagmanager/add-cart";
 
-// wanneer iemand een product toevoegt aan winkelmand.
-// 2 verschillen met hierboven: event en item quantity kan meer dan 1 zijn.
+$(document).ready(function () {
+    //  wanneer iemand een product bekijkt
+    if ($("body#product").length > 0) {
+      viewProductAnalyticsPush.init();
+    }
 
-dataLayer.push({ ecommerce: null });
-dataLayer.push({
-  event: "add_to_cart",
-  ecommerce: {
-    currency: "EUR",
-    value: 8.41, // bedrag product ex btw
-    items: [
-      {
-        item_id: "", //SKU / ID
-        item_name: "", // bv. Stalen koker 20x20x2mm
-        discount: 0, // number, indien van toepassing
-        index: 0,
-        item_category: "", // bv. Profielen
-        item_category2: "", // bv. Staal
-        price: 8.41, // non-discounted price. Dus value = price - discount
-        quantity: 1, // hier is het altijd 1
-      },
-    ],
-  },
-})
-
-// wanneer iemand winkelmand bekijkt
+  // wanneer iemand winkelmand bekijkt
 // 2 verschillen met hierboven: event en items kunnen meerdere producten zijn.
+  if ($("body#cart").length > 0) {
+    viewCartAnalyticsPush.init();
+  }
 
-dataLayer.push({ ecommerce: null });
-dataLayer.push({
-  event: "view_cart",
-  ecommerce: {
-    currency: "EUR",
-    value: 8.41, // bedrag product ex btw
-    items: [
-      {
-        item_id: "", //SKU / ID
-        item_name: "", // bv. Stalen koker 20x20x2mm
-        discount: 0, // number, indien van toepassing
-        index: 0,
-        item_category: "", // bv. Profielen
-        item_category2: "", // bv. Staal
-        price: 8.41, // non-discounted price. Dus value = price - discount
-        quantity: 1, // hier is het altijd 1
-      },
-    ],
-  },
+  // wanneer er een aankoop is gedaan
+  if ($("body#order-confirmation").length > 0) {
+    purchaseAnalyticsPush.init();
+  }
+
+  // wanneer iemand op de pagina /bestellen komt
+  if ($("body#module-supercheckout-supercheckout, body#checkout").length > 0) {
+    startCheckoutAnalyticsPush.init();
+  }
+
+  // wanneer iemand aan stap 4 "Bezorgadres" begint
+  $(document).on('change', '[name="payment_address[postcode]"]',function() {
+    startCheckoutAddressAnalyticsPush.init();
+  });
+
+  // wanneer iemand betaalwijze selecteert
+  $(document).on('change', '[name="payment_method"]',function() {
+    selectCheckoutPaymentAnalyticsPush.init();
+  });
+
+  // wanneer iemand een product verwijderd uit de winkelwagen
+  $(document).on('mouseup', '.product-cart-delete-button',function() {
+    removeFromCartAnalyticsPush.init();
+  });
+
+  // wanneer iemand een product toevoegde aan de winkelwagen
+  $(document).on('mouseup', '.add-to-cart',function() {
+    addToCartAnalyticsPush.init();
+  });
+
+
+
+
 })
 
-// wanneer iemand winkelmand bekijkt
-// 1 verschil met hierboven: event
-
-dataLayer.push({ ecommerce: null });
-dataLayer.push({
-  event: "remove_from_cart",
-  ecommerce: {
-    currency: "EUR",
-    value: 8.41, // bedrag product ex btw
-    items: [
-      {
-        item_id: "", //SKU / ID
-        item_name: "", // bv. Stalen koker 20x20x2mm
-        discount: 0, // number, indien van toepassing
-        index: 0,
-        item_category: "", // bv. Profielen
-        item_category2: "", // bv. Staal
-        price: 8.41, // non-discounted price. Dus value = price - discount
-        quantity: 1, // hier is het altijd 1
-      },
-    ],
-  },
-})
-
-// wanneer iemand op de pagina /bestellen komt
-// 1 verschil met hierboven: event
-
-dataLayer.push({ ecommerce: null });
-dataLayer.push({
-  event: "begin_checkout",
-  ecommerce: {
-    currency: "EUR",
-    value: 8.41, // bedrag product ex btw
-    items: [
-      {
-        item_id: "", //SKU / ID
-        item_name: "", // bv. Stalen koker 20x20x2mm
-        discount: 0, // number, indien van toepassing
-        index: 0,
-        item_category: "", // bv. Profielen
-        item_category2: "", // bv. Staal
-        price: 8.41, // non-discounted price. Dus value = price - discount
-        quantity: 1, // hier is het altijd 1
-      },
-    ],
-  },
-})
-
-// iemand die een succesvolle betaling heeft  gehad en op de bedankt pagina komt.
-// extra items aan toegevoegd!
-
-dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object.
-dataLayer.push({
-  event: "purchase",
-  ecommerce: {
-    currency: "EUR",
-    value: 8.41, // bedrag product ex btw
-    tax: 1.00, // tax bedrag
-    shipping: 1.00, // shipping bedrag
-    coupon: "5% korting", // of officiele coupon naam (deze is optioneel. Als het moeilijk is, laat dan maar zitten.)
-    items: [
-      {
-        item_id: "", //SKU / ID
-        item_name: "", // bv. Stalen koker 20x20x2mm
-        discount: 0, // number, indien van toepassing
-        index: 0,
-        item_category: "", // bv. Profielen
-        item_category2: "", // bv. Staal
-        price: 8.41, // non-discounted price. Dus value = price - discount
-        quantity: 1, // hier is het altijd 1
-      },
-    ],
-  },
-})
-
-
-
-// deze hieronder zijn optioneel maar heel handig. Dus als het kan, graag
-
-// wanneer iemand betaalwijze selecteert
-
-dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object.
-dataLayer.push({
-  event: "add_payment_info",
-  payment_type: "iDeal", // of andere gekozen methode
-  ecommerce: {
-    currency: "EUR",
-    value: 8.41, // bedrag product ex btw
-    items: [
-      {
-        item_id: "", //SKU / ID
-        item_name: "", // bv. Stalen koker 20x20x2mm
-        discount: 0, // number, indien van toepassing
-        index: 0,
-        item_category: "", // bv. Profielen
-        item_category2: "", // bv. Staal
-        price: 8.41, // non-discounted price. Dus value = price - discount
-        quantity: 1, // hier is het altijd 1
-      },
-    ],
-  },
-})
-
-// wanneer iemand aan stap 4 "Bezorgadres" begint
-
-dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object.
-dataLayer.push({
-  event: "add_shipping_info",
-  ecommerce: {
-    currency: "EUR",
-    value: 8.41, // bedrag product ex btw
-    items: [
-      {
-        item_id: "", //SKU / ID
-        item_name: "", // bv. Stalen koker 20x20x2mm
-        discount: 0, // number, indien van toepassing
-        index: 0,
-        item_category: "", // bv. Profielen
-        item_category2: "", // bv. Staal
-        price: 8.41, // non-discounted price. Dus value = price - discount
-        quantity: 1, // hier is het altijd 1
-      },
-    ],
-  },
-})

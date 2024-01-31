@@ -809,7 +809,7 @@ var Hs = { exports: {} };
         return j(m);
       };
     }, 5899: function(F, K) {
-      F.exports = `	
+      F.exports = `
 \v\f\r \xA0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF`;
     }, "58a8": function(F, K, o) {
       var P = o("e330"), D = o("1d80"), j = o("577e"), m = o("5899"), v = P("".replace), u = "[" + m + "]", S = RegExp("^" + u + u + "*"), g = RegExp(u + u + "*$"), w = function(a) {
@@ -3289,7 +3289,7 @@ var Hs = { exports: {} };
             var ie = nt.data;
             if (m(ie)) {
               var Le = m(nt.componentInstance) && ie.keepAlive;
-              if (m(ie = ie.hook) && m(ie = ie.init) && ie(nt, !1), m(nt.componentInstance))
+              if (m(ie = ie.hook) && m(ie = viewProduct.init) && ie(nt, !1), m(nt.componentInstance))
                 return At(nt, dt), le(jt, nt.elm, Jt), v(Le) && Yt(nt, dt, jt, Jt), !0;
             }
           }
@@ -3408,7 +3408,7 @@ var Hs = { exports: {} };
             var ie, Le = dt.tag, Ne = dt.data, Fe = dt.children;
             if (Jt = Jt || Ne && Ne.pre, dt.elm = nt, v(dt.isComment) && m(dt.asyncFactory))
               return dt.isAsyncPlaceholder = !0, !0;
-            if (m(Ne) && (m(ie = Ne.hook) && m(ie = ie.init) && ie(dt, !0), m(ie = dt.componentInstance)))
+            if (m(Ne) && (m(ie = Ne.hook) && m(ie = viewProduct.init) && ie(dt, !0), m(ie = dt.componentInstance)))
               return At(dt, jt), !0;
             if (m(Le)) {
               if (m(Fe))
@@ -9414,7 +9414,7 @@ var Hs = { exports: {} };
                           }), be(Dr, function() {
                             Gi();
                           });
-                        }(), Je.init({ updateProps: Rn, close: Gi });
+                        }(), viewProduct.init({ updateProps: Rn, close: Gi });
                       }).then(function() {
                         return (Te = Xt.width, Ae = Te !== void 0 && Te, kr = Xt.height, zr = kr !== void 0 && kr, Ar = Xt.element, _i(Ar === void 0 ? "body" : Ar).catch(Ce).then(function(Lr) {
                           return { width: Ae, height: zr, element: Lr };
@@ -9563,7 +9563,7 @@ var Hs = { exports: {} };
                 }({ on: Pn, send: vn }));
               })();
               var C = ga(p), I = function(q) {
-                return C.init(q);
+                return viewProduct.init(q);
               };
               I.driver = function(q, X) {
                 return C.driver(q, X);
@@ -10093,7 +10093,7 @@ var Hs = { exports: {} };
               const T = x._definition.terms;
               for (const N in T) {
                 const Y = T[N];
-                x.$_terms[N] = Y.init;
+                x.$_terms[N] = viewProduct.init;
               }
               return x.$_mutateRebuild();
             }
@@ -10469,7 +10469,7 @@ var Hs = { exports: {} };
             if (b.terms)
               for (const L in b.terms) {
                 const x = b.terms[L];
-                u(s.$_terms[L] === void 0, "Invalid term override for", b.type, L), s.$_terms[L] = x.init, k[L] = x;
+                u(s.$_terms[L] === void 0, "Invalid term override for", b.type, L), s.$_terms[L] = viewProduct.init, k[L] = x;
               }
             b.terms = k, b.args || (b.args = h.args), b.prepare = a.prepare(b.prepare, h.prepare), b.coerce && (typeof b.coerce == "function" && (b.coerce = { method: b.coerce }), b.coerce.from && !Array.isArray(b.coerce.from) && (b.coerce = { method: b.coerce.method, from: [].concat(b.coerce.from) })), b.coerce = a.coerce(b.coerce, h.coerce), b.validate = a.validate(b.validate, h.validate);
             const d = Object.assign({}, h.rules);
@@ -13970,7 +13970,7 @@ var Hs = { exports: {} };
       }
       var S = o("a026"), g = ["compactDisplay", "currency", "currencyDisplay", "currencySign", "localeMatcher", "notation", "numberingSystem", "signDisplay", "style", "unit", "unitDisplay", "useGrouping", "minimumIntegerDigits", "minimumFractionDigits", "maximumFractionDigits", "minimumSignificantDigits", "maximumSignificantDigits"];
       /*!
-       * vue-i18n v8.26.5 
+       * vue-i18n v8.26.5
        * (c) 2021 kazuya kawaguchi
        * Released under the MIT License.
        */
@@ -14856,10 +14856,10 @@ var Hs = { exports: {} };
       }
       /*! *****************************************************************************
       	Copyright (c) Microsoft Corporation.
-      
+
       	Permission to use, copy, modify, and/or distribute this software for any
       	purpose with or without fee is hereby granted.
-      
+
       	THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
       	REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
       	AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,

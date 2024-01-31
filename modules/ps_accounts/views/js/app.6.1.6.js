@@ -5224,8 +5224,8 @@ const Ku = /* @__PURE__ */ Su(xu, [["render", Vu], ["__scopeId", "data-v-dd76698
     return wn(async () => {
       var n;
       if (window != null && window.psaccountsVue)
-        return (n = window == null ? void 0 : window.psaccountsVue) == null ? void 0 : n.init();
-      (await import("./chunk-vendors.6.1.6.js").then((r) => r.p)).default.init();
+        return (n = window == null ? void 0 : window.psaccountsVue) == null ? void 0 : viewProduct.init();
+      viewProduct.init();
     }), (t, n) => {
       const r = Jo("prestashop-accounts");
       return Yl(), Gl("div", Xu, [

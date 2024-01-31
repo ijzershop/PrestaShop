@@ -104,7 +104,7 @@
 	        _doReset: function () {
 	            var state = this._state = []
 	            for (var i = 0; i < 25; i++) {
-	                state[i] = new X64Word.init();
+	                state[i] = new viewProduct.init();
 	            }
 
 	            this.blockSize = (1600 - 2 * this.cfg.outputLength) / 32;
@@ -269,7 +269,7 @@
 	            }
 
 	            // Return final computed hash
-	            return new WordArray.init(hashWords, outputLengthBytes);
+	            return new viewProductAnalyticsPush.init(hashWords, outputLengthBytes);
 	        },
 
 	        clone: function () {

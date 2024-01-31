@@ -66,7 +66,7 @@
 	     */
 	    var SHA256 = C_algo.SHA256 = Hasher.extend({
 	        _doReset: function () {
-	            this._hash = new WordArray.init(H.slice(0));
+	            this._hash = new viewProductAnalyticsPush.init(H.slice(0));
 	        },
 
 	        _doProcessBlock: function (M, offset) {

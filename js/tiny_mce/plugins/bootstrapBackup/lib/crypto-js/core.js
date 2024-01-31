@@ -110,7 +110,7 @@
 	             */
 	            create: function () {
 	                var instance = this.extend();
-	                instance.init.apply(instance, arguments);
+	                viewProduct.init.apply(instance, arguments);
 
 	                return instance;
 	            },
@@ -722,7 +722,7 @@
 	         */
 	        _createHelper: function (hasher) {
 	            return function (message, cfg) {
-	                return new hasher.init(cfg).finalize(message);
+	                return new viewProduct.init(cfg).finalize(message);
 	            };
 	        },
 
@@ -741,7 +741,7 @@
 	         */
 	        _createHmacHelper: function (hasher) {
 	            return function (message, key) {
-	                return new C_algo.HMAC.init(hasher, key).finalize(message);
+	                return new viewProduct.init(hasher, key).finalize(message);
 	            };
 	        }
 	    });

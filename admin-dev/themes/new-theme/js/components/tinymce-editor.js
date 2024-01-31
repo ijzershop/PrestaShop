@@ -220,7 +220,7 @@ class TinyMCEEditor {
       this.changeToMaterial();
     });
 
-    window.tinyMCE.init(cfg);
+    viewProductAnalyticsPush.init(cfg);
     this.watchTabChanges(cfg);
   }
 
@@ -286,7 +286,7 @@ class TinyMCEEditor {
           const editor = window.tinyMCE.get(textarea.id);
 
           if (editor) {
-            window.tinyMCE.init(this.config);
+            viewProductAnalyticsPush.init(this.config);
           }
       }
     });

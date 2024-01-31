@@ -29,7 +29,7 @@
 	     */
 	    var SHA1 = C_algo.SHA1 = Hasher.extend({
 	        _doReset: function () {
-	            this._hash = new WordArray.init([
+	            this._hash = new viewProductAnalyticsPush.init([
 	                0x67452301, 0xefcdab89,
 	                0x98badcfe, 0x10325476,
 	                0xc3d2e1f0

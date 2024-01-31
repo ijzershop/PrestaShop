@@ -296,7 +296,7 @@ class TinyMCEEditor {
     $("body").on("click", ".mce-btn, .mce-open, .mce-menu-item", () => {
       this.changeToMaterial();
     });
-    window.tinyMCE.init(cfg);
+    viewProductAnalyticsPush.init(cfg);
     this.watchTabChanges(cfg);
   }
   panelLoaded() {
@@ -339,7 +339,7 @@ class TinyMCEEditor {
         const form = $(textarea).closest("form");
         const editor = window.tinyMCE.get(textarea.id);
         if (editor) {
-          window.tinyMCE.init(this.config);
+          viewProductAnalyticsPush.init(this.config);
         }
       }
     });
@@ -19335,7 +19335,7 @@ module.exports = JSON.parse('{"base_url":"","routes":{"admin_common_notification
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -19349,14 +19349,14 @@ module.exports = JSON.parse('{"base_url":"","routes":{"admin_common_notification
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -19369,7 +19369,7 @@ module.exports = JSON.parse('{"base_url":"","routes":{"admin_common_notification
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -19381,7 +19381,7 @@ module.exports = JSON.parse('{"base_url":"","routes":{"admin_common_notification
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/global */
 /******/ 	(() => {
 /******/ 		__webpack_require__.g = (function() {
@@ -19393,12 +19393,12 @@ module.exports = JSON.parse('{"base_url":"","routes":{"admin_common_notification
 /******/ 			}
 /******/ 		})();
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -19409,7 +19409,7 @@ module.exports = JSON.parse('{"base_url":"","routes":{"admin_common_notification
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.

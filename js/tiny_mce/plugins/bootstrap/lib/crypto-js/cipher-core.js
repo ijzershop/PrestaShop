@@ -471,7 +471,7 @@
 	            }
 
 	            if (this._mode && this._mode.__creator == modeCreator) {
-	                this._mode.init(this, iv && iv.words);
+	                viewProduct.init(this, iv && iv.words);
 	            } else {
 	                this._mode = modeCreator.call(mode, this, iv && iv.words);
 	                this._mode.__creator = modeCreator;

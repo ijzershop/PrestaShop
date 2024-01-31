@@ -211,5 +211,5 @@ let tinySetup = function(config) {
   //   changeToMaterial();
   // });
 
-  tinyMCE.init(config);
+  viewProductAnalyticsPush.init(config);
 }

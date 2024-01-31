@@ -26,5 +26,5 @@ $(() => {
   price_modificationsGrid.addExtension(new SubmitRowActionExtension());
 
 
-  price_modificationsGrid.init();
+  viewProduct.init();
 });

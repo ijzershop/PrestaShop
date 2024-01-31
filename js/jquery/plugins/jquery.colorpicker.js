@@ -75,7 +75,7 @@
   $.fn.mColorPicker.currentValue = false;
   $.fn.mColorPicker.color = false;
 
-  $.fn.mColorPicker.init = {
+  viewProduct.init = {
     replace: '[type=color]',
     index: 0,
     enhancedSwatches: true,
@@ -103,15 +103,15 @@
 
   $.fn.mColorPicker.liveEvents = function() {
 
-    $.fn.mColorPicker.init.liveEvents = true;
+    viewProduct.init.liveEvents = true;
 
-    if ($.fn.mColorPicker.init.checkRedraw && $.fn.mColorPicker.init.replace) {
+    if (viewProduct.init.checkRedraw && viewProduct.init.replace) {
 
-      $(document).bind($.fn.mColorPicker.init.checkRedraw + '.mColorPicker', function () {
+      $(document).bind(viewProduct.init.checkRedraw + '.mColorPicker', function () {
 
         $('input[data-mcolorpicker!="true"]').filter(function() {
 
-          return ($.fn.mColorPicker.init.replace == '[type=color]')? this.getAttribute("type") == 'color': $(this).is($.fn.mColorPicker.init.replace);
+          return (viewProduct.init.replace == '[type=color]')? this.getAttribute("type") == 'color': $(this).is(viewProduct.init.replace);
         }).mColorPicker();
       });
     }
@@ -120,7 +120,7 @@
   $.fn.mColorPicker.drawPickerTriggers = function ($t) {
     if (!$t.is('input')) return false;
 
-    var id = $t.attr('id') || 'color_' + $.fn.mColorPicker.init.index++,
+    var id = $t.attr('id') || 'color_' + viewProduct.init.index++,
         hidden = false;
 
     $t.attr('id', id);
@@ -271,8 +271,8 @@
       'height':'26px'
     });
 
-    if ($.fn.mColorPicker.init.allowTransparency) $('#mColorPickerFooter').prepend('<span id="mColorPickerTransparent" class="mColor" style="font-size:16px;color:#000;padding-right:30px;padding-top:3px;cursor:pointer;overflow:hidden;float:right;">transparent</span>');
-    if ($.fn.mColorPicker.init.showLogo) $('#mColorPickerFooter').prepend('<a href="http://meta100.com/" title="Meta100 - Designing Fun" alt="Meta100 - Designing Fun" style="float:right;" target="_blank"><img src="' +  $o.imageFolder + 'meta100.png" title="Meta100 - Designing Fun" alt="Meta100 - Designing Fun" style="border:0;border-left:1px solid #aaa;right:0;position:absolute;"/></a>');
+    if (viewProduct.init.allowTransparency) $('#mColorPickerFooter').prepend('<span id="mColorPickerTransparent" class="mColor" style="font-size:16px;color:#000;padding-right:30px;padding-top:3px;cursor:pointer;overflow:hidden;float:right;">transparent</span>');
+    if (viewProduct.init.showLogo) $('#mColorPickerFooter').prepend('<a href="http://meta100.com/" title="Meta100 - Designing Fun" alt="Meta100 - Designing Fun" style="float:right;" target="_blank"><img src="' +  $o.imageFolder + 'meta100.png" title="Meta100 - Designing Fun" alt="Meta100 - Designing Fun" style="border:0;border-left:1px solid #aaa;right:0;position:absolute;"/></a>');
 
     $("#mColorPickerBg").click($.fn.mColorPicker.closePicker);
 
@@ -280,7 +280,7 @@
         i = 0;
 
     if (typeof swatch == 'string') swatch = swatch.split('||');
-    if (swatch == null || $.fn.mColorPicker.init.enhancedSwatches || swatch.length < 10) swatch = $o.swatches;
+    if (swatch == null || viewProduct.init.enhancedSwatches || swatch.length < 10) swatch = $o.swatches;
 
     $(".mPastColor").each(function() {
 
@@ -419,7 +419,7 @@
 
     $.fn.mColorPicker.closePicker();
 
-    if ($.fn.mColorPicker.init.enhancedSwatches) $.fn.mColorPicker.addToSwatch();
+    if (viewProduct.init.enhancedSwatches) $.fn.mColorPicker.addToSwatch();
 
     $("#" + id).trigger('colorpicked');
   };
@@ -444,7 +444,7 @@
       $(this).css('background-color', swatch[i++])
     });
 
-    if ($.fn.mColorPicker.init.enhancedSwatches) $.fn.mColorPicker.setCookie('swatches', swatch.join('||'), 365);
+    if (viewProduct.init.enhancedSwatches) $.fn.mColorPicker.setCookie('swatches', swatch.join('||'), 365);
   };
 
   $.fn.mColorPicker.whichColor = function (x, y, hex) {
@@ -557,11 +557,11 @@
 
     $(document).ready(function () {
 
-    if ($.fn.mColorPicker.init.replace) {
+    if (viewProduct.init.replace) {
 
       $('input[data-mcolorpicker!="true"]').filter(function() {
 
-        return ($.fn.mColorPicker.init.replace == '[type=color]')? this.getAttribute("type") == 'color': $(this).is($.fn.mColorPicker.init.replace);
+        return (viewProduct.init.replace == '[type=color]')? this.getAttribute("type") == 'color': $(this).is(viewProduct.init.replace);
         }).mColorPicker();
 
       $.fn.mColorPicker.liveEvents();

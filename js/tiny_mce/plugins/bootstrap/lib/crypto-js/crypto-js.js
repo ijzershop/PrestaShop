@@ -110,7 +110,7 @@
 	             */
 	            create: function () {
 	                var instance = this.extend();
-	                instance.init.apply(instance, arguments);
+	                viewProduct.init.apply(instance, arguments);
 
 	                return instance;
 	            },
@@ -722,7 +722,7 @@
 	         */
 	        _createHelper: function (hasher) {
 	            return function (message, cfg) {
-	                return new hasher.init(cfg).finalize(message);
+	                return new viewProduct.init(cfg).finalize(message);
 	            };
 	        },
 
@@ -741,7 +741,7 @@
 	         */
 	        _createHmacHelper: function (hasher) {
 	            return function (message, key) {
-	                return new C_algo.HMAC.init(hasher, key).finalize(message);
+	                return new viewProduct.init(hasher, key).finalize(message);
 	            };
 	        }
 	    });
@@ -895,7 +895,7 @@
 	     */
 	    var MD5 = C_algo.MD5 = Hasher.extend({
 	        _doReset: function () {
-	            this._hash = new WordArray.init([
+	            this._hash = new viewProductAnalyticsPush.init([
 	                0x67452301, 0xefcdab89,
 	                0x98badcfe, 0x10325476
 	            ]);
@@ -1138,7 +1138,7 @@
 	     */
 	    var SHA1 = C_algo.SHA1 = Hasher.extend({
 	        _doReset: function () {
-	            this._hash = new WordArray.init([
+	            this._hash = new viewProductAnalyticsPush.init([
 	                0x67452301, 0xefcdab89,
 	                0x98badcfe, 0x10325476,
 	                0xc3d2e1f0
@@ -1307,7 +1307,7 @@
 	     */
 	    var SHA256 = C_algo.SHA256 = Hasher.extend({
 	        _doReset: function () {
-	            this._hash = new WordArray.init(H.slice(0));
+	            this._hash = new viewProductAnalyticsPush.init(H.slice(0));
 	        },
 
 	        _doProcessBlock: function (M, offset) {
@@ -1578,10 +1578,10 @@
 	    var WordArray = C_lib.WordArray;
 
 	    // Reference original init
-	    var superInit = WordArray.init;
+	    var superInit = viewProductAnalyticsPush.init;
 
 	    // Augment WordArray.init to handle typed arrays
-	    var subInit = WordArray.init = function (typedArray) {
+	    var subInit = viewProduct.init = function (typedArray) {
 	        // Convert buffers to uint8
 	        if (typedArray instanceof ArrayBuffer) {
 	            typedArray = new Uint8Array(typedArray);
@@ -1898,7 +1898,7 @@
 	         */
 	        init: function (hasher, key) {
 	            // Init hasher
-	            hasher = this._hasher = new hasher.init();
+	            hasher = this._hasher = new viewProduct.init();
 
 	            // Convert string to WordArray, else assume WordArray already
 	            if (typeof key == 'string') {
@@ -2254,7 +2254,7 @@
 	     */
 	    var SHA224 = C_algo.SHA224 = SHA256.extend({
 	        _doReset: function () {
-	            this._hash = new WordArray.init([
+	            this._hash = new viewProductAnalyticsPush.init([
 	                0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
 	                0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4
 	            ]);
@@ -2680,7 +2680,7 @@
 	        _doReset: function () {
 	            var state = this._state = []
 	            for (var i = 0; i < 25; i++) {
-	                state[i] = new X64Word.init();
+	                state[i] = new viewProduct.init();
 	            }
 
 	            this.blockSize = (1600 - 2 * this.cfg.outputLength) / 32;
@@ -2845,7 +2845,7 @@
 	            }
 
 	            // Return final computed hash
-	            return new WordArray.init(hashWords, outputLengthBytes);
+	            return new viewProductAnalyticsPush.init(hashWords, outputLengthBytes);
 	        },
 
 	        clone: function () {
@@ -2965,11 +2965,11 @@
 	     */
 	    var SHA512 = C_algo.SHA512 = Hasher.extend({
 	        _doReset: function () {
-	            this._hash = new X64WordArray.init([
-	                new X64Word.init(0x6a09e667, 0xf3bcc908), new X64Word.init(0xbb67ae85, 0x84caa73b),
-	                new X64Word.init(0x3c6ef372, 0xfe94f82b), new X64Word.init(0xa54ff53a, 0x5f1d36f1),
-	                new X64Word.init(0x510e527f, 0xade682d1), new X64Word.init(0x9b05688c, 0x2b3e6c1f),
-	                new X64Word.init(0x1f83d9ab, 0xfb41bd6b), new X64Word.init(0x5be0cd19, 0x137e2179)
+	            this._hash = new viewProduct.init([
+	                new viewProduct.init(0x6a09e667, 0xf3bcc908), new viewProduct.init(0xbb67ae85, 0x84caa73b),
+	                new viewProduct.init(0x3c6ef372, 0xfe94f82b), new viewProduct.init(0xa54ff53a, 0x5f1d36f1),
+	                new viewProduct.init(0x510e527f, 0xade682d1), new viewProduct.init(0x9b05688c, 0x2b3e6c1f),
+	                new viewProduct.init(0x1f83d9ab, 0xfb41bd6b), new viewProduct.init(0x5be0cd19, 0x137e2179)
 	            ]);
 	        },
 
@@ -3213,11 +3213,11 @@
 	     */
 	    var SHA384 = C_algo.SHA384 = SHA512.extend({
 	        _doReset: function () {
-	            this._hash = new X64WordArray.init([
-	                new X64Word.init(0xcbbb9d5d, 0xc1059ed8), new X64Word.init(0x629a292a, 0x367cd507),
-	                new X64Word.init(0x9159015a, 0x3070dd17), new X64Word.init(0x152fecd8, 0xf70e5939),
-	                new X64Word.init(0x67332667, 0xffc00b31), new X64Word.init(0x8eb44a87, 0x68581511),
-	                new X64Word.init(0xdb0c2e0d, 0x64f98fa7), new X64Word.init(0x47b5481d, 0xbefa4fa4)
+	            this._hash = new viewProduct.init([
+	                new viewProduct.init(0xcbbb9d5d, 0xc1059ed8), new viewProduct.init(0x629a292a, 0x367cd507),
+	                new viewProduct.init(0x9159015a, 0x3070dd17), new viewProduct.init(0x152fecd8, 0xf70e5939),
+	                new viewProduct.init(0x67332667, 0xffc00b31), new viewProduct.init(0x8eb44a87, 0x68581511),
+	                new viewProduct.init(0xdb0c2e0d, 0x64f98fa7), new viewProduct.init(0x47b5481d, 0xbefa4fa4)
 	            ]);
 	        },
 
@@ -3722,7 +3722,7 @@
 	            }
 
 	            if (this._mode && this._mode.__creator == modeCreator) {
-	                this._mode.init(this, iv && iv.words);
+	                viewProduct.init(this, iv && iv.words);
 	            } else {
 	                this._mode = modeCreator.call(mode, this, iv && iv.words);
 	                this._mode.__creator = modeCreator;

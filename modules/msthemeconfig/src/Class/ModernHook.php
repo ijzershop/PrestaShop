@@ -1252,6 +1252,93 @@ class ModernHook
         $filterManager = $this->module->get('prestashop.core.filter.front_end_object.search_result_product');
         $filterManager->whitelist(['quantity', 'minimal_quantity', 'out_of_stock', 'depends_on_stock']);
     }
+    /**
+     * @throws Exception
+     */
+    public function hookActionFrontControllerSetVariables($param): void
+    {
+        switch ($param['templateVars']['page']['page_name']){
+
+            case 'product':
+                $product = $this->controller->getProduct();
+                $product_categories = $product->getParentCategories($this->context->cookie->id_lang);
+                if(count($product_categories) >= 2){
+                    $cat1 = $product_categories[count($product_categories)-2];
+                }
+
+                if(count($product_categories) >= 3){
+                    $cat2 = $product_categories[count($product_categories)-3];
+                }
+
+                $param['templateVars']['analytics_data'] =  [
+                    'currency' => $this->context->currency->name,
+                    'amount_tax_excl' => $product->getPriceWithoutReduct(true),
+                    'id_product' => $product->id,
+                    'name' => $product->name,
+                    'discount' => $product->getPrice(true, null, 6, null, true, false, 1),
+                    'category_parent' => $cat2['name'],
+                    'category' => $cat1['name'],
+                    'price_before_discount' => $product->getPrice(false, null, 6, null, false, false, 1),
+                    'qty' => 1,
+                ];
+                break;
+            case 'module-supercheckout-supercheckout':
+            case 'checkout':
+            case 'category':
+            case 'order-confirmation':
+            case 'cart':
+                $cart = $param['templateVars']['cart'];
+
+                $items = [];
+
+                foreach ($cart['products'] as $product){
+                    $prod = new Product($product['id_product']);
+                    $product_categories = $prod->getParentCategories($this->context->cookie->id_lang);
+                    if(count($product_categories) >= 2){
+                        $cat1 = $product_categories[count($product_categories)-2];
+                    }
+
+                    if(count($product_categories) >= 3){
+                        $cat2 = $product_categories[count($product_categories)-3];
+                    }
+                    $item = [];
+
+                    $item['item_id'] = $product['id_product'];
+                    $item['item_name'] = $product['name'];
+                    $item['discount'] = $product['discount_amount'];
+                    $item['index'] = 0;
+                    $item['item_category'] = $cat2['name'];
+                    $item['item_category2'] = $cat1['name'];
+                    $item['price'] = $product['price_with_reduction_without_tax'];
+                    $item['quantity'] = $product['quantity'];
+                    $items[] = $item;
+                }
+
+                $param['templateVars']['analytics_data'] = [
+                    'currency' => $this->context->currency->name,
+                    'amount_tax_excl' => $cart['totals']['total_excluding_tax']['amount'],
+                    'items' => $items,
+                ];
+                break;
+            case 'index'://Home
+                break;
+            case 'contactinformation'://Informatie aanvraag formulier
+                break;
+            case 'contactoffer'://Offerte aanvraag formulier
+                break;
+            case 'authentication'://Login scherm
+                break;
+            case 'password'://Wachtwoord vergeten scherm
+                break;
+            case 'cms'://cms pagina
+                break;
+            case 'search'://zoek pagina
+                break;
+            default:
+                die($param['templateVars']['page']['page_name']);
+                break;
+        }
+    }
 
     /**
      * Modify category form
@@ -2263,8 +2350,14 @@ class ModernHook
         } else {
             return $value[$idLang];
         }
-
     }
+
+
+    /*
+     * Analitics hooks
+     */
+
+
 }
 
 

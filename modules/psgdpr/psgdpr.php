@@ -367,12 +367,11 @@ class Psgdpr extends Module
     public function getTokenFromAdminLink(string $link): string
     {
         parse_str((string) parse_url($link, PHP_URL_QUERY), $result);
+
         if (is_array($result['_token'])) {
             throw new \PrestaShopException('Invalid token');
         }
-        if(!$result['_token']){
-            $result['_token'] = Context::getContext()->controller->token;
-        }
+
         return $result['_token'];
     }
 
@@ -516,29 +515,8 @@ class Psgdpr extends Module
             $module['displayName'] = $currentModuleInfos->displayName;
             $module['logoPath'] = Tools::getHttpHost(true) . $physicalUri . 'modules/' . $currentModuleInfos->name . '/logo.png';
 
-<<<<<<< HEAD
-        $id_customer = Context::getContext()->customer->id;
-        $id_guest = 0;
-        if ($id_customer == null) {
-            $id_guest = Context::getContext()->cart->id_guest;
-            $id_customer = 0;
-        }
-        $this->context->smarty->assign([
-            'ps_version' => $this->ps_version,
-            'psgdpr_id_guest' => $id_guest,
-            'psgdpr_id_customer' => $id_customer,
-            'psgdpr_customer_token' => sha1(Context::getContext()->customer->secure_key != null ? Context::getContext()->customer->secure_key : md5(uniqid(mt_rand(0, mt_getrandmax()), true))),
-            'psgdpr_guest_token' => sha1('psgdpr' . $id_guest . $_SERVER['REMOTE_ADDR'] . date('Y-m-d')),
-            'psgdpr_id_module' => $id_module,
-            'psgdpr_consent_message' => $message,
-            'psgdpr_front_controller' => $url,
-        ]);
-
-        return $this->fetch('module:' . $this->name . '/views/templates/hook/displayGDPRConsent.tpl');
-=======
             return $module;
         }, $moduleList);
->>>>>>> c8dd03977e6c3094edbf7e3dad0a467e27d4385a
     }
 
     /**

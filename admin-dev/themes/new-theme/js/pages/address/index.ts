@@ -24,7 +24,6 @@
  */
 
 import Grid from '@components/grid/grid';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
 import SortingExtension from '@components/grid/extension/sorting-extension';
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
@@ -34,27 +33,20 @@ import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-e
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import ChoiceTable from '@components/choice-table';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
-import SubmitGridExtension from "@components/grid/extension/submit-grid-action-extension";
-
 
 const {$} = window;
 
 $(() => {
   const addressGrid = new Grid('address');
 
-  addressGrid.addExtension(new ReloadListActionExtension());
-  addressGrid.addExtension(new ExportToSqlManagerExtension());
   addressGrid.addExtension(new FiltersResetExtension());
   addressGrid.addExtension(new SortingExtension());
+  addressGrid.addExtension(new ExportToSqlManagerExtension());
   addressGrid.addExtension(new ReloadListExtension());
   addressGrid.addExtension(new BulkActionCheckboxExtension());
   addressGrid.addExtension(new SubmitBulkExtension());
   addressGrid.addExtension(new SubmitRowActionExtension());
-  addressGrid.addExtension(new SubmitGridExtension());
   addressGrid.addExtension(new LinkRowActionExtension());
-  addressGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   // needed for address required fields form
   new ChoiceTable();

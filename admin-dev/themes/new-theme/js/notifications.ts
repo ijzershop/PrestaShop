@@ -59,7 +59,6 @@ const refreshNotifications = function (): void {
           $(GlobalMap.notifications.messageNotificationTemplate).html(),
         );
 
-
         setNotificationsNumber('_nb_new_orders_', nbOrders);
         setNotificationsNumber('_nb_new_customers_', nbCustomers);
         setNotificationsNumber('_nb_new_messages_', nbCustomerMessages);

@@ -36,12 +36,6 @@ import 'typeahead.js/dist/typeahead.jquery';
 import 'typeahead.js/dist/bloodhound.min';
 import 'jquery-serializejson';
 
-
-// Plugins CSS
-import 'dropzone/dist/min/dropzone.min.css';
-import 'magnific-popup/dist/magnific-popup.css';
-
-// Theme SCSS
 import '@scss/theme.scss';
 
 // Theme Javascript
@@ -64,9 +58,8 @@ import watchSymfonyDebugBar from '@app/utils/watch-symfony-debug-bar';
 import '@js/components/header/search-form';
 
 const {$} = window;
-if(window.Dropzone === undefined){
-  window.Dropzone = require('dropzone/dist/dropzone.js');
-}
+
+// Theme Javascript
 window.Dropzone.autoDiscover = false;
 
 new NavBar();

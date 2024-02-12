@@ -298,6 +298,7 @@ class NumberFormatter {
 
   static build(specifications: Record<string, any>): NumberFormatter {
     let symbol;
+
     if (undefined !== specifications.numberSymbols) {
       // @ts-ignore-next-line
       symbol = new NumberSymbol(...specifications.numberSymbols);

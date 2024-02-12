@@ -7,11 +7,8 @@ export default class startCheckoutAnalyticsPush {
       let dataObject = prestashop.analytics_data;
       dataLayer.push({ecommerce: null});
 
-<<<<<<< HEAD
-      console.log(['begin_checkout', dataObject]);
-=======
+
       // console.log(['begin_checkout', dataObject]);
->>>>>>> c8dd03977e6c3094edbf7e3dad0a467e27d4385a
 
       dataLayer.push({
         event: "begin_checkout",

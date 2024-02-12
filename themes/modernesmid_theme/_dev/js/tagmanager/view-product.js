@@ -8,11 +8,7 @@ export default class viewProductAnalyticsPush {
 
       dataLayer.push({ecommerce: null});
 
-<<<<<<< HEAD
-      console.log(['view_item', dataObject]);
-=======
       // console.log(['view_item', dataObject]);
->>>>>>> c8dd03977e6c3094edbf7e3dad0a467e27d4385a
 
       dataLayer.push({
         event: "view_item",

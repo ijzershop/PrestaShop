@@ -1,7 +1,6 @@
 /**
  * Combination bulk actions management
  */
-
 export default function () {
   const bulkForm = $('#bulk-combinations-container');
   const deleteCombinationsBtn = $('#delete-combinations');
@@ -12,7 +11,6 @@ export default function () {
   const finalPriceBasics = $('#form_step1_price_shortcut');
   const finalPriceBasicsIT = $('#form_step1_price_ttc_shortcut');
   const ecotaxTI = $('#form_step2_ecotax');
-
 
   return {
     init: function init() {

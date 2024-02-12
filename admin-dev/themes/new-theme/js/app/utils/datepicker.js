@@ -67,7 +67,6 @@ const replaceDatePicker = () => {
 const init = function initDatePickers() {
   const $datePickers = $('.datepicker input[type="text"]');
   $.each($datePickers, (i, picker) => {
-
     $(picker)
       .datetimepicker({
         locale: window.full_language_code,

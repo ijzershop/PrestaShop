@@ -34,11 +34,9 @@ const {$} = window;
  * npm and fully integrate in the back-office theme.
  */
 class TinyMCEEditor {
-  cfg;
   constructor(options) {
     const opts = options || {};
     this.tinyMCELoaded = false;
-    this.config = {};
     if (typeof opts.baseAdminUrl === 'undefined') {
       if (typeof window.baseAdminDir !== 'undefined') {
         opts.baseAdminUrl = window.baseAdminDir;
@@ -74,149 +72,63 @@ class TinyMCEEditor {
     }
   }
 
-
   /**
    * Prepare the config and init all TinyMCE editors
    *
    * @param config
    */
   initTinyMCE(config) {
-
-    let fetchKey = function(hostname) {
-      let keys = [];
-      keys["bouwstaalmat.nl"] =  "";
-      keys["bouwstaalmat.viho.nl"] =  "";
-      keys["constructiebalk.nl"] =  "3wORV+ZdWifIWnUWSxdAUtCPcNfJnjU/DMxjcGDxcZnBQVJgpRjWdVZMdqAhsj5pbZd3c/h/s41crmf9zwJuv3VrO/4pkSLOmAdBZJT3W6Y="; //set
-      keys["constructieklus.nl"] =  "";
-      keys["constructieklus.viho.nl"] =  "";
-      keys["demodernesmid.nl"] =  "";
-      keys["demodernesmid.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO+zP8NYYqmVXAXbxgL6gbmPashb4b9GpWNnBUAErfRNXXYLw30+WTmQ6IQvaGJ1N8A=="; //SET
-      keys["gerofitness.nl"] =  "";
-      keys["gerofitness.viho.nl"] =  "";
-      keys["ijzershop.frl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=";//Set
-      keys["ijzershop.nl"] =  "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY="; //Set
-      keys["ijzershop.eu"] =  "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY="; //Set
-      keys["ijzershop176.local"] =  "cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpmftIOvjnss+mhviBjMWYpzfTD8gujkxPFveiunw80iXmfbHphHun6k0qBPJyPtFC8=";
-      keys["paneelhek.nl"] =  "";
-      keys["paneelhek.viho.nl"] =  "";
-      keys["viho.nl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4="; //Set
-
-      if(keys.hasOwnProperty(hostname)){
-        return keys[hostname];
-      } else {
-        return "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY=";
-      }
-
-    }
-
-    // detect the root url
-    const base_url = location.protocol + '//' + location.host + '/';
-    // detect localhost
-    // the value must include your local window.location.hostname
-    if (typeof (base_url) == "undefined") {
-    }
-    const tbpKey = fetchKey(window.location.hostname);
-
     const cfg = {
-      selector: '.autoload_rte',
-      plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager', 'paste'],
+      selector: '.rte',
+      plugins: 'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize',
       browser_spellcheck: true,
-      toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print paste | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments |  bootstrap",
+      toolbar1:
+        /* eslint-disable-next-line max-len */
+        'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
+      toolbar2: '',
       language: window.iso_user,
-      contextmenu: "bootstrap",
-      image_advtab: true ,
-      external_filemanager_path:"/js/filemanager/",
-      filemanager_title:"Bestands beheer" ,
-      external_plugins: { "filemanager" : "/js/filemanager/plugin.min.js"},
-      bootstrapConfig: {
-        language: iso_user,
-        url: base_url + 'js/tiny_mce/plugins/bootstrap/',
-        iconFont: 'fontawesome5',
-        imagesPath: '/upload',
-        key: tbpKey,
-        enableTemplateEdition: true,
+      external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
+      filemanager_title: 'File manager',
+      external_plugins: {
+        filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
       },
-      editorStyleFormats: {
-        textStyles: true, // true or false
-        blockStyles: true, // true or false
-        containerStyles: true, // true or false
-        responsive: ['xs', 'sm'], // xs sm md lg
-        spacing: ['all', 'x', 'y', 'top', 'right', 'bottom', 'left'] // all x y top right bottom left
+      content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
+      skin: 'prestashop',
+      mobile: {
+        theme: 'mobile',
+        plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
+        toolbar:
+          /* eslint-disable-next-line max-len */
+          'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect',
       },
-
-      style_formats_autohide: true,
-      content_style: (lang_is_rtl === '1' ? "body {direction:rtl;}" : ""),
-      skin: "oxide",
-      theme: "silver",
       menubar: false,
       statusbar: false,
       relative_urls: false,
       convert_urls: false,
-      entity_encoding: "raw",
-      extended_valid_elements: "em[class|name|id|itemscope|itemtype|itemprop],@[role|data-*|aria-*]",
-      valid_children: "+*[*]",
-      valid_elements: "*[*]",
-      rel_list: [{
-        title: 'nofollow',
-        value: 'nofollow'
-      }],
-      paste_data_images: true,
-      paste_preprocess: function(plugin, args) {
-        let m;
-        const content = args.content;
-        const regex = new RegExp('^<img.*?src=\"(.*?)\"');
-        if(regex.test(content))
-        {
-          //is an image do nothing
-          return false;
-        } else {
-          //is text strip all
-          m = content.replace(/(<([^>]+)>)/gi, "");
-          args.content = m;
-        }
+      entity_encoding: 'raw',
+      extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
+      valid_children: '+*[*]',
+      valid_elements: '*[*]',
+      rel_list: [{title: 'nofollow', value: 'nofollow'}],
+      editor_selector: ComponentsMap.tineMceEditor.selectorClass,
+      init_instance_callback: () => {
+        this.changeToMaterial();
       },
-      paste_postprocess: function(plugin, args) {
-        args.node.setAttribute('id', '42');
+      setup: (editor) => {
+        this.setupEditor(editor);
       },
-      automatic_uploads: true,
-      images_upload_url: '/custom_uploader/upload.php',
-      images_upload_handler: function (blobInfo, success, failure) {
-        var xhr, formData;
-        xhr = new XMLHttpRequest();
-        xhr.withCredentials = false;
-        xhr.open('POST', '/custom_uploader/upload.php');
-        formData = new FormData();
-        formData.append('path','');
-        formData.append('path_thumb','');
-        formData.append('file', blobInfo.blob(), blobInfo.filename());
-        xhr.send(formData);
-        xhr.onload = function() {
-          var json;
-          if (xhr.status !== 200) {
-            failure('HTTP Error: ' + xhr.status);
-            return;
-          }
-          json = JSON.parse(xhr.responseText);
-
-          if (!json || typeof json.location != 'string') {
-            failure('Invalid JSON: ' + xhr.responseText);
-            return;
-          }
-          success(json.location);
-        };
-      },
-      editor_selector :'autoload_rte',
-      init_instance_callback: () => {  },
-      setup : (editor) => { this.setupEditor(editor); },
+      ...config,
     };
 
-    if (typeof config.editor_selector != 'undefined') {
-      config.selector = '.' + config.editor_selector;
+    if (typeof window.defaultTinyMceConfig !== 'undefined') {
+      Object.assign(cfg, window.defaultTinyMceConfig);
     }
 
-     this.config =  cfg;
-    // Change icons in popups
+    if (typeof cfg.editor_selector !== 'undefined') {
+      cfg.selector = `.${cfg.editor_selector}`;
+    }
 
+    // Change icons in popups
     $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => {
       this.changeToMaterial();
     });
@@ -225,22 +137,18 @@ class TinyMCEEditor {
     this.watchTabChanges(cfg);
   }
 
-  panelLoaded() {
-    this.watchTabChanges(this.config);
-  }
-
   /**
    * Setup TinyMCE editor once it has been initialized
    *
    * @param editor
    */
   setupEditor(editor) {
-    editor.on('loadContent', event => {
-      TinyMCEEditor.handleCounterTiny(event.target.id);
+    editor.on('loadContent', (event) => {
+      this.handleCounterTiny(event.target.id);
     });
     editor.on('change', (event) => {
       window.tinyMCE.triggerSave();
-      TinyMCEEditor.handleCounterTiny(event.target.id);
+      this.handleCounterTiny(event.target.id);
     });
     editor.on('blur', () => {
       window.tinyMCE.triggerSave();
@@ -263,12 +171,10 @@ class TinyMCEEditor {
       const tabContainer = $(textarea).closest('.translations.tabbable');
 
       if (translatedField.length && tabContainer.length) {
-
         const textareaLocale = translatedField.data('locale');
         const textareaLinkSelector = `.nav-item a[data-locale="${textareaLocale}"]`;
 
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
-
           const form = $(textarea).closest('form');
           const editor = window.tinyMCE.get(textarea.id);
 
@@ -282,12 +188,6 @@ class TinyMCEEditor {
             form,
           });
         });
-      } else {
-          const form = $(textarea).closest('form');
-          const editor = window.tinyMCE.get(textarea.id);
-          if (!editor) {
-            editor.init(this.config);
-          }
       }
     });
 
@@ -343,7 +243,7 @@ class TinyMCEEditor {
       'mce-i-table': '<i class="material-icons">grid_on</i>',
       'mce-i-media': '<i class="material-icons">video_library</i>',
       'mce-i-browse': '<i class="material-icons">attachment</i>',
-      'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>'
+      'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>',
     };
 
     $.each(materialIconAssoc, (index, value) => {
@@ -358,7 +258,7 @@ class TinyMCEEditor {
    *
    * @param id
    */
-  static handleCounterTiny(id) {
+  handleCounterTiny(id) {
     const textarea = $(`#${id}`);
     const counter = textarea.attr('counter');
     const counterType = textarea.attr('counter_type');

@@ -5,11 +5,7 @@ export default class selectCheckoutPaymentAnalyticsPush {
       let dataObject = prestashop.analytics_data;
       dataLayer.push({ecommerce: null});
 
-<<<<<<< HEAD
-      console.log(['add_payment_info', dataObject]);
-=======
       // console.log(['add_payment_info', dataObject]);
->>>>>>> c8dd03977e6c3094edbf7e3dad0a467e27d4385a
 
       let selectedElem = document.querySelector('[name="payment_method"]:checked');
       let paymentType = 'iDeal';

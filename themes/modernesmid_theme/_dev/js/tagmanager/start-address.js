@@ -1,21 +1,22 @@
-window.dataLayer = window.dataLayer || [];
-
 export default class startCheckoutAddressAnalyticsPush {
-  static init() {
-    let dataObject = prestashop.analytics_data;
-    window.dataLayer.push({ecommerce: null});
+  static init(checkoutFormElem) {
+    if (checkoutFormElem.attr('analytics_send_address') !== '1') {
+      checkoutFormElem.attr('analytics_send_address', '1');
+        let dataObject = prestashop.analytics_data;
+        dataLayer.push({ecommerce: null});
 
-    console.log(['add_shipping_info', dataObject]);
+        // console.log(['add_shipping_info', dataObject]);
 
-    window.dataLayer.push({
-      event: "add_shipping_info",
-      ecommerce: {
-        currency: dataObject.currency,
-        value: prestashop.cart.amount_tax_excl, // bedrag product ex btw
-        items: [
-          dataObject.items
-        ],
-      },
-    })
-  }
+        dataLayer.push({
+          event: "add_shipping_info",
+          ecommerce: {
+            currency: 'EUR',
+            value: prestashop.cart.amount_tax_excl, // bedrag product ex btw
+            items: [
+              dataObject.items
+            ],
+          },
+        })
+      }
+    }
 }

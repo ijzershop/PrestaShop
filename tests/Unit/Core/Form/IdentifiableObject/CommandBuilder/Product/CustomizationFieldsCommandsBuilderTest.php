@@ -53,7 +53,7 @@ class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuild
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builtCommands = $this->customizationFieldsCommandBuilder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
+        $builtCommands = $this->customizationFieldsCommandBuilder->buildCommands($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -75,7 +75,7 @@ class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuild
 
         yield [
             [
-                'details' => [
+                'specifications' => [
                     'customizations' => null,
                 ],
             ],
@@ -84,7 +84,7 @@ class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuild
 
         yield [
             [
-                'details' => [
+                'specifications' => [
                     'customizations' => [],
                 ],
             ],
@@ -120,13 +120,12 @@ class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuild
                     'id' => null,
                     'added_by_module' => false,
                 ],
-            ],
-            $this->getSingleShopConstraint()
+            ]
         );
 
         yield [
             [
-                'details' => [
+                'specifications' => [
                     'customizations' => [
                         'customization_fields' => [
                             [

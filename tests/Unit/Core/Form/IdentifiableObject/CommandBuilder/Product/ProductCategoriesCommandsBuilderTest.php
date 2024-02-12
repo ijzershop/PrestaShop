@@ -43,7 +43,7 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
         $builder = new ProductCategoriesCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -72,8 +72,7 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         $command = new SetAssociatedProductCategoriesCommand(
             $this->getProductId()->getValue(),
             42,
-            [42, 49, 51],
-            $this->getSingleShopConstraint()
+            [42, 49, 51]
         );
         yield [
             [
@@ -102,8 +101,7 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         $command = new SetAssociatedProductCategoriesCommand(
             $this->getProductId()->getValue(),
             51,
-            [42, 49, 51],
-            $this->getSingleShopConstraint()
+            [42, 49, 51]
         );
         yield [
             [
@@ -129,8 +127,7 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         $command = new SetAssociatedProductCategoriesCommand(
             $this->getProductId()->getValue(),
             42,
-            [42, 49, 51],
-            $this->getSingleShopConstraint()
+            [42, 49, 51]
         );
         yield [
             [
@@ -156,7 +153,7 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         ];
 
         // No associations means remove all
-        $command = new RemoveAllAssociatedProductCategoriesCommand($this->getProductId()->getValue(), $this->getSingleShopConstraint());
+        $command = new RemoveAllAssociatedProductCategoriesCommand($this->getProductId()->getValue());
         yield [
             [
                 'description' => [

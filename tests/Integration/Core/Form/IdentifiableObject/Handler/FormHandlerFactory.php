@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandl
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerFactoryInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FormHandlerFactory implements FormHandlerFactoryInterface
 {

@@ -340,7 +340,7 @@ class OrderSummaryStarter {
     }
     initOrderSummary() {
         const cartSummary = new _summary__WEBPACK_IMPORTED_MODULE_0__["Summary"]();
-        viewProduct.init();
+        cartSummary.init();
     }
 }
 

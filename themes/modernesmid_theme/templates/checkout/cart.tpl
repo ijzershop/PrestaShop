@@ -50,7 +50,8 @@
     {*            {/block}*}
                   {* Show print cart button *}
                   <a href="#" id="addCustomProductByEmployee" data-cart="{Context::getContext()->cart->id}"  class="btn btn-success float-right mt-2" alt="Extra product toevoegen"><i class="fasl fa-plus"></i> Regel toevoegen</a>
-    {*              <a href="#" id="printShoppingCartByEmployee" data-cart="{Context::getContext()->cart->id}" class="btn btn-link text-dark float-right mt-1" alt="Winkelwagen als pdf opslaan"><i class="fa-2x fasl fa-file-pdf"></i></a>*}
+                  <a href="#" id="removeShoppingCartDefaultDiscount" data-cart="{Context::getContext()->cart->id}"  class="btn btn-warning float-right mt-2" alt="Winkelwagen korting verwijderen"><i class="fasl fa-times"></i> Korting verwijderen</a>
+                  {*              <a href="#" id="printShoppingCartByEmployee" data-cart="{Context::getContext()->cart->id}" class="btn btn-link text-dark float-right mt-1" alt="Winkelwagen als pdf opslaan"><i class="fa-2x fasl fa-file-pdf"></i></a>*}
                 </div>
             {/if}
         </div>
@@ -138,7 +139,7 @@
       }
       // Skip Saturdays and Sundays
       while(targetDate.getDay() === 0 ||
-       targetDate.getDay() === 6 || 
+       targetDate.getDay() === 6 ||
        freedayArray.indexOf((targetDate.getMonth()+1)+'/'+targetDate.getDate()+'/'+targetDate.getFullYear()) > -1 ||
       (targetDate.getTime() - now.getTime()) < 0)
       {
@@ -148,7 +149,7 @@
       // get total seconds between the times
       let difference = targetDate.getTime() - now.getTime();
 
-  
+
       let diff = Math.abs(difference) / 1000;
       // calculate (and subtract) whole days
       let days = Math.floor(diff / 86400);

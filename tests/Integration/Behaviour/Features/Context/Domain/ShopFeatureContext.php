@@ -47,7 +47,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -110,13 +109,5 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     public function assertShopNotFound(): void
     {
         $this->assertLastErrorIs(ShopNotFoundException::class);
-    }
-
-    /**
-     * @Then I should get error that shop association was not found
-     */
-    public function assertLastErrorIsShopAssociationNotFound(): void
-    {
-        $this->assertLastErrorIs(ShopAssociationNotFound::class);
     }
 }

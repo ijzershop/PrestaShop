@@ -25,10 +25,12 @@ use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
+use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Psr\Log\LoggerInterface;
@@ -72,11 +74,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
     private $versionChangeApplyConfigCommandHandler;
 
     /**
-     * @var ModuleRepository
-     */
-    private $coreModuleRepository;
-    /**
-     * @var SymfonyCacheClearer
+     * @var CacheClearerInterface
      */
     private $cacheClearer;
 
@@ -91,7 +89,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         Client $distributionClient,
         AdminAuthenticationProvider $adminAuthenticationProvider,
         VersionChangeApplyConfigCommandHandler $versionChangeApplyConfigCommandHandler,
-        SymfonyCacheClearer $cacheClearer
+        CacheClearerInterface $cacheClearer
     ) {
         $this->logger = $logger;
         $this->moduleRepository = $moduleRepository;
@@ -129,14 +127,10 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
                 ['onDisable'],
             ],
             ModuleManagementEvent::ENABLE_MOBILE => [
-                ['clearSfCache'],
-                ['clearCatalogCache'],
-                ['onEnableMobile'],
+                ['onEnableOnMobile'],
             ],
             ModuleManagementEvent::DISABLE_MOBILE => [
-                ['clearSfCache'],
-                ['clearCatalogCache'],
-                ['onDisableMobile'],
+                ['onDisableOnMobile'],
             ],
             ModuleManagementEvent::UPGRADE => [
                 ['clearCatalogCache'],
@@ -171,6 +165,14 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
     public function onPostInstall(ModuleManagementEvent $event): void
     {
         $this->logEvent(ModuleManagementEvent::POST_INSTALL, $event);
+
+        $module = $event->getModule();
+        if (defined('PS_INSTALLATION_IN_PROGRESS') && 'ps_mbo' === $module->get('name')) {
+            // Update position of hook dashboardZoneTwo
+            /** @var \ps_mbo $psMbo */
+            $psMbo = $module->getInstance();
+            $psMbo->putMboDashboardZoneTwoAtLastPosition();
+        }
     }
 
     public function onUninstall(ModuleManagementEvent $event): void
@@ -188,12 +190,12 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         $this->logEvent(ModuleManagementEvent::DISABLE, $event);
     }
 
-    public function onEnableMobile(ModuleManagementEvent $event): void
+    public function onEnableOnMobile(ModuleManagementEvent $event): void
     {
         $this->logEvent(ModuleManagementEvent::ENABLE_MOBILE, $event);
     }
 
-    public function onDisableMobile(ModuleManagementEvent $event): void
+    public function onDisableOnMobile(ModuleManagementEvent $event): void
     {
         $this->logEvent(ModuleManagementEvent::DISABLE_MOBILE, $event);
     }
@@ -231,11 +233,12 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
 
     private function applyConfigOnVersionChange(ModuleInterface $module)
     {
+        /** @var Module $module */
         $command = new VersionChangeApplyConfigCommand(
             _PS_VERSION_,
-            $module->disk->get('version')
+            (string) $module->disk->get('version')
         );
 
-        $configCollection = $this->versionChangeApplyConfigCommandHandler->handle($command);
+        $this->versionChangeApplyConfigCommandHandler->handle($command);
     }
 }

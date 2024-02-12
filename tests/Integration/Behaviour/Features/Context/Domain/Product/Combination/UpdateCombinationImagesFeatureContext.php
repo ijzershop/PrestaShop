@@ -73,7 +73,7 @@ class UpdateCombinationImagesFeatureContext extends AbstractCombinationFeatureCo
      */
     public function assertCombinationImages(string $combinationReference, array $imageReferences): void
     {
-        $images = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getImageIds();
+        $images = $this->getCombinationForEditing($combinationReference)->getImageIds();
         Assert::assertEquals(count($images), count($imageReferences));
         foreach ($imageReferences as $imageReference) {
             $imageId = $this->getSharedStorage()->get($imageReference);
@@ -95,7 +95,7 @@ class UpdateCombinationImagesFeatureContext extends AbstractCombinationFeatureCo
      */
     public function assertCombinationCover(string $combinationReference, string $coverUrl): void
     {
-        $combinationCoverUrl = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getCoverThumbnailUrl();
+        $combinationCoverUrl = $this->getCombinationForEditing($combinationReference)->getCoverThumbnailUrl();
         $realImageUrl = $this->getRealImageUrl($coverUrl);
         Assert::assertEquals(
             $realImageUrl,
@@ -111,7 +111,7 @@ class UpdateCombinationImagesFeatureContext extends AbstractCombinationFeatureCo
      */
     public function assertNoImages(string $combinationReference): void
     {
-        $images = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getImageIds();
+        $images = $this->getCombinationForEditing($combinationReference)->getImageIds();
         Assert::assertEmpty($images);
     }
 }

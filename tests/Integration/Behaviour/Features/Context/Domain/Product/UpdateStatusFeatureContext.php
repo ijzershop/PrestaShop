@@ -31,11 +31,10 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 
@@ -47,98 +46,47 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
      * @param bool $status
      * @param TableNode $productsList
      */
-    public function bulkUpdateStatusForDefaultShop(bool $status, TableNode $productsList): void
+    public function bulkUpdateStatus(bool $status, TableNode $productsList): void
     {
-        $this->bulkUpdateStatus($status, $productsList, ShopConstraint::shop($this->getDefaultShopId()));
+        $productIds = [];
+        foreach ($productsList->getColumnsHash() as $productInfo) {
+            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkUpdateProductStatusCommand(
+                $productIds,
+                $status
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+
+            return;
+        }
     }
 
     /**
-     * @When /^I bulk change status to be (enabled|disabled) for following products for shop "([^"]+)":$/
-     *
-     * @param bool $status
-     * @param string $shopReference
-     * @param TableNode $productsList
-     */
-    public function bulkUpdateStatusForSpecificShop(bool $status, string $shopReference, TableNode $productsList): void
-    {
-        $this->bulkUpdateStatus($status, $productsList, ShopConstraint::shop($this->referenceToId($shopReference)));
-    }
-
-    /**
-     * @When /^I bulk change status to be (enabled|disabled) for following products for shop group "([^"]+)":$/
-     *
-     * @param bool $status
-     * @param string $shopGroupReference
-     * @param TableNode $productsList
-     */
-    public function bulkUpdateStatusForShopGroup(bool $status, string $shopGroupReference, TableNode $productsList): void
-    {
-        $this->bulkUpdateStatus($status, $productsList, ShopConstraint::shopGroup($this->referenceToId($shopGroupReference)));
-    }
-
-    /**
-     * @When /^I bulk change status to be (enabled|disabled) for following products for all shops:$/
-     *
-     * @param bool $status
-     * @param TableNode $productsList
-     */
-    public function bulkUpdateStatusForAllShops(bool $status, TableNode $productsList): void
-    {
-        $this->bulkUpdateStatus($status, $productsList, ShopConstraint::allShops());
-    }
-
-    /**
-     * @When /^I (enable|disable) product "([^"]+)"$/
+     * @When /^I (enable|disable) product "(.*)"$/
      *
      * status transformation handled by @see StringToBoolTransformContext
      *
      * @param bool $status
      * @param string $productReference
      */
-    public function updateStatusForDefaultShop(bool $status, string $productReference): void
+    public function updateStatus(bool $status, string $productReference): void
     {
-        $this->updateProductStatus($status, $productReference, ShopConstraint::shop($this->getDefaultShopId()));
-    }
-
-    /**
-     * @When /^I (enable|disable) product "([^"]+)" for shop "([^"]+)"$/
-     *
-     * status transformation handled by @see StringToBoolTransformContext
-     *
-     * @param bool $status
-     * @param string $productReference
-     * @param string $shopReference
-     */
-    public function updateStatusForSpecificShop(bool $status, string $productReference, string $shopReference): void
-    {
-        $this->updateProductStatus($status, $productReference, ShopConstraint::shop($this->referenceToId($shopReference)));
-    }
-
-    /**
-     * @When /^I (enable|disable) product "([^"]+)" for all shops$/
-     *
-     * status transformation handled by @see StringToBoolTransformContext
-     *
-     * @param bool $status
-     * @param string $productReference
-     */
-    public function updateStatusForAllShops(bool $status, string $productReference): void
-    {
-        $this->updateProductStatus($status, $productReference, ShopConstraint::allShops());
-    }
-
-    /**
-     * @When /^I (enable|disable) product "([^"]+)" for shop group "([^"]+)"$/
-     *
-     * status transformation handled by @see StringToBoolTransformContext
-     *
-     * @param bool $status
-     * @param string $productReference
-     * @param string $shopGroupReference
-     */
-    public function updateStatusForShopGroup(bool $status, string $productReference, string $shopGroupReference): void
-    {
-        $this->updateProductStatus($status, $productReference, ShopConstraint::shopGroup($this->referenceToId($shopGroupReference)));
+        try {
+            $this->getCommandBus()->handle(new UpdateProductStatusCommand(
+                $this->getSharedStorage()->get($productReference),
+                $status
+            ));
+        } catch (ProductConstraintException $e) {
+            if (ProductConstraintException::INVALID_ONLINE_DATA === $e->getCode()) {
+                $this->setLastException($e);
+            } else {
+                throw $e;
+            }
+        }
     }
 
     /**
@@ -214,44 +162,6 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
                     $productException->getCode()
                 ));
             }
-        }
-    }
-
-    private function updateProductStatus(bool $status, string $productReference, ShopConstraint $shopConstraint): void
-    {
-        try {
-            $command = new UpdateProductCommand(
-                $this->referenceToId($productReference),
-                $shopConstraint
-            );
-            $command->setActive($status);
-            $this->getCommandBus()->handle($command);
-        } catch (ProductConstraintException $e) {
-            if (ProductConstraintException::INVALID_ONLINE_DATA === $e->getCode()) {
-                $this->setLastException($e);
-            } else {
-                throw $e;
-            }
-        }
-    }
-
-    private function bulkUpdateStatus(bool $status, TableNode $productsList, ShopConstraint $shopConstraint): void
-    {
-        $productIds = [];
-        foreach ($productsList->getColumnsHash() as $productInfo) {
-            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
-        }
-
-        try {
-            $this->getCommandBus()->handle(new BulkUpdateProductStatusCommand(
-                $productIds,
-                $status,
-                $shopConstraint
-            ));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-
-            return;
         }
     }
 }

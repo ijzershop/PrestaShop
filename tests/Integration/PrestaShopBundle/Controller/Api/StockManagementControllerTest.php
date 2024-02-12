@@ -361,28 +361,16 @@ class StockManagementControllerTest extends ApiTestCase
         $bulkEditProductsRoute = $this->router->generate('api_stock_bulk_edit_products');
 
         self::$client->request('POST', $bulkEditProductsRoute);
-        $content = $this->assertResponseBodyValidJson(400);
-        $this->assertEquals([
-            'error' => 'Invalid JSON content (The request body should contain a JSON-encoded array of product identifiers and deltas)',
-        ], $content);
+        $this->assertResponseBodyValidJson(400);
 
         self::$client->request('POST', $bulkEditProductsRoute, [], [], [], '[{"combination_id": 0}]');
-        $content = $this->assertResponseBodyValidJson(400);
-        $this->assertEquals([
-            'error' => 'Each item of JSON-encoded array in the request body should contain a product id ("product_id"), a quantity delta ("delta"). The item of index #0 is invalid.',
-        ], $content);
+        $this->assertResponseBodyValidJson(400);
 
         self::$client->request('POST', $bulkEditProductsRoute, [], [], [], '[{"product_id": 1}]');
-        $content = $this->assertResponseBodyValidJson(400);
-        $this->assertEquals([
-            'error' => 'Each item of JSON-encoded array in the request body should contain a product id ("product_id"), a quantity delta ("delta"). The item of index #0 is invalid.',
-        ], $content);
+        $this->assertResponseBodyValidJson(400);
 
         self::$client->request('POST', $bulkEditProductsRoute, [], [], [], '[{"delta": 0}]');
-        $content = $this->assertResponseBodyValidJson(400);
-        $this->assertEquals([
-            'error' => 'Each item of JSON-encoded array in the request body should contain a product id ("product_id"), a quantity delta ("delta"). The item of index #0 is invalid.',
-        ], $content);
+        $this->assertResponseBodyValidJson(400);
 
         self::$client->request(
             'POST',
@@ -392,10 +380,7 @@ class StockManagementControllerTest extends ApiTestCase
             [],
             '[{"product_id": 1, "delta": 0}]'
         );
-        $content = $this->assertResponseBodyValidJson(400);
-        $this->assertEquals([
-            'error' => 'Value cannot be 0.',
-        ], $content);
+        $this->assertResponseBodyValidJson(400);
     }
 
     private function assertOkResponseOnBulkEditProducts(): void

@@ -1,59 +1,31 @@
+{shop_url}
 
-[{shop_url}] 
+Order details
 
-Congratulations! 
+Customer: {firstname} {lastname} - ({email})
 
-A new order was placed on {shop_name} by the following customer:
-{firstname} {lastname} ({email}) 
+Address:
+{delivery_block_html}
 
-ORDER: {order_name} Placed on {date}
+Order: {order_name} Placed on {date}
 
-PAYMENT: {payment} 		 
+Payment: {payment}
 
-REFERENCE
+Carrier: {carrier}
 
-PRODUCT
+Customer message: {message}
 
-UNIT PRICE
+Reference	Product	Unit price	Quantity	Total price   {items}
+Products	{total_products}
+Discounts	{total_discounts}
+Shipping	{total_shipping}
+Including total tax	{total_tax_paid}
+Total paid	{total_paid}
 
-QUANTITY
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 
-TOTAL PRICE
+[telefoon: 058-2123138](tel://0900-2502500)
 
-{items} 
+[email: info@v15.nl](mailto:info@v15.nl)
 
-PRODUCTS 
-
-{total_products} 
-
-DISCOUNTS 
-
-{total_discounts} 
-
-GIFT-WRAPPING 
-
-{total_wrapping} 
-
-SHIPPING 
-
-{total_shipping} 
-
-TOTAL TAX PAID 
-
-{total_tax_paid} 
-
-TOTAL PAID 
-
-{total_paid} 
-
-{carrier} 
-
-{delivery_block_html} 
-
-{invoice_block_html} 
-
-{message} 
-
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
-
+ijzershop.localÂ |Â Ceresweg 1Â |Â 8938BG LeeuwardenÂ |Â 0900-2502500Â Â De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

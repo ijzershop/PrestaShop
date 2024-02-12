@@ -28,8 +28,9 @@ $(document).ready(() => {
     document.cookie = `cookie-consent=${value};expires=${expire}domain=${domain};path=/;secure;samesite=lax;`
 
     if (marketing === true) dataLayer.push({event: "marketing_consent"})
-
-    document.getElementById('cookiesModal').remove();
+    if(document.getElementById('cookiesModal') !== null){
+      document.getElementById('cookiesModal').remove();
+    }
   }
 
   const verifyConsent = ()=> {

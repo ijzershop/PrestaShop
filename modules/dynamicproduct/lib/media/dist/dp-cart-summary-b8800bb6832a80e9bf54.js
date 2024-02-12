@@ -258,7 +258,7 @@ if (true) {
 }
 const cartSummary = new _views_ts_front_cart_summary_summary__WEBPACK_IMPORTED_MODULE_2__["Summary"](new _tools_tools__WEBPACK_IMPORTED_MODULE_0__["Tools"]());
 $(document).on("ready", () => {
-    viewProduct.init();
+    cartSummary.init();
 });
 
 

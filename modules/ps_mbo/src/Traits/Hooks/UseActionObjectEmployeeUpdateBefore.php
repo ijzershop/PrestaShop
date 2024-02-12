@@ -21,6 +21,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+
 trait UseActionObjectEmployeeUpdateBefore
 {
     /**
@@ -31,10 +34,17 @@ trait UseActionObjectEmployeeUpdateBefore
         if (empty($params) || empty($params['object']) || !$params['object'] instanceof \Employee) {
             return;
         }
-        $currentApiUser = $this->getAdminAuthenticationProvider()->getApiUser();
-        if (!$currentApiUser) {
+        try {
+            $currentApiUser = $this->getAdminAuthenticationProvider()->getApiUser();
+            if (!$currentApiUser) {
+                throw new ExpectedServiceNotFoundException('Unable to get the Api User');
+            }
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+
             return;
         }
+
         if ($params['object']->id === $currentApiUser->id) {
             $params['object']->firstname = $currentApiUser->firstname;
             $params['object']->lastname = $currentApiUser->lastname;

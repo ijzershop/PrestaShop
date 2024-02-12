@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilderInterface;
 
@@ -159,7 +158,7 @@ class ConditionBuilder implements ProductCommandsBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         foreach ($this->formCondition as $key => $value) {
             if (!isset($formData[$key]) || $formData[$key] !== $value) {
@@ -176,7 +175,7 @@ class AlwaysEmptyBuilder implements ProductCommandsBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $shopConstraint): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         return [];
     }
@@ -202,11 +201,11 @@ class MultiCommandsBuilder implements ProductCommandsBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         $commands = [];
         foreach ($this->builders as $builder) {
-            $commands = array_merge($commands, $builder->buildCommands($productId, $formData, $singleShopConstraint));
+            $commands = array_merge($commands, $builder->buildCommands($productId, $formData));
         }
 
         return $commands;

@@ -52,6 +52,7 @@ import './lib/jquery.scrollbox.min';
 
 // import './components/block-cart';
 import $ from 'jquery';
+import jQuery from 'jquery'
 /* eslint-enable */
 
 // "inherit" EventEmitter
@@ -1719,6 +1720,30 @@ var showAddedToCartGlow = function (caller_element) {
   return true;
 };
 
+$(document).on('click', '.removeShoppingCartDefaultDiscount', function (event) {
+  event.preventDefault();
+  event.stopImmediatePropagation();
+
+  const url = '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1';
+
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: {
+      _token: prestashop.static_token,
+      action: 'remove_default_discount_cart_rule_counter_access',
+    },
+  })
+    .done(function (e) {
+      location.reload();
+    })
+    .fail(function () {
+      // console.log('error');
+    });
+
+
+});
+
 
 // Voeg regel toe aan winkel wagen
 $(document).on('click', '#addCustomProductByEmployee', function (event) {
@@ -1770,7 +1795,7 @@ $(document).on('click', '#addCustomProductByEmployee', function (event) {
 
   tinymce.suffix = '.min';
   tinymce.baseURL = window.location.origin + '/js/tiny_mce';
-  viewProduct.init({
+  tinymce.init({
     theme_url: '/js/tiny_mce/themes/silver/theme.min.js',
     theme: 'silver',
     relative_urls: true,
@@ -2139,44 +2164,5 @@ $(function() {
   });
 
 });
-
-
-function redirectToCrosselProduct(){
-  console.log(this);
-  return true;
-}
-//
-// let passGoogleDataToCsv = function(){
-//   const url =
-//   let dataArray = {
-//     'event': '',
-//     'reference': '',
-//     'customer': '',
-//     'shop': '',
-//     'transactionId': '',
-//     'products': ''
-//   };
-//
-//   $.ajax({
-//     url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1',
-//     type: 'POST',
-//     data: {
-//       _token: prestashop.static_token,
-//       action: 'add_data_to_google_check_csv',
-//       data: dataArray,
-//     },
-//   }).done(function (e) {
-//     console.log(e);
-//   });
-//
-//   console.log('sil wat wurde!');
-//
-//
-//
-//
-//   return true;
-// }
-
-// passGoogleDataToCsv();
 
 

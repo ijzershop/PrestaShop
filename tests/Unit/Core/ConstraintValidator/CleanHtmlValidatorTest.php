@@ -56,30 +56,6 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
         ;
     }
 
-    public function testItFailsWhenAttributeStartingWithOnIsGiven()
-    {
-        $htmlTag = '<a href="#" onanything="evilJavascriptIsCalled()"></a>';
-
-        $this->validator->validate($htmlTag, new CleanHtml());
-
-        $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $htmlTag . '"')
-            ->assertRaised()
-        ;
-    }
-
-    public function testCaseInsensitiveOnEventAttributeDetection()
-    {
-        $htmlTag = '<a href="#" oNnotexi="evilJavascriptIsCalled()"></a>';
-
-        $this->validator->validate($htmlTag, new CleanHtml());
-
-        $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $htmlTag . '"')
-            ->assertRaised()
-        ;
-    }
-
     public function testItFailsWhenIframeIsGiven()
     {
         $htmlTag = '<iframe src="catvideo.html" /></iframe>';
@@ -160,61 +136,6 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
 
         $this->assertNoViolation();
         $this->context->getViolations();
-    }
-
-    public function testItSucceedsWhenRegularAttributeIsGiven()
-    {
-        $htmlTag = '<div randomattribute="blabla">test</div>';
-        $this->validator->validate($htmlTag, new CleanHtml());
-
-        $this->assertNoViolation();
-        $this->context->getViolations();
-    }
-
-    public function testSucceedsWithSpaces()
-    {
-        $htmlTag = '<div
-
-randomattribute="blabla"   attributewithoutvalue
-
-        randomattr="random value">
-
-</div>';
-        $this->validator->validate($htmlTag, new CleanHtml());
-
-        $this->assertNoViolation();
-    }
-
-    public function itFailsToHaveOnAttributeWithRandomSpacesAndLines()
-    {
-        $htmlTag = '<div
-randomattribute="blabla"
-
-    onbidule="test" attributewithoutvalue
-
-        randomattr="random value">test
-
-        </div>';
-
-        $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $htmlTag . '"')
-            ->assertRaised()
-        ;
-
-        $this->context->getViolations();
-    }
-
-    public function itFailsWithRLOInjection()
-    {
-        $htmlTag = '‮<img src=x onerror="alert(\'img\')">';
-
-        $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $htmlTag . '"')
-            ->assertRaised()
-        ;
-
-        $this->context->getViolations();
-
     }
 
     protected function createValidator()

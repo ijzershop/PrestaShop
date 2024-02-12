@@ -53,7 +53,7 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builtCommands = $this->commandsBuilder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
+        $builtCommands = $this->commandsBuilder->buildCommands($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -68,14 +68,14 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
 
         yield [
             [
-                'details' => null,
+                'specifications' => null,
             ],
             [],
         ];
 
         yield [
             [
-                'details' => [
+                'specifications' => [
                     'attachments' => null,
                 ],
             ],
@@ -84,7 +84,7 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
 
         yield [
             [
-                'details' => [
+                'specifications' => [
                     'attachments' => [],
                 ],
             ],
@@ -93,7 +93,7 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
 
         yield [
             [
-                'details' => [
+                'specifications' => [
                     'attachments' => [
                         'attached_files' => [],
                     ],
@@ -104,7 +104,7 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
 
         yield [
             [
-                'details' => [
+                'specifications' => [
                     'attachments' => [
                         'attached_files' => [
                             [
@@ -135,7 +135,7 @@ class ProductAttachmentsCommandsBuilderTest extends AbstractProductCommandBuilde
         // Filter duplicate IDs
         yield [
             [
-                'details' => [
+                'specifications' => [
                     'attachments' => [
                         'attached_files' => [
                             [

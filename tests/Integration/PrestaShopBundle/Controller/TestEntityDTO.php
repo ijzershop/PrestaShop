@@ -69,24 +69,12 @@ class TestEntityDTO
      *
      * @throws VariableNotFoundException
      */
-    public function getVariable(string $variableName)
+    public function __get(string $variableName)
     {
         if (!isset($this->variables[$variableName])) {
             throw new VariableNotFoundException(sprintf('Variable %s not found in entity', $variableName));
         }
 
         return $this->variables[$variableName];
-    }
-
-    /**
-     * @param string $variableName
-     *
-     * @return mixed
-     *
-     * @throws VariableNotFoundException
-     */
-    public function __get(string $variableName)
-    {
-        return $this->getVariable($variableName);
     }
 }

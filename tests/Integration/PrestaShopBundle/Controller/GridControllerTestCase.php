@@ -95,7 +95,8 @@ abstract class GridControllerTestCase extends WebTestCase
     }
 
     /**
-     * Parses all the entities' data from the grid table, based on the parseEntityFromRow that each subclass must implement.
+     * Parses all the entities' data from the grid table, based on the parseEntityFromRow that each sub-class must
+     * implement.
      *
      * @param Crawler $crawler
      *
@@ -103,6 +104,7 @@ abstract class GridControllerTestCase extends WebTestCase
      */
     protected function parseEntitiesFromGridTable(Crawler $crawler): TestEntityDTOCollection
     {
+        $testEntityDTOCollection = new TestEntityDTOCollection();
         $grid = $crawler->filter($this->getGridSelector());
         if (empty($grid->count())) {
             throw new InvalidArgumentException(sprintf(
@@ -113,25 +115,6 @@ abstract class GridControllerTestCase extends WebTestCase
 
         // Get rows but filter the one that is used to indicate there is no result
         $entitiesRows = $grid->filter('tbody tr:not(.empty_row)');
-
-        $testEntityDTOCollection = $this->parseEntitiesFromRows($entitiesRows);
-
-        // Get total number
-        $testEntityDTOCollection->setTotalCount((int) $grid->first()->attr('data-total'));
-
-        return $testEntityDTOCollection;
-    }
-
-    /**
-     * Parses all the entities' data from the table rows, based on the parseEntityFromRow that each subclass must implement.
-     *
-     * @param Crawler $entitiesRows
-     *
-     * @return TestEntityDTOCollection
-     */
-    protected function parseEntitiesFromRows(Crawler $entitiesRows): TestEntityDTOCollection
-    {
-        $testEntityDTOCollection = new TestEntityDTOCollection();
 
         // If no rows are found the collection is empty
         if ($entitiesRows->count()) {
@@ -150,7 +133,7 @@ abstract class GridControllerTestCase extends WebTestCase
 
     /**
      * Calls the grid page with specific filters and return the parsed entities it contains, based on the
-     * parseEntityFromRow that each subclass must implement.
+     * parseEntityFromRow that each sub-class must implement.
      *
      * @param array $testFilters
      * @param array $routeParams

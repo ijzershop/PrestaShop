@@ -23,26 +23,24 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Db;
 use Exception;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
+use PrestaShopDatabaseException;
 
 trait UseDashboardZoneOne
 {
+    use HaveCdcComponent;
+
     /**
      * Display "Advices and updates" block on the left column of the dashboard
      *
-     * @param array $params
-     *
      * @return false|string
      */
-    public function hookDashboardZoneOne(array $params)
+    public function hookDashboardZoneOne()
     {
-        $this->context->smarty->assign(
-            [
-                'shop_context' => json_encode($this->get('mbo.cdc.context_builder')->getViewContext()),
-                'cdcErrorUrl' => $this->get('router')->generate('admin_mbo_module_cdc_error'),
-            ]
-        );
-
-        return $this->display($this->name, 'dashboard-zone-one.tpl');
+        return $this->smartyDisplayTpl('dashboard-zone-one.tpl', [
+            'urlAccountsCdn' => $this->loadPsAccounts(),
+        ]);
     }
 
     /**
@@ -66,23 +64,12 @@ trait UseDashboardZoneOne
      */
     protected function loadMediaDashboardZoneOne(): void
     {
-        if (\Tools::getValue('controller') === 'AdminDashboard') {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');
-            $this->context->controller->addCss($this->getPathUri() . 'views/css/cdc-error-templating.css');
-
-            $cdcJsFile = getenv('MBO_CDC_URL');
-            if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
-                $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error.js');
-
-                return;
-            }
-
-            $this->context->controller->addJs($cdcJsFile);
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version);
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/addons-connect.css');
-        }
+        $this->loadCdcMediaFilesForControllers(['AdminDashboard']);
     }
 
+    /**
+     * @throws PrestaShopDatabaseException
+     */
     public function useDashboardZoneOneExtraOperations()
     {
         //Update module position in Dashboard
@@ -93,5 +80,37 @@ trait UseDashboardZoneOne
         $id_hook = $result['0']['id_hook'];
 
         $this->updatePosition((int) $id_hook, false);
+    }
+
+    protected function loadPsAccounts(): string
+    {
+        /*********************
+         * PrestaShop Account *
+         * *******************/
+        $urlAccountsCdn = '';
+        $accountsFacade = $accountsService = null;
+
+        try {
+            $accountsFacade = $this->get('mbo.ps_accounts.facade');
+            $accountsService = $accountsFacade->getPsAccountsService();
+        } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
+            ErrorHelper::reportError($e);
+        }
+
+        if (null !== $accountsFacade && null !== $accountsService) {
+            try {
+                \Media::addJsDef([
+                    'contextPsAccounts' => $accountsFacade->getPsAccountsPresenter()
+                        ->present('ps_mbo'),
+                ]);
+
+                // Retrieve the PrestaShop Account CDN
+                $urlAccountsCdn = $accountsService->getAccountsCdn();
+            } catch (\Exception $e) {
+                ErrorHelper::reportError($e);
+            }
+        }
+
+        return $urlAccountsCdn;
     }
 }

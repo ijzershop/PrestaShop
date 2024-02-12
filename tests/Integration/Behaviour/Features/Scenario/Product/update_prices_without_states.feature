@@ -1,6 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-prices-without-states
 @restore-products-before-feature
-@restore-taxes-after-feature
 @reboot-kernel-before-feature
 @clear-cache-before-feature
 @update-prices-without-states
@@ -37,7 +36,7 @@ Feature: Update product price fields from Back Office (BO) when default country 
     And tax rules group named "FR Tax (6%)" exists
     And product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
-    When I update product "product1" with following values:
+    When I update product "product1" prices with following information:
       | price              | 100.99          |
       | ecotax             | 0               |
       | tax rules group    | FR Tax (6%)     |
@@ -58,7 +57,7 @@ Feature: Update product price fields from Back Office (BO) when default country 
       | unity                   | bag of ten      |
 
   Scenario: I update product prices with negative values
-    Given I update product "product1" with following values:
+    Given I update product "product1" prices with following information:
       | price           | 50              |
       | ecotax          | 3               |
       | tax rules group | FR Tax (6%)     |
@@ -77,16 +76,16 @@ Feature: Update product price fields from Back Office (BO) when default country 
       | unit_price_tax_included | 530             |
       | unit_price_ratio        | 0.1             |
       | unity                   | bag of ten      |
-    When I update product "product1" with following values:
+    When I update product "product1" prices with following information:
       | price | -20 |
     Then I should get error that product "price" is invalid
-    When I update product "product1" with following values:
+    When I update product "product1" prices with following information:
       | ecotax | -2 |
     Then I should get error that product "ecotax" is invalid
-    When I update product "product1" with following values:
+    When I update product "product1" prices with following information:
       | wholesale_price | -35 |
     Then I should get error that product "wholesale_price" is invalid
-    When I update product "product1" with following values:
+    When I update product "product1" prices with following information:
       | unit_price | -300 |
     Then I should get error that product "unit_price" is invalid
     And product product1 should have following prices information:
@@ -102,7 +101,7 @@ Feature: Update product price fields from Back Office (BO) when default country 
       | unity                   | bag of ten      |
 
   Scenario: I update product tax the price tax included and unit price tax included is impacted
-    When I update product "product1" with following values:
+    When I update product "product1" prices with following information:
       | price      | 20  |
       | unit_price | 500 |
     Then product product1 should have following prices information:
@@ -112,7 +111,7 @@ Feature: Update product price fields from Back Office (BO) when default country 
       | unit_price_tax_included | 500  |
       | unit_price_ratio        | 0.04 |
       | tax rules group         |      |
-    When I update product "product1" with following values:
+    When I update product "product1" prices with following information:
       | tax rules group | FR Tax (6%)     |
     Then product product1 should have following prices information:
       | price                   | 20              |

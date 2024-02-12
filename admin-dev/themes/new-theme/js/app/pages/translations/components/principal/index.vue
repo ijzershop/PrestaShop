@@ -149,6 +149,7 @@
         return this.$store.getters.catalog.data.data;
       },
       saveAction(): string {
+        console.log(this.$store.getters.catalog);
         return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.edit_url : '';
       },
       resetAction(): string {

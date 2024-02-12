@@ -169,13 +169,19 @@ class StockManager
 
         $stockAvailable = $stockManager->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
 
+
         // Update quantity of the pack products
         if ($packItemsManager->isPack($product)) {
             // The product is a pack
             $this->updatePackQuantity($product, $stockAvailable, $delta_quantity, $id_shop);
         } else {
             // The product is not a pack
-            $stockAvailable->quantity = (int)$stockAvailable->quantity + $delta_quantity;
+            $qty = (int)$stockAvailable->quantity + $delta_quantity;
+            if($qty > 2147483648 || $qty < -2147483648){
+                $qty = 2147483648;
+            }
+
+            $stockAvailable->quantity = $qty;
             $stockAvailable->update();
 
             // Decrease case only: the stock of linked packs should be decreased too.

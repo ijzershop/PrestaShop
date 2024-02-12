@@ -44,7 +44,7 @@ class CombinationImagesCommandsBuilderTest extends AbstractCombinationCommandBui
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
         $builder = new CombinationImagesCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getCombinationId(), $formData, $this->getSingleShopConstraint());
+        $builtCommands = $builder->buildCommands($this->getCombinationId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 

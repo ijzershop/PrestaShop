@@ -1109,7 +1109,7 @@ var Dropzone = function (_Emitter) {
       }
     }
 
-    viewProduct.init();
+    _this.init();
     return _this;
   }
 
@@ -1362,7 +1362,7 @@ var Dropzone = function (_Emitter) {
 
       this.enable();
 
-      return viewProduct.init.call(this);
+      return this.options.init.call(this);
     }
 
     // Not fully tested yet

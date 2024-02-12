@@ -32,15 +32,11 @@ use Configuration;
 use DateTime;
 use DateTimeInterface;
 use Language;
-use LogicException;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
@@ -51,11 +47,6 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContext
 {
-    protected const DATE_KEYS_BY_TYPE = [
-        StockMovement::EDITION_TYPE => ['add'],
-        StockMovement::ORDERS_TYPE => ['from', 'to'],
-    ];
-
     /**
      * Transform url from behat test into a proper one, expected value looks like this:
      *   http://myshop.com/img/p/{image1}-small_default.jpg
@@ -142,22 +133,19 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
 
         return $this->getQueryBus()->handle(new GetProductForEditing(
             $productId,
-            $shopConstraint,
-            $this->getDefaultLangId()
+            $shopConstraint
         ));
     }
 
     /**
      * @param string $productReference
-     * @param ShopConstraint $shopConstraint
      *
      * @return CustomizationField[]
      */
-    protected function getProductCustomizationFields(string $productReference, ShopConstraint $shopConstraint): array
+    protected function getProductCustomizationFields(string $productReference): array
     {
         return $this->getQueryBus()->handle(new GetProductCustomizationFields(
-            $this->getSharedStorage()->get($productReference),
-            $shopConstraint
+            $this->getSharedStorage()->get($productReference)
         ));
     }
 
@@ -343,63 +331,10 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
     }
 
     /**
-     * @param string $outOfStock
-     *
      * @return int
      */
-    protected function convertPackStockTypeToInt(string $outOfStock): int
+    protected function getDefaultShopId(): int
     {
-        $intValues = [
-            'default' => PackStockType::STOCK_TYPE_DEFAULT,
-            'products_only' => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,
-            'pack_only' => PackStockType::STOCK_TYPE_PACK_ONLY,
-            'both' => PackStockType::STOCK_TYPE_BOTH,
-            'invalid' => 42, // This random number is hardcoded intentionally to reflect invalid pack stock type
-        ];
-
-        return $intValues[$outOfStock];
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function resolveHistoryDateKeys(string $type): array
-    {
-        if (array_key_exists($type, self::DATE_KEYS_BY_TYPE)) {
-            return self::DATE_KEYS_BY_TYPE[$type];
-        }
-        throw new LogicException(
-            sprintf(
-                'Invalid history type "%s" given, expected any of: %s.',
-                $type,
-                implode(', ', array_keys(self::DATE_KEYS_BY_TYPE))
-            )
-        );
-    }
-
-    /**
-     * @param string $manufacturerReference
-     *
-     * @return int
-     */
-    protected function getManufacturerId(string $manufacturerReference): int
-    {
-        if ('' === $manufacturerReference) {
-            return NoManufacturerId::NO_MANUFACTURER_ID;
-        }
-
-        return $this->getSharedStorage()->get($manufacturerReference);
-    }
-
-    /**
-     * @param string $shopReferences
-     *
-     * @return int[]
-     */
-    protected function getShopIdsFromReferences(string $shopReferences): array
-    {
-        return array_map(function (string $shopReference) {
-            return (int) $this->getSharedStorage()->get(trim($shopReference));
-        }, explode(',', $shopReferences));
+        return (int) Configuration::get('PS_SHOP_DEFAULT');
     }
 }

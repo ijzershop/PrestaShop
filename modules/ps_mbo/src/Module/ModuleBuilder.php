@@ -25,9 +25,12 @@ use Exception;
 use Module as LegacyModule;
 use PaymentModule;
 use PhpParser;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShopBundle\Service\Routing\Router;
 use Psr\Log\LoggerInterface;
 use stdClass;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Validate;
 
 /**
@@ -94,7 +97,7 @@ class ModuleBuilder implements ModuleBuilderInterface
             'path' => $this->moduleDirectory . $module->name,
         ];
 
-        if ($this->isModuleMainClassValid($module->name)) {
+        if ($moduleIsPresentOnDisk && $this->isModuleMainClassValid($module->name)) {
             $mainClassAttributes = [];
 
             // We load the main class of the module, and get its properties
@@ -135,9 +138,13 @@ class ModuleBuilder implements ModuleBuilderInterface
             && $module->attributes->getBoolean('is_configurable')
         ) {
             $module->attributes->set('urls', [
-                'configure' => $this->router->generate('admin_module_configure_action', [
-                    'module_name' => $moduleName,
-                ]),
+                'configure' => UrlHelper::transformToAbsoluteUrl($this->router->generate(
+                    'admin_module_configure_action',
+                    [
+                        'module_name' => $moduleName,
+                    ],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                )),
             ]);
         }
     }
@@ -170,6 +177,7 @@ class ModuleBuilder implements ModuleBuilderInterface
         try {
             $parser->parse(file_get_contents($filePath));
         } catch (PhpParser\Error $exception) {
+            ErrorHelper::reportError($exception);
             $this->logger->critical(
                 sprintf(
                     'Parse error detected in main class of module %s: %s',

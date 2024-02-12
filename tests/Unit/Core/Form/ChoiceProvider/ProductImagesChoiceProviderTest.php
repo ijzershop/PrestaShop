@@ -32,7 +32,6 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductImagesChoiceProvider;
 
 class ProductImagesChoiceProviderTest extends TestCase
@@ -44,16 +43,14 @@ class ProductImagesChoiceProviderTest extends TestCase
             ->getMock()
         ;
 
-        $choiceProvider = new ProductImagesChoiceProvider($queryBus, 1, 2);
+        $choiceProvider = new ProductImagesChoiceProvider($queryBus);
         $imageChoices = $choiceProvider->getChoices(['plop' => 45]);
         $this->assertEmpty($imageChoices);
     }
 
-    /**
-     * @dataProvider getChoicesProvider
-     */
-    public function testGetChoices(int $productId, int $defaultShopId, ?int $contextShopId, ShopConstraint $expectedShopConstraint): void
+    public function testGetChoices(): void
     {
+        $productId = 42;
         $queryBus = $this->getMockBuilder(CommandBusInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
@@ -63,30 +60,21 @@ class ProductImagesChoiceProviderTest extends TestCase
         $queryBus
             ->expects($this->once())
             ->method('handle')
-            ->with($this->callback(function (GetProductImages $query) use ($productId, $expectedShopConstraint) {
+            ->with($this->callback(function (GetProductImages $query) use ($productId) {
                 $this->assertEquals($productId, $query->getProductId()->getValue());
-                $this->assertEquals($expectedShopConstraint, $query->getShopConstraint());
 
                 return true;
             }))
             ->willReturn($productImages)
         ;
 
-        $choiceProvider = new ProductImagesChoiceProvider($queryBus, $defaultShopId, $contextShopId);
+        $choiceProvider = new ProductImagesChoiceProvider($queryBus);
         $imageChoices = $choiceProvider->getChoices(['product_id' => $productId]);
         $expectedChoices = [
             'thumbnail42.jpg' => 42,
             'thumbnail51.jpg' => 51,
         ];
         $this->assertEquals($expectedChoices, $imageChoices);
-    }
-
-    public function getChoicesProvider(): array
-    {
-        return [
-            [42, 1, 2, ShopConstraint::shop(2)],
-            [42, 1, null, ShopConstraint::shop(1)],
-        ];
     }
 
     /**
@@ -101,8 +89,7 @@ class ProductImagesChoiceProviderTest extends TestCase
                 1,
                 [],
                 'image42.jpg',
-                'thumbnail42.jpg',
-                []
+                'thumbnail42.jpg'
             ),
             new ProductImage(
                 51,
@@ -110,8 +97,7 @@ class ProductImagesChoiceProviderTest extends TestCase
                 2,
                 [],
                 'image51.jpg',
-                'thumbnail51.jpg',
-                []
+                'thumbnail51.jpg'
             ),
         ];
     }

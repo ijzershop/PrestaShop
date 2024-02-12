@@ -105,16 +105,18 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Transform table:id reference,combination,reduction type,reduction value,includes tax,fixed price,from quantity,shop,currency,currencyISOCode,country,group,customer,from,to
+     *
      * @param TableNode $tableNode
      *
      * @return SpecificPriceList
      */
-    private function transformSpecificPriceList(TableNode $tableNode): SpecificPriceList
+    public function transformSpecificPriceList(TableNode $tableNode): SpecificPriceList
     {
         $dataRows = $tableNode->getColumnsHash();
         $specificPrices = [];
         foreach ($dataRows as $dataRow) {
-            $specificPriceId = !empty($dataRow['price id']) ? $this->getSharedStorage()->get($dataRow['price id']) : 0;
+            $specificPriceId = $this->getSharedStorage()->get($dataRow['id reference']);
             $fixedPrice = $dataRow['fixed price'];
             $specificPrices[] = new SpecificPriceForListing(
                 $specificPriceId,
@@ -230,7 +232,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
 
         $specificPricePropertyNames = [
             'reductionType', 'includesTax', 'fromQuantity', 'shopId',
-            'currencyId', 'countryId', 'groupId', 'productId', 'combinationId',
+            'currencyId', 'countryId', 'groupId', 'productId',
         ];
         foreach ($specificPricePropertyNames as $propertyName) {
             Assert::assertSame(
@@ -280,15 +282,16 @@ class SpecificPriceContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      * @param string $langIso
-     * @param TableNode $tableNode
+     * @param SpecificPriceList $expectedList
+     *
+     * @see transformSpecificPriceList
      */
-    public function assertSpecificPriceList(string $productReference, string $langIso, TableNode $tableNode): void
+    public function assertSpecificPriceList(string $productReference, string $langIso, SpecificPriceList $expectedList): void
     {
         $langId = (int) Language::getIdByIso($langIso);
         $productId = $this->getSharedStorage()->get($productReference);
         /** @var SpecificPriceList $actualList */
         $actualList = $this->getQueryBus()->handle(new GetSpecificPriceList($productId, $langId));
-        $expectedList = $this->transformSpecificPriceList($tableNode);
 
         Assert::assertEquals(
             $expectedList->getTotalSpecificPricesCount(),
@@ -299,13 +302,11 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         $actualSpecificPrices = $actualList->getSpecificPrices();
-        $dataRows = $tableNode->getColumnsHash();
         foreach ($expectedList->getSpecificPrices() as $key => $expectedItem) {
             $actualItem = $actualSpecificPrices[$key];
-            $dataRow = $dataRows[$key];
 
             $scalarPropertyNames = [
-                'reductionType', 'includesTax',
+                'specificPriceId', 'reductionType', 'includesTax',
                 'fromQuantity', 'shopName', 'currencyName', 'currencyISOCode', 'countryName',
                 'groupName', 'customerName', 'combinationName',
             ];
@@ -316,15 +317,6 @@ class SpecificPriceContext extends AbstractProductFeatureContext
                     $propertyAccessor->getValue($actualItem, $propertyName),
                     sprintf('Unexpected specificPriceForListing "%s"', $propertyName)
                 );
-            }
-
-            // If the specific price id was specified we check for its value
-            if ($expectedItem->getSpecificPriceId() !== 0) {
-                Assert::assertSame($expectedItem->getSpecificPriceId(), $actualItem->getSpecificPriceId());
-            }
-            // If the reference column was specified we assign the reference ith the matching ID
-            if (!empty($dataRow['id reference'])) {
-                $this->getSharedStorage()->set($dataRow['id reference'], $actualItem->getSpecificPriceId());
             }
 
             $decimalProperties = ['reductionValue', 'fixedPrice.value'];
@@ -521,6 +513,16 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         }
 
         return $editCommand;
+    }
+
+    /**
+     * @param int $specificPriceId
+     *
+     * @return DeleteSpecificPriceCommand
+     */
+    private function createDeleteSpecificPriceCommand(int $specificPriceId): DeleteSpecificPriceCommand
+    {
+        return new DeleteSpecificPriceCommand($specificPriceId);
     }
 
     /**

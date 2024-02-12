@@ -44,7 +44,7 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
     public function testBuildCommand(array $formData, array $expectedCommands)
     {
         $builder = new ProductSuppliersCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 

@@ -43,7 +43,7 @@ class SpecificPricePriorityCommandsBuilderTest extends AbstractProductCommandBui
     public function testBuildCommand(array $formData, array $expectedCommands)
     {
         $builder = new SpecificPricePriorityCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 

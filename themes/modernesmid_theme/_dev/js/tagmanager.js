@@ -9,49 +9,69 @@ import purchaseAnalyticsPush from "./tagmanager/purchase";
 import addToCartAnalyticsPush from "./tagmanager/add-cart";
 
 $(document).ready(function () {
+
     //  wanneer iemand een product bekijkt
-    if ($("body#product").length > 0) {
-      viewProductAnalyticsPush.init();
+    const bodyElemIdProduct = $("body#product");
+    if (bodyElemIdProduct.length > 0 && bodyElemIdProduct.attr('analytics_send') !== '1') {
+        viewProductAnalyticsPush.init(bodyElemIdProduct);
     }
 
   // wanneer iemand winkelmand bekijkt
-// 2 verschillen met hierboven: event en items kunnen meerdere producten zijn.
-  if ($("body#cart").length > 0) {
-    viewCartAnalyticsPush.init();
+  const bodyElemIdCart = $("body#cart");
+  if (bodyElemIdCart.length > 0 && bodyElemIdCart.attr('analytics_send') !== '1') {
+    viewCartAnalyticsPush.init(bodyElemIdCart);
   }
 
   // wanneer er een aankoop is gedaan
-  if ($("body#order-confirmation").length > 0) {
-    purchaseAnalyticsPush.init();
+  const bodyElemIdPurchase = $("body#order-confirmation");
+  if (bodyElemIdPurchase.length > 0 && bodyElemIdPurchase.attr('analytics_send') !== '1') {
+    purchaseAnalyticsPush.init(bodyElemIdPurchase);
   }
 
   // wanneer iemand op de pagina /bestellen komt
-  if ($("body#module-supercheckout-supercheckout, body#checkout").length > 0) {
-    startCheckoutAnalyticsPush.init();
+  const bodyElemIdStartCheckout = $("body#module-supercheckout-supercheckout, body#checkout");
+  if (bodyElemIdStartCheckout.length > 0 && bodyElemIdStartCheckout.attr('analytics_send') !== '1') {
+    startCheckoutAnalyticsPush.init(bodyElemIdStartCheckout);
   }
 
+  const checkoutFormElem = $('form#velsof_supercheckout_form');
   // wanneer iemand aan stap 4 "Bezorgadres" begint
-  $(document).on('change', '[name="payment_address[postcode]"]',function() {
-    startCheckoutAddressAnalyticsPush.init();
+  $(document).on('change', '[name^="shipping_address"], [name^="payment_address"]',function(e) {
+    e.preventDefault();
+    if(checkoutFormElem.attr('analytics_send_address') !== '1'){
+        startCheckoutAddressAnalyticsPush.init(checkoutFormElem);
+    }
   });
 
   // wanneer iemand betaalwijze selecteert
   $(document).on('change', '[name="payment_method"]',function() {
-    selectCheckoutPaymentAnalyticsPush.init();
+    if(checkoutFormElem.attr('analytics_send_payment') !== '1') {
+      selectCheckoutPaymentAnalyticsPush.init(checkoutFormElem);
+    }
   });
 
   // wanneer iemand een product verwijderd uit de winkelwagen
-  $(document).on('mouseup', '.product-cart-delete-button',function() {
+  $(document).on('mouseup', '.product-cart-delete-button, .remove-from-cart',function(e) {
+    e.stopImmediatePropagation();
     removeFromCartAnalyticsPush.init();
   });
 
-  // wanneer iemand een product toevoegde aan de winkelwagen
-  $(document).on('mouseup', '.add-to-cart',function() {
-    addToCartAnalyticsPush.init();
+  // wanneer iemand een product verwijderd uit de winkelwagen doormiddel van input op nul plaatsen
+  $(document).on('keyup', '.js-cart-line-product-quantity',function(e) {
+    e.stopImmediatePropagation();
+    let elem = $(this);
+    if(elem.val() <= 0 || elem.val() < elem.attr('data-current-value')){
+      removeFromCartAnalyticsPush.init();
+    }
+    if(elem.val() > elem.attr('data-current-value')){
+      addToCartAnalyticsPush.init();
+    }
   });
 
-
-
-
+  // wanneer iemand een product toevoegde aan de winkelwagen
+  $(document).on('mouseup', '.add-to-cart',function(e) {
+    e.stopImmediatePropagation();
+    addToCartAnalyticsPush.init();
+  });
 })
 

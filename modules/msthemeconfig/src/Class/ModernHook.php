@@ -1335,7 +1335,7 @@ class ModernHook
             case 'search'://zoek pagina
                 break;
             default:
-                die($param['templateVars']['page']['page_name']);
+                // die($param['templateVars']['page']['page_name']);
                 break;
         }
     }

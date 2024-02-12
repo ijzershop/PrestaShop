@@ -6855,7 +6855,7 @@ var mobile = (function (domGlobals) {
           var output = optBlob.map(function (blob) {
             return {
               config: blob.config(),
-              state: viewProduct.init(blob.config())
+              state: blob.state().init(blob.config())
             };
           });
           return function () {

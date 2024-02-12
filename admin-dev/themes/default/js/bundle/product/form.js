@@ -29,7 +29,7 @@ $(document).ready(() => {
   featuresCollection.init();
   displayFormCategory.init();
   formCategory.init();
-  viewProduct.init();
+  stock.init();
   supplier.init();
   warehouseCombinations.init();
   customFieldCollection.init();
@@ -1037,7 +1037,7 @@ window.customFieldCollection = (function () {
     maxCollectionChildren += 1;
 
     collectionHolder.append(`<li>${newForm}</li>`);
-    viewProduct.init();
+    window.prestaShopUiKit.init();
   }
 
   return {
@@ -1874,8 +1874,7 @@ window.priceCalculation = (function () {
           ps_round(price - getEcotaxTaxIncluded(),
             displayPricePrecision,
           ),
-          rates,
-          computationMethod),
+          rates, computationMethod),
         displayPricePrecision,
       );
     },
@@ -2213,13 +2212,7 @@ window.seo = (function () {
   /** Hide or show the input product selector */
   function hideShowRedirectToProduct() {
     redirectTypeValue = redirectTypeElem.val();
-    if (redirectTypeValue === '404'
-      || redirectTypeValue === '410'
-      || redirectTypeValue === 'default'
-      || redirectTypeValue === '200-displayed'
-      || redirectTypeValue === '404-displayed'
-      || redirectTypeValue === '410-displayed'
-    ) {
+    if (redirectTypeValue === '404' || redirectTypeValue === '410') {
       $('#id-product-redirected').hide();
     } else {
       updateRemoteUrl();

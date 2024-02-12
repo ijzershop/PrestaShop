@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import ComponentsMap from '@components/components-map';
 import {EventEmitter} from './event-emitter';
 
 const {$} = window;
@@ -220,7 +221,7 @@ class TinyMCEEditor {
       this.changeToMaterial();
     });
 
-    viewProductAnalyticsPush.init(cfg);
+    window.tinyMCE.init(cfg);
     this.watchTabChanges(cfg);
   }
 
@@ -284,9 +285,8 @@ class TinyMCEEditor {
       } else {
           const form = $(textarea).closest('form');
           const editor = window.tinyMCE.get(textarea.id);
-
-          if (editor) {
-            viewProductAnalyticsPush.init(this.config);
+          if (!editor) {
+            editor.init(this.config);
           }
       }
     });

@@ -86,7 +86,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="row" data-role="thread-messages">
+	<div class="row">
 		{foreach $messages as $message}
 			{include file="./message.tpl" message=$message initial=false}
 		{/foreach}

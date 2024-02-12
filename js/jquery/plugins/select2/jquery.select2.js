@@ -3275,7 +3275,7 @@ the specific language governing permissions and limitations under the Apache Lic
                 }
 
                 select2 = multiple ? new window.Select2["class"].multi() : new window.Select2["class"].single();
-                viewProduct.init(opts);
+                select2.init(opts);
             } else if (typeof(args[0]) === "string") {
 
                 if (indexOf(args[0], allowedMethods) < 0) {

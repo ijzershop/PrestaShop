@@ -39,9 +39,12 @@ $(() => {
   // new TranslatableInput();
   new window.prestashop.component.TinyMCEEditor();
   initPrestashopComponents();
-  const offerFormTemplate = function (data: any[]) {
+  const offerFormTemplate = function (data: { oi_offer_extra_shipping: string; id_product: number | undefined; id: number; link: any; formTitle: any; id_oi_offer: any; new: any; name: any; price: any; quantity: any; weight: any; description_short: any; } | undefined) {
     let extraShippingSelectNo = 'checked="true"';
     let extraShippingSelectYes = '';
+    if(data === undefined){
+      return false;
+    }
     // @ts-ignore
     if (parseInt(data.oi_offer_extra_shipping) === 1) {
       extraShippingSelectNo = '';
@@ -49,10 +52,12 @@ $(() => {
     }
 
     let idProduct = 0;
+    // @ts-ignore
     if(data.id_product !== undefined){
       // @ts-ignore
       idProduct = data.id_product;
     } else {
+      // @ts-ignore
       idProduct = data.id;
     }
 
@@ -185,19 +190,28 @@ $(() => {
         let id = $(this).attr('data-offer-id');
         let putLink = $('#offer-put-url').val();
 
-        let offer: any[];
-        offer = [];
+        let offer;
+        // @ts-ignore
         offer.formTitle = 'Create offer';
         // @ts-ignore
         offer.id_product = '';
+        // @ts-ignore
         offer.id_oi_offer = id;
+        // @ts-ignore
         offer.name = '';
+        // @ts-ignore
         offer.price = '';
+        // @ts-ignore
         offer.quantity = '';
+        // @ts-ignore
         offer.extra_shipping = '';
+        // @ts-ignore
         offer.weight = '';
+        // @ts-ignore
         offer.description_short = '';
+        // @ts-ignore
         offer.link = putLink;
+        // @ts-ignore
         offer.new = true;
 
         $.fancybox.open(offerFormTemplate(offer), {

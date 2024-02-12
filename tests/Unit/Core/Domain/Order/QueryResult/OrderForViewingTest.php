@@ -50,7 +50,7 @@ class OrderForViewingTest extends TestCase
 {
     public function testConstruct(): void
     {
-        $mockCreatedAt = new DateTimeImmutable();
+        $mockCreatedAt = $this->createMock(DateTimeImmutable::class);
         $mockCustomer = $this->createMock(OrderCustomerForViewing::class);
         $mockShippingAddress = $this->createMock(OrderShippingAddressForViewing::class);
         $mockInvoiceAddress = $this->createMock(OrderInvoiceAddressForViewing::class);

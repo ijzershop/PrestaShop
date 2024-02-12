@@ -21,19 +21,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use Configuration;
 use Exception;
-use PrestaShop\Module\Mbo\Addons\Exception\LoginErrorException;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AddonsController extends FrameworkBundleAdminController
 {
@@ -61,94 +57,6 @@ class AddonsController extends FrameworkBundleAdminController
         $this->requestStack = $requestStack;
         $this->moduleManager = $moduleManager;
         $this->moduleRepository = $moduleRepository;
-    }
-
-    /**
-     * Controller responsible for the authentication on PrestaShop Addons.
-     *
-     * @return JsonResponse
-     */
-    public function loginAction(): JsonResponse
-    {
-        $request = $this->requestStack->getCurrentRequest();
-        $response = new JsonResponse();
-
-        // Parameters needed in order to authenticate the merchant : login and password
-        $params = [
-            'format' => 'json',
-            'username' => $request->get('username_addons', null),
-            'password' => $request->get('password_addons', null),
-        ];
-
-        try {
-            $json = $this->get('mbo.addons.data_provider')->request('check_customer', $params);
-            if ($json === null) {
-                throw new LoginErrorException();
-            }
-
-            if (!empty($json->errors)) {
-                throw new LoginErrorException($json->errors->code . ': ' . $json->errors->label);
-            }
-
-            Configuration::updateValue('PS_LOGGED_ON_ADDONS', 1);
-
-            $cookieExpirationTime = $request->get('addons_remember_me', false) ? strtotime('+30 days') : strtotime('+1 days');
-            $response = $this->createCookieUser($response, $json, $params, $cookieExpirationTime);
-            $response->setData(['success' => 1, 'message' => '']);
-
-            // Clear previously filtered modules search
-            $this->get('mbo.modules.repository')->clearCache();
-        } catch (Exception $e) {
-            $response->setData([
-                'success' => 0,
-                'message' => $this->trans(
-                    'PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.',
-                    'Modules.Mbo.Errors'
-                ),
-            ]);
-        }
-
-        return $response;
-    }
-
-    /**
-     * Controller responsible for the logout on PrestaShop Addons.
-     *
-     * @return JsonResponse|RedirectResponse
-     */
-    public function logoutAction()
-    {
-        // Clear previously filtered modules search
-        $this->get('mbo.modules.repository')->clearCache();
-
-        $request = $this->requestStack->getCurrentRequest();
-
-        if ($request->isXmlHttpRequest()) {
-            $response = new JsonResponse();
-            $response->setData([
-                'success' => 1,
-                'message' => '',
-            ]);
-        } else {
-            if ($request->server->get('HTTP_REFERER')) {
-                $url = $request->server->get('HTTP_REFERER');
-            } else {
-                $url = $this->redirect($this->generateUrl('admin_module_catalog'));
-            }
-            $response = new RedirectResponse($url);
-        }
-        $response->headers->clearCookie('username_addons_v2');
-        $response->headers->clearCookie('password_addons_v2');
-        $response->headers->clearCookie('is_contributor_v2');
-
-        $session = $this->get('session');
-        $session->remove('username_addons_v2');
-        $session->remove('password_addons_v2');
-        $session->remove('is_contributor_v2');
-
-        $request->setSession($session);
-
-        return $response;
     }
 
     public function upgradeModuleAction(): JsonResponse
@@ -189,6 +97,7 @@ class AddonsController extends FrameworkBundleAdminController
                 );
             }
         } catch (Exception $e) {
+            ErrorHelper::reportError($e);
             if ($e->getPrevious() instanceof ModuleUpgradeNotNeededException) {
                 $upgradeResponse['status'] = true;
                 $upgradeResponse['msg'] = $this->trans(
@@ -202,6 +111,7 @@ class AddonsController extends FrameworkBundleAdminController
                 try {
                     $this->moduleManager->disable($moduleName);
                 } catch (Exception $subE) {
+                    ErrorHelper::reportError($subE);
                 }
 
                 $upgradeResponse['msg'] = $this->trans(
@@ -216,33 +126,5 @@ class AddonsController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse($upgradeResponse);
-    }
-
-    private function createCookieUser(Response $response, \stdClass $json, array $params, int $expiresAt = -1): Response
-    {
-        $encryptor = $this->get('mbo.addons.user.credentials_encryptor');
-
-        $response->headers->setCookie(
-            new Cookie('username_addons_v2', $encryptor->encrypt($params['username']), $expiresAt, null, null, null, false)
-        );
-        $response->headers->setCookie(
-            new Cookie('password_addons_v2', $encryptor->encrypt($params['password']), $expiresAt, null, null, null, false)
-        );
-        $response->headers->setCookie(
-            new Cookie('is_contributor_v2', (string) $json->is_contributor, $expiresAt, null, null, null, false)
-        );
-
-        return $response;
-    }
-
-    private function createSessionUser(Response $response, SessionInterface $session, \stdClass $json, array $params): Response
-    {
-        $encryptor = $this->get('mbo.addons.user.credentials_encryptor');
-
-        $session->set('username_addons_v2', $encryptor->encrypt($params['username']));
-        $session->set('password_addons_v2', $encryptor->encrypt($params['password']));
-        $session->set('is_contributor_v2', (string) $json->is_contributor);
-
-        return $response;
     }
 }

@@ -28,79 +28,59 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use AttributeGroup as LegacyAttributeGroup;
 use Behat\Gherkin\Node\TableNode;
+use Language;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Query\GetAttributeGroupList;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
 {
     /**
+     * @Given attribute group :reference named :name in :langIso language exists
+     *
+     * @param string $attributeGroupReference
+     * @param string $name
+     * @param string $langIso
+     */
+    public function assertNamedAttributeGroupExists(string $attributeGroupReference, string $name, string $langIso): void
+    {
+        $langId = (int) Language::getIdByIso($langIso);
+
+        if (!$langId) {
+            throw new RuntimeException(sprintf('Language by iso code "%s" was not found', $langIso));
+        }
+
+        $attributeGroups = LegacyAttributeGroup::getAttributesGroups($langId);
+        $foundGroupId = null;
+
+        foreach ($attributeGroups as $attributeGroup) {
+            if ($attributeGroup['name'] === $name) {
+                $foundGroupId = (int) $attributeGroup['id_attribute_group'];
+
+                break;
+            }
+        }
+
+        Assert::assertNotNull($foundGroupId, sprintf('Attribute group named "%s" was not found', $name));
+        $this->getSharedStorage()->set($attributeGroupReference, $foundGroupId);
+    }
+
+    /**
      * @Given there is a list of following attribute groups:
      *
      * @param TableNode $tableNode
      */
-    public function assertAllAttributeGroupsForDefaultShop(TableNode $tableNode): void
+    public function assertAllAttributeGroups(TableNode $tableNode): void
     {
-        $this->assertAllAttributeGroups($tableNode, ShopConstraint::shop($this->getDefaultShopId()));
-    }
+        $attributeGroupsData = $this->localizeByColumns($tableNode);
+        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(false));
 
-    /**
-     * @Given there is a list of following attribute groups for shops ":shopReferences":
-     *
-     * @param TableNode $tableNode
-     * @param string $shopReferences
-     */
-    public function assertAllAttributeGroupsForShops(TableNode $tableNode, string $shopReferences): void
-    {
-        $shopIds = $this->referencesToIds($shopReferences);
-
-        foreach ($shopIds as $shopId) {
-            $this->assertAllAttributeGroups(
-                $tableNode,
-                ShopConstraint::shop($shopId)
-            );
-        }
-    }
-
-    /**
-     * @Given there is a list of following attribute groups for all shops:
-     *
-     * @param TableNode $tableNode
-     */
-    public function assertAllAttributeGroupsForAllShops(TableNode $tableNode): void
-    {
-        $this->assertAllAttributeGroups(
-            $tableNode,
-            ShopConstraint::allShops()
-        );
-    }
-
-    /**
-     * @Given there should be no attribute groups for shops ":shopReferences"
-     *
-     * @param string $shopReferences
-     *
-     * @return void
-     */
-    public function assertAllAttributeGroupsListForShopIsEmpty(string $shopReferences): void
-    {
-        $shopIds = $this->referencesToIds($shopReferences);
-
-        foreach ($shopIds as $shopId) {
-            $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(
-                ShopConstraint::shop($shopId)
-            ));
-
-            Assert::assertEmpty(
-                $attributeGroups,
-                sprintf('Expected no attribute groups to be found for shop id %d', $shopId)
-            );
-        }
+        $this->assertAttributeGroups($attributeGroupsData, $attributeGroups);
     }
 
     /**
@@ -108,249 +88,25 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      *
      * @param TableNode $tableNode
      */
-    public function assertProductAttributeGroupsForDefaultShop(string $productReference, TableNode $tableNode): void
+    public function assertProductAttributeGroups(string $productReference, TableNode $tableNode): void
     {
-        $this->assertProductAttributeGroups($productReference, $tableNode, ShopConstraint::shop($this->getDefaultShopId()));
+        $attributeGroupsData = $this->localizeByColumns($tableNode);
+        $productId = (int) $this->getSharedStorage()->get($productReference);
+        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups($productId, false));
+
+        $this->assertAttributeGroups($attributeGroupsData, $attributeGroups);
     }
 
     /**
-     * @Then product ":productReference" should have the following list of attribute groups for shops ":shopReferences":
-     *
-     * @param TableNode $tableNode
+     * @param array $attributeGroupsData
+     * @param array $attributeGroups
      */
-    public function assertProductAttributeGroupsForShops(string $productReference, TableNode $tableNode, string $shopReferences): void
+    private function assertAttributeGroups(array $attributeGroupsData, array $attributeGroups): void
     {
-        $shopIds = $this->referencesToIds($shopReferences);
-
-        foreach ($shopIds as $shopId) {
-            $this->assertProductAttributeGroups($productReference, $tableNode, ShopConstraint::shop($shopId));
-        }
-    }
-
-    /**
-     * @Then product ":productReference" should have the following list of attribute groups for all shops:
-     *
-     * @param TableNode $tableNode
-     */
-    public function assertProductAttributeGroupsForAllShops(string $productReference, TableNode $tableNode): void
-    {
-        $this->assertProductAttributeGroups($productReference, $tableNode, ShopConstraint::allShops());
-    }
-
-    /**
-     * @Then product :productReference should have no attribute groups
-     *
-     * @param string $productReference
-     */
-    public function assertNoProductAttributesForDefaultShop(string $productReference): void
-    {
-        $shopId = $this->getDefaultShopId();
-        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
-            (int) $this->getSharedStorage()->get($productReference),
-            ShopConstraint::shop($shopId)
-        ));
-
-        Assert::assertEmpty(
-            $attributeGroups,
-            sprintf('Expected no attribute groups to be found for product "%s" and shop id %d', $productReference, $shopId)
-        );
-    }
-
-    /**
-     * @Given the attribute group :attributeGroupReference should have the following attributes:
-     *
-     * @param TableNode $tableNode
-     * @param string $attributeGroupReference
-     */
-    public function assertAttributesInGroupForDefaultShop(TableNode $tableNode, string $attributeGroupReference): void
-    {
-        $this->assertAttributesInGroup(
-            $tableNode,
-            $attributeGroupReference,
-            ShopConstraint::shop($this->getDefaultShopId())
-        );
-    }
-
-    /**
-     * @Given the attribute group :attributeGroupReference should have the following attributes for all shops:
-     *
-     * @param TableNode $tableNode
-     * @param string $attributeGroupReference
-     */
-    public function assertAttributesInGroupForAllShops(TableNode $tableNode, string $attributeGroupReference): void
-    {
-        $this->assertAttributesInGroup(
-            $tableNode,
-            $attributeGroupReference,
-            ShopConstraint::allShops()
-        );
-    }
-
-    /**
-     * @Given the attribute group :attributeGroupReference should have the following attributes for shops ":shopReferences":
-     *
-     * @param TableNode $tableNode
-     * @param string $attributeGroupReference
-     * @param string $shopReferences
-     */
-    public function assertAttributesInGroupForShops(
-        TableNode $tableNode,
-        string $attributeGroupReference,
-        string $shopReferences
-    ): void {
-        $shopIds = $this->referencesToIds($shopReferences);
-
-        foreach ($shopIds as $shopId) {
-            $this->assertAttributesInGroup(
-                $tableNode,
-                $attributeGroupReference,
-                ShopConstraint::shop($shopId)
-            );
-        }
-    }
-
-    /**
-     * @Then the attribute group ":attributeGroupReference" should have no attributes for shops ":shopReferences"
-     *
-     * @param string $attributeGroupReference
-     * @param string $shopReferences
-     *
-     * @return void
-     */
-    public function assertAttributesAreEmptyInGroupForShops(string $attributeGroupReference, string $shopReferences): void
-    {
-        $shopIds = $this->referencesToIds($shopReferences);
-
-        foreach ($shopIds as $shopId) {
-            $this->performAttributesInGroupAssertion(
-                null,
-                $this->getQueryBus()->handle(new GetAttributeGroupList(ShopConstraint::shop($shopId))),
-                $attributeGroupReference
-            );
-        }
-    }
-
-    /**
-     * @Then product ":productReference" should have the following list of attributes in attribute group ":attributeGroupReference":
-     *
-     * @param TableNode $tableNode
-     * @param string $productReference
-     * @param string $attributeGroupReference
-     */
-    public function assertProductAttributesInGroupForDefaultShop(TableNode $tableNode, string $productReference, string $attributeGroupReference): void
-    {
-        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
-            (int) $this->getSharedStorage()->get($productReference),
-            ShopConstraint::shop($this->getDefaultShopId())
-        ));
-
-        $this->performAttributesInGroupAssertion($tableNode, $attributeGroups, $attributeGroupReference);
-    }
-
-    /**
-     * @Then product ":productReference" should have the following list of attributes in attribute group ":attributeGroupReference" for shops ":shopReferences":
-     *
-     * @param TableNode $tableNode
-     * @param string $productReference
-     * @param string $attributeGroupReference
-     * @param string $shopReferences
-     */
-    public function assertProductAttributesInGroupForShops(
-        TableNode $tableNode,
-        string $productReference,
-        string $attributeGroupReference,
-        string $shopReferences
-    ): void {
-        $shopIds = $this->referencesToIds($shopReferences);
-
-        foreach ($shopIds as $shopId) {
-            $this->assertProductAttributesInGroup(
-                $tableNode,
-                $productReference,
-                $attributeGroupReference,
-                ShopConstraint::shop($shopId)
-            );
-        }
-    }
-
-    /**
-     * @Then product ":productReference" should have the following list of attributes in attribute group ":attributeGroupReference" for all shops:
-     *
-     * @param TableNode $tableNode
-     * @param string $productReference
-     * @param string $attributeGroupReference
-     */
-    public function assertProductAttributesInGroupForAllShops(
-        TableNode $tableNode,
-        string $productReference,
-        string $attributeGroupReference
-    ): void {
-        $this->assertProductAttributesInGroup(
-            $tableNode,
-            $productReference,
-            $attributeGroupReference,
-            ShopConstraint::allShops()
-        );
-    }
-
-    private function assertAttributesInGroup(TableNode $tableNode, string $attributeGroupReference, ShopConstraint $shopConstraint): void
-    {
-        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList($shopConstraint));
-
-        $this->performAttributesInGroupAssertion($tableNode, $attributeGroups, $attributeGroupReference);
-    }
-
-    private function assertProductAttributesInGroup(
-        TableNode $tableNode,
-        string $productReference,
-        string $attributeGroupReference,
-        ShopConstraint $shopConstraint
-    ): void {
-        $this->performAttributesInGroupAssertion(
-            $tableNode,
-            $this->getQueryBus()->handle(new GetProductAttributeGroups(
-                $this->getSharedStorage()->get($productReference),
-                $shopConstraint
-            )),
-            $attributeGroupReference
-        );
-    }
-
-    private function assertAllAttributeGroups(TableNode $tableNode, ShopConstraint $shopConstraint): void
-    {
-        $this->performAttributeGroupsAssertion(
-            $tableNode,
-            $this->getQueryBus()->handle(new GetAttributeGroupList($shopConstraint))
-        );
-    }
-
-    private function assertProductAttributeGroups(string $productReference, TableNode $tableNode, ShopConstraint $shopConstraint): void
-    {
-        $this->performAttributeGroupsAssertion(
-            $tableNode,
-            $this->getQueryBus()->handle(new GetProductAttributeGroups(
-                (int) $this->getSharedStorage()->get($productReference),
-                $shopConstraint
-            ))
-        );
-    }
-
-    /**
-     * @param TableNode $tableNode
-     * @param array $actualAttributeGroups
-     */
-    private function performAttributeGroupsAssertion(TableNode $tableNode, array $actualAttributeGroups): void
-    {
-        $expectedAttributeGroups = $this->localizeByColumns($tableNode);
-
-        Assert::assertEquals(
-            count($expectedAttributeGroups),
-            count($actualAttributeGroups),
-            'Expected count of attribute groups doesn\'t match'
-        );
-        foreach ($expectedAttributeGroups as $index => $attributeGroupsDatum) {
+        Assert::assertEquals(count($attributeGroupsData), count($attributeGroups));
+        foreach ($attributeGroupsData as $index => $attributeGroupsDatum) {
             /** @var AttributeGroup $attributeGroup */
-            $attributeGroup = $actualAttributeGroups[$index];
+            $attributeGroup = $attributeGroups[$index];
             Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($attributeGroupsDatum['is_color_group']), $attributeGroup->isColorGroup());
             Assert::assertEquals($attributeGroupsDatum['group_type'], $attributeGroup->getGroupType());
             Assert::assertEquals($attributeGroupsDatum['position'], $attributeGroup->getPosition());
@@ -366,6 +122,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
                 Assert::assertTrue(isset($attributeGroupPublicNames[$langId]));
                 Assert::assertEquals($publicName, $attributeGroupPublicNames[$langId]);
             }
+            Assert::assertNull($attributeGroup->getAttributes());
 
             $expectedId = $this->getSharedStorage()->get($attributeGroupsDatum['reference']);
             Assert::assertEquals($expectedId, $attributeGroup->getAttributeGroupId());
@@ -373,11 +130,58 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param TableNode|null $tableNode when null is passed, it means we expect empty result
+     * @Then product :productReference should have no attribute groups
+     *
+     * @param string $productReference
+     */
+    public function assertNoProductAttributes(string $productReference): void
+    {
+        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
+            (int) $this->getSharedStorage()->get($productReference),
+            false
+        ));
+
+        Assert::assertEmpty($attributeGroups);
+    }
+
+    /**
+     * @Given the attribute group :attributeGroupReference should have the following attributes:
+     *
+     * @param TableNode $tableNode
+     * @param string $attributeGroupReference
+     */
+    public function assertAttributeInAllGroups(TableNode $tableNode, string $attributeGroupReference): void
+    {
+        $attributesData = $this->localizeByColumns($tableNode);
+        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(true));
+
+        $this->assertAttributesInGroup($attributesData, $attributeGroups, $attributeGroupReference);
+    }
+
+    /**
+     * @Then product ":productReference" should have the following list of attributes in attribute group ":attributeGroupReference":
+     *
+     * @param TableNode $tableNode
+     * @param string $productReference
+     * @param string $attributeGroupReference
+     */
+    public function assertAttributeInProductGroups(TableNode $tableNode, string $productReference, string $attributeGroupReference): void
+    {
+        $attributesData = $this->localizeByColumns($tableNode);
+        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
+            (int) $this->getSharedStorage()->get($productReference),
+            true
+        ));
+
+        $this->assertAttributesInGroup($attributesData, $attributeGroups, $attributeGroupReference);
+    }
+
+    /**
+     * @param array $attributesData
      * @param array $attributeGroups
      * @param string $attributeGroupReference
      */
-    private function performAttributesInGroupAssertion(?TableNode $tableNode, array $attributeGroups, string $attributeGroupReference): void
+    private function assertAttributesInGroup(array $attributesData, array $attributeGroups, string $attributeGroupReference): void
     {
         $attributeGroupId = $this->getSharedStorage()->get($attributeGroupReference);
         $checkAttributeGroup = null;
@@ -393,28 +197,17 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException(sprintf('Could no find attribute group %s', $attributeGroupReference));
         }
 
-        if (!$tableNode) {
-            // if tableNode is null we expect that desired group attributes are empty
-            Assert::assertEmpty(
-                $checkAttributeGroup->getAttributes(),
-                sprintf('Expected no attributes in group "%s"', $attributeGroupReference)
-            );
-
-            return;
-        }
-
-        $expectedAttributesData = $this->localizeByColumns($tableNode);
-        Assert::assertEquals(count($expectedAttributesData), count($checkAttributeGroup->getAttributes()));
+        Assert::assertEquals(count($attributesData), count($checkAttributeGroup->getAttributes()));
         $attributes = $checkAttributeGroup->getAttributes();
-        foreach ($expectedAttributesData as $index => $attributesDatum) {
+        foreach ($attributesData as $index => $attributesDatum) {
             $attribute = $attributes[$index];
-            Assert::assertEquals($attributesDatum['color'], $attribute->getColor(), 'Unexpected color');
-            Assert::assertEquals($attributesDatum['position'], $attribute->getPosition(), 'Unexpected position');
+            Assert::assertEquals($attributesDatum['color'], $attribute->getColor());
+            Assert::assertEquals($attributesDatum['position'], $attribute->getPosition());
 
             $attributeNames = $attribute->getLocalizedNames();
             foreach ($attributesDatum['name'] as $langId => $name) {
                 Assert::assertTrue(isset($attributeNames[$langId]));
-                Assert::assertEquals($name, $attributeNames[$langId], 'Unexpected name');
+                Assert::assertEquals($name, $attributeNames[$langId]);
             }
 
             $expectedId = $this->getSharedStorage()->get($attributesDatum['reference']);

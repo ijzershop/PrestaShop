@@ -25,7 +25,7 @@ use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This service returns descriptions for the buttons to add into the Module configure toolbar
@@ -91,9 +91,19 @@ class Toolbar
         return [
             'add_module' => [
                 'href' => '#',
-                'desc' => $this->translator->trans('Upload a module', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
+                'desc' => $this->translator->trans(
+                    'Upload a module',
+                    [],
+                    'Modules.Mbo.Modulescatalog',
+                    $this->translator->getLocale()
+                ),
                 'icon' => 'cloud_upload',
-                'help' => $this->translator->trans('Upload a module', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
+                'help' => $this->translator->trans(
+                    'Upload a module',
+                    [],
+                    'Modules.Mbo.Modulescatalog',
+                    $this->translator->getLocale()
+                ),
             ],
         ];
     }
@@ -105,45 +115,16 @@ class Toolbar
      */
     public function getConnectionToolbar(): array
     {
-        if ($this->addonsDataProvider->isUserAuthenticated()) {
-            if ($this->addonsDataProvider->isUserAuthenticatedOnAccounts()) {
-                $toolbarButtons['accounts_logout'] = $this->getAccountsStatusButton();
-            } else {
-                $toolbarButtons['addons_logout'] = $this->getAddonsLogoutButton();
-            }
-        } else {
-            $toolbarButtons['addons_connect'] = $this->getAddonsConnectButton();
+        $toolbarButtons = [];
+
+        if (
+            $this->addonsDataProvider->isUserAuthenticated()
+            && $this->addonsDataProvider->isUserAuthenticatedOnAccounts()
+        ) {
+            $toolbarButtons['accounts_logout'] = $this->getAccountsStatusButton();
         }
 
         return $toolbarButtons;
-    }
-
-    public function getAddonsConnectButton(): ?array
-    {
-        if ($this->addonsDataProvider->isUserAuthenticated()) {
-            return null;
-        }
-
-        return [
-            'href' => '#',
-            'desc' => $this->translator->trans('Connect to Addons marketplace', [], 'Modules.Mbo.Addons', $this->translator->getLocale()),
-            'icon' => 'vpn_key',
-            'help' => $this->translator->trans('Connect to Addons marketplace', [], 'Modules.Mbo.Addons', $this->translator->getLocale()),
-        ];
-    }
-
-    public function getAddonsLogoutButton(): ?array
-    {
-        if (!$this->addonsDataProvider->isUserAuthenticated()) {
-            return null;
-        }
-
-        return [
-            'href' => '#',
-            'desc' => $this->addonsDataProvider->getAuthenticatedUserEmail(),
-            'icon' => 'exit_to_app',
-            'help' => $this->translator->trans('Synchronized with Addons marketplace!', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
-        ];
     }
 
     public function getAccountsStatusButton(): ?array
@@ -154,9 +135,18 @@ class Toolbar
 
         return [
             'href' => '#',
-            'desc' => $this->translator->trans('Connected', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
-            'icon' => 'check_circle',
-            'help' => $this->translator->trans('Connected as', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail()
+            'desc' => $this->translator->trans(
+                'Connected',
+                [],
+                'Modules.Mbo.Modulescatalog',
+                $this->translator->getLocale()
+            ),
+            'help' => $this->translator->trans(
+                'Connected as',
+                [],
+                'Modules.Mbo.Modulescatalog',
+                $this->translator->getLocale()
+            ) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail()
         ];
     }
 }

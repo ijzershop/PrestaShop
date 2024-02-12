@@ -26,6 +26,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client as HttpClient;
 use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 class ConnectedClient extends BaseClient
 {
@@ -36,7 +37,8 @@ class ConnectedClient extends BaseClient
 
     /**
      * @param HttpClient $httpClient
-     * @param \Doctrine\Common\Cache\CacheProvider $cacheProvider
+     * @param CacheProvider $cacheProvider
+     * @param UserInterface $user
      */
     public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider, UserInterface $user)
     {
@@ -53,21 +55,14 @@ class ConnectedClient extends BaseClient
         $countryIsoCode = mb_strtolower(Context::getContext()->country->iso_code);
 
         $userCacheKey = '';
-        $credentials = [];
         if ($this->user->isAuthenticated()) {
             $credentials = $this->user->getCredentials(true);
 
-            if (array_key_exists('accounts_token', $credentials)) {
+            if (null !== $credentials && array_key_exists('accounts_token', $credentials)) {
                 $userCacheKey = md5($credentials['accounts_token']);
 
                 $this->setQueryParams([
                     'accounts_token' => $credentials['accounts_token'],
-                ]);
-            } else {
-                $userCacheKey = md5($credentials['username'] . $credentials['password']);
-                $this->setQueryParams([
-                    'addons_username' => $credentials['username'],
-                    'addons_pwd' => $credentials['password'],
                 ]);
             }
         }
@@ -88,6 +83,7 @@ class ConnectedClient extends BaseClient
         try {
             $modulesList = $this->processRequestAndDecode('modules');
         } catch (\Throwable $e) {
+            ErrorHelper::reportError($e);
             return [];
         }
         if (empty($modulesList) || !is_array($modulesList)) {

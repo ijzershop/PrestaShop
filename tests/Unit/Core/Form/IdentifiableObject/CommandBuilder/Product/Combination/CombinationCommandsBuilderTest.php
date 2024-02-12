@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface;
 
@@ -45,11 +44,11 @@ class CombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTe
     public function testBuildCommands(array $formData, array $commandBuilders, array $expectedCommands)
     {
         $builder = new CombinationCommandsBuilder($commandBuilders);
-        $builtCommands = $builder->buildCommands($this->getCombinationId(), $formData, $this->getSingleShopConstraint());
+        $builtCommands = $builder->buildCommands($this->getCombinationId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
-    public function getExpectedCommands(): iterable
+    public function getExpectedCommands()
     {
         $collection = [];
         yield [
@@ -159,7 +158,7 @@ class ConditionBuilder implements CombinationCommandsBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(CombinationId $combinationId, array $formData, ShopConstraint $singleShopConstraint): array
+    public function buildCommands(CombinationId $combinationId, array $formData): array
     {
         foreach ($this->formCondition as $key => $value) {
             if (!isset($formData[$key]) || $formData[$key] !== $value) {
@@ -176,7 +175,7 @@ class AlwaysEmptyBuilder implements CombinationCommandsBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(CombinationId $combinationId, array $formData, ShopConstraint $singleShopConstraint): array
+    public function buildCommands(CombinationId $combinationId, array $formData): array
     {
         return [];
     }
@@ -202,11 +201,11 @@ class MultiCommandsBuilder implements CombinationCommandsBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(CombinationId $combinationId, array $formData, ShopConstraint $singleShopConstraint): array
+    public function buildCommands(CombinationId $combinationId, array $formData): array
     {
         $commands = [];
         foreach ($this->builders as $builder) {
-            $commands = array_merge($commands, $builder->buildCommands($combinationId, $formData, $singleShopConstraint));
+            $commands = array_merge($commands, $builder->buildCommands($combinationId, $formData));
         }
 
         return $commands;

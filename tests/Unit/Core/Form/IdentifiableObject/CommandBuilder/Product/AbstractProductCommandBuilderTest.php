@@ -28,13 +28,19 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Base class to test a product command builder
  */
-abstract class AbstractProductCommandBuilderTest extends AbstractMultiShopCommandsBuilderTest
+abstract class AbstractProductCommandBuilderTest extends TestCase
 {
+    public const SHOP_ID = 1;
+
+    protected const MODIFY_ALL_SHOPS_PREFIX = 'modify_all_shops_';
+
     /**
      * @var ProductId
      */
@@ -50,5 +56,10 @@ abstract class AbstractProductCommandBuilderTest extends AbstractMultiShopComman
         }
 
         return $this->productId;
+    }
+
+    protected function getSingleShopConstraint(): ShopConstraint
+    {
+        return ShopConstraint::shop(self::SHOP_ID);
     }
 }

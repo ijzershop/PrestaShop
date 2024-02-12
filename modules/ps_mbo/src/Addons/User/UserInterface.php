@@ -31,9 +31,9 @@ interface UserInterface
     /**
      * @pararm bool $encrypted
      *
-     * @return array{username: string, password: string}
+     * @return array{username?: string, password?: string, accounts_token?: string}
      */
-    public function getCredentials(bool $encrypted = false): array;
+    public function getCredentials(bool $encrypted = false): ?array;
 
     /**
      * @return array{username: string}

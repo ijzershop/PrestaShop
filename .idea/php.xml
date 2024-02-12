@@ -278,6 +278,7 @@
       <path value="$PROJECT_DIR$/vendor/matthiasmullie/minify" />
       <path value="$PROJECT_DIR$/vendor/matthiasmullie/path-converter" />
       <path value="$PROJECT_DIR$/vendor/friendsofsymfony/jsrouting-bundle" />
+      <path value="$PROJECT_DIR$/modules/psgdpr/vendor/composer" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

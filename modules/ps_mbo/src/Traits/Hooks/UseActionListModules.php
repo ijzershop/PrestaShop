@@ -21,10 +21,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use Exception;
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\Config;
-use PrestaShop\Module\Mbo\Module\Collection;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Module\CollectionFactory;
 use PrestaShop\Module\Mbo\Module\Filters;
+use PrestaShop\Module\Mbo\Module\FiltersFactory;
+use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 trait UseActionListModules
 {
@@ -33,19 +42,33 @@ trait UseActionListModules
      * Add additional buttons on the module configure page's toolbar.
      *
      * @return array<array<string, string>>
+     *
+     * @throws Exception
      */
-    public function hookActionListModules(array $params): array
+    public function hookActionListModules(): array
     {
-        $filters = $this->get('mbo.modules.filters.factory')->create();
+        try {
+            /** @var FiltersFactory $filtersFactory */
+            $filtersFactory = $this->get('mbo.modules.filters.factory');
+            /** @var CollectionFactory $collectionFactory */
+            $collectionFactory = $this->get('mbo.modules.collection.factory');
+            /** @var Repository $moduleRepository */
+            $moduleRepository = $this->get('mbo.modules.repository');
+
+            if (null === $filtersFactory || null === $collectionFactory || null === $moduleRepository) {
+                throw new ExpectedServiceNotFoundException('Some services not found in UseActionListModules');
+            }
+        } catch (Exception $exception) {
+            ErrorHelper::reportError($exception);
+            return [];
+        }
+        $filters = $filtersFactory->create();
         $filters
             ->setType(Filters\Type::MODULE | Filters\Type::SERVICE)
             ->setStatus(Filters\Status::ALL & Filters\Status::INSTALLED);
 
-        /**
-         * @var Collection $modulesCollection
-         */
-        $modulesCollection = $this->get('mbo.modules.collection.factory')->build(
-            $this->get('mbo.modules.repository')->fetchAll(),
+        $modulesCollection = $collectionFactory->build(
+            $moduleRepository->fetchAll(),
             $filters
         );
 
@@ -56,7 +79,7 @@ trait UseActionListModules
          */
         foreach ($modulesCollection as $name => $module) {
             $downloadUrl = $module->get('download_url');
-            if(is_string($downloadUrl) && strpos($downloadUrl, 'shop_url') === false) {
+            if (is_string($downloadUrl) && strpos($downloadUrl, 'shop_url') === false) {
                 $downloadUrl .= '&shop_url=' . $shopUrl;
             }
             $modules[] = [
@@ -64,7 +87,7 @@ trait UseActionListModules
                 'displayName' => $module->get('displayName'),
                 'description' => $module->get('description'),
                 'additional_description' => $this->getAdditionalDescription((int) $module->get('id'), $name),
-                'version' => $module->get('version'),
+                'version' => (string) $module->get('version'),
                 'version_available' => $module->get('version_available'),
                 'author' => $module->get('author'),
                 'url' => $module->get('url'),
@@ -77,9 +100,26 @@ trait UseActionListModules
         return $modules;
     }
 
-    private function getAdditionalDescription(int $moduleId, string $moduleName)
+    /**
+     * @throws SyntaxError
+     * @throws RuntimeError
+     * @throws LoaderError
+     */
+    private function getAdditionalDescription(int $moduleId, string $moduleName): string
     {
-        return $this->get('twig')->render(
+        try {
+            /** @var Environment $twigEnvironment */
+            $twigEnvironment = $this->get('twig');
+
+            if (null === $twigEnvironment) {
+                throw new ExpectedServiceNotFoundException('Unable to get Twig service');
+            }
+        } catch (Exception $exception) {
+            ErrorHelper::reportError($exception);
+            return '';
+        }
+
+        return $twigEnvironment->render(
             '@Modules/ps_mbo/views/templates/hook/twig/module_manager_additional_description.html.twig', [
                 'module' => [
                     'attributes' => [

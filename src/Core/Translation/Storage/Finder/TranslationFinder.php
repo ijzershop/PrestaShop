@@ -95,6 +95,7 @@ class TranslationFinder
     {
         $finder = new Finder();
 
+
         if (null !== $pattern) {
             $finder->name($pattern);
         }
@@ -129,6 +130,7 @@ class TranslationFinder
                 $domain = $this->getDomainFromFile($file, $locale);
 
                 $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);
+
                 $messageCatalogue->addCatalogue(
                     $this->removeTrailingLocaleFromDomains($fileCatalogue)
                 );

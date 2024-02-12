@@ -58,12 +58,17 @@ class LocaleCacheDataLayerTest extends TestCase
     public function testReadWrite()
     {
         $data = new LocaleData();
-        $data->setLocaleCode('fr');
+        /* @phpstan-ignore-next-line */
+        $data->foo = ['bar', 'baz'];
 
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->layer->write('fooBar', $data);
+        /** @noinspection end */
 
         // Get value back from cache
+        /** @noinspection PhpUnhandledExceptionInspection */
         $cachedData = $this->layer->read('fooBar');
+        /* @noinspection end */
 
         $this->assertInstanceOf(
             LocaleData::class,
@@ -71,12 +76,14 @@ class LocaleCacheDataLayerTest extends TestCase
         );
 
         $this->assertSame(
-            'fr',
-            $cachedData->getLocaleCode()
+            ['bar', 'baz'],
+            $cachedData->foo
         );
 
         // Same test with unknown cache key
+        /** @noinspection PhpUnhandledExceptionInspection */
         $cachedData = $this->layer->read('unknown');
+        /* @noinspection end */
 
         $this->assertNull($cachedData);
     }

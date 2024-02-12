@@ -575,33 +575,6 @@ font-size: 11px;
             {*Added by Anshul to change the progressive loader*}
             <div class="panel panel-default p-0">
 
-              <input type="hidden" id="accepted_no_vat_be" value="0"/>
-              <style>
-                #accepted_no_vat_be_modal .modal-body{
-                  min-width: 60vw;
-                }
-                #accepted_no_vat_be_modal .modal-dialog{
-                  max-width: 80%!important;
-                }
-              </style>
-              <div class="modal" id="accepted_no_vat_be_modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header bg-primary text-white text-center">
-                      <h3 class="modal-title w-100">Geen 0% BTW Factuur</h3>
-                    </div>
-                    <div class="modal-body bg-primary text-white">
-                      <p class="lead">De IJzershop verkoopt uitsluitend aan <b>particuliere klanten</b> in België en brengt hiervoor 21% BTW in rekening. Belgische ondernemers kunnen <b>geen 0% BTW factuur</b> ontvangen of aanvragen.</p>
-                    </div>
-                    <div class="modal-footer text-center display-block p-0">
-                      <button type="button" class="btn btn-danger col-6 m-0 font-weight-bold" data-dismiss="modal">Geen akkoord </button>
-                      <button type="button" class="btn btn-success col-6 m-0 font-weight-bold" id="accepted_no_vat_be_button">Akkoord, Bestellen</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
 
 <input type="hidden" id="accepted_no_vat_be" value="0"/>
               <style>

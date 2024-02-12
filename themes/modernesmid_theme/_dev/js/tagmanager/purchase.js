@@ -4,7 +4,7 @@ export default class purchaseAnalyticsPush {
     let dataObject = prestashop.analytics_data;
     dataLayer.push({ecommerce: null});
 
-    console.log(['purchase', dataObject]);
+    // console.log(['purchase', dataObject]);
 
     dataLayer.push({
       event: "purchase",

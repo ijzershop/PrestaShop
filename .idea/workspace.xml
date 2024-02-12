@@ -245,7 +245,7 @@
   <component name="PerforceDirect.Settings">
     <option name="ENABLED" value="false" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP 7.3">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP 8.3">
     <include_path>
       <path value="$APPLICATION_HOME_DIR$/external_plugins/PHPStorm-CC-PrestaShop-master" />
       <path value="$PROJECT_DIR$/modules/ps_creditpayment/vendor/composer" />
@@ -496,6 +496,7 @@
       <path value="$PROJECT_DIR$/vendor/matthiasmullie/minify" />
       <path value="$PROJECT_DIR$/vendor/matthiasmullie/path-converter" />
       <path value="$PROJECT_DIR$/vendor/friendsofsymfony/jsrouting-bundle" />
+      <path value="$PROJECT_DIR$/modules/psgdpr/vendor/composer" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -527,7 +528,7 @@
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;14.19.1&quot;,
     &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;14.18.63&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/wamp64/www/ijzershop8.local/admin-dev/themes/new-theme/public&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/wampserver/www/ijzershop8.local/admin-dev/themes/new-theme/public&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -535,8 +536,8 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\wamp64\\www\\ijzershop8.local\\admin-dev\\themes\\default\\node_modules_backup\\webpack-license-plugin\\node_modules\\typescript\\lib&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.webide.settings.project.settings.php&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\wampserver\\www\\ijzershop8.local\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib&quot;,
     &quot;two.files.diff.last.used.file&quot;: &quot;C:/wamp64/www/ijzershop8.local/admin-dev/themes/new-theme/js/components/tinymce-editor.js&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
@@ -555,11 +556,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\wampserver\www\ijzershop8.local\admin-dev\themes\new-theme\public" />
+      <recent name="C:\wampserver\www\ijzershop8.local\admin-dev\themes\default\public" />
+      <recent name="C:\wampserver\www\ijzershop8.local\modules\psgdpr" />
       <recent name="C:\wamp64\www\ijzershop8.local\admin-dev\themes\new-theme\public" />
       <recent name="C:\wamp64\www\ijzershop8.local\themes\modernesmid_theme\mails" />
-      <recent name="C:\wamp64\www\ijzershop8.local\mails\en" />
-      <recent name="C:\wamp64\www\ijzershop8.local\modules\msthemeconfig\src\Core" />
-      <recent name="C:\wamp64\www\ijzershop8.local\modules" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\wamp64\www\ijzershop8.local\themes\modernesmid_theme\mails\nl" />
@@ -1252,7 +1253,18 @@
       <workItem from="1706601874368" duration="17591000" />
       <workItem from="1706680669851" duration="51000" />
       <workItem from="1706680732504" duration="274000" />
-      <workItem from="1706681015891" duration="2842000" />
+      <workItem from="1706681015891" duration="21103000" />
+      <workItem from="1706766826890" duration="11965000" />
+      <workItem from="1706867963106" duration="2110000" />
+      <workItem from="1706872466462" duration="2407000" />
+      <workItem from="1707297103284" duration="706000" />
+      <workItem from="1707299494812" duration="203000" />
+      <workItem from="1707302385330" duration="530000" />
+      <workItem from="1707374508739" duration="9073000" />
+      <workItem from="1707389681575" duration="863000" />
+      <workItem from="1707459233692" duration="19408000" />
+      <workItem from="1707504543752" duration="9000" />
+      <workItem from="1707718581125" duration="10427000" />
     </task>
     <servers />
   </component>
@@ -1263,6 +1275,643 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/BObasePage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/regression/currencies/computingPrecision_FO.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/positions/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/imageSettings/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/imageSettings/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/shoppingCarts/view.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/shoppingCarts/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/products/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/products/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/categories/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/categories/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/modules/moduleManager/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shipping/carriers/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shipping/carriers/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/languages/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/languages/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/translations/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/search/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/search/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/team/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/team/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/team/employeeBasePage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/team/myProfile.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/webservice/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/webservice/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/pages/pageCategory/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/themeAndLogo/advancedCustomization/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/discounts/catalogPriceRules/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/discounts/catalogPriceRules/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/locations/states/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/locations/states/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/orderSettings/statuses/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/orderSettings/statuses/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/team/permissions/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/multistore/shop/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/multistore/shop/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/04_deliverySlips/01_generateDeliverySlipByDate.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/05_positions/02_searchHook.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/10_payment/02_preferences/03_countryRestrictions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/10_payment/02_preferences/02_groupRestrictions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/10_payment/02_preferences/04_carrierRestrictions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/10_payment/02_preferences/01_currencyRestrictions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/08_stocks/02_updateQuantity.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/08_stocks/01_simpleFilterStocks.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/08_stocks/04_filterStocksByStatus.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/08_stocks/06_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/08_stocks/03_bulkEditQuantity.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/03_monitoring/02_monitoringProducts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/03_monitoring/01_deleteEmptyCategory.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/03_monitoring/03_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/01_customers/02_CRUDCustomer.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/01_customers/07_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/01_customers/05_setRequiredFields.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/01_customers/03_customersBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/01_customers/01_filterAndQuickEditCustomers.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/01_customers/08_viewCustomer.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/01_customers/09_subscribeToNewsletter.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/01_customers/04_paginationAndSortCustomers.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/01_customers/06_exportCustomers.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/05_customerService/02_orderMessages/02_filterAndBulkDeleteOrderMessages.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/05_customerService/02_orderMessages/01_CRUDOrderMessage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/05_customerService/02_orderMessages/03_paginationAndSortOrderMessages.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/createOrders/02_createCustomer.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/createOrders/01_searchViewCustomer.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/createOrders/10_checkSummary.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/createOrders/08_chooseAddress.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/createOrders/05_selectPreviousOrders.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/createOrders/06_addProductToTheCart.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/createOrders/09_chooseShipping.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/createOrders/04_selectPreviousCarts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/createOrders/03_createSimpleOrderInBO.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/createOrders/07_searchAddRemoveVoucher.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/04_deliverySlips/02_deliverySlipOptions/01_deliverySlipPrefix.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/04_deliverySlips/02_deliverySlipOptions/03_enableDisableProductImage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/04_deliverySlips/02_deliverySlipOptions/02_deliverySlipNumber.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/09_shipping/02_preferences/02_carrierOptions/02_updateCarriersSortOption.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/09_shipping/02_preferences/02_carrierOptions/01_defaultCarrier.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/05_brandsAndSuppliers/suppliers/02_filterAndQuickEdit.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/05_brandsAndSuppliers/suppliers/03_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/05_brandsAndSuppliers/suppliers/04_paginationSortAndBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/05_brandsAndSuppliers/suppliers/01_CRUDSupplier.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/03_taxes/02_taxRules/02_filterSortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/03_taxes/02_taxRules/01_CRUDTaxRules.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/03_taxes/02_taxRules/03_quickEditAndBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/07_search/02_tags/01_CRUDTag.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/07_search/02_tags/02_filterSortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/04_pagination/02_updateDefaultProductsOrder.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/04_pagination/01_updateNumberOfProductsPerPage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/04_customerSettings/02_groups/03_bulkDeleteGroups.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/04_customerSettings/02_groups/02_CRUDGroups.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/04_customerSettings/02_groups/01_filterGroups.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/02_orderSettings/01_orderSettings/general/06_termsOfService.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/02_orderSettings/01_orderSettings/general/04_minimumPurchaseTotalRequired.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/02_orderSettings/01_orderSettings/general/02_enableGuestCheckout.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/02_orderSettings/01_orderSettings/general/03_disableReorderingOption.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/02_orderSettings/01_orderSettings/general/01_enableFinalSummary.js" />
+        <option value="$PROJECT_DIR$/tests/UI/commonTests/FO/loginFO.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/login/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/category/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/contactUs/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/orderTracking/guestOrderTracking.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/passwordReminder/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/sanity/03_productsBO/05_deleteProductsWithBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/sanity/03_productsBO/03_CRUDStandardProductWithCombinationsInBO.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/sanity/03_productsBO/02_CRUDStandardProductInBO.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/sanity/03_productsBO/01_filterProducts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/sanity/03_productsBO/04_deleteProduct.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/emailThemes/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/emailThemes/preview.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/view/messagesBlock.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/view/productsBlock.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/view/customerBlock.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/view/paymentBlock.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/view/viewOrderBasePage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/view/tabListBlock.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/stocks/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/suppliers/view.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/suppliers/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/suppliers/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/modules/moduleCatalog/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/payment/preferences/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/customers/outstanding/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/localization/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/localization/localizationBasePage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/customerService/merchandiseReturns/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/customerService/merchandiseReturns/edit.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/logs/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/orderSettings/statuses/returnStatus/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/02_invoices/03_invoiceOptions/01_enableDisableInvoices.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/02_invoices/03_invoiceOptions/04_invoicePrefix.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/02_invoices/03_invoiceOptions/06_otherOptions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/02_invoices/03_invoiceOptions/05_enableDisableCurrentYear.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/02_invoices/03_invoiceOptions/02_enableDisableTaxBreakdown.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/02_invoices/03_invoiceOptions/03_enableDisableProductImage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/09_shipping/02_preferences/01_handling/01_handlingCharges.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/07_discounts/02_catalogPriceRules/01_CRUDCatalogPriceRule.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/07_discounts/02_catalogPriceRules/02_filterSortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/04_attributesAndFeatures/01_attributes/01_CRUDAttributesAndValues.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/03_states/03_bulkActionsStates.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/03_states/02_CRUDState.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/03_states/04_sortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/03_states/01_filterAndQuickEditStates.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/03_currencies/03_helpButton.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/03_currencies/02_CreateUnofficialCurrency.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/03_currencies/01_CreateOfficialCurrency.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/03_currencies/04_updateExchangeRate.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/03_currencies/05_filterSortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/06_trafficAndSeo/02_searchEngines/02_CRUDSearchEngines.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/06_trafficAndSeo/02_searchEngines/01_filterSortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/06_trafficAndSeo/02_searchEngines/03_bulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/06_team/employees/03_employeesBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/06_team/employees/01_filterAndQuickEditEmployees.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/06_team/employees/02_CRUDEmployee.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/06_team/employees/04_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/06_team/employees/05_sortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/07_database/dbBackup/03_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/07_database/dbBackup/01_CreateAndDeleteDbBackup.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/07_database/dbBackup/02_paginationAndBulkDelete.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/04_attributesAndFeatures/01_attributes/attributes/02_sortPaginationAndBulkDelete.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/04_attributesAndFeatures/01_attributes/attributes/04_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/04_attributesAndFeatures/01_attributes/attributes/01_filterAttributes.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/06_trafficAndSeo/01_seoAndUrls/01_seoAndUrls/02_CRUDSeoPage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/06_trafficAndSeo/01_seoAndUrls/01_seoAndUrls/07_bulkDeleteSeoPages.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/06_trafficAndSeo/01_seoAndUrls/01_seoAndUrls/06_sortAndPaginationSeoPages.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/06_trafficAndSeo/01_seoAndUrls/01_seoAndUrls/01_filterSeoPages.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/commonPage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/cms/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/product/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/legalNotice/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/securePayment/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/sanity/04_catalogFO/02_checkProduct.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/sanity/04_catalogFO/01_filterProducts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/01_localization/01_importLocalizationPack.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/01_localization/03_helpButton.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/01_localization/02_defaultLanguage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/01_localization/05_defaultCountry.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/01_localization/04_defaultCurrency.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/06_trafficAndSeo/01_seoAndUrls/helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/01_productsGeneral/06_defaultActivationStatus.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/01_productsGeneral/03_maxSizeShortDescription.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/01_productsGeneral/01_catalogMode.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/01_productsGeneral/04_quantityDiscountsBasedOn.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/01_productsGeneral/05_forceUpdateFriendlyURL.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/01_productsGeneral/02_newDaysNumber.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/04_email/03_sendTestEmail/01_sendTestEmail.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/05_brandsAndSuppliers/brands/addresses/01_filterAddresses.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/05_brandsAndSuppliers/brands/addresses/02_sortPaginationAndBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/04_attributesAndFeatures/01_attributes/values/02_sortPaginationAndBulkDelete.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/04_attributesAndFeatures/01_attributes/values/01_filterValues.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/02_orderSettings/01_orderSettings/giftOptions/01_giftOptions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/FObasePage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/stats/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/dashboard/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/cart/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/stores/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/delivery/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/pricesDrop/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/searchResults/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/sanity/02_ordersBO/01_filterOrders.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/sanity/02_ordersBO/02_editOrder.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/regression/menu/deniedAccessToMenuTab.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/regression/menu/deniedAccessToModuleCatalogPage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/linkWidgets/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/linkWidgets/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/creditSlips/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/brands/view.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/brands/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/brands/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/brands/addAddress.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/attributes/view.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/attributes/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/attributes/addValue.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/attributes/addAttribute.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/modules/productComments/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shipping/preferences/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/locations/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/locations/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/stores/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/stores/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/email/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/multistore/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/multistore/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/15_header/05_viewMyShop.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/15_header/03_searchBar.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/15_header/07_myProfile.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/15_header/02_quickAccess.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/stocks/movements/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/taxes/taxRules/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/taxes/taxRules/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/customerSettings/groups/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/customerSettings/groups/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/database/sqlManager/view.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/database/sqlManager/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/database/sqlManager/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/02_invoices/02_generateInvoiceByStatus.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/02_invoices/01_generateInvoiceByDate.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/04_pages/02_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/04_pages/01_CRUDPageCategory.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/06_imageSettings/02_CRUDImageType.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/06_imageSettings/01_filterImageTypes.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/06_imageSettings/03_bulkDeleteImageTypes.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/06_files/03_filterSortPaginationAndBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/06_files/04_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/06_files/01_CRUDFile.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/02_categories/01_filterAndQuickEditCategories.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/02_categories/04_changeCategoryPosition.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/02_categories/02_CRUDCategoryInBO.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/02_categories/06_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/02_categories/05_paginationAndSortCategories.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/02_categories/03_categoriesBulkAction.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/02_categories/07_exportCategories.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/02_categories/08_editHomeCategory.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/03_outstanding/02_viewOrder.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/03_outstanding/03_viewInvoice.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/03_outstanding/04_pagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/03_outstanding/05_sortFilterOutstanding.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/03_outstanding/01_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/04_email/02_enableDisableLogEmails.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/04_email/03_sortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/04_email/01_filterDeleteAndBulkActionsEmails.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/10_multistore/03_CRUDShops.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/10_multistore/06_quickEditAndbulkActionsShopUrls.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/10_multistore/01_CRUDShopGroups.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/10_multistore/04_filterSortAndPaginationShops.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/10_multistore/02_filterSortAndPaginationShopGroups.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/10_multistore/05_filterSortAndPaginationShopUrls.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/viewAndEditOrder/10_changeStatus.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/viewAndEditOrder/05_carriersTab.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/viewAndEditOrder/04_documentsTab.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/viewAndEditOrder/02_productBlock.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/viewAndEditOrder/06_merchandiseReturnsTab.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/viewAndEditOrder/12_checkMultiInvoice.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/viewAndEditOrder/09_addDiscount.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/viewAndEditOrder/01_customerBlock.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/viewAndEditOrder/07_messagesBlock.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/viewAndEditOrder/11_checkInvoice.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/viewAndEditOrder/03_statusTab.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/viewAndEditOrder/08_paymentBlock.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/01_themeAndLogo/03_advancedCustomization/01_advancedCustomization.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/03_monitoring/sortPaginationAndBulkDelete/01_emptyCategories.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/03_monitoring/sortPaginationAndBulkDelete/04_disabledProducts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/03_monitoring/sortPaginationAndBulkDelete/03_withoutCombinationsWithoutQuantities.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/03_monitoring/sortPaginationAndBulkDelete/06_productsWithoutDescription.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/03_monitoring/sortPaginationAndBulkDelete/07_productsWithoutPrice.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/03_monitoring/sortPaginationAndBulkDelete/05_productsWithoutImage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/03_monitoring/sortPaginationAndBulkDelete/02_withCombinationsWithoutQuantities.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/02_languages/02_CRUDLanguage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/02_languages/03_bulkActionsLanguages.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/02_languages/04_sortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/02_languages/01_filterAndQuickEditLanguages.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/01_localization/02_languages/05_helpButton.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/01_general/maintenance/01_enableDisableShop.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/03_productsStock/06_labelOfInStockProducts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/03_productsStock/08_enableDeliveryTimeOfInStockProducts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/03_productsStock/07_labelOutOfStock.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/03_productsStock/02_defaultPackStockManagement.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/03_productsStock/04_displayRemainingQuantities.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/03_productsStock/05_allowOrderingOutOfStock.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/03_productsStock/09_enableDeliveryTimeOfOutOfStockProducts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/03_productsStock/03_displayUnavailableProductAttributes.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/03_productsStock/01_enableStockManagement.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/02_orderSettings/02_statuses/statuses/01_CRUDOrderStatus.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/02_orderSettings/02_statuses/statuses/03_quickEdit.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/02_orderSettings/02_statuses/statuses/02_filterSortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/06_trafficAndSeo/01_seoAndUrls/05_seoOptions/01_displayAttributesInProductMetaTitle.js" />
+        <option value="$PROJECT_DIR$/tests/UI/utils/mailHelper.js" />
+        <option value="$PROJECT_DIR$/tests/UI/utils/setup.js" />
+        <option value="$PROJECT_DIR$/tests/UI/utils/date.js" />
+        <option value="$PROJECT_DIR$/tests/UI/utils/helpers.js" />
+        <option value="$PROJECT_DIR$/tests/UI/utils/files.js" />
+        <option value="$PROJECT_DIR$/tests/UI/utils/testContext.js" />
+        <option value="$PROJECT_DIR$/tests/UI/utils/globals.js" />
+        <option value="$PROJECT_DIR$/tests/UI/utils/basicHelper.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/install/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/login/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/customers/view.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/customers/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/customers/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/searchResults/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/commonTests/BO/orders/shoppingCarts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/home/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/siteMap/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/bestSales/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/newProducts/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/termsAndConditionsOfUse/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/sanity/06_checkoutFO/01_orderProduct.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/regression/checkout/100PercentDiscount_FO.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/pages/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/pages/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/invoices/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/files/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/files/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/discounts/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/discounts/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/productsV2/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/modules/psEmailSubscription/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/customers/addresses/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/customers/addresses/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/currencies/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/currencies/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/customerService/customerService/view.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/customerService/customerService/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/customerSettings/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/customerSettings/options.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/menuTab/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/performance/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/00_login/02_login.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/00_login/01_passwordReminder.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/themeAndLogo/themeAndLogo/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/design/themeAndLogo/themeAndLogo/themeAndLogoBasePage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/locations/countries/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/locations/countries/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/customerSettings/titles/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/customerSettings/titles/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/database/dbBackup/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/06_bulkOpenInNewTab.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/07_sortOrders.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/10_pagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/03_exportOrders.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/11_previewOrder.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/05_bulkUpdateOrdersStatus.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/08_viewCustomer.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/04_updateStatus.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/09_viewGuest.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/02_filterOrders.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/01_orders/01_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/05_shoppingCarts/03_viewCarts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/05_shoppingCarts/02_sortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/05_shoppingCarts/01_filterShoppingCarts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/07_linkWidget/01_CreateAndCheckFooterLinkWidget.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/04_translations/01_modifyTranslation.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/04_translations/02_addUpdateLanguage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/04_translations/03_exportLanguage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/05_customerService/03_merchandiseReturns/01_merchandiseReturnOptions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/08_logs/01_filterSortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/09_webservice/02_filterAndQuickEditWebservice.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/09_webservice/04_sortPaginationAndBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/09_webservice/03_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/09_webservice/01_CRUDWebservice.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/04_pages/categories/01_filterAndQuickEditCategories.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/04_pages/categories/03_paginationAndSortCategories.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/04_pages/categories/02_categoriesBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/05_brandsAndSuppliers/brands/01_CRUDBrandAndAddress.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/05_brandsAndSuppliers/brands/02_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/03_taxes/01_taxes/01_filterAndQuickEditTaxes.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/03_taxes/01_taxes/04_taxOptionsForm.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/03_taxes/01_taxes/03_taxesBulkActionsInBO.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/03_taxes/01_taxes/05_sortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/03_taxes/01_taxes/02_CRUDTaxesInBO.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/02_countries/02_CRUDCountry.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/02_countries/04_sortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/02_countries/05_countriesRestrictions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/02_countries/01_filterAndQuickEditCountries.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/02_countries/03_bulkActionsCountries.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/07_search/01_search/01_CRUDSearch.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/07_search/01_search/02_bulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/07_search/01_search/03_quickEditStatus.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/05_contact/stores/01_filterAndQuickEditStores.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/05_contact/stores/04_sortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/05_contact/stores/03_bulkActionsStores.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/05_contact/stores/05_contactDetails.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/05_contact/stores/02_CRUDStores.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/06_team/profiles/01_filterProfiles.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/06_team/profiles/02_CRUDProfile.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/06_team/profiles/03_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/06_team/profiles/05_paginationAndBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/06_team/profiles/04_sortProfiles.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/04_customerSettings/01_customers/04_enableB2BMode.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/04_customerSettings/01_customers/02_sendEmailAfterRegistration.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/04_customerSettings/01_customers/05_askForBirthDate.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/04_customerSettings/01_customers/06_enablePartnerOffers.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/04_customerSettings/01_customers/01_redisplayCartAtLogin.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/04_attributesAndFeatures/02_features/values/02_sortPaginationAndBulkDelete.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/04_attributesAndFeatures/02_features/values/01_filterFeatureValues.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/02_orderSettings/02_statuses/returnStatuses/02_filterSortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/02_orderSettings/02_statuses/returnStatuses/01_CRUDOrderReturnStatus.js" />
+        <option value="$PROJECT_DIR$/tests/UI/commonTests/BO/loginBO.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/quickAccess/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/quickAccess/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/commonTests/BO/catalog/monitoring.js" />
+        <option value="$PROJECT_DIR$/tests/UI/commonTests/BO/advancedParameters/newFeatures.js" />
+        <option value="$PROJECT_DIR$/tests/UI/commonTests/BO/advancedParameters/setPermissions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/commonTests/BO/advancedParameters/importFile.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/aboutUs/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/checkout/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/checkout/orderConfirmation.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/addresses.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/orderHistory.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/addAddress.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/identity.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/myWishlists.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/returnDetails.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/creditSlips.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/gdprPersonalData.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/vouchers.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/merchandiseReturns.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/FO/myAccount/orderDetails.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/sanity/05_cartFO/01_editCheckCart.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/sanity/01_installShop/01_installShop.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/productV2/sanity/06_deleteProductsWithBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/productV2/sanity/05_deleteProduct.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/productV2/sanity/04_CRUDVirtualProduct.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/productV2/sanity/02_CRUDStandardProduct.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/productV2/sanity/01_filterProducts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/productV2/sanity/03_CRUDProductWithCombinations.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/orders/deliverySlips/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/features/view.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/features/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/features/addFeature.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/features/addValue.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/monitoring/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/modules/moduleConfiguration/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/taxes/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/international/taxes/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/customerService/orderMessages/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/customerService/orderMessages/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/orderSettings/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/import/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/featureFlag/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/productsV2/add/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/productsV2/add/combinationsTab.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/productsV2/add/detailsTab.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/productsV2/add/pricingTab.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/productsV2/add/descriptionTab.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/productsV2/add/stocksTab.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/catalog/productsV2/add/virtualProductTab.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/search/tags/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/search/tags/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/team/profiles/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/team/profiles/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/multistore/url/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/advancedParameters/multistore/url/addURL.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/03_creditSlips/02_sortAndPaginationCreditSlips.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/03_creditSlips/03_generateCreditSlipsByDate.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/03_creditSlips/01_createFilterCreditSlips.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/02_orders/03_creditSlips/04_creditSlipOptions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/03_emailTheme/01_previewEmailThemes.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/03_emailTheme/02_selectDefaultEmailTheme.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/03_emailTheme/03_viewRawHtmlAndText.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/09_shipping/01_carriers/02_filterSortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/09_shipping/01_carriers/04_changePosition.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/09_shipping/01_carriers/03_quickEditAndBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/09_shipping/01_carriers/01_CRUDCarrier.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/01_products/01_filterAndQuickEditProducts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/01_products/02_paginationAndSortProducts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/01_products/05_duplicateProductFromList.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/01_products/03_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/01_products/06_bulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/01_products/04_previewProductFromList.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/02_addresses/04_paginationAndSortAddresses.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/02_addresses/03_addressesBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/02_addresses/02_CRUDAddressInBO.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/02_addresses/05_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/02_addresses/06_setRequiredFields.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/04_customers/02_addresses/01_filterAddresses.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/05_customerService/01_customerService/02_changeStatus.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/05_contact/01_filterContacts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/05_contact/02_CRUDContact.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/05_contact/03_contactBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/05_contact/04_sortContacts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/05_import/02_importFile.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/05_import/01_downloadSampleFiles.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/04_pages/pages/02_pagesBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/04_pages/pages/03_paginationAndSortPages.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/08_design/04_pages/pages/01_filterAndQuickEditPages.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/07_discounts/01_cartRules/02_filterQuickEditAndBulkActionsCartRules.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/07_discounts/01_cartRules/03_sortAndPaginationCartRule.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/01_zones/04_sortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/01_zones/01_filterAndQuickEditZones.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/01_zones/02_CRUDZone.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/11_international/02_locations/01_zones/03_bulkActionsZones.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/01_general/general/11_enableDisableMultistore.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/01_general/general/08_enableDisableSuppliers.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/01_general/general/09_enableDisableBrands.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/02_productPage/04_displayDiscountedPrice.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/02_productPage/01_displayAvailableQuantities.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/03_productSettings/02_productPage/03_separatorOfAttributeAnchor.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/04_customerSettings/03_titles/02_CRUDTitles.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/04_customerSettings/03_titles/03_bulkDeleteTitles.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/04_customerSettings/03_titles/01_filterTitles.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/07_database/sqlManager/04_filterSortAndPagination.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/07_database/sqlManager/02_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/07_database/sqlManager/01_CRUDSqlQuery.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/14_advancedParameters/07_database/sqlManager/03_exportSqlQuery.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/05_brandsAndSuppliers/brands/brands/01_filterAndQuickEditBrands.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/05_brandsAndSuppliers/brands/brands/02_sortPaginationAndBulkActions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/05_brandsAndSuppliers/brands/brands/03_exportBrands.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/04_attributesAndFeatures/02_features/features/01_filterFeatures.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/04_attributesAndFeatures/02_features/features/03_changePosition.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/04_attributesAndFeatures/02_features/features/02_sortPaginationAndBulkDelete.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/03_catalog/04_attributesAndFeatures/02_features/features/04_helpCard.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/06_trafficAndSeo/01_seoAndUrls/02_setUpUrls/03_enableDisableFriendlyURL.js" />
+        <option value="$PROJECT_DIR$/tests/UI/campaigns/functional/BO/13_shopParameters/06_trafficAndSeo/01_seoAndUrls/02_setUpUrls/04_enableDisableAccentedURL.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/trafficAndSeo/searchEngines/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/trafficAndSeo/searchEngines/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/contact/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/contact/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/general/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/productSettings/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/trafficAndSeo/seoAndUrls/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/trafficAndSeo/seoAndUrls/add.js" />
+        <option value="$PROJECT_DIR$/tests/UI/pages/BO/shopParameters/general/maintenance/index.js" />
+        <option value="$PROJECT_DIR$/tests/UI/tools/stepIdentifiersChecker.js" />
+        <option value="$PROJECT_DIR$/tests/UI/tools/linkchecker.js" />
+        <option value="$PROJECT_DIR$/tests/UI/tools/urls.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/customer.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/title.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/taxRule.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/seoPage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/store.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/group.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/sqlQuery.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/CMSpage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/state.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/invoice.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/tag.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/brand.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/imageType.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/address.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/orderMessage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/shop.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/language.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/cartRule.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/supplier.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/contact.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/catalogPriceRule.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/orderReturnStatus.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/deliverySlipOptions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/zone.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/category.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/shopGroup.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/search.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/brandAddress.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/CMScategory.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/webservice.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/product.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/profile.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/tax.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/productReview.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/carrier.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/file.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/employee.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/orderStatus.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/searchEngine.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/faker/country.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/paymentMethods.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/taxOptions.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/currencies.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/brands.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/states.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/features.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/countries.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/hooks.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/taxRule.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/languages.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/orderStatuses.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/seoPages.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/search.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/products.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/contacts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/titles.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/modules.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/shoppingCarts.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/orders.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/linkWidgets.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/zones.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/orderReturnStatuses.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/CMSpage.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/suppliers.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/employees.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/carriers.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/stores.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/categories.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/searchEngines.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/profiles.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/tax.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/address.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/attributes.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/sqlTables.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/pages.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/moduleCategories.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/demo/imageTypes.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/import/addresses.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/import/categories.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/import/brands.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/import/combinations.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/import/productsWithoutQuantities.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/import/customers.js" />
+        <option value="$PROJECT_DIR$/tests/UI/data/import/disabledProducts.js" />
+      </list>
+    </option>
   </component>
   <component name="UnknownFeatures">
     <option featureType="dependencySupport" implementationName="javascript:npm:styled-components" />
@@ -1447,7 +2096,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/modules/msthemeconfig/src/Class/ModernHook.php</url>
-          <line>2289</line>
+          <line>2321</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -1664,6 +2313,17 @@
           <url>file://$PROJECT_DIR$/admin-dev/themes/new-theme/js/pages/customer/index.ts</url>
           <line>25</line>
           <option name="timeStamp" value="59" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/themes/modernesmid_theme/_dev/js/theme.js</url>
+          <line>1722</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/themes/modernesmid_theme/_dev/js/theme.js</url>
+          <line>39</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="73" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

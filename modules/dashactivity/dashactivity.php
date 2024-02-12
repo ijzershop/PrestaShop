@@ -27,9 +27,6 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-/**
- *
- */
 class dashactivity extends Module
 {
     protected static $colors = ['#1F77B4', '#FF7F0E', '#2CA02C'];
@@ -47,9 +44,6 @@ class dashactivity extends Module
         $this->ps_versions_compliancy = ['min' => '1.7.7.0', 'max' => _PS_VERSION_];
     }
 
-    /**
-     * @return bool
-     */
     public function install()
     {
         Configuration::updateValue('DASHACTIVITY_CART_ACTIVE', 30);
@@ -77,12 +71,6 @@ class dashactivity extends Module
         }
     }
 
-    /**
-     * @param $params
-     * @return false|string
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     */
     public function hookDashboardZoneOne($params)
     {
         $this->context->smarty->assign($this->getConfigFieldsValues());
@@ -98,11 +86,6 @@ class dashactivity extends Module
         return $this->display(__FILE__, 'dashboard_zone_one.tpl');
     }
 
-    /**
-     * @param $params
-     * @return array
-     * @throws PrestaShopDatabaseException
-     */
     public function hookDashboardData($params)
     {
         if (Tools::strlen($params['date_from']) == 10) {
@@ -179,7 +162,9 @@ class dashactivity extends Module
 						' . Shop::addSqlRestriction(false, 'c') . '
 						AND cp.`time_end` IS NULL
 					AND (\'' . pSQL(date('Y-m-d H:i:00', time() - 60 * (int) Configuration::get('DASHACTIVITY_VISITOR_ONLINE'))) . '\' < cp.`time_start`)
-					' . ($maintenance_ips ? 'AND c.ip_address NOT IN (' . preg_replace('/[^,0-9]/|([,\s]+$)', '', $maintenance_ips) . ')' : '') . ' GROUP BY c.id_connections ORDER BY c.date_add DESC';
+					' . ($maintenance_ips ? 'AND c.ip_address NOT IN (' . rtrim(preg_replace('/[^,0-9]/', '', $maintenance_ips),",") . ')' : '') . '
+					GROUP BY c.id_connections
+					ORDER BY c.date_add DESC';
         } else {
             $sql = 'SELECT c.id_guest, c.ip_address, c.date_add, c.http_referer, "-" as page
 					FROM `' . _DB_PREFIX_ . 'connections` c
@@ -187,9 +172,9 @@ class dashactivity extends Module
 					WHERE (g.id_customer IS NULL OR g.id_customer = 0)
 						' . Shop::addSqlRestriction(false, 'c') . '
 						AND (\'' . pSQL(date('Y-m-d H:i:00', time() - 60 * (int) Configuration::get('DASHACTIVITY_VISITOR_ONLINE'))) . '\' < c.`date_add`)
-					' . ($maintenance_ips ? 'AND c.ip_address NOT IN (' . preg_replace('/[^,0-9]|([,\s]+$)/', '', $maintenance_ips) . ')' : '') . ' ORDER BY c.date_add DESC';
+					' . ($maintenance_ips ? 'AND c.ip_address NOT IN (' . rtrim(preg_replace('/[^,0-9]/', '', $maintenance_ips),",") . ')' : '') . '
+					ORDER BY c.date_add DESC';
         }
-
         Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($sql);
         $online_visitor = Db::getInstance()->NumRows();
 
@@ -257,7 +242,7 @@ class dashactivity extends Module
         );
 
         $product_reviews = 0;
-        if (Module::isInstalled('productcomments')) {
+        if (Module::isInstalled('productcomments') && !Module::getInstanceByName('productcomments')->active) {
             $product_reviews += Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
 				FROM `' . _DB_PREFIX_ . 'product_comment` pc
@@ -265,7 +250,7 @@ class dashactivity extends Module
 				' . Shop::addSqlAssociation('product', 'p') . '
 				WHERE pc.deleted = 0
 				AND pc.`date_add` BETWEEN "' . pSQL($params['date_from']) . '" AND "' . pSQL($params['date_to']) . '"
-				' . Shop::addSqlRestriction(Shop::SHARE_ORDER)
+				' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'pc')
             );
         }
 
@@ -297,12 +282,6 @@ class dashactivity extends Module
         ];
     }
 
-    /**
-     * @param $date_from
-     * @param $date_to
-     * @return array
-     * @throws PrestaShopDatabaseException
-     */
     protected function getChartTrafficSource($date_from, $date_to)
     {
         $referers = $this->getReferer($date_from, $date_to);
@@ -315,12 +294,6 @@ class dashactivity extends Module
         return $return;
     }
 
-    /**
-     * @param $date_from
-     * @param $date_to
-     * @return array
-     * @throws PrestaShopDatabaseException
-     */
     protected function getTrafficSources($date_from, $date_to)
     {
         $referrers = $this->getReferer($date_from, $date_to, 3);
@@ -333,13 +306,6 @@ class dashactivity extends Module
         return $traffic_sources;
     }
 
-    /**
-     * @param $date_from
-     * @param $date_to
-     * @param $limit
-     * @return int[]
-     * @throws PrestaShopDatabaseException
-     */
     protected function getReferer($date_from, $date_to, $limit = 3)
     {
         $direct_link = $this->trans('Direct link', [], 'Admin.Orderscustomers.Notification');
@@ -369,11 +335,6 @@ class dashactivity extends Module
         return $websites;
     }
 
-    /**
-     * @return string
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     */
     public function renderConfigForm()
     {
         $fields_form = [
@@ -460,9 +421,6 @@ class dashactivity extends Module
         return $helper->generateForm([$fields_form]);
     }
 
-    /**
-     * @return array
-     */
     public function getConfigFieldsValues()
     {
         return [

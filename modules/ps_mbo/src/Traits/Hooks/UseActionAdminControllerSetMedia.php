@@ -45,15 +45,19 @@ trait UseActionAdminControllerSetMedia
     public function hookActionAdminControllerSetMedia(): void
     {
         if (Tools::getValue('controller') === "AdminPsMboModule") {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/upload_module_with_cdc.js?v=' . $this->version);
+            $this->context->controller->addJs(
+                sprintf('%sviews/js/upload_module_with_cdc.js?v=%s', $this->getPathUri(), $this->version)
+            );
         }
-        
+
         if (empty($this->adminControllerMediaMethods)) {
             return;
         }
 
         usort($this->adminControllerMediaMethods, function ($a, $b) {
-            return $a['order'] === $b['order'] ? 0 : ($a['order'] < $b['order'] ? -1 : 1);
+            $order = $a['order'] < $b['order'] ? -1 : 1;
+
+            return $a['order'] === $b['order'] ? 0 : $order;
         });
         foreach ($this->adminControllerMediaMethods as $setMediaMethod) {
             $this->{$setMediaMethod['method']}();
@@ -93,6 +97,9 @@ trait UseActionAdminControllerSetMedia
         if (in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CONNECTION_TOOLBAR)) {
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/connection-toolbar.css');
             $this->context->controller->addJS($this->getPathUri() . 'views/js/connection-toolbar.js');
+        }
+        if ('AdminPsMboModule' === Tools::getValue('controller')) {
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/hide-toolbar.css');
         }
         if ($this->isAdminLegacyContext()) {
             // Add it to have all script work on all pages...

@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation;
 use PrestaShop\PrestaShop\Core\Configuration\PhpExtensionCheckerInterface;
 use PrestaShop\PrestaShop\Core\Webservice\ServerRequirementsChecker;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ServerRequirementsCheckerTest extends TestCase
 {

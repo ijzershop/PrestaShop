@@ -4,7 +4,7 @@ export default class removeFromCartAnalyticsPush {
     let dataObject = prestashop.analytics_data;
     dataLayer.push({ecommerce: null});
 
-    console.log(['remove_from_cart', dataObject]);
+    // console.log(['remove_from_cart', dataObject]);
 
     dataLayer.push({
       event: "remove_from_cart",

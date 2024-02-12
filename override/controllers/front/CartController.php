@@ -203,6 +203,19 @@ class CartController extends CartControllerCore
                     'Shop.Notifications.Error'
                 );
             }
+
+            if (!$this->errors) {
+                $cart_rules = $this->context->cart->getCartRules();
+                $available_cart_rules = CartRule::getCustomerCartRules(
+                    $this->context->language->id,
+                    (isset($this->context->customer->id) ? $this->context->customer->id : 0),
+                    true,
+                    true,
+                    true,
+                    $this->context->cart,
+                    false,
+                    true
+                );
             $update_quantity = $this->context->cart->updateQty(
                 $this->qty,
                 $this->id_product,
@@ -215,6 +228,7 @@ class CartController extends CartControllerCore
                 true
             );
             if ($update_quantity < 0) {
+                    // If product has attribute, minimal quantity is set with minimal quantity of attribute
                 $minimal_quantity = ($this->id_product_attribute)
                     ? ProductAttribute::getAttributeMinimalQty($this->id_product_attribute)
                     : $product->minimal_quantity;
@@ -241,7 +255,9 @@ class CartController extends CartControllerCore
                 );
             }
         }
-        CartRule::autoRemoveFromCart();
+        }
+
+        $removed = CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
     }
     /*

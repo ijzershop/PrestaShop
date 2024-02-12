@@ -21,9 +21,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\Version;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
+use Symfony\Component\Routing\Router;
 
 trait UseDisplayBackOfficeEmployeeMenu
 {
@@ -37,24 +41,38 @@ trait UseDisplayBackOfficeEmployeeMenu
      */
     public function hookDisplayBackOfficeEmployeeMenu(array $params): void
     {
-        if (!class_exists(ActionsBarButtonsCollection::class)
+        if (
+            !class_exists(ActionsBarButtonsCollection::class)
             || !class_exists(ActionsBarButton::class)
-            || !($params['links'] instanceof ActionsBarButtonsCollection)) {
+            || !($params['links'] instanceof ActionsBarButtonsCollection)
+        ) {
             return;
         }
 
-        /** @var \PrestaShop\Module\Mbo\Distribution\Client $apiClient */
-        $apiClient = $this->get('mbo.cdc.client.distribution_api');
-
         try {
-            $config = $apiClient->getEmployeeMenu();
+            /** @var Client $apiClient */
+            $apiClient = $this->get('mbo.cdc.client.distribution_api');
+
+            /** @var Router $router */
+            $router = $this->get('router');
+
+            if (null === $apiClient || null === $router) {
+                throw new ExpectedServiceNotFoundException(
+                    'Some services not found in UseDisplayBackOfficeEmployeeMenu'
+                );
+            }
+
+            $config = $apiClient->setRouter($router)->getEmployeeMenu();
             if (empty($config) || empty($config->userMenu) || !is_array($config->userMenu)) {
                 return;
             }
             foreach ($config->userMenu as $link) {
                 $versionFrom = Version::convertFromApi($link->ps_version_from);
                 $versionTo = Version::convertFromApi($link->ps_version_to);
-                if (version_compare(_PS_VERSION_, $versionFrom, '<') || version_compare(_PS_VERSION_, $versionTo, '>')) {
+                if (
+                    version_compare(_PS_VERSION_, $versionFrom, '<')
+                    || version_compare(_PS_VERSION_, $versionTo, '>')
+                ) {
                     continue;
                 }
                 $params['links']->add(
@@ -63,12 +81,15 @@ trait UseDisplayBackOfficeEmployeeMenu
                         [
                             'link' => $link->link,
                             'icon' => $link->icon,
+                            'isExternalLink' => $link->is_external_link ?? true,
                         ],
                         $link->name
                     )
                 );
             }
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+
             return;
         }
     }

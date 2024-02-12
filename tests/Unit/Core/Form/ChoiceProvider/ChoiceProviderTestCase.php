@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\ChoiceProvider;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 abstract class ChoiceProviderTestCase extends TestCase
 {

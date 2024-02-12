@@ -199,6 +199,7 @@ class TreeBuilder
         $cleanTree = &$rootTree['tree']['children'];
 
         $index1 = 0;
+
         foreach ($tree as $k1 => $t1) {
             $index2 = 0;
             if (is_array($t1) && '__' !== substr($k1, 0, 2)) {

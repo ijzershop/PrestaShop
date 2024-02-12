@@ -1,0 +1,8 @@
+{shop_url}
+
+We have created a voucher in your name for referring a friend.
+Here is the code of your voucher: {voucher_num}, with an amount of {voucher_num}
+
+Simply copy/paste this code during the payment process for your next order.
+
+ijzershop.localÂ |Â Ceresweg 1Â |Â 8938BG LeeuwardenÂ |Â 0900-2502500Â Â De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

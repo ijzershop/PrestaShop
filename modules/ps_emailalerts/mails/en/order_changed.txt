@@ -1,21 +1,19 @@
+{shop_url}
 
-[{shop_url}]
+Your order with the reference {order_name} from {shop_name} has been changed by the merchant.
 
-Hi {firstname} {lastname},
+Go to your customer account to learn more about it.
 
-Your order with the reference {order_name} from {shop_name} has
-been modified.
+If you have a guest account, you can follow your order via the [Guest Tracking]({guest_tracking_url}) section on our shop.
 
-You can review your order and download your invoice from the
-"Order history" [{history_url}] section of your
-customer account by clicking "My account"
-[{my_account_url}] on our shop.
+Wat is de status van uw bestelling?
+Volg de status en details in uw eigen    [> klantaccount](https://ijzershop8.local/nl/mijn-account)
+Geen account? Volg dan uw bestelling via    [> bestelling volgen](https://ijzershop8.local/nl/bestelling-volgen-als-gast)
 
-If you have a guest account, you can follow your order via the
-"Guest Tracking"
-[{guest_tracking_url}?id_order={order_name}] section
-on our shop.
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/]
+[telefoon: 058-2123138](tel://0900-2502500)
 
+[email: info@v15.nl](mailto:info@v15.nl)
+
+ijzershop.localÂ |Â Ceresweg 1Â |Â 8938BG LeeuwardenÂ |Â 0900-2502500Â Â De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

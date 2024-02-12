@@ -27,19 +27,11 @@
 
 namespace Tests\Resources;
 
+use AppKernel;
 use Cache;
-use CMSCategory;
-use CMSRole;
-use Combination;
-use Connection;
 use Db;
 use Exception;
-use Language;
-use Order;
-use PrestaShop\PrestaShop\Core\Util\Inflector;
-use PrestaShop\PrestaShop\Core\Version;
-use PrestaShopLogger;
-use ProductAttribute;
+use Tools;
 
 class DatabaseDump
 {
@@ -119,7 +111,7 @@ class DatabaseDump
 
         $this->databaseName = _DB_NAME_;
         if ($dumpFile === null) {
-            $this->dumpFile = sprintf('%s/ps_dump_%s_%s.sql', sys_get_temp_dir(), $this->databaseName, Version::VERSION);
+            $this->dumpFile = sprintf('%s/ps_dump_%s_%s.sql', sys_get_temp_dir(), $this->databaseName, AppKernel::VERSION);
         } else {
             $this->dumpFile = $dumpFile;
         }
@@ -151,8 +143,7 @@ class DatabaseDump
      */
     public function restoreTable(string $table): void
     {
-        $className = $this->getClassName($table);
-        $this->cleanClassCache($className);
+        $className = Tools::toCamelCase($table, true);
         $tableName = $this->dbPrefix . $table;
         $this->checkTableDumpFile($tableName);
 
@@ -167,40 +158,9 @@ class DatabaseDump
         $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
         $restoreCommand .= ' < ' . escapeshellarg($dumpFile) . ' 2> /dev/null';
         $this->exec($restoreCommand);
-    }
 
-    private function cleanClassCache(string $className): void
-    {
         // Clean EntityManager cache
         Cache::clean(sprintf('objectmodel_%s_*', $className));
-        // Clear static cache of the ObjectModel class related to the table
-        $staticMethodCall = sprintf('%s::resetStaticCache', $className);
-        if (is_callable($staticMethodCall)) {
-            call_user_func($staticMethodCall);
-        }
-    }
-
-    private function getClassName(string $table): string
-    {
-        if ($table === 'lang') {
-            return Language::class;
-        } elseif ($table === 'cms_category') {
-            return CMSCategory::class;
-        } elseif ($table === 'cms_role') {
-            return CMSRole::class;
-        } elseif ($table === 'product_attribute') {
-            return Combination::class;
-        } elseif ($table === 'connections') {
-            return Connection::class;
-        } elseif ($table === 'log') {
-            return PrestaShopLogger::class;
-        } elseif ($table === 'attribute') {
-            return ProductAttribute::class;
-        } elseif ($table === 'orders') {
-            return Order::class;
-        }
-
-        return Inflector::getInflector()->classify($table);
     }
 
     /**
@@ -288,7 +248,7 @@ class DatabaseDump
             '%s/ps_dump_%s_%s_%s.sql',
             sys_get_temp_dir(),
             $this->databaseName,
-            Version::VERSION,
+            AppKernel::VERSION,
             $table
         );
     }
@@ -299,7 +259,7 @@ class DatabaseDump
             '%s/ps_dump_%s_%s_%s.md5',
             sys_get_temp_dir(),
             $this->databaseName,
-            Version::VERSION,
+            AppKernel::VERSION,
             $table
         );
     }

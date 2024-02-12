@@ -21,10 +21,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module;
 
-use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
+use Exception;
+use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
-use PrestaShop\Module\Mbo\Module\SourceRetriever\SourceRetrieverInterface;
-use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
+use PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
 class ActionsManager
@@ -36,106 +37,58 @@ class ActionsManager
 
     /**
      * @var Repository
+     * @TODO : Not needed anymore
      */
     private $moduleRepository;
 
-    /**
-     * @var SourceRetrieverInterface
-     */
-    private $sourceRetriever;
-
     public function __construct(
         FilesManager $filesManager,
-        Repository $moduleRepository,
-        SourceRetrieverInterface $sourceRetriever
+        Repository $moduleRepository
     ) {
         $this->filesManager = $filesManager;
         $this->moduleRepository = $moduleRepository;
-        $this->sourceRetriever = $sourceRetriever;
     }
 
     /**
      * @param int $moduleId
      *
-     * @throws SourceHandlerNotFoundException
-     * @throws FileNotFoundException
+     * @throws UnexpectedModuleSourceContentException
+     * @throws DownloadModuleException
      */
     public function install(int $moduleId): void
     {
         $moduleZip = $this->filesManager->downloadModule($moduleId);
 
-        $this->filesManager->installFromZip($moduleZip);
+        $this->filesManager->installFromSource($moduleZip);
+    }
+
+    /**
+     * @throws DownloadModuleException
+     */
+    public function downloadModule(int $moduleId): string
+    {
+        return $this->filesManager->downloadModule($moduleId);
     }
 
     /**
      * @throws UnexpectedModuleSourceContentException
-     * @throws ModuleNewVersionNotFoundException
+     * @throws SourceHandlerNotFoundException
      */
-    public function downloadAndReplaceModuleFiles(\stdClass $module, ?string $source = null): void
+    public function downloadAndReplaceModuleFiles(string $moduleName, string $source): void
     {
-        $moduleZip = (null !== $source) ?
-            $this->downloadModuleFromUrl($module, $source) :
-            $this->downloadModuleFromModulesProvider($module);
-
-        $this->filesManager->deleteModuleDirectory($module);
-
-        $this->filesManager->installFromZip($moduleZip);
-    }
-
-    /**
-     * @param string $moduleName
-     *
-     * @return \stdClass|null
-     */
-    public function findVersionForUpdate(string $moduleName): ?\stdClass
-    {
-        $db = \Db::getInstance();
-        $request = 'SELECT `version` FROM `' . _DB_PREFIX_ . "module` WHERE name='" . $moduleName . "'";
-
-        /** @var string|false $moduleCurrentVersion */
-        $moduleCurrentVersion = $db->getValue($request);
-
-        if (!$moduleCurrentVersion) {
-            return null;
-        }
-        // We need to clear cache to get fresh data from addons
-        $this->moduleRepository->clearCache();
-
-        $module = $this->moduleRepository->getApiModule($moduleName);
-
-        if (null === $module) {
-            return null;
+        if (
+            AddonsUrlSourceRetriever::assertIsAddonsUrl($source)
+            && strpos($source, 'shop_url') === false
+        ) {
+            $source .= '&shop_url=' . Config::getShopUrl();
         }
 
-        $versionAvailable = (string) $module->version_available;
+        $this->filesManager->canInstallFromSource($source);
 
-        // If the current installed version is greater or equal than the one returned by Addons, do nothing
-        if (version_compare($versionAvailable, $moduleCurrentVersion, 'gt')) {
-            return $module;
+        if ('ps_mbo' === $moduleName) {
+            $this->filesManager->deleteModuleDirectory($moduleName);
         }
 
-        return null;
-    }
-
-    private function downloadModuleFromModulesProvider(\stdClass $module): string
-    {
-        $moduleName = (string) $module->name;
-
-        $module = $this->findVersionForUpdate($moduleName);
-        if (null === $module) {
-            throw new ModuleNewVersionNotFoundException(sprintf('A downloadable new version was not found for the module %s', $moduleName));
-        }
-
-        return $this->filesManager->downloadModule((int) $module->id);
-    }
-
-    private function downloadModuleFromUrl(\stdClass $module, string $source): string
-    {
-        $zipFilename = $this->sourceRetriever->get($source);
-        if (!$this->sourceRetriever->validate($zipFilename, $module->name)) {
-            throw new UnexpectedModuleSourceContentException(sprintf('The source given doesn\'t contains the expected module : %s', $module->name));
-        }
-
-        return $zipFilename;
+        $this->filesManager->installFromSource($source);
     }
 }

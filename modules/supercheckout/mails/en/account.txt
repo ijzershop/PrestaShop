@@ -1,30 +1,23 @@
-
-[{shop_url}] 
-
-Hi {firstname} {lastname},
-
-Thank you for creating a customer account at {shop_name}. 
+{shop_url}
 
 Here are your login details:
 
-E-MAIL ADDRESS: {email}
-
-PASSWORD: {passwd}		 
+Email address: {email}
 
 Important Security Tips:
 
-* Always keep your account details safe.
+• Always keep your account details safe.
 
-* Never disclose your login details to anyone.
+• Never disclose your login details to anyone.
 
-* Change your password regularly.
+• Change your password regularly.
 
-* Should you suspect someone is using your account illegally, please
-notify us immediately.
+• Should you suspect someone is using your account illegally, please notify us immediately.
 
-You can now place orders on our shop: {shop_name}
-[{shop_url}] 
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+[telefoon: 058-2123138](tel://0900-2502500)
 
+[email: info@v15.nl](mailto:info@v15.nl)
+
+ijzershop.localÂ |Â Ceresweg 1Â |Â 8938BG LeeuwardenÂ |Â 0900-2502500Â Â De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

@@ -22,8 +22,11 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
+use PrestaShop\Module\Mbo\Addons\Toolbar;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use Tools;
 
 trait UseActionGetAdminToolbarButtons
@@ -44,11 +47,26 @@ trait UseActionGetAdminToolbarButtons
          */
         $extraToolbarButtons = $params['toolbar_extra_buttons_collection'];
 
-        if (!in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CONNECTION_TOOLBAR)) {
+        $controllersWithConnectionToolbar = self::CONTROLLERS_WITH_CONNECTION_TOOLBAR;
+        if (
+            $this->isPsAccountEnabled()
+            && ($key = array_search('AdminModulesManage', $controllersWithConnectionToolbar)) !== false
+        ) {
+            unset($controllersWithConnectionToolbar[$key]);
+        }
+
+        if (!in_array(Tools::getValue('controller'), $controllersWithConnectionToolbar)) {
             return $extraToolbarButtons;
         }
 
-        $toolbarButtons = $this->get('mbo.addons.toolbar')->getConnectionToolbar();
+        try {
+            /** @var Toolbar $addonsToolbar */
+            $addonsToolbar = $this->get('mbo.addons.toolbar');
+            $toolbarButtons = $addonsToolbar->getConnectionToolbar();
+        } catch (Exception $e) {
+            ErrorHelper::reportError($e);
+            $toolbarButtons = [];
+        }
 
         foreach ($toolbarButtons as $toolbarButtonLabel => $toolbarButtonDescription) {
             $actionBarButton = new ActionsBarButton(
@@ -56,36 +74,14 @@ trait UseActionGetAdminToolbarButtons
                 $toolbarButtonDescription,
                 $toolbarButtonDescription['desc']
             );
-            $extraToolbarButtons->add($actionBarButton);
+            try {
+                $extraToolbarButtons->add($actionBarButton);
+            } catch (TypeException $e) {
+                // Do nothing, just not adding this element
+                ErrorHelper::reportError($e);
+            }
         }
 
         return $extraToolbarButtons;
-    }
-
-    /**
-     * @return void
-     *
-     * @throws Exception
-     */
-    public function bootUseActionGetAdminToolbarButtons(): void
-    {
-        if (method_exists($this, 'addAdminControllerMedia')) {
-            $this->addAdminControllerMedia('loadMediaGetAdminToolbarButtons');
-        }
-    }
-
-    /**
-     * Add JS and CSS file
-     *
-     * @return void
-     *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
-     */
-    protected function loadMediaGetAdminToolbarButtons(): void
-    {
-        if (!in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CONNECTION_TOOLBAR)) {
-            return;
-        }
-        $this->context->controller->addJs($this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version);
     }
 }

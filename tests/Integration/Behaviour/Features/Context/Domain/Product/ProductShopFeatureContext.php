@@ -28,55 +28,53 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
-use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductShopAssociationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductShopAssociationNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShop;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
 class ProductShopFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @Then product :productReference is not associated to shop(s) :shopReferences
+     * @Then product :productReference is not associated to shop :shopReference
      *
      * @param string $productReference
-     * @param string $shopReferences
+     * @param string $shopReference
      */
-    public function checkNoShopAssociation(string $productReference, string $shopReferences): void
+    public function checkNoShopAssociation(string $productReference, string $shopReference): void
     {
-        foreach ($this->referencesToIds($shopReferences) as $shopId) {
-            $caughtException = null;
-            try {
-                $this->getProductForEditing($productReference, $shopId);
-            } catch (ProductShopAssociationNotFoundException $e) {
-                $caughtException = $e;
-            }
+        $shopId = $this->getSharedStorage()->get($shopReference);
 
-            Assert::assertNotNull($caughtException);
+        $caughtException = null;
+        try {
+            $this->getProductForEditing($productReference, $shopId);
+        } catch (ShopAssociationNotFound $e) {
+            $caughtException = $e;
         }
+
+        Assert::assertNotNull($caughtException);
     }
 
     /**
-     * @Then product :productReference is associated to shop(s) :shopReferences
+     * @Then product :productReference is associated to shop :shopReference
      *
      * @param string $productReference
-     * @param string $shopReferences
+     * @param string $shopReference
      */
-    public function checkShopAssociation(string $productReference, string $shopReferences): void
+    public function checkShopAssociation(string $productReference, string $shopReference): void
     {
-        foreach ($this->referencesToIds($shopReferences) as $shopId) {
-            $caughtException = null;
-            try {
-                $this->getProductForEditing($productReference, $shopId);
-            } catch (ProductShopAssociationNotFoundException $e) {
-                $caughtException = $e;
-            }
+        $shopId = $this->getSharedStorage()->get($shopReference);
 
-            Assert::assertNull($caughtException);
+        $caughtException = null;
+        try {
+            $this->getProductForEditing($productReference, $shopId);
+        } catch (ShopAssociationNotFound $e) {
+            $caughtException = $e;
         }
+
+        Assert::assertNull($caughtException);
     }
 
     /**
@@ -90,63 +88,29 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
         $shopId = $this->getSharedStorage()->get($shopReference);
 
-        /** @var ProductRepository $productRepository */
-        $productRepository = CommonFeatureContext::getContainer()->get(ProductRepository::class);
+        /** @var ProductMultiShopRepository $productRepository */
+        $productRepository = CommonFeatureContext::getContainer()->get('prestashop.adapter.product.repository.product_multi_shop_repository');
         $defaultShopId = $productRepository->getProductDefaultShopId(new ProductId($productId));
         Assert::assertEquals($shopId, $defaultShopId->getValue());
     }
 
     /**
-     * @When I set following shops for product ":productReference":
+     * @When I copy product :productReference from shop :shopSourceReference to shop :shopTargetReference
      *
      * @param string $productReference
-     * @param TableNode $tableNode
+     * @param string $shopSourceReference
+     * @param string $shopTargetReference
      */
-    public function setProductShops(string $productReference, TableNode $tableNode): void
+    public function copyProductToShop(string $productReference, string $shopSourceReference, string $shopTargetReference): void
     {
-        $data = $tableNode->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+        $shopSourceId = $this->getSharedStorage()->get($shopSourceReference);
+        $shopTargetId = $this->getSharedStorage()->get($shopTargetReference);
 
-        try {
-            $this->getCommandBus()->handle(new SetProductShopsCommand(
-                $this->getSharedStorage()->get($productReference),
-                $this->getSharedStorage()->get($data['source shop']),
-                $this->referencesToIds($data['shops'])
-            ));
-        } catch (InvalidProductShopAssociationException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @Then I should get error that I cannot unassociate product from all shops
-     */
-    public function assertLastExceptionIsEmptyProductShopAssociation(): void
-    {
-        $this->assertLastErrorIs(
-            InvalidProductShopAssociationException::class,
-            InvalidProductShopAssociationException::EMPTY_SHOPS_ASSOCIATION
-        );
-    }
-
-    /**
-     * @Then I should get error that I cannot unassociate product from source shop
-     */
-    public function assertLastExceptionIsSourceShopMissingInShopAssociation(): void
-    {
-        $this->assertLastErrorIs(
-            InvalidProductShopAssociationException::class,
-            InvalidProductShopAssociationException::SOURCE_SHOP_MISSING_IN_SHOP_ASSOCIATION
-        );
-    }
-
-    /**
-     * @Then I should get error that source shop is not associated to product
-     */
-    public function assertLastExceptionIsSourceShopIsNotAssociated(): void
-    {
-        $this->assertLastErrorIs(
-            InvalidProductShopAssociationException::class,
-            InvalidProductShopAssociationException::SOURCE_SHOP_NOT_ASSOCIATED
-        );
+        $this->getCommandBus()->handle(new CopyProductToShop(
+            $productId,
+            $shopSourceId,
+            $shopTargetId
+        ));
     }
 }

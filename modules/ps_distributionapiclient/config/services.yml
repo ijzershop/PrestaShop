@@ -10,8 +10,7 @@ services:
       - '%ps_cache_dir%/distribution-api'
 
   distributionapiclient.cache.provider:
-    class: Doctrine\Common\Cache\Psr6\DoctrineProvider
-    factory: [ Doctrine\Common\Cache\Psr6\DoctrineProvider, wrap ]
+    class: Symfony\Component\Cache\DoctrineProvider
     arguments:
       - '@distributionapiclient.cache.filesystem.adapter'
 

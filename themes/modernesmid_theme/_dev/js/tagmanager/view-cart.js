@@ -6,7 +6,11 @@ export default class viewCartAnalyticsPush {
       let dataObject = prestashop.analytics_data;
       dataLayer.push({ecommerce: null});
 
+<<<<<<< HEAD
       console.log(['view_cart', dataObject]);
+=======
+      // console.log(['view_cart', dataObject]);
+>>>>>>> c8dd03977e6c3094edbf7e3dad0a467e27d4385a
 
       dataLayer.push({
         event: "view_cart",

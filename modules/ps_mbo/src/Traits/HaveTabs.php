@@ -22,8 +22,8 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits;
 
 use Db;
+use Exception;
 use LanguageCore as Language;
-use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use Symfony\Component\String\UnicodeString;
 use TabCore as Tab;
 use ValidateCore as Validate;
@@ -43,7 +43,8 @@ trait HaveTabs
         ],
         'AdminPsMboSelection' => [
             'name' => 'Modules in the spotlight',
-            'visible' => true,
+            'visible' => false,
+            'position' => 1,
             'class_name' => 'AdminPsMboSelection',
             'parent_class_name' => 'AdminPsMboModuleParent',
             'wording' => 'Modules in the spotlight',
@@ -52,6 +53,7 @@ trait HaveTabs
         'AdminPsMboModule' => [
             'name' => 'Marketplace',
             'visible' => true,
+            'position' => 0,
             'class_name' => 'AdminPsMboModule',
             'parent_class_name' => 'AdminPsMboModuleParent',
         ],
@@ -94,7 +96,7 @@ trait HaveTabs
      *
      * @return bool
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleTabAction(string $action): bool
     {
@@ -117,6 +119,7 @@ trait HaveTabs
      * Used when module is enabled and in upgrade script.
      *
      * @param array $tabData
+     * @param bool $activate
      *
      * @return bool
      */
@@ -200,6 +203,7 @@ trait HaveTabs
      * If a tab is missing, it will be added. If a tab is not declared in the module, it will be removed.
      *
      * @return void
+     * @throws \PrestaShopException
      */
     public function updateTabs(): void
     {
@@ -242,7 +246,7 @@ trait HaveTabs
         }
         // Install the new tabs
         foreach ($newTabs as $newTab) {
-            $this->installTab(static::$ADMIN_CONTROLLERS[$newTab], false);
+            $this->installTab(static::$ADMIN_CONTROLLERS[$newTab]);
         }
 
         foreach ($currentModuleTabs as $currentModuleTab) {
@@ -256,13 +260,15 @@ trait HaveTabs
      * Updates an already existing tab.
      *
      * @param array $tabData
-     *
-     * @return bool
      */
     private function updateTab(array $tabData): bool
     {
         $tabId = Tab::getIdFromClassName($tabData['class_name']);
-        $tab = new Tab($tabId);
+        try {
+            $tab = new Tab($tabId);
+        } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
+            return false;
+        }
 
         if (false === Validate::isLoadedObject($tab)) {
             return false;
@@ -286,7 +292,12 @@ trait HaveTabs
             return false;
         }
 
-        $tab = new Tab($tabId);
+        try {
+            $tab = new Tab($tabId);
+        } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
+            return false;
+        }
+
         if (
             Validate::isLoadedObject($tab)
             && !empty($tabData['position'])
@@ -301,7 +312,7 @@ trait HaveTabs
         return true;
     }
 
-    private function putTabInPosition(Tab $tab, int $position)
+    private function putTabInPosition(Tab $tab, int $position): void
     {
         // Check tab position in DB
         $dbTabPosition = Db::getInstance()->getValue('
@@ -319,7 +330,9 @@ trait HaveTabs
             '
             UPDATE `' . _DB_PREFIX_ . 'tab`
             SET `position` = `position`+1
-            WHERE `id_parent` = ' . (int) $tab->id_parent . ' AND `position` >= ' . $position . ' AND `id_tab` <> ' . (int) $tab->id
+            WHERE `id_parent` = ' . (int) $tab->id_parent . '
+            AND `position` >= ' . $position . '
+            AND `id_tab` <> ' . (int) $tab->id
         );
 
         Db::getInstance()->execute(

@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace Tests\Resources\Translator;
 
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class DummyTranslator implements TranslatorInterface
 {

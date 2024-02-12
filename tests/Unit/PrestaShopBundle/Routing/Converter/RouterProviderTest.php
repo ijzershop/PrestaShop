@@ -28,10 +28,8 @@ namespace Tests\Unit\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
 use PrestaShopBundle\Routing\Converter\LegacyRoute;
-use PrestaShopBundle\Routing\Converter\LegacyRouteFactory;
 use PrestaShopBundle\Routing\Converter\RouterProvider;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -56,12 +54,7 @@ class RouterProviderTest extends TestCase
                 ],
             ],
         ]);
-
-        $routerProvider = new RouterProvider(
-            $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagRepository::class))
-        );
-
+        $routerProvider = new RouterProvider($router);
         $legacyRoutes = $routerProvider->getLegacyRoutes();
         $this->assertCount(2, $legacyRoutes);
         $this->assertNotEmpty($legacyRoutes['admin_products']);
@@ -106,10 +99,7 @@ class RouterProviderTest extends TestCase
                 ],
             ],
         ]);
-        $routerProvider = new RouterProvider(
-            $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagRepository::class))
-        );
+        $routerProvider = new RouterProvider($router);
         $controllersActions = $routerProvider->getControllersActions();
         $this->assertCount(2, $controllersActions);
         $this->assertSame([
@@ -150,12 +140,7 @@ class RouterProviderTest extends TestCase
                 ],
             ],
         ]);
-
-        $routerProvider = new RouterProvider(
-            $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagRepository::class))
-        );
-
+        $routerProvider = new RouterProvider($router);
         $controllerActions = $routerProvider->getActionsByController('AdminProducts');
         $this->assertCount(3, $controllerActions);
         $this->assertSame(['index', 'add', 'create'], $controllerActions);
@@ -186,12 +171,7 @@ class RouterProviderTest extends TestCase
                 ],
             ],
         ]);
-
-        $routerProvider = new RouterProvider(
-            $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagRepository::class))
-        );
-
+        $routerProvider = new RouterProvider($router);
         $controllerActions = $routerProvider->getActionsByController('adminproducts');
         $this->assertCount(3, $controllerActions);
         $this->assertSame(['index', 'add', 'create'], $controllerActions);
@@ -242,12 +222,7 @@ class RouterProviderTest extends TestCase
                 ],
             ],
         ]);
-
-        $routerProvider = new RouterProvider(
-            $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagRepository::class))
-        );
-
+        $routerProvider = new RouterProvider($router);
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'index');
         $this->assertEquals('admin_products', $legacyRoute->getRouteName());
 
@@ -320,12 +295,7 @@ class RouterProviderTest extends TestCase
                 ],
             ],
         ]);
-
-        $routerProvider = new RouterProvider(
-            $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagRepository::class))
-        );
-
+        $routerProvider = new RouterProvider($router);
         $legacyRoute = $routerProvider->getLegacyRouteByAction('adminproducts', 'index');
         $this->assertEquals('admin_products', $legacyRoute->getRouteName());
 
@@ -359,11 +329,7 @@ class RouterProviderTest extends TestCase
                 ],
             ],
         ]);
-
-        $routerProvider = new RouterProvider(
-            $router,
-            new LegacyRouteFactory($this->createMock(FeatureFlagRepository::class))
-        );
+        $routerProvider = new RouterProvider($router);
 
         $caughtException = null;
 

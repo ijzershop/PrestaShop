@@ -36,13 +36,11 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerComman
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerLogoImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use RuntimeException;
@@ -128,9 +126,6 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['meta_keywords'])) {
             [$this->defaultLangId => $command->setLocalizedMetaKeywords($data['meta_keywords'])];
-        }
-        if (isset($data['logo image'])) {
-            $this->pretendImageUploaded(_PS_MANU_IMG_DIR_, $data['logo image'], $manufacturerId);
         }
 
         $this->getCommandBus()->handle($command);
@@ -284,7 +279,8 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
 
         try {
-            $this->getEditableManufacturer((int) $manufacturer->id);
+            $query = new GetManufacturerForEditing((int) $manufacturer->id);
+            $this->getQueryBus()->handle($query);
 
             throw new NoExceptionAlthoughExpectedException(sprintf('Manufacturer %s exists, but it was expected to be deleted', $manufacturerReference));
         } catch (ManufacturerNotFoundException $e) {
@@ -315,45 +311,6 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         }
 
         throw new RuntimeException(sprintf('Manufacturer %s named "%s" does not exist', $manufacturerReference, $name));
-    }
-
-    /**
-     * @When I delete the manufacturer :manufacturerReference logo image
-     *
-     * @param string $manufacturerReference
-     */
-    public function deleteCategoryLogoImage(string $manufacturerReference): void
-    {
-        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
-
-        $this->getCommandBus()->handle(new DeleteManufacturerLogoImageCommand((int) $manufacturer->id));
-    }
-
-    /**
-     * @Given the manufacturer :manufacturerReference has a logo image
-     *
-     * @param string $manufacturerReference
-     */
-    public function assertManufacturerHasLogoImage(string $manufacturerReference): void
-    {
-        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
-
-        $editableManufacturer = $this->getEditableManufacturer((int) $manufacturer->id);
-
-        Assert::assertNotNull($editableManufacturer->getLogoImage());
-    }
-
-    /**
-     * @Then the manufacturer :manufacturerReference does not have a logo image
-     *
-     * @param string $manufacturerReference
-     */
-    public function assertManufacturerHasNotLogoImage(string $manufacturerReference)
-    {
-        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
-
-        $editableManufacturer = $this->getEditableManufacturer((int) $manufacturer->id);
-        Assert::assertNull($editableManufacturer->getLogoImage());
     }
 
     /**
@@ -404,15 +361,5 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         Assert::assertSame($manufacturer->name, $viewableMaufacturer->getName());
         Assert::assertSame($countOfAddresses, count($viewableMaufacturer->getManufacturerAddresses()));
         Assert::assertSame($countOfProducts, count($viewableMaufacturer->getManufacturerProducts()));
-    }
-
-    /**
-     * @param int $manufacturerId
-     *
-     * @return EditableManufacturer
-     */
-    private function getEditableManufacturer(int $manufacturerId): EditableManufacturer
-    {
-        return $this->getQueryBus()->handle(new GetManufacturerForEditing($manufacturerId));
     }
 }

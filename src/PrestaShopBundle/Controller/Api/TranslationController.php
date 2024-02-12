@@ -75,9 +75,9 @@ class TranslationController extends ApiController
             $translationService = $this->container->get('prestashop.service.translation');
 
             $locale = $request->attributes->get('locale');
-            $domain = $request->attributes->get('domain');
-            $theme = $request->attributes->get('theme');
-            $module = $request->query->get('module');
+            $domain = str_replace('&','',$request->attributes->get('domain'));
+            $theme = str_replace('&','',$request->attributes->get('theme'));
+            $module = str_replace('&','',$request->query->get('module'));
             $search = $request->query->get('search');
 
             try {

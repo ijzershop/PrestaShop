@@ -26,7 +26,9 @@ namespace PrestaShop\Module\Mbo\Addons\Provider;
 use Exception;
 use GuzzleHttp\Exception\ClientException;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
+use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUser;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 /**
  * This class will provide data from Addons API
@@ -106,7 +108,9 @@ class AddonsDataProvider implements DataProviderInterface
     }
 
     /**
-     * Downloads a module source from addons, store it and returns the file name
+     * Downloads a module source from addons, store it and returns the file name.
+     *
+     * @throws DownloadModuleException
      */
     public function downloadModule(int $moduleId): string
     {
@@ -119,6 +123,7 @@ class AddonsDataProvider implements DataProviderInterface
         try {
             $moduleData = $this->request('module_download', $params);
         } catch (Exception $e) {
+            ErrorHelper::reportError($e);
             $message = $this->isUserAuthenticated() ?
                 'Error sent by Addons. You may be not allowed to download this module.'
                 : 'Error sent by Addons. You may need to be logged.';
@@ -130,14 +135,14 @@ class AddonsDataProvider implements DataProviderInterface
                     $message = 'Error sent by Addons. ' . $jsonContent['errors']['label'];
                 }
             }
-            throw new Exception($message, 0, $e);
+            throw new DownloadModuleException($message, 0, $e);
         }
 
         $temporaryZipFilename = tempnam($this->cacheDir, 'mod');
         if (file_put_contents($temporaryZipFilename, $moduleData) !== false) {
             return $temporaryZipFilename;
         } else {
-            throw new Exception('Cannot store module content in temporary file !');
+            throw new DownloadModuleException('Cannot store module content in temporary file !');
         }
     }
 
@@ -186,22 +191,15 @@ class AddonsDataProvider implements DataProviderInterface
         $this->marketplaceClient->reset();
 
         // We merge the addons credentials
-        if ($this->isUserAuthenticated()) {
-            $credentials = $this->user->getCredentials();
-            if (array_key_exists('accounts_token', $credentials)) {
-                $this->marketplaceClient->setHeaders([
-                    'Authorization' => 'Bearer ' . $credentials['accounts_token'],
-                ]);
 
-                // This is a bug for now, we need to give a couple of username/password even if a token is given
-                // It has to be cleaned once the bug fixed
-                $params = array_merge([
-                    'username' => 'name@domain.com',
-                    'password' => 'fakepwd',
-                ], $params);
-            } else {
-                $params = array_merge($credentials, $params);
-            }
+        $authParams = $this->getAuthenticationParams();
+        if (null !== $authParams['bearer'] && is_string($authParams['bearer'])) {
+            $this->marketplaceClient->setHeaders([
+                'Authorization' => 'Bearer ' . $authParams['bearer'],
+            ]);
+        }
+        if (null !== $authParams['credentials'] && is_array($authParams['credentials'])) {
+            $params = array_merge($authParams['credentials'], $params);
         }
 
         if ($action === 'module_download') {
@@ -213,9 +211,46 @@ class AddonsDataProvider implements DataProviderInterface
         try {
             return $this->marketplaceClient->{self::ADDONS_API_MODULE_ACTIONS[$action]}($params);
         } catch (Exception $e) {
+            ErrorHelper::reportError($e);
             self::$is_addons_up = false;
             throw $e;
         }
+    }
+
+    public function getAuthenticationParams(): array
+    {
+        $authParams = [
+            'bearer' => null,
+            'credentials' => null,
+        ];
+
+        // We merge the addons credentials
+        if ($this->isUserAuthenticated()) {
+            $credentials = $this->user->getCredentials();
+            if (null !== $credentials && array_key_exists('accounts_token', $credentials)) {
+                $authParams['bearer'] = $credentials['accounts_token'];
+                // This is a bug for now, we need to give a couple of username/password even if a token is given
+                // It has to be cleaned once the bug fixed
+                $authParams['credentials'] = [
+                    'username' => 'name@domain.com',
+                    'password' => 'fakepwd',
+                ];
+            } else {
+                $authParams['credentials'] = $credentials;
+            }
+        }
+
+        return $authParams;
+
+    }
+
+    public function getAccountsShopUuid(): ?string
+    {
+        if (!$this->isUserAuthenticatedOnAccounts()) {
+            return null;
+        }
+
+        return $this->user->getAccountsShopUuid();
     }
 
     /**

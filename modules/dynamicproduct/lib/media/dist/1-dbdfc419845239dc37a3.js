@@ -4370,7 +4370,7 @@ function create_if_block_2(ctx) {
 	return block;
 }
 
-// (40:6)
+// (40:6) 
 function create_tooltip_slot(ctx) {
 	let span;
 	let tooltip;
@@ -7129,7 +7129,7 @@ function create_if_block(ctx) {
 	return block;
 }
 
-// (136:35)
+// (136:35) 
 function create_if_block_2(ctx) {
 	let div;
 	let button;
@@ -8344,7 +8344,7 @@ function create_if_block_4(ctx) {
 	return block;
 }
 
-// (93:30)
+// (93:30) 
 function create_if_block_3(ctx) {
 	let span;
 	let i;
@@ -10351,7 +10351,7 @@ function create_fragment(ctx) {
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "type", "text");
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "id", input_id_value = `dp_${/*field*/ ctx[0].name}`);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "class", "form-control");
-			input.value = input_value_value = /*field*/ viewProduct.init;
+			input.value = input_value_value = /*field*/ ctx[0].init;
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "min", input_min_value = /*field*/ ctx[0].settings.min);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "max", input_max_value = /*field*/ ctx[0].settings.max);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["add_location"])(input, file, 51, 2, 1633);
@@ -10419,7 +10419,7 @@ function create_fragment(ctx) {
 				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr_dev"])(input, "id", input_id_value);
 			}
 
-			if (!current || dirty & /*field*/ 1 && input_value_value !== (input_value_value = /*field*/ viewProduct.init) && input.value !== input_value_value) {
+			if (!current || dirty & /*field*/ 1 && input_value_value !== (input_value_value = /*field*/ ctx[0].init) && input.value !== input_value_value) {
 				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["prop_dev"])(input, "value", input_value_value);
 			}
 
@@ -19330,7 +19330,7 @@ function getPreferredImageSize(url) {
 function createSvg(color, size) {
     let svg = `
   <svg xmlns="http://www.w3.org/2000/svg" width="${size.width}" height="${size.height}" viewBox="0 0 ${size.width} ${size.height}">
-    <rect x="0" y="0" width="${size.width}" height="${size.height}" fill="${color}"></rect>
+    <rect x="0" y="0" width="${size.width}" height="${size.height}" fill="${color}"></rect> 
   </svg>`;
     const blob = new Blob([svg], { type: "image/svg+xml" });
     return URL.createObjectURL(blob);

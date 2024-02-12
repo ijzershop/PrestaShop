@@ -47,7 +47,6 @@ use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
-use Tests\Resources\Resetter\TaxesResetter;
 
 class TaxFeatureContext extends AbstractDomainFeatureContext
 {
@@ -61,22 +60,6 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $this->defaultLangId = CommonFeatureContext::getContainer()
             ->get('prestashop.adapter.legacy.configuration')
             ->get('PS_LANG_DEFAULT');
-    }
-
-    /**
-     * @BeforeFeature @restore-taxes-before-feature
-     */
-    public static function restoreTaxesTablesBeforeFeature(): void
-    {
-        TaxesResetter::resetTaxes();
-    }
-
-    /**
-     * @AfterFeature @restore-taxes-after-feature
-     */
-    public static function restoreTaxesTablesAfterFeature(): void
-    {
-        TaxesResetter::resetTaxes();
     }
 
     /**

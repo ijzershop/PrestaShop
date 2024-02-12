@@ -38,7 +38,7 @@ use PrestaShopBundle\Cache\LocalizationWarmer;
 use SpecificPriceFormatter;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Integration\Utility\ContextMockerTrait;
-use Tests\Resources\Resetter\LocalizationPackResetter;
+use Tests\Resources\LocalizationPackResetter;
 
 class SpecificPriceFormatterTest extends KernelTestCase
 {

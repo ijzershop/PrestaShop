@@ -118,9 +118,6 @@ class ProfileFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['names'])) {
             Assert::assertEquals($editableProfile->getLocalizedNames(), $data['names']);
         }
-        if (isset($data['avatarUrl'])) {
-            Assert::assertEquals($editableProfile->getAvatarUrl(), $data['avatarUrl']);
-        }
     }
 
     /**

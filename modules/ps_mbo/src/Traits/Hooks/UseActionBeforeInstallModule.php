@@ -21,18 +21,36 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Module\Module;
+use Exception;
+use PrestaShop\Module\Mbo\Addons\ApiClient;
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Module\ActionsManager;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
+use Tools;
 
 trait UseActionBeforeInstallModule
 {
     /**
      * Hook actionBeforeInstallModule.
+     *
+     * @throws SourceHandlerNotFoundException
+     * @throws FileNotFoundException
      */
     public function hookActionBeforeInstallModule(array $params): void
     {
-        /** @var ModuleDataProvider $moduleDataProvider */
-        $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
+        try {
+            /** @var ModuleDataProvider $moduleDataProvider */
+            $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
+            if (null === $moduleDataProvider) {
+                throw new ExpectedServiceNotFoundException('Unable to get ModuleDataProvider');
+            }
+        } catch (Exception $e) {
+            ErrorHelper::reportError($e);
+            return;
+        }
 
         if (empty($params['moduleName']) || $moduleDataProvider->isOnDisk($params['moduleName'])) {
             return;
@@ -40,13 +58,39 @@ trait UseActionBeforeInstallModule
 
         $moduleName = (string) $params['moduleName'];
 
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
-
-        if (null === $module) {
+        try {
+            /** @var ApiClient $addonsClient */
+            $addonsClient = $this->get('mbo.addons.client.api');
+            if (null === $addonsClient) {
+                throw new ExpectedServiceNotFoundException('Unable to get Addons ApiClient');
+            }
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return;
         }
 
-        $this->get('mbo.modules.actions_manager')->install((int) $module->get('id'));
+        $moduleId = (int) Tools::getValue('module_id');
+
+        if (!$moduleId) {
+            $addon = $addonsClient->getModuleByName($moduleName);
+
+            if (null === $addon || !isset($addon->product->id_product)) {
+                return;
+            }
+
+            $moduleId = (int) $addon->product->id_product;
+        }
+
+        try {
+            /** @var ActionsManager $actionsManager */
+            $actionsManager = $this->get('mbo.modules.actions_manager');
+            if (null === $actionsManager) {
+                throw new ExpectedServiceNotFoundException('Unable to get ActionsManager');
+            }
+        } catch (Exception $e) {
+            ErrorHelper::reportError($e);
+            return;
+        }
+        $actionsManager->install($moduleId);
     }
 }

@@ -5,7 +5,11 @@ export default class startCheckoutAddressAnalyticsPush {
         let dataObject = prestashop.analytics_data;
         dataLayer.push({ecommerce: null});
 
+<<<<<<< HEAD
         console.log(['add_shipping_info', dataObject]);
+=======
+        // console.log(['add_shipping_info', dataObject]);
+>>>>>>> c8dd03977e6c3094edbf7e3dad0a467e27d4385a
 
         dataLayer.push({
           event: "add_shipping_info",

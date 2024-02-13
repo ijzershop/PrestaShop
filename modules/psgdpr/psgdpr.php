@@ -368,10 +368,13 @@ class Psgdpr extends Module
     {
         parse_str((string) parse_url($link, PHP_URL_QUERY), $result);
 
+        if(empty($result['_token'])) {
+            $result['_token'] = Tools::getAdminTokenLite('Psgdpr');
+        }
+
         if (is_array($result['_token'])) {
             throw new \PrestaShopException('Invalid token');
         }
-
         return $result['_token'];
     }
 

@@ -73,8 +73,8 @@ class StockManager
             foreach ($products_pack as $product_pack) {
                 $productStockAvailable = $stockManager->getStockAvailableByProduct($product_pack, $product_pack->id_pack_product_attribute, $id_shop);
                 $qtyPack = $productStockAvailable->quantity + ($delta_quantity * $product_pack->pack_quantity);
-                if($qtyPack > 2147483648 || $qtyPack < -2147483648){
-                    $qtyPack = 2147483648;
+                if($qtyPack > 2147483647 || $qtyPack < -2147483647){
+                    $qtyPack = 2147483647;
                 }
                 $productStockAvailable->quantity =  $qtyPack;
                 $productStockAvailable->update();
@@ -84,8 +84,8 @@ class StockManager
         }
 
         $qty = $stock_available->quantity + $delta_quantity;
-        if($qty > 2147483648 || $qty < -2147483648){
-            $qty = 2147483648;
+        if($qty > 2147483647 || $qty < -2147483647){
+            $qty = 2147483647;
         }
 
         $stock_available->quantity = $qty;
@@ -177,8 +177,8 @@ class StockManager
         } else {
             // The product is not a pack
             $qty = (int)$stockAvailable->quantity + $delta_quantity;
-            if($qty > 2147483648 || $qty < -2147483648){
-                $qty = 2147483648;
+            if($qty > 2147483647 || $qty < -2147483647){
+                $qty = 2147483647;
             }
 
             $stockAvailable->quantity = $qty;

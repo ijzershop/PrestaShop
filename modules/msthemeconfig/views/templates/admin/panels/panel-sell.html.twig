@@ -62,6 +62,22 @@
           </div>
         </div>
 
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            Geen kortingsregel
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_DISCOUNT_RULE_THIRD"
+                    class="w-100 form-control select2-data-input" data-type="discounts"
+                    id="MSTHEMECONFIG_DISCOUNT_RULE_THIRD">
+              {{ MSTHEMECONFIG_NO_DISCOUNT_RULE|raw }}
+            </select>
+            <p class="help-block">
+              Geen kortingsregel die op de winkelwagen word toegepast, als bij de balie of backoffice geen automatische winkelwagen korting gegeven moet worden. Deze word ook niet getoond op de factuur!
+            </p>
+          </div>
+        </div>
+
 
 
 

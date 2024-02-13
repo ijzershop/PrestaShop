@@ -82,6 +82,10 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $this->_setVatInclExclContext(filter_var($vat, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE));
         }
 
+        if (Tools::getValue('action') == 'remove_default_discount_cart_rule_counter_access') {
+            $this->_removeDefaultCartDiscountRuleCounterAccess();
+        }
+
         if (Tools::getValue('action') == 'check_for_existing_email_address') {
             $email = Tools::getValue('email');
             $this->_checkForExistingEmailAddress($email);
@@ -276,7 +280,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $idEvent = $data['eventId'];
             $eventData = $data['data'];
             $idCustomer = Context::getContext()->customer->id;
-            
+
             $date = new DateTime();
             $ip_customer = Tools::getRemoteAddr();
 
@@ -290,7 +294,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $filesBulk = array();
 
             $ignored = array('.', '..', 'index.php', '.htaccess');
-            
+
             foreach (scandir($dir) as $file) {
                 if (in_array($file, $ignored)) continue;
                 if(str_contains($file, 'Purchases')){
@@ -312,7 +316,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                     return $matches[1] . ($matches[2] + 1);
                 };
                 $csvBulkName = preg_replace_callback('/(\D*)(\d+)/', $callback, end($filesBulk));
-                
+
                 $file = new SplFileObject($dir.$csvBulkName, 'a');
                 $file->fputcsv($headerArray);
                 $file->fputcsv($dataArray);
@@ -344,7 +348,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                     };
 
                     $filesPurchaseName = preg_replace_callback('/(\D*)(\d+)/', $callbackPurchase, end($filesPurchase));
-                    
+
                     $purchaseFile = new SplFileObject($dir . $filesPurchaseName, 'a');
                     $purchaseFile->fputcsv($headerArray);
                     $purchaseFile->fputcsv($data2Array);
@@ -1764,10 +1768,18 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         }
     }
 
+    private function _removeDefaultCartDiscountRuleCounterAccess()
+    {
+        $cart = new Cart($this->context->cart->id);
+        $cartRuleId = Configuration::get('MSTHEMECONFIG_NO_DISCOUNT_RULE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '152');
 
-
-
-
+        try {
+            $cart->addCartRule((int)$cartRuleId);
+                return die(json_encode(['msg' => 'Discount Rules are removed', 'success' => true]));
+            } catch (Exception $exception){
+                return die(json_encode(['msg' => $exception->getMessage(), 'success' => false]));
+        }
+    }
 
 
 }

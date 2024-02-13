@@ -1720,8 +1720,7 @@ var showAddedToCartGlow = function (caller_element) {
   return true;
 };
 
-$(document).on('click', '.removeShoppingCartDefaultDiscount', function (event) {
-  event.preventDefault();
+$(document).on('click', '#removeShoppingCartDefaultDiscount', function (event) {
   event.stopImmediatePropagation();
 
   const url = '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1';
@@ -1740,8 +1739,6 @@ $(document).on('click', '.removeShoppingCartDefaultDiscount', function (event) {
     .fail(function () {
       // console.log('error');
     });
-
-
 });
 
 

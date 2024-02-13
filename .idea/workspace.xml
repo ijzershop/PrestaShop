@@ -2231,7 +2231,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php-line-method">
           <url>file://$PROJECT_DIR$/modules/msthemeconfig/controllers/front/ajax.php</url>
-          <line>657</line>
+          <line>661</line>
           <properties>
             <option name="className" value="\msthemeconfigAjaxModuleFrontController" />
             <option name="methodName" value="get_best_path" />

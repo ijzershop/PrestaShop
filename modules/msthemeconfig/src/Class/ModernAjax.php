@@ -538,6 +538,7 @@ class ModernAjax
                 $dataArray['MSTHEMECONFIG_DISCOUNT_RULE_FIRST'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_FIRST', $this->idLang, $this->idShopGroup, $this->idShop,  0),'discounts');
                 $dataArray['MSTHEMECONFIG_DISCOUNT_RULE_SECOND'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_SECOND', $this->idLang, $this->idShopGroup, $this->idShop,  0),'discounts');
                 $dataArray['MSTHEMECONFIG_DISCOUNT_RULE_THIRD'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_THIRD', $this->idLang, $this->idShopGroup, $this->idShop,  0),'discounts');
+                $dataArray['MSTHEMECONFIG_NO_DISCOUNT_RULE'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_NO_DISCOUNT_RULE', $this->idLang, $this->idShopGroup, $this->idShop,  '152'),'discounts');
                 break;
         }
 

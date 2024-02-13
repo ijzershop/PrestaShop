@@ -2097,7 +2097,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/modules/msthemeconfig/src/Class/ModernHook.php</url>
-          <line>2321</line>
+          <line>2371</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">

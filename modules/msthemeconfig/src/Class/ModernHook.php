@@ -1173,52 +1173,102 @@ class ModernHook
         $first = Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_FIRST', $idLang, $idShopGroup, $idShop,  0);
         $second = Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_SECOND', $idLang, $idShopGroup, $idShop,  0);
         $third = Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_THIRD', $idLang, $idShopGroup, $idShop,  0);
+        $no = Configuration::get('MSTHEMECONFIG_NO_DISCOUNT_RULE', $idLang, $idShopGroup, $idShop);
 
         $firstRule = new CartRule($first);
         $secondRule = new CartRule($second);
         $thirdRule = new CartRule($third);
+        $noRule = new CartRule($no);
 
         $isElegibleForDiscount = 0;
+        $noDiscountCounterAction = 0;
 
         $currentCartValue = $this->context->cart->getOrderTotal(false, CART::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING);
         $activeMatchingRule = null;
         $activeDiscountRules = [];
         $discountText = [];
-        foreach ([$firstRule, $secondRule, $thirdRule] as $index => $matchingRule){
 
-            if(isset($matchingRule->name[(int)$idLang])){
-                $name = $matchingRule->name[(int)$idLang];
-            } else {
-                $name = '';
+        $cartRules = $this->context->cart->getCartRules();
+        if(count($cartRules) > 0){
+            foreach ($cartRules as $index => $cartRule){
+                if ((int)$cartRule['id_cart_rule'] == (int)$first && $noDiscountCounterAction != 1) {
+                    $isElegibleForDiscount = 1;
+                } elseif ((int)$cartRule['id_cart_rule'] == (int)$second && $noDiscountCounterAction != 1) {
+                    $isElegibleForDiscount = 2;
+                } elseif ((int)$cartRule['id_cart_rule'] == (int)$third && $noDiscountCounterAction != 1) {
+                    $isElegibleForDiscount = 3;
+                }
+
+                if ((int)$cartRule['id_cart_rule'] == (int)$no) {
+                    $isElegibleForDiscount = 0;
+                    $noDiscountCounterAction = 1;
+                }
+
+                $name = $cartRule['name'][(int)$idLang] ?? '';
+
+                $activeDiscountRules[$index] = [
+                    'id_cart_rule' => $cartRule['id_cart_rule'],
+                    'order' => $index,
+                    'name' => $name,
+                    'minimum_amount' => $cartRule['minimum_amount'],
+                    'discount' => $cartRule['reduction_percent'],
+                    'next_discount' => 0
+                ];
+
+                if((float)$currentCartValue < (float)$cartRule['minimum_amount']){
+                    $activeDiscountRules[$index]['next_discount'] = 1;
+                    $discountText[] = (int)$cartRule['reduction_percent'].'% korting vanaf '.(int)$cartRule['minimum_amount'].' euro<br/>';
+                    $isElegibleForDiscount = 1;
+                }
+
+                if((int)$cartRule['reduction_percent'] > (int)$maxReductionPercent){
+                    $maxReductionPercent = $cartRule['reduction_percent'];
+                }
             }
+        } else {
+            $name = $firstRule->name[(int)$idLang] ?? '';
 
-            $activeDiscountRules[$index] = [
-                'id_cart_rule' => $matchingRule->id,
-                'order' => $index,
+            $activeDiscountRules[0] = [
+                'id_cart_rule' => $firstRule->id,
+                'order' => 0,
                 'name' => $name,
-                'minimum_amount' => $matchingRule->minimum_amount,
-                'discount' => $matchingRule->reduction_percent,
+                'minimum_amount' => $firstRule->minimum_amount,
+                'discount' => $firstRule->reduction_percent,
                 'next_discount' => 0
             ];
 
-
-            if((float)$currentCartValue < (float)$matchingRule->minimum_amount){
-                $activeDiscountRules[$index]['next_discount'] = 1;
-                $discountText[] = (int)$matchingRule->reduction_percent.'% korting vanaf '.(int)$matchingRule->minimum_amount.' euro<br/>';
+            if((float)$currentCartValue < (float)$firstRule->minimum_amount){
+                $activeDiscountRules[0]['next_discount'] = 1;
+                $discountText[] = (int)$firstRule->reduction_percent.'% korting vanaf '.(int)$firstRule->minimum_amount.' euro<br/>';
                 $isElegibleForDiscount = 1;
             }
 
-            if((int)$matchingRule->reduction_percent > (int)$maxReductionPercent){
-                $maxReductionPercent = $matchingRule->reduction_percent;
+            if((int)$firstRule->reduction_percent > (int)$maxReductionPercent){
+                $maxReductionPercent = $firstRule->reduction_percent;
             }
         }
-        if($isElegibleForDiscount){
-            $message = 'Ontvang '.implode(' of ',$discountText);
-        } else {
-            $message = 'U heeft de maximale korting van '.(int)$maxReductionPercent.'% al in uw winkelwagen! <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'">Toch graag een aanbod op maat,<br/> neem dan contact met ons op.</a>';
+
+
+        switch ($isElegibleForDiscount){
+            case 1:
+                    $message = 'Ontvang '.implode(' of ',$discountText);
+                break;
+            case 2:
+                    $message = 'U heeft de maximale korting van '.(int)$maxReductionPercent.'% al in uw winkelwagen! <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'">Toch graag een aanbod op maat,<br/> neem dan contact met ons op.</a>';
+                break;
+            case 3:
+                    $message = 'U heeft de maximale korting van '.(int)$maxReductionPercent.'% al in uw winkelwagen! <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'">Toch graag een aanbod op maat,<br/> neem dan contact met ons op.</a>';
+                break;
         }
 
-        $remainingMessage = $this->getRemainingAmountBeforeNextDiscount($activeDiscountRules);
+
+
+        if($noDiscountCounterAction == 1){
+            $message = 'De korting is verwijderd uit uw winkelwagen door de balie medewerker! Klopt dit niet? <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'"><br/> Neem dan contact met ons op.</a>';
+            $remainingMessage = $this->getRemainingAmountBeforeNextDiscount([]);
+        } else {
+            $remainingMessage = $this->getRemainingAmountBeforeNextDiscount($activeDiscountRules);
+        }
 
         return ['rules' => $activeDiscountRules, 'message' => $message.$remainingMessage['msg'], 'order_total' => $remainingMessage['current_order_total']];
     }

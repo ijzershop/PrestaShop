@@ -26,9 +26,9 @@
 
 <div class="card-block cart-summary-totals">
   {block name='cart_summary_tax'}
-      {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION) > 0}
+      {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS) > 0}
             <div class="cart-summary-line summary-total-discount">
-              <span class="label sub">Korting</span><span class="value sub">{Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR')}</span>
+              <span class="label sub">Korting</span><span class="value sub">{Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS), 'EUR')}</span>
             </div>
       {/if}
     {if $cart.subtotals.tax > 0 && $withTax}

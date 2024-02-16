@@ -3,7 +3,7 @@ export default class addToCartAnalyticsPush {
     let dataObject = prestashop.analytics_data;
     dataLayer.push({ecommerce: null});
 
-    // console.log(['add_to_cart', dataObject]);
+    console.log(['add_to_cart', dataObject]);
 
     dataLayer.push({
       event: "add_to_cart",

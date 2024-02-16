@@ -27,10 +27,7 @@ td.koopman_label_button-type.column-label{
   border-radius: 0;
   width: 100%;
   flex-wrap: wrap;
-  margin-right: -.9375rem !important;
-  margin-left: -.9375rem !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important
+  margin: 0 -.9375rem !important;
 }
 
 .cc-koopman label {
@@ -63,86 +60,6 @@ td.koopman_label_button-type.column-label{
   background-size: contain;
   background-repeat: no-repeat;
   vertical-align: middle
-}
-
-.envelope, .envelope:hover {
-  height: 80px;
-  width: 19.5%;
-  border-color: #fff;
-  border-style: solid;
-  border-width: 2px 0;
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #3d57ae;
-  background-image: url(/modules/msthemeconfig/views/templates/img/envelop_koopman.png)
-}
-
-.plaat, .plaat:hover {
-  height: 80px;
-  width: 19.5%;
-  border-color: #fff;
-  border-style: solid;
-  border-width: 2px 0px 2px 2px;
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #3d57ae;
-  background-image: url(/modules/msthemeconfig/views/templates/img/plaat_koopman.png)
-}
-
-.meter-1, .meter-1:hover {
-  height: 80px;
-  width: 19.5%;
-  border-color: #fff;
-  border-style: solid;
-  border-width: 2px 0px 2px 0;
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #3d57ae;
-  background-image: url(/modules/msthemeconfig/views/templates/img/1m_koopman.png)
-}
-
-.meter-larger-2, .meter-larger-2:hover {
-  height: 80px;
-  width: 19.5%;
-  border-color: #fff;
-  border-style: solid;
-  border-width: 2px 0px 2px 1px;
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #3d57ae;
-  background-image: url(/modules/msthemeconfig/views/templates/img/2m+35_koopman.png)
-}
-
-.meter-smaller-2, .meter-smaller-2:hover {
-  height: 80px;
-  width: 19.5%;
-  border-color: #fff;
-  border-style: solid;
-  border-width: 2px 0;
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #3d57ae;
-  background-image: url(/modules/msthemeconfig/views/templates/img/2m-35_koopman.png)
 }
 
 .toegevoegd {
@@ -178,6 +95,7 @@ td.koopman_label_button-type.column-label{
   color: #fff
 }
 
+
 .reverse {
   transform: rotate(180deg);
 }
@@ -201,3 +119,57 @@ td.koopman_label_button-type.column-label{
   to   { transform: rotate(360deg); }
 }
 
+.koopman_label_button_2-type .text-button-large{
+  font-size: 1.6rem!important;
+  background-color: #028102!important;
+}
+.koopman_label_button_2-type .input-lg{
+  font-size: 1.6rem;
+}
+.koopman_label_button_2-type .pagination-lg .page-link {
+  padding: .75rem 1.8rem;
+  font-size: 1rem;
+  line-height: 1.8;
+  background-color: #3d57ae!important;
+}
+.koopman_label_button_2-type .pallet_selection_box button{
+  font-size: 1.2rem !important;
+  width: 70px;
+  height: 70px;
+  margin: 5px 0;
+  background-color: #3d57ae!important;
+  border: 1px solid #3d57ae;
+}
+.koopman_label_button_2-type .pagination-lg .page-link:hover,
+.koopman_label_button_2-type .pallet_selection_box button:hover,
+.koopman_label_button_2-type .pagination-lg .page-link[type="button"]::-moz-focus-inner,
+.koopman_label_button_2-type .pallet_selection_box button[type="button"]::-moz-focus-inner,
+.koopman_label_button_2-type .pallet_selection_box button:not([disabled]):not(.disabled).active,
+.koopman_label_button_2-type .pagination-lg .page-link:not([disabled]):not(.disabled):active {
+  background-color: #7a9ffc!important;
+  border-color: #7a9ffc!important;
+  border-width: 2px!important;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.koopman_label_button_2-type .pallet_selection_box{
+  display: none;
+  text-align: center;
+  position: absolute;
+  bottom:100px;
+  right:-10px;
+  width: 100px;
+  height: 245px;
+  background-color: #ffffff;
+  border: 3px dashed #3d57ae;
+  z-index: 2;
+  border-radius: 5px;
+}
+.koopman_label_button_2-type .input-group .input-group-prepend, .koopman_label_button_2-type .input-group .input-group-append{
+  width: 90px;
+}
+.koopman_label_button_2-type .package_size_select{
+  text-align: center;
+  text-align-last: center;
+}

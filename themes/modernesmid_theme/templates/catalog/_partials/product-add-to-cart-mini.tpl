@@ -27,8 +27,7 @@
     {block name='product_quantity'}
       <div class="product-quantity clearfix">
         <div class="qty col-12 col-sm-6 float-left p-0 pr-sm-1 pl-sm-2">
-            {if !$product.add_to_cart_url || !$product.available_for_order}
-
+            {if !Product::productIsOrderable($product.id_product)}
             <span class="help-text text-warning col-12 p-0">
                       <span class="d-inline-block w-100  mb-3 mb-md-0" data-toggle="popover" data-title="Geen vooraad" data-content="Disabled popover">
                         <button class="badge badge-danger w-100 text-wrap border-0" style="min-height: 2.67em;pointer-events: none;font-size: 0.9rem;font-weight: inherit;" type="button" disabled>
@@ -36,10 +35,6 @@
                         </button>
                       </span>
                     </span>
-
-                  {*            <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>*}
-
-
             {else}
           <input
             data-product-id="{$product.id_product}"
@@ -47,9 +42,9 @@
             name="qty"
             id="quantity_wanted_{$product.id_product}"
             value="1"
-            class="form-control mb-3 mb-md-0 input-group {if !$product.available_for_order}disabled{/if}"
+            class="form-control mb-3 mb-md-0 input-group {if !Product::productIsOrderable($product.id_product)}disabled{/if}"
             min="{$product.minimal_quantity}"
-            {if  $product.available_for_order && ($product.low_stock_threshold >= $product.quantity && $product.out_of_stock == 0)}max="{$product.quantity}"{/if}
+            {if ($product.low_stock_threshold >= $product.quantity) && ($product.out_of_stock == 0)}max="{$product.quantity}"{/if}
             aria-label="{l s='Quantity' d='Shop.Theme.Actions'}"
             style="{if !$product.add_to_cart_url}pointer-events:none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') &&  (int)$product.quantity <= 0 && (int)$product.out_of_stock == 0}pointer-events:none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') && (int)$product.quantity != 0 && (int)$product.quantity < 100 && (int)$product.quantity < 0 && (int)$product.out_of_stock == 0}pointer-events:none;{/if}"
           >
@@ -60,7 +55,7 @@
           <a alt="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" href="{$link->getPageLink('cart')}?token={$static_token}"
             data-product-id="{$product.id_product}"
             data-product-customization="{json_encode($product.id_customization)}"
-            class="btn btn-success add-to-cart w-100 text-nowrap {if !$product.add_to_cart_url || !$product.available_for_order || ($product.out_of_stock == 0 && $product.quantity <= 0)}disabled{/if}"
+            class="btn btn-success add-to-cart w-100 text-nowrap {if !Product::productIsOrderable($product.id_product)}disabled{/if}"
             data-button-action="add-to-cart"
           ><i data-product-id="{$product.id_product}" class="fasl fa-cart-shopping shopping-cart"></i></a>
         </div>

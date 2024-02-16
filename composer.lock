@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "924d622dd9ad5cf3ee8ff7d2e647fc69",
+    "content-hash": "e40cbcc8cd7c765a9eed40a0d1b78b48",
     "packages": [
         {
             "name": "api-platform/core",
@@ -4615,6 +4615,44 @@
                 "source": "https://github.com/paragonie/random_compat"
             },
             "time": "2020-10-15T08:29:30+00:00"
+        },
+        {
+            "name": "pcloud/pcloud-php-sdk",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pCloud/pcloud-sdk-php.git",
+                "reference": "61fb9b98ca2db11ead4423ef16ce0ac5ea16225b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pCloud/pcloud-sdk-php/zipball/61fb9b98ca2db11ead4423ef16ce0ac5ea16225b",
+                "reference": "61fb9b98ca2db11ead4423ef16ce0ac5ea16225b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "9.5.11"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "pCloud\\Sdk\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "pCloud SDK for PHP",
+            "support": {
+                "issues": "https://github.com/pCloud/pcloud-sdk-php/issues",
+                "source": "https://github.com/pCloud/pcloud-sdk-php/tree/v3"
+            },
+            "time": "2022-10-06T13:02:11+00:00"
         },
         {
             "name": "pear/archive_tar",
@@ -9789,16 +9827,16 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.27.0",
+            "version": "v1.29.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936"
+                "reference": "87b68208d5c1188808dd7839ee1e6c8ec3b02f1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936",
-                "reference": "7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/87b68208d5c1188808dd7839ee1e6c8ec3b02f1b",
+                "reference": "87b68208d5c1188808dd7839ee1e6c8ec3b02f1b",
                 "shasum": ""
             },
             "require": {
@@ -9806,9 +9844,6 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-main": "1.27-dev"
-                },
                 "thanks": {
                     "name": "symfony/polyfill",
                     "url": "https://github.com/symfony/polyfill"
@@ -9852,7 +9887,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.27.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.29.0"
             },
             "funding": [
                 {
@@ -9868,7 +9903,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-11-03T14:55:06+00:00"
+            "time": "2024-01-29T20:11:03+00:00"
         },
         {
             "name": "symfony/polyfill-php81",

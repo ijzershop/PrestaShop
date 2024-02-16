@@ -153,34 +153,8 @@
                   </td>
                 {/if}
             </tr>
-              {if !Product::productIsOrderable($product.id_product)}
-                <tr class="d-block d-md-none">
-                  <td>
-                    <div class="w-100">
-
-                        {*                    Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden*}
-                      <span class="help-text text-warning">
-                      <span class="d-inline-block" data-toggle="popover" data-content="Disabled popover">
-                        <button class="btn btn-primary" style="pointer-events: none;" type="button" disabled>Geen Vooraad</button>
-                      </span>
-                    </span>
-                    </div>
-                  </td>
-                </tr>
-              {/if}
           </table>
         </div>
-          {if !Product::productIsOrderable($product.id_product)}
-            <div class="col-12 d-none d-md-block">
-              <div class="w-100">
-              <span class="help-text text-warning">
-                      <span class="d-inline-block" data-toggle="popover" data-content="Disabled popover">
-                        <button class="btn btn-primary" style="pointer-events: none;" type="button" disabled>Geen Vooraad</button>
-                      </span>
-              </span>
-              </div>
-            </div>
-          {/if}
         <div class="product_variations col-8">
           <div class="highlighted-informations{if !$product.main_variants} no-variants{/if} hidden-sm-down">
               {block name='product_variants'}

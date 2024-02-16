@@ -35,9 +35,9 @@
             data-product-id="{$product.id_product}"
             data-product-customization="{$product.id_customization}"
             value="{$product.quantity_wanted}"
-            class="form-control {if !$product.available_for_order}disabled{/if}"
+            class="form-control {if !Product::productIsOrderable($product.id_product)}disabled{/if}"
             min="{$product.minimal_quantity}"
-            {if  $product.available_for_order && ($product.low_stock_threshold >= $product.quantity && $product.out_of_stock == 0)}max="{$product.quantity}"{/if}
+            {if  ($product.low_stock_threshold >= $product.quantity) && ($product.out_of_stock == 0)}max="{$product.quantity}"{/if}
             aria-label="{l s='Quantity' d='Shop.Theme.Actions'}"
             style="{if !$product.add_to_cart_url}pointer-events:none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') &&  (int)$product.quantity <= 0 && (int)$product.out_of_stock == 0}pointer-events:none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') && (int)$product.quantity != 0 && (int)$product.quantity < 100 && (int)$product.quantity < 0 && (int)$product.out_of_stock == 0}pointer-events:none;{/if}"
           >

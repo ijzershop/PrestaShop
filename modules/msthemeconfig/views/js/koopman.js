@@ -372,4 +372,90 @@ $(function () {
 
   });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//   Nieuwe opzet label print kolom
+
+  //   minus button
+  $(document).on('click', '[name="package_size_minus"]', function(){
+      let orderId = $(this).attr('data-row-id');
+      let selectBox = $('[name="package_size"][data-row-id="'+orderId+'"]')[0];
+      let index = selectBox.selectedIndex;
+      if(index > 0){
+        selectBox.selectedIndex = index-1;
+      }
+  });
+
+  //   plus button
+  $(document).on('click', '[name="package_size_plus"]', function(){
+    let orderId = $(this).attr('data-row-id');
+    let selectBox = $('[name="package_size"][data-row-id="'+orderId+'"]')[0];
+    let index = selectBox.selectedIndex;
+    if(index < 20){
+      selectBox.selectedIndex = index+1;
+    }
+  });
+
+  //   pallet selectie button
+  $(document).on('click', '[name="package_total_pallet"]', function(){
+    let orderId = $(this).attr('data-row-id');
+      $('.pallet_selection_box[data-row-id="'+orderId+'"]').toggle();
+  });
+
+  $(document).on('click', '.collie-selection',function (e) {
+    let $clickedLabel = $(this);
+    $clickedLabel.toggleClass('temp_disabled', "");
+    let $tr = $clickedLabel.closest('TR');
+    $tr.toggleClass('temp_disabled_row', "");
+
+    let orderId = $clickedLabel.attr('data-row-id');
+    let weightOption = $('.package_size_select[data-row-id="'+orderId+'"]').val();
+    let orderWeight = $clickedLabel.attr('data-order-weight');
+    let chosenCollies = $clickedLabel.attr('data-collies');
+    let collieType = $clickedLabel.attr('data-collie-type');
+
+    $.ajax({
+      url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=print-label&id_order=' + orderId +
+        '&weight=' + orderWeight +
+        '&weight_option=' + weightOption +
+        '&collies=' + chosenCollies +
+        '&collie_type=' + collieType +
+        '&token=' + token,
+      type: 'GET'
+    }).done(function (data) {
+      if(data === 'printed'){
+        location.reload();
+      } else {
+        $('#updateAddressModal .modal-body').html(data);
+        $('#updateAddressModal').modal('show');
+      }
+    });
+  });
+
+
+
+
+
+
+
+
+
+
 });

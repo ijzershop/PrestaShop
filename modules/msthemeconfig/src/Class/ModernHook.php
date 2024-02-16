@@ -2061,7 +2061,6 @@ class ModernHook
      * @return mixed
      */
     private function generateKoopmanLabelButtons($object){
-
         $shippingCarrier = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop);
         $pickupCarrier = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop);
         $addedCarrier = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_ADDEDORDER_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop);
@@ -2289,11 +2288,31 @@ class ModernHook
         $searchQueryBuilder->addSelect('o.added_to_order as added_to_order');
         $searchQueryBuilder->addSelect('cu.email as email');
         $searchQueryBuilder->addSelect('a.postcode as postcode');
+        $searchQueryBuilder->addSelect('SUM(od.product_weight * od.product_quantity) as total_order_weight');
+        $searchQueryBuilder->addSelect('GROUP_CONCAT(od.product_weight) as product_weight');
+        $searchQueryBuilder->addSelect('GROUP_CONCAT(od.product_quantity) as product_quantity');
+        $searchQueryBuilder->addSelect('oc.tracking_number as shipping_number');
+        $searchQueryBuilder->leftJoin(
+            'o',
+            '`' . pSQL(_DB_PREFIX_) . 'order_detail`',
+            'od',
+            'o.`id_order` = od.`id_order`'
+        );
+
+        $searchQueryBuilder->leftJoin(
+            'o',
+            '`' . pSQL(_DB_PREFIX_) . 'order_carrier`',
+            'oc',
+            'o.`id_order` = oc.`id_order`'
+        );
+
+        $searchQueryBuilder->groupBy('o.id_order');
 
         $countQueryBuilder = $params['count_query_builder'];
         $countQueryBuilder->addSelect('o.added_to_order as added_to_order');
         $countQueryBuilder->addSelect('cu.email as email');
         $countQueryBuilder->addSelect('a.postcode as postcode');
+
 
         $searchCriteria = $params['search_criteria'];
 

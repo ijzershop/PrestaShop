@@ -8,6 +8,7 @@ require_once _PS_CORE_DIR_ . '/init.php';
 
 
 use MsThemeConfig\Class\ExportOrders;
+use MsThemeConfig\Class\ExportOrdersMultipleCollies;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use Symfony\Component\HttpFoundation\Response;
@@ -116,7 +117,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         }
 
 
-        if ($_POST['action'] == 'add_data_to_google_check_csv') {
+        if (isset($_POST['action']) && $_POST['action'] == 'add_data_to_google_check_csv') {
             return $this->_addGoogleDataToCsvForTesting();
         }
 
@@ -1351,10 +1352,12 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         }
 
         $id_order = Tools::getValue('id_order');
-        $type = Tools::getValue('type');
+        $weight_option = Tools::getValue('weight_option');
         $weight = Tools::getValue('weight');
+        $collies = Tools::getValue('collies');
+        $collieType = Tools::getValue('collie_type');
 
-        $export = new ExportOrders($id_order, $weight, $type);
+        $export = new ExportOrdersMultipleCollies($id_order, $weight, $weight_option, $collies, $collieType);
         $export->export();
 
         if($export->redirect){
@@ -1368,8 +1371,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 $history->changeIdOrderState((int)$readyForShippingStatus, (int)$id_order);
                 $history->add();
             }
-
-            $this->makeApiCallToDashboard('set-label-printed', $id_order, Order::getUniqReferenceOf($id_order));
             die('printed');
         } else {
             die($export->output);
@@ -1382,7 +1383,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
      */
     private function _runKoopmanDayClosing()
     {
-        $export = new ExportOrders(0, 0, 0);
+        $export = new ExportOrdersMultipleCollies(0);
         $export->dagafsluiting();
 
         die('done');

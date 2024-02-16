@@ -85,6 +85,7 @@ public $shipping_number;
          * End add relation product language
          */
         $sql .= ' WHERE od.`id_order` = %d';
+        $sql .= ' GROUP BY od.`id_order_detail`';
         $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id);
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);

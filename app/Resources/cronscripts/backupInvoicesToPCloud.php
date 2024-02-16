@@ -56,10 +56,10 @@ class BackupInvoicesToPCloud
 
         $this->serverFolder = str_replace('private_html',
             'public_html',
-            $_SERVER['DOCUMENT_ROOT'] . 'upload' . DIRECTORY_SEPARATOR . 'facturen' . DIRECTORY_SEPARATOR);
+            $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . 'facturen' . DIRECTORY_SEPARATOR);
         $this->serverFolderDownloadTemp = str_replace('private_html',
             'public_html',
-            $_SERVER['DOCUMENT_ROOT'] . 'upload' . DIRECTORY_SEPARATOR . 'facturendownloads' . DIRECTORY_SEPARATOR);
+            $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . 'facturendownloads' . DIRECTORY_SEPARATOR);
 
         $this->invoiceStatusses = ['4', '5', '6', '32', '31', '18', '19'];
         $this->creditStatusses = ['7', '14', '45'];
@@ -119,7 +119,7 @@ class BackupInvoicesToPCloud
                     sleep(2);
                 }
             } catch (PrestaShopDatabaseException|PrestaShopException $exception) {
-                $this->addToLogFile(['location' => 'runBackup:123', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
+                $this->addToLogFile(['location' => 'runBackup:122', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
                 echo 'No pCloud folders available or failed to generate files';
             }
         }
@@ -177,7 +177,7 @@ class BackupInvoicesToPCloud
             }
             return $searchedFolder;
         } catch (Exception $exception) {
-            $this->addToLogFile(['location' => 'findOrCreateFolderYear:182', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
+            $this->addToLogFile(['location' => 'findOrCreateFolderYear:180', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
     }
@@ -228,7 +228,7 @@ class BackupInvoicesToPCloud
             }
             return $searchedFolder;
         } catch (Exception $exception) {
-            $this->addToLogFile(['location' => 'findOrCreateFolderMonth:236', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
+            $this->addToLogFile(['location' => 'findOrCreateFolderMonth:231', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
     }
@@ -274,7 +274,7 @@ class BackupInvoicesToPCloud
                 return $this->archivePCloudFolder($searchedMonthFolder, $searchedYearFolder);
             }
         } catch (Exception $exception) {
-            $this->addToLogFile(['location' => 'archiveFolder:285', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
+            $this->addToLogFile(['location' => 'archiveFolder:277', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
     }
@@ -314,7 +314,7 @@ class BackupInvoicesToPCloud
             }
             return ['success' => true, 'file' => $zipFileId, 'time' => date('d-m-Y H:i:s')];
         } catch (Exception $exception) {
-            $this->addToLogFile(['location' => 'archivePCloudFolderLocally:327', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
+            $this->addToLogFile(['location' => 'archivePCloudFolderLocally:317', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
     }
@@ -343,7 +343,7 @@ class BackupInvoicesToPCloud
             }
             return ['zip_name' => $filename, 'status' => $zip->getStatusString()];
         } catch (Exception $exception) {
-            $this->addToLogFile(['location' => 'buildZip:356', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
+            $this->addToLogFile(['location' => 'buildZip:346', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
     }
@@ -365,7 +365,7 @@ class BackupInvoicesToPCloud
             }
             return $data;
         } catch (Exception $exception) {
-            $this->addToLogFile(['location' => 'archivePCloudFolder:379', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
+            $this->addToLogFile(['location' => 'archivePCloudFolder:368', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
     }
@@ -442,7 +442,7 @@ class BackupInvoicesToPCloud
                 sleep($this->sleepTime);
             }
         } catch (Exception $exception) {
-            $this->addToLogFile(['location' => 'createOrderSlips:518', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
+            $this->addToLogFile(['location' => 'createOrderSlips:445', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
         return ['success' => true, 'error' => ''];
@@ -468,7 +468,7 @@ class BackupInvoicesToPCloud
             $price = round((float)$object->total_paid_tax_incl, 2);
             return preg_replace(['/\s+/'], [''], $type . '-' . str_replace('-', '', $order->reference) . '-' . $customer_email . '-' . $payment . '-' . $price);
         } catch (PrestaShopException $exception) {
-            $this->addToLogFile(['location' => 'generateFileName:545', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
+            $this->addToLogFile(['location' => 'generateFileName:471', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return '';
         }
     }
@@ -488,7 +488,7 @@ class BackupInvoicesToPCloud
             file_put_contents($this->serverFolder . $fileName . '.pdf', $delivery_slip_pdf);
             return ['success' => true, 'error' => ''];
         } catch (PrestaShopException|Exception $exception) {
-            $this->addToLogFile(['location' => 'generatePdfFile:565', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
+            $this->addToLogFile(['location' => 'generatePdfFile:491', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
     }
@@ -523,7 +523,7 @@ class BackupInvoicesToPCloud
             }
             return $successFilesList;
         } catch (Exception $exception) {
-            $this->addToLogFile(['location' => 'uploadFilesToPCloud:416', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
+            $this->addToLogFile(['location' => 'uploadFilesToPCloud:526', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
     }
@@ -545,7 +545,7 @@ class BackupInvoicesToPCloud
                     $this->errorRecords[] = ['file' => $meta, 'time' => date('d-m-Y H:i:s')];
                 }
             } catch (Exception $exception) {
-                $this->addToLogFile(['location' => 'cleanServerFolder:438', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
+                $this->addToLogFile(['location' => 'cleanServerFolder:548', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
 
             }
         }

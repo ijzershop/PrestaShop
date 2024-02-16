@@ -19,7 +19,7 @@ final class LabelButtonColumn extends AbstractColumn
      */
     public function getType(): string
     {
-        return 'koopman_label_button';
+        return 'koopman_label_button_2';
     }
 
     /**

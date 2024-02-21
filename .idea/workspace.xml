@@ -580,7 +580,7 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.webide.settings.project.settings.php&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\wampserver\\www\\ijzershop8.local\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib&quot;,
     &quot;two.files.diff.last.used.file&quot;: &quot;C:/wamp64/www/ijzershop8.local/admin-dev/themes/new-theme/js/components/tinymce-editor.js&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
@@ -1314,7 +1314,11 @@
       <workItem from="1707900481912" duration="17894000" />
       <workItem from="1707978759960" duration="15094000" />
       <workItem from="1708005953894" duration="5656000" />
-      <workItem from="1708061191733" duration="18675000" />
+      <workItem from="1708061191733" duration="23084000" />
+      <workItem from="1708090239854" duration="7094000" />
+      <workItem from="1708410091733" duration="8750000" />
+      <workItem from="1708495878644" duration="44000" />
+      <workItem from="1708495936255" duration="3563000" />
     </task>
     <servers />
   </component>
@@ -2146,7 +2150,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/modules/msthemeconfig/src/Class/ModernHook.php</url>
-          <line>2390</line>
+          <line>2409</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -2324,24 +2328,6 @@
           <option name="timeStamp" value="67" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php-line-method">
-          <url>file://$PROJECT_DIR$/override/controllers/front/CartController.php</url>
-          <line>31</line>
-          <properties>
-            <option name="className" value="\CartController" />
-            <option name="methodName" value="updateCart" />
-          </properties>
-          <option name="timeStamp" value="68" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php-line-method">
-          <url>file://$PROJECT_DIR$/override/controllers/front/CartController.php</url>
-          <line>88</line>
-          <properties>
-            <option name="className" value="\CartController" />
-            <option name="methodName" value="processChangeProductInCart" />
-          </properties>
-          <option name="timeStamp" value="69" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php-line-method">
           <url>file://$PROJECT_DIR$/modules/singlestockattributespoco/modified_1.7.3/override/classes/Cart.php</url>
           <line>78</line>
           <properties>
@@ -2356,7 +2342,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/modules/supercheckout/views/js/front/supercheckout.js</url>
-          <line>4972</line>
+          <line>4975</line>
           <option name="timeStamp" value="54" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -2366,7 +2352,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/themes/modernesmid_theme/_dev/js/theme.js</url>
-          <line>1722</line>
+          <line>1727</line>
           <option name="timeStamp" value="72" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">

@@ -2468,6 +2468,9 @@ function updateQty(element, action, qty, is_step_action) {
           }
           loadCarriers();
         }
+
+        prestashop.emit('addToCartAnalyticsPush', jsonData.added_product);
+        console.log(['checkout', 'in supercheckout', jsonData]);
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
         errors = sprintf(ajaxRequestFailedMsg, XMLHttpRequest, textStatus);
@@ -4057,7 +4060,7 @@ function refresh() {
           // }
         }).fail(function (resp) {
           prestashop.emit('handleError', {
-            eventType: 'updateShoppingCart',
+            eventType: 'updateCart',
             resp: resp
           });
         });

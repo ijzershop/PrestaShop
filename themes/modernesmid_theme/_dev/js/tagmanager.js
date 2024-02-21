@@ -9,7 +9,6 @@ import purchaseAnalyticsPush from "./tagmanager/purchase";
 import addToCartAnalyticsPush from "./tagmanager/add-cart";
 
 $(document).ready(function () {
-
     //  wanneer iemand een product bekijkt
     const bodyElemIdProduct = $("body#product");
     if (bodyElemIdProduct.length > 0 && bodyElemIdProduct.attr('analytics_send') !== '1') {
@@ -56,22 +55,19 @@ $(document).ready(function () {
     removeFromCartAnalyticsPush.init();
   });
 
-  // wanneer iemand een product verwijderd uit de winkelwagen doormiddel van input op nul plaatsen
-  $(document).on('keyup', '.js-cart-line-product-quantity',function(e) {
-    e.stopImmediatePropagation();
-    let elem = $(this);
-    if(elem.val() <= 0 || elem.val() < elem.attr('data-current-value')){
-      removeFromCartAnalyticsPush.init();
-    }
-    if(elem.val() > elem.attr('data-current-value')){
-      addToCartAnalyticsPush.init();
-    }
-  });
+  addToCartAnalyticsPush.init();
 
-  // wanneer iemand een product toevoegde aan de winkelwagen
-  $(document).on('mouseup', '.add-to-cart',function(e) {
-    e.stopImmediatePropagation();
-    addToCartAnalyticsPush.init();
-  });
+  if (typeof prestashop !== 'undefined') {
+    prestashop.on('addToCartAnalyticsPush',
+      function (data) {
+        console.log(data);
+        if(data.op === 'up'){
+          addToCartAnalyticsPush.init(data);
+        }
+        if(data.op === 'down'){
+          removeFromCartAnalyticsPush.init(data);
+        }
+      });
+  }
 })
 

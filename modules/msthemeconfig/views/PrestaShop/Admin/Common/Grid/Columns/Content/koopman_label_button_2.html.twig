@@ -12,7 +12,7 @@
         {% else %}
           <i class="koopman-current-status-badge-label"></i> | <b> {{ record.osname }} </b>
         {% endif %}
-        <span class="calculated_weight float-right {% if record.color is not empty and record.color not same as '#ffffff' %} text-white {% endif %}">
+        <span class="calculated_weight float-right {% if record.color is not empty %} text-white {% endif %}">
           {{ record.total_order_weight|number_format }}<sub>Kg</sub>
         </span>
       </div>

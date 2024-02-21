@@ -173,3 +173,9 @@ td.koopman_label_button-type.column-label{
   text-align: center;
   text-align-last: center;
 }
+
+.calculated_weight{
+  font-size: 1.2rem;
+  position: absolute;
+  right: 20px;
+}

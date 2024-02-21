@@ -237,6 +237,16 @@
 
       </footer>
     {/if}
+
+      <div class="contactform-user-code-input">
+        <label class="text-dark">{l s='User Code' d='Modules.Contactform.Shop'}</label>
+        <input class="form-control mb-2" type="text" name="gebruikers_informatie_nummer" value="" tabindex="-1" autocomplete="off"/>
+        <div class="invalid-feedback">
+          Vul a.u.b. uw postcode in dan kunnen wij u beter helpen.
+        </div>
+      </div>
+
+
   </form>
   </div>
   </div>

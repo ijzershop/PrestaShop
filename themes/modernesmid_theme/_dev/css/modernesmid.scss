@@ -2241,3 +2241,10 @@ main {
 #cookiesModal input.cookie-input:checked:not(:disabled) + div.cookie-toggle {
   background-color: var(--primary)!important;
 }
+
+
+//contactform-user-code-input
+.contactform-user-code-input{
+  position: absolute;
+  left:-50000px
+}

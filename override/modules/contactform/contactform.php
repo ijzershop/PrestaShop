@@ -19,6 +19,10 @@
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+/**
+ *
+ */
 class ContactformOverride extends Contactform {
     public function sendMessage()
     {
@@ -38,8 +42,16 @@ class ContactformOverride extends Contactform {
             $decode = json_decode($response, true);
             if (!$decode['success'] == true) {
                 $this->context->controller->errors[] = $this->trans('Formulaire invalide.', array(), 'Modules.Contactform.Shop');
-            }else{
-                parent::sendMessage();
+            } else {
+                if(!empty(Tools::getValue('gebruikers_informatie_nummer'))){
+                    $this->context->controller->success[] = $this->trans(
+                        'Your message has been successfully sent to our team.',
+                        [],
+                        'Modules.Contactform.Shop'
+                    );
+                } else {
+                    parent::sendMessage();
+                }
             }
         }else{
             $this->context->controller->errors[] = $this->trans('Erreur de traitement.', array(), 'Modules.Contactform.Shop');

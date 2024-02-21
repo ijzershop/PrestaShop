@@ -1,8 +1,22 @@
 {# modules/msthemeconfig/views/PrestaShop/Admin/Common/Grid/Columns/Content/koopman_label_button_2.html.twig #}
 <div class="col-12" style="min-width: 500px;">
-  <div class="row">
-    <div class="col-5">Zending Nummer(s)</div>
-    <div class="col-7">{{ record.shipping_number }}</div>
+  <div class="text-center">
+    <div class="w-100">
+      <div class="badge badge-important koopman-current-status-badge status_{{ record.current_state }}" style="background-color: {{ record.color }};">
+        {% if record.carrier is same as column.options.stateCarrier.shipping %}
+          <i class="koopman-current-status-badge-label">{{ column.options.stateCarrier.shipping_label }}</i> | <b> {{ record.osname }} </b>
+        {% elseif record.carrier is same as column.options.stateCarrier.pickup %}
+          <i class="koopman-current-status-badge-label">{{ column.options.stateCarrier.pickup_label }}</i> | <b> {{ record.osname }} </b>
+        {% elseif record.carrier is same as column.options.stateCarrier.added %}
+          <i class="koopman-current-status-badge-label">{{ column.options.stateCarrier.added_label }}</i> | <b> {{ record.osname }} </b>
+        {% else %}
+          <i class="koopman-current-status-badge-label"></i> | <b> {{ record.osname }} </b>
+        {% endif %}
+      </div>
+    </div>
+  <div class="row  bg-warning text-white">
+    <div class="col-4 text-left">Zending Nummer(s)</div>
+    <div class="col-8">{{ record.shipping_number }}</div>
   </div>
 <div class="row">
   <div class="input-group">
@@ -83,5 +97,73 @@
       </ul>
   </div>
 </div>
+  <div class="row">
+    <div class="col-6 p-0">
+      {#     Pickup Carrier #}
+      {% if record.carrier is same as column.options.stateCarrier.pickup %}
+        {#  Afgehaald State  #}
+        {% if record.current_state is not same as column.options.stateType.pickup %}
+          {#  Af te halen State  #}
+          <div class="cc-koopman aftehalen-btn btn" data-order="{{ record.id_order }}" title="Af te halen">
+            <input id="aftehalen_{{ record.id_order }}" type="radio" name="af-halen-pakket" value="aftehalen"/>
+            <label class="type-cc w-100 aftehalen" for="aftehalen_{{ record.id_order }}">Klaar voor Afhalen</label>
+          </div>
+        {% else %}
+          <div class="cc-koopman  afgehaald-btn btn" data-order="{{ record.id_order }}" title="Afgehaald">
+            <input id="afgehaald_{{ record.id_order }}" type="radio" name="afgehaald-pakket" value="afgehaald"/>
+            <label class="type-cc w-100 afgehaald" for="afgehaald_{{ record.id_order }}">Opgehaald</label>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {% if record.carrier is same as column.options.stateCarrier.added %}
+        {#  Toevoegen State  #}
+        {% if record.current_state not in column.options.stateType.added %}
+          <div class="cc-koopman toegevoegd-btn btn" data-order="{{ record.id_order }}" title="Toegevoegd">
+            <input id="toegevoegd_{{ record.id_order }}" type="radio" name="toegevoegd-aan-pakket" value="toegevoegd"/>
+            <label class="type-cc w-100 toegevoegd" for="toegevoegd_{{ record.id_order }}">Toegevoegd</label>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+    <div class="col-6 p-0">
+      {#  Backorder Waiting State  #}
+      {% if record.current_state is not same as column.options.stateType.waiting %}
+        <div class="cc-koopman backorder-btn btn btn-warning"
+             data-order="{{ record.id_order }}" title="Status wijzigen naar achtend op vooraad">
+          <input id="backorder_{{ record.id_order }}" type="radio" name="backorder-pakket" value="backorder"/>
+          <label class="type-cc backorder" for="backorder_{{ record.id_order }}">
+            Voorraad = Op
+          </label>
+        </div>
+      {% endif %}
+
+      {#  Send to Workshop State  #}
+      {% if record.current_state is not same as column.options.stateType.workshop %}
+        <div data-toggle="modal" data-target="#trelloModal" class="cc-koopman workshop-btn btn btn-success"
+             data-order="{{ record.id_order }}" title="Status wijzigen naar werkplaats">
+          <input id="workshop_{{ record.id_order }}" type="radio" name="workshop-pakket" value="workshop"/>
+          <label class="type-cc workshop" for="workshop_{{ record.id_order }}">
+            Werkplaats klus
+          </label>
+        </div>
+      {% endif %}
+
+
+      {#  Being prepared State  #}
+      {% if record.current_state is not same as column.options.stateType.shipping %}
+        <div class="cc-koopman beingprepared-btn btn btn-warning"
+             data-order="{{ record.id_order }}" title="Status wijzigen naar word voorbereid">
+          <input id="beingprepared_{{ record.id_order }}" type="radio" name="beingprepared-pakket" value="beingprepared"/>
+          <label class="type-cc beingprepared" for="beingprepared_{{ record.id_order }}">
+            Voorbereiden
+          </label>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
 </div>
 

@@ -13,28 +13,7 @@
       {% endif %}
     </div>
   </div>
-  <div class="row">
-    {#     Shipping Carrier#}
-    {% if record.carrier is same as column.options.stateCarrier.shipping or record.carrier is same as column.options.stateCarrier.added %}
-      <div class="cc-koopman koopman w-100" title="Koopman label afdrukken">
 
-        <input id="envelope_{{ record.id_order }}" type="radio" data-id-order="{{ record.id_order }}" name="koopman-package" value="envelope"/>
-        <label class="type-cc btn btn-primary envelope float-left" for="envelope_{{ record.id_order }}" style="border-left:0px;"></label>
-
-        <input id="plaat_{{ record.id_order }}" type="radio" data-id-order="{{ record.id_order }}" name="koopman-package" value="plaat"/>
-        <label class="type-cc btn btn-primary plaat" for="plaat_{{ record.id_order }}"></label>
-
-        <input id="meter-1_{{ record.id_order }}" type="radio" data-id-order="{{ record.id_order }}" name="koopman-package" value="1-meter"/>
-        <label class="type-cc btn btn-primary meter-1" for="meter-1_{{ record.id_order }}"></label>
-
-        <input id="meter-smaller-2_{{ record.id_order }}" type="radio" data-id-order="{{ record.id_order }}" name="koopman-package" value="2-meter-smaller"/>
-        <label class="type-cc btn btn-primary meter-smaller-2" for="meter-smaller-2_{{ record.id_order }}"></label>
-
-        <input id="meter-larger-2_{{ record.id_order }}" type="radio" data-id-order="{{ record.id_order }}" name="koopman-package" value="2-meter-larger"/>
-        <label class="type-cc btn btn-primary meter-larger-2 float-right" for="meter-larger-2_{{ record.id_order }}" style="border-right:0px;"></label>
-      </div>
-  {% endif %}
-  </div>
   <div class="row">
     <div class="col-6 p-0">
       {#     Pickup Carrier #}

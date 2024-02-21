@@ -26,8 +26,38 @@ class CartController extends CartControllerCore
             ]);
             $this->setTemplate('checkout/cart-empty');
         }
+
         parent::initContent();
     }
+
+    public function addUpdatedCartProductToSession($idProduct=null, $idProductAttr=null, $postType='update'){
+        if($idProduct){
+            $product = new Product($idProduct, true, $this->context->cookie->id_lang);
+            $product_categories = $product->getParentCategories($this->context->cookie->id_lang);
+            if(count($product_categories) >= 2){
+                $cat1 = $product_categories[count($product_categories)-2];
+            }
+
+            if(count($product_categories) >= 3){
+                $cat2 = $product_categories[count($product_categories)-3];
+            }
+
+            $addedProduct  =  [
+                'currency' => 'EUR',
+                'amount_tax_excl' => $product->price,
+                'id_product' => $product->id,
+                'name' => $product->name,
+                'discount' => $product->getPrice(true, null, 6, null, true, false, 1),
+                'category_parent' => $cat2['name'],
+                'category' => $cat1['name'],
+                'price_before_discount' => $product->getPrice(false, null, 6, null, false, false, 1),
+                'qty' => $this->qty
+            ];
+            $_SESSION['analytics_data']['product']['type'] = $postType;
+            $_SESSION['analytics_data']['product']['data'] = $addedProduct;
+        }
+    }
+
 
     protected function updateCart()
     {
@@ -35,10 +65,27 @@ class CartController extends CartControllerCore
             && !$this->errors
             && !($this->context->customer->isLogged() && !$this->isTokenValid())
         ) {
+            if(Tools::getIsset('add') && Tools::getValue('add') == '1'){
+                $postType = 'add';
+            } elseif (Tools::getIsset('update') && Tools::getValue('update') == '1'){
+                $postType = 'update';
+            } elseif (Tools::getIsset('delete') && Tools::getValue('delete') == '1'){
+                $postType = 'delete';
+            } elseif (Tools::getIsset('deleteAll') && Tools::getValue('deleteAll') == '1'){
+                $postType = 'deleteAll';
+            } elseif (Tools::getIsset('addDiscount') && Tools::getValue('addDiscount') == '1'){
+                $postType = 'addDiscount';
+            } elseif (Tools::getIsset('deleteDiscount') && Tools::getValue('deleteDiscount') == '1'){
+                $postType = 'deleteDiscount';
+            } else {
+                $postType = 'none';
+            }
             if (Tools::getIsset('add') || Tools::getIsset('update')) {
                 $this->processChangeProductInCart();
+                $this->addUpdatedCartProductToSession($this->id_product, $this->id_product_attribute, $postType);
             } elseif (Tools::getIsset('delete')) {
                 $this->processDeleteProductInCart();
+                $this->addUpdatedCartProductToSession($this->id_product, $this->id_product_attribute, $postType);
             } elseif (Tools::getIsset('deleteAll')) {
                 $this->context->cart->delete();
                 $this->context->cookie->id_cart = 0;
@@ -279,8 +326,74 @@ class CartController extends CartControllerCore
                 }
             }
         }
-        parent::displayAjaxUpdate();
+        if (Configuration::isCatalogMode()) {
+            return;
+        }
+
+        $productsInCart = $this->context->cart->getProducts();
+        $updatedProducts = array_filter($productsInCart, [$this, 'productInCartMatchesCriteria']);
+        $updatedProduct = reset($updatedProducts);
+        $productQuantity = $updatedProduct['quantity'] ?? 0;
+
+        $product = new Product($this->id_product, true, $this->context->cookie->id_lang);
+        $product_categories = $product->getParentCategories($this->context->cookie->id_lang);
+        if(count($product_categories) >= 2){
+            $cat1 = $product_categories[count($product_categories)-2];
+        }
+
+        if(count($product_categories) >= 3){
+            $cat2 = $product_categories[count($product_categories)-3];
+        }
+
+        $op = 'up';
+        if(Tools::getValue('op') !== null){
+            $op = Tools::getValue('op');
+        }
+
+        $addedProduct  =  [
+            'currency' => 'EUR',
+            'amount_tax_excl' => $product->price,
+            'id_product' => $product->id,
+            'name' => $product->name,
+            'discount' => $product->getPrice(true, null, 6, null, true, false, 1),
+            'category_parent' => $cat2['name'],
+            'category' => $cat1['name'],
+            'price_before_discount' => $product->getPrice(false, null, 6, null, false, false, 1),
+            'qty' => 1,
+            'op' => $op
+        ];
+
+        if (!$this->errors) {
+            $presentedCart = $this->cart_presenter->present($this->context->cart);
+
+            // filter product output
+            $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
+                ->filter($presentedCart['products']);
+
+            $this->ajaxRender(json_encode([
+                'success' => true,
+                'id_product' => $this->id_product,
+                'id_product_attribute' => $this->id_product_attribute,
+                'id_customization' => $this->customization_id,
+                'quantity' => $productQuantity,
+                'cart' => $presentedCart,
+                'errors' => empty($this->updateOperationError) ? '' : reset($this->updateOperationError),
+                'added_product' => $addedProduct
+            ]));
+
+            return;
+        } else {
+            $this->ajaxRender(json_encode([
+                'hasError' => true,
+                'errors' => $this->errors,
+                'quantity' => $productQuantity,
+                'added_product' => $addedProduct
+            ]));
+
+            return;
+        }
     }
+
     /*
     * module: advancedvatmanager
     * date: 2023-10-02 07:45:24

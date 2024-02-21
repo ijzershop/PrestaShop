@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace MsThemeConfig\Class;
 
-use CartCore;
-use DateTime;
 use Exception;
 use MsThemeConfig\Controller\Admin\DmsMailThemeController;
 use MsThemeConfig\Controller\Admin\DmsAdminOrderController;
@@ -257,7 +255,7 @@ class ModernHook
 
             $cartObject = new Cart($idCart);
             $shipping = $orderObject->getShipping();
-            $discount_check = ($shipping[0]['shipping_cost_tax_excl'] + $cartObject->getOrderTotal(false, CartCore::ONLY_PRODUCTS, $orderObject->getCartProducts()) - (float)$total_discount) * 1.21;
+            $discount_check = ($shipping[0]['shipping_cost_tax_excl'] + $cartObject->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderObject->getCartProducts()) - (float)$total_discount) * 1.21;
             $this->smarty->assign(['total_discount' => $total_discount, 'discount_check' => $discount_check]);
         }
     }
@@ -1305,37 +1303,30 @@ class ModernHook
     /**
      * @throws Exception
      */
-    public function hookActionFrontControllerSetVariables($param): void
+    public function hookActionFrontControllerSetVariables(&$param): void
     {
+        $param['templateVars']['analytics_data'] = [];
         switch ($param['templateVars']['page']['page_name']){
-
             case 'product':
-                $product = $this->controller->getProduct();
-                $product_categories = $product->getParentCategories($this->context->cookie->id_lang);
-                if(count($product_categories) >= 2){
-                    $cat1 = $product_categories[count($product_categories)-2];
+                if(isset($_SESSION['analytics_data']['product']['type'])){
+                    $param['templateVars']['analytics_data']['product'] =  [
+                        'event_type' => $_SESSION['analytics_data']['product']['type'],
+                        'currency' => $_SESSION['analytics_data']['product']['data']['currency'],
+                        'amount_tax_excl' => $_SESSION['analytics_data']['product']['data']['amount_tax_excl'],
+                        'id_product' => $_SESSION['analytics_data']['product']['data']['id_product'],
+                        'name' => $_SESSION['analytics_data']['product']['data']['name'],
+                        'discount' => $_SESSION['analytics_data']['product']['data']['discount'],
+                        'category_parent' => $_SESSION['analytics_data']['product']['data']['category_parent'],
+                        'category' => $_SESSION['analytics_data']['product']['data']['category'],
+                        'price_before_discount' => $_SESSION['analytics_data']['product']['data']['price_before_discount'],
+                        'qty' => $_SESSION['analytics_data']['product']['data']['qty'],
+                    ];
+                    $_SESSION['analytics_data'] = null;
                 }
-
-                if(count($product_categories) >= 3){
-                    $cat2 = $product_categories[count($product_categories)-3];
-                }
-
-                $param['templateVars']['analytics_data'] =  [
-                    'currency' => 'EUR',
-                    'amount_tax_excl' => $product->getPriceWithoutReduct(true),
-                    'id_product' => $product->id,
-                    'name' => $product->name,
-                    'discount' => $product->getPrice(true, null, 6, null, true, false, 1),
-                    'category_parent' => $cat2['name'],
-                    'category' => $cat1['name'],
-                    'price_before_discount' => $product->getPrice(false, null, 6, null, false, false, 1),
-                    'qty' => 1,
-                ];
                 break;
             case 'order-confirmation':
                $cart = new Cart($_GET['id_cart']);
-
-                $items = [];
+               $items = [];
 
                 foreach ($cart->getProducts() as $product){
                     $prod = new Product($product['id_product']);
@@ -1359,9 +1350,21 @@ class ModernHook
                     $items[] = $item;
                 }
 
-                $param['templateVars']['analytics_data'] = [
+                $discount = '';
+                if(count($cart->getCartRules()) > 0){
+                    $discounts = [];
+                    foreach($cart->getCartRules() as $rule){
+                        $discounts[] = $rule['name'];
+                    }
+                    $discount = implode(',', $discounts);
+                }
+
+                $param['templateVars']['analytics_data']['confirmation'] = [
                     'currency' => 'EUR',
                     'amount_tax_excl' => $cart->getOrderTotal(false),
+                    'discount' => $discount,
+                    'shipping' => $cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
+                    'tax' => $cart->getOrderTotal(true) - $cart->getOrderTotal(false),
                     'items' => $items,
                 ];
                 break;
@@ -1396,12 +1399,28 @@ class ModernHook
                     $items[] = $item;
                 }
 
-                $param['templateVars']['analytics_data'] = [
+                $param['templateVars']['analytics_data']['cart'] = [
                     'currency' => 'EUR',
                     'amount_tax_excl' => $cart['totals']['total_excluding_tax']['amount'],
                     'items' => $items,
                 ];
-                break;
+
+            if(isset($_SESSION['analytics_data']['product']['type'])){
+                $param['templateVars']['analytics_data']['product'] =  [
+                    'event_type' => $_SESSION['analytics_data']['product']['type'],
+                    'currency' => $_SESSION['analytics_data']['product']['data']['currency'],
+                    'amount_tax_excl' => $_SESSION['analytics_data']['product']['data']['amount_tax_excl'],
+                    'id_product' => $_SESSION['analytics_data']['product']['data']['id_product'],
+                    'name' => $_SESSION['analytics_data']['product']['data']['name'],
+                    'discount' => $_SESSION['analytics_data']['product']['data']['discount'],
+                    'category_parent' => $_SESSION['analytics_data']['product']['data']['category_parent'],
+                    'category' => $_SESSION['analytics_data']['product']['data']['category'],
+                    'price_before_discount' => $_SESSION['analytics_data']['product']['data']['price_before_discount'],
+                    'qty' => $_SESSION['analytics_data']['product']['data']['qty'],
+                ];
+                $_SESSION['analytics_data'] = null;
+            }
+            break;
             case 'index'://Home
                 break;
             case 'contactinformation'://Informatie aanvraag formulier

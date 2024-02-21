@@ -3,11 +3,13 @@ export default class viewCartAnalyticsPush {
     if (bodyElemIdCart.attr('analytics_send') !== '1') {
       bodyElemIdCart.attr('analytics_send', '1');
 
-      let dataObject = prestashop.analytics_data;
+      let dataObject = prestashop.analytics_data.cart;
+      if(dataObject === undefined){
+          return;
+      }
       dataLayer.push({ecommerce: null});
 
-      // console.log(['view_cart', dataObject]);
-
+      console.log(['view_cart', dataObject]);
       dataLayer.push({
         event: "view_cart",
         ecommerce: {

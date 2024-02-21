@@ -27,7 +27,6 @@ td.koopman_label_button-type.column-label{
   border-radius: 0;
   width: 100%;
   flex-wrap: wrap;
-  margin: 0 -.9375rem !important;
 }
 
 .cc-koopman label {
@@ -81,6 +80,7 @@ td.koopman_label_button-type.column-label{
   border-radius: 5px 5px 0 0;
   width: 100% !important;
   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  padding: 1rem .5rem;
 }
 
 .koopman-current-status-badge .type-cc {

@@ -100,6 +100,7 @@ import '../fontawesome/modified_files/sharp-light';
 import '../fontawesome/modified_files/duotone';
 import '../fontawesome/modified_files/brands';
 import alert from "bootstrap/js/src/alert";
+import addToCartAnalyticsPush from "./tagmanager/add-cart";
 
 /**
  *
@@ -1011,6 +1012,7 @@ $(function () {
         data: query,
       })
         .done(function (resp) {
+          addToCartAnalyticsPush.init(resp.added_product);
 
           $('a.add-to-cart[data-product-id="' + product_id + '"]').removeClass('active');
           $('svg.fa-plus[data-product-id="' + product_id + '"]').show();
@@ -1029,6 +1031,9 @@ $(function () {
             },
             resp: resp,
           });
+
+
+
         })
         .fail(function (resp) {
           prestashop.emit('handleError', {

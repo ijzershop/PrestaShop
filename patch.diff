@@ -1,0 +1,25 @@
+From ee86802e5c73ca885e071c2e8ae530c5fe782023 Mon Sep 17 00:00:00 2001
+From: matks <mathieu.ferment@prestashop.com>
+Date: Mon, 19 Feb 2024 11:36:58 +0100
+Subject: [PATCH] Fix changelog missing line
+
+---
+ docs/CHANGELOG.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/docs/CHANGELOG.txt b/docs/CHANGELOG.txt
+index 924203642b0..a629f454dba 100644
+--- a/docs/CHANGELOG.txt
++++ b/docs/CHANGELOG.txt
+@@ -21,6 +21,8 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
+ @copyright Since 2007 PrestaShop SA and Contributors
+ @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ 
++Changelog for PrestaShop 8
++
+ ####################################
+ #   v8.1.4 - (2024-02-12)
+ ####################################
+-- 
+2.35.0.windows.1
+

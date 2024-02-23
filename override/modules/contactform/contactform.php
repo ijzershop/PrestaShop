@@ -23,38 +23,51 @@ if (!defined('_PS_VERSION_')) {
 /**
  *
  */
-class ContactformOverride extends Contactform {
+class ContactformOverride extends Contactform
+{
     public function sendMessage()
     {
-        $data = array(
-            'secret' => Tools::getValue('RECAPTCHA_PRIVATE_KEY', Configuration::get('RECAPTCHA_PRIVATE_KEY', Context::getContext()->language->id, null,  Context::getContext()->shop->id, '')),
-            'response' => $_POST['g-recaptcha-response']
-        );
-        $verify = curl_init();
-        if(isset($verify) && $verify){
-            curl_setopt($verify, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
-            curl_setopt($verify, CURLOPT_POST, true);
-            curl_setopt($verify, CURLOPT_POSTFIELDS, http_build_query($data));
-            curl_setopt($verify, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($verify, CURLOPT_RETURNTRANSFER, true);
-            $response = @curl_exec($verify);
-            curl_close($verify);
-            $decode = json_decode($response, true);
-            if (!$decode['success'] == true) {
-                $this->context->controller->errors[] = $this->trans('Formulaire invalide.', array(), 'Modules.Contactform.Shop');
-            } else {
-                if(!empty(Tools::getValue('gebruikers_informatie_nummer'))){
-                    $this->context->controller->success[] = $this->trans(
-                        'Your message has been successfully sent to our team.',
-                        [],
-                        'Modules.Contactform.Shop'
-                    );
+        if (Module::isEnabled('csoft_invisible_recaptcha_v2')) {
+            $data = array(
+                'secret' => Tools::getValue('RECAPTCHA_PRIVATE_KEY', Configuration::get('RECAPTCHA_PRIVATE_KEY', Context::getContext()->language->id, null, Context::getContext()->shop->id, '')),
+                'response' => $_POST['g-recaptcha-response']
+            );
+            $verify = curl_init();
+            if (isset($verify) && $verify) {
+                curl_setopt($verify, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+                curl_setopt($verify, CURLOPT_POST, true);
+                curl_setopt($verify, CURLOPT_POSTFIELDS, http_build_query($data));
+                curl_setopt($verify, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($verify, CURLOPT_RETURNTRANSFER, true);
+                $response = @curl_exec($verify);
+                curl_close($verify);
+                $decode = json_decode($response, true);
+                if (!$decode['success'] == true) {
+                    $this->context->controller->errors[] = $this->trans('Form is invalid.', array(), 'Modules.Contactform.Shop');
                 } else {
-                    parent::sendMessage();
+                    if (!empty(Tools::getValue('gebruikers_informatie_nummer'))) {
+                        $this->context->controller->success[] = $this->trans(
+                            'Your message has been successfully sent to our team.',
+                            [],
+                            'Modules.Contactform.Shop'
+                        );
+                    } else {
+                        parent::sendMessage();
+                    }
                 }
+            } else {
+                $this->context->controller->errors[] = $this->trans('Error by sending message.', array(), 'Modules.Contactform.Shop');
             }
-        }else{
-            $this->context->controller->errors[] = $this->trans('Erreur de traitement.', array(), 'Modules.Contactform.Shop');
+        } else {
+            if (!empty(Tools::getValue('gebruikers_informatie_nummer'))) {
+                $this->context->controller->success[] = $this->trans(
+                    'Your message has been successfully sent to our team.',
+                    [],
+                    'Modules.Contactform.Shop'
+                );
+            } else {
+                parent::sendMessage();
+            }
         }
     }
 }

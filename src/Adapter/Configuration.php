@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Shop;
-use ShopCore;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Traversable;
 
@@ -428,22 +427,11 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             E_USER_DEPRECATED
         );
 
-
-        if(Shop::getContext() === null){
-            try {
-                Shop::setContext(ShopCore::CONTEXT_SHOP, 1);
-            } catch (\PrestaShopException $e) {
-            }
-        }
-
         if (Shop::getContext() === Shop::CONTEXT_SHOP) {
             return ShopConstraint::shop(Shop::getContextShopID());
         } elseif (Shop::getContext() === Shop::CONTEXT_GROUP) {
             return ShopConstraint::shopGroup(Shop::getContextShopGroupID());
         }
-
-
-
 
         return ShopConstraint::allShops();
     }

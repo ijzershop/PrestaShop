@@ -42,7 +42,7 @@ class StringModifierTest extends TestCase
         $this->stringModifier = new StringModifier();
     }
 
-    public function testItTransformsCamelCaseToSplitWords()
+    public function testItTransformsCamelCaseToSplitWords(): void
     {
         $data = [
             [
@@ -117,5 +117,41 @@ class StringModifierTest extends TestCase
         yield ['test', 4];
         yield ['testable', 20];
         yield ['good bye cruel world 10.99', 128];
+    }
+
+    /**
+     * @dataProvider str2UrlProvider
+     */
+    public function testStr2url(string $input, string $expected, bool $allow_accented_chars): void
+    {
+        self::assertSame($expected, $this->stringModifier->str2url($input, $allow_accented_chars));
+    }
+
+    public function str2UrlProvider(): Generator
+    {
+        yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-', false];
+        yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text', false];
+        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-', false];
+        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou', false];
+        yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-', false];
+        yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text', false];
+        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-', false];
+        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou', false];
+        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-áéíóú', true];
+    }
+
+    /**
+     * @dataProvider getTestReplaceAccentedCharactersData
+     */
+    public function testReplaceAccentedCharacters(string $input, string $expected): void
+    {
+        self::assertSame($expected, $this->stringModifier->replaceAccentedChars($input));
+    }
+
+    public function getTestReplaceAccentedCharactersData(): Generator
+    {
+        yield 'empty string' => ['', ''];
+        yield 'Test a variations' => ['aaâæaa', 'aaaaeaa'];
+        yield 'Test e variations' => ['éèê', 'eee'];
     }
 }

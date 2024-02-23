@@ -15,11 +15,11 @@ services:
 
   prestashop.api.private_key:
     class: League\OAuth2\Server\CryptKey
-    arguments: ['%api_private_key%']
+    arguments: [ '%api_private_key%' ]
 
   prestashop.api.public_key:
     class: League\OAuth2\Server\CryptKey
-    arguments: ['%api_public_key%']
+    arguments: [ '%api_public_key%' ]
 
   League\OAuth2\Server\AuthorizationServer:
     arguments:

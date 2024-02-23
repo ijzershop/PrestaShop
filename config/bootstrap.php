@@ -33,7 +33,6 @@ use Symfony\Component\Yaml\Yaml;
 
 $container_builder = new ContainerBuilder();
 $legacyContainer = $container_builder->build();
-
 ServiceLocator::setServiceContainerInstance($legacyContainer);
 
 if (!file_exists(_PS_CACHE_DIR_)) {
@@ -51,7 +50,6 @@ $yamlParametersFilepath = $configDirectory . '/parameters.yml';
 $filesystem = new Filesystem();
 
 $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
-
     try {
         $filesystem->dumpFile($destination, '<?php return '.var_export($config, true).';'."\n");
     } catch (IOException $e) {
@@ -61,12 +59,9 @@ $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
     return true;
 };
 
-
-
 // Bootstrap an application with parameters.yml, which has been installed before PHP parameters file support
 if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)) {
     $parameters = Yaml::parseFile($yamlParametersFilepath);
-
     if ($exportPhpConfigFile($parameters, $phpParametersFilepath)) {
         $filesystem->dumpFile($yamlParametersFilepath, 'parameters:' . "\n");
     }

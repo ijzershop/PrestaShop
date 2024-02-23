@@ -24,8 +24,9 @@
  */
 import '../scss/font.scss';
 import '../scss/admin-theme.scss';
-import '../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import '@openfonts/ubuntu-condensed_latin';
+
 import PerfectScrollBar from 'perfect-scrollbar';
 
 $(document).ready(() => {
@@ -34,6 +35,4 @@ $(document).ready(() => {
   if ($navBarOverflow.length > 0) {
     new PerfectScrollBar('.nav-bar-overflow');
   }
-
-
 });

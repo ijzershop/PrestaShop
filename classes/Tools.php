@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShop\PrestaShop\Adapter\Entity\AddressFormat;
+
 class ToolsCore
 {
     public const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
@@ -1769,11 +1769,6 @@ class ToolsCore
      */
     public static function math_round($value, $places, $mode = PS_ROUND_HALF_UP)
     {
-
-        if(is_null($value)){
-            $value = 0;
-        }
-
         //If PHP_ROUND_HALF_UP exist (PHP 5.3) use it and pass correct mode value (PrestaShop define - 1)
         if (defined('PHP_ROUND_HALF_UP')) {
             return round($value, $places, $mode - 1);
@@ -3269,7 +3264,7 @@ exit;
             return $str;
         }
 
-        return str_replace(["\r\n", "\r", "\n", AddressFormatCore::FORMAT_NEW_LINE, PHP_EOL], '<br />', $str);
+        return str_replace(["\r\n", "\r", "\n", AddressFormat::FORMAT_NEW_LINE, PHP_EOL], '<br />', $str);
     }
 
     /**

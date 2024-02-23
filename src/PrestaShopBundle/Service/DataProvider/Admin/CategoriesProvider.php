@@ -218,9 +218,9 @@ class CategoriesProvider
      *
      * @param array $categories
      *
-     * @return array
+     * @return stdClass
      */
-    private function sortCategories(array $categories): array
+    private function sortCategories(array $categories): stdClass
     {
         uasort(
             $categories,
@@ -230,7 +230,7 @@ class CategoriesProvider
         );
 
         // Convert array to object to be consistent with current API call
-        return (array)json_decode(json_encode($categories));
+        return json_decode(json_encode($categories));
     }
 
     /**

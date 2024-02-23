@@ -80,8 +80,6 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
             $data['first_name'],
             $data['last_name'],
             $data['address1'],
-            $data['house_number'],
-            $data['house_number_extension'],
             $data['city'],
             (int) $data['id_country'],
             $data['postcode'],
@@ -126,14 +124,6 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
 
         if (isset($data['address1'])) {
             $editAddressCommand->setAddress($data['address1']);
-        }
-
-        if (isset($data['house_number'])) {
-            $editAddressCommand->setHouseNumber($data['house_number']);
-        }
-
-        if (isset($data['house_number_extension'])) {
-            $editAddressCommand->setHouseNumberExtension($data['house_number_extension']);
         }
 
         if (isset($data['city'])) {

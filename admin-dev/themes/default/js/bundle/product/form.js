@@ -827,48 +827,48 @@ window.form = (function () {
   }
   return {
     init() {
-      // /** prevent form submit on ENTER keypress */
-      // jwerty.key('enter', (e) => {
-      //   e.preventDefault();
-      // });
-      //
-      // /** create keyboard event for save */
-      // jwerty.key('alt+shift+S', (e) => {
-      //   e.preventDefault();
-      //   send();
-      // });
-      //
-      // /** create keyboard event for save & duplicate */
-      // jwerty.key('alt+shift+D', (e) => {
-      //   e.preventDefault();
-      //   send($('.product-footer .duplicate').attr('data-redirect'));
-      // });
-      //
-      // /** create keyboard event for save & new */
-      // jwerty.key('alt+shift+P', (e) => {
-      //   e.preventDefault();
-      //   send($('.product-footer .new-product').attr('data-redirect'));
-      // });
-      //
-      // /** create keyboard event for save & go catalog */
-      // jwerty.key('alt+shift+Q', (e) => {
-      //   e.preventDefault();
-      //   send($('.product-footer .go-catalog').attr('data-redirect'));
-      // });
-      //
-      // /** create keyboard event for save & go preview */
-      // jwerty.key('alt+shift+V', (e) => {
-      //   e.preventDefault();
-      //   const productFooter = $('.product-footer .preview');
-      //   send(productFooter.attr('data-redirect'), productFooter.attr('target'));
-      // });
-      //
-      // /** create keyboard event for save & active or desactive product */
-      // jwerty.key('alt+shift+O', (e) => {
-      //   e.preventDefault();
-      //   const step1CheckBox = $('#form_step1_active');
-      //   step1CheckBox.prop('checked', !step1CheckBox.is(':checked'));
-      // });
+      /** prevent form submit on ENTER keypress */
+      jwerty.key('enter', (e) => {
+        e.preventDefault();
+      });
+
+      /** create keyboard event for save */
+      jwerty.key('alt+shift+S', (e) => {
+        e.preventDefault();
+        send();
+      });
+
+      /** create keyboard event for save & duplicate */
+      jwerty.key('alt+shift+D', (e) => {
+        e.preventDefault();
+        send($('.product-footer .duplicate').attr('data-redirect'));
+      });
+
+      /** create keyboard event for save & new */
+      jwerty.key('alt+shift+P', (e) => {
+        e.preventDefault();
+        send($('.product-footer .new-product').attr('data-redirect'));
+      });
+
+      /** create keyboard event for save & go catalog */
+      jwerty.key('alt+shift+Q', (e) => {
+        e.preventDefault();
+        send($('.product-footer .go-catalog').attr('data-redirect'));
+      });
+
+      /** create keyboard event for save & go preview */
+      jwerty.key('alt+shift+V', (e) => {
+        e.preventDefault();
+        const productFooter = $('.product-footer .preview');
+        send(productFooter.attr('data-redirect'), productFooter.attr('target'));
+      });
+
+      /** create keyboard event for save & active or desactive product */
+      jwerty.key('alt+shift+O', (e) => {
+        e.preventDefault();
+        const step1CheckBox = $('#form_step1_active');
+        step1CheckBox.prop('checked', !step1CheckBox.is(':checked'));
+      });
 
       elem.submit((event) => {
         replaceBadLocaleCharacters();
@@ -1874,7 +1874,8 @@ window.priceCalculation = (function () {
           ps_round(price - getEcotaxTaxIncluded(),
             displayPricePrecision,
           ),
-          rates, computationMethod),
+          rates,
+          computationMethod),
         displayPricePrecision,
       );
     },
@@ -2212,7 +2213,13 @@ window.seo = (function () {
   /** Hide or show the input product selector */
   function hideShowRedirectToProduct() {
     redirectTypeValue = redirectTypeElem.val();
-    if (redirectTypeValue === '404' || redirectTypeValue === '410') {
+    if (redirectTypeValue === '404'
+      || redirectTypeValue === '410'
+      || redirectTypeValue === 'default'
+      || redirectTypeValue === '200-displayed'
+      || redirectTypeValue === '404-displayed'
+      || redirectTypeValue === '410-displayed'
+    ) {
       $('#id-product-redirected').hide();
     } else {
       updateRemoteUrl();

@@ -42,7 +42,6 @@ function handleCheckoutStepChange() {
   const steps = new Steps();
   const clickableSteps = steps.getClickableSteps();
 
-
   clickableSteps.on('click', (event) => {
     const clickedStep = Steps.getClickedStep(event);
 

@@ -111,7 +111,6 @@ class TranslationsTreeBuilder
         ?string $subtreeName = null,
         ?string $fullSubtreeName = null
     ): array {
-
         $current = [];
         if ($subtreeName !== null) {
             $current['name'] = $subtreeName;
@@ -120,7 +119,6 @@ class TranslationsTreeBuilder
             $current['full_name'] = $fullSubtreeName;
             $current['domain_catalog_link'] = $this->getRoute($fullSubtreeName, $routeParams);
         }
-
 
         foreach ($metadataSubtree as $name => $value) {
             if ($name === Catalogue::METADATA_KEY_NAME) {

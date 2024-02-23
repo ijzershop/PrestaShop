@@ -34,12 +34,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
-		<link rel="apple-touch-icon" href="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}_favicons/apple-icon-60x60.png" />
+		<link rel="apple-touch-icon" href="{$img_dir}app_icon.png" />
 
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="robots" content="NOFOLLOW, NOINDEX">
 		<title>
-			{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'html':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if}
+			{$shop_name} {if $meta_title != ''}{if isset($navigationPipe)}{$navigationPipe|escape:'html':'UTF-8'}{else}&gt;{/if} {$meta_title}{/if} (PrestaShop&trade;)
 		</title>
 		{foreach from=$css_files key=css_uri item=media}
 			<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />

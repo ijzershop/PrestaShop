@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 
 /**
@@ -46,10 +45,7 @@ class ShopId implements ShopIdInterface
      */
     public function __construct(int $shopId)
     {
-//        $this->assertIsGreaterThanZero($shopId);
-        if (0 >= $shopId) {
-            $shopId = 1;
-        }
+        $this->assertIsGreaterThanZero($shopId);
 
         $this->shopId = $shopId;
     }

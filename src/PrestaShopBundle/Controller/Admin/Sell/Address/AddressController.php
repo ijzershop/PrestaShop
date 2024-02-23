@@ -43,9 +43,9 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressExcep
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressRequiredFieldsException;
-use MsThemeConfig\Core\Domain\Address\Query\GetCustomerAddressForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
-use MsThemeConfig\Core\Domain\Address\QueryResult\EditableCustomerAddress;
+use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CartAddressType;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
@@ -284,6 +284,7 @@ class AddressController extends FrameworkBundleAdminController
 
         $addressForm = $addressFormBuilder->getForm($formData);
         $addressForm->handleRequest($request);
+
         try {
             $handlerResult = $addressFormHandler->handle($addressForm);
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
@@ -349,8 +350,8 @@ class AddressController extends FrameworkBundleAdminController
                 $formCountryId = (int) $request->request->get('customer_address')['id_country'];
                 $formData['id_country'] = $formCountryId;
             }
-            $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
 
+            $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
@@ -463,7 +464,6 @@ class AddressController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handleFor($orderId, $addressForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
                 if ($request->query->has('submitFormAjax')) {

@@ -25,7 +25,7 @@
 <div id="login-panel">
 	<div id="login-header">
 		<h1 class="text-center">
-			{$shop_name}
+			<img id="logo" src="{$img_dir}prestashop@2x.png" width="123px" height="24px" alt="PrestaShop" />
 		</h1>
 		<div class="text-center">{$ps_version}</div>
 		<div id="error" class="hide alert alert-danger">
@@ -49,8 +49,7 @@
 		<div class="alert alert-warning">{$warningSslMessage}</div>
 		{/if}
 	</div>
-	<div>
-		<img class="mx-auto" src="{$shop.logo}" alt="{$shop_name}" /></div>
+	<div id="shop-img"><img src="{$img_dir}preston-login@2x.png" alt="{$shop_name}" width="69.5px" height="118.5px" /></div>
 	<div class="flip-container">
 		<div class="flipper">
 			<div class="front front_login panel" {if isset($reset_token) && isset($id_employee)}style="display:none;"{/if}>
@@ -143,7 +142,7 @@
 			</div>
 
 			<div class="front forgot_confirm" style="display: none">
-				<h4 id="forgot_confirm_name">{l s='Please, check your mailbox.' d='Admin.Login.Notification'}<br/><br/>{l s='A link to reset your password has been sent to you.' d='Admin.Login.Notification'}</h4>
+				<h4 id="forgot_confirm_name">{l s='Please, check your mailbox.' d='Admin.Login.Notification'}<br/><br/>{l s='If this email address has been registered in our store, you will receive a link to reset your password.' d='Admin.Login.Notification'}</h4>
 			</div>
 		</div>
 		{else}
@@ -187,5 +186,5 @@
 				<i class="icon-github"></i>
 			</a>
 		</p>
-	</div> *}
+	</div>
 </div>

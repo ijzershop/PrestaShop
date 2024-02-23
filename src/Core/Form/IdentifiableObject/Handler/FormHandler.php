@@ -36,7 +36,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Handles identifiable object form and delegates form data saving to data handler.
  */
-class FormHandler implements FormHandlerInterface
+final class FormHandler implements FormHandlerInterface
 {
     /**
      * @var FormDataHandlerInterface
@@ -141,7 +141,6 @@ class FormHandler implements FormHandlerInterface
         ]);
 
         $this->dataHandler->update($id, $data);
-
 
         $this->hookDispatcher->dispatchWithParameters('actionAfterUpdate' . Container::camelize($form->getName()) . 'FormHandler', [
             'id' => $id,

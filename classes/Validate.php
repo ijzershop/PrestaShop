@@ -640,7 +640,6 @@ class ValidateCore
         return Tools::strlen($hashedPasswd) == 32 || Tools::strlen($hashedPasswd) == 60;
     }
 
-
     /**
      * @deprecated since 8.0
      */

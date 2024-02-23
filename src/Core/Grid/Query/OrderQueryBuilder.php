@@ -134,25 +134,14 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             ->from($this->dbPrefix . 'orders', 'o')
             ->leftJoin('o', $this->dbPrefix . 'customer', 'cu', 'o.id_customer = cu.id_customer')
             ->leftJoin('o', $this->dbPrefix . 'currency', 'cur', 'o.id_currency = cur.id_currency')
-
-            ->leftJoin('o', $this->dbPrefix . 'address', 'a', 'o.id_address_delivery = a.id_address')
-            ->leftJoin('a', $this->dbPrefix . 'country', 'c', 'a.id_country = c.id_country')
-            ->leftJoin(
+            ->innerJoin('o', $this->dbPrefix . 'address', 'a', 'o.id_address_delivery = a.id_address')
+            ->innerJoin('a', $this->dbPrefix . 'country', 'c', 'a.id_country = c.id_country')
+            ->innerJoin(
                 'c',
                 $this->dbPrefix . 'country_lang',
                 'cl',
                 'c.id_country = cl.id_country AND cl.id_lang = :context_lang_id'
             )
-
-
-//            ->innerJoin('o', $this->dbPrefix . 'address', 'a', 'o.id_address_delivery = a.id_address')
-//            ->innerJoin('a', $this->dbPrefix . 'country', 'c', 'a.id_country = c.id_country')
-//            ->innerJoin(
-//                'c',
-//                $this->dbPrefix . 'country_lang',
-//                'cl',
-//                'c.id_country = cl.id_country AND cl.id_lang = :context_lang_id'
-//            )
             ->leftJoin('o', $this->dbPrefix . 'order_state', 'os', 'o.current_state = os.id_order_state')
             ->leftJoin(
                 'os',

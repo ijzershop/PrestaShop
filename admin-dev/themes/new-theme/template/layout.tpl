@@ -18,7 +18,7 @@
 
       {* Logo *}
       <i class="material-icons js-mobile-menu">menu</i>
-      <a id="header_logo" class="logo float-left" style="background: url('/img/{Configuration::get('PS_LOGO', null, null, 1)}')  left center/165px auto no-repeat !important;margin: 0;" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
+      <a id="header_logo" class="logo float-left" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
       <span id="shop_version">{$ps_version}</span>
 
       <div class="component" id="quick-access-container">

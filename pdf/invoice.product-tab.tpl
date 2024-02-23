@@ -45,9 +45,6 @@
       {l s='Unit Price' d='Shop.Pdf' pdf='true'}{if $isTaxEnabled}<br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}{/if}
     </th>
     <th class="product header small" width="{$layout.quantity.width}%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
-    <th class="product header-right small" width="{$layout.total_tax_incl.width}%">
-        {l s='Total' d='Shop.Pdf' pdf='true'}{if $isTaxEnabled}<br /> {l s='(Tax incl.)' d='Shop.Pdf' pdf='true'}{/if}
-    </th>
     <th class="product header-right small" width="{$layout.total_tax_excl.width}%">
       {l s='Total' d='Shop.Pdf' pdf='true'}{if $isTaxEnabled}<br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}{/if}
     </th>
@@ -114,14 +111,7 @@
         {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl_including_ecotax}
       </td>
     </tr>
-      {if $order_detail.id_category_default == (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) && $order_detail.description_short != ""}
-        <tr>
-          <td colspan="4">
-              {$order_detail.description_short nofilter}
-          </td>
-          <td></td>
-        </tr>
-      {/if}
+
     {foreach $order_detail.customizedDatas as $customizationPerAddress}
       {foreach $customizationPerAddress as $customizationId => $customization}
         <tr class="customization_data {$bgcolor_class}">

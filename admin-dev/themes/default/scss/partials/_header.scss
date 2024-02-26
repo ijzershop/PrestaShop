@@ -26,6 +26,7 @@ $search-border-color: #bbcdd2;
     width: 13.13rem;
     height: 100%;
     background: url("#{$img-path}/prestashop-avatar-header_shopname.png") no-repeat center left;
+    background-size: contain;
 
     .mobile & {
       flex-grow: 1;
@@ -40,7 +41,7 @@ $search-border-color: #bbcdd2;
     top: 0.9375rem;
     left: 11.25rem;
     font-size: 10px;
-    color: #4a4a4a;
+    color: #ffffff;
     // hide if viewport <= tablet portrait size
     @media (max-width: breakpoint-max("md")) {
       display: none;

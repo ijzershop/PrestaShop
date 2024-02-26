@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   width="514"
+   height="100"
+   viewBox="0 0 514 100"
+   sodipodi:docname="prestashop-avatar-header_shopname.svg"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   inkscape:export-filename="C:\wampserver\www\ijzershop8.local\admin-dev\themes\default\img\prestashop-avatar-header_shopname.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     showgrid="false"
+     inkscape:zoom="2.077821"
+     inkscape:cx="256.75936"
+     inkscape:cy="50.052434"
+     inkscape:window-width="1920"
+     inkscape:window-height="1057"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Image 1">
+    <g
+       inkscape:label="Laag 1"
+       id="layer1"
+       transform="matrix(3.1706161,0,0,3.1706161,-805.96687,-263.64368)">
+      <flowRoot
+         xml:space="preserve"
+         id="flowRoot823"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#00127e;fill-opacity:1;stroke:none"
+         transform="matrix(0.18579755,0,0,0.18579755,238.30293,67.810118)"><flowRegion
+           id="flowRegion825"
+           style="fill:#00127e;fill-opacity:1"><rect
+             id="rect827"
+             width="1802.8572"
+             height="862.85712"
+             x="94.285713"
+             y="71.09108"
+             style="fill:#00127e;fill-opacity:1" /></flowRegion><flowPara
+           id="flowPara829"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:104.689px;font-family:IJzershop;-inkscape-font-specification:'IJzershop, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#00127e;fill-opacity:1"><flowSpan
+   style="fill:#000000"
+   id="flowSpan1432">IJZER</flowSpan>SHOP</flowPara></flowRoot>
+      <flowRoot
+         xml:space="preserve"
+         id="flowRoot1400"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;line-height:1.25;font-family:'j.d.';-inkscape-font-specification:'j.d.';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         transform="matrix(0.33451902,0,0,0.33451902,258.27244,86.662692)"><flowRegion
+           id="flowRegion1402"><rect
+             id="rect1404"
+             width="596.42859"
+             height="56.42857"
+             x="2.1428571"
+             y="58.57143" /></flowRegion><flowPara
+           id="flowPara1406">de moderne smid van 't internet</flowPara></flowRoot>
+    </g>
+  </g>
+</svg>

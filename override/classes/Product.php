@@ -141,13 +141,11 @@ class Product extends ProductCore {
             return false;
         }
 
-        // No need to query if there isn't any real cart!
         if (!$id_cart) {
             return false;
         }
 
         if ($id_customization === 0) {
-            // Backward compatibility: check if there are no products in cart with specific `id_customization` before returning false
             $product_customizations = (int) Db::getInstance()->getValue('
                 SELECT COUNT(`id_customization`) FROM `' . _DB_PREFIX_ . 'cart_product`
                 WHERE `id_cart` = ' . (int) $id_cart .
@@ -182,8 +180,6 @@ class Product extends ProductCore {
 
         foreach ($result as $row) {
             if ((int) $row['id_module'] && (int) $row['type'] == Product::CUSTOMIZE_TEXTFIELD) {
-                // Hook called only for the module concerned
-                // When a module saves a customization programmatically, it should add its ID in the `id_module` column
                 $row['value'] = Hook::exec('displayCustomization', ['customization' => $row], (int) $row['id_module']);
             }
             $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['datas'][(int) $row['type']][] = $row;
@@ -315,27 +311,5 @@ class Product extends ProductCore {
             $msg = '<div class="w-100 text-danger text-center">Nog '.$available_stock.' stuks beschikbaar</div>';
         }
         return json_encode(['is_orderable' => $is_orderable, 'remaining_qty_msg' => $msg, 'remaining_stock' => $available_stock]);
-    }
-    /*
-    * module: dynamicproduct
-    * date: 2023-06-14 15:56:08
-    * version: 2.43.11
-    */
-    public static function getProductProperties($id_lang, $row, Context $context = null)
-    {
-        $result = parent::getProductProperties($id_lang, $row, $context);
-
-        $module = Module::getInstanceByName('dynamicproduct');
-        if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
-            $id_product = (int) $row['id_product'];
-            $dynamic_config = classes\models\DynamicConfig::getByProduct($id_product);
-            if ($dynamic_config->active) {
-                $displayed_price = classes\models\DynamicConfig::getDisplayedPrice($id_product);
-                if ($displayed_price || $dynamic_config->display_dynamic_price) {
-                    $module->calculator->assignProductPrices($row, $displayed_price, $result);
-                }
-            }
-        }
-        return $result;
     }
 }

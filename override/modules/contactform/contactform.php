@@ -16,6 +16,10 @@
  * @copyright 2016-2020. Com'onSoft and contributors
  * @version   1.1.2
  */
+
+use GeoIp2\Exception\AddressNotFoundException;
+use MaxMind\Db\Reader\InvalidDatabaseException;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -25,6 +29,46 @@ if (!defined('_PS_VERSION_')) {
  */
 class ContactformOverride extends Contactform
 {
+
+    /**
+     * {@inheritdoc}
+     * @throws InvalidDatabaseException|AddressNotFoundException
+     */
+    public function renderWidget($hookName = null, array $configuration = [])
+    {
+        if (!$this->active) {
+            return;
+        }
+
+        $widgetVariables = $this->getWidgetVariables($hookName, $configuration);
+        $widgetVariables['geo_location_block'] = false;
+        $record = null;
+
+        try {
+            $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
+            $record = $reader->city(Tools::getRemoteAddr());
+            // $record = $reader->city("62.108.15.61"); //Nederland
+            // $record = $reader->city("81.242.255.41"); //Belgie
+//            $record = $reader->city("2.17.191.255"); //Duitsland
+        } catch (InvalidDatabaseException|AddressNotFoundException $e){
+            if(Tools::getRemoteAddr() == '::1'){
+                $widgetVariables['notifications']['messages'] = $e->getMessage();
+                $widgetVariables['notifications']['nw_error'] = true;
+                $widgetVariables['geo_location_block'] = true;
+
+            }
+        }
+
+        if(($record == null && Tools::getRemoteAddr() != '::1') || ($record != null && !in_array(strtolower($record->country->isoCode), ['nl', 'be']))){
+            $widgetVariables['notifications']['messages'] =  'Het is niet mogelijk dit formulier buiten Nedereland of België te versturen.';
+            $widgetVariables['notifications']['nw_error'] = true;
+            $widgetVariables['geo_location_block'] = true;
+        }
+
+        $this->smarty->assign($widgetVariables);
+        return $this->display(__FILE__, 'views/templates/widget/contactform.tpl');
+    }
+
     public function sendMessage()
     {
         if (Module::isEnabled('csoft_invisible_recaptcha_v2')) {

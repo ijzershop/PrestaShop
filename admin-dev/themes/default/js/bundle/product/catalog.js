@@ -110,14 +110,17 @@ $(document).ready(() => {
 
   updateBulkMenu();
   updateFilterMenu();
-
-  /** create keyboard event for save & new */
-  jwerty.key('ctrl+P', (e) => {
-    e.preventDefault();
-    const url = $('form#product_catalog_list').attr('newproducturl');
-    window.location.href = url;
-  });
-});
+//
+//   let jwerty1 = jwerty;
+//   console.log(jwerty);
+//
+//   /** create keyboard event for save & new */
+//   jwerty1.key('ctrl+P', (e) => {
+//     e.preventDefault();
+//     const url = $('form#product_catalog_list').attr('newproducturl');
+//     window.location.href = url;
+//   });
+// });
 
 function productOrderTable(orderBy, orderWay) {
   const form = $('form#product_catalog_list');

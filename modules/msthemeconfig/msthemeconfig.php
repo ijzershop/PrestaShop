@@ -124,10 +124,6 @@ class MsThemeConfig extends Module
             'max' => '8.99.99'
         ];
 
-        if (!Configuration::get('MSTHEMECONFIG_NAME', $this->idLang, $this->idShopGroup, $this->idShop)) {
-            $this->warning = $this->trans('No name provided', [], $this->transDomain);
-        }
-
         $this->idShop = $this->context->shop->id;
         $this->idShopGroup = $this->context->shop->getGroup()->id;
         $this->idLang = $this->context->language->id;

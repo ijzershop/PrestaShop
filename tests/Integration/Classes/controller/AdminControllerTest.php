@@ -38,16 +38,21 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
+use PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
+use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Shop;
 use Smarty;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Tests\Integration\Utility\ContextMockerTrait;
 use Tools;
 
@@ -270,14 +275,26 @@ class AdminControllerTest extends TestCase
         $mockContainerBuilder = $this->getMockBuilder(ContainerBuilder::class)->getMock();
         $mockContainerBuilder->method('get')
             ->willReturnCallback(function (string $param) {
-                if ($param == Controller::SERVICE_LOCALE_REPOSITORY) {
+                if ($param === Controller::SERVICE_LOCALE_REPOSITORY) {
                     return $this->getMockLocaleRepository();
                 }
-                if ($param == 'prestashop.core.admin.multistore') {
+                if ($param === 'prestashop.core.admin.multistore') {
                     return $this->getMockMultistoreController();
                 }
-                if ($param == 'prestashop.adapter.multistore_feature') {
+                if ($param === 'prestashop.adapter.multistore_feature') {
                     return $this->getMockFeatureInterface();
+                }
+                if ($param === 'prestashop.user_provider') {
+                    return $this->getMockedUserProvider();
+                }
+                if ($param === 'security.csrf.token_manager') {
+                    return $this->getMockedCsrfTokenManager();
+                }
+                if ($param === 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker') {
+                    return $this->getMockedAvifExtensionChecker();
+                }
+                if ($param === 'prestashop.core.admin.feature_flag.repository' || $param === FeatureFlagRepository::class) {
+                    return $this->getMockedFeatureFlagRepository();
                 }
             });
 
@@ -348,6 +365,27 @@ class AdminControllerTest extends TestCase
         return $mockMultistoreController;
     }
 
+    private function getMockedAvifExtensionChecker(): AvifExtensionChecker
+    {
+        $mockAvifExtensionChecker = $this->getMockBuilder(AvifExtensionChecker::class)
+            ->getMock();
+
+        $mockAvifExtensionChecker->method('isAvailable')->willReturn(true);
+
+        return $mockAvifExtensionChecker;
+    }
+
+    private function getMockedFeatureFlagRepository(): FeatureFlagRepository
+    {
+        $mockFeatureFlagRepository = $this->getMockBuilder(FeatureFlagRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockFeatureFlagRepository->method('isEnabled')->willReturn(false);
+
+        return $mockFeatureFlagRepository;
+    }
+
     private function getMockNumberSpecification(): NumberSpecification
     {
         $mockNumberSpecification = $this->getMockBuilder(NumberSpecification::class)->disableOriginalConstructor()->getMock();
@@ -387,5 +425,24 @@ class AdminControllerTest extends TestCase
         $mockMockFeatureInterface->method('isUsed')->willReturn(false);
 
         return $mockMockFeatureInterface;
+    }
+
+    private function getMockedUserProvider(): UserProvider
+    {
+        $userProvider = $this->createMock(UserProvider::class);
+        $userProvider->method('getUsername')->willReturn('testUser');
+
+        return $userProvider;
+    }
+
+    private function getMockedCsrfTokenManager(): CsrfTokenManager
+    {
+        $mockedCrfToken = $this->createMock(CsrfToken::class);
+        $mockedCrfToken->method('getValue')->willReturn('mockedToken');
+
+        $tokenManager = $this->createMock(CsrfTokenManager::class);
+        $tokenManager->method('getToken')->withAnyParameters()->willReturn($mockedCrfToken);
+
+        return $tokenManager;
     }
 }

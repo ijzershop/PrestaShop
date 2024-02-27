@@ -287,7 +287,7 @@ final class MailPreviewVariablesBuilder
 
             $url = $this->context->link->getProductLink($product['product_id']);
             $itemsTable .=
-                '<tr>
+                '<tr style="background-color:' . ($key % 2 ? '#DDE2E6' : '#EBECEE') . ';">
 					<td style="padding:0.6em 0.4em;">' . $product['product_reference'] . '</td>
 					<td style="padding:0.6em 0.4em;">
 						<strong><a href="' . $url . '">' . $product['product_name'] . '</a>'
@@ -326,7 +326,7 @@ final class MailPreviewVariablesBuilder
         foreach ($order->getCartProducts() as $key => $product) {
             $url = $this->context->link->getProductLink($product['product_id']);
             $itemsTable .=
-                '<tr>
+                '<tr style="background-color:' . ($key % 2 ? '#DDE2E6' : '#EBECEE') . ';">
 					<td style="padding:0.6em 0.4em;">' . $product['product_reference'] . '</td>
 					<td style="padding:0.6em 0.4em;">
 						<strong><a href="' . $url . '">' . $product['product_name'] . '</a>

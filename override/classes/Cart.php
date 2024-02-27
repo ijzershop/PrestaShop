@@ -328,10 +328,6 @@ class Cart extends CartCore
             }
         }
 
-        // $productItem = new Product($id_product);
-        // if ($productItem && $productItem->reference == Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE')) {
-        //     $productItem->delete();
-        // }
 
         $result = Db::getInstance()->getRow('
             SELECT SUM(`quantity`) AS \'quantity\'
@@ -480,7 +476,6 @@ class Cart extends CartCore
         }
         $id_product_attribute_default = Product::getDefaultAttribute($id_product);
 
-        /* If we have a product combination, the minimal quantity is set with the one of this combination */
         if (!empty($id_product_attribute)) {
             $minimal_quantity = (int)ProductAttribute::getAttributeMinimalQty($id_product_attribute);
         } else {
@@ -517,10 +512,8 @@ class Cart extends CartCore
         ) {
             return false;
         } else {
-            /* Check if the product is already in the cart */
             $result = $this->containsProduct($id_product, $id_product_attribute, (int)$id_customization, (int)$id_address_delivery);
 
-            /* Update quantity if product already exist */
             if ($result) {
                 if ($operator == 'up') {
                     $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
@@ -530,7 +523,6 @@ class Cart extends CartCore
 
                     $result2 = Db::getInstance()->getRow($sql);
                     $product_qty = (int)$result2['quantity'];
-                    // Quantity for product pack
                     if (Pack::isPack($id_product)) {
                         $product_qty = Pack::getQuantity($id_product, $id_product_attribute);
                     }
@@ -552,7 +544,6 @@ class Cart extends CartCore
                     return false;
                 }
 
-                /* Delete product from cart */
                 if ($new_qty <= 0) {
                     return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
                 } elseif ($new_qty < $minimal_quantity) {
@@ -569,7 +560,6 @@ class Cart extends CartCore
                     );
                 }
             } elseif ($operator == 'up') {
-                /* Add product to the cart */
 
                 $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
                         FROM '._DB_PREFIX_.'product p
@@ -578,15 +568,10 @@ class Cart extends CartCore
 
                 $result2 = Db::getInstance()->getRow($sql);
 
-                // Quantity for product pack
                 if (Pack::isPack($id_product)) {
                     $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute);
                 }
 
-                /*
-                * Added for checking product count in cart with different combinations.
-                * They must be not more than default combination count in stock.
-                */
                 $cart_items = $this->getWsCartRows();
                 $product_qty_by_id = 0;
                 foreach ($cart_items as $cart_item) {
@@ -622,7 +607,6 @@ class Cart extends CartCore
             }
         }
 
-        // refresh cache of self::_products
         $this->_products = $this->getProducts(true);
         $this->update();
         $context = Context::getContext()->cloneContext();
@@ -835,26 +819,5 @@ class Cart extends CartCore
                 return ['cart_rule_name' => $rule->getFieldByLang('name',  $this->id_lang),'cart_rule' => $cartRulesCheck['cart_rule'], 'amount' => Tools::ps_round($value, Context::getContext()->getComputingPrecision())];
                 break;
         }
-    }
-    /*
-    * module: dynamicproduct
-    * date: 2023-06-14 15:56:08
-    * version: 2.43.11
-    */
-    public function duplicate()
-    {
-        $id_cart_old = (int) $this->id;
-        $result = parent::duplicate();
-        $id_cart_new = (int) $result['cart']->id;
-        Module::getInstanceByName('dynamicproduct');
-        if (Module::isEnabled('dynamicproduct')) {
-
-            $module = Module::getInstanceByName('dynamicproduct');
-            $module->hookCartDuplicated(array(
-                'id_cart_old' => $id_cart_old,
-                'id_cart_new' => $id_cart_new,
-            ));
-        }
-        return $result;
     }
 }

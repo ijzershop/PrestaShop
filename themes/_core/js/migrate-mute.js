@@ -26,6 +26,6 @@ import jQuery from 'jquery';
 
 (function () {
   if (typeof jQuery.migrateMute === 'undefined') {
-    jQuery.migrateMute = true;
+    jQuery.migrateMute = !window.prestashop.debug;
   }
 }());

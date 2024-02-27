@@ -1123,9 +1123,7 @@ class OrderController extends FrameworkBundleAdminController
             'update_order_status',
             UpdateOrderStatusType::class
         );
-
         $form->handleRequest($request);
-
 
         if (!$form->isSubmitted() || !$form->isValid()) {
             // Check if the form is submit from the action bar
@@ -1135,7 +1133,6 @@ class OrderController extends FrameworkBundleAdminController
             );
             $form->handleRequest($request);
         }
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->handleOrderStatusUpdate($orderId, (int) $form->getData()['new_order_status_id']);
@@ -1158,7 +1155,6 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateStatusFromListAction(int $orderId, Request $request): RedirectResponse
     {
-
         $this->handleOrderStatusUpdate($orderId, $request->request->getInt('value'));
 
         return $this->redirectToRoute('admin_orders_index');

@@ -25,7 +25,9 @@ $search-border-color: #bbcdd2
 	#header_logo
 		height: 100%
 		background: url('#{$img-path}/prestashop-avatar-header_shopname.png') no-repeat center left
+    background-size: contain
 		width: 13.13rem
+
 		.mobile &
 			margin-left: -15px
 			min-width: 172px
@@ -37,7 +39,7 @@ $search-border-color: #bbcdd2
 		position: absolute
 		left: 11.25rem
 		top: .9375rem
-		color: #4a4a4a
+		color: #ffffff
         // hide if viewport <= tablet portrait size
 		@media (max-width: breakpoint-max('md'))
 			display: none
@@ -230,7 +232,7 @@ $search-border-color: #bbcdd2
 				.employee-wrapper
 					&-avatar
 						float: left
-						margin: 0 20px	
+						margin: 0 20px
 
 					&-profile
 						text-align: center

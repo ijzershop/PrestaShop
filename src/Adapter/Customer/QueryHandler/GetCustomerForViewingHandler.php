@@ -246,12 +246,10 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      */
     private function getCustomerOrders(Customer $customer): OrdersInformation
     {
-
         $validOrders = [];
         $invalidOrders = [];
 
         $orders = Order::getCustomerOrders($customer->id, true);
-
         $totalSpent = 0;
 
         foreach ($orders as $order) {

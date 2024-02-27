@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecificPricePriorityForProductCommand;
@@ -98,7 +99,7 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
     {
         /** @var SpecificPricePriorityUpdater $priorityUpdater */
         $priorityUpdater = CommonFeatureContext::getContainer()
-            ->get('prestashop.adapter.product.specific_price.update.specific_price_priority_updater')
+            ->get(SpecificPricePriorityUpdater::class)
         ;
 
         try {
@@ -143,7 +144,7 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
     /**
      * @see transformPriorityList
      *
-     * @Then following specific price priorities should be used for product ":productReference":
+     * @Then following specific price priorities should be used for product :productReference:
      *
      * @param string $productReference
      * @param PriorityList $priorityList
@@ -244,7 +245,7 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
     private function getDefaultPriorities(): PriorityList
     {
         SpecificPrice::flushCache();
-        $specificPriceRepository = $this->getContainer()->get('prestashop.adapter.product.specific_price.repository.specific_price_repository');
+        $specificPriceRepository = $this->getContainer()->get(SpecificPriceRepository::class);
 
         return $specificPriceRepository->getDefaultPriorities();
     }

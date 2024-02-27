@@ -35,8 +35,6 @@ use RuntimeException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Validate;
 
-
-
 /**
  * Generates delivery slip for given order
  *
@@ -76,8 +74,6 @@ final class DeliverySlipPdfGenerator implements PDFGeneratorInterface
         $order_invoice_collection = $order->getInvoicesCollection();
 
         $pdf = new PDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP, Context::getContext()->smarty);
-
-        ob_end_clean();
         $pdf->render();
     }
 }

@@ -56,8 +56,13 @@ class TinyMCEEditor {
     if (typeof opts.langIsRtl === 'undefined') {
       opts.langIsRtl = typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
     }
+
+      opts.base_url_website = window.location.protocol + '//' + window.location.host + '/';
+
     this.setupTinyMCE(opts);
   }
+
+
 
   /**
    * Initial setup which checks if the tinyMCE library is already loaded.
@@ -65,13 +70,39 @@ class TinyMCEEditor {
    * @param config
    */
   setupTinyMCE(config) {
+    console.log(config.base_url_website);
     if (typeof tinyMCE === 'undefined') {
       this.loadAndInitTinyMCE(config);
     } else {
       this.initTinyMCE(config);
     }
   }
+  fetchKey(hostname) {
+    let keys = [];
+    keys["bouwstaalmat.nl"] =  "";
+    keys["bouwstaalmat.viho.nl"] =  "";
+    keys["constructiebalk.nl"] =  "3wORV+ZdWifIWnUWSxdAUtCPcNfJnjU/DMxjcGDxcZnBQVJgpRjWdVZMdqAhsj5pbZd3c/h/s41crmf9zwJuv3VrO/4pkSLOmAdBZJT3W6Y="; //set
+    keys["constructieklus.nl"] =  "";
+    keys["constructieklus.viho.nl"] =  "";
+    keys["demodernesmid.nl"] =  "";
+    keys["demodernesmid.viho.nl"] =  "cO4FCAY9a7EYM+WNt80HO+zP8NYYqmVXAXbxgL6gbmPashb4b9GpWNnBUAErfRNXXYLw30+WTmQ6IQvaGJ1N8A=="; //SET
+    keys["gerofitness.nl"] =  "";
+    keys["gerofitness.viho.nl"] =  "";
+    keys["ijzershop.frl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=";//Set
+    keys["ijzershop.nl"] =  "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY="; //Set
+    keys["ijzershop.eu"] =  "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY="; //Set
+    keys["ijzershop176.local"] =  "cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpmftIOvjnss+mhviBjMWYpzfTD8gujkxPFveiunw80iXmfbHphHun6k0qBPJyPtFC8=";
+    keys["paneelhek.nl"] =  "";
+    keys["paneelhek.viho.nl"] =  "";
+    keys["viho.nl"] =  "paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4="; //Set
 
+    if(keys.hasOwnProperty(hostname)){
+      return keys[hostname];
+    } else {
+      return "n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY=";
+    }
+
+  }
   /**
    * Prepare the config and init all TinyMCE editors
    *
@@ -80,36 +111,101 @@ class TinyMCEEditor {
   initTinyMCE(config) {
     const cfg = {
       selector: '.rte',
-      plugins: 'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize',
+      relative_urls: false,
+      plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
       browser_spellcheck: true,
-      toolbar1:
-        /* eslint-disable-next-line max-len */
-        'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
-      toolbar2: '',
-      language: window.iso_user,
-      external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
-      filemanager_title: 'File manager',
-      external_plugins: {
-        filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
+      toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
+      paste_data_images: true,
+      paste_preprocess: function(plugin, args) {
+        let m;
+        const content = args.content;
+        const regex = new RegExp('^<img.*?src=\"(.*?)\"');
+        if(regex.test(content))
+        {
+          //is an image do nothing
+          return false;
+        } else {
+          //is text strip all
+          m = content.replace(/(<([^>]+)>)/gi, "");
+          args.content = m;
+        }
       },
-      content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
-      skin: 'prestashop',
+      contextmenu: "bootstrap",
+      image_advtab: true ,
+      external_filemanager_path: config.base_url_website+ "js/filemanager/",
+      filemanager_title:"Bestands beheer" ,
+      external_plugins: { "filemanager" : config.base_url_website+ "js/filemanager/plugin.min.js"},
+      bootstrapConfig: {
+        language: iso_user,
+        url: config.base_url_website + 'js/tiny_mce/plugins/bootstrap/',
+        iconFont: 'fontawesome5',
+        imagesPath: config.base_url_website+ 'upload',
+        key:   this.fetchKey(window.location.hostname),
+        enableTemplateEdition: true,
+      },
+      editorStyleFormats: {
+        textStyles: true, // true or false
+        blockStyles: true, // true or false
+        containerStyles: true, // true or false
+        responsive: ['xs', 'sm'], // xs sm md lg
+        spacing: ['all', 'x', 'y', 'top', 'right', 'bottom', 'left'] // all x y top right bottom left
+      },
+      style_formats_autohide: true,
+      language: iso_user,
+      content_style: lang_is_rtl === '1' ? 'body {direction:rtl;}' : '',
+      skin: "oxide",
+      themes: "silver",
       mobile: {
         theme: 'mobile',
         plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
         toolbar:
-          /* eslint-disable-next-line max-len */
           'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect',
       },
       menubar: false,
       statusbar: false,
-      relative_urls: false,
       convert_urls: false,
       entity_encoding: 'raw',
       extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
       valid_children: '+*[*]',
       valid_elements: '*[*]',
       rel_list: [{title: 'nofollow', value: 'nofollow'}],
+      automatic_uploads: true,
+      images_upload_url: config.base_url_website+ '/custom_uploader/upload.php',
+      images_upload_handler: function (blobInfo, success, failure, progress) {
+        let xhr, formData;
+        const url = '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1';
+        xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        xhr.open('POST', url);
+
+        formData = new FormData();
+        formData.append('action','upload_files');
+        formData.append('path','/editor_uploads');
+        formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+        xhr.upload.onprogress = function (e) {
+          progress(e.loaded / e.total * 100);
+        };
+
+        xhr.onload = function() {
+          let json;
+
+          if (xhr.status !== 200) {
+            failure('HTTP Error: ' + xhr.status);
+            return;
+          }
+          json = JSON.parse(xhr.responseText);
+
+          if (!json || typeof json.location != 'string') {
+            failure('Invalid JSON: ' + xhr.responseText);
+            return;
+          }
+          success('/upload'+json.location);
+          top.tinymce.activeEditor.notificationManager.close();
+        };
+        xhr.send(formData);
+        return false;
+      },
       editor_selector: ComponentsMap.tineMceEditor.selectorClass,
       init_instance_callback: () => {
         this.changeToMaterial();

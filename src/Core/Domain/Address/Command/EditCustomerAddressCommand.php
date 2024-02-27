@@ -34,16 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
  */
 class EditCustomerAddressCommand extends AbstractEditAddressCommand
 {
-
-    /**
-     * @var string
-     */
-    private $houseNumber;
-
-    /**
-     * @var string
-     */
-    private $houseNumberExtension;
     /**
      * @var AddressId
      */
@@ -66,45 +56,4 @@ class EditCustomerAddressCommand extends AbstractEditAddressCommand
     {
         return $this->addressId;
     }
-
-    /**
-     * @return string|null
-     */
-    public function getHouseNumber(): ?string
-    {
-        return $this->houseNumber;
-    }
-
-    /**
-     * @param string $houseNumber
-     *
-     * @return self
-     */
-    public function setHouseNumber(string $houseNumber): self
-    {
-        $this->houseNumber = $houseNumber;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getHouseNumberExtension(): ?string
-    {
-        return $this->houseNumberExtension;
-    }
-
-    /**
-     * @param string $houseNumberExtension
-     *
-     * @return self
-     */
-    public function setHouseNumberExtension(string $houseNumberExtension): self
-    {
-        $this->houseNumberExtension = $houseNumberExtension;
-
-        return $this;
-    }
-
 }

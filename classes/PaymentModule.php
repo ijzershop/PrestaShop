@@ -223,7 +223,6 @@ abstract class PaymentModuleCore extends Module
 
         $this->context->cart = new Cart((int) $id_cart);
         $this->context->customer = new Customer((int) $this->context->cart->id_customer);
-
         // The tax cart is loaded before the customer so re-cache the tax calculation method
         $this->context->cart->setTaxCalculationMethod();
 
@@ -237,7 +236,6 @@ abstract class PaymentModuleCore extends Module
         }
 
         $order_status = new OrderState((int) $id_order_state, (int) $this->context->language->id);
-
         if (!Validate::isLoadedObject($order_status)) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status cannot be loaded', 3, null, 'Cart', (int) $id_cart, true);
 

@@ -24,7 +24,7 @@
 <div class="row">
   <div class="input-group">
     <div class="input-group-prepend">
-      <button type="button" data-row-id="{{ record.id_order }}" name="package_size_minus" class="btn btn-primary w-100 text-button-large">-</button>
+      <button type="button" data-row-id="{{ record.id_order }}" name="package_size_minus" class="btn btn-primary w-100 text-button-large rounded-0 rounded-bottom">-</button>
     </div>
     <select class="package_size_select form-control input-lg w-100" data-row-id="{{ record.id_order }}" name="package_size" {% if record.shipping_number is not empty %}style="border-color:#ff0000;border-width: 2px;border-style: dashed;" {% endif %}>
       <option value="1" {% if record.total_order_weight|number_format == 0 and record.total_order_weight|number_format <= 1 %} selected {% endif %}>0 - 1kg</option>
@@ -50,7 +50,7 @@
       <option value="0" {% if record.total_order_weight|number_format > 200 %} selected {% endif %}>200+</option>
     </select>
     <div class="input-group-append">
-      <button type="button" data-row-id="{{ record.id_order }}" name="package_size_plus"  class="btn btn-primary w-100 text-button-large">+</button>
+      <button type="button" data-row-id="{{ record.id_order }}" name="package_size_plus"  class="btn btn-primary w-100 text-button-large rounded-0">+</button>
     </div>
   </div>
 </div>
@@ -101,7 +101,8 @@
   </div>
 </div>
   <div class="row">
-    <div class="col-6 p-0">
+    <div class="col-12 p-0 btn-toolbar">
+      <div class="btn-group  btn-group-justified m-0" role="group" aria-label="First group">
       {#     Pickup Carrier #}
       {% if record.carrier is same as column.options.stateCarrier.pickup %}
         {#  Afgehaald State  #}
@@ -128,8 +129,7 @@
           </div>
         {% endif %}
       {% endif %}
-    </div>
-    <div class="col-6 p-0">
+
       {#  Backorder Waiting State  #}
       {% if record.current_state is not same as column.options.stateType.waiting %}
         <div class="cc-koopman backorder-btn btn btn-warning"
@@ -153,17 +153,18 @@
       {% endif %}
 
 
-      {#  Being prepared State  #}
-      {% if record.current_state is not same as column.options.stateType.shipping %}
-        <div class="cc-koopman beingprepared-btn btn btn-warning"
-             data-order="{{ record.id_order }}" title="Status wijzigen naar word voorbereid">
-          <input id="beingprepared_{{ record.id_order }}" type="radio" name="beingprepared-pakket" value="beingprepared"/>
-          <label class="type-cc beingprepared" for="beingprepared_{{ record.id_order }}">
-            Voorbereiden
-          </label>
-        </div>
-      {% endif %}
+{#      #}{#  Being prepared State  #}
+{#      {% if record.current_state is not same as column.options.stateType.shipping %}#}
+{#        <div class="cc-koopman beingprepared-btn btn btn-warning"#}
+{#             data-order="{{ record.id_order }}" title="Status wijzigen naar word voorbereid">#}
+{#          <input id="beingprepared_{{ record.id_order }}" type="radio" name="beingprepared-pakket" value="beingprepared"/>#}
+{#          <label class="type-cc beingprepared" for="beingprepared_{{ record.id_order }}">#}
+{#            Voorbereiden#}
+{#          </label>#}
+{#        </div>#}
+{#      {% endif %}#}
     </div>
+  </div>
   </div>
 </div>
 

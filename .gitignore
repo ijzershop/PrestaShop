@@ -5,10 +5,10 @@
 *.log
 npm-debug.log.*
 .sass-cache/
-.well-known/*
 *.swp
 *.swo
 .cache/
+
 # Cache
 /cache/*
 !/cache/.htaccess
@@ -63,6 +63,8 @@ npm-debug.log.*
 !/img/m/index.php
 !/img/os/index.php
 !/img/p/index.php
+!/img/pr/index.php
+!/img/pr/default.jpg
 !/img/s/index.php
 !/img/scenes
 !/img/st/index.php
@@ -70,130 +72,10 @@ npm-debug.log.*
 !/img/t/index.php
 !/img/tmp/index.php
 
-!/upload/aanlasplaten-cat.jpg
-!/upload/aluminium-overzicht.png
-!/upload/aluminium-verstek.png
-!/upload/balk-behandeling-4.jpg
-!/upload/balk-berekening.png
-!/upload/bankoverschrijving.png
-!/upload/Betaalgemak-B2 (1).jpg
-!/upload/Betaalgemak-B2.jpg
-!/upload/bevestigingsmateriaal.jpg
-!/upload/BOORGATEN.png
-!/upload/boren1.png
-!/upload/bouten-moeren.png
-!/upload/BOUWHOOGTE-WIELEN.png
-!/upload/C-aluminium.jpg
-!/upload/CAT-aftekenen.png
-!/upload/CAT-assen.png
-!/upload/CAT-blokken.png
-!/upload/cat-boren-en-tappen.png
-!/upload/CAT-buiskoppelingen.png
-!/upload/CAT-bussen.png
-!/upload/CAT-constructiebalken.png
-!/upload/CAT-corten-2.jpg
-!/upload/CAT-draaiwerk.png
-!/upload/cat-gehardeassen.png
-!/upload/CAT-spuitverf.png
-!/upload/CAT-techn-spray.png
-!/upload/cat-veiligheid.png
-!/upload/cat-verbruiksmaterialen.png
-!/upload/cat-werkplaatsa.png
-!/upload/cilinderkopbout.png
-!/upload/CONSTRUCTIE.png
-!/upload/constructieplaten-cat.jpg
-!/upload/Consumentenvoorwaarden Metaalunie 2019.pdf
-!/upload/cookiebar.png
-!/upload/Corona-1.png
-!/upload/corten-profielen.jpg
-!/upload/cortenplaat.png
-!/upload/detailtekening.jpg
-!/upload/doppen-ass.png
-!/upload/draadstang-ass.png
-!/upload/glijlager.jpg
-!/upload/H-BALK-VERSTEKZAGEN.png
-!/upload/icon.jpg
-!/upload/Ideal-betaling.png
-!/upload/Idealbetaling-BW.png
-!/upload/IJzershop-corten.png
-!/upload/inslag-cat.png
-!/upload/knippen1.png
-!/upload/knoppen-ass.png
-!/upload/kogellager.jpg
-!/upload/KOLOMVERBINDING.png
-!/upload/koninklijke_metaalunie.png
-!/upload/kunststof_profielen.jpg
-!/upload/laagbolkop.png
-!/upload/lagerblok.jpg
-!/upload/lagers-cat.png
-!/upload/lasbochten-cat.png
-!/upload/lasproducten-cat.png
-!/upload/lassen-en-boren.jpg
-!/upload/lassen-werkplaats.png
-!/upload/lassen1.png
-!/upload/legpress.png
-!/upload/maatvoering-flensmontageblok.png
-!/upload/maatvoering-lineairlager.png
-!/upload/maatvoering-montageblok.png
-!/upload/messing_profielen_2.jpg
-!/upload/Metaalunievoorwaarden 2019.pdf
-!/upload/moer-assorti.png
-!/upload/moer-maten.png
-!/upload/moerkap-cat.png
-!/upload/montage-apparaatwielen.png
-!/upload/montage-universeel.png
-!/upload/oogmoer-cat-2.png
-!/upload/orderpicking.png
-!/upload/overview_gdpr.png
-!/upload/paypal-betaling_1.png
-!/upload/perfo.png
-!/upload/perfo_1.png
-!/upload/platen-knippen.png
-!/upload/platen-zetten.png
-!/upload/popnagel-cat.png
-!/upload/ring-assorti.png
-!/upload/ring-cat.png
-!/upload/RVS draadstang.png
-!/upload/RVS profielen.jpg
-!/upload/RVS-moeren-assorti.png
-!/upload/RVS-ringen-assorti.png
-!/upload/rvs-strekmetaal.jpg
-!/upload/RVS-zeskantbout.png
-!/upload/RVSplaat.png
-!/upload/s355-plaat.jpg
-!/upload/sleutel-cat.png
-!/upload/slider-checked.png
-!/upload/slider-unchecked.png
-!/upload/slotbout-cat.png
-!/upload/staalplaat.png
-!/upload/stalen-profielen.png
-!/upload/stelschroef-cat.png
-!/upload/strekmetaal.png
-!/upload/supportdesk.png
-!/upload/traanplaat.png
-!/upload/Transmission.jpg
-!/upload/U-BALK-LIGGEND-VERSTEK.png
-!/upload/U-BALK-STAAND-VERSTEK.png
-!/upload/vb-handen-64-2.png
-!/upload/vb-maatvoering-64.png
-!/upload/vb-oppervlakte-64-2.png
-!/upload/vb-transport2-64-2.png
-!/upload/vb-volumekorting-64.png
-!/upload/verpakte-profielen.png
-!/upload/verzinkte draadstang.png
-!/upload/verzinkte_profielen.jpg
-!/upload/verzonken kopbout-2.png
-!/upload/verzonken kopbout.png
-!/upload/vleugelbout-cat.png
-!/upload/vleugelmoet-cat.png
-!/upload/Werkplaats-sfeer-6.jpg
-!/upload/Werkplaats-sfeer-6_1.jpg
-!/upload/wielen-cat.png
-!/upload/zagen1.png
-!/upload/zeskantbouten.png
-!/upload/zetten1.png
-!/upload/zincor-verzinkt.jpg
-!/upload/1-beugels.png
+# Upload
+/upload/*
+!/upload/index.php
+!/upload/.htaccess
 
 /docs/phpdoc-sf/
 *.hot-update.js
@@ -254,7 +136,6 @@ themes/*-chunk.js.map
 
 config/defines_custom.inc.php
 config/settings.inc.php
-config/defines.inc.php
 config/settings.old.php
 config/xml/*
 config/themes/*
@@ -265,22 +146,12 @@ app/config/config.php
 
 # Themes, modules and overrides
 
-# # modules/*
-# !modules/ijzershopkiyoh
-# !modules/sawandcutmodule
-# !modules/offerintegration
-# !modules/smallorderfee
-# !modules/koopmanorderexport
-modules/ps_metrics
-modules/ps_eventbus
-modules/mollie/vendor/*
-modules/psaddonsconnect/vendor/*
-# override/*
+modules/*
+override/*
 themes/*/
 themes/classic
 !themes/_core
 !themes/_libraries
-!themes/modernesmid_theme
 
 # Vendors and dependencies
 
@@ -295,7 +166,6 @@ php-cs-fixer
 translations/*
 !translations/default
 mails/*
-!mails/en/
 !mails/themes/
 !mails/_partials/
 themes/default-bootstrap/lang/*
@@ -316,7 +186,7 @@ themes/default-bootstrap/modules/*/mails/*
 /.web-server-pid
 /app/Resources/geoip/GeoLite2-City.mmdb
 /app/config/parameters.yml
-/app/config/parameters_backup.php
+/app/config/parameters.php
 /build/
 /phpunit.xml
 /var/*
@@ -344,11 +214,5 @@ tools/build/releases/*
 # Docker configuration
 install.lock
 docker-compose.override.yml
-modules/backup_ps_metrics/
-/app/config/parameters.php
-/app/config/
-modules/pricemodifier/uploads/
-/modules/mollie_bc/
+app/config/parameters_backup.php
 google_dumps/
-*/node_modules_backup/*
-node_modules_backup/

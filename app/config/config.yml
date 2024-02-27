@@ -26,7 +26,6 @@ services:
     alias: monolog.logger
     public: true
 
-
 framework:
   assets:
     version: !php/const PrestaShop\PrestaShop\Core\Version::VERSION

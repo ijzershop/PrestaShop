@@ -1,5 +1,5 @@
 $(document).ready(function () {
 
-  $('#customer_informer_identification').select2();
+  $('form[name="customer"] #customer_informer_identification').select2();
 
 });

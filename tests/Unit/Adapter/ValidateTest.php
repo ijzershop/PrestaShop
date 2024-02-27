@@ -67,6 +67,8 @@ class ValidateTest extends TestCase
         yield [1, 'DESC'];
         yield [1, 'asc'];
         yield [1, 'desc'];
+        yield [1, 'random'];
+        yield [1, 'RANDOM'];
     }
 
     /**
@@ -122,6 +124,143 @@ class ValidateTest extends TestCase
             [false, null],
             [false, 'invalid'],
             [false, '666invalid'],
+        ];
+    }
+
+    /**
+     * @param bool $expected
+     * @param string $objectClassName
+     *
+     * @dataProvider isValidObjectClassNameDataProvider
+     */
+    public function testisValidObjectClassName(bool $expected, string $objectClassName): void
+    {
+        $this->assertSame($expected, $this->validate->isValidObjectClassName($objectClassName));
+    }
+
+    /**
+     * @param string $html
+     * @param bool $iframeAllowed
+     * @param $expectedResult
+     *
+     * @dataProvider isCleanHtmlDataProvider
+     *
+     * @return void
+     */
+    public function testIsCleanHtml(string $html, bool $allowFrame, $expectedResult): void
+    {
+        $this->assertSame($expectedResult, $this->validate->isCleanHtml($html, $allowFrame));
+    }
+
+    public function isValidObjectClassNameDataProvider(): array
+    {
+        return [
+            [true, 'MyClassName'],
+            [true, '_MyClassName'],
+            [true, '_My_Class_Name_'],
+            [true, '_MyClassName_'],
+            [true, '__My__Class__Name__'],
+            [false, ''],
+            [false, '666'],
+            [true, '_666'],
+            [true, '_6_6_6_'],
+            [true, '__'],
+        ];
+    }
+
+    private function isCleanHtmlDataProvider()
+    {
+        return [
+            [
+                '<div randomattribute="randomvalue">test</div>', // nominal case
+                false,
+                true
+            ],
+            [
+                '<div
+
+randomattribute="anything"   attributewithoutvalue
+
+        randomattr="random value">
+
+</div>', // nominal case with added spaces and line jumps
+                false,
+                true
+            ],
+            [
+                '/form input > embed onerror iframe object', // test plain words with forbidden tag / attributes: should pass
+                false,
+                true
+            ],
+            [
+                '<a href="#" onchange="evilJavascriptIsCalled()"></a>', // event attributes are forbidden, should not pass
+                false,
+                false
+            ],
+            [
+                '<a href="#" onanything="evilJavascriptIsCalled()"></a>', // random attribute starting with on should not pass
+                false,
+                false
+            ],
+            [
+                '<a href="#" oNnotexi="evilJavascriptIsCalled()"></a>', // random attribute starting with on but case insensitive: should not pass
+                false,
+                false
+            ],
+            [
+                '<iframe src="catvideo.html" /></iframe>', // iframe forbidden
+                false,
+                false
+            ],
+            [
+                '<iframe src="catvideo.html" /></iframe>', // iframe parameter is set to true, should pass
+                true,
+                true
+            ],
+            [
+                '<form></form>', // form should not pass,
+                false,
+                false
+            ],
+            [
+                '<embed></embed>', // embed should not pass
+                false,
+                false
+            ],
+            [
+                '<input>', // input should not pass
+                false,
+                false
+            ],
+            [
+                '<script>
+
+    </script>', // script tags are forbidden, should not pass (added a random tabulation and line break
+                false,
+                false
+            ],
+            [
+                '<object></object>', // objects are forbidden, should not pass
+                false,
+                false
+            ],
+            [
+                '<div
+randomattribute="anything"
+
+    onbidule="test" attributewithoutvalue
+
+        randomattr="random value">test
+
+        </div>', // puting an attribute starting with "on" in the middle of other attributes, with spaces and line breaks: shouldn't pass
+                false,
+                false
+            ],
+            [
+                '‮<img src=x onerror="alert(\'img\')">', // test RLO xss attack
+                false,
+                false
+            ]
         ];
     }
 }

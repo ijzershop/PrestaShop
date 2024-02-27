@@ -227,7 +227,6 @@ class CustomerController extends AbstractAdminController
         }
 
         try {
-
             $customerForm->handleRequest($request);
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);

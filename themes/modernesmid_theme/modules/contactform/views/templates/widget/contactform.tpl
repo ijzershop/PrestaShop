@@ -82,19 +82,9 @@
         </ul>
         </p>
       </div>
-
-
-
-{*      <div class="notification {if $notifications.nw_error}notification-error{else}notification-success{/if}">*}
-{*        <ul class="list-unstyled">*}
-{*          {foreach $notifications.messages as $notif}*}
-{*            <li>{$notif}</li>*}
-{*          {/foreach}*}
-{*        </ul>*}
-{*      </div>*}
     {/if}
 
-    {if !$notifications || $notifications.nw_error}
+    {if (!$notifications || $notifications.nw_error) && !$geo_location_block}
       <section class="form-fields">
         {if Context::getContext()->controller->php_self == 'contactinformation'}
           <input type="hidden" value="2" class="form-control" name="id_contact">
@@ -237,6 +227,16 @@
 
       </footer>
     {/if}
+
+      <div class="contactform-user-code-input">
+        <label class="text-dark">{l s='User Code' d='Modules.Contactform.Shop'}</label>
+        <input class="form-control mb-2" type="text" name="gebruikers_informatie_nummer" value="" tabindex="-1" autocomplete="off"/>
+        <div class="invalid-feedback">
+          Vul a.u.b. uw gebruikercode in.
+        </div>
+      </div>
+
+
   </form>
   </div>
   </div>

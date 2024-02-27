@@ -58,6 +58,7 @@
             }
             */
     },
+
     _processFile(data) {
       const that = this;
       const dfd = $.Deferred().resolveWith(that, [data]);

@@ -144,9 +144,9 @@ class FrameworkBundleAdminController extends AbstractController
                 );
             }
         }
+
         return $errors;
     }
-
 
     /**
      * Creates a HookEvent, sets its parameters, and dispatches it.

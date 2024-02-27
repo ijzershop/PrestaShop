@@ -91,6 +91,7 @@ function error_modal(heading, msg) {
   errorModal.modal('show');
 }
 
+// move to hash after clicking on anchored links
 // eslint-disable-next-line
 function scroll_if_anchor(href) {
   // eslint-disable-next-line
@@ -99,6 +100,7 @@ function scroll_if_anchor(href) {
 
   if (href.indexOf('#') === 0) {
     const $target = $(href);
+
     if ($target.length) {
       $('html, body').animate({scrollTop: $target.offset().top - fromTop});
       if (history && 'pushState' in history) {
@@ -108,7 +110,6 @@ function scroll_if_anchor(href) {
     }
   }
 }
-
 $(document).ready(() => {
   const $mainMenu = $('.main-menu');
   const $navBar = $('.nav-bar');
@@ -221,7 +222,6 @@ $(document).ready(() => {
   addMobileBodyClickListener();
   const MAX_MOBILE_WIDTH = 1023;
 
-
   if ($(window).width() <= MAX_MOBILE_WIDTH) {
     mobileNav();
   }
@@ -230,7 +230,6 @@ $(document).ready(() => {
     if ($('body').hasClass('mobile') && $(window).width() > MAX_MOBILE_WIDTH) {
       unbuildMobileMenu();
     } else if (!$('body').hasClass('mobile') && $(window).width() <= MAX_MOBILE_WIDTH) {
-
       mobileNav();
       $('nav.nav-bar ul.main-menu').removeClass('sidebar-closed');
     }
@@ -409,7 +408,6 @@ $(document).ready(() => {
     $('.clear_search').removeClass('hide');
   }
 
-
   $('.clear_search').on('click', function (e) {
     e.stopPropagation();
     e.preventDefault();
@@ -443,7 +441,6 @@ $(document).ready(() => {
   });
 
   // select list for search type
-
   $('#header_search_options').on('click', 'li a', function (e) {
     e.preventDefault();
     $('#header_search_options .search-option').removeClass('active');
@@ -451,16 +448,13 @@ $(document).ready(() => {
       .closest('li')
       .addClass('active');
     $('#bo_search_type').val($(this).data('value'));
-    $('#search_type_icon')
-      .removeAttr('class')
-      .addClass($(this).data('icon'));
+    $('#search_type_icon').text($(this).find('.material-icons').text());
     $('#bo_query').attr('placeholder', $(this).data('placeholder'));
     $('#bo_query').focus();
   });
 
   // reset form
   /* global header_confirm_reset, body_confirm_reset, left_button_confirm_reset, right_button_confirm_reset */
-
   $('.reset_ready').click(function () {
     const href = $(this).attr('href');
     confirm_modal(
@@ -508,7 +502,6 @@ $(document).ready(() => {
       .parent();
     parentZone.find('.status').addClass('hide');
 
-
     if ($(this).attr('checked') === 'checked') {
       enable = 1;
       parentZone.find('.enabled').removeClass('hide');
@@ -531,6 +524,7 @@ $(document).ready(() => {
     $('#id_order_carrier').val($(this).data('id-order-carrier'));
     $('#shipping_tracking_number').val($(this).data('tracking-number'));
     $(`#shipping_carrier option[value=${$(this).data('id-carrier')}]`).prop('selected', true);
+
     $('#modal-shipping').modal();
   });
 });

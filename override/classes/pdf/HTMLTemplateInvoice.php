@@ -197,7 +197,12 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         if (!empty($invoice_address->address2) && $invoice_address->address2 != ' ') {
             $formatted_invoice_address .= $invoice_address->address2 . '<br />';
         }
-        $formatted_invoice_address .= ucwords($invoice_address->postcode) . ' ' . $invoice_address->city . '<br />';
+
+        $invoicePostalCode = '';
+        if(!empty($invoice_address->postcode)){
+            $invoicePostalCode = ucwords($invoice_address->postcode);
+        }
+        $formatted_invoice_address .= $invoicePostalCode . ' ' . $invoice_address->city . '<br />';
         $formatted_invoice_address .= $invoice_address->country . '<br />';
 
         $formatted_delivery_address = '';
@@ -218,7 +223,14 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             if (!empty($delivery_address->address2) && $delivery_address->address2 != ' ') {
                 $formatted_delivery_address .= $delivery_address->address2 . '<br />';
             }
-            $formatted_delivery_address .= ucwords($delivery_address->postcode) . ' ' . $delivery_address->city . '<br />';
+
+
+            $deliveryPostalCode = '';
+            if(!empty($delivery_address->postcode)){
+                $deliveryPostalCode = ucwords($delivery_address->postcode);
+            }
+
+            $formatted_delivery_address .= $deliveryPostalCode . ' ' . $delivery_address->city . '<br />';
             $formatted_delivery_address .= $delivery_address->country . '<br />';
         }
 

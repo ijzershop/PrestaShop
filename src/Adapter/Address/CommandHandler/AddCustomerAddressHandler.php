@@ -75,8 +75,6 @@ final class AddCustomerAddressHandler extends AbstractAddressHandler implements 
         $address->lastname = $command->getLastName();
         $address->firstname = $command->getFirstName();
         $address->address1 = $command->getAddress();
-        $address->house_number = $command->getHouseNumber();
-        $address->house_number_extension = $command->getHouseNumberExtension();
         $address->id_country = $command->getCountryId()->getValue();
         $address->city = $command->getCity();
         $address->alias = $command->getAddressAlias();

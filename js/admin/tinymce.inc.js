@@ -2,7 +2,7 @@
  * Change default icons to marerial icons
  */
 // function changeToMaterial() {
-//   var materialIconAssoc = {
+//   let materialIconAssoc = {
 //     'mce-i-code': '<i class="material-icons">code</i>',
 //     'mce-i-none': '<i class="material-icons">format_color_text</i>',
 //     'mce-i-bold': '<i class="material-icons">format_bold</i>',
@@ -30,7 +30,7 @@
 // }
 
 function fetchKey(hostname) {
-  var keys = [];
+  let keys = [];
   keys["bouwstaalmat.nl"] =  "";
   keys["bouwstaalmat.viho.nl"] =  "";
   keys["constructiebalk.nl"] =  "3wORV+ZdWifIWnUWSxdAUtCPcNfJnjU/DMxjcGDxcZnBQVJgpRjWdVZMdqAhsj5pbZd3c/h/s41crmf9zwJuv3VrO/4pkSLOmAdBZJT3W6Y="; //set
@@ -73,15 +73,16 @@ let tinySetup = function(config) {
   }
 
 
-  if (typeof (base_url) == "undefined") {
-    // detect the root url
-    var base_url = location.protocol + '//' + location.host + '/';
-    // detect localhost
-  }
-  var tbpKey = fetchKey(window.location.hostname);
+  let base_url_website = window.location.protocol + '//' + window.location.host + '/';
+  let tbpKey = fetchKey(window.location.hostname);
 
-  var default_config = {
+  let default_config = {
     selector: '.rte',
+    base_url: base_url_website + 'js/tiny_mce/',
+    remove_script_host: false,
+    document_base_url: base_url_website,
+    plugin_base_url: base_url_website,
+    relative_urls: false,
     plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
     browser_spellcheck: true,
     toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
@@ -102,14 +103,14 @@ let tinySetup = function(config) {
     },
     contextmenu: "bootstrap",
     image_advtab: true ,
-    external_filemanager_path:"/js/filemanager/",
+    external_filemanager_path: base_url_website + 'js/filemanager/',
     filemanager_title:"Bestands beheer" ,
-    external_plugins: { "filemanager" : "/js/filemanager/plugin.min.js"},
+    external_plugins: { "filemanager" : base_url_website + "js/filemanager/plugin.min.js"},
     bootstrapConfig: {
       language: iso_user,
-      url: base_url + 'js/tiny_mce/plugins/bootstrap/',
+      url: base_url_website + 'js/tiny_mce/plugins/bootstrap/',
       iconFont: 'fontawesome5',
-      imagesPath: '/upload',
+      imagesPath: base_url_website+ 'upload',
       key: tbpKey,
       enableTemplateEdition: true,
     },
@@ -134,7 +135,6 @@ let tinySetup = function(config) {
     },
     menubar: false,
     statusbar: false,
-    relative_urls: false,
     convert_urls: false,
     entity_encoding: 'raw',
     extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
@@ -142,10 +142,10 @@ let tinySetup = function(config) {
     valid_elements: '*[*]',
     rel_list: [{title: 'nofollow', value: 'nofollow'}],
     automatic_uploads: true,
-    images_upload_url: '/custom_uploader/upload.php',
+    images_upload_url: base_url_website + 'custom_uploader/upload.php',
     images_upload_handler: function (blobInfo, success, failure, progress) {
       let xhr, formData;
-      const url = '/index.php?fc=module&module=modernesmidthemeconfigurator&controller=ajax&id_lang=1';
+      const url = '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1';
       xhr = new XMLHttpRequest();
       xhr.withCredentials = false;
       xhr.open('POST', url);
@@ -188,8 +188,8 @@ let tinySetup = function(config) {
     if (config[index] === undefined) config[index] = el;
   });
 
-  var plugins_arr = config['plugins'];
-  var old_plugins_array = ['iespell', 'inlinepopups', 'style', 'xhtmlxtras', 'safari'];
+  let plugins_arr = config['plugins'];
+  let old_plugins_array = ['iespell', 'inlinepopups', 'style', 'xhtmlxtras', 'safari'];
   $.each(plugins_arr, function(index, data) {
     if (data == 'advhr') plugins_arr[index] = 'hr';
     else if (data == 'advlink') plugins_arr[index] = 'link';
@@ -202,7 +202,7 @@ let tinySetup = function(config) {
     }
   });
 
-  var plugins = plugins_arr.join(',');
+  let plugins = plugins_arr.join(',');
 
   config.plugins = plugins;
 

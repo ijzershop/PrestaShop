@@ -592,6 +592,9 @@
     ],
     "DatabaseDriversLRU": [
       "mysql"
+    ],
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "PHP"
     ]
   }
 }]]></component>
@@ -1323,7 +1326,7 @@
       <workItem from="1708582648595" duration="1843000" />
       <workItem from="1708927966862" duration="3647000" />
       <workItem from="1708937633468" duration="10945000" />
-      <workItem from="1709012578752" duration="17919000" />
+      <workItem from="1709012578752" duration="19833000" />
     </task>
     <servers />
   </component>

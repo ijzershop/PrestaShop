@@ -9,7 +9,7 @@
           <h5 class="mb-3 text-black modal-title">Wij gebruiken Cookies</h5>
           <p class="text-black" style="font-size:14px;">Wij gebruiken cookies op deze website om content en advertenties te personaliseren. Daarnaast kunnen social media features hiermee geladen worden en analyseren wij de interacties van onze bezoekers. We delen deze informatie met onze analytics en social media partners en adverteerders. Zij kunnen deze data combineren met data die ze al hebben verzameld. Een lisjt met alle cookies en de functies hiervan vindt u in onze <a href="/content/11-privacyverklaring" title="privacy verklaring">privacyverklaring.</a></p>
         </div>
-        <div class="modal-footer justify-content-between m-col-rev">
+        <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-outline-secondary float-right w-47" id="cookie-change">Instellingen aanpassen</button>
           <button type="button" class="btn btn-primary float-left w-47"  id="cookie-accept">Accepteren</button>
         </div>
@@ -54,8 +54,8 @@
           </div>
         </div>
         <div class="modal-footer justify-content-between m-col-rev">
-          <button type="button" class="btn btn-outline-secondary float-right w-47" id="cookie-accept-change">Aanpassingen accepteren</button>
           <button type="button" class="btn btn-primary w-47 float-left" id="cookie-accept-2">Accepteren</button>
+          <button type="button" class="btn btn-outline-secondary float-right w-47" id="cookie-accept-change">Aanpassingen accepteren</button>
         </div>
       </div>
     </div>

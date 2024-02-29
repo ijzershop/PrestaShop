@@ -20,7 +20,7 @@ $(function() {
       }
     },
     _renderItem: function (ul, product) {
-      var searchBarWidth = '465px';
+      var searchBarWidth = '100%';
       var orderable = checkIsOrderable(product);
 
       if(product.value === 'x'){

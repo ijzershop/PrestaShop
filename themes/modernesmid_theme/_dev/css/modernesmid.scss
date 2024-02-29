@@ -386,7 +386,12 @@ ul#ui-id-1 {
 ul#ui-id-2 {
   border-top-right-radius: 0px;
   border-top-left-radius: 0px;
-  border: none;
+  border: 1px solid $border_color_5!important;
+  li:hover, li a:hover, li a.ui-state-active{
+    background-color: $background_color_17 !important;
+    color: $color_3!important;
+    border:none;
+  }
   li.ui-menu-item {
     a.ui-state-focus {
       border: none;
@@ -2201,7 +2206,9 @@ main {
 
 
 //Cookie check modal
-
+#cookiesModal .modal-dialog-centered{
+  min-height: 100%;
+}
 @media only screen and (min-width: 768px){ #cookiesModal .w-47{width:47%;} }
 @media only screen and (max-width: 767px){ #cookiesModal .w-47{width: 100%; } .m-col-rev{ flex-direction: column-reverse; }}
 #cookiesModal .cookie-input {

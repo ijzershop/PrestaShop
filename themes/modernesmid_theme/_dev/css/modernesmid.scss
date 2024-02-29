@@ -1697,6 +1697,7 @@ main {
 .buorg-pad {
   padding: 25px !important;
   line-height: 1.2rem !important;
+  width:100vw;
 }
 .buorg {
   font: initial;
@@ -1711,7 +1712,7 @@ main {
 }
 .buorg-moremsg {
   font-size: 1rem !important;
-  line-height: .5rem !important;
+  line-height: .9rem !important;
   margin-bottom: 10px;
 }
 #buorgig {
@@ -2208,6 +2209,7 @@ main {
 //Cookie check modal
 #cookiesModal .modal-dialog-centered{
   min-height: 100%;
+  max-width: 95vw;
 }
 @media only screen and (min-width: 768px){ #cookiesModal .w-47{width:47%;} }
 @media only screen and (max-width: 767px){ #cookiesModal .w-47{width: 100%; display: block; } .m-col-rev{ flex-direction: column-reverse; }}

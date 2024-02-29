@@ -2210,7 +2210,7 @@ main {
   min-height: 100%;
 }
 @media only screen and (min-width: 768px){ #cookiesModal .w-47{width:47%;} }
-@media only screen and (max-width: 767px){ #cookiesModal .w-47{width: 100%; } .m-col-rev{ flex-direction: column-reverse; }}
+@media only screen and (max-width: 767px){ #cookiesModal .w-47{width: 100%; display: block; } .m-col-rev{ flex-direction: column-reverse; }}
 #cookiesModal .cookie-input {
   position: absolute;
   opacity: 0;

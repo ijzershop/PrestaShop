@@ -53,9 +53,9 @@
             </label>
           </div>
         </div>
-        <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-outline-secondary float-right w-47" id="cookie-accept-change">Aanpassingen accepteren</button>
+        <div class="modal-footer justify-content-between m-col-rev">
           <button type="button" class="btn btn-primary w-47 float-left" id="cookie-accept-2">Accepteren</button>
+          <button type="button" class="btn btn-outline-secondary float-right w-47" id="cookie-accept-change">Aanpassingen accepteren</button>
         </div>
       </div>
     </div>

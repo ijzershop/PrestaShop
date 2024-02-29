@@ -1325,7 +1325,18 @@ class ModernHook
                 }
                 break;
             case 'order-confirmation':
-               $cart = new Cart($_GET['id_cart']);
+                $cart = new Cart($_GET['id_cart']);
+                $transaction_id = '';
+                $reference = '';
+               if(isset($_GET['id_order'])) {
+                   $order = new Order($_GET['id_order']);
+                   $transIds = $order->getOrderPayments();
+                   $reference = $order->reference;
+                   if(isset($transIds[0]->transaction_id)){
+                       $transaction_id = $transIds[0]->transaction_id;
+                   }
+               }
+
                $items = [];
 
                 foreach ($cart->getProducts() as $product){
@@ -1360,6 +1371,8 @@ class ModernHook
                 }
 
                 $param['templateVars']['analytics_data']['confirmation'] = [
+                    'transaction_id' => $transaction_id,
+                    'reference' => $reference,
                     'currency' => 'EUR',
                     'amount_tax_excl' => $cart->getOrderTotal(false),
                     'discount' => $discount,

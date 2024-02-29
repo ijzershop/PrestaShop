@@ -332,7 +332,7 @@ class DmsAdminOrderController extends FrameworkBundleAdminController
             'meta_title' => $metatitle,
             'history' => $orderForViewing->getHistory(),
             'order' => new Order($orderForViewing->getId()),
-            'searchToken' => Tools::getAdminTokenLite('ModernesmidThemeConfigurator'),
+            'searchToken' => Tools::getAdminTokenLite('MsThemeConfig'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'orderForViewing' => $orderForViewing,
             'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),

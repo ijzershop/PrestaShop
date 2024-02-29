@@ -2096,10 +2096,11 @@ $('.nav-contact').on('mouseleave',function() {
 $(function() {
 
   $.widget("custom.icon_select_menu", $.ui.selectmenu, {
+    _resizeMenu: function() {
+      let menuWidth = $('#'+this.element[0].id+'-button').width()+26;
+      this.menu.outerWidth( menuWidth );
+    },
     _renderItem: function (ul, item) {
-
-      console.log(item.element[0].dataset);
-
       let li = $("<li>");
       let wrapper = $("<li href='"+item.element.attr('data-url')+"'>");
       wrapper.html('<span class="product-name w-100">'+item.label+'<span class="float-right text-black price">'+item.element[0].dataset.price+'</span></span>');

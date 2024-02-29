@@ -576,6 +576,21 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
+    public function createAndPushBackofficeAnalyticsData($id_order, $type='refund', $items)
+    {
+        $transaction_id = '';
+        $reference = '';
+        $order = new Order($_GET['id_order']);
+        $transIds = $order->getOrderPayments();
+        $reference = $order->reference;
+        if(isset($transIds[0]->transaction_id)){
+            $transaction_id = $transIds[0]->transaction_id;
+        }
+
+        $cart = new Cart($order->id_cart);
+        var_export([$order, $transaction_id, $cart, $type, $items]);
+    }
+
     /**
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
@@ -595,9 +610,11 @@ class OrderController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.core.form.identifiable_object.partial_refund_form_handler');
         $form = $formBuilder->getFormFor($orderId);
 
+
         try {
             $form->handleRequest($request);
             $result = $formHandler->handleFor($orderId, $form);
+
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
                     $this->addFlash('success', $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification'));

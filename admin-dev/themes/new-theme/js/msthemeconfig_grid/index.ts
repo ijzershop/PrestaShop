@@ -190,30 +190,21 @@ $(() => {
         let id = $(this).attr('data-offer-id');
         let putLink = $('#offer-put-url').val();
 
-        let offer;
-        // @ts-ignore
-        offer.formTitle = 'Create offer';
-        // @ts-ignore
-        offer.id_product = '';
-        // @ts-ignore
-        offer.id_oi_offer = id;
-        // @ts-ignore
-        offer.name = '';
-        // @ts-ignore
-        offer.price = '';
-        // @ts-ignore
-        offer.quantity = '';
-        // @ts-ignore
-        offer.extra_shipping = '';
-        // @ts-ignore
-        offer.weight = '';
-        // @ts-ignore
-        offer.description_short = '';
-        // @ts-ignore
-        offer.link = putLink;
-        // @ts-ignore
-        offer.new = true;
+        let offer =  {
+          oi_offer_extra_shipping: '',
+          id_product: '',
+          link: putLink,
+          formTitle: 'Create Offer',
+          id_oi_offer: id,
+          new: true,
+          name: '',
+          price: '',
+          quantity: '',
+          weight: '',
+          description_short: '',
+        }
 
+        // @ts-ignore
         $.fancybox.open(offerFormTemplate(offer), {
           dropdownParent: $('#offer-row-form'),
           width: '800',

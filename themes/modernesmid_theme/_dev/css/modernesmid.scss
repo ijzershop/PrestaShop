@@ -338,16 +338,28 @@ form.header-search-box {
     max-width: 100%;
     width: 100%;
     margin-left: 0 !important;
+    .ui-menu{
+      width: 100%!important;
+      left:0!important;
+      top:60px!important;
+    }
     .input-group-append {
       margin-bottom: 0;
       .btn {
         border-top-right-radius: 0 !important;
         border-bottom-right-radius: 0 !important;
+        border:none;
+        height: 48px;
       }
+    }
+    input.form-control:focus{
+      border:none;
+      height: 49px;
     }
     input.form-control {
       border-top-left-radius: 0 !important;
       border-bottom-left-radius: 0 !important;
+      height: 50px!important;
     }
   }
   overflow-x: hidden;
@@ -399,6 +411,9 @@ ul#ui-id-2 {
       width: 100%;
       background-color: $background_color_7;
       background-image: none;
+    }
+    a.ui-state-active{
+      background: none;
     }
     span.price {
       float: right;
@@ -823,6 +838,7 @@ ul#ui-id-2 {
         font-size: smaller;
         position: absolute;
         line-height: 25px;
+        font-size: 12px;
         text-align: center;
         top: 0;
         left: -2px;
@@ -2256,4 +2272,25 @@ main {
 .contactform-user-code-input{
   position: absolute;
   left:-50000px
+}
+
+.custom-product-item label{
+  font-size: 15px;
+  font-weight: bold;
+  margin-left:5px;
+}
+
+.custom-product-item .input-group,
+.custom-product-item .input-group,
+.custom-product-item input[name="custom_product_total"],
+.custom-product-item .input-group input{
+  height:  60px;
+}
+
+.custom-product-item button{
+  height: 60px;
+  width: 50%;
+}
+.modal{
+  z-index:9999;
 }

@@ -33,7 +33,7 @@ class LscPscartdropdown extends LscIntegration
         $confData = [
             EsiConf::FLD_PRIV => 1,
             EsiConf::FLD_TAG => LiteSpeedCacheConfig::TAG_CART,
-            EsiConf::FLD_HOOK_METHODS => 'hookDisplayHeader',
+            EsiConf::FLD_HOOK_METHODS => 'hookHeader',
         ];
         $this->esiConf = new EsiConf(self::NAME, EsiConf::TYPE_INTEGRATED, $confData);
 

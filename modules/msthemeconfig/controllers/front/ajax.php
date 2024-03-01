@@ -390,8 +390,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $qty = (int)$_POST['qty'];
         $price = $_POST['price'];
         $description = $_POST['description'];
-        $paid = $_POST['switchinput'];
-        $withTax = $_POST['with_tax'];
+        $paid = (int)$_POST['switchinput'];
+        $withTax = (int)$_POST['with_tax'];
 
         $reference = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
         $category = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
@@ -403,13 +403,13 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             Context::getContext()->cookie->id_cart = $cart->id;
         }
 
-        if ($withTax == 'true') {
+        if ($withTax) {
             $productPrice = number_format($price - ($price / 121) * 21, 6, '.', '');
         } else {
             $productPrice = number_format($price, 6, '.', '');
         }
 
-        if ($paid == 'true') {
+        if ($paid) {
             //is paid add product to cart
             $product = new Product();
             $product->ean13 = '';

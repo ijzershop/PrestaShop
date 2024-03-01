@@ -238,40 +238,16 @@
       {*  Only show voucher when customer from group or balie mederwerker *}
 
           {if $vouchers.allowed}
-              {foreach $vouchers.added as $voucher}
 
-                  {assign var="voucher_object" value=CartRule::getCartsRuleByCode($voucher.code, null, true)}
-                <div style="margin-bottom: 1%;" id="cart_discount_{$voucher.id_cart_rule}"
-                     class="cart_discount text-right p-1"
-                     style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
-                  <div style="float:left;line-height: 20px;margin-right:5px;"
-                       title="{l s='Korting toevoegen' mod='supercheckout'}"></div>
-                  <span style="float:left;color:#4862A3;font-size:14px;">Korting: {$voucher.name}</span><a
-                    href="javascript:void(0)"
-                    style="float: left;margin-left: 2%;"
-                    onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><i
-                      class="fasl fa-trash"></i></a>
-                  <span
-                    class="price text-right">
-                      {if (float)$voucher.reduction_amount > 0.00}
-                          {Context::getContext()->currentLocale->formatPrice($voucher.reduction_amount, 'EUR')}
-                      {elseif (float)$voucher.reduction_percent > 0.00}
-                          {$voucher.reduction_percent}%
-                      {/if}
-
-
-                  </span>
-                </div>
-              {/foreach}
               {if in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Customer::getGroupsStatic(Context::getContext()->cart->id_customer)) || (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
 
-              {if count($vouchers.added) == 0}
+{*              {if count($vouchers.added) == 0}*}
                 <div class="rewardHeader"
                      style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
                   <a href="javascript:void(0)"
                      onclick="$('.rewardBody').toggle();">{l s='Heeft u een kortings code?' mod='supercheckout'} </a>
                 </div>
-                <div class="rewardBody" style="display:none">
+                <div class="rewardBody">
                   <!--h2>Coupon / Voucher / Reward</h2-->
                   <div id="supercheckout_voucher_input_row" class="form-group form-coupon"
                        style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
@@ -284,15 +260,40 @@
                       <span class="input-group-btn"><button id="button-coupon" onClick="callCoupon();" type="button"
                                                             data-loading-text="Loading..."
                                                             class="btn btn-primary orangebuttonapply"
-                                                            style="min-height: 33px;">{l s='Korting Toevoegen' mod='supercheckout'}</button>
+                                                            style="min-height: 33px;"><i class="fa fasl-check"></i></button>
                     </span>
                     </div>
                   </div>
                 </div>
-              {/if}
+{*              {/if}*}
               {else}
                 <div id="supercheckout_voucher_input_row" style="display:none;"></div>
               {/if}
+            {foreach $vouchers.added as $voucher}
+
+              {assign var="voucher_object" value=CartRule::getCartsRuleByCode($voucher.code, null, true)}
+              <div style="margin-bottom: 1%;" id="cart_discount_{$voucher.id_cart_rule}"
+                   class="cart_discount text-right p-1"
+                   style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
+                <div style="float:left;line-height: 20px;margin-right:5px;"
+                     title="{l s='Korting toevoegen' mod='supercheckout'}"></div>
+                <span style="float:left;color:#4862A3;font-size:14px;">Korting: {$voucher.name}</span><a
+                  href="javascript:void(0)"
+                  style="float: left;margin-left: 2%;"
+                  onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><i
+                    class="fasl fa-trash"></i></a>
+                <span
+                  class="price text-right">
+                      {if (float)$voucher.reduction_amount > 0.00}
+                        {Context::getContext()->currentLocale->formatPrice($voucher.reduction_amount, 'EUR')}
+                      {elseif (float)$voucher.reduction_percent > 0.00}
+                        {$voucher.reduction_percent}%
+                      {/if}
+
+
+                  </span>
+              </div>
+            {/foreach}
       {/if}
       {* Start Code Added By Priyanshu on 11-Feb-2021 to implement the Total Price Display functionality*}
       {if (int)Context::getContext()->cart->getOrderTotal(true, Cart::BOTH) !== 0 && ((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE'))}

@@ -171,28 +171,28 @@
 
 <div class="custom-panel rewardsection">
     {if $vouchers.allowed}
-        {foreach $vouchers.added as $voucher}
-            <div style="margin-bottom: 1%;" id="cart_discount_{$voucher.id_cart_rule}" class="cart_discount text-right" style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}none{/if}{/if};">
-
-                <span style="float:left;color:#4862A3;font-size:initial;><b>{$voucher.name}</b></span><a href="javascript:void(0)" style="float: left;margin-left: 2%;" onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><div title="{l s='Redeem' mod='supercheckout'}" class="removeProduct"><i class="fasl fa-trash"></i></div></a>
-                <span class="price text-right">{$voucher.reduction_formatted nofilter}{*escape not required as contains html*}</span>
-            </div>
-        {/foreach}
         <div class="rewardHeader" style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}none{/if}{/if};">
             <a href="javascript:void(0)" onclick="$('.rewardBody').toggle();">{l s='Have a promo code?' mod='supercheckout'} </a>
         </div>
-        <div class="rewardBody" style="display:none">
+        <div class="rewardBody">
             <!--h2>Coupon / Voucher / Reward</h2-->
             <div id="supercheckout_voucher_input_row" class="form-group form-coupon" style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}none{/if}{/if};">
                 <!--label for="input-coupon" class="control-label">Enter your coupon here</label-->
                 <div class="input-group" id="voucher-form">
                     <input type="hidden" value="1" name="submitDiscount">
                     <input name="discount_name" id="discount_name" type="text" placeholder="{l s='Enter your coupon here' mod='supercheckout'}" class="voucherText form-control">
-                    <span class="input-group-btn"><button id="button-coupon" onClick="callCoupon();" type="button" data-loading-text="Loading..." class="btn btn-primary orangebuttonapply" style="min-height: 33px;">{l s='Apply' mod='supercheckout'}</button>
+                    <span class="input-group-btn"><button id="button-coupon" onClick="callCoupon();" type="button" data-loading-text="Loading..." class="btn btn-primary orangebuttonapply" style="min-height: 33px;"><i class="fa fasl-check"></i> </button>
                     </span>
                 </div>
             </div>
         </div>
+                {foreach $vouchers.added as $voucher}
+            <div style="margin-bottom: 1%;" id="cart_discount_{$voucher.id_cart_rule}" class="cart_discount text-right" style="{if $logged}{if $settings['order_total_option']['voucher']['logged']['display'] eq 1}{else}none{/if}{else}{if $settings['order_total_option']['voucher']['guest']['display'] eq 1}{else}none{/if}{/if};">
+
+                <span style="float:left;color:#4862A3;font-size:initial;><b>{$voucher.name}</b></span><a href="javascript:void(0)" style="float: left;margin-left: 2%;" onclick="removeDiscount('{$voucher.id_cart_rule|intval}')"><div title="{l s='Redeem' mod='supercheckout'}" class="removeProduct"><i class="fasl fa-trash"></i></div></a>
+                <span class="price text-right">{$voucher.reduction_formatted nofilter}{*escape not required as contains html*}</span>
+            </div>
+        {/foreach}
     {else}
         <div id="supercheckout_voucher_input_row" style="display:none;"></div>
     {/if}

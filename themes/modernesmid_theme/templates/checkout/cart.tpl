@@ -34,7 +34,7 @@
       <div class="cart-grid-body col-xs-12 col-lg-8">
 
         <!-- cart products detailed -->
-        <div class="card cart-container border-0">
+        <div class="card cart-container border-0 row">
           <div class="p-2 ">
             <a class="h2 w-100 text-decoration-none text-dark">{l s='Shopping Cart' d='Shop.Theme.Checkout'}</a>
           </div>
@@ -50,7 +50,7 @@
     {*            {/block}*}
                   {* Show print cart button *}
                   <a href="#" id="addCustomProductByEmployee" data-cart="{Context::getContext()->cart->id}"  class="btn btn-success float-right mt-2" alt="Extra product toevoegen"><i class="fasl fa-plus"></i> Regel toevoegen</a>
-                  <a href="#" id="removeShoppingCartDefaultDiscount" data-cart="{Context::getContext()->cart->id}"  class="btn btn-warning float-right mt-2" alt="Winkelwagen korting verwijderen"><i class="fasl fa-times"></i> Korting verwijderen</a>
+                  <a href="#" id="removeShoppingCartDefaultDiscount" data-cart="{Context::getContext()->cart->id}"  class="btn btn-warning float-right text-white mt-2" alt="Winkelwagen korting verwijderen"><i class="fasl fa-times"></i> Korting verwijderen</a>
                   {*              <a href="#" id="printShoppingCartByEmployee" data-cart="{Context::getContext()->cart->id}" class="btn btn-link text-dark float-right mt-1" alt="Winkelwagen als pdf opslaan"><i class="fa-2x fasl fa-file-pdf"></i></a>*}
                 </div>
             {/if}

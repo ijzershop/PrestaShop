@@ -1294,7 +1294,7 @@
 }
 
 #supercheckout-fieldset .voucherText {
-    height: 20px !important;
+    height: 50px !important;
     width: 45% !important;
     min-width: 45% !important;
 }

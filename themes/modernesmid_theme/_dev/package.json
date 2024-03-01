@@ -27,6 +27,7 @@
     "eslint-plugin-html": "^6.0.0",
     "eslint-plugin-import": "^2.20.0",
     "expose-loader": "^3.0.0",
+    "file-loader": "^6.2.0",
     "flexibility": "^1.0.5",
     "jquery": "^3.5.1",
     "jquery-touchswipe": "^1.6",
@@ -48,11 +49,13 @@
     "webpack-sources": "^0.1.0"
   },
   "dependencies": {
+    "@awesome.me/kit-cc4f3be310": "^1.0.44",
     "@fortawesome/fontawesome-pro": "^6.2.1",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "csv-parser": "^3.0.0",
     "papaparse": "^5.4.1",
     "popper.js": "^1.16.1",
+    "resolve-url-loader": "^5.0.0",
     "sprintf-js": "^1.1.2"
   }
 }

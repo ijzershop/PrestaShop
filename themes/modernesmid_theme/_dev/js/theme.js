@@ -85,20 +85,18 @@ $(document).ready(() => {
   });
 });
 
+import { library, dom } from "@fortawesome/fontawesome-svg-core";
+import fa from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/fontawesome.min.js'
+import fac from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/custom-icons.min.js'
+import fasl from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-light.min.js'
+import fass from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-solid.min.js'
+import fasr from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-regular.min.js'
+import fast from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-thin.min.js'
+import fad from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/duotone.min.js'
+import fab from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/brands.min.js'
 
-
-// import '@fortawesome/fontawesome-pro/js/fontawesome.js';
-// import '@fortawesome/fontawesome-pro/js/sharp-solid.js';
-// import '@fortawesome/fontawesome-pro/js/light.js';
-// import '@fortawesome/fontawesome-pro/js/duotone.js';
-// import '@fortawesome/fontawesome-pro/js/brands.js';
-// import '@fortawesome/fontawesome-pro/js/v4-shims.js';
-
-import '../fontawesome/modified_files/fontawesome';
-import '../fontawesome/modified_files/sharp-regular';
-import '../fontawesome/modified_files/sharp-light';
-import '../fontawesome/modified_files/duotone';
-import '../fontawesome/modified_files/brands';
+library.add(fa, fac, fasl, fass, fasr, fad, fab, fast);
+dom.watch();
 import alert from "bootstrap/js/src/alert";
 import addToCartAnalyticsPush from "./tagmanager/add-cart";
 
@@ -1751,44 +1749,67 @@ $(document).on('click', '#removeShoppingCartDefaultDiscount', function (event) {
 $(document).on('click', '#addCustomProductByEmployee', function (event) {
   event.stopImmediatePropagation();
 
-  var rowId = Math.random().toString(36).substr(2, 9);
+  let rowId = Math.random().toString(36).substr(2, 9);
   const cart = $(this).attr('data-cart');
-  const htmlBlock = '<li class="cart-item w-100 p-2"> ' +
+  const htmlBlock = '<li class="cart-item custom-product-item w-100 p-2"> ' +
     '<div class="product-line-grid col-12">' +
     '<div class="row pb-1"> ' +
     '<input type="text" class="col-12 form-control" name="custom_product_label" placeholder="Titel"/> ' +
     '</div> ' +
     '<div class="row"> ' +
     '<div class="product-line-grid-body col-12 text-center text-sm-left"> ' +
-    '<div class="row"> <div class="col-3 pl-0"> ' +
-    '<input type="number" class="form-control" min="1" step="0.5" name="custom_product_total" placeholder="Aantal"/> </div>' +
-    '<div class="col-5 mx-auto pr-0 pl-0"> <div class="input-group"><div class="input-group-prepend">' +
+    '<div class="row">' +
+    '<table class="w-100">' +
+    '<tr>' +
+    '<td style="width:20%"><input type="number" class="form-control" min="1" step="0.5" name="custom_product_total" placeholder="Aantal"/></td>' +
+    '<td style="width:30%">' +
+    '<div class="input-group">' +
+    '<div class="input-group-prepend">' +
     '<span class="input-group-text">€</span></div>' +
     '<input type="number" min="0.05" max="999999999999" step="0.05" class="form-control" name="custom_product_price" placeholder="Prijs"/>' +
-    '<div class="input-group-append" id="tax_check" data-id="' + rowId + '">' +
-    '<span class="input-group-text" id="custom_product_tax_text">excl. btw</span>' +
-    '<span class="input-group-text"><input name="custom_product_tax_checkbox" id="custom_product_tax_checkbox"  data-id="' + rowId + '" type="checkbox" aria-label="incl./excl btw checkbox"></span>' +
+    '</div></td>' +
+    '<td>' +
+    '<div class="form-check px-2 pt-2">' +
+    '<input value="0" name="custom_product_tax_checkbox" id="custom_product_tax_checkbox_excl"  data-id="' + rowId + '" type="radio"  aria-label="incl./excl btw checkbox">' +
+    '<label class="form-check-label" for="custom_product_tax_checkbox_excl">\n' +
+    'Excl. Btw' +
+    '</label>' +
     '</div>' +
-    '</div> ' +
-    '</div><div class="col-3 pr-0"> <div class="btn-group float-right"> ' +
-    '    <div class="onoffswitch float-right">' +
-    '        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-id="' + rowId + '" id="switch_' + rowId + '" tabindex="0" checked>' +
-    '        <label class="onoffswitch-label mb-0" for="switch_' + rowId + '">' +
-    '            <span class="onoffswitch-inner"></span>' +
-    '            <span class="onoffswitch-switch"></span>' +
-    '        </label>' +
-    '    </div>' +
-    '<button  data-cart="' + cart + '" class="btn btn-secondary btn-danger removeCustomProductEmployee"><i class="fasl fa-xmark"></i></button> ' +
-    '<button data-cart="' + cart + '" class="btn btn-secondary btn-success saveCustomProductEmployee" data-id="' + rowId + '"><i class="fasl fa-check"></i></button> ' +
-    '</div></div></div>' +
+    '<div class="form-check p-2">' +
+    '<input value="1" name="custom_product_tax_checkbox" id="custom_product_tax_checkbox_incl"  data-id="' + rowId + '" checked type="radio" aria-label="incl./excl btw checkbox">' +
+    '<label class="form-check-label" for="custom_product_tax_checkbox_incl">\n' +
+    'Incl. Btw' +
+    '</label>' +
     '</div>' +
-    '<div class="product-line-grid-left col-12 mt-1"> ' +
+    '</td>' +
+    '<td>' +
+    '<div class="form-check  px-2 pt-2">' +
+    '<input value="0" name="type" id="onoffswitch_checkbox_refund"  data-id="' + rowId + '" type="radio"  aria-label="payment or discount">' +
+    '<label class="form-check-label" for="onoffswitch_checkbox_refund">\n' +
+    'Teruggave' +
+    '</label>' +
+    '</div>' +
+    '<div class="form-check p-2">' +
+    '<input value="1" name="type" id="onoffswitch_checkbox_payment"  data-id="' + rowId + '" type="radio" checked aria-label="payment or discount">' +
+    '<label class="form-check-label" for="onoffswitch_checkbox_payment">\n' +
+    'Betaling' +
+    '</label>' +
+    '</div>' +
+    '</td>' +
+    '<td>' +
+    '<button  data-cart="' + cart + '" class="btn btn-secondary btn-danger removeCustomProductEmployee"><i class="fasl fa-xmark"></i></button>' +
+    '<button data-cart="' + cart + '" class="btn btn-secondary btn-success saveCustomProductEmployee" data-id="' + rowId + '"><i class="fasl fa-check"></i></button>' +
+    '</td>'+
+    '</tr>' +
+    '</table>' +
+    '</div>' +
+    '<div class="product-line-grid-left mt-1"> ' +
     '<div class="row"> ' +
     '<textarea class="col-12 form-control customer_product_description" rows="5" name="custom_product_description" id="' + rowId + 'custom_product_description" placeholder="Omschrijving"></textarea> ' +
     '</div></div>' +
     '<div class="row"><hr class="col-12"/></div></div></div></li>';
 
-  var cartItems = '<ul class="cart-items list-unstyled col-12"></ul>';
+  let cartItems = '<ul class="cart-items list-unstyled col-12"></ul>';
   if ($('.cart-overview.js-cart .cart-items').length === 0) {
     $('.cart-overview.js-cart .no-items').remove();
     $('.cart-overview.js-cart').append(cartItems);
@@ -1810,29 +1831,6 @@ $(document).on('click', '#addCustomProductByEmployee', function (event) {
     plugins: 'lists fullscreen',
     toolbar: 'fullscreen | bold italic underline striketrough subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent'
   });
-
-  $(document).on('click', '#custom_product_tax_checkbox', function (e) {
-    var checked = $(this).prop('checked');
-    if (checked) {
-      $('#custom_product_tax_text').text('incl. btw');
-    } else {
-      $('#custom_product_tax_text').text('excl. btw');
-    }
-  });
-
-  $(document).on('change', '.onoffswitch-checkbox', function (e) {
-
-    var rowId = $(this).attr('data-id');
-    var checked = $(this).is(':checked');
-
-    if (checked) {
-      $('#custom_product_tax_checkbox[data-id="' + rowId + '"]').prop('checked', false);
-    } else {
-      $('#custom_product_tax_checkbox[data-id="' + rowId + '"]').prop('checked', false);
-    }
-  });
-
-
 });
 
 
@@ -1852,8 +1850,8 @@ $(document).on('click', '.saveCustomProductEmployee', function (event) {
   const label = parentRow.find('[name="custom_product_label"]').val();
   const qty = parentRow.find('[name="custom_product_total"]').val();
   const price = parentRow.find('[name="custom_product_price"]').val();
-  const switchInput = parentRow.find('[name="onoffswitch"]').is(':checked');
-  const withTax = parentRow.find('[name="custom_product_tax_checkbox"]').is(':checked');
+  const productType = parentRow.find('[name="type"]:checked').val();
+  const withTax = parentRow.find('[name="custom_product_tax_checkbox"]:checked').val();
 
   parentRow.find('.error-msg-custom-product').remove();
 
@@ -1867,12 +1865,12 @@ $(document).on('click', '.saveCustomProductEmployee', function (event) {
     return;
   }
 
-  if (label.length == 0) {
+  if (label.length === 0) {
     parentRow.prepend('<span class="text-danger row mb-1 error-msg-custom-product">Er is geen titel ingevuld</span>')
     return;
   }
 
-  var description = tinymce.get(rowId + "custom_product_description").getContent();
+  let description = tinymce.get(rowId + "custom_product_description").getContent();
 
   const url = '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1';
 
@@ -1886,7 +1884,7 @@ $(document).on('click', '.saveCustomProductEmployee', function (event) {
       qty: qty,
       price: price,
       description: description,
-      switchinput: switchInput,
+      switchinput: productType,
       with_tax: withTax,
     },
   })
@@ -1899,19 +1897,6 @@ $(document).on('click', '.saveCustomProductEmployee', function (event) {
 
 
 });
-
-
-// $(document).on('submit', '.contact-form form', function(event) {
-//   console.log('clicked')
-//   var postalCodeInput = $('[name="postalcode"]');
-//   if(postalCodeInput.val() == ""){
-//     event.preventDefault();
-//     postalCodeInput.addClass('is-invalid');
-//   } else {
-//     postalCodeInput.removeClass('is-invalid');
-//   }
-
-// });
 
 function removeDiscount(id_cart_rule) {
   $.ajax({

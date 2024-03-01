@@ -27,7 +27,7 @@
     {if $cart.products}
     <ul class="cart-items list-unstyled col-12 p-0">
       {foreach from=$cart.products item=product}
-        <li class="cart-item row">
+        <li class="cart-item">
           {block name='cart_detailed_product_line'}
             {include file='checkout/_partials/cart-detailed-product-line.tpl' product=$product}
           {/block}

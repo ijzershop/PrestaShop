@@ -58,9 +58,20 @@ let config = {
         test: /\.scss$/,
         use:[
             MiniCssExtractPlugin.loader,
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true
+              }
+            },
             'postcss-loader',
-            'sass-loader',
+            'resolve-url-loader',
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true,
+              }
+            }
           ],
       },
       {

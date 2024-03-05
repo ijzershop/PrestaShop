@@ -180,7 +180,7 @@ class ModernHook
      */
     public function hookDisplayHome($hookArgs): string
     {
-        $selectedCats = explode(',', Configuration::get('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES'));
+        $selectedCats = explode(',', Configuration::get('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES', $this->idLang, $this->idShop, $this->idShopGroup));
         $itemList = [];
 
         $position = 0;

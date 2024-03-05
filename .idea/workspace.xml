@@ -568,7 +568,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Rebasing modernesmid-core8",
+    "git-widget-placeholder": "modernesmid-core8",
     "ignore.virus.scanning.warn.message": "true",
     "javascript.nodejs.core.library.configured.version": "14.19.1",
     "javascript.nodejs.core.library.typings.version": "14.18.63",
@@ -1331,7 +1331,7 @@
       <workItem from="1709269787699" duration="18473000" />
       <workItem from="1709534305957" duration="16292000" />
       <workItem from="1709559781977" duration="8000" />
-      <workItem from="1709616228102" duration="20037000" />
+      <workItem from="1709616228102" duration="21168000" />
     </task>
     <servers />
   </component>

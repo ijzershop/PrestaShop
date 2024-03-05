@@ -601,7 +601,7 @@ class ModernAjax
             $selectedOptionList = [];
             $optionList = $this->getSelect2Data($data_type, $sort)->getContent();
 
-            $selectedOptions = explode(',', $options);
+            $selectedOptions = explode(',', (string)$options);
             if ($optionList) {
                 $data = json_decode($optionList);
 

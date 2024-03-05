@@ -27,6 +27,7 @@
 {assign var=withTax value=Context::getContext()->cookie->price_vat_settings_incl === "true"}
 <div class="js-cart pl-0" style="padding-left: calc(100% - 345px) !important;"
      data-refresh-url="{$refresh_url}">{*{strip}*}
+{*  {{dd(Context::getContext()->cart)}}*}
   <div id="top-header-shoppingcart-box">
     <table width="100%">
       <tr>
@@ -35,7 +36,7 @@
           ({if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if})
         </td>
         <td class="text-right" id="header-cart-subtotal">
-            {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING), 'EUR' )}
+            {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_PRODUCTS_NO_DISCOUNTS), 'EUR' )}
         </td>
       </tr>
       <tr>

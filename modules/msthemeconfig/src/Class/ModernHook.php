@@ -1247,6 +1247,7 @@ class ModernHook
         }
 
 
+        $message = '';
         switch ($isElegibleForDiscount){
             case 1:
                     $message = 'Ontvang '.implode(' of ',$discountText);

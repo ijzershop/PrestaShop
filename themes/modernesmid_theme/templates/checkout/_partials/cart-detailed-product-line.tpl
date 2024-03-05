@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="product-line-grid col-12 p-0">
-    {assign var="has_remaining_stock" value=json_decode(Product::hasMaxProductsRemainingStock($product.id_product, 50))}
+  {assign var="has_remaining_stock" value=json_decode(Product::hasMaxProductsRemainingStock($product.id_product, 50))}
   <div class="row">
     <!--  product left content: image-->
     <div class="product-line-grid-left col-12 col-sm-2 col-md-2 col-lg-2">
@@ -36,9 +36,9 @@
         data-id-product-attribute="{$product.id_product_attribute|escape:'javascript'}"
         data-id-customization="{$product.id_customization|escape:'javascript'}"
       >
-          {if !isset($product.is_gift) || !$product.is_gift}
-            <i class="fasl fa-xmark float-right"></i>
-          {/if}
+        {if !isset($product.is_gift) || !$product.is_gift}
+          <i class="fasl fa-xmark float-right"></i>
+        {/if}
       </a>
       <span class="product-image media-middle row mx-auto">
       {if isset($product.cover.bySize.medium_default.url)}
@@ -50,60 +50,60 @@
     <!--  product left body: description -->
     <div class="product-line-grid-body col-12 col-sm-10 col-md-10 col-lg-10 pl-lg-0 pr-0 text-center text-sm-left">
       <div class="row">
-        <div class="product-line-info col-12 col-sm-7 col-md-7 col-lg-7 pl-3 pr-3 pl-sm-0 pr-sm-0 pt-2">
+        <div class="product-line-info col-12 col-sm-6 col-md-6 col-lg-6 pl-3 pr-3 pl-sm-0 pr-sm-0 pt-2">
           <a class="label text-decoration-none text-dark" href="{$product.url}"
              data-id_customization="{$product.id_customization|intval}">{$product.name}</a>
           <div class="product-line-info product-price {if $product.has_discount}has-discount{/if}">
-{*              {if $product.has_discount}*}
-{*                <div class="product-discount">*}
-{*                  <span*}
-{*                    class="regular-price pr-2">{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax, 'EUR')}</span>*}
-{*                  <span*}
-{*                    class="product-price pr-2">{Context::getContext()->currentLocale->formatPrice($product.price_with_reduction_without_tax, 'EUR')}</span>*}
-{*                </div>*}
-{*              {/if}*}
+            {*              {if $product.has_discount}*}
+            {*                <div class="product-discount">*}
+            {*                  <span*}
+            {*                    class="regular-price pr-2">{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax, 'EUR')}</span>*}
+            {*                  <span*}
+            {*                    class="product-price pr-2">{Context::getContext()->currentLocale->formatPrice($product.price_with_reduction_without_tax, 'EUR')}</span>*}
+            {*                </div>*}
+            {*              {/if}*}
           </div>
 
           <div class="product-line-grid-right product-line-actions pl-0 col-12 float-right">
-              {foreach from=$product.attributes key="attribute" item="value"}
-                  {if !in_array($attribute, AttributeGroup::getSawCutModuleAttributeGroupNames(Context::getContext()->cookie->id_lang))}
-                    <tr class="small_cart_attr_attr font-italic">
-                      <td class="small_cart_attr_k font-italic">{$attribute}:</td>
-                      <td class="value font-italic">{$value}</td>
-                    </tr>
-                  {/if}
-              {/foreach}
-              {if is_array($product.customizations) && $product.customizations|count}
-                  {block name='cart_detailed_product_line_customization'}
-                      {foreach from=$product.customizations item="customization"}
-                          {foreach from=$customization.fields item="field"}
-                            <div class="w-100">
-                                {if $field.label === 'zaaginstructies' || $field.label === 'instructies' || $field.label === 'knipinstructies'}
-                                  <div class="col-12 pl-0 font-italic">
-{*                                      {$field.label}: *}
-                                      {$field.text nofilter}
-{*                                    (± 5mm)*}
-                                  </div>
-                                {else}
-                                  <div class="font-italic">{$field.label}</div>
-                                    {if $field.type == 'text'}
-                                      <div class="font-italic">{$field.text nofilter}</div>
-                                    {elseif $field.type == 'image'}
-                                      <div><img src="{$field.image.small.url}" alt="{$field.label}"/></div>
-                                    {/if}
-                                {/if}
-                            </div>
-                          {/foreach}
-                      {/foreach}
-                  {/block}
+            {foreach from=$product.attributes key="attribute" item="value"}
+              {if !in_array($attribute, AttributeGroup::getSawCutModuleAttributeGroupNames(Context::getContext()->cookie->id_lang))}
+                <tr class="small_cart_attr_attr font-italic">
+                  <td class="small_cart_attr_k font-italic">{$attribute}:</td>
+                  <td class="value font-italic">{$value}</td>
+                </tr>
               {/if}
+            {/foreach}
+            {if is_array($product.customizations) && $product.customizations|count}
+              {block name='cart_detailed_product_line_customization'}
+                {foreach from=$product.customizations item="customization"}
+                  {foreach from=$customization.fields item="field"}
+                    <div class="w-100">
+                      {if $field.label === 'zaaginstructies' || $field.label === 'instructies' || $field.label === 'knipinstructies'}
+                        <div class="col-12 pl-0 font-italic">
+                          {*                                      {$field.label}: *}
+                          {$field.text nofilter}
+                          {*                                    (± 5mm)*}
+                        </div>
+                      {else}
+                        <div class="font-italic">{$field.label}</div>
+                        {if $field.type == 'text'}
+                          <div class="font-italic">{$field.text nofilter}</div>
+                        {elseif $field.type == 'image'}
+                          <div><img src="{$field.image.small.url}" alt="{$field.label}"/></div>
+                        {/if}
+                      {/if}
+                    </div>
+                  {/foreach}
+                {/foreach}
+              {/block}
+            {/if}
             <div class="clearfix"></div>
           </div>
 
 
         </div>
         <!--  product left body: description -->
-        <div class="product-line-grid-right product-line-actions col-12 col-sm-5 col-md-5 col-lg-5">
+        <div class="product-line-grid-right product-line-actions col-12 col-sm-6 col-md-6 col-lg-6">
           <div class="row">
             <div class="col-md-10 col-sm-10 col-12 pl-3 pl-sm-2 pr-3 pr-sm-2">
               <div class="row">
@@ -119,56 +119,60 @@
                         data-id-product-attribute="{$product.id_product_attribute|escape:'javascript'}"
                         data-id-customization="{$product.id_customization|escape:'javascript'}"
                       >
-                          {if !isset($product.is_gift) || !$product.is_gift}
-                            <i class="fasl fa-trash fa-2x float-xs-left"></i>
-                          {/if}
+                        {if !isset($product.is_gift) || !$product.is_gift}
+                          <i class="fasl fa-trash fa-2x float-xs-left"></i>
+                        {/if}
                       </a>
                     </div>
                     <div class="col-10">
 
-                        {if isset($product.is_gift) && $product.is_gift}
-                          <span class="gift-quantity">{$product.quantity}</span>
-                        {else}
-                          <input
-                            onclick="this.select()"
-                            class="js-cart-line-product-quantity form-control"
-                            data-down-url="{$product.down_quantity_url}"
-                            data-up-url="{$product.up_quantity_url}"
-                            data-update-url="{$product.update_quantity_url}"
-                            data-product-id="{$product.id_product}"
-                            type="text"
-                            value="{$product.quantity}"
-                            data-current-value="{$product.quantity}"
-                            name="product-quantity-spin"
-                            min="{$product.minimal_quantity}"
-                            {if  $product.out_of_stock === 0}max="{$has_remaining_stock->remaining_stock}"{/if}
-                            pattern="\d*"
-                          />
-                        {/if}
+                      {if isset($product.is_gift) && $product.is_gift}
+                        <span class="gift-quantity">{$product.quantity}</span>
+                      {else}
+                        <input
+                          onclick="this.select()"
+                          class="js-cart-line-product-quantity form-control"
+                          data-down-url="{$product.down_quantity_url}"
+                          data-up-url="{$product.up_quantity_url}"
+                          data-update-url="{$product.update_quantity_url}"
+                          data-product-id="{$product.id_product}"
+                          type="text"
+                          value="{$product.quantity}"
+                          data-current-value="{$product.quantity}"
+                          name="product-quantity-spin"
+                          min="{$product.minimal_quantity}"
+                          {if  $product.out_of_stock === 0}max="{$has_remaining_stock->remaining_stock}"{/if}
+                          pattern="\d*"
+                        />
+                      {/if}
                     </div>
                   </div>
 
                 </div>
                 <div class="col-12 col-sm-6 price pl-0">
-            <span class="product-price" style="line-height: 38px;">
+            <span class="product-price">
               <strong>
                 {if isset($product.is_gift) && $product.is_gift}
                   <span class="gift">{l s='Gift' d='Shop.Theme.Checkout'}</span>
-                {else}
+
+{else}
+
                   <span class="product-price">
-                    {if Context::getContext()->cookie->price_vat_settings_incl === "true"}
-                        {Context::getContext()->currentLocale->formatPrice($product.price_without_reduction*$product.quantity, 'EUR')}
-                    {else}
-                        {Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax*$product.quantity, 'EUR')}
-                    {/if}
+                  {if $product.price_reduction_after_cartrule_reduction_without_tax > 0}
+                    <span class="regular-price"
+                          data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{Context::getContext()->currentLocale->formatPrice((float)(float)$product.price_with_reduction*(int)$product.quantity , 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice((float)Product::getPriceStatic($product.id_product, false)*(int)$product.quantity, 'EUR')}{/if} </span>
+                  {/if}
+                                      <span class="inclusive-price"
+                                            data-product-id="{$product.id_product}"> {if Context::getContext()->cookie->price_vat_settings_incl === "true"}{Context::getContext()->currentLocale->formatPrice((float)$product.price_after_cartrule_reduction_with_tax*(int)$product.quantity, 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice((float)$product.price_after_cartrule_reduction_without_tax*(int)$product.quantity, 'EUR')}{/if} </span>
+
                   </span>
                 {/if}
               </strong>
             </span>
                 </div>
-                  {if $has_remaining_stock->is_orderable}
-                      {$has_remaining_stock->remaining_qty_msg nofilter}
-                  {/if}
+                {if $has_remaining_stock->is_orderable}
+                  {$has_remaining_stock->remaining_qty_msg nofilter}
+                {/if}
               </div>
             </div>
           </div>

@@ -67,6 +67,385 @@ class Product extends ProductCore {
 
         parent::__construct($id_product, $full, $id_lang, $id_shop);
     }
+
+
+
+    /**
+     * @param int $id_lang Language identifier
+     * @param array $row
+     * @param Context|null $context
+     *
+     * @return array|false
+     */
+    public static function getProductProperties($id_lang, $row, Context $context = null)
+    {
+        Hook::exec('actionGetProductPropertiesBefore', [
+            'id_lang' => $id_lang,
+            'product' => &$row,
+            'context' => $context,
+        ]);
+
+        if (!$row['id_product']) {
+            return false;
+        }
+
+        if ($context == null) {
+            $context = Context::getContext();
+        }
+
+        $id_product_attribute = $row['id_product_attribute'] = (!empty($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null);
+
+        // Product::getDefaultAttribute is only called if id_product_attribute is missing from the SQL query at the origin of it:
+        // consider adding it in order to avoid unnecessary queries
+        $row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
+        if (
+            Combination::isFeatureActive() &&
+            $id_product_attribute === null &&
+            (
+                (isset($row['cache_default_attribute']) && ($ipa_default = $row['cache_default_attribute']) !== null)
+                || ($ipa_default = Product::getDefaultAttribute($row['id_product'], (int) !$row['allow_oosp']))
+            )
+        ) {
+            $id_product_attribute = $row['id_product_attribute'] = $ipa_default;
+        }
+        if (!Combination::isFeatureActive() || !isset($row['id_product_attribute'])) {
+            $id_product_attribute = $row['id_product_attribute'] = 0;
+        }
+
+        // Tax
+        $usetax = !Tax::excludeTaxeOption();
+
+        $cache_key = $row['id_product'] . '-' . $id_product_attribute . '-' . $id_lang . '-' . (int) $usetax;
+        if (isset($row['id_product_pack'])) {
+            $cache_key .= '-pack' . $row['id_product_pack'];
+        }
+
+        if (!isset($row['cover_image_id'])) {
+            $cover = static::getCover($row['id_product']);
+            if (isset($cover['id_image'])) {
+                $row['cover_image_id'] = $cover['id_image'];
+            }
+        }
+
+        if (isset($row['cover_image_id'])) {
+            $cache_key .= '-cover' . (int) $row['cover_image_id'];
+        }
+
+        if (isset(self::$productPropertiesCache[$cache_key])) {
+            return array_merge($row, self::$productPropertiesCache[$cache_key]);
+        }
+
+        // Datas
+        $row['category'] = Category::getLinkRewrite((int) $row['id_category_default'], (int) $id_lang);
+        $row['category_name'] = Db::getInstance()->getValue('SELECT name FROM ' . _DB_PREFIX_ . 'category_lang WHERE id_shop = ' . (int) $context->shop->id . ' AND id_lang = ' . (int) $id_lang . ' AND id_category = ' . (int) $row['id_category_default']);
+        $row['link'] = $context->link->getProductLink((int) $row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
+
+        // Get manufacturer name if missing
+        if (empty($row['manufacturer_name'])) {
+            // Assign empty value
+            $row['manufacturer_name'] = null;
+
+            // If we have manufacturer ID, we wil try to load it's name and assign it
+            if (!empty($row['id_manufacturer'])) {
+                $manufacturerName = Manufacturer::getNameById((int) $row['id_manufacturer']);
+                if (!empty($manufacturerName)) {
+                    $row['manufacturer_name'] = $manufacturerName;
+                }
+            }
+        }
+
+        $row['attribute_price'] = 0;
+        if ($id_product_attribute) {
+            $row['attribute_price'] = (float) Combination::getPrice($id_product_attribute);
+        }
+
+        if (isset($row['quantity_wanted'])) {
+            // 'quantity_wanted' may very well be zero even if set
+            $quantity = max((int) $row['minimal_quantity'], (int) $row['quantity_wanted']);
+        } elseif (isset($row['cart_quantity'])) {
+            $quantity = max((int) $row['minimal_quantity'], (int) $row['cart_quantity']);
+        } else {
+            $quantity = (int) $row['minimal_quantity'];
+        }
+
+        // We save value in $priceTaxExcluded and $priceTaxIncluded before they may be rounded
+        $row['price_tax_exc'] = $priceTaxExcluded = Product::getPriceStatic(
+            (int) $row['id_product'],
+            false,
+            $id_product_attribute,
+            (self::$_taxCalculationMethod == PS_TAX_EXC ? Context::getContext()->getComputingPrecision() : 6),
+            null,
+            false,
+            true,
+            $quantity
+        );
+
+        if (self::$_taxCalculationMethod == PS_TAX_EXC) {
+            $row['price_tax_exc'] = Tools::ps_round($priceTaxExcluded, Context::getContext()->getComputingPrecision());
+            $row['price'] = $priceTaxIncluded = Product::getPriceStatic(
+                (int) $row['id_product'],
+                true,
+                $id_product_attribute,
+                6,
+                null,
+                false,
+                true,
+                $quantity
+            );
+            $row['price_without_reduction'] = $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
+                (int) $row['id_product'],
+                false,
+                $id_product_attribute,
+                2,
+                null,
+                false,
+                false,
+                $quantity
+            );
+        } else {
+            $priceTaxIncluded = Product::getPriceStatic(
+                (int) $row['id_product'],
+                true,
+                $id_product_attribute,
+                6,
+                null,
+                false,
+                true,
+                $quantity
+            );
+            $row['price'] = Tools::ps_round($priceTaxIncluded, Context::getContext()->getComputingPrecision());
+            $row['price_without_reduction'] = Product::getPriceStatic(
+                (int) $row['id_product'],
+                true,
+                $id_product_attribute,
+                6,
+                null,
+                false,
+                false,
+                $quantity
+            );
+            $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
+                (int) $row['id_product'],
+                false,
+                $id_product_attribute,
+                6,
+                null,
+                false,
+                false,
+                $quantity
+            );
+        }
+
+        $row['reduction'] = Product::getPriceStatic(
+            (int) $row['id_product'],
+            (bool) $usetax,
+            $id_product_attribute,
+            6,
+            null,
+            true,
+            true,
+            $quantity,
+            true,
+            null,
+            null,
+            null,
+            $specific_prices
+        );
+
+        $row['reduction_without_tax'] = Product::getPriceStatic(
+            (int) $row['id_product'],
+            false,
+            $id_product_attribute,
+            6,
+            null,
+            true,
+            true,
+            $quantity,
+            true,
+            null,
+            null,
+            null,
+            $specific_prices
+        );
+
+
+        //Added cart reduction percent to show an all products
+        $context = Context::getContext();
+        $cartRules = $context->cart->getOrderedCartRulesIds();
+
+        $prio = 50;
+        $cartReductionPercent = 0;
+        $firstDiscountRule = Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_FIRST', $context->language->id, $context->shop->id_shop_group, $context->shop->id_shop);
+        $secondDiscountRule = Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_SECOND', $context->language->id, $context->shop->id_shop_group, $context->shop->id_shop);
+        $thirdDiscountRule = Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_THIRD', $context->language->id, $context->shop->id_shop_group, $context->shop->id_shop);
+        foreach ($cartRules as $rule){
+
+            $ruleId = (int)$rule['id_cart_rule'];
+            if(in_array($ruleId, [158 ,$firstDiscountRule ,$secondDiscountRule ,$thirdDiscountRule])){
+                $cartRule = new CartRule($ruleId);
+                if($cartRule->priority <= $prio){
+                    $prio = $cartRule->priority;
+                    $cartReductionPercent = (float)$cartRule->reduction_percent;
+                }
+            }
+        }
+
+
+        $spec_price = Product::getPriceStatic(
+                (int) $row['id_product'],
+                false,
+                $id_product_attribute,
+                6,
+                null,
+                false,
+                false,
+                $quantity
+            );
+        $specific_price_reduction = ($spec_price * $cartReductionPercent) / 100;
+
+        $row['price_after_cartrule_reduction_without_tax'] = $spec_price - $specific_price_reduction;
+
+        $spec_price = Product::getPriceStatic(
+                (int) $row['id_product'],
+                false,
+                $id_product_attribute,
+                6,
+                null,
+                false,
+                false,
+                $quantity
+            );
+        $specific_price_reduction = ($spec_price * $cartReductionPercent) / 100;
+
+        $row['price_reduction_after_cartrule_reduction_with_tax'] = $specific_price_reduction*1.21;
+
+        $spec_price = Product::getPriceStatic(
+                (int) $row['id_product'],
+                false,
+                $id_product_attribute,
+                6,
+                null,
+                false,
+                false,
+                $quantity
+            );
+        $specific_price_reduction = ($spec_price * $cartReductionPercent) / 100;
+
+        $row['price_reduction_after_cartrule_reduction_without_tax'] = $specific_price_reduction;
+
+        $spec_price = Product::getPriceStatic(
+                (int) $row['id_product'],
+                false,
+                $id_product_attribute,
+                6,
+                null,
+                false,
+                false,
+                $quantity
+            );
+        $specific_price_reduction = ($spec_price * $cartReductionPercent) / 100;
+
+        $row['price_after_cartrule_reduction_with_tax'] = ($spec_price - $specific_price_reduction) * 1.21;
+
+        $row['specific_prices'] = $specific_prices;
+        /* Get quantity of the base product.
+         * For products without combinations - self explanatory.
+         * For products with combinations - this value is a SUM of quantities of all combinations.
+         * You have 2 black shirts + 2 white shirts = $quantity 4.
+         */
+        $row['quantity'] = Product::getQuantity(
+            (int) $row['id_product'],
+            0,
+            isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
+            $context->cart
+        );
+
+        $row['quantity_all_versions'] = $row['quantity'];
+
+        // If we have some combination ID specified, we will return more precise stock and date for this combination
+        if ($row['id_product_attribute']) {
+            $row['quantity'] = Product::getQuantity(
+                (int) $row['id_product'],
+                $id_product_attribute,
+                isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
+                $context->cart
+            );
+
+            $row['available_date'] = Product::getAvailableDate(
+                (int) $row['id_product'],
+                $id_product_attribute
+            );
+        }
+
+        $row['id_image'] = Product::defineProductImage($row, $id_lang);
+        $row['features'] = Product::getFrontFeaturesStatic((int) $id_lang, $row['id_product']);
+
+        /*
+         * Loading of files attached to product. This is using cache_has_attachments property which needs to be managed
+         * every time a file is changed. It can sometimes lead to database inconsistency.
+         *
+         * It would be better to lazy load it in ProductLazyArray so we can just always take the live data
+         * if needed and would not need to take care about cache_has_attachments.
+         */
+        $row['attachments'] = [];
+        if (!isset($row['cache_has_attachments']) || $row['cache_has_attachments']) {
+            $row['attachments'] = Product::getAttachmentsStatic((int) $id_lang, $row['id_product']);
+        }
+
+        $row['virtual'] = ((!isset($row['is_virtual']) || $row['is_virtual']) ? 1 : 0);
+
+        // Pack management
+        $row['pack'] = (!isset($row['cache_is_pack']) ? Pack::isPack($row['id_product']) : (int) $row['cache_is_pack']);
+        $row['packItems'] = $row['pack'] ? Pack::getItemTable($row['id_product'], $id_lang) : [];
+        $row['nopackprice'] = $row['pack'] ? Pack::noPackPrice($row['id_product']) : 0;
+
+        if ($row['pack'] && !Pack::isInStock($row['id_product'], $quantity, $context->cart)) {
+            $row['quantity'] = 0;
+        }
+
+        $row['customization_required'] = false;
+        if (isset($row['customizable']) && $row['customizable'] && Customization::isFeatureActive()) {
+            if (count(Product::getRequiredCustomizableFieldsStatic((int) $row['id_product']))) {
+                $row['customization_required'] = true;
+            }
+        }
+
+        if (!isset($row['attributes'])) {
+            $attributes = Product::getAttributesParams($row['id_product'], $row['id_product_attribute']);
+
+            foreach ($attributes as $attribute) {
+                $row['attributes'][$attribute['id_attribute_group']] = $attribute;
+            }
+        }
+
+        $row = Product::getTaxesInformations($row, $context);
+
+        $row['ecotax_rate'] = (float) Tax::getProductEcotaxRate($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+
+        Hook::exec('actionGetProductPropertiesAfter', [
+            'id_lang' => $id_lang,
+            'product' => &$row,
+            'context' => $context,
+        ]);
+
+        // Always recompute unit prices based on initial ratio so that discounts are applied on unit price as well
+        $unitPriceRatio = self::computeUnitPriceRatio($row, $id_product_attribute, $quantity, $context);
+        $row['unit_price_ratio'] = $unitPriceRatio;
+        $row['unit_price_tax_excluded'] = $unitPriceRatio != 0 ? $priceTaxExcluded / $unitPriceRatio : 0.0;
+        $row['unit_price_tax_included'] = $unitPriceRatio != 0 ? $priceTaxIncluded / $unitPriceRatio : 0.0;
+
+        Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
+            'id_lang' => $id_lang,
+            'product' => &$row,
+            'context' => $context,
+        ]);
+
+        self::$productPropertiesCache[$cache_key] = $row;
+
+        return self::$productPropertiesCache[$cache_key];
+    }
+
+
     public function getAttributesGroups($id_lang, $id_product_attribute = null)
     {
         $ssa = Module::getInstanceByName('singlestockattributespoco');

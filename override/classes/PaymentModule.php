@@ -286,7 +286,6 @@ class PaymentModule extends PaymentModuleCore
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status is about to be added', 1, null, 'Cart', (int) $id_cart, true);
             }
-
             if($order->current_state !== $id_order_state){
                 $new_history = new OrderHistory();
                 $new_history->id_order = (int) $order->id;
@@ -573,18 +572,15 @@ class PaymentModule extends PaymentModuleCore
             (float) $cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $carrierId),
             $computingPrecision
         );
-
         $order->total_refunded_tax_excl =
             abs(Tools::ps_round(
             (float) $cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS, $order->product_list, $carrierId),
             $computingPrecision
         ));
-
         $order->total_refunded_tax_incl = abs(Tools::ps_round(
             (float) $cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS, $order->product_list, $carrierId),
             $computingPrecision
         ));
-
         $order->total_paid = $order->total_paid_tax_incl;
         $order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
         $order->round_type = Configuration::get('PS_ROUND_TYPE');
@@ -594,7 +590,6 @@ class PaymentModule extends PaymentModuleCore
         if ($debug) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order is about to be added', 1, null, 'Cart', (int) $cart->id, true);
         }
-
         $result = $order->add();
         if (!$result) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order cannot be created', 3, null, 'Cart', (int) $cart->id, true);
@@ -632,8 +627,8 @@ class PaymentModule extends PaymentModuleCore
     }
     /*
     * module: klcartruleextender
-    * date: 2023-04-05 08:02:35
-    * version: 1.0.1
+    * date: 2024-03-05 08:40:48
+    * version: 1.0.2
     */
     protected function createOrderCartRules(
         Order $order,

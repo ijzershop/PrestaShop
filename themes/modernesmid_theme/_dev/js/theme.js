@@ -87,7 +87,7 @@ $(document).ready(() => {
 
 import { library, dom } from "@fortawesome/fontawesome-svg-core";
 import fa from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/fontawesome.min.js'
-import fac from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/custom-icons.min.js'
+import fak from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/custom-icons.min.js'
 import fasl from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-light.min.js'
 import fass from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-solid.min.js'
 import fasr from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-regular.min.js'
@@ -95,7 +95,7 @@ import fast from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-thin
 import fad from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/duotone.min.js'
 import fab from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/brands.min.js'
 
-library.add(fa, fac, fasl, fass, fasr, fad, fab, fast);
+library.add(fa, fak, fasl, fass, fasr, fad, fab, fast);
 dom.watch();
 import alert from "bootstrap/js/src/alert";
 import addToCartAnalyticsPush from "./tagmanager/add-cart";
@@ -837,7 +837,7 @@ $(function () {
     if (parseInt(productsTotal) === 0) {
       $('.top-header-shoppingcart').find('[data-fa-i2svg]').attr({'data-prefix': 'fad', 'data-icon': 'cart-shopping'});
     } else {
-      $('.top-header-shoppingcart').find('[data-fa-i2svg]').attr({'data-prefix': 'fasr', 'data-icon': 'cart-shopping'});
+      $('.top-header-shoppingcart').find('[data-fa-i2svg]').attr({'data-prefix': 'fasl', 'data-icon': 'cart-shopping'});
     }
     $('#header-cart-subtotal').text(renderMoneyString(totalForAllProducts));
 
@@ -988,7 +988,7 @@ $(function () {
 
     const clickedHref = $(this).attr('href');
     $('svg.fa-plus[data-product-id="' + product_id + '"]').hide();
-    $('svg.shopping-cart[data-product-id="' + product_id + '"]').attr('data-icon','rotate');
+    $('svg.shopping-cart[data-product-id="' + product_id + '"]').attr('data-icon','arrows-rotate');
     if ($('#quantity_wanted_' + product_id).val() > $('[data-stock]').data('stock') && $('[data-allow-oosp]').data('allow-oosp').length === 0) {
       $('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
     } else {

@@ -137,12 +137,15 @@
           <div class="pl-0"
                id="total_product_price_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}"
                style="{if $logged}{if $settings['cart_options']['product_total']['logged']['display'] eq 1}{else}display:none{/if}{else}{if $settings['cart_options']['product_total']['guest']['display'] eq 1}{else}display:none{/if}{/if};">
-            <span class="cart-product-price d-block text-right"
-                  style="font-size: 14px;"><b>{Context::getContext()->currentLocale->formatPrice(($product.price_with_reduction_without_tax*$product.quantity), 'EUR')}</b></span>{*escape not required as contains html*}
-              {if $product.price != $product.regular_price}
-                <span
-                  class="cart-product-price regular-price d-block text-right">{Context::getContext()->currentLocale->formatPrice(($product.price_without_reduction_without_tax*$product.quantity), 'EUR')}</span>{*escape not required as contains html*}
-              {/if}
+            {if $product.reduction > 0}
+              <span style="font-size: .8rem;"
+                class="regular-price d-block text-right">{Context::getContext()->currentLocale->formatPrice(($product.price_without_reduction_without_tax*$product.quantity), 'EUR')}</span>{*escape not required as contains html*}
+            {/if}
+            <span class="cart-product-price inclusive-price d-block text-right">
+              <b>
+                {Context::getContext()->currentLocale->formatPrice(($product.price_with_reduction_without_tax*$product.quantity), 'EUR')}
+              </b>
+            </span>
           </div>
   </div>
   </td>

@@ -139,7 +139,7 @@
                 <div class="row">
                   <div class="add col-12">
                     <a class="btn btn-success add-to-cart w-100 {if !$product.add_to_cart_url || !$product.available_for_order || ($product.out_of_stock == 0 && $product.quantity <= 0)}disabled{/if}" data-button-action="add-to-cart" data-product-id="{$product.id_product}" type="button" {if !$product.add_to_cart_url} disabled {/if} href="{$link->getPageLink('cart')}?token={$static_token}">
-                      <i class="fasl fa-regular fa-plus" data-product-id="{$product.id_product}"></i><i class="fasl fa-regular fa-cart-shopping shopping-cart" data-product-id="{$product.id_product}"></i>
+                      <i class="fasl fa-plus" data-product-id="{$product.id_product}"></i><i class="fasl fa-cart-shopping shopping-cart" data-product-id="{$product.id_product}"></i>
                     </a>
                   </div>
                   {if !$product.add_to_cart_url || !$product.available_for_order}
@@ -397,7 +397,7 @@
 
       // Skip Saturdays and Sundays
       while(targetDate.getDay() === 0 ||
-       targetDate.getDay() === 6 || 
+       targetDate.getDay() === 6 ||
        freedayArray.indexOf((targetDate.getMonth()+1)+'/'+targetDate.getDate()+'/'+targetDate.getFullYear()) > -1 ||
       (targetDate.getTime() - now.getTime()) < 0)
       {
@@ -407,7 +407,7 @@
       // get total seconds between the times
       let difference = targetDate.getTime() - now.getTime();
 
-  
+
       let diff = Math.abs(difference) / 1000;
       // calculate (and subtract) whole days
       let days = Math.floor(diff / 86400);

@@ -1,37 +1,8 @@
 <?php
-/**
-* 2022 - Keyrnel
-*
-* NOTICE OF LICENSE
-*
-* The source code of this module is under a commercial license.
-* Each license is unique and can be installed and used on only one shop.
-* Any reproduction or representation total or partial of the module, one or more of its components,
-* by any means whatsoever, without express permission from us is prohibited.
-* If you have not received this module from us, thank you for contacting us.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade this module to newer
-* versions in the future.
-*
-* @author    Keyrnel
-* @copyright 2022 - Keyrnel
-* @license   commercial
-* International Registered Trademark & Property of Keyrnel
-*/
 class OrderInvoice extends OrderInvoiceCore
 {
-    /**
-     * @see ObjectModel::$definition
-     */
-
-    /** @var float */
     public $total_refunded_tax_excl;
-
-    /** @var float */
     public $total_refunded_tax_incl;
-
     public static $definition = [
         'table' => 'order_invoice',
         'primary' => 'id_order_invoice',
@@ -58,10 +29,13 @@ class OrderInvoice extends OrderInvoiceCore
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
+    
+    
+    
     /*
     * module: klcartruleextender
-    * date: 2023-04-05 08:02:35
-    * version: 1.0.1
+    * date: 2024-03-05 08:40:48
+    * version: 1.0.2
     */
     public function getProductTaxesBreakdown($order = null)
     {
@@ -90,19 +64,11 @@ class OrderInvoice extends OrderInvoiceCore
         }
         return $breakdown;
     }
-    /**
-     * Returns the shipping taxes breakdown.
-     *
-     * @since 1.5
-     *
-     * @param Order $order
-     *
-     * @return array
-     */
+    
     /*
     * module: klcartruleextender
-    * date: 2023-04-05 08:02:35
-    * version: 1.0.1
+    * date: 2024-03-05 08:40:48
+    * version: 1.0.2
     */
     public function getShippingTaxesBreakdown($order)
     {
@@ -127,15 +93,11 @@ class OrderInvoice extends OrderInvoiceCore
         }
         return $breakdown;
     }
-    /**
-     * Returns the wrapping taxes breakdown.
-     *
-     * @return array
-     */
+    
     /*
     * module: klcartruleextender
-    * date: 2023-04-05 08:02:35
-    * version: 1.0.1
+    * date: 2024-03-05 08:40:48
+    * version: 1.0.2
     */
     public function getWrappingTaxesBreakdown()
     {

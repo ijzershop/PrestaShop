@@ -41,8 +41,8 @@ class KlCartRuleExtender extends Module
         $this->module_key = '5648da966a09f9f48cce03a931b84cfe';
         $this->bootstrap = true;
 
-        parent::__construct();
 
+        parent::__construct();
         $this->displayName = $this->l('Cart rule extender - Add shipping and wrapping cost');
         $this->description = $this->l('Let the possibility to your customers to include shipping and wrapping cost with their discount codes.');
         $this->ps_versions_compliancy = ['min' => '1.7.7.0', 'max' => _PS_VERSION_];

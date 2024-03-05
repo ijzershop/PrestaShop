@@ -1,5 +1,4 @@
 <?php
-
 class CartRule extends CartRuleCore
 {
     public const FILTER_ACTION_ALL = 1;
@@ -89,31 +88,6 @@ class CartRule extends CartRuleCore
             ],
         ],
     ];
-
-    /*
-    * module: klcartruleextender
-    * date: 2023-04-05 08:02:35
-    * version: 1.0.1
-    */
-    public static function copyConditions($id_cart_rule_source, $id_cart_rule_destination)
-    {
-        parent::copyConditions($id_cart_rule_source, $id_cart_rule_destination);
-        if (($moduleClass = Module::getInstanceByName('klcartruleextender'))
-            && $moduleClass instanceof KlCartRuleExtender
-            && $moduleClass->isEnabledForShopContext()
-            && $moduleClass->isCartRuleIncludingFees($id_cart_rule_source)
-        ) {
-            $moduleClass->addCartRuleFees([$id_cart_rule_destination]);
-        }
-    }
-
-
-    /**
-     * Automatically add this CartRule to the Cart.
-     *
-     * @param Context|null $context Context instance
-     * @param bool $useOrderPrices
-     */
     public static function getAutoAddToCartRules(Context $context = null, bool $useOrderPrices = false)
     {
         if ($context === null) {
@@ -122,7 +96,6 @@ class CartRule extends CartRuleCore
         if (!CartRule::isFeatureActive() || !Validate::isLoadedObject($context->cart)) {
             return;
         }
-
         $sql = '
 		SELECT SQL_NO_CACHE cr.*
 		FROM ' . _DB_PREFIX_ . 'cart_rule cr
@@ -173,10 +146,8 @@ class CartRule extends CartRuleCore
         $returnData = ['cart_rule' => null, 'remaining_amount' => 0.00];
         if ($result) {
             $cart_rules = ObjectModel::hydrateCollection('CartRule', $result);
-
             if ($cart_rules) {
                 foreach ($cart_rules as $key => $cart_rule) {
-                    /** @var CartRule $cart_rule */
                     if (!$cart_rule->checkValidity($context, false, false, true, false)) {
                         $productTotal = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
                         if ($cart_rule->minimum_amount > $productTotal) {
@@ -190,6 +161,22 @@ class CartRule extends CartRuleCore
         }
         return $returnData;
     }
-
-
+    
+    
+    /*
+    * module: klcartruleextender
+    * date: 2024-03-05 08:40:48
+    * version: 1.0.2
+    */
+    public static function copyConditions($id_cart_rule_source, $id_cart_rule_destination)
+    {
+        parent::copyConditions($id_cart_rule_source, $id_cart_rule_destination);
+        if (($moduleClass = Module::getInstanceByName('klcartruleextender'))
+            && $moduleClass instanceof KlCartRuleExtender
+            && $moduleClass->isEnabledForShopContext()
+            && $moduleClass->isCartRuleIncludingFees($id_cart_rule_source)
+        ) {
+            $moduleClass->addCartRuleFees([$id_cart_rule_destination]);
+        }
+    }
 }

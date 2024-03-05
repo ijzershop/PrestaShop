@@ -572,7 +572,7 @@
     "ignore.virus.scanning.warn.message": "true",
     "javascript.nodejs.core.library.configured.version": "14.19.1",
     "javascript.nodejs.core.library.typings.version": "14.18.63",
-    "last_opened_file_path": "C:/wampserver/www/ijzershop8.local/themes/modernesmid_theme/assets/css",
+    "last_opened_file_path": "C:/wampserver/www/ijzershop8.local/modules/litespeedcache",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -603,11 +603,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\wampserver\www\ijzershop8.local\modules\litespeedcache" />
       <recent name="C:\wampserver\www\ijzershop8.local\themes\modernesmid_theme\assets\css" />
       <recent name="C:\wampserver\www\ijzershop8.local\themes\modernesmid_theme\_dev" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msthemeconfig\views\PrestaShop\Admin\Common\Grid\Columns\Content" />
-      <recent name="C:\wampserver\www\ijzershop8.local\admin-dev\themes\new-theme\public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\wampserver\www\ijzershop8.local\themes\modernesmid_theme\_dev" />
@@ -1328,7 +1328,10 @@
       <workItem from="1708937633468" duration="10945000" />
       <workItem from="1709012578752" duration="28531000" />
       <workItem from="1709188542101" duration="5391000" />
-      <workItem from="1709269787699" duration="17856000" />
+      <workItem from="1709269787699" duration="18473000" />
+      <workItem from="1709534305957" duration="16292000" />
+      <workItem from="1709559781977" duration="8000" />
+      <workItem from="1709616228102" duration="20019000" />
     </task>
     <servers />
   </component>
@@ -2160,7 +2163,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/modules/msthemeconfig/src/Class/ModernHook.php</url>
-          <line>2431</line>
+          <line>2432</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -2187,11 +2190,6 @@
           <url>file://$PROJECT_DIR$/modules/pricemodifier/views/templates/admin/grid/supplier_data_column.html.twig</url>
           <line>377</line>
           <option name="timeStamp" value="65" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/override/classes/Cart.php</url>
-          <line>443</line>
-          <option name="timeStamp" value="71" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/controllers/front/ProductController.php</url>
@@ -2351,6 +2349,15 @@
           </properties>
           <option name="timeStamp" value="70" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="php-line-method">
+          <url>file://$PROJECT_DIR$/classes/Product.php</url>
+          <line>5581</line>
+          <properties>
+            <option name="className" value="\ProductCore" />
+            <option name="methodName" value="getProductProperties" />
+          </properties>
+          <option name="timeStamp" value="79" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/modules/pricemodifier/js/price_modifications/index.js</url>
           <option name="timeStamp" value="45" />
@@ -2383,13 +2390,11 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/themes/modernesmid_theme/_dev/js/theme.js</url>
           <line>49</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="76" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/themes/modernesmid_theme/_dev/js/theme.js</url>
           <line>53</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="77" />
         </line-breakpoint>
       </breakpoints>

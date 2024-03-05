@@ -1034,13 +1034,23 @@ ul.product-flags {
 .regular-price {
   text-decoration: line-through;
   color: $color_13;
+  font-size: 1rem;
+  font-weight: 300 !important;
+  vertical-align: text-bottom;
+  width: 100%;
+  display: table-caption;
+  height: 18px;
+  text-align: right;
 }
 .inclusive-price {
   font-size: 1.5rem;
-  line-height: 2.5rem;
+  line-height: 1.8rem;
   font-weight: 600 !important;
   color: $color_14 !important;
   vertical-align: text-top;
+  width: 100%;
+  text-align: right;
+  float: right;
 }
 .carousel-indicators {
   bottom: -25px;

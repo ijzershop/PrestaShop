@@ -192,6 +192,16 @@ class Calculator
      *
      * @throws \Exception
      */
+    public function getRowTotalWithoutDiscount()
+    {
+        return $this->calculator->getRowTotalWithoutDiscount();
+    }
+
+    /**
+     * @return AmountImmutable
+     *
+     * @throws \Exception
+     */
     public function getDiscountTotal()
     {
         $amount = new AmountImmutable();

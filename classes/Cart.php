@@ -2075,7 +2075,7 @@ class CartCore extends ObjectModel
      *
      * @throws \Exception
      */
-    public function getOrderTotal(
+    public function  getOrderTotal(
         $withTaxes = true,
         $type = Cart::BOTH,
         $products = null,

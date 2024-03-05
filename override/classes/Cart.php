@@ -31,6 +31,7 @@ class Cart extends CartCore
     public const ONLY_DISCOUNTS_NO_CALCULATION = 9;
     public const ONLY_REMAINDER_OF_DISCOUNTS = 10;
     public const ONLY_REMAINDER_UNTIL_STORE_DISCOUNT = 11;
+    public const ONLY_PRODUCTS_NO_DISCOUNTS = 11;
     public
     function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
@@ -315,7 +316,6 @@ class Cart extends CartCore
         bool $preserveGiftsRemoval = true,
         bool $useOrderPrices = false
     ){
-
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
         }
@@ -327,8 +327,6 @@ class Cart extends CartCore
                 return false;
             }
         }
-
-
         $result = Db::getInstance()->getRow('
             SELECT SUM(`quantity`) AS \'quantity\'
             FROM `' . _DB_PREFIX_ . 'customization`
@@ -387,9 +385,7 @@ class Cart extends CartCore
         if (!$ssa || !$ssa->active || !$ssa->useSSA($id_product)) {
             return parent::containsProduct($id_product, $id_product_attribute, $id_customization, $id_address_delivery);
         }
-
         $sql = 'SELECT cp.`quantity` FROM `'._DB_PREFIX_.'cart_product` cp';
-
         if ($id_customization) {
             $sql .= '
                 LEFT JOIN `'._DB_PREFIX_.'customization` c ON (
@@ -397,7 +393,6 @@ class Cart extends CartCore
                     AND c.`id_product_attribute` = cp.`id_product_attribute`
                 )';
         }
-
         $sql .= '
             WHERE cp.`id_product` = '.(int)$id_product.'
             AND cp.`id_product_attribute` = '.(int)$id_product_attribute.'
@@ -406,15 +401,9 @@ class Cart extends CartCore
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
             $sql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
         }
-
         if ($id_customization) {
             $sql .= ' AND c.`id_customization` = '.(int)$id_customization;
         }
-        /*
-        * Modified to return the total products from the cart if the current attribute is already there.
-        * This is needed because if this function returns a result, then PS will try to update the quantity
-        * of the product in the cart, rather than add it to the cart.
-        */
 
         $ret = Db::getInstance()->getRow($sql);
         if (isset($ret['quantity']) && $ret['quantity'] > 0) {
@@ -428,7 +417,6 @@ class Cart extends CartCore
         }
         return $ret;
     }
-
     public function updateQty(
         $quantity,
         $id_product,
@@ -475,7 +463,6 @@ class Cart extends CartCore
             }
         }
         $id_product_attribute_default = Product::getDefaultAttribute($id_product);
-
         if (!empty($id_product_attribute)) {
             $minimal_quantity = (int)ProductAttribute::getAttributeMinimalQty($id_product_attribute);
         } else {
@@ -513,14 +500,12 @@ class Cart extends CartCore
             return false;
         } else {
             $result = $this->containsProduct($id_product, $id_product_attribute, (int)$id_customization, (int)$id_address_delivery);
-
             if ($result) {
                 if ($operator == 'up') {
                     $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
                             FROM '._DB_PREFIX_.'product p
                             '.Product::sqlStock('p', $id_product_attribute_default, true, $shop).'
                             WHERE p.id_product = '.$id_product;
-
                     $result2 = Db::getInstance()->getRow($sql);
                     $product_qty = (int)$result2['quantity'];
                     if (Pack::isPack($id_product)) {
@@ -528,7 +513,6 @@ class Cart extends CartCore
                     }
                     $new_qty = (int)$result['quantity'] + (int)$quantity;
                     $qty = '+ '.(int)$quantity;
-
                     if (!$skipAvailabilityCheckOutOfStock && !Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
                         if ($new_qty > $product_qty) {
                             return false;
@@ -543,7 +527,6 @@ class Cart extends CartCore
                 } else {
                     return false;
                 }
-
                 if ($new_qty <= 0) {
                     return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
                 } elseif ($new_qty < $minimal_quantity) {
@@ -560,18 +543,14 @@ class Cart extends CartCore
                     );
                 }
             } elseif ($operator == 'up') {
-
                 $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
                         FROM '._DB_PREFIX_.'product p
                         '.Product::sqlStock('p', $id_product_attribute_default, true, $shop).'
                         WHERE p.id_product = '.$id_product;
-
                 $result2 = Db::getInstance()->getRow($sql);
-
                 if (Pack::isPack($id_product)) {
                     $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute);
                 }
-
                 $cart_items = $this->getWsCartRows();
                 $product_qty_by_id = 0;
                 foreach ($cart_items as $cart_item) {
@@ -579,17 +558,14 @@ class Cart extends CartCore
                         $product_qty_by_id += (int)$cart_item['quantity'];
                     }
                 }
-
                 if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
                     if (((int)$quantity+(int)$product_qty_by_id) > $result2['quantity']) {
                         return false;
                     }
                 }
-
                 if ((int)$quantity < $minimal_quantity) {
                     return -1;
                 }
-
                 $result_add = Db::getInstance()->insert('cart_product', array(
                     'id_product' =>            (int)$id_product,
                     'id_product_attribute' =>    (int)$id_product_attribute,
@@ -600,13 +576,11 @@ class Cart extends CartCore
                     'date_add' =>                date('Y-m-d H:i:s'),
                     'id_customization' =>       (int)$id_customization,
                 ));
-
                 if (!$result_add) {
                     return false;
                 }
             }
         }
-
         $this->_products = $this->getProducts(true);
         $this->update();
         $context = Context::getContext()->cloneContext();
@@ -616,7 +590,6 @@ class Cart extends CartCore
         if ($auto_add_cart_rule) {
             CartRule::autoAddToCart($context, $useOrderPrices);
         }
-
         if ($product->customizable) {
             return $this->_updateCustomizationQuantity((int)$quantity, (int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery, $operator);
         } else {
@@ -684,11 +657,33 @@ class Cart extends CartCore
         }
         return true;
     }
+    public function getTotalBeforeNextAutoDiscount($withTaxes = true, $parts = 'all')
+    {
+        $cartRulesCheck = CartRule::getAutoAddToCartRules(Context::getContext(), true);
+        $amount = new AmountImmutable($cartRulesCheck['remaining_amount'] * 1.21, $cartRulesCheck['remaining_amount']);
+        $rule =  new CartRule($cartRulesCheck['cart_rule']->id);
+        $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
+        switch ($parts){
+            case 'name':
+                return $rule->getFieldByLang('name',  $this->id_lang);
+                break;
+            case 'rule':
+                return $cartRulesCheck['cart_rule'];
+                break;
+            case 'amount':
+                return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
+                break;
+            default:
+                return ['cart_rule_name' => $rule->getFieldByLang('name',  $this->id_lang),'cart_rule' => $cartRulesCheck['cart_rule'], 'amount' => Tools::ps_round($value, Context::getContext()->getComputingPrecision())];
+                break;
+        }
+    }
+
     /*
-    * module: klcartruleextender
-    * date: 2023-04-05 08:02:35
-    * version: 1.0.1
-    */
+   * module: klcartruleextender
+   * date: 2023-04-05 08:02:35
+   * version: 1.0.1
+   */
     public function getCartRules(
         $filter = CartRule::FILTER_ACTION_ALL,
         $autoAdd = true,
@@ -740,12 +735,26 @@ class Cart extends CartCore
     )
     {
 
-            if(!is_numeric($id_carrier) && isset(Context::getContext()->cart->id_carrier) && (int)Context::getContext()->cart->id_carrier > 0){
-                $id_carrier = (int)Context::getContext()->cart->id_carrier;
-            }
+        if(!is_numeric($id_carrier) && isset(Context::getContext()->cart->id_carrier) && (int)Context::getContext()->cart->id_carrier > 0){
+            $id_carrier = (int)Context::getContext()->cart->id_carrier;
+        }
 
 
-        if (!in_array($type, [CART::ONLY_DISCOUNTS_NO_CALCULATION, CART::ONLY_REMAINDER_OF_DISCOUNTS, CART::ONLY_REMAINDER_UNTIL_STORE_DISCOUNT])) {
+//        if () {
+//
+//
+//            return $value;
+//        }
+
+
+        if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
+            || !($moduleClass instanceof KlCartRuleExtender)
+            || !$moduleClass->isEnabledForShopContext()
+            || (!Configuration::get('KL_CART_RULE_EXTENDER_SHIPPING_FEES') && !Configuration::get('KL_CART_RULE_EXTENDER_WRAPPING_FEES'))
+//            || !in_array($type, [Cart::BOTH, Cart::ONLY_DISCOUNTS])
+            || $this->getNbOfPackages() > 1
+            || !in_array($type, [CART::ONLY_DISCOUNTS_NO_CALCULATION, CART::ONLY_REMAINDER_OF_DISCOUNTS, CART::ONLY_REMAINDER_UNTIL_STORE_DISCOUNT])
+        ) {
             $value = parent::getOrderTotal(
                 $withTaxes,
                 $type,
@@ -754,21 +763,16 @@ class Cart extends CartCore
                 $use_cache,
                 $keepOrderPrices
             );
-        } else {
-        }
-        if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
-            || !($moduleClass instanceof KlCartRuleExtender)
-            || !$moduleClass->isEnabledForShopContext()
-            || (!Configuration::get('KL_CART_RULE_EXTENDER_SHIPPING_FEES') && !Configuration::get('KL_CART_RULE_EXTENDER_WRAPPING_FEES'))
-            || !in_array($type, [Cart::BOTH, Cart::ONLY_DISCOUNTS, CART::ONLY_REMAINDER_OF_DISCOUNTS, CART::ONLY_DISCOUNTS_NO_CALCULATION, CART::ONLY_REMAINDER_UNTIL_STORE_DISCOUNT])
-            || $this->getNbOfPackages() > 1
-        ) {
+
             return $value;
         }
+
+
         if ((int)$id_carrier <= 0) {
             $id_carrier = null;
         }
         $this->getCartRules(CartRule::FILTER_ACTION_ALL, false, false, $products, $id_carrier, $keepOrderPrices);
+
         $calculator = $moduleClass->getCalculator();
         if (!$calculator->isProcessed) {
             return $value;
@@ -782,6 +786,9 @@ class Cart extends CartCore
                 break;
             case CART::ONLY_DISCOUNTS_NO_CALCULATION:
                 $amount = $calculator->getDiscountTotal(true);
+                break;
+            case CART::ONLY_PRODUCTS_NO_DISCOUNTS:
+                $amount = $calculator->getRowTotalWithoutDiscount();
                 break;
             case CART::ONLY_REMAINDER_OF_DISCOUNTS:
                 $discount = $calculator->getDiscountTotal(true);
@@ -799,25 +806,26 @@ class Cart extends CartCore
         return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
     }
 
-    public function getTotalBeforeNextAutoDiscount($withTaxes = true, $parts = 'all')
+
+    /*
+    * module: dynamicproduct
+    * date: 2023-06-14 15:56:08
+    * version: 2.43.11
+    */
+    public function duplicate()
     {
-        $cartRulesCheck = CartRule::getAutoAddToCartRules(Context::getContext(), true);
-        $amount = new AmountImmutable($cartRulesCheck['remaining_amount'] * 1.21, $cartRulesCheck['remaining_amount']);
-        $rule =  new CartRule($cartRulesCheck['cart_rule']->id);
-        $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
-        switch ($parts){
-            case 'name':
-                return $rule->getFieldByLang('name',  $this->id_lang);
-                break;
-            case 'rule':
-                return $cartRulesCheck['cart_rule'];
-                break;
-            case 'amount':
-                return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
-                break;
-            default:
-                return ['cart_rule_name' => $rule->getFieldByLang('name',  $this->id_lang),'cart_rule' => $cartRulesCheck['cart_rule'], 'amount' => Tools::ps_round($value, Context::getContext()->getComputingPrecision())];
-                break;
+        $id_cart_old = (int) $this->id;
+        $result = parent::duplicate();
+        $id_cart_new = (int) $result['cart']->id;
+        Module::getInstanceByName('dynamicproduct');
+        if (Module::isEnabled('dynamicproduct')) {
+
+            $module = Module::getInstanceByName('dynamicproduct');
+            $module->hookCartDuplicated(array(
+                'id_cart_old' => $id_cart_old,
+                'id_cart_new' => $id_cart_new,
+            ));
         }
+        return $result;
     }
 }

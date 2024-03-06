@@ -29,7 +29,7 @@
   }
 
   #product-images-carousel .carousel-inner{
-    max-width: 305px;
+    max-width: 200px;
     margin:0 auto;
   }
   #product-images-carousel .carousel-control-prev{

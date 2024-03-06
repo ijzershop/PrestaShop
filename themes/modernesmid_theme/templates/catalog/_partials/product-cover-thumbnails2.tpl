@@ -28,15 +28,24 @@
     max-width: 100%;
   }
 
+
   #product-images-carousel .carousel-inner{
     max-width: 200px;
     margin:0 auto;
   }
+  @media (min-width: 768px) {
+    #product-images-carousel .carousel-inner{
+      max-width: 360px;
+      margin:0 auto;
+    }
+  }
+
+
   #product-images-carousel .carousel-control-prev{
-    left:10px;
+    left:-15px;
   }
   #product-images-carousel .carousel-control-next{
-    right:10px;
+    right:-15px;
   }
 
 
@@ -66,7 +75,7 @@
     justify-content: center;
     left: 0;
     padding: 0;
-    height: 105px;
+    height: 85px;
     margin-left: auto;
     margin-right: auto;
     overflow-y: hidden;
@@ -118,17 +127,17 @@
         {/if}
     {/foreach}
   </div>
-    <ol class="carousel-indicators">
-        {assign var="index_indicator" value=0}
-        {assign var="index_thumbs" value=0}
-        {foreach from=$product.images item=image key=key2}
-          {if strpos($image.legend, 'techntabel') == false}
-            <li data-target="#product-images-carousel" data-slide-to="{$index_indicator}" class=" {if $image.id_image == $product.cover.id_image}active{/if}">
-            </li>
-              {assign var="index_indicator" value=$index_indicator+1}
-          {/if}
-        {/foreach}
-    </ol>
+{*    <ol class="carousel-indicators">*}
+{*        {assign var="index_indicator" value=0}*}
+{*        {assign var="index_thumbs" value=0}*}
+{*        {foreach from=$product.images item=image key=key2}*}
+{*          {if strpos($image.legend, 'techntabel') == false}*}
+{*            <li data-target="#product-images-carousel" data-slide-to="{$index_indicator}" class=" {if $image.id_image == $product.cover.id_image}active{/if}">*}
+{*            </li>*}
+{*              {assign var="index_indicator" value=$index_indicator+1}*}
+{*          {/if}*}
+{*        {/foreach}*}
+{*    </ol>*}
   <ol class="carousel-indicators-thumbs m-0">
           {foreach from=$product.images item=image key=key3}
               {if strpos($image.legend, 'techntabel') == false}

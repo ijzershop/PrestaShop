@@ -209,7 +209,7 @@
           {/block}
         {/if}
       </div>
-      <div class="col-12 col-sm-5">
+      <div class="col-12 col-sm-5 pt-2">
         {if Configuration::get('SHOW_PRODUCT_FEATURES') === 'category'}
             {assign var='cat' value=Category::getNestedCategories($product.id_category_default)}
             {if is_null($cat[$product.id_category_default].top_description)}

@@ -22,79 +22,6 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-
-<style type="text/css">
-  .images-container.product-miniature{
-    max-width: 100%;
-  }
-
-  #product-images-carousel .carousel-inner{
-    max-width: 200px;
-    margin:0 auto;
-  }
-  #product-images-carousel .carousel-control-prev{
-    left:10px;
-  }
-  #product-images-carousel .carousel-control-next{
-    right:10px;
-  }
-
-
-  .carousel-control-next, .carousel-control-prev{
-    top:auto;
-    bottom: 8px;
-  }
-
-  .carousel-indicators-thumbs li img{
-    border: 1px solid #cccc;
-    margin: 5px;
-    cursor: pointer;
-  }
-  .carousel-indicators-thumbs li{
-    opacity: .5;
-    cursor: pointer;
-  }
-
-  .carousel-indicators-thumbs li.active{
-    opacity: 1;
-  }
-
-  .carousel-indicators-thumbs{
-    list-style: none;
-    margin-top: 30px;
-    position: relative;
-    justify-content: center;
-    left: 0;
-    padding: 0;
-    height: 105px;
-    margin-left: auto;
-    margin-right: auto;
-    overflow-y: hidden;
-    display: flex;
-    -webkit-box-pack: center;
-  }
-
-  #product-images-carousel .carousel-indicators {
-    position: absolute;
-    right: 0;
-    left: 0;
-    z-index: 4;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    padding-left: 0;
-    margin-right: 20%;
-    margin-left: 20%;
-    list-style: none;
-    height: auto;
-    bottom:95px;
-  }
-</style>
-
-
 <div class="images-container product-miniature">
   {block name='product_images'}
 
@@ -118,17 +45,17 @@
         {/if}
     {/foreach}
   </div>
-    <ol class="carousel-indicators">
-        {assign var="index_indicator" value=0}
-        {assign var="index_thumbs" value=0}
-        {foreach from=$product.images item=image key=key2}
-          {if strpos($image.legend, 'techntabel') == false}
-            <li data-target="#product-images-carousel" data-slide-to="{$index_indicator}" class=" {if $image.id_image == $product.cover.id_image}active{/if}">
-            </li>
-              {assign var="index_indicator" value=$index_indicator+1}
-          {/if}
-        {/foreach}
-    </ol>
+{*    <ol class="carousel-indicators">*}
+{*        {assign var="index_indicator" value=0}*}
+{*        {assign var="index_thumbs" value=0}*}
+{*        {foreach from=$product.images item=image key=key2}*}
+{*          {if strpos($image.legend, 'techntabel') == false}*}
+{*            <li data-target="#product-images-carousel" data-slide-to="{$index_indicator}" class=" {if $image.id_image == $product.cover.id_image}active{/if}">*}
+{*            </li>*}
+{*              {assign var="index_indicator" value=$index_indicator+1}*}
+{*          {/if}*}
+{*        {/foreach}*}
+{*    </ol>*}
   <ol class="carousel-indicators-thumbs m-0">
           {foreach from=$product.images item=image key=key3}
               {if strpos($image.legend, 'techntabel') == false}

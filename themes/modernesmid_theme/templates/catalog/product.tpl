@@ -68,12 +68,12 @@
         </section>
         {/block}
       </div>
-      <div class="col-12 col-lg-5 mt-4 mt-lg-0">
+      <div class="col-12 col-lg-5 mt-lg-0">
         <div class="row">
           <div class="col-12">
             {block name='page_header_container'}
             {block name='page_header'}
-            <h1 class="h3 m-0 text-black">{block name='page_title'}{$product.name}{/block}</h1>
+            <h1 class="h4 m-0 text-black">{block name='page_title'}{$product.name}{/block}</h1>
                 {block name='product_description_short'}
                 <div id="product-description-short-{$product.id}">{if !empty($product.description_short)}{$product.description_short nofilter}{else}<span class="d-none"><span>{/if}</div>
                 {/block}
@@ -91,14 +91,14 @@
               </div>
               <div class="col-12">
                 <div class="row">
-                  <div class="col-6 col-sm-4">
+                  <div class="col-12 col-md-4">
                   {if (Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) || !Configuration::get('PS_CATALOG_MODE')}
                     {block name='product_prices'}
                     {include file='catalog/_partials/product-prices.tpl'}
                     {/block}
                   {/if}
                   </div>
-                  <div class="product-actions col-12 col-sm-4">
+                  <div class="product-actions col-12 col-md-4">
                     {block name='product_buy'}
                     <form action="{$urls.pages.cart}" method="post" id="add-to-cart-or-refresh">
                       <input type="hidden" name="token" value="{$static_token}">
@@ -127,7 +127,7 @@
                   </div>
 
 
-                  <div class="col-12 col-sm-4">
+                  <div class="col-12 col-md-4">
 
 
 

@@ -61,7 +61,7 @@
 
   .carousel-indicators-thumbs{
     list-style: none;
-    margin-top: 110px;
+    margin-top: 30px;
     position: relative;
     justify-content: center;
     left: 0;
@@ -90,7 +90,7 @@
     margin-left: 20%;
     list-style: none;
     height: auto;
-    bottom:150px;
+    bottom:95px;
   }
 </style>
 
@@ -129,11 +129,11 @@
           {/if}
         {/foreach}
     </ol>
-  <ol class="carousel-indicators-thumbs">
+  <ol class="carousel-indicators-thumbs m-0">
           {foreach from=$product.images item=image key=key3}
               {if strpos($image.legend, 'techntabel') == false}
                 <li data-slide-to="{$index_thumbs}" class=" {if $image.id_image == $product.cover.id_image}active{/if}">
-                  <img src="{$image.bySize.small_default.url}" alt="{$image.legend}"/>
+                  <img height="70px" width="auto" src="{$image.bySize.small_default.url}" alt="{$image.legend}"/>
                 </li>
                   {assign var="index_thumbs" value=$index_thumbs+1}
               {/if}

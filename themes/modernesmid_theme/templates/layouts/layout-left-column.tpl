@@ -27,7 +27,7 @@
 {block name='right_column'}{/block}
 
 {block name='content_wrapper'}
-  <div id="content-wrapper" class="left-column col-xs-12 col-lg-10">
+  <div id="content-wrapper" class="left-column row">
     {hook h="displayContentWrapperTop"}
     {block name='content'}
     {/block}

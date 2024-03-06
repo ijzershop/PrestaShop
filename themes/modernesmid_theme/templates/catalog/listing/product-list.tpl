@@ -33,7 +33,7 @@
       <h2 id="js-product-list-header" class="h2 mb-4 col-12 p-0">{if strtolower($listing.label) != 'zoekresultaten'}{$listing.label}{/if}</h2>
     {/block}
     {/if}
-    <section id="products" class="row">
+    <section id="products" class="col">
 
       {hook h="displayFilter"}
 

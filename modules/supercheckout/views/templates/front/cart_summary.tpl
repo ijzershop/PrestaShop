@@ -263,7 +263,7 @@
                       <span class="input-group-btn"><button id="button-coupon" onClick="callCoupon();" type="button"
                                                             data-loading-text="Loading..."
                                                             class="btn btn-primary orangebuttonapply"
-                                                            style="min-height: 33px;"><i class="fa fasl-check"></i></button>
+                                                            style="min-height: 33px;"><i class="fasl fa-check"></i></button>
                     </span>
                     </div>
                   </div>

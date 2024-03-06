@@ -43,7 +43,7 @@
                 {/if}
             </div>
     {/block}
-    <div class="col-12 pr-0">
+    <div class="col-12">
       <div class="row">
       {assign var="subCategories" value=Category::getChildren($category.id, Context::getContext()->cookie->id_lang)}
       {foreach from=$subCategories item=subcat key=key}

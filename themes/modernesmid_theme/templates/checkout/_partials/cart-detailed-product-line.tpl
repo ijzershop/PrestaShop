@@ -22,13 +22,14 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div class="product-line-grid col-12 p-0">
+<div class="product-line-grid col-12">
   {assign var="has_remaining_stock" value=json_decode(Product::hasMaxProductsRemainingStock($product.id_product, 50))}
   <div class="row">
     <!--  product left content: image-->
     <div class="product-line-grid-left col-12 col-sm-2 col-md-2 col-lg-2">
       <a
-        class="remove-from-cart text-dark pr-3 d-block d-sm-none"
+        class="remove-from-cart btn btn-outline-danger d-block d-sm-none"
+        style="position: absolute;right: 2px;"
         rel="nofollow"
         href="{$product.remove_from_cart_url}"
         data-link-action="delete-from-cart"
@@ -37,7 +38,7 @@
         data-id-customization="{$product.id_customization|escape:'javascript'}"
       >
         {if !isset($product.is_gift) || !$product.is_gift}
-          <i class="fasl fa-xmark float-right"></i>
+          <i class="fasl fa-trash float-right"></i>
         {/if}
       </a>
       <span class="product-image media-middle row mx-auto">
@@ -53,17 +54,6 @@
         <div class="product-line-info col-12 col-sm-6 col-md-6 col-lg-6 pl-3 pr-3 pl-sm-0 pr-sm-0 pt-2">
           <a class="label text-decoration-none text-dark" href="{$product.url}"
              data-id_customization="{$product.id_customization|intval}">{$product.name}</a>
-          <div class="product-line-info product-price {if $product.has_discount}has-discount{/if}">
-            {*              {if $product.has_discount}*}
-            {*                <div class="product-discount">*}
-            {*                  <span*}
-            {*                    class="regular-price pr-2">{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax, 'EUR')}</span>*}
-            {*                  <span*}
-            {*                    class="product-price pr-2">{Context::getContext()->currentLocale->formatPrice($product.price_with_reduction_without_tax, 'EUR')}</span>*}
-            {*                </div>*}
-            {*              {/if}*}
-          </div>
-
           <div class="product-line-grid-right product-line-actions pl-0 col-12 float-right">
             {foreach from=$product.attributes key="attribute" item="value"}
               {if !in_array($attribute, AttributeGroup::getSawCutModuleAttributeGroupNames(Context::getContext()->cookie->id_lang))}
@@ -149,15 +139,15 @@
                   </div>
 
                 </div>
-                <div class="col-12 col-sm-6 price pl-0">
-            <span class="product-price">
+                <div class="col-12 col-sm-6 price pl-0 mt-2 mt-sm-0">
+            <span class="product-price" style="line-height: .7rem;">
               <strong>
                 {if isset($product.is_gift) && $product.is_gift}
                   <span class="gift">{l s='Gift' d='Shop.Theme.Checkout'}</span>
 
 {else}
 
-                  <span class="product-price">
+                  <span class="product-price" style="line-height: .7rem;">
                   {if $product.price_reduction_after_cartrule_reduction_without_tax > 0}
                     <span class="regular-price"
                           data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{Context::getContext()->currentLocale->formatPrice((float)(float)$product.price_with_reduction*(int)$product.quantity , 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice((float)Product::getPriceStatic($product.id_product, false)*(int)$product.quantity, 'EUR')}{/if} </span>

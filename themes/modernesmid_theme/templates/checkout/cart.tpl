@@ -35,14 +35,14 @@
 
         <!-- cart products detailed -->
         <div class="card cart-container border-0 row">
-          <div class="p-2 ">
-            <a class="h2 w-100 text-decoration-none text-dark">{l s='Shopping Cart' d='Shop.Theme.Checkout'}</a>
+          <div class="p-2 col">
+            <a class="h2 col text-decoration-none text-dark">{l s='Shopping Cart' d='Shop.Theme.Checkout'}</a>
           </div>
           {block name='cart_overview'}
             {include file='checkout/_partials/cart-detailed.tpl' cart=$cart}
           {/block}
             {if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id}
-                <div>
+                <div class="col">
     {*            {block name='continue_shopping'}*}
     {*              <a class="btn btn-dark mt-2" href="{$urls.pages.index}">*}
     {*                <i class="fasl fa-chevron-left"></i> {l s='Continue shopping' d='Shop.Theme.Actions'}*}

@@ -691,8 +691,8 @@ font-size: 11px;
                         {/if}
                     {/if}
 
-                    <div class="supercheckout-threecolumns supercheckout-container supercheckout-skin-generic panel-body" id="supercheckout-columnleft">
-                        <div class="col">
+                    <div class="supercheckout-threecolumns supercheckout-container supercheckout-skin-generic panel-body col" id="supercheckout-columnleft">
+                        <div class="row">
                             {assign var='layout_name' value='1_column'}
                             {assign var='multiplier' value=1}
                             {assign var='multiplier_3' value=0.98}
@@ -826,9 +826,10 @@ font-size: 11px;
                                     {/foreach}
                                 </div>
                             </div>
-                            <div class="{if $layout_name == '2_column' || $layout_name == '1_column'}col-lg-8 col-md-8 col-sm-12 {else}parent-three-column{/if} custom-panel kb_mobile_sc_respo">
-                       {if $layout_name != '3_column'} <div class="row"> {/if}
-                                    <div class="supercheckout-column-middle columnleftsort col-lg-4 col-md-6 col-sm-12 col-12 pl-lg-0 pr-lg-0 pr-md-0 kb_mobile_sc_respo" id="columnleft-2"> {*Need to change later*}
+                            <div class="{if $layout_name == '2_column' || $layout_name == '1_column'}col-lg-8 col-md-8 col-sm-12 {else}parent-three-column col-lg-8 col-md-12 col-sm-12 col-12{/if} custom-panel kb_mobile_sc_respo">
+                       {if $layout_name != '3_column'} {/if}
+                              <div class="row">
+                                    <div class="supercheckout-column-middle columnleftsort col-lg-6 col-md-12 col-sm-12 col-12 pl-lg-0 pr-lg-0 p-md-0 kb_mobile_sc_respo" id="columnleft-2"> {*Need to change later*}
                                         <div class="supercheckout-column-left columnleftsort col-lg-6 col-md-6 col-sm-12 col-12" id="column-2-upper">
                                         </div>
                                         <div class="supercheckout-column-left columnleftsort col-lg-6 col-md-6 col-sm-12 col-12 kb_mobile_sc_respo" id="column-1-inside">
@@ -840,8 +841,9 @@ font-size: 11px;
 
                                         </div>
                                     </div>
-                                    <div class="supercheckout-column-right columnleftsort col-lg-4 col-md-6 col-sm-12 col-12 kb_mobile_sc_respo" id="columnleft-3">
+                                    <div class="supercheckout-column-right columnleftsort col-lg-6 col-md-12 col-sm-12 col-12 kb_mobile_sc_respo" id="columnleft-3">
                                     </div>
+                              </div>
                             {if $layout_name != '3_column'} </div> {/if}
 
                             </div>

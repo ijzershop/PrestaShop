@@ -252,6 +252,7 @@
   #kiyoh-block li.slide_hidden {
     opacity: 0;
     height: 0;
+    padding: 0;
   }
 
   #kiyoh-block li .svg-inline--fa{
@@ -259,6 +260,7 @@
   }
 
   #kiyoh-block li {
+    padding: 0px 5px;
     animation: slideInFromLeft 0.5s ease-out;
   }
 

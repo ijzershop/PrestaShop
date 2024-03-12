@@ -1031,6 +1031,15 @@ ul.product-flags {
     text-align: right;
   }
 }
+@media (max-width: 767px) {
+  .product-title {
+    font-size: 1rem!important;
+  }
+  li.breadcrumb-item a, li.breadcrumb-item a span, li.breadcrumb-item{
+    line-height: .7rem!important;
+    font-size: .7rem!important;
+  }
+}
 .regular-price {
   text-decoration: line-through;
   color: $color_13;

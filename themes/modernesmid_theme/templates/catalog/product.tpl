@@ -73,7 +73,7 @@
           <div class="col-12">
             {block name='page_header_container'}
             {block name='page_header'}
-            <h1 class="h4 m-0 text-black">{block name='page_title'}{$product.name}{/block}</h1>
+            <h1 class="product-title h4 m-0 text-black">{block name='page_title'}{$product.name}{/block}</h1>
                 {block name='product_description_short'}
                 <div id="product-description-short-{$product.id}">{if !empty($product.description_short)}{$product.description_short nofilter}{else}<span class="d-none"><span>{/if}</div>
                 {/block}

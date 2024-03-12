@@ -62,8 +62,8 @@
             {include file='_partials/breadcrumb.tpl'}
           {/block}
         </div>
-        <div class="container-fluid">
-          <div class="row">
+        <div class="container-fluid p-0">
+          <div class="w-100">
             <div class="container d-flex">
 
           {block name="left_column"}

@@ -1,0 +1,52 @@
+{
+  "short_name": "GeroShop",
+  "name": "GeroShop.nl partnerwebshop van de Ijzershop",
+  "description": "Alle onderdelen die wij gebruiken tijdens de fabricage van onze toestellen kunt u via GeroShop bekijken en bestellen. Via de site kunt u de uitvoering en de prijs bekijken en deze kunt u vermelden op uw bestelformulier.",
+  "background_color": "#3b56ad",
+  "theme_color": "#3b56ad",
+  "display": "fullscreen",
+  "start_url": "https://geroshop.nl",
+  "icons": [
+  {
+    "src": "https://geroshop.nl\/themes\/modernesmid\/assets\/favicons\/GS_favicons\/android-icon-36x36.png",
+    "sizes": "36x36",
+    "type": "image\/png",
+    "density": "0.75",
+    "purpose": "any maskable"
+  },
+  {
+    "src": "https://geroshop.nl\/themes\/modernesmid\/assets\/favicons\/GS_favicons\/android-icon-48x48.png",
+    "sizes": "48x48",
+    "type": "image\/png",
+    "density": "1.0",
+    "purpose": "any maskable"
+  },
+  {
+    "src": "https://geroshop.nl\/themes\/modernesmid\/assets\/favicons\/GS_favicons\/android-icon-72x72.png",
+    "sizes": "72x72",
+    "type": "image\/png",
+    "density": "1.5",
+    "purpose": "any maskable"
+  },
+  {
+    "src": "https://geroshop.nl\/themes\/modernesmid\/assets\/favicons\/GS_favicons\/android-icon-96x96.png",
+    "sizes": "96x96",
+    "type": "image\/png",
+    "density": "2.0",
+    "purpose": "any maskable"
+  },
+  {
+    "src": "https://geroshop.nl\/themes\/modernesmid\/assets\/favicons\/GS_favicons\/android-icon-144x144.png",
+    "sizes": "144x144",
+    "type": "image\/png",
+    "density": "3.0",
+    "purpose": "any maskable"
+  },
+  {
+    "src": "https://geroshop.nl\/themes\/modernesmid\/assets\/favicons\/GS_favicons\/android-icon-192x192.png",
+    "sizes": "192x192",
+    "type": "image\/png",
+    "density": "4.0",
+    "purpose": "any maskable"
+  }]
+}

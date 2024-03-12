@@ -1,0 +1,52 @@
+{
+  "short_name": "Ijzersehop",
+  "name": "Ijzersehop.nl partnerwebshop van de Ijzershop",
+  "description": "IJzershop.nl levert stalen, aluminium en roestvaste platen en profielen. Wij leveren in heel Nederland aan vakmensen en particulieren. De metalen profielen worden in lengtes van 2 meter geleverd maar kunnen ook op maat worden gezaagd of geknipt.",
+  "background_color": "#3b56ad",
+  "theme_color": "#3b56ad",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+  {
+    "src": "/themes/modernesmid_theme/assets/favicons/IJ_favicons/android-icon-36x36.png",
+    "sizes": "36x36",
+    "type": "image/png",
+    "density": "0.75",
+    "purpose": "any maskable"
+  },
+  {
+    "src": "/themes/modernesmid_theme/assets/favicons/IJ_favicons/android-icon-48x48.png",
+    "sizes": "48x48",
+    "type": "image/png",
+    "density": "1.0",
+    "purpose": "any maskable"
+  },
+  {
+    "src": "/themes/modernesmid_theme/assets/favicons/IJ_favicons/android-icon-72x72.png",
+    "sizes": "72x72",
+    "type": "image/png",
+    "density": "1.5",
+    "purpose": "any maskable"
+  },
+  {
+    "src": "/themes/modernesmid_theme/assets/favicons/IJ_favicons/android-icon-96x96.png",
+    "sizes": "96x96",
+    "type": "image/png",
+    "density": "2.0",
+    "purpose": "any maskable"
+  },
+  {
+    "src": "/themes/modernesmid_theme/assets/favicons/IJ_favicons/android-icon-144x144.png",
+    "sizes": "144x144",
+    "type": "image/png",
+    "density": "3.0",
+    "purpose": "any maskable"
+  },
+  {
+    "src": "/themes/modernesmid_theme/assets/favicons/IJ_favicons/android-icon-192x192.png",
+    "sizes": "192x192",
+    "type": "image/png",
+    "density": "4.0",
+    "purpose": "any maskable"
+  }]
+}

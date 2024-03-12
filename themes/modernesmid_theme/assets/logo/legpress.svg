@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="460.4306"
+   height="104.45051"
+   viewBox="0 0 121.82226 27.635865"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="legpress.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="236.08637"
+     inkscape:cy="77.22564"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Laag 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-281.29362,-87.70772)">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot823"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#00127e;fill-opacity:1;stroke:none"
+       transform="matrix(0.15090611,0,0,0.15090611,267.06541,75.004752)"><flowRegion
+         id="flowRegion825"
+         style="fill:#00127e;fill-opacity:1"><rect
+           id="rect827"
+           width="1802.8572"
+           height="862.85712"
+           x="94.285713"
+           y="71.09108"
+           style="fill:#00127e;fill-opacity:1" /></flowRegion><flowPara
+         id="flowPara829"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:104.68925476px;font-family:IJzershop;-inkscape-font-specification:'IJzershop, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#00127e;fill-opacity:1"><flowSpan
+   style="fill:#000000"
+   id="flowSpan1418">LEG</flowSpan>PRESS</flowPara></flowRoot>    <g
+       id="g1428"
+       transform="matrix(1.3030276,0,0,1.3030276,-90.178216,-27.841931)">
+      <flowRoot
+         transform="matrix(0.16826152,0,0,0.16826152,289.46122,94.712646)"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.66666603px;line-height:1.25;font-family:'j.d.';-inkscape-font-specification:'j.d.';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         id="flowRoot1400"
+         xml:space="preserve"><flowRegion
+           id="flowRegion1402"><rect
+             y="58.57143"
+             x="2.1428571"
+             height="56.42857"
+             width="596.42859"
+             id="rect1404" /></flowRegion><flowPara
+           id="flowPara1406">partnerwebshop van</flowPara></flowRoot>      <text
+         id="text1410"
+         y="107.7655"
+         x="335.8754"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.68568873px;line-height:1.25;font-family:'j.d.';-inkscape-font-specification:'j.d.';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13821334"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:IJzershop;-inkscape-font-specification:IJzershop;stroke-width:0.13821334"
+           y="107.7655"
+           x="335.8754"
+           id="tspan1408"
+           sodipodi:role="line"><tspan
+             id="tspan1412"
+             style="fill:#00127e;fill-opacity:1;stroke-width:0.13821334"><tspan
+   id="tspan1416"
+   style="fill:#000000;stroke-width:0.13821334">GERO</tspan>FITNESS</tspan></tspan></text>
+    </g>
+  </g>
+</svg>

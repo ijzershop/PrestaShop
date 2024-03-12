@@ -229,6 +229,11 @@
     height: 32px;
   }
 
+  #kiyoh-block .list-group-item a span.text{
+    font-size: .7rem;
+    line-height: 1rem;
+    vertical-align: text-top;
+  }
   @keyframes slideInFromLeft {
     0% {
       transform: translateX(-200%);

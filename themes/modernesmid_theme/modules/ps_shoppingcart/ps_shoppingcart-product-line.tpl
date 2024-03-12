@@ -86,9 +86,9 @@
             </div>
           </div>
             {assign var="has_remaining_stock" value=json_decode(Product::hasMaxProductsRemainingStock($product.id_product, 50))}
-            {if $has_remaining_stock->is_orderable}
-                {$has_remaining_stock->remaining_qty_msg nofilter}
-            {/if}
+{*            {if $has_remaining_stock->is_orderable}*}
+{*                {$has_remaining_stock->remaining_qty_msg nofilter}*}
+{*            {/if}*}
         </div>
       </div>
       {* <div class="price col-2" style="padding-right:0px;text-align:right;">

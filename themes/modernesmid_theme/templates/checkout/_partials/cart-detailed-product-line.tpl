@@ -160,9 +160,9 @@
               </strong>
             </span>
                 </div>
-                {if $has_remaining_stock->is_orderable}
-                  {$has_remaining_stock->remaining_qty_msg nofilter}
-                {/if}
+{*                {if $has_remaining_stock->is_orderable}*}
+{*                  {$has_remaining_stock->remaining_qty_msg nofilter}*}
+{*                {/if}*}
               </div>
             </div>
           </div>

@@ -9,17 +9,20 @@ export default class viewCartAnalyticsPush {
       }
       dataLayer.push({ecommerce: null});
 
-      console.log(['view_cart', dataObject]);
-      dataLayer.push({
+      let sendedData = {
         event: "view_cart",
         ecommerce: {
           currency: 'EUR',
-          value: dataObject.amount_tax_excl, // bedrag product ex btw
+          coupon: dataObject.coupon,
+          discount: dataObject.discount,
+          value: dataObject.price, // bedrag product ex btw
           items: [
             dataObject.items
           ],
         },
-      })
+      };
+      console.log(['view_cart', sendedData]);
+      dataLayer.push(sendedData)
     }
   }
 }

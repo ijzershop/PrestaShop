@@ -3,22 +3,25 @@ export default class removeFromCartAnalyticsPush {
 
     dataLayer.push({ecommerce: null});
     if(dataObject === null){
-      dataObject = prestashop.analytics_data.product;
+      dataObject = prestashop.analytics_data.add_to_cart_product;
       if(dataObject === undefined){
         return;
       }
     }
-    console.log(['remove_from_cart', dataObject, prestashop]);
-    dataLayer.push({
-      event: "add_to_cart",
+    let sendedData = {
+      event: "remove_from_cart",
       ecommerce: {
         currency: 'EUR',
-        value: dataObject.amount_tax_excl, // bedrag product ex btw
+        coupon: dataObject.coupon,
+        discount: dataObject.discount,
+        value: dataObject.price, // bedrag product ex btw
         items: [
           dataObject
         ],
       },
-    })
+    };
+    console.log(['remove_from_cart', sendedData]);
+    dataLayer.push(sendedData)
   }
 }
 

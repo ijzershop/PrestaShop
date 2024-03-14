@@ -4,22 +4,25 @@ export default class startCheckoutAnalyticsPush {
       bodyElemIdStartCheckout.attr('analytics_send', '1');
 
 
-      let dataObject = prestashop.analytics_data;
+      let dataObject = prestashop.analytics_data.cart;
       dataLayer.push({ecommerce: null});
 
 
-      // console.log(['begin_checkout', dataObject]);
-
-      dataLayer.push({
+      let sendedData = {
         event: "begin_checkout",
         ecommerce: {
           currency: 'EUR',
-          value: dataObject.amount_tax_excl, // bedrag product ex btw
+          coupon: dataObject.coupon,
+          discount: dataObject.discount,
+          value: dataObject.price, // bedrag product ex btw
           items: [
             dataObject.items
           ],
         },
-      })
+      };
+
+      console.log(['begin_checkout', sendedData]);
+      dataLayer.push(sendedData)
     }
   }
 }

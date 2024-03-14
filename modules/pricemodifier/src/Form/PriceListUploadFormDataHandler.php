@@ -147,13 +147,13 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
                 foreach ($xmlDataFile as $product) {
                     $priceMod = 0;
                     if (!empty($product['kwaliteit'])) {
-                        $old_supplier_nameA = preg_replace('/ +/', ' ', '<b>' . preg_replace('/\s+/', ' ', (string)$product['naam']) . '(' . $product['kwaliteit'] . ')' . '</b><br>' . $product['type']);
-                        $old_supplier_nameB = preg_replace('/ +/', ' ', '<b>' . preg_replace('/\s+/', ' ', (string)$product['naam']) . '</b><br>' . $product['type']);
-                        $supplier_name = preg_replace('/ +/', ' ', '<b>' . preg_replace('/\s+/', ' ', (string)$product['naam']) . '</b><br>' . $product['type'] . ' (' . $product['kwaliteit'] . ')');
+                        $old_supplier_nameA = preg_replace('/ +/', ' ', '<b>' . preg_replace(['/\s+/','/"/'], [' ',''], (string)$product['naam']) . '(' . $product['kwaliteit'] . ')' . '</b><br>' . $product['type']);
+                        $old_supplier_nameB = preg_replace('/ +/', ' ', '<b>' . preg_replace(['/\s+/','/"/'], [' ',''], (string)$product['naam']) . '</b><br>' . $product['type']);
+                        $supplier_name = preg_replace('/ +/', ' ', '<b>' . preg_replace(['/\s+/','/"/'], [' ',''], (string)$product['naam']) . '</b><br>' . $product['type'] . ' (' . $product['kwaliteit'] . ')');
                     } else {
-                        $old_supplier_nameA = preg_replace('/ +/', ' ', '<b>' . preg_replace('/\s+/', ' ', (string)$product['naam']) . '</b><br>' . $product['type']);
-                        $old_supplier_nameB = preg_replace('/ +/', ' ', '<b>' . preg_replace('/\s+/', ' ', (string)$product['naam']) . '</b><br>' . $product['type']);
-                        $supplier_name = preg_replace('/ +/', ' ', '<b>' . preg_replace('/\s+/', ' ', (string)$product['naam']) . '</b><br>' . $product['type']);
+                        $old_supplier_nameA = preg_replace('/ +/', ' ', '<b>' . preg_replace(['/\s+/','/"/'], [' ',''], (string)$product['naam']) . '</b><br>' . $product['type']);
+                        $old_supplier_nameB = preg_replace('/ +/', ' ', '<b>' . preg_replace(['/\s+/','/"/'], [' ',''], (string)$product['naam']) . '</b><br>' . $product['type']);
+                        $supplier_name = preg_replace('/ +/', ' ', '<b>' . preg_replace(['/\s+/','/"/'], [' ',''], (string)$product['naam']) . '</b><br>' . $product['type']);
                     }
 
                     $supplier_data = $this->renderArray($product);

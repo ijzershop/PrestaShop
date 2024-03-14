@@ -3,21 +3,33 @@ export default class addToCartAnalyticsPush {
 
     dataLayer.push({ecommerce: null});
     if(dataObject === null){
-      dataObject = prestashop.analytics_data.product;
+      dataObject = prestashop.analytics_data.add_to_cart_product;
       if(dataObject === undefined){
         return;
       }
     }
-    console.log(['add_to_cart', dataObject, prestashop]);
-    dataLayer.push({
-      event: "add_to_cart",
+
+    let type = 'add_to_cart';
+    if(dataObject.op === 'down' || dataObject.event_type === 'delete'){
+      type = 'remove_from_cart';
+    }
+
+    let sendedData = {
+      event: type,
       ecommerce: {
         currency: 'EUR',
-        value: dataObject.amount_tax_excl, // bedrag product ex btw
+        value: parseFloat(dataObject.price)*parseInt(dataObject.quantity),
+        coupon: dataObject.coupon,
+        discount: dataObject.discount,
         items: [
           dataObject
         ],
       },
-    })
+    };
+
+    console.log(['add_to_cart_product', sendedData, dataObject]);
+    let newURL = location.href.split("?")[0];
+    window.history.pushState('object', document.title, newURL);
+    dataLayer.push(sendedData)
   }
 }

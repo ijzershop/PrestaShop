@@ -2,10 +2,8 @@ export default class selectCheckoutPaymentAnalyticsPush {
   static init(checkoutFormElem) {
     if (checkoutFormElem.attr('analytics_send_payment') !== '1') {
       checkoutFormElem.attr('analytics_send_payment', '1');
-      let dataObject = prestashop.analytics_data;
+      let dataObject = prestashop.analytics_data.cart;
       dataLayer.push({ecommerce: null});
-
-      // console.log(['add_payment_info', dataObject]);
 
       let selectedElem = document.querySelector('[name="payment_method"]:checked');
       let paymentType = 'iDeal';
@@ -42,17 +40,23 @@ export default class selectCheckoutPaymentAnalyticsPush {
           break;
       }
 
-      dataLayer.push({
+      let sendedData = {
         event: "add_payment_info",
         payment_type: paymentType, // of andere gekozen methode
         ecommerce: {
           currency: 'EUR',
-          value: prestashop.cart.amount_tax_excl, // bedrag product ex btw
+          value: dataObject.price, // bedrag product ex btw
+          coupon: dataObject.coupon,
+          discount: dataObject.discount,
           items: [
             dataObject.items
           ],
         },
-      })
+      }
+
+      console.log(['add_payment_info', sendedData]);
+
+      dataLayer.push(sendedData)
     }
   }
 }

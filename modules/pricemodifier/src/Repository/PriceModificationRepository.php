@@ -22,6 +22,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShopDatabaseException;
+use Product;
 
 /**
  *
@@ -115,36 +116,42 @@ class PriceModificationRepository extends EntityRepository
                 return "";
             }
 
-            $qb = Db::getInstance();
-            $qb->update('price_modification',
-                [
-                'name_supplier' => $name,
-                'file_supplier' => $file_supplier,
-                'supplier_data' => addslashes($supplier_data),
-                'xml_upload_date' => $xml_date->format('Y-m-d H:m:s')
-                ],
-                "`name_supplier` IN ('".implode("','", $name_supplier). "') AND `file_supplier` = '". $file_supplier . "'",
-                100,
-                false,
-                false,
-                true
-            );
-            if(!$qb->Affected_Rows()){
-                $qb->insert('price_modification', [
-                    'name_supplier' => $name,
-                    'file_supplier' => $file_supplier,
-                    'supplier_data' => addslashes($supplier_data),
-                    'xml_upload_date' => $xml_date->format('Y-m-d H:m:s'),
-                    'id_store_product' => 0,
-                    'active' => 0
-                ],
-                    false,
-                    false
-                );
+            $supplierWhere = '';
+            if(count($name_supplier) > 0){
+                $supplierWhere .=  " AND (`name_supplier` = '";
+                $supplierWhere .= implode("' OR `name_supplier` = '", preg_replace(['/["][\/]/'],"'",$name_supplier));
+                $supplierWhere .=  "')";
+            }
 
+            $qb = \Db::getInstance();
+            $sqlSelect = "SELECT * FROM `" . _DB_PREFIX_ . "price_modification` WHERE `file_supplier` = '". $file_supplier. "' " . $supplierWhere;
+            $res = $qb->executeS($sqlSelect);
+
+            if(count($res) > 0){
+                foreach($res as $existingProduct){
+                    if($existingProduct['id_store_product'] > 0){
+                        $product = new Product($existingProduct['id_store_product']);
+                        $data = json_decode($supplier_data);
+                        $product->weight = (float)$data->attributes->gewicht;
+                        $product->save();
+                    }
+                }
+
+                $sqlUpdate = "UPDATE `" . _DB_PREFIX_ . "price_modification` SET `name_supplier` = '".$name."',
+                `file_supplier`='".$file_supplier."',
+                 `supplier_data`='".$supplier_data."',
+                  `xml_upload_date` = '".$xml_date->format("Y-m-d H:m:s") .
+                    "' WHERE `file_supplier` = '". $file_supplier. "' ". $supplierWhere;
+
+                $qb->execute($sqlUpdate, false);
+            } else {
+                $sqlInsert = "INSERT INTO `" . _DB_PREFIX_ . "price_modification` (`name_supplier`,`file_supplier`, `supplier_data`,`xml_upload_date`) " .
+                    "VALUES ('".$name."','".$file_supplier."','".$supplier_data."','".$xml_date->format("Y-m-d H:m:s")."') ";
+
+                $qb->execute($sqlInsert, false);
             }
             return $name;
-        } catch (PrestaShopDatabaseException $exception){
+        } catch (PrestaShopDatabaseException|\PrestaShopException $exception){
             return $exception->getMessage();
         }
     }

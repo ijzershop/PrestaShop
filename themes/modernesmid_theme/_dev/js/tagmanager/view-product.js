@@ -4,31 +4,33 @@ export default class viewProductAnalyticsPush {
     if(bodyElemIdProduct.attr('analytics_send') !== '1'){
       bodyElemIdProduct.attr('analytics_send', '1');
 
-      let dataObject = prestashop.analytics_data;
+      let dataObject = prestashop.analytics_data.product;
 
       dataLayer.push({ecommerce: null});
 
-      // console.log(['view_item', dataObject]);
-
-      dataLayer.push({
+      let sendedData = {
         event: "view_item",
         ecommerce: {
           currency: 'EUR',
-          value: dataObject.amount_tax_excl, // bedrag product ex btw
+          coupon: dataObject.coupon,
+          discount: dataObject.discount,
+          value: dataObject.price, // bedrag product ex btw
           items: [
             {
-              item_id: dataObject.id_product, //SKU / ID
-              item_name: dataObject.name, // bv. Stalen koker 20x20x2mm
+              item_id: dataObject.item_id, //SKU / ID
+              item_name: dataObject.item_name, // bv. Stalen koker 20x20x2mm
               discount: dataObject.discount, // number, indien van toepassing
               index: 0,
-              item_category: dataObject.category_parent, // bv. Profielen
-              item_category2: dataObject.category, // bv. Staal
-              price: dataObject.price_before_discount, // non-discounted price. Dus value = price - discount
-              quantity: dataObject.qty, // hier is het altijd 1
+              item_category: dataObject.item_category, // bv. Profielen
+              item_category2: dataObject.item_category2, // bv. Staal
+              price: dataObject.price, // non-discounted price. Dus value = price - discount
+              quantity: dataObject.quantity, // hier is het altijd 1
             },
           ],
         },
-      });
+      };
+      console.log(['view_item', sendedData]);
+      dataLayer.push(sendedData);
     }
   }
 }

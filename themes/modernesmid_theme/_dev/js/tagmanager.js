@@ -51,8 +51,8 @@ $(document).ready(function () {
 
   // wanneer iemand een product verwijderd uit de winkelwagen
   $(document).on('mouseup', '.product-cart-delete-button, .remove-from-cart',function(e) {
-    e.stopImmediatePropagation();
     removeFromCartAnalyticsPush.init();
+    e.stopImmediatePropagation();
   });
 
   addToCartAnalyticsPush.init();

@@ -2245,7 +2245,6 @@ main {
 //Cookie check modal
 #cookiesModal .modal-dialog-centered{
   min-height: 100%;
-  max-width: 95vw;
 }
 @media only screen and (min-width: 768px){ #cookiesModal .w-47{width:47%;} }
 @media only screen and (max-width: 767px){ #cookiesModal .w-47{width: 100%; display: block; } .m-col-rev{ flex-direction: column-reverse; }}

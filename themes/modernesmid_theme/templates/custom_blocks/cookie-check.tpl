@@ -1,5 +1,5 @@
 <aside class="modal fade show" style="{if $consent_cookie == '1'}display:none;z-index:-1;{else}display:block;z-index:999;{/if}" id="cookiesModal" tabindex="-1" role="dialog" aria-labelledby="cookiesModal" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" rol="document">
+  <div class="modal-dialog modal-dialog-centered modal-lg container" rol="document">
     <div class="modal-content">
       <div class="modal-header p  d-none d-md-block">
         <img loading="lazy" class="logo w-25 d-none d-md-block" src="{{$shop.logo}}" alt="Ijzershop">

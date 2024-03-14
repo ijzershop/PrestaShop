@@ -47,7 +47,7 @@
   </div>
 {*    <ol class="carousel-indicators">*}
 {*        {assign var="index_indicator" value=0}*}
-{*        {assign var="index_thumbs" value=0}*}
+        {assign var="index_thumbs" value=0}
 {*        {foreach from=$product.images item=image key=key2}*}
 {*          {if strpos($image.legend, 'techntabel') == false}*}
 {*            <li data-target="#product-images-carousel" data-slide-to="{$index_indicator}" class=" {if $image.id_image == $product.cover.id_image}active{/if}">*}

@@ -1313,17 +1313,42 @@ class ModernHook
                     $param['templateVars']['analytics_data']['product'] =  [
                         'event_type' => $_SESSION['analytics_data']['product']['type'],
                         'currency' => $_SESSION['analytics_data']['product']['data']['currency'],
-                        'amount_tax_excl' => $_SESSION['analytics_data']['product']['data']['amount_tax_excl'],
-                        'id_product' => $_SESSION['analytics_data']['product']['data']['id_product'],
-                        'name' => $_SESSION['analytics_data']['product']['data']['name'],
+                        'price' => $_SESSION['analytics_data']['product']['data']['amount_tax_excl'],
+                        'item_id' => $_SESSION['analytics_data']['product']['data']['item_id'],
+                        'item_name' => $_SESSION['analytics_data']['product']['data']['item_name'],
+                        'coupon' => $_SESSION['analytics_data']['product']['data']['coupon'],
                         'discount' => $_SESSION['analytics_data']['product']['data']['discount'],
-                        'category_parent' => $_SESSION['analytics_data']['product']['data']['category_parent'],
-                        'category' => $_SESSION['analytics_data']['product']['data']['category'],
-                        'price_before_discount' => $_SESSION['analytics_data']['product']['data']['price_before_discount'],
-                        'qty' => $_SESSION['analytics_data']['product']['data']['qty'],
+                        'item_category' => $_SESSION['analytics_data']['product']['data']['item_category'],
+                        'item_category2' => $_SESSION['analytics_data']['product']['data']['item_category2'],
+                        'price' => $_SESSION['analytics_data']['product']['data']['price_before_discount'],
+                        'quantity' => $_SESSION['analytics_data']['product']['data']['quantity'],
                     ];
                     $_SESSION['analytics_data'] = null;
+                } else {
+                    $product = Context::getContext()->controller->getProduct();
+                    $product_categories = $product->getParentCategories($this->context->cookie->id_lang);
+                    if(count($product_categories) >= 2){
+                        $cat1 = $product_categories[count($product_categories)-2];
+                    }
+
+                    if(count($product_categories) >= 3){
+                        $cat2 = $product_categories[count($product_categories)-3];
+                    }
+
+                    $param['templateVars']['analytics_data']['product'] =  [
+                        'event_type' => null,
+                        'currency' => 'EUR',
+                        'coupon' => '',
+                        'price' => $product->getPrice(false),
+                        'item_id' => $product->id,
+                        'item_name' => $product->name,
+                        'discount' => $product->getPrice(true, null, 6, null, true, false, 1),
+                        'item_category' => $cat2['name'],
+                        'item_category2' => $cat1['name'],
+                        'quantity' => 1,
+                    ];
                 }
+
                 break;
             case 'order-confirmation':
                 $cart = new Cart($_GET['id_cart']);
@@ -1362,21 +1387,23 @@ class ModernHook
                     $items[] = $item;
                 }
 
-                $discount = '';
+                $coupon = '';
+
                 if(count($cart->getCartRules()) > 0){
-                    $discounts = [];
+                    $coupons = [];
                     foreach($cart->getCartRules() as $rule){
-                        $discounts[] = $rule['name'];
+                        $coupons[] = $rule['name'];
                     }
-                    $discount = implode(',', $discounts);
+                    $coupon = implode(',', $coupons);
                 }
 
                 $param['templateVars']['analytics_data']['confirmation'] = [
                     'transaction_id' => $transaction_id,
                     'reference' => $reference,
                     'currency' => 'EUR',
-                    'amount_tax_excl' => $cart->getOrderTotal(false),
-                    'discount' => $discount,
+                    'price' => $cart->getOrderTotal(false),
+                    'coupon' => $coupon,
+                    'discount' => $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
                     'shipping' => $cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
                     'tax' => $cart->getOrderTotal(true) - $cart->getOrderTotal(false),
                     'items' => $items,
@@ -1387,11 +1414,12 @@ class ModernHook
             case 'category':
             case 'cart':
                 $cart = $param['templateVars']['cart'];
+                $cartObject = new Cart(Context::getContext()->cart->id);
 
-                $items = [];
+            $items = [];
 
-                foreach ($cart['products'] as $product){
-                    $prod = new Product($product['id_product']);
+            foreach ($cart['products'] as $product){
+                $prod = new Product($product['id_product']);
                     $product_categories = $prod->getParentCategories($this->context->cookie->id_lang);
                     if(count($product_categories) >= 2){
                         $cat1 = $product_categories[count($product_categories)-2];
@@ -1413,27 +1441,57 @@ class ModernHook
                     $items[] = $item;
                 }
 
+                $coupon = '';
+
+                if(count($cartObject->getCartRules()) > 0){
+                    $coupons = [];
+                    foreach($cartObject->getCartRules() as $rule){
+                        $coupons[] = $rule['name'];
+                    }
+                    $coupon = implode(',', $coupons);
+                }
+
                 $param['templateVars']['analytics_data']['cart'] = [
                     'currency' => 'EUR',
-                    'amount_tax_excl' => $cart['totals']['total_excluding_tax']['amount'],
+                    'coupon' => $coupon,
+                    'discount' => $cartObject->getOrderTotal(false, CART::ONLY_DISCOUNTS),
+                    'price' => $cart['totals']['total_excluding_tax']['amount'],
                     'items' => $items,
                 ];
 
-            if(isset($_SESSION['analytics_data']['product']['type'])){
+            if(isset($_SESSION['analytics_data']['product']['event_type'])){
                 $param['templateVars']['analytics_data']['product'] =  [
-                    'event_type' => $_SESSION['analytics_data']['product']['type'],
+                    'event_type' => $_SESSION['analytics_data']['product']['event_type'],
                     'currency' => $_SESSION['analytics_data']['product']['data']['currency'],
-                    'amount_tax_excl' => $_SESSION['analytics_data']['product']['data']['amount_tax_excl'],
-                    'id_product' => $_SESSION['analytics_data']['product']['data']['id_product'],
-                    'name' => $_SESSION['analytics_data']['product']['data']['name'],
+                    'price' => $_SESSION['analytics_data']['product']['data']['price'],
+                    'item_id' => $_SESSION['analytics_data']['product']['data']['item_id'],
+                    'item_name' => $_SESSION['analytics_data']['product']['data']['item_name'],
+                    'coupon' => $_SESSION['analytics_data']['product']['data']['coupon'],
                     'discount' => $_SESSION['analytics_data']['product']['data']['discount'],
-                    'category_parent' => $_SESSION['analytics_data']['product']['data']['category_parent'],
-                    'category' => $_SESSION['analytics_data']['product']['data']['category'],
-                    'price_before_discount' => $_SESSION['analytics_data']['product']['data']['price_before_discount'],
-                    'qty' => $_SESSION['analytics_data']['product']['data']['qty'],
+                    'item_category' => $_SESSION['analytics_data']['product']['data']['item_category'],
+                    'item_category2' => $_SESSION['analytics_data']['product']['data']['item_category2'],
+                    'quantity' => $_SESSION['analytics_data']['product']['data']['quantity'],
                 ];
                 $_SESSION['analytics_data'] = null;
             }
+
+            if(isset($_SESSION['analytics_data']['add_to_cart_product']['event_type'])){
+                $param['templateVars']['analytics_data']['add_to_cart_product'] =  [
+                    'event_type' => $_SESSION['analytics_data']['add_to_cart_product']['event_type'],
+                    'op' => $_SESSION['analytics_data']['add_to_cart_product']['op'],
+                    'currency' => $_SESSION['analytics_data']['add_to_cart_product']['data']['currency'],
+                    'price' => $_SESSION['analytics_data']['add_to_cart_product']['data']['price'],
+                    'item_id' => $_SESSION['analytics_data']['add_to_cart_product']['data']['item_id'],
+                    'item_name' => $_SESSION['analytics_data']['add_to_cart_product']['data']['item_name'],
+                    'coupon' => $_SESSION['analytics_data']['add_to_cart_product']['data']['coupon'],
+                    'discount' => $_SESSION['analytics_data']['add_to_cart_product']['data']['discount'],
+                    'item_category' => $_SESSION['analytics_data']['add_to_cart_product']['data']['item_category'],
+                    'item_category2' => $_SESSION['analytics_data']['add_to_cart_product']['data']['item_category2'],
+                    'quantity' => $_SESSION['analytics_data']['add_to_cart_product']['data']['quantity'],
+                ];
+                $_SESSION['analytics_data'] = null;
+            }
+
             break;
             case 'index'://Home
                 break;

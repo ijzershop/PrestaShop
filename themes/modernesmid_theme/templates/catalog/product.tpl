@@ -48,6 +48,16 @@
   <div class="col-12">
     {include file='custom_blocks/notification.tpl'}
     <div class="row">
+      <div class="col-12 d-block d-md-none">
+        {block name='page_header_container'}
+          {block name='page_header'}
+            <h1 class="product-title h4 m-0 text-black">{block name='page_title'}{$product.name}{/block}</h1>
+            {block name='product_description_short'}
+              <div id="product-description-short-{$product.id}">{if !empty($product.description_short)}{$product.description_short nofilter}{else}<span class="d-none"><span>{/if}</div>
+            {/block}
+          {/block}
+        {/block}
+      </div>
       <div class="col-12 col-lg-7">
         {block name='page_content_container'}
         <section class="page-content" id="content">
@@ -70,7 +80,7 @@
       </div>
       <div class="col-12 col-lg-5 mt-lg-0">
         <div class="row">
-          <div class="col-12">
+          <div class="col-12 d-none d-md-block">
             {block name='page_header_container'}
             {block name='page_header'}
             <h1 class="product-title h4 m-0 text-black">{block name='page_title'}{$product.name}{/block}</h1>
@@ -80,9 +90,7 @@
             {/block}
             {/block}
           </div>
-                  <div class="col-12" {if !$product.add_to_cart_url || !$product.available_for_order}style="pointer-events:none;" {/if}>
-                    {hook h='displayProductSawAndCutButtons' product=$product}
-                  </div>
+
 
           <div class="col-12">
             <div class="product-information row">
@@ -91,14 +99,14 @@
               </div>
               <div class="col-12">
                 <div class="row">
-                  <div class="col-12 col-md-4">
+                  <div class="col-6 col-md-4">
                   {if (Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) || !Configuration::get('PS_CATALOG_MODE')}
                     {block name='product_prices'}
                     {include file='catalog/_partials/product-prices.tpl'}
                     {/block}
                   {/if}
                   </div>
-                  <div class="product-actions col-12 col-md-4">
+                  <div class="product-actions col-6 col-md-4">
                     {block name='product_buy'}
                     <form action="{$urls.pages.cart}" method="post" id="add-to-cart-or-refresh">
                       <input type="hidden" name="token" value="{$static_token}">
@@ -150,11 +158,11 @@
                 </div>
                 {/if}
                 {/if}
+          </div>
 
-
-</div>
-
-
+                  <div class="col-12" {if !$product.add_to_cart_url || !$product.available_for_order}style="pointer-events:none;" {/if}>
+                    {hook h='displayProductSawAndCutButtons' product=$product}
+                  </div>
 
                     {if !in_array((int)$category->id_category, [6, (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', Context::getContext()->cookie->id_lang, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, 382)]) }
                   <div class="cart-related-products mt-2 mb-2 text-black col-12">

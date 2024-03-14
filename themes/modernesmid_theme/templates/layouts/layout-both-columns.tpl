@@ -57,14 +57,14 @@
 
       <section id="wrapper">
         {hook h="displayWrapperTop"}
-        <div class="container-fluid breadcrumb p-0 mt-1 mb-1 rounded-0">
+        <div class="container-fluid breadcrumb p-0 mt-1 mb-1 rounded-0 d-none d-sm-flex">
           {block name='breadcrumb'}
             {include file='_partials/breadcrumb.tpl'}
           {/block}
         </div>
         <div class="container-fluid p-0">
           <div class="w-100">
-            <div class="container d-flex">
+            <div class="container d-flex p-1">
 
           {block name="left_column"}
             <div id="left-column" class="d-none d-lg-block col-md-2 pl-0">

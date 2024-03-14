@@ -155,7 +155,7 @@ final class PriceModificationDataFactory implements GridDataFactoryInterface
                     $priceMod->setActive($record['active']);
                     $priceMod->setId($record['id']);
                     $priceMod->setNameSupplier($record['name_supplier']);
-                    $priceMod->setIdStoreProduct($record['id_store_product']);
+                    $priceMod->setIdStoreProduct(is_null($record['id_store_product']) ? 0 : $record['id_store_product']);
                     $priceMod->setFileSupplier($record['file_supplier']);
                     if(!is_null($record['selected_supplier_price'])){
                         $priceMod->setSelectedSupplierPrice($record['selected_supplier_price']);

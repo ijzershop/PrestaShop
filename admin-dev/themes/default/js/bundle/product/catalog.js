@@ -110,7 +110,7 @@ $(document).ready(() => {
 
   updateBulkMenu();
   updateFilterMenu();
-//
+
 //   let jwerty1 = jwerty;
 //   console.log(jwerty);
 //
@@ -120,7 +120,7 @@ $(document).ready(() => {
 //     const url = $('form#product_catalog_list').attr('newproducturl');
 //     window.location.href = url;
 //   });
-// });
+});
 
 function productOrderTable(orderBy, orderWay) {
   const form = $('form#product_catalog_list');

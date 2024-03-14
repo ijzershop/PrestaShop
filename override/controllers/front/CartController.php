@@ -30,7 +30,7 @@ class CartController extends CartControllerCore
         parent::initContent();
     }
 
-    public function addUpdatedCartProductToSession($idProduct=null, $idProductAttr=null, $postType='update'){
+    public function addUpdatedCartProductToSession($idProduct=null, $idProductAttr=null, $postType='update', $op='up'){
         if($idProduct){
             $product = new Product($idProduct, true, $this->context->cookie->id_lang);
             $product_categories = $product->getParentCategories($this->context->cookie->id_lang);
@@ -42,19 +42,35 @@ class CartController extends CartControllerCore
                 $cat2 = $product_categories[count($product_categories)-3];
             }
 
+            $cart = new Cart(Context::getContext()->cart->id);
+            $coupon = '';
+
+            if(count($cart->getCartRules()) > 0){
+                $coupons = [];
+                foreach($cart->getCartRules() as $rule){
+                    $coupons[] = $rule['name'];
+                }
+                $coupon = implode(',', $coupons);
+            }
+
             $addedProduct  =  [
                 'currency' => 'EUR',
-                'amount_tax_excl' => $product->price,
-                'id_product' => $product->id,
-                'name' => $product->name,
-                'discount' => $product->getPrice(true, null, 6, null, true, false, 1),
-                'category_parent' => $cat2['name'],
-                'category' => $cat1['name'],
-                'price_before_discount' => $product->getPrice(false, null, 6, null, false, false, 1),
-                'qty' => $this->qty
+                'price' => $product->price,
+                'item_id' => $product->id,
+                'item_name' => $product->name,
+                'coupon' => $coupon,
+                'discount' => $product->getPrice(true, null, 6, null, true, false, $this->qty),
+                'item_category' => $cat2['name'],
+                'item_category2' => $cat1['name'],
+                'quantity' => $this->qty
             ];
-            $_SESSION['analytics_data']['product']['type'] = $postType;
-            $_SESSION['analytics_data']['product']['data'] = $addedProduct;
+            $_SESSION['analytics_data']['add_to_cart_product']['price'] = $cart->getOrderTotal(false);
+            $_SESSION['analytics_data']['add_to_cart_product']['coupon'] = $coupon;
+            $_SESSION['analytics_data']['add_to_cart_product']['discount'] = $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS);
+            $_SESSION['analytics_data']['add_to_cart_product']['event_type'] = $postType;
+            $_SESSION['analytics_data']['add_to_cart_product']['op'] = $op;
+            $_SESSION['analytics_data']['add_to_cart_product']['data'] = $addedProduct;
+
         }
     }
 
@@ -82,10 +98,11 @@ class CartController extends CartControllerCore
             }
             if (Tools::getIsset('add') || Tools::getIsset('update')) {
                 $this->processChangeProductInCart();
-                $this->addUpdatedCartProductToSession($this->id_product, $this->id_product_attribute, $postType);
+                $this->addUpdatedCartProductToSession($this->id_product, $this->id_product_attribute, $postType, Tools::getValue('op'));
             } elseif (Tools::getIsset('delete')) {
                 $this->processDeleteProductInCart();
-                $this->addUpdatedCartProductToSession($this->id_product, $this->id_product_attribute, $postType);
+                $postType = 'delete';
+                $this->addUpdatedCartProductToSession($this->id_product, $this->id_product_attribute, $postType, Tools::getValue('op'));
             } elseif (Tools::getIsset('deleteAll')) {
                 $this->context->cart->delete();
                 $this->context->cookie->id_cart = 0;
@@ -350,16 +367,35 @@ class CartController extends CartControllerCore
             $op = Tools::getValue('op');
         }
 
+        if(!$op && Tools::getValue('delete') === 1){
+            dd('test');
+        }
+
+        $coupon = '';
+
+        if(count($this->context->cart->getCartRules()) > 0){
+            $coupons = [];
+            foreach($this->context->cart->getCartRules() as $rule){
+                $coupons[] = $rule['name'];
+            }
+            $coupon = implode(',', $coupons);
+        }
+
+        $qty = 1;
+        if(Tools::getIsset('qty')){
+            $qty = Tools::getValue('qty');
+        }
+
         $addedProduct  =  [
             'currency' => 'EUR',
-            'amount_tax_excl' => $product->price,
-            'id_product' => $product->id,
-            'name' => $product->name,
-            'discount' => $product->getPrice(true, null, 6, null, true, false, 1),
-            'category_parent' => $cat2['name'],
-            'category' => $cat1['name'],
-            'price_before_discount' => $product->getPrice(false, null, 6, null, false, false, 1),
-            'qty' => 1,
+            'price' => $product->price,
+            'item_id' => $product->id,
+            'item_name' => $product->name,
+            'coupon' => $coupon,
+            'discount' => $product->getPrice(true, null, 6, null, true, false, $qty),
+            'item_category' => $cat2['name'],
+            'item_category' => $cat1['name'],
+            'quantity' => $qty,
             'op' => $op
         ];
 

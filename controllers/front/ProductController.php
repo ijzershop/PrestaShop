@@ -906,6 +906,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     protected function transformDescriptionWithImg($desc)
     {
+        if(is_null($desc)){
+            return '';
+        }
         $reg = '/\[img\-([0-9]+)\-(left|right)\-([a-zA-Z0-9-_]+)\]/';
         while (preg_match($reg, $desc, $matches)) {
             $link_lmg = $this->context->link->getImageLink($this->product->link_rewrite, $this->product->id . '-' . $matches[1], $matches[3]);

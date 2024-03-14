@@ -172,7 +172,7 @@
 
 
         <div class="pl-0 pl-sm-2 pr-0 col-7 col-sm-8 mb-3 mb-sm-3 mb-md-0 float-right d-flex d-sm-flex d-md-none">
-          <a href="{$product.url}" type="button" class="btn staffel-button text-center">
+          <a href="{$product.url}" type="button" class="btn staffel-button text-center rounded-0">
             <i class="fasl fa-info-circle"></i> Bekijk info
           </a>
         </div>

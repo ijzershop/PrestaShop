@@ -48,12 +48,12 @@
   <div class="col-12">
     {include file='custom_blocks/notification.tpl'}
     <div class="row">
-      <div class="col-12 d-block d-md-none">
+      <div class="col-12 d-block d-lg-none text-center">
         {block name='page_header_container'}
           {block name='page_header'}
             <h1 class="product-title h4 m-0 text-black">{block name='page_title'}{$product.name}{/block}</h1>
             {block name='product_description_short'}
-              <div id="product-description-short-{$product.id}">{if !empty($product.description_short)}{$product.description_short nofilter}{else}<span class="d-none"><span>{/if}</div>
+              <div class="d-none d-sm-block" id="product-description-short-{$product.id}">{if !empty($product.description_short)}{$product.description_short nofilter}{else}<span class="d-none"><span>{/if}</div>
             {/block}
           {/block}
         {/block}
@@ -80,7 +80,7 @@
       </div>
       <div class="col-12 col-lg-5 mt-lg-0">
         <div class="row">
-          <div class="col-12 d-none d-md-block">
+          <div class="col-12 d-none d-lg-block text-right">
             {block name='page_header_container'}
             {block name='page_header'}
             <h1 class="product-title h4 m-0 text-black">{block name='page_title'}{$product.name}{/block}</h1>

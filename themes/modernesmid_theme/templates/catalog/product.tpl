@@ -48,7 +48,7 @@
   <div class="col-12">
     {include file='custom_blocks/notification.tpl'}
     <div class="row">
-      <div class="col-12 d-block d-lg-none text-center">
+      <div class="col-12 d-block d-lg-none text-center pb-3">
         {block name='page_header_container'}
           {block name='page_header'}
             <h1 class="product-title h4 m-0 text-black">{block name='page_title'}{$product.name}{/block}</h1>

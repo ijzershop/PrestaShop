@@ -144,7 +144,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/modules/sawandcutmodule" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="GitSEFilterConfiguration">
@@ -568,7 +568,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "p8",
+    "git-widget-placeholder": "modernesmid-core8",
     "ignore.virus.scanning.warn.message": "true",
     "javascript.nodejs.core.library.configured.version": "14.19.1",
     "javascript.nodejs.core.library.typings.version": "14.18.63",
@@ -1337,7 +1337,7 @@
       <workItem from="1710138195065" duration="601000" />
       <workItem from="1710225511439" duration="16838000" />
       <workItem from="1710313192740" duration="25498000" />
-      <workItem from="1710397947514" duration="8992000" />
+      <workItem from="1710397947514" duration="9559000" />
     </task>
     <servers />
   </component>

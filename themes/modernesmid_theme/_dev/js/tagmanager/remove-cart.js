@@ -14,7 +14,7 @@ export default class removeFromCartAnalyticsPush {
         currency: 'EUR',
         coupon: dataObject.coupon,
         discount: dataObject.discount,
-        value: dataObject.price, // bedrag product ex btw
+        value: parseFloat(dataObject.price)*parseInt(dataObject.quantity),
         items: [
           dataObject
         ],

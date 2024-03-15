@@ -49,7 +49,7 @@
   }
 </style>
 
-<div id="js-product-list-header" class="col-12 pr-0 pl-0">
+<div id="js-product-list-header" class="col-12 pr-3 pl-3  pr-lg-0 pl-lg-0 ">
     {if $listing.pagination.items_shown_from == 1}
       <h2 class="h2 mb-0 text-center">{if !empty($category.second_name)}{$category.second_name}{else}{$category.name}{/if}</h2>
         {if !empty($listing.products)}

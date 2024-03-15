@@ -14,7 +14,7 @@ export default class viewProductAnalyticsPush {
           currency: 'EUR',
           coupon: dataObject.coupon,
           discount: dataObject.discount,
-          value: dataObject.price, // bedrag product ex btw
+          value: parseFloat(dataObject.price)*parseInt(dataObject.quantity),
           items: [
             {
               item_id: dataObject.item_id, //SKU / ID

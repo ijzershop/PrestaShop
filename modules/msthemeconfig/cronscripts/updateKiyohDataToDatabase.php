@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 use JKetelaar\Kiyoh\Kiyoh;
 
-require_once dirname(__DIR__) . './../../config/config.inc.php';
+require_once dirname(__DIR__) . '/../../config/config.inc.php';
 require_once('../vendor/autoload.php');
 
 error_reporting(E_ALL);

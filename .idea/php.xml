@@ -323,6 +323,15 @@
       <path value="$PROJECT_DIR$/vendor/behat/behat" />
       <path value="$PROJECT_DIR$/vendor/justinrainbow/json-schema" />
       <path value="$PROJECT_DIR$/vendor/php-cs-fixer/diff" />
+      <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/jketelaar/php-kiyoh-api" />
+      <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/psr/http-factory" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
@@ -395,7 +404,7 @@
       </interpreter>
     </phpInfoCache>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="8.1">
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.3">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
   <component name="PhpRuntimeConfiguration" document_root_path="../../www" />

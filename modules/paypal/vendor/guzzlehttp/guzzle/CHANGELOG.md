@@ -36,7 +36,7 @@
 
 ## 6.4.1 - 2019-10-23
 
-* No `guzzle.phar` was created in 6.4.0 due expired API token. This release will fix that 
+* No `guzzle.phar` was created in 6.4.0 due expired API token. This release will fix that
 * Added `parent::__construct()` to `FileCookieJar` and `SessionCookieJar`
 
 ## 6.4.0 - 2019-10-23
@@ -997,7 +997,7 @@ interfaces.
 
 * BC: CurlException now extends from RequestException rather than BadResponseException
 * BC: Renamed Guzzle\Plugin\Cache\CanCacheStrategyInterface::canCache() to canCacheRequest() and added CanCacheResponse()
-* Added getData to ServiceDescriptionInterface
+* Added fetchDataFromKiyohServer to ServiceDescriptionInterface
 * Added context array to RequestInterface::setState()
 * Bug: Removing hard dependency on the BackoffPlugin from Guzzle\Http
 * Bug: Adding required content-type when JSON request visitor adds JSON to a command

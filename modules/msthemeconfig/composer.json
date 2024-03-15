@@ -12,7 +12,8 @@
     "ext-intl": "*",
     "ext-soap": "*",
     "ext-mysqli": "*",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "jketelaar/php-kiyoh-api": "^2.1"
   },
   "autoload": {
     "psr-4": {

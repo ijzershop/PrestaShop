@@ -252,7 +252,7 @@ class DmsAdminCategoryController extends FrameworkBundleAdminController
 //                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 //
 //                return $this->redirectToRoute('admin_categories_index', [
-//                    'categoryId' => $categoryForm->getData()['id_parent'],
+//                    'categoryId' => $categoryForm->fetchDataFromKiyohServer()['id_parent'],
 //                ]);
 //            }
 //        } catch (Exception $e) {

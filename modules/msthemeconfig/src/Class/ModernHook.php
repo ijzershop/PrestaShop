@@ -1125,7 +1125,7 @@ class ModernHook
      */
     public function hookKiyohBanner()
     {
-        $query = 'SELECT * FROM `' . _DB_PREFIX_ . 'kiyoh_custom`';
+        $query = "SELECT * FROM `" . _DB_PREFIX_ . "kiyoh_custom` where `id` = '1'";
         $results = Db::getInstance()->executeS($query);
 
         if (empty($results)) {
@@ -1133,7 +1133,6 @@ class ModernHook
                     'averageRating' => 10,
                     'averageRatingPercentage' => 99,
                     'totalReviews' => 2400,
-                    'reviewPage' => $reviewPage,
                 ];
         } else {
             $attr = [

@@ -88,7 +88,7 @@ class FormFiller
 
     /**
      * Some fields are based on the DisablingSwitchExtension in regular FO the field are enabled by JS but here
-     * we need to force this or the data will be removed from the $form->getData()
+     * we need to force this or the data will be removed from the $form->fetchDataFromKiyohServer()
      *
      * @param Form $form
      * @param FormField $formField

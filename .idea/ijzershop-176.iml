@@ -311,6 +311,15 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/phpunit-bridge" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/guzzlehttp/guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/jketelaar/php-kiyoh-api" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/psr/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/psr/http-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/ralouphie/getallheaders" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/symfony/deprecation-contracts" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

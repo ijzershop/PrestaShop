@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace app\Resources\cronscripts;
+namespace app\Resources\cron_scripts;
 
 require_once dirname(__DIR__).'./../../config/config.inc.php';
 require_once dirname(__DIR__).'./../../vendor/autoload.php';

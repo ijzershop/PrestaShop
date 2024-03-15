@@ -70,7 +70,7 @@
                     {foreach $customizationPerAddress as $customizationId => $customization}
                         {if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
                             {foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}{if !empty($customization_infos.value)}
-                                {if !empty($customization_infos.technical_image)}
+                                {if !empty($customization_infos.technical_image) && file_exists($customization_infos.technical_image)}
                                   <tr>
                                     <td colspan="4" style="padding:0;margin:0">{$customization_infos.value|strip_tags:true|strip}</td>
                                       <td class="right" colspan="2">

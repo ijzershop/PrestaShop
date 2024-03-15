@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace app\Resources\cron_scripts;
 
-require_once dirname(__DIR__).'./../../config/config.inc.php';
+require_once dirname(__DIR__).'/../../config/config.inc.php';
 $_SERVER['REQUEST_METHOD'] = 'POST';
-require_once dirname(__DIR__).'./../../vendor/autoload.php';
+require_once dirname(__DIR__).'/../../vendor/autoload.php';
 
+use AppKernel;
 use Configuration;
 use Context;
 use Currency;
@@ -29,59 +30,66 @@ class OrderSlipGenerator
     /**
      * @var array
      */
-    private $completedSuccessRecords;
+    private array $completedSuccessRecords;
     /**
      * @var array
      */
-    private $errorRecords;
+    private array $errorRecords;
     /**
      * @var bool
      */
-    private $debug;
+    private bool $debug;
     /**
      * @var int
      */
-    private $paidStatus;
+    private int $paidStatus;
     /**
      * @var int
      */
-    private $processedStatus;
+    private int $processedStatus;
     /**
      * @var string
      */
-    private $pdfDeliverySlipTemplate;
+    private string $pdfDeliverySlipTemplate;
     /**
      * @var int
      */
-    private $slipTime;
+    private int $slipTime;
 
     /**
      * OrderSlipGenerator constructor.
      * @param false $debug
      */
-    public function __construct($debug=false)
+    public function __construct(false $debug=false)
     {
         $this->pdfDeliverySlipTemplate = PDF::TEMPLATE_DELIVERY_SLIP;
         $this->completedSuccessRecords = [];
         $this->errorRecords = [];
         $this->debug = $debug;
-        $this->paidStatus = Configuration::get('MSTHEMECONFIG_ORDERSTATE_PAID', 1,1,1, '2');
-        $this->processedStatus = Configuration::get('MSTHEMECONFIG_ORDERSTATE_PROCESSED', 1,1,1, '3');
+        $this->paidStatus = (int)Configuration::get('MSTHEMECONFIG_ORDERSTATE_PAID', 1,1,1, '2');
+        $this->processedStatus = (int)Configuration::get('MSTHEMECONFIG_ORDERSTATE_PROCESSED', 1,1,1, '3');
 
         global $kernel;
             if(!$kernel){
               require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
-              $kernel = new \AppKernel('prod', false);
+              $kernel = new AppKernel('prod', false);
               $kernel->boot();
           }
 
     }
 
 
-    public function doApiCall($route, $params, $headerParams = []){
+    /**
+     * @param $route
+     * @param $params
+     * @param array $headerParams
+     * @return array|mixed
+     */
+    public function doApiCall($route, $params, array $headerParams = []): mixed
+    {
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_URL => Configuration::get('MSTHEMECONFIG_DASHBOARD_API_URL',1,1,1).'/api/'.$route,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_MAXREDIRS => 10,
@@ -91,7 +99,7 @@ class OrderSlipGenerator
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => $params,
             CURLOPT_HTTPHEADER => $headerParams,
-        ));
+        ]);
         $response = curl_exec($curl);
         // Check if any error occurred
         if(!curl_errno($curl))
@@ -104,7 +112,7 @@ class OrderSlipGenerator
         return $returnData;
     }
     /**
-     * Main Generate function to fetch and generate an batch delivery slip pdf.
+     * Main Generate function to fetch and generate a batch delivery slip pdf.
      *
      * @return bool
      * @throws PrestaShopDatabaseException
@@ -157,11 +165,7 @@ class OrderSlipGenerator
     {
         $date_to = date('Y-m-d H:i:s', strtotime('-5 minutes'));
 
-        if($this->debug){
-            $last_updated_date = date('Y-m-d H:i:s', strtotime('-1 year'));
-        } else {
-            $last_updated_date = date('Y-m-d H:i:s', strtotime('-1 year'));
-        }
+        $last_updated_date = date('Y-m-d H:i:s', strtotime('-1 year'));
 
         $sql_query = new DbQuery();
         $sql_query->select('oi.id_order_invoice, oi.id_order, oi.number, oi.delivery_number, oi.delivery_date, oi.total_discount_tax_excl, oi.total_discount_tax_incl, oi.total_paid_tax_excl, oi.total_paid_tax_incl, oi.total_refunded_tax_excl, oi.total_refunded_tax_incl, oi.total_products, oi.total_products_wt, oi.total_shipping_tax_excl, oi.total_shipping_tax_incl, oi.shipping_tax_computation_method, oi.total_wrapping_tax_excl, oi.total_wrapping_tax_incl, oi.shop_address, oi.note, oi.date_add');
@@ -191,43 +195,42 @@ class OrderSlipGenerator
      * Create order slip pdf and set all new states of the selected orders.
      *
      * @param $order_invoice_collection
-     * @return false
+     * @return void
      */
-    private function createOrderSlipBatch($order_invoice_collection) : bool
+    private function createOrderSlipBatch($order_invoice_collection) : void
     {
         if (! count($order_invoice_collection)) {
-            return false;
+            return;
         }
 
         try {
             $chunk_size = 2;
-            $splitted_order_invoice_collection = array_chunk($order_invoice_collection, $chunk_size);
+            $first_chunk_order_invoice_collection = array_chunk($order_invoice_collection, $chunk_size);
 
             if(count($order_invoice_collection) % $chunk_size) {
-                $leftovers = array_pop($splitted_order_invoice_collection);
-                $last      = array_pop($splitted_order_invoice_collection);
-                array_push($splitted_order_invoice_collection, array_merge((array)$last, (array)$leftovers));
+                $leftovers = array_pop($first_chunk_order_invoice_collection);
+                $last      = array_pop($first_chunk_order_invoice_collection);
+                $first_chunk_order_invoice_collection[] = array_merge((array)$last, (array)$leftovers);
             }
 
-            foreach($splitted_order_invoice_collection as $chunked_order_invoice_collection){
+            foreach($first_chunk_order_invoice_collection as $chunked_order_invoice_collection){
                 $this->generateBatchFile($chunked_order_invoice_collection, $this->pdfDeliverySlipTemplate);
                 sleep(10);
             }
 
             foreach ($order_invoice_collection as $order) {
+                $order_object = new Order($order->id_order);
                 try {
-                    $order_object = new Order($order->id_order);
-                    $order_object->setCurrentState((int)$this->processedStatus, 0);
+                    $order_object->setCurrentState($this->processedStatus);
                     $order_object->save();
-                } catch (PrestaShopException $exception) {
-                    array_push($this->errorRecords, ['id_order' => $order->id_order, 'reference' => $order_object->reference, 'time' => date('d-m-Y H:i:s')]);
+                } catch (PrestaShopException) {
+                    $this->errorRecords[] = ['id_order' => $order->id_order, 'reference' => $order_object->reference, 'time' => date('d-m-Y H:i:s')];
                 }
-                array_push($this->completedSuccessRecords, ['id_order' => $order->id_order, 'reference' => $order_object->reference, 'time' => date('d-m-Y H:i:s')]);
+                $this->completedSuccessRecords[] = ['id_order' => $order->id_order, 'reference' => $order_object->reference, 'time' => date('d-m-Y H:i:s')];
             }
-        } catch (PrestaShopException $exception) {
-            return false;
+        } catch (PrestaShopException) {
+            return;
         }
-        return true;
     }
 
     /**
@@ -236,7 +239,7 @@ class OrderSlipGenerator
      * Branch of function in controllers/admin/AdminPDFController.
      * @throws PrestaShopException
      */
-    public function generateBatchFile($object, $template)
+    public function generateBatchFile($object, $template): true
     {
     	$context = Context::getContext();
     	$context->currency = new Currency(1, 1, 1);
@@ -253,6 +256,6 @@ class OrderSlipGenerator
 try {
     $batch = new OrderSlipGenerator(false);
     $batch->generateOrderSlips();
-} catch (PrestaShopDatabaseException | PrestaShopException $exeption) {
-    return $exeption;
+} catch (PrestaShopDatabaseException | PrestaShopException $exception) {
+    return $exception;
 }

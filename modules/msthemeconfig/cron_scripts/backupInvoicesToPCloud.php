@@ -2,31 +2,33 @@
 
 declare(strict_types=1);
 
-namespace app\Resources\cronscripts;
+namespace app\Resources\cron_scripts;
+
+require_once dirname(__DIR__) . '/../../config/config.inc.php';
+require_once(dirname(__DIR__).'/vendor/autoload.php');
 
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 
-require_once dirname(__DIR__) . './../../config/config.inc.php';
-require_once dirname(__DIR__) . './../../vendor/autoload.php';
-
+use AppKernel;
+use Context;
 use Customer;
+use Db;
+use DbQuery;
+use ObjectModel;
 use pCloud\Sdk\App;
 use pCloud\Sdk\Exception;
 use pCloud\Sdk\File;
 use pCloud\Sdk\Folder;
 use pCloud\Sdk\Request;
 use PDFCore;
-use PrestaShop\PrestaShop\Adapter\Entity\Context;
-use PrestaShop\PrestaShop\Adapter\Entity\Currency;
-use PrestaShop\PrestaShop\Adapter\Entity\Db;
-use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
-use PrestaShop\PrestaShop\Adapter\Entity\ObjectModel;
-use PrestaShop\PrestaShop\Adapter\Entity\Order;
-use PrestaShop\PrestaShop\Adapter\Entity\Shop;
+use Currency;
+use Order;
+use Shop;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use ShopCore;
+use stdClass;
 use ZipArchive;
 
 /**
@@ -40,7 +42,7 @@ class BackupInvoicesToPCloud
     public function __construct(bool $debug = true)
     {
         $this->debug = $debug;
-        $this->generateInvoices = false;
+        $this->generateInvoices = true;
         $this->deletePcloudArchivedFolder = false;
 
 
@@ -80,6 +82,13 @@ class BackupInvoicesToPCloud
         // Create Folder instance
         $this->pCloudFolder = new Folder($this->pCloudApp);
         $this->pCloudRequest = new Request($this->pCloudApp);
+
+        global $kernel;
+        if (!$kernel) {
+            require_once _PS_ROOT_DIR_ . '/app/AppKernel.php';
+            $kernel = new AppKernel('prod', false);
+            $kernel->boot();
+        }
     }
 
     /**
@@ -176,7 +185,7 @@ class BackupInvoicesToPCloud
                 $searchedFolder = $this->pCloudFolder->create($name, (int)$this->rootFolderId);
             }
             return $searchedFolder;
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->addToLogFile(['location' => 'findOrCreateFolderYear:180', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
@@ -227,7 +236,7 @@ class BackupInvoicesToPCloud
                 $searchedFolder = $this->pCloudFolder->create($name, (int)$yearFolderId);
             }
             return $searchedFolder;
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->addToLogFile(['location' => 'findOrCreateFolderMonth:231', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
@@ -273,7 +282,7 @@ class BackupInvoicesToPCloud
             } else {
                 return $this->archivePCloudFolder($searchedMonthFolder, $searchedYearFolder);
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->addToLogFile(['location' => 'archiveFolder:277', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
@@ -313,7 +322,7 @@ class BackupInvoicesToPCloud
                 $this->pCloudFolder->deleteRecursive((int)$MonthFolder);
             }
             return ['success' => true, 'file' => $zipFileId, 'time' => date('d-m-Y H:i:s')];
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->addToLogFile(['location' => 'archivePCloudFolderLocally:317', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
@@ -342,7 +351,7 @@ class BackupInvoicesToPCloud
                 $zip->close();
             }
             return ['zip_name' => $filename, 'status' => $zip->getStatusString()];
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->addToLogFile(['location' => 'buildZip:346', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
@@ -351,7 +360,7 @@ class BackupInvoicesToPCloud
     /**
      * Archive the folder on pCloud. Function is now disabled on pCloud server
      */
-    private function archivePCloudFolder($monthFolderId, $yearFolderId): array|\stdClass
+    private function archivePCloudFolder($monthFolderId, $yearFolderId): array|stdClass
     {
         try {
             $data = $this->pCloudRequest->get("savezip", [
@@ -364,7 +373,7 @@ class BackupInvoicesToPCloud
                 $this->pCloudFolder->deleteRecursive((int)$monthFolderId);
             }
             return $data;
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->addToLogFile(['location' => 'archivePCloudFolder:368', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
@@ -441,7 +450,7 @@ class BackupInvoicesToPCloud
                 $this->generatePdfFile($credit, $this->pdfCreditInvoiceTemplate, $fileName);
                 sleep($this->sleepTime);
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->addToLogFile(['location' => 'createOrderSlips:445', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
@@ -467,7 +476,7 @@ class BackupInvoicesToPCloud
 
             $price = round((float)$object->total_paid_tax_incl, 2);
             return preg_replace(['/\s+/'], [''], $type . '-' . str_replace('-', '', $order->reference) . '-' . $customer_email . '-' . $payment . '-' . $price);
-        } catch (PrestaShopException $exception) {
+        } catch (\Exception $exception) {
             $this->addToLogFile(['location' => 'generateFileName:471', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return '';
         }
@@ -487,7 +496,7 @@ class BackupInvoicesToPCloud
 
             file_put_contents($this->serverFolder . $fileName . '.pdf', $delivery_slip_pdf);
             return ['success' => true, 'error' => ''];
-        } catch (PrestaShopException|Exception $exception) {
+        } catch (PrestaShopException $exception) {
             $this->addToLogFile(['location' => 'generatePdfFile:491', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
@@ -522,7 +531,7 @@ class BackupInvoicesToPCloud
                 $successFilesList[$file] = $pCloudFileObject->upload($this->serverFolder . $file, $monthFolderId, $file);
             }
             return $successFilesList;
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->addToLogFile(['location' => 'uploadFilesToPCloud:526', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
             return ['success' => false, 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')];
         }
@@ -544,7 +553,7 @@ class BackupInvoicesToPCloud
                 } else {
                     $this->errorRecords[] = ['file' => $meta, 'time' => date('d-m-Y H:i:s')];
                 }
-            } catch (Exception $exception) {
+            } catch (\Exception $exception) {
                 $this->addToLogFile(['location' => 'cleanServerFolder:548', 'error' => $exception->getMessage(), 'time' => date('d-m-Y H:i:s')]);
 
             }
@@ -555,6 +564,6 @@ class BackupInvoicesToPCloud
 $backup = new BackupInvoicesToPCloud(true);
 try {
     $backup->runBackup(true);
-} catch (Exception $exception) {
+} catch (\Exception $exception) {
     echo $exception->getMessage();
 }

@@ -60,7 +60,6 @@ $(document).ready(function () {
   if (typeof prestashop !== 'undefined') {
     prestashop.on('addToCartAnalyticsPush',
       function (data) {
-        console.log(data);
         if(data.op === 'up'){
           addToCartAnalyticsPush.init(data);
         }

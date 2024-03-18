@@ -590,7 +590,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "editor.preferences.tabs",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "ts.external.directory.path": "C:\\wampserver\\www\\ijzershop8.local\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib",
     "two.files.diff.last.used.file": "C:/wamp64/www/ijzershop8.local/admin-dev/themes/new-theme/js/components/tinymce-editor.js",
     "vue.rearranger.settings.migration": "true"
@@ -1348,7 +1348,8 @@
       <workItem from="1710225511439" duration="16838000" />
       <workItem from="1710313192740" duration="25498000" />
       <workItem from="1710397947514" duration="11022000" />
-      <workItem from="1710480969434" duration="18471000" />
+      <workItem from="1710480969434" duration="18923000" />
+      <workItem from="1710743807405" duration="2145000" />
     </task>
     <servers />
   </component>
@@ -2396,7 +2397,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/themes/modernesmid_theme/_dev/js/theme.js</url>
-          <line>1725</line>
+          <line>1726</line>
           <option name="timeStamp" value="72" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">

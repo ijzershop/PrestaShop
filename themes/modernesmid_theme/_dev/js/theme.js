@@ -1010,7 +1010,7 @@ $(function () {
         data: query,
       })
         .done(function (resp) {
-          addToCartAnalyticsPush.init(resp.added_product);
+
 
           $('a.add-to-cart[data-product-id="' + product_id + '"]').removeClass('active');
           $('svg.fa-plus[data-product-id="' + product_id + '"]').show();
@@ -1030,8 +1030,9 @@ $(function () {
             resp: resp,
           });
 
+          $('#quantity_wanted_' + product_id).val('1');
 
-
+          addToCartAnalyticsPush.init(resp.added_product);
         })
         .fail(function (resp) {
           prestashop.emit('handleError', {

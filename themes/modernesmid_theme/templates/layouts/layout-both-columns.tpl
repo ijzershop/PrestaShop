@@ -67,7 +67,7 @@
             <div class="container d-flex p-1">
 
           {block name="left_column"}
-            <div id="left-column" class="d-none d-lg-block col-md-2 pl-0">
+            <div id="left-column" class="d-none d-lg-block col-md-2 pl-0 col-lg-2">
               {if $page.page_name == 'product'}
                 {hook h='displayLeftColumn'}
               {else}
@@ -77,7 +77,7 @@
           {/block}
 
           {block name="content_wrapper"}
-            <div id="content-wrapper" class="left-column right-column col-sm-4 col-md-6">
+            <div id="content-wrapper" class="left-column right-column col-sm-4 col-md-6 col-lg-10">
               {hook h="displayContentWrapperTop"}
               {block name="content"}
               {/block}

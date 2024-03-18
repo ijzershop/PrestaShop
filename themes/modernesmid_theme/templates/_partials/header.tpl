@@ -183,33 +183,6 @@
   </div>
 </div>
 {/if}
-    <script>
-{literal}
-const element = document.getElementById("main-menu-bar");
-const stickyObserver = new IntersectionObserver(function(){
-
-  if(element.classList.contains('is-sticky')){
-    document.getElementById('navbar-brand-item-lg').classList.add('d-lg-block');
-    document.getElementById('navbar-brand-item-mobile').classList.remove('d-md-none');
-    document.getElementById('navbar-cart-item-mobile').classList.remove('d-none');
-  } else {
-    document.getElementById('navbar-brand-item-lg').classList.remove('d-lg-block');
-    document.getElementById('navbar-brand-item-mobile').classList.add('d-md-none');
-    document.getElementById('navbar-cart-item-mobile').classList.add('d-none');
-  }
-
-}, {
-  rootMargin: '-1px 0px 0px 0px',
-  threshold: [1],
-});
-
-stickyObserver.observe(element);
-
-{/literal}
-
-    </script>
-
-
   {/block}
 
 

@@ -702,9 +702,17 @@ $(function () {
     if (scrollElement.scrollTop() >= stickyTop) {
       stickyWrapper.height(stickyHeight);
       sticky.addClass('is-sticky');
+
+      document.getElementById('navbar-brand-item-lg').classList.add('d-lg-block');
+      document.getElementById('navbar-brand-item-mobile').classList.remove('d-md-none');
+      document.getElementById('navbar-cart-item-mobile').classList.remove('d-none');
     } else {
       sticky.removeClass('is-sticky');
       stickyWrapper.height('auto');
+
+      document.getElementById('navbar-brand-item-lg').classList.remove('d-lg-block');
+      document.getElementById('navbar-brand-item-mobile').classList.add('d-md-none');
+      document.getElementById('navbar-cart-item-mobile').classList.add('d-none');
     }
   };
 

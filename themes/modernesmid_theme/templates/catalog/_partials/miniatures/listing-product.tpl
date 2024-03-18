@@ -183,10 +183,10 @@
     </div>
   </article>
   <article
-    class="product-miniature js-product-miniature d-none d-md-flex border-bottom row pt-2 pt-sm-1 pb-1 ml-sm-1 mr-sm-2 m-0"
+    class="product-miniature js-product-miniature d-none d-md-flex border-bottom row pt-2 pt-sm-1 pb-1 ml-sm-1 mr-sm-1 m-0"
     id="product_{$product.id_product}" data-id-product="{$product.id_product}"
     data-id-product-attribute="{$product.id_product_attribute}">
-    <div class="thumbnail-container col-12">
+    <div class="thumbnail-container col-12 p-0">
       <div class="row d-block d-md-flex">
           {block name='product_thumbnail'}
             <div

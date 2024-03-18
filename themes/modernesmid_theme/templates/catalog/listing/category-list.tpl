@@ -25,7 +25,7 @@
 {extends file=$layout}
 
 {block name='content'}
-  <section id="main">
+  <section id="main" class="col-12 pl-lg-0">
     {include file='custom_blocks/notification.tpl'}
     {block name='product_list_header'}
     <div class="row">

@@ -27,20 +27,20 @@
   <div class="row">
     <!--  product left content: image-->
     <div class="product-line-grid-left col-12 col-sm-2 col-md-2 col-lg-2">
-      <a
-        class="remove-from-cart btn btn-outline-danger d-block d-sm-none"
-        style="position: absolute;right: 2px;"
-        rel="nofollow"
-        href="{$product.remove_from_cart_url}"
-        data-link-action="delete-from-cart"
-        data-id-product="{$product.id_product|escape:'javascript'}"
-        data-id-product-attribute="{$product.id_product_attribute|escape:'javascript'}"
-        data-id-customization="{$product.id_customization|escape:'javascript'}"
-      >
-        {if !isset($product.is_gift) || !$product.is_gift}
-          <i class="fasl fa-trash float-right"></i>
-        {/if}
-      </a>
+{*      <a*}
+{*        class="remove-from-cart btn btn-outline-danger d-block d-sm-none"*}
+{*        style="position: absolute;right: 2px;"*}
+{*        rel="nofollow"*}
+{*        href="{$product.remove_from_cart_url}"*}
+{*        data-link-action="delete-from-cart"*}
+{*        data-id-product="{$product.id_product|escape:'javascript'}"*}
+{*        data-id-product-attribute="{$product.id_product_attribute|escape:'javascript'}"*}
+{*        data-id-customization="{$product.id_customization|escape:'javascript'}"*}
+{*      >*}
+{*        {if !isset($product.is_gift) || !$product.is_gift}*}
+{*          <i class="fasl fa-trash float-right"></i>*}
+{*        {/if}*}
+{*      </a>*}
       <span class="product-image media-middle row mx-auto">
       {if isset($product.cover.bySize.medium_default.url)}
         <img src="{$product.cover.bySize.medium_default.url}" class="col-12 mx-auto"

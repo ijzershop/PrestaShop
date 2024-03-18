@@ -49,7 +49,7 @@
       <div class="container-fluid pt-2">
       {include file='custom_blocks/notification.tpl'}
       </div>
-        <div class="container-fluid">
+        <div class="container-fluid p-2">
 
       {block name='content'}
         <section id="content">

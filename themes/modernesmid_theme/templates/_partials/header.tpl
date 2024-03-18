@@ -100,7 +100,7 @@
               {*     / Kyio Column      *}
           </td>
             {if Module::isEnabled('ps_shoppingcart')}
-          <td class="d-none d-md-none d-lg-flex col  p-0 shoppingcart-header-box pr-md-2 pr-lg-4">
+          <td class="d-none d-md-none d-lg-flex col  p-0 shoppingcart-header-box pr-md-2 pr-lg-0">
               {*    Winkelwagen Column        *}
             <style>
               .js-cart{

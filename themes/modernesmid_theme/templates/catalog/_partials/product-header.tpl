@@ -41,11 +41,18 @@
     -o-transition: all .3s linear;
     transition: all .3s linear;
   }
+  #toggle-cat-description span{
+    min-width: 50%;
+    display: inline-block;
+  }
+
+  #toggle-cat-description:hover{
+    background-color: rgba(59, 86, 173, 1);
+    color: #ffffff;
+  }
   #toggle-cat-description{
-    /*-webkit-box-shadow: 0px -10px 40px 55px #fff;*/
-    /*-moz-box-shadow: 0px -10px 40px 55px #fff;*/
-    /*box-shadow: 0px -10px 40px 55px #fff;*/
-    padding-top: 12px;
+    color: rgba(59, 86, 173, 0.5);
+    padding: 5px 0px;
   }
 </style>
 
@@ -67,7 +74,7 @@
                     {/if}
                 </div>
             </div>
-          <div class="row text-center"><a href="#" class="w-100 h5" id="toggle-cat-description" data-shown="0" onclick="toggleCategoryDescr(this)"> > Toon Alles</a></div>
+          <div class="row text-center"><a href="#" class="w-100 display-4 text-decoration-none" id="toggle-cat-description" data-shown="0" onclick="toggleCategoryDescr(this)"> <i class="fast fa-chevron-down"></i>  <span>Toon meer informatie</span>  <i class="fast fa-chevron-down"></i> </a></div>
         {/if}
     {/if}
 </div>
@@ -77,10 +84,10 @@
   function toggleCategoryDescr(e){
     if(document.getElementById('block-category-inner').classList.contains('active')){
         document.getElementById('block-category-inner').classList.remove('active');
-        document.getElementById('toggle-cat-description').textContent = '< Toon Alles';
+        document.getElementById('toggle-cat-description').innerHTML = '<i class="fast fa-chevron-down"></i>  <span>Toon meer informatie</span> <i class="fast fa-chevron-down"></i>';
     } else {
       document.getElementById('block-category-inner').classList.add('active');
-      document.getElementById('toggle-cat-description').textContent = '< Verberg Informatie';
+      document.getElementById('toggle-cat-description').innerHTML = '<i class="fast fa-chevron-up"></i> <span>Verberg Informatie</span> <i class="fast fa-chevron-up"></i> ';
         }
 
 

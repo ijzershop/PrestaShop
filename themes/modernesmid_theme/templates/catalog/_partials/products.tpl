@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div id="js-product-list" class="row">
-  <div class="products col-12 p-3 p-md-4 p-lg-3">
+  <div class="products col-12 p-0 pl-3 pr-3 pl-md-4 pr-md-4 pl-lg-3 pr-lg-3">
       {foreach from=$listing.products key="index" item="product"}
       {block name='product_miniature'}
         {include file='catalog/_partials/miniatures/listing-product.tpl' index=$index product=$product}

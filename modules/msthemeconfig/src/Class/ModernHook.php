@@ -1300,10 +1300,120 @@ class ModernHook
         $filterManager = $this->module->get('prestashop.core.filter.front_end_object.search_result_product');
         $filterManager->whitelist(['quantity', 'minimal_quantity', 'out_of_stock', 'depends_on_stock']);
     }
+
+
     /**
      * @throws Exception
      */
-    public function hookActionFrontControllerSetVariables(&$param): void
+    public function hookActionDispatcherAfter(&$param): void
+    {
+        $route = '';
+        $type = 'string';
+        if(is_array($param)){
+            $type = 'array';
+            if($param['request']->attributes->get('_route') !== null){
+                $route = $param['request']->attributes->get('_route');
+            }
+        } elseif (is_object($param)) {
+            $type = 'object';
+            if(isset($param->route)){
+                $route = $param->route;
+            }
+        }
+        switch ($route) {
+            case 'admin_orders_add_payment':
+            case 'admin_orders_update_product':
+            case 'admin_orders_update_shipping':
+            case 'admin_orders_partial_refund':
+            case 'admin_orders_standard_refund':
+            case 'admin_orders_return_product':
+            case 'admin_orders_add_product':
+            case 'admin_orders_delete_product':
+            case 'admin_orders_cancellation':
+            case 'admin_orders_remove_cart_rule':
+            case 'admin_orders_add_cart_rule':
+                if($type == 'array'){
+                    $data = $param['request']->request->all();
+                    $attributes = $param['request']->attributes;
+                    $id_order = $attributes->get('orderId');
+
+                    $result = $this->sendAnalyticsDataToSession($data, $attributes);
+                    var_export([$data, $attributes, $id_order]);
+                } else {
+                    var_dump('is Object',$param);
+                }
+                die();
+                break;
+        }
+//        var_export($route);
+//        die();
+    }
+
+    private function sendAnalyticsDataToSession($data, $attributes, $id_order = null){
+
+
+
+
+        if($id_order){
+
+            if(array_key_exists('cancel_product', $data)){
+                $cancelProduct = $data['cancel_product'];
+                $addProductRow = $data['add_product_row'];
+                $editProductRow = $data['edit_product_row'];
+
+                
+            }
+
+//            $product = new Product($idProduct, true, $this->context->cookie->id_lang);
+//            $product_categories = $product->getParentCategories($this->context->cookie->id_lang);
+//            if(count($product_categories) >= 2){
+//                $cat1 = $product_categories[count($product_categories)-2];
+//            }
+//
+//            if(count($product_categories) >= 3){
+//                $cat2 = $product_categories[count($product_categories)-3];
+//            }
+//
+//            $cart = new Cart(Context::getContext()->cart->id);
+//            $coupon = '';
+//
+//            if(count($cart->getCartRules()) > 0){
+//                $coupons = [];
+//                foreach($cart->getCartRules() as $rule){
+//                    $coupons[] = $rule['name'];
+//                }
+//                $coupon = implode(',', $coupons);
+//            }
+
+            $addedProduct  =  [
+                'currency' => 'EUR',
+                'price' => $product->price,
+                'item_id' => $product->id,
+                'item_name' => $product->name,
+                'coupon' => $coupon,
+                'discount' => $product->getPrice(true, null, 6, null, true, false, $this->qty),
+                'item_category' => $cat2['name'],
+                'item_category2' => $cat1['name'],
+                'quantity' => $this->qty
+            ];
+
+
+            $_SESSION['analytics_data']['refund']['event_type'] = $postType;
+            $_SESSION['analytics_data']['refund']['transaction_id'] = $id_transaction;
+            $_SESSION['analytics_data']['refund']['currency'] = 'EU';
+            $_SESSION['analytics_data']['refund']['coupon'] = $coupon;
+            $_SESSION['analytics_data']['refund']['value'] = $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS);
+            $_SESSION['analytics_data']['refund']['shipping'] = $shipping;
+            $_SESSION['analytics_data']['refund']['tax'] = $addedProduct;
+            $_SESSION['analytics_data']['refund']['items'] = $addedProduct;
+        }
+    }
+
+/**
+ * @param $param
+ * @return void
+ */
+public function hookActionFrontControllerSetVariables(&$param): void
     {
         $param['templateVars']['analytics_data'] = [];
         switch ($param['templateVars']['page']['page_name']){
@@ -1934,7 +2044,7 @@ class ModernHook
      */
     public function hookDisplayBackOfficeHeader($params): void
     {
-
+//dd($params);
     }
 
     /**

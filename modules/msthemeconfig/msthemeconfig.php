@@ -286,6 +286,7 @@ class MsThemeConfig extends Module
             'actionCustomerFormBuilderModifier',
             'actionFrontControllerInitAfter',
             'actionFrontControllerSetVariables',
+            'actionDispatcherAfter',
             'actionFrontControllerSetMedia',
             'actionListMailThemes',
             'actionOrderGridDefinitionModifier',
@@ -1020,5 +1021,15 @@ class MsThemeConfig extends Module
     {
         $hookClass = $this->getModernHooks();
         $hookClass->hookActionFrontControllerSetVariables($params);
+    }
+
+    /**
+     * @param $params
+     * @throws PrestaShopException
+     */
+    public function hookActionDispatcherAfter($params): void
+    {
+        $hookClass = $this->getModernHooks();
+        $hookClass->hookActionDispatcherAfter($params);
     }
 }

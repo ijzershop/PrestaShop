@@ -1311,7 +1311,7 @@ class ModernHook
         $type = 'string';
         if(is_array($param)){
             $type = 'array';
-            if($param['request']->attributes->get('_route') !== null){
+            if($param['request']->attributes !== null){
                 $route = $param['request']->attributes->get('_route');
             }
         } elseif (is_object($param)) {

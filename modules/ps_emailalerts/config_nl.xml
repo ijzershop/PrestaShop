@@ -2,7 +2,7 @@
 <module>
     <name>ps_emailalerts</name>
     <displayName><![CDATA[E-mailwaarschuwingen]]></displayName>
-    <version><![CDATA[2.4.2]]></version>
+    <version><![CDATA[3.0.0]]></version>
     <description><![CDATA[Maak uw dagelijks leven gemakkelijker, behandel e-mailwaarschuwingen over voorraad en bestellingen, zowel voor u als voor uw klanten.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[administration]]></tab>

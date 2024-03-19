@@ -1,5 +1,11 @@
-{shop_url}
 
-Thank you for subscribing to our newsletter. We are pleased to offer you the following voucher: {discount}
+[{shop_url}] 
 
-ijzershop.localÂ |Â Ceresweg 1Â |Â 8938BG LeeuwardenÂ |Â 0900-2502500Â Â De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01
+Hi, 
+
+Regarding your newsletter subscription, we are pleased to offer
+you the following voucher: {discount} 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

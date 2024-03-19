@@ -502,7 +502,6 @@
       <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
       <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
       <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
-      <path value="$PROJECT_DIR$/vendor/pcloud/pcloud-php-sdk" />
       <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
       <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
       <path value="$PROJECT_DIR$/vendor/myclabs/deep-copy" />
@@ -551,6 +550,7 @@
       <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/guzzlehttp/guzzle" />
       <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vendor/pcloud/pcloud-php-sdk" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -579,7 +579,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Merging mergePresta8.1.5",
+    "git-widget-placeholder": "modernesmid-core8",
     "ignore.virus.scanning.warn.message": "true",
     "javascript.nodejs.core.library.configured.version": "14.19.1",
     "javascript.nodejs.core.library.typings.version": "14.18.63",
@@ -1351,7 +1351,7 @@
       <workItem from="1710397947514" duration="11022000" />
       <workItem from="1710480969434" duration="18923000" />
       <workItem from="1710743807405" duration="12650000" />
-      <workItem from="1710826120342" duration="7317000" />
+      <workItem from="1710826120342" duration="8334000" />
     </task>
     <servers />
   </component>

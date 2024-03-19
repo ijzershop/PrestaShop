@@ -1,9 +1,15 @@
-{shop_url}
 
-Good news, this item is back in stock!
+[{shop_url}] 
 
-{product}
+Hi, 
 
-Click on the following link to visit the product page and order it: [{product}]({product_link})
+This item is once again in-stock.
 
-ijzershop.localÂ |Â Ceresweg 1Â |Â 8938BG LeeuwardenÂ |Â 0900-2502500Â Â De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01
+You can access the product page by clicking on the link: {product}
+[{product_link}]
+
+You can order it right now from our online shop. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

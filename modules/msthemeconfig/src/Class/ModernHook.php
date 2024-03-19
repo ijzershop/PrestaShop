@@ -1361,7 +1361,7 @@ class ModernHook
                 $addProductRow = $data['add_product_row'];
                 $editProductRow = $data['edit_product_row'];
 
-                
+
             }
 
 //            $product = new Product($idProduct, true, $this->context->cookie->id_lang);

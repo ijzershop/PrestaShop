@@ -10,7 +10,6 @@
       <sourceFolder url="file://$MODULE_DIR$/tests/Unit" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tools/build/tests/Unit" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_shoppingcart/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/mollie_bc/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/mollie/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/msthemeconfig/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/composer" />

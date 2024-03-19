@@ -579,7 +579,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "modernesmid-core8",
+    "git-widget-placeholder": "Merging mergePresta8.1.5",
     "ignore.virus.scanning.warn.message": "true",
     "javascript.nodejs.core.library.configured.version": "14.19.1",
     "javascript.nodejs.core.library.typings.version": "14.18.63",
@@ -1351,7 +1351,7 @@
       <workItem from="1710397947514" duration="11022000" />
       <workItem from="1710480969434" duration="18923000" />
       <workItem from="1710743807405" duration="12650000" />
-      <workItem from="1710826120342" duration="6779000" />
+      <workItem from="1710826120342" duration="7317000" />
     </task>
     <servers />
   </component>
@@ -2183,7 +2183,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/modules/msthemeconfig/src/Class/ModernHook.php</url>
-          <line>2593</line>
+          <line>2599</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -2376,7 +2376,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php-line-method">
           <url>file://$PROJECT_DIR$/classes/Product.php</url>
-          <line>5581</line>
+          <line>5594</line>
           <properties>
             <option name="className" value="\ProductCore" />
             <option name="methodName" value="getProductProperties" />

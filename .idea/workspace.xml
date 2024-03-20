@@ -621,11 +621,11 @@
       <recent name="C:\wampserver\www\ijzershop8.local\themes\modernesmid_theme\_dev" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\wampserver\www\ijzershop8.local\modules\msthemeconfig\views\js\admin" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msthemeconfig\cronscripts" />
       <recent name="C:\wampserver\www\ijzershop8.local\themes\modernesmid_theme\_dev" />
       <recent name="C:\wampserver\www\ijzershop8.local\js\tiny_mce\skins\ui" />
       <recent name="C:\wamp64\www\ijzershop8.local\themes\modernesmid_theme\mails\nl" />
-      <recent name="C:\wamp64\www\ijzershop8.local\themes\modernesmid_theme\mails" />
     </key>
   </component>
   <component name="RunManager" selected="PHP Script.backupInvoicesToPCloud.php">
@@ -1352,7 +1352,8 @@
       <workItem from="1710480969434" duration="18923000" />
       <workItem from="1710743807405" duration="12650000" />
       <workItem from="1710826120342" duration="8428000" />
-      <workItem from="1710837243679" duration="223000" />
+      <workItem from="1710837243679" duration="10753000" />
+      <workItem from="1710917330006" duration="39000" />
     </task>
     <servers />
   </component>
@@ -2184,7 +2185,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/modules/msthemeconfig/src/Class/ModernHook.php</url>
-          <line>2599</line>
+          <line>2636</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">

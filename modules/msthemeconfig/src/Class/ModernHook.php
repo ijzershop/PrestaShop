@@ -1307,105 +1307,140 @@ class ModernHook
      */
     public function hookActionDispatcherAfter(&$param): void
     {
-        $route = '';
-        $type = 'string';
-        if(is_array($param)){
-            $type = 'array';
-            if($param['request']->attributes !== null){
-                $route = $param['request']->attributes->get('_route');
-            }
-        } elseif (is_object($param)) {
-            $type = 'object';
-            if(isset($param->route)){
-                $route = $param->route;
-            }
-        }
-        switch ($route) {
-            case 'admin_orders_add_payment':
-            case 'admin_orders_update_product':
-            case 'admin_orders_update_shipping':
-            case 'admin_orders_partial_refund':
-            case 'admin_orders_standard_refund':
-            case 'admin_orders_return_product':
-            case 'admin_orders_add_product':
-            case 'admin_orders_delete_product':
-            case 'admin_orders_cancellation':
-            case 'admin_orders_remove_cart_rule':
-            case 'admin_orders_add_cart_rule':
-                if($type == 'array'){
-                    $data = $param['request']->request->all();
-                    $attributes = $param['request']->attributes;
-                    $id_order = $attributes->get('orderId');
+//        $result = null;
+//        try {
+//            $route = '';
+//            $type = 'string';
+//            if(is_array($param)){
+//                $type = 'array';
+//                if($param['request']->attributes !== null){
+//                    $route = $param['request']->attributes->get('_route');
+//                }
+//            } elseif (is_object($param)) {
+//                $type = 'object';
+//                if(isset($param->route)){
+//                    $route = $param->route;
+//                }
+//            }
+//            switch ($route) {
+//                case 'admin_orders_add_payment':
+//                case 'admin_orders_update_product':
+//                case 'admin_orders_update_shipping':
+//                case 'admin_orders_partial_refund':
+//                case 'admin_orders_standard_refund':
+//                case 'admin_orders_return_product':
+//                case 'admin_orders_add_product':
+//                case 'admin_orders_delete_product':
+//                case 'admin_orders_cancellation':
+//                case 'admin_orders_remove_cart_rule':
+//                case 'admin_orders_add_cart_rule':
+//                    if($type == 'array'){
+//                        $data = $param['request']->request->all();
+//                        $attributes = $param['request']->attributes;
+//                        $id_order = $attributes->get('orderId');
+//
+//                        $_SESSION['analytics_data'] = $this->sendAnalyticsDataToSession($data, $attributes, $id_order);
+//
+////                        var_export([$data, $attributes, $id_order, $result]);
+//                    } else {
+//                        var_dump('is Object',$param);
+//                    }
+//
+//
+////                    break;
+//            }
+//        } catch(\Exception $exception){
+//            dd($exception);
+//        }
 
-                    $result = $this->sendAnalyticsDataToSession($data, $attributes);
-                    var_export([$data, $attributes, $id_order]);
-                } else {
-                    var_dump('is Object',$param);
-                }
-                die();
-                break;
-        }
-//        var_export($route);
-//        die();
+
+
+
     }
 
-    private function sendAnalyticsDataToSession($data, $attributes, $id_order = null){
+    /**
+     * @param $data
+     * @param $attributes
+     * @param $id_order
+     */
+    private function sendAnalyticsDataToSession($data, $attributes, $id_order = null)
+    {
 
-
-
-
+        $addedProducts = [];
+        $result = [];
         if($id_order){
+            $order = new Order($id_order);
+            $id_transaction = '';
+            $coupon = '';
+            foreach($order->getOrderPayments() as $payment){
+                if($payment->transaction_id != ""){
+                    $id_transaction = $payment->transaction_id;
+                }
+            }
+
+            if(count($order->getCartRules()) > 0){
+                $coupons = [];
+                foreach($order->getCartRules() as $rule){
+                    $coupons[] = $rule['name'];
+                }
+                $coupon = implode(',', $coupons);
+            }
 
             if(array_key_exists('cancel_product', $data)){
+                $postType= 'refund';
                 $cancelProduct = $data['cancel_product'];
                 $addProductRow = $data['add_product_row'];
                 $editProductRow = $data['edit_product_row'];
 
+                $total_refund = 0;
+                $refunded_qty = 0;
+                $cat1 = '';
+                $cat2 = '';
+                foreach ($order->getOrderDetailList() as $orderDetail) {
+                    $orderDetailId = $orderDetail['id_order_detail'];
 
+                    $product = new Product($orderDetail['product_id'], true, $this->context->cookie->id_lang);
+                    $product_categories = $product->getParentCategories($this->context->cookie->id_lang);
+                    if(count($product_categories) >= 2){
+                        $cat1 = $product_categories[count($product_categories)-2];
+                    }
+
+                    if(count($product_categories) >= 3){
+                        $cat2 = $product_categories[count($product_categories)-3];
+                    }
+
+                    if (!empty($cancelProduct['quantity_' . $orderDetailId]) || !empty((float) $cancelProduct['amount_' . $orderDetailId])) {
+                        $refunded_qty = $cancelProduct['quantity_' . $orderDetailId] ?? 0;
+                        $total_refund += (float)$cancelProduct['amount_' . $orderDetailId]/1.21 ?? 0;
+                    }
+
+                    $addedProducts[]  =  [
+                        'currency' => 'EUR',
+                        'price' => (float)$orderDetail['product_price'],
+                        'item_id' => (int)$orderDetail['product_id'],
+                        'item_name' => $orderDetail['product_name'],
+                        'coupon' => '',
+                        'discount' => '',
+                        'item_category' => $cat2['name'],
+                        'item_category2' => $cat1['name'],
+                        'quantity' => (int)$refunded_qty
+                    ];
+
+                }
+
+                $result['refund']['event_type'] = $postType;
+                $result['refund']['transaction_id'] = $id_transaction;
+                $result['refund']['currency'] = 'EU';
+                $result['refund']['coupon'] = $coupon;
+                $result['refund']['value'] = (float)$total_refund;
+                $result['refund']['shipping'] = (float)$cancelProduct['shipping_amount'];
+                $result['refund']['tax'] = ($total_refund*1.21)-$total_refund;
+                $result['refund']['items'] = $addedProducts;
+
+                return $result;
+                //End Cancel Product
             }
 
-//            $product = new Product($idProduct, true, $this->context->cookie->id_lang);
-//            $product_categories = $product->getParentCategories($this->context->cookie->id_lang);
-//            if(count($product_categories) >= 2){
-//                $cat1 = $product_categories[count($product_categories)-2];
-//            }
-//
-//            if(count($product_categories) >= 3){
-//                $cat2 = $product_categories[count($product_categories)-3];
-//            }
-//
-//            $cart = new Cart(Context::getContext()->cart->id);
-//            $coupon = '';
-//
-//            if(count($cart->getCartRules()) > 0){
-//                $coupons = [];
-//                foreach($cart->getCartRules() as $rule){
-//                    $coupons[] = $rule['name'];
-//                }
-//                $coupon = implode(',', $coupons);
-//            }
-
-            $addedProduct  =  [
-                'currency' => 'EUR',
-                'price' => $product->price,
-                'item_id' => $product->id,
-                'item_name' => $product->name,
-                'coupon' => $coupon,
-                'discount' => $product->getPrice(true, null, 6, null, true, false, $this->qty),
-                'item_category' => $cat2['name'],
-                'item_category2' => $cat1['name'],
-                'quantity' => $this->qty
-            ];
-
-
-            $_SESSION['analytics_data']['refund']['event_type'] = $postType;
-            $_SESSION['analytics_data']['refund']['transaction_id'] = $id_transaction;
-            $_SESSION['analytics_data']['refund']['currency'] = 'EU';
-            $_SESSION['analytics_data']['refund']['coupon'] = $coupon;
-            $_SESSION['analytics_data']['refund']['value'] = $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS);
-            $_SESSION['analytics_data']['refund']['shipping'] = $shipping;
-            $_SESSION['analytics_data']['refund']['tax'] = $addedProduct;
-            $_SESSION['analytics_data']['refund']['items'] = $addedProduct;
         }
     }
 
@@ -2037,14 +2072,16 @@ public function hookActionFrontControllerSetVariables(&$param): void
     }
 
     /**
-     * @TODO check function
      *
      * @param $params
-     * @return void
      */
     public function hookDisplayBackOfficeHeader($params): void
     {
-//dd($params);
+//        $this->context->smarty->assign([
+//            'analytics_data' => $_SESSION['analytics_data'],
+//        ]);
+//        $this->context->controller->addJS('../../views/js/admin/analytics.js');
+//        $_SESSION['analytics_data'] = null;
     }
 
     /**

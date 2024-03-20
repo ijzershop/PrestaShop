@@ -614,25 +614,6 @@ class Ps_EmailAlerts extends Module
     }
 
 
-if ($dir_mail) {
-Mail::send(
-$mail_id_lang,
-'new_order',
-
-$template_vars,
-$merchant_mail,
-null,
-$configuration['PS_SHOP_EMAIL'],
-$configuration['PS_SHOP_NAME'],
-null,
-null,
-$dir_mail,
-false,
-$id_shop
-);
-}
-
-
     public function hookDisplayProductAdditionalInfo($params)
     {
         if ($params['product']['minimal_quantity'] <= $params['product']['quantity']

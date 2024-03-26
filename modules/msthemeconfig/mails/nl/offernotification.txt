@@ -3,17 +3,16 @@
 Bekijk de door u aangevraagde offerte via de onderstaande link:
 
 [Uw Offerte]({url})
-Werkt de knop niet kopieëer dan de onderstaande link en plak deze in uw browser..
+Werkt de knop niet kopieëer dan de onderstaande link en plak deze in uw browser.
 {url}
 
-- - offerte pagina word geopend op {shop_url}
-- - vul hier uw email: {customer_email} en de code: {offer_access_code} in
-- - als beide correct zijn ingevuld klikt u op "Toon mijn offerte"
-- - vul het gewenste aantal in
-- - plaats in uw winkelwagen
-- - voeg eventueel extra producten toe
-- - bestel & betaal
-- - [uw offerte is geldig tot {date_exp}]({url})
+- offerte pagina word geopend op {shop_url}
+- vul hier uw email: {customer_email} en de code: {offer_access_code} in
+- als beide correct zijn ingevuld klikt u op "Toon mijn offerte"
+- vul het gewenste aantal in
+- plaats in uw winkelwagen
+- voeg eventueel extra producten toe
+- bestel & betaal
 
 Let op! Deze aanbieding verloopt op {date_exp_exact}, daarna wordt de aanbieding verwijderd uit ons systeem.
 

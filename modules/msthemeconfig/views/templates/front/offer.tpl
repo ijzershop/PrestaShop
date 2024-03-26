@@ -20,7 +20,7 @@
     <div class="form-group row">
       <label for="access_email" class="col-sm-2 col-form-label">Email</label>
       <div class="col-sm-10">
-        <input type="email" class="form-control" id="access_email" placeholder="Email" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
+        <input type="email" class="form-control" id="access_email" placeholder="Email" autocomplete=off>
         <small id="access_email_help_text" class="form-text text-muted">
           Vul hier uw email adres in waarop u de offerte mail heeft ontvangen.
         </small>
@@ -29,7 +29,7 @@
     <div class="form-group row">
       <label for="access_code" class="col-sm-2 col-form-label">Code</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" id="access_code" placeholder="Code" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
+        <input type="text" class="form-control" id="access_code" placeholder="Code" style="text-transform:uppercase" autocomplete=off>
         <small id="access_code_help_text" class="form-text text-muted">
           Vul hier de toegangscode in. Deze vind u in de offerte mail die van ons heeft ontvangen.
         </small>
@@ -154,6 +154,15 @@ if(offerCode === localStorage.getItem('offerAccessCode')){
     return checkValidAccessData();
   });
 
+  emailElem.addEventListener('drop',function(e){
+    return checkValidAccessData();
+  });
+
+  emailElem.addEventListener('change',function(e){
+    return checkValidAccessData();
+  });
+
+
   accessElem.addEventListener('keyup',function(e){
     return checkValidAccessData();
   });
@@ -162,21 +171,30 @@ if(offerCode === localStorage.getItem('offerAccessCode')){
     return checkValidAccessData();
   });
 
+  accessElem.addEventListener('drop',function(e){
+    return checkValidAccessData();
+  });
+
+  accessElem.addEventListener('change',function(e){
+    return checkValidAccessData();
+  });
+
+
   let checkValidAccessData  = function(e){
-    if(emailElem.value === offerEmail){
+    if(emailElem.value.trim() === offerEmail){
       emailElem.classList.add('is-valid');
     } else {
       emailElem.classList.remove('is-valid');
     }
 
-    if(accessElem.value === offerCode){
+    if(accessElem.value.toUpperCase().trim() === offerCode){
       accessElem.classList.add('is-valid');
     } else {
       accessElem.classList.remove('is-valid');
     }
 
     let subButton = document.getElementById('show_offer_btn');
-    if(emailElem.value === offerEmail && accessElem.value === offerCode){
+    if(emailElem.value.trim() === offerEmail && accessElem.value.toUpperCase().trim() === offerCode){
       subButton.classList.remove('disabled');
       subButton.disabled = false;
     } else {

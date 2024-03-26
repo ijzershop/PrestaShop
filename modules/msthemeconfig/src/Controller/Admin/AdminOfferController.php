@@ -118,7 +118,7 @@ class AdminOfferController extends FrameworkBundleAdminController {
         );
         $numericDate = strtotime($offer->date_exp);
         $translated_date = datefmt_format($fmt, $numericDate);
-dd($translated_date, $offer->date_exp);
+
         $vars = [
             '{customer_name}' => $offer->name,
             '{message}' => $offer->message,

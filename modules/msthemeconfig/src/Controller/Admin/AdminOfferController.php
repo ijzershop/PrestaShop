@@ -114,7 +114,7 @@ class AdminOfferController extends FrameworkBundleAdminController {
 
         $fmt = datefmt_create(
             'nl_NL', // The output language.
-            pattern: "eeee e MMMM Y 'om' h:ss" // The output formatting.
+            pattern: "eeee d MMMM Y 'om' h:ss" // The output formatting.
         );
         $numericDate = strtotime($offer->date_exp);
         $translated_date = datefmt_format($fmt, $numericDate);

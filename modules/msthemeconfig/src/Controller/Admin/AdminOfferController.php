@@ -111,6 +111,14 @@ class AdminOfferController extends FrameworkBundleAdminController {
         $subject = sprintf(Context::getContext()->getTranslator()->trans('Offerte %s'), $offer->code);
         $bcc = ConfigurationCore::get('PS_SHOP_EMAIL');
 
+
+        $fmt = datefmt_create(
+            'nl_NL', // The output language.
+            pattern: "eeee e MMMM Y 'om' h:ss" // The output formatting.
+        );
+        $numericDate = strtotime($offer->date_exp);
+        $translated_date = datefmt_format($fmt, $numericDate);
+
         $vars = [
             '{customer_name}' => $offer->name,
             '{message}' => $offer->message,
@@ -118,7 +126,7 @@ class AdminOfferController extends FrameworkBundleAdminController {
             '{offer_access_code}' => $offer->access_code,
             '{customer_email}' => $offer->email,
             '{date_exp}' => date('d-m-Y',strtotime($offer->date_exp)),
-            '{date_exp_exact}' => date('l j F Y \o\m H:i',strtotime($offer->date_exp)),
+            '{date_exp_exact}' => $translated_date,
             '{url}' => Context::getContext()->link->getModuleLink('msthemeconfig', 'offer', ['offer_code' => $offer->code])
         ];
 

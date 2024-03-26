@@ -246,7 +246,7 @@
   <component name="PerforceDirect.Settings">
     <option name="ENABLED" value="false" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP 8.3">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP8.1">
     <include_path>
       <path value="$APPLICATION_HOME_DIR$/external_plugins/PHPStorm-CC-PrestaShop-master" />
       <path value="$PROJECT_DIR$/modules/ps_creditpayment/vendor/composer" />
@@ -571,54 +571,55 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.CodyHistoryLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyProjectSettingsMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;modernesmid-core8&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;14.19.1&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;14.18.63&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/wampserver/www/ijzershop.local&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\wampserver\\www\\ijzershop8.local\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib&quot;,
-    &quot;two.files.diff.last.used.file&quot;: &quot;C:/wamp64/www/ijzershop8.local/admin-dev/themes/new-theme/js/components/tinymce-editor.js&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
+    "RunOnceActivity.CodyHistoryLlmMigration": "true",
+    "RunOnceActivity.CodyProjectSettingsMigration": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "modernesmid-core8",
+    "ignore.virus.scanning.warn.message": "true",
+    "javascript.nodejs.core.library.configured.version": "14.19.1",
+    "javascript.nodejs.core.library.typings.version": "14.18.63",
+    "last_opened_file_path": "C:/wampserver/www/ijzershop8.local/modules/msthemeconfig/mails/nl",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "reference.webide.settings.project.settings.php",
+    "ts.external.directory.path": "C:\\wampserver\\www\\ijzershop8.local\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib",
+    "two.files.diff.last.used.file": "C:/wamp64/www/ijzershop8.local/admin-dev/themes/new-theme/js/components/tinymce-editor.js",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;ChangesTree.GroupingKeys&quot;: [
-      &quot;directory&quot;,
-      &quot;repository&quot;
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "directory",
+      "repository"
     ],
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+    "DatabaseDriversLRU": [
+      "mysql"
     ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;PHP&quot;
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "PHP"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReadonlyStatusHandler">
     <option name="SHOW_DIALOG" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\wampserver\www\ijzershop8.local\modules\msthemeconfig\mails\nl" />
+      <recent name="C:\wampserver\www\ijzershop8.local\mails\themes\modernesmid\core" />
+      <recent name="C:\wampserver\www\ijzershop8.local" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msthemeconfig\cronscripts" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\sawandcutmodule\views\templates\front" />
-      <recent name="C:\wampserver\www\ijzershop8.local\modules\litespeedcache" />
-      <recent name="C:\wampserver\www\ijzershop8.local\themes\modernesmid_theme\assets\css" />
-      <recent name="C:\wampserver\www\ijzershop8.local\themes\modernesmid_theme\_dev" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msthemeconfig\views\js\admin" />
@@ -1353,7 +1354,13 @@
       <workItem from="1710743807405" duration="12650000" />
       <workItem from="1710826120342" duration="8428000" />
       <workItem from="1710837243679" duration="10753000" />
-      <workItem from="1710917330006" duration="39000" />
+      <workItem from="1710917330006" duration="2499000" />
+      <workItem from="1711003810227" duration="97000" />
+      <workItem from="1711012028142" duration="895000" />
+      <workItem from="1711017433153" duration="3306000" />
+      <workItem from="1711210808948" duration="21000" />
+      <workItem from="1711350002535" duration="17499000" />
+      <workItem from="1711430707649" duration="6908000" />
     </task>
     <servers />
   </component>
@@ -2185,7 +2192,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/modules/msthemeconfig/src/Class/ModernHook.php</url>
-          <line>2636</line>
+          <line>2640</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -2222,6 +2229,11 @@
           <url>file://$PROJECT_DIR$/app/Resources/cronscripts/OrderSlipGenerator.php</url>
           <line>9</line>
           <option name="timeStamp" value="81" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/modules/msthemeconfig/src/Controller/Admin/AdminOfferController.php</url>
+          <line>118</line>
+          <option name="timeStamp" value="83" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php-line-method">
           <url>file://$PROJECT_DIR$/modules/ps_pinpayment/ps_pinpayment.php</url>
@@ -2315,7 +2327,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php-line-method">
           <url>file://$PROJECT_DIR$/modules/msthemeconfig/src/Controller/Admin/AdminOfferController.php</url>
-          <line>39</line>
+          <line>34</line>
           <properties>
             <option name="className" value="\MsThemeConfig\Controller\Admin\AdminOfferController" />
             <option name="methodName" value="__construct" />
@@ -2428,6 +2440,11 @@
           <url>file://$PROJECT_DIR$/themes/modernesmid_theme/_dev/js/tagmanager/add-cart.js</url>
           <line>16</line>
           <option name="timeStamp" value="80" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/themes/modernesmid_theme/_dev/js/theme.js</url>
+          <line>87</line>
+          <option name="timeStamp" value="82" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

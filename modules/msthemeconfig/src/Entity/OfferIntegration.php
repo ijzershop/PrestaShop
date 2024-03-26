@@ -85,6 +85,13 @@ class OfferIntegration
     private $date_upd;
 
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="access_code", type="string", nullable=false)
+     */
+    private $access_code;
+
     public function __construct()
     {
     }
@@ -236,6 +243,25 @@ class OfferIntegration
     public function setUpdatedAt(DateTime $date_upd)
     {
         $this->date_upd = $date_upd;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccessCode(): string
+    {
+        return (string)$this->access_code;
+    }
+
+    /**
+     * @param string $date_upd
+     *
+     */
+    public function setAccessCode(string  $access_code)
+    {
+        $this->access_code = $access_code;
 
         return $this;
     }

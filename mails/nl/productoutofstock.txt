@@ -1,9 +1,9 @@
 {shop_url}
 
-Er zijn nu minder dan {last_qty} producten van {product} op voorraad.
+Er zijn nu minder dan {last_qty} producten op voorraad.
 
 Resterende voorraad: {qty}
 
 Vul uw inventaris aan, ga naar het gedeelte Catalogus> Voorraad van uw backoffice om uw voorraad te beheren.
 
-ijzershop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01
+ijzershop.localÂ |Â Ceresweg 1Â |Â 8938BG LeeuwardenÂ |Â 0900-2502500Â Â De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

@@ -40,8 +40,9 @@ class OfferIntegrationFormDataHandler implements FormDataHandlerInterface
      */
     public function __construct(
         OfferIntegrationRepository $offerIntegrationRepository,
-        EntityManagerInterface $entityManager
-    ) {
+        EntityManagerInterface     $entityManager
+    )
+    {
         $this->offerIntegrationRepository = $offerIntegrationRepository;
         $this->entityManager = $entityManager;
     }
@@ -52,7 +53,7 @@ class OfferIntegrationFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         $existingOffer = Offer::getOfferForCode($data['code']);
-        if(isset($existingOffer->id_oi_offer)){
+        if (isset($existingOffer->id_oi_offer)) {
             $offerIntegration = new OfferIntegration($existingOffer->id_oi_offer);
         } else {
             $offerIntegration = new OfferIntegration();
@@ -65,6 +66,7 @@ class OfferIntegrationFormDataHandler implements FormDataHandlerInterface
         $offerIntegration->setMessage($data['message']);
         $offerIntegration->setDateExp($data['date_exp']);
         $offerIntegration->setUpdatedAt(date_create());
+        $offerIntegration->setAccessCode($this->generateAccessCode($data['email']));
         $this->entityManager->persist($offerIntegration);
         $this->entityManager->flush();
 
@@ -79,7 +81,7 @@ class OfferIntegrationFormDataHandler implements FormDataHandlerInterface
 
         $offerIntegration = $this->offerIntegrationRepository->findOneById($id);
 
-        if($offerIntegration){
+        if ($offerIntegration) {
             $offerIntegration->setCode($data['code']);
             $offerIntegration->setName($data['name']);
             $offerIntegration->setEmail($data['email']);
@@ -87,12 +89,29 @@ class OfferIntegrationFormDataHandler implements FormDataHandlerInterface
             $offerIntegration->setMessage($data['message']);
             $offerIntegration->setDateExp($data['date_exp']);
             $offerIntegration->setUpdatedAt(date_create());
-
+            if(empty($offerIntegration->getAccessCode())){
+                $offerIntegration->setAccessCode($this->generateAccessCode($data['email']));
+            }
             $this->entityManager->flush();
 
             return $offerIntegration->getId();
         }
         return 0;
 
+    }
+
+
+    /**
+     * @param $string
+     * @param int $length
+     * @return string
+     */
+    public function generateAccessCode($string, int $length = 6): string
+    {
+        if (!$string) {
+            return '';
+        }
+        $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return substr(strtoupper(md5(uniqid($string . str_shuffle($chars), true))), 0, $length);
     }
 }

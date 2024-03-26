@@ -1,21 +1,13 @@
- 
-
 {shop_url}
 
-Hi {firstname} {lastname},
+Proficiat, u bent één van onze beste klanten, echter heeft u geen bestelling meer geplaatst sinds {days_threshold} dagen.
 
-Your cart on {shop_name}
+Uw winkelwagen is opgeslagen, u kunt uw bestelling afmaken door onze winkel te bezoeken: {shop_url}
 
-Congratulations, you are one of our best customers! However, it looks like you have not placed an order since {days_threshold} days.
+We willen u graag een korting aanbieden van {amount}% op uw volgende order! Deze aanbieding is {days} dagen geldig, dus twijfel niet te lang!
 
-Your cart has been saved, you can resume your order by visiting our store: {shop_url}
+Hier is uw WAARDEBON: {voucher_num}
 
-We are pleased to offer you a discount of {amount}% off your next order. And this offer is valid for {days} days, so do not wait any longer!
+Voer deze code in bij uw winkelwagen om uw korting te krijgen.
 
-Here is your VOUCHER CODE: {voucher_num}
-
-Enter this code in your shopping cart to get the discount.
-
-[{shop_name}]({shop_url})
-
-Powered by [PrestaShop](https://www.prestashop-project.org/)
+ijzershop.localÂ |Â Ceresweg 1Â |Â 8938BG LeeuwardenÂ |Â 0900-2502500Â Â De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

@@ -355,7 +355,7 @@ class Mail extends MailCore
             $swift = new Swift_Mailer($connection);
             /* Get templates content */
             $iso = Language::getIsoById((int) $idLang);
-            $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
+            $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT',null, null, $idShop));
             $isoArray = [];
             if ($iso) {
                 $isoArray[] = $iso;
@@ -472,7 +472,7 @@ class Mail extends MailCore
                 $message->setReplyTo($replyTo, ($replyToName !== '' ? $replyToName : null));
             }
 
-            if (false !== Configuration::get('PS_LOGO_MAIL') &&
+            if (false !== Configuration::get('PS_LOGO_MAIL',null, null, $idShop) &&
                 file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
             ) {
                 $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop);
@@ -633,7 +633,7 @@ class Mail extends MailCore
 
             ShopUrl::resetMainDomainCache();
 
-            if ($send && Configuration::get('PS_LOG_EMAILS')) {
+            if ($send && Configuration::get('PS_LOG_EMAILS', null, null, $idShop)) {
                 $mail = new Mail();
                 $mail->template = Tools::substr($template, 0, 62);
                 $mail->subject = Tools::substr($message->getSubject(), 0, 255);

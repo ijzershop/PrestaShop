@@ -1,18 +1,30 @@
-Beste {customer_name},
+{shop_url}
 
-Wij hebben uw offerte aanvraag ontvangen.
+Bekijk de door u aangevraagde offerte via de onderstaande link:
 
-Om de aanbieding die wij voor u hebben samengesteld te bekijken klikt u op de volgende link: {url}.
+[Uw Offerte]({url})
+Werkt de knop niet kopieëer dan de onderstaande link en plak deze in uw browser..
+{url}
 
-U krijgt dan een overzicht van de producten die zijn aangevraagd en kunt u het gewenste aantal invullen en toevoegen aan uw winkelwagen. Vervolgens kunt u de winkelwagen nog aanvullen met andere producten van <a href="https://www.ijzershop.nl">www.IjzerShop.nl</a> en afrekenen via Ideal, Paypal of een bankoverschrijving. Na ontvangst van de bestelling ontvangt u direct een bevestiging van uw order inclusief factuur in uw mailbox
-Let op deze aanbieding verloopt op {date_exp}, daarna word de aanbieding verwijderd uit ons systeem.
+- - offerte pagina word geopend op {shop_url}
+- - vul hier uw email adres ({customer_email}) in en de volgende code: {offer_access_code}
+- - als beide correct zijn ingevuld klikt u op "Toon mijn offerte"
+- - vul het gewenste aantal in
+- - plaats in uw winkelwagen
+- - voeg eventueel extra producten toe
+- - bestel & betaal
+- - [uw offerte is geldig tot {date_exp}]({url})
 
-Mocht u naar aanleiding van onze offerte nog vragen hebben horen wij deze graag.
+Let op! Deze aanbieding verloopt op {date_exp_exact}, daarna wordt de aanbieding verwijderd uit ons systeem.
 
-Met vriendelijke groet,
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 
-Verkoop Ijzershop.nl
+[telefoon: 058-2123138](tel://0900-2502500)
 
-Venusweg 15
-8938 BC Leeuwarden
-Tel: 0900-2502500
+[email: info@v15.nl](mailto:info@v15.nl)
+
+Hoeveel sterren krijgen wij van u?,
+Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
+>  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
+
+ijzershop.localÂ |Â Ceresweg 1Â |Â 8938BG LeeuwardenÂ |Â 0900-2502500Â Â De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

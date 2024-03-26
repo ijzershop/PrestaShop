@@ -1301,6 +1301,21 @@ class ModernHook
         $filterManager->whitelist(['quantity', 'minimal_quantity', 'out_of_stock', 'depends_on_stock']);
     }
 
+    /**
+     *
+     * @param $params
+     */
+    public function hookDisplayBackOfficeHeader($params)
+    {
+//        $this->context->controller->addJS(_PS_ROOT_DIR_.'/modules/msthemeconfig/views/js/admin/analytics.js');
+//        $this->context->smarty->assign([
+//            'analytics_data' => $_SESSION['analytics_data'],
+//        ]);
+//
+//        return $this->context->smarty->fetch(_PS_ROOT_DIR_.'/modules/msthemeconfig/views/templates/admin/analytics.tpl');
+//        $_SESSION['analytics_data'] = null;
+    }
+
 
     /**
      * @throws Exception
@@ -2071,18 +2086,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
         return $jsonLDCategory;
     }
 
-    /**
-     *
-     * @param $params
-     */
-    public function hookDisplayBackOfficeHeader($params): void
-    {
-//        $this->context->smarty->assign([
-//            'analytics_data' => $_SESSION['analytics_data'],
-//        ]);
-//        $this->context->controller->addJS('../../views/js/admin/analytics.js');
-//        $_SESSION['analytics_data'] = null;
-    }
+
 
     /**
      * @TODO check function

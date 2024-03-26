@@ -1,11 +1,52 @@
-{extends file='page.tpl'}
+{extends file='layouts/layout-both-columns.tpl'}
 
 
 
 
 
-{block name="page_content"}
-<div class="card mt-3">
+{block name="content"}
+  <script type="application/javascript">
+    let offerCode = "{{$offer.access_code}}";
+    let offerEmail = "{{$offer.email}}";
+    let min_item = '{l s='Please select at least one product'}';
+    let max_item = '{l s='You cannot add more than %d product(s) to the product comparison'}';
+  </script>
+
+<div class="card mt-3" id="offer_card_access">
+  <div class="card-header"><h1>{l s='Uw offerte'}</h1></div>
+  <div class="card-body">
+    <p class="col-12 col-sm-8 mx-auto">Uw offerte staat klaar, vul uw gegevens in om de offerte te kunnen bekijken. Deze kunt u terugvinden in de offerte mail die u van ons heeft ontvangen.</p>
+  <form class="mx-auto col-12 col-sm-8">
+    <div class="form-group row">
+      <label for="access_email" class="col-sm-2 col-form-label">Email</label>
+      <div class="col-sm-10">
+        <input type="email" class="form-control" id="access_email" placeholder="Email" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
+        <small id="access_email_help_text" class="form-text text-muted">
+          Vul hier uw email adres in waarop u de offerte mail heeft ontvangen.
+        </small>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="access_code" class="col-sm-2 col-form-label">Code</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="access_code" placeholder="Code" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off>
+        <small id="access_code_help_text" class="form-text text-muted">
+          Vul hier de toegangscode in. Deze vind u in de offerte mail die van ons heeft ontvangen.
+        </small>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-12">
+        <button type="button" class="btn btn-primary col-12 disabled" disabled id="show_offer_btn">Toon mijn offerte</button>
+      </div>
+    </div>
+  </form>
+  </div>
+</div>
+
+
+
+  <div class="card mt-3 d-none" id="offer_card">
   <div class="card-header"><h1>{l s='Uw offerte'}</h1></div>
   <div class="card-body">
         {if {$date_exp_days} > 0}
@@ -23,7 +64,7 @@
           {foreach from=$products item=product name=products}
             <!-- PRODUCT -->
             <li class="list-group-item pt-2" style="border-collapse: collapse;border-width:1px 0px 1px 0px;border-style:solid;border-color:#f2f2f2;{if !$product.active}display:none;{/if}">
-              <div class="product-container ajax_block_product row" itemscope itemtype="http://schema.org/Product">
+              <div class="product-container ajax_block_product row p-2" itemscope itemtype="http://schema.org/Product">
                 <div class="col-sm-12 col-md-4 col-lg-4 pb-2">
                   <a href="/{Category::getLinkRewrite($product.id_category_default, $product.id_lang)}/{$product.id_product}-{$product.link_rewrite}.html" itemprop="name" class="text-decoration-none text-dark h4 product-title">
                       {$product.name|truncate:256:'...'|escape:'html':'UTF-8'}
@@ -86,22 +127,77 @@
   </ul>
 </div>
 
-<script>
-    var min_item = '{l s='Please select at least one product'}';
-    var max_item = '{l s='You cannot add more than %d product(s) to the product comparison'}';
-    var comparator_max_item = '{if isset($comparator_max_item)}{$comparator_max_item}{else}0{/if}';
-    var comparedProductsIds = '{if isset($comparator_max_item)}{$compared_products}{else}[]{/if}';
-</script>
-
-
-
-
-
-
-
-
-
-
-
-{/if}
+    {/if}
 {/block}
+
+  {block name="hook_before_body_closing_tag"}
+<script type="text/javascript">
+  // console.log([offerCode, offerEmail,  localStorage.getItem('offerAccessCode')]);
+
+
+let comparator_max_item = '{if isset($comparator_max_item)}{$comparator_max_item}{else}0{/if}';
+let comparedProductsIds = '{if isset($comparator_max_item)}{$compared_products}{else}[]{/if}';
+
+
+if(offerCode === localStorage.getItem('offerAccessCode')){
+  document.getElementById('offer_card').classList.toggle('d-none');
+  document.getElementById('offer_card_access').classList.toggle('d-none');
+} else {
+  let accessElem = document.getElementById('access_code');
+  let emailElem = document.getElementById('access_email');
+
+  emailElem.addEventListener('keyup',function(e){
+    return checkValidAccessData();
+  });
+
+  emailElem.addEventListener('paste',function(e){
+    return checkValidAccessData();
+  });
+
+  accessElem.addEventListener('keyup',function(e){
+    return checkValidAccessData();
+  });
+
+  accessElem.addEventListener('paste',function(e){
+    return checkValidAccessData();
+  });
+
+  let checkValidAccessData  = function(e){
+    if(emailElem.value === offerEmail){
+      emailElem.classList.add('is-valid');
+    } else {
+      emailElem.classList.remove('is-valid');
+    }
+
+    if(accessElem.value === offerCode){
+      accessElem.classList.add('is-valid');
+    } else {
+      accessElem.classList.remove('is-valid');
+    }
+
+    let subButton = document.getElementById('show_offer_btn');
+    if(emailElem.value === offerEmail && accessElem.value === offerCode){
+      subButton.classList.remove('disabled');
+      subButton.disabled = false;
+    } else {
+      subButton.classList.add('disabled');
+      subButton.disabled = true;
+    }
+  }
+}
+document.getElementById('show_offer_btn').addEventListener('click', function(e){
+  localStorage.setItem('offerAccessCode', document.getElementById('access_code').value);
+  document.getElementById('offer_card').classList.toggle('d-none');
+  document.getElementById('offer_card_access').classList.toggle('d-none');
+});
+</script>
+{/block}
+
+
+
+
+
+
+
+
+

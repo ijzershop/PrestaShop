@@ -41,6 +41,8 @@ class Offer extends ObjectModel
 	/** @var string Object expiration date */
 	public $date_exp;
 
+    public $access_code;
+
 	public static $definition = [
 		'table' => 'offer_integration',
 		'primary' => 'id_oi_offer',
@@ -54,10 +56,12 @@ class Offer extends ObjectModel
 			'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false],
 			'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false],
 			'date_exp' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false],
+			'access_code' => ['type' => self::TYPE_STRING,'required' => false, 'copy_post' => false],
         ]
     ];
 
-	public static function getAllOffers($filter = array(), $orderby = null, $asc = true)
+
+    public static function getAllOffers($filter = array(), $orderby = null, $asc = true)
 	{
 		$query = 'SELECT * FROM `' . _DB_PREFIX_ . 'offer_integration`';
 

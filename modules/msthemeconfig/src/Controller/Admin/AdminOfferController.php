@@ -2,23 +2,18 @@
 namespace MsThemeConfig\Controller\Admin;
 
 use ConfigurationCore;
+use Context;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Exception;
+use Mail;
 use MsThemeConfig\Core\Grid\Definition\Factory\OfferIntegrationGridDefinitionFactory;
 use MsThemeConfig\Core\Grid\Filters\OfferIntegrationFilters;
-use PrestaShop\PrestaShop\Adapter\Entity\AdminController;
-use PrestaShop\PrestaShop\Adapter\Entity\Mail;
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException;
-use PrestaShop\PrestaShop\Adapter\Entity\Product;
-use PrestaShop\PrestaShop\Adapter\Entity\Tools;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShopException;
+use Product;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 
 use MsThemeConfig\Class\Offer;
-use MsThemeConfig\Class\OIHelperList;
-use PrestaShop\PrestaShop\Adapter\Entity\Context;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -112,7 +107,7 @@ class AdminOfferController extends FrameworkBundleAdminController {
         }
 
         $template = 'offernotification';
-        $template_path = _PS_MODULE_DIR_ . 'offerintegration/mails/';
+        $template_path = _PS_MODULE_DIR_ . 'msthemeconfig/mails/';
         $subject = sprintf(Context::getContext()->getTranslator()->trans('Offerte %s'), $offer->code);
         $bcc = ConfigurationCore::get('PS_SHOP_EMAIL');
 
@@ -120,7 +115,10 @@ class AdminOfferController extends FrameworkBundleAdminController {
             '{customer_name}' => $offer->name,
             '{message}' => $offer->message,
             '{offer_code}' => $offer->code,
-            '{date_exp}' => date('d-m-Y H:m',strtotime($offer->date_exp)),
+            '{offer_access_code}' => $offer->access_code,
+            '{customer_email}' => $offer->email,
+            '{date_exp}' => date('d-m-Y',strtotime($offer->date_exp)),
+            '{date_exp_exact}' => date('l j F Y \o\m H:i',strtotime($offer->date_exp)),
             '{url}' => Context::getContext()->link->getModuleLink('msthemeconfig', 'offer', ['offer_code' => $offer->code])
         ];
 

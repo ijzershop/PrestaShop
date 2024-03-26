@@ -576,7 +576,7 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function createAndPushBackofficeAnalyticsData($id_order, $type='refund', $items)
+    public function createAndPushBackofficeAnalyticsData($id_order, $items, $type='refund')
     {
         $transaction_id = '';
         $reference = '';
@@ -588,7 +588,7 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         $cart = new Cart($order->id_cart);
-        var_export([$order, $transaction_id, $cart, $type, $items]);
+//        var_export([$order, $transaction_id, $cart, $type, $items]);
     }
 
     /**

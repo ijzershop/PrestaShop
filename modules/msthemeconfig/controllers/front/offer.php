@@ -73,6 +73,10 @@ class MsThemeConfigOfferModuleFrontController extends ModuleFrontController {
     public  function initContent()
     {
         parent::initContent();
+        if(!$this->offer){
+            Tools::redirect('index.php');
+        }
+
 
         $this->context->smarty->assign([
             'robots_follow' => 'nofollow',

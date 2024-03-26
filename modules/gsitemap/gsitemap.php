@@ -441,9 +441,9 @@ class Gsitemap extends Module
         * and we are left with only accessible products.
         */
         if (Group::isFeatureActive() && !empty(Configuration::get('PS_UNIDENTIFIED_GROUP'))) {
-            $group_join = ' INNER JOIN (SELECT DISTINCT cp.`id_product` FROM `' . _DB_PREFIX_ . 'category_product` cp 
-            INNER JOIN `' . _DB_PREFIX_ . 'category_group` ctg ON (ctg.`id_category` = cp.`id_category`) 
-            WHERE ctg.`id_group` = ' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP') . ' AND cp.`id_product` >= ' . (int) $id_product . ' 
+            $group_join = ' INNER JOIN (SELECT DISTINCT cp.`id_product` FROM `' . _DB_PREFIX_ . 'category_product` cp
+            INNER JOIN `' . _DB_PREFIX_ . 'category_group` ctg ON (ctg.`id_category` = cp.`id_category`)
+            WHERE ctg.`id_group` = ' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP') . ' AND cp.`id_product` >= ' . (int) $id_product . '
             ) g ON ps.`id_product` = g.`id_product`';
         } else {
             $group_join = ' ';
@@ -451,14 +451,16 @@ class Gsitemap extends Module
 
         // Get product IDs
         $products_id = Db::getInstance()->ExecuteS('SELECT ps.`id_product` FROM `' . _DB_PREFIX_ . 'product_shop` ps' . $group_join . '
-        WHERE ps.`id_product` >= ' . (int) $id_product . ' AND ps.`active` = 1 AND ps.`visibility` != \'none\' 
-        AND ps.`id_shop`=' . $this->context->shop->id . ' 
+        WHERE ps.`id_product` >= ' . (int) $id_product . ' AND ps.`active` = 1 AND ps.`visibility` != \'none\'
+        AND ps.`id_shop`=' . $this->context->shop->id . '
         ORDER BY ps.`id_product` ASC');
 
         // Process each category and add it to list of links that will be further "converted" to XML and added to the sitemap
         foreach ($products_id as $product_id) {
             $product = new Product((int) $product_id['id_product'], false, (int) $lang['id_lang']);
-
+            if(!$product->category){
+                continue;
+            }
             $url = $link->getProductLink($product, $product->link_rewrite, htmlspecialchars(strip_tags($product->category)), $product->ean13, (int) $lang['id_lang'], (int) $this->context->shop->id, 0);
 
             $images_product = [];
@@ -525,10 +527,10 @@ class Gsitemap extends Module
         $categories_id = Db::getInstance()->ExecuteS('SELECT c.id_category FROM `' . _DB_PREFIX_ . 'category` c
                 INNER JOIN `' . _DB_PREFIX_ . 'category_shop` cs ON c.`id_category` = cs.`id_category`' .
                 $group_join . '
-                WHERE c.`id_category` >= ' . (int) $id_category . ' AND c.`active` = 1 
-                AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY') . ' 
-                AND c.id_category != ' . (int) Configuration::get('PS_HOME_CATEGORY') . ' 
-                AND c.id_parent > 0 AND c.`id_category` > 0 AND cs.`id_shop` = ' . (int) $this->context->shop->id . ' 
+                WHERE c.`id_category` >= ' . (int) $id_category . ' AND c.`active` = 1
+                AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY') . '
+                AND c.id_category != ' . (int) Configuration::get('PS_HOME_CATEGORY') . '
+                AND c.id_parent > 0 AND c.`id_category` > 0 AND cs.`id_shop` = ' . (int) $this->context->shop->id . '
                 ORDER BY c.`id_category` ASC');
 
         // Process each category and add it to list of links that will be further "converted" to XML and added to the sitemap
@@ -546,9 +548,22 @@ class Gsitemap extends Module
                     Context::getContext()->shop->domain . Context::getContext()->shop->physical_uri . Context::getContext()->shop->virtual_uri,
                 ], $image_link) : $image_link;
 
+
+                if($category->name){
+                    $category_name = htmlspecialchars(strip_tags($category->name));
+                } else {
+                    $category_name = '';
+                }
+
+                if($category->description){
+                    $category_descr = htmlspecialchars(strip_tags($category->description));
+                } else {
+                    $category_descr = '';
+                }
+
                 $image_category = [
-                    'title_img' => htmlspecialchars(strip_tags($category->name)),
-                    'caption' => Tools::substr(htmlspecialchars(strip_tags($category->description)), 0, 350),
+                    'title_img' => $category_name,
+                    'caption' => Tools::substr($category_descr, 0, 350),
                     'link' => $image_link,
                 ];
             }
@@ -808,6 +823,9 @@ class Gsitemap extends Module
 
         fwrite($write_fd, '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . PHP_EOL);
         foreach ($link_sitemap as $file) {
+            if(strpos(strtolower($file['link']), 'offer') !== false){
+                continue;
+            }
             fwrite($write_fd, '<url>' . PHP_EOL);
             $lastmod = (isset($file['lastmod']) && !empty($file['lastmod'])) ? date('c', strtotime($file['lastmod'])) : null;
             $this->addSitemapNode($write_fd, htmlspecialchars(strip_tags($file['link'])), $this->getPriorityPage($file['page']), Configuration::get('GSITEMAP_FREQUENCY'), $lastmod);

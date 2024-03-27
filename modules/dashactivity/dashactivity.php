@@ -162,7 +162,7 @@ class dashactivity extends Module
 						' . Shop::addSqlRestriction(false, 'c') . '
 						AND cp.`time_end` IS NULL
 					AND (\'' . pSQL(date('Y-m-d H:i:00', time() - 60 * (int) Configuration::get('DASHACTIVITY_VISITOR_ONLINE'))) . '\' < cp.`time_start`)
-					' . ($maintenance_ips ? 'AND c.ip_address NOT IN (' . rtrim(preg_replace('/[^,0-9]/', '', $maintenance_ips),",") . ')' : '') . '
+					' . ($maintenance_ips ? 'AND c.ip_address NOT IN (' . preg_replace('/[^,0-9]/', '', $maintenance_ips) . ')' : '') . '
 					GROUP BY c.id_connections
 					ORDER BY c.date_add DESC';
         } else {
@@ -172,7 +172,7 @@ class dashactivity extends Module
 					WHERE (g.id_customer IS NULL OR g.id_customer = 0)
 						' . Shop::addSqlRestriction(false, 'c') . '
 						AND (\'' . pSQL(date('Y-m-d H:i:00', time() - 60 * (int) Configuration::get('DASHACTIVITY_VISITOR_ONLINE'))) . '\' < c.`date_add`)
-					' . ($maintenance_ips ? 'AND c.ip_address NOT IN (' . rtrim(preg_replace('/[^,0-9]/', '', $maintenance_ips),",") . ')' : '') . '
+					' . ($maintenance_ips ? 'AND c.ip_address NOT IN (' . preg_replace('/[^,0-9]/', '', $maintenance_ips) . ')' : '') . '
 					ORDER BY c.date_add DESC';
         }
         Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -242,7 +242,7 @@ class dashactivity extends Module
         );
 
         $product_reviews = 0;
-        if (Module::isInstalled('productcomments') && !Module::getInstanceByName('productcomments')->active) {
+        if (Module::isInstalled('productcomments')) {
             $product_reviews += Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
 				FROM `' . _DB_PREFIX_ . 'product_comment` pc
@@ -250,7 +250,7 @@ class dashactivity extends Module
 				' . Shop::addSqlAssociation('product', 'p') . '
 				WHERE pc.deleted = 0
 				AND pc.`date_add` BETWEEN "' . pSQL($params['date_from']) . '" AND "' . pSQL($params['date_to']) . '"
-				' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'pc')
+				' . Shop::addSqlRestriction(Shop::SHARE_ORDER)
             );
         }
 

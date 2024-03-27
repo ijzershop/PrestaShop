@@ -20,6 +20,7 @@
 
 use PrestaShop\Module\PsAccounts\Handler\Error\Sentry;
 use PrestaShop\Module\PsAccounts\Presenter\PsAccountsPresenter;
+use PrestaShop\Module\PsAccounts\Provider\OAuth2\PrestaShopSession;
 use PrestaShop\Module\PsAccounts\Repository\ShopTokenRepository;
 use PrestaShop\Module\PsAccounts\Service\ShopLinkAccountService;
 
@@ -46,7 +47,7 @@ class AdminAjaxPsAccountsController extends ModuleAdminController
     /**
      * @return void
      *
-     * @throws Throwable
+     * @throws Exception
      */
     public function ajaxProcessGetOrRefreshToken()
     {
@@ -70,7 +71,7 @@ class AdminAjaxPsAccountsController extends ModuleAdminController
     /**
      * @return void
      *
-     * @throws Throwable
+     * @throws Exception
      */
     //public function displayAjaxUnlinkShop()
     public function ajaxProcessUnlinkShop()
@@ -94,7 +95,7 @@ class AdminAjaxPsAccountsController extends ModuleAdminController
     /**
      * @return void
      *
-     * @throws Throwable
+     * @throws Exception
      */
     public function ajaxProcessResetLinkAccount()
     {
@@ -115,7 +116,7 @@ class AdminAjaxPsAccountsController extends ModuleAdminController
     /**
      * @return void
      *
-     * @throws Throwable
+     * @throws Exception
      */
     public function ajaxProcessGetContext()
     {
@@ -128,6 +129,62 @@ class AdminAjaxPsAccountsController extends ModuleAdminController
             header('Content-Type: text/json');
 
             $this->ajaxDie(json_encode($presenter->present($psxName)));
+        } catch (Exception $e) {
+            Sentry::captureAndRethrow($e);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function ajaxProcessGetOrRefreshAccessToken()
+    {
+        try {
+            /** @var PrestaShopSession $oauthSession */
+            $oauthSession = $this->module->getService(PrestaShopSession::class);
+
+            header('Content-Type: text/json');
+
+            $this->ajaxDie(
+                json_encode([
+                    'token' => (string) $oauthSession->getOrRefreshAccessToken(),
+                ])
+            );
+        } catch (Exception $e) {
+            Sentry::captureAndRethrow($e);
+        }
+    }
+
+    /**
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function ajaxProcessGetInvitations()
+    {
+        try {
+            header('Content-Type: text/json');
+            $indirectsApi = $this->module->getService(
+                \PrestaShop\Module\PsAccounts\Api\Client\IndirectChannelClient::class
+            );
+            $response = $indirectsApi->getInvitations();
+
+            if (!$response || true !== $response['status']) {
+                // TODO log error
+                $this->ajaxDie(
+                    json_encode([
+                        'invitations' => [],
+                    ])
+                );
+            } else {
+                $this->ajaxDie(
+                    json_encode([
+                        'invitations' => $response['body']['invitations'],
+                    ])
+                );
+            }
         } catch (Exception $e) {
             Sentry::captureAndRethrow($e);
         }

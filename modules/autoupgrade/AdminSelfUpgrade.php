@@ -34,7 +34,10 @@ use PrestaShop\Module\AutoUpgrade\UpgradePage;
 use PrestaShop\Module\AutoUpgrade\UpgradeSelfCheck;
 use PrestaShop\Module\AutoUpgrade\UpgradeTools\FilesystemAdapter;
 
-require_once _PS_ROOT_DIR_ . '/modules/autoupgrade/vendor/autoload.php';
+$autoloadPath = __DIR__ . '/vendor/autoload.php';
+if (file_exists($autoloadPath)) {
+    require_once $autoloadPath;
+}
 
 class AdminSelfUpgrade extends AdminController
 {
@@ -520,21 +523,6 @@ class AdminSelfUpgrade extends AdminController
         $this->content = $this->_html;
 
         parent::display();
-    }
-
-    /**
-     * @deprecated
-     * Method allowing errors on very old tabs to be displayed.
-     * On the next major of this module, use an admin controller and get rid of this.
-     *
-     * This method is called by functions.php available in the admin root folder.
-     */
-    public function displayErrors()
-    {
-        if (empty($this->_errors)) {
-            return;
-        }
-        echo implode(' - ', $this->_errors);
     }
 
     /**

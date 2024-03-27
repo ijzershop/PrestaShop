@@ -23,13 +23,13 @@ if (!defined('_PS_VERSION_')) {
 require_once __DIR__ . '/vendor/autoload.php';
 class Ps_accounts extends Module
 {
-    use \PrestaShop\Module\PsAccounts\Provider\OAuth2\Oauth2LogoutTrait;
+    use \PrestaShop\Module\PsAccounts\Provider\OAuth2\PrestaShopLogoutTrait;
 
     const DEFAULT_ENV = '';
 
     // Needed in order to retrieve the module version easier (in api call headers) than instanciate
     // the module each time to get the version
-    const VERSION = '6.1.6';
+    const VERSION = '6.3.2';
 
     const HOOK_ACTION_SHOP_ACCOUNT_LINK_AFTER = 'actionShopAccountLinkAfter';
     const HOOK_ACTION_SHOP_ACCOUNT_UNLINK_AFTER = 'actionShopAccountUnlinkAfter';
@@ -56,6 +56,7 @@ class Ps_accounts extends Module
         'displayDashboardTop',
         'actionAdminLoginControllerLoginAfter',
         'actionAdminControllerInitBefore',
+        'actionModuleInstallAfter',
         self::HOOK_DISPLAY_ACCOUNT_UPDATE_WARNING,
         self::HOOK_ACTION_SHOP_ACCOUNT_LINK_AFTER,
         self::HOOK_ACTION_SHOP_ACCOUNT_UNLINK_AFTER,
@@ -106,15 +107,15 @@ class Ps_accounts extends Module
 
         // We cannot use the const VERSION because the const is not computed by addons marketplace
         // when the zip is uploaded
-        $this->version = '6.1.6';
+        $this->version = '6.3.2';
 
         $this->module_key = 'abf2cd758b4d629b2944d3922ef9db73';
 
         parent::__construct();
 
         $this->displayName = $this->l('PrestaShop Account');
-        $this->description = $this->l('Associate your shop with your PrestaShop account to activate and manage your subscriptions in your back office. Do not uninstall this module if you have a current subscription.');
-        $this->description_full = $this->l('Associate your shop with your PrestaShop account to activate and manage your subscriptions in your back office. Do not uninstall this module if you have a current subscription.');
+        $this->description = $this->l('Link your store to your PrestaShop account to activate and manage your subscriptions in your back office. Do not uninstall this module if you have a current subscription.');
+        $this->description_full = $this->l('Link your store to your PrestaShop account to activate and manage your subscriptions in your back office. Do not uninstall this module if you have a current subscription.');
         $this->confirmUninstall = $this->l('This action will prevent immediately your PrestaShop services and Community services from working as they are using PrestaShop Accounts module for authentication.');
 
         $this->ps_versions_compliancy = ['min' => '8.0.0', 'max' => _PS_VERSION_];
@@ -157,7 +158,7 @@ class Ps_accounts extends Module
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @throws Throwable
+     * @throws Exception
      */
     public function install()
     {
@@ -307,27 +308,6 @@ class Ps_accounts extends Module
         );
     }
 
-//    /**
-//     * Override of native function to always retrieve Symfony container instead of legacy admin container on legacy context.
-//     *
-//     * @param string $serviceName
-//     *
-//     * @return mixed
-//     */
-//    public function getService($serviceName)
-//    {
-//        if ((new \PrestaShop\Module\PsAccounts\Context\ShopContext())->isShop173()) {
-//            // 1.7.3
-//            // 1.7.6
-//            //$this->context->controller->getContainer()
-//
-//            if (null === $this->container) {
-//                $this->container = \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance();
-//            }
-//        }
-//        return $this->container->get($serviceName);
-//    }
-
     /**
      * @param array $params
      *
@@ -351,7 +331,7 @@ class Ps_accounts extends Module
      */
     public function renderUpdateWarningView()
     {
-        if ($this->getShopContext()->isShop17()) {
+        if ($this->getShopContext()->isShop173()) {
             /* @phpstan-ignore-next-line */
             return PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()
                 ->get('twig')
@@ -368,7 +348,7 @@ class Ps_accounts extends Module
      */
     public function renderDeleteWarningView()
     {
-        if ($this->getShopContext()->isShop17()) {
+        if ($this->getShopContext()->isShop173()) {
             /* @phpstan-ignore-next-line */
             return PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()
                 ->get('twig')
@@ -645,7 +625,7 @@ class Ps_accounts extends Module
                     ' ' . print_r($response['body']['message'], true)
                 );
             }
-        } catch (\Throwable $e) {
+        } catch (Exception $e) {
             $this->getLogger()->debug(
                 'Error curl while trying to DELETE shop : ' . print_r($e->getMessage(), true)
             );
@@ -700,12 +680,12 @@ class Ps_accounts extends Module
         /** @var \PrestaShop\Module\PsAccounts\Service\PsAccountsService $psAccountsService */
         $psAccountsService = $this->getService(\PrestaShop\Module\PsAccounts\Service\PsAccountsService::class);
 
-        if (!$psAccountsService->getLoginActivated()) {
-            return;
-        }
-
         if (isset($_GET['logout'])) {
-            $this->oauth2Logout();
+            if ($psAccountsService->getLoginActivated()) {
+                $this->oauth2Logout();
+            } else {
+                $this->getOauth2Session()->clear();
+            }
         }
     }
 
@@ -734,6 +714,18 @@ class Ps_accounts extends Module
     }
 
     /**
+     * @param mixed $module
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function hookActionModuleInstallAfter($module)
+    {
+        $this->resetCircuitBreaker();
+    }
+
+    /**
      * @return string
      */
     public function getModuleEnvVar()
@@ -756,13 +748,14 @@ class Ps_accounts extends Module
      *
      * @return string
      *
-     * @throws Throwable
+     * @throws PrestaShopException
+     * @throws \PrestaShop\Module\PsAccounts\Exception\SshKeysNotFoundException
      */
     public function getContent()
     {
         $this->loadAssets();
 
-        return $this->display(__FILE__, '/views/templates/admin/app.tpl');
+        return $this->display(__FILE__, 'views/templates/admin/app.tpl');
     }
 
     /**
@@ -770,7 +763,8 @@ class Ps_accounts extends Module
      *
      * @return void
      *
-     * @throws Throwable
+     * @throws PrestaShopException
+     * @throws \PrestaShop\Module\PsAccounts\Exception\SshKeysNotFoundException
      */
     protected function loadAssets()
     {
@@ -832,7 +826,7 @@ class Ps_accounts extends Module
     /**
      * @return void
      *
-     * @throws Throwable
+     * @throws PrestaShopException
      */
     private function autoReonboardOnV5()
     {
@@ -862,27 +856,44 @@ class Ps_accounts extends Module
         return Module::isEnabled('smb_edition');
     }
 
-    protected function getProvider(): PrestaShop\Module\PsAccounts\Provider\OAuth2\Oauth2ClientShopProvider
+    /**
+     * @throws Exception
+     */
+    public function getOauth2Client(): PrestaShop\Module\PsAccounts\Provider\OAuth2\Oauth2Client
     {
-        /** @var \PrestaShop\Module\PsAccounts\Provider\OAuth2\Oauth2ClientShopProvider $provider */
-        $provider = $this->getService(\PrestaShop\OAuth2\Client\Provider\PrestaShop::class);
-
-        return $provider;
+        return $this->getService(\PrestaShop\Module\PsAccounts\Provider\OAuth2\Oauth2Client::class);
     }
 
-    protected function getAccessToken(): ?League\OAuth2\Client\Token\AccessToken
+    protected function getProvider(): PrestaShop\Module\PsAccounts\Provider\OAuth2\PrestaShopClientProvider
     {
-        /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
-        $session = $this->getContainer()->get('session');
-
-        /** @var \League\OAuth2\Client\Token\AccessToken $accessToken */
-        $accessToken = $session->get('accessToken');
-
-        return $accessToken;
+        return $this->getService(\PrestaShop\Module\PsAccounts\Provider\OAuth2\PrestaShopClientProvider::class);
     }
 
     protected function isOauth2LogoutEnabled(): bool
     {
         return $this->hasParameter('ps_accounts.oauth2_url_session_logout');
+    }
+
+    protected function getOauth2Session(): PrestaShop\Module\PsAccounts\Provider\OAuth2\PrestaShopSession
+    {
+        return $this->getService(\PrestaShop\Module\PsAccounts\Provider\OAuth2\PrestaShopSession::class);
+    }
+
+    /**
+     * @return void
+     *
+     * @throws Exception
+     */
+    private function resetCircuitBreaker(): void
+    {
+        $this->getLogger()->info(__METHOD__);
+
+        /** @var \PrestaShop\Module\PsAccounts\Api\Client\AccountsClient $accountsClient */
+        $accountsClient = $this->getService(\PrestaShop\Module\PsAccounts\Api\Client\AccountsClient::class);
+        $accountsClient->getCircuitBreaker()->reset();
+
+        /** @var \PrestaShop\Module\PsAccounts\Api\Client\SsoClient $ssoClient */
+        $ssoClient = $this->getService(\PrestaShop\Module\PsAccounts\Api\Client\SsoClient::class);
+        $ssoClient->getCircuitBreaker()->reset();
     }
 }

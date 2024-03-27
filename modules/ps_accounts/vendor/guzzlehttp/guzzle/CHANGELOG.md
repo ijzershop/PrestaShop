@@ -1178,7 +1178,7 @@ interfaces.
 
 * BC: CurlException now extends from RequestException rather than BadResponseException
 * BC: Renamed Guzzle\Plugin\Cache\CanCacheStrategyInterface::canCache() to canCacheRequest() and added CanCacheResponse()
-* Added fetchDataFromKiyohServer to ServiceDescriptionInterface
+* Added getData to ServiceDescriptionInterface
 * Added context array to RequestInterface::setState()
 * Bug: Removing hard dependency on the BackoffPlugin from Guzzle\Http
 * Bug: Adding required content-type when JSON request visitor adds JSON to a command

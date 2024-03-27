@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Prestashop\ModuleLibGuzzleAdapter\Guzzle7;
 
-use Prestashop\ModuleLibGuzzleAdapter\ConfigInterface;
+use Prestashop\ModuleLibGuzzleAdapter\Interfaces\ConfigInterface;
 
 class Config implements ConfigInterface
 {

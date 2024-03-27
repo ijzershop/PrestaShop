@@ -36,7 +36,7 @@ class Autoupgrade extends Module
         $this->name = 'autoupgrade';
         $this->tab = 'administration';
         $this->author = 'PrestaShop';
-        $this->version = '4.15.0';
+        $this->version = '5.0.1';
         $this->need_instance = 1;
 
         $this->bootstrap = true;
@@ -86,9 +86,6 @@ class Autoupgrade extends Module
             if (!$tab->save()) {
                 return $this->_abortInstall($this->trans('Unable to create the "AdminSelfUpgrade" tab', [], 'Modules.Autoupgrade.Admin'));
             }
-            if (!@copy(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'logo.gif', _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 't' . DIRECTORY_SEPARATOR . 'AdminSelfUpgrade.gif')) {
-                return $this->_abortInstall($this->trans('Unable to copy logo.gif in %s', [_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 't' . DIRECTORY_SEPARATOR], 'Modules.Autoupgrade.Admin'));
-            }
         } else {
             $tab = new Tab((int) $id_tab);
         }
@@ -126,7 +123,15 @@ class Autoupgrade extends Module
      */
     public function registerHookAndSetToTop($hookName)
     {
-        return $this->registerHook($hookName) && $this->updatePosition((int) Hook::getIdByName($hookName), false);
+        if (!$this->registerHook($hookName)) {
+            return false;
+        }
+
+        // Updating position is not blocking for installation esepcially since this method returns false when no other
+        // module is hooked, which doesn't mean the module can't work as expected.
+        $this->updatePosition((int) Hook::getIdByName($hookName), false);
+
+        return true;
     }
 
     public function hookDashboardZoneOne($params)
@@ -162,7 +167,7 @@ class Autoupgrade extends Module
     public function getContent()
     {
         global $cookie;
-        header('Location: index.php?tab=AdminSelfUpgrade&token=' . md5(pSQL(_COOKIE_KEY_ . 'AdminSelfUpgrade' . (int) Tab::getIdFromClassName('AdminSelfUpgrade') . (int) $cookie->id_employee)));
+        header('Location: index.php?controller=AdminSelfUpgrade&token=' . md5(pSQL(_COOKIE_KEY_ . 'AdminSelfUpgrade' . (int) Tab::getIdFromClassName('AdminSelfUpgrade') . (int) $cookie->id_employee)));
         exit;
     }
 

@@ -19,6 +19,8 @@ use PrestaShop\PsAccountsInstaller\Installer\Exception\ModuleNotInstalledExcepti
 use PrestaShop\PsAccountsInstaller\Installer\Exception\ModuleVersionException;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 
+const MYSQL_DATE_FORMAT = 'Y-m-d H:i:s';
+
 abstract class AbstractApiController extends \ModuleFrontController
 {
     /**
@@ -156,6 +158,9 @@ abstract class AbstractApiController extends \ModuleFrontController
      */
     protected function handleDataSync(PaginatedApiDataProviderInterface $dataProvider)
     {
+        /** @var bool $debug */
+        $debug = \Tools::getValue('debug') == 1;
+
         /** @var string $jobId */
         $jobId = \Tools::getValue('job_id');
         /** @var string $langIso */
@@ -170,13 +175,28 @@ abstract class AbstractApiController extends \ModuleFrontController
         /** @var bool $initFullSync */
         $initFullSync = \Tools::getValue('full', 0) == 1;
 
-        $dateNow = (new \DateTime())->format(\DateTime::ATOM);
+        /** @var \PrestaShop\Module\PsEventbus\Repository\ConfigurationRepository $configurationRepository */
+        $configurationRepository = $this->module->getService(\PrestaShop\Module\PsEventbus\Repository\ConfigurationRepository::class);
+        $timezone = (string) $configurationRepository->get('PS_TIMEZONE');
+
+        $dateNow = (new \DateTime('now', new \DateTimeZone($timezone)))->format(MYSQL_DATE_FORMAT);
         $offset = 0;
         $incrementalSync = false;
         $response = [];
 
         try {
             $typeSync = $this->eventbusSyncRepository->findTypeSync($this->type, $langIso);
+
+            if ($debug) {
+                $response = $dataProvider->getQueryForDebug($offset, $limit, $langIso);
+
+                return array_merge(
+                    [
+                        'object_type' => $this->type,
+                    ],
+                    $response
+                );
+            }
 
             if ($typeSync !== false && is_array($typeSync)) {
                 $offset = (int) $typeSync['offset'];

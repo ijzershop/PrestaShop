@@ -26,19 +26,24 @@ class CategoryRepository
     }
 
     /**
-     * @param int $shopId
      * @param string $langIso
      *
      * @return \DbQuery
      */
-    public function getBaseQuery($shopId, $langIso)
+    private function getBaseQuery($langIso)
     {
+        if ($this->context->shop === null) {
+            throw new \PrestaShopException('No shop context');
+        }
+
+        $shopId = (int) $this->context->shop->id;
+
         $query = new \DbQuery();
         $query->from('category_shop', 'cs')
             ->innerJoin('category', 'c', 'cs.id_category = c.id_category')
             ->leftJoin('category_lang', 'cl', 'cl.id_category = cs.id_category')
             ->leftJoin('lang', 'l', 'l.id_lang = cl.id_lang')
-            ->where('cs.id_shop = ' . (int) $shopId)
+            ->where('cs.id_shop = ' . $shopId)
             ->where('cl.id_shop = cs.id_shop')
             ->where('l.iso_code = "' . pSQL($langIso) . '"');
 
@@ -149,9 +154,7 @@ class CategoryRepository
      */
     public function getCategories($offset, $limit, $langIso)
     {
-        /** @var int $shopId */
-        $shopId = $this->context->shop->id;
-        $query = $this->getBaseQuery($shopId, $langIso);
+        $query = $this->getBaseQuery($langIso);
 
         $this->addSelectParameters($query);
 
@@ -168,9 +171,7 @@ class CategoryRepository
      */
     public function getRemainingCategoriesCount($offset, $langIso)
     {
-        /** @var int $shopId */
-        $shopId = $this->context->shop->id;
-        $query = $this->getBaseQuery($shopId, $langIso)
+        $query = $this->getBaseQuery($langIso)
             ->select('(COUNT(cs.id_category) - ' . (int) $offset . ') as count');
 
         return (int) $this->db->getValue($query);
@@ -187,9 +188,7 @@ class CategoryRepository
      */
     public function getCategoriesIncremental($limit, $langIso, $categoryIds)
     {
-        /** @var int $shopId */
-        $shopId = $this->context->shop->id;
-        $query = $this->getBaseQuery($shopId, $langIso);
+        $query = $this->getBaseQuery($langIso);
 
         $this->addSelectParameters($query);
 
@@ -200,14 +199,39 @@ class CategoryRepository
     }
 
     /**
+     * @param int $offset
+     * @param int $limit
+     * @param string $langIso
+     *
+     * @return array
+     *
+     * @throws \PrestaShopDatabaseException
+     */
+    public function getQueryForDebug($offset, $limit, $langIso)
+    {
+        $query = $this->getBaseQuery($langIso);
+
+        $this->addSelectParameters($query);
+
+        $query->limit($limit, $offset);
+
+        $queryStringified = preg_replace('/\s+/', ' ', $query->build());
+
+        return array_merge(
+            (array) $query,
+            ['queryStringified' => $queryStringified]
+        );
+    }
+
+    /**
      * @param \DbQuery $query
      *
      * @return void
      */
     private function addSelectParameters(\DbQuery $query)
     {
-        $query->select('CONCAT(cs.id_category, "-", l.iso_code) as unique_category_id, cs.id_category,
-         c.id_parent, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_keywords, cl.meta_description,
-         l.iso_code, c.date_add as created_at, c.date_upd as updated_at');
+        $query->select('CONCAT(cs.id_category, "-", l.iso_code) as unique_category_id, cs.id_category');
+        $query->select('c.id_parent, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_keywords, cl.meta_description');
+        $query->select('l.iso_code, c.date_add as created_at, c.date_upd as updated_at');
     }
 }

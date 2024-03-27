@@ -24,10 +24,16 @@ class CartRepository
      */
     private function getBaseQuery()
     {
+        if ($this->context->shop === null) {
+            throw new \PrestaShopException('No shop context');
+        }
+
+        $shopId = (int) $this->context->shop->id;
+
         $query = new \DbQuery();
 
         $query->from('cart', 'c')
-            ->where('c.id_shop = ' . (int) $this->context->shop->id);
+            ->where('c.id_shop = ' . $shopId);
 
         return $query;
     }
@@ -85,6 +91,30 @@ class CartRepository
         $result = $this->db->executeS($query);
 
         return is_array($result) ? $result : [];
+    }
+
+    /**
+     * @param int $offset
+     * @param int $limit
+     *
+     * @return array
+     *
+     * @throws \PrestaShopDatabaseException
+     */
+    public function getQueryForDebug($offset, $limit)
+    {
+        $query = $this->getBaseQuery();
+
+        $this->addSelectParameters($query);
+
+        $query->limit($limit, $offset);
+
+        $queryStringified = preg_replace('/\s+/', ' ', $query->build());
+
+        return array_merge(
+            (array) $query,
+            ['queryStringified' => $queryStringified]
+        );
     }
 
     /**

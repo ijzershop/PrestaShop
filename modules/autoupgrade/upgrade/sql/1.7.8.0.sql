@@ -1,7 +1,7 @@
 SET SESSION sql_mode='';
 SET NAMES 'utf8mb4';
 
-INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
+INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
   (NULL, 'actionPresentCart', 'Cart Presenter', 'This hook is called before a cart is presented', '1'),
   (NULL, 'actionPresentOrder', 'Order footer', 'This hook is called before an order is presented', '1'),
   (NULL, 'actionPresentOrderReturn', 'Order Return Presenter', 'This hook is called before an order return is presented', '1'),
@@ -132,7 +132,7 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL,'actionAfterCreateOrderStateFormHandler','Modify order state identifiable object data after creating it','This hook allows to modify order state identifiable object forms data after it was created','1'),
   (NULL,'actionAfterCreateOrderReturnStateFormHandler','Modify order return state identifiable object data after creating it','This hook allows to modify order return state identifiable object forms data after it was created','1'),
   (NULL,'actionAfterCreateZoneFormHandler','Modify zone identifiable object data after creating it','This hook allows to modify zone identifiable object forms data after it was created','1')
-;
+ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `description` = VALUES(`description`);
 
 ALTER TABLE `PREFIX_employee` ADD `has_enabled_gravatar` TINYINT UNSIGNED DEFAULT 0 NOT NULL;
 
@@ -150,9 +150,9 @@ ALTER TABLE `PREFIX_currency` CHANGE `numeric_iso_code` `numeric_iso_code` varch
 
 UPDATE `PREFIX_configuration` SET `value` = '4' WHERE `name` = 'PS_LOGS_BY_EMAIL' AND `value` = '5';
 ALTER TABLE `PREFIX_log`
-  ADD `id_shop` INT(10) NULL DEFAULT NULL after `object_id`,
-  ADD `id_shop_group` INT(10) NULL DEFAULT NULL after `id_shop`,
-  ADD `id_lang` INT(10) NULL DEFAULT NULL after `id_shop_group`,
+  ADD `id_shop` INT(10) unsigned DEFAULT NULL after `object_id`,
+  ADD `id_shop_group` INT(10) unsigned DEFAULT NULL after `id_shop`,
+  ADD `id_lang` INT(10) unsigned DEFAULT NULL after `id_shop_group`,
   ADD `in_all_shops` TINYINT(1) unsigned NOT NULL DEFAULT '0'
 ;
 

@@ -73,4 +73,3 @@ function ps_800_add_security_tab()
         );
     }
 }
-

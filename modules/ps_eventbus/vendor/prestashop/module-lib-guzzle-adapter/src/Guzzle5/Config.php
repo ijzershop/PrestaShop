@@ -1,17 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Prestashop\ModuleLibGuzzleAdapter\Guzzle5;
 
-use Prestashop\ModuleLibGuzzleAdapter\ConfigInterface;
+use Prestashop\ModuleLibGuzzleAdapter\Interfaces\ConfigInterface;
 
 class Config implements ConfigInterface
 {
     /**
      * {@inheritdoc}
      */
-    public static function fixConfig(array $config): array
+    public static function fixConfig(array $config)
     {
         if (isset($config['timeout'])) {
             $config['defaults']['timeout'] = $config['timeout'];

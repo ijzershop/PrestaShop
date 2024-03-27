@@ -12,6 +12,8 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_shoppingcart/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/mollie/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/msthemeconfig/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/ps_themecusto/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/ps_wirepayment/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/doctrine/collections" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/symfony/filesystem" />
@@ -320,6 +322,12 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/psr/http-message" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/ralouphie/getallheaders" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/symfony/deprecation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/symfony/polyfill-ctype" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_emailsubscription/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_facetedsearch/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_facetedsearch/vendor/doctrine/collections" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_themecusto/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_wirepayment/vendor/composer" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

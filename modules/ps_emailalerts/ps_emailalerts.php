@@ -588,16 +588,13 @@ class Ps_EmailAlerts extends Module
                     $mail_id_lang,
                     'new_order',
                     $this->trans(
-                        '%s | %s | %s | %s',
+                        'New order : #%d - %s',
                         [
+                            $order->id,
                             $order->reference,
-                            $contextLocale->formatPrice($order->total_paid, $currency->iso_code),
-                            strtoupper(Tools::substr($order->payment, 0, 32)),
-                            (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name)
                         ],
                         'Emails.Subject',
-                        $locale
-                    ),
+                        $locale),
                     $template_vars,
                     $merchant_mail,
                     null,
@@ -612,7 +609,6 @@ class Ps_EmailAlerts extends Module
             }
         }
     }
-
 
     public function hookDisplayProductAdditionalInfo($params)
     {

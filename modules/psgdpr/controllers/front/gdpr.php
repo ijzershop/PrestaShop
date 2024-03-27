@@ -1,7 +1,4 @@
 <?php
-
-use Symfony\Component\Translation\Exception\InvalidArgumentException;
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -51,59 +48,42 @@ class psgdprgdprModuleFrontController extends ModuleFrontController
         parent::initContent();
 
         $params = [
-            'token' => sha1($context->customer->secure_key),
+            'psgdpr_token' => sha1($context->customer->secure_key),
         ];
 
         $this->context->smarty->assign([
             'psgdpr_contactUrl' => $this->context->link->getPageLink('contact', true, $this->context->language->id),
             'psgdpr_front_controller' => Context::getContext()->link->getModuleLink('psgdpr', 'gdpr', $params, true),
-            'psgdpr_csv_controller' => Context::getContext()->link->getModuleLink('psgdpr', 'ExportCustomerData', array_merge(['type' => 'csv'], $params), true),
-            'psgdpr_pdf_controller' => Context::getContext()->link->getModuleLink('psgdpr', 'ExportCustomerData', array_merge(['type' => 'pdf'], $params), true),
+            'psgdpr_csv_controller' => Context::getContext()->link->getModuleLink('psgdpr', 'ExportDataToCsv', $params, true),
+            'psgdpr_pdf_controller' => Context::getContext()->link->getModuleLink('psgdpr', 'ExportDataToPdf', $params, true),
             'psgdpr_ps_version' => (bool) version_compare(_PS_VERSION_, '1.7', '>='),
             'psgdpr_id_customer' => Context::getContext()->customer->id,
         ]);
 
         $this->context->smarty->tpl_vars['page']->value['body_classes']['page-customer-account'] = true;
 
-        $this->setTemplate('module:psgdpr/views/templates/front/account_gdpr_page.tpl');
+        $this->setTemplate('module:psgdpr/views/templates/front/customerPersonalData.tpl');
     }
 
-    /**
-     * Get breadcrumb links
-     *
-     * @return array
-     *
-     * @throws InvalidArgumentException
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     */
     public function getBreadcrumbLinks()
     {
         $breadcrumb = parent::getBreadcrumbLinks();
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
         $breadcrumb['links'][] = [
-           'title' => $this->trans('GDPR - Personal data', [], 'Modules.Psgdpr.Shop'),
+           'title' => $this->trans('GDPR - Personal data', [], 'Modules.Psgdpr.Customeraccount'),
            'url' => $this->context->link->getModuleLink($this->module->name, 'gdpr', [], true),
         ];
 
         return $breadcrumb;
     }
 
-    /**
-     * Set media of module
-     *
-     * @return bool
-     */
-    public function setMedia(): bool
+    public function setMedia()
     {
         $js_path = $this->module->getPathUri() . '/views/js/';
         $css_path = $this->module->getPathUri() . '/views/css/';
 
         parent::setMedia();
-
         $this->context->controller->addJS($js_path . 'front.js');
-        $this->context->controller->addCSS($css_path . 'account-gdpr-page.css');
-
-        return true;
+        $this->context->controller->addCSS($css_path . 'customerPersonalData.css');
     }
 }

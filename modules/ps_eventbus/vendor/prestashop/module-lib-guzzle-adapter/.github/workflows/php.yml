@@ -2,11 +2,16 @@ name: PHP tests
 on: [push, pull_request]
 jobs:
   php-linter:
-    name: PHP Syntax check 7.2|7.3|8.0|8.1
+    name: PHP Syntax check 5.6|7.2|7.3|8.0|8.1
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: PHP syntax checker 5.6
+        uses: prestashop/github-action-php-lint/5.6@master
+        with:
+          folder-to-exclude: '! -path "./src/Guzzle7/*"'
 
       - name: PHP syntax checker 7.2
         uses: prestashop/github-action-php-lint/7.2@master
@@ -68,16 +73,24 @@ jobs:
       - run: composer install
         working-directory: tests/Guzzle7
 
-      - name : Run PHPStan for Guzzle 5
+      - name: Run PHPStan for Guzzle 5
         run: vendor/bin/phpstan analyse -c tests/Guzzle5/phpstan.neon
 
-      - name : Run PHPStan for Guzzle 7
+      - name: Run PHPStan for Guzzle 7
         run: vendor/bin/phpstan analyse -c tests/Guzzle7/phpstan.neon
 
   phpunit:
     name: PHPUnit
+    strategy:
+      matrix:
+        version: [5.6, 7.2, 7.4, 8.1]
     runs-on: ubuntu-latest
     steps:
+      - name: Setup PHP with tools
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.version }}
+
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -93,7 +106,12 @@ jobs:
           path: ~/.composer/cache
           key: php-composer-cache
 
-      - run: composer install
+      - run: COMPOSER=composer-legacy.json composer install
 
       - name: Run PHPUnit
+        if: ${{ matrix.version == '5.6' }}
+        run: vendor/bin/phpunit tests/unit/Guzzle5ConfigTest.php
+
+      - name: Run PHPUnit
+        if: ${{ matrix.version == '7.2' || matrix.version == '7.4' || matrix.version == '8.1' }}
         run: vendor/bin/phpunit tests/unit

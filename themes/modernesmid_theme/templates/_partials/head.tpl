@@ -122,6 +122,40 @@
 <noscript><iframe src=https://sst.ijzershop.nl/ns.html?id=GTM-PZJB8L3 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager -->
 
+<script type="text/javascript">
+    {literal}
+  document.addEventListener('DOMContentLoaded', function(){
+// week days and times definitions
+let workingDays = [1,2,3,4,5];
+let startHour = 8;
+let endHour = 17;
+
+let currentTime = new Date();
+let currentHour = currentTime.getUTCHours();
+let currentDay = currentTime.getUTCDay();
+
+  let pageStatus = 'away';
+
+
+if ((workingDays.indexOf(currentDay) !== -1 && (currentHour >= startHour && currentHour < endHour))) {
+  document.getElementById('info-row-mail').style.display = 'table-row';
+  document.getElementById('info-row-maps').style.display = 'table-row';
+  document.getElementById('info-row-phone').style.display = 'table-row';
+  document.getElementById('info-row-whatsapp').style.display = 'table-row';
+  document.getElementById('info-row-chat').style.display = 'none';
+} else {
+  document.getElementById('info-row-mail').style.display = 'table-row';
+  document.getElementById('info-row-maps').style.display = 'table-row';
+  document.getElementById('info-row-phone').style.display = 'table-row';
+  document.getElementById('info-row-whatsapp').style.display = 'table-row';
+  document.getElementById('info-row-chat').style.display = 'none';
+}
+  }, false);
+
+{/literal}
+</script>
+
+
 {block name='hook_extra'}{/block}
 
 <style type="text/css">

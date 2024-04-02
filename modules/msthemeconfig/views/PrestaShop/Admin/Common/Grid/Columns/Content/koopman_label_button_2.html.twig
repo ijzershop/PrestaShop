@@ -13,7 +13,7 @@
           <i class="koopman-current-status-badge-label"></i> | <b> {{ record.osname }} </b>
         {% endif %}
         <span class="calculated_weight float-right {% if record.color is not empty %} text-white {% endif %}">
-          {{ record.total_order_weight|number_format }}<sub>Kg</sub>
+          {{ record.total_order_weight|number_format(2) }}<sub>Kg</sub>
         </span>
       </div>
     </div>
@@ -27,27 +27,27 @@
       <button type="button" data-row-id="{{ record.id_order }}" name="package_size_minus" class="btn btn-primary w-100 text-button-large rounded-0 rounded-bottom">-</button>
     </div>
     <select class="package_size_select form-control input-lg w-100" data-row-id="{{ record.id_order }}" name="package_size" {% if record.shipping_number is not empty %}style="border-color:#ff0000;border-width: 2px;border-style: dashed;" {% endif %}>
-      <option value="1" {% if record.total_order_weight|number_format == 0 and record.total_order_weight|number_format <= 1 %} selected {% endif %}>0 - 1kg</option>
-      <option value="3" {% if record.total_order_weight|number_format > 1 and record.total_order_weight|number_format <= 3 %} selected {% endif %}>1 - 3kg</option>
-      <option value="5" {% if record.total_order_weight|number_format > 3 and record.total_order_weight|number_format <= 5 %} selected {% endif %}>3 - 5kg</option>
-      <option value="7" {% if record.total_order_weight|number_format > 5 and record.total_order_weight|number_format <= 7 %} selected {% endif %}>5 - 7kg</option>
-      <option value="10" {% if record.total_order_weight|number_format > 7 and record.total_order_weight|number_format <= 10 %} selected {% endif %}>7 - 10kg</option>
-      <option value="15" {% if record.total_order_weight|number_format > 10 and record.total_order_weight|number_format <= 15 %} selected {% endif %}>10 - 15kg</option>
-      <option value="20" {% if record.total_order_weight|number_format > 15 and record.total_order_weight|number_format <= 20 %} selected {% endif %}>15 - 20kg</option>
-      <option value="25" {% if record.total_order_weight|number_format > 20 and record.total_order_weight|number_format <= 25 %} selected {% endif %}>20 - 25kg</option>
-      <option value="30" {% if record.total_order_weight|number_format > 25 and record.total_order_weight|number_format <= 30 %} selected {% endif %}>25 - 30kg</option>
-      <option value="40" {% if record.total_order_weight|number_format > 30 and record.total_order_weight|number_format <= 40 %} selected {% endif %}>30 - 40kg</option>
-      <option value="50" {% if record.total_order_weight|number_format > 40 and record.total_order_weight|number_format <= 50 %} selected {% endif %}>40 - 50kg</option>
-      <option value="60" {% if record.total_order_weight|number_format > 50 and record.total_order_weight|number_format <= 60 %} selected {% endif %}>50 - 60kg</option>
-      <option value="70" {% if record.total_order_weight|number_format > 60 and record.total_order_weight|number_format <= 70 %} selected {% endif %}>60 - 70kg</option>
-      <option value="80" {% if record.total_order_weight|number_format > 70 and record.total_order_weight|number_format <= 80 %} selected {% endif %}>70 - 80kg</option>
-      <option value="90" {% if record.total_order_weight|number_format > 80 and record.total_order_weight|number_format <= 90 %} selected {% endif %}>80 - 90kg</option>
-      <option value="100" {% if record.total_order_weight|number_format > 90 and record.total_order_weight|number_format <= 100 %} selected {% endif %}>90 - 100kg</option>
-      <option value="125" {% if record.total_order_weight|number_format > 100 and record.total_order_weight|number_format <= 125 %} selected {% endif %}>100 - 125kg</option>
-      <option value="150" {% if record.total_order_weight|number_format > 125 and record.total_order_weight|number_format <= 150 %} selected {% endif %}>125 - 150kg</option>
-      <option value="175" {% if record.total_order_weight|number_format > 150 and record.total_order_weight|number_format <= 175 %} selected {% endif %}>150 - 175kg</option>
-      <option value="200" {% if record.total_order_weight|number_format > 175 and record.total_order_weight|number_format <= 200 %} selected {% endif %}>175 - 200kg</option>
-      <option value="0" {% if record.total_order_weight|number_format > 200 %} selected {% endif %}>200+</option>
+      <option value="1" {% if record.total_order_weight|number_format(2) == 0 and record.total_order_weight|number_format(2) <= 1 %} selected {% endif %}>0 - 1kg</option>
+      <option value="3" {% if record.total_order_weight|number_format(2) > 1 and record.total_order_weight|number_format(2) <= 3 %} selected {% endif %}>1 - 3kg</option>
+      <option value="5" {% if record.total_order_weight|number_format(2) > 3 and record.total_order_weight|number_format(2) <= 5 %} selected {% endif %}>3 - 5kg</option>
+      <option value="7" {% if record.total_order_weight|number_format(2) > 5 and record.total_order_weight|number_format(2) <= 7 %} selected {% endif %}>5 - 7kg</option>
+      <option value="10" {% if record.total_order_weight|number_format(2) > 7 and record.total_order_weight|number_format(2) <= 10 %} selected {% endif %}>7 - 10kg</option>
+      <option value="15" {% if record.total_order_weight|number_format(2) > 10 and record.total_order_weight|number_format(2) <= 15 %} selected {% endif %}>10 - 15kg</option>
+      <option value="20" {% if record.total_order_weight|number_format(2) > 15 and record.total_order_weight|number_format(2) <= 20 %} selected {% endif %}>15 - 20kg</option>
+      <option value="25" {% if record.total_order_weight|number_format(2) > 20 and record.total_order_weight|number_format(2) <= 25 %} selected {% endif %}>20 - 25kg</option>
+      <option value="30" {% if record.total_order_weight|number_format(2) > 25 and record.total_order_weight|number_format(2) <= 30 %} selected {% endif %}>25 - 30kg</option>
+      <option value="40" {% if record.total_order_weight|number_format(2) > 30 and record.total_order_weight|number_format(2) <= 40 %} selected {% endif %}>30 - 40kg</option>
+      <option value="50" {% if record.total_order_weight|number_format(2) > 40 and record.total_order_weight|number_format(2) <= 50 %} selected {% endif %}>40 - 50kg</option>
+      <option value="60" {% if record.total_order_weight|number_format(2) > 50 and record.total_order_weight|number_format(2) <= 60 %} selected {% endif %}>50 - 60kg</option>
+      <option value="70" {% if record.total_order_weight|number_format(2) > 60 and record.total_order_weight|number_format(2) <= 70 %} selected {% endif %}>60 - 70kg</option>
+      <option value="80" {% if record.total_order_weight|number_format(2) > 70 and record.total_order_weight|number_format(2) <= 80 %} selected {% endif %}>70 - 80kg</option>
+      <option value="90" {% if record.total_order_weight|number_format(2) > 80 and record.total_order_weight|number_format(2) <= 90 %} selected {% endif %}>80 - 90kg</option>
+      <option value="100" {% if record.total_order_weight|number_format(2) > 90 and record.total_order_weight|number_format(2) <= 100 %} selected {% endif %}>90 - 100kg</option>
+      <option value="125" {% if record.total_order_weight|number_format(2) > 100 and record.total_order_weight|number_format(2) <= 125 %} selected {% endif %}>100 - 125kg</option>
+      <option value="150" {% if record.total_order_weight|number_format(2) > 125 and record.total_order_weight|number_format(2) <= 150 %} selected {% endif %}>125 - 150kg</option>
+      <option value="175" {% if record.total_order_weight|number_format(2) > 150 and record.total_order_weight|number_format(2) <= 175 %} selected {% endif %}>150 - 175kg</option>
+      <option value="200" {% if record.total_order_weight|number_format(2) > 175 and record.total_order_weight|number_format(2) <= 200 %} selected {% endif %}>175 - 200kg</option>
+      <option value="0" {% if record.total_order_weight|number_format(2) > 200 %} selected {% endif %}>200+</option>
     </select>
     <div class="input-group-append">
       <button type="button" data-row-id="{{ record.id_order }}" name="package_size_plus"  class="btn btn-primary w-100 text-button-large rounded-0">+</button>
@@ -58,25 +58,25 @@
     <div class="col-12 p-0">
       <ul class="pagination pagination-lg  justify-content-center">
         <li class="page-item m-1">
-          <button type="button" data-order-weight="{{ record.total_order_weight|number_format }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="1" name="package_total_1" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">1</button>
+          <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="1" name="package_total_1" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">1</button>
         </li>
         <li class="page-item m-1">
-          <button type="button" data-order-weight="{{ record.total_order_weight|number_format }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="2" name="package_total_2" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">2</button>
+          <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="2" name="package_total_2" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">2</button>
         </li>
         <li class="page-item m-1">
-          <button type="button" data-order-weight="{{ record.total_order_weight|number_format }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="3" name="package_total_3" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">3</button>
+          <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="3" name="package_total_3" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">3</button>
         </li>
         <li class="page-item m-1">
-          <button type="button" data-order-weight="{{ record.total_order_weight|number_format }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="4" name="package_total_4" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">4</button>
+          <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="4" name="package_total_4" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">4</button>
         </li>
         <li class="page-item m-1">
-          <button type="button" data-order-weight="{{ record.total_order_weight|number_format }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="5" name="package_total_5" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">5</button>
+          <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="5" name="package_total_5" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">5</button>
         </li>
         <li class="page-item m-1">
           <div class="pallet_selection_box"  data-row-id="{{ record.id_order }}">
-            <button type="button" data-order-weight="{{ record.total_order_weight|number_format }}" data-row-id="{{ record.id_order }}" data-collie-type="MP" data-collies="1" name="package_total_mini" class="text-decoration-none btn-primary rounded-circle text-button-large collie-selection">Mini</button>
-            <button type="button" data-order-weight="{{ record.total_order_weight|number_format }}" data-row-id="{{ record.id_order }}" data-collie-type="PLH" data-collies="1" name="package_total_half" class="text-decoration-none btn-primary rounded-circle text-button-large collie-selection">Halve</button>
-            <button type="button" data-order-weight="{{ record.total_order_weight|number_format }}" data-row-id="{{ record.id_order }}" data-collie-type="PL" data-collies="1" name="package_total_pallet" class="text-decoration-none btn-primary rounded-circle text-button-large collie-selection">Pallet</button>
+            <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="MP" data-collies="1" name="package_total_mini" class="text-decoration-none btn-primary rounded-circle text-button-large collie-selection">Mini</button>
+            <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="PLH" data-collies="1" name="package_total_half" class="text-decoration-none btn-primary rounded-circle text-button-large collie-selection">Halve</button>
+            <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="PL" data-collies="1" name="package_total_pallet" class="text-decoration-none btn-primary rounded-circle text-button-large collie-selection">Pallet</button>
           </div>
           <button type="button" data-row-id="{{ record.id_order }}" data-collies="x" name="package_total_pallet" class="page-link p-0 btn-primary rounded-pill">
             <svg style="padding:0.8rem;" width="72px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 256 256" xml:space="preserve">

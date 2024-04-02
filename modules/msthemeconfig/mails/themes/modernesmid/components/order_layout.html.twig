@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+      xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
   <title> {% block title %}Title{% endblock %} </title>
-  <!--[if !mso]><!-- -->
+  <!--[if !mso] -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!--<![endif]-->
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style type="text/css">
+    .link-white{
+      color: #ffffff;
+      text-decoration: none;
+    }
+
     #outlook a {
       padding: 0;
     }
@@ -52,10 +58,146 @@
       display: block;
       margin: 13px 0;
     }
+
+    @media only screen and (max-width: 300px) {
+      body {
+        width: 218px !important;
+        margin: auto !important;
+      }
+
+      .table {
+        width: 195px !important;
+        margin: auto !important;
+      }
+
+      .logo, .titleblock, .linkbelow, .box, .footer, .space_footer {
+        width: auto !important;
+        display: block !important;
+      }
+
+      span.title {
+        font-size: 20px !important;
+        line-height: 23px !important
+      }
+
+      span.subtitle {
+        font-size: 16px !important;
+        line-height: 18px !important;
+        padding-top: 10px !important;
+        display: block !important;
+      }
+
+      td.box p {
+        font-size: 12px !important;
+        font-weight: bold !important;
+      }
+
+      .table-recap table, .table-recap thead, .table-recap tbody, .table-recap th, .table-recap td, .table-recap tr {
+        display: block !important;
+      }
+
+      .table-recap {
+        width: 200px !important;
+      }
+
+      .table-recap tr td, .conf_body td {
+        text-align: center !important;
+      }
+
+      .address {
+        display: block !important;
+        margin-bottom: 10px !important;
+      }
+
+      .space_address {
+        display: none !important;
+      }
+    }
+
+    @media only screen and (min-width: 301px) and (max-width: 500px) {
+      body {
+        width: 100% !important;
+        margin: auto !important;
+      }
+
+      .table {
+        width: 285px !important;
+        margin: auto !important;
+      }
+
+      .logo, .titleblock, .linkbelow, .box, .footer, .space_footer {
+        width: auto !important;
+        display: block !important;
+      }
+
+      .table-recap table, .table-recap thead, .table-recap tbody, .table-recap th, .table-recap td, .table-recap tr {
+        display: block !important;
+      }
+
+      .table-recap {
+        width: 295px !important;
+      }
+
+      .table-recap tr td, .conf_body td {
+        text-align: center !important;
+      }
+
+    }
+
+    @media only screen and (min-width: 501px) and (max-width: 768px) {
+      body {
+        width: 100% !important;
+        margin: auto !important;
+      }
+
+      .table {
+        width: 450px !important;
+        margin: auto !important;
+      }
+
+      .logo, .titleblock, .linkbelow, .box, .footer, .space_footer {
+        width: auto !important;
+        display: block !important;
+      }
+    }
+
+    @media only screen and (max-device-width: 480px) {
+      body {
+        width: 100% !important;
+        margin: auto !important;
+      }
+
+      .table {
+        width: 285px;
+        margin: auto !important;
+      }
+
+      .logo, .titleblock, .linkbelow, .box, .footer, .space_footer {
+        width: auto !important;
+        display: block !important;
+      }
+
+      .table-recap {
+        width: 295px !important;
+      }
+
+      .table-recap tr td, .conf_body td {
+        text-align: center !important;
+      }
+
+      .address {
+        display: block !important;
+        margin-bottom: 10px !important;
+      }
+
+      .space_address {
+        display: none !important;
+      }
+    }
   </style>
   <!--[if !mso]><!-->
   <style type="text/css">
-    @media only screen and (max-width:480px) {
+    @media only screen and (max-width: 480px) {
       @-ms-viewport {
         width: 320px;
       }
@@ -67,18 +209,20 @@
   </style>
   <!--<![endif]-->
   <!--[if mso]>
-        <xml>
-        <o:OfficeDocumentSettings>
-          <o:AllowPNG/>
-          <o:PixelsPerInch>96</o:PixelsPerInch>
-        </o:OfficeDocumentSettings>
-        </xml>
-        <![endif]-->
+  <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+  </xml>
+  <![endif]-->
   <!--[if lte mso 11]>
-        <style type="text/css">
-          .outlook-group-fix { width:100% !important; }
-        </style>
-        <![endif]-->
+  <style type="text/css">
+    .outlook-group-fix {
+      width: 100% !important;
+    }
+  </style>
+  <![endif]-->
   <style type="text/css">
   </style>
   <style type="text/css">
@@ -105,45 +249,6 @@
       font-weight: 600;
     }
 
-    .box {
-      width: 244px;
-    }
-
-    .margin {
-      margin-right: 16px
-    }
-
-    table {
-      font-family: Open-sans, sans-serif;
-      font-size: 16px;
-    }
-
-    .products-table,
-    .products-table th,
-    .products-table td {
-      font-family: Open-sans, sans-serif;
-      font-size: 12px;
-      /*background-color: #FDFDFD;*/
-      color: #353943;
-    }
-
-    .products-table th {
-      font-weight: 600;
-      padding: 10px 5px;
-      border: 1px solid #DFDFDF;
-    }
-
-    .products-table .order_summary td {
-      font-weight: 600;
-      font-size: 16px;
-      padding: 10px;
-      border: 1px solid #DFDFDF;
-    }
-
-    .products-table.mail-alert td {
-      border: 1px solid #DFDFDF;
-    }
-
     @media only screen and (max-width: 480px) {
 
       body,
@@ -155,78 +260,76 @@
         text-align: left;
         display: inline-block
       }
-
-      .box {
-        display: block !important;
-        width: 100%
-      }
-
-      .space {
-        display: none !important
-      }
     }
   </style>
-    {% block styles %}
-    {% endblock %}
+  {% block styles %}
+  {% endblock %}
 </head>
 
-<body style="">
-  <div style="">
-    <!--[if mso | IE]>
+<body
+  style="-webkit-text-size-adjust:none;background-color:#fff;width:650px;font-family:Open-sans, sans-serif;color:#777777;font-size:13px;line-height:18px;margin:auto;">
+<div style="width:100%;background-color:#ffffff;margin:0 auto; max-width: 604px;">
+  <!--[if mso | IE]>
 
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td height="40" style="vertical-align:top;height:40px;">
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td height="40" style="vertical-align:top;height:40px;">
 
-    <![endif]-->
-    <div style="height:40px;">   </div>
-    <!--[if mso | IE]>
+  <![endif]-->
 
-        </td></tr></table>
+  <!--[if mso | IE]>
+
+  </td></tr></table>
 
 
-      <table
-         align="center" border="0" cellpadding="0" cellspacing="0" class="shadow-outlook wrapper-container-outlook" style="width:604px;" width="604"
-      >
-        <tr>
-          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
-      <![endif]-->
-    <div class="shadow wrapper-container" style="background:#ffffff;background-color:#ffffff;Margin:0px auto;border-radius:4px;max-width:604px;">
-      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;background-color:#ffffff;width:100%;border-radius:4px;">
-        <tbody>
-          <tr>
-            <td style="direction:ltr;font-size:0px;padding:0;text-align:center;vertical-align:top;">
-            <td style="direction:ltr;font-size:0px;padding:0;text-align:center;vertical-align:top;">
-            <td style="direction:ltr;font-size:0px;padding:0;text-align:center;vertical-align:top;">
-              <!--[if mso | IE]>
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                <![endif]-->
-                  {% block header %}
-                      {% include '@MailThemes/modernesmid/components/header.html.twig' %}
-                  {% endblock %}
+  <table
+    align="center" border="0" cellpadding="0" cellspacing="0" class="shadow-outlook wrapper-container-outlook"
+    style="max-width:604px;margin:0 auto;" width="604"
+  >
+    <tr>
+      <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+  <![endif]-->
+  <div class="wrapper-container"
+       style="width:100%;background:#ffffff;background-color:#ffffff;Margin:0 auto;border-radius:4px;max-width:604px;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
+           style="background:#ffffff;background-color:#ffffff;width:100%;border-radius:4px;">
+      <tbody>
+      <tr>
+        <td style="direction:ltr;font-size:0px;padding:0;text-align:center;vertical-align:top;">
+          <!--[if mso | IE]>
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+          <![endif]-->
+          {% block header %}
+            {% include '@MailThemes/modernesmid/components/header.html.twig' %}
+          {% endblock %}
 
-                  {% block content %}
-                  {% endblock %}
+          {% block content %}
+          {% endblock %}
 
-                  {% block footer_content %}
-                  {% endblock %}
+          {% block footer_content %}
+          {% endblock %}
 
-              <!--[if mso | IE]>
-                  </table>
-                <![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]>
-          </td>
-        </tr>
-      </table>
-      <![endif]-->
-                  {% block footer %}
-                      {% include '@MailThemes/modernesmid/components/footer.html.twig' %}
-                  {% endblock %}
+          {% block footer %}
+            {% include '@MailThemes/modernesmid/components/footer.html.twig' %}
+          {% endblock %}
 
+          <!--[if mso | IE]>
+          </table>
+          <![endif]-->
+        </td>
+      </tr>
+
+
+      </tbody>
+    </table>
   </div>
+  <!--[if mso | IE]>
+  </td>
+  </tr>
+  <![endif]-->
+
+
+</div>
 </body>
 
 </html>

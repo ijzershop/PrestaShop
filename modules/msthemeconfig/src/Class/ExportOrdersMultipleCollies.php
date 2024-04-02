@@ -49,7 +49,7 @@ class ExportOrdersMultipleCollies
     public function __construct($id_order, float $weight = 1, int $weightOption = 0, int $collies = 1, string $collieType = 'COL')
     {
         $this->idOrder = $id_order;
-        $this->debug = true;
+        $this->debug = false;
         $this->weight = (float)$weight;
         $this->weightOption = $weightOption;
         $this->collieType = $collieType;
@@ -479,9 +479,9 @@ class ExportOrdersMultipleCollies
                     $collieRow->gewicht = $collieWeight;
 
                     if ($collieType == 'COL') {
-                        $collieRow->lengte = 199;
-                        $collieRow->breedte = 25;
-                        $collieRow->hoogte = 25;
+                        $collieRow->lengte = 200;
+                        $collieRow->breedte = 17;
+                        $collieRow->hoogte = 23;
                     } elseif ($collieType == 'MP') {
                         $collieRow->lengte = 50;
                         $collieRow->breedte = 60;
@@ -495,9 +495,9 @@ class ExportOrdersMultipleCollies
                         $collieRow->breedte = 120;
                         $collieRow->hoogte = 115;
                     } else {
-                        $collieRow->lengte = 199;
-                        $collieRow->breedte = 25;
-                        $collieRow->hoogte = 25;
+                        $collieRow->lengte = 200;
+                        $collieRow->breedte = 17;
+                        $collieRow->hoogte = 23;
                     }
 
                     $shippingTask->aRegel[$i + 1] = $collieRow;

@@ -15,14 +15,14 @@
 
 class ChannableFeedModuleFrontController extends ModuleFrontController
 {
-
+    
     protected static $combination_separator = '||||';
     protected static $combination_desc_separator = '####';
     protected static $imgurl_separator = '!!!!';
 
     private static $categories_tree_cache = [];
     private static $all_categories_cache = false;
-
+    
     private $time_debug = false;
     private $sql_debug = false;
     private $sql_optimization_mode = 'id_product'; // or 'id_product_and_attribute';
@@ -44,11 +44,11 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
         if (!WebserviceKey::keyExists(Tools::getValue('key')) || !WebserviceKey::isKeyActive(Tools::getValue('key'))) {
             die('Not authenticated');
         }
-
+        
         if (Tools::getValue('multiquerymode') == 'true' || Configuration::get('CHANNABLE_MULTIQUERY_MODE')) {
             $this->multiquerymode = true;
         }
-
+        
         if (Tools::getValue('time_debug') == 'true') {
             $this->time_debug = true;
         }
@@ -69,18 +69,18 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
         if (Tools::getValue('sql_optimization_mode') == 'id_product' || Tools::getValue('sql_optimization_mode') == 'id_product_and_attribute') {
             $this->sql_optimization_mode = Tools::getValue('sql_optimization_mode');
         }
-
+        
         $currency = false;
         if (isset(Context::getContext()->currency)) {
             $currency = Context::getContext()->currency;
             $currency = (string)$currency->iso_code;
         }
-
+        
         $default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
         $id_zone = (int)$default_country->id_zone;
         $id_carrier = (int)Configuration::get('PS_CARRIER_DEFAULT');
         $default_carrier = new Carrier((int)Configuration::get('PS_CARRIER_DEFAULT'));
-
+        
         if ((int)Configuration::get('CHANNABLE_CUSTOMER_ID') > 0) {
             $channable_customer_id = (int)Configuration::get('CHANNABLE_CUSTOMER_ID');
             if (Customer::getAddressesTotalById($channable_customer_id) > 0) {
@@ -91,18 +91,18 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 $id_zone = (int)$default_country->id_zone;
             }
         }
-
+        
         $shipping_time_available = '';
         $shipping_time_outofstock = '';
-
+        
         if (Module::isInstalled('advancedeucompliance') && Module::isEnabled('advancedeucompliance')) {
             $shipping_time_available = Configuration::get('AEUC_LABEL_DELIVERY_TIME_AVAILABLE', (int)Context::getContext()->language->id);
             $shipping_time_outofstock = Configuration::get('AEUC_LABEL_DELIVERY_TIME_OOS', (int)Context::getContext()->language->id);
         }
-
+        
         $starttime = microtime(true);
         $limit_string = false;
-
+        
         $sql_optimization_mode = Configuration::get('CHANNABLE_SQL_OPTIMIZATION_MODE');
         if (Tools::getValue('limit')) {
             $limit_string = ' LIMIT ' . pSQL(Tools::getValue('limit'));
@@ -111,25 +111,25 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
         }
         if ($sql_optimization_mode) {
             $product_ids_in = array();
-
+            
             if ($this->sql_optimization_mode == 'id_product') {
                 $product_ids_sql = '
                 SELECT
                        p.id_product
                   FROM
                        '._DB_PREFIX_.'product p
-				  JOIN '._DB_PREFIX_.'product_shop ps ON (p.id_product = ps.id_product AND ps.id_shop = \'' . (int)Context::getContext()->shop->id . '\' ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND ps.active = 1' : '') . ')
+                  JOIN '._DB_PREFIX_.'product_shop ps ON (p.id_product = ps.id_product AND ps.id_shop = \'' . (int)Context::getContext()->shop->id . '\' ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND ps.active = 1' : '') . ')
                        ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ?
                            ' LEFT JOIN '._DB_PREFIX_.'stock_available sav ON (sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0 '.StockAvailable::addSqlShopRestriction(null, null, 'sav').')
                        ' : '') . '
                  WHERE
-        	           ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\')  ' : '1') . '
+                       ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\')  ' : '1') . '
                        ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
-            		   ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (sav.quantity > 0) ' : '') . '
+                       ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (sav.quantity > 0) ' : '') . '
                        ' . $this->sqlHook('product_ids_where') . '
               GROUP BY p.id_product
               ORDER BY p.id_product ' . $limit_string;
-
+                
                 if ($product_ids_results = Db::getInstance()->ExecuteS($product_ids_sql)) {
                     foreach ($product_ids_results as $product_ids_row) {
                         $product_ids_in[] = (int)$product_ids_row['id_product'];
@@ -145,7 +145,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                   FROM
                        '._DB_PREFIX_.'product p
                   JOIN
-                  	   '._DB_PREFIX_.'product_shop ps ON (p.id_product = ps.id_product AND ps.id_shop = \'' . (int)Context::getContext()->shop->id . '\' ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND ps.active = 1' : '') . ')
+                       '._DB_PREFIX_.'product_shop ps ON (p.id_product = ps.id_product AND ps.id_shop = \'' . (int)Context::getContext()->shop->id . '\' ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND ps.active = 1' : '') . ')
              LEFT JOIN
                        '._DB_PREFIX_.'product_attribute pa ON (p.id_product = pa.id_product ' . $this->getAttributesDisabled('pa') . ')
              LEFT JOIN
@@ -153,14 +153,14 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
              LEFT JOIN
                        '._DB_PREFIX_.'stock_available pq ON (p.id_product = pq.id_product)
                  WHERE
-        	           ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\')  ' : '1') . '
+                       ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\')  ' : '1') . '
                    AND (pas.id_shop = \'' . (int)Context::getContext()->shop->id . '\' OR pas.id_shop IS NULL)
                        ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
                        ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (pq.quantity > 0) ' : '') . '
                        ' . $this->sqlHook('product_ids_where') . '
               GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
               ORDER BY p.id_product ' . $limit_string;
-
+                
                 if ($product_ids_results = Db::getInstance()->ExecuteS($product_ids_sql)) {
                     foreach ($product_ids_results as $product_ids_row) {
                         $product_ids_in[] = '\'' . $product_ids_row['product_id_in'] . '\'';
@@ -171,14 +171,14 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 $product_ids_in[] = '12345678987654321'; // dummy ID to receive empty result
             }
         }
-
-
+        
+        
         if ($this->multiquerymode) {
             $sql = $this->getMultiqueryMode(!Channable::useCache(), $product_ids_in, $limit_string);
         } else {
             $sql = $this->getDefaultMode(!Channable::useCache(), $product_ids_in, $limit_string, $default_country);
         }
-
+        
         if ($this->time_debug) {
             $results = Db::getInstance()->executeS($sql);
             echo 'Results: ' . sizeof($results) . '<br />';
@@ -196,7 +196,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
         header('Page-Size: ' . Configuration::get('CHANNABLE_DEFAULT_PAGE_SIZE'));
         $tracked_cache = array();
         $tracked_cache_new = array();
-
+        
         if ($results = Db::getInstance()->executeS($sql)) {
             foreach ($results as $row) {
                 $productJsonCache = ChannableCache::getByKey('PRODUCT_JSON_' . $row['id'], self::$cache_lifetime_products, true, (int)Context::getContext()->language->id);
@@ -838,12 +838,12 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
     protected function getFeatures($id_product)
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT fl.`name`, fvl.`value`
-				FROM `'._DB_PREFIX_.'feature_product` fp
-				LEFT JOIN `'._DB_PREFIX_.'feature_value` fv ON (fp.id_feature_value = fv.id_feature_value)
+                SELECT fl.`name`, fvl.`value`
+                FROM `'._DB_PREFIX_.'feature_product` fp
+                LEFT JOIN `'._DB_PREFIX_.'feature_value` fv ON (fp.id_feature_value = fv.id_feature_value)
                 LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (fl.id_feature = fp.id_feature)
                 LEFT JOIN `'._DB_PREFIX_.'feature_value_lang` fvl ON (fp.id_feature_value = fvl.id_feature_value)
-				WHERE fp.`id_product` = '.(int)$id_product.'
+                WHERE fp.`id_product` = '.(int)$id_product.'
                   AND (fl.id_lang = ' . (int)Context::getContext()->language->id . ')
                   AND (fvl.id_lang = ' . (int)Context::getContext()->language->id . ')');
         return $result;
@@ -874,13 +874,13 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
     protected function getAttributesImages($id_product_attribute)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT a.`id_image` as id
-			FROM `'._DB_PREFIX_.'product_attribute_image` a
-			'.ShopCore::addSqlAssociation('product_attribute', 'a').'
+            SELECT a.`id_image` as id
+            FROM `'._DB_PREFIX_.'product_attribute_image` a
+            '.ShopCore::addSqlAssociation('product_attribute', 'a').'
             LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.id_image = a.id_image)
-			WHERE a.`id_product_attribute` = '.(int)$id_product_attribute.'
+            WHERE a.`id_product_attribute` = '.(int)$id_product_attribute.'
             ORDER BY i.position
-		');
+        ');
     }
 
     /**
@@ -1111,7 +1111,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 p.id_category_default
             FROM
                 '._DB_PREFIX_.'product p
-                	JOIN
+                    JOIN
                 '._DB_PREFIX_.'product_shop ps ON (p.id_product = ps.id_product AND ps.id_shop = \'' . (int)Context::getContext()->shop->id . '\' ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND ps.active = 1' : '') . ')
                     LEFT JOIN
                 '._DB_PREFIX_.'product_attribute pa ON (p.id_product = pa.id_product ' . $this->getAttributesDisabled('pa') . ')
@@ -1147,11 +1147,11 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                     LEFT JOIN
                 '._DB_PREFIX_.'tax t ON (t.id_tax = tr.id_tax)
                     LEFT JOIN
-                '._DB_PREFIX_.'stock_available sav ON (sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` =
+                '._DB_PREFIX_.'stock_available sav ON (sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 
                 ( if(pa.id_product_attribute IS NULL, 0, pa.id_product_attribute) )
                 '.StockAvailable::addSqlShopRestriction(null, null, 'sav').')
             WHERE
-            	' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
+                ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product_and_attribute') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' if(pa.id_product_attribute IS NULL, p.id_product, concat(p.id_product, \'_\', pa.id_product_attribute)) IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' p.id_product IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
                 pl.id_lang = \'' .  (int)Context::getContext()->language->id . '\'
@@ -1177,18 +1177,18 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                    concat(p.id_product, \'_\', pa.id_product_attribute)
                 ) as id,
                 p.id_product as parent_id,
-                pa.id_product_attribute
+                pa.id_product_attribute                
             FROM
                 '._DB_PREFIX_.'product p
-                	JOIN
+                    JOIN
                 '._DB_PREFIX_.'product_shop ps ON (p.id_product = ps.id_product AND ps.id_shop = \'' . (int)Context::getContext()->shop->id . '\' ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND ps.active = 1' : '') . ')
                     LEFT JOIN
-                '._DB_PREFIX_.'product_attribute pa ON (p.id_product = pa.id_product ' . $this->getAttributesDisabled('pa') . ')
+                '._DB_PREFIX_.'product_attribute pa ON (p.id_product = pa.id_product ' . $this->getAttributesDisabled('pa') . ')                
             WHERE
-            	' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
+                ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product_and_attribute') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' if(pa.id_product_attribute IS NULL, p.id_product, concat(p.id_product, \'_\', pa.id_product_attribute)) IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
-                ' . (($this->sql_optimization_mode == 'id_product') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' p.id_product IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
-                1
+                ' . (($this->sql_optimization_mode == 'id_product') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' p.id_product IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '       
+                1         
             GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
             ORDER BY p.id_product ' . ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? '' : $limit_string);
         }
@@ -1238,7 +1238,7 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 p.id_category_default
             FROM
                 '._DB_PREFIX_.'product p
-                	JOIN
+                    JOIN
                 '._DB_PREFIX_.'product_shop ps ON (p.id_product = ps.id_product AND ps.id_shop = \'' . (int)Context::getContext()->shop->id . '\' ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND ps.active = 1' : '') . ')
                     LEFT JOIN
                 '._DB_PREFIX_.'product_attribute pa ON (p.id_product = pa.id_product ' . $this->getAttributesDisabled('pa') . ')
@@ -1252,12 +1252,12 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product)
                 ' . (Configuration::get('PS_STOCK_MANAGEMENT') ?
                     'LEFT JOIN
-                	'._DB_PREFIX_.'stock_available sav ON (sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` =
-                	 ( if(pa.id_product_attribute IS NULL, 0, pa.id_product_attribute) )
-                	 '.StockAvailable::addSqlShopRestriction(null, null, 'sav').')' : ''
+                    '._DB_PREFIX_.'stock_available sav ON (sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 
+                     ( if(pa.id_product_attribute IS NULL, 0, pa.id_product_attribute) )
+                     '.StockAvailable::addSqlShopRestriction(null, null, 'sav').')' : ''
                 ) . '
             WHERE
-            	' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
+                ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product_and_attribute') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' if(pa.id_product_attribute IS NULL, p.id_product, concat(p.id_product, \'_\', pa.id_product_attribute)) IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' p.id_product IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
                 pl.id_lang = \'' .  (int)Context::getContext()->language->id . '\'
@@ -1278,12 +1278,12 @@ class ChannableFeedModuleFrontController extends ModuleFrontController
                 pa.id_product_attribute
             FROM
                 '._DB_PREFIX_.'product p
-                	JOIN
+                    JOIN
                 '._DB_PREFIX_.'product_shop ps ON (p.id_product = ps.id_product AND ps.id_shop = \'' . (int)Context::getContext()->shop->id . '\' ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND ps.active = 1' : '') . ')
                     LEFT JOIN
                 '._DB_PREFIX_.'product_attribute pa ON (p.id_product = pa.id_product ' . $this->getAttributesDisabled('pa') . ')
             WHERE
-            	' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
+                ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product_and_attribute') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' if(pa.id_product_attribute IS NULL, p.id_product, concat(p.id_product, \'_\', pa.id_product_attribute)) IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' p.id_product IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
                 1

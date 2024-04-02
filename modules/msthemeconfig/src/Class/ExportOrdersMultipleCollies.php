@@ -479,9 +479,9 @@ class ExportOrdersMultipleCollies
                     $collieRow->gewicht = $collieWeight;
 
                     if ($collieType == 'COL') {
-                        $collieRow->lengte = 199;
-                        $collieRow->breedte = 25;
-                        $collieRow->hoogte = 25;
+                        $collieRow->lengte = 200;
+                        $collieRow->breedte = 17;
+                        $collieRow->hoogte = 23;
                     } elseif ($collieType == 'MP') {
                         $collieRow->lengte = 50;
                         $collieRow->breedte = 60;
@@ -495,9 +495,9 @@ class ExportOrdersMultipleCollies
                         $collieRow->breedte = 120;
                         $collieRow->hoogte = 115;
                     } else {
-                        $collieRow->lengte = 199;
-                        $collieRow->breedte = 25;
-                        $collieRow->hoogte = 25;
+                        $collieRow->lengte = 200;
+                        $collieRow->breedte = 17;
+                        $collieRow->hoogte = 23;
                     }
 
                     $shippingTask->aRegel[$i + 1] = $collieRow;

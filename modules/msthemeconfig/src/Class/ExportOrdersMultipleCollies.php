@@ -49,7 +49,7 @@ class ExportOrdersMultipleCollies
     public function __construct($id_order, float $weight = 1, int $weightOption = 0, int $collies = 1, string $collieType = 'COL')
     {
         $this->idOrder = $id_order;
-        $this->debug = true;
+        $this->debug = false;
         $this->weight = (float)$weight;
         $this->weightOption = $weightOption;
         $this->collieType = $collieType;

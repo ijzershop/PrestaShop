@@ -81,10 +81,10 @@ abstract class AbstractArray implements ArrayInterface
      *
      * @param array-key $offset The offset for which a value should be returned.
      *
-     * @return T|null the value stored at the offset, or null if the offset
+     * @return TValue the value stored at the offset, or null if the offset
      *     does not exist.
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->data[$offset] ?? null;
     }

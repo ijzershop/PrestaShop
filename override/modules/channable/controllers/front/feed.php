@@ -145,8 +145,8 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                  WHERE
                        ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\')  ' : '1') . '
                        ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
-                       ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (sav.quantity > 0) ' : '') . ' 
-                 AND p.id_category_default IN ('. $shownCategories .') 
+                       ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (sav.quantity > 0) ' : '') . '
+                 AND p.id_category_default IN ('. $shownCategories .')
               GROUP BY p.id_product
               ORDER BY p.id_product ' . $limit_string;
 
@@ -177,8 +177,8 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                        ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\')  ' : '1') . '
                    AND (pas.id_shop = \'' . (int)Context::getContext()->shop->id . '\' OR pas.id_shop IS NULL)
                        ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
-                       ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (pq.quantity > 0) ' : '') . ' 
-              AND p.id_category_default IN ('. $shownCategories .') 
+                       ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (pq.quantity > 0) ' : '') . '
+              AND p.id_category_default IN ('. $shownCategories .')
               GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
               ORDER BY p.id_product ' . $limit_string;
 
@@ -187,7 +187,7 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                         $product_ids_in[] = '\'' . $product_ids_row['product_id_in'] . '\'';
                     }
                 }
-            } 
+            }
             if (sizeof($product_ids_in) == 0) {
                 $product_ids_in[] = '12345678987654321'; // dummy ID to receive empty result
             }
@@ -1209,7 +1209,7 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                 ' . $this->getPossibleCategoriesWhere() . '
                 ' . $this->getPossibleFeaturesWhere() . '
                 ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
-                ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (pq.quantity > 0) ' : '') . ' 
+                ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (pq.quantity > 0) ' : '') . '
             AND p.id_category_default IN ('. $shownCategories .')
             GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
             ORDER BY p.id_product, pac.id_attribute ' . ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? '' : $limit_string);
@@ -1230,8 +1230,8 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
             WHERE
                 ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product_and_attribute') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' if(pa.id_product_attribute IS NULL, p.id_product, concat(p.id_product, \'_\', pa.id_product_attribute)) IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
-                ' . (($this->sql_optimization_mode == 'id_product') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' p.id_product IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . ' 
-                AND p.id_category_default IN ('. $shownCategories .') 
+                ' . (($this->sql_optimization_mode == 'id_product') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' p.id_product IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
+                AND p.id_category_default IN ('. $shownCategories .')
                 1
             GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
             ORDER BY p.id_product ' . ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? '' : $limit_string);
@@ -1313,7 +1313,7 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                 pl.id_shop = \'' .  (int)Context::getContext()->shop->id . '\'
                 ' . (Configuration::get('CHANNABLE_DISABLE_INACTIVE') == '1' ? ' AND (ps.active = 1) ' : '') . '
                 ' . (Configuration::get('CHANNABLE_DISABLE_OUT_OF_STOCK') == '1' ? ' AND (' . (Configuration::get('PS_STOCK_MANAGEMENT') ? 'sav.quantity' : 'pq.quantity') . ' > 0) ' : '') . '
-            AND p.id_category_default IN ('. $shownCategories .') 
+            AND p.id_category_default IN ('. $shownCategories .')
             GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
             ORDER BY p.id_product ' . ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? '' : $limit_string);
         } else {
@@ -1335,7 +1335,7 @@ class channablefeedModuleFrontControllerOverride extends ChannableFeedModuleFron
                 ' . (isset($_GET['manual_product_id']) ? ' p.id_product IN (\'' . pSQL($_GET['manual_product_id']) . '\') AND ' : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product_and_attribute') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' if(pa.id_product_attribute IS NULL, p.id_product, concat(p.id_product, \'_\', pa.id_product_attribute)) IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
                 ' . (($this->sql_optimization_mode == 'id_product') ? ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? ' p.id_product IN (' . join(', ', $product_ids_in) . ') AND ' : '') : '') . '
-                 AND p.id_category_default IN ('. $shownCategories .')                 
+                 AND p.id_category_default IN ('. $shownCategories .')
                 1
             GROUP BY CONCAT(COALESCE(pa.id_product_attribute, \'\'), \'--\', p.id_product)
             ORDER BY p.id_product ' . ((isset($product_ids_in) && sizeof($product_ids_in) > 0) ? '' : $limit_string);

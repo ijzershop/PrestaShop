@@ -39,7 +39,7 @@ class NodeProviderCollection extends AbstractCollection
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
      * @psalm-suppress RedundantConditionGivenDocblockType
      */
-    public function unserialize($serialized): void
+    public function __unserialize($serialized): void
     {
         /** @var array<array-key, NodeProviderInterface> $data */
         $data = unserialize($serialized, [
@@ -57,5 +57,10 @@ class NodeProviderCollection extends AbstractCollection
                 return $unserialized instanceof NodeProviderInterface;
             }
         );
+    }
+
+    public function __serialize(): array
+    {
+        // TODO: Implement __serialize() method.
     }
 }

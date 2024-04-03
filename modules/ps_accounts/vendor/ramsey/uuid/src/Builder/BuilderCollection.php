@@ -55,7 +55,7 @@ class BuilderCollection extends AbstractCollection
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
      * @psalm-suppress RedundantConditionGivenDocblockType
      */
-    public function unserialize($serialized): void
+    public function __unserialize($serialized): void
     {
         /** @var array<array-key, UuidBuilderInterface> $data */
         $data = unserialize($serialized, [
@@ -76,5 +76,10 @@ class BuilderCollection extends AbstractCollection
                 return $unserialized instanceof UuidBuilderInterface;
             }
         );
+    }
+
+    public function __serialize(): array
+    {
+        // TODO: Implement __serialize() method.
     }
 }

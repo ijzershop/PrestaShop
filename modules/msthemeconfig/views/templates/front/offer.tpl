@@ -88,7 +88,7 @@
                   <div class="row">
                     <div class="input-group col-sm-12">
                       <input
-                        class="quantity form-control input-group {if !$product.available_for_order}disabled{/if}"
+                        class="quantity form-control input-group {if !$product.available_for_order || $date_exp_days <= 0}disabled{/if}"
                         {if  $product.available_for_order && ($product.low_stock_threshold >= $product.quantity || $product.out_of_stock == 0)}max="{$product.quantity}"{/if}
                         id="quantity_wanted_{$product.id_product}"
                         type="number"
@@ -105,12 +105,16 @@
                         alt="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" href="{$link->getPageLink('cart')}?token={$static_token}"
                         data-product-id="{$product.id_product}"
                         data-product-customization=""
-                        class="btn btn-success add-to-cart w-100 text-nowrap mt-2 {if !$product.available_for_order || ($product.out_of_stock == 0 && $product.quantity <= 0)}disabled{/if}"
+                        class="btn btn-success add-to-cart w-100 text-nowrap mt-2 {if !$product.available_for_order || ($product.out_of_stock == 0 && $product.quantity <= 0) ||  $date_exp_days <= 0}disabled{/if}"
                         data-button-action="add-to-cart"
                       ><i data-product-id="{$product.id_product}" class="fasl fa-cart-shopping shopping-cart"></i> <span class="d-none d-sm-inline-block d-md-none d-lg-inline-block">Toevoegen aan winkelwagen</span></a>
                         {if $product.low_stock_threshold >= $product.quantity || ($product.out_of_stock == 0 && $product.quantity <= 0)}
-                          <div class="col-12">
+                          <div class="w-100">
                             <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>
+                          </div>
+                          {elseif  $date_exp_days <= 0}
+                          <div class="w-100">
+                            <span class="help-text text-warning">Dit product is verlopen, u kunt het niet meer bestellen. <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>Wilt u een nieuw aanbod? neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>
                           </div>
                         {/if}
                     </div>

@@ -107,6 +107,11 @@ if (process.env.NODE_ENV === 'production') {
       new TerserPlugin({
         parallel: true,
         extractComments: false,
+        terserOptions: {
+          output: {
+            comments: false,
+          }
+        }
       }),
     ],
   };

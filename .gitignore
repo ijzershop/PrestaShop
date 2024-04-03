@@ -218,3 +218,4 @@ install.lock
 docker-compose.override.yml
 app/config/parameters_backup.php
 google_dumps/
+themes/modernesmid_theme/assets/cache/

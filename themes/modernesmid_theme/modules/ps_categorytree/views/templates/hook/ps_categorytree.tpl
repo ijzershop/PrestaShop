@@ -34,13 +34,13 @@
                   {assign var="sub_id" value=$node.id}
                 <li data-depth="{$depth}" data-sub="{$sub_id}" data-index="{$loopindex}"  data-key="{$key}" class="p-0 pb-1 pt-1 {if $depth >= 2}pl-{$depth*1}{/if}">
                     {if $depth === 0}
-                      <a rel="nofollow"
+                      <span rel="nofollow"
                         class="menu-category-header font-weight-bold" data-toggle="collapse"
                          data-target="#submenu-item{$node.id}" aria-expanded="false"
                          aria-controls="#submenu-item{$node.id}"
                          aria-label="open/sluit {$node.name} categorie">{if $depth == 0}{strtoupper($node.name)}
                           <span class="float-right submenu-chevron"> <i class="fasl {if (int)$loopindex <= 1 && $depth <= 1 && $key === 0}fa-chevron-up{else}fa-chevron-down{/if}"></i></span>
-                          {else}{$node.name}{/if}</a>
+                          {else}{$node.name}{/if}</span>
                         {if $node.children}
                             {categories nodes=$node.children depth=$depth+1}
                         {/if}

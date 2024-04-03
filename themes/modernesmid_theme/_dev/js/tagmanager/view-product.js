@@ -29,7 +29,7 @@ export default class viewProductAnalyticsPush {
           ],
         },
       };
-      console.log(['view_item', sendedData]);
+      //console.log(['view_item', sendedData]);
       dataLayer.push(sendedData);
     }
   }

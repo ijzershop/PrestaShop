@@ -19,7 +19,7 @@ export default class startCheckoutAddressAnalyticsPush {
         },
       };
 
-      console.log(['add_shipping_info', sendedData]);
+      //console.log(['add_shipping_info', sendedData]);
 
       dataLayer.push(sendedData)
       }

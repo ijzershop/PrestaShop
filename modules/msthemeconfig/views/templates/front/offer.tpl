@@ -96,7 +96,7 @@
                         value="1"
                         size="3"
                         min="{$product.minimal_quantity}"
-                        name="qty"
+                        name="qty_{$product.id_product}"
                       />
 
 
@@ -139,12 +139,14 @@ let comparator_max_item = '{if isset($comparator_max_item)}{$comparator_max_item
 let comparedProductsIds = '{if isset($comparator_max_item)}{$compared_products}{else}[]{/if}';
 
 
+let accessElem = document.getElementById('access_code');
+let emailElem = document.getElementById('access_email');
+
 if(offerCode === localStorage.getItem('offerAccessCode')){
   document.getElementById('offer_card').classList.toggle('d-none');
   document.getElementById('offer_card_access').classList.toggle('d-none');
 } else {
-  let accessElem = document.getElementById('access_code');
-  let emailElem = document.getElementById('access_email');
+
 
   emailElem.addEventListener('keyup',function(e){
     return checkValidAccessData();
@@ -179,7 +181,6 @@ if(offerCode === localStorage.getItem('offerAccessCode')){
     return checkValidAccessData();
   });
 
-
   let checkValidAccessData  = function(e){
     if(emailElem.value.trim() === offerEmail){
       emailElem.classList.add('is-valid');
@@ -202,12 +203,30 @@ if(offerCode === localStorage.getItem('offerAccessCode')){
       subButton.disabled = true;
     }
   }
+
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  let changeEvent = new Event('change');
+  if(urlParams.has('email')){
+    emailElem.value = decodeURI(urlParams.get('email'));
+    emailElem.dispatchEvent(changeEvent);
+  }
+
+  if(urlParams.has('access_code')){
+    accessElem.value = urlParams.get('access_code');
+    accessElem.dispatchEvent(changeEvent);
+  }
 }
 document.getElementById('show_offer_btn').addEventListener('click', function(e){
   localStorage.setItem('offerAccessCode', document.getElementById('access_code').value);
   document.getElementById('offer_card').classList.toggle('d-none');
   document.getElementById('offer_card_access').classList.toggle('d-none');
 });
+
+  if(accessElem.classList.contains('is-valid') && emailElem.classList.contains('is-valid')){
+    let clickEvent = new Event('click');
+    document.getElementById('show_offer_btn').dispatchEvent(clickEvent);
+  }
 </script>
 {/block}
 

@@ -54,7 +54,7 @@ export default class selectCheckoutPaymentAnalyticsPush {
         },
       }
 
-      console.log(['add_payment_info', sendedData]);
+      //console.log(['add_payment_info', sendedData]);
 
       dataLayer.push(sendedData)
     }

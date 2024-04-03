@@ -27,7 +27,7 @@ export default class addToCartAnalyticsPush {
       },
     };
 
-    console.log(['add_to_cart_product', sendedData, dataObject]);
+    //console.log(['add_to_cart_product', sendedData, dataObject]);
     let newURL = location.href.split("?")[0];
     window.history.pushState('object', document.title, newURL);
     dataLayer.push(sendedData)

@@ -30,7 +30,7 @@
         <div class="qty">
           <input
             type="number"
-            name="qty"
+            name="qty_{$product.id_product}"
             id="quantity_wanted_{$product.id_product}"
             data-product-id="{$product.id_product}"
             data-product-customization="{$product.id_customization}"

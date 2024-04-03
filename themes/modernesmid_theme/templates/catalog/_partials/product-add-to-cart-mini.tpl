@@ -39,7 +39,7 @@
           <input
             data-product-id="{$product.id_product}"
             type="number"
-            name="qty"
+            name="qty_{$product.id_product}"
             id="quantity_wanted_{$product.id_product}"
             value="1"
             class="form-control mb-3 mb-md-0 input-group {if !Product::productIsOrderable($product.id_product)}disabled{/if}"

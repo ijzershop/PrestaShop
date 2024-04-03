@@ -127,7 +127,7 @@ class AdminOfferController extends FrameworkBundleAdminController {
             '{customer_email}' => $offer->email,
             '{date_exp}' => date('d-m-Y',strtotime($offer->date_exp)),
             '{date_exp_exact}' => $translated_date,
-            '{url}' => Context::getContext()->link->getModuleLink('msthemeconfig', 'offer', ['offer_code' => $offer->code])
+            '{url}' => Context::getContext()->link->getModuleLink('msthemeconfig', 'offer', ['offer_code' => $offer->code, 'email' => $offer->email, 'access_code' => $offer->access_code])
         ];
 
         if (Mail::send(Context::getContext()->language->id, $template, $subject, $vars, $offer->email, $offer->name, null, null, null, null, $template_path, false, null, $bcc)) {

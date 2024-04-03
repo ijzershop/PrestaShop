@@ -20,7 +20,7 @@ export default class removeFromCartAnalyticsPush {
         ],
       },
     };
-    console.log(['remove_from_cart', sendedData]);
+    //console.log(['remove_from_cart', sendedData]);
     dataLayer.push(sendedData)
   }
 }

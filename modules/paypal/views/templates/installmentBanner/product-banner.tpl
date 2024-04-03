@@ -39,7 +39,7 @@
 
 <script>
     Banner.prototype.updateAmount = function() {
-        var quantity = parseFloat(document.querySelector('input[name="qty"]').value);
+        var quantity = parseFloat(document.querySelector('input[name^="qty"]').value);
         var productPrice = parseFloat(document.querySelector('[itemprop="price"]').getAttribute('content'));
         this.amount = quantity * productPrice;
     };

@@ -24,33 +24,19 @@
  */
 /* eslint-disable */
 import 'bootstrap';
-import 'flexibility';
-import 'jquery-touchswipe';
+
 import './selectors';
 import './responsive';
 import './cookie-modal';
 import './tagmanager';
 
-// import './checkout';
-// import './customer';
-// import './listing';
-// import './product';
-// import './cart';
-
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
-// import DropDown from './components/drop-down';
 import Form from './components/form';
 import usePasswordPolicy from './components/usePasswordPolicy';
 import ProductMinitature from './components/product-miniature';
 import ProductSelect from './components/product-select';
-// import TopMenu from './components/top-menu';
 
-
-import './lib/bootstrap-filestyle.min';
-import './lib/jquery.scrollbox.min';
-
-// import './components/block-cart';
 import $ from 'jquery';
 import jQuery from 'jquery'
 /* eslint-enable */
@@ -71,31 +57,15 @@ $(document).ready(() => {
   productMinitature.init();
   productSelect.init();
   usePasswordPolicy('.field-password-policy');
-
-  $('.carousel[data-touch="true"]').swipe({
-    swipe(event, direction) {
-      if (direction === 'left') {
-        $(this).carousel('next');
-      }
-      if (direction === 'right') {
-        $(this).carousel('prev');
-      }
-    },
-    allowPageScroll: 'vertical',
-  });
 });
 
 import { library, dom } from "@fortawesome/fontawesome-svg-core";
 import fa from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/fontawesome.min.js'
 import fak from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/custom-icons.min.js'
 import fasl from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-light.min.js'
-import fass from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-solid.min.js'
-import fasr from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-regular.min.js'
-import fast from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-thin.min.js'
-import fad from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/duotone.min.js'
 import fab from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/brands.min.js'
 
-library.add(fa, fak, fasl, fass, fasr, fad, fab, fast);
+library.add(fa, fak, fasl, fab);
 dom.watch();
 import alert from "bootstrap/js/src/alert";
 import addToCartAnalyticsPush from "./tagmanager/add-cart";
@@ -166,7 +136,6 @@ $(function () {
   $('#product-images-carousel .carousel-indicators-thumbs li').on('click', function(e){
     let key = $(this).data('slide-to');
     $('#product-images-carousel .carousel-indicators li[data-slide-to="'+key+'"]').click();
-    console.log(key)
   });
 
   function renderMoneyString(price) {
@@ -234,7 +203,6 @@ $(function () {
     window.open('/index.php?controller=pdf-physical-on-credit-order-slip?id_order=' + order, '_blank');
   });
 
-
   $('.user-info').on('click', function (event) {
     event.stopPropagation();
     const clickedBtn = $(this).find('.dropdown');
@@ -256,8 +224,6 @@ $(function () {
 
     let iconSvg = $this.find('.opener > svg');
     let icon = iconSvg.attr('data-icon');
-
-    // console.log([iconSvg]);
 
     if(icon === 'plus'){
       iconSvg.attr('data-icon', 'minus');
@@ -850,7 +816,7 @@ $(function () {
     $('#header-cart-subtotal').text(renderMoneyString(totalForAllProducts));
 
     let shippingCost = cart.subtotals.shipping.amount;
-    if (shippingCost == 0) {
+    if (shippingCost === 0) {
       $('input.carrier-selection[value="pickup"]').prop('checked', true);
     } else {
       $('input.carrier-selection[value="shipping"]').prop('checked', true);
@@ -872,10 +838,8 @@ $(function () {
   };
 
   function updateSideBarCart(cart) {
-    if (!cart) {
-      return false;
-    }
-    return true;
+    return cart;
+
   }
 
   prestashop.on('updateCart', function (event) {
@@ -960,7 +924,7 @@ $(function () {
       $('#' + id).toggle();
     });
   });
-  $('body').on('focusin', '[name="qty"]', function (event) {
+  $('body').on('focusin', '[name^="qty"]', function (event) {
     event.preventDefault();
     this.select();
   });
@@ -1158,7 +1122,7 @@ $(function () {
           $('[name="city"]').removeClass('is-invalid').addClass('was-validated is-valid');
 
 
-          if (e.address.settlement != undefined) {
+          if (e.address.settlement !== undefined) {
             $('[name="city"]').val(e.address.settlement).removeClass('is-invalid').addClass('was-validated is-valid');
           }
 

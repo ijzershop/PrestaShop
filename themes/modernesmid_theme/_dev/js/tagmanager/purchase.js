@@ -20,7 +20,7 @@ export default class purchaseAnalyticsPush {
       },
     };
 
-    console.log(['purchase', sendedData]);
+    //console.log(['purchase', sendedData]);
 
     dataLayer.push(sendedData)
   }

@@ -74,7 +74,7 @@
                     {/if}
                 </div>
             </div>
-          <div class="row text-center"><a href="#" class="w-100 display-4 text-decoration-none" id="toggle-cat-description" data-shown="0" onclick="toggleCategoryDescr(this)"> <i class="fast fa-chevron-down"></i>  <span>Toon meer informatie</span>  <i class="fast fa-chevron-down"></i> </a></div>
+          <div class="row text-center"><a href="#" class="w-100 display-4 text-decoration-none" id="toggle-cat-description" data-shown="0" onclick="toggleCategoryDescr(this)"> <i class="fasl fa-chevron-down"></i>  <span>Toon meer informatie</span>  <i class="fasl fa-chevron-down"></i> </a></div>
         {/if}
     {/if}
 </div>
@@ -84,10 +84,10 @@
   function toggleCategoryDescr(e){
     if(document.getElementById('block-category-inner').classList.contains('active')){
         document.getElementById('block-category-inner').classList.remove('active');
-        document.getElementById('toggle-cat-description').innerHTML = '<i class="fast fa-chevron-down"></i>  <span>Toon meer informatie</span> <i class="fast fa-chevron-down"></i>';
+        document.getElementById('toggle-cat-description').innerHTML = '<i class="fasl fa-chevron-down"></i>  <span>Toon meer informatie</span> <i class="fasl fa-chevron-down"></i>';
     } else {
       document.getElementById('block-category-inner').classList.add('active');
-      document.getElementById('toggle-cat-description').innerHTML = '<i class="fast fa-chevron-up"></i> <span>Verberg Informatie</span> <i class="fast fa-chevron-up"></i> ';
+      document.getElementById('toggle-cat-description').innerHTML = '<i class="fasl fa-chevron-up"></i> <span>Verberg Informatie</span> <i class="fasl fa-chevron-up"></i> ';
         }
 
 

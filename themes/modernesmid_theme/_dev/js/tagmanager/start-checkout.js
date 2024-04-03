@@ -21,7 +21,7 @@ export default class startCheckoutAnalyticsPush {
         },
       };
 
-      console.log(['begin_checkout', sendedData]);
+      //console.log(['begin_checkout', sendedData]);
       dataLayer.push(sendedData)
     }
   }

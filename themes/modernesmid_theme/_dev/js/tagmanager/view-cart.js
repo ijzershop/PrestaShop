@@ -21,7 +21,7 @@ export default class viewCartAnalyticsPush {
           ],
         },
       };
-      console.log(['view_cart', sendedData]);
+      //console.log(['view_cart', sendedData]);
       dataLayer.push(sendedData)
     }
   }

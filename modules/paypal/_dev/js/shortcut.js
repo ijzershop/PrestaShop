@@ -53,7 +53,7 @@ const Shortcut = {
     this.button = document.querySelector('[paypal-button-container]');
 
     if (this.page == 'product') {
-      this.productQuantity = $('input[name="qty"]').val();
+      this.productQuantity = $('input[name^="qty"]').val();
       this.idProduct = $('[data-paypal-id-product]').val();
       this.combination = this.getCombination();
     }

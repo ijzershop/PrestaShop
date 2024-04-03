@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {foreach $stylesheets.external as $stylesheet}
-  <link rel="stylesheet" href="{$stylesheet.uri}" type="text/css" media="{$stylesheet.media}" media="prefers-color-scheme: light">
+  <link rel="preload stylesheet" href="{$stylesheet.uri}" type="text/css" media="{$stylesheet.media}" media="prefers-color-scheme: light">
 {/foreach}
 
 {foreach $stylesheets.inline as $stylesheet}

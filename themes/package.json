@@ -7,7 +7,7 @@
     "build": "webpack --progress --mode production",
     "lint": "eslint -c .eslintrc.js --ext .js,.vue ./_core",
     "lint-fix": "eslint -c .eslintrc.js --ext .js,.vue ./_core --fix",
-    "watch": "webpack --progress -w --mode development"
+    "watch": "webpack source-map --progress --colors --debug --display-chunks -w --mode development"
   },
   "author": "PrestaShop",
   "license": "OSL-3.0",

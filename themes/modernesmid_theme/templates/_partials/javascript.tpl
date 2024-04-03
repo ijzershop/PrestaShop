@@ -25,7 +25,7 @@
 {foreach $javascript.external as $js}
   <script type="text/javascript" src="{$js.uri}" {$js.attribute}></script>
 {/foreach}
-<script type="text/javascript" src="/themes/node_modules/browser-update/scripts/update.js"></script>
+<script type="text/javascript" src="/themes/node_modules/browser-update/scripts/update.js"  async></script>
 {foreach $javascript.inline as $js}
   <script type="text/javascript">
     {$js.content nofilter}

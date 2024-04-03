@@ -33,7 +33,7 @@ use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShop\Module\Mbo\Module\Module;
-use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
+use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
 use PrestaShop\Module\Mbo\Tab\Tab;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Module\Module as CoreModule;
@@ -115,7 +115,7 @@ class ContextBuilder
         $modules = [];
         // Filter : remove uninstalled modules
         foreach ($this->listInstalledModulesAndStatuses() as $installedModule) {
-            if ($installedModule['status'] !== ModuleStateMachine::STATUS_UNINSTALLED) {
+            if ($installedModule['status'] !== TransitionInterface::STATUS_UNINSTALLED) {
                 $modules[] = $installedModule['name'];
             }
         }
@@ -124,11 +124,13 @@ class ContextBuilder
             'modules' => $modules,
             'user_id' => $this->accountsDataProvider->getAccountsUserId(),
             'shop_id' => $this->accountsDataProvider->getAccountsShopId(),
+            'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
             'iso_lang' => $this->getLanguage()->getIsoCode(),
             'iso_code' => $this->getCountry()->iso_code,
             'mbo_version' => \ps_mbo::VERSION,
             'ps_version' => _PS_VERSION_,
             'shop_url' => Config::getShopUrl(),
+            'shop_creation_date' => defined('_PS_CREATION_DATE_') ? _PS_CREATION_DATE_ : null,
         ];
     }
 
@@ -196,6 +198,7 @@ class ContextBuilder
             'module_catalog_url' => UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_mbo_catalog_module')),
             'theme_catalog_url' => UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_mbo_catalog_theme')),
             'php_version' => phpversion(),
+            'shop_creation_date' => defined('_PS_CREATION_DATE_') ? _PS_CREATION_DATE_ : null,
         ];
     }
 

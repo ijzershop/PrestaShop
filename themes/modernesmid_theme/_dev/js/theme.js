@@ -54,7 +54,7 @@ import './lib/jquery.scrollbox.min';
 import $ from 'jquery';
 import jQuery from 'jquery'
 /* eslint-enable */
-
+import 'lazysizes';
 // "inherit" EventEmitter
 // eslint-disable-next-line
 for (const i in EventEmitter.prototype) {

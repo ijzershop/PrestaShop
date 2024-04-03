@@ -24,6 +24,7 @@ namespace PrestaShop\Module\Mbo\Traits;
 use Db;
 use Exception;
 use LanguageCore as Language;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Symfony\Component\String\UnicodeString;
 use TabCore as Tab;
 use ValidateCore as Validate;
@@ -41,6 +42,13 @@ trait HaveTabs
             'class_name' => 'AdminPsMboModuleParent',
             'parent_class_name' => 'AdminParentModulesSf',
         ],
+        'AdminPsMboModule' => [
+            'name' => 'Marketplace',
+            'visible' => true,
+            'position' => 0,
+            'class_name' => 'AdminPsMboModule',
+            'parent_class_name' => 'AdminPsMboModuleParent',
+        ],
         'AdminPsMboSelection' => [
             'name' => 'Modules in the spotlight',
             'visible' => false,
@@ -49,13 +57,6 @@ trait HaveTabs
             'parent_class_name' => 'AdminPsMboModuleParent',
             'wording' => 'Modules in the spotlight',
             'wording_domain' => 'Modules.Mbo.Modulesselection',
-        ],
-        'AdminPsMboModule' => [
-            'name' => 'Marketplace',
-            'visible' => true,
-            'position' => 0,
-            'class_name' => 'AdminPsMboModule',
-            'parent_class_name' => 'AdminPsMboModuleParent',
         ],
         'AdminPsMboRecommended' => [
             'name' => 'Modules recommandés',
@@ -119,11 +120,10 @@ trait HaveTabs
      * Used when module is enabled and in upgrade script.
      *
      * @param array $tabData
-     * @param bool $activate
      *
      * @return bool
      */
-    public function installTab(array $tabData, bool $activate = true): bool
+    public function installTab(array $tabData): bool
     {
         $tabNameByLangId = array_fill_keys(
             Language::getIDs(false),
@@ -144,9 +144,10 @@ trait HaveTabs
         $tab->position = Tab::getNewLastPosition($idParent);
         $tab->id_parent = $idParent;
         $tab->name = $tabNameByLangId;
-        $tab->active = $tabData['visible'] ? $tabData['visible'] : false;
+        $tab->active = $tabData['visible'] ?: false;
 
-        if (false === $activate) { // This case will happen when upgrading the module. We disable all the tabs
+        if (false === self::checkModuleStatus()) {
+            // If the MBO module is not active, we disable all the tabs. They will be enabled when MBO is enabling
             $tab->active = false;
         }
 
@@ -207,12 +208,6 @@ trait HaveTabs
      */
     public function updateTabs(): void
     {
-        if (false === self::checkModuleStatus()) {
-            // If the MBO module is not active.
-            // We don't update the tabs, it will be done when the module is enabled.
-            return;
-        }
-
         $tabData = Db::getInstance()->executeS('
             SELECT class_name
             FROM `' . _DB_PREFIX_ . 'tab`
@@ -222,6 +217,22 @@ trait HaveTabs
         //Flatten $tabData array
         $tabData = array_unique(array_map('current', $tabData));
         $currentModuleTabs = array_keys(static::$ADMIN_CONTROLLERS);
+        
+        // First disable all the tabs to reset it all
+        foreach ($tabData as $tabInDb) {
+            try {
+                $tab = new Tab((int) $tabInDb);
+            } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
+                continue;
+            }
+
+            if (false === Validate::isLoadedObject($tab)) {
+                continue;
+            }
+
+            $tab->active = false;
+            $tab->save();
+        }
 
         $oldTabs = [];
         $newTabs = [];
@@ -247,6 +258,28 @@ trait HaveTabs
         // Install the new tabs
         foreach ($newTabs as $newTab) {
             $this->installTab(static::$ADMIN_CONTROLLERS[$newTab]);
+        }
+
+        foreach ($currentModuleTabs as $currentModuleTab) {
+            if (!in_array($currentModuleTab, $oldTabs) && !in_array($currentModuleTab, $newTabs)) {
+                $tabData = static::$ADMIN_CONTROLLERS[$currentModuleTab];
+
+                $idParent = empty($tabData['parent_class_name'])
+                    ? -1
+                    : Tab::getIdFromClassName($tabData['parent_class_name'])
+                ;
+
+                $tabId = Tab::getIdFromClassName($tabData['class_name']);
+                try {
+                    $tab = new Tab($tabId);
+
+                    // This will reorder the tabs starting with 1
+                    $tab->cleanPositions($idParent);
+                } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
+                    ErrorHelper::reportError($e);
+                    throw new Exception('Failed to clean parent tab positions', 0, $e);
+                }
+            }
         }
 
         foreach ($currentModuleTabs as $currentModuleTab) {
@@ -283,6 +316,13 @@ trait HaveTabs
 
         $tab->id_parent = $idParent;
         $tab->name = $tabNameByLangId;
+        $tab->active = $tabData['visible'] ?: false;
+
+        if (false === self::checkModuleStatus()) {
+            // If the MBO module is not active, we disable all the tabs. They will be enabled when MBO is enabling
+            $tab->active = false;
+        }
+
         if (!empty($tabData['wording']) && !empty($tabData['wording_domain'])) {
             $tab->wording = $tabData['wording'];
             $tab->wording_domain = $tabData['wording_domain'];
@@ -300,12 +340,9 @@ trait HaveTabs
 
         if (
             Validate::isLoadedObject($tab)
-            && !empty($tabData['position'])
-            && $tab->position !== (int) $tabData['position']
+            && isset($tabData['position'])
+            && (int) $tab->position !== (int) $tabData['position']
         ) {
-            // This will reorder the tabs starting with 1
-            $tab->cleanPositions($idParent);
-
             $this->putTabInPosition($tab, $tabData['position']);
         }
 
@@ -321,7 +358,7 @@ trait HaveTabs
 			WHERE `id_tab` = ' . (int) $tab->id
         );
 
-        if ((int) $dbTabPosition === $position) {
+        if ((int) $dbTabPosition === (int) $position) {
             // Nothing to do, tab is already in the right position
             return;
         }

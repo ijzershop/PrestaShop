@@ -34,7 +34,8 @@
                   {assign var="sub_id" value=$node.id}
                 <li data-depth="{$depth}" data-sub="{$sub_id}" data-index="{$loopindex}"  data-key="{$key}" class="p-0 pb-1 pt-1 {if $depth >= 2}pl-{$depth*1}{/if}">
                     {if $depth === 0}
-                      <a class="menu-category-header font-weight-bold" data-toggle="collapse"
+                      <a rel="nofollow"
+                        class="menu-category-header font-weight-bold" data-toggle="collapse"
                          data-target="#submenu-item{$node.id}" aria-expanded="false"
                          aria-controls="#submenu-item{$node.id}"
                          aria-label="open/sluit {$node.name} categorie">{if $depth == 0}{strtoupper($node.name)}

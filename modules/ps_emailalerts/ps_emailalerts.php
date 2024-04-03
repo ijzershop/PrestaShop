@@ -588,10 +588,13 @@ class Ps_EmailAlerts extends Module
                     $mail_id_lang,
                     'new_order',
                     $this->trans(
-                        'New order : #%d - %s',
+                        '%s | %s | %s | %s',
                         [
                             $order->id,
                             $order->reference,
+                            $contextLocale->formatPrice($order->total_paid, $currency->iso_code),
+                            strtoupper(Tools::substr($order->payment, 0, 32)),
+                            (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name)
                         ],
                         'Emails.Subject',
                         $locale),

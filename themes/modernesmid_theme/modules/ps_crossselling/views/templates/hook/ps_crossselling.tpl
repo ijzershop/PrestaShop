@@ -64,10 +64,10 @@
 	                     {/if}
                     {/foreach}
                   </div>
-                  <a style="left:-10px;" class="carousel-control-prev" href="#you-like-carousel" role="button" data-slide="prev">
+                  <a style="left:-10px;" class="carousel-control-prev" aria-label="Vorige lijst met producten" href="#you-like-carousel" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                   </a>
-                  <a style="right:-10px;" class="carousel-control-next" href="#you-like-carousel" role="button" data-slide="next">
+                  <a style="right:-10px;" class="carousel-control-next" aria-label="Volgende lijst met producten" href="#you-like-carousel" role="button" data-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                   </a>
                 </div>

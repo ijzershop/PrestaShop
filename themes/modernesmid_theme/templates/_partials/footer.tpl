@@ -42,12 +42,12 @@
       <div class="container">
         <div class="row">
           <div class="col-12 d-flex d-sm-flex d-lg-none">
-            <img class="mx-auto pt-2" rel="preload" as="image" width="50px" src="/themes/modernesmid_theme/assets/img/200818_Betalingsmethoden_YS_R01.svg" alt="{l s="payment options" d='Shop.Theme.Global'}" title="{l s="payment options from this shop" d='Shop.Theme.Global'}">
+            <img class="mx-auto pt-2 lazyload" rel="preload" as="image" width="50px" data-src="/themes/modernesmid_theme/assets/img/200818_Betalingsmethoden_YS_R01.svg" alt="{l s="payment options" d='Shop.Theme.Global'}" title="{l s="payment options from this shop" d='Shop.Theme.Global'}">
           </div>
           <div class="col-12 col-lg-9">
             <p class="text-center text-lg-left">
               {block name='copyright_link'}
-                <a class="text-white">
+                <a rel="nofollow" class="text-white">
                   <br>
                   {l s='%copyright% %year% %modernesmid% | %kvknummer% | %btw%' sprintf=['%modernesmid%' => 'De Moderne Smid BV', '%kvknummer%' => 'KvK nummer: 075220555', '%btw%' => 'BTW nr.: NL860193421B01', '%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme.Global'}
                 </a>

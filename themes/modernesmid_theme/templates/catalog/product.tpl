@@ -146,7 +146,7 @@
                 {else}
                 <div class="row">
                   <div class="add col-12">
-                    <a class="btn btn-success add-to-cart w-100 {if !$product.add_to_cart_url || !$product.available_for_order || ($product.out_of_stock == 0 && $product.quantity <= 0)}disabled{/if}" data-button-action="add-to-cart" data-product-id="{$product.id_product}" type="button" {if !$product.add_to_cart_url} disabled {/if} href="{$link->getPageLink('cart')}?token={$static_token}">
+                    <a class="btn btn-success add-to-cart w-100 {if !$product.add_to_cart_url || !$product.available_for_order || ($product.out_of_stock == 0 && $product.quantity <= 0)}disabled{/if}" data-button-action="add-to-cart" data-product-id="{$product.id_product}" aria-label="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" type="button" {if !$product.add_to_cart_url} disabled {/if} href="{$link->getPageLink('cart')}?token={$static_token}">
                       <i class="fasl fa-plus" data-product-id="{$product.id_product}"></i><i class="fasl fa-cart-shopping shopping-cart" data-product-id="{$product.id_product}"></i>
                     </a>
                   </div>
@@ -355,10 +355,10 @@
             <li data-target="#accessories-carousel" data-slide-to="{$index3}" class="rounded {if $index3 == 0}active{/if}"></li>
             {/foreach}
           </ol>
-          <a class="carousel-control-prev" href="#accessories-carousel" role="button" data-slide="prev">
+          <a class="carousel-control-prev"  aria-label="Vorige accessoires lijst" href="#accessories-carousel" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           </a>
-          <a class="carousel-control-next" href="#accessories-carousel" role="button" data-slide="next">
+          <a class="carousel-control-next"  aria-label="Vorige accessoires lijst" href="#accessories-carousel" role="button" data-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
           </a>
         </div>

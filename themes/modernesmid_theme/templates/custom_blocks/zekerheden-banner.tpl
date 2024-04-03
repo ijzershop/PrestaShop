@@ -8,7 +8,7 @@
                     <div class="row">
                         <div class="col-4 pr-0 certainty-icon text-right pl-0">
                             <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FIRST_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
-                                <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid">
+                                <img rel="preload" is="image" data-src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_FIRST_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid lazyload">
                             </a>
                         </div>
                         <div class="col-8 pl-0 pr-0 certainty-text">
@@ -31,7 +31,7 @@
                     <div class="row">
                         <div class="col-4 pr-0 certainty-icon text-right">
                             <a href="/{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
-                                <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid">
+                                <img rel="preload" is="image" data-src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_SECOND_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid lazyload">
                             </a>
                         </div>
                         <div class="col-8 pl-0 pr-0 certainty-text">
@@ -54,7 +54,7 @@
                     <div class="row">
                         <div class="col-4 pr-0 certainty-icon text-right">
                             <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_THIRD_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
-                                <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid">
+                                <img rel="preload" is="image" data-src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_THIRD_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid lazyload">
                             </a>
                         </div>
                         <div class="col-8 pl-0 pr-0 certainty-text">
@@ -79,8 +79,11 @@
                             {* TODO add shippinng method selet to template module, get visitor carrier and set shipping price *}
                             {assign var="transmissionCarrier" value=Carrier::getCarrierByReference(2,Context::getContext()->cookie->id_lang)}
                             {* By changing zone the banner item gets updated belgium is 9, Germany 10 *}
-                                {assign var="customerCountry" value=Context::getContext()->country->name}
-
+                          {if Context::getContext()->country->id_country === '3'}
+                              {assign var="customerCountry" value="België"}
+                          {else}
+                              {assign var="customerCountry" value="Nederland"}
+                          {/if}
                                     {if Context::getContext()->cookie->price_vat_settings_incl === "true"}
                                         {assign var="defaultShippingPrice" value=$transmissionCarrier->getMaxDeliveryPriceByPrice(Context::getContext()->country->id_zone)*1.21}
                                         {assign var="shippingPrice" value=number_format(Tools::convertPrice($defaultShippingPrice),0,',','.')}
@@ -93,7 +96,7 @@
                                         {assign var="customerCountry" value=$customerCountry[1]}
                                     {/if}
                             <a href="{$link->getCMSLink(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}" class="zekerheden-banner-img" title="{sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $customerCountry, $shippingPrice)}">
-                                <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $customerCountry, $shippingPrice)}" class="hover_effect_target img-fluid">
+                                <img rel="preload" is="image" data-src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{sprintf(Configuration::get('MSTHEMECONFIG_BANNER_FOURTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $customerCountry, $shippingPrice)}" class="hover_effect_target img-fluid lazyload">
                             </a>
                         </div>
                         <div class="col-8 pl-0 pr-0 certainty-text">
@@ -117,7 +120,7 @@
                     <div class="row">
                         <div class="col-4 pr-0 certainty-icon text-right">
                             <a href="/{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_LINK',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="zekerheden-banner-img" title="{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}">
-                                <img rel="preload" is="image" src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid">
+                                <img rel="preload" is="image" data-src="https://ijzershop.nl/upload/{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_IMAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" alt="{Configuration::get('MSTHEMECONFIG_BANNER_FIFTH_TITLE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}" class="hover_effect_target img-fluid lazyload">
                             </a>
                         </div>
                         <div class="col-8 pl-0 pr-0 certainty-text">

@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
   <fieldset>
     <label for="related_products_select" class="font-weight-bold mb-0">Andere Maat? Wissel snel!</label>
-    <select class="form-control-select" name="related_products_select" id="related_products_select" width="100%">
+    <select class="form-control-select" name="related_products_select" id="related_products_select" width="100%" aria-label="Andere maat, wissel snel">
         {foreach from=$products item=productItem key=productItemIndex}
             {assign var="imageId" value=explode('-',$productItem['id_image'])}
 {*          {dd($productItem)}*}

@@ -469,7 +469,7 @@ class ExportOrdersMultipleCollies
 
             if (!empty($shippingTask->geaplaats)) {
 
-                $collieWeight =  (int)round((float)($weight / $collies), 0, 2);
+                $collieWeight =  (int)floor((float)($weight / $collies));
 
                 for ($i = 0; $i < $collies; $i++) {
                     $collieRow = new stdClass();

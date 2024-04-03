@@ -48,7 +48,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.9.0';
+    public const VERSION = '4.10.3';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminModulesManage',
@@ -93,13 +93,13 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.9.0';
+        $this->version = '4.10.3';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
-            'min' => '8.0.0',
+            'min' => '8.0.2',
             'max' => _PS_VERSION_,
         ];
 
@@ -225,7 +225,7 @@ class ps_mbo extends Module
         Shop::setContext($previousContextType, $previousContextShopId);
 
         // Install tab before registering shop, we need the tab to be active to create the good token
-        $this->handleTabAction('install');
+        $this->updateTabs();
         $this->postponeTabsTranslations();
 
         // Register online services

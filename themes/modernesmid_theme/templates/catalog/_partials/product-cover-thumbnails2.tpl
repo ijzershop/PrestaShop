@@ -67,10 +67,10 @@
           {/foreach}
       </ol>
       {if $control_check > 0}
-        <a class="carousel-control-prev" href="#product-images-carousel" role="button" data-slide="prev">
+        <a class="carousel-control-prev" aria-label="Vorige afbeelding" href="#product-images-carousel" role="button" data-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         </a>
-        <a class="carousel-control-next" href="#product-images-carousel" role="button" data-slide="next">
+        <a class="carousel-control-next" aria-label="Volgende afbeelding" href="#product-images-carousel" role="button" data-slide="next">
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
         </a>
       {/if}

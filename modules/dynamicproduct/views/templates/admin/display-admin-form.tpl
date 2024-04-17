@@ -1,5 +1,5 @@
 {*
-* 2010-2022 Tuni-Soft
+* 2007-2023 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -17,18 +17,99 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    Tuni-Soft
-*  @copyright 2010-2022 Tuni-Soft
+*  @author    TuniSoft <tunisoft.solutions@gmail.com>
+*  @copyright 2007-2023 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
 *}
+<ul class="nav nav-tabs" id="dp-module-tabs-headers">
+  <li role="presentation" class="active">
+    <a href="#configuration">
+      <i class="icon-cogs"></i> {l s='Configuration' mod='dynamicproduct'}
+    </a>
+  </li>
+  <li role="presentation">
+    <a href="#product-configurations">
+      <i class="icon-cogs"></i> {l s='Product configurations' mod='dynamicproduct'}
+    </a>
+  </li>
+  <li role="presentation">
+    <a href="#units">
+      <i class="icon-calculator"></i> {l s='Units Of Measurement' mod='dynamicproduct'}
+    </a>
+  </li>
+  <li role="presentation">
+    <a href="#field-groups" data-cy="field-groups-tab">
+      <i class="icon-list"></i> {l s='Field Groups' mod='dynamicproduct'}
+    </a>
+  </li>
+  <li role="presentation">
+    <a href="#steps">
+      <i class="icon-list"></i> {l s='Steps' mod='dynamicproduct'}
+    </a>
+  </li>
+  <li role="presentation">
+    <a href="#common-fields">
+      <i class="icon-share-alt"></i> {l s='Common fields' mod='dynamicproduct'}
+    </a>
+  </li>
+  <li role="presentation">
+    <a href="#favorite-fields">
+      <i class="icon-star"></i> {l s='Favorite fields' mod='dynamicproduct'}
+    </a>
+  </li>
+</ul>
 
-{include file="./units/unit-list.tpl"}
+<div class="tab-content" id="dp-module-tabs" style="display: none;">
+  <div class="tab-pane active" id="configuration">
+      {$main_config_html} {* prestashop form rendered by the module *}
+  </div>
+  <div class="tab-pane" id="product-configurations">
+      {include file="./fields/configs-list.tpl"}
+  </div>
+  <div class="tab-pane" id="units">
+      {include file="./units/unit-list.tpl"}
+  </div>
+  <div class="tab-pane" id="field-groups">
+      {include file="./field-groups/field-group-list.tpl"}
+  </div>
+  <div class="tab-pane" id="steps">
+      {include file="./steps/step-list.tpl"}
+  </div>
+  <div class="tab-pane" id="common-fields">
+      {include file="./fields/common-fields-list.tpl"}
+  </div>
+  <div class="tab-pane" id="favorite-fields">
+      {include file="./fields/favorite-list.tpl"}
+  </div>
+</div>
 
-{include file="./field-groups/field-group-list.tpl"}
+<p style="margin-top: 1em; font-size: 12px;">
+  Dynamic Product • v{$version|escape:'html':'UTF-8'}
+</p>
 
-{include file="./steps/step-list.tpl"}
+<script>
+  $(document).ready(function () {
+    $("#dp-module-tabs-headers a").click(function (e) {
+      e.preventDefault()
+      history.pushState(null, "", e.currentTarget.getAttribute("href") + "-tab")
+      $(this).tab("show")
+    })
 
-{include file="./fields/common-fields-list.tpl"}
+    if (location.hash) {
+      $("#dp-module-tabs-headers").find("a[href=\"" + location.hash.replace("-tab", "") + "\"]").tab("show")
+    }
 
-{include file="./fields/favorite-list.tpl"}
+    document.getElementById("dp-module-tabs").style.display = "block"
+  })
+</script>
 
+<style>
+  #dp-module-tabs-headers {
+    padding-left: 1em;
+  }
+
+  #dp-module-tabs-headers li:not(.active) a {
+    background-color: #FAFAFA;
+  }
+</style>

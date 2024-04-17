@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,45 +14,30 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\module;
 
-namespace classes\module;
-
-use Address;
-use classes\DynamicTools;
-use classes\helpers\DynamicCalculatorHelper;
-use classes\models\DynamicConfig;
-use Configuration;
-use Context;
-use Customer;
-use DynamicProduct;
-use Exception;
-use Group;
-use GroupReductionCore;
-use PrestaShopLogger;
-use Product;
-use SpecificPrice;
-use Tax;
-use Validate;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\helpers\CachedCalculationHelper;
+use DynamicProduct\classes\helpers\DynamicCalculatorHelper;
+use DynamicProduct\classes\models\DynamicConfig;
 
 class DynamicCalculator
 {
-
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
-    private $addresses = array();
+    private $addresses = [];
 
     public function __construct($module, $context)
     {
@@ -61,36 +47,37 @@ class DynamicCalculator
 
     public function getTax($id_product, $force_tax = false, $cart = false)
     {
-        if (!$cart && Validate::isLoadedObject($this->context->cart)) {
+        if (!$cart && \Validate::isLoadedObject($this->context->cart)) {
             $cart = $this->context->cart;
         }
 
-        if (Validate::isLoadedObject($cart)) {
+        if (\Validate::isLoadedObject($cart)) {
             $id_customer = (int) $cart->id_customer;
         } else {
             $id_customer = $this->module->provider->getCustomer();
         }
 
-        if (Tax::excludeTaxeOption()) {
+        if (\Tax::excludeTaxeOption()) {
             return 0;
         }
 
         if ($id_customer) {
-            $tax_calculation_method = (int) Group::getPriceDisplayMethod(Customer::getDefaultGroupId($id_customer));
+            $tax_calculation_method = (int) \Group::getPriceDisplayMethod(\Customer::getDefaultGroupId($id_customer));
         } else {
-            $tax_calculation_method = (int) Group::getPriceDisplayMethod((int) Group::getCurrent()->id);
+            $tax_calculation_method = (int) \Group::getPriceDisplayMethod((int) \Group::getCurrent()->id);
         }
 
         if ($tax_calculation_method === PS_TAX_EXC && !$force_tax) {
             return 0;
         }
 
-        if (Validate::isLoadedObject($cart)) {
-            $address = $this->getAddress($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+        if (\Validate::isLoadedObject($cart)) {
+            $address = $this->getAddress($cart->{\Configuration::get('PS_TAX_ADDRESS_TYPE')});
         } else {
-            $address = new Address(0);
+            $address = new \Address(0);
         }
-        return (float) Tax::getProductTaxRate(
+
+        return (float) \Tax::getProductTaxRate(
             (int) $id_product,
             (int) $address->id,
             DynamicTools::getContext()
@@ -106,12 +93,13 @@ class DynamicCalculator
         if ($tax_rate) {
             $result *= (1 + $tax_rate / 100);
         }
+
         return $result;
     }
 
     public function getReduction($customized_data)
     {
-        $specific_price = SpecificPrice::getSpecificPrice(
+        return \SpecificPrice::getSpecificPrice(
             (int) $customized_data['id_product'],
             (int) $this->context->shop->id,
             (int) $this->module->provider->getCurrency(),
@@ -122,19 +110,18 @@ class DynamicCalculator
             (int) $this->module->provider->getCustomer(),
             (int) $customized_data['id_cart']
         );
-        return $specific_price;
     }
 
     public function getProductReduction($id_product)
     {
-        return SpecificPrice::getSpecificPrice(
+        return \SpecificPrice::getSpecificPrice(
             (int) $id_product,
             (int) $this->context->shop->id,
             (int) $this->module->provider->getCurrency(),
             (int) $this->module->provider->getCountry(),
             (int) $this->module->provider->getCustomerGroup(),
             1,
-            Product::getDefaultAttribute($id_product),
+            \Product::getDefaultAttribute($id_product),
             (int) $this->module->provider->getCustomer(),
             (int) $this->module->provider->getCart()
         );
@@ -150,6 +137,7 @@ class DynamicCalculator
         if ($type === 'percentage') {
             $price -= $price * $reduction;
         }
+
         return $price;
     }
 
@@ -160,9 +148,10 @@ class DynamicCalculator
         } else {
             $id_customer = $this->module->provider->getCustomerFromCart($id_cart);
         }
-        $group_reduction = Group::getReduction($id_customer);
+        $group_reduction = \Group::getReduction($id_customer);
         $reduction = (float) $group_reduction / 100;
         $price -= $price * $reduction;
+
         return $price;
     }
 
@@ -173,10 +162,11 @@ class DynamicCalculator
         } else {
             $id_customer = $this->module->provider->getCustomerFromCart($id_cart);
         }
-        $id_group = $id_customer ? Customer::getDefaultGroupId($id_customer) : (int) Group::getCurrent()->id;
-        $reduction = GroupReductionCore::getValueForProduct($id_product, $id_group);
+        $id_group = $id_customer ? (int) \Customer::getDefaultGroupId($id_customer) : (int) \Group::getCurrent()->id;
+        $reduction = \GroupReductionCore::getValueForProduct($id_product, $id_group);
         $price -= $price * (float) $reduction;
-        return array($price, $reduction);
+
+        return [$price, $reduction];
     }
 
     public function getAddress($id_address)
@@ -184,7 +174,8 @@ class DynamicCalculator
         if (isset($this->addresses[$id_address])) {
             return $this->addresses[$id_address];
         }
-        return $this->addresses[$id_address] = new Address($id_address);
+
+        return $this->addresses[$id_address] = new \Address($id_address);
     }
 
     private function calculateDisplayPrice($id_product, $display_price, $with_tax = true, $use_reduc = true)
@@ -195,12 +186,12 @@ class DynamicCalculator
         }
         $calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
         if ($use_reduc) {
-            $result = $calculator_helper->applyReductions(
+            $result = $calculator_helper->applyGroupReductions(
                 $result,
-                $id_product,
-                $this->getProductReduction($id_product)
+                $id_product
             );
         }
+
         return $result;
     }
 
@@ -212,22 +203,22 @@ class DynamicCalculator
 
         $id_attribute = isset($product['id_product_attribute']) ?
             (int) $product['id_product_attribute'] :
-            (int) Product::getDefaultAttribute($id_product);
-        $product_price_ttc = Product::getPriceStatic(
+            (int) \Product::getDefaultAttribute($id_product);
+        $product_price_ttc = \Product::getPriceStatic(
             $id_product,
-            !Product::getTaxCalculationMethod(),
+            !\Product::getTaxCalculationMethod(),
             $id_attribute
         );
 
-        $product_price_ht = Product::getPriceStatic(
+        $product_price_ht = \Product::getPriceStatic(
             $id_product,
             false,
             $id_attribute
         );
 
-        $product_price_nr = Product::getPriceStatic(
+        $product_price_nr = \Product::getPriceStatic(
             $id_product,
-            !Product::getTaxCalculationMethod(),
+            !\Product::getTaxCalculationMethod(),
             $id_attribute,
             6,
             null,
@@ -238,12 +229,19 @@ class DynamicCalculator
         if ($dynamic_config->display_dynamic_price) {
             $dynamic_calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
             try {
-                $display_price = $dynamic_calculator_helper->calculateDisplayPrice(
-                    $id_product,
-                    $id_attribute
-                );
-            } catch (Exception $e) {
-                PrestaShopLogger::addLog(
+                $cache_helper = new CachedCalculationHelper($this->module, $this->context);
+                $calculation = $cache_helper->getCached($id_product, $id_attribute);
+                if ($calculation) {
+                    $display_price = $calculation;
+                } else {
+                    $display_price = $dynamic_calculator_helper->calculateDisplayPrice(
+                        $id_product,
+                        $id_attribute
+                    );
+                    $cache_helper->cache($id_product, $id_attribute, $display_price);
+                }
+            } catch (\Exception $e) {
+                \PrestaShopLogger::addLog(
                     sprintf('Error in formula: %s', DynamicTools::reportException($e, true)),
                     3,
                     1,
@@ -257,6 +255,10 @@ class DynamicCalculator
         $display_price_ttc = $this->calculateDisplayPrice($id_product, $display_price);
         $display_price_ht = $this->calculateDisplayPrice($id_product, $display_price, false);
         $display_price_nr = $this->calculateDisplayPrice($id_product, $display_price, true, false);
+
+        $display_price_ttc = $this->module->provider->convertPrice($display_price_ttc);
+        $display_price_ht = $this->module->provider->convertPrice($display_price_ht);
+        $display_price_nr = $this->module->provider->convertPrice($display_price_nr);
 
         $price_ttc = $display_price_ttc + $product_price_ttc;
         $price_ht = $display_price_ht + $product_price_ht;

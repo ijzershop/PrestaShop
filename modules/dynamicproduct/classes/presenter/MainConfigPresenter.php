@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,22 +14,20 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\presenter;
 
-namespace classes\presenter;
-
-use classes\DynamicTools;
-use classes\models\DynamicMainConfig;
-use classes\module\DynamicPresenter;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\models\DynamicMainConfig;
+use DynamicProduct\classes\module\DynamicPresenter;
 
 class MainConfigPresenter extends DynamicPresenter
 {
@@ -38,53 +37,54 @@ class MainConfigPresenter extends DynamicPresenter
     {
         $source = DynamicTools::getSource();
 
-        $switch_debug_mode = array(
-            'type'   => 'switch',
-            'label'  => $this->module->l('Debug mode', $source),
-            'desc'   => $this->module->l('Enable this option to debug formulas in the browser console', $source),
-            'name'   => 'debug_mode',
-            'values' => array(
-                array(
-                    'id'    => 'active_on',
+        $switch_debug_mode = [
+            'type' => 'switch',
+            'label' => $this->module->l('Debug mode', $source),
+            'desc' => $this->module->l('Enable this option to debug formulas in the browser console', $source),
+            'name' => 'debug_mode',
+            'values' => [
+                [
+                    'id' => 'active_on',
                     'value' => 1,
-                    'label' => $this->module->l('Yes', $source)
-                ),
-                array(
-                    'id'    => 'active_off',
+                    'label' => $this->module->l('Yes', $source),
+                ],
+                [
+                    'id' => 'active_off',
                     'value' => 0,
-                    'label' => $this->module->l('No', $source)
-                )
-            )
-        );
+                    'label' => $this->module->l('No', $source),
+                ],
+            ],
+        ];
 
-        return array(
-            'form' => array(
-                'legend'  => array(
-                    'title' => $this->module->l('Configuration', $source),
-                    'icon'  => 'icon-cogs'
-                ),
-                'input'   => array(
+        return [
+            'form' => [
+                'input' => [
                     $switch_debug_mode,
-                ),
-                'buttons' => array(
-                    array(
+                ],
+                'buttons' => [
+                    [
                         'title' => $this->module->l('Troubleshooting', $source),
-                        'href'  => $this->module->provider->getModuleAdminLink('view_troubleshooter'),
-                        'icon'  => 'process-icon-terminal',
-                        'class' => 'pull-left btn-success'
-                    )
-                )
-            )
-        );
+                        'href' => $this->module->provider->getModuleAdminLink('view_troubleshooter'),
+                        'class' => 'pull-left btn-success',
+                    ],
+                    [
+                        'title' => $this->module->l('Upgrade verification', $source),
+                        'href' => $this->module->provider->getModuleAdminLink('view_upgrade_checker'),
+                        'class' => 'pull-left tn-margin-left',
+                    ],
+                ],
+            ],
+        ];
     }
 
     protected function getFormValues()
     {
-        $result = array();
+        $result = [];
         $values = DynamicMainConfig::getConfigValues();
         foreach ($values as $name => $value) {
             $result[$name] = $value;
         }
+
         return $result;
     }
 }

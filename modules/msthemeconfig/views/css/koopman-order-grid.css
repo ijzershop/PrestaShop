@@ -189,6 +189,7 @@ td.koopman_label_button-type.column-label{
 .koopman_label_button_2-type .package_size_select{
   text-align: center;
   text-align-last: center;
+  pointer-events: none;
 }
 
 .calculated_weight{

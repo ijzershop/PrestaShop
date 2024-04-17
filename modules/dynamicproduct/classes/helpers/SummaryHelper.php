@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,29 +14,25 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\helpers;
 
-namespace classes\helpers;
-
-use classes\DynamicTools;
-use Context;
-use DynamicProduct;
-use Tools;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\models\DynamicInput;
 
 class SummaryHelper
 {
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
     public function __construct($module, $context)
@@ -44,33 +41,60 @@ class SummaryHelper
         $this->context = $context;
     }
 
-    public function getCachedSummary($summary_name, $id_input, $id_lang, $is_pdf, $is_order_detail)
+    /**
+     * @param $summary_name
+     * @param DynamicInput $dynamic_input
+     * @param $id_lang
+     * @param $is_pdf
+     * @param $is_order_detail
+     *
+     * @return bool|string
+     */
+    public function getCachedSummary($summary_name, $dynamic_input, $id_lang, $is_pdf, $is_order_detail)
     {
         if (!DynamicTools::isCacheEnabled()) {
             return false;
         }
-        $cache_file = $this->getCacheFile($summary_name, $id_input, $id_lang, $is_pdf, $is_order_detail);
+        $cache_file = $this->getCacheFile($summary_name, $dynamic_input, $id_lang, $is_pdf, $is_order_detail);
         if (is_file($cache_file)) {
-            return Tools::file_get_contents($cache_file);
+            return \Tools::file_get_contents($cache_file);
         }
+
         return false;
     }
 
-    public function cacheSummary($summary_name, $id_input, $id_lang, $is_pdf, $is_order_detail, $summary)
+    /**
+     * @param $summary_name
+     * @param DynamicInput $dynamic_input
+     * @param $id_lang
+     * @param $is_pdf
+     * @param $is_order_detail
+     * @param $summary
+     *
+     * @return false|int
+     */
+    public function cacheSummary($summary_name, $dynamic_input, $id_lang, $is_pdf, $is_order_detail, $summary)
     {
-        $cache_file = $this->getCacheFile($summary_name, $id_input, $id_lang, $is_pdf, $is_order_detail);
+        $cache_file = $this->getCacheFile($summary_name, $dynamic_input, $id_lang, $is_pdf, $is_order_detail);
+
         return file_put_contents($cache_file, $summary);
     }
 
     /**
      * @param $summary_name
-     * @param $id_input
+     * @param DynamicInput $dynamic_input
      * @param $id_lang
+     * @param $is_pdf
+     * @param $is_order_detail
+     *
+     * @return string
      */
-    private function getCacheFile($summary_name, $id_input, $id_lang, $is_pdf, $is_order_detail)
+    private function getCacheFile($summary_name, $dynamic_input, $id_lang, $is_pdf, $is_order_detail)
     {
+        $date_upd = md5($dynamic_input->date_upd);
+
         return $this->module->provider->getDataFile(
-            "cache/$summary_name-$id_input-$id_lang-$is_pdf-$is_order_detail.html"
+            "cache/$summary_name-{$dynamic_input->id}-{$date_upd}-$id_lang-$is_pdf-$is_order_detail.html"
         );
     }
 }

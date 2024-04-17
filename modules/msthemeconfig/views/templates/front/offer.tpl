@@ -100,6 +100,18 @@
                       />
 
 
+
+{*                      <div class="add col-12">*}
+{*                        <a class="btn btn-success add-to-cart w-100 {if !$product.add_to_cart_url || !$product.available_for_order || ($product.out_of_stock == 0 && $product.quantity <= 0)}disabled{/if}" data-button-action="add-to-cart" data-product-id="{$product.id_product}" aria-label="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" type="button" {if !$product.add_to_cart_url} disabled {/if} href="{$link->getPageLink('cart')}?token={$static_token}">*}
+{*                          <i class="fasl fa-plus" data-product-id="{$product.id_product}"></i><i class="fasl fa-cart-shopping shopping-cart" data-product-id="{$product.id_product}"></i>*}
+{*                        </a>*}
+{*                      </div>*}
+{*                      {if !$product.add_to_cart_url || !$product.available_for_order}*}
+{*                        <div class="col-12">*}
+{*                          <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>*}
+{*                        </div>*}
+{*                      {/if}*}
+
                       <a
 
                         alt="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" href="{$link->getPageLink('cart')}?token={$static_token}"
@@ -107,10 +119,10 @@
                         data-product-customization=""
                         class="btn btn-success add-to-cart w-100 text-nowrap mt-2 {if !$product.available_for_order || ($product.out_of_stock == 0 && $product.quantity <= 0) ||  $date_exp_days <= 0}disabled{/if}"
                         data-button-action="add-to-cart"
-                      ><i data-product-id="{$product.id_product}" class="fasl fa-cart-shopping shopping-cart"></i> <span class="d-none d-sm-inline-block d-md-none d-lg-inline-block">Toevoegen aan winkelwagen</span></a>
-                        {if $product.low_stock_threshold >= $product.quantity || ($product.out_of_stock == 0 && $product.quantity <= 0)}
+                      ><i class="fasl fa-plus" data-product-id="{$product.id_product}"></i><i data-product-id="{$product.id_product}" class="fasl fa-cart-shopping shopping-cart"></i></a>
+                        {if !$product.available_for_order}
                           <div class="w-100">
-                            <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>
+                            <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>
                           </div>
                           {elseif  $date_exp_days <= 0}
                           <div class="w-100">
@@ -128,17 +140,14 @@
               </div>
             </li>
           {/foreach}
-  </ul>
-</div>
+        </ul>
+      </div>
 
     {/if}
 {/block}
 
   {block name="hook_before_body_closing_tag"}
 <script type="text/javascript">
-  // console.log([offerCode, offerEmail,  localStorage.getItem('offerAccessCode')]);
-
-
 let comparator_max_item = '{if isset($comparator_max_item)}{$comparator_max_item}{else}0{/if}';
 let comparedProductsIds = '{if isset($comparator_max_item)}{$compared_products}{else}[]{/if}';
 

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,33 +14,30 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+/* @noinspection PhpUnusedPrivateMethodInspection */
 
-/** @noinspection PhpUnusedPrivateMethodInspection */
-
-use classes\DynamicTools;
-use classes\models\DynamicCommonField;
-use classes\models\DynamicField;
-use classes\models\DynamicFieldGroup;
-use classes\models\DynamicProductFieldGroup;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\models\DynamicCommonField;
+use DynamicProduct\classes\models\DynamicField;
+use DynamicProduct\classes\models\DynamicFieldGroup;
+use DynamicProduct\classes\models\DynamicProductFieldGroup;
 
 class DynamicProductFieldGroupsController extends ModuleAdminController
 {
-
     /** @var DynamicProduct */
     public $module;
     public $action;
 
-    /** @var Context $context */
+    /** @var Context */
     public $context;
     public $id_product;
     public $id_default_lang;
@@ -55,12 +53,13 @@ class DynamicProductFieldGroupsController extends ModuleAdminController
 
     public function postProcess()
     {
+        $source = basename(__FILE__, '.php');
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
         if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
-            exit(json_encode(array(
-                'error'   => true,
-                'message' => $this->module->l('This product is for viewing only!')
-            )));
+            exit(json_encode([
+                'error' => true,
+                'message' => $this->module->l('This product is for viewing only!', $source),
+            ]));
         }
 
         $method = 'process' . Tools::toCamelCase($this->action, true);
@@ -68,15 +67,15 @@ class DynamicProductFieldGroupsController extends ModuleAdminController
             return $this->{$method}();
         }
 
-        exit();
+        exit;
     }
 
     private function processGetFieldGroups()
     {
-        $this->respond(array(
-            'product_field_groups' => DynamicProductFieldGroup::getByIdProduct($this->id_product, true),
-            'field_groups'         => DynamicFieldGroup::getAll($this->context->language->id),
-        ));
+        $this->respond([
+            'product_field_groups' => DynamicProductFieldGroup::getRowsByProduct($this->id_product),
+            'field_groups' => DynamicFieldGroup::getAllRows($this->context->language->id),
+        ]);
     }
 
     private function processInsertGroup()
@@ -87,9 +86,9 @@ class DynamicProductFieldGroupsController extends ModuleAdminController
         $product_field_group->id_field_group = $id_group;
         $product_field_group->position = DynamicProductFieldGroup::getHighestPosition($product_field_group);
         $product_field_group->save();
-        $this->respond(array(
-            'product_field_groups' => DynamicProductFieldGroup::getByIdProduct($this->id_product, true),
-        ));
+        $this->respond([
+            'product_field_groups' => DynamicProductFieldGroup::getRowsByProduct($this->id_product),
+        ]);
     }
 
     private function processSaveGroupSettings()
@@ -99,6 +98,7 @@ class DynamicProductFieldGroupsController extends ModuleAdminController
         $product_field_group = new DynamicProductFieldGroup($id_product_group);
         $product_field_group->collapsible = (int) $product_group['collapsible'];
         $product_field_group->start_collapsed = (int) $product_group['start_collapsed'];
+        $product_field_group->id_control_field = (int) $product_group['id_control_field'];
         $product_field_group->save();
         $this->respond();
     }
@@ -110,18 +110,18 @@ class DynamicProductFieldGroupsController extends ModuleAdminController
         $product_field_group->delete();
         Db::getInstance()->update(
             $this->module->name . '_field',
-            array('id_group' => 0),
+            ['id_group' => 0],
             'id_group = ' . (int) $product_field_group->id
         );
         Db::getInstance()->update(
             $this->module->name . '_common_field',
-            array('id_group' => 0),
+            ['id_group' => 0],
             'id_group = ' . (int) $product_field_group->id
         );
-        $this->respond(array(
-            'fields'               => DynamicField::getFieldsByIdProduct($this->id_product),
-            'product_field_groups' => DynamicProductFieldGroup::getByIdProduct($this->id_product, true),
-        ));
+        $this->respond([
+            'fields' => DynamicField::getFieldRowsByProduct($this->id_product),
+            'product_field_groups' => DynamicProductFieldGroup::getRowsByProduct($this->id_product),
+        ]);
     }
 
     private function processReorderGroups()
@@ -132,7 +132,9 @@ class DynamicProductFieldGroupsController extends ModuleAdminController
             $product_group->position = (int) $position + 1;
             $product_group->save();
         }
-        $this->respond();
+        $this->respond([
+            'product_field_groups' => DynamicProductFieldGroup::getRowsByProduct($this->id_product),
+        ]);
     }
 
     private function processSaveFieldGroup()
@@ -151,13 +153,37 @@ class DynamicProductFieldGroupsController extends ModuleAdminController
         $this->respond();
     }
 
-    private function respond($data = array(), $success = 1)
+    private function processSaveFieldsOrder()
+    {
+        $id_product_group = (int) Tools::getValue('id_product_group');
+        $order = Tools::getValue('order');
+        if (is_array($order)) {
+            foreach ($order as $position => $id_field) {
+                $field = new DynamicField($id_field);
+                if ((int) $field->id_product !== $this->id_product) {
+                    $common_field = DynamicCommonField::getByFieldAndProduct($id_field, $this->id_product);
+                    $common_field->id_group = (int) $id_product_group;
+                    $common_field->position = (int) $position;
+                    $common_field->save();
+                } else {
+                    $field->id_group = (int) $id_product_group;
+                    $field->position = (int) $position;
+                    $field->save();
+                }
+            }
+        }
+        $this->respond([
+            'fields' => DynamicField::getFieldRowsByProduct($this->id_product),
+        ]);
+    }
+
+    private function respond($data = [], $success = 1)
     {
         /** @noinspection CallableParameterUseCaseInTypeContextInspection */
         $success = $success && (int) !array_key_exists('error', $data);
-        $arr = array(
+        $arr = [
             'success' => $success,
-        );
+        ];
         $arr = array_merge($arr, $data);
         exit(json_encode($arr));
     }

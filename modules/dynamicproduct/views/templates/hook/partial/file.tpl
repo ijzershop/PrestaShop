@@ -1,5 +1,5 @@
 {*
-* 2007-2022 PrestaShop
+* 2007-2023 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -17,10 +17,26 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2022 PrestaShop SA
+*  @author    TuniSoft <tunisoft.solutions@gmail.com>
+*  @copyright 2007-2023 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<a target="_blank" href="{$input_field->getFileUrl()}">{$input_field->value|escape:'htmlall':'UTF-8'}</a>
+{if is_array($input_field->data_obj) && !empty($input_field->data_obj)}
+  <ul class="dp-files">
+      {foreach from=$input_field->data_obj item=upload}
+        <li>
+          <a target="_blank"
+             href="{$input_field->getFileUrl($upload.file)|escape:'htmlall':'UTF-8'}"
+             title="{$upload.filename|escape:'htmlall':'UTF-8'}"
+          >
+              {$upload.filename|escape:'htmlall':'UTF-8'}
+          </a>
+        </li>
+      {/foreach}
+  </ul>
+{else}
+  <a target="_blank" href="{$input_field->getFileUrl($input_field->value)|escape:'htmlall':'UTF-8'}">
+      {$input_field->value|escape:'htmlall':'UTF-8'}
+  </a>
+{/if}

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,29 +14,24 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\helpers;
 
-namespace classes\helpers;
-
-use classes\models\DynamicFieldGroup;
-use Context;
-use DynamicProduct;
+use DynamicProduct\classes\models\DynamicFieldGroup;
 
 class FieldGroupHelper
 {
-
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
     public function __construct($module, $context)
@@ -45,16 +41,16 @@ class FieldGroupHelper
     }
 
     /**
-     * @param $id_field_group
+     * @param int $id_field_group
      * @param DynamicFieldGroup[] $groups
      */
-    public function getGroup($id_field_group, $groups)
+    public function getGroup(int $id_field_group, $groups)
     {
-        if (isset($groups[$id_field_group])) {
-            return $groups[$id_field_group];
+        $key = array_search($id_field_group, array_column($groups, 'id'));
+        if ($key !== false) {
+            return $groups[$key];
         }
-        $dynamic_field_group = new DynamicFieldGroup();
-        $dynamic_field_group->id = $id_field_group;
-        return $dynamic_field_group;
+
+        return (new DynamicFieldGroup())->getObjectValues();
     }
 }

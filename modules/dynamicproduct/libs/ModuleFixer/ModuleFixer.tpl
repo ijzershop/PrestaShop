@@ -1,5 +1,5 @@
 {*
-* 2007-2022 PrestaShop
+* 2007-2023 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -17,14 +17,13 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    Tunis-Soft
-*  @copyright since 2012 Tuni-Soft
+*  @author    TuniSoft <tunisoft.solutions@gmail.com>
+*  @copyright 2007-2023 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <div class="panel">
-  <h3><i class="icon icon-credit-card"></i> {$module->displayName|escape:'htmlall':'UTF-8'}</h3>
+  <h3><i class="icon icon-credit-card"></i> {l s='Hooks' mod='dynamicproduct'}</h3>
 
   <div class="well">
     <h4>{l s='List of hooks' mod='dynamicproduct'}</h4>
@@ -72,8 +71,8 @@
   </div>
 </div>
 
-<div class="panel">
-  <h3><i class="icon icon-credit-card"></i> {$module->displayName|escape:'htmlall':'UTF-8'}</h3>
+<div class="panel" id="dp-fix-templates">
+  <h3><i class="icon icon-credit-card"></i> {l s='Templates' mod='dynamicproduct'}</h3>
 
   <div class="well">
     <h4>{l s='Fix templates' mod='dynamicproduct'}</h4>
@@ -99,4 +98,69 @@
        class="btn btn-default pull-left"
     ><i class="process-icon-back"></i> {l s='Back' mod='dynamicproduct'}</a>
   </div>
+</div>
+
+<div class="panel" id="dp_cleanup_panel">
+  <h3><i class="icon process-icon-delete"></i> {l s='Cleanup' mod='dynamicproduct'}</h3>
+
+  <p class="help-block">
+      {l s='Delete old unused customization data' mod='dynamicproduct'}
+  </p>
+
+  <div class="alert alert-warning">
+      {l s='A full database + files backup is recommended before cleaning up the data' mod='dynamicproduct'}
+  </div>
+
+  <form action="#dp_cleanup_panel" method="post">
+    <div class="well">
+      <div class="form-group">
+        <label for="min_age">
+            {l s='Clean unused customizations older than' mod='dynamicproduct'}
+          <select id="min_age"
+                  name="min_age"
+                  class="form-control"
+          >
+              {if !isset($min_age)}
+                  {assign var="min_age" value=7}
+              {/if}
+            <option value="7" {if $min_age == 7}selected{/if}>{l s='1 week' mod='dynamicproduct'}</option>
+            <option value="14" {if $min_age == 14}selected{/if}>{l s='2 weeks' mod='dynamicproduct'}</option>
+            <option value="30" {if $min_age == 30}selected{/if}>{l s='1 month' mod='dynamicproduct'}</option>
+            <option value="90" {if $min_age == 90}selected{/if}>{l s='3 months' mod='dynamicproduct'}</option>
+            <option value="120" {if $min_age == 120}selected{/if}>{l s='4 months' mod='dynamicproduct'}</option>
+            <option value="150" {if $min_age == 150}selected{/if}>{l s='5 months' mod='dynamicproduct'}</option>
+            <option value="180" {if $min_age == 180}selected{/if}>{l s='6 months' mod='dynamicproduct'}</option>
+            <option value="365" {if $min_age == 365}selected{/if}>{l s='1 year' mod='dynamicproduct'}</option>
+          </select>
+        </label>
+        <p class="help-block">
+            {l s='Customizations that are used in orders will not be deleted' mod='dynamicproduct'}
+        </p>
+      </div>
+
+        {if isset($time_limit_exceeded)}
+          <div class="alert alert-warning">
+              {l s='Server time limit exceeded, please run the cleanup again' mod='dynamicproduct'}
+          </div>
+        {/if}
+        {if isset($saved_inputs_delete_count)}
+          <div class="alert alert-success">
+              {l s='Deleted %s unused customizations' sprintf=[$saved_inputs_delete_count|intval] mod='dynamicproduct'}
+          </div>
+        {/if}
+    </div>
+
+    <div class="panel-footer">
+      <a href="{$module_link|escape:'htmlall':'UTF-8'}"
+         class="btn btn-default pull-left"
+      ><i class="process-icon-back"></i> {l s='Back' mod='dynamicproduct'}</a>
+      <button type="submit" value="1" name="cleanup" class="btn btn-default btn-warning"
+              style="color: #0b0b0b; margin-left: 1em;"
+      >
+        <i class="process-icon-save"></i> {l s='Clean data' mod='dynamicproduct'}
+      </button>
+    </div>
+
+  </form>
+
 </div>

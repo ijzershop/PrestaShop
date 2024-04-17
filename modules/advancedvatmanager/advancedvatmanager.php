@@ -2848,7 +2848,8 @@ class AdvancedVatManager extends Module
                         $cart =  $params['cart'];
                         if ($this->context->cart && $cart->nbProducts()) {
                             $product_price = array();
-                            $total_cart = $cart->getOrderTotal(false,Cart::ONLY_PRODUCTS);
+                            $total_cart = $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+
                             // Save cookie of total product prices in cart and price per product unit without tax.
                             $products = $cart->getProducts(true);
                             foreach ($products as $product) {

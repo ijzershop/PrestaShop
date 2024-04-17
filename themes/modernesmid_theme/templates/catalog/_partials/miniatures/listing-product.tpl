@@ -40,7 +40,7 @@
                     <span class="h6 product-title p-0" data-id-product="{$product.id_product}"><a
                         class="text-decoration-none text-black" href="{$product.url}">{$product.name}</a></span>
                     <br/>
-                    <a class="help-text product-description-short">Indicatie prijs
+                    <a class="help-text product-description-short text-decoration-none">Indicatie prijs
                       € {$dynamicProductConfig.default_price} is op basis van {$dynamicProductConfig.lengte}
                       mm {$dynamicProductConfig.behandeling} {$product.name}</a>
                     <br/>
@@ -228,7 +228,7 @@
                         <span class="h6 product-title p-0" data-id-product="{$product.id_product}"><a
                             class="text-decoration-none text-black" href="{$product.url}">{$product.name}</a></span>
                         <br/>
-                        <a class="help-text product-description-short">Indicatie prijs
+                        <a class="help-text product-description-short text-decoration-none">Indicatie prijs
                           € {$dynamicProductConfig.default_price} is op basis van {$dynamicProductConfig.lengte}
                           mm {$dynamicProductConfig.behandeling} {$product.name}</a>
                         <br/>

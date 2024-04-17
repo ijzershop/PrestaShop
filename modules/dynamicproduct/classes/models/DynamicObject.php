@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,37 +14,25 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\models;
 
-namespace classes\models;
+use DynamicProduct\classes\DynamicTools;
 
-use classes\DynamicTools;
-use Configuration;
-use Context;
-use Db;
-use DbQuery;
-use DynamicProduct;
-use Language;
-use ObjectModel;
-use Tools;
-use Uploader;
-use Validate;
-
-class DynamicObject extends ObjectModel
+class DynamicObject extends \ObjectModel
 {
     public static $module_name = 'dynamicproduct';
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     protected $module;
-    /** @var Context $context */
+    /** @var \Context */
     protected $context;
     public $position;
     protected $dir;
@@ -75,17 +64,20 @@ class DynamicObject extends ObjectModel
 
     /**
      * @param $model
+     *
      * @return DynamicObject
      */
     public static function getModelClass($model)
     {
         $namespace = 'classes\models\\';
-        $class_name = 'Dynamic' . Tools::toCamelCase($model, true);
+        $class_name = 'Dynamic' . \Tools::toCamelCase($model, true);
+
         return $namespace . $class_name;
     }
 
     /**
      * @param DynamicObject $object
+     *
      * @return mixed
      */
     public static function getValues($object, $fill_lang_values = false)
@@ -93,6 +85,7 @@ class DynamicObject extends ObjectModel
         if ($fill_lang_values) {
             $object = self::fillLangFields($object);
         }
+
         return json_decode(json_encode($object), true);
     }
 
@@ -103,12 +96,13 @@ class DynamicObject extends ObjectModel
 
     /**
      * @param DynamicObject $object
+     *
      * @return DynamicObject
-     * // TODO: remove this
+     *                       // TODO: remove this
      */
     private static function fillLangFields($object)
     {
-        $languages = Language::getLanguages();
+        $languages = \Language::getLanguages();
         $lang_fields = self::getLangFields($object);
         foreach ($lang_fields as $lang_field) {
             $value_all_langs = $object->{$lang_field};
@@ -119,27 +113,39 @@ class DynamicObject extends ObjectModel
                 }
             }
         }
+
         return $object;
     }
 
     public static function getLangFields($object)
     {
-        $lang_fields = array();
-        $definition = ObjectModel::getDefinition($object);
+        $lang_fields = [];
+        $definition = \ObjectModel::getDefinition($object);
         $fields = $definition['fields'];
         foreach ($fields as $field_name => $field) {
             if (self::isLangField($field)) {
                 $lang_fields[] = $field_name;
             }
         }
+
         return $lang_fields;
     }
 
     public function getPathForCreation($name = 'file')
     {
         if (property_exists($this, $name)) {
-            return $this->getDir() . $this->$name . $this->ext;
+            $filename = $this->$name;
+            if (!is_string($filename)) {
+                return false;
+            }
+            $extension = pathinfo($filename, PATHINFO_EXTENSION);
+            if ($filename && !$extension) {
+                $filename .= $this->ext;
+            }
+
+            return $this->getDir() . $filename;
         }
+
         return false;
     }
 
@@ -149,14 +155,18 @@ class DynamicObject extends ObjectModel
         if (is_file($path)) {
             return $path;
         }
+
         return false;
     }
 
     public function getThumbPathForCreation($name = 'file')
     {
         if (property_exists($this, $name)) {
-            return $this->getDir() . $this->$name . $this->thumb_suffix;
+            $filename = pathinfo($this->$name, PATHINFO_FILENAME);
+
+            return $this->getDir() . $filename . $this->thumb_suffix;
         }
+
         return false;
     }
 
@@ -166,6 +176,7 @@ class DynamicObject extends ObjectModel
         if (is_file($path)) {
             return $path;
         }
+
         return false;
     }
 
@@ -176,7 +187,7 @@ class DynamicObject extends ObjectModel
 
     public static function deleteByProduct($id_product)
     {
-        return Db::getInstance()->delete(static::$definition['table'], 'id_product = ' . (int) $id_product);
+        return \Db::getInstance()->delete(static::$definition['table'], 'id_product = ' . (int) $id_product);
     }
 
     public function delete()
@@ -190,23 +201,23 @@ class DynamicObject extends ObjectModel
 
     public function saveFromPost()
     {
-        $errors = array();
+        $errors = [];
         $fields = static::$definition['fields'];
         foreach ($fields as $field => $info) {
             $type = $info['type'];
             $is_lang = self::isLangField($info);
             if (!$is_lang) {
-                if (Tools::getIsset($field)) {
-                    $value = self::formatValue(Tools::getValue($field), $type);
+                if (\Tools::getIsset($field)) {
+                    $value = self::formatValue(\Tools::getValue($field), $type);
                     $this->$field = $value;
                 }
                 if ((int) $type === self::TYPE_BOOL) {
-                    $value = self::formatValue(Tools::getIsset($field), $type);
+                    $value = self::formatValue(\Tools::getIsset($field), $type);
                     $this->$field = $value;
                 }
             } else {
-                $id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
-                $translations = Tools::getValue($field);
+                $id_default_lang = (int) \Configuration::get('PS_LANG_DEFAULT');
+                $translations = \Tools::getValue($field);
                 if (!is_array($translations)) {
                     $translations = self::getTranslationsFromArray($field, $_POST);
                 }
@@ -231,8 +242,8 @@ class DynamicObject extends ObjectModel
                 if (isset($fields[$name]) && !$file['error']) {
                     $field = $fields[$name];
                     if ($field['extensions']) {
-                        $path = $this->getDir() . Tools::replaceAccentedChars($file['name']);
-                        $uploader = new Uploader();
+                        $path = $this->getDir() . \Tools::replaceAccentedChars($file['name']);
+                        $uploader = new \Uploader();
                         $uploader->setName($name);
                         $uploader->setAcceptTypes($field['extensions']);
                         $upload = $uploader->process();
@@ -244,7 +255,7 @@ class DynamicObject extends ObjectModel
                                 }
                                 $this->$name = basename($path);
                             } else {
-                                $errors[] = Tools::displayError($upload[0]['error'], false);
+                                $errors[] = \Tools::displayError($upload[0]['error'], false);
                             }
                         }
                     }
@@ -257,6 +268,7 @@ class DynamicObject extends ObjectModel
                 $this->complement();
             }
         }
+
         return $errors;
     }
 
@@ -265,8 +277,8 @@ class DynamicObject extends ObjectModel
         $fields = static::$definition['fields'];
         foreach ($fields as $field => $info) {
             $type = $info['type'];
-            if (Tools::getIsset($field)) {
-                $value = self::formatValue(Tools::getValue($field), $type);
+            if (\Tools::getIsset($field)) {
+                $value = self::formatValue(\Tools::getValue($field), $type);
                 $this->$field = $value;
             }
         }
@@ -290,24 +302,42 @@ class DynamicObject extends ObjectModel
         if (isset($values['id'])) {
             $obj->id = (int) $values['id'];
         }
+
         return $obj;
     }
 
     public static function getHighestPosition($object)
     {
-        $sql = new DbQuery();
+        $sql = new \DbQuery();
         $sql->select('max(position) as maxposition');
         $sql->from(static::$definition['table']);
         if (isset(static::$definition['group_by'])) {
             $group_by = static::$definition['group_by'];
             $sql->where(pSQL($group_by) . ' = ' . (int) $object->$group_by);
         }
-        $max = Db::getInstance()->getValue($sql);
+        if (isset(static::$definition['fields']['deleted'])) {
+            $sql->where('deleted = 0');
+        }
+        $max = \Db::getInstance()->getValue($sql);
+
         return (int) $max + 1;
     }
 
     /**
+     * @param DynamicObject[] $objects
+     */
+    public static function fixPositions($objects)
+    {
+        $position = 0;
+        foreach ($objects as $object) {
+            $object->position = $position++;
+            $object->save();
+        }
+    }
+
+    /**
      * @param null $id_lang
+     *
      * @return static[]
      */
     public static function getAll($id_lang = null)
@@ -315,14 +345,14 @@ class DynamicObject extends ObjectModel
         $class_definition = static::$definition;
         $primary = $class_definition['primary'];
         $class = static::class;
-        $objects = array();
-        $sql = new DbQuery();
+        $objects = [];
+        $sql = new \DbQuery();
         $sql->select($primary);
         $sql->from($class_definition['table']);
         if (isset($class_definition['fields']['position'])) {
             $sql->orderBy('position ASC');
         }
-        $rows = Db::getInstance()->executeS($sql);
+        $rows = \Db::getInstance()->executeS($sql);
         if (is_array($rows)) {
             foreach ($rows as $row) {
                 $id_object = $row[$primary];
@@ -330,30 +360,38 @@ class DynamicObject extends ObjectModel
                 $objects[$id_object] = $object;
             }
         }
+
         return $objects;
     }
 
     /**
      * @param $id_product
+     * @param bool $order
+     * @param null $id_lang
+     *
      * @return static[]
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
     public static function getByIdProduct($id_product, $order = false, $id_lang = null)
     {
-        $objects = array();
-        $sql = new DbQuery();
+        $objects = [];
+        $sql = new \DbQuery();
         $sql->from(static::$definition['table']);
         $sql->where('id_product = ' . (int) $id_product);
         if ($order) {
             $sql->orderBy('position ASC');
         }
-        $rows = Db::getInstance()->executeS($sql, false);
-        while ($row = Db::getInstance()->nextRow($rows)) {
+        $rows = \Db::getInstance()->executeS($sql, false);
+        while ($row = \Db::getInstance()->nextRow($rows)) {
             $id = $row[static::$definition['primary']];
             $object = new static($id, $id_lang);
-            if (Validate::isLoadedObject($object)) {
+            if (\Validate::isLoadedObject($object)) {
                 $objects[$id] = $object;
             }
         }
+
         return $objects;
     }
 
@@ -364,7 +402,7 @@ class DynamicObject extends ObjectModel
 
     private static function getTranslationsFromArray($field, $array)
     {
-        $translations = array();
+        $translations = [];
         foreach ($array as $key => $value) {
             if (preg_match("@{$field}_(\d)+@", $key, $match)) {
                 $id_lang = (int) $match[1];
@@ -373,6 +411,7 @@ class DynamicObject extends ObjectModel
                 }
             }
         }
+
         return $translations;
     }
 
@@ -381,12 +420,12 @@ class DynamicObject extends ObjectModel
         $definition = static::$definition;
         $complement_field = $definition['complement'];
         $group_by = $definition['group_by'];
-        $data = array(
-            pSQL($complement_field) => 0
-        );
+        $data = [
+            pSQL($complement_field) => 0,
+        ];
         $where = pSQL($group_by) . ' = ' . (int) $this->$group_by;
         $where .= ' AND ' . pSQL($definition['primary']) . ' != ' . (int) $this->id;
-        Db::getInstance()->update($definition['table'], $data, $where);
+        \Db::getInstance()->update($definition['table'], $data, $where);
     }
 
     private function castNumericValues()
@@ -394,7 +433,7 @@ class DynamicObject extends ObjectModel
         $fields = static::$definition['fields'];
         foreach ($fields as $field => $info) {
             $type = $info['type'];
-            if (in_array((int) $type, array(self::TYPE_INT, self::TYPE_FLOAT), true)) {
+            if (in_array((int) $type, [self::TYPE_INT, self::TYPE_FLOAT], true)) {
                 $original_value = $this->$field;
                 if ($original_value !== null) {
                     $value = self::formatValue($original_value, $type);

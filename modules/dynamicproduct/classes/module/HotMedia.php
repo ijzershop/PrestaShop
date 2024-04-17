@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,29 +14,22 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
-
-namespace classes\module;
-
-use Context;
-use DynamicProduct;
-use Tools;
+namespace DynamicProduct\classes\module;
 
 class HotMedia
 {
-
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
     private $hash;
@@ -49,11 +43,11 @@ class HotMedia
 
     public function addJS($js_uri, $base_path = null)
     {
-        $protocol = Tools::getCurrentUrlProtocolPrefix();
+        $protocol = \Tools::getCurrentUrlProtocolPrefix();
         $base_URI = $this->context->shop->getBaseURI();
-        $controller = Context::getContext()->controller;
+        $controller = \Context::getContext()->controller;
         if (!is_array($js_uri)) {
-            $js_uri = array($js_uri);
+            $js_uri = [$js_uri];
         }
         if (method_exists($controller, 'registerJavascript')) {
             foreach ($js_uri as $js_file) {
@@ -71,7 +65,7 @@ class HotMedia
                     $separator = $js_file[0] !== DIRECTORY_SEPARATOR ? DIRECTORY_SEPARATOR : null;
                     $path = _PS_ROOT_DIR_ . $separator . $js_file;
                     $js_file = $base_URI . $js_file . '?' . $this->hash;
-                    $js_file = $protocol . Tools::getMediaServer($js_file) . $js_file;
+                    $js_file = $protocol . \Tools::getMediaServer($js_file) . $js_file;
                     if (!is_file($path)) {
                         $js_file = false;
                     }
@@ -81,7 +75,7 @@ class HotMedia
                     $controller->registerJavascript(
                         md5($js_file),
                         $js_file,
-                        array('priority' => 100, 'position' => 'bottom', 'server' => 'remote')
+                        ['priority' => 100, 'position' => 'bottom', 'server' => 'remote']
                     );
                 }
             }
@@ -101,9 +95,9 @@ class HotMedia
 
     public function addCSS($css_uri, $base_path = null)
     {
-        $controller = Context::getContext()->controller;
+        $controller = \Context::getContext()->controller;
         if (!is_array($css_uri)) {
-            $css_uri = array($css_uri);
+            $css_uri = [$css_uri];
         }
         if (method_exists($controller, 'registerStylesheet')) {
             foreach ($css_uri as $css_file) {
@@ -120,11 +114,11 @@ class HotMedia
                 $controller->registerStylesheet(
                     md5($css_file),
                     $css_file,
-                    array(
+                    [
                         'priority' => 100,
                         'position' => 'bottom',
-                        'server'   => $base_path ? 'remote' : 'local'
-                    )
+                        'server' => $base_path ? 'remote' : 'local',
+                    ]
                 );
             }
         } else {
@@ -167,6 +161,7 @@ class HotMedia
             foreach ($files as &$file) {
                 $file = $file . '?' . $this->hash;
             }
+
             return $files;
         }
 

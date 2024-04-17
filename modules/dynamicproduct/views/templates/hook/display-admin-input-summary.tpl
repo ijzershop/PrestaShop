@@ -1,5 +1,5 @@
-{**
-* 2010-2022 Tuni-Soft
+{*
+* 2007-2023 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -17,37 +17,60 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author
-*  @copyright 2014-2022
+*  @author    TuniSoft <tunisoft.solutions@gmail.com>
+*  @copyright 2007-2023 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <!-- ✅ ✅ ✅ If the summary is not displayed correctly, open the module configuration page and click the "Troubleshooting" button, then Fix the templates then clear the cache ✅ -->
 
-<div class="dp_cart dp_seven_cart">
+{$displayed_count = 0}
+
+<div class="dp_cart dp_seven_cart"
+     data-id_customization="{$input->id_customization|intval}"
+>
   <div class="dp_input_div dp_input_{$input->id|intval}">
-      {if count($input->input_fields)}
-          {foreach from=$input->input_fields item=input_field}
-              {if $input_field->isSkippedName()}{continue}{/if}
-              {if $input_field->isSkipped() && !$input_field->isAdminField()}{continue}{/if}
-            <span>
+      {if count($grouped_fields)}
+          {foreach from=$grouped_fields item=group}
+              {if $group.label}
+                <strong>{$group.label|escape:'htmlall':'UTF-8'}</strong>
+                <br>
+              {/if}
+              {foreach from=$group.fields item=input_field}
+                  {if $input_field->isSkippedName()}{continue}{/if}
+                  {if $input_field->isSkipped() && !$input_field->isAdminField()}{continue}{/if}
+                  {$displayed_count = $displayed_count + 1}
+                <span style="{if $group.label}padding-left: 1em;{/if}">
                 {if $input_field->label}
                   <strong>{$input_field->label|escape:'htmlall':'UTF-8'}:</strong>
                 {/if}
-                {if $input_field->getTemplatePath()}
-                    {include file=$input_field->getTemplatePath()}
-                {else}
-                    {$input_field->displayValue()|escape:'htmlall':'UTF-8'}
-                {/if}
+                    {if $input_field->getTemplatePath()}
+                        {include file=$input_field->getTemplatePath()}
+                    {else}
+                        {$input_field->getDynamicValue($input->getInputFields())|escape:'htmlall':'UTF-8'}
+                    {/if}
+                    {$sku = $input_field->getSKU()}
+                    {if $sku}
+                      ({$sku|escape:'htmlall':'UTF-8'})
+                    {/if}
             </span>
+                <br>
+              {/foreach}
             <br>
           {/foreach}
       {/if}
 
-      {if $input->canDisplayWeight()||1}
+      {if $input->canDisplayWeight()}
         <span>
           <strong>{l s='Weight' mod='dynamicproduct'}:</strong>
             {$input->weight|floatval} {Configuration::get('PS_WEIGHT_UNIT')|escape:'htmlall':'UTF-8'}
+        </span>
+      {/if}
+
+      {if isset($show_price) && $show_price}
+        <span>
+          <strong>{l s='Price' mod='dynamicproduct'}:</strong>
+          {$price|escape:'htmlall':'UTF-8'}
         </span>
       {/if}
 
@@ -65,4 +88,12 @@
         </a>
       {/if}
   </div>
+
+    {if $displayed_count == 0}
+      <style>
+        .dp_cart[data-id_customization="{$input->id_customization|intval}"] {
+          display: none;
+        }
+      </style>
+    {/if}
 </div>

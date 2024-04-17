@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,43 +14,41 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\models\intervals;
 
-namespace classes\models\intervals;
-
-use classes\models\DynamicField;
-use classes\models\DynamicObject;
-use Db;
-use DbQuery;
-use Validate;
+use DynamicProduct\classes\helpers\ModelHelper;
+use DynamicProduct\classes\models\DynamicField;
+use DynamicProduct\classes\models\DynamicObject;
+use DynamicProduct\classes\models\DynamicProductConfigLink;
 
 class IntervalField extends DynamicObject
 {
-
     public $id_interval;
     public $id_field;
 
     /** @var DynamicField */
     public $field;
 
-    public static $definition = array(
-        'table'     => 'dynamicproduct_interval_field',
-        'primary'   => 'id_interval_field',
+    private static $cache = [];
+
+    public static $definition = [
+        'table' => 'dynamicproduct_interval_field',
+        'primary' => 'id_interval_field',
         'multilang' => false,
-        'fields'    => array(
-            'id_interval' => array('type' => self::TYPE_INT),
-            'id_field'    => array('type' => self::TYPE_INT),
-        )
-    );
+        'fields' => [
+            'id_interval' => ['type' => self::TYPE_INT],
+            'id_field' => ['type' => self::TYPE_INT],
+        ],
+    ];
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
@@ -59,43 +58,70 @@ class IntervalField extends DynamicObject
 
     /**
      * @param $id_interval
+     *
      * @return IntervalField[]
      */
     public static function getByInterval($id_interval)
     {
-        $objects = array();
-        $sql = new DbQuery();
+        $objects = [];
+        $sql = new \DbQuery();
         $sql->from(static::$definition['table']);
         $sql->where('id_interval = ' . (int) $id_interval);
-        $rows = Db::getInstance()->executeS($sql, false);
-        while ($row = Db::getInstance()->nextRow($rows)) {
+        $rows = \Db::getInstance()->executeS($sql, false);
+        while ($row = \Db::getInstance()->nextRow($rows)) {
             $id = $row[static::$definition['primary']];
             $object = new self($id);
-            if (Validate::isLoadedObject($object)) {
-                $objects[$id] = $object;
+            if (\Validate::isLoadedObject($object)) {
+                $objects[] = $object;
             }
         }
+
         return $objects;
+    }
+
+    public static function getRowsByProduct($id_product)
+    {
+        if (isset(self::$cache[$id_product])) {
+            return self::$cache[$id_product];
+        }
+
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+
+        $rows = \Db::getInstance()->executeS(/* @lang MySQL */ '
+            SELECT *, dif.id_interval_field as id 
+            
+            FROM ' . _DB_PREFIX_ . 'dynamicproduct_interval i
+            
+            JOIN ' . _DB_PREFIX_ . 'dynamicproduct_interval_field dif
+            ON i.id_interval = dif.id_interval
+            
+            WHERE i.id_product = ' . (int) $id_source_product);
+
+        $rows = ModelHelper::castNumericValues($rows, self::class);
+
+        return self::$cache[$id_source_product] = $rows;
     }
 
     /**
      * @param $id_field
+     *
      * @return IntervalField[]
      */
     public static function getByField($id_field)
     {
-        $objects = array();
-        $sql = new DbQuery();
+        $objects = [];
+        $sql = new \DbQuery();
         $sql->from(static::$definition['table']);
         $sql->where('id_field = ' . (int) $id_field);
-        $rows = Db::getInstance()->executeS($sql, false);
-        while ($row = Db::getInstance()->nextRow($rows)) {
+        $rows = \Db::getInstance()->executeS($sql, false);
+        while ($row = \Db::getInstance()->nextRow($rows)) {
             $id = $row[static::$definition['primary']];
             $object = new self($id);
-            if (Validate::isLoadedObject($object)) {
+            if (\Validate::isLoadedObject($object)) {
                 $objects[$id] = $object;
             }
         }
+
         return $objects;
     }
 

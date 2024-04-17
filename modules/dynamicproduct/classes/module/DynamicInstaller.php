@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,38 +14,30 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\module;
 
-namespace classes\module;
-
-use classes\DynamicTools;
-use classes\helpers\FolderHelper;
-use Context;
-use Db;
-use DynamicProduct;
-use Language;
-use Tab;
-use Tools;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\helpers\FolderHelper;
 
 class DynamicInstaller
 {
-
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
-    private $hooks_front = array(
+    private $hooks_front = [
         'displayHeader',
+        'actionFrontControllerInitBefore',
         'displayProductAdditionalInfo',
         'actionValidateOrder',
         'displayProductPriceBlock',
@@ -53,96 +46,109 @@ class DynamicInstaller
         'displayBeforeShoppingCartBlock',
         'displayShoppingCart',
         'actionCartSave',
+        'displayCustomerAccount',
         'addWebserviceResources',
-    );
-    private $hooks_admin = array(
+        'actionProductSearchProviderRunQueryAfter',
+    ];
+    private $hooks_admin = [
         'displayBackOfficeHeader',
         'displayAdminProductsExtra',
         'actionProductAdd',
+        'actionProductSave',
         'actionAdminControllerSetMedia',
         'actionOrderStatusPostUpdate',
         'actionClearCompileCache',
-    );
+        'displayDashboardToolbarTopMenu',
+        'actionAdminProductsListingFieldsModifier',
+    ];
 
-    private static $controllers = array(
-        array(
-            'name'  => 'Dynamic Main Config',
-            'class' => 'DynamicMainConfig'
-        ),
-        array(
-            'name'  => 'Dynamic Product Settings',
-            'class' => 'DynamicProductSettings'
-        ),
-        array(
-            'name'  => 'Dynamic Product Equations',
-            'class' => 'DynamicProductEquations'
-        ),
-        array(
-            'name'  => 'Dynamic Product Fields',
-            'class' => 'DynamicProductFields'
-        ),
-        array(
-            'name'  => 'Dynamic Product Fields Settings',
-            'class' => 'DynamicProductFieldsSettings'
-        ),
-        array(
-            'name'  => 'Dynamic Product Fields Options',
-            'class' => 'DynamicProductFieldsOptions'
-        ),
-        array(
-            'name'  => 'Dynamic Product Combinations',
-            'class' => 'DynamicProductCombinations'
-        ),
-        array(
-            'name'  => 'Dynamic Product Visibility',
-            'class' => 'DynamicProductVisibility'
-        ),
-        array(
-            'name'  => 'Dynamic Product Proportions',
-            'class' => 'DynamicProductProportions'
-        ),
-        array(
-            'name'  => 'Dynamic Product Conditions',
-            'class' => 'DynamicProductConditions'
-        ),
-        array(
-            'name'  => 'Dynamic Product Field Formulas',
-            'class' => 'DynamicProductFieldFormulas'
-        ),
-        array(
-            'name'   => 'Dynamic Product',
-            'class'  => 'DpRedirect',
-            'parent' => 'AdminParentModulesSf'
-        ),
-        array(
-            'name'  => 'Dynamic Product Intervals',
-            'class' => 'DynamicProductIntervals'
-        ),
-        array(
-            'name'  => 'Dynamic Product Grids',
-            'class' => 'DynamicProductGrids'
-        ),
-        array(
-            'name'  => 'Dynamic Product Exec Order',
-            'class' => 'DynamicProductExecOrder'
-        ),
-        array(
-            'name'  => 'Dynamic Product Field Groups',
-            'class' => 'DynamicProductFieldGroups'
-        ),
-        array(
-            'name'  => 'Dynamic Product Steps',
-            'class' => 'DynamicProductSteps'
-        ),
-        array(
-            'name'  => 'Dynamic Product Dev',
-            'class' => 'DynamicProductDev'
-        ),
-        array(
-            'name'  => 'Dynamic Product CSV',
-            'class' => 'DynamicProductCSV'
-        ),
-    );
+    private static $controllers = [
+        [
+            'name' => 'Dynamic Main Config',
+            'class' => 'DynamicMainConfig',
+        ],
+        [
+            'name' => 'Dynamic Product Settings',
+            'class' => 'DynamicProductSettings',
+        ],
+        [
+            'name' => 'Dynamic Product Equations',
+            'class' => 'DynamicProductEquations',
+        ],
+        [
+            'name' => 'Dynamic Preset Equations',
+            'class' => 'DynamicPresetEquations',
+        ],
+        [
+            'name' => 'Dynamic Product Fields',
+            'class' => 'DynamicProductFields',
+        ],
+        [
+            'name' => 'Dynamic Product Fields Settings',
+            'class' => 'DynamicProductFieldsSettings',
+        ],
+        [
+            'name' => 'Dynamic Product Fields Options',
+            'class' => 'DynamicProductFieldsOptions',
+        ],
+        [
+            'name' => 'Dynamic Product Combinations',
+            'class' => 'DynamicProductCombinations',
+        ],
+        [
+            'name' => 'Dynamic Product Visibility',
+            'class' => 'DynamicProductVisibility',
+        ],
+        [
+            'name' => 'Dynamic Product Proportions',
+            'class' => 'DynamicProductProportions',
+        ],
+        [
+            'name' => 'Dynamic Product Conditions',
+            'class' => 'DynamicProductConditions',
+        ],
+        [
+            'name' => 'Dynamic Product Field Formulas',
+            'class' => 'DynamicProductFieldFormulas',
+        ],
+        [
+            'name' => 'Dynamic Product',
+            'class' => 'DpRedirect',
+            'parent' => 'AdminParentModulesSf',
+        ],
+        [
+            'name' => 'Dynamic Product Intervals',
+            'class' => 'DynamicProductIntervals',
+        ],
+        [
+            'name' => 'Dynamic Product Grids',
+            'class' => 'DynamicProductGrids',
+        ],
+        [
+            'name' => 'Dynamic Product Exec Order',
+            'class' => 'DynamicProductExecOrder',
+        ],
+        [
+            'name' => 'Dynamic Product Field Groups',
+            'class' => 'DynamicProductFieldGroups',
+        ],
+        [
+            'name' => 'Dynamic Product Steps',
+            'class' => 'DynamicProductSteps',
+        ],
+        [
+            'name' => 'Dynamic Product Dev',
+            'class' => 'DynamicProductDev',
+        ],
+        [
+            'name' => 'Dynamic Product CSV',
+            'class' => 'DynamicProductCSV',
+        ],
+        [
+            'name' => 'Dynamic Calculation Items',
+            'class' => 'DynamicCalculationItems',
+        ],
+    ];
 
     public function __construct($module, $context)
     {
@@ -165,6 +171,7 @@ class DynamicInstaller
         foreach ($this->getHooks() as $hook) {
             $this->module->registerHook($hook);
         }
+
         return true;
     }
 
@@ -173,6 +180,7 @@ class DynamicInstaller
         foreach ($this->getHooks() as $hook) {
             $this->module->unregisterHook($hook);
         }
+
         return true;
     }
 
@@ -182,13 +190,14 @@ class DynamicInstaller
         foreach (self::$controllers as $controller) {
             $success &= $this->installController($controller);
         }
+
         return $success;
     }
 
     public function installController($controller)
     {
-        $languages = Language::getLanguages();
-        $tab = new Tab();
+        $languages = \Language::getLanguages();
+        $tab = new \Tab();
         foreach ($languages as $lang) {
             $tab->name[$lang['id_lang']] = $controller['name'];
         }
@@ -200,12 +209,14 @@ class DynamicInstaller
         }
         $tab->module = $this->module->name;
         $tab->active = 1;
+
         return $tab->add();
     }
 
     public function uninstallController($name)
     {
-        $tab = new Tab((int) Tab::getIdFromClassName($name));
+        $tab = new \Tab((int) \Tab::getIdFromClassName($name));
+
         return $tab->delete();
     }
 
@@ -213,8 +224,9 @@ class DynamicInstaller
     {
         $success = true;
         foreach (self::$controllers as $controller) {
-            $success &= $this->uninstallController($controller ['class']);
+            $success &= $this->uninstallController($controller['class']);
         }
+
         return $success;
     }
 
@@ -222,7 +234,7 @@ class DynamicInstaller
     {
         $result = true;
 
-        $folders = array(
+        $folders = [
             '',
             'allocations',
             'calculator',
@@ -235,8 +247,10 @@ class DynamicInstaller
             'images',
             'images/field',
             'images/thumbnails',
+            'images/radio',
             'images/dropdown',
-        );
+            'images/preview',
+        ];
 
         $index_file = $this->module->getDir() . 'index.php';
 
@@ -248,21 +262,21 @@ class DynamicInstaller
             }
         }
 
-        $files = array(
-            'install/calculator/.htaccess'  => 'calculator/.htaccess',
+        $files = [
+            'install/calculator/.htaccess' => 'calculator/.htaccess',
             'install/calculator/readme.txt' => 'calculator/readme.txt',
 
             'install/allocations/.htaccess' => 'allocations/.htaccess',
 
             'install/declarations/.htaccess' => 'declarations/.htaccess',
 
-            'install/databases/.htaccess'  => 'databases/.htaccess',
+            'install/databases/.htaccess' => 'databases/.htaccess',
             'install/databases/readme.txt' => 'databases/readme.txt',
 
             'install/cache/.htaccess' => 'cache/.htaccess',
 
             'install/upload_keep/readme.txt' => 'upload_keep/readme.txt',
-        );
+        ];
 
         foreach ($files as $src => $dest) {
             $file_path = $this->module->getDir() . $src;
@@ -279,15 +293,15 @@ class DynamicInstaller
 
     public function copyFiles()
     {
-        $folders = array(
-            'allocations'          => 'allocations',
-            'calculator'           => 'calculator',
-            'declarations'         => 'declarations',
-            'scripts'              => 'scripts',
-            'upload'               => 'upload',
-            'views/img/field'      => 'images/field',
+        $folders = [
+            'allocations' => 'allocations',
+            'calculator' => 'calculator',
+            'declarations' => 'declarations',
+            'scripts' => 'scripts',
+            'upload' => 'upload',
+            'views/img/field' => 'images/field',
             'views/img/thumbnails' => 'images/thumbnails',
-        );
+        ];
 
         $folder_helper = new FolderHelper($this->module, $this->context);
 
@@ -296,6 +310,7 @@ class DynamicInstaller
             $dest = $this->module->provider->getDataDir($dest);
             $folder_helper->copyFolder($src, $dest);
         }
+
         return true;
     }
 
@@ -305,20 +320,21 @@ class DynamicInstaller
             return false;
         }
 
-        if (!$sql = Tools::file_get_contents($path)) {
+        if (!$sql = \Tools::file_get_contents($path)) {
             return false;
         }
         $sql = str_replace(
-            array('__PREFIX', '_MYSQL_ENGINE_'),
-            array(_DB_PREFIX_ . $this->module->name, _MYSQL_ENGINE_),
+            ['ps_dynamicproduct', 'ps_tunisoft', 'InnoDb'],
+            [_DB_PREFIX_ . $this->module->name, _DB_PREFIX_ . 'tunisoft', _MYSQL_ENGINE_],
             $sql
         );
         $sql = preg_split('/;\s*[\r\n]+/', $sql);
         foreach ($sql as $query) {
-            if (trim($query) && !Db::getInstance()->execute(trim($query))) {
+            if (trim($query) && !\Db::getInstance()->execute(trim($query))) {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -326,30 +342,54 @@ class DynamicInstaller
     {
         $success = true;
         $uninstall_script = $this->module->getDir() . 'sql/tables.json';
-        $contents = Tools::file_get_contents($uninstall_script);
+        $contents = \Tools::file_get_contents($uninstall_script);
         $tables = json_decode($contents, true);
         if (is_array($tables)) {
             foreach ($tables as $table) {
                 $table = $this->restoreTableName($table);
-                $sql = 'DROP TABLE IF EXISTS `__PREFIX_' . pSQL($table) . '`;';
-                $sql = str_replace('__PREFIX', pSQL(_DB_PREFIX_ . $this->module->name), $sql);
-                $success &= Db::getInstance()->execute($sql);
+                $sql = 'DROP TABLE IF EXISTS `ps_dynamicproduct_' . pSQL($table) . '`;';
+                $sql = str_replace('ps_dynamicproduct', pSQL(_DB_PREFIX_ . $this->module->name), $sql);
+                $success &= \Db::getInstance()->execute($sql);
             }
         }
+
         return $success;
     }
 
     private function restoreTableName($table)
     {
-        if (!DynamicTools::isModuleDevMode() && Tools::substr($table, 0, 1) === '_') {
-            $table = Tools::substr($table, 1);
+        if (!DynamicTools::isModuleDevMode() && \Tools::substr($table, 0, 1) === '_') {
+            $table = \Tools::substr($table, 1);
         }
+
         return $table;
     }
 
     public function upgradeSQL($version)
     {
         $path = $this->module->getFolderPath('upgrade/sql') . "upgrade-{$version}.sql";
+
         return $this->execSQLFile($path);
+    }
+
+    public function checkUpgrade($version)
+    {
+        $path = $this->getUpgradeCheckerFile($version);
+
+        try {
+            return $this->execSQLFile($path);
+        } catch (\Exception|\Throwable $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param $version
+     *
+     * @return string
+     */
+    public function getUpgradeCheckerFile($version)
+    {
+        return $this->module->getFolderPath('upgrade/sql') . "upgrade-{$version}-check.sql";
     }
 }

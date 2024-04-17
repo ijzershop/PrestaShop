@@ -259,6 +259,15 @@ offerintegration_ajax_select2_products_data:
     _legacy_link: 'MsAdminAjax:select2_products_data'
     _legacy_parameters:
 
+offerintegration_ajax_price_data:
+  path: /modernesmid/offerintegration/ajax/price_data
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'MsThemeConfig\Controller\Admin\MsAdminAjaxController::getPriceDataAction'
+    _legacy_controller: 'MsAdminAjaxController'
+    _legacy_link: 'MsAdminAjax:price_data'
+    _legacy_parameters:
+
 offerintegration_ajax_put_offer_row:
   path: /modernesmid/offerintegration/ajax/put
   methods: [ POST ]

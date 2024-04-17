@@ -589,9 +589,7 @@ class Ps_EmailAlerts extends Module
                     'new_order',
                     $this->trans(
                         '%s | %s | %s | %s',
-                        [
-                            $order->id,
-                            $order->reference,
+                        [   $order->reference,
                             $contextLocale->formatPrice($order->total_paid, $currency->iso_code),
                             strtoupper(Tools::substr($order->payment, 0, 32)),
                             (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name)

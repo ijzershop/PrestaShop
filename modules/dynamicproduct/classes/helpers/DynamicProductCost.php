@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,33 +14,25 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\helpers;
 
-namespace classes\helpers;
-
-use classes\models\DynamicEquation;
-use classes\models\DynamicInput;
-use Context;
-use Db;
-use DynamicProduct;
-use OrderDetail;
-use Validate;
+use DynamicProduct\classes\models\DynamicEquation;
+use DynamicProduct\classes\models\DynamicInput;
 
 class DynamicProductCost
 {
-
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
     public function __construct($module, $context)
@@ -50,7 +43,7 @@ class DynamicProductCost
 
     public function updateCost($id_order)
     {
-        $order_details = OrderDetail::getList($id_order);
+        $order_details = \OrderDetail::getList($id_order);
         foreach ($order_details as $order_detail) {
             $id_product = (int) $order_detail['product_id'];
 
@@ -65,7 +58,7 @@ class DynamicProductCost
             }
 
             $cost_equation = DynamicEquation::getEquationByIdFormula($id_product, DynamicEquation::_DP_COST_EQ_);
-            if (!Validate::isLoadedObject($cost_equation)) {
+            if (!\Validate::isLoadedObject($cost_equation)) {
                 continue;
             }
 
@@ -74,9 +67,9 @@ class DynamicProductCost
                 continue;
             }
             $cost = DynamicEquation::evaluateFormula($formula, $dynamic_input->getInputFields(), 'Cost formula');
-            Db::getInstance()->update(
+            \Db::getInstance()->update(
                 'order_detail',
-                array('purchase_supplier_price' => (float) $cost),
+                ['purchase_supplier_price' => (float) $cost],
                 'id_order_detail = ' . (int) $order_detail['id_order_detail']
             );
         }

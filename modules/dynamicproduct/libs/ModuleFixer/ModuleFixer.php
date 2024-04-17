@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,36 +14,57 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
+/**
+ * 2007-2023 TuniSoft
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
+ * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace libs\ModuleFixer;
+namespace DynamicProduct\libs\ModuleFixer;
 
-use Context;
-use DynamicProduct;
-use Hook;
-use Tools;
+use DynamicProduct\classes\models\DynamicInput;
+use DynamicProduct\libs\UpgradeChecker\UpgradeChecker;
 
 class ModuleFixer
 {
-    /** @var DynamicProduct */
+    /** @var \DynamicProduct */
     private $module;
-    /** @var Context */
+    /** @var \Context */
     private $context;
 
-    private $errors = array();
+    private $errors = [];
 
     public function __construct($module)
     {
-        $this->context = Context::getContext();
+        $this->context = \Context::getContext();
         $this->module = $module;
     }
 
@@ -51,47 +73,36 @@ class ModuleFixer
         $this->postProcess();
         $module_hooks = $this->getModuleHooks();
         $unregistered_hooks = $this->getHooksList($module_hooks);
-        $this->context->smarty->assign(array(
-            'module'             => $this->module,
-            'module_link'        => $this->getModuleLink(),
-            'module_hooks'       => $module_hooks,
+        $this->context->smarty->assign([
+            'module' => $this->module,
+            'module_link' => $this->getModuleLink(),
+            'module_hooks' => $module_hooks,
             'unregistered_hooks' => $unregistered_hooks,
-            'errors'             => $this->errors,
-            'templates_fixed'    => $this->areTemplatesFixed(),
-        ));
+            'errors' => $this->errors,
+            'templates_fixed' => $this->areTemplatesFixed(),
+        ]);
+
         return $this->context->smarty->fetch(dirname(__FILE__) . '/ModuleFixer.tpl');
     }
 
-    private function getModuleHooks()
+    private function getModuleHooks(): array
     {
-        if (!property_exists($this->module, 'hooks')) {
-            $this->errors[] = 'Module class has no property hooks, it should be an array containing mandatory hooks';
-            return array();
-        }
-
-        $module_hooks = $this->module->hooks;
-
-        if (!is_array($module_hooks)) {
-            $this->errors[] = 'property hooks should be an array containing mandatory hooks';
-            return array();
-        }
-
-        return $module_hooks;
+        return $this->module->installer->getHooks();
     }
 
     private function getHooksList($module_hooks)
     {
-        $hooks_list = array();
+        $hooks_list = [];
 
         foreach ($module_hooks as $hook_name) {
-            if (!Hook::isModuleRegisteredOnHook($this->module, $hook_name, $this->context->shop->id)) {
-                $id_hook = (int) Hook::getIdByName($hook_name);
-                $hook = new Hook($id_hook, $this->context->language->id);
-                $hooks_list[] = array(
-                    'id_hook'     => $id_hook,
-                    'name'        => $hook_name,
+            if (!\Hook::isModuleRegisteredOnHook($this->module, $hook_name, $this->context->shop->id)) {
+                $id_hook = (int) \Hook::getIdByName($hook_name);
+                $hook = new \Hook($id_hook, $this->context->language->id);
+                $hooks_list[] = [
+                    'id_hook' => $id_hook,
+                    'name' => $hook_name,
                     'description' => $hook->description,
-                );
+                ];
             }
         }
 
@@ -100,17 +111,20 @@ class ModuleFixer
 
     private function postProcess()
     {
-        if (Tools::isSubmit('restore_hooks')) {
+        if (\Tools::isSubmit('restore_hooks')) {
             $this->restoreHooks();
         }
-        if (Tools::isSubmit('fix_templates')) {
+        if (\Tools::isSubmit('fix_templates')) {
             $this->fixTemplates();
+        }
+        if (\Tools::isSubmit('cleanup')) {
+            $this->cleanUp();
         }
     }
 
     private function restoreHooks()
     {
-        $hooks = (array) Tools::getValue('hooks');
+        $hooks = (array) \Tools::getValue('hooks');
         if (is_array($hooks)) {
             $hook_names = array_keys($hooks);
             foreach ($hook_names as $hook_name) {
@@ -127,7 +141,7 @@ class ModuleFixer
 
         foreach ($fixes as $fix) {
             if (is_file($fix['path'])) {
-                $contents = Tools::file_get_contents($fix['path']);
+                $contents = \Tools::file_get_contents($fix['path']);
                 if ($contents) {
                     $new_contents = str_replace($fix['search'], $fix['replace'], $contents);
                     file_put_contents($fix['path'], $new_contents);
@@ -141,48 +155,118 @@ class ModuleFixer
         $fixes = $this->getFixes();
         foreach ($fixes as $fix) {
             if (is_file($fix['path'])) {
-                $contents = Tools::file_get_contents($fix['path']);
+                $contents = \Tools::file_get_contents($fix['path']);
                 if (strpos($contents, $fix['replace']) === false) {
                     return false;
                 }
             }
         }
+
         return true;
     }
 
     private function getFixes(): array
     {
-        return array(
-            array(
-                'path'    => _PS_ROOT_DIR_ .
-                    "/src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig",
-                "search"  => "{{ customizationField.value }}",
-                "replace" => "{{ customizationField.value | raw }}",
-            ),
-            array(
-                'path'    => _PS_ROOT_DIR_ .
-                    "/src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig",
-                "search"  => "{{ customization.value }}",
-                "replace" => "{{ customization.value | raw }}",
-            ),
-            array(
-                'path'    => _PS_ROOT_DIR_ .
-                    "/mails/_partials/order_conf_product_list.tpl",
-                "search"  => "{\$customization['customization_text']}",
-                "replace" => "{\$customization['customization_text'] nofilter}",
-            ),
-            array(
-                'path'    => _PS_ROOT_DIR_ .
-                    "/mails/en/order_conf_product_list.tpl",
-                "search"  => "{\$customization['customization_text']}",
-                "replace" => "{\$customization['customization_text'] nofilter}",
-            ),
-        );
+        return [
+            [
+                'path' => _PS_ROOT_DIR_ .
+                    '/src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig',
+                'search' => '{{ customizationField.value }}',
+                'replace' => '{{ customizationField.value | raw }}',
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                    '/src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig',
+                'search' => '{{ customization.value }}',
+                'replace' => '{{ customization.value | raw }}',
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                    '/mails/_partials/order_conf_product_list.tpl',
+                'search' => "{\$customization['customization_text']}",
+                'replace' => "{\$customization['customization_text'] nofilter}",
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                    '/mails/en/order_conf_product_list.tpl',
+                'search' => "{\$customization['customization_text']}",
+                'replace' => "{\$customization['customization_text'] nofilter}",
+            ],
+        ];
     }
 
     private function getModuleLink()
     {
-        $token = Tools::getAdminTokenLite('AdminModules');
+        $token = \Tools::getAdminTokenLite('AdminModules');
+
         return 'index.php?controller=AdminModules&token=' . $token . '&configure=' . $this->module->name;
+    }
+
+    public function displayDiagnostics()
+    {
+        $templates_fixed = $this->areTemplatesFixed();
+
+        $has_failed_upgrades = false;
+        $upgrade_checker = new UpgradeChecker($this->module);
+        $upgrades = $upgrade_checker->getUpgrades();
+        $failed_upgrades = in_array(false, array_column($upgrades, 'success'));
+        if ($failed_upgrades) {
+            $has_failed_upgrades = true;
+        }
+        $needs_upgrade = $upgrade_checker->needsUpgrade();
+        $display_diagnostics = !$templates_fixed || $has_failed_upgrades || $needs_upgrade;
+
+        $this->context->smarty->assign([
+            'templates_fixed' => $templates_fixed,
+            'has_failed_upgrades' => $has_failed_upgrades,
+            'needs_upgrade' => $needs_upgrade,
+            'module_link' => $this->getModuleLink(),
+        ]);
+
+        if (!$display_diagnostics) {
+            return null;
+        }
+
+        return $this->context->smarty->fetch(dirname(__FILE__) . '/diagnostics.tpl');
+    }
+
+    public function cleanUp()
+    {
+        $start_time = microtime(true);
+        $max_execution_time = (int) ini_get('max_execution_time');
+
+        $min_age = \Tools::getValue('min_age');
+
+        $saved_inputs_delete_count = 0;
+
+        $old_inputs = \Db::getInstance()->executeS('SELECT i.id_input FROM ' . _DB_PREFIX_ . 'dynamicproduct_input i
+                LEFT JOIN ' . _DB_PREFIX_ . 'order_detail od ON od.id_customization = i.id_customization
+                WHERE i.date_upd < NOW() - INTERVAL ' . (int) $min_age . ' DAY
+                AND ISNULL(od.id_order_detail) AND NOT i.is_admin AND NOT i.is_bookmarked;');
+
+        foreach ($old_inputs as $old_input) {
+            $id_input = (int) $old_input['id_input'];
+            $input = new DynamicInput($id_input);
+            if (\Validate::isLoadedObject($input)) {
+                $input->delete();
+                ++$saved_inputs_delete_count;
+            }
+
+            $elapsed_time = (microtime(true) - $start_time);
+            if ($elapsed_time > $max_execution_time - 1) {
+                $this->context->smarty->assign([
+                    'time_limit_exceeded' => true,
+                    'min_age' => $min_age,
+                    'saved_inputs_delete_count' => $saved_inputs_delete_count,
+                ]);
+
+                return;
+            }
+        }
+
+        $this->context->smarty->assign([
+            'min_age' => $min_age,
+            'saved_inputs_delete_count' => $saved_inputs_delete_count,
+        ]);
     }
 }

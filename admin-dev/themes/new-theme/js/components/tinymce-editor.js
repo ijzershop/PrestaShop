@@ -70,7 +70,6 @@ class TinyMCEEditor {
    * @param config
    */
   setupTinyMCE(config) {
-    console.log(config.base_url_website);
     if (typeof tinyMCE === 'undefined') {
       this.loadAndInitTinyMCE(config);
     } else {
@@ -112,9 +111,9 @@ class TinyMCEEditor {
     const cfg = {
       selector: '.rte',
       relative_urls: false,
-      plugins: ['link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
+      plugins: ['paste','link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
       browser_spellcheck: true,
-      toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
+      toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print paste | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
       paste_data_images: true,
       paste_preprocess: function(plugin, args) {
         let m;
@@ -122,12 +121,24 @@ class TinyMCEEditor {
         const regex = new RegExp('^<img.*?src=\"(.*?)\"');
         if(regex.test(content))
         {
-          //is an image do nothing
-          return false;
+          m = content.replace('<img', '<img width="100%" style="max-width:100%;height:auto!important;"');
+          args.content = m;
         } else {
           //is text strip all
           m = content.replace(/(<([^>]+)>)/gi, "");
           args.content = m;
+        }
+      },
+      paste_postprocess: (editor, args) => {
+        let child = args.node.firstChild;
+        if(child.tagName === 'IMG'){
+          let srcString = child.src;
+          if(srcString.indexOf(config.base_url_website) === -1 && srcString.indexOf('blob:') === -1){
+            srcString = config.base_url_website + srcString
+          } else if(srcString.indexOf(config.base_url_website) === -1 && srcString.indexOf('blob:') !== -1){
+            srcString.replace('blob:', 'blob:' + config.base_url_website);
+          }
+          child.src = srcString;
         }
       },
       contextmenu: "bootstrap",
@@ -140,7 +151,7 @@ class TinyMCEEditor {
         url: config.base_url_website + 'js/tiny_mce/plugins/bootstrap/',
         iconFont: 'fontawesome5',
         imagesPath: config.base_url_website+ 'upload',
-        key:   this.fetchKey(window.location.hostname),
+        key: this.fetchKey(window.location.hostname),
         enableTemplateEdition: true,
       },
       editorStyleFormats: {
@@ -170,7 +181,7 @@ class TinyMCEEditor {
       valid_elements: '*[*]',
       rel_list: [{title: 'nofollow', value: 'nofollow'}],
       automatic_uploads: true,
-      images_upload_url: config.base_url_website+ '/custom_uploader/upload.php',
+      images_upload_url: config.base_url_website+ 'custom_uploader/upload.php',
       images_upload_handler: function (blobInfo, success, failure, progress) {
         let xhr, formData;
         const url = '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1';
@@ -189,7 +200,6 @@ class TinyMCEEditor {
 
         xhr.onload = function() {
           let json;
-
           if (xhr.status !== 200) {
             failure('HTTP Error: ' + xhr.status);
             return;
@@ -200,7 +210,7 @@ class TinyMCEEditor {
             failure('Invalid JSON: ' + xhr.responseText);
             return;
           }
-          success('/upload'+json.location);
+          success(config.base_url_website+'upload'+json.location);
           top.tinymce.activeEditor.notificationManager.close();
         };
         xhr.send(formData);
@@ -212,8 +222,7 @@ class TinyMCEEditor {
       },
       setup: (editor) => {
         this.setupEditor(editor);
-      },
-      ...config,
+      }
     };
 
     if (typeof window.defaultTinyMceConfig !== 'undefined') {
@@ -229,6 +238,7 @@ class TinyMCEEditor {
       this.changeToMaterial();
     });
 
+    $.extend(cfg, config);
     window.tinyMCE.init(cfg);
     this.watchTabChanges(cfg);
   }
@@ -289,7 +299,6 @@ class TinyMCEEditor {
 
     EventEmitter.on('languageSelected', (data) => {
       const textareaLinkSelector = `.nav-item a[data-locale="${data.selectedLocale}"]`;
-
       $(textareaLinkSelector).click();
     });
   }
@@ -312,6 +321,8 @@ class TinyMCEEditor {
     window.tinyMCEPreInit.base = `${finalPath}/js/tiny_mce`;
     window.tinyMCEPreInit.suffix = '.min';
     $.getScript(`${finalPath}/js/tiny_mce/tinymce.min.js`, () => {
+
+
       this.setupTinyMCE(config);
     });
   }

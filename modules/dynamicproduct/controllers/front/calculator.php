@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,26 +14,23 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+/* @noinspection PhpUnusedPrivateMethodInspection */
 
-/** @noinspection PhpUnusedPrivateMethodInspection */
-
-use classes\controllers\front\DynamicFrontController;
-use classes\DynamicTools;
-use classes\helpers\DynamicCalculatorHelper;
-use classes\models\DynamicInputField;
+use DynamicProduct\classes\controllers\front\DynamicFrontController;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\helpers\DynamicCalculatorHelper;
+use DynamicProduct\classes\models\DynamicInputField;
 
 /** @noinspection PhpUnused */
-
 class DynamicProductCalculatorModuleFrontController extends DynamicFrontController
 {
     /** @noinspection PhpUnused */
@@ -43,23 +41,28 @@ class DynamicProductCalculatorModuleFrontController extends DynamicFrontControll
         $fields = Tools::getValue('fields');
         $adapter_data = Tools::getValue('adapter_data');
 
-        $input_fields = array();
-        $fields_visibility = array();
+        $input_fields = [];
+        $fields_visibility = [];
+        $grouped_fields = [];
 
         $calculator_helper->resetDebugMessages();
 
         try {
-            [$input_fields, $fields_visibility] = DynamicInputField::getInputFieldsFromData(
+            list($input_fields, $fields_visibility, $grouped_fields) = DynamicInputField::getInputFieldsFromData(
                 $this->id_product,
                 $this->id_attribute,
                 $fields,
-                empty($fields['changed']['value'])
+                empty($fields['changed']['value']) ? DynamicInputField::LOAD_ALL : DynamicInputField::LOAD_NONE
             );
         } catch (Exception $e) {
-            $this->respond(array(
-                'error'   => 1,
-                'message' => DynamicTools::reportException($e)
-            ));
+            if (_PS_MODE_DEV_) {
+                throw $e;
+            }
+
+            $this->respond([
+                'error' => 1,
+                'message' => DynamicTools::reportException($e),
+            ]);
         }
 
         try {
@@ -71,17 +74,21 @@ class DynamicProductCalculatorModuleFrontController extends DynamicFrontControll
                 $adapter_data
             );
         } catch (Exception $e) {
-            $calculation = array(
-                'input_fields'   => $input_fields,
-                'visibility'     => $fields_visibility,
+            if (_PS_MODE_DEV_) {
+                throw $e;
+            }
+            $calculation = [
+                'input_fields' => $input_fields,
+                'visibility' => $fields_visibility,
                 'debug_messages' => DynamicProduct::$debug_messages,
-            );
-            $this->respond(array(
-                'error'   => 1,
-                'message' => DynamicTools::reportException($e)
-            ));
+            ];
+            $this->respond([
+                'error' => 1,
+                'message' => DynamicTools::reportException($e),
+            ]);
         }
 
+        $calculation['grouped_fields'] = $grouped_fields;
         $this->respond($calculation);
     }
 }

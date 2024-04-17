@@ -28,6 +28,7 @@
       {assign var="control_check"  value=0}
 <div id="product-images-carousel" class="carousel slide" data-ride="false" data-keyboard="true" data-touch="true" data-pause="hover">
   <div class="carousel-inner">
+    {if (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}
     {foreach from=$product.images item=image key=key}
     {if strpos($image.legend, 'techntabel') == false}
       <div class="carousel-item  {if $image.id_image == $product.cover.id_image}active{/if}">
@@ -44,22 +45,28 @@
         {assign var="control_check"  value=(int)$key}
         {/if}
     {/foreach}
+
+    {else}
+      <div class="carousel-item  active">
+        <img
+          class="w-100 thumb js-thumb selected"
+          data-image-medium-src="/themes/modernesmid_theme/assets/logo/offer-product-ijzershop.png"
+          data-image-large-src="/themes/modernesmid_theme/assets/logo/offer-product-ijzershop.png"
+          src="/themes/modernesmid_theme/assets/logo/offer-product-ijzershop.png"
+          alt="Offerte afbeelding"
+          title="Offerte afbeelding"
+          width="100"
+        >
+      </div>
+      {assign var="control_check"  value=0}
+    {/if}
   </div>
-{*    <ol class="carousel-indicators">*}
-{*        {assign var="index_indicator" value=0}*}
-        {assign var="index_thumbs" value=0}
-{*        {foreach from=$product.images item=image key=key2}*}
-{*          {if strpos($image.legend, 'techntabel') == false}*}
-{*            <li data-target="#product-images-carousel" data-slide-to="{$index_indicator}" class=" {if $image.id_image == $product.cover.id_image}active{/if}">*}
-{*            </li>*}
-{*              {assign var="index_indicator" value=$index_indicator+1}*}
-{*          {/if}*}
-{*        {/foreach}*}
-{*    </ol>*}
+
+  {assign var="index_thumbs" value=0}
   <ol class="carousel-indicators-thumbs m-0">
           {foreach from=$product.images item=image key=key3}
               {if strpos($image.legend, 'techntabel') == false}
-                <li data-slide-to="{$index_thumbs}" class=" {if $image.id_image == $product.cover.id_image}active{/if}">
+                <li  data-target="#product-images-carousel" data-slide-to="{$index_thumbs}" class=" {if $image.id_image == $product.cover.id_image}active{/if}">
                   <img height="70px" width="auto" src="{$image.bySize.small_default.url}" alt="{$image.legend}"/>
                 </li>
                   {assign var="index_thumbs" value=$index_thumbs+1}

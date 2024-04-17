@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,44 +14,26 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\module;
 
-namespace classes\module;
-
-use Address;
-use Cart;
-use Category;
-use classes\DynamicTools;
-use classes\models\DynamicMainConfig;
-use Combination;
-use Configuration;
-use Context;
-use Cookie;
-use Currency;
-use Customer;
-use Db;
-use DbQuery;
-use DynamicProduct;
-use Guest;
-use Product;
-use Tools;
-use Validate;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\models\DynamicMainConfig;
+use DynamicProduct\classes\models\DynamicProductConfigLink;
 
 class DynamicProvider
 {
-
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
     public function __construct($module, $context)
@@ -74,20 +57,22 @@ class DynamicProvider
         if ($this->context->customer) {
             return $this->context->customer->id_default_group;
         }
+
         return null;
     }
 
     public function getCustomerFromCart($id_cart)
     {
-        return (new Cart($id_cart))->id_customer;
+        return (new \Cart($id_cart))->id_customer;
     }
 
     public function getGuest()
     {
         $id_guest = $this->context->cookie ? (int) $this->context->cookie->id_guest : 0;
         if (!$id_guest && class_exists('Guest')) {
-            Guest::setNewGuest($this->context->cookie);
+            \Guest::setNewGuest($this->context->cookie);
         }
+
         return $this->context->cookie ? (int) $this->context->cookie->id_guest : 0;
     }
 
@@ -98,18 +83,28 @@ class DynamicProvider
             if ($id_currency) {
                 return $id_currency;
             }
+        } else {
+            $id_currency = (int) $this->context->cookie->id_currency;
+            if ($id_currency) {
+                $currency = new \Currency($id_currency);
+                if (\Validate::isLoadedObject($currency)) {
+                    return $id_currency;
+                }
+            }
         }
-        return Currency::getDefaultCurrency()->id;
+
+        return \Currency::getDefaultCurrency()->id;
     }
 
     public function getCart()
     {
-        if (Validate::isLoadedObject($this->context->cart)) {
+        if (\Validate::isLoadedObject($this->context->cart)) {
             return (int) $this->context->cart->id;
         }
 
         if (isset($this->context->cookie->id_cart) && (int) $this->context->cookie->id_cart) {
-            $this->context->cart = new Cart($this->context->cookie->id_cart);
+            $this->context->cart = new \Cart($this->context->cookie->id_cart);
+
             return (int) $this->context->cookie->id_cart;
         }
 
@@ -117,67 +112,71 @@ class DynamicProvider
     }
 
     /**
-     * @param Context $context
+     * @param \Context $context
+     *
      * @return int
      */
     public function getDeliveryAddressID($context)
     {
         $id_address_delivery = 0;
         if ($context->customer->id) {
-            $id_customer = Context::getContext()->customer->id;
+            $id_customer = \Context::getContext()->customer->id;
             if ((int) $context->cart->id_address_delivery) {
                 $id_address_delivery = $context->cart->id_address_delivery;
             }
             if ($id_address_delivery === 0) {
-                $id_address_delivery = (int) Address::getFirstCustomerAddressId($id_customer);
+                $id_address_delivery = (int) \Address::getFirstCustomerAddressId($id_customer);
             }
-            if (!Customer::customerHasAddress($id_customer, $id_address_delivery)) {
+            if (!\Customer::customerHasAddress($id_customer, $id_address_delivery)) {
                 $id_address_delivery = 0;
             }
         }
+
         return $id_address_delivery;
     }
 
     public function getAttributeID($id_product, $attributes)
     {
-        return (int) Product::getIdProductAttributesByIdAttributes($id_product, $attributes);
+        return (int) \Product::getIdProductAttributeByIdAttributes($id_product, $attributes);
     }
 
-    public function getProductLink($id_product, $id_attribute = 0, $params = array())
+    public function getProductLink($id_product, $id_attribute = 0, $params = [])
     {
-        $product = new Product((int) $id_product, false, $this->context->language->id);
+        $product = new \Product((int) $id_product, false, $this->context->language->id);
 
-        $is_rewrite_active = (bool) Configuration::get('PS_REWRITING_SETTINGS');
+        $is_rewrite_active = (bool) \Configuration::get('PS_REWRITING_SETTINGS');
         $product_link = $this->context->link->getProductLink(
             $product,
             $product->link_rewrite,
-            Category::getLinkRewrite($product->id_category_default, $this->context->language->id),
+            \Category::getLinkRewrite($product->id_category_default, $this->context->language->id),
             $product->ean13,
-            Context::getContext()->language->id,
-            Context::getContext()->shop->id,
-            $id_attribute ?: Product::getDefaultAttribute($id_product),
+            \Context::getContext()->language->id,
+            \Context::getContext()->shop->id,
+            $id_attribute ?: \Product::getDefaultAttribute($id_product),
             $is_rewrite_active
         );
         if (count($params)) {
             $product_link = DynamicTools::addQueryToUrl($product_link, $params);
         }
+
         return $product_link;
     }
 
     /**
      * @param $id_product
      * @param $id_attribute
+     *
      * @return float
      */
     public function getProductPrice($id_product, $id_attribute)
     {
         $context = DynamicTools::getContext();
-        $id_default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $id_default_currency = (int) \Configuration::get('PS_CURRENCY_DEFAULT');
         $clone_context = $context->cloneContext();
-        $clone_context->currency = new Currency($id_default_currency);
+        $clone_context->currency = new \Currency($id_default_currency);
         $specific_price_output = null;
 
-        return (float) Product::getPriceStatic(
+        return (float) \Product::getPriceStatic(
             $id_product,
             false,
             $id_attribute,
@@ -199,13 +198,13 @@ class DynamicProvider
 
     public function getProductWeight($id_product, $id_attribute)
     {
-        $sql = new DbQuery();
+        $sql = new \DbQuery();
         $sql->select('weight');
         $sql->from('product');
         $sql->where('id_product = ' . (int) $id_product);
-        $product_weight = (float) Db::getInstance()->getValue($sql);
+        $product_weight = (float) \Db::getInstance()->getValue($sql);
 
-        $combination = new Combination($id_attribute);
+        $combination = new \Combination($id_attribute);
 
         return $product_weight + (float) $combination->weight;
     }
@@ -214,29 +213,34 @@ class DynamicProvider
     {
         $id_lang = $this->context->language->id;
         $id_shop = $this->context->shop->id;
-        $product = new Product($id_product, true, $id_lang, $id_shop, DynamicTools::getContext());
+        $product = new \Product($id_product, true, $id_lang, $id_shop, DynamicTools::getContext());
         $attributes_resume = $product->getAttributesResume($this->context->language->id);
-        return is_array($attributes_resume) ? $attributes_resume : array();
+
+        return is_array($attributes_resume) ? $attributes_resume : [];
     }
 
     public function getVisibilityValues($id_product, $id_attribute = 0, $id_field = 0)
     {
-        $sql = new DbQuery();
+        $id_product_source = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_attribute_source = DynamicProductConfigLink::getSourceAttribute($id_product_source, $id_product, $id_attribute);
+
+        $sql = new \DbQuery();
         $sql->from($this->module->name . '_visibility');
-        $sql->where('id_product = ' . (int) $id_product);
+        $sql->where('id_product = ' . (int) $id_product_source);
         if ((int) $id_attribute) {
-            $sql->where('id_attribute = ' . (int) $id_attribute);
+            $sql->where('id_attribute = ' . (int) $id_attribute_source);
         }
         if ((int) $id_field) {
             $sql->where('id_field = ' . (int) $id_field);
         }
         if ((int) $id_field) {
             $sql->select('visible');
-            return Db::getInstance()->getValue($sql);
+
+            return \Db::getInstance()->getValue($sql);
         }
         $sql->where('visible = 0');
-        $result = Db::getInstance()->executeS($sql);
-        if (!$id_attribute) {
+        $result = \Db::getInstance()->executeS($sql);
+        if (!$id_attribute_source) {
             return DynamicTools::organizeDoubleBy('id_attribute', 'id_field', $result, 'visible');
         }
 
@@ -245,12 +249,13 @@ class DynamicProvider
 
     public function hasRequiredField($id_product)
     {
-        $sql = new DbQuery();
+        $sql = new \DbQuery();
         $sql->select('id_customization_field');
         $sql->from('customization_field');
         $sql->where('id_product = ' . (int) $id_product);
         $sql->where('required = 1');
-        return (int) Db::getInstance()->getRow($sql);
+
+        return (int) \Db::getInstance()->getRow($sql);
     }
 
     public function getDynamicInputIdFromString($value)
@@ -262,30 +267,33 @@ class DynamicProvider
         if (is_numeric($value)) {
             return (int) $value;
         }
+
         return false;
     }
 
     public function isOrderStateRequest()
     {
-        return Tools::getIsset('id_order_state') && Tools::getIsset('submitState');
+        return \Tools::getIsset('id_order_state') && \Tools::getIsset('submitState');
     }
 
     public function getCountry()
     {
         if (method_exists('Tools', 'getCountry')) {
-            return Tools::getCountry();
+            return \Tools::getCountry();
         }
+
         return 0;
     }
 
     /**
-     * @param Context $context
+     * @param \Context $context
      */
     public function getLangID($context = null)
     {
         if (!$context) {
-            $context = Context::getContext();
+            $context = \Context::getContext();
         }
+
         return (int) $context->language->id;
     }
 
@@ -313,22 +321,23 @@ class DynamicProvider
 
     public function getTabID($class_name)
     {
-        $sql = new DbQuery();
+        $sql = new \DbQuery();
         $sql->select('id_tab');
         $sql->from('tab');
         $sql->where('class_name = "' . pSQL($class_name) . '"');
-        $id_tab = (int) Db::getInstance()->getValue($sql);
+        $id_tab = (int) \Db::getInstance()->getValue($sql);
+
         return $id_tab ?: -1;
     }
 
     public function getDataDir($folder = '')
     {
-        return _PS_ROOT_DIR_ . '/dynamicproduct/' . $folder . (Tools::strlen($folder) ? '/' : '');
+        return _PS_ROOT_DIR_ . '/dynamicproduct/' . $folder . (\Tools::strlen($folder) ? '/' : '');
     }
 
-    public function getDataDirUrl($folder)
+    public function getDataDirUrl($folder = null)
     {
-        return $this->module->getBaseUrl() . 'dynamicproduct/' . $folder . (Tools::strlen($folder) ? '/' : '');
+        return $this->module->getBaseUrl() . 'dynamicproduct/' . $folder . (\Tools::strlen($folder) ? '/' : '');
     }
 
     public function getDataFile($file)
@@ -348,103 +357,98 @@ class DynamicProvider
             '&configure=' . urlencode($this->module->name)
             . ($parameter ? '&' : '') . $parameter;
         $link = str_replace('&#', '#', $link);
+
         return $link;
     }
 
-    public function isDuplicateRequest()
+    public function isDuplicateRequest(): bool
     {
-        if (!isset($_SERVER['PATH_INFO'])) {
-            return false;
+        $request_uri = null;
+
+        if (isset($_SERVER['PATH_INFO'])) {
+            $request_uri = $_SERVER['PATH_INFO'];
         }
-        $PATH_INFO = $_SERVER['PATH_INFO'];
+
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $request_uri = $_SERVER['REQUEST_URI'];
+        }
+
         return
-            strpos($PATH_INFO, '/products/unit/duplicate/') !== false ||
-            strpos($PATH_INFO, '/product/unit/duplicate/') !== false;
+            strpos($request_uri, '/products/unit/duplicate/') !== false
+            || strpos($request_uri, '/product/unit/duplicate/') !== false;
     }
 
-    public function getCurrentProductID()
+    public function getCurrentProductID(): int
     {
-        $id_product = (int) Tools::getValue('id_product', 0);
+        $id_product = (int) \Tools::getValue('id_product');
+        if ($id_product) {
+            return $id_product;
+        }
+
+        global $kernel;
+        $requestStack = $kernel->getContainer()->get('request_stack');
+        $request = $requestStack->getCurrentRequest();
+        if ($request) {
+            return (int) $request->get('id');
+        }
+
+        return 0;
+    }
+
+    public function getProductIdFromDuplicateRequest(): int
+    {
+        $id_product = (int) \Tools::getValue('id_product');
 
         if ($id_product) {
             return $id_product;
         }
 
-        $path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : null;
-        if (!$path) {
-            $path = isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : null;
-        }
-        if (!$path) {
-            $path = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
+        $request_uri = $_SERVER['PATH_INFO'] ?? $_SERVER['REQUEST_URI'] ?? null;
+
+        if (!$request_uri) {
+            return 0;
         }
 
-        $matched = preg_match("/\/products\/(\d+)/", $path, $matches);
-        if ($matched) {
-            $id_product = (int) $matches[1];
+        preg_match('@/duplicate/(\d+)@', $request_uri, $matches);
+        if (isset($matches[1])) {
+            return (int) $matches[1];
         }
 
-        $matched = preg_match("/\/products-v2\/(\d+)/", $path, $matches);
-        if ($matched) {
-            $id_product = (int) $matches[1];
-        }
-
-        if (!$id_product) {
-            $id_product = (int) str_replace('/product/form/', '', $path);
-        }
-
-        if (!$id_product) {
-            $matched = preg_match("/id_product=(\d+)/", $path, $matches);
-            if ($matched) {
-                $id_product = (int) $matches[1];
-            }
-        }
-        return $id_product;
-    }
-
-    public function getProductIdFromDuplicateRequest()
-    {
-        $id_product = (int) Tools::getValue('id_product');
-        return $id_product ?: (int) str_replace(
-            array(
-                '/sell/catalog/products/unit/duplicate/',
-                '/product/unit/duplicate/'
-            ),
-            '',
-            $_SERVER['PATH_INFO']
-        );
+        return 0;
     }
 
     public function isAdmin()
     {
-        if (defined("_PS_IS_ADMIN_") && _PS_IS_ADMIN_) {
+        if (defined('_PS_IS_ADMIN_') && _PS_IS_ADMIN_) {
             return true;
         }
-        $cookie = new Cookie('psAdmin');
+        $cookie = new \Cookie('psAdmin');
         if ((int) $cookie->id_employee) {
             // we have an employee in the cookie
             return true;
         }
+
         return false;
     }
 
     public function getCurrentAttribute(int $id_product)
     {
-        return (int) Tools::getValue('id_product_attribute', Product::getDefaultAttribute($id_product));
+        return (int) \Tools::getValue('id_product_attribute', \Product::getDefaultAttribute($id_product));
     }
 
-    public function convertPrice($price, Currency $currency = null, Context $context = null): float
+    public function convertPrice($price, \Currency $currency = null, \Context $context = null): float
     {
         if (!$context) {
-            $context = Context::getContext();
+            $context = \Context::getContext();
         }
 
         if (!$currency) {
             $currency = $context->currency;
         }
 
-        $currency_from = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency_from = new \Currency(\Configuration::get('PS_CURRENCY_DEFAULT'));
 
-        return Tools::convertPriceFull($price, $currency_from, $currency);
+        return \Tools::convertPriceFull($price, $currency_from, $currency);
     }
 
     public function formatPrice($price)
@@ -453,12 +457,17 @@ class DynamicProvider
         if (method_exists($this->context, 'getCurrentLocale')) {
             $locale = $this->context->getCurrentLocale();
         } elseif (method_exists('Tools', 'getContextLocale')) {
-            $locale = Tools::getContextLocale($this->context);
+            $locale = \Tools::getContextLocale($this->context);
+        }
+        $currency = $this->context->currency;
+        if (!$currency) {
+            $currency = \Currency::getDefaultCurrency();
         }
         if ($locale) {
-            return $locale->formatPrice($price, $this->context->currency->iso_code);
+            return $locale->formatPrice($price, $currency->iso_code);
         }
-        return Context::getContext()->currentLocale->formatPrice($price, 'EUR');
+
+        return \Tools::displayPrice($price, $currency);
     }
 
     public function convertAndFormatPrice($price)

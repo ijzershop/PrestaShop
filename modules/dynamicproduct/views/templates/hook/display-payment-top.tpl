@@ -1,5 +1,5 @@
 {*
-* 2007-2017 PrestaShop
+* 2007-2023 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -17,12 +17,11 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2022 PrestaShop SA
+*  @author    TuniSoft <tunisoft.solutions@gmail.com>
+*  @copyright 2007-2023 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if count($dp_oos_inputs) || count($dp_disabled_options)}
   <div id="dp_errors" style="clear: both; padding-top: 15px; margin: 5px 20px">
       {foreach from=$dp_oos_inputs item=dp_oos_input}
@@ -37,9 +36,9 @@
       {foreach from=$dp_disabled_options item=$disabled_option}
         <div class="alert alert-warning">
             {l s='The option' mod='dynamicproduct'}
-          <strong>{$disabled_option.option}</strong>
+          <strong>{$disabled_option.option|escape:'htmlall':'UTF-8'}</strong>
             {l s='of product' mod='dynamicproduct'}
-          <strong>{$disabled_option.product}</strong>
+          <strong>{$disabled_option.product|escape:'htmlall':'UTF-8'}</strong>
             {l s='is no longer available' mod='dynamicproduct'}
           <br>
           <a style="color: #0e0e0e" href="{$disabled_option.edit_link|escape:'htmlall':'UTF-8'}">
@@ -49,10 +48,10 @@
       {/foreach}
   </div>
   <script type="text/javascript">
-    var _intv = setInterval(function () {
+    var dp_intv = setInterval(function () {
       if (typeof $ === "function") {
         hidePaymentMethods()
-        clearInterval(_intv)
+        clearInterval(dp_intv)
       }
     }, 100)
 
@@ -64,10 +63,10 @@
   </script>
 {else}
   <script type="text/javascript">
-    var _intv = setInterval(function () {
+    var dp_intv = setInterval(function () {
       if (typeof $ === "function") {
         showPaymentMethods()
-        clearInterval(_intv)
+        clearInterval(dp_intv)
       }
     }, 100)
 

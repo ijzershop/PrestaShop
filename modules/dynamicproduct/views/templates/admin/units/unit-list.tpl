@@ -1,5 +1,5 @@
 {*
-* 2007-2022 PrestaShop
+* 2007-2023 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -17,64 +17,59 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2022 PrestaShop SA
+*  @author    TuniSoft <tunisoft.solutions@gmail.com>
+*  @copyright 2007-2023 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <div id="dp_units_data">
   <form action="{$req|escape:'htmlall':'UTF-8'}" method="post" id="dp_units_form">
     <div class="panel">
-      <div class="panel-heading">
-        <i class="icon-calculator"></i>
-          {l s='Units Of Measurement' mod='dynamicproduct'}
-      </div>
       <div class="form-wrapper">
         <table class="table">
           <thead>
-            <tr>
-              <th>ID</th>
-              <th>{l s='Unit Name' mod='dynamicproduct'}</th>
-              <th>{l s='Symbol' mod='dynamicproduct'}</th>
-              <th class="fixed-width-sm center">{l s='Actions' mod='dynamicproduct'}</th>
-            </tr>
+          <tr>
+            <th>ID</th>
+            <th>{l s='Unit Name' mod='dynamicproduct'}</th>
+            <th>{l s='Symbol' mod='dynamicproduct'}</th>
+            <th class="fixed-width-sm center">{l s='Actions' mod='dynamicproduct'}</th>
+          </tr>
           </thead>
           <tbody>
-              {foreach from=$units item=unit}
-                  {$editlink = "index.php?controller=AdminModules{$default}&id_unit={$unit->id|intval}&display_update_unit&token={$token|escape:'htmlall':'UTF-8'}"}
-                  {$deletelink = "index.php?controller=AdminModules{$default}&id_unit={$unit->id|intval}&submit_delete_unit&token={$token|escape:'htmlall':'UTF-8'}"}
-                <tr>
-                  <td>{$unit->id|intval}</td>
-                  <td>{$unit->name|escape:'htmlall':'UTF-8'}</td>
-                  <td>{$unit->symbol|escape:'htmlall':'UTF-8'}</td>
-                  <td class="text-right">
-                    <div class="btn-group-action">
-                      <div class="btn-group pull-right">
-                        <a href="{$editlink|escape:'htmlall':'UTF-8'}"
-                           title="{l s='Edit' mod='dynamicproduct'}"
-                           class="edit btn btn-default"
+          {foreach from=$units item=unit}
+              {$editlink = "index.php?controller=AdminModules{$default}&id_unit={$unit->id|intval}&display_update_unit&token={$token|escape:'htmlall':'UTF-8'}"}
+              {$deletelink = "index.php?controller=AdminModules{$default}&id_unit={$unit->id|intval}&submit_delete_unit&token={$token|escape:'htmlall':'UTF-8'}"}
+            <tr>
+              <td>{$unit->id|intval}</td>
+              <td>{$unit->name|escape:'htmlall':'UTF-8'}</td>
+              <td>{$unit->symbol|escape:'htmlall':'UTF-8'}</td>
+              <td class="text-right">
+                <div class="btn-group-action">
+                  <div class="btn-group pull-right">
+                    <a href="{$editlink|escape:'htmlall':'UTF-8'}"
+                       title="{l s='Edit' mod='dynamicproduct'}"
+                       class="edit btn btn-default"
+                    >
+                      <i class="icon-pencil"></i> {l s='Edit' mod='dynamicproduct'}
+                    </a>
+                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                      <i class="icon-caret-down"></i>&nbsp;
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a href="{$deletelink|escape:'htmlall':'UTF-8'}"
+                           title="{l s='Delete' mod='dynamicproduct'}"
+                           class="dp_confirm_delete"
                         >
-                          <i class="icon-pencil"></i> {l s='Edit' mod='dynamicproduct'}
+                          <i class="icon-trash"></i> {l s='Delete' mod='dynamicproduct'}
                         </a>
-                        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                          <i class="icon-caret-down"></i>&nbsp;
-                        </button>
-                        <ul class="dropdown-menu">
-                          <li>
-                            <a href="{$deletelink|escape:'htmlall':'UTF-8'}"
-                               title="{l s='Delete' mod='dynamicproduct'}"
-                               class="dp_confirm_delete"
-                            >
-                              <i class="icon-trash"></i> {l s='Delete' mod='dynamicproduct'}
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              {/foreach}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {/foreach}
           </tbody>
         </table>
       </div>

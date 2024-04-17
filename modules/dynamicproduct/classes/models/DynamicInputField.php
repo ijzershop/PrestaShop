@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,33 +14,26 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\models;
 
-namespace classes\models;
-
-use classes\DynamicTools;
-use classes\factory\DynamicFieldFactory;
-use classes\factory\InputFieldFactory;
-use classes\helpers\DynamicCalculatorHelper;
-use classes\helpers\DynamicFieldsHelper;
-use classes\helpers\FieldsVisibilityHelper;
-use classes\models\intervals\IntervalCondition;
-use Db;
-use DbQuery;
-use Validate;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\factory\InputFieldFactory;
+use DynamicProduct\classes\helpers\DynamicCalculatorHelper;
+use DynamicProduct\classes\helpers\DynamicFieldsHelper;
+use DynamicProduct\classes\helpers\FieldsVisibilityHelper;
 
 class DynamicInputField extends DynamicObject
 {
-    /** @var DynamicField */
+    /** @var array */
     protected $field;
 
     public $id_input;
@@ -53,64 +47,79 @@ class DynamicInputField extends DynamicObject
     public $type;
     public $visible;
 
+    public $data;
+    public $data_obj;
+
     public $value_formatted;
-    public $selected_options;
+    public $display_value;
+    public $sku;
+    public $selected_options = [];
+    public $duplicated = false;
 
     public $image_url;
     public $thumb_url;
     public $image_size;
 
     private $excluded = false;
-    private $excluded_options = array();
+    private $excluded_options = [];
 
     private $locked_value = false;
+    private $force_value = false;
 
-    protected $skipped_names = array('quantity');
+    protected $skipped_names = ['quantity'];
 
-    private static $null_values = array(
-        _DP_INPUT_       => 0,
-        _DP_TEXT_        => '',
-        _DP_DATE_        => '',
-        _DP_IMAGE_       => '',
-        _DP_DROPDOWN_    => 0,
-        _DP_CHECKBOX_    => 0,
-        _DP_SWITCH_      => 0,
-        _DP_FILE_        => '',
-        _DP_SLIDER_      => 0,
-        _DP_THUMBNAILS_  => 0,
-        _DP_TEXTAREA_    => '',
-        _DP_RADIO_       => 0,
-        _DP_COLORPICKER_ => ''
-    );
+    public const LOAD_NONE = 0;
+    public const LOAD_INITIAL = 1;
+    public const LOAD_ALL = 2;
+
+    private static $null_values = [
+        _DP_INPUT_ => 0,
+        _DP_TEXT_ => '',
+        _DP_DATE_ => '',
+        _DP_IMAGE_ => '',
+        _DP_DROPDOWN_ => 0,
+        _DP_CHECKBOX_ => 0,
+        _DP_SWITCH_ => 0,
+        _DP_FILE_ => '',
+        _DP_SLIDER_ => 0,
+        _DP_THUMBNAILS_ => 0,
+        _DP_TEXTAREA_ => '',
+        _DP_RADIO_ => 0,
+        _DP_COLORPICKER_ => '',
+        _DP_PHP_ => 0,
+    ];
 
     protected $webserviceParameters = [
-        'objectNodeName'  => 'dynamic_input_field',
+        'objectNodeName' => 'dynamic_input_field',
         'objectsNodeName' => 'dynamic_input_fields',
-        'fields'          => [
-            'id_input'        => ['required' => true, 'xlink_resource' => 'dynamic_inputs'],
-            'id_field'        => [],
-            'name'            => [],
-            'value'           => ['getter' => 'displayValue'],
+        'fields' => [
+            'id_input' => ['required' => true, 'xlink_resource' => 'dynamic_inputs'],
+            'id_field' => [],
+            'name' => [],
+            'value' => ['getter' => 'displayValue'],
             'secondary_value' => [],
-            'type'            => [],
-            'visible'         => [],
+            'sku' => ['getter' => 'renderSKU'],
+            'type' => [],
+            'visible' => [],
+            'data' => ['getter' => 'displayJSON'],
         ],
     ];
 
-    public static $definition = array(
-        'table'   => 'dynamicproduct_input_field',
+    public static $definition = [
+        'table' => 'dynamicproduct_input_field',
         'primary' => 'id_input_field',
-        'fields'  => array(
-            'id_input'        => array('type' => self::TYPE_INT),
-            'id_field'        => array('type' => self::TYPE_INT),
-            'name'            => array('type' => self::TYPE_STRING),
-            'value'           => array('type' => self::TYPE_HTML),
-            'secondary_value' => array('type' => self::TYPE_STRING),
-            'options'         => array('type' => self::TYPE_STRING),
-            'type'            => array('type' => self::TYPE_INT),
-            'visible'         => array('type' => self::TYPE_BOOL),
-        )
-    );
+        'fields' => [
+            'id_input' => ['type' => self::TYPE_INT],
+            'id_field' => ['type' => self::TYPE_INT],
+            'name' => ['type' => self::TYPE_STRING],
+            'value' => ['type' => self::TYPE_HTML],
+            'secondary_value' => ['type' => self::TYPE_STRING],
+            'options' => ['type' => self::TYPE_STRING],
+            'type' => ['type' => self::TYPE_INT],
+            'visible' => ['type' => self::TYPE_BOOL],
+            'data' => ['type' => self::TYPE_STRING],
+        ],
+    ];
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
@@ -124,37 +133,41 @@ class DynamicInputField extends DynamicObject
 
     public function setData($id_lang)
     {
-        $this->setDynamicField($id_lang);
+        $this->setDynamicField();
         $this->setFormattedValue();
         $this->setLabel();
         $this->setSelectedOptions();
+        $this->setDisplayValue();
+        $this->setSKU();
     }
 
     /**
      * @param $id_input
      * @param $id_lang
+     *
      * @return DynamicInputField[]
      */
     public static function getByIdInput($id_input, $id_lang = null)
     {
-        $input_fields = array();
-        $sql = new DbQuery();
+        $input_fields = [];
+        $sql = new \DbQuery();
         $sql->from(self::$definition['table']);
         $sql->where('id_input = ' . (int) $id_input);
-        $rows = Db::getInstance()->executeS($sql, false);
-        while ($row = Db::getInstance()->nextRow($rows)) {
+        $rows = \Db::getInstance()->executeS($sql, false);
+        while ($row = \Db::getInstance()->nextRow($rows)) {
             $id_input_field = $row['id_input_field'];
             $dynamic_input_field = InputFieldFactory::create((int) $row['type'], (int) $id_input_field, $id_lang);
-            if (Validate::isLoadedObject($dynamic_input_field)) {
+            if (\Validate::isLoadedObject($dynamic_input_field)) {
                 $input_fields[$dynamic_input_field->name] = $dynamic_input_field;
             }
         }
+
         return $input_fields;
     }
 
-    protected function setDynamicField($id_lang)
+    protected function setDynamicField()
     {
-        $this->field = DynamicFieldFactory::create($this->type, $this->id_field, $id_lang);
+        $this->field = DynamicField::getFieldFromCache($this->id_field);
     }
 
     public function getDynamicField()
@@ -166,7 +179,9 @@ class DynamicInputField extends DynamicObject
     {
         if (!$this->locked_value) {
             $this->value = $value;
+            $this->syncSelectedOption();
             $this->setFormattedValue();
+            $this->setDisplayValue();
         }
     }
 
@@ -185,27 +200,98 @@ class DynamicInputField extends DynamicObject
         }
     }
 
-    public function getValueForCalculation()
+    public function setDisplayValue()
+    {
+        $display_value = null;
+        if (in_array($this->type, [_DP_DROPDOWN_, _DP_RADIO_, _DP_THUMBNAILS_])) {
+            $display_value = $this->displayValue();
+            if ($display_value === null) {
+                $display_value = '';
+            }
+        }
+
+        $this->display_value = $display_value;
+    }
+
+    public function setSKU()
+    {
+        $sku = null;
+        if (in_array($this->type, [_DP_DROPDOWN_, _DP_RADIO_, _DP_THUMBNAILS_])) {
+            $sku = $this->getSKU();
+            if ($sku === null) {
+                $sku = '';
+            }
+        }
+
+        $this->sku = $sku;
+    }
+
+    public function syncSelectedOption()
+    {
+        $this->selected_options = [];
+        $this->secondary_value = 0;
+        foreach ($this->field['options'] as $option) {
+            if (is_numeric($this->value)) {
+                if ((float) $option['value'] === (float) $this->value) {
+                    $this->selected_options = [$option['id']];
+                    $this->secondary_value = $option['secondary_value'];
+                    break;
+                }
+            } else {
+                if ($option['value'] === $this->value) {
+                    $this->selected_options = [$option['id']];
+                    $this->secondary_value = $option['secondary_value'];
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param DynamicInputField[] $input_fields
+     */
+    public function getValueForCalculation(array $input_fields = [])
     {
         if ($this->isExcluded()) {
             return $this->getNullValue();
         }
+
+        if (!empty($input_fields) && !$this->duplicated) {
+            $id_group = $this->field['id_group'];
+            $group = DynamicProductFieldGroup::getGroupFromCache($id_group);
+
+            if ($group && $group['id_control_field']) {
+                $field_name = $this->name;
+                $matches = preg_grep('/^' . $field_name . '_\d+$/', array_keys($input_fields));
+                $total = 0;
+                foreach ($matches as $match) {
+                    $total += $input_fields[$match]->getValueForCalculation();
+                }
+
+                return $total;
+            }
+        }
+
         if ($this->hasExcludedOptions()) {
-            return (float) $this->value - $this->getExcludedOptionsValue();
+            return $this->getOptionsTotalValue();
         }
 
         $reset = false;
         $value = $this->value;
 
-        $str_values = array();
+        if ($this->isForcedValue()) {
+            return $value;
+        }
+
+        $str_values = [];
 
         if (is_array($this->selected_options) && count($this->selected_options)) {
             $has_strings = false;
 
             foreach ($this->selected_options as $selected_option) {
-                if (isset($this->field->options[$selected_option])) {
-                    $option_value = $this->field->options[$selected_option]->value;
-                    if (!is_numeric($option_value) && !empty($option_value)) {
+                if (isset($this->field['options'][$selected_option])) {
+                    $option_value = $this->field['options'][$selected_option]['value'];
+                    if (!is_numeric($option_value)) {
                         $has_strings = true;
                         break;
                     }
@@ -213,14 +299,14 @@ class DynamicInputField extends DynamicObject
             }
 
             foreach ($this->selected_options as $selected_option) {
-                if (isset($this->field->options[$selected_option])) {
+                if (isset($this->field['options'][$selected_option])) {
                     if (!$reset) {
                         // only reset value if we have options, if not, use the value directly
                         $value = 0;
                         $reset = true;
                     }
                     // if we encounter a string, return it immediately
-                    $option_value = $this->field->options[$selected_option]->value;
+                    $option_value = $this->field['options'][$selected_option]['value'];
                     if ($has_strings) {
                         $str_values[] = $option_value;
                     } else {
@@ -230,35 +316,60 @@ class DynamicInputField extends DynamicObject
             }
         }
         if (count($str_values)) {
-            if (count($str_values) === 1 && !$this->getDynamicField()->settings->multiselect) {
+            if (count($str_values) === 1 && !(int) $this->field['settings']['multiselect']) {
                 return $str_values[0];
             }
+
             return implode(';', $str_values) . ';';
         }
+
         return $value;
     }
 
-    public function getSecondaryValueForCalculation()
+    /**
+     * @param DynamicInputField[] $input_fields
+     */
+    public function getSecondaryValueForCalculation(array $input_fields = [])
     {
         if ($this->isExcluded()) {
             return $this->getNullValue();
         }
+
+        if (!empty($input_fields) && !$this->duplicated) {
+            $id_group = $this->field['id_group'];
+            $group = DynamicProductFieldGroup::getGroupFromCache($id_group);
+
+            if ($group && $group['id_control_field']) {
+                $field_name = $this->name;
+                $matches = preg_grep('/^' . $field_name . '_\d+$/', array_keys($input_fields));
+                $total = 0;
+                foreach ($matches as $match) {
+                    $total += $input_fields[$match]->getSecondaryValueForCalculation();
+                }
+
+                return $total;
+            }
+        }
+
         if ($this->hasExcludedOptions()) {
-            return $this->secondary_value - $this->getExcludedOptionsValue();
+            return $this->getOptionsTotalSecondaryValue();
         }
         $reset = false;
         $value = $this->secondary_value;
 
         if (is_array($this->selected_options) && count($this->selected_options)) {
             foreach ($this->selected_options as $selected_option) {
-                if (isset($this->field->options[$selected_option])) {
+                if (isset($this->field['options'][$selected_option])) {
                     if (!$reset) {
                         // only reset value if we have options, if not, use the secondary value directly
                         $value = 0;
                         $reset = true;
                     }
                     // if we encounter a string, return it immediately
-                    $option_secondary_value = $this->field->options[$selected_option]->secondary_value;
+                    $option_secondary_value = 0;
+                    if (isset($this->field['options'][$selected_option]['secondary_value'])) {
+                        $option_secondary_value = $this->field['options'][$selected_option]['secondary_value'];
+                    }
                     if (!is_numeric($option_secondary_value) && !empty($option_secondary_value)) {
                         return $option_secondary_value;
                     }
@@ -266,12 +377,18 @@ class DynamicInputField extends DynamicObject
                 }
             }
         }
+
+        if ($value === null) {
+            $value = 0;
+        }
+
         return $value;
     }
 
     /**
      * @param DynamicInputField[] $input_fields
-     * @return mixed
+     *
+     * @return string
      */
     public function getDynamicValue($input_fields)
     {
@@ -279,8 +396,16 @@ class DynamicInputField extends DynamicObject
 
         foreach ($input_fields as $input_field) {
             $value = str_replace(
-                "[{$input_field->name}]",
-                htmlspecialchars($input_field->value_formatted),
+                [
+                    "[[{$input_field->name}]]",
+                    "[{$input_field->name}]",
+                    "{{$input_field->name}}",
+                ],
+                [
+                    htmlspecialchars($input_field->secondary_value),
+                    htmlspecialchars($input_field->value_formatted),
+                    htmlspecialchars((string)$input_field->display_value),
+                ],
                 $value
             );
         }
@@ -288,21 +413,29 @@ class DynamicInputField extends DynamicObject
         return $value;
     }
 
-    /**
-     * @param IntervalCondition $interval_condition
-     */
-    public function isWithinLimit($interval_condition)
+    public function getSKU()
     {
-        return $this->value >= $interval_condition->min &&
-            ($this->value < $interval_condition->max || (float) $interval_condition->max === (float) 0);
+        return null;
     }
 
-    /**
-     * @param IntervalCondition $interval_condition
-     */
-    public function isWithinValues($interval_condition)
+    public function renderSKU()
     {
-        return in_array((float) $this->value, $interval_condition->values, true);
+        $option = $this->field['options'][$this->selected_options[0]];
+
+        return $option->sku;
+    }
+
+    public function isWithinLimit(array $interval_condition, array $input_fields)
+    {
+        $value = $this->getValueForCalculation($input_fields);
+
+        return $value >= $interval_condition['min']
+            && ($value < $interval_condition['max'] || (float) $interval_condition['max'] === 0.0);
+    }
+
+    public function isWithinValues(array $interval_condition, array $input_fields)
+    {
+        return in_array($this->getValueForCalculation($input_fields), $interval_condition['values']);
     }
 
     private function setLabel()
@@ -311,8 +444,8 @@ class DynamicInputField extends DynamicObject
             $this->label = 'Quantity';
         }
         $field = $this->getDynamicField();
-        if (Validate::isLoadedObject($field)) {
-            $this->label = $field->label;
+        if ((int) $field['id']) {
+            $this->label = $field['label'];
         }
     }
 
@@ -335,15 +468,11 @@ class DynamicInputField extends DynamicObject
         return $this->excluded;
     }
 
-    public function setExcludedOptions($visibility)
+    public function setExcludedOptions($hidden_options, $options)
     {
-        $excluded_options = array();
-        foreach ($visibility as $id_option => $visible) {
-            if ((int) $visible === 0) {
-                $excluded_options[] = $id_option;
-            }
-        }
-        $this->excluded_options = $excluded_options;
+        $option_ids = array_keys($options);
+        $excluded_options = array_intersect($option_ids, $hidden_options);
+        $this->excluded_options = array_values($excluded_options);
     }
 
     public function hasExcludedOptions()
@@ -356,32 +485,68 @@ class DynamicInputField extends DynamicObject
         if (!isset($this->selected_options[0])) {
             return false;
         }
-        return in_array($this->selected_options[0], $this->excluded_options, false);
+
+        return in_array($this->selected_options[0], $this->excluded_options);
     }
 
-    public function getExcludedOptionsValue()
+    public function getOptionsTotalValue()
     {
         $total_value = 0;
-        foreach ($this->excluded_options as $id_option) {
-            if (isset($this->field->options[$id_option]) && in_array($id_option, $this->selected_options, false)) {
-                $total_value += (float) $this->field->options[$id_option]->value;
+        foreach ($this->selected_options as $id_option) {
+            if (isset($this->field['options'][$id_option]) && !in_array($id_option, $this->excluded_options)) {
+                $value = $this->field['options'][$id_option]['value'];
+                if (!is_numeric($value)) {
+                    return $value;
+                }
+                $total_value += (float) $value;
             }
         }
+
+        return $total_value;
+    }
+
+    public function getOptionsTotalSecondaryValue()
+    {
+        $total_value = 0;
+        foreach ($this->selected_options as $id_option) {
+            if (isset($this->field['options'][$id_option]) && !in_array($id_option, $this->excluded_options)) {
+                $secondary_value = $this->field['options'][$id_option]['secondary_value'];
+                if (!is_numeric($secondary_value)) {
+                    return $secondary_value;
+                }
+                $total_value += (float) $secondary_value;
+            }
+        }
+
         return $total_value;
     }
 
     public function selectFirstVisibleOption()
     {
         if ($this->hasExcludedOptions()) {
-            foreach ($this->field->options as $option) {
-                $id_option = $option->id;
+            foreach ($this->field['options'] as $option) {
+                $id_option = $option['id'];
                 if (!in_array($id_option, $this->excluded_options)) {
                     $this->setSelectOption($option);
+
                     return true;
                 }
             }
         }
+
         return true;
+    }
+
+    public function removeExcludedOptionsFromSelection()
+    {
+        $selected_options = [];
+        foreach ($this->selected_options as $selected_option) {
+            if (!in_array((int) $selected_option, $this->excluded_options)) {
+                $selected_options[] = $selected_option;
+            }
+        }
+        $this->selected_options = $selected_options;
+        $this->options = json_encode($selected_options);
     }
 
     private function setSelectedOptions()
@@ -401,10 +566,10 @@ class DynamicInputField extends DynamicObject
     private function setSelectOption($option)
     {
         if (!$this->locked_value) {
-            $id_option = (int) $option->id;
-            $this->selected_options = array($id_option);
-            $this->options = json_encode(array($id_option));
-            $this->setValue($option->value);
+            $id_option = (int) $option['id'];
+            $this->selected_options = [$id_option];
+            $this->options = json_encode([$id_option]);
+            $this->setValue($option['value']);
         }
     }
 
@@ -413,89 +578,115 @@ class DynamicInputField extends DynamicObject
         return isset($this->selected_options[0]) ? (int) $this->selected_options[0] : 0;
     }
 
-    public static function getDefaultInputFields($id_product, $id_attribute, $load_all = false, $values = array())
+    public static function getDefaultInputFields($id_product, $id_attribute, $load = self::LOAD_NONE, $values = [])
     {
-        return self::getInputFieldsFromData($id_product, $id_attribute, array(), $load_all, $values);
+        return self::getInputFieldsFromData(
+            $id_product,
+            $id_attribute,
+            [],
+            $load,
+            $values
+        );
     }
 
     /**
      * @param $id_product
      * @param $id_attribute
      * @param $fields
-     * @param bool $load_all
+     * @param bool|int $load
      * @param array $values
+     *
      * @return array[DynamicInputField[], array]
      */
     public static function getInputFieldsFromData(
         $id_product,
         $id_attribute,
         $fields,
-        $load_all = false,
-        $values = array()
-    ) {
+        $load = self::LOAD_NONE,
+        array $values = []
+    ): array {
         $module = DynamicTools::getModule();
         $context = DynamicTools::getContext();
 
         $fields_helper = new DynamicFieldsHelper($module, $context);
-        $fields_helper->addFields($id_product, $id_attribute, $fields, $load_all, $values);
+        $fields_helper->addFields($id_product, $id_attribute, $fields, $load, $values);
+        list($grouped_fields, $new_fields) = $fields_helper->duplicateFields($id_product, $fields);
+        $fields_helper->addFields($id_product, $id_attribute, $fields, $load, $values, $new_fields);
         $fields_helper->addAttributes($id_product, $id_attribute, $fields);
         $fields_helper->addFeatures($id_product, $fields);
         $fields_helper->addExtraFields($id_product, $id_attribute, $fields);
 
-        $has_changed_field = isset($fields['changed']) && !empty($fields['changed']['value']);
-
-        $input_fields = array();
+        $input_fields = [];
         foreach ($fields as $field) {
-            if (isset($field['name']) && !empty($field['name'])) {
+            if (!empty($field['name'])) {
                 $input_fields[$field['name']] =
-                    self::getInputFieldFromData($field, $context->language->id, $has_changed_field);
+                    self::getInputFieldFromData($field, $context->language->id, $fields['changed']);
             }
         }
 
-        $calculator_helper = new DynamicCalculatorHelper($module, $context);
-        $calculator_helper->applyProportions($id_product, $input_fields);
+        $dynamic_calculator_helper = new DynamicCalculatorHelper(
+            DynamicTools::getModule(),
+            DynamicTools::getContext()
+        );
+
+        $dynamic_calculator_helper->applyProportions($id_product, $input_fields);
 
         DynamicEquation::hookAllocator($id_product, $id_attribute, $input_fields);
 
-        $exec_order = ExecOrder::getByIdProduct($id_product, true);
-        if (count($exec_order)) {
-            list($fields_visibility) = DynamicEquation::processExecOrder(
+        $config = DynamicConfig::getByProduct($id_product);
+
+        $calculation_items = DynamicCalculationItem::getRowsByProduct($id_product);
+
+        if ($config->custom_calculation && count($calculation_items)) {
+            list($fields_visibility) = DynamicEquation::processCustomOrder(
                 $id_product,
                 $id_attribute,
-                $exec_order,
                 $input_fields
             );
         } else {
-            $visibility_helper = new FieldsVisibilityHelper($module, $context);
-            $fields_visibility = $visibility_helper->getFieldsVisibility(
-                $id_product,
-                $id_attribute,
-                $input_fields
-            );
+            $exec_order = ExecOrder::getRowsByProduct($id_product, true);
+            if (count($exec_order)) {
+                list($fields_visibility) = DynamicEquation::processExecOrder(
+                    $id_product,
+                    $id_attribute,
+                    $exec_order,
+                    $input_fields
+                );
+            } else {
+                $visibility_helper = new FieldsVisibilityHelper($module, $context);
+                $fields_visibility = $visibility_helper->getFieldsVisibility(
+                    $id_product,
+                    $id_attribute,
+                    $input_fields
+                );
 
-            $visibility_helper->setExcludedFields($input_fields, $fields_visibility);
-
-            DynamicEquation::execIntervalConditions($id_product, $input_fields);
-            DynamicEquation::execFieldFormulas($id_product, $input_fields);
-            DynamicEquation::execGrids($id_product, $input_fields);
+                DynamicEquation::execIntervalConditions($id_product, $input_fields);
+                DynamicEquation::execFieldFormulas($id_product, $input_fields);
+                DynamicEquation::execGrids($id_product, $input_fields);
+            }
         }
 
-        return [$input_fields, $fields_visibility];
+        return [$input_fields, $fields_visibility, $grouped_fields];
     }
 
     /**
      * @param $field
      * @param $id_lang
-     * @param bool $has_changed_field
+     * @param $changed
+     *
      * @return DynamicInputField
      */
-    public static function getInputFieldFromData($field, $id_lang, $has_changed_field = false)
+    public static function getInputFieldFromData($field, $id_lang, $changed): DynamicInputField
     {
         $input_field = InputFieldFactory::create($field['type']);
 
+        if (isset($field['duplicated']) && $field['duplicated']) {
+            $input_field->duplicated = true;
+        }
+
         foreach (self::$definition['fields'] as $field_name => $field_info) {
             if (isset($field[$field_name])) {
-                if (!in_array($field_info['type'], array(self::TYPE_STRING, self::TYPE_HTML))) {
+                if (!in_array($field_info['type'], [self::TYPE_STRING, self::TYPE_HTML])) {
                     $value = self::formatValue($field[$field_name], $field_info['type']);
                 } else {
                     $value = $field[$field_name];
@@ -508,16 +699,24 @@ class DynamicInputField extends DynamicObject
 
         // Disallow setting the html value from javascript
         if ((int) $field['type'] === _DP_HTML_) {
-            $input_field->value = "";
-            $input_field->value_formatted = "";
+            $input_field->value = '';
+            $input_field->value_formatted = '';
         }
 
         if (isset($field['selected_options'])) {
-            $input_field->selected_options = $field['selected_options'];
+            if (is_string($field['selected_options'])) {
+                $field['selected_options'] = json_decode($field['selected_options'], true);
+            }
+            if (is_array($field['selected_options'])) {
+                $input_field->selected_options = array_map('intval', $field['selected_options']);
+            }
             $input_field->options = json_encode($input_field->selected_options, true);
             $input_field->value = $input_field->getValueForCalculation();
             $input_field->secondary_value = $input_field->getSecondaryValueForCalculation();
+            $input_field->setDisplayValue();
         }
+
+        $has_changed_field = !empty($changed['value']);
 
         if (!$has_changed_field && $input_field->type === _DP_INPUT_ && !(float) $input_field->value) {
             $dynamic_calculator_helper = new DynamicCalculatorHelper(
@@ -526,22 +725,30 @@ class DynamicInputField extends DynamicObject
             );
             $input_field->value = $dynamic_calculator_helper->getValueFromProportion($input_field->id_field);
         }
+
+        if ($input_field->name == 'quantity'
+            && $changed['value'] != 'quantity'
+            && \Tools::getIsset('quantity')
+        ) {
+            $input_field->value = \Tools::getValue('quantity', 1);
+        }
+
         return $input_field;
     }
 
     public function isSkipped()
     {
-        return !$this->visible || in_array($this->name, $this->skipped_names, true);
+        return !(int) $this->visible || in_array($this->name, $this->skipped_names, true);
     }
 
     public function isSkippedName()
     {
-        return strpos($this->field->name, "_") === 0;
+        return strpos($this->field['name'], '_') === 0;
     }
 
     public function isAdminField()
     {
-        return strpos($this->field->name, "admin_") === 0;
+        return strpos($this->field['name'], 'admin_') === 0;
     }
 
     public function lockValue()
@@ -554,9 +761,24 @@ class DynamicInputField extends DynamicObject
         $this->locked_value = false;
     }
 
+    public function forceValue()
+    {
+        $this->force_value = true;
+    }
+
+    public function isForcedValue()
+    {
+        return $this->force_value;
+    }
+
     public function displayValue()
     {
         return $this->value;
+    }
+
+    public function displayJSON()
+    {
+        return $this->data_obj;
     }
 
     private function getTemplateName()
@@ -564,10 +786,10 @@ class DynamicInputField extends DynamicObject
         if (isset($this->module->field_types[$this->type])) {
             return $this->module->field_types[$this->type]['name'];
         }
+
         return null;
     }
 
-    /** @noinspection PhpUnused */
     public function getTemplatePath()
     {
         $template = sprintf('views/templates/hook/partial/%s.tpl', $this->getTemplateName());
@@ -575,6 +797,7 @@ class DynamicInputField extends DynamicObject
         if (!is_file($path)) {
             return false;
         }
+
         return sprintf(
             'module:%s/%s',
             $this->module->name,
@@ -584,6 +807,6 @@ class DynamicInputField extends DynamicObject
 
     public function getImagesUrls()
     {
-        return array();
+        return [];
     }
 }

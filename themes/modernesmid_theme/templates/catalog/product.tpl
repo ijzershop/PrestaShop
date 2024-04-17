@@ -32,8 +32,10 @@
   <meta property="og:title" content="{$page.meta.title}">
   <meta property="og:site_name" content="{$shop.name}">
   <meta property="og:description" content="{$page.meta.description}">
+  {if isset($product.cover.large.url)}
   <meta property="og:image" content="{$product.cover.large.url}">
-    {if $product.show_price}
+  {/if}
+  {if $product.show_price}
       <meta property="product:pretax_price:amount" content="{$product.price_tax_exc}">
       <meta property="product:pretax_price:currency" content="{$currency.iso_code}">
       <meta property="product:price:amount" content="{$product.price_amount}">
@@ -85,7 +87,7 @@
             {block name='page_header'}
             <h1 class="product-title h4 m-0 text-black">{block name='page_title'}{$product.name}{/block}</h1>
                 {block name='product_description_short'}
-                <div id="product-description-short-{$product.id}">{if !empty($product.description_short)}{$product.description_short nofilter}{else}<span class="d-none"><span>{/if}</div>
+                <div id="product-description-short-{$product.id}">{if !empty($product.description_short) && (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}{$product.description_short nofilter}{else}<span class="d-none"><span>{/if}</div>
                 {/block}
             {/block}
             {/block}
@@ -93,19 +95,20 @@
 
 
           <div class="col-12">
-            <div class="product-information row">
+            <div class="product-information row px-2">
               <div class="col-12 col-sm-3 align-right">
                 {hook h='displayRating' product=$product withtext=false}
               </div>
               <div class="col-12">
                 <div class="row">
-                  <div class="col-6 col-md-4">
+                  <div class="col-12 col-md-4 mb-3 mb-md-0">
                   {if (Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) || !Configuration::get('PS_CATALOG_MODE')}
                     {block name='product_prices'}
                     {include file='catalog/_partials/product-prices.tpl'}
                     {/block}
                   {/if}
                   </div>
+                  {if !Product::isDynamicProduct($product)}
                   <div class="product-actions col-6 col-md-4">
                     {block name='product_buy'}
                     <form action="{$urls.pages.cart}" method="post" id="add-to-cart-or-refresh">
@@ -114,7 +117,7 @@
                       <input type="hidden" name="id_customization" value="{$product.id_customization}" id="product_customization_id">
                       {if !Module::isEnabled('dynamicproduct') || !Product::isDynamicProduct($product)}
                       {block name='product_pack'}
-                      {if $packItems}
+                      {if $packItems && (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}
                       <section class="product-pack">
                         <p class="h4">{l s='This pack contains' d='Shop.Theme.Catalog'}</p>
                         {foreach from=$packItems item="product_pack"}
@@ -133,17 +136,17 @@
                     </form>
                     {/block}
                   </div>
+                  {/if}
 
-
+                  {if !Configuration::get('PS_CATALOG_MODE')}
+                  {if Module::isEnabled('dynamicproduct') && Product::isDynamicProduct($product)}
+                  {* dynamic product *}
+                  {hook h="displayDynamicProductForm" product=$product}
+                  {else}
                   <div class="col-12 col-md-4">
 
 
 
-                  {if !Configuration::get('PS_CATALOG_MODE')}
-                {if Module::isEnabled('dynamicproduct') && Product::isDynamicProduct($product)}
-                  {* dynamic product *}
-                  {hook h="displayDynamicProductForm" product=$product}
-                {else}
                 <div class="row">
                   <div class="add col-12">
                     <a class="btn btn-success add-to-cart w-100 {if !$product.add_to_cart_url || !$product.available_for_order || ($product.out_of_stock == 0 && $product.quantity <= 0)}disabled{/if}" data-button-action="add-to-cart" data-product-id="{$product.id_product}" aria-label="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" type="button" {if !$product.add_to_cart_url} disabled {/if} href="{$link->getPageLink('cart')}?token={$static_token}">
@@ -157,8 +160,8 @@
                   {/if}
                 </div>
                 {/if}
-                {/if}
           </div>
+                  {/if}
 
                   <div class="col-12" {if !$product.add_to_cart_url || !$product.available_for_order}style="pointer-events:none;" {/if}>
                     {hook h='displayProductSawAndCutButtons' product=$product}
@@ -180,7 +183,7 @@
         </div>
 
         <div class="cart-discount mt-2 mb-2 text-black col-12">
-          <div class="card-body bg-light"><span class="fasl fa-badge-percent fa-3x float-right" id="next-discount-icon"></span>
+          <div class="card-body bg-light" style="min-height: 75px;"><span class="fasl fa-badge-percent fa-3x float-right" id="next-discount-icon"></span>
             {$discount_add.message|unescape: "html" nofilter}
           </div>
         </div>
@@ -200,12 +203,19 @@
       </div>
     </div>
     <div class="row border-bottom">
-      <div class="col-12 col-sm-7 pt-3 pb-4">
+      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}col-sm-5 pb-4{/if} pt-3 ">
         {if !empty($product.description)}
           {block name='product_description'}
             <div class="product-description border-bottom pb-4 pt-4 row">
                 <span class="description-title font-weight-bold h5 col-12">Beschrijving</span>
                   <div class="col-12">{$product.description nofilter}</div>
+            </div>
+          {/block}
+          {elseif (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') == (int)$product.id_category_default}
+          {block name='product_description'}
+            <div class="product-description border-bottom pb-4 pt-4 row">
+              <span class="description-title font-weight-bold h5 col-12">Beschrijving</span>
+              <div class="col-12">{$product.description_short nofilter}</div>
             </div>
           {/block}
         {else}
@@ -217,7 +227,7 @@
           {/block}
         {/if}
       </div>
-      <div class="col-12 col-sm-5 pt-2">
+      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}col-sm-7 pt-2{/if} ">
         {if Configuration::get('SHOW_PRODUCT_FEATURES') === 'category'}
             {assign var='cat' value=Category::getNestedCategories($product.id_category_default)}
             {if is_null($cat[$product.id_category_default].top_description)}

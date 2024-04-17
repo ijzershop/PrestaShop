@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,21 +14,19 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\models\input_fields;
 
-namespace classes\models\input_fields;
-
-use classes\DynamicTools;
-use classes\models\DynamicInputField;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\models\DynamicInputField;
 
 class SwitchInputField extends DynamicInputField
 {
@@ -40,12 +39,13 @@ class SwitchInputField extends DynamicInputField
 
     private function skipIfEmpty()
     {
-        return $this->field->settings->hide_when_empty && (float) $this->value === (float) 0;
+        return (int) $this->field['settings']['hide_when_empty'] && (float) $this->value === 0.0;
     }
 
     public function displayValue()
     {
         $generic_source = DynamicTools::getGenericSource();
+
         return (int) $this->value ?
             $this->module->l('Yes', $generic_source) :
             $this->module->l('No', $generic_source);

@@ -88,6 +88,8 @@ let tinySetup = function(config) {
     toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
     paste_data_images: true,
     paste_preprocess: function(plugin, args) {
+      console.log(['inc:', args, plugin, this]);
+
       let m;
       const content = args.content;
       const regex = new RegExp('^<img.*?src=\"(.*?)\"');
@@ -172,7 +174,7 @@ let tinySetup = function(config) {
           failure('Invalid JSON: ' + xhr.responseText);
           return;
         }
-        success('/upload'+json.location);
+        success(config.base_url_website+'upload'+json.location);
         top.tinymce.activeEditor.notificationManager.close();
       };
       xhr.send(formData);

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,29 +14,21 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
-
-namespace classes;
-
-use Context;
-use Db;
-use DynamicProduct;
-use Module;
-use Tools;
+namespace DynamicProduct\classes;
 
 class DynamicTools
 {
-
     public static $name;
+    public static $module;
     public static $context;
     public static $languages;
 
@@ -46,12 +39,14 @@ class DynamicTools
         if (isset($trace[1])) {
             $file = $trace[1]['file'];
         }
+
         return $file;
     }
 
     public static function getSource()
     {
         $file = self::getCallingFile();
+
         return pathinfo($file, PATHINFO_FILENAME);
     }
 
@@ -63,15 +58,17 @@ class DynamicTools
     public static function checkRestricted($id, $array)
     {
         $context = self::getContext();
+
         return (int) $context->employee->id_profile !== 1 && in_array((int) $id, $array, false);
     }
 
     public static function getRestricted($string)
     {
         if (!defined($string)) {
-            return array();
+            return [];
         }
         $value = constant($string);
+
         return explode('-', $value);
     }
 
@@ -95,14 +92,8 @@ class DynamicTools
         if (!self::isModuleDevMode()) {
             return false;
         }
-        $context = self::getContext();
-        $port = _DP_FRONT_DEV_PORT_;
-        if ($context->controller) {
-            $port = $context->controller->controller_type === 'front' ?
-                _DP_FRONT_DEV_PORT_ :
-                _DP_ADMIN_DEV_PORT_;
-        }
-        return $port;
+
+        return _DP_FRONT_DEV_PORT_;
     }
 
     public static function isHotMode($port)
@@ -110,7 +101,7 @@ class DynamicTools
         if (!self::isModuleDevMode()) {
             return false;
         }
-        if (Tools::getIsset('hot')) {
+        if (\Tools::getIsset('hot')) {
             return true;
         }
 
@@ -119,12 +110,14 @@ class DynamicTools
         }
 
         $fsock = @fsockopen(_PS_SOCK_IP_, $port, $errno, $errstr, 1);
+
         return (bool) $fsock;
     }
 
     public static function isSuperAdmin()
     {
         $context = self::getContext();
+
         return (int) $context->employee->id_profile === 1;
     }
 
@@ -135,7 +128,7 @@ class DynamicTools
 
     public static function organizeBy($key, $source, $select = false)
     {
-        $return = array();
+        $return = [];
         if (is_array($source)) {
             foreach ($source as $row) {
                 $akey = $row[$key];
@@ -146,12 +139,13 @@ class DynamicTools
                 }
             }
         }
+
         return $return;
     }
 
     public static function organizeDoubleBy($key1, $key2, $source, $select = false, $unset = false)
     {
-        $return = array();
+        $return = [];
         if (is_array($source)) {
             foreach ($source as $row) {
                 $akey1 = $row[$key1];
@@ -166,21 +160,37 @@ class DynamicTools
                 }
             }
         }
+
         return $return;
+    }
+
+    public static function mergeRecursive($array1, $array2)
+    {
+        $keys = array_keys($array2);
+        foreach ($keys as $key) {
+            if (isset($array1[$key])) {
+                $array1[$key] = array_merge($array1[$key], $array2[$key]);
+            } else {
+                $array1[$key] = $array2[$key];
+            }
+        }
+
+        return $array1;
     }
 
     public static function getAdminLink($add = '')
     {
         $module = self::getModule();
+
         return $module->currentIndex .
             '&configure=' . $module->name .
-            '&token=' . Tools::getAdminTokenLite('AdminModules') .
+            '&token=' . \Tools::getAdminTokenLite('AdminModules') .
             $add;
     }
 
     public static function redirect($add = '')
     {
-        Tools::redirectAdmin(self::getAdminLink($add));
+        \Tools::redirectAdmin(self::getAdminLink($add));
     }
 
     public static function checkAddress()
@@ -193,24 +203,21 @@ class DynamicTools
         $id_customer = $context->cookie ? $context->cookie->id_customer : 0;
         if ($id_customer) {
             $id_address_delivery = $context->cart ? $context->cart->id_address_delivery : 0;
-            if ($id_cart) {
-                /** @noinspection UnnecessaryCastingInspection */
-                Db::getInstance()->execute(
-                    'UPDATE `' . _DB_PREFIX_ . 'customization`
+            \Db::getInstance()->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'customization` 
                     SET `id_address_delivery` = ' . (int) $id_address_delivery
-                    . ' WHERE `id_cart` = ' . (int) $id_cart . ' AND `id_address_delivery`=0'
-                );
-            }
+                . ' WHERE `id_cart` = ' . (int) $id_cart . ' AND `id_address_delivery`=0'
+            );
         }
     }
 
     public static function translate($string, $iso_lang, $source, $js = false)
     {
-        $file = dirname(dirname(__FILE__)) . '/translations/' . $iso_lang . '.php';
+        $file = dirname(__FILE__, 2) . '/translations/' . $iso_lang . '.php';
         if (!file_exists($file)) {
             return $string;
         }
-        $_MODULE = array();
+        $_MODULE = [];
         if (is_file($file)) {
             include $file;
         }
@@ -218,13 +225,13 @@ class DynamicTools
 
         $module = self::getModule();
 
-        $current_key = Tools::strtolower('<{' . $module->name . '}' . _THEME_NAME_ . '>' . $source) . '_' . $key;
-        $default_key = Tools::strtolower('<{' . $module->name . '}prestashop>' . $source) . '_' . $key;
+        $current_key = \Tools::strtolower('<{' . $module->name . '}' . _THEME_NAME_ . '>' . $source) . '_' . $key;
+        $default_key = \Tools::strtolower('<{' . $module->name . '}prestashop>' . $source) . '_' . $key;
         $ret = $string;
         if (isset($_MODULE[$current_key])) {
-            $ret = Tools::stripslashes($_MODULE[$current_key]);
+            $ret = \Tools::stripslashes($_MODULE[$current_key]);
         } elseif (isset($_MODULE[$default_key])) {
-            $ret = Tools::stripslashes($_MODULE[$default_key]);
+            $ret = \Tools::stripslashes($_MODULE[$default_key]);
         }
 
         if ($js) {
@@ -236,14 +243,14 @@ class DynamicTools
 
     public static function addQueryToUrl($link, $values)
     {
-        $queries = array();
+        $queries = [];
         foreach ($values as $key => $value) {
             $queries[] = $key . ($value ? '=' . $value : '');
         }
         $query = implode('&', $queries);
         $hash = '';
         if (preg_match("/\#/", $link)) {
-            list ($link, $hash) = explode('#', $link);
+            list($link, $hash) = explode('#', $link);
         }
         if (!preg_match("/\?/", $link)) {
             $link .= '?';
@@ -251,31 +258,40 @@ class DynamicTools
             $link .= '&';
         }
         $link .= $query;
-        if (Tools::strlen($hash)) {
+        if (\Tools::strlen($hash)) {
             $link .= '#' . $hash;
         }
+
         return $link;
     }
 
     /**
-     * @return DynamicProduct
+     * @return false|\DynamicProduct
      */
     public static function getModule()
     {
-        return Module::getInstanceByName('dynamicproduct');
+        if (self::$module) {
+            return self::$module;
+        }
+
+        return self::$module = \Module::getInstanceByName('dynamicproduct');
     }
 
     /**
-     * @return Context
+     * @return \Context
      */
     public static function getContext()
     {
-        return Context::getContext();
+        if (self::$context) {
+            return self::$context;
+        }
+
+        return self::$context = \Context::getContext();
     }
 
     public static function productHasAttributeGroup($id_product, $id_group)
     {
-        return Db::getInstance()->getRow(
+        return \Db::getInstance()->getRow(
             'SELECT * FROM ' . _DB_PREFIX_ . 'attribute a
               LEFT JOIN ' . _DB_PREFIX_ . 'attribute_group ag
                 ON a.id_attribute_group = ag.id_attribute_group
@@ -304,19 +320,21 @@ class DynamicTools
         if (method_exists($context, 'getCurrentLocale')) {
             $locale = $context->getCurrentLocale();
         } elseif (method_exists('Tools', 'getContextLocale')) {
-            $locale = Tools::getContextLocale($context);
+            $locale = \Tools::getContextLocale($context);
         }
         if ($locale) {
             return $locale->formatPrice($price, $context->currency->iso_code);
         }
-        return Context::getContext()->currentLocale->formatPrice($price, 'EUR');
+
+        return \Tools::displayPrice($price);
     }
 
     public static function capitalizeFilename($name)
     {
         $filename = pathinfo($name, PATHINFO_FILENAME);
-        $filename = str_replace(array('-', '_'), ' ', $filename);
-        return Tools::ucfirst($filename);
+        $filename = str_replace(['-', '_'], ' ', $filename);
+
+        return \Tools::ucfirst($filename);
     }
 
     /**
@@ -326,6 +344,7 @@ class DynamicTools
      * @param float $minutes interval between refreshes, false => no cache
      *
      * @return string content of the URL
+     *
      * @noinspection PhpUnused
      */
     public static function getURL($url, $minutes = 60)
@@ -337,18 +356,20 @@ class DynamicTools
             if (file_exists($cache)) {
                 $is_cache_valid = filemtime($cache) > time() - 60 * (float) $minutes;
                 if ($is_cache_valid) {
-                    return Tools::file_get_contents($cache);
+                    return \Tools::file_get_contents($cache);
                 }
             }
         }
-        $content = Tools::file_get_contents($url);
+        $content = \Tools::file_get_contents($url);
         file_put_contents($cache, $content);
+
         return $content;
     }
 
     public static function encodeFile($path)
     {
-        $content = Tools::file_get_contents($path);
+        $content = \Tools::file_get_contents($path);
+
         return base64_encode($content);
     }
 
@@ -357,9 +378,32 @@ class DynamicTools
         return base64_decode($data);
     }
 
-    public function isString($value)
+    public static function convertToArray($object)
+    {
+        return json_decode(json_encode($object), true);
+    }
+
+    public static function isString($value)
     {
         return is_string($value) && !is_numeric($value);
+    }
+
+    public static function mapAttributes($attributes_old, $attributes_new, $force_mapping = false)
+    {
+        $mapping = [];
+        if (count($attributes_old) !== count($attributes_new) && !$force_mapping) {
+            return [];
+        }
+
+        foreach ($attributes_old as $index => $attribute) {
+            if (isset($attributes_new[$index])) {
+                $mapping[(int) $attribute['id_product_attribute']] = (int) $attributes_new[$index]['id_product_attribute'];
+            } else {
+                $mapping[(int) $attribute['id_product_attribute']] = 0;
+            }
+        }
+
+        return $mapping;
     }
 
     public static function reportException($e, $short = false): string
@@ -367,6 +411,7 @@ class DynamicTools
         if ($short) {
             return $e->getMessage();
         }
+
         return "{$e->getMessage()} ({$e->getFile()}:{$e->getLine()})";
     }
 }

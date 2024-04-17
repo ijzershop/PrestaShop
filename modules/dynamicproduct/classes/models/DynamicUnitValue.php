@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,21 +14,16 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
-
-namespace classes\models;
-
-use Db;
-use DbQuery;
+namespace DynamicProduct\classes\models;
 
 class DynamicUnitValue extends DynamicObject
 {
@@ -42,62 +38,75 @@ class DynamicUnitValue extends DynamicObject
     public $min_width;
     public $min_height;
     public $max_size;
+    public $max_files = 1;
     public $extensions;
     public $min_date;
     public $max_date;
+    public $disabled_days;
     public $multiselect;
     public $color;
     public $display_value_price;
     public $display_secondary_value_price;
+    public $display_price_tax_excl;
     public $custom_suffix;
     public $display_in_popup;
-    public $hide_when_empty = 1;
-    public $show_in_summary = 0;
+    public $hide_when_empty;
+    public $show_in_summary;
     public $price_unit;
     public $ps_style;
+    public $show_dropzone;
+    public $script_name;
+    public $json_config;
 
-    private static $unit_values = array();
+    private static $unit_values = [];
 
-    public static $definition = array(
-        'table'     => 'dynamicproduct_unit_value',
-        'primary'   => 'id_unit_value',
+    public static $definition = [
+        'table' => 'dynamicproduct_unit_value',
+        'primary' => 'id_unit_value',
         'multilang' => true,
-        'fields'    => array(
-            'id_field'                      => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_unit'                       => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'min'                           => array('type' => self::TYPE_FLOAT),
-            'max'                           => array('type' => self::TYPE_FLOAT),
-            'step'                          => array('type' => self::TYPE_FLOAT),
-            'init'                          => array('type' => self::TYPE_FLOAT),
-            'extra'                         => array('type' => self::TYPE_STRING),
-            'required'                      => array('type' => self::TYPE_INT),
-            'min_width'                     => array('type' => self::TYPE_INT),
-            'min_height'                    => array('type' => self::TYPE_INT),
-            'max_size'                      => array('type' => self::TYPE_INT),
-            'extensions'                    => array('type' => self::TYPE_STRING),
-            'min_date'                      => array('type' => self::TYPE_STRING),
-            'max_date'                      => array('type' => self::TYPE_STRING),
-            'multiselect'                   => array('type' => self::TYPE_INT),
-            'color'                         => array('type' => self::TYPE_STRING),
-            'display_value_price'           => array('type' => self::TYPE_INT),
-            'display_secondary_value_price' => array('type' => self::TYPE_INT),
-            'custom_suffix'                 => array('type' => self::TYPE_STRING),
-            'display_in_popup'              => array('type' => self::TYPE_INT),
-            'hide_when_empty'               => array('type' => self::TYPE_INT),
-            'show_in_summary'               => array('type' => self::TYPE_INT),
+        'fields' => [
+            'id_field' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_unit' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'min' => ['type' => self::TYPE_FLOAT],
+            'max' => ['type' => self::TYPE_FLOAT],
+            'step' => ['type' => self::TYPE_FLOAT],
+            'init' => ['type' => self::TYPE_FLOAT],
+            'extra' => ['type' => self::TYPE_STRING],
+            'required' => ['type' => self::TYPE_INT],
+            'min_width' => ['type' => self::TYPE_INT],
+            'min_height' => ['type' => self::TYPE_INT],
+            'max_size' => ['type' => self::TYPE_INT],
+            'max_files' => ['type' => self::TYPE_INT],
+            'extensions' => ['type' => self::TYPE_STRING],
+            'min_date' => ['type' => self::TYPE_STRING],
+            'max_date' => ['type' => self::TYPE_STRING],
+            'disabled_days' => ['type' => self::TYPE_STRING],
+            'multiselect' => ['type' => self::TYPE_INT],
+            'color' => ['type' => self::TYPE_STRING],
+            'display_value_price' => ['type' => self::TYPE_INT],
+            'display_secondary_value_price' => ['type' => self::TYPE_INT],
+            'display_price_tax_excl' => ['type' => self::TYPE_INT],
+            'custom_suffix' => ['type' => self::TYPE_STRING],
+            'display_in_popup' => ['type' => self::TYPE_INT],
+            'hide_when_empty' => ['type' => self::TYPE_INT],
+            'show_in_summary' => ['type' => self::TYPE_INT],
             /* Lang fields */
-            'price_unit'                    => array(
-                'type'     => self::TYPE_STRING,
-                'lang'     => true,
+            'price_unit' => [
+                'type' => self::TYPE_STRING,
+                'lang' => true,
                 'required' => false,
-                'size'     => 256
-            ),
-            'ps_style'                      => array('type' => self::TYPE_INT),
-        )
-    );
+                'size' => 256,
+            ],
+            'ps_style' => ['type' => self::TYPE_INT],
+            'show_dropzone' => ['type' => self::TYPE_INT],
+            'script_name' => ['type' => self::TYPE_STRING],
+            'json_config' => ['type' => self::TYPE_STRING],
+        ],
+    ];
 
     /**
      * @param $id_field
+     *
      * @return DynamicUnitValue
      */
     public static function getUnitValue($id_field, $id_lang = null)
@@ -106,18 +115,20 @@ class DynamicUnitValue extends DynamicObject
         if (isset(self::$unit_values[$key])) {
             return self::$unit_values[$key];
         }
-        $sql = new DbQuery();
+        $sql = new \DbQuery();
         $sql->select('id_unit_value');
         $sql->from(self::$definition['table']);
         $sql->where('id_field = ' . (int) $id_field);
-        $id_unit_value = Db::getInstance()->getValue($sql);
+        $id_unit_value = \Db::getInstance()->getValue($sql);
         $dynamic_unit_value = new self($id_unit_value, $id_lang);
         $dynamic_unit_value->id_field = (int) $id_field;
+
         return self::$unit_values[$key] = $dynamic_unit_value;
     }
 
     /**
      * @param $id_field
+     *
      * @return DynamicUnitValue
      */
     public static function getUnitValuesByIdField($id_field)

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,33 +14,31 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+/* @noinspection PhpUnusedPrivateMethodInspection */
 
-/** @noinspection PhpUnusedPrivateMethodInspection */
-
-use classes\DynamicTools;
-use classes\factory\DynamicFieldFactory;
-use classes\helpers\DynamicFieldsHelper;
-use classes\models\DynamicCommonField;
-use classes\models\DynamicField;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\factory\DynamicFieldFactory;
+use DynamicProduct\classes\helpers\DynamicFieldsHelper;
+use DynamicProduct\classes\helpers\FormulasHelper;
+use DynamicProduct\classes\models\DynamicCommonField;
+use DynamicProduct\classes\models\DynamicField;
 
 class DynamicProductFieldsController extends ModuleAdminController
 {
-
     /** @var DynamicProduct */
     public $module;
     public $action;
 
-    /** @var Context $context */
+    /** @var Context */
     public $context;
     public $id_field;
     public $id_product;
@@ -57,12 +56,13 @@ class DynamicProductFieldsController extends ModuleAdminController
 
     public function postProcess()
     {
+        $source = basename(__FILE__, '.php');
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
         if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
-            exit(json_encode(array(
-                'error'   => true,
-                'message' => $this->module->l('This product is for viewing only!')
-            )));
+            exit(json_encode([
+                'error' => true,
+                'message' => $this->module->l('This product is for viewing only!', $source),
+            ]));
         }
 
         $method = 'process' . Tools::toCamelCase($this->action, true);
@@ -70,43 +70,79 @@ class DynamicProductFieldsController extends ModuleAdminController
             return $this->{$method}();
         }
 
-        exit();
+        exit;
     }
 
     private function processAddField()
     {
+        $type = (int) Tools::getValue('type', 1);
+        $id_field_after = (int) Tools::getValue('after', 0);
+
         $dynamic_field = new DynamicField();
         $dynamic_field->id_product = $this->id_product;
-        $dynamic_field->position = DynamicField::getHighestPosition($dynamic_field);
-        $dynamic_field->type = 1;
+
+        $new_position = DynamicField::getHighestPosition($dynamic_field);
+        if ($id_field_after) {
+            $field_after = new DynamicField($id_field_after);
+            if (Validate::isLoadedObject($field_after)) {
+                $position = $field_after->position;
+                $new_position = $position + 1;
+                Db::getInstance()->update(
+                    DynamicField::$definition['table'],
+                    ['position' => ['type' => 'sql', 'value' => '`position` + 1']],
+                    'id_product = ' . (int) $this->id_product . ' AND position > ' . (int) $position
+                );
+                Db::getInstance()->update(
+                    DynamicCommonField::$definition['table'],
+                    ['position' => ['type' => 'sql', 'value' => '`position` + 1']],
+                    'id_product = ' . (int) $this->id_product . ' AND position > ' . (int) $position
+                );
+            }
+        }
+
+        $dynamic_field->name = Tools::getValue('name', '');
+        $dynamic_field->position = $new_position;
+        $dynamic_field->type = $type;
         $dynamic_field->active = 1;
+        $dynamic_field->id_group = 0;
+        $dynamic_field->id_step = 0;
         $dynamic_field->save();
-        $this->respond(array(
-            'field' => $dynamic_field
-        ));
+        $this->respond([
+            'field' => DynamicFieldFactory::create($dynamic_field->type, $dynamic_field->id),
+            'fields' => DynamicField::getFieldRowsByProduct($this->id_product),
+        ]);
     }
 
     private function processSaveField()
     {
         $id_field = (int) Tools::getValue('id');
         $dynamic_field = new DynamicField($id_field);
+        $original_name = $dynamic_field->name;
         $id_product_original = (int) $dynamic_field->id_product;
         $dynamic_field->saveFromPost();
         if ($id_product_original !== $this->id_product) {
             $dynamic_field->id_product = $id_product_original;
             $dynamic_field->save();
         }
-        $this->respond(array(
+
+        $reason = Tools::getValue('reason');
+        $updates = false;
+        if ($reason === 'name_change') {
+            $updates = FormulasHelper::updateFormulas($dynamic_field, $original_name, $dynamic_field->name);
+        }
+
+        $this->respond([
             'field' => DynamicFieldFactory::create($dynamic_field->type, $dynamic_field->id),
-        ));
+            'updates' => $updates,
+        ]);
     }
 
     private function processDuplicateField()
     {
         $this->module->handler->copyField($this->id_field, $this->id_product);
-        $this->respond(array(
-            'fields' => DynamicField::getFieldsByIdProduct($this->id_product),
-        ));
+        $this->respond([
+            'fields' => DynamicField::getFieldRowsByProduct($this->id_product),
+        ]);
     }
 
     private function processDeleteField()
@@ -114,9 +150,9 @@ class DynamicProductFieldsController extends ModuleAdminController
         $fields_helper = new DynamicFieldsHelper($this->module, $this->context);
         $dynamic_field = $fields_helper->deleteField($this->id_product, $this->id_field);
 
-        $this->respond(array(
-            'field' => $dynamic_field
-        ));
+        $this->respond([
+            'field' => $dynamic_field,
+        ]);
     }
 
     private function processDeleteFields()
@@ -137,24 +173,30 @@ class DynamicProductFieldsController extends ModuleAdminController
 
         $uploader = new Uploader();
         $uploader->setName('file');
-        $uploader->setAcceptTypes(array('jpeg', 'gif', 'png', 'jpg'));
+        $uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg']);
         $file = $uploader->process();
         $upload = $file[0];
 
         if ($upload['error']) {
-            $this->respond(array(
-                'error'   => true,
-                'message' => $upload['error']
-            ));
+            $this->respond([
+                'error' => true,
+                'message' => $upload['error'],
+            ]);
         }
 
         $save_path = $upload['save_path'];
-        ImageManager::resize($save_path, $img_dir . $this->id_field . '.jpg');
+        $ext = pathinfo($save_path, PATHINFO_EXTENSION);
+        $filename = $this->id_field . '.' . $ext;
+        ImageManager::resize($save_path, $img_dir . $filename);
         ImageManager::resize($save_path, $img_dir . $this->id_field . '-thumb.jpg', 35, 35);
 
-        $this->respond(array(
+        $dynamic_field = new DynamicField($this->id_field);
+        $dynamic_field->image = $filename;
+        $dynamic_field->save();
+
+        $this->respond([
             'field' => new DynamicField($this->id_field),
-        ));
+        ]);
     }
 
     private function processDeleteFieldImage()
@@ -169,9 +211,13 @@ class DynamicProductFieldsController extends ModuleAdminController
             unlink($thumb);
         }
 
-        $this->respond(array(
+        $dynamic_field = new DynamicField($this->id_field);
+        $dynamic_field->image = '';
+        $dynamic_field->save();
+
+        $this->respond([
             'field' => new DynamicField($this->id_field),
-        ));
+        ]);
     }
 
     private function processSaveFieldsOrder()
@@ -205,22 +251,23 @@ class DynamicProductFieldsController extends ModuleAdminController
         $new_field->favorite = false;
         $new_field->save();
 
-        $this->respond(array(
-            'field' => $new_field
-        ));
+        $this->respond([
+            'field' => DynamicFieldFactory::create($new_field->type, $new_field->id),
+        ]);
     }
 
     private function processLoadCommonField()
     {
+        $source = basename(__FILE__, '.php');
         $id_field = (int) Tools::getValue('id_field');
         $dynamic_field = new DynamicField($id_field);
 
         $common_field = DynamicCommonField::getByFieldAndProduct($id_field, $this->id_product);
         if (Validate::isLoadedObject($common_field)) {
-            $this->respond(array(
-                'error'   => true,
-                'message' => $this->module->l('A common field can only be included once in the same product')
-            ));
+            $this->respond([
+                'error' => true,
+                'message' => $this->module->l('A common field can only be included once in the same product', $source),
+            ]);
         }
         $common_field->position = 1;
 
@@ -232,21 +279,24 @@ class DynamicProductFieldsController extends ModuleAdminController
         $common_field->save();
 
         // modify original field for display only
-        $dynamic_field->position = $common_field->position;
-        $dynamic_field->common = true;
-        $dynamic_field->linked = true;
+        $field = DynamicFieldFactory::create($dynamic_field->type, $dynamic_field->id);
+        $field->position = $common_field->position;
+        $field->common = true;
+        $field->linked = true;
 
-        $this->respond(array(
-            'field' => $dynamic_field
-        ));
+        $this->respond([
+            'field' => $field,
+        ]);
     }
 
-    public function respond($data = array(), $success = 1)
-    {
+    public function respond(
+        $data = [],
+        $success = 1
+    ) {
         $success = $success && (int) !array_key_exists('error', $data);
-        $arr = array(
+        $arr = [
             'success' => $success,
-        );
+        ];
         $arr = array_merge($arr, $data);
         exit(json_encode($arr));
     }

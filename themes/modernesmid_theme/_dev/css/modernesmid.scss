@@ -1376,11 +1376,7 @@ section.checkout-step.-current {
     -moz-appearance: textfield;
   }
 }
-.dp_field_container {
-  .dp_input {
-    border: 1px solid #ced4da !important;
-  }
-}
+
 .vprogress-row {
   &:not(:last-child) {
     background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 8%, rgba(239, 239, 239, 1) 8%, rgba(239, 239, 239, 1) 10%, rgba(255, 255, 255, 1) 10%, rgba(255, 255, 255, 1) 100%);
@@ -1587,7 +1583,9 @@ main {
   overflow-x: hidden;
 }
 #search_filters_wrapper {
-  border: 1px 1px 0px 1px solid #777777;
+  border-width: 1px 1px 0px 1px;
+  border-style: solid;
+  border-color: #777777;
   .nav-link {
     line-height: 1.5rem;
   }
@@ -1761,7 +1759,7 @@ main {
 }
 #buorgul {
   background: #21a055 !important;
-  box-shadow: 0px !important;
+  box-shadow: none !important;
   padding: 10px 10px !important;
 }
 .bubble {
@@ -2341,10 +2339,10 @@ main {
 
 
 #product-images-carousel .carousel-control-prev{
-  left:-15px;
+  left:0;
 }
 #product-images-carousel .carousel-control-next{
-  right:-15px;
+  right:0;
 }
 
 

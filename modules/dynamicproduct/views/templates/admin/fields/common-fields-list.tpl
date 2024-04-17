@@ -1,5 +1,5 @@
 {*
-* 2007-2022 PrestaShop
+* 2007-2023 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -17,57 +17,52 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2022 PrestaShop SA
+*  @author    TuniSoft <tunisoft.solutions@gmail.com>
+*  @copyright 2007-2023 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <div class="panel">
-  <div class="panel-heading">
-    <i class="icon-share-alt"></i>
-      {l s='Common fields' mod='dynamicproduct'}
-  </div>
   <div class="form-wrapper">
       {if count($common_fields)}
         <table class="table">
           <thead>
-            <tr>
-              <th>ID</th>
-              <th>{l s='Name' mod='dynamicproduct'}</th>
-              <th>{l s='Label' mod='dynamicproduct'}</th>
-              <th>{l s='Product' mod='dynamicproduct'}</th>
-              <th class="fixed-width-sm center">{l s='Actions' mod='dynamicproduct'}</th>
-            </tr>
+          <tr>
+            <th>ID</th>
+            <th>{l s='Name' mod='dynamicproduct'}</th>
+            <th>{l s='Label' mod='dynamicproduct'}</th>
+            <th>{l s='Product' mod='dynamicproduct'}</th>
+            <th class="fixed-width-sm center">{l s='Actions' mod='dynamicproduct'}</th>
+          </tr>
           </thead>
           <tbody>
-              {foreach from=$common_fields item=common_field}
-                  {$deletelink = "index.php?controller=AdminModules{$default}&id_common_field={$common_field->id|intval}&submit_remove_common_field&token={$token|escape:'htmlall':'UTF-8'}"}
-                <tr>
-                  <td>{$common_field->id|intval}</td>
-                  <td>{$common_field->name|escape:'htmlall':'UTF-8'}</td>
-                  <td>{$common_field->label|escape:'htmlall':'UTF-8'}</td>
-                  <td>
-                    <a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $common_field->id_product|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}&amp;id_product={$common_field->id_product|intval}&amp;updateproduct"
-                       target="_blank"
+          {foreach from=$common_fields item=common_field}
+              {$deletelink = "index.php?controller=AdminModules{$default}&id_common_field={$common_field.id|intval}&submit_remove_common_field&token={$token|escape:'htmlall':'UTF-8'}"}
+            <tr>
+              <td>{$common_field.id|intval}</td>
+              <td>{$common_field.name|escape:'htmlall':'UTF-8'}</td>
+              <td>{$common_field.label|escape:'htmlall':'UTF-8'}</td>
+              <td>
+                <a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $common_field.id_product|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}&amp;id_product={$common_field.id_product|intval}&amp;updateproduct"
+                   target="_blank"
+                >
+                    {Product::getProductName($common_field.id_product)|escape:'htmlall':'UTF-8'}
+                </a>
+              </td>
+              <td class="text-right">
+                <div class="btn-group-action">
+                  <div class="btn-group pull-right">
+                    <a href="{$deletelink|escape:'htmlall':'UTF-8'}"
+                       title="{l s='The field will not be deleted' mod='dynamicproduct'}"
+                       class="edit btn btn-default"
                     >
-                        {Product::getProductName($common_field->id_product)|escape:'htmlall':'UTF-8'}
+                      <i class="icon-trash"></i> {l s='Remove' mod='dynamicproduct'}
                     </a>
-                  </td>
-                  <td class="text-right">
-                    <div class="btn-group-action">
-                      <div class="btn-group pull-right">
-                        <a href="{$deletelink|escape:'htmlall':'UTF-8'}"
-                           title="{l s='The field will not be deleted' mod='dynamicproduct'}"
-                           class="edit btn btn-default"
-                        >
-                          <i class="icon-trash"></i> {l s='Remove from common fields' mod='dynamicproduct'}
-                        </a>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              {/foreach}
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {/foreach}
           </tbody>
         </table>
       {else}

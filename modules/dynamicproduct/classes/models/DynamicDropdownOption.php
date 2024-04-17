@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,23 +14,19 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\models;
 
-namespace classes\models;
-
-use Db;
-use DbQuery;
-use ImageManager;
-use Validate;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\helpers\ModelHelper;
 
 class DynamicDropdownOption extends DynamicObject
 {
@@ -38,6 +35,7 @@ class DynamicDropdownOption extends DynamicObject
 
     public $value;
     public $secondary_value;
+    public $sku;
     public $is_default;
     public $position;
     public $color;
@@ -45,76 +43,87 @@ class DynamicDropdownOption extends DynamicObject
 
     public $deleted = 0;
 
+    public $image;
     public $image_url;
     public $thumb_url;
 
+    public $preview;
+    public $preview_url;
+    public $preview_thumb_url;
+
     public $displayed_value;
 
-    private static $dropdown_options;
-
-    public static $definition = array(
-        'table'      => 'dynamicproduct_dropdown_option',
-        'primary'    => 'id_dropdown_option',
-        'group_by'   => 'id_field',
+    public static $definition = [
+        'table' => 'dynamicproduct_dropdown_option',
+        'primary' => 'id_dropdown_option',
+        'group_by' => 'id_field',
         'complement' => 'is_default',
-        'multilang'  => true,
-        'fields'     => array(
-            'id_field'        => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'value'           => array('type' => self::TYPE_STRING),
-            'secondary_value' => array('type' => self::TYPE_STRING),
-            'color'           => array('type' => self::TYPE_STRING),
-            'is_default'      => array('type' => self::TYPE_INT),
-            'position'        => array('type' => self::TYPE_INT),
-            'deleted'         => array('type' => self::TYPE_INT),
+        'multilang' => true,
+        'fields' => [
+            'id_field' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'value' => ['type' => self::TYPE_STRING],
+            'secondary_value' => ['type' => self::TYPE_STRING],
+            'sku' => ['type' => self::TYPE_STRING],
+            'color' => ['type' => self::TYPE_STRING],
+            'image' => ['type' => self::TYPE_STRING],
+            'preview' => ['type' => self::TYPE_STRING],
+            'is_default' => ['type' => self::TYPE_INT],
+            'position' => ['type' => self::TYPE_INT],
+            'deleted' => ['type' => self::TYPE_INT],
             /* Lang fields */
-            'label'           => array(
-                'type'     => self::TYPE_STRING,
-                'lang'     => true,
+            'label' => [
+                'type' => self::TYPE_STRING,
+                'lang' => true,
                 'required' => false,
                 'validate' => 'isGenericName',
-                'size'     => 200
-            )
-        )
-    );
+                'size' => 200,
+            ],
+        ],
+    ];
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         parent::__construct($id, $id_lang, $id_shop);
         $this->initImage();
+        $this->initPreview();
     }
 
     /**
      * @param $id_field
      * @param $id_lang
+     *
      * @return DynamicDropdownOption[]
      */
     public static function getDropdownOptionsByIdField($id_field, $id_lang = null)
     {
-        $dropdown_options = array();
-        $sql = new DbQuery();
-        $sql->from(self::$definition['table']);
-        $sql->select('id_dropdown_option');
-        $sql->where('id_field = ' . (int) $id_field);
-        $sql->where('!deleted');
-        $sql->orderBy('`position` ASC');
-        $rows = Db::getInstance()->executeS($sql, false);
-        while ($row = Db::getInstance()->nextRow($rows)) {
-            $id_dropdown_option = (int) $row['id_dropdown_option'];
-            $dropdown_option = new self($id_dropdown_option, $id_lang);
-            if (Validate::isLoadedObject($dropdown_option)) {
-                $dropdown_options[$id_dropdown_option] = $dropdown_option;
+        $module = DynamicTools::getModule();
+
+        $rows = \Db::getInstance()->executeS('
+            SELECT *, o.id_dropdown_option as id FROM `' . _DB_PREFIX_ . 'dynamicproduct_dropdown_option` o
+            LEFT JOIN `' . _DB_PREFIX_ . 'dynamicproduct_dropdown_option_lang` ol 
+            ON (o.`id_dropdown_option` = ol.`id_dropdown_option`)
+            WHERE `id_field` = ' . (int) $id_field . ' 
+            AND o.`deleted` = 0 ' . ($id_lang ? 'AND `id_lang` = ' . (int) $id_lang : '') . '
+            ORDER BY `position` ASC
+        ');
+
+        $options = ModelHelper::groupByLang($rows, $id_lang, ['label']);
+
+        $options = ModelHelper::castNumericValues($options, self::class);
+
+        $base_url = $module->provider->getDataDirUrl('images/dropdown');
+        foreach ($options as &$option) {
+            if (!empty($option['image'])) {
+                $option['image_url'] = $base_url . $option['image'];
+                $option['thumb_url'] = $base_url . $option['id'] . '-thumb.jpg';
+            }
+            if (!empty($option['preview'])) {
+                $option['preview_url'] = $base_url . $option['preview'];
+                $option['preview_thumb_url'] = $base_url . $option['id'] . '-preview-thumb.jpg';
             }
         }
-        return $dropdown_options;
-    }
 
-    public static function getDropdownOption($id_dropdown_option, $id_lang)
-    {
-        $key = $id_dropdown_option . '_' . $id_lang;
-        if (isset(self::$dropdown_options[$key])) {
-            return self::$dropdown_options[$key];
-        }
-        return self::$dropdown_options[$key] = new self($id_dropdown_option, $id_lang);
+        return $options;
     }
 
     private function initImage()
@@ -127,41 +136,76 @@ class DynamicDropdownOption extends DynamicObject
 
     public function hasImage()
     {
-        return $this->getPath('id');
+        return $this->getPath('image');
     }
 
     public function getThumb()
     {
-        return $this->getThumbPath('id');
+        return $this->getThumbPath('image');
     }
 
     public function getThumbUrl()
     {
-        $path = $this->getThumbPath('id');
+        $path = $this->getThumbPath('image');
         if (!$path) {
-            $image_path = $this->getPath('id');
+            $image_path = $this->getPath('image');
             if ($image_path) {
-                ImageManager::resize($image_path, $this->getDir() . $this->id . '-thumb.jpg', _DP_THUMB_, _DP_THUMB_);
-                $path = $this->getThumbPath('id');
+                \ImageManager::resize($image_path, $this->getDir() . $this->id . '-thumb.jpg', _DP_THUMB_, _DP_THUMB_);
+                $path = $this->getThumbPath('image');
             }
         }
         if ($path) {
             return $this->getUrl() . basename($path);
         }
+
         return $this->getPixelUrl();
     }
 
     public function getImage()
     {
-        return $this->getPath('id');
+        return $this->getPath('image');
     }
 
     public function getImageUrl()
     {
-        if ($path = $this->getPath('id')) {
+        if ($path = $this->getPath('image')) {
             return $this->getUrl() . basename($path);
         }
+
         return $this->getPixelUrl();
+    }
+
+    private function initPreview()
+    {
+        if ($this->hasPreview()) {
+            $this->preview_url = $this->getPreviewUrl();
+            $this->preview_thumb_url = $this->getPreviewThumbUrl();
+        }
+    }
+
+    public function getPreview()
+    {
+        return $this->getDir() . $this->preview;
+    }
+
+    public function getPreviewThumb()
+    {
+        return $this->getDir() . $this->id . '-preview-thumb.jpg';
+    }
+
+    public function hasPreview()
+    {
+        return $this->preview && is_file($this->getPreview());
+    }
+
+    public function getPreviewUrl()
+    {
+        return $this->getUrl() . $this->preview;
+    }
+
+    public function getPreviewThumbUrl()
+    {
+        return $this->getUrl() . $this->id . '-preview-thumb.jpg';
     }
 
     public function copyImagesFrom($id_dropdown_option)
@@ -170,21 +214,39 @@ class DynamicDropdownOption extends DynamicObject
 
         $image = $dropdown_option->getImage();
         if (is_file($image)) {
-            $dest_image = $this->getPathForCreation('id');
+            $extention = pathinfo($image, PATHINFO_EXTENSION);
+            $this->image = $this->id . '.' . $extention;
+            $dest_image = $this->getPathForCreation('image');
             copy($image, $dest_image);
         }
 
         $thumb = $dropdown_option->getThumb();
         if (is_file($thumb)) {
-            $dest_thumb = $this->getThumbPathForCreation('id');
+            $dest_thumb = $this->getThumbPathForCreation('image');
             copy($thumb, $dest_thumb);
         }
+
+        $image = $dropdown_option->getPreview();
+        if (is_file($image)) {
+            $extention = pathinfo($image, PATHINFO_EXTENSION);
+            $this->preview = $this->id . '-preview.' . $extention;
+            $dest_image = $this->getPreview();
+            copy($image, $dest_image);
+        }
+
+        $thumb = $dropdown_option->getPreviewThumb();
+        if (is_file($thumb)) {
+            $dest_thumb = $this->getPreviewThumb();
+            copy($thumb, $dest_thumb);
+        }
+
+        $this->save();
     }
 
     public function delete()
     {
-        $path = $this->getPath('id');
-        $thumb = $this->getThumbPath('id');
+        $path = $this->getPath('image');
+        $thumb = $this->getThumbPath('image');
         if (is_file($path)) {
             unlink($path);
         }
@@ -192,7 +254,6 @@ class DynamicDropdownOption extends DynamicObject
             unlink($thumb);
         }
 
-        // parent::delete();
         $this->deleted = true;
         $this->save();
     }

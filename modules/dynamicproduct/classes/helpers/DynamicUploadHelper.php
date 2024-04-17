@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,30 +14,25 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\helpers;
 
-namespace classes\helpers;
-
-use classes\models\DynamicInput;
-use classes\models\input_fields\UploadInputField;
-use Context;
-use DynamicProduct;
+use DynamicProduct\classes\models\DynamicInput;
+use DynamicProduct\classes\models\input_fields\UploadInputField;
 
 class DynamicUploadHelper
 {
-
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
     public function __construct($module, $context)
@@ -48,7 +44,7 @@ class DynamicUploadHelper
     public function copyOrderFilesToKeep($id_cart)
     {
         $dest = $this->module->provider->getDataDir('upload_keep');
-        $types = array(_DP_IMAGE_, _DP_FILE_);
+        $types = [_DP_IMAGE_, _DP_FILE_];
         $dynamic_inputs = DynamicInput::getInputsByIdCart($id_cart);
         foreach ($dynamic_inputs as $dynamic_input) {
             $dynamic_input->assignInputFields($this->context->language->id);
@@ -56,13 +52,17 @@ class DynamicUploadHelper
             foreach ($input_fields as $input_field) {
                 if (in_array((int) $input_field->type, $types, true)) {
                     if ($input_field instanceof UploadInputField) {
-                        $file_path = $input_field->getFilePath();
-                        $thumb_path = $input_field->getThumbPath();
-                        if (is_file($file_path)) {
-                            copy($file_path, $dest . basename($file_path));
-                        }
-                        if (is_file($thumb_path)) {
-                            copy($thumb_path, $dest . basename($thumb_path));
+                        if (is_array($input_field->data)) {
+                            foreach ($input_field->data as $upload) {
+                                $file_path = $input_field->getFilePath($upload['file']);
+                                $thumb_path = $input_field->getThumbFilePath($upload['file']);
+                                if (is_file($file_path)) {
+                                    copy($file_path, $dest . basename($file_path));
+                                }
+                                if (is_file($thumb_path)) {
+                                    copy($thumb_path, $dest . basename($thumb_path));
+                                }
+                            }
                         }
                     }
                 }

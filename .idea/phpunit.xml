@@ -9,12 +9,12 @@
         <option value="$PROJECT_DIR$/modules/ps_wirepayment/tests" />
         <option value="$PROJECT_DIR$/modules/ps_themecusto/tests" />
         <option value="$PROJECT_DIR$/modules/autoupgrade/tests" />
-        <option value="$PROJECT_DIR$/modules/ps_distributionapiclient/tests/Unit" />
-        <option value="$PROJECT_DIR$/tools/build/tests/Unit" />
-        <option value="$PROJECT_DIR$/tests/Unit" />
         <option value="$PROJECT_DIR$/modules/ps_facetedsearch/tests/php" />
+        <option value="$PROJECT_DIR$/tools/build/tests/Unit" />
         <option value="$PROJECT_DIR$/modules/gamification/tests/unit" />
         <option value="$PROJECT_DIR$/modules/gamification/tests/functional" />
+        <option value="$PROJECT_DIR$/tests/Unit" />
+        <option value="$PROJECT_DIR$/modules/ps_distributionapiclient/tests/Unit" />
       </list>
     </option>
   </component>

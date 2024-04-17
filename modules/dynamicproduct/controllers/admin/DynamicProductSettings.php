@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,37 +14,41 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+/* @noinspection PhpUnusedPrivateMethodInspection */
 
-/** @noinspection PhpUnusedPrivateMethodInspection */
-
-use classes\DynamicTools;
-use classes\models\DynamicConfig;
-use classes\models\DynamicProductConfigLink;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\helpers\ProductHelper;
+use DynamicProduct\classes\models\DynamicCombinationField;
+use DynamicProduct\classes\models\DynamicCombinationValue;
+use DynamicProduct\classes\models\DynamicConfig;
+use DynamicProduct\classes\models\DynamicField;
+use DynamicProduct\classes\models\DynamicProductConfigLink;
 
 class DynamicProductSettingsController extends ModuleAdminController
 {
-
     /** @var DynamicProduct */
     public $module;
     public $action;
 
-    /** @var Context $context */
+    /** @var Context */
     public $context;
     public $id_product;
     public $id_default_lang;
 
     public function __construct()
     {
+        if (empty($_POST)) {
+            $_POST = json_decode(Tools::file_get_contents('php://input'), true);
+        }
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
@@ -53,12 +58,13 @@ class DynamicProductSettingsController extends ModuleAdminController
 
     public function postProcess()
     {
+        $source = basename(__FILE__, '.php');
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
-        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
-            exit(json_encode(array(
-                'error'   => true,
-                'message' => $this->module->l('This product is for viewing only!')
-            )));
+        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted)) {
+            exit(json_encode([
+                'error' => true,
+                'message' => $this->module->l('This product is for viewing only!', $source),
+            ]));
         }
 
         $method = 'process' . Tools::toCamelCase($this->action, true);
@@ -66,7 +72,58 @@ class DynamicProductSettingsController extends ModuleAdminController
             return $this->{$method}();
         }
 
-        exit();
+        exit;
+    }
+
+    private function processLoadData()
+    {
+        $id_product = $this->id_product;
+
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+
+        // get product combinations
+        $combinations = $this->module->provider->getProductCombinations($id_product);
+
+        if ($id_product !== $id_source_product) {
+            $source_combinations = $this->module->provider->getProductCombinations($id_source_product);
+            foreach ($combinations as $index => &$combination) {
+                if (!isset($source_combinations[$index])) {
+                    break;
+                }
+                $combination['id_product_attribute'] = $source_combinations[$index]['id_product_attribute'];
+            }
+        }
+
+        $visibility_values = false;
+        if (is_array($combinations) && count($combinations)) {
+            $visibility_values = $this->module->provider->getVisibilityValues($id_source_product);
+        }
+
+        $combination_fields = DynamicCombinationField::getByIdProduct($id_source_product);
+
+        $combination_values = DynamicCombinationValue::getValuesByIdProduct($id_source_product);
+        $combination_values = DynamicCombinationValue::organizeByAttributesAndFields($combination_values);
+
+        $id_lang = $this->context->language->id;
+
+        $this->respond([
+            'fields' => DynamicField::getFieldRowsByProduct($this->id_product),
+            'favorite_fields' => DynamicField::getFavoriteFields($id_lang),
+            'common_fields' => DynamicField::getCommonFields($id_lang),
+            'combinations' => $combinations,
+            'combination_fields' => $combination_fields,
+            'combination_values' => $combination_values,
+            'visibility' => $visibility_values,
+            'databases' => ProductHelper::getProductDatabaseFields(),
+        ]);
+    }
+
+    private function processLoadProducts()
+    {
+        $this->respond([
+            'products' => DynamicConfig::getActiveProducts(),
+            'linked_configs' => DynamicProductConfigLink::getLinkedConfigs(),
+        ]);
     }
 
     private function processSaveInput()
@@ -109,10 +166,10 @@ class DynamicProductSettingsController extends ModuleAdminController
     private function processCopyCategoryConfig()
     {
         if (DynamicTools::isDemoMode() && !DynamicTools::isSuperAdmin()) {
-            $this->respond(array(
-                'error'   => true,
+            $this->respond([
+                'error' => true,
                 'message' => 'This function is not available in the demo mode!',
-            ));
+            ]);
         }
         $id_category = (int) Tools::getValue('id_target_category');
 
@@ -156,19 +213,20 @@ class DynamicProductSettingsController extends ModuleAdminController
             1,
             false
         );
-        $this->respond(array(
+        $this->respond([
             'products' => array_map(function ($product) {
                 return (int) $product['id_product'];
-            }, $products)
-        ));
+            }, $products),
+        ]);
     }
 
     private function processExportConfig()
     {
-        $data = $this->module->handler->exportConfig($this->id_product);
-        $this->respond(array(
-            'data' => $data
-        ));
+        $link_images = (int) Tools::getValue('link_images');
+        $data = $this->module->handler->exportConfig($this->id_product, $link_images);
+        $this->respond([
+            'data' => $data,
+        ]);
     }
 
     private function processImportConfig()
@@ -176,15 +234,15 @@ class DynamicProductSettingsController extends ModuleAdminController
         $uploader = new Uploader();
         $uploader->setMaxSize(1024 * 1000 * 100);
         $uploader->setName('file');
-        $uploader->setAcceptTypes(array('json'));
+        $uploader->setAcceptTypes(['json']);
         $file = $uploader->process();
         $upload = $file[0];
 
         if ($upload['error']) {
-            $this->respond(array(
-                'error'   => true,
-                'message' => $upload['error']
-            ));
+            $this->respond([
+                'error' => true,
+                'message' => $upload['error'],
+            ]);
         }
 
         $save_path = $upload['save_path'];
@@ -192,14 +250,20 @@ class DynamicProductSettingsController extends ModuleAdminController
         $data = json_decode($contents, true);
         if (!$data) {
             $source = DynamicTools::getSource();
-            $this->respond(array(
-                'error'   => true,
-                'message' =>
-                    $this->module->l('Could not import data, please check your file then try again', $source)
-            ));
+            $this->respond([
+                'error' => true,
+                'message' => $this->module->l('Could not import data, please check your file then try again', $source),
+            ]);
         }
 
-        $this->module->handler->importConfig($this->id_product, $data);
+        try {
+            $this->module->handler->importConfig($this->id_product, $data);
+        } catch (Exception $e) {
+            $this->respond([
+                'error' => true,
+                'message' => $e->getMessage(),
+            ]);
+        }
 
         $this->respond();
     }
@@ -210,11 +274,10 @@ class DynamicProductSettingsController extends ModuleAdminController
         $data = json_decode($json, true);
         if (!$data) {
             $source = DynamicTools::getSource();
-            $this->respond(array(
-                'error'   => true,
-                'message' =>
-                    $this->module->l('Could not import data, please check your file then try again', $source)
-            ));
+            $this->respond([
+                'error' => true,
+                'message' => $this->module->l('Could not import data, please check your file then try again', $source),
+            ]);
         }
 
         $this->module->handler->importConfig($this->id_product, $data);
@@ -234,12 +297,12 @@ class DynamicProductSettingsController extends ModuleAdminController
         $this->respond();
     }
 
-    public function respond($data = array(), $success = 1)
+    public function respond($data = [], $success = 1)
     {
         $success = $success && (int) !array_key_exists('error', $data);
-        $arr = array(
+        $arr = [
             'success' => $success,
-        );
+        ];
         $arr = array_merge($arr, $data);
         exit(json_encode($arr));
     }

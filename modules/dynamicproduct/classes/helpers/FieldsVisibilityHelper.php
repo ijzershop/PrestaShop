@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,30 +14,26 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\helpers;
 
-namespace classes\helpers;
-
-use classes\models\DynamicEquation;
-use classes\models\DynamicInputField;
-use Context;
-use DynamicProduct;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\models\DynamicEquation;
+use DynamicProduct\classes\models\DynamicInputField;
 
 class FieldsVisibilityHelper
 {
-
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
     public function __construct($module, $context)
@@ -51,32 +48,37 @@ class FieldsVisibilityHelper
         $hidden_fields_by_attribute = $this->module->provider->getVisibilityValues($id_product, $id_attribute);
         $hidden_fields = array_merge($conditions_visibility['fields'], array_keys($hidden_fields_by_attribute));
         $conditions_visibility['fields'] = $hidden_fields;
-        return $conditions_visibility;
-    }
 
-    public function getMetConditions($id_product, $input_fields)
-    {
-        return DynamicEquation::getMetConditions($id_product, $input_fields);
+        $visibility_helper = new FieldsVisibilityHelper($this->module, $this->context);
+        $visibility_helper->setExcludedFields($input_fields, $conditions_visibility);
+
+        return $conditions_visibility;
     }
 
     /**
      * @param DynamicInputField[] $input_fields
-     * @param $fields_visibility
+     * @param $visibility
      */
-    public function setExcludedFields(&$input_fields, $fields_visibility)
+    public function setExcludedFields(&$input_fields, $visibility)
     {
         foreach ($input_fields as &$input_field) {
-            if ($this->isHidden($fields_visibility, $input_field->id_field)
-                || $this->belongsToHiddenGroup($fields_visibility, $input_field->getDynamicField()->id_group)) {
+            $field = $input_field->getDynamicField();
+            if ($this->isHidden($visibility, $input_field->id_field)
+                || $this->belongsToHiddenGroup($visibility, $field['id_group'])) {
                 $input_field->setExcluded();
             }
-            if ($this->hasHiddenOptions($fields_visibility, $input_field->id_field)) {
-                $input_field->setExcludedOptions($fields_visibility[$input_field->id_field]);
+            $options = $field['options'];
+            $hidden_options = $visibility['options'][$input_field->id_field] ?? [];
+            if ($this->hasHiddenOptions($hidden_options, $options)) {
+                $input_field->setExcludedOptions($hidden_options, $options);
                 if ($input_field->type === _DP_DROPDOWN_ && $input_field->isSelectedOptionExcluded()) {
                     $input_field->selectFirstVisibleOption();
                 }
                 if ($input_field->type === _DP_RADIO_ && $input_field->isSelectedOptionExcluded()) {
                     $input_field->selectFirstVisibleOption();
+                }
+                if ($input_field->type === _DP_THUMBNAILS_ && $input_field->hasExcludedOptions()) {
+                    $input_field->removeExcludedOptionsFromSelection();
                 }
             }
         }
@@ -84,18 +86,29 @@ class FieldsVisibilityHelper
 
     private function isHidden($visibility, $id_field)
     {
-        return isset($visibility[$id_field]) && (int) $visibility[$id_field] === 0;
+        return in_array($id_field, $visibility['fields']);
     }
 
-    private function hasHiddenOptions($visibility, $id_field)
+    private function hasHiddenOptions($hidden_options, $options)
     {
-        return isset($visibility[$id_field]) && is_array($visibility[$id_field]);
+        $option_ids = array_keys($options);
+        $intersect = array_intersect($option_ids, $hidden_options);
+
+        return count($intersect) > 0;
     }
 
     private function belongsToHiddenGroup($visibility, $id_group)
     {
-        return isset($visibility['groups'])
-            && isset($visibility['groups'][$id_group])
-            && (int) $visibility['groups'][$id_group] === 0;
+        return in_array($id_group, $visibility['groups']);
+    }
+
+    public function mergeArrays(array &$hidden_items1, array &$hidden_items2)
+    {
+        return [
+            'fields' => array_merge($hidden_items1['fields'], $hidden_items2['fields']),
+            'options' => DynamicTools::mergeRecursive($hidden_items1['options'], $hidden_items2['options']),
+            'groups' => array_merge($hidden_items1['groups'], $hidden_items2['groups']),
+            'steps' => array_merge($hidden_items1['steps'], $hidden_items2['steps']),
+        ];
     }
 }

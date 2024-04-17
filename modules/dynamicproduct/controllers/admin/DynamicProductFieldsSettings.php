@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,32 +14,29 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+/* @noinspection PhpUnusedPrivateMethodInspection */
 
-/** @noinspection PhpUnusedPrivateMethodInspection */
-
-use classes\DynamicTools;
-use classes\helpers\TranslationHelper;
-use classes\models\DynamicField;
-use classes\models\DynamicUnitValue;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\helpers\TranslationHelper;
+use DynamicProduct\classes\models\DynamicField;
+use DynamicProduct\classes\models\DynamicUnitValue;
 
 class DynamicProductFieldsSettingsController extends ModuleAdminController
 {
-
     /** @var DynamicProduct */
     public $module;
     public $action;
 
-    /** @var Context $context */
+    /** @var Context */
     public $context;
     public $id_field;
     public $id_product;
@@ -56,12 +54,13 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
 
     public function postProcess()
     {
+        $source = basename(__FILE__, '.php');
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
         if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
-            exit(json_encode(array(
-                'error'   => true,
-                'message' => $this->module->l('This product is for viewing only!')
-            )));
+            exit(json_encode([
+                'error' => true,
+                'message' => $this->module->l('This product is for viewing only!', $source),
+            ]));
         }
 
         $method = 'process' . Tools::toCamelCase($this->action, true);
@@ -69,7 +68,7 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
             return $this->{$method}();
         }
 
-        exit();
+        exit;
     }
 
     private function processSaveFieldSettings()
@@ -224,10 +223,10 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
     private function processSaveHtmlSettings()
     {
         if (DynamicTools::isDemoMode() && !DynamicTools::isSuperAdmin()) {
-            $this->respond(array(
-                'error'   => true,
+            $this->respond([
+                'error' => true,
                 'message' => 'This function is not available in the demo mode!',
-            ));
+            ]);
         }
         $options = Tools::getValue('options');
         $descriptions = $options['description'];
@@ -319,12 +318,12 @@ class DynamicProductFieldsSettingsController extends ModuleAdminController
         $this->respond();
     }
 
-    public function respond($data = array(), $success = 1)
+    public function respond($data = [], $success = 1)
     {
         $success = $success && (int) !array_key_exists('error', $data);
-        $arr = array(
+        $arr = [
             'success' => $success,
-        );
+        ];
         $arr = array_merge($arr, $data);
         exit(json_encode($arr));
     }

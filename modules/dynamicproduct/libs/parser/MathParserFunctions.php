@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,21 +14,19 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
-
-use classes\DynamicTools;
-use classes\helpers\DynamicEquationHelper;
-use libs\parser\MathParser;
-use libs\parser\MathParserParserException;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\helpers\DynamicEquationHelper;
+use DynamicProduct\libs\parser\MathParser;
+use DynamicProduct\libs\parser\MathParserParserException;
 
 function mpAdd($p1, $p2)
 {
@@ -41,6 +40,7 @@ function mpAddStr($p1, $p2)
     } elseif (!is_numeric($p2)) {
         throw new Exception(MathParser::getMessage1('InvConcatOper2', $p2));
     }
+
     return $p1 + $p2;
 }
 
@@ -126,6 +126,7 @@ function mpAndStr($p1, $p2)
     } elseif (!is_numeric($p2)) {
         throw new Exception(MathParser::getMessage1('InvConcatOper', $p2));
     }
+
     return $p1 && $p2;
 }
 
@@ -149,9 +150,10 @@ function sumFunc()
     $p = func_get_args();
     $count = func_num_args();
     $tot = 0;
-    for ($i = 0; $i < $count; $i++) {
+    for ($i = 0; $i < $count; ++$i) {
         $tot += $p[$i];
     }
+
     return $tot;
 }
 
@@ -162,6 +164,7 @@ function mpMax()
     if ($count < 1) {
         throw new MathParserParserException(MathParser::getMessage2('WrngNPrms2', 'MAX', '1'), 'max', 'max');
     }
+
     return max($p);
 }
 
@@ -172,6 +175,7 @@ function mpMin()
     if ($count < 1) {
         throw new MathParserParserException(MathParser::getMessage2('WrngNPrms2', 'MIN', '1'), 'min', 'min');
     }
+
     return min($p);
 }
 
@@ -236,6 +240,7 @@ function mpSign($val)
     if ($val < 0) {
         return -1;
     }
+
     return 0;
 }
 
@@ -247,6 +252,7 @@ function mpTrunc($val)
     if ($val < 0) {
         return floor($val) + 1;
     }
+
     return 0;
 }
 
@@ -263,6 +269,7 @@ function mpLogn($base, $val)
 function mpRand()
 {
     $max = getrandmax();
+
     return rand(0, $max) / $max;
 }
 
@@ -288,6 +295,7 @@ function mpConcat()
     foreach ($p as $val) {
         $s .= $val;
     }
+
     return $s;
 }
 

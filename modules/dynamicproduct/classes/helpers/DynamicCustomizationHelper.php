@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,34 +14,27 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\helpers;
 
-namespace classes\helpers;
-
-use classes\models\DynamicEquation;
-use classes\models\DynamicInput;
-use classes\models\DynamicInputField;
-use Context;
-use Db;
-use DynamicProduct;
-use Product;
-use Tools;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\models\DynamicEquation;
+use DynamicProduct\classes\models\DynamicInput;
+use DynamicProduct\classes\models\DynamicInputField;
 
 class DynamicCustomizationHelper
 {
-
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
     public function __construct($module, $context)
@@ -49,25 +43,151 @@ class DynamicCustomizationHelper
         $this->context = $context;
     }
 
+    public function addToCart(
+        int $id_product,
+        int $id_attribute,
+        int $quantity,
+        array $fields,
+        array $id_customizations = null,
+        bool $add_to_cart = true,
+        int $dp_input = 0,
+        int $dp_cart = 0
+    ) {
+        $id_inputs = [];
+
+        $input = new DynamicInput($dp_input);
+        if (\Validate::isLoadedObject($input) && $input->checkAuth()) {
+            $is_same_cart = (int) $input->id_cart === (int) $this->module->provider->getCart();
+            if ($is_same_cart) {
+                DynamicInput::deleteCustomization($dp_input);
+            }
+        }
+
+        $fields['quantity']['value'] = $quantity;
+
+        list($input_fields) = DynamicInputField::getInputFieldsFromData(
+            $id_product,
+            $id_attribute,
+            $fields
+        );
+
+        $preview_helper = new PreviewHelper($this->module, $this->context);
+        $preview_helper->addPreviewField($input_fields);
+
+        $calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
+
+        try {
+            $calculator_helper->checkFormulas($id_product, $input_fields);
+        } catch (\Exception $e) {
+            return [
+                'error' => 1,
+                'message' => DynamicTools::reportException($e),
+            ];
+        }
+
+        $id_cart = $dp_cart ?: (int) $this->module->handler->addCart();
+        $id_customization_field = $this->module->handler->addCustomField($id_product);
+
+        $id_address_delivery = $this->module->provider->getDeliveryAddressID($this->context);
+
+        $customization_helper = new DynamicCustomizationHelper($this->module, $this->context);
+
+        $attributes_errors = [];
+
+        foreach ($id_customizations as $id_product_attribute => $id_customization) {
+            if (!$id_customization) {
+                $id_customization = $customization_helper->saveCustomization(
+                    $id_product,
+                    $id_product_attribute,
+                    $id_address_delivery,
+                    $id_cart
+                );
+                $id_customizations[$id_product_attribute] = $id_customization;
+            }
+
+            $price_equation_result = $calculator_helper->getPriceEquationResult(
+                $id_product,
+                $id_product_attribute,
+                $input_fields
+            );
+
+            $weight_equation_result = $calculator_helper->getWeightEquationResult(
+                $id_product,
+                $id_product_attribute,
+                $input_fields
+            );
+
+            $dynamic_input = $customization_helper->saveDynamicInput(
+                $id_product,
+                $id_product_attribute,
+                $id_cart,
+                $id_customization,
+                $quantity,
+                $price_equation_result,
+                $weight_equation_result,
+                $input_fields
+            );
+
+            $id_inputs[$id_product_attribute] = $dynamic_input->id;
+
+            $customization_helper->saveCustomizationData(
+                $id_product,
+                $this->module->id,
+                $id_customization,
+                $id_customization_field,
+                $dynamic_input
+            );
+
+            $customization_helper->saveInputFields($input_fields, $dynamic_input->id);
+
+            $cart = $this->context->cart;
+            if ($add_to_cart) {
+                $added = $cart->updateQty(
+                    (int) $dynamic_input->cart_quantity,
+                    (int) $dynamic_input->id_product,
+                    (int) $dynamic_input->id_attribute,
+                    $id_customization,
+                    'up',
+                    (int) $cart->id_address_delivery,
+                    new \Shop((int) $this->context->shop->id),
+                    false
+                );
+                if (!$added) {
+                    $attributes_errors[] = $id_product_attribute;
+                }
+            }
+        }
+
+        return [
+            'id_module' => $this->module->id,
+            'id_customizations' => $id_customizations,
+            'id_inputs' => $id_inputs,
+            'attributes_errors' => $attributes_errors,
+            'input_fields' => $input_fields,
+        ];
+    }
+
     /**
      * @param $id_product
      * @param $id_attribute
      * @param $id_address_delivery
      * @param $id_cart
+     *
      * @return int
      */
     public function saveCustomization($id_product, $id_attribute, $id_address_delivery, $id_cart)
     {
-        $data = array(
+        $data = [
             'id_product_attribute' => (int) $id_attribute,
-            'id_address_delivery'  => (int) $id_address_delivery,
-            'id_cart'              => (int) $id_cart,
-            'id_product'           => (int) $id_product,
-            'quantity'             => 0,
-            'in_cart'              => 0
-        );
-        Db::getInstance()->insert('customization', $data);
-        return Db::getInstance()->Insert_ID();
+            'id_address_delivery' => (int) $id_address_delivery,
+            'id_cart' => (int) $id_cart,
+            'id_product' => (int) $id_product,
+            'quantity' => 0,
+            'in_cart' => 0,
+        ];
+        \Db::getInstance()->insert('customization', $data);
+
+        return \Db::getInstance()->Insert_ID();
     }
 
     /**
@@ -85,21 +205,21 @@ class DynamicCustomizationHelper
         $dynamic_input
     ) {
         /** @noinspection UnnecessaryCastingInspection */
-        $data = array(
+        $data = [
             'id_customization' => (int) $id_customization,
-            'id_module'        => (int) $id_module,
-            'type'             => (int) Product::CUSTOMIZE_TEXTFIELD,
-            'index'            => (int) $id_customization_field,
-            'value'            => (int) $dynamic_input->id,
-            'price'            => (float) $dynamic_input->price,
-            'weight'           => (float) $dynamic_input->weight,
-        );
+            'id_module' => (int) $id_module,
+            'type' => (int) \Product::CUSTOMIZE_TEXTFIELD,
+            'index' => (int) $id_customization_field,
+            'value' => (int) $dynamic_input->id,
+            'price' => (float) $dynamic_input->price,
+            'weight' => (float) $dynamic_input->weight,
+        ];
 
-        Db::getInstance()->insert('customized_data', $data, false, true, Db::REPLACE);
+        \Db::getInstance()->insert('customized_data', $data, false, true, \Db::REPLACE);
         $customizable = $this->module->provider->hasRequiredField($id_product) ? 2 : 1;
-        Db::getInstance()->update(
+        \Db::getInstance()->update(
             'product',
-            array('customizable' => $customizable),
+            ['customizable' => $customizable],
             'id_product = ' . (int) $id_product
         );
     }
@@ -112,7 +232,10 @@ class DynamicCustomizationHelper
         $quantity,
         $price_equation_result,
         $weight_equation_result,
-        $input_fields
+        $input_fields,
+        $name = null,
+        $is_bookmarked = false,
+        $is_admin = false
     ) {
         $dynamic_input = new DynamicInput();
         $dynamic_input->id_product = (int) $id_product;
@@ -121,13 +244,17 @@ class DynamicCustomizationHelper
         $dynamic_input->cart_quantity = (int) $quantity;
         $dynamic_input->id_customer = (int) $this->module->provider->getCustomer();
         $dynamic_input->id_guest = (int) $this->module->provider->getGuest();
-        $dynamic_input->hash = Tools::getValue('hash');
+        $dynamic_input->hash = \Tools::getValue('hash');
+        $dynamic_input->name = $name;
+        $dynamic_input->is_bookmarked = $is_bookmarked;
+        $dynamic_input->is_admin = (int) $is_admin;
 
         $dynamic_input->price = (float) $price_equation_result;
         $dynamic_input->weight = (float) $weight_equation_result;
         $dynamic_input->dynamic_quantity = DynamicEquation::getDynamicQuantity($dynamic_input, $input_fields);
         $dynamic_input->id_customization = (int) $id_customization;
         $dynamic_input->save();
+
         return $dynamic_input;
     }
 
@@ -140,7 +267,44 @@ class DynamicCustomizationHelper
         foreach ($input_fields as $input_field) {
             $input_field->id = null;
             $input_field->id_input = (int) $id_input;
+            if ($input_field->data) {
+                $input_field->data = json_encode($input_field->data);
+            }
             $input_field->save();
         }
+    }
+
+    public function getCustomerProducts($id_customer, $id_guest)
+    {
+        $inputs = [];
+        $sql = new \DbQuery();
+        $sql->select('*');
+        $sql->from(DynamicInput::$definition['table']);
+        $conditions = [];
+
+        if ($id_customer) {
+            $conditions[] = 'id_customer = ' . (int) $id_customer;
+        }
+        if ($id_guest) {
+            $conditions[] = 'id_guest = ' . (int) $id_guest;
+        }
+
+        if (!count($conditions)) {
+            return [];
+        }
+
+        $condition = implode(' OR ', $conditions);
+        $sql->where(pSQL($condition));
+        $sql->where('is_bookmarked = 1');
+        $db = \Db::getInstance();
+        $result = $db->executeS($sql, false);
+        while ($row = $db->nextRow($result)) {
+            $input = new DynamicInput((int) $row['id_input']);
+            if (\Validate::isLoadedObject($input)) {
+                $inputs[] = $input;
+            }
+        }
+
+        return $inputs;
     }
 }

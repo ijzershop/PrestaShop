@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,69 +14,78 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\factory;
 
-namespace classes\factory;
-
-use classes\DynamicTools;
-use classes\models\dynamic_fields\CheckboxField;
-use classes\models\dynamic_fields\ColorPickerField;
-use classes\models\dynamic_fields\DateField;
-use classes\models\dynamic_fields\DropDownField;
-use classes\models\dynamic_fields\ErrorField;
-use classes\models\dynamic_fields\FeatureField;
-use classes\models\dynamic_fields\FileField;
-use classes\models\dynamic_fields\HtmlField;
-use classes\models\dynamic_fields\ImageField;
-use classes\models\dynamic_fields\NumericField;
-use classes\models\dynamic_fields\PHPField;
-use classes\models\dynamic_fields\RadioField;
-use classes\models\dynamic_fields\SliderField;
-use classes\models\dynamic_fields\SwitchField;
-use classes\models\dynamic_fields\TextAreaField;
-use classes\models\dynamic_fields\TextField;
-use classes\models\dynamic_fields\ThumbnailsField;
-use classes\models\DynamicField;
-use Context;
-use Db;
-use DbQuery;
-use DynamicProduct;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\models\dynamic_fields\CheckboxField;
+use DynamicProduct\classes\models\dynamic_fields\ColorPickerField;
+use DynamicProduct\classes\models\dynamic_fields\CustomField;
+use DynamicProduct\classes\models\dynamic_fields\DateField;
+use DynamicProduct\classes\models\dynamic_fields\DropDownField;
+use DynamicProduct\classes\models\dynamic_fields\ErrorField;
+use DynamicProduct\classes\models\dynamic_fields\FeatureField;
+use DynamicProduct\classes\models\dynamic_fields\FileField;
+use DynamicProduct\classes\models\dynamic_fields\HtmlField;
+use DynamicProduct\classes\models\dynamic_fields\ImageField;
+use DynamicProduct\classes\models\dynamic_fields\NumericField;
+use DynamicProduct\classes\models\dynamic_fields\PHPField;
+use DynamicProduct\classes\models\dynamic_fields\PreviewField;
+use DynamicProduct\classes\models\dynamic_fields\RadioField;
+use DynamicProduct\classes\models\dynamic_fields\SliderField;
+use DynamicProduct\classes\models\dynamic_fields\SwitchField;
+use DynamicProduct\classes\models\dynamic_fields\TextAreaField;
+use DynamicProduct\classes\models\dynamic_fields\TextField;
+use DynamicProduct\classes\models\dynamic_fields\ThumbnailsField;
+use DynamicProduct\classes\models\DynamicDropdownOption;
+use DynamicProduct\classes\models\DynamicField;
+use DynamicProduct\classes\models\DynamicPreviewOption;
+use DynamicProduct\classes\models\DynamicRadioOption;
+use DynamicProduct\classes\models\DynamicThumbnailsOption;
 
 class DynamicFieldFactory
 {
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
-    private static $types = array(
-        _DP_INPUT_       => NumericField::class,
-        _DP_TEXT_        => TextField::class,
-        _DP_DATE_        => DateField::class,
-        _DP_IMAGE_       => ImageField::class,
-        _DP_PHP_         => PHPField::class,
-        _DP_DROPDOWN_    => DropDownField::class,
-        _DP_CHECKBOX_    => CheckboxField::class,
-        _DP_SWITCH_      => SwitchField::class,
-        _DP_FILE_        => FileField::class,
-        _DP_SLIDER_      => SliderField::class,
-        _DP_THUMBNAILS_  => ThumbnailsField::class,
-        _DP_TEXTAREA_    => TextAreaField::class,
-        _DP_FEATURE_     => FeatureField::class,
-        _DP_RADIO_       => RadioField::class,
+    private static $types = [
+        _DP_INPUT_ => NumericField::class,
+        _DP_TEXT_ => TextField::class,
+        _DP_DATE_ => DateField::class,
+        _DP_IMAGE_ => ImageField::class,
+        _DP_PHP_ => PHPField::class,
+        _DP_DROPDOWN_ => DropDownField::class,
+        _DP_CHECKBOX_ => CheckboxField::class,
+        _DP_SWITCH_ => SwitchField::class,
+        _DP_FILE_ => FileField::class,
+        _DP_SLIDER_ => SliderField::class,
+        _DP_THUMBNAILS_ => ThumbnailsField::class,
+        _DP_TEXTAREA_ => TextAreaField::class,
+        _DP_FEATURE_ => FeatureField::class,
+        _DP_RADIO_ => RadioField::class,
         _DP_COLORPICKER_ => ColorPickerField::class,
-        _DP_HTML_        => HtmlField::class,
-        _DP_ERROR_       => ErrorField::class,
-    );
+        _DP_HTML_ => HtmlField::class,
+        _DP_ERROR_ => ErrorField::class,
+        _DP_CUSTOM_ => CustomField::class,
+        _DP_PREVIEW_ => PreviewField::class,
+    ];
+
+    private static $option_types = [
+        8 => DynamicDropdownOption::class,
+        12 => DynamicThumbnailsOption::class,
+        16 => DynamicRadioOption::class,
+        22 => DynamicPreviewOption::class,
+    ];
 
     public function __construct($module, $context)
     {
@@ -87,6 +97,7 @@ class DynamicFieldFactory
      * @param int $type
      * @param int $id_field
      * @param int $id_lang
+     *
      * @return DynamicField
      */
     public static function create($type = null, $id_field = null, $id_lang = null)
@@ -105,10 +116,25 @@ class DynamicFieldFactory
     private static function getFieldType($id_field)
     {
         $module = DynamicTools::getModule();
-        $sql = new DbQuery();
+        $sql = new \DbQuery();
         $sql->select('type');
         $sql->from($module->name . '_field');
         $sql->where('id_field = ' . (int) $id_field);
-        return (int) Db::getInstance()->getValue($sql);
+
+        return (int) \Db::getInstance()->getValue($sql);
+    }
+
+    /**
+     * @param int $id_option
+     *
+     * @return DynamicDropdownOption|DynamicThumbnailsOption|DynamicRadioOption
+     */
+    public static function getOptionInstance($id_field, $id_option = 0)
+    {
+        $dynamic_field = new DynamicField($id_field);
+        $type = (int) $dynamic_field->type;
+        $class_name = self::$option_types[$type];
+
+        return new $class_name($id_option);
     }
 }

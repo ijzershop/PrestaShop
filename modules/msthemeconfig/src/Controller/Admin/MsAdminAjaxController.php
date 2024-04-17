@@ -5,18 +5,17 @@ namespace MsThemeConfig\Controller\Admin;
 
 use MsThemeConfig\Class\Offer;
 use mysqli_result;
-use PrestaShop\PrestaShop\Adapter\Entity\Category;
-use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
-use PrestaShop\PrestaShop\Adapter\Entity\Carrier;
-use PrestaShop\PrestaShop\Adapter\Entity\Context;
-use PrestaShop\PrestaShop\Adapter\Entity\Db;
-use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
-use PrestaShop\PrestaShop\Adapter\Entity\Mail;
-use PrestaShop\PrestaShop\Adapter\Entity\Product;
-use PrestaShop\PrestaShop\Adapter\Entity\Shop;
-use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
-use PrestaShop\PrestaShop\Adapter\Entity\Tools;
-use PrestaShop\PrestaShop\Adapter\Entity\Validate;
+use Category;
+use Configuration;
+use Context;
+use Db;
+use DbQuery;
+use Pack;
+use Product;
+use Shop;
+use StockAvailable;
+use Tools;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopDatabaseException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,7 +67,7 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
         $id_lang = $this->getContext()->language->id;
 
         $sql = new DbQuery();
-        $sql->select('p.`id_product` as id, p.`id_category_default`, CONCAT_WS(" - ", cl.`name`,pl.`name`) as text');
+        $sql->select('p.`id_product` as id, p.`price` as price, p.`id_category_default`, CONCAT_WS(" - ", cl.`name`,pl.`name`) as text');
         $sql->from('product', 'p');
         $sql->join(Shop::addSqlAssociation('product', 'p'));
         $sql->leftJoin(
@@ -110,6 +109,49 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
         return $result;
     }
 
+    public function getPriceDataAction()
+    {
+        $id_product = Tools::getValue('idPack');
+        $id_product_attribute = Tools::getValue('idPackAttribute');
+        $qty = (int)Tools::getValue('customizationTotal');
+
+        $customization = (int)Tools::getValue('productCustomization');
+        $product = new Product($id_product);
+        $combinations = $product->getAttributeCombinations($id_product);
+
+        $attr_names = array_column($combinations, 'attribute_name');
+        array_multisort($attr_names, SORT_ASC, $combinations);
+
+        if((int)$customization > 0) {
+            $customizationValue = $customization;
+            $attr_key = (int)$customizationValue - 1;
+        } else {
+            $customizationValue = 0;
+            $attr_key = 0;
+        }
+
+        if(count($combinations) > 0){
+            if($customizationValue > count($combinations)){
+                $neededAttribute = end($combinations);
+            } else {
+                $neededAttribute = $combinations[$attr_key];
+            }
+
+            $id_product_attribute = $neededAttribute['id_product_attribute'];
+        } else {
+            $id_product_attribute = 0;
+        }
+
+        $staticPrice = Product::getPriceStatic($id_product,false, $id_product_attribute);
+        $name = Product::getProductName($id_product, $id_product_attribute, Context::getContext()->language->id);
+        $price = $staticPrice * $qty;
+        if(is_numeric($price)){
+            return  Response::create(json_encode(['product_name' => $name, 'id_product_attribute' => $id_product_attribute ,'price' => $price]));
+        } else {
+            return Response::create(json_encode(['product_name' => $name, 'id_product_attribute' => $id_product_attribute ,'price' => 0.00]));
+        }
+    }
+
 
     /**
      * @throws \PrestaShopException
@@ -131,7 +173,7 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
 
         if (Tools::getValue('offer-new') === "false") {
             $id_product = Tools::getValue('offer-row-id');
-            $offer = new Product($id_product);
+            $offer = new Pack($id_product);
             $offer->price = number_format((float)Tools::getValue('offer-price'), 6, '.', '');
             $offer->weight = Tools::getValue('offer-weight');
             $offer->name = [1 => $_POST['offer-row-title']];
@@ -144,6 +186,46 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
             $offer->id_category_default = $catID;
             $offer->id_tax_rules_group = 1;
             $offer->out_of_stock = 0;
+
+
+            Pack::deleteItems($id_product, true);
+            if(Tools::getIsset('stock_selected_product_id') && count(Tools::getValue('stock_selected_product_id')) > 0){
+                $offer->product_type = ProductType::TYPE_PACK;
+                $ids = Tools::getValue('stock_selected_product_id');
+                $totals = Tools::getValue('stock_selected_product_qty');
+                $customizedValue = Tools::getValue('stock_selected_product_customization');
+
+                for ($i=0; $i < count($ids); $i++){
+                    $attachProduct = new Product($ids[$i]);
+                    $combinations = $attachProduct->getAttributeCombinations();
+
+                    $attr_names = array_column($combinations, 'attribute_name');
+                    array_multisort($attr_names, SORT_ASC, $combinations);
+
+                        if((int)$customizedValue[$i] > 0) {
+                            $customizationValue = $customizedValue[$i];
+                            $attr_key = (int)$customizationValue - 1;
+                        } else {
+                            $customizationValue = 0;
+                            $attr_key = 0;
+                        }
+
+                    if(count($combinations) > 0){
+                        if($customizationValue > count($combinations)){
+                            $neededAttribute = end($combinations);
+                        } else {
+                            $neededAttribute = $combinations[$attr_key];
+                        }
+
+                        $id_product_attribute = $neededAttribute['id_product_attribute'];
+                    } else {
+                        $id_product_attribute = 0;
+                    }
+                    Pack::addItem($offer->id, $ids[$i], (int)$totals[$i], $id_product_attribute);
+                }
+            } else {
+                $offer->product_type = ProductType::TYPE_STANDARD;
+            }
             $offer->update();
 
             $qty = (int)Tools::getValue('offer-qty', 0);
@@ -154,6 +236,12 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
             $offer->quantity = $qty;
             $offer->id_product = $id_product;
 
+
+            $offer->packedProducts = Pack::getItems($offer->id_product, 1);
+
+            foreach ($offer->packedProducts as $key => $pack){
+                $offer->packedProducts[$key]->attributes = Product::getAttributesParams($pack->id, $pack->id_pack_product_attribute);
+            }
 
             return Response::create(json_encode(['msg' => 'Offer updated', 'offer' => $offer, 'error' => false]));
 
@@ -171,7 +259,7 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
                 $newOfferId = $newOfferIntegration->id;
             }
 
-            $offer = new Product(Tools::getValue('offer-row-product'));
+            $offer = new Pack(Tools::getValue('offer-row-product'));
             $offer->id = null;
 
             $offer->link_rewrite =  substr( "abcdefghilkmnopqrstuvwxyz" ,mt_rand( 0 ,25 ) ,1 ) .substr( md5((string)time()) ,1 );
@@ -195,6 +283,46 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
             $offer->out_of_stock = 0;
             $offer->id_category_default = $catID;
             $offer->id_tax_rules_group = 1;
+
+            Pack::deleteItems($offer->id);
+            if(Tools::getIsset('stock_selected_product_id') && count(Tools::getValue('stock_selected_product_id')) > 0){
+                $offer->product_type = ProductType::TYPE_PACK;
+                $ids = Tools::getValue('stock_selected_product_id');
+                $totals = Tools::getValue('stock_selected_product_qty');
+                $customizedValue = Tools::getValue('stock_selected_product_customization');
+
+                for ($i=0; $i < count($ids); $i++){
+                    $attachProduct = new Product($ids[$i]);
+                    $combinations = $attachProduct->getAttributeCombinations();
+
+                    $attr_names = array_column($combinations, 'attribute_name');
+                    array_multisort($attr_names, SORT_ASC, $combinations);
+
+                    if((int)$customizedValue[$i] > 0) {
+                        $customizationValue = $customizedValue[$i];
+                        $attr_key = (int)$customizationValue - 1;
+                    } else {
+                        $customizationValue = 0;
+                        $attr_key = 0;
+                    }
+
+                    if(count($combinations) > 0){
+                        if($customizationValue > count($combinations)){
+                            $neededAttribute = end($combinations);
+                        } else {
+                            $neededAttribute = $combinations[$attr_key];
+                        }
+
+                        $id_product_attribute = $neededAttribute['id_product_attribute'];
+                    } else {
+                        $id_product_attribute = 0;
+                    }
+                    Pack::addItem($offer->id, $ids[$i], (int)$totals[$i], $id_product_attribute);
+                }
+            } else {
+                $offer->product_type = ProductType::TYPE_STANDARD;
+            }
+
             $offer->save();
 
             $offer->addToCategories($categoryArray);

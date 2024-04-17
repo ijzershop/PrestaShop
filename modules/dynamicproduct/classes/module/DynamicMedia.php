@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,28 +14,22 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
-
-namespace classes\module;
-
-use Context;
-use DynamicProduct;
+namespace DynamicProduct\classes\module;
 
 class DynamicMedia
 {
-
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
     private $hash;
@@ -48,9 +43,12 @@ class DynamicMedia
 
     public function addJS($js_uri)
     {
-        $controller = Context::getContext()->controller;
+        if (!$js_uri) {
+            return;
+        }
+        $controller = \Context::getContext()->controller;
         if (!is_array($js_uri)) {
-            $js_uri = array($js_uri);
+            $js_uri = [$js_uri];
         }
         if (method_exists($controller, 'registerJavascript')) {
             foreach ($js_uri as $js_file) {
@@ -61,7 +59,7 @@ class DynamicMedia
                 $controller->registerJavascript(
                     md5($js_file),
                     $js_file,
-                    array('priority' => 100, 'position' => 'bottom')
+                    ['priority' => 100, 'position' => 'bottom']
                 );
             }
         } else {
@@ -76,9 +74,9 @@ class DynamicMedia
 
     public function addCSS($css_uri)
     {
-        $controller = Context::getContext()->controller;
+        $controller = \Context::getContext()->controller;
         if (!is_array($css_uri)) {
-            $css_uri = array($css_uri);
+            $css_uri = [$css_uri];
         }
         if (method_exists($controller, 'registerStylesheet')) {
             foreach ($css_uri as $css_file) {
@@ -123,6 +121,7 @@ class DynamicMedia
             foreach ($files as &$file) {
                 $file = $file . '?' . $this->hash;
             }
+
             return $files;
         }
 

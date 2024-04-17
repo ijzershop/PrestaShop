@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,22 +14,18 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\libs\parser;
 
-namespace libs\parser;
-
-use classes\DynamicTools;
-use Exception;
-use Tools;
+use DynamicProduct\classes\DynamicTools;
 
 class MathParser
 {
@@ -66,14 +63,14 @@ class MathParser
 
     public function __construct()
     {
-        include_once('MathParserFunctions.php');
+        include_once 'MathParserFunctions.php';
         $this->expression = '';
         $this->node = null;
         $this->dirty = true;
         $this->optimization_on = false;
 
-        $this->variables = array();
-        $this->functions = array();
+        $this->variables = [];
+        $this->functions = [];
 
         $this->createDefaultFuncs();
         $this->createDefaultVars();
@@ -120,7 +117,7 @@ class MathParser
             } elseif ($this->str_concat_operator == '+') {
                 $this->add_op = new MathParserParserFunction('+', 'mpAddStr', 2);
             } else {
-                throw new Exception('Invalid string concat operator: ' . $this->str_concat_operator);
+                throw new \Exception('Invalid string concat operator: ' . $this->str_concat_operator);
             }
         } else {
             $this->add_op = self::$add_func;
@@ -153,7 +150,7 @@ class MathParser
                 $this->add_op = self::$add_func;
             }
         } else {
-            throw new Exception('Invalid string concat operator: ' . $value);
+            throw new \Exception('Invalid string concat operator: ' . $value);
         }
     }
 
@@ -173,7 +170,7 @@ class MathParser
     public static function &getTranslationStrings()
     {
         if (!isset(self::$translator)) {
-            self::$translator = array();
+            self::$translator = [];
 
             $module = DynamicTools::getModule();
             self::$translator['ExpEmpty'] = $module->l('expression is empty.', 'mathparser');
@@ -219,6 +216,7 @@ class MathParser
         foreach (self::$translator as $key => $item) {
             self::$translator[$key] = htmlspecialchars_decode($item);
         }
+
         return self::$translator;
     }
 
@@ -230,26 +228,27 @@ class MathParser
     public function getVariable($varname)
     {
         if ($varname == null) {
-            throw new Exception('Variable name cannot be null.');
+            throw new \Exception('Variable name cannot be null.');
         }
         $upcname = strtoupper($varname);
         $a_variable = $this->variables[$upcname];
         if ($a_variable == null) {
-            throw new Exception($this->getMessage1('VarNtExst', $varname));
+            throw new \Exception($this->getMessage1('VarNtExst', $varname));
         }
+
         return $a_variable->value;
     }
 
     public function setVariable($varname, $new_val, $fn_value_provider = null)
     {
         if ($varname == null) {
-            throw new Exception('Variable name cannot be null.');
+            throw new \Exception('Variable name cannot be null.');
         }
         if (is_numeric($new_val)) {
             $new_val = (float) $new_val;
         } else {
             if (!is_string($new_val)) {
-                throw new Exception('Variable should be floating point or string value: ' . $new_val);
+                throw new \Exception('Variable should be floating point or string value: ' . $new_val);
             }
         }
         $upcname = strtoupper($varname);
@@ -258,7 +257,7 @@ class MathParser
             $existing->value = $new_val;
         } else {
             if (!$this->isValidName($upcname)) {
-                throw new Exception($this->getMessage1('NtVarNm', $varname));
+                throw new \Exception($this->getMessage1('NtVarNm', $varname));
             }
             $var = new MathParserVariable($this, $upcname, $new_val, $fn_value_provider);
             $this->variables[$upcname] = $var;
@@ -271,26 +270,23 @@ class MathParser
         if ($this->dirty) {
             $this->parse();
         }
+
         return $this->node->getValue();
     }
 
     public function parse()
     {
-        if (!isset($this->expression) || !(Tools::strlen($this->expression) > 0)) {
+        if (!isset($this->expression) || !(\Tools::strlen($this->expression) > 0)) {
             $this->node = null;
-            throw new Exception($this->getMessage('ExpEmpty'));
+            throw new \Exception($this->getMessage('ExpEmpty'));
         }
 
         $formula = $this->expression;
         $this->upperCase($formula);
-        $len = Tools::strlen($formula);
+        $len = \Tools::strlen($formula);
         $brackets = self::checkBrackets($formula);
         if ($brackets > -1 && $brackets < $len) {
-            throw new MathParserParserException(
-                $this->getMessage2('BrcktMis', $formula, $brackets),
-                Tools::substr($formula, $brackets),
-                $formula
-            );
+            throw new MathParserParserException($this->getMessage2('BrcktMis', $formula, $brackets), \Tools::substr($formula, $brackets), $formula);
         } elseif ($brackets == $len) {
             throw new MathParserParserException($this->getMessage1('MisBrckt', $formula), $formula, $formula);
         }
@@ -307,10 +303,10 @@ class MathParser
 
     private function upperCase(&$c)
     {
-        $len = Tools::strlen($c);
+        $len = \Tools::strlen($c);
         $chrArray = preg_split('//u', $c, -1, PREG_SPLIT_NO_EMPTY);
         $inside_string_const = false;
-        for ($i = 0; $i < $len; $i++) {
+        for ($i = 0; $i < $len; ++$i) {
             $ch = $chrArray[$i];
             if ($ch == '"') {
                 $inside_string_const = !$inside_string_const;
@@ -331,21 +327,21 @@ class MathParser
     public function createFunc($new_func_name, $func_addr, $param_count)
     {
         if ($new_func_name == null) {
-            throw new Exception('Function name cannot be null.');
+            throw new \Exception('Function name cannot be null.');
         }
         if ($func_addr == null) {
-            throw new Exception('Function implementation cannot be null.');
+            throw new \Exception('Function implementation cannot be null.');
         }
 
         $upcname = strtoupper($new_func_name);
         if (!$this->isValidName($upcname)) {
-            throw new Exception($this->getMessage1('NtFncNm', $new_func_name));
+            throw new \Exception($this->getMessage1('NtFncNm', $new_func_name));
         }
 
         if ($this->isFunction($upcname)) {
-            throw new Exception($this->getMessage1('FncExst', $new_func_name));
+            throw new \Exception($this->getMessage1('FncExst', $new_func_name));
         } elseif ($param_count < -1) {
-            throw new Exception($this->getMessage2('WrngNPrms', $new_func_name, (string) $param_count));
+            throw new \Exception($this->getMessage2('WrngNPrms', $new_func_name, (string) $param_count));
         } else {
             $func = new MathParserParserFunction($upcname, $func_addr, $param_count);
             $this->functions[$upcname] = $func;
@@ -414,7 +410,7 @@ class MathParser
             $this->createVar('PI', 3.14159265358979, null);
             $this->createVar('X', 0.0, null);
             $this->createVar('Y', 0.0, null);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -422,7 +418,7 @@ class MathParser
     public function deleteVar($var_name)
     {
         if ($var_name == null) {
-            throw new Exception('Variable name cannot be null.');
+            throw new \Exception('Variable name cannot be null.');
         }
 
         $upcname = strtoupper($var_name);
@@ -433,7 +429,7 @@ class MathParser
     public function deleteFunc($func_name)
     {
         if ($func_name == null) {
-            throw new Exception('Function name cannot be null.');
+            throw new \Exception('Function name cannot be null.');
         }
         $upcname = strtoupper($func_name);
         unset($this->functions[$upcname]);
@@ -443,13 +439,13 @@ class MathParser
 
     public function deleteAllVars()
     {
-        $this->variables = array();
+        $this->variables = [];
         $this->dirty = true;
     }
 
     public function deleteAllFuncs()
     {
-        $this->functions = array();
+        $this->functions = [];
         $this->dirty = true;
     }
 
@@ -462,7 +458,7 @@ class MathParser
     public function isVariableUsed($var_name)
     {
         if ($var_name == null) {
-            throw new Exception('Variable name cannot be null.');
+            throw new \Exception('Variable name cannot be null.');
         }
 
         if ($this->dirty) {
@@ -470,51 +466,56 @@ class MathParser
         }
 
         $var_name = strtoupper($var_name);
+
         return $this->node->isVariableUsed($var_name);
     }
 
     public function isFunctionUsed($func_name)
     {
         if ($func_name == null) {
-            throw new Exception('Function name cannot be null.');
+            throw new \Exception('Function name cannot be null.');
         }
         if ($this->dirty) {
             $this->parse();
         }
 
         $func_name = strtoupper($func_name);
+
         return $this->node->isFunctionUsed($func_name);
     }
 
     public function isVariable($var_name)
     {
         if ($var_name == null) {
-            throw new Exception('Variable name cannot be null.');
+            throw new \Exception('Variable name cannot be null.');
         }
         $var_name = strtoupper($var_name);
+
         return isset($this->variables[$var_name]);
     }
 
     public function isFunction($func_name)
     {
         if ($func_name == null) {
-            throw new Exception('Function name cannot be null.');
+            throw new \Exception('Function name cannot be null.');
         }
         $func_name = strtoupper($func_name);
+
         return isset($this->functions[$func_name]);
     }
 
     public function getVariablesUsed()
     {
-        if ($this->dirty && $this->expression != null && Tools::strlen($this->expression) > 0) {
+        if ($this->dirty && $this->expression != null && \Tools::strlen($this->expression) > 0) {
             $this->parse();
         }
+
         return MathParser::findVariablesUsed($this->node);
     }
 
     public static function findVariablesUsed($a_node)
     {
-        $list = array();
+        $list = [];
         if ($a_node instanceof MathParserUnknownVarNode) {
             $list[] = $a_node->var_name;
         } elseif ($a_node instanceof MathParserVarNode) {
@@ -528,6 +529,7 @@ class MathParser
                 }
             }
         }
+
         return $list;
     }
 
@@ -554,6 +556,7 @@ class MathParser
     public function getValueAsDouble()
     {
         $obj = $this->evaluate();
+
         return (float) $obj;
     }
 
@@ -565,42 +568,45 @@ class MathParser
     private function isValidChar($index, $c)
     {
         if ($index == 0) {
-            if (($c >= 'A' && $c <= 'Z')) {
+            if ($c >= 'A' && $c <= 'Z') {
                 return true;
             }
             if ($c == '_') {
                 return true;
             }
+
             return false;
         }
-        if ((($c >= '0' && $c <= '9') || ($c >= 'A' && $c <= 'Z'))) {
+        if (($c >= '0' && $c <= '9') || ($c >= 'A' && $c <= 'Z')) {
             return true;
         }
         if ($c == '_') {
             return true;
         }
+
         return false;
     }
 
     private function isValidName($name)
     {
-        $len = Tools::strlen($name);
+        $len = \Tools::strlen($name);
         $chrArray = preg_split('//u', $name, -1, PREG_SPLIT_NO_EMPTY);
-        for ($i = 0; $i < $len; $i++) {
+        for ($i = 0; $i < $len; ++$i) {
             if (!$this->isValidChar($i, $chrArray[$i])) {
                 return false;
             }
         }
+
         return true;
     }
 
     protected static function checkBrackets($formula)
     {
         $n = 0;
-        $len = Tools::strlen($formula);
+        $len = \Tools::strlen($formula);
         $inside_string_const = false;
         $chrArray = preg_split('//u', $formula, -1, PREG_SPLIT_NO_EMPTY);
-        for ($i = 0; $i < $len; $i++) {
+        for ($i = 0; $i < $len; ++$i) {
             $ch = $chrArray[$i];
             if ($ch == '\"') {
                 $inside_string_const = !$inside_string_const;
@@ -618,22 +624,24 @@ class MathParser
                 }
             }
         }
+
         return ($n == 0) ? -1 : $len;
     }
 
     protected static function removeOuterBrackets($formula)
     {
         $temp = $formula;
-        $len = Tools::strlen($temp);
+        $len = \Tools::strlen($temp);
         $chrArray = preg_split('//u', $formula, -1, PREG_SPLIT_NO_EMPTY);
         while (($len > 2) && ($chrArray[0] == '(') && ($chrArray[$len - 1] == ')')) {
-            $temp = trim(Tools::substr($temp, 1, $len - 2));
+            $temp = trim(\Tools::substr($temp, 1, $len - 2));
             if (self::checkBrackets($temp) == -1) {
                 $formula = $temp;
             }
-            $len = Tools::strlen($temp);
+            $len = \Tools::strlen($temp);
             $chrArray = preg_split('//u', $formula, -1, PREG_SPLIT_NO_EMPTY);
         }
+
         return $formula;
     }
 
@@ -641,14 +649,16 @@ class MathParser
     {
         if (is_numeric($formula)) {
             $dbl_val = (float) $formula;
+
             return true;
         }
+
         return false;
     }
 
     private static function getStringLiteral($formula)
     {
-        $len = Tools::strlen($formula);
+        $len = \Tools::strlen($formula);
         $chrArray = preg_split('//u', $formula, -1, PREG_SPLIT_NO_EMPTY);
         if (!($len > 1 && $chrArray[0] == '"' && $chrArray[$len - 1] == '"')) {
             return null;
@@ -656,20 +666,21 @@ class MathParser
         if ($formula == '""') {
             return $formula;
         }
-        $temp = Tools::substr($formula, 1, $len - 2);
+        $temp = \Tools::substr($formula, 1, $len - 2);
         if (self::checkEscapes($temp)) {
             return str_replace('""', '"', $temp);
         }
+
         return null;
     }
 
     private static function checkEscapes($formula)
     {
-        $len = Tools::strlen($formula);
+        $len = \Tools::strlen($formula);
         $chrArray = preg_split('//u', $formula, -1, PREG_SPLIT_NO_EMPTY);
         $ch = null;
         $inside_string_const = false;
-        for ($i = 0; $i < $len; $i++) {
+        for ($i = 0; $i < $len; ++$i) {
             $ch = $chrArray[$i];
             if ($ch == '"') {
                 if ($inside_string_const) {
@@ -685,21 +696,21 @@ class MathParser
             }
             $inside_string_const = false;
         }
+
         return true;
     }
 
     protected function createParseTree($exp_to_parse)
     {
         $exp_to_parse = trim($exp_to_parse);
-        if (($len = Tools::strlen($exp_to_parse)) == 0) {
+        if (($len = \Tools::strlen($exp_to_parse)) == 0) {
             return null;
         }
 
         $formula = $this->removeOuterBrackets($exp_to_parse);
-
-        if (Tools::strlen($formula) != $len) {
+        if (\Tools::strlen($formula) != $len) {
             $formula = trim($formula);
-            if (Tools::strlen($formula) == 0) {
+            if (\Tools::strlen($formula) == 0) {
                 return null;
             }
         }
@@ -728,14 +739,10 @@ class MathParser
             if ($this->isOneParamFunc($formula, $func_addr, $param, $last_oper)) {
                 $left_node = $this->createParseTree($param);
                 if ($left_node == null) {
-                    throw new MathParserParserException(
-                        $this->getMessage2('ExpNtVld', $param, $formula),
-                        $param,
-                        $formula
-                    );
+                    throw new MathParserParserException($this->getMessage2('ExpNtVld', $param, $formula), $param, $formula);
                 }
                 if ($func_addr != null) {
-                    return new MMathparserNParamNode(array($left_node), $func_addr);
+                    return new MMathparserNParamNode([$left_node], $func_addr);
                 }
             }
         }
@@ -744,22 +751,14 @@ class MathParser
         $param_right = null;
         if ($this->isTwoParamFunc($formula, $func_addr, $param_left, $param_right, $last_oper)) {
             if (($left_node = $this->createParseTree($param_left)) == null) {
-                throw new MathParserParserException(
-                    $this->getMessage2('ExpNtVld', $param_left, $formula),
-                    $param_left,
-                    $formula
-                );
+                throw new MathParserParserException($this->getMessage2('ExpNtVld', $param_left, $formula), $param_left, $formula);
             }
             if (($right_node = $this->createParseTree($param_right)) == null) {
-                throw new MathParserParserException(
-                    $this->getMessage2('ExpNtVld', $param_right, $formula),
-                    $param_right,
-                    $formula
-                );
+                throw new MathParserParserException($this->getMessage2('ExpNtVld', $param_right, $formula), $param_right, $formula);
             }
 
             if ($func_addr != null) {
-                return new MMathparserNParamNode(array($left_node, $right_node), $func_addr);
+                return new MMathparserNParamNode([$left_node, $right_node], $func_addr);
             }
         }
 
@@ -770,14 +769,10 @@ class MathParser
                 throw new MathParserParserException($this->getMessage1('InvNPrm', $formula), $formula, $formula);
             }
             $n_param = count($parms);
-            $nodes = array();
-            for ($i = 0; $i < $n_param; $i++) {
+            $nodes = [];
+            for ($i = 0; $i < $n_param; ++$i) {
                 if (($left_node = $this->createParseTree($parms[$i])) == null) {
-                    throw new MathParserParserException(
-                        $this->getMessage2('ExpNtVld', $parms[$i], $formula),
-                        $parms[$i],
-                        $formula
-                    );
+                    throw new MathParserParserException($this->getMessage2('ExpNtVld', $parms[$i], $formula), $parms[$i], $formula);
                 }
                 $nodes[$i] = $left_node;
             }
@@ -794,11 +789,11 @@ class MathParser
         $precedence = 13;
         $bracket_level = 0;
         $result = -1;
-        $len = Tools::strlen($formula);
+        $len = \Tools::strlen($formula);
         $chrArray = preg_split('//u', $formula, -1, PREG_SPLIT_NO_EMPTY);
         $last_was_operator = 0;
         $inside_string_literal = false;
-        for ($i = 0; $i < $len; $i++) {
+        for ($i = 0; $i < $len; ++$i) {
             $current_ch = $chrArray[$i];
             if ($current_ch === '"') {
                 $inside_string_literal = !$inside_string_literal;
@@ -985,6 +980,7 @@ class MathParser
                     break;
             }
         }
+
         return $result;
     }
 
@@ -993,79 +989,82 @@ class MathParser
         $func_addr = null;
         $param_left = null;
         $param_right = null;
-        $len = Tools::strlen($formula);
+        $len = \Tools::strlen($formula);
         $chrArray = preg_split('//u', $formula, -1, PREG_SPLIT_NO_EMPTY);
 
-        if ($curr_char > 0) { //if function in question is an operand
+        if ($curr_char > 0) { // if function in question is an operand
             if ($curr_char > $len - 2) {
                 return false;
             }
             $curr_ch = $chrArray[$curr_char];
 
-            //was it an operand also? we want to find <>, >=, <=
+            // was it an operand also? we want to find <>, >=, <=
             if ($curr_ch == '!') {
-                $next_ch = $chrArray[$curr_char + 1]; //look ahead.
+                $next_ch = $chrArray[$curr_char + 1]; // look ahead.
                 if ($next_ch == '=') {
                     $func_addr = self::$notequals_func;
-                    $param_left = Tools::substr($formula, 0, $curr_char);
-                    $param_right = Tools::substr($formula, $curr_char + 2);
+                    $param_left = \Tools::substr($formula, 0, $curr_char);
+                    $param_right = \Tools::substr($formula, $curr_char + 2);
+
                     return true;
                 }
             } elseif ($curr_ch == '<') {
-                $next_ch = $chrArray[$curr_char + 1]; //look ahead.
+                $next_ch = $chrArray[$curr_char + 1]; // look ahead.
                 if ($next_ch == '>') {
                     $func_addr = self::$notequals_func;
-                    $param_left = Tools::substr($formula, 0, $curr_char);
-                    $param_right = Tools::substr($formula, $curr_char + 2);
+                    $param_left = \Tools::substr($formula, 0, $curr_char);
+                    $param_right = \Tools::substr($formula, $curr_char + 2);
                 } elseif ($next_ch == '=') {
                     $func_addr = self::$ltequals_func;
-                    $param_left = Tools::substr($formula, 0, $curr_char);
-                    $param_right = Tools::substr($formula, $curr_char + 2);
+                    $param_left = \Tools::substr($formula, 0, $curr_char);
+                    $param_right = \Tools::substr($formula, $curr_char + 2);
                 } else {
-                    $func_addr = self::$lt_func; //default case.
-                    $param_left = Tools::substr($formula, 0, $curr_char);
-                    $param_right = Tools::substr($formula, $curr_char + 1);
+                    $func_addr = self::$lt_func; // default case.
+                    $param_left = \Tools::substr($formula, 0, $curr_char);
+                    $param_right = \Tools::substr($formula, $curr_char + 1);
                 }
 
-                if (!(Tools::strlen($param_left) > 0)) {
+                if (!(\Tools::strlen($param_left) > 0)) {
                     return false;
                 }
-                if (!(Tools::strlen($param_right) > 0)) {
+                if (!(\Tools::strlen($param_right) > 0)) {
                     return false;
                 }
-                return true; //all output is assigned, now we return true.
+
+                return true; // all output is assigned, now we return true.
             } elseif ($curr_ch == '>') {
                 $next_ch = $chrArray[$curr_char + 1];
                 if ($next_ch == '=') {
                     $func_addr = self::$gtequals_func;
-                    $param_left = Tools::substr($formula, 0, $curr_char);
-                    $param_right = Tools::substr($formula, $curr_char + 2);
+                    $param_left = \Tools::substr($formula, 0, $curr_char);
+                    $param_right = \Tools::substr($formula, $curr_char + 2);
                 } else {
-                    $func_addr = self::$gt_func; //default case.
-                    $param_left = Tools::substr($formula, 0, $curr_char);
-                    $param_right = Tools::substr($formula, $curr_char + 1);
+                    $func_addr = self::$gt_func; // default case.
+                    $param_left = \Tools::substr($formula, 0, $curr_char);
+                    $param_right = \Tools::substr($formula, $curr_char + 1);
                 }
-                if (!(Tools::strlen($param_left) > 0)) {
+                if (!(\Tools::strlen($param_left) > 0)) {
                     return false;
                 }
 
-                if (!(Tools::strlen($param_right) > 0)) {
+                if (!(\Tools::strlen($param_right) > 0)) {
                     return false;
                 }
-                return true; //all output is assigned, now we return true.
+
+                return true; // all output is assigned, now we return true.
             } else {
-                $param_left = Tools::substr($formula, 0, $curr_char);
-                if (!(Tools::strlen($param_left) > 0)) {
+                $param_left = \Tools::substr($formula, 0, $curr_char);
+                if (!(\Tools::strlen($param_left) > 0)) {
                     return false;
                 }
 
-                $param_right = Tools::substr($formula, $curr_char + 1);
-                if (!(Tools::strlen($param_right) > 0)) {
+                $param_right = \Tools::substr($formula, $curr_char + 1);
+                if (!(\Tools::strlen($param_right) > 0)) {
                     return false;
                 }
 
                 switch ($chrArray[$curr_char]) {
-                    //analytical operators:
+                    // analytical operators:
                     case '+':
                         $func_addr = $this->add_op;
                         break;
@@ -1085,7 +1084,7 @@ class MathParser
                         $func_addr = self::$mod_func;
                         break;
 
-                    //logical operators:
+                        // logical operators:
                     case '<':
                         $func_addr = self::$lt_func;
                         break;
@@ -1103,17 +1102,18 @@ class MathParser
                         break;
                 }
             }
-            return true; //all output is assigned, now we return true.
+
+            return true; // all output is assigned, now we return true.
         }
-        //if we reach here, result is false
-        //if main operation is not an operand but a function
-        //$bracket_level;
-        //$param_start;
+        // if we reach here, result is false
+        // if main operation is not an operand but a function
+        // $bracket_level;
+        // $param_start;
         $temp = '';
-        if ($chrArray[$len - 1] == ')') {  //last character must be brackets closing function param list
+        if ($chrArray[$len - 1] == ')') {  // last character must be brackets closing function param list
             $i = 0;
             while ($this->isValidChar($i, $chrArray[$i])) {
-                $temp .= ($chrArray[$i]);
+                $temp .= $chrArray[$i];
                 ++$i;
             }
             while ($chrArray[$i] == ' ') {
@@ -1127,7 +1127,7 @@ class MathParser
                     $param_start = $i + 1;
                     $bracket_level = 1;
                     $inside_string_literal = false;
-                    while (!($i > $len - 1 - 1)) { //last character is a ')', that's why we use i>len - 1
+                    while (!($i > $len - 1 - 1)) { // last character is a ')', that's why we use i>len - 1
                         ++$i;
                         switch ($chrArray[$i]) {
                             case '"':
@@ -1145,11 +1145,11 @@ class MathParser
                                 break;
                             case ',':
                                 if ((!$inside_string_literal) && (1 == $bracket_level) && ($i < $len - 2)) {
-                                    //last character is a ')', that's why we use i>Len-2
-                                    $param_left = Tools::substr($formula, $param_start, $i - $param_start);
-                                    $param_right = Tools::substr($formula, $i + 1, $len - 1 - ($i + 1));
-                                    //last character is a ')', that's why we use Len-1-i
-                                    return true; //we are sure that it is a two parameter function
+                                    // last character is a ')', that's why we use i>Len-2
+                                    $param_left = \Tools::substr($formula, $param_start, $i - $param_start);
+                                    $param_right = \Tools::substr($formula, $i + 1, $len - 1 - ($i + 1));
+                                    // last character is a ')', that's why we use Len-1-i
+                                    return true; // we are sure that it is a two parameter function
                                 }
                                 break;
                         }
@@ -1157,7 +1157,8 @@ class MathParser
                 }
             }
         }
-        return false; //means we could not find it
+
+        return false; // means we could not find it
     }
 
     private function isOneParamFunc($formula, &$func_addr, &$param, $curr_char)
@@ -1165,11 +1166,11 @@ class MathParser
         $func_addr = null;
         $param = null;
         $param_start = null;
-        $len = Tools::strlen($formula);
+        $len = \Tools::strlen($formula);
         $chrArray = preg_split('//u', $formula, -1, PREG_SPLIT_NO_EMPTY);
         if ($curr_char == 0) {
-            $param = Tools::substr($formula, 1);
-            if (!(Tools::strlen($param) > 0)) {
+            $param = \Tools::substr($formula, 1);
+            if (!(\Tools::strlen($param) > 0)) {
                 return false;
             }
 
@@ -1185,15 +1186,17 @@ class MathParser
                     break;
                 default:
                     $func_addr = null;
+
                     return false;
             }
+
             return true;
         }
         if ($chrArray[$len - 1] == ')') {
             $i = 0;
             $temp = '';
             while ($this->isValidChar($i, $chrArray[$i])) {
-                $temp .= ($chrArray[$i]);
+                $temp .= $chrArray[$i];
                 ++$i;
             }
             while ($chrArray[$i] == ' ') {
@@ -1204,11 +1207,13 @@ class MathParser
                 if ($func != null && $func->param_count == 1) {
                     $func_addr = $func;
                     $param_start = $i + 1;
-                    $param = Tools::substr($formula, $param_start, $len - 1 - $param_start);
+                    $param = \Tools::substr($formula, $param_start, $len - 1 - $param_start);
+
                     return true;
                 }
             }
         }
+
         return false;
     }
 
@@ -1217,13 +1222,13 @@ class MathParser
         $func_addr = null;
         $parms = null;
 
-        $len = Tools::strlen($formula);
+        $len = \Tools::strlen($formula);
         $chrArray = preg_split('//u', $formula, -1, PREG_SPLIT_NO_EMPTY);
         $temp = '';
         if ($chrArray[$len - 1] == ')') {
             $i = 0;
             while ($this->isValidChar($i, $chrArray[$i])) {
-                $temp .= ($chrArray[$i]);
+                $temp .= $chrArray[$i];
                 ++$i;
             }
             while ($chrArray[$i] == ' ') {
@@ -1235,7 +1240,7 @@ class MathParser
                 if ($func_addr != null) {
                     $n_params = $func_addr->param_count;
                     if ($n_params > -1) {
-                        $parms = array();
+                        $parms = [];
                         if ($n_params == 0) {
                             if ($chrArray[$i + 1] == ')') {
                                 return true;
@@ -1266,10 +1271,11 @@ class MathParser
                                         if ($n_params > -1 && !($p_index < $n_params)) {
                                             return false;
                                         }
-                                        $parms[$p_index++] = Tools::substr($formula, $param_start, $i - $param_start);
+                                        $parms[$p_index++] = \Tools::substr($formula, $param_start, $i - $param_start);
 
                                         if ($p_index == $n_params - 1) {
-                                            $parms[$p_index] = Tools::substr($formula, $i + 1, $len - 1 - ($i + 1));
+                                            $parms[$p_index] = \Tools::substr($formula, $i + 1, $len - 1 - ($i + 1));
+
                                             return true;
                                         }
                                         $param_start = $i + 1;
@@ -1278,7 +1284,7 @@ class MathParser
                             }
                         }
                     } else {
-                        $list = array();
+                        $list = [];
                         $param_start = $i + 1;
                         $bracket_level = 1;
                         $inside_string_literal = false;
@@ -1300,23 +1306,25 @@ class MathParser
                                     break;
                                 case ',':
                                     if (!$inside_string_literal && (1 == $bracket_level) && ($i < $len - 2)) {
-                                        $list[] = Tools::substr($formula, $param_start, $i - $param_start);
+                                        $list[] = \Tools::substr($formula, $param_start, $i - $param_start);
                                         $param_start = $i + 1;
                                     }
                                     break;
                             }
                         }
-                        $remaining = trim(Tools::substr($formula, $param_start, $len - 1 - $param_start));
-                        if (Tools::strlen($remaining) > 0) {
+                        $remaining = trim(\Tools::substr($formula, $param_start, $len - 1 - $param_start));
+                        if (\Tools::strlen($remaining) > 0) {
                             $list[] = $remaining;
                         }
 
                         $parms = $list;
+
                         return true;
                     }
                 }
             }
         }
+
         return false;
     }
 
@@ -1325,7 +1333,7 @@ class MathParser
         $a_node->optimize();
         if ($a_node instanceof MMathparserNParamNode) {
             $count = count($a_node->nodes);
-            for ($i = 0; $i < $count; $i++) {
+            for ($i = 0; $i < $count; ++$i) {
                 if (!($a_node->nodes[$i] instanceof MathParserBasicNode)) {
                     return $a_node;
                 }
@@ -1333,6 +1341,7 @@ class MathParser
 
             return new MathParserBasicNode($a_node->getValue());
         }
+
         return $a_node;
     }
 
@@ -1365,16 +1374,18 @@ class MathParser
         if ($variable != null) {
             return new MathParserVarNode($variable, $var_name);
         } elseif ($this->variable_resolver != null) {
-            $len = Tools::strlen($var_name);
+            $len = \Tools::strlen($var_name);
             $chrArray = preg_split('//u', $var_name, -1, PREG_SPLIT_NO_EMPTY);
-            for ($i = 0; $i < $len; $i++) {
+            for ($i = 0; $i < $len; ++$i) {
                 $ch = $chrArray[$i];
                 if (!$this->isValidChar($i, $ch)) {
                     return null;
                 }
             }
+
             return new MathParserUnknownVarNode($this, $var_name);
         }
+
         return null;
     }
 
@@ -1388,8 +1399,9 @@ class MathParser
             if ($s == null) {
                 $s = $key;
             }
+
             return $s;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $key;
         }
     }
@@ -1397,12 +1409,14 @@ class MathParser
     public static function getMessage1($key, $param)
     {
         $temp = self::getMessage($key);
+
         return sprintf($temp, $param);
     }
 
     public static function getMessage2($key, $param0, $param1)
     {
         $temp = self::getMessage($key);
+
         return sprintf($temp, $param0, $param1);
     }
 }

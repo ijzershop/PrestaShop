@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,34 +14,31 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+/* @noinspection PhpUnusedPrivateMethodInspection */
 
-/** @noinspection PhpUnusedPrivateMethodInspection */
-
-use classes\DynamicTools;
-use classes\helpers\GridHelper;
-use classes\models\grids\Grid;
-use classes\models\grids\GridColumn;
-use classes\models\grids\GridRow;
-use classes\models\grids\GridValue;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\helpers\GridHelper;
+use DynamicProduct\classes\models\grids\Grid;
+use DynamicProduct\classes\models\grids\GridColumn;
+use DynamicProduct\classes\models\grids\GridRow;
+use DynamicProduct\classes\models\grids\GridValue;
 
 class DynamicProductGridsController extends ModuleAdminController
 {
-
     /** @var DynamicProduct */
     public $module;
     public $action;
 
-    /** @var Context $context */
+    /** @var Context */
     public $context;
     public $id_product;
     public $id_default_lang;
@@ -56,12 +54,13 @@ class DynamicProductGridsController extends ModuleAdminController
 
     public function postProcess()
     {
+        $source = basename(__FILE__, '.php');
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
         if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
-            exit(json_encode(array(
-                'error'   => true,
-                'message' => $this->module->l('This product is for viewing only!')
-            )));
+            exit(json_encode([
+                'error' => true,
+                'message' => $this->module->l('This product is for viewing only!', $source),
+            ]));
         }
 
         $method = 'process' . Tools::toCamelCase($this->action, true);
@@ -69,7 +68,14 @@ class DynamicProductGridsController extends ModuleAdminController
             return $this->{$method}();
         }
 
-        exit();
+        exit;
+    }
+
+    private function processLoadGrids()
+    {
+        $this->respond([
+            'grids' => Grid::getRowsByProduct($this->id_product),
+        ]);
     }
 
     private function processAddGrid()
@@ -84,13 +90,21 @@ class DynamicProductGridsController extends ModuleAdminController
         $grid_column->id_grid = $id_grid;
         $grid_column->save();
 
+        $grid_column = new GridColumn();
+        $grid_column->id_grid = $id_grid;
+        $grid_column->save();
+
         $grid_row = new GridRow();
         $grid_row->id_grid = $id_grid;
         $grid_row->add();
 
-        $this->respond(array(
-            'grid' => new Grid($id_grid)
-        ));
+        $grid_row = new GridRow();
+        $grid_row->id_grid = $id_grid;
+        $grid_row->add();
+
+        $this->respond([
+            'grid' => Grid::loadGrid($id_grid),
+        ]);
     }
 
     private function processSaveGrid()
@@ -101,9 +115,9 @@ class DynamicProductGridsController extends ModuleAdminController
         $grid->id_field_column = (int) $grid_data['id_field_column'];
         $grid->id_field_row = (int) $grid_data['id_field_row'];
         $grid->save();
-        $this->respond(array(
-            'grid' => $grid
-        ));
+        $this->respond([
+            'grid' => Grid::loadGrid($grid->id),
+        ]);
     }
 
     private function processDeleteGrid()
@@ -120,20 +134,20 @@ class DynamicProductGridsController extends ModuleAdminController
         $grid_column = new GridColumn();
         $grid_column->id_grid = $id_grid;
         $grid_column->add();
-        $this->respond(array(
-            'grid' => new Grid($id_grid)
-        ));
+        $this->respond([
+            'grid' => Grid::loadGrid($id_grid),
+        ]);
     }
 
     private function processSaveColumn()
     {
         $column = Tools::getValue('column');
         $grid_column = new GridColumn((int) $column['id']);
-        $grid_column->value = (float) $column['value'];
+        $grid_column->value = $column['value'];
         $grid_column->save();
-        $this->respond(array(
-            'grid' => new Grid($grid_column->id_grid)
-        ));
+        $this->respond([
+            'grid' => Grid::loadGrid($grid_column->id_grid),
+        ]);
     }
 
     private function processDeleteColumn()
@@ -141,9 +155,9 @@ class DynamicProductGridsController extends ModuleAdminController
         $id_column = Tools::getValue('id_column');
         $grid_column = new GridColumn($id_column);
         $grid_column->delete();
-        $this->respond(array(
-            'grid' => new Grid($grid_column->id_grid)
-        ));
+        $this->respond([
+            'grid' => Grid::loadGrid($grid_column->id_grid),
+        ]);
     }
 
     private function processAddRow()
@@ -152,20 +166,20 @@ class DynamicProductGridsController extends ModuleAdminController
         $grid_row = new GridRow();
         $grid_row->id_grid = $id_grid;
         $grid_row->add();
-        $this->respond(array(
-            'grid' => new Grid($id_grid)
-        ));
+        $this->respond([
+            'grid' => Grid::loadGrid($id_grid),
+        ]);
     }
 
     private function processSaveRow()
     {
         $row = Tools::getValue('row');
         $grid_row = new GridRow((int) $row['id']);
-        $grid_row->value = (float) $row['value'];
+        $grid_row->value = $row['value'];
         $grid_row->save();
-        $this->respond(array(
-            'grid' => new Grid($grid_row->id_grid)
-        ));
+        $this->respond([
+            'grid' => Grid::loadGrid($grid_row->id_grid),
+        ]);
     }
 
     private function processDeleteRow()
@@ -173,9 +187,9 @@ class DynamicProductGridsController extends ModuleAdminController
         $id_row = Tools::getValue('id_row');
         $grid_row = new GridRow($id_row);
         $grid_row->delete();
-        $this->respond(array(
-            'grid' => new Grid($grid_row->id_grid)
-        ));
+        $this->respond([
+            'grid' => Grid::loadGrid($grid_row->id_grid),
+        ]);
     }
 
     private function processSaveValue()
@@ -196,17 +210,15 @@ class DynamicProductGridsController extends ModuleAdminController
             $grid_value->save();
         }
 
-        $this->respond(array(
-            'grid' => new Grid($grid_value->id_grid)
-        ));
+        $this->respond();
     }
 
-    private function processImportCSV()
+    private function processImportCSV(): void
     {
         $id_grid = null;
         $uploader = new Uploader();
         $uploader->setName('csv');
-        $uploader->setAcceptTypes(array('csv'));
+        $uploader->setAcceptTypes(['csv']);
         $files = $uploader->process();
         if (isset($files[0]) && $files[0]['error'] === 0) {
             $save_path = $files[0]['save_path'];
@@ -216,33 +228,33 @@ class DynamicProductGridsController extends ModuleAdminController
                 try {
                     $id_grid = $grid_helper->importCSVData($this->id_product, $csv_data);
                 } catch (Exception $e) {
-                    $this->respond(array(
-                        'error'   => true,
-                        'message' => DynamicTools::reportException($e)
-                    ));
+                    $this->respond([
+                        'error' => true,
+                        'message' => DynamicTools::reportException($e),
+                    ]);
                 }
             }
         }
         if ($id_grid) {
-            $this->respond(array(
-                'grid' => new Grid($id_grid)
-            ));
+            $this->respond([
+                'grid' => Grid::loadGrid($id_grid),
+            ]);
         } else {
             $source = DynamicTools::getSource();
-            $this->respond(array(
-                'error'   => true,
-                'message' => $this->module->l('Could not import data, please check your file then try again', $source)
-            ));
+            $this->respond([
+                'error' => true,
+                'message' => $this->module->l('Could not import data, please check your file then try again', $source),
+            ]);
         }
     }
 
-    public function respond($data = array(), $success = 1)
+    public function respond($data = [], $success = 1)
     {
         /** @noinspection CallableParameterUseCaseInTypeContextInspection */
         $success = $success && (int) !array_key_exists('error', $data);
-        $arr = array(
+        $arr = [
             'success' => $success,
-        );
+        ];
         $arr = array_merge($arr, $data);
         exit(json_encode($arr));
     }

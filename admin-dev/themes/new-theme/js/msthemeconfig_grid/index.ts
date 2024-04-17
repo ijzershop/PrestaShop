@@ -16,8 +16,9 @@ import FiltersSubmitButtonEnablerExtension
 
 import "select2";
 import initPrestashopComponents from "@app/utils/init-components";
-
-
+import {forEach} from "lodash";
+import exports from "@node_modules/webpack";
+import forEachRuntime = exports.util.runtime.forEachRuntime;
 
 const {$} = window;
 
@@ -39,7 +40,127 @@ $(() => {
   // new TranslatableInput();
   new window.prestashop.component.TinyMCEEditor();
   initPrestashopComponents();
-  const offerFormTemplate = function (data: { oi_offer_extra_shipping: string; id_product: number | undefined; id: number; link: any; formTitle: any; id_oi_offer: any; new: any; name: any; price: any; quantity: any; weight: any; description_short: any; } | undefined) {
+
+  const renderMoneyString = function(price: string | number) {
+    const formatter = new Intl.NumberFormat('nl-NL', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 2,
+    });
+    return formatter.format(Number(price));
+  }
+
+  const packedItemTemplate = function(item: any, rowId: string | number){
+    let name;
+    let idProduct;
+    let price;
+    let native_price = 0.00;
+    let quantity;
+    let customCount;
+    let customCountSelected = '';
+    let display = 'display:none;'
+    let idProductAttribute = 0;
+    if(item.data === undefined){
+      name = item.name;
+      idProduct = item.id;
+      quantity = item.pack_quantity;
+      native_price = item.price*quantity;
+      price  = renderMoneyString(item.price*quantity);
+      let testArr = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+      customCount = 0;
+      if(item.attributes.length > 0){
+        idProductAttribute = item.id_pack_product_attribute;
+        customCount = testArr.indexOf(item.attributes[0].name)+1;
+        customCountSelected = 'checked';
+        display = 'display:table-row;'
+      }
+    } else {
+      name  = item.data.text;
+      idProduct  = item.data.id;
+      quantity  = 1;
+      if(item.data.price !== undefined){
+        native_price = item.data.price*quantity;
+        price = renderMoneyString(item.data.price*quantity);
+      } else {
+        price = renderMoneyString('0.00');
+      }
+      customCount = 1;
+    }
+
+    let block = '<li class="list-group-item added"><table class="w-100"><tr><td style="width:5%;padding:4px;"><input type="checkbox" class="form-control customization_check" data-row-id="'+rowId+'" '+customCountSelected+'></td>' +
+      '<td style="width:45%;padding:4px;" class="pack_product_name" data-row-id="'+rowId+'">'+name+'</td>' +
+      '<td  style="width:30%;padding:4px;">' +
+      '<input class="form-control form-control-sm" type="number" name="stock_selected_product_qty[]" data-row-id="'+rowId+'" step="1" min="1" value="'+quantity+'"/>' +
+      '<input type="hidden" name="stock_selected_product_id[]" data-row-id="'+rowId+'" value="'+idProduct+'"/>' +
+      '<input type="hidden" name="stock_selected_product_attribute_id[]" data-row-id="'+rowId+'" value="'+idProductAttribute+'"/>' +
+      '</td>' +
+      '<td  style="width:10%;padding:4px;"><span class="price_span" data-row-id="'+rowId+'" data-price="'+native_price+'">'+price+'</span></td>' +
+      '<td  style="width:10%;padding:4px;"><button type="button" data-row-id="'+rowId+'" class="btn delete_selected_stock_product btn-danger w-100">X</button></td>' +
+      '</tr>' +
+      '<tr class="customization_row_'+rowId+'" style="'+display+'">' +
+      '<td colspan="2">Aantal knippen of zaagsnedes:</td>' +
+      '<td colspan="3">' +
+      '<input type="number" step="1" min="1" max="10" name="stock_selected_product_customization[]" data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" value="'+customCount+'" class="form-control"/>' +
+      '</td></tr></table></li>';
+
+    return block;
+  }
+
+  const updatePackPrice = function(idPack: number, idPackAttribute: number, customizationTotal: number, productCustomization: number, rowId:number){
+    let getPriceLink  = $('#price-url').val();
+
+    let price = 0.00;
+    let data = {
+      'idPack': idPack,
+      'idPackAttribute': idPackAttribute,
+      'customizationTotal': customizationTotal,
+      'productCustomization': productCustomization,
+  };
+
+    if(getPriceLink !== undefined){
+    $.ajax({
+      method: "POST",
+      url: getPriceLink.toString(),
+      data: data
+    }).done(function (e) {
+      let data = JSON.parse(e);
+      $('.pack_product_name[data-row-id="'+rowId+'"]').text(data.product_name);
+      $('.price_span[data-row-id="'+rowId+'"]').text(renderMoneyString(data.price));
+      $('.price_span[data-row-id="'+rowId+'"]').attr('data-price', data.price);
+      $('[name="stock_selected_product_attribute_id[]"][data-row-id="'+rowId+'"]').val(data.id_product_attribute);
+      updateTotalPrice();
+    });
+    }
+  }
+
+  function initChangePacks() {
+    $(document).on('change','[name="stock_selected_product_qty[]"],  [name="stock_selected_product_customization[]"]',  function (e) {
+      let elem = e.currentTarget;
+      let rowId = elem.dataset.rowId;
+
+      let productQty = $('[name="stock_selected_product_qty[]"][data-row-id="'+rowId+'"]').val();
+      let productId = $('[name="stock_selected_product_id[]"][data-row-id="'+rowId+'"]').val();
+      let productAttributeId = $('[name="stock_selected_product_attribute_id[]"][data-row-id="'+rowId+'"]').val();
+      let productCustomization = $('[name="stock_selected_product_customization[]"][data-row-id="'+rowId+'"]').val();
+     updatePackPrice(Number(productId), Number(productAttributeId), Number(productQty), Number(productCustomization), Number(rowId));
+    })
+  }
+
+  const offerFormTemplate = function (data: {
+    packedProducts: any;
+    oi_offer_extra_shipping: string;
+    id_product: number | undefined;
+    id: number;
+    link: any;
+    formTitle: any;
+    id_oi_offer: any;
+    new: any;
+    name: any;
+    price: any;
+    quantity: any;
+    weight: any;
+    description_short: any;
+  } | undefined) {
     let extraShippingSelectNo = 'checked="true"';
     let extraShippingSelectYes = '';
     if(data === undefined){
@@ -61,6 +182,16 @@ $(() => {
       idProduct = data.id;
     }
 
+    let packBlock = '';
+    if(data.packedProducts !== undefined && data.packedProducts.length > 0){
+      let pack = data.packedProducts;
+      for(let i = 0; i < pack.length; i++){
+        packBlock += packedItemTemplate(pack[i], i);
+      }
+    } else {
+      packBlock += '<li class="list-group-item empty-text">Selecteer producten voor voorraad beheer</li>';
+    }
+
     return `<div class="card" id="offer-row-card" data-link="${data.link}">
     <div class="card-header">
       Offer row
@@ -73,12 +204,19 @@ $(() => {
       <input type="hidden" name="offer-row-id" value="${idProduct}"/>
       <input type="hidden" name="offer-new" value="${data.new}"/>
         <div class="form-group">
-          <label for="store-products">Product</label>
-          <select id="store-products" class="form-control" name="offer-row-product" data-toggle="select2" data-minimumresultsforsearch="0" aria-hidden="true" readonly="true">
-            <<option value="${data.id}" selected>${data.name}</option>
-          </select>
+          <label for="store-products">Product(en)</label>
+            <select id="store-products" class="form-control" name="offer-row-product" data-toggle="select2"  aria-hidden="true" readonly="false">
+              <<option value="${data.id}" selected>${data.name}</option>
+            </select>
         </div>
 
+        <ul class="list-group mb-4" id="stock_selected_products">
+        ${packBlock}
+        </ul>
+        <div class="form-group">
+          <strong id="total_price_pack_products" class="w-100 h3 text-dark">Totaal:<span class="float-right">0.00</span> </strong>
+
+        </div>
         <div class="form-group">
           <label for="offer-row-title">Naam</label>
           <input type="text" class="form-control" name="offer-row-title"  id="offer-row-title" placeholder="Product Naam" value="${data.name}">
@@ -130,8 +268,9 @@ $(() => {
   };
 
   let initSelect2 = function (url: string | number | string[] | undefined, readonly = false) {
-    jQuery('#store-products').select2({
-      dropdownParent: $('#offer-row-form'),
+    $('#store-products').select2({
+      dropdownParent: $('#offer-row-form .form-group:first-child'),
+      theme: 'default form-control',
       disabled: readonly,
       width: '100%',
       ajax: {
@@ -144,8 +283,26 @@ $(() => {
           };
         }
       }
+    }).on('select2:select', function (e: any) {
+      let stockLength = $('#stock_selected_products li.added').length;
+      let block = packedItemTemplate(e.params, stockLength);
+
+      if($('#stock_selected_products li.added').length === 0){
+        $('#stock_selected_products').html(block);
+      } else {
+        $('#stock_selected_products').append(block);
+      }
+      updateTotalPrice();
     });
   };
+
+  $(document).on('click', '.customization_check', function(e){
+    $('tr.customization_row_'+$(this).attr('data-row-id')).toggle();
+  });
+  $(document).on('click', '.delete_selected_stock_product', function(e){
+    $(this).parentsUntil('li').parent('li').remove();
+    updateTotalPrice();
+  });
 
   $(document).on('click', '.update-offer-row', function (e) {
     let id = $(this).attr('data-row-id');
@@ -158,12 +315,15 @@ $(() => {
 
     $.fancybox.open(offerFormTemplate(offer), {
       dropdownParent: $('#offer-row-form'),
-      width: '800',
-      height: '800',
+      minWidth: '90%',
+      maxHeight: '90%',
+      maxWidth: '1200px',
+      top: '5%',
       autoDimensions: false,
       afterShow: function () {
         let url = $('#select2-url').val();
-        initSelect2(url, true);
+        initSelect2(url, false);
+        initChangePacks();
 
         // @ts-ignore
         if (typeof window.tinyMCE != 'undefined' && $(window.tinyMCE.editors).length > 0) {
@@ -177,6 +337,7 @@ $(() => {
           });
         }
         new window.prestashop.component.TinyMCEEditor();
+        updateTotalPrice();
       }
     });
   });
@@ -213,6 +374,7 @@ $(() => {
           afterShow: function () {
             let url = $('#select2-url').val();
             initSelect2(url, false);
+            initChangePacks();
 
             // @ts-ignore
             if (typeof window.tinyMCE != 'undefined' && $(window.tinyMCE.editors).length > 0) {
@@ -226,6 +388,7 @@ $(() => {
               });
             }
             new window.prestashop.component.TinyMCEEditor();
+            updateTotalPrice();
           }
         });
 
@@ -333,6 +496,19 @@ $(() => {
       });
   });
 
+  let updateTotalPrice = function() {
+    let totalPackPrice = 0;
+    let priceElems = $('.price_span');
+
+    for (let i = 0; i < priceElems.length; i++){
+      totalPackPrice = Number(totalPackPrice) + Number($(priceElems[i]).attr('data-price'));
+    }
+
+    $('#total_price_pack_products span').text(renderMoneyString(totalPackPrice));
+  }
+
+
+
   $(document).on('click', '.delete-offer-row', function (e) {
 
     let deleteLink = $(this).attr('data-link');
@@ -355,3 +531,6 @@ $(() => {
 
 
 });
+
+
+

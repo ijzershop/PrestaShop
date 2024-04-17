@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,29 +14,22 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
-
-namespace classes\helpers;
-
-use Context;
-use DynamicProduct;
-use Tools;
+namespace DynamicProduct\classes\helpers;
 
 class ColorHelper
 {
-
-    /** @var DynamicProduct $module */
+    /** @var \DynamicProduct */
     public $module;
-    /** @var Context $context */
+    /** @var \Context */
     public $context;
 
     public function __construct($module, $context)
@@ -49,22 +43,25 @@ class ColorHelper
         $dark = '#222';
         $light = '#DDD';
         $luminence = $this->getColorLuminence($value);
+
         return $luminence > 0.22 ? $dark : $light;
     }
 
     private function getColorLuminence($value)
     {
         $color = $this->HEXToRGB($value);
+
         return ((0.2126 * $color[0]) + (0.7152 * $color[1]) + (0.0722 * $color[2])) / 255;
     }
 
     private function HEXToRGB($value)
     {
         $values = str_replace('#', '', $value);
-        switch (Tools::strlen($values)) {
+        switch (\Tools::strlen($values)) {
             case 3:
                 list($r, $g, $b) = sscanf($values, '%1s%1s%1s');
-                return array(hexdec("$r$r"), hexdec("$g$g"), hexdec("$b$b"));
+
+                return [hexdec("$r$r"), hexdec("$g$g"), hexdec("$b$b")];
             case 6:
                 return array_map('hexdec', sscanf($values, '%2s%2s%2s'));
             default:

@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'prestashop/ps_mbo',
-        'pretty_version' => 'v4.10.3',
-        'version' => '4.10.3.0',
-        'reference' => '71769b2a54e0b9679ab29ccce23f7aa25b2a9eff',
+        'pretty_version' => 'v4.11.0',
+        'version' => '4.11.0.0',
+        'reference' => 'e7155b7f8dc0b0eadc7376b9913b03188f71e02e',
         'type' => 'prestashop-module',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -164,9 +164,9 @@
             'dev_requirement' => false,
         ),
         'prestashop/ps_mbo' => array(
-            'pretty_version' => 'v4.10.3',
-            'version' => '4.10.3.0',
-            'reference' => '71769b2a54e0b9679ab29ccce23f7aa25b2a9eff',
+            'pretty_version' => 'v4.11.0',
+            'version' => '4.11.0.0',
+            'reference' => 'e7155b7f8dc0b0eadc7376b9913b03188f71e02e',
             'type' => 'prestashop-module',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

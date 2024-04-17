@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,24 +14,23 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
-
 /**
  * @param DynamicProduct $module
+ *
  * @return bool
  */
 function upgrade_module_2_0_0($module)
 {
-    $queries = array(
+    $queries = [
         'ALTER TABLE `' . _DB_PREFIX_ . $module->name . '_field` ADD `common` tinyint(1) NOT NULL DEFAULT 0;',
         'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . $module->name . '_common_field` (
           `id_common_field` int(11) NOT NULL AUTO_INCREMENT,
@@ -38,8 +38,8 @@ function upgrade_module_2_0_0($module)
           `id_product` int(11) NOT NULL,
           `position` int(11) NOT NULL,
           PRIMARY KEY (`id_common_field`)
-        ) ENGINE=_MYSQL_ENGINE_ DEFAULT CHARSET=utf8;'
-    );
+        ) ENGINE=InnoDb DEFAULT CHARSET=utf8;',
+    ];
 
     $errors = '';
     foreach ($queries as $query) {

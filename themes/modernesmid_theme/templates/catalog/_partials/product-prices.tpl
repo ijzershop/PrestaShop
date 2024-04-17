@@ -24,14 +24,6 @@
   *}
   {if $product.show_price}
   <div class="product-prices text-center text-md-right  mt-1 mt-sm-0">
-    {block name='product_discount'}
-{*    {if $product.has_discount}*}
-{*    <div class="product-discount">*}
-{*      {hook h='displayProductPriceBlock' product=$product type="old_price"}*}
-{*      <span class="regular-price">{$product.regular_price}</span>*}
-{*    </div>*}
-{*    {/if}*}
-    {/block}
     {block name='product_price'}
       <div style="line-height: .7;" class="product-price {if $product.has_discount}has-discount{/if}">
         {if Module::isEnabled('dynamicproduct') && Product::isDynamicProduct($product)}
@@ -58,26 +50,26 @@
           <br>
         </div>
         {/if}
-        {block name='product_unit_price'}
-          {if $displayUnitPrice}
-            <p class="product-unit-price sub">{l s='(%unit_price%)' d='Shop.Theme.Catalog' sprintf=['%unit_price%' => $product.unit_price_full]}</p>
-          {/if}
-        {/block}
+{*        {block name='product_unit_price'}*}
+{*          {if $displayUnitPrice}*}
+{*            <p class="product-unit-price sub">{l s='(%unit_price%)' d='Shop.Theme.Catalog' sprintf=['%unit_price%' => $product.unit_price_full]}</p>*}
+{*          {/if}*}
+{*        {/block}*}
     </div>
     {/block}
-    {block name='product_pack_price'}
-    {if $displayPackPrice}
-    <p class="product-pack-price"><span>{l s='Instead of %price%' d='Shop.Theme.Catalog' sprintf=['%price%' => $noPackPrice]}</span></p>
-    {/if}
-    {/block}
-    {block name='product_ecotax'}
-    {if $product.ecotax.amount > 0}
-    <p class="price-ecotax">{l s='Including %amount% for ecotax' d='Shop.Theme.Catalog' sprintf=['%amount%' => $product.ecotax.value]}
-      {if $product.has_discount}
-      {l s='(not impacted by the discount)' d='Shop.Theme.Catalog'}
-      {/if}
-    </p>
-    {/if}
-    {/block}
+{*    {block name='product_pack_price'}*}
+{*    {if $displayPackPrice}*}
+{*    <p class="product-pack-price"><span>{l s='Instead of %price%' d='Shop.Theme.Catalog' sprintf=['%price%' => $noPackPrice]}</span></p>*}
+{*    {/if}*}
+{*    {/block}*}
+{*    {block name='product_ecotax'}*}
+{*    {if $product.ecotax.amount > 0}*}
+{*    <p class="price-ecotax">{l s='Including %amount% for ecotax' d='Shop.Theme.Catalog' sprintf=['%amount%' => $product.ecotax.value]}*}
+{*      {if $product.has_discount}*}
+{*      {l s='(not impacted by the discount)' d='Shop.Theme.Catalog'}*}
+{*      {/if}*}
+{*    </p>*}
+{*    {/if}*}
+{*    {/block}*}
   </div>
   {/if}

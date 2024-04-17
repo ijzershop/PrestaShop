@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,41 +14,86 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\models;
 
-namespace classes\models;
+use DynamicProduct\classes\helpers\ModelHelper;
 
 class DynamicFieldGroup extends DynamicObject
 {
-
     public $label;
     public $name;
     public $show_label = false;
 
-    public static $definition = array(
-        'table'     => 'dynamicproduct_field_group',
-        'primary'   => 'id_field_group',
+    public static $definition = [
+        'table' => 'dynamicproduct_field_group',
+        'primary' => 'id_field_group',
         'multilang' => true,
-        'fields'    => array(
-            'name'       => array('type' => self::TYPE_STRING),
-            'show_label' => array('type' => self::TYPE_INT),
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING],
+            'show_label' => ['type' => self::TYPE_INT],
             /* Lang fields */
-            'label'      => array(
-                'type'     => self::TYPE_STRING,
-                'lang'     => true,
+            'label' => [
+                'type' => self::TYPE_STRING,
+                'lang' => true,
                 'required' => false,
                 'validate' => 'isGenericName',
-                'size'     => 64
-            ),
-        )
-    );
+                'size' => 64,
+            ],
+        ],
+    ];
+
+    public static function getLabel($id_product_group)
+    {
+        if ($id_product_group) {
+            $product_field_group = new DynamicProductFieldGroup($id_product_group);
+            $field_group = new DynamicFieldGroup(
+                $product_field_group->id_field_group,
+                \Context::getContext()->language->id
+            );
+            if (\Validate::isLoadedObject($field_group) && $field_group->show_label) {
+                return $field_group->label;
+            }
+        }
+
+        return null;
+    }
+
+    public static function getRowsByProduct($id_product, $id_lang): array
+    {
+        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+
+        $groups = \Db::getInstance()->executeS(
+            'SELECT fg.*, fgl.*, fg.id_field_group as id FROM `' . _DB_PREFIX_ . 'dynamicproduct_field_group` fg
+            LEFT JOIN `' . _DB_PREFIX_ . 'dynamicproduct_field_group_lang` fgl
+            ON (fg.`id_field_group` = fgl.`id_field_group` AND fgl.`id_lang` = ' . (int) $id_lang . ')
+            LEFT JOIN `' . _DB_PREFIX_ . 'dynamicproduct_product_field_group` pfg
+            ON (fg.`id_field_group` = pfg.`id_field_group`)
+            WHERE pfg.`id_product` = ' . (int) $id_source_product
+        );
+
+        return ModelHelper::castNumericValues($groups, self::class);
+    }
+
+    public static function getAllRows($id_lang = null): array
+    {
+        $groups = \Db::getInstance()->executeS(
+            'SELECT fg.*, fgl.*, fg.id_field_group as id 
+            FROM `' . _DB_PREFIX_ . 'dynamicproduct_field_group` fg
+            LEFT JOIN `' . _DB_PREFIX_ . 'dynamicproduct_field_group_lang` fgl
+            ON (fg.`id_field_group` = fgl.`id_field_group`' . ($id_lang ? ' AND fgl.`id_lang` = ' . (int) $id_lang : '') . ')
+        ');
+
+        $groups = ModelHelper::groupByLang($groups, $id_lang, ['label']);
+
+        return ModelHelper::castNumericValues($groups, self::class);
+    }
 }

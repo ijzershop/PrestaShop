@@ -1,5 +1,5 @@
-{**
-* 2010-2022 Tuni-Soft
+{*
+* 2007-2023 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -17,50 +17,105 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author
-*  @copyright 2014-2022
+*  @author    TuniSoft <tunisoft.solutions@gmail.com>
+*  @copyright 2007-2023 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{if !$is_pdf}
-    {$target = uniqid()}
-  <br>
-  <a class="dp_thumb_view"
-     data-name="{$input_field->name}"
-     data-toggle="modal"
-     data-target="#dp_modal_{$target|escape:'htmlall':'UTF-8'}"
-     data-label="{$input_field->label|escape:'htmlall':'UTF-8'}"
-     href="{$input_field->getFileUrl()|escape:'htmlall':'UTF-8'}"
-     target="_blank"
-     title="{l s='Click to enlarge' mod='dynamicproduct'}"
-  >
-    <img src="{$input_field->getThumbUrl()|escape:'htmlall':'UTF-8'}" alt="">
-  </a>
-  <div class="modal fade" id="dp_modal_{$target|escape:'htmlall':'UTF-8'}" tabindex="-1" role="dialog"
-       aria-hidden="true"
-  >
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <!-- Front office and backoffice have different bootstrap versions -->
-          <!-- So in the backoffice, we display the title before the close button -->
-          <!-- And in the front office, we displayed it afterward -->
-            {if isset($is_admin) && $is_admin}
-              <h5 class="modal-title">{$input_field->label}</h5>
-            {/if}
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-            {if !isset($is_admin) || !$is_admin}
-              <h5 class="modal-title">{$input_field->label}</h5>
-            {/if}
-        </div>
-        <div class="modal-body">
-          <img src="{$input_field->getFileUrl()|escape:'htmlall':'UTF-8'}" style="width: 100%;" alt="preview">
-        </div>
-      </div>
-    </div>
+{if is_array($input_field->data_obj)}
+  <div class="dp-images">
+      {foreach from=$input_field->data_obj item=upload}
+          {if !$is_pdf}
+              {$target = uniqid()}
+            <a class="dp_thumb_view"
+               data-name="{$input_field->name|escape:'htmlall':'UTF-8'}"
+               data-toggle="modal"
+               data-target="#dp_modal_{$target|escape:'htmlall':'UTF-8'}"
+               data-label="{$input_field->label|escape:'htmlall':'UTF-8'}"
+               href="{$input_field->getFileUrl($upload.file)|escape:'htmlall':'UTF-8'}"
+               target="_blank"
+               title="{l s='Click to enlarge' mod='dynamicproduct'}"
+            >
+              <img height="64" src="{$input_field->getThumbUrl($upload.file)|escape:'htmlall':'UTF-8'}" alt="">
+            </a>
+            <div class="modal fade" id="dp_modal_{$target|escape:'htmlall':'UTF-8'}" tabindex="-1" role="dialog"
+                 aria-hidden="true"
+            >
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <!-- Front office and backoffice have different bootstrap versions -->
+                    <!-- So in the backoffice, we display the title before the close button -->
+                    <!-- And in the front office, we displayed it afterward -->
+                      {if isset($is_admin) && $is_admin}
+                        <h5 class="modal-title">{$input_field->label|escape:'htmlall':'UTF-8'}</h5>
+                      {/if}
+                    <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                      {if !isset($is_admin) || !$is_admin}
+                        <h5 class="modal-title">{$input_field->label|escape:'htmlall':'UTF-8'}</h5>
+                      {/if}
+                  </div>
+                  <div class="modal-body">
+                    <img src="{$input_field->getFileUrl($upload.file)|escape:'htmlall':'UTF-8'}"
+                         style="width: 100%;"
+                         alt="preview"
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          {else}
+            <img width="64" src="{$input_field->getFilePath($upload.file)|escape:'htmlall':'UTF-8'}" alt="Upload">
+            <br/>
+          {/if}
+      {/foreach}
   </div>
 {else}
-    {l s='attachment' mod='dynamicproduct'}
+    {if !$is_pdf}
+        {$target = uniqid()}
+      <br>
+      <a class="dp_thumb_view"
+         data-name="{$input_field->name|escape:'htmlall':'UTF-8'}"
+         data-toggle="modal"
+         data-target="#dp_modal_{$target|escape:'htmlall':'UTF-8'}"
+         data-label="{$input_field->label|escape:'htmlall':'UTF-8'}"
+         href="{$input_field->getFileUrl($input_field->value)|escape:'htmlall':'UTF-8'}"
+         target="_blank"
+         title="{l s='Click to enlarge' mod='dynamicproduct'}"
+      >
+        <img src="{$input_field->getThumbUrl($input_field->value)|escape:'htmlall':'UTF-8'}" alt="">
+      </a>
+      <div class="modal fade" id="dp_modal_{$target|escape:'htmlall':'UTF-8'}" tabindex="-1" role="dialog"
+           aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <!-- Front office and backoffice have different bootstrap versions -->
+              <!-- So in the backoffice, we display the title before the close button -->
+              <!-- And in the front office, we displayed it afterward -->
+                {if isset($is_admin) && $is_admin}
+                  <h5 class="modal-title">{$input_field->label|escape:'htmlall':'UTF-8'}</h5>
+                {/if}
+              <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+                {if !isset($is_admin) || !$is_admin}
+                  <h5 class="modal-title">{$input_field->label|escape:'htmlall':'UTF-8'}</h5>
+                {/if}
+            </div>
+            <div class="modal-body">
+              <img src="{$input_field->getFileUrl($input_field->value)|escape:'htmlall':'UTF-8'}"
+                   style="width: 100%;"
+                   alt="preview"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    {else}
+      <img width="100" src="{$input_field->getFilePath($input_field->value)|escape:'htmlall':'UTF-8'}" alt="Upload">
+    {/if}
 {/if}

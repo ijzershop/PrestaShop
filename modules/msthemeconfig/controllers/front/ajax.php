@@ -705,7 +705,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $filename = uniqid() . '-' . basename($file['name']);
             $filename = str_replace(' ', '-', $filename);
             $filename = strtolower($filename);
-            $filename = filter_var($filename, FILTER_SANITIZE_STRING);
+            $filename = filter_var($filename, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $dest = Tools::getValue('path');
 
             $path = _PS_UPLOAD_DIR_ . $dest;

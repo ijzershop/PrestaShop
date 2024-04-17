@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,22 +14,19 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tunis-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace DynamicProduct\classes\models\dynamic_fields;
 
-namespace classes\models\dynamic_fields;
-
-use classes\helpers\OptionPriceHelper;
-use classes\models\DynamicField;
-use classes\models\DynamicThumbnailsOption;
+use DynamicProduct\classes\models\DynamicField;
+use DynamicProduct\classes\models\DynamicThumbnailsOption;
 
 class ThumbnailsField extends DynamicField
 {
@@ -37,42 +35,36 @@ class ThumbnailsField extends DynamicField
 
     public function getOptions()
     {
-        $options = DynamicThumbnailsOption::getThumbnailsOptionsByIdField($this->id, $this->id_lang);
-        $option_price_helper = new OptionPriceHelper($this->module, $this->context);
-        if ((int) $this->settings->display_value_price) {
-            $options = $option_price_helper->displayValue(
-                $options,
-                $this->id_product,
-                $this->settings
-            );
-        }
-        if ((int) $this->settings->display_secondary_value_price) {
-            $options = $option_price_helper->displaySecondaryValue(
-                $options,
-                $this->id_product,
-                $this->settings
-            );
-        }
-        return $options;
+        return DynamicThumbnailsOption::getThumbnailsOptionsByIdField($this->id, $this->id_lang);
     }
 
     public function getInitialValue()
     {
         foreach ($this->options as $option) {
-            if ($option->is_default) {
-                return $option->value;
+            if ($option['is_default']) {
+                return $option['value'];
             }
         }
+
         return 0;
     }
 
-    public function getInitialOptions()
+    public function getInitialOptions($initial_value = null)
     {
-        foreach ($this->options as $option) {
-            if ($option->is_default) {
-                return array($option->id);
+        if ($initial_value) {
+            foreach ($this->options as $option) {
+                if ($option['value'] == $initial_value) {
+                    return [$option['id']];
+                }
             }
         }
-        return array();
+
+        foreach ($this->options as $option) {
+            if ($option['is_default']) {
+                return [$option['id']];
+            }
+        }
+
+        return [];
     }
 }

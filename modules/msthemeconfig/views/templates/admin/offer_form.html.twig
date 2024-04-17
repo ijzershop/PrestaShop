@@ -23,6 +23,16 @@
     #offer_integration_form .form-control-label{
       max-width:20%;
     }
+    .select2-container--default .select2-selection--multiple, .select2-container--default .select2-selection--single{
+      border:none!important;
+
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow b{
+      margin-top: 8px!important;
+    }
+    .fancybox-wrap{
+      top: 5%!important;
+    }
   </style>
   <div class="card w-100">
     <h3 class="card-header">
@@ -36,6 +46,7 @@
       <div class="card-body row">
         <div class="col-md-12 col-lg-4" id="offer_integration_form">
           <input id="select2-url" value="{{ adminSelect2DataLink }}" type="hidden"/>
+          <input id="price-url" value="{{ getPriceLink }}" type="hidden"/>
           <input id="offer-put-url" value="{{ putLink }}" type="hidden"/>
           <input name="new-offer-id" id="new-offer-id" value="" type="hidden"/>
           {{ form_errors(offerForm) }}
@@ -43,7 +54,7 @@
             {{ form_rest(offerForm) }}
           {% endblock %}
         </div>
-        <div class="col-md-12  col-lg-8 float-right">
+        <div class="col-md-12  col-lg-8 float-right overflow-auto">
           {% include '@Modules/msthemeconfig/views/templates/admin/offer_row_table_row.html.twig' with {'offerRows': offerRows} %}
         </div>
       </div>

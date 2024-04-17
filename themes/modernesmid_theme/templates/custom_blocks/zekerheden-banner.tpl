@@ -79,7 +79,7 @@
                             {* TODO add shippinng method selet to template module, get visitor carrier and set shipping price *}
                             {assign var="transmissionCarrier" value=Carrier::getCarrierByReference(2,Context::getContext()->cookie->id_lang)}
                             {* By changing zone the banner item gets updated belgium is 9, Germany 10 *}
-                          {if Context::getContext()->country->id_country === '3'}
+                          {if Context::getContext()->country->id === '3'}
                               {assign var="customerCountry" value="België"}
                           {else}
                               {assign var="customerCountry" value="Nederland"}

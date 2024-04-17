@@ -1,11 +1,12 @@
 <?php
 /**
- * 2010-2022 Tuni-Soft
+ * 2007-2023 TuniSoft
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License (AFL 3.0)
- * It is available through the world-wide-web at this URL:
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
@@ -13,41 +14,37 @@
  *
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future. If you wish to customize the module for your
- * needs please refer to
- * http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
- * for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    Tuni-Soft
- * @copyright 2010-2022 Tuni-Soft
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
+/* @noinspection PhpUnusedPrivateMethodInspection */
 
-/** @noinspection PhpUnusedPrivateMethodInspection */
-
-use classes\controllers\front\DynamicFrontController;
-use classes\helpers\FileHelper;
-use classes\models\DynamicField;
-use classes\models\input_fields\FileInputField;
-use classes\models\input_fields\ImageInputField;
-
-/** @noinspection PhpUnused */
+use DynamicProduct\classes\controllers\front\DynamicFrontController;
+use DynamicProduct\classes\helpers\FileHelper;
+use DynamicProduct\classes\models\DynamicField;
+use DynamicProduct\classes\models\input_fields\FileInputField;
+use DynamicProduct\classes\models\input_fields\ImageInputField;
 
 class DynamicProductUploaderModuleFrontController extends DynamicFrontController
 {
-    /** @noinspection PhpUnused */
     protected function processUploadImage()
     {
+        $source = basename(__FILE__, '.php');
         $id_field = (int) Tools::getValue('id_field');
 
         $field = new DynamicField($id_field);
 
         if ((int) $field->type !== _DP_IMAGE_) {
-            $this->respond(array(
-                'error'   => true,
-                'message' => $this->module->l('The upload could not be completed')
-            ));
+            $this->respond([
+                'error' => true,
+                'message' => $this->module->l('The upload could not be completed', $source),
+            ]);
         }
 
         $options = $field->getSettings();
@@ -58,91 +55,120 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
         $uploader = new Uploader();
         if ($size) {
             $uploader->setMaxSize($size);
-        }
-        $uploader->setName('file');
-        $uploader->setAcceptTypes(array('jpeg', 'gif', 'png', 'jpg'));
-        $file = $uploader->process();
-        $upload = $file[0];
-
-        if ($size && $upload['size'] > $size) {
-            $this->respond(array(
-                'error'   => true,
-                'message' =>
-                    $this->module->l('This image is too big, the maximum allowed size is') .
-                    ' ' . $options->max_size . ' ' . $this->module->l('MB')
-            ));
+        } else {
+            $uploader->setCheckFileSize(false);
         }
 
-        if ($upload['error']) {
-            $this->respond(array(
-                'error'   => true,
-                'message' => $upload['error']
-            ));
+        $uploader->setName('files');
+        $uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg']);
+        $files = $uploader->process();
+
+        if (!count($files)) {
+            $this->respond([
+                'error' => true,
+                'message' => $this->module->l('No files were uploaded', $source),
+            ]);
         }
-
-        $save_path = $upload['save_path'];
-
-        $info = getimagesize($save_path);
-
-        if ($options->min_width && (int) $info[0] < $options->min_width) {
-            $this->respond(array(
-                'error'   => true,
-                'message' =>
-                    $this->module->l('The minimum required width is')
-                    . ' ' . $options->min_width . ' ' . $this->module->l('pixels')
-                    . ' (' . $this->module->l('The uploaded image has a width of')
-                    . ' ' . $info[0] . ' ' . $this->module->l('pixels') . ')'
-            ));
-            unlink($save_path);
-        }
-
-        if ($options->min_height && (int) $info[1] < $options->min_height) {
-            $this->respond(array(
-                'error'   => true,
-                'message' =>
-                    $this->module->l('The minimum required height is')
-                    . ' ' . $options->min_height . ' ' . $this->module->l('pixels')
-                    . ' (' . $this->module->l('The uploaded image has a height of')
-                    . ' ' . $info[1] . ' ' . $this->module->l('pixels') . ')'
-            ));
-            unlink($save_path);
-        }
-
-        $extension = pathinfo($upload['name'], PATHINFO_EXTENSION);
-        $filename = time() . '_' . mt_rand();
-
-        $image = $img_dir . $filename . '.' . $extension;
-        $thumb = $img_dir . $filename . '-thumb.jpg';
-        $folder_url = $this->module->provider->getDataDirUrl('upload');
-
-        ImageManager::resize($save_path, $image, null, null, $extension);
-        ImageManager::resize($save_path, $thumb, 256, 256, $extension);
 
         $input_field = new ImageInputField();
         $input_field->id_field = $id_field;
         $input_field->name = $field->name;
-        $input_field->value = basename($image);
-        $input_field->image_url = $folder_url . basename($image);
-        $input_field->thumb_url = $folder_url . basename($thumb);
         $input_field->visible = 1;
 
-        $this->respond(array(
-            'input_field' => $input_field,
-        ));
+        $errors = [];
+        $uploads = [];
+        foreach ($files as $upload) {
+            if ($size && $upload['size'] > $size) {
+                $errors[] = $upload['name'] . ': ' . $this->module->l('This image is too big, the maximum allowed size is', $source)
+                    . ' ' . $options->max_size . ' ' . $this->module->l('MB', $source);
+                continue;
+            }
+
+            if ($upload['error']) {
+                $errors[] = $upload['name'] . ': ' . $upload['error'];
+                continue;
+            }
+
+            $extension = pathinfo($upload['name'], PATHINFO_EXTENSION);
+            $filename = time() . '_' . mt_rand();
+
+            $file = $img_dir . $filename . '.' . $extension;
+
+            $save_path = $upload['save_path'];
+
+            $info = getimagesize($save_path);
+
+            if ($options->min_width && (int) $info[0] < $options->min_width) {
+                $this->respond([
+                    'error' => true,
+                    'message' => $this->module->l('The minimum required width is', $source)
+                        . ' ' . $options->min_width . ' ' . $this->module->l('pixels', $source)
+                        . ' (' . $this->module->l('The uploaded image has a width of', $source)
+                        . ' ' . $info[0] . ' ' . $this->module->l('pixels', $source) . ')',
+                ]);
+                unlink($save_path);
+            }
+
+            if ($options->min_height && (int) $info[1] < $options->min_height) {
+                $this->respond([
+                    'error' => true,
+                    'message' => $this->module->l('The minimum required height is', $source)
+                        . ' ' . $options->min_height . ' ' . $this->module->l('pixels', $source)
+                        . ' (' . $this->module->l('The uploaded image has a height of', $source)
+                        . ' ' . $info[1] . ' ' . $this->module->l('pixels', $source) . ')',
+                ]);
+                unlink($save_path);
+            }
+
+            if (is_file($save_path) && rename($save_path, $file)) {
+                $uploaded = [
+                    'file' => basename($file),
+                    'filename' => basename($upload['name']),
+                ];
+
+                $image = $img_dir . $filename . '.' . $extension;
+                $thumb = $img_dir . $filename . '-thumb.jpg';
+
+                ImageManager::resize($save_path, $image, null, null, $extension);
+                ImageManager::resize($image, $thumb, 256, 256, $extension);
+
+                $folder_url = $this->module->provider->getDataDirUrl('upload');
+                $thumb = $img_dir . $filename . '-thumb.jpg';
+                $uploaded['thumb_url'] = $folder_url . basename($thumb);
+                $uploaded['image_url'] = $folder_url . basename($file);
+
+                $uploads[] = $uploaded;
+                $input_field->data = $uploads;
+            } else {
+                $errors[] = $upload['name'] . ': ' . $this->module->l('The file could not be saved', $source);
+            }
+        }
+
+        if (count($errors)) {
+            $this->respond([
+                'error' => true,
+                'errors' => $errors,
+                'message' => $this->module->l('Some errors were encountered while uploading the files', $source),
+            ]);
+        } else {
+            $this->respond([
+                'input_field' => $input_field,
+            ]);
+        }
     }
 
-    /** @noinspection PhpUnused */
     protected function processUploadFile()
     {
+        $source = basename(__FILE__, '.php');
         $id_field = (int) Tools::getValue('id_field');
 
         $field = new DynamicField($id_field);
 
         if ((int) $field->type !== _DP_FILE_) {
-            $this->respond(array(
-                'error'   => true,
-                'message' => $this->module->l('The upload could not be completed')
-            ));
+            $this->respond([
+                'error' => true,
+                'message' => $this->module->l('The upload could not be completed', $source),
+            ]);
         }
 
         $options = $field->getSettings();
@@ -160,60 +186,83 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
         $uploader = new Uploader();
         if ($size) {
             $uploader->setMaxSize($size);
+        } else {
+            $uploader->setCheckFileSize(false);
         }
-        $uploader->setName('file');
+
+        $uploader->setName('files');
         $uploader->setAcceptTypes($extensions);
         $uploader->setSavePath($file_dir);
-        $file = $uploader->process();
-        $upload = $file[0];
+        $files = $uploader->process();
 
-        if ($size && $upload['size'] > $size) {
-            $this->respond(array(
-                'error'   => true,
-                'message' =>
-                    $this->module->l('This file is too big, the maximum allowed size is')
-                    . ' ' . $options->max_size . ' ' . $this->module->l('MB')
-            ));
+        if (!count($files)) {
+            $this->respond([
+                'error' => true,
+                'message' => $this->module->l('No files were uploaded', $source),
+            ]);
         }
 
-        if ($upload['error']) {
-            $this->respond(array(
-                'error'   => true,
-                'message' => $upload['error']
-            ));
-        }
+        $input_field = new FileInputField();
+        $input_field->id_field = $id_field;
+        $input_field->name = $field->name;
+        $input_field->visible = 1;
 
-        $extension = pathinfo($upload['name'], PATHINFO_EXTENSION);
-        $filename = time() . '_' . mt_rand();
-
-        $file = $file_dir . $filename . '.' . $extension;
-
-        if (rename($upload['save_path'], $file)) {
-            $input_field = new FileInputField();
-            $input_field->id_field = $id_field;
-            $input_field->name = $field->name;
-            $input_field->value = basename($file);
-            $input_field->visible = 1;
-
-            $file_helper = new FileHelper($this->module, $this->context);
-            if ($file_helper->isImage($file)) {
-                $folder_url = $this->module->provider->getDataDirUrl('upload');
-                $thumb = $file_dir . $filename . '-thumb.jpg';
-                ImageManager::resize($file, $thumb, 256, 256, $extension);
-                $input_field->thumb_url = $folder_url . basename($thumb);
-                $input_field->image_url = $folder_url . basename($file);
-            } else {
-                $input_field->thumb_url = null;
-                $input_field->image_url = null;
+        $errors = [];
+        $uploads = [];
+        foreach ($files as $upload) {
+            if ($size && $upload['size'] > $size) {
+                $errors[] = $upload['name'] . ': ' . $this->module->l('This file is too big, the maximum allowed size is', $source)
+                    . ' ' . $options->max_size . ' ' . $this->module->l('MB', $source);
+                continue;
             }
-            $this->respond(array(
-                'input_field' => $input_field,
-            ));
+
+            if ($upload['error']) {
+                $errors[] = $upload['name'] . ': ' . $upload['error'];
+                continue;
+            }
+
+            $extension = pathinfo($upload['name'], PATHINFO_EXTENSION);
+            $filename = time() . '_' . mt_rand();
+
+            $file = $file_dir . $filename . '.' . $extension;
+
+            $save_path = $upload['save_path'];
+
+            if (is_file($save_path) && rename($save_path, $file)) {
+                $uploaded = [
+                    'file' => basename($file),
+                    'filename' => basename($upload['name']),
+                ];
+
+                $file_helper = new FileHelper($this->module, $this->context);
+                if ($file_helper->isImage($file)) {
+                    $folder_url = $this->module->provider->getDataDirUrl('upload');
+                    $thumb = $file_dir . $filename . '-thumb.jpg';
+                    ImageManager::resize($file, $thumb, 256, 256, $extension);
+                    $uploaded['thumb_url'] = $folder_url . basename($thumb);
+                    $uploaded['image_url'] = $folder_url . basename($file);
+                } else {
+                    $uploaded['thumb_url'] = null;
+                    $uploaded['image_url'] = null;
+                }
+
+                $uploads[] = $uploaded;
+                $input_field->data = $uploads;
+            } else {
+                $errors[] = $upload['name'] . ': ' . $this->module->l('The file could not be saved', $source);
+            }
+        }
+
+        if (count($errors)) {
+            $this->respond([
+                'error' => true,
+                'errors' => $errors,
+                'message' => $this->module->l('Some errors were encountered while uploading the files', $source),
+            ]);
         } else {
-            $this->respond(array(
-                'error'   => true,
-                'message' => $this->module->l('The upload could not be completed')
-            ));
+            $this->respond([
+                'input_field' => $input_field,
+            ]);
         }
     }
 }

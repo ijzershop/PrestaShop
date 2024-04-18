@@ -10,28 +10,28 @@ SetEnv HTTP_MOD_REWRITE On
 RewriteEngine on
 
 
-#Domain: ijzershop8.local
+#Domain: ijzershop.nl
 RewriteRule . - [E=REWRITEBASE:/]
 RewriteRule ^api(?:/(.*))?$ %{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]
 
 # Images
-RewriteCond %{HTTP_HOST} ^ijzershop8.local$
+RewriteCond %{HTTP_HOST} ^ijzershop.nl$
 RewriteRule ^([0-9])(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1/$1$2$3.jpg [L]
-RewriteCond %{HTTP_HOST} ^ijzershop8.local$
+RewriteCond %{HTTP_HOST} ^ijzershop.nl$
 RewriteRule ^([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1/$2/$1$2$3$4.jpg [L]
-RewriteCond %{HTTP_HOST} ^ijzershop8.local$
+RewriteCond %{HTTP_HOST} ^ijzershop.nl$
 RewriteRule ^([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1/$2/$3/$1$2$3$4$5.jpg [L]
-RewriteCond %{HTTP_HOST} ^ijzershop8.local$
+RewriteCond %{HTTP_HOST} ^ijzershop.nl$
 RewriteRule ^([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1/$2/$3/$4/$1$2$3$4$5$6.jpg [L]
-RewriteCond %{HTTP_HOST} ^ijzershop8.local$
+RewriteCond %{HTTP_HOST} ^ijzershop.nl$
 RewriteRule ^([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1/$2/$3/$4/$5/$1$2$3$4$5$6$7.jpg [L]
-RewriteCond %{HTTP_HOST} ^ijzershop8.local$
+RewriteCond %{HTTP_HOST} ^ijzershop.nl$
 RewriteRule ^([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1/$2/$3/$4/$5/$6/$1$2$3$4$5$6$7$8.jpg [L]
-RewriteCond %{HTTP_HOST} ^ijzershop8.local$
+RewriteCond %{HTTP_HOST} ^ijzershop.nl$
 RewriteRule ^([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1/$2/$3/$4/$5/$6/$7/$1$2$3$4$5$6$7$8$9.jpg [L]
-RewriteCond %{HTTP_HOST} ^ijzershop8.local$
+RewriteCond %{HTTP_HOST} ^ijzershop.nl$
 RewriteRule ^c/([0-9]+)(\-[\.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2$3.jpg [L]
-RewriteCond %{HTTP_HOST} ^ijzershop8.local$
+RewriteCond %{HTTP_HOST} ^ijzershop.nl$
 RewriteRule ^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]
 # AlphaImageLoader for IE and fancybox
 RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ js/jquery/plugins/fancybox/images/$1.$2 [L]
@@ -113,53 +113,53 @@ ErrorDocument 404 /index.php?controller=404
 #RequestHeader unset Accept-Language
 
 
-Redirect 301 /home https://ijzershop8.local
-Redirect 301 /index.php?controller=order https://ijzershop8.local/bestellen
-Redirect 301 /406-wielen-en-stelvoeten https://ijzershop8.local/51-wielen
-Redirect 301 /gaffel/4025-gaffel.html https://ijzershop8.local/gaffel/787-gaffelkop-met-veerklem-m6.html
-Redirect 301 /gaffel/4093-gaffel.html https://ijzershop8.local/gaffel/855-gaffelkop-met-veerklem-m6.html
-Redirect 301 /gaffel/4094-gaffel.html https://ijzershop8.local/gaffel/856-gaffelkop-met-veerklem-m6.html
-Redirect 301 /gaffel/4095-gaffel.html https://ijzershop8.local/gaffel/857-gaffelkop-met-veerklem-m6.html
-Redirect 301 /hijsoog/4192-hijsoog-klein.html https://ijzershop8.local/hijsoog/920-hijsoog-klein-60-x-40-x-6mm-met-gat-20mm.html
-Redirect 301 /hijsoog/4193-hijsoog-middel.html https://ijzershop8.local/hijsoog/921-hijsoog-klein-60-x-40-x-6mm-met-gat-20mm.html
-Redirect 301 /hijsoog/4194-hijsoog-groot.html https://ijzershop8.local/hijsoog/922-hijsoog-klein-60-x-40-x-6mm-met-gat-20mm.html
-Redirect 301 /Home/4912-tako.html https://ijzershop8.local/
-Redirect 301 /laselektroden-rvs/2662-laselectrode32.html https://ijzershop8.local/12-laselektroden
-Redirect 301 /lineairlager/4665-lineairlager-10mm.html https://ijzershop8.local/96-lineairlager
-Redirect 301 /laselektroden-rvs/2663-laselectrode32.html https://ijzershop8.local/12-laselektroden
-Redirect 301 /Offerte/4977-u0b0a7253aa2afd069f8214c72de6839.html https://ijzershop8.local/offerte-aanvragen
-Redirect 301 /Offerte/5042-o73d423ca0c5bbe721e1cf9acad364eb.html https://ijzershop8.local/offerte-aanvragen
-Redirect 301 /Offerte/5206-ic76fbd3ab2579ffd9a93d14f8edc635.html https://ijzershop8.local/offerte-aanvragen
-Redirect 301 /Offerte/5251-f408bbe5c72cc62d62d9d32347c0dfdf.html https://ijzershop8.local/offerte-aanvragen
-Redirect 301 /Offerte/5483-l18fcdf17ce681970485d5f5ab22ca85.html https://ijzershop8.local/offerte-aanvragen
-Redirect 301 /schoor/4183-schoor-150x150x8.html https://ijzershop8.local/schoor/1638-schoor-150x150x6mm.html
-Redirect 301 /schoor/4219-schoor-200x200x4mm.html https://ijzershop8.local/schoor/947-schoor-200x200x8mm.html
-Redirect 301 /schoor/4923-schoor-200x200x4mm.html https://ijzershop8.local/schoor/947-schoor-200x200x8mm.html
-Redirect 301 /tandveerring/4047-tandveerring.html https://ijzershop8.local/tandveerring/808-tandveerring-m6-64-x-11-x-07mm.html
-Redirect 301 /tandveerring/4048-tandveerring.html https://ijzershop8.local/tandveerring/809-tandveerring-m8-82-x-15-x-08mm.html
-Redirect 301 /tors/4826-beton-ijzer.html https://ijzershop8.local/tors/1549-3054-beton-ijzer-6mm.html#/9-zaagsnede-a
-Redirect 301 /tors/4827-beton-ijzer.html https://ijzershop8.local/tors/1550-3061-beton-ijzer-8mm.html#/9-zaagsnede-a
-Redirect 301 /2-Home https://ijzershop8.local/
-Redirect 301 /?ref=xranks?ref=xranks https://ijzershop8.local/
+Redirect 301 /home https://ijzershop.nl
+Redirect 301 /index.php?controller=order https://ijzershop.nl/bestellen
+Redirect 301 /406-wielen-en-stelvoeten https://ijzershop.nl/51-wielen
+Redirect 301 /gaffel/4025-gaffel.html https://ijzershop.nl/gaffel/787-gaffelkop-met-veerklem-m6.html
+Redirect 301 /gaffel/4093-gaffel.html https://ijzershop.nl/gaffel/855-gaffelkop-met-veerklem-m6.html
+Redirect 301 /gaffel/4094-gaffel.html https://ijzershop.nl/gaffel/856-gaffelkop-met-veerklem-m6.html
+Redirect 301 /gaffel/4095-gaffel.html https://ijzershop.nl/gaffel/857-gaffelkop-met-veerklem-m6.html
+Redirect 301 /hijsoog/4192-hijsoog-klein.html https://ijzershop.nl/hijsoog/920-hijsoog-klein-60-x-40-x-6mm-met-gat-20mm.html
+Redirect 301 /hijsoog/4193-hijsoog-middel.html https://ijzershop.nl/hijsoog/921-hijsoog-klein-60-x-40-x-6mm-met-gat-20mm.html
+Redirect 301 /hijsoog/4194-hijsoog-groot.html https://ijzershop.nl/hijsoog/922-hijsoog-klein-60-x-40-x-6mm-met-gat-20mm.html
+Redirect 301 /Home/4912-tako.html https://ijzershop.nl/
+Redirect 301 /laselektroden-rvs/2662-laselectrode32.html https://ijzershop.nl/12-laselektroden
+Redirect 301 /lineairlager/4665-lineairlager-10mm.html https://ijzershop.nl/96-lineairlager
+Redirect 301 /laselektroden-rvs/2663-laselectrode32.html https://ijzershop.nl/12-laselektroden
+Redirect 301 /Offerte/4977-u0b0a7253aa2afd069f8214c72de6839.html https://ijzershop.nl/offerte-aanvragen
+Redirect 301 /Offerte/5042-o73d423ca0c5bbe721e1cf9acad364eb.html https://ijzershop.nl/offerte-aanvragen
+Redirect 301 /Offerte/5206-ic76fbd3ab2579ffd9a93d14f8edc635.html https://ijzershop.nl/offerte-aanvragen
+Redirect 301 /Offerte/5251-f408bbe5c72cc62d62d9d32347c0dfdf.html https://ijzershop.nl/offerte-aanvragen
+Redirect 301 /Offerte/5483-l18fcdf17ce681970485d5f5ab22ca85.html https://ijzershop.nl/offerte-aanvragen
+Redirect 301 /schoor/4183-schoor-150x150x8.html https://ijzershop.nl/schoor/1638-schoor-150x150x6mm.html
+Redirect 301 /schoor/4219-schoor-200x200x4mm.html https://ijzershop.nl/schoor/947-schoor-200x200x8mm.html
+Redirect 301 /schoor/4923-schoor-200x200x4mm.html https://ijzershop.nl/schoor/947-schoor-200x200x8mm.html
+Redirect 301 /tandveerring/4047-tandveerring.html https://ijzershop.nl/tandveerring/808-tandveerring-m6-64-x-11-x-07mm.html
+Redirect 301 /tandveerring/4048-tandveerring.html https://ijzershop.nl/tandveerring/809-tandveerring-m8-82-x-15-x-08mm.html
+Redirect 301 /tors/4826-beton-ijzer.html https://ijzershop.nl/tors/1549-3054-beton-ijzer-6mm.html#/9-zaagsnede-a
+Redirect 301 /tors/4827-beton-ijzer.html https://ijzershop.nl/tors/1550-3061-beton-ijzer-8mm.html#/9-zaagsnede-a
+Redirect 301 /2-Home https://ijzershop.nl/
+Redirect 301 /?ref=xranks?ref=xranks https://ijzershop.nl/
 
-Redirect 301 /eindplaat-vierkant/4935-eindplaat-vierkant-40x20x4.html https://ijzershop8.local/259-eindplaat-vierkant
-Redirect 301 /eindplaat-vierkant/4934-eindplaat-vierkant-40x20x4.html https://ijzershop8.local/259-eindplaat-vierkant
-Redirect 301 /eindplaat-vierkant/4937-eindplaat-vierkant-40x20x4.html https://ijzershop8.local/259-eindplaat-vierkant
-Redirect 301 /eindplaat-rechthoek/4941-eindplaat-vierkant-40x20x4.html https://ijzershop8.local/260-eindplaat-rechthoek
-Redirect 301 /eindplaat-rechthoek/4939-eindplaat-vierkant-40x20x4.html https://ijzershop8.local/260-eindplaat-rechthoek
-Redirect 301 /eindplaat-rond/4947-eindplaat-rond.html https://ijzershop8.local/258-eindplaat-rond
-Redirect 301 /eindplaat-rond/4943-eindplaat-rond.html https://ijzershop8.local/258-eindplaat-rond
-Redirect 301 /eindplaat-rond/4944-eindplaat-rond.html https://ijzershop8.local/258-eindplaat-rond
-Redirect 301 /aluminium-blok/4267-aluminium-freesblok-200x100x50.html https://ijzershop8.local/aluminium-blok/995-aluminium-blok-200x100x50mm.html
-Redirect 301 /stalen-hoekprofiel-kgw/4806-stalen-hoekstaal-30-x-30-x-3mm.html https://ijzershop8.local/stalen-hoekprofiel-kgw/1529-stalen-hoekstaa-kgwl-30-x-30-x-3mm.html
+Redirect 301 /eindplaat-vierkant/4935-eindplaat-vierkant-40x20x4.html https://ijzershop.nl/259-eindplaat-vierkant
+Redirect 301 /eindplaat-vierkant/4934-eindplaat-vierkant-40x20x4.html https://ijzershop.nl/259-eindplaat-vierkant
+Redirect 301 /eindplaat-vierkant/4937-eindplaat-vierkant-40x20x4.html https://ijzershop.nl/259-eindplaat-vierkant
+Redirect 301 /eindplaat-rechthoek/4941-eindplaat-vierkant-40x20x4.html https://ijzershop.nl/260-eindplaat-rechthoek
+Redirect 301 /eindplaat-rechthoek/4939-eindplaat-vierkant-40x20x4.html https://ijzershop.nl/260-eindplaat-rechthoek
+Redirect 301 /eindplaat-rond/4947-eindplaat-rond.html https://ijzershop.nl/258-eindplaat-rond
+Redirect 301 /eindplaat-rond/4943-eindplaat-rond.html https://ijzershop.nl/258-eindplaat-rond
+Redirect 301 /eindplaat-rond/4944-eindplaat-rond.html https://ijzershop.nl/258-eindplaat-rond
+Redirect 301 /aluminium-blok/4267-aluminium-freesblok-200x100x50.html https://ijzershop.nl/aluminium-blok/995-aluminium-blok-200x100x50mm.html
+Redirect 301 /stalen-hoekprofiel-kgw/4806-stalen-hoekstaal-30-x-30-x-3mm.html https://ijzershop.nl/stalen-hoekprofiel-kgw/1529-stalen-hoekstaa-kgwl-30-x-30-x-3mm.html
 
-Redirect 301 /content/49-beoordelingen https://ijzershop8.local/content/49-beoordelingen-reviews-en-ervaringen
-Redirect 301 /zwenkremwiel/98-zwenkwiel-met-rem-50mm.html https://ijzershop8.local/zwenkremwiel/98-zwenkremwiel.html
-Redirect 301 /1226-verzinkte-buis https://ijzershop8.local/332-buis
-Redirect 301 /362-constructiebalken https://ijzershop8.local/content/61-constructiebalken
-Redirect 301 /363-hea-balk https://ijzershop8.local/content/57-hea-constructiebalk
-Redirect 301 /364-ipe-balk https://ijzershop8.local/content/59-ipe-constructiebalk
-Redirect 301 /366-unp-balk https://ijzershop8.local/content/60-unp-constructiebalk
+Redirect 301 /content/49-beoordelingen https://ijzershop.nl/content/49-beoordelingen-reviews-en-ervaringen
+Redirect 301 /zwenkremwiel/98-zwenkwiel-met-rem-50mm.html https://ijzershop.nl/zwenkremwiel/98-zwenkremwiel.html
+Redirect 301 /1226-verzinkte-buis https://ijzershop.nl/332-buis
+Redirect 301 /362-constructiebalken https://ijzershop.nl/content/61-constructiebalken
+Redirect 301 /363-hea-balk https://ijzershop.nl/content/57-hea-constructiebalk
+Redirect 301 /364-ipe-balk https://ijzershop.nl/content/59-ipe-constructiebalk
+Redirect 301 /366-unp-balk https://ijzershop.nl/content/60-unp-constructiebalk
 
 <IfModule mod_deflate.c>
 AddOutputFilterByType DEFLATE text/plain

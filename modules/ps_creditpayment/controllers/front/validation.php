@@ -114,14 +114,14 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 
         //Create Card
         $query = [
-            "relation_id" => $customer->informer_identification,
+            "relation_id" => (int)$customer->informer_identification,
             "reference" => $reference,
             "contact_name" => $customer->firstname . ' ' . $customer->lastname,
             "quotation_date" => date('Y-m-d'),
             "payment_condition_id" => $payment_condition_id,
             "currency_id" => $currency_id,
             "vat_option" => $vat_option,
-            "template_id" => $template_id,
+            "template_id" => (int)$template_id,
             "comment" => $customer_comment,
             "footer" => $footer,
               "lines" => []
@@ -186,7 +186,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             "Securitycode: ".$security_code,
             "Apikey: ". $api_key,
         );
-
 
         curl_setopt_array($curlCard, array(
             CURLOPT_URL => "https://api.informer.eu/v1/salesorder",

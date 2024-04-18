@@ -590,7 +590,6 @@ class Ps_EmailAlerts extends Module
                     $this->trans(
                         '%s | %s | %s | %s',
                         [
-                            $order->id,
                             $order->reference,
                             $contextLocale->formatPrice($order->total_paid, $currency->iso_code),
                             strtoupper(Tools::substr($order->payment, 0, 32)),

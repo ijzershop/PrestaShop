@@ -1,11 +1,15 @@
 {shop_url}
 
-Bekijk de door u aangevraagde offerte via de onderstaande link:
+Bekijk de door u aangevraagde offerte via de onderstaande knop:
+
+[Open uw offerte!]({url})
+
+Werkt de knop niet? Kopiëer en plak dan de onderstaande link in uw browser:
 
 {url}
 
-- offerte pagina word geopend op {shop_url}
-- vul hier uw email: {customer_email} en de code: {offer_access_code} in
+- offerte pagina word geopend op de website van de {shop_name}
+- word de offerte niet automatisch ontgrendeld, vul dan hier uw email: {customer_email} en de code: {offer_access_code} in
 - als beide correct zijn ingevuld klikt u op "Toon mijn offerte"
 - vul het gewenste aantal in
 - plaats in uw winkelwagen

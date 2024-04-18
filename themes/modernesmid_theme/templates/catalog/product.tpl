@@ -200,7 +200,7 @@
       </div>
     </div>
     <div class="row border-bottom">
-      <div class="col-12 col-sm-7 pt-3 pb-4">
+      <div class="col-12 col-sm-5 pt-3 pb-4">
         {if !empty($product.description)}
           {block name='product_description'}
             <div class="product-description border-bottom pb-4 pt-4 row">
@@ -217,7 +217,7 @@
           {/block}
         {/if}
       </div>
-      <div class="col-12 col-sm-5 pt-2">
+      <div class="col-12 col-sm-7 pt-2">
         {if Configuration::get('SHOW_PRODUCT_FEATURES') === 'category'}
             {assign var='cat' value=Category::getNestedCategories($product.id_category_default)}
             {if is_null($cat[$product.id_category_default].top_description)}

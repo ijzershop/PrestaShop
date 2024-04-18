@@ -59,7 +59,7 @@
   <ol class="carousel-indicators-thumbs m-0">
           {foreach from=$product.images item=image key=key3}
               {if strpos($image.legend, 'techntabel') == false}
-                <li data-slide-to="{$index_thumbs}" class=" {if $image.id_image == $product.cover.id_image}active{/if}">
+                <li  data-target="#product-images-carousel" data-slide-to="{$index_thumbs}" class=" {if $image.id_image == $product.cover.id_image}active{/if}">
                   <img height="70px" width="auto" src="{$image.bySize.small_default.url}" alt="{$image.legend}"/>
                 </li>
                   {assign var="index_thumbs" value=$index_thumbs+1}

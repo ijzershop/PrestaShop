@@ -223,7 +223,6 @@ $(function () {
 
       $clickedLabel.toggleClass('temp_disabled', "");
       $tr.toggleClass('temp_disabled_row', "");
-
       /*
       *  Gewijzigd door JB Stoker - Moderne Smid
       *  Pakket maten en soorten aangepast, tevens type pakket toegevoegd voor maatvoering
@@ -234,7 +233,6 @@ $(function () {
       *  5 -2 Meter > 15 : (50 x 30 x 1= 30Kg) / value = 2-meter-larger
       *
       */
-
       if (type !== -1) {
         switch (type) {
           case 'envelope':
@@ -254,7 +252,6 @@ $(function () {
             break;
         }
 
-
         $.ajax({
           url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=print-label&id_order=' + orderId + '&weight='+gewicht+'&type='+type+'&token=' + token,
           type: 'GET'
@@ -268,11 +265,8 @@ $(function () {
               $('#updateAddressModal').modal('show');
             }
           });
-      }
+        }
     });
-
-
-
 
   $(document).on('click', '.updateAddress',function () {
     let orderId = $('#updateAddressKoopman [name="id_order"]').val();
@@ -398,9 +392,16 @@ $(function () {
       let orderId = $(this).attr('data-row-id');
       let selectBox = $('[name="package_size"][data-row-id="'+orderId+'"]')[0];
       let index = selectBox.selectedIndex;
-      if(index > 0){
-        selectBox.selectedIndex = index-1;
-      }
+
+    if(index > 0){
+      selectBox.selectedIndex = index-1;
+    }
+
+    let selectedWeightValue = parseInt(selectBox.value);
+
+    if(selectedWeightValue > 0){
+      $('.collie-selection[data-row-id="'+orderId+'"]').attr('data-order-weight', selectedWeightValue)
+    }
   });
 
   //   plus button
@@ -408,10 +409,19 @@ $(function () {
     let orderId = $(this).attr('data-row-id');
     let selectBox = $('[name="package_size"][data-row-id="'+orderId+'"]')[0];
     let index = selectBox.selectedIndex;
+
     if(index < 20){
       selectBox.selectedIndex = index+1;
     }
+    let selectedWeightValue = parseInt(selectBox.value);
+
+    if(selectedWeightValue > 0){
+      $('.collie-selection[data-row-id="'+orderId+'"]').attr('data-order-weight', selectedWeightValue)
+    }
   });
+
+
+
 
   //   pallet selectie button
   $(document).on('click', '[name="package_total_pallet"]', function(){

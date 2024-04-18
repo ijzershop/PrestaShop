@@ -158,7 +158,7 @@ class ExportOrdersMultipleCollies
                 }
             }
 
-            if (isset($this->weightOption)) {
+            if (!isset($this->weight)) {
                 if ($this->weightOption > 0) {
                     $weight = $this->weightOption;
                 }
@@ -483,9 +483,10 @@ class ExportOrdersMultipleCollies
                         $collieRow->breedte = 17;
                         $collieRow->hoogte = 23;
                     } elseif ($collieType == 'MP') {
-                        $collieRow->lengte = 50;
-                        $collieRow->breedte = 60;
-                        $collieRow->hoogte = 115;
+                        $collieRow->lengte = 200;
+                        $collieRow->breedte = 40;
+                        $collieRow->hoogte = 50;
+                        $collieRow->gewicht = 200;
                     } elseif ($collieType == 'PLH') {
                         $collieRow->lengte = 80;
                         $collieRow->breedte = 60;

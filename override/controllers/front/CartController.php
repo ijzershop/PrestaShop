@@ -1,11 +1,9 @@
 <?php
-
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 class CartController extends CartControllerCore
 {
-
     public function initContent()
     {
         if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show') {
@@ -26,10 +24,8 @@ class CartController extends CartControllerCore
             ]);
             $this->setTemplate('checkout/cart-empty');
         }
-
         parent::initContent();
     }
-
     public function addUpdatedCartProductToSession($idProduct=null, $idProductAttr=null, $postType='update', $op='up'){
         if($idProduct){
             $product = new Product($idProduct, true, $this->context->cookie->id_lang);
@@ -37,14 +33,11 @@ class CartController extends CartControllerCore
             if(count($product_categories) >= 2){
                 $cat1 = $product_categories[count($product_categories)-2];
             }
-
             if(count($product_categories) >= 3){
                 $cat2 = $product_categories[count($product_categories)-3];
             }
-
             $cart = new Cart(Context::getContext()->cart->id);
             $coupon = '';
-
             if(count($cart->getCartRules()) > 0){
                 $coupons = [];
                 foreach($cart->getCartRules() as $rule){
@@ -52,7 +45,6 @@ class CartController extends CartControllerCore
                 }
                 $coupon = implode(',', $coupons);
             }
-
             $addedProduct  =  [
                 'currency' => 'EUR',
                 'price' => $product->price,
@@ -70,11 +62,8 @@ class CartController extends CartControllerCore
             $_SESSION['analytics_data']['add_to_cart_product']['event_type'] = $postType;
             $_SESSION['analytics_data']['add_to_cart_product']['op'] = $op;
             $_SESSION['analytics_data']['add_to_cart_product']['data'] = $addedProduct;
-
         }
     }
-
-
     protected function updateCart()
     {
         if ($this->context->cookie->exists()
@@ -149,24 +138,20 @@ class CartController extends CartControllerCore
             Tools::redirect('index.php');
         }
     }
-
     protected function processChangeProductInCart()
     {
         $ssa = Module::getInstanceByName('singlestockattributespoco');
         if (!$ssa || !$ssa->active || !$ssa->useSSA($this->id_product)) {
             return parent::processChangeProductInCart();
         }
-
         $mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
         $ErrorKey = ('update' === $mode) ? 'updateOperationError' : 'errors';
-
         if (Tools::getIsset('group')) {
             $this->id_product_attribute = (int)Product::getIdProductAttributeByIdAttributes(
                 $this->id_product,
                 Tools::getValue('group')
             );
         }
-
         if ($this->qty == 0) {
             $this->{$ErrorKey}[] = $this->trans(
                 'Null quantity.',
@@ -187,10 +172,8 @@ class CartController extends CartControllerCore
                 ['%product%' => $product->name],
                 'Shop.Notifications.Error'
             );
-
             return;
         }
-
         if (!$this->id_product_attribute && $product->hasAttributes()) {
             $minimum_quantity = ($product->out_of_stock == OutOfStockType::OUT_OF_STOCK_DEFAULT)
                 ? !Configuration::get('PS_ORDER_OUT_OF_STOCK')
@@ -202,7 +185,6 @@ class CartController extends CartControllerCore
         }
         $qty_to_check = $this->qty;
         $cart_products = $this->context->cart->getProducts();
-
         $cart_qty = 0;
         if (is_array($cart_products)) {
             foreach ($cart_products as $cart_product) {
@@ -267,7 +249,6 @@ class CartController extends CartControllerCore
                     'Shop.Notifications.Error'
                 );
             }
-
             if (!$this->errors) {
                 $cart_rules = $this->context->cart->getCartRules();
                 $available_cart_rules = CartRule::getCustomerCartRules(
@@ -292,7 +273,6 @@ class CartController extends CartControllerCore
                 true
             );
             if ($update_quantity < 0) {
-                    // If product has attribute, minimal quantity is set with minimal quantity of attribute
                 $minimal_quantity = ($this->id_product_attribute)
                     ? ProductAttribute::getAttributeMinimalQty($this->id_product_attribute)
                     : $product->minimal_quantity;
@@ -320,137 +300,7 @@ class CartController extends CartControllerCore
             }
         }
         }
-
         $removed = CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
-    }
-    /*
-    * module: advancedvatmanager
-    * date: 2023-10-02 07:45:24
-    * version: 1.6.2.2
-    */
-    public function displayAjaxUpdate()
-    {
-        if (Module::isEnabled('advancedvatmanager')) {
-            $advancedvatmanager = Module::getInstanceByName('advancedvatmanager');
-            $checkNotAllowCheckout = $advancedvatmanager->checkNotAllowCheckout();
-            if ($checkNotAllowCheckout !== false && !$advancedvatmanager->opc_presteamshop_enabled) {
-                if (isset($this->updateOperationError)) {
-                    $this->updateOperationError[] = $checkNotAllowCheckout;
-                }
-                else {
-                    $this->errors[] = $checkNotAllowCheckout;
-                }
-            }
-        }
-        if (Configuration::isCatalogMode()) {
-            return;
-        }
-
-        $productsInCart = $this->context->cart->getProducts();
-        $updatedProducts = array_filter($productsInCart, [$this, 'productInCartMatchesCriteria']);
-        $updatedProduct = reset($updatedProducts);
-        $productQuantity = $updatedProduct['quantity'] ?? 0;
-
-        $product = new Product($this->id_product, true, $this->context->cookie->id_lang);
-        $product_categories = $product->getParentCategories($this->context->cookie->id_lang);
-        if(count($product_categories) >= 2){
-            $cat1 = $product_categories[count($product_categories)-2];
-        }
-
-        if(count($product_categories) >= 3){
-            $cat2 = $product_categories[count($product_categories)-3];
-        }
-
-        $op = 'up';
-        if(Tools::getValue('op') !== null){
-            $op = Tools::getValue('op');
-        }
-
-        if(!$op && Tools::getValue('delete') === 1){
-            dd('test');
-        }
-
-        $coupon = '';
-
-        if(count($this->context->cart->getCartRules()) > 0){
-            $coupons = [];
-            foreach($this->context->cart->getCartRules() as $rule){
-                $coupons[] = $rule['name'];
-            }
-            $coupon = implode(',', $coupons);
-        }
-
-        $qty = 1;
-        if(Tools::getIsset('qty')){
-            $qty = Tools::getValue('qty');
-        }
-
-        $addedProduct  =  [
-            'currency' => 'EUR',
-            'price' => $product->price,
-            'item_id' => $product->id,
-            'item_name' => $product->name,
-            'coupon' => $coupon,
-            'discount' => $product->getPrice(true, null, 6, null, true, false, $qty),
-            'item_category' => $cat2['name'],
-            'item_category' => $cat1['name'],
-            'quantity' => $qty,
-            'op' => $op
-        ];
-
-        if (!$this->errors) {
-            $presentedCart = $this->cart_presenter->present($this->context->cart);
-
-            // filter product output
-            $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
-                ->filter($presentedCart['products']);
-
-            $this->ajaxRender(json_encode([
-                'success' => true,
-                'id_product' => $this->id_product,
-                'id_product_attribute' => $this->id_product_attribute,
-                'id_customization' => $this->customization_id,
-                'quantity' => $productQuantity,
-                'cart' => $presentedCart,
-                'errors' => empty($this->updateOperationError) ? '' : reset($this->updateOperationError),
-                'added_product' => $addedProduct
-            ]));
-
-            return;
-        } else {
-            $this->ajaxRender(json_encode([
-                'hasError' => true,
-                'errors' => $this->errors,
-                'quantity' => $productQuantity,
-                'added_product' => $addedProduct
-            ]));
-
-            return;
-        }
-    }
-
-    /*
-    * module: advancedvatmanager
-    * date: 2023-10-02 07:45:24
-    * version: 1.6.2.2
-    */
-    public function postProcess()
-    {
-        if (Module::isEnabled('advancedvatmanager')) {
-            $advancedvatmanager = Module::getInstanceByName('advancedvatmanager');
-            $checkNotAllowCheckout = $advancedvatmanager->checkNotAllowCheckout();
-            if (!Tools::getValue('ajax') && $checkNotAllowCheckout !== false && !$advancedvatmanager->opc_presteamshop_enabled) {
-                if (version_compare(_PS_VERSION_, '1.7.0.0', '>=')) {
-                    $this->errors[] =  $checkNotAllowCheckout;
-                }
-                else {
-                    if (!Tools::getIsset('add') || !Tools::getIsset('update')) {
-                        $this->errors[] =  $checkNotAllowCheckout;
-                    }
-                }
-            }
-        }
-        parent::postProcess();
     }
 }

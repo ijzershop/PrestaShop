@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modernesmid/components/layout.html.twig' %}
 
-{% block title %}{{ 'Your offer'|trans({}, 'Emails.Body', locale) }}{% endblock %}
+{% block title %}{{ 'Uw offerte'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 
@@ -131,7 +131,7 @@
                                     <div
                                       style="font-family:Open-sans, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#555454;"
                                       align="left">
-                                      Bekijk de door u aangevraagde offerte via de onderstaande link:
+                                      Bekijk de door u aangevraagde offerte via de onderstaande knop:
                                     </div>
                                   </td>
                                 </tr>
@@ -208,16 +208,49 @@
                                      width="100%">
                                 <tr>
                                   <td align="left"
+                                  style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 10px 20px; word-break: break-word;height: 100px;text-align: center;">
+                                  <!--[if mso]>
+                                <center>
+                                  <v:rect style="height:40px;width:0;" fill="f" stroke="f" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" />
+                                  <v:rect href="{url}" style="width:465px;height:40px;position:relative;top:0;left:0;v-text-anchor:middle;" arcsize="0%" stroke="f" fillcolor="#21A055" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word">
+                                    <w:anchorlock/>
+                                    <v:textbox inset="0,0,0,0">
+                                      <center>
+                                  <![endif]-->
+                                  <a href="{url}" style="width:460px; font-family: Open-sans, sans-serif; font-size: 14px; margin: 0; padding: 0 24px; color: #ffffff; margin-top: 0; font-weight: bold; line-height: 40px; letter-spacing: 0.1ch; text-transform: uppercase; background-color: #21A055; border-radius: 0; display: inline-block; text-align: center; text-decoration: none; white-space: nowrap; -webkit-text-size-adjust: none;" bgcolor="#21A055">Open uw offerte!</a>
+                                  <!--[if mso]>
+                                  </center>
+                                  </v:textbox>
+                                  </v:rect>
+                                  </center>
+                                  <![endif]-->
+                                  </td>
+                          </tr>
+                          <tr>
+                            <td align="left"
+                                style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 10px 20px; padding-top: 0px; padding-bottom: 0px; word-break: break-word;">
+                              <div
+                                style="font-family:Open-sans, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#ffffff;"
+                                align="left">
+                                Werkt de knop niet? Kopiëer en plak dan de onderstaande link in uw browser:
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+
+                                  <td align="left"
                                       style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 10px 20px; word-break: break-word;">
                                     <div
                                       style="font-family:Open-sans, sans-serif;font-size: 16px;line-height:25px;text-align:left;color:#FFFFFF;"
                                       align="left">
-                                      <a color="#ffffff !important;text-decoration:none;" style="color:#ffffff;text-decoration:none;font-weight:500;display: inline-block;" href="{url}"><strong><font color="#FFFFFF">{url}</font></strong></a>
-                                      <br/>
+
+                                      <a color="#ffffff !important;" style="font-style:italic;color:#ffffff;font-size:14px;display: inline-block;" href="{url}"><strong><font color="#FFFFFF">{url}</font></strong></a>
+
+                                        <br/>
                                       <br/>
                                       <ul style="margin:0px 0px 0px 20px;margin-block-start:0px;margin-block-end:0px;padding-inline-start:0px;" type="square">
-                                        <li>offerte pagina word geopend op <a color="#ffffff !important;text-decoration:none;" style="color:#ffffff;text-decoration:none;font-weight:500;display: inline-block;" href="{shop_url}"><strong><font color="#FFFFFF">{shop_url}</font></strong></a></li>
-                                        <li>vul hier uw email: <a color="#ffffff !important;text-decoration:none;" style="color:#ffffff;text-decoration:none;font-weight:500;display: inline-block;" href="mailto:{customer_email}"><strong><font color="#FFFFFF">{customer_email}</font></strong></a> en de code: <strong class="label link-white" style="color:#ffffff;text-decoration:none;font-weight: 600;">{offer_access_code}</strong> in</li>
+                                        <li>offerte pagina word geopend op de website van de {shop_name}</li>
+                                        <li>word de offerte niet automatisch ontgrendeld, vul dan hier uw email: <a color="#ffffff !important;text-decoration:none;" style="color:#ffffff;text-decoration:none;font-weight:500;display: inline-block;" href="mailto:{customer_email}"><strong><font color="#FFFFFF">{customer_email}</font></strong></a> en de code: <strong class="label link-white" style="color:#ffffff;text-decoration:none;font-weight: 600;">{offer_access_code}</strong> in</li>
                                         <li>als beide correct zijn ingevuld klikt u op "Toon mijn offerte"</li>
                                         <li>vul het gewenste aantal in</li>
                                         <li>plaats in uw winkelwagen</li>
@@ -286,7 +319,9 @@
       </table>
       <![endif]-->
 
-
+    </td>
+  </tr>
+</table>
 
 
       {% endblock %}
@@ -346,10 +381,12 @@
             width: 320px;
           }
         }
-      </style><style type="text/css">
+      </style>
+        <style type="text/css">
         @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700);
         @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i);
-      </style><style type="text/css">
+      </style>
+        <style type="text/css">
         @media only screen and (min-width:480px) {
           .mj-column-per-100 {
             width: 100% !important;
@@ -361,8 +398,8 @@
             max-width: 25px;
           }
         }
-      </style><style type="text/css">
-      </style><style type="text/css">
+      </style>
+        <style type="text/css">
         .shadow {
           box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.1);
         }

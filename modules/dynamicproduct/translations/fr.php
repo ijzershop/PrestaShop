@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,16 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 global $_MODULE;
-$_MODULE = [];
+$_MODULE = array();
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_cfb1926301def71fee208c87b72381f3'] = 'Produit Dynamique';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_e5b1eba6a27ec379c4a0c31212948ff0'] = 'Permettez à vos clients de personnaliser leur commandes en modifiant les produits';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_023f969d7a7356f2c99114712dbe1e6c'] = 'Les surcharges doivent être activées (dans Performance) pour le bon fonctionnement du module';
@@ -58,7 +62,7 @@ $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_8524de963f07201e5c086830d37
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_e6ff0db3b8285dce688b7f9a44e4915b'] = 'Données sauvegardées';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_a25c753ee3e4be15ec0daa5a40deb7b8'] = 'Une erreur est survenue';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_80ebdccece38141cd9c0f9b3b623091f'] = 'Êtes-vous sûr de vouloir supprimer cet élément?';
-$_MODULE['<{dynamicproduct}prestashop>dynamicproduct_e5de44a74a0b43a44aa63bcef26d49b4'] = "Vous risquez de perdre toutes les modifications non enregistrÃ©es Ã\u{a0} cette formule, continuer?";
+$_MODULE['<{dynamicproduct}prestashop>dynamicproduct_e5de44a74a0b43a44aa63bcef26d49b4'] = 'Vous risquez de perdre toutes les modifications non enregistrÃ©es Ã  cette formule, continuer?';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_d1359ad59c7336f783e8c5825cd222be'] = 'Êtes-vous sûr de vouloir supprimer cette image?';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_f488c3db91689599fa2ac1167b6b7919'] = 'Vous risquez de perdre toutes les modifications non enregistrées, continuer?';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_e5ced0126db5c42f70d099145ee578bd'] = 'La formule n\'est pas valide';
@@ -158,6 +162,8 @@ $_MODULE['<{dynamicproduct}prestashop>modulefixer_94e5deb691caecd5c02526c5cc4208
 $_MODULE['<{dynamicproduct}prestashop>modulefixer_9f7aa8ce719604f269027cacec634cf1'] = '6 mois';
 $_MODULE['<{dynamicproduct}prestashop>modulefixer_ca4c73c1f333c437a47c58afd0623530'] = '1 an';
 $_MODULE['<{dynamicproduct}prestashop>modulefixer_1613af7fb2c01fc18431146762702de2'] = 'Les personnalisations utilisées dans les commandes ne seront pas supprimées';
+$_MODULE['<{dynamicproduct}prestashop>modulefixer_0ebba251aa18aa8d5fa3236eefc355a1'] = 'Clé cron';
+$_MODULE['<{dynamicproduct}prestashop>modulefixer_aae074ea284b29c2383db7c6bbac78c2'] = 'Lien cron';
 $_MODULE['<{dynamicproduct}prestashop>modulefixer_813ff6b359729dc977ec2514226b8f49'] = 'Limite de temps du serveur dépassée, veuillez relancer le nettoyage';
 $_MODULE['<{dynamicproduct}prestashop>modulefixer_09ea3e2ea18814fcc3909ea1dd5358b6'] = '%s personnalisations inutilisées supprimées';
 $_MODULE['<{dynamicproduct}prestashop>modulefixer_fda67625149a59ec4b619ada215bf131'] = 'Nettoyer les données';
@@ -201,6 +207,7 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_c74ea6dbff701bfa23819583
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_146ffe2fd9fa5bec3b63b52543793ec7'] = 'Afficher plus';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_ef6f483e51946e94240df458f820e853'] = 'Nombre max. de fichiers';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_338131a3a3f4a2649c1d1ed2d2107589'] = 'Supérieur ou égal';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_15825fb6c17dd61aa162952dfed0f380'] = 'Ordre de calcul';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_dc30bc0c7914db5918da4263fce93ad2'] = 'Effacer';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_d3d2e617335f08df83599665eef8a418'] = 'Fermer';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_f4c1b6e8295c1bb78d944bfe41f22bd1'] = 'Tout changement aura un effet sur la configuration de _nb_ produits.';
@@ -216,21 +223,24 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_b0955da5bf0515e22e5ceff1
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_038da344d316a7c1cfeca36ef439d835'] = 'Exporter la configuration à un fichier';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_a2e4822a98337283e39f7b60acf85ec9'] = 'vide';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_833b661dc2c19c60fb0211ca5af7d307'] = 'Tout changement aura un effet sur les configurations liées.';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_607b83c9909a9db1c8d9e2d6fb4659f2'] = 'Effacer les éléments existants avant de les copier';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_e1b2d6142f17683c8064df7bc18866f5'] = 'Préfixer avec un espace si nécessaire';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_cce00e447ac4e51ecaf489d9766fd3ff'] = 'Non recommandé car cela peut ralentir la page du panier';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_fa0e92ab3c39a4fbdf81351af8d377ef'] = 'Choisir un produit';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_f3b4f189b81f173dba5affd0ad81372f'] = "Important\u{a0}: Le nom doit être un nom de classe CSS valide";
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_f3b4f189b81f173dba5affd0ad81372f'] = 'Important : Le nom doit être un nom de classe CSS valide';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_48a8afb093958428aeac593d309cb6bb'] = 'Champ de contrôle';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_60b18c742baeca27df08fc0c84533858'] = 'Utilisez les boutons _Haut__ / _Bas__ et _Tab__ / _Shift__ _Tab__ pour naviguer entre les champs';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_c3df79f06f352b4bb55d7b10b89d7601'] = 'Supprimer la formule du champ';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_8f30135ec68e92855b8292c7d7f8e01c'] = 'Importer un fichier de configuration';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_d83c9471810f2eab62b3f0d169f68f02'] = 'Ajouter une condition';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_e5290ed8ca57e71414a620b3deecb677'] = 'Ajouter une option';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_45e96c0a422ce8a1a6ec1bd5eb9625c6'] = 'Sélectionner tout';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_6691c0cf879b8db5735bda15ecf6c350'] = 'Supprimer tous les élément';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_0a52730597fb4ffa01fc117d9e71e3a9'] = 'Exemple';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_2efd8ed8f44373d71412de644235f908'] = 'Réductible';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_881234c2911501f265d0f2bb6495c3b0'] = 'Jours désactivés';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_cdf6c5f18c818fb3331285f31c4c32b8'] = "Cela va **AUSSI SUPPRIMER l'élément d'origine**. Êtes-vous sûr de vouloir continuer\u{a0}?";
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_cdf6c5f18c818fb3331285f31c4c32b8'] = 'Cela va **AUSSI SUPPRIMER l\'élément d\'origine**. Êtes-vous sûr de vouloir continuer ?';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_ccce04325bb2159fae145915376f82fe'] = 'Afficher la valeur secondaire comme description de l\'option';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_191384794fcb68e3c3e080c5cd0da7d2'] = 'Date max';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_dae8ace18bdcbcc6ae5aece263e14fe8'] = 'Options';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_3fd7cdae7ac5fb45cd49e28274cb2922'] = 'Actualiser la liste des bases de données';
@@ -261,7 +271,7 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_8ebab5a7974de1d41cb9eff7
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_f15dceb01634a6c4e6c88e42ad05c6a9'] = 'Modifier le résumé';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_f02fd6853ab3754828c19fa32c3b12ff'] = 'Cliquez pour modifier la formule';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_3ea4f796f31fb5785da38e1fc6369e93'] = 'Calcul';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_f3b328511f2d181d84f3b8b3ea3c4670'] = "Êtes-vous sûr de vouloir supprimer les champs sélectionnés\u{a0}?";
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_f3b328511f2d181d84f3b8b3ea3c4670'] = 'Êtes-vous sûr de vouloir supprimer les champs sélectionnés ?';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_5d9fb36748119065d95c548cbfc2962a'] = 'Formule de poid';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_af07ea0d50ed8cbb5a3f147085866792'] = 'Modifier la description';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_da1b4d51517f74ef268190442ee1cf8f'] = 'Cliquez pour basculer la visibilité de l\'option';
@@ -294,7 +304,7 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_5226b348d5fdbb1fe8d6b938
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_642c5581efa4e921c3ebd4a3c6540038'] = 'Basculer tout';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_9e2941b3c81256fac10392aaca4ccfde'] = 'Condition';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_68a66213b0687fa2a7d8fe02fa1b75eb'] = 'Configure la visibility des options';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_e02567b99a25b38b2d6e2fe54fd37726'] = "Afficher le libellé «\u{a0}À partir de\u{a0}» dans la page de catégorie";
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_e02567b99a25b38b2d6e2fe54fd37726'] = 'Afficher le libellé « À partir de » dans la page de catégorie';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_cb1d5dcb81197c25f5a819de152f2a6b'] = 'Aucun ordre d\'exécution n\'est configuré, l\'ordre par défaut sera utilisé';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_0ad4574e8a4bd36c6a4a90c8a27bf029'] = 'Minimiser la condition (Maj + Clic pour tout minimiser)';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_c8fdae1aaa6ac34db5781ebb5331bf7c'] = 'Nom du script';
@@ -328,9 +338,11 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_474c1219b0e41415e1115456
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_9af88458629cc27bc77b7fef99d031f5'] = 'Supprimer cette étape';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_ea2ef9b0d095bf991f4973633b485340'] = 'Bases CSV';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_6daf7b8fc08c631cc8d3537bf889ff0a'] = 'Cliquer pour basculer la visibilité du champ';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_ddda55b80f65cae4157306794a168c37'] = 'Désélectionner tout';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_22b334d50b5bb7d61218bd544095e2f9'] = 'Cliquer pour insérer une option';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_f11cedfc3583dc1a844ab66473311905'] = 'Si vide, alors le nom du champ sera utilisé';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_6e1161eb7598184b3ee2a291be55f79c'] = 'Afficher le poids aux clients';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_61b354d93ca440de9401f646caa9140e'] = 'Quantité (Le champ quantité de PrestaShop)';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_af6bd1381faa23bfe6188fee1994b9ef'] = 'Nom de la classe CSS (facultatif)';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_ffd03615ffbbd9ca2b6d1d0a5844c4b2'] = 'Afficher le libellé';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_93bb8a03089c537cbaa71e26ae6ebe02'] = 'Effacer la configuration actuelle';
@@ -338,12 +350,13 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_9f347a9e40ec47a282cad0e1
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_95ff7dcabe891604b9911ddb2786f622'] = 'Largeur min';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_958f470d0b1c8fb2b9e62b48e8903299'] = 'non limité';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_1244b9cfc9a25eef68cae899e5ab48dc'] = 'Suffixe personnalisé';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_6617705c30357c470af1a7faebeacdfe'] = 'Les liens affecteront les produits actuels et futurs de la catégorie sélectionnée';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_f9c2ec65a712f3de5d545e5ccc4ef1e0'] = 'Supprimer cette colonne';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_af3891c08cbdbe86a5495f87f97bca2e'] = 'Affichera une erreur si sa valeur est 0';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_3c35295595576b387a6737fc78c739e4'] = 'Supprimer les champs sélectionnés';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_2695fc5f142249a36e8ba5885076935d'] = 'Utilisez Ctrl + Entrée pour sauvegarder la formule';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_09078ab4d3ed67df5acc068f59823216'] = 'Dissocier la configuration';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_15739ea5893ae54cd92c05ef855d0cfd'] = "Êtes-vous sûr de basculer toutes les options\u{a0}?";
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_15739ea5893ae54cd92c05ef855d0cfd'] = 'Êtes-vous sûr de basculer toutes les options ?';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_fb68bdf682e6f23f50f5b6d99c39046e'] = 'Exclure du résumé quand la case est décochée';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_16bfbf9c462762cf1cba4134ec53c504'] = 'Chargement';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_2e4edd453344e584f5a52d4d0933df4e'] = 'Visibilité des champs';
@@ -357,6 +370,9 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_661e61babcff43f6ebb8d018
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_a37ede293936e29279ed543129451ec3'] = 'Groupes';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_d8f7cc38e310b801fe84a231cb902a15'] = 'Formules des champs';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_92a8282ecbe5bc307a0c1be4905a6c03'] = 'Intervalles';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_9cddd06a1b55a522a45c70b9d889d673'] = 'Le prix original du produit';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_f7d618107a1072c752b75cb685a94ecd'] = 'Le poids original du produit';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_08ddab49812ca7dbf737426000462500'] = 'La quantité sélectionnée par le client';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_895c3be19fdc74ca77409aec8098e565'] = 'Vous pouvez configurer la visibilité de chaque champs selon la déclinaison choisie. Un champ caché aura une valeur nulle dans la formule';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_1729a56cfc89021478498fe0c89a843a'] = 'Visibilité';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_a9188cda0d41a70639143b99a90bd1ee'] = 'Proportions';
@@ -383,13 +399,17 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_72d6d7a1885885bb55a565fd
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_3dbdbec5923880593ad581212d49caa9'] = 'Importer la configuration du presse-papier';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_c05d3fbf508de9dc3966b035e717e533'] = 'Exporter les liens d\'image au lieu d\'encoder les images';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_69bfdffb2e111e2526fe41ff709ac042'] = 'Il en résulte un fichier plus petit. Activez uniquement si les images sont accessibles depuis votre boutique cible.';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_dc0d249d5a9e30b5cf918616a92e05ba'] = 'Veuillez sélectionner les éléments que vous souhaitez copier à partir du produit source.';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_83140a627f470b6b4eefed9f9b96e475'] = 'Equations';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_c20e67202c578f2a41fe4ccfb088160f'] = 'Les valeurs par déclinaison';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_e8ee772f84254a2c0d9f9fc2015a8173'] = 'La visibilité par déclinaison';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_e3c4ce2322180c45f45f1d2325e6ade6'] = 'Charger la configuration';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_b02d8b2c78dfd6cc791eff6f283e5008'] = 'Sélectionnez une catégorie';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_ddb9675f5526258cf29173e0bf28d206'] = 'Utilisera la même configuration dans plusieurs produits au lieu de la copier';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_2b975217731599ee993adf369bda0529'] = 'Lier au lieu de copier';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_fd323c93e8a0ddcca2ff60cc217ac1dc'] = 'Ne conservera pas les configurations d\'origine des produits liés';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_7ee305f445398e98571248365e72a4bf'] = 'Effacer les configurations des produits liés';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_1b8c5f033bb1edb419608e0534fb4a44'] = 'Vous pouvez copier ou lier cette configuration à tous les produits de la catégorie sélectionnée';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_e3c4ce2322180c45f45f1d2325e6ade6'] = 'Charger la configuration';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_3e89e0437691c5f747378429526f32f5'] = 'Utilisera la même configuration au lieu de la copier';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_4a91fee19aa016a4f44a54306b7298c3'] = 'Ne conservera pas la configuration actuelle';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_ffbcc4327edea85603af64a55330b6d9'] = 'Vous pouvez copier la configuration du produit sélectionné vers le produit actuel';
@@ -418,7 +438,7 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_68439f80b6c7a088e83f8f50
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_0902dfa31679bc8d462cc79a7c1f1124'] = 'Formule de quantité';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_2c9f2ca40f9858ac096fb664ca4720b5'] = 'Quelques noms de champ sont dupliqués. Veuillez les renommer ou les supprimer.';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_2120965e5a4184fdb9a8ce676574f8cd'] = 'Ajouter un nouveau champ';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_99a805a305f758fbc720db2e925b3b63'] = "Voulez-vous mettre à jour le nom du champ dans toutes les formules de produits\u{a0}?";
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_99a805a305f758fbc720db2e925b3b63'] = 'Voulez-vous mettre à jour le nom du champ dans toutes les formules de produits ?';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_86754577897acfb25deb69039d49d9a7'] = 'Affiché';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_7acdf85c69cc3c5305456a293524386e'] = 'Masqué';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_91f839d8fa388bed8a400a78f9856411'] = 'Charger un champ des favoris';
@@ -440,6 +460,7 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_0ed8337430d03ea1a5d7f6ae
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_e0156661e1f78a9933a445169b2f491e'] = 'Afficher les infos du champ dans un popup';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_d1e6b81720bfa2b990b0c7f655bb3a03'] = 'Importer des images';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_3a5dcb943d6bc607c6b2658350526bc5'] = 'Valeurs initiale';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_68753d36ec0c4d7768b20993268d68d1'] = 'Placeholder';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_47c4c36d97355b08ea37ef5e6599f0e9'] = 'Caractères min';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_cd0b0a929b43e1df4d4d6025a436cdfe'] = 'Caractères max';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_ddc07aced6a53384382500ac173a8feb'] = 'Exclure du résumé quand la valeur est vide ou égale à 0';
@@ -478,11 +499,11 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_7286408847b51e914dac76d3
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_c78f32177a392822c95e345609fb935b'] = 'Afficher les paramètres avancés';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_25800be369aa86f4c1f64ff1d6524214'] = 'Formule de la condition';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_09e25aef41a63cda78e6d26a30d56d14'] = 'Filtrer les champs des conditions';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_4408d07230e2d922159e2d9c7fbbdec3'] = "Voulez-vous vraiment supprimer tous les éléments\u{a0}?";
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_4408d07230e2d922159e2d9c7fbbdec3'] = 'Voulez-vous vraiment supprimer tous les éléments ?';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_61f6068a41c2f929b296944cb4a46a8f'] = 'Cliquer pour ouvrir l\'élément';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_5518092d076d42178eaa9f36c7e92ca9'] = 'Cliquez pour ouvrir l\'onglet de l\'élément';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_feb34796b477e22358db2c184f5499c2'] = 'Maintenez la touche Maj enfoncée pour supprimer également l\'élément d\'origine';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_17a8d422b062d86e67047694f5c62f19'] = "Êtes-vous sûr de vouloir ajouter tous les éléments\u{a0}?";
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_17a8d422b062d86e67047694f5c62f19'] = 'Êtes-vous sûr de vouloir ajouter tous les éléments ?';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_d4f3742b9f5de5a637fc65a2b8948d15'] = 'Insérer les éléments sélectionnés';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_c0bc820a664c36080fb21557d70d54e5'] = 'Aucun élément n\'a été trouvé, commencez par ajouter un nouvel élément ci-dessous';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_8806c85965eacccab3c3d618fd5a46c5'] = 'Choisir une couleur';
@@ -504,9 +525,6 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_d26344991381c78d4fafa1f4
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_c7c42ea1914c0b11d37586d5f98e5d7a'] = 'Créer un nouveau champ variable dynamique';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_eff88d54854b0637031f4066736623bc'] = 'Nom du champ';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_f811eca71e87cd702e340f0ed91fe576'] = 'Enregistrer le champ';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_9cddd06a1b55a522a45c70b9d889d673'] = 'Le prix original du produit';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_f7d618107a1072c752b75cb685a94ecd'] = 'Le poids original du produit';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_08ddab49812ca7dbf737426000462500'] = 'La quantité sélectionnée par le client';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_af9ba1c642f3112f2a4fa1e72424543b'] = 'Bases de données actualisées avec succès';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_9982e9bbb8cfb526589e958a672dd1f1'] = 'Les attributs du produit';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_4829243e90f6a3a5afd96555a82edd26'] = 'Les caractéristiques du produit';
@@ -540,13 +558,13 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_2e018c13b49111fab0dc2b3d
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_b407aa18f930a472ec7378225da50254'] = 'Une erreur a empêché le module Produit Dynamique d\'afficher les champs';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_8524de963f07201e5c086830d370797f'] = 'Chargement...';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_65bfabc9970a96ff2adaf4344df01e74'] = 'Produit sur mesure: Mode dépannage activé';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_5066708a4d4da80668add7fe67b5df9c'] = 'Veuillez choisir une couleur HEX valide (#FFFFFF)';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_33e69d09233ddf9c83043f1620b9bb10'] = 'Agrandir l\'image';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_0614ba01641323a425986368c2d5eb45'] = 'Certains fichiers n\'ont pas été acceptés';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_65da47b6ef0adda3d4c4ed54dfde4494'] = 'Types de fichiers';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_d9867b0d49a0fdc540ca71400ba81df3'] = 'Image importée';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_7d34baf3889e91966a588f017f83713a'] = 'Importer un fichier';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_29c28faa7b2764e0248483fdbae211b8'] = 'Fichier importé';
-$_MODULE['<{dynamicproduct}prestashop>translationhelper_5066708a4d4da80668add7fe67b5df9c'] = 'Veuillez choisir une couleur HEX valide (#FFFFFF)';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_8c489d0946f66d17d73f26366a4bf620'] = 'Poids';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_944507b74994b1a2edae8c5cc6086e62'] = 'Veuillez saisir le nom de votre personnalisation';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_7755db97afdda55c4ddd97b192acd805'] = 'La personnalisation a été enregistrée avec succès';
@@ -574,7 +592,7 @@ $_MODULE['<{dynamicproduct}prestashop>dynamicpresetequations_d2f1938c3b81377b26e
 $_MODULE['<{dynamicproduct}prestashop>dynamicpresetequations_d87e2abad8995b67c9673bdc6ba74631'] = 'Cette formule existe déjà !';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproductequations_d2f1938c3b81377b26ece3fc8d79f74d'] = 'Ce produit est en lecture seule';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproductexecorder_d2f1938c3b81377b26ece3fc8d79f74d'] = 'Ce produit est en lecture seule';
-$_MODULE['<{dynamicproduct}prestashop>dynamicproductproportions_d2f1938c3b81377b26ece3fc8d79f74d'] = "Ce produit est à visionner uniquement\u{a0}!";
+$_MODULE['<{dynamicproduct}prestashop>dynamicproductproportions_d2f1938c3b81377b26ece3fc8d79f74d'] = 'Ce produit est à visionner uniquement !';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproductfields_d2f1938c3b81377b26ece3fc8d79f74d'] = 'Ce produit est en lecture seule';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproductfields_3149d85671ec060a7e812bfcdc39c2c4'] = 'Un champ commun ne peut être inclus qu\'une fois dans le même produit';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproductfieldgroups_d2f1938c3b81377b26ece3fc8d79f74d'] = 'Ce produit est pour la visualisation seulement!';
@@ -610,6 +628,8 @@ $_MODULE['<{dynamicproduct}prestashop>uploader_c9ca17c72a6223d4f544caebce28bff6'
 $_MODULE['<{dynamicproduct}prestashop>uploader_80662895ee9c5682149ea2b4397d4d22'] = 'Le fichier n\'a pas pu être enregistré';
 $_MODULE['<{dynamicproduct}prestashop>uploader_589bcdafae826e307b0763dc21e36b38'] = 'Certaines erreurs ont été rencontrées lors de l\'import des fichiers';
 $_MODULE['<{dynamicproduct}prestashop>uploader_08209e1887a64c49dd35882d1f3a2a1c'] = 'Ce fichier dépasse la taille maximale autorisée de';
+$_MODULE['<{dynamicproduct}prestashop>cleanup_997d4f4d2f4a86ba3ec8c3f299568509'] = 'La clé Cron ne peut pas être vide';
+$_MODULE['<{dynamicproduct}prestashop>cleanup_52a0e1af6872697ca88e5a48520bf037'] = 'Clé cron invalide';
 $_MODULE['<{dynamicproduct}prestashop>products_584e9b00fd8348747c968cbd6391494f'] = 'La personnalisation n\'a pas pu être supprimée';
 $_MODULE['<{dynamicproduct}prestashop>products_601b4e53bbbf737faefc07e6327baf18'] = 'Personnalisation supprimée avec succès';
 $_MODULE['<{dynamicproduct}prestashop>display-admin-form_254f642527b45bc260048e30704edb39'] = 'Configuration';
@@ -664,7 +684,7 @@ $_MODULE['<{dynamicproduct}prestashop>configs-list_c30f9c20e2f70db92c60e850272c5
 $_MODULE['<{dynamicproduct}prestashop>configs-list_06df33001c1d7187fdd81ea1f5b277aa'] = 'Actions';
 $_MODULE['<{dynamicproduct}prestashop>configs-list_d0cc2dd53a052a4de0ff38cbabbde0ad'] = 'Voir cette configuration';
 $_MODULE['<{dynamicproduct}prestashop>configs-list_4351cfebe4b61d8aa5efa1d020710005'] = 'Ouvrir';
-$_MODULE['<{dynamicproduct}prestashop>configs-list_fdcd68a87187f956c55ce8b3ba358d7e'] = "Vous n'avez pas encore de produits dynamiques\u{a0}! Vous pouvez ouvrir une page d'édition de produit pour la rendre dynamique.";
+$_MODULE['<{dynamicproduct}prestashop>configs-list_fdcd68a87187f956c55ce8b3ba358d7e'] = 'Vous n\'avez pas encore de produits dynamiques ! Vous pouvez ouvrir une page d\'édition de produit pour la rendre dynamique.';
 $_MODULE['<{dynamicproduct}prestashop>common-fields-list_49ee3087348e8d44e1feda1917443987'] = 'Nom';
 $_MODULE['<{dynamicproduct}prestashop>common-fields-list_b021df6aac4654c454f46c77646e745f'] = 'Label';
 $_MODULE['<{dynamicproduct}prestashop>common-fields-list_deb10517653c255364175796ace3553f'] = 'Produit';
@@ -690,8 +710,6 @@ $_MODULE['<{dynamicproduct}prestashop>display-payment-top_2b935b5ec5acacb10a1305
 $_MODULE['<{dynamicproduct}prestashop>display-payment-top_67e0d4d38f5f7269a2a4bff9747ddf52'] = 'L\'option';
 $_MODULE['<{dynamicproduct}prestashop>display-payment-top_acb5770f31b7938d68ff73dd83f53610'] = 'du produit';
 $_MODULE['<{dynamicproduct}prestashop>display-payment-top_94f46bb96dc4965e755de4b717451d3b'] = 'n\'est plus disponible';
-$_MODULE['<{dynamicproduct}prestashop>display-admin-top-menu_62583a31143cd9a464bcae55d8ded901'] = 'Afficher tous les produits';
-$_MODULE['<{dynamicproduct}prestashop>display-admin-top-menu_efb7663c9d83d25cb3772ea258d29c3f'] = 'Afficher les produits personnalisés';
 $_MODULE['<{dynamicproduct}prestashop>display-extra_da22c93ccb398c72070f4000cc7b59a1'] = 'Personnalisation';
 $_MODULE['<{dynamicproduct}prestashop>display-admin-input-summary_8c489d0946f66d17d73f26366a4bf620'] = 'Poids';
 $_MODULE['<{dynamicproduct}prestashop>display-admin-input-summary_3601146c4e948c32b6424d2c0a7f0118'] = 'Prix';
@@ -700,5 +718,7 @@ $_MODULE['<{dynamicproduct}prestashop>display-admin-input-summary_d37faa29432d65
 $_MODULE['<{dynamicproduct}prestashop>display-product-button_63a78ed4647f7c63c2929e35ec1c95e3'] = 'Personnaliser';
 $_MODULE['<{dynamicproduct}prestashop>translations_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
 $_MODULE['<{dynamicproduct}prestashop>translations_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
+$_MODULE['<{dynamicproduct}prestashop>file_801ab24683a4a8c433c6eb40c48bcd9d'] = 'Télécharger';
 $_MODULE['<{dynamicproduct}prestashop>image_985b8ec9cecc41bc3d2eaddabcf7151f'] = 'Cliquer pour agrandir';
+$_MODULE['<{dynamicproduct}prestashop>image_801ab24683a4a8c433c6eb40c48bcd9d'] = 'Télécharger';
 $_MODULE['<{dynamicproduct}prestashop>customer-account_5bd909d2aabb76836e8fdad730968abb'] = 'Personnalisations';

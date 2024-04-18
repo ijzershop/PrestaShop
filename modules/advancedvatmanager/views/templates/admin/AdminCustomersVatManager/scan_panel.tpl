@@ -40,7 +40,7 @@
         <div id="avm_scanbutton" class="scan_btn">
             <button id="open_scan_btn" class="btn btn-default" name="open_scan"><span class="icon_container"><i class="fab fa-searchengin"></i></span>&nbsp;{l s='Scan VAT numbers' mod='advancedvatmanager'}</button>
             <button style="display:none" id="stop_scan_btn" class="btn btn-danger" name="stop_scan"><i class="fal fa-stop-circle"></i>&nbsp;{l s='Stop scan' mod='advancedvatmanager'}</button>
-            <button style="display:none" id="reload_btn" class="btn btn-primary" name="reload_page"><i class="fad fa-sync"></i>&nbsp;{l s='Reload page' mod='advancedvatmanager'}</button>
+            <button style="display:none" id="reload_btn" class="btn btn-primary" name="submitReloadPage" value="1"><i class="fad fa-sync"></i>&nbsp;{l s='Reload page' mod='advancedvatmanager'}</button>
             <a type="button" style="display:none" id="download_list_btn" class="btn btn-success" name="download_list" href="{$href|escape:'htmlall':'UTF-8'}"><i class="fal fa-download"></i>&nbsp;{l s='Download Customers VAT List' mod='advancedvatmanager'}</a>
         </div>
     </div>

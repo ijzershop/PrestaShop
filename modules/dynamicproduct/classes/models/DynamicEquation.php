@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,8 +27,13 @@
 
 namespace DynamicProduct\classes\models;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\helpers\CachedEvaluationHelper;
+use DynamicProduct\classes\helpers\ConfigLinkHelper;
 use DynamicProduct\classes\helpers\DebugHelper;
 use DynamicProduct\classes\helpers\FieldsVisibilityHelper;
 use DynamicProduct\classes\helpers\MathParserHelper;
@@ -72,7 +77,7 @@ class DynamicEquation extends DynamicObject
      */
     public static function getEquationsByIdProduct($id_product)
     {
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
         $dynamic_equations = [];
         $sql = new \DbQuery();
         $sql->from(self::$definition['table']);
@@ -98,7 +103,7 @@ class DynamicEquation extends DynamicObject
      */
     public static function getEquationByIdFormula($id_product, $id_formula)
     {
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
         $sql = new \DbQuery();
         $sql->select('id_equation');
         $sql->from(self::$definition['table']);
@@ -162,7 +167,7 @@ class DynamicEquation extends DynamicObject
         CachedEvaluationHelper::loadEvaluationCache($id_product);
 
         $literal_expression = self::getFormulaLiteral($formula, $input_fields);
-        if (empty($literal_expression) || strlen(trim($literal_expression)) === 0) {
+        if (strlen(trim($literal_expression)) === 0) {
             $result = 0;
         } else {
             $hash = md5($literal_expression);
@@ -172,6 +177,7 @@ class DynamicEquation extends DynamicObject
                     $result = eval('return ' . $literal_expression . ';'); /* expression is validated using isArithmetic */
                 } else {
                     $parser = MathParserHelper::getMathParser();
+                    $parser->setFields($input_fields);
                     $parser->setExpression($literal_expression);
                     $result = $parser->getValue();
                 }
@@ -282,7 +288,7 @@ class DynamicEquation extends DynamicObject
     public static function getFormulaLiteral($formula, $input_fields)
     {
         if (empty($formula)) {
-            return $formula;
+            return '';
         }
         $matches = self::matchFields($formula);
         if (!count($matches)) {
@@ -380,7 +386,7 @@ class DynamicEquation extends DynamicObject
     {
         $module = DynamicTools::getModule();
         $calculator_global = $module->provider->getDataFile('calculator/products.php');
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
         $calculator = $module->provider->getDataFile('calculator/product' . (int) $id_source_product . '.php');
 
         if (!file_exists($calculator) && !file_exists($calculator_global)) {
@@ -452,7 +458,7 @@ class DynamicEquation extends DynamicObject
     public static function hookWeightCalculator($id_product, $id_attribute, $input_fields, $weight = false)
     {
         $module = DynamicTools::getModule();
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
         $calculator_global = $module->provider->getDataFile('calculator/weights.php');
         $calculator = $module->provider->getDataFile('calculator/weight' . (int) $id_source_product . '.php');
 
@@ -523,7 +529,7 @@ class DynamicEquation extends DynamicObject
     {
         $module = DynamicTools::getModule();
         $calculator_global = $module->provider->getDataFile('calculator/quantity.php');
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
         $calculator = $module->provider->getDataFile('calculator/quantity' . (int) $id_source_product . '.php');
 
         if (!file_exists($calculator) && !file_exists($calculator_global)) {
@@ -563,7 +569,7 @@ class DynamicEquation extends DynamicObject
     {
         $module = DynamicTools::getModule();
         $allocator_global = $module->provider->getDataFile('allocations/products.php');
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
         $allocator = $module->provider->getDataFile('allocations/product' . (int) $id_source_product . '.php');
 
         if (!file_exists($allocator) && !file_exists($allocator_global)) {
@@ -661,53 +667,62 @@ class DynamicEquation extends DynamicObject
             foreach ($condition_groups as $condition_group) {
                 // if a group has already been executed, do not carry on iterating the rest of the groups
                 if (!$executed_group) {
-                    $conditions_true = true;
+                    $is_true = true;
                     $id_condition_group = $condition_group['id'];
                     $interval_conditions = $condition_group['conditions'];
                     foreach ($interval_conditions as $interval_condition) {
                         // if a group condition is false, do not complete the rest of the iterations
-                        if ($conditions_true) {
+                        if ($is_true) {
                             /* @noinspection NestedPositiveIfStatementsInspection */
-                            if ((int) $interval_condition['id_field']) {
-                                $condition_field = new DynamicField($interval_condition['id_field']);
-                                /** @var DynamicInputField $input_field */
-                                $input_field = $input_fields[$condition_field->name] ?: null;
+                            if ($interval_condition['id_field']) {
+                                $id_field_int = (int) $interval_condition['id_field'];
+                                if ($id_field_int) {
+                                    $condition_field = new DynamicField($interval_condition['id_field']);
+                                    /** @var DynamicInputField $input_field */
+                                    $input_field = $input_fields[$condition_field->name] ?: null;
+                                } else {
+                                    $input_field = $input_fields[$interval_condition['id_field']] ?: null;
+                                }
                                 if ($input_field) {
                                     if ($interval_condition['type'] === 'range') {
-                                        $conditions_true &= $input_field->isWithinLimit($interval_condition, $input_fields);
+                                        $is_true &= $input_field->isWithinLimit($interval_condition, $input_fields);
                                     }
                                     if ($interval_condition['type'] === 'values') {
-                                        $conditions_true &= $input_field->isWithinValues($interval_condition, $input_fields);
+                                        $is_true &= $input_field->isWithinValues($interval_condition, $input_fields);
                                     }
                                 }
                             }
                         }
                     }
-                    if ($conditions_true) {
+                    if ($is_true) {
                         $executed_group = true;
-                        $interval_fields = array_filter($product_interval_fields, function ($interval_field) use ($interval) {
-                            return (int) $interval_field['id_interval'] === $interval['id'];
-                        });
+                        $interval_fields = array_filter(
+                            $product_interval_fields,
+                            function ($interval_field) use ($interval) {
+                                return (int) $interval_field['id_interval'] === $interval['id'];
+                            }
+                        );
                         foreach ($interval_fields as $interval_field) {
-                            if ((int) $interval_field['id_field']) {
-                                $target_field = DynamicField::getFieldFromCache($interval_field['id_field']);
-                                $target_field_name = $target_field['name'];
-                                if (isset($input_fields[$target_field_name]) && (int) $target_field['id']) {
-                                    $id_interval_field = $interval_field['id'];
-                                    $interval_formula = IntervalFormula::getIntervalFormula(
-                                        $id_condition_group,
-                                        $id_interval_field
-                                    );
-                                    try {
-                                        $name = "Interval [$target_field_name] #{$interval_field['id']} ";
-                                        $result = self::evaluateFormula($interval_formula->formula, $input_fields, $name);
-                                    } catch (\Exception $e) {
-                                        throw new \RuntimeException($module->l('Interval Formula', $source) . "({$interval_formula->formula})" . ': ' . DynamicTools::reportException($e, true));
-                                    }
-                                    $input_fields[$target_field_name]->unlockValue();
-                                    $input_fields[$target_field_name]->setValue($result);
-                                    $input_fields[$target_field_name]->lockValue();
+                            if (!(int) $interval_field['id_field']) {
+                                continue;
+                            }
+                            $target_field = DynamicField::getFieldFromCache($interval_field['id_field']);
+                            $target_field_name = $target_field['name'];
+                            if (isset($input_fields[$target_field_name]) && (int) $target_field['id']) {
+                                $id_interval_field = $interval_field['id'];
+                                $interval_formula = IntervalFormula::getIntervalFormula(
+                                    $id_condition_group,
+                                    $id_interval_field
+                                );
+                                try {
+                                    $name = "Interval [$target_field_name] #{$interval_field['id']} ";
+                                    $result = self::evaluateFormula($interval_formula->formula, $input_fields, $name);
+                                } catch (\Exception $e) {
+                                    throw new \RuntimeException($module->l('Interval Formula', $source) . "({$interval_formula->formula})" . ': ' . DynamicTools::reportException($e, true));
                                 }
+                                $input_fields[$target_field_name]->unlockValue();
+                                $input_fields[$target_field_name]->setValue($result);
+                                $input_fields[$target_field_name]->lockValue();
                             }
                         }
                     }
@@ -846,7 +861,7 @@ class DynamicEquation extends DynamicObject
     {
         $module = DynamicTools::getModule();
         $declaration_global = $module->provider->getDataFile('declarations/products.php');
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
         $declaration = $module->provider->getDataFile('declarations/product' . (int) $id_source_product . '.php');
 
         // declarations arrays
@@ -885,14 +900,13 @@ class DynamicEquation extends DynamicObject
      */
     public static function getDynamicQuantity($dynamic_input, $input_fields = null)
     {
-        $dynamic_input->assignInputFields(DynamicTools::getContext()->language->id);
         $equation = self::getQuantityEquation($dynamic_input->id_product);
 
         return (int) self::calculateQuantityFormula(
             $dynamic_input->id_product,
             $dynamic_input->id_attribute,
             $equation,
-            $input_fields ?: $dynamic_input->input_fields
+            $input_fields ?: $dynamic_input->getInputFields()
         );
     }
 
@@ -902,14 +916,14 @@ class DynamicEquation extends DynamicObject
      *
      * @return bool
      */
-    public static function checkProductStock($dynamic_input, $dynamic_quantity = 0)
+    public static function checkProductStock($dynamic_input, $input_fields = [], $dynamic_quantity = 0)
     {
         $product_helper = new ProductHelper(DynamicTools::getModule(), DynamicTools::getContext());
         if ($product_helper->isAvailableWhenOutOfStock($dynamic_input->id_product)) {
             return true;
         }
         if (!$dynamic_quantity) {
-            $dynamic_quantity = self::getDynamicQuantity($dynamic_input) * (float) $dynamic_input->cart_quantity;
+            $dynamic_quantity = self::getDynamicQuantity($dynamic_input, $input_fields) * (float) $dynamic_input->cart_quantity;
             if (!$dynamic_quantity) {
                 return true;
             }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\Message\Encoding;
+namespace ps_eventbus_v3_0_7\Http\Message\Encoding;
 
 /**
  * Transform a regular stream into a chunked one.
@@ -16,7 +16,6 @@ class ChunkStream extends FilteredStream
     {
         return 'chunk';
     }
-
     /**
      * {@inheritdoc}
      */
@@ -24,14 +23,12 @@ class ChunkStream extends FilteredStream
     {
         return 'dechunk';
     }
-
     /**
      * {@inheritdoc}
      */
     protected function fill()
     {
         parent::fill();
-
         if ($this->stream->eof()) {
             $this->buffer .= "0\r\n\r\n";
         }

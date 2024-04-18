@@ -1,10 +1,9 @@
 <?php
 
-namespace Http\Message\Decorator;
+namespace ps_eventbus_v3_0_7\Http\Message\Decorator;
 
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
-
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
@@ -14,7 +13,6 @@ trait MessageDecorator
      * @var MessageInterface
      */
     private $message;
-
     /**
      * Returns the decorated message.
      *
@@ -27,7 +25,6 @@ trait MessageDecorator
     {
         return $this->message;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -35,7 +32,6 @@ trait MessageDecorator
     {
         return $this->message->getProtocolVersion();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -43,10 +39,8 @@ trait MessageDecorator
     {
         $new = clone $this;
         $new->message = $this->message->withProtocolVersion($version);
-
         return $new;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -54,7 +48,6 @@ trait MessageDecorator
     {
         return $this->message->getHeaders();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -62,7 +55,6 @@ trait MessageDecorator
     {
         return $this->message->hasHeader($header);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -70,7 +62,6 @@ trait MessageDecorator
     {
         return $this->message->getHeader($header);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -78,7 +69,6 @@ trait MessageDecorator
     {
         return $this->message->getHeaderLine($header);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -86,10 +76,8 @@ trait MessageDecorator
     {
         $new = clone $this;
         $new->message = $this->message->withHeader($header, $value);
-
         return $new;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -97,10 +85,8 @@ trait MessageDecorator
     {
         $new = clone $this;
         $new->message = $this->message->withAddedHeader($header, $value);
-
         return $new;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -108,10 +94,8 @@ trait MessageDecorator
     {
         $new = clone $this;
         $new->message = $this->message->withoutHeader($header);
-
         return $new;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -119,7 +103,6 @@ trait MessageDecorator
     {
         return $this->message->getBody();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -127,7 +110,6 @@ trait MessageDecorator
     {
         $new = clone $this;
         $new->message = $this->message->withBody($body);
-
         return $new;
     }
 }

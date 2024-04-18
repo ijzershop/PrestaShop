@@ -1,10 +1,9 @@
 <?php
 
-namespace Http\Message\Decorator;
+namespace ps_eventbus_v3_0_7\Http\Message\Decorator;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
-
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
@@ -13,7 +12,6 @@ trait RequestDecorator
     use MessageDecorator {
         getMessage as getRequest;
     }
-
     /**
      * Exchanges the underlying request with another.
      *
@@ -23,10 +21,8 @@ trait RequestDecorator
     {
         $new = clone $this;
         $new->message = $request;
-
         return $new;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -34,7 +30,6 @@ trait RequestDecorator
     {
         return $this->message->getRequestTarget();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -42,10 +37,8 @@ trait RequestDecorator
     {
         $new = clone $this;
         $new->message = $this->message->withRequestTarget($requestTarget);
-
         return $new;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -53,7 +46,6 @@ trait RequestDecorator
     {
         return $this->message->getMethod();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -61,10 +53,8 @@ trait RequestDecorator
     {
         $new = clone $this;
         $new->message = $this->message->withMethod($method);
-
         return $new;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -72,15 +62,13 @@ trait RequestDecorator
     {
         return $this->message->getUri();
     }
-
     /**
      * {@inheritdoc}
      */
-    public function withUri(UriInterface $uri, $preserveHost = false)
+    public function withUri(UriInterface $uri, $preserveHost = \false)
     {
         $new = clone $this;
         $new->message = $this->message->withUri($uri, $preserveHost);
-
         return $new;
     }
 }

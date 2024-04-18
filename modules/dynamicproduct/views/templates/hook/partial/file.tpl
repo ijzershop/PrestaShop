@@ -1,5 +1,5 @@
 {*
-* 2007-2023 TuniSoft
+* 2007-2024 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -18,25 +18,32 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    TuniSoft <tunisoft.solutions@gmail.com>
-*  @copyright 2007-2023 TuniSoft
+*  @copyright 2007-2024 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if is_array($input_field->data_obj) && !empty($input_field->data_obj)}
-  <ul class="dp-files">
+	<ul class="dp-files">
       {foreach from=$input_field->data_obj item=upload}
-        <li>
-          <a target="_blank"
-             href="{$input_field->getFileUrl($upload.file)|escape:'htmlall':'UTF-8'}"
-             title="{$upload.filename|escape:'htmlall':'UTF-8'}"
-          >
+				<li>
+					<a target="_blank"
+					   href="{$input_field->getFileUrl($upload.file)|escape:'htmlall':'UTF-8'}"
+					   title="{$upload.filename|escape:'htmlall':'UTF-8'}"
+					>
               {$upload.filename|escape:'htmlall':'UTF-8'}
-          </a>
-        </li>
+					</a>
+				</li>
       {/foreach}
-  </ul>
+	</ul>
+    {if $is_admin && !$is_pdf}
+			<div class="form-group mt-1">
+				<a class="btn btn-default"
+				   href="{$input_field->getDownloadUrl(Order::getOrderByCartId($input->id_cart))|escape:'htmlall':'UTF-8'}"
+				>{l s='Download' mod='dynamicproduct'}</a>
+			</div>
+    {/if}
 {else}
-  <a target="_blank" href="{$input_field->getFileUrl($input_field->value)|escape:'htmlall':'UTF-8'}">
+	<a target="_blank" href="{$input_field->getFileUrl($input_field->value)|escape:'htmlall':'UTF-8'}">
       {$input_field->value|escape:'htmlall':'UTF-8'}
-  </a>
+	</a>
 {/if}

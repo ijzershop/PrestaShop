@@ -1,3 +1,51 @@
+#1.6.6.2 (25/03/2024)
+- [FIX] Fatal error when add to cart action is perfomed when customer is logged.
+
+#1.6.6.1 (11/03/2024)
+- [FIX] Issue installing new database table.
+- [FIX] Bug in PHP code.
+
+#1.6.6.0 (28/02/2024)
+- [FIX] Minor bugs.
+- [FIX] Bug adding duplicated iso code to VAT numbers automatically.
+- [FIX] Brexit VAT exemption issue for shopping cart amount.
+- [ADD] Feature to clean cart table generated from module to calculate Brexit and VOEC conditions. Remove the cookie function to do it because it was giving issues.
+- [IMP] PHP Code.
+
+#1.6.5.0 (06/02/2024)
+- [FIX] Issue with country Greece ISO code.
+- [FIX] Minor Bugs.
+- [IMP] html classes added in product prices label and amounts to be able to customize styles separated.
+- [ADD] Smart validation mode enhancement adding Country ISO code for numbers inserted by clients missing iso code at beginning for validation taking in consideration country selected in address form.
+
+#1.6.4.0 (23/01/2024)
+- [FIX] Issue with Cron jobs because of .htaccess security directive.
+- [FIX] Issue requesting multiple AJAX in Prestashop 1.6 checkout form when more than one AJAX is executed from third party checkout modules.
+- [FIX] Issue displaying order with taxes in customers with tax exemption when order is created from admin.
+- [FIX] BUG with Greece VAT number validations.
+- [FIX] Minor Bugs.
+- [IMP] Delete VAT number process of Customer VAT number list deleting VAT number from ps_address table.
+- [ADD] Option to allow register customer address even VAT number is not valid.
+- [ADD] Information in FAQ section about error response from API.
+
+#1.6.3.0 (12/12/2023)
+- [FIX] Minor bug in UK VAT number validation API process.
+- [FIX] Issue with module admin tabs collapsed.
+- [FIX] Bug during customer VAT scanning process invalidating both duplicated VAT number instead the last one registered.
+- [FIX] Issue with VOEC and Brexit option in shopping cart from currency conversion process when shop has multiple currencies.
+- [FIX] Issue in tax exemption engine with module Geolocation and One Page Checkout & Social Login by ETS-Soft by using same hook TaxManager.
+- [FIX] Issue validating the format of Malta VAT numbers.
+- [FIX] Issue with country states selector when country selector value is handled in address form.
+- [IMP] AJAX address generator process in FO.
+- [IMP] Currency conversion process.
+- [IMP] Customer VAT analysis form multi-store sharing customers.
+- [IMP] PHP code.
+- [IMP] Not allow checkout process messages and steps in Brexit and VOEC.
+- [IMP] Security directives applied.
+- [NEW] Option to not allow non VOEC products in shopping cart.
+- [NEW] Option to display product price (prestashop standar, without tax, with tax, both).
+- [ADD] Compatibility with module Geolocation (ets_geolocation) by ETS-Soft
+
 #1.6.2.2 (01/08/2023)
 - [FIX] Issue with JS variables in product page.
 

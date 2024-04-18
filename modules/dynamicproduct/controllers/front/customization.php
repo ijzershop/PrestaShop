@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /* @noinspection PhpUnusedPrivateMethodInspection */
 
 use DynamicProduct\classes\controllers\front\DynamicFrontController;
@@ -114,7 +118,7 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
         );
         $dynamic_input->updateWeight($weight);
 
-        $cart = new \Cart($dynamic_input->id_cart);
+        $cart = new Cart($dynamic_input->id_cart);
 
         $price = Product::getPriceStatic(
             $this->id_product,
@@ -165,7 +169,7 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
         $order_detail->total_price_tax_incl = $price_ttc * $dynamic_input->cart_quantity;
         $order_detail->save();
 
-        $order = new \Order($order_detail->id_order);
+        $order = new Order($order_detail->id_order);
 
         $order->total_products = $cart->getOrderTotal(
             false,
@@ -210,7 +214,7 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
         );
 
         if ($id_invoice) {
-            $order_invoice = new \OrderInvoice($id_invoice);
+            $order_invoice = new OrderInvoice($id_invoice);
             if (Validate::isLoadedObject($order_invoice)) {
                 $order_invoice->total_products = $order->total_products;
                 $order_invoice->total_products_wt = $order->total_products_wt;

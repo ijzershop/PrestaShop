@@ -24,10 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class AdminAddressesController extends AdminAddressesControllerCore
 {
     public function processSave()
     {
+        if (Module::isEnabled('dniverificator')) {
+            if (Configuration::get('DNIVERIFICATOR_BO') == 1) {  
+                if (!VerificationEngine::skipDNIFieldBycountry((int)Tools::getValue('id_country'))) {
+                    $name = Tools::getValue('firstname').' '.Tools::getValue('lastname');
+                    $dniverificator = new VerificationEngine(Tools::getValue('dni'), $name, Tools::getValue('company'));
+                    $validation = $dniverificator->verificationProcess((int)Tools::getValue('id_country'), Tools::getValue('id_customer'));
+                    if (!VerificationEngine::$skip_validation) {
+                        if ($validation && Configuration::get('DNIVERIFICATOR_COMPANY_VALIDATION') == 1 && !VerificationEngine::$company_valid) {
+                            $this->errors[] = $dniverificator->getMessage();
+                        }
+                        else if (!$validation) {
+                            $this->errors[] = $dniverificator->getMessage();
+                        }
+                    }
+                }               
+            }
+        }
         if (Module::isEnabled('advancedvatmanager') && Configuration::get('ADVANCEDVATMANAGER_ADMINVALIDATION')) {
             $module = new ValidationEngine(Tools::getValue('vat_number'));
             $module->VATValidationProcess(Tools::getValue('id_country'), $this->context->customer->id, Tools::getValue('id_address'), Tools::getValue('company'));
@@ -45,6 +66,23 @@ class AdminAddressesController extends AdminAddressesControllerCore
 
     public function processAdd()
     {
+        if (Module::isEnabled('dniverificator')) {
+            if (Configuration::get('DNIVERIFICATOR_BO') == 1) {  
+                if (!VerificationEngine::skipDNIFieldBycountry((int)Tools::getValue('id_country'))) {
+                    $name = Tools::getValue('firstname').' '.Tools::getValue('lastname');
+                    $dniverificator = new VerificationEngine(Tools::getValue('dni'), $name, Tools::getValue('company'));
+                    $validation = $dniverificator->verificationProcess((int)Tools::getValue('id_country'), Tools::getValue('id_customer'));
+                    if (!VerificationEngine::$skip_validation) {
+                        if ($validation && Configuration::get('DNIVERIFICATOR_COMPANY_VALIDATION') == 1 && !VerificationEngine::$company_valid) {
+                            $this->errors[] = $dniverificator->getMessage();
+                        }
+                        else if (!$validation) {
+                            $this->errors[] = $dniverificator->getMessage();
+                        }
+                    }
+                }               
+            }
+        }
         if (Module::isEnabled('advancedvatmanager') && Configuration::get('ADVANCEDVATMANAGER_ADMINVALIDATION')) {
             $module = new ValidationEngine(Tools::getValue('vat_number'));
             $module->VATValidationProcess(Tools::getValue('id_country'), $this->context->customer->id, Tools::getValue('id_address'), Tools::getValue('company'));

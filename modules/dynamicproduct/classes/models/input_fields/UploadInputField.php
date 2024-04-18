@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\models\input_fields;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\models\DynamicInputField;
 
 class UploadInputField extends DynamicInputField
@@ -48,6 +53,15 @@ class UploadInputField extends DynamicInputField
         return $folder_url . $file;
     }
 
+    public function getDownloadUrl($id_order)
+    {
+        return DynamicTools::addQueryToUrl($this->context->link->getAdminLink('DynamicProductFields'), [
+            'action' => 'DownloadFiles',
+            'id_input_field' => $this->id,
+            'prefix' => $id_order,
+        ]);
+    }
+
     public function isSkipped()
     {
         if (parent::isSkipped()) {
@@ -59,16 +73,17 @@ class UploadInputField extends DynamicInputField
 
     public function getFilePath($file)
     {
-        if ($this->getKeepFilePath($file)) {
-            return $this->getKeepFilePath($file);
+        $keepFilePath = $this->getKeepFilePath($file);
+        if ($keepFilePath) {
+            return $keepFilePath;
         }
 
-        return $this->module->provider->getDataDir($this->dir) . $file;
+        return $this->module->provider->getDataDir($this->dir) . basename($file);
     }
 
     public function getKeepFilePath($file)
     {
-        $keep_path = $this->module->provider->getDataDir('upload_keep') . $file;
+        $keep_path = $this->module->provider->getDataDir('upload_keep') . basename($file);
 
         return is_file($keep_path) ? $keep_path : false;
     }
@@ -79,7 +94,7 @@ class UploadInputField extends DynamicInputField
         $dir = $this->getKeepFilePath($file) ? $this->keep_dir : $this->dir;
         $upload_dir = $this->module->provider->getDataDir($dir);
 
-        return $upload_dir . str_replace('.' . $extension, $this->thumb_suffix, $file);
+        return $upload_dir . str_replace('.' . $extension, $this->thumb_suffix, basename($file));
     }
 
     public function getThumbUrl($file)
@@ -88,6 +103,6 @@ class UploadInputField extends DynamicInputField
         $folder_url = $this->module->provider->getDataDirUrl($dir);
         $extension = pathinfo($file, PATHINFO_EXTENSION);
 
-        return $folder_url . str_replace('.' . $extension, $this->thumb_suffix, $file);
+        return $folder_url . str_replace('.' . $extension, $this->thumb_suffix, basename($file));
     }
 }

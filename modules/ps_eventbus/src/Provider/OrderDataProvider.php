@@ -8,8 +8,7 @@ use PrestaShop\Module\PsEventbus\Repository\OrderCartRuleRepository;
 use PrestaShop\Module\PsEventbus\Repository\OrderDetailsRepository;
 use PrestaShop\Module\PsEventbus\Repository\OrderHistoryRepository;
 use PrestaShop\Module\PsEventbus\Repository\OrderRepository;
-
-class OrderDataProvider implements PaginatedApiDataProviderInterface
+class OrderDataProvider implements \PrestaShop\Module\PsEventbus\Provider\PaginatedApiDataProviderInterface
 {
     /**
      * @var OrderRepository
@@ -35,34 +34,23 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
      * @var OrderCartRuleRepository
      */
     private $orderCartRuleRepository;
-
     /**
      * @var int
      */
     private $shopId;
-
-    public function __construct(
-        \Context $context,
-        OrderRepository $orderRepository,
-        OrderDetailsRepository $orderDetailsRepository,
-        ArrayFormatter $arrayFormatter,
-        OrderHistoryRepository $orderHistoryRepository,
-        OrderCartRuleRepository $orderCartRuleRepository
-    ) {
+    public function __construct(\Context $context, OrderRepository $orderRepository, OrderDetailsRepository $orderDetailsRepository, ArrayFormatter $arrayFormatter, OrderHistoryRepository $orderHistoryRepository, OrderCartRuleRepository $orderCartRuleRepository)
+    {
         $this->orderRepository = $orderRepository;
         $this->context = $context;
         $this->arrayFormatter = $arrayFormatter;
         $this->orderDetailsRepository = $orderDetailsRepository;
         $this->orderHistoryRepository = $orderHistoryRepository;
         $this->orderCartRuleRepository = $orderCartRuleRepository;
-
         if ($this->context->shop === null) {
             throw new \PrestaShopException('No shop context');
         }
-
         $this->shopId = (int) $this->context->shop->id;
     }
-
     /**
      * @param int $offset
      * @param int $limit
@@ -70,34 +58,24 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
      *
      * @return array
      *
-     * @throws \PrestaShopDatabaseException
+     * @@throws \PrestaShopDatabaseException
      */
     public function getFormattedData($offset, $limit, $langIso)
     {
         $orders = $this->orderRepository->getOrders($offset, $limit, $this->shopId);
-
         if (empty($orders)) {
             return [];
         }
-
         $langId = (int) \Language::getIdByIso($langIso);
         $this->castOrderValues($orders, $langId);
-
         $orderDetails = $this->getOrderDetails($orders);
         $orderStatuses = $this->getOrderStatuses($orders, $langId);
         $orderCartRules = $this->getOrderCartRules($orders);
-
-        $orders = array_map(function ($order) {
-            return [
-                'id' => $order['id_order'],
-                'collection' => Config::COLLECTION_ORDERS,
-                'properties' => $order,
-            ];
+        $orders = \array_map(function ($order) {
+            return ['id' => $order['id_order'], 'collection' => Config::COLLECTION_ORDERS, 'properties' => $order];
         }, $orders);
-
-        return array_merge($orders, $orderDetails, $orderStatuses, $orderCartRules);
+        return \array_merge($orders, $orderDetails, $orderStatuses, $orderCartRules);
     }
-
     /**
      * @param int $offset
      * @param string $langIso
@@ -108,41 +86,30 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
     {
         return (int) $this->orderRepository->getRemainingOrderCount($offset, $this->shopId);
     }
-
     /**
      * @param int $limit
      * @param string $langIso
      *
      * @return array
      *
-     * @throws \PrestaShopDatabaseException
+     * @@throws \PrestaShopDatabaseException
      */
     public function getFormattedDataIncremental($limit, $langIso, $objectIds)
     {
         $langId = (int) \Language::getIdByIso($langIso);
         $orders = $this->orderRepository->getOrdersIncremental($limit, $this->shopId, $objectIds);
-
-        if (!is_array($orders) || empty($orders)) {
+        if (!\is_array($orders) || empty($orders)) {
             return [];
         }
-
         $orderDetails = $this->getOrderDetails($orders);
         $orderStatuses = $this->getOrderStatuses($orders, $langId);
         $orderCartRules = $this->getOrderCartRules($orders);
-
         $this->castOrderValues($orders, (int) \Language::getIdByIso($langIso));
-
-        $orders = array_map(function ($order) {
-            return [
-                'id' => $order['id_order'],
-                'collection' => Config::COLLECTION_ORDERS,
-                'properties' => $order,
-            ];
+        $orders = \array_map(function ($order) {
+            return ['id' => $order['id_order'], 'collection' => Config::COLLECTION_ORDERS, 'properties' => $order];
         }, $orders);
-
-        return array_merge($orders, $orderDetails, $orderStatuses, $orderCartRules);
+        return \array_merge($orders, $orderDetails, $orderStatuses, $orderCartRules);
     }
-
     /**
      * @param int $offset
      * @param int $limit
@@ -150,54 +117,42 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
      *
      * @return array
      *
-     * @throws \PrestaShopDatabaseException
+     * @@throws \PrestaShopDatabaseException
      */
     public function getQueryForDebug($offset, $limit, $langIso)
     {
         return $this->orderRepository->getQueryForDebug($offset, $limit, $this->shopId);
     }
-
     /**
      * @param array $orders
      *
      * @return array
      *
-     * @throws \PrestaShopDatabaseException
+     * @@throws \PrestaShopDatabaseException
      */
     private function getOrderDetails(array $orders)
     {
         if (empty($orders)) {
             return [];
         }
-
         $orderIds = $this->arrayFormatter->formatValueArray($orders, 'id_order');
-
         $orderDetails = $this->orderDetailsRepository->getOrderDetails($orderIds, $this->shopId);
-
-        if (!is_array($orderDetails) || empty($orderDetails)) {
+        if (!\is_array($orderDetails) || empty($orderDetails)) {
             return [];
         }
-
         $this->castOrderDetailValues($orderDetails);
-
-        $orderDetails = array_map(function ($orderDetail) {
-            return [
-                'id' => $orderDetail['id_order_detail'],
-                'collection' => Config::COLLECTION_ORDER_DETAILS,
-                'properties' => $orderDetail,
-            ];
+        $orderDetails = \array_map(function ($orderDetail) {
+            return ['id' => $orderDetail['id_order_detail'], 'collection' => Config::COLLECTION_ORDER_DETAILS, 'properties' => $orderDetail];
         }, $orderDetails);
-
         return $orderDetails;
     }
-
     /**
      * @param array $orders
      * @param int $langId
      *
      * @return array|array[]
      *
-     * @throws \PrestaShopDatabaseException
+     * @@throws \PrestaShopDatabaseException
      */
     private function getOrderStatuses(array $orders, $langId)
     {
@@ -207,22 +162,16 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
         $orderIds = $this->arrayFormatter->formatValueArray($orders, 'id_order');
         $orderHistoryStatuses = $this->orderHistoryRepository->getOrderHistoryStatuses($orderIds, $langId);
         $orderHistoryStatuses = $this->castOrderStatuses($orderHistoryStatuses);
-
-        return array_map(function ($orderHistoryStatus) {
-            return [
-                'id' => $orderHistoryStatus['id_order_history'],
-                'collection' => Config::COLLECTION_ORDER_STATUS_HISTORY,
-                'properties' => $orderHistoryStatus,
-            ];
+        return \array_map(function ($orderHistoryStatus) {
+            return ['id' => $orderHistoryStatus['id_order_history'], 'collection' => Config::COLLECTION_ORDER_STATUS_HISTORY, 'properties' => $orderHistoryStatus];
         }, $orderHistoryStatuses);
     }
-
     /**
      * @param array $orders
      *
      * @return array|array[]
      *
-     * @throws \PrestaShopDatabaseException
+     * @@throws \PrestaShopDatabaseException
      */
     private function getOrderCartRules(array $orders)
     {
@@ -232,23 +181,17 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
         $orderIds = $this->arrayFormatter->formatValueArray($orders, 'id_order');
         $orderCartRules = $this->orderCartRuleRepository->getOrderCartRules($orderIds);
         $this->castOrderCartRulesValues($orderCartRules);
-
-        return array_map(function ($orderCartRule) {
-            return [
-                'id' => $orderCartRule['id_order_cart_rule'],
-                'collection' => Config::COLLECTION_ORDER_CART_RULES,
-                'properties' => $orderCartRule,
-            ];
+        return \array_map(function ($orderCartRule) {
+            return ['id' => $orderCartRule['id_order_cart_rule'], 'collection' => Config::COLLECTION_ORDER_CART_RULES, 'properties' => $orderCartRule];
         }, $orderCartRules);
     }
-
     /**
      * @param array $orders
      * @param int $langId
      *
      * @return void
      *
-     * @throws \PrestaShopDatabaseException
+     * @@throws \PrestaShopDatabaseException
      */
     private function castOrderValues(array &$orders, int $langId)
     {
@@ -270,7 +213,6 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
             unset($order['address_iso']);
         }
     }
-
     /**
      * @param array $orders
      * @param array $order
@@ -278,7 +220,7 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
      *
      * @return bool
      *
-     * @throws \PrestaShopDatabaseException
+     * @@throws \PrestaShopDatabaseException
      */
     private function castIsPaidValue(array $orders, array $order, int $langId)
     {
@@ -286,17 +228,14 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
         $orderIds = $this->arrayFormatter->formatValueArray($orders, 'id_order');
         /** @var array $orderHistoryStatuses */
         $orderHistoryStatuses = $this->orderHistoryRepository->getOrderHistoryStatuses($orderIds, $langId);
-
         foreach ($orderHistoryStatuses as &$orderHistoryStatus) {
             if ($order['id_order'] == $orderHistoryStatus['id_order'] && $dateAdd < $orderHistoryStatus['date_add']) {
                 $isPaid = (bool) $orderHistoryStatus['paid'];
                 $dateAdd = $orderHistoryStatus['date_add'];
             }
         }
-
         return (bool) $isPaid;
     }
-
     /**
      * @param array $orderDetails
      *
@@ -319,8 +258,7 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
             $orderDetail['conversion_rate'] = (float) $orderDetail['conversion_rate'];
         }
     }
-
-    private function castOrderStatuses(array &$orderStatuses): array
+    private function castOrderStatuses(array &$orderStatuses) : array
     {
         $castedOrderStatuses = [];
         foreach ($orderStatuses as $orderStatus) {
@@ -340,10 +278,8 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
             $castedOrderStatus['updated_at'] = $castedOrderStatus['date_add'];
             $castedOrderStatuses[] = $castedOrderStatus;
         }
-
         return $castedOrderStatuses;
     }
-
     /**
      * @param array $orderDetail
      *
@@ -354,21 +290,17 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
         if (!$orderDetail['address_iso']) {
             $orderDetail['invoice_country_code'] = null;
             $orderDetail['delivery_country_code'] = null;
-
             return;
         }
-
-        $addressAndIsoCodes = explode(',', $orderDetail['address_iso']);
-        if (count($addressAndIsoCodes) === 1) {
-            $addressAndIsoCode = explode(':', $addressAndIsoCodes[0]);
+        $addressAndIsoCodes = \explode(',', $orderDetail['address_iso']);
+        if (\count($addressAndIsoCodes) === 1) {
+            $addressAndIsoCode = \explode(':', $addressAndIsoCodes[0]);
             $orderDetail['invoice_country_code'] = $addressAndIsoCode[1];
             $orderDetail['delivery_country_code'] = $addressAndIsoCode[1];
-
             return;
         }
-
         foreach ($addressAndIsoCodes as $addressAndIsoCodeString) {
-            $addressAndIsoCode = explode(':', $addressAndIsoCodeString);
+            $addressAndIsoCode = \explode(':', $addressAndIsoCodeString);
             if ($addressAndIsoCode[0] === 'delivery') {
                 $orderDetail['delivery_country_code'] = $addressAndIsoCode[1];
             } elseif ($addressAndIsoCode[0] === 'invoice') {
@@ -376,7 +308,6 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
             }
         }
     }
-
     /**
      * @param array $orderCartRules
      *
@@ -392,7 +323,7 @@ class OrderDataProvider implements PaginatedApiDataProviderInterface
             $orderCartRule['value'] = (float) $orderCartRule['value'];
             $orderCartRule['value_tax_excl'] = (float) $orderCartRule['value_tax_excl'];
             $orderCartRule['free_shipping'] = (bool) $orderCartRule['free_shipping'];
-            $orderCartRule['deleted'] = isset($orderCartRule['deleted']) ? (bool) $orderCartRule['deleted'] : false;
+            $orderCartRule['deleted'] = isset($orderCartRule['deleted']) ? (bool) $orderCartRule['deleted'] : \false;
         }
     }
 }

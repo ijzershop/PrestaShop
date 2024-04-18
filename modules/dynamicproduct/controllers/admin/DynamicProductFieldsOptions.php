@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /* @noinspection PhpUnusedPrivateMethodInspection */
 
 use DynamicProduct\classes\DynamicTools;
@@ -194,10 +198,13 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         $filename = $this->id_option . '.' . $extension;
         ImageManager::resize($save_path, $img_dir . $filename);
 
+        list($width, $height) = getimagesize($save_path);
         $class_name = self::$types[$dynamic_field->type];
         /** @var DynamicDropdownOption $option */
         $option = new $class_name($this->id_option);
         $option->image = $filename;
+        $option->image_width = $width;
+        $option->image_height = $height;
         $option->save();
 
         $image = new ImageResize($save_path);
@@ -280,9 +287,12 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
                     $option->label[$language['id_lang']] = DynamicTools::capitalizeFilename(basename($path));
                 }
 
+                list($width, $height) = getimagesize($path);
                 $filename = $option->id . '.' . $extension;
                 ImageManager::resize($path, $img_dir . $filename);
                 $option->image = $filename;
+                $option->image_width = $width;
+                $option->image_height = $height;
                 $option->save();
 
                 $image = new ImageResize($path);
@@ -359,6 +369,8 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         }
 
         $option->image = null;
+        $option->image_width = null;
+        $option->image_height = null;
         $option->save();
 
         $this->respond([

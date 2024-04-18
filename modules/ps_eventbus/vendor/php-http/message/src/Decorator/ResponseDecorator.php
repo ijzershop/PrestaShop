@@ -1,9 +1,8 @@
 <?php
 
-namespace Http\Message\Decorator;
+namespace ps_eventbus_v3_0_7\Http\Message\Decorator;
 
 use Psr\Http\Message\ResponseInterface;
-
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
@@ -12,7 +11,6 @@ trait ResponseDecorator
     use MessageDecorator {
         getMessage as getResponse;
     }
-
     /**
      * Exchanges the underlying response with another.
      *
@@ -22,10 +20,8 @@ trait ResponseDecorator
     {
         $new = clone $this;
         $new->message = $response;
-
         return $new;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -33,7 +29,6 @@ trait ResponseDecorator
     {
         return $this->message->getStatusCode();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -41,10 +36,8 @@ trait ResponseDecorator
     {
         $new = clone $this;
         $new->message = $this->message->withStatus($code, $reasonPhrase);
-
         return $new;
     }
-
     /**
      * {@inheritdoc}
      */

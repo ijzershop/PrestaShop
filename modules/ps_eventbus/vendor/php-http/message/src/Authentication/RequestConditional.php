@@ -1,11 +1,10 @@
 <?php
 
-namespace Http\Message\Authentication;
+namespace ps_eventbus_v3_0_7\Http\Message\Authentication;
 
-use Http\Message\Authentication;
-use Http\Message\RequestMatcher;
+use ps_eventbus_v3_0_7\Http\Message\Authentication;
+use ps_eventbus_v3_0_7\Http\Message\RequestMatcher;
 use Psr\Http\Message\RequestInterface;
-
 /**
  * Authenticate a PSR-7 Request if the request is matching the given request matcher.
  *
@@ -17,18 +16,15 @@ final class RequestConditional implements Authentication
      * @var RequestMatcher
      */
     private $requestMatcher;
-
     /**
      * @var Authentication
      */
     private $authentication;
-
     public function __construct(RequestMatcher $requestMatcher, Authentication $authentication)
     {
         $this->requestMatcher = $requestMatcher;
         $this->authentication = $authentication;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -37,7 +33,6 @@ final class RequestConditional implements Authentication
         if ($this->requestMatcher->matches($request)) {
             return $this->authentication->authenticate($request);
         }
-
         return $request;
     }
 }

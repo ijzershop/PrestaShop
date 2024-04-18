@@ -7,6 +7,18 @@
  * 	@module Advanced VAT Manager
  */
 
+/* Table list */
+table#table-advancedvatmanager_customers span.title_box {
+    word-wrap: break-word;
+    white-space: normal;
+    font-weight: 600;
+    text-align: center;
+}
+
+table#table-advancedvatmanager_customers thead>tr>th {
+    vertical-align: middle;    
+}
+
 .avm_process_container,  .progress_circle {
     text-align:  center;
 }

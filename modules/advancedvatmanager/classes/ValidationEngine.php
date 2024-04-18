@@ -10,9 +10,10 @@
  
 if (!defined('_PS_VERSION_')) {
     exit;
-};
+}
 
 require_once(_PS_MODULE_DIR_.'advancedvatmanager/classes/CustomersVAT.php');
+require_once(_PS_MODULE_DIR_.'advancedvatmanager/classes/CustomersCart.php');
 require_once(_PS_MODULE_DIR_.'advancedvatmanager/classes/CustomersExemption.php');
 require_once(_PS_MODULE_DIR_.'advancedvatmanager/classes/AdvancedVatManagerOC.php');
 
@@ -35,8 +36,10 @@ class ValidationEngine extends Module
     protected $eu_prefix = array();
     // Add more ISO code to update European countries
     public static $european_countries_iso = array('AT','BE','BG','CY','CZ','DE','DK','EE','ES','FI','FR','GR','HR','HU','IE','IT','LT','LU','LV','MT','NL','PL','PT','RO','SE','SI','SK');
+    public static $north_ireland_states = array('GB-NIR', 'GB-ANT','GB-ARM','GB-DOW','GB-BFS','GB-BNB','GB-BLA','GB-BLY','GB-CKF','GB-CLR','GB-CKT','GB-CGV','GB-DRY','GB-DGN','GB-FER','GB-LRN','GB-LMV','GB-LSB','GB-MFT','GB-NTA','GB-NYM','GB-OMH');
     public static $brexit_countries_iso = array('GB');
     public static $voec_countries_iso = array('NO');
+    public static $country_state_iso = null;
     public static $company_valid = 2;// 1 Valid, 0 Invalid, 2 Not checked
     public static $validation_process = false;
     public static $skip_validation_process = false;
@@ -45,6 +48,7 @@ class ValidationEngine extends Module
     public static $customer_with_vat_valid = false;
     public static $brexit_customer = false;
     public static $voec_customer = false;
+    public static $voec_company = false;
     public static $no_voec_product = false;// True when a product is 3.000 NOK or higher
     public static $voec_product = false;
     public static $allow_checkout = true;
@@ -96,6 +100,7 @@ class ValidationEngine extends Module
                 if (Country::getIsoById($id) == 'GB') {
                     $this->eu_prefix[Country::getIsoById($id)] = 'XI'; 
                 }
+                // Fix Greece iso code in VAT
                 else if (Country::getIsoById($id) == 'GR') {
                     $this->eu_prefix[Country::getIsoById($id)] = 'EL'; 
                 }
@@ -119,11 +124,10 @@ class ValidationEngine extends Module
         self::$vat_iso_code = Tools::substr(self::$vat, 0, 2);  
         self::$status = array();
         self::$company_valid = 2;
-        self::$notax_customer = false;  
         
         if (
-            (Configuration::get('ADVANCEDVATMANAGER_SKIPAPISYSTEMFAIL') == 1 && self::$checkVatCron === false && self::$checkVatProcess === false) ||
-            (Configuration::get('ADVANCEDVATMANAGER_CRON_SKIPAPISYSTEMFAIL') == 1 && self::$checkVatCron && self::$checkVatProcess === false)
+            (Configuration::get('ADVANCEDVATMANAGER_SKIPAPISYSTEMFAIL') == 1 && self::$checkVatCron == false && self::$checkVatProcess == false) ||
+            (Configuration::get('ADVANCEDVATMANAGER_CRON_SKIPAPISYSTEMFAIL') == 1 && self::$checkVatCron && self::$checkVatProcess == false)
         )
         {
             $this->skip_api_fails = true;
@@ -149,7 +153,7 @@ class ValidationEngine extends Module
      */
     public static function setVATValidation($valid = null)
     {
-        if ($valid !== null) {
+        if ($valid != null) {
             self::$valid = $valid;    
         }
         return self::$valid;
@@ -228,13 +232,14 @@ class ValidationEngine extends Module
     }
     
     /**
-     * ValidationEngine::getVat()
-     * Gets VAT number complete (with ISO code)
+     * ValidationEngine::setVat()
+     * Sets VAT number complete (with ISO code)
+     * @params $vat VAT number with ISO code
      * @return
      */
-    public static function setVat($vat = null)
+    public static function setVat($vat)
     {
-        if ($vat !== null) {
+        if ($vat != null) {
             self::$vat = $vat;    
         }
         return self::$vat;
@@ -251,6 +256,17 @@ class ValidationEngine extends Module
     }
     
     /**
+     * ValidationEngine::setVatNumber()
+     * Sets VAT number with no ISO code
+     * @params $vat VAT number with no ISO code
+     * @return
+     */
+    public static function setVatNumber($vat)
+    {
+        self::$vat_number = $vat;
+    }
+    
+    /**
      * ValidationEngine::getVatIso()
      * Gets ISO code from VAT number
      * @return
@@ -258,6 +274,16 @@ class ValidationEngine extends Module
     public static function getVatIso()
     {
         return self::$vat_iso_code;
+    }
+    
+    /**
+     * ValidationEngine::setVatIso()
+     * Gets ISO code from VAT number
+     * @return
+     */
+    public static function setVatIso($iso_code)
+    {
+        self::$vat_iso_code = $iso_code;
     }
     
     /**
@@ -318,7 +344,7 @@ class ValidationEngine extends Module
      */
     public static function setStatus($status = null)
     {
-        if ($status !== null) {
+        if ($status != null) {
             self::$status[] = $status;    
         }
     }
@@ -341,7 +367,7 @@ class ValidationEngine extends Module
      */
     public function setMessage($message = null)
     {
-        if ($message !== null) {
+        if ($message != null) {
             $this->message = $message;    
         }
         return $this->message;
@@ -383,20 +409,20 @@ class ValidationEngine extends Module
      */
     public static function skipVATValidation($country_id = null, $company =  null, $vat_number = null)
     {
-        if ($vat_number === null) {
+        if ($vat_number == null) {
             $vat_number = Tools::getValue('vat_number');
         }
         
-        if ($company === null) {
+        if ($company == null) {
             $company = Tools::getValue('company');
         }
         
-        if ($country_id === null) {
+        if ($country_id == null) {
             $country_id = Tools::getValue('id_country');
         }
         
         // Reforce validation system to avoid issues validating wrong VAT numbers in wrong countries what happens in the execution of cron tasks to import orders in third-party modules.
-        if ($country_id === null || $country_id == '') {
+        if ($country_id == null || $country_id == '') {
             return true;    
         }
         
@@ -416,7 +442,7 @@ class ValidationEngine extends Module
 
         // Checks Front validation enabled
         if (Context::getContext()->controller instanceof FrontController) {
-            if (Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION') == 0 && self::$admin_scan === false) {
+            if (Configuration::get('ADVANCEDVATMANAGER_FRONTVALIDATION') == 0 && self::$admin_scan == false) {
                 return true;
             }
             // Checks if VAT number is empty and field is optional
@@ -436,7 +462,7 @@ class ValidationEngine extends Module
                     return true;
                 }
             }
-            if (Configuration::get('ADVANCEDVATMANAGER_ADMINVALIDATION') == 0 && self::$admin_scan === false) {
+            if (Configuration::get('ADVANCEDVATMANAGER_ADMINVALIDATION') == 0 && self::$admin_scan == false) {
                 return true;
             }
              // Checks if VAT number is empty and field is optional
@@ -459,17 +485,17 @@ class ValidationEngine extends Module
     public function VATValidationProcess($country_id = null, $id_customer = null, $id_address = null, $company = null)
     { 
         self::$init_validation_process = true;
-        if ($id_customer === null) {
+        if ($id_customer == null) {
             $id_customer = (isset(Context::getContext()->customer->id) && Context::getContext()->customer->id?Context::getContext()->customer->id:Tools::getValue('id_customer'));    
         }
-        if ($id_address === null) {
+        if ($id_address == null) {
             $id_address = Tools::getIsset('id_address')?Tools::getValue('id_address'):false;
         }
         
         $customer = new Customer($id_customer);
         
         // Company name
-        if ($company === null) {
+        if ($company == null) {
             $company = Tools::getValue('company');  
         }
         
@@ -477,10 +503,14 @@ class ValidationEngine extends Module
         
         if ($country_id) {
             $country_iso = Country::getIsoById($country_id);
+            if (Tools::getValue('id_state')) {
+                $state = new State((int)Tools::getValue('id_state'));
+                self::$country_state_iso = $state->iso_code;
+            }
         }
         
         // Skip validation process
-        if (self::skipVATValidation($country_id, $company, self::$vat) === false) {
+        if (self::skipVATValidation($country_id, $company, self::$vat) == false) {
             // Checks blacklist
             if (Configuration::get('ADVANCEDVATMANAGER_BLACKLIST') != '') {
                 $blacklist = explode(',', Configuration::get('ADVANCEDVATMANAGER_BLACKLIST'));
@@ -492,10 +522,10 @@ class ValidationEngine extends Module
             }
             // Validation type
             if (Configuration::get('ADVANCEDVATMANAGER_VALIDATION_TYPE') == 'format') {
-                $this->formatValidation(self::$vat, $country_id, $company);
+                $this->formatValidation($country_id, $company);
             }
             elseif (Configuration::get('ADVANCEDVATMANAGER_VALIDATION_TYPE') == 'api') {
-                if ($this->formatValidation(self::$vat, $country_id, $company)) {
+                if ($this->formatValidation($country_id, $company)) {
                     //UK VAT
                     if ($country_iso == 'GB' && self::$vat_iso_code != $this->eu_prefix['GB']) {
                         if (Configuration::get('ADVANCEDVATMANAGER_BREXIT_ENABLED') == 1) {
@@ -522,11 +552,11 @@ class ValidationEngine extends Module
                     } 
                 }
                 // No admin scan and send email after API validation
-                if (self::$admin_scan === false) {
+                if (self::$admin_scan == false) {
                     if (self::$valid) {
                         $module = Module::getInstanceByName('advancedvatmanager');
                         // API system process fails
-                        if (self::$system_fail === true) {
+                        if (self::$system_fail == true) {
                             if (Configuration::get('ADVANCEDVATMANAGER_SENDAPIALERT') == 1) {
                                 $module->sendEmail(0, $customer_info);    
                             }   
@@ -549,12 +579,12 @@ class ValidationEngine extends Module
             // Checks duplicated once validation is performed
             if (CustomersVAT::checkduplicated(self::$vat, $id_customer)) {
                 self::$duplicated = true;
-                if (!empty(self::$vat) && (bool)Configuration::get('ADVANCEDVATMANAGER_ALLOWDUPLICATED') === false && self::$valid) {
+                if (!empty(self::$vat) && (bool)Configuration::get('ADVANCEDVATMANAGER_ALLOWDUPLICATED') == false && self::$valid) {
                     $this->message = sprintf($this->l('The VAT number %s is already in our database associated to another customer.', 'ValidationEngine'), self::$vat);
                     self::$status[] = $this->l('The VAT number is duplicated.', 'ValidationEngine');
                     self::$valid = false;
                 }
-                elseif (!empty(self::$vat) && (bool)Configuration::get('ADVANCEDVATMANAGER_ALLOWDUPLICATED') === true && self::$valid) {
+                elseif (!empty(self::$vat) && (bool)Configuration::get('ADVANCEDVATMANAGER_ALLOWDUPLICATED') == true && self::$valid) {
                     $this->message = sprintf($this->l('The VAT number %s is already in our database associated to another customer.', 'ValidationEngine'), self::$vat);
                     self::$status[] = $this->l('The VAT number is duplicated.', 'ValidationEngine');
                     self::$valid = true;
@@ -771,7 +801,17 @@ class ValidationEngine extends Module
             self::$valid =  true;
             $this->message = $this->l('UK VAT number has been validated successfully by HMRC GOV.UK system.', 'ValidationEngine');
             self::$registered_company_name = $response['target']['name'];
-            $this->address = $response['target']['address']['line1'].PHP_EOL.$response['target']['address']['line2'].PHP_EOL.$response['target']['address']['line3'].PHP_EOL.$response['target']['address']['line3'];
+            $address = '';
+            if (isset($response['target']['address']['line1'])) {
+                $address .= $response['target']['address']['line1'].PHP_EOL;
+            }
+            if (isset($response['target']['address']['line2'])) {
+                $address .= $response['target']['address']['line2'].PHP_EOL;
+            }
+            if (isset($response['target']['address']['line3'])) {
+                $address .= $response['target']['address']['line3'].PHP_EOL;
+            }
+            $this->address = $address;
             $this->requestDate = $response['processingDate'];
             
         }
@@ -859,7 +899,8 @@ class ValidationEngine extends Module
         self::$vat = $vat;    
         
         if (Configuration::get('ADVANCEDVATMANAGER_VALIDATION_MODE') == 'smart') {
-            self::$vat = $this->escape(self::$vat);
+            // Format number
+            self::$vat = $this->escape(self::$vat);          
         }
         if (Configuration::get('ADVANCEDVATMANAGER_SAVETOUPPERCASE')) {
             self::$vat = Tools::strtoupper(self::$vat);
@@ -870,42 +911,61 @@ class ValidationEngine extends Module
     /**
      * ValidationEngine::formatValidation()
      * Format validation process
-     * @param mixed $vat
      * @param mixed $country_id
      * @param mixed $company
      * @return
      */
-    public function formatValidation($vat, $country_id = null, $company = null)
+    public function formatValidation($country_id = null, $company = null)
     { 
-        //Put it in uppercase
-        $vat = Tools::strtoupper($vat);
-        // VAT iso code
-        $vat_iso_code = Tools::substr($vat, 0, 2);
         // First char
-        $first_char = Tools::substr($vat, 0, 1);
-        // Separate 2 parts of number
-        $vat_number = Tools::substr($vat, 2);
-
+        $first_char = Tools::substr(self::$vat, 0, 1);
         $country_iso = Country::getIsoById($country_id);
-        
-        if ((empty($vat) && Configuration::get('ADVANCEDVATMANAGER_VATFIELD') == 'required') || (empty($vat) && Configuration::get('ADVANCEDVATMANAGER_DISPLAY_WITH_COMPANY') == 1 && $company)) {
-            $this->message = $this->l('VAT number is empty.', 'ValidationEngine');
-            self::$status[] = $this->l('VAT number empty', 'ValidationEngine');
-            self::$valid = false;
-            return false;    
+
+        // Add ISO Code if it is missed by client and if smart validation mode is enabled
+        if (Configuration::get('ADVANCEDVATMANAGER_VALIDATION_MODE') == 'smart') {  
+            // checks iso code digits except Norway
+            if (preg_match('/^[0-9]{2}$/', (int)self::$vat_iso_code) && !in_array($country_iso, self::$voec_countries_iso)) {
+                // United Kingdom
+                if (in_array($country_iso, self::$brexit_countries_iso)) {
+                    // Checks North Ireland states
+                    if (in_array(self::$country_state_iso, self::$north_ireland_states)) {
+                        self::setVatIso($this->eu_prefix[$country_iso]);             
+                        self::setVatNumber(self::$vat);                
+                        self::setVat(self::$vat_iso_code.self::$vat);    
+                    }
+                    else {
+                        self::setVatIso('GB');             
+                        self::setVatNumber(self::$vat);                
+                        self::setVat(self::$vat_iso_code.self::$vat);  
+                    }   
+                }
+                else {
+                    self::setVatIso($this->eu_prefix[$country_iso]);             
+                    self::setVatNumber(self::$vat);                
+                    self::setVat(self::$vat_iso_code.self::$vat);  
+                }     
+            }
         }
-        if (!empty($vat)) {
+        if (empty(self::$vat)) {
+            if (Configuration::get('ADVANCEDVATMANAGER_VATFIELD') == 'required' || (empty(self::$vat) && Configuration::get('ADVANCEDVATMANAGER_DISPLAY_WITH_COMPANY') == 1 && $company)) {
+                $this->message = $this->l('VAT number is empty.', 'ValidationEngine');
+                self::$status[] = $this->l('VAT number empty', 'ValidationEngine');
+                self::$valid = false;
+                return false;                        
+            }     
+        }
+        if (!empty(self::$vat)) {
             // United Kingdom
             if ($country_iso == 'GB') {
                 // UK VAT but Brexit disabled
-                if ($vat_iso_code == $country_iso && Configuration::get('ADVANCEDVATMANAGER_BREXIT_ENABLED') == 0) {
-                    $this->message = sprintf($this->l('The VAT number %s belongs to the United Kingdom and this shop does not have validation activated for VAT numbers from this country.', 'ValidationEngine'), $vat);
+                if (self::$vat_iso_code == $country_iso && Configuration::get('ADVANCEDVATMANAGER_BREXIT_ENABLED') == 0) {
+                    $this->message = sprintf($this->l('The VAT number %s belongs to the United Kingdom and this shop does not have validation activated for VAT numbers from this country.', 'ValidationEngine'), self::$vat);
                     self::$status[] = $this->l('The VAT number belongs to the United Kingdom and Brexit option is disabled.', 'ValidationEngine');
                     self::$valid = false;
                     return false;
                 }
                 // EU VAT in UK area
-                else if ($country_iso != $vat_iso_code && $this->eu_prefix[$country_iso] != $vat_iso_code) {
+                else if ($country_iso != self::$vat_iso_code && $this->eu_prefix[$country_iso] != self::$vat_iso_code) {
                     $this->message = $this->l('VAT number format is not correct. Should contain country iso code at beginning.', 'ValidationEngine');    
                     self::$status[] = $this->l('VAT number format invalid', 'ValidationEngine');
                     self::$valid = false;
@@ -915,13 +975,13 @@ class ValidationEngine extends Module
             // Norway
             else if ($country_iso == 'NO') {
                 // Norwegian VAT but VOEC disabled
-                if (in_array($first_char, array('8','9')) && Tools::strlen($vat) == 9 && Configuration::get('ADVANCEDVATMANAGER_VOEC_ENABLED') == 0) {
-                    $this->message = sprintf($this->l('The VAT number %s belongs to the Norway and VOEC option is disabled.', 'ValidationEngine'), $vat);
+                if (in_array($first_char, array('8','9')) && Tools::strlen(self::$vat) == 9 && Configuration::get('ADVANCEDVATMANAGER_VOEC_ENABLED') == 0) {
+                    $this->message = sprintf($this->l('The VAT number %s belongs to the Norway and VOEC option is disabled.', 'ValidationEngine'), self::$vat);
                     self::$valid = false;
                     return false; 
                 }
                 // Norwegian VAT with bad format
-                else if (!in_array($first_char, array('8','9')) || Tools::strlen($vat) != 9) {
+                else if (!in_array($first_char, array('8','9')) || Tools::strlen(self::$vat) != 9) {
                     $this->message = $this->l('VAT number format is not correct. Should contain 9 digits of length beginning with 8 or 9.', 'ValidationEngine');    
                     self::$status[] = $this->l('VAT number format invalid', 'ValidationEngine');
                     self::$valid = false;
@@ -930,7 +990,7 @@ class ValidationEngine extends Module
             }
             // EU VAT with wrong ISO code
             else {
-                if ($this->eu_prefix[$country_iso] != $vat_iso_code) {
+                if ($this->eu_prefix[$country_iso] != self::$vat_iso_code) {
                     $this->message = $this->l('VAT number format is not correct. Should contain country iso code at beginning.', 'ValidationEngine');    
                     self::$status[] = $this->l('VAT number format invalid', 'ValidationEngine');
                     self::$valid = false;
@@ -939,7 +999,7 @@ class ValidationEngine extends Module
             }
             // ISO code validation except Norwegian VAT numbers
             if ($country_iso != 'NO') {           
-                if (!$this->ISOCodeValidation($vat_number, $vat_iso_code)) {
+                if (!$this->ISOCodeValidation(self::$vat_number, self::$vat_iso_code)) {
                     self::$status[] = $this->l('VAT number format invalid', 'ValidationEngine');
                     self::$valid = false;
                     return false;
@@ -1123,7 +1183,7 @@ class ValidationEngine extends Module
                 break;
             // Malta
             case 'MT':
-                if (Tools::strlen($vat_number) != 8 || Tools::substr($vat_number, 0, 1) != 1 || !self::isInt($vat_number)) {
+                if (Tools::strlen($vat_number) != 8 || !self::isInt($vat_number)) {
                     $valid = false;
                 } 
                 break;
@@ -1176,7 +1236,7 @@ class ValidationEngine extends Module
                 } 
                 break;
         } 
-        if ($valid === false) {
+        if ($valid == false) {
             $this->message = $this->l('VAT number format is not valid.', 'ValidationEngine');
         }
         return $valid; 
@@ -1223,9 +1283,43 @@ class ValidationEngine extends Module
     public static function checkNoTax($id_customer = null, $id_address = null, $country_id = null)
     {
         $country_iso = '';
+        self::$allow_checkout = true;        
         self::$notax_customer = false;
+        self::$brexit_customer = false;
+        self::$voec_customer = false;
+        self::$voec_company = false;
+        self::$customer_with_vat_valid = false;
+        self::$no_voec_product = false;
+        self::$voec_product = false;
         
-        if ($id_customer === null && $id_address === null && $country_id === null) {
+        if ($country_id != null) {
+            $country_iso = Country::getIsoById($country_id);
+        }        
+        
+        if ($id_address != null) {
+            $address = new Address($id_address);
+            ValidationEngine::$id_address_used = $address->id;
+        }
+        else {
+            ValidationEngine::$id_address_used = $id_address;
+        }
+        
+        if ($country_iso == 'GB') {
+            if (Configuration::get('ADVANCEDVATMANAGER_BREXIT_ENABLED') == 1) {
+                // Check North Ireland states as excluded in Brexit.
+                if (isset($address->id_state) && !in_array($address->id_state, self::$north_ireland_states)) { 
+                    self::$brexit_customer = true;    
+                }
+            }
+        }
+        else if ($country_iso == 'NO') {
+            if (Configuration::get('ADVANCEDVATMANAGER_VOEC_ENABLED') == 1) {
+                self::$voec_customer = true;
+            }
+        }
+
+        // PRIORITY OPTIONS START
+        if ($id_customer == null && $id_address == null && $country_id == null) {
             return false;
         }
         
@@ -1242,19 +1336,8 @@ class ValidationEngine extends Module
         if ($country_id && $country_id == Configuration::get('ADVANCEDVATMANAGER_LOCAL_COUNTRY')) { 
             return false;
         }
-        
-        // North Ireland code iso 
-        $north_ireland_state = State::getIdByIso('GB-NIR');
-        
-        if ($id_address !== null) {
-            $address = new Address($id_address);
-        }
-        
-        if ($country_id !== null) {
-            $country_iso = Country::getIsoById($country_id);
-        }
-        
-        // Checks if customer exemtpion is set for this customer
+           
+        // Checks if customer exemption is set for this customer
         if (CustomersExemption::checkCustomerExemption($id_customer)) {
             self::$notax_customer = true;
             return true; 
@@ -1268,98 +1351,97 @@ class ValidationEngine extends Module
         if (self::checkGroupExemption($id_customer)) {
             self::$notax_customer = true;
             return true;    
-        }
-        
-        // Brexit mode for VAT exemtpion when cart price is equal or below to 135 pounds and country address is UK
-        if (Configuration::get('ADVANCEDVATMANAGER_BREXIT_ENABLED') == 1 && $country_iso == 'GB') {
-            // Check North Ireland state as excluded in Brexit.
-            if (isset($address->id_state) && $address->id_state != $north_ireland_state) {
-                self::$brexit_customer = true;
-                $module = Module::getInstanceByName('advancedvatmanager');
-                $cookie_cart = json_decode(Context::getContext()->cookie->__get('avm_cart'), true);
-                if ($cookie_cart && $module->checkNotAllowCheckoutBrexit($cookie_cart['total'])) {
-                    self::$allow_checkout = false;     
-                }
-                // More than 135GBP no tax in any case
-                if ($cookie_cart && (float)$cookie_cart['total'] > $module->getCurrencyAmount('GBP', AVM_BREXIT_LIMIT)) {
-                    self::$notax_customer = true;  
-                    return true;
-                }
-                // Less or equal than 135GBP
-                else {
-                    // If company with UK VAT number valid, then no tax
-                    if (CustomersVAT::checkCustomerVATValid($id_customer, $id_address) && Configuration::get('ADVANCEDVATMANAGER_BREXIT_VATEXEMPT_LESSTHAN135GBP') == 1) {
-                        self::$notax_customer = true; 
-                        self::$customer_with_vat_valid = true; 
-                        return true;        
-                    }
-                    return false;
-                }
+        }             
+        // PRIORITY OPTIONS END       
+
+        // Get Cart from table advancedvatmanager_customer_cart
+        $products_cart = CustomersCart::getProducts($id_customer, Context::getContext()->shop->id);
+        $total_cart = (float)CustomersCart::getTotalCart($id_customer, Context::getContext()->shop->id);
+                   
+        // Brexit mode for VAT exemption when country address is UK
+        if (self::$brexit_customer) {
+            $advancedvatmanager = Module::getInstanceByName('advancedvatmanager');
+            if ($total_cart && $advancedvatmanager->checkNotAllowCheckoutBrexit($total_cart)) {
+                self::$allow_checkout = false;     
+            }
+            // More than 135GBP no tax in any case
+            if ($total_cart && $total_cart > $advancedvatmanager->getCurrencyAmount('GBP', AVM_BREXIT_LIMIT)) {
+                self::$notax_customer = true;  
+            }
+            // Less or equal than 135GBP
+            else if (CustomersVAT::checkCustomerVATValid($id_customer, $id_address) && Configuration::get('ADVANCEDVATMANAGER_BREXIT_VATEXEMPT_LESSTHAN135GBP') == 1) {
+                // If company with UK VAT number valid, then no tax
+                self::$notax_customer = true; 
+                self::$customer_with_vat_valid = true;    
             }
         }
-        
         // VOEC mode for VAT exemtpion depends on the VOEC mode selected
-        else if (Configuration::get('ADVANCEDVATMANAGER_VOEC_ENABLED') == 1 && $country_iso == 'NO') {
-            self::$no_voec_product = false;
-            self::$voec_customer = true;
-            $module = Module::getInstanceByName('advancedvatmanager');
+        else if (self::$voec_customer) {
+            $advancedvatmanager = Module::getInstanceByName('advancedvatmanager');
             //No tax if the customer is a company with valid VAT number and VOEC customer is false because it is a company
             if (CustomersVAT::checkCustomerVATValid($id_customer, $id_address)) {
                 self::$notax_customer = true; 
                 self::$customer_with_vat_valid = true; 
                 self::$voec_customer = false;
-                return true;        
+                self::$voec_company = true; 
             }
-            $cookie_cart = json_decode(Context::getContext()->cookie->__get('avm_cart'), true);
+            // CHECK SHOPPING CART FOR VOEC AND NON VOEC PROUCTS
             // More than 3.000 NOK
-            if ($cookie_cart && (float)$cookie_cart['total'] > $module->getCurrencyAmount('NOK', AVM_NOK_PRODUCT_LIMIT)) {
+            else if ($total_cart && $total_cart > $advancedvatmanager->getCurrencyAmount('NOK', AVM_NOK_PRODUCT_LIMIT)) {
                 // Checks product prices
                 // 3.000 or higher product price then there is a non VOEC product.
-                if (max($cookie_cart['products']) >= $module->getCurrencyAmount('NOK', AVM_NOK_PRODUCT_LIMIT)) {
+                if (max($products_cart) >= $advancedvatmanager->getCurrencyAmount('NOK', AVM_NOK_PRODUCT_LIMIT)) {
                     self::$no_voec_product = true; 
                 } 
                 // Less than 3.000 NOK is VOEC product
-                if (min($cookie_cart['products']) < $module->getCurrencyAmount('NOK', AVM_NOK_PRODUCT_LIMIT)) {
+                if (min($products_cart) < $advancedvatmanager->getCurrencyAmount('NOK', AVM_NOK_PRODUCT_LIMIT)) {
                     self::$voec_product = true; 
                 }    
                 // Cart contains NON VOEC AND VOEC products
                 if (self::$no_voec_product && self::$voec_product) {
                     // Option to allow bundling
                     if (Configuration::get('ADVANCEDVATMANAGER_VOEC_MODE') == 2) {
-                        self::$notax_customer = true; 
-                        return true;    
+                        self::$notax_customer = true;    
                     }
                     // Option to not allow bundling and not allow checkour until non VOEC product is deleted.
                     else if (Configuration::get('ADVANCEDVATMANAGER_VOEC_MODE') == 1) {
-                        self::$allow_checkout = false;
-                        return false;        
+                        self::$notax_customer = true;
+                        self::$allow_checkout = false;     
                     }
                 }
                 // Cart contains only VOEC products
                 else if (!self::$no_voec_product && self::$voec_product) {
-                    return false;
+                     self::$notax_customer = false; 
                 }
-                // Cart contains only NON VOEC prodcuts
+                // Cart contains only NON VOEC produts
                 else if (self::$no_voec_product && !self::$voec_product) {
-                    return true;
+                     self::$notax_customer = true; 
                 }
+                // Check non VOEC products and if shop allow Non VOEC products in shopping cart
+                if (self::$no_voec_product && Configuration::get('ADVANCEDVATMANAGER_VOEC_DISABLE_CART_NONVOEC')) {
+                    if (
+                        (Configuration::get('ADVANCEDVATMANAGER_VOEC_DISABLE_CART_NONVOEC') == 'consumer' && self::$voec_customer ) ||
+                        (Configuration::get('ADVANCEDVATMANAGER_VOEC_DISABLE_CART_NONVOEC') == 'company' && self::$voec_company) ||
+                        Configuration::get('ADVANCEDVATMANAGER_VOEC_DISABLE_CART_NONVOEC') == 'all'
+                    ){
+                        self::$allow_checkout = false;            
+                    }
+                }  
             }
             // Less or equal than 3.000 NOK then taxed
             else {
-                return false;
-            }
+                self::$notax_customer = false;
+            }         
         }
-        
-        if (Configuration::get('ADVANCEDVATMANAGER_VATEXEMPTION')) {
-            if ($id_address !== null) {
+        else {
+            if (Configuration::get('ADVANCEDVATMANAGER_VATEXEMPTION')) {
                 if(CustomersVAT::checkCustomerVATValid($id_customer, $id_address)) {
                     self::$notax_customer = true;
                     self::$customer_with_vat_valid = true;   
-                    return true;
                 } 
-            }
+            }           
         }
-        return false;
+        return self::$notax_customer;
     }
     
     /**

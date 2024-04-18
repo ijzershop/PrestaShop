@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\module;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\helpers\CachedCalculationHelper;
@@ -104,7 +108,7 @@ class DynamicCalculator
             (int) $this->context->shop->id,
             (int) $this->module->provider->getCurrency(),
             (int) $this->module->provider->getCountry(),
-            (int) $this->context->customer->id_default_group,
+            (int) ($this->context->customer ? $this->context->customer->id_default_group : 0),
             (int) $customized_data['quantity'],
             (int) $customized_data['id_product_attribute'],
             (int) $this->module->provider->getCustomer(),
@@ -226,8 +230,8 @@ class DynamicCalculator
             false
         );
 
+        $dynamic_calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
         if ($dynamic_config->display_dynamic_price) {
-            $dynamic_calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
             try {
                 $cache_helper = new CachedCalculationHelper($this->module, $this->context);
                 $calculation = $cache_helper->getCached($id_product, $id_attribute);
@@ -252,9 +256,26 @@ class DynamicCalculator
             }
         }
 
+        $specific_price = $this->module->calculator->getReduction([
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_attribute,
+            'quantity' => 1,
+            'id_cart' => $this->module->provider->getCart(),
+        ]);
+
+
         $display_price_ttc = $this->calculateDisplayPrice($id_product, $display_price);
         $display_price_ht = $this->calculateDisplayPrice($id_product, $display_price, false);
         $display_price_nr = $this->calculateDisplayPrice($id_product, $display_price, true, false);
+
+        $display_price_ttc = $dynamic_calculator_helper->applySpecificPriceReductions(
+            $display_price_ttc,
+            $specific_price
+        );
+        $display_price_ht = $dynamic_calculator_helper->applySpecificPriceReductions(
+            $display_price_ht,
+            $specific_price
+        );
 
         $display_price_ttc = $this->module->provider->convertPrice($display_price_ttc);
         $display_price_ht = $this->module->provider->convertPrice($display_price_ht);
@@ -264,6 +285,8 @@ class DynamicCalculator
         $price_ht = $display_price_ht + $product_price_ht;
         $price_nr = $display_price_nr + $product_price_nr;
 
+        $result['price_amount'] = $price_ttc;
+        $result['regular_price'] = $price_nr;
         $result['price'] = $price_ttc;
         $result['price_tax_exc'] = $price_ht;
         $result['price_without_reduction'] = $price_nr;

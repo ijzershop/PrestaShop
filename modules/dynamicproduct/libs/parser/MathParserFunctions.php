@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,18 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\helpers\DynamicEquationHelper;
+use DynamicProduct\classes\models\DynamicField;
+use DynamicProduct\classes\models\DynamicInputField;
 use DynamicProduct\libs\parser\MathParser;
 use DynamicProduct\libs\parser\MathParserParserException;
 
@@ -302,4 +308,45 @@ function mpConcat()
 function mpPrice($val)
 {
     return DynamicTools::formatPrice($val);
+}
+
+/**
+ * @param $field_name
+ * @param DynamicInputField[] $input_fields
+ *
+ * @return mixed|string
+ */
+function mpLabel($field_name, $input_fields = null)
+{
+    if (empty($input_fields) || !isset($input_fields[$field_name])) {
+        return '';
+    }
+
+    $selected_options = $input_fields[$field_name]->selected_options;
+    if (empty($selected_options)) {
+        return '';
+    }
+
+    $selected_option = (int) $selected_options[0];
+
+    if (!$selected_option) {
+        return '';
+    }
+
+    return DynamicField::getLabelForDefaultLang($selected_option, $input_fields[$field_name]->getDynamicField()['type']);
+}
+
+/**
+ * @param $field_name
+ * @param DynamicInputField[] $input_fields
+ *
+ * @return string
+ */
+function mpRef($field_name, $input_fields = null)
+{
+    if (empty($input_fields) || !isset($input_fields[$field_name])) {
+        return '';
+    }
+
+    return $input_fields[$field_name]->setSKU();
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,17 +19,20 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\helpers;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use DynamicProduct\classes\models\DynamicCombinationValue;
 use DynamicProduct\classes\models\DynamicCommonField;
 use DynamicProduct\classes\models\DynamicField;
 use DynamicProduct\classes\models\DynamicInputField;
-use DynamicProduct\classes\models\DynamicProductConfigLink;
 
 class DynamicFieldsHelper
 {
@@ -215,8 +218,8 @@ class DynamicFieldsHelper
 
     private function getCombinationValue($id_product, $id_attribute, $dynamic_field)
     {
-        $id_product_source = DynamicProductConfigLink::getSourceProduct($id_product);
-        $id_attribute_source = DynamicProductConfigLink::getSourceAttribute($id_product_source, $id_product, $id_attribute);
+        $id_product_source = ConfigLinkHelper::getSourceProduct($id_product);
+        $id_attribute_source = ConfigLinkHelper::getSourceAttribute($id_product_source, $id_product, $id_attribute);
 
         $combination_value = DynamicCombinationValue::getCombinationValue(
             $id_product_source,
@@ -268,6 +271,8 @@ class DynamicFieldsHelper
 
         switch ($type) {
             case _DP_INPUT_:
+                $initial_value = (float) $field['init'];
+                break;
             case _DP_SLIDER_:
                 $initial_value = (int) $field['init'];
                 break;

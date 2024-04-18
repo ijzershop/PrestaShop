@@ -1,5 +1,7 @@
 <?php
 
+
+
 /**
  * @param Ps_eventbus $module
  *
@@ -8,6 +10,5 @@
 function upgrade_module_1_6_9($module)
 {
     $module->registerhook('actionObjectCombinationDeleteAfter');
-
-    return true;
+    return \true;
 }

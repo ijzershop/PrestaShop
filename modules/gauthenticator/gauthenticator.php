@@ -2,7 +2,7 @@
 /**
  * Google Authenticator Security Module for Prestashop
  *
- * Tested in Prestashop 1.6.0.5, 1.6.1.24, 1.7.0.2, 1.7.8.0, 8.0.0
+ * Tested in Prestashop 1.6.0.5, 1.6.1.24, 1.7.0.2, 1.7.8.0, 8.0.0, 8.1.0
  *
  * @author    Rinku Kazeno <development@kazeno.co>
  * @copyright Copyright since 2012 Rinku Kazeno
@@ -18,12 +18,17 @@
  *   own business needs, as long as no distribution of either the
  *   original module or the user-modified version is made.
  *
- * @version 1.25
+ * @version 1.26
  */
 
-if (!defined( '_PS_VERSION_') OR !defined('_CAN_LOAD_FILES_')) {
+if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+if (!defined('_CAN_LOAD_FILES_')) {
+    exit;
+}
+
 if (!defined('_PS_ADMIN_DIR_')) {
     if (defined('PS_ADMIN_DIR')) {
         define('_PS_ADMIN_DIR_', PS_ADMIN_DIR);
@@ -31,6 +36,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
         exit;
     }
 }
+
 
 class Gauthenticator extends Module
 {
@@ -42,7 +48,7 @@ class Gauthenticator extends Module
     {
         $this->name = 'gauthenticator';     //DON'T CHANGE!!
         $this->tab = 'administration';
-        $this->version = '1.25';
+        $this->version = '1.26';
         $this->author = 'R. Kazeno';
         $this->module_key = '593a8f4855e8e79dd370d4ee832ac80c';
         $this->need_instance = 0;
@@ -61,6 +67,7 @@ class Gauthenticator extends Module
         }
         require_once _PS_MODULE_DIR_.$this->name.'/classes/GAuthenticatedEmployee.php';
     }
+
 
     /**
      * @throws PrestaShopException
@@ -83,13 +90,23 @@ class Gauthenticator extends Module
         } else {
             $tplver = '8';
         }
-        if ((_PS_VERSION_ > '1.6') && (_PS_VERSION_ < '1.6.1')) {
+        if (
+            '1.6' < _PS_VERSION_
+            && _PS_VERSION_ < '1.6.1'
+        ) {
             self::updateTranslationsAfterInstall(false);
         }
         if (!is_dir(_PS_ROOT_DIR_.'/override/controllers/admin/templates/login')) {
-            mkdir(_PS_ROOT_DIR_ . '/override/controllers/admin/templates/login', 0700, true);
+            mkdir(
+                _PS_ROOT_DIR_ . '/override/controllers/admin/templates/login',
+                0700,
+                true
+            );
         }
-        copy(_PS_MODULE_DIR_."/gauthenticator/views/templates/admin/login/content_{$tplver}.tpx", _PS_ROOT_DIR_.'/override/controllers/admin/templates/login/content.tpl');  //replace login template
+        copy(
+            _PS_MODULE_DIR_."/gauthenticator/views/templates/admin/login/content_{$tplver}.tpx",
+            _PS_ROOT_DIR_.'/override/controllers/admin/templates/login/content.tpl'
+        );  //replace login template
         if (_PS_VERSION_ < '1.7') {
             $tabId = Tab::getIdFromClassName('AdminAdmin');
         } elseif (_PS_VERSION_ < '8') {
@@ -121,11 +138,13 @@ class Gauthenticator extends Module
             Hook::getIdByName('actionAdminLoginControllerLoginBefore')
             && Hook::getIdByName('actionAdminLoginControllerSetMedia')
         );
+
         return (
             parent::install()
             && $tab->add()
             && $db->execute('ALTER TABLE `'.pSQL(_DB_PREFIX_).'employee` ADD gatoken TEXT NULL')
             && Configuration::updateValue(self::CONFIG_PREFIX.'LOGIN_MODIFIED', '1')
+            && Configuration::updateValue(self::CONFIG_PREFIX.'PS_ACCOUNTS_MODIFIED', '0')
             && Configuration::updateValue(self::CONFIG_PREFIX.'RECOVERY_CODE', '')
             && Configuration::updateValue(self::CONFIG_PREFIX.'RECOVERY_USER', '')
             && (
@@ -148,24 +167,43 @@ class Gauthenticator extends Module
         //remove imported files
         unlink(_PS_ROOT_DIR_.'/override/controllers/admin/templates/login/content.tpl');
         $db = Db::getInstance();
+
+        if (Configuration::get(Gauthenticator::CONFIG_PREFIX.'PS_ACCOUNTS_MODIFIED')) {
+            # reactivate ps_accounts module login override if we had disabled it
+            Configuration::updateValue('PS_ACCOUNTS_LOGIN_ENABLED', '1');
+        }
+
         return (
             parent::uninstall()
             && $db->execute('ALTER TABLE `'.pSQL(_DB_PREFIX_).'employee` DROP gatoken')
             && Configuration::deleteByName(self::CONFIG_PREFIX.'LOGIN_MODIFIED')
+            && Configuration::deleteByName(self::CONFIG_PREFIX.'PS_ACCOUNTS_MODIFIED')
             && Configuration::deleteByName(self::CONFIG_PREFIX.'RECOVERY_CODE')
             && Configuration::deleteByName(self::CONFIG_PREFIX.'RECOVERY_USER')
         );
     }
-    
+
+
     public function disable($forceAll = FALSE)
     {
         Configuration::updateValue(self::CONFIG_PREFIX.'LOGIN_MODIFIED', '0');
+        if (Configuration::get(Gauthenticator::CONFIG_PREFIX.'PS_ACCOUNTS_MODIFIED')) {
+            # reactivate ps_accounts module login override if we had disabled it
+            Configuration::updateValue('PS_ACCOUNTS_LOGIN_ENABLED', '1');
+        }
+
         return parent::disable($forceAll);
     }
-    
+
+
     public function enable($forceAll = FALSE)
     {
         Configuration::updateValue(self::CONFIG_PREFIX.'LOGIN_MODIFIED', '1');
+        if (Configuration::get(Gauthenticator::CONFIG_PREFIX.'PS_ACCOUNTS_MODIFIED')) {
+            # deactivate ps_accounts module login override if we had disabled it
+            Configuration::updateValue('PS_ACCOUNTS_LOGIN_ENABLED', '0');
+        }
+
         return parent::enable($forceAll);
     }
 
@@ -244,7 +282,7 @@ class Gauthenticator extends Module
             !defined('_GOOGLE_AUTHENTICATOR_DISABLE_')
             && !file_exists(_PS_ROOT_DIR_.'/override/controllers/admin/templates/login/content.tpl')
         ) {
-            $controller->errors[] = $this->l("The Google Authenticator module has been installed, but the login template was not copied successfully during install. Please follow the instructions in the module's manual for copying the template manually.");
+            $controller->errors[] = $this->l('The Google Authenticator module has been installed, but the login template was not copied successfully during install. Please follow the instructions in the module\'s manual for copying the template manually.');
         } elseif (
             !defined('_GOOGLE_AUTHENTICATOR_DISABLE_')
             && Configuration::get(Gauthenticator::CONFIG_PREFIX.'LOGIN_MODIFIED')
@@ -258,7 +296,7 @@ class Gauthenticator extends Module
             include_once(_PS_MODULE_DIR_.'gauthenticator/classes/GAuthenticatedEmployee.php');
 
             $employee = new Employee();
-            $employee->gatoken = '';
+            $employee->gatoken = '';    //initialize property so it's loaded in getByEmail
             $isEmployeeLoaded = $employee->getByemail($email, $passwd);
             $gauth = new GAuth;
             if (

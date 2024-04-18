@@ -22,4 +22,17 @@
 <div class="faq_item">
     <h4 class="faq_title">{l s='I am using a Marketplaces module that imports customer data and orders generated on the platform. However, this platform controls the prices and tax allocation of these orders. How can I configure the module so that it does not try to validate the VAT numbers of the imported customer data by the marketplace module and allows the marketplace to manage the taxes and prices of the orders that are imported?' mod='advancedvatmanager'}</h4>
     <p>{l s='To disable the validation of customer VAT numbers that are imported from these modules for synchronizing data with marketplaces, you must disable the "Disable validation in modules" option in the "Activation" section of the configuration page of this module.' mod='advancedvatmanager'}</p>
-</div>  
+</div>
+<div class="faq_item">
+    <h4 class="faq_title">{l s='When I try to check VAT numbers, an error message is displayed.' mod='advancedvatmanager'}</h4>
+    <p>{l s='To check VAT numbers, the system sends a request via VIES, GOV.UK and data.brreg.no API. These API return a response depends on the result of validation or system status. Something, API systems return error message due maintenance status, some limits reached, etc...Below we show the possible error messages and what they mean.' mod='advancedvatmanager'}</p>
+    <li><strong>{l s='Invalid country ISO code' mod='advancedvatmanager'}:</strong> {l s='The country ISO code inserted is invalid' mod='advancedvatmanager'}</li>
+    <li><strong>{l s='Invalid Merchant VAT information' mod='advancedvatmanager'}:</strong> {l s='The Merchant VAT number inserted in module configuration is not valid.' mod='advancedvatmanager'}</li>
+    <li><strong>{l s='Service unavailable' mod='advancedvatmanager'}:</strong> {l s='The API system is unavailable for some reason (maintenance, technical issues, server down...). You should try again later.' mod='advancedvatmanager'}</li>
+    <li><strong>{l s='Request unavailable' mod='advancedvatmanager'}:</strong> {l s='The request is unavailable due API server issue. You should try again later.' mod='advancedvatmanager'}</li>
+    <li><strong>{l s='Timeout' mod='advancedvatmanager'}:</strong> {l s='The request has been waiting for a long time and the maximum time limit has been exceeded. This may be due to an overload of the server where the API is located. You should try again later.' mod='advancedvatmanager'}</li>
+    <li><strong>{l s='VAT number is blocked' mod='advancedvatmanager'}:</strong> {l s='The VAT number is blocked for any reason. There is not anything to do about this.' mod='advancedvatmanager'}</li>
+    <li><strong>{l s='Merchant server IP address is blocked' mod='advancedvatmanager'}:</strong> {l s='The API syste has blocked the requester IP address because it has been considered spam. You have to reset the router to change the IP address before trying a new request.' mod='advancedvatmanager'}</li>
+    <li><strong>{l s='Internal server error' mod='advancedvatmanager'}:</strong> {l s='The API server has a technical issues. Try again later.' mod='advancedvatmanager'}</li>
+    <li><strong>{l s='Maximum of concurrent requests reached' mod='advancedvatmanager'}:</strong> {l s='You have reached the maximum requests limit for a certain time. This occurs when a massive number of requests are made in a short period of time. You will have to wait a few minutes before making requests again.' mod='advancedvatmanager'}</li>
+</div>    

@@ -1,10 +1,9 @@
 <?php
 
-namespace Http\Message\Encoding;
+namespace ps_eventbus_v3_0_7\Http\Message\Encoding;
 
-use Clue\StreamFilter as Filter;
+use ps_eventbus_v3_0_7\Clue\StreamFilter as Filter;
 use Psr\Http\Message\StreamInterface;
-
 /**
  * Stream for encoding to gzip format (RFC 1952).
  *
@@ -17,16 +16,13 @@ class GzipEncodeStream extends FilteredStream
      */
     public function __construct(StreamInterface $stream, $level = -1)
     {
-        if (!extension_loaded('zlib')) {
+        if (!\extension_loaded('zlib')) {
             throw new \RuntimeException('The zlib extension must be enabled to use this stream');
         }
-
         parent::__construct($stream, ['window' => 31, 'level' => $level]);
-
         // @deprecated will be removed in 2.0
         $this->writeFilterCallback = Filter\fun($this->writeFilter(), ['window' => 31]);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -34,7 +30,6 @@ class GzipEncodeStream extends FilteredStream
     {
         return 'zlib.deflate';
     }
-
     /**
      * {@inheritdoc}
      */

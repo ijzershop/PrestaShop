@@ -1,9 +1,8 @@
 <?php
 
-namespace Http\Message\Decorator;
+namespace ps_eventbus_v3_0_7\Http\Message\Decorator;
 
 use Psr\Http\Message\StreamInterface;
-
 /**
  * Decorates a stream.
  *
@@ -15,7 +14,6 @@ trait StreamDecorator
      * @var StreamInterface
      */
     protected $stream;
-
     /**
      * {@inheritdoc}
      */
@@ -23,7 +21,6 @@ trait StreamDecorator
     {
         return $this->stream->__toString();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -31,7 +28,6 @@ trait StreamDecorator
     {
         $this->stream->close();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -39,7 +35,6 @@ trait StreamDecorator
     {
         return $this->stream->detach();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -47,7 +42,6 @@ trait StreamDecorator
     {
         return $this->stream->getSize();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -55,7 +49,6 @@ trait StreamDecorator
     {
         return $this->stream->tell();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -63,7 +56,6 @@ trait StreamDecorator
     {
         return $this->stream->eof();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -71,15 +63,13 @@ trait StreamDecorator
     {
         return $this->stream->isSeekable();
     }
-
     /**
      * {@inheritdoc}
      */
-    public function seek($offset, $whence = SEEK_SET)
+    public function seek($offset, $whence = \SEEK_SET)
     {
         $this->stream->seek($offset, $whence);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -87,7 +77,6 @@ trait StreamDecorator
     {
         $this->stream->rewind();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -95,7 +84,6 @@ trait StreamDecorator
     {
         return $this->stream->isWritable();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -103,7 +91,6 @@ trait StreamDecorator
     {
         return $this->stream->write($string);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -111,7 +98,6 @@ trait StreamDecorator
     {
         return $this->stream->isReadable();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -119,7 +105,6 @@ trait StreamDecorator
     {
         return $this->stream->read($length);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -127,7 +112,6 @@ trait StreamDecorator
     {
         return $this->stream->getContents();
     }
-
     /**
      * {@inheritdoc}
      */

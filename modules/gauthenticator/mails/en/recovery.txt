@@ -1,15 +1,13 @@
-{shop_url}
+
+[{shop_url}]
+
+Hi {firstname} {lastname},
 
 A Google Authenticator recovery code has been requested by your Back Office account. You can use the following code to regain access to your Back Office:
-
 {recovery_token}
 
 This code will only work once, and it will be disabled by any successful Back Office login by any account using Google Authenticator.
 
-[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
 
-[telefoon: 058-2123138](tel://0900-2502500)
-
-[email: info@v15.nl](mailto:info@v15.nl)
-
-ijzershop.localÂ |Â Ceresweg 1Â |Â 8938BG LeeuwardenÂ |Â 0900-2502500Â Â De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

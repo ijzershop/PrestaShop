@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,7 +50,12 @@
 
 namespace DynamicProduct\libs\ModuleFixer;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use DynamicProduct\classes\models\DynamicInput;
+use DynamicProduct\classes\models\DynamicMainConfig;
 use DynamicProduct\libs\UpgradeChecker\UpgradeChecker;
 
 class ModuleFixer
@@ -75,11 +80,17 @@ class ModuleFixer
         $unregistered_hooks = $this->getHooksList($module_hooks);
         $this->context->smarty->assign([
             'module' => $this->module,
+            'config' => DynamicMainConfig::getConfig(),
             'module_link' => $this->getModuleLink(),
             'module_hooks' => $module_hooks,
             'unregistered_hooks' => $unregistered_hooks,
             'errors' => $this->errors,
             'templates_fixed' => $this->areTemplatesFixed(),
+            'cron_link' => $this->context->link->getModuleLink(
+                $this->module->name,
+                'cleanup',
+                ['min_age' => '_min_age_', 'cron_key' => '_cron_key_', 'action' => 'cleanup']
+            ),
         ]);
 
         return $this->context->smarty->fetch(dirname(__FILE__) . '/ModuleFixer.tpl');
@@ -260,7 +271,10 @@ class ModuleFixer
                     'saved_inputs_delete_count' => $saved_inputs_delete_count,
                 ]);
 
-                return;
+                return [
+                    'success' => true,
+                    'saved_inputs_delete_count' => $saved_inputs_delete_count,
+                ];
             }
         }
 
@@ -268,5 +282,10 @@ class ModuleFixer
             'min_age' => $min_age,
             'saved_inputs_delete_count' => $saved_inputs_delete_count,
         ]);
+
+        return [
+            'success' => true,
+            'saved_inputs_delete_count' => $saved_inputs_delete_count,
+        ];
     }
 }

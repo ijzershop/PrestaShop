@@ -17,8 +17,12 @@
  *   own business needs, as long as no distribution of either the
  *   original module or the user-modified version is made.
  *
- *  @file-version 1.25
+ *  @file-version 1.26
  */
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 if (!defined('_PS_ADMIN_DIR_')) {
     if (defined('PS_ADMIN_DIR')) {
@@ -27,11 +31,16 @@ if (!defined('_PS_ADMIN_DIR_')) {
         exit;
     }
 }
- 
+
+
 class AdminGauthController extends ModuleAdminController
-{ 
+{
+    public $bootstrap = true;
     public $profilesArray = array();
-    public $authTypes = array('HOTP'=>'HOTP', 'TOTP'=>'TOTP');
+    public $authTypes = array(
+        'HOTP'=>'HOTP',
+        'TOTP'=>'TOTP'
+    );
     public $type, $enabled, $pending, $key;
     protected $restrict_edition = false;
     public $errors = array();
@@ -40,17 +49,20 @@ class AdminGauthController extends ModuleAdminController
     public function __construct() 
     { 
         require_once  _PS_MODULE_DIR_.'gauthenticator/classes/GAuthenticatedEmployee.php';
-        $this->bootstrap = true;
+
         $this->context = Context::getContext();
         $this->table = 'employee';
         $this->className = 'GAuthenticatedEmployee';
         $this->lang = false;
+
         parent::__construct();
 
         $this->addRowAction('edit');
         $this->_select = 'pl.`name` AS profile, IFNULL(gatoken, \'\') AS type, IFNULL(gatoken, \'\') AS enabled';
-        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile`
-        LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '.(int)$this->context->language->id.')';
+        $this->_join = (
+            'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile`
+            LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '.(int)$this->context->language->id.')'
+        );
         if ($this->context->cookie->profile != 1) {     //show only own account if not admin
             $this->_where = 'AND `id_employee` = ' . (int)$this->context->employee->id;
         }
@@ -59,6 +71,7 @@ class AdminGauthController extends ModuleAdminController
         foreach ($profiles AS $profile) {
             $this->profilesArray[$profile['name']] = $profile['name'];
         }
+
         $gauthe = new GAuthenticatedEmployee();
         $this->fields_list = array(
             'id_employee' => array(
@@ -108,44 +121,128 @@ class AdminGauthController extends ModuleAdminController
                 'callback_object' => $gauthe
             ),
         );
+    }
 
-        /*if (_PS_VERSION_ < '1.7') {
-            $home_tab = Tab::getInstanceFromClassName('adminHome');
-            $this->tabs_list[$home_tab->id] = array(
-                'name' => $home_tab->name[$this->context->language->id],
-                'id_tab' => $home_tab->id,
-                'children' => array(array(
-                    'id_tab' => $home_tab->id,
-                    'name' => $home_tab->name[$this->context->language->id]
-                ))
-            );
-        } else {
-            $home_tab = Tab::getInstanceFromClassName('AdminDashboard', $this->context->language->id);
-            $this->tabs_list[$home_tab->id] = array(
-                'name' => $home_tab->name,
-                'id_tab' => $home_tab->id,
-                'children' => array(array(
-                    'id_tab' => $home_tab->id,
-                    'name' => $home_tab->name
-                ))
-            );
-        }*/
 
-        
-        if ($this->context->employee->id == Tools::getValue('id_employee')) {
-            $this->tabAccess['view'] = '1';
-            if (!isset($this->tabAccess['edit']) || !$this->tabAccess['edit']) {
-                $this->restrict_edition = true;
+    /**
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
+     */
+    public function postProcess()
+    {
+        parent::postProcess();
+
+        if (
+            !static::hasEditPermission(
+                $this->id_object,
+                $this->context->employee
+            )
+        ) {
+            return false;
+        }
+
+        $this->object = $this->loadObject(true);
+        if (!$this->id_object) {
+            return false;
+        }
+
+        require_once(_PS_ROOT_DIR_.'/modules/gauthenticator/lib/gauth.php');
+        $gauth = new GAuth();
+        $gauth->importData($this->object->gatoken);
+        if (Tools::getIsset('submitSync')) {
+            if (!preg_match('/^\d{8}$/', Tools::getValue('rectoken', ''))) {
+                $this->errors[] = $this->l('Error matching email recovery token');
+                return false;
             }
-            $this->tabAccess['edit'] = '1';
-        }
-        if (!Module::isEnabled('gauthenticator')) {
-            $this->warnings[] = $this->l('The Google Authenticator module is currently disabled. Your Back Office will not be protected until you re-enable it in the Modules section.');
-        }
-        if (!file_exists(_PS_ROOT_DIR_.'/override/controllers/admin/templates/login/content.tpl')) {
-            $this->errors[] = $this->l("The Google Authenticator module has been installed, but the login template was not copied successfully during install. Please follow the instructions in the module's manual for copying the template manually.");
+
+            if (!preg_match('/^\d{6}$/', Tools::getValue('key1', '')) || !preg_match('/^\d{6}$/', Tools::getValue('key2', ''))) {
+                $this->errors[] = $this->l('Key format error, each key should be comprised of 6 digits');
+                $this->display = 'edit';
+
+                return false;
+            }
+
+            if ($gauth->resync(Tools::getValue('key1'), Tools::getValue('key2')))  {
+                $gauth->setUserData('status', true);
+                $gauth->setUserData('recovery', Tools::getValue('rectoken'));
+                $gauth->setUserData('sync', false);
+                $this->object->gatoken = pSQL($gauth->exportData());
+            } else {
+                $this->errors[] = $gauth->_errors[0];
+                $this->display = 'edit';
+
+                return false;
+            }
+
+        } elseif (
+            Tools::getValue('enabled', 0)
+            && (
+                Tools::getIsset('submitReset')
+                || (
+                    Tools::getIsset('submitSave')
+                    && Tools::getValue('changed', 0)
+                )
+            )
+        ) {
+            if (!in_array(Tools::getValue('type', ''), array('HOTP', 'TOTP'))) {
+                $this->errors[] = $this->l('Selected authentication type error');
+
+                return false;
+            }
+
+            $gauth->createUser(Tools::getValue('type'));
+            $gauth->setUserData('status', false);
+            $gauth->setUserData('sync', true);
+            $this->object->gatoken = pSQL($gauth->exportData());
+        } elseif (Tools::getIsset('submitSave')) {
+            if (
+                !$gauth->getUserData('sync')
+                && Tools::getValue('enabled', 0)
+            ) {
+                $gauth->setUserData('status', true);
+            } else {
+                $gauth->setUserData('status', false);
+            }
+            $this->object->gatoken = pSQL($gauth->exportData());
+        } elseif (Tools::getIsset('submitReset')) {
+            $this->object->gatoken = '';
         }
 
+        if (
+            Tools::getIsset('submitSave')
+            || Tools::getIsset('submitReset')
+            || Tools::getIsset('submitSync')
+        ) {
+            $result = $this->object->update();
+            $this->afterUpdate($this->object);
+            if (!$result) {
+                $this->errors[] = Tools::displayError(Db::getInstance()->getMsgError());
+                $this->display = 'edit';
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    public function processdisablePsAccountsLoginOverride()
+    {
+        Configuration::updateValue(GAuthenticator::CONFIG_PREFIX.'PS_ACCOUNTS_MODIFIED', '1');
+        Configuration::updateValue('PS_ACCOUNTS_LOGIN_ENABLED', '0');
+
+        $this->redirect_after = self::$currentIndex . '&' . $this->identifier . '&token=' . $this->token;
+
+    }
+
+
+    public function processenablePsAccountsLoginOverride()
+    {
+        Configuration::updateValue(GAuthenticator::CONFIG_PREFIX.'PS_ACCOUNTS_MODIFIED', '0');
+        Configuration::updateValue('PS_ACCOUNTS_LOGIN_ENABLED', '1');
+
+        $this->redirect_after = self::$currentIndex . '&' . $this->identifier . '&token=' . $this->token;
     }
 
 
@@ -164,34 +261,80 @@ class AdminGauthController extends ModuleAdminController
             }
         }
     }        
-    
+
+
     public function initContent()
     {
-        if (!$this->display && Tools::getValue('id_employee'))
+        if (!$this->display && Tools::getValue('id_employee')) {
             $this->display = Tools::getIsset('updateemployee') ? 'edit' : 'list';
+        }
 
-        return parent::initContent();
+        if ($this->context->employee->id == Tools::getValue('id_employee')) {
+            $this->tabAccess['view'] = '1';
+            if (!isset($this->tabAccess['edit']) || !$this->tabAccess['edit']) {
+                $this->restrict_edition = true;
+            }
+            $this->tabAccess['edit'] = '1';
+        }
+        if (!Module::isEnabled('gauthenticator')) {
+            $this->warnings[] = $this->l('The Google Authenticator module is currently disabled. Your Back Office will not be protected until you re-enable it in the Modules section.');
+        }
+        if (!file_exists(_PS_ROOT_DIR_.'/override/controllers/admin/templates/login/content.tpl')) {
+            $this->errors[] = $this->l("The Google Authenticator module has been installed, but the login template was not copied successfully during install. Please follow the instructions in the module's manual for copying the template manually.");
+        }
+
+        if (Configuration::hasKey('PS_ACCOUNTS_LOGIN_ENABLED')) {
+            if (Configuration::get('PS_ACCOUNTS_LOGIN_ENABLED')) {
+                $this->warnings[] = sprintf(
+                    $this->l('The Prestashop Accounts module is currently overriding your Back Office login page, allowing logins through your Prestashop.com account which can not be protected with 2-factor authentication. If you don\'t require that functionality you can disable it by clicking the following link: %s'),
+                    sprintf(
+                        '<br><a href="%s">%s</a>',
+                        self::$currentIndex . '&action=disable_ps_accounts_login_override&token=' . $this->token,
+                        $this->l('Disable unsecured PS Account logins')
+                    )
+                );
+            } elseif (Configuration::get(GAuthenticator::CONFIG_PREFIX.'PS_ACCOUNTS_MODIFIED')) {
+                $this->informations[] = sprintf(
+                    $this->l('The Prestashop Accounts module login override has been disabled. If you need to allow Back Office logins through your Prestashop.com account which can not be protected with 2-factor authentication, you can enable it by clicking the following link: %s'),
+                    sprintf(
+                        '<br><a href="%s">%s</a>',
+                        self::$currentIndex . '&action=enable_ps_accounts_login_override&token=' . $this->token,
+                        $this->l('Enable unsecured PS Account logins')
+                    )
+                );
+            }
+        }
+
+        parent::initContent();
     }
+
 
     /**
      * @throws Exception
      */
     public function renderForm()
     {
-        if (!($obj = $this->loadObject(true))) {
+        $obj = $this->loadObject(true);
+        if (!$obj) {
             return null;
         }
 
         require_once(_PS_MODULE_DIR_.'gauthenticator/lib/gauth.php');
 
-        $this->enabled = FALSE;     //if no gatoken, it's disabled
-        $name = $this->getFieldValue($obj, 'firstname') . ' ' . $this->getFieldValue($obj, 'lastname');
+        $this->enabled = false;     //if no gatoken, it's disabled
+        $name = (
+            $this->getFieldValue($obj, 'firstname')
+            . ' '
+            . $this->getFieldValue($obj, 'lastname')
+        );
         $tkey = '';
         $qrcode = '';
         $url = '';
         if ($this->getFieldValue($obj, 'gatoken')) {
             $gauth = new GAuth();
-            $gauth->importData($this->getFieldValue($obj, 'gatoken'));
+            $gauth->importData(
+                $this->getFieldValue($obj, 'gatoken')
+            );
             $url = $gauth->createURL($name);
             $qrcode = $this->getQrCode($url);
             $tkey = $gauth->getKey();
@@ -203,7 +346,10 @@ class AdminGauthController extends ModuleAdminController
         $this->fields_value['type'] = $this->type;
         $this->fields_value['enabled'] = $this->enabled;
         if ($this->pending) {       //edit confirm and key sync screen
-            $type_array = array('TOTP' => 'Time based', 'HOTP' => 'Counter based');
+            $type_array = array(
+                'TOTP' => 'Time based',
+                'HOTP' => 'Counter based'
+            );
             $recovery = Tools::passwdGen(8, 'NUMERIC');
             $this->fields_value['tkey'] = $tkey;
             $this->fields_value['ttype'] = $type_array[$this->type];
@@ -247,7 +393,8 @@ class AdminGauthController extends ModuleAdminController
                         'size' => 7,
                         'maxlength' => 6,
                         'required' => true
-                    ),array(
+                    ),
+                    array(
                         'type' => 'text',
                         'label' => $this->l('Enter second Verification Code').':',
                         'name' => 'key2',
@@ -282,17 +429,32 @@ class AdminGauthController extends ModuleAdminController
                     )
                 )
             );
-            if ( _PS_VERSION_ < '1.6') {
-                $this->fields_form['submit']['class'] = 'button';
-            }
-            $this->fields_value['qrCode'] = '<img src="data:image/gif;base64,'.GAuth::base64($qrcode, 'encode').'" alt="'.$url.'" title="'.$url.'" />';
+            $this->fields_value['qrCode'] = (
+                '<img src="data:image/gif;base64,'
+                . GAuth::base64($qrcode, 'encode')
+                . '" alt="' . $url
+                . '" title="' . $url
+                . '" />'
+            );
             $this->fields_value['enabled'] = '0';   // this is to disable in case of reset
             $this->fields_value['rectoken'] = $recovery;
-            $this->fields_value['rectext'] = '<div class="alert alert-info">'.$this->l('Please write down and store the following Recovery Code somewhere safe. In case you lose access to your device you can use this Code to get a single-use recovery token sent to your email.').'<br/><div class="text-center" style="font-size: 14px">'.$this->l('Recovery Code:').' <strong>'.$recovery.'</strong></div></div>';
+            $this->fields_value['rectext'] = (
+                '<div class="alert alert-info">'
+                . $this->l('Please write down and store the following Recovery Code somewhere safe. In case you lose access to your device you can use this Code to get a single-use recovery token sent to your email.')
+                . '<br/><div class="text-center" style="font-size: 14px">'
+                . $this->l('Recovery Code:')
+                . ' <strong>'
+                . $recovery
+                . '</strong></div></div>'
+            );
             $this->context->smarty->assign(array(
-                'requiredTxt' => $this->l('Two consecutive Verification Codes are required in order to sync your device.'),
-                'differentTxt' => $this->l('The two Verification Codes must be different and generated consecutively.'),
-                'showReset' => (_PS_VERSION_ < '1.6')
+                'requiredTxt' => $this->l(
+                    'Two consecutive Verification Codes are required in order to sync your device.'
+                ),
+                'differentTxt' => $this->l(
+                    'The two Verification Codes must be different and generated consecutively.'
+                ),
+                'showReset' => (_PS_VERSION_ < '1.6')   // required for all PS versions
             ));
             $this->fields_value['submitAndJs'] = $this->module->display(
                 _PS_MODULE_DIR_.$this->module->name.DIRECTORY_SEPARATOR.$this->module->name.'.php',
@@ -364,9 +526,6 @@ class AdminGauthController extends ModuleAdminController
                     'name' => 'submitSave',
                 ),
             );
-            if ( _PS_VERSION_ < '1.6') {
-                $this->fields_form['submit']['class'] = 'button';
-            }
             if ($this->type) {
                 $this->fields_form['buttons'] = array(
                     array(
@@ -382,7 +541,7 @@ class AdminGauthController extends ModuleAdminController
                 'retypeConf' => $this->l('You have changed the Authentication Type. This will make the current key stop working, and generate a new one. Continue?'),
                 'resetConf' => $this->l('This will make the current key stop working, and generate a new one. Continue?'),
                 'disableConf' => $this->l('This will disable and delete the current key. Continue?'),
-                'showReset' => (_PS_VERSION_ < '1.6')
+                'showReset' => (_PS_VERSION_ < '1.6')   // required for all PS versions
             ));
             $this->fields_value['changed'] = !$this->type ? '1' : '0';
             $this->fields_value['submitAndJs'] = $this->module->display(
@@ -391,100 +550,12 @@ class AdminGauthController extends ModuleAdminController
             );
         }
 
-        return implode("\n", $this->errors).parent::renderForm();
+        return (
+            implode("\n", $this->errors)
+            . parent::renderForm()
+        );
     }
 
-    /**
-     * @throws PrestaShopException
-     * @throws PrestaShopDatabaseException
-     */
-    public function postProcess()
-    {
-        if (!$this->id_object) {
-            return false;
-        }
-
-        $this->object = $this->loadObject(true);
-        if (!$this->id_object) {
-            return false;
-        }
-
-        require_once(_PS_ROOT_DIR_.'/modules/gauthenticator/lib/gauth.php');
-        $gauth = new GAuth();
-        $gauth->importData($this->object->gatoken);
-        if (Tools::getIsset('submitSync')) {
-            if (!preg_match('/^\d{8}$/', Tools::getValue('rectoken', ''))) {
-                $this->errors[] = $this->l('Error matching email recovery token');
-                return false;
-            }
-
-            if (!preg_match('/^\d{6}$/', Tools::getValue('key1', '')) || !preg_match('/^\d{6}$/', Tools::getValue('key2', ''))) {
-                $this->errors[] = $this->l('Key format error, each key should be comprised of 6 digits');
-                $this->display = 'edit';
-                return false;
-            }
-
-            if ($gauth->resync(Tools::getValue('key1'), Tools::getValue('key2')))  {
-                $gauth->setUserData('status', true);
-                $gauth->setUserData('recovery', Tools::getValue('rectoken'));
-                $gauth->setUserData('sync', false);
-                $this->object->gatoken = pSQL($gauth->exportData());
-            } else {
-                $this->errors[] = $gauth->_errors[0];
-                $this->display = 'edit';
-                return false;
-            }
-
-        } elseif (
-            Tools::getValue('enabled', 0)
-            && (
-                Tools::getIsset('submitReset')
-                || (
-                    Tools::getIsset('submitSave')
-                    && Tools::getValue('changed', 0)
-                )
-            )
-        ) {
-            if (!in_array(Tools::getValue('type', ''), array('HOTP', 'TOTP'))) {
-                $this->errors[] = $this->l('Selected authentication type error');
-                return false;
-            }
-
-            $gauth->createUser(Tools::getValue('type'));
-            $gauth->setUserData('status', false);
-            $gauth->setUserData('sync', true);
-            $this->object->gatoken = pSQL($gauth->exportData());
-        } elseif (Tools::getIsset('submitSave')) {
-            if (
-                !$gauth->getUserData('sync')
-                && Tools::getValue('enabled', 0)
-            ) {
-                $gauth->setUserData('status', true);
-            } else {
-                $gauth->setUserData('status', false);
-            }
-            $this->object->gatoken = pSQL($gauth->exportData());
-        } elseif (Tools::getIsset('submitReset')) {
-            $this->object->gatoken = '';
-        }
-
-        if (
-            Tools::getIsset('submitSave')
-            || Tools::getIsset('submitReset')
-            || Tools::getIsset('submitSync')
-        ) {
-            $result = $this->object->update();
-            $this->afterUpdate($this->object);
-            if (!$result) {
-                $this->errors[] = Tools::displayError(Db::getInstance()->getMsgError());
-                $this->display = 'edit';
-                return false;
-            }
-
-            return $this->object;
-        }
-
-    }
 
     /**
      * Prevent unwanted updates to underlying employee object
@@ -592,5 +663,35 @@ class AdminGauthController extends ModuleAdminController
             imagedestroy($png);
             return $imagedata;
         }
+    }
+
+
+    /**
+     * Check if $employee has permissions to edit configuration of employee with id $idObject
+     * @param $idObject
+     * @param $employee
+     * @return bool
+     */
+    protected static function hasEditPermission($idObject, $employee)
+    {
+        if (
+            !$idObject
+            || !$employee
+            || !$employee->id
+            || !$employee->id_profile
+        ) {
+            return false;
+        }
+
+        $tabId = Tab::getIdFromClassName('AdminEmployees');
+        $profile = Profile::getProfileAccess($employee->id_profile, $tabId);
+
+        return (
+            (int)$idObject === (int)$employee->id
+            || (
+                isset($profile['edit'])
+                && $profile['edit']
+            )
+        );
     }
 }

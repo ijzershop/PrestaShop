@@ -10,7 +10,7 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name="defaultForm"}
-    <div class="row">
+    <div id="advancedvatmanager_module_config" class="row">
         {block name="tabs"}
             {if isset($vertical_tabs)}
                 <div class="vertical-tabs col-lg-2 col-md-3">
@@ -753,6 +753,34 @@
 {/if}
 </form>
 <!-- CURRENCY RATE TAB END --->
+<!-- TOOLS TAB BEGIN --->     
+<form id="tools_tab" class="defaultForm form-horizontal{if isset($vertical_tabs) && $vertical_tabs|count} col-lg-10 col-md-9{/if}{if isset($name_controller) && $name_controller} {$name_controller|escape:'htmlall':'UTF-8'}{/if}"{if isset($current) && $current} action="{$current|escape:'htmlall':'UTF-8'}{if isset($token) && $token}&amp;token={$token|escape:'htmlall':'UTF-8'}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style|escape:'htmlall':'UTF-8'}"{/if} novalidate>        
+{if isset($vertical_tabs) && isset($vertical_tabs.form['tools_tab'])}
+<div id="js-tab-content-tools_tab" class="js-tab-content{if isset($vertical_tabs.form['tools_tab'].active) && $vertical_tabs.form['tools_tab'].active} active{else} hidden{/if}">
+   {/if}
+   <div class="panel" id="fieldset_tools_tab{if isset($smarty.capture.identifier_count) && $smarty.capture.identifier_count}_{$smarty.capture.identifier_count|intval}{/if}{if $smarty.capture.fieldset_name > 1}_{($smarty.capture.fieldset_name - 1)|intval}{/if}">
+<div id="documentation" class="documentation">
+    <div class="panel-heading">
+        <i class="fal fa-wrench"></i>&nbsp;{l s='Tools' mod='advancedvatmanager'}
+    </div>
+    <p>{l s='In this section you can use some tools designed for this module' mod='advancedvatmanager'}</p><br/><br />
+    <div style="text-align:center;" class="content"> 
+        <div class="alert alert-info">{l s='This button is to clean the table generated from this module to save cart info for Brexit and VOEC operations. Theoretically, every time a customer places an order or generates another shopping cart, the record is automatically deleted from the database. However, in some cases there may be records left undeleted.' mod='advancedvatmanager'}
+            <br />
+            <br />
+            {if !$records_cart_table}
+                <div class="alert alert-success empty_table">{l s='Empty table' mod='advancedvatmanager'}</div>
+            {/if}
+            <button class="btn btn-info" id="delete_cart_table" type="submit" name="submit_delete_cart_table" value="1" {if !$records_cart_table}disabled{/if}><i class="far fa-trash-alt"></i> {l s='Delete table with %s records' sprintf=[$records_cart_table] mod='advancedvatmanager'}</button>    
+        </div>
+    </div>
+</div>
+</div>
+{if isset($vertical_tabs) && isset($vertical_tabs.form['currency_rate_tab'])}
+</div>
+{/if}
+</form>
+<!-- TOOLS TAB END --->
 <!-- DOCUMENTATION TAB BEGIN --->     
 <form id="documentation_tab" class="defaultForm form-horizontal{if isset($vertical_tabs) && $vertical_tabs|count} col-lg-10 col-md-9{/if}{if isset($name_controller) && $name_controller} {$name_controller|escape:'htmlall':'UTF-8'}{/if}"{if isset($current) && $current} action="{$current|escape:'htmlall':'UTF-8'}{if isset($token) && $token}&amp;token={$token|escape:'htmlall':'UTF-8'}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style|escape:'htmlall':'UTF-8'}"{/if} novalidate>        
 {if isset($vertical_tabs) && isset($vertical_tabs.form['documentation_tab'])}
@@ -835,7 +863,9 @@
             <div class="col-lg-6">
                <h5 class="module_compatible_item"><a style="color:#555;text-decoration:none" href="https://addons.prestashop.com/{Context::getContext()->language->iso_code|escape:'htmlall':'UTF-8'}/express-checkout-process/48891-one-page-checkout-fast-intuitive-professional.html" target="_blank">{l s='One Page Checkout module by ETS-Soft' mod='advancedvatmanager'}</a>&nbsp;&nbsp;{if Module::isInstalled('ets_onepagecheckout')}<span style="color:#00E10E;" class="mod_installed"><i class="fal fa-check-circle"></i> {l s='Version installed:' mod='advancedvatmanager'} {Module::getInstanceByName('ets_onepagecheckout')->version|escape:'htmlall':'UTF-8'}</span>{else}<span style="color:#f51d1d" class="mod_not_installed"><i class="fal fa-times-circle"></i> {l s='Not installed' mod='advancedvatmanager'}</span>{/if}</h5>      
                 
-                <h5 class="module_compatible_item"><a style="color:#555;text-decoration:none" href="https://addons.prestashop.com/{Context::getContext()->language->iso_code|escape:'htmlall':'UTF-8'}/other-payment-methods/28289-payment-with-fee-custom-payment-methods.html" target="_blank">{l s='Payment With Fee module by ETS-Soft' mod='advancedvatmanager'}</a>&nbsp;&nbsp;{if Module::isInstalled('ets_payment_with_fee')}<span style="color:#00E10E;" class="mod_installed"><i class="fal fa-check-circle"></i> {l s='Version installed:' mod='advancedvatmanager'} {Module::getInstanceByName('ets_payment_with_fee')->version|escape:'htmlall':'UTF-8'}</span>{else}<span style="color:#f51d1d" class="mod_not_installed"><i class="fal fa-times-circle"></i> {l s='Not installed' mod='advancedvatmanager'}</span>{/if}</h5>    
+                <h5 class="module_compatible_item"><a style="color:#555;text-decoration:none" href="https://addons.prestashop.com/{Context::getContext()->language->iso_code|escape:'htmlall':'UTF-8'}/other-payment-methods/28289-payment-with-fee-custom-payment-methods.html" target="_blank">{l s='Payment With Fee module by ETS-Soft' mod='advancedvatmanager'}</a>&nbsp;&nbsp;{if Module::isInstalled('ets_payment_with_fee')}<span style="color:#00E10E;" class="mod_installed"><i class="fal fa-check-circle"></i> {l s='Version installed:' mod='advancedvatmanager'} {Module::getInstanceByName('ets_payment_with_fee')->version|escape:'htmlall':'UTF-8'}</span>{else}<span style="color:#f51d1d" class="mod_not_installed"><i class="fal fa-times-circle"></i> {l s='Not installed' mod='advancedvatmanager'}</span>{/if}</h5>
+                
+                <h5 class="module_compatible_item"><a style="color:#555;text-decoration:none" href="https://addons.prestashop.com/{Context::getContext()->language->iso_code|escape:'htmlall':'UTF-8'}/international-localization/45015-geolocation-auto-language-currency-tax-shipping.html" target="_blank">{l s='Geolocation by ETS-Soft' mod='advancedvatmanager'}</a>&nbsp;&nbsp;{if Module::isInstalled('ets_geolocation')}<span style="color:#00E10E;" class="mod_installed"><i class="fal fa-check-circle"></i> {l s='Version installed:' mod='advancedvatmanager'} {Module::getInstanceByName('ets_geolocation')->version|escape:'htmlall':'UTF-8'}</span>{else}<span style="color:#f51d1d" class="mod_not_installed"><i class="fal fa-times-circle"></i> {l s='Not installed' mod='advancedvatmanager'}</span>{/if}</h5>      
                 
                 <h5 class="module_compatible_item"><a style="color:#555;text-decoration:none" href="https://www.sunnytoo.com/product/easycheckout-one-page-checkout-module-prestashop-1-7" target="_blank">{l s='Easy checkout module by SUNNYTOO.COM' mod='advancedvatmanager'}</a>&nbsp;&nbsp;{if Module::isInstalled('steasycheckout')}<span style="color:#00E10E;" class="mod_installed"><i class="fal fa-check-circle"></i> {l s='Version installed:' mod='advancedvatmanager'} {Module::getInstanceByName('steasycheckout')->version|escape:'htmlall':'UTF-8'}</span>{else}<span style="color:#f51d1d" class="mod_not_installed"><i class="fal fa-times-circle"></i> {l s='Not installed' mod='advancedvatmanager'}</span>{/if}</h5>  
                 

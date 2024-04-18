@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class DynamicTools
 {
@@ -82,6 +86,11 @@ class DynamicTools
         return \defined('_PS_MODULE_DEV_') && _PS_MODULE_DEV_;
     }
 
+    public static function isModuleDevModeForced()
+    {
+        return \defined('_PS_MODULE_DEV_') && _PS_MODULE_DEV_ === 'force';
+    }
+
     public static function isCacheEnabled()
     {
         return !defined('_PS_MODULE_CACHE_') || _PS_MODULE_CACHE_;
@@ -98,6 +107,9 @@ class DynamicTools
 
     public static function isHotMode($port)
     {
+        if (self::isModuleDevModeForced()) {
+            return true;
+        }
         if (!self::isModuleDevMode()) {
             return false;
         }
@@ -204,7 +216,7 @@ class DynamicTools
         if ($id_customer) {
             $id_address_delivery = $context->cart ? $context->cart->id_address_delivery : 0;
             \Db::getInstance()->execute(
-                'UPDATE `' . _DB_PREFIX_ . 'customization` 
+                'UPDATE `' . _DB_PREFIX_ . 'customization`
                     SET `id_address_delivery` = ' . (int) $id_address_delivery
                 . ' WHERE `id_cart` = ' . (int) $id_cart . ' AND `id_address_delivery`=0'
             );
@@ -229,9 +241,9 @@ class DynamicTools
         $default_key = \Tools::strtolower('<{' . $module->name . '}prestashop>' . $source) . '_' . $key;
         $ret = $string;
         if (isset($_MODULE[$current_key])) {
-            $ret = \Tools::stripslashes($_MODULE[$current_key]);
+            $ret = stripslashes($_MODULE[$current_key]);
         } elseif (isset($_MODULE[$default_key])) {
-            $ret = \Tools::stripslashes($_MODULE[$default_key]);
+            $ret = stripslashes($_MODULE[$default_key]);
         }
 
         if ($js) {
@@ -408,6 +420,9 @@ class DynamicTools
 
     public static function reportException($e, $short = false): string
     {
+        if (_PS_MODE_DEV_) {
+            throw $e;
+        }
         if ($short) {
             return $e->getMessage();
         }

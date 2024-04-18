@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\helpers;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use DynamicProduct\classes\DynamicTools;
-use DynamicProduct\classes\models\DynamicProductConfigLink;
 use DynamicProduct\classes\models\grids\Grid;
 use DynamicProduct\classes\models\grids\GridColumn;
 use DynamicProduct\classes\models\grids\GridRow;
@@ -47,7 +50,7 @@ class GridHelper
 
     public function importCSVData($id_product, $csv_data)
     {
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
         $source = DynamicTools::getSource();
         $columns = $csv_data[0] ?: null;
         if (!$columns) {

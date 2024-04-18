@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\models;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\factory\InputFieldFactory;
@@ -96,12 +100,13 @@ class DynamicInputField extends DynamicObject
             'id_input' => ['required' => true, 'xlink_resource' => 'dynamic_inputs'],
             'id_field' => [],
             'name' => [],
+            'label' => ['getter' => 'getLabel'],
             'value' => ['getter' => 'displayValue'],
             'secondary_value' => [],
             'sku' => ['getter' => 'renderSKU'],
             'type' => [],
             'visible' => [],
-            'data' => ['getter' => 'displayJSON'],
+            'data' => [],
         ],
     ];
 
@@ -133,9 +138,9 @@ class DynamicInputField extends DynamicObject
 
     public function setData($id_lang)
     {
-        $this->setDynamicField();
+        $this->setDynamicField($id_lang);
         $this->setFormattedValue();
-        $this->setLabel();
+        $this->setLabel($id_lang);
         $this->setSelectedOptions();
         $this->setDisplayValue();
         $this->setSKU();
@@ -153,7 +158,7 @@ class DynamicInputField extends DynamicObject
         $sql = new \DbQuery();
         $sql->from(self::$definition['table']);
         $sql->where('id_input = ' . (int) $id_input);
-        $rows = \Db::getInstance()->executeS($sql, false);
+        $rows = \Db::getInstance()->executeS($sql, false, false);
         while ($row = \Db::getInstance()->nextRow($rows)) {
             $id_input_field = $row['id_input_field'];
             $dynamic_input_field = InputFieldFactory::create((int) $row['type'], (int) $id_input_field, $id_lang);
@@ -165,9 +170,9 @@ class DynamicInputField extends DynamicObject
         return $input_fields;
     }
 
-    protected function setDynamicField()
+    protected function setDynamicField($id_lang = null)
     {
-        $this->field = DynamicField::getFieldFromCache($this->id_field);
+        $this->field = DynamicField::getFieldFromCache($this->id_field, $id_lang);
     }
 
     public function getDynamicField()
@@ -224,6 +229,8 @@ class DynamicInputField extends DynamicObject
         }
 
         $this->sku = $sku;
+
+        return $sku;
     }
 
     public function syncSelectedOption()
@@ -404,7 +411,7 @@ class DynamicInputField extends DynamicObject
                 [
                     htmlspecialchars($input_field->secondary_value),
                     htmlspecialchars($input_field->value_formatted),
-                    htmlspecialchars((string)$input_field->display_value),
+                    htmlspecialchars($input_field->display_value ?? ''),
                 ],
                 $value
             );
@@ -420,6 +427,10 @@ class DynamicInputField extends DynamicObject
 
     public function renderSKU()
     {
+        if (!$this->selected_options || !isset($this->selected_options[0])) {
+            return null;
+        }
+
         $option = $this->field['options'][$this->selected_options[0]];
 
         return $option->sku;
@@ -438,14 +449,35 @@ class DynamicInputField extends DynamicObject
         return in_array($this->getValueForCalculation($input_fields), $interval_condition['values']);
     }
 
-    private function setLabel()
+    public function getLabel()
+    {
+        $id_lang = $this->context->language->id;
+        $this->setLabel($id_lang);
+
+        if (isset($this->label[$id_lang])) {
+            return $this->label[$id_lang];
+        }
+
+        $id_default_lang = (int) \Configuration::get('PS_LANG_DEFAULT');
+        if (isset($this->label[$id_default_lang])) {
+            return $this->label[$id_default_lang];
+        }
+
+        return '';
+    }
+
+    private function setLabel($id_lang)
     {
         if ($this->name === 'quantity') {
             $this->label = 'Quantity';
         }
         $field = $this->getDynamicField();
-        if ((int) $field['id']) {
+        if (is_array($field['label']) && isset($field['label'][$id_lang])) {
+            $this->label = $field['label'][$id_lang];
+        } elseif (is_string($field['label'])) {
             $this->label = $field['label'];
+        } else {
+            $this->label = '';
         }
     }
 
@@ -567,9 +599,10 @@ class DynamicInputField extends DynamicObject
     {
         if (!$this->locked_value) {
             $id_option = (int) $option['id'];
+            $this->setValue($option['value']);
+            $this->setSecondaryValue($option['secondary_value']);
             $this->selected_options = [$id_option];
             $this->options = json_encode([$id_option]);
-            $this->setValue($option['value']);
         }
     }
 
@@ -743,11 +776,19 @@ class DynamicInputField extends DynamicObject
 
     public function isSkippedName()
     {
+        if (!$this->field['name']) {
+            return false;
+        }
+
         return strpos($this->field['name'], '_') === 0;
     }
 
     public function isAdminField()
     {
+        if (!$this->field['name']) {
+            return false;
+        }
+
         return strpos($this->field['name'], 'admin_') === 0;
     }
 
@@ -774,11 +815,6 @@ class DynamicInputField extends DynamicObject
     public function displayValue()
     {
         return $this->value;
-    }
-
-    public function displayJSON()
-    {
-        return $this->data_obj;
     }
 
     private function getTemplateName()

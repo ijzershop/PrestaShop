@@ -8,23 +8,19 @@ class CategoryRepository
      * @var \Db
      */
     private $db;
-
     /**
      * @var array
      */
     private $categoryLangCache;
-
     /**
      * @var \Context
      */
     private $context;
-
-    public function __construct(\Db $db, \Context $context)
+    public function __construct(\Context $context)
     {
-        $this->db = $db;
+        $this->db = \Db::getInstance();
         $this->context = $context;
     }
-
     /**
      * @param string $langIso
      *
@@ -35,21 +31,11 @@ class CategoryRepository
         if ($this->context->shop === null) {
             throw new \PrestaShopException('No shop context');
         }
-
         $shopId = (int) $this->context->shop->id;
-
         $query = new \DbQuery();
-        $query->from('category_shop', 'cs')
-            ->innerJoin('category', 'c', 'cs.id_category = c.id_category')
-            ->leftJoin('category_lang', 'cl', 'cl.id_category = cs.id_category')
-            ->leftJoin('lang', 'l', 'l.id_lang = cl.id_lang')
-            ->where('cs.id_shop = ' . $shopId)
-            ->where('cl.id_shop = cs.id_shop')
-            ->where('l.iso_code = "' . pSQL($langIso) . '"');
-
+        $query->from('category_shop', 'cs')->innerJoin('category', 'c', 'cs.id_category = c.id_category')->leftJoin('category_lang', 'cl', 'cl.id_category = cs.id_category')->leftJoin('lang', 'l', 'l.id_lang = cl.id_lang')->where('cs.id_shop = ' . $shopId)->where('cl.id_shop = cs.id_shop')->where('l.iso_code = "' . pSQL($langIso) . '"');
         return $query;
     }
-
     /**
      * @param int $topCategoryId
      * @param int $langId
@@ -60,37 +46,22 @@ class CategoryRepository
     public function getCategoryPaths($topCategoryId, $langId, $shopId)
     {
         if ((int) $topCategoryId === 0) {
-            return [
-                'category_path' => '',
-                'category_id_path' => '',
-            ];
+            return ['category_path' => '', 'category_id_path' => ''];
         }
-
         $categories = [];
-
         try {
             $categoriesWithParentsInfo = $this->getCategoriesWithParentInfo($langId, $shopId);
         } catch (\PrestaShopDatabaseException $e) {
-            return [
-                'category_path' => '',
-                'category_id_path' => '',
-            ];
+            return ['category_path' => '', 'category_id_path' => ''];
         }
-
         $this->buildCategoryPaths($categoriesWithParentsInfo, $topCategoryId, $categories);
-
-        $categories = array_reverse($categories);
-
-        return [
-            'category_path' => implode(' > ', array_map(function ($category) {
-                return $category['name'];
-            }, $categories)),
-            'category_id_path' => implode(' > ', array_map(function ($category) {
-                return $category['id_category'];
-            }, $categories)),
-        ];
+        $categories = \array_reverse($categories);
+        return ['category_path' => \implode(' > ', \array_map(function ($category) {
+            return $category['name'];
+        }, $categories)), 'category_id_path' => \implode(' > ', \array_map(function ($category) {
+            return $category['id_category'];
+        }, $categories))];
     }
-
     /**
      * @param array $categoriesWithParentsInfo
      * @param int $currentCategoryId
@@ -107,7 +78,6 @@ class CategoryRepository
             }
         }
     }
-
     /**
      * @param int $langId
      * @param int $shopId
@@ -120,29 +90,16 @@ class CategoryRepository
     {
         if (!isset($this->categoryLangCache[$langId])) {
             $query = new \DbQuery();
-
-            $query->select('c.id_category, cl.name, c.id_parent')
-                ->from('category', 'c')
-                ->leftJoin(
-                    'category_lang',
-                    'cl',
-                    'cl.id_category = c.id_category AND cl.id_shop = ' . (int) $shopId
-                )
-                ->where('cl.id_lang = ' . (int) $langId)
-                ->orderBy('cl.id_category');
-
+            $query->select('c.id_category, cl.name, c.id_parent')->from('category', 'c')->leftJoin('category_lang', 'cl', 'cl.id_category = c.id_category AND cl.id_shop = ' . (int) $shopId)->where('cl.id_lang = ' . (int) $langId)->orderBy('cl.id_category');
             $result = $this->db->executeS($query);
-
-            if (is_array($result)) {
+            if (\is_array($result)) {
                 $this->categoryLangCache[$langId] = $result;
             } else {
                 throw new \PrestaShopDatabaseException('No categories found');
             }
         }
-
         return $this->categoryLangCache[$langId];
     }
-
     /**
      * @param int $offset
      * @param int $limit
@@ -155,14 +112,10 @@ class CategoryRepository
     public function getCategories($offset, $limit, $langIso)
     {
         $query = $this->getBaseQuery($langIso);
-
         $this->addSelectParameters($query);
-
         $query->limit($limit, $offset);
-
         return $this->db->executeS($query);
     }
-
     /**
      * @param int $offset
      * @param string $langIso
@@ -171,12 +124,9 @@ class CategoryRepository
      */
     public function getRemainingCategoriesCount($offset, $langIso)
     {
-        $query = $this->getBaseQuery($langIso)
-            ->select('(COUNT(cs.id_category) - ' . (int) $offset . ') as count');
-
+        $query = $this->getBaseQuery($langIso)->select('(COUNT(cs.id_category) - ' . (int) $offset . ') as count');
         return (int) $this->db->getValue($query);
     }
-
     /**
      * @param int $limit
      * @param string $langIso
@@ -189,15 +139,10 @@ class CategoryRepository
     public function getCategoriesIncremental($limit, $langIso, $categoryIds)
     {
         $query = $this->getBaseQuery($langIso);
-
         $this->addSelectParameters($query);
-
-        $query->where('c.id_category IN(' . implode(',', array_map('intval', $categoryIds)) . ')')
-            ->limit($limit);
-
+        $query->where('c.id_category IN(' . \implode(',', \array_map('intval', $categoryIds)) . ')')->limit($limit);
         return $this->db->executeS($query);
     }
-
     /**
      * @param int $offset
      * @param int $limit
@@ -210,19 +155,11 @@ class CategoryRepository
     public function getQueryForDebug($offset, $limit, $langIso)
     {
         $query = $this->getBaseQuery($langIso);
-
         $this->addSelectParameters($query);
-
         $query->limit($limit, $offset);
-
-        $queryStringified = preg_replace('/\s+/', ' ', $query->build());
-
-        return array_merge(
-            (array) $query,
-            ['queryStringified' => $queryStringified]
-        );
+        $queryStringified = \preg_replace('/\\s+/', ' ', $query->build());
+        return \array_merge((array) $query, ['queryStringified' => $queryStringified]);
     }
-
     /**
      * @param \DbQuery $query
      *

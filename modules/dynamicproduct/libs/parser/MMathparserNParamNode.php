@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,21 +19,30 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\libs\parser;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+use DynamicProduct\classes\models\DynamicInputField;
+
 class MMathparserNParamNode extends MathParserNode
 {
     public $nodes;
     public $fptr;
+    /** @var DynamicInputField[] */
+    public $input_fields;
 
-    public function __construct($n, $func_addr)
+    public function __construct($n, $func_addr, $input_fields = [])
     {
         $this->nodes = &$n;
         $this->fptr = $func_addr;
+        $this->input_fields = $input_fields;
     }
 
     public function getValue()
@@ -56,6 +65,7 @@ class MMathparserNParamNode extends MathParserNode
                 $p[] = $value;
             }
 
+            $p[] = $this->input_fields;
             return call_user_func_array($this->fptr->event_handler, $p);
         }
     }

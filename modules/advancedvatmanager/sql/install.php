@@ -24,6 +24,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 $sql = array(
 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'advancedvatmanager_customers` (
     `id_advancedvatmanager_customers` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -65,7 +69,20 @@ $sql = array(
     `id_shop` int(11) UNSIGNED NOT NULL,
       PRIMARY KEY (`id_advancedvatmanager_customers_exemption`,`id_shop`),
       KEY `id_shop` (`id_shop`)
-) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;'    
+) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;' ,
+'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'advancedvatmanager_customer_cart` (
+    `id_advancedvatmanager_customer_cart` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `id_cart` int(11) UNSIGNED NOT NULL,
+    `id_customer` int(11) UNSIGNED NOT NULL,
+    `id_address_delivery` int(11) UNSIGNED,
+    `id_address_invoice` int(11) UNSIGNED,
+    `id_shop` int(11) UNSIGNED NOT NULL DEFAULT 1,
+    `total` DECIMAL(20,6) DEFAULT "0.000000",
+    `products`  TEXT NULL DEFAULT NULL,
+    `date_upd` datetime NOT NULL,
+    `date_add` datetime NOT NULL,
+    PRIMARY KEY  (`id_advancedvatmanager_customer_cart`)
+    ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;',   
 );
 
 foreach ($sql as $query) {

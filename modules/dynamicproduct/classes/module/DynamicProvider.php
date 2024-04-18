@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,19 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\module;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\helpers\ConfigLinkHelper;
 use DynamicProduct\classes\models\DynamicMainConfig;
-use DynamicProduct\classes\models\DynamicProductConfigLink;
 
 class DynamicProvider
 {
@@ -221,8 +225,8 @@ class DynamicProvider
 
     public function getVisibilityValues($id_product, $id_attribute = 0, $id_field = 0)
     {
-        $id_product_source = DynamicProductConfigLink::getSourceProduct($id_product);
-        $id_attribute_source = DynamicProductConfigLink::getSourceAttribute($id_product_source, $id_product, $id_attribute);
+        $id_product_source = ConfigLinkHelper::getSourceProduct($id_product);
+        $id_attribute_source = ConfigLinkHelper::getSourceAttribute($id_product_source, $id_product, $id_attribute);
 
         $sql = new \DbQuery();
         $sql->from($this->module->name . '_visibility');
@@ -375,7 +379,8 @@ class DynamicProvider
 
         return
             strpos($request_uri, '/products/unit/duplicate/') !== false
-            || strpos($request_uri, '/product/unit/duplicate/') !== false;
+            || strpos($request_uri, '/product/unit/duplicate/') !== false
+            || strpos($request_uri, '/duplicate-shop/') !== false;
     }
 
     public function getCurrentProductID(): int
@@ -436,7 +441,7 @@ class DynamicProvider
         return (int) \Tools::getValue('id_product_attribute', \Product::getDefaultAttribute($id_product));
     }
 
-    public function convertPrice($price, \Currency $currency = null, \Context $context = null): float
+    public function convertPrice($price, \Currency $currency = null, \Context $context = null)
     {
         if (!$context) {
             $context = \Context::getContext();

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\helpers;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\models\DynamicConfig;
@@ -293,6 +297,7 @@ class DynamicCalculatorHelper
     public function getPriceEquationResult($id_product, $id_attribute, $input_fields)
     {
         $price_equation = DynamicEquation::getPriceEquation($id_product);
+
         // 6 decimals is the database float precision in this case
         return \Tools::ps_round(DynamicEquation::calculatePriceFormula(
             $id_product,
@@ -312,6 +317,7 @@ class DynamicCalculatorHelper
     public function getWeightEquationResult($id_product, $id_attribute, $input_fields)
     {
         $weight_equation = DynamicEquation::getWeightEquation($id_product);
+
         // 6 decimals is the database float precision in this case
         return \Tools::ps_round(DynamicEquation::calculateWeightFormula(
             $id_product,
@@ -427,10 +433,10 @@ class DynamicCalculatorHelper
     public function formatPrices($final_prices)
     {
         return [
-            'price_ht' => \Tools::displayPrice($final_prices['price_ht']),
-            'price_ht_nr' => \Tools::displayPrice($final_prices['price_ht_nr']),
-            'price_ttc' => \Tools::displayPrice($final_prices['price_ttc']),
-            'price_ttc_nr' => \Tools::displayPrice($final_prices['price_ttc_nr']),
+            'price_ht' => DynamicTools::formatPrice($final_prices['price_ht']),
+            'price_ht_nr' => DynamicTools::formatPrice($final_prices['price_ht_nr']),
+            'price_ttc' => DynamicTools::formatPrice($final_prices['price_ttc']),
+            'price_ttc_nr' => DynamicTools::formatPrice($final_prices['price_ttc_nr']),
         ];
     }
 
@@ -494,14 +500,18 @@ class DynamicCalculatorHelper
         ];
 
         $unit_prices = $this->roundPrices($unit_prices, 6);
-        $unit_prices = $this->roundPrices($unit_prices, _PS_PRICE_COMPUTE_PRECISION_);
+        if (defined('_PS_PRICE_COMPUTE_PRECISION_')) {
+            $unit_prices = $this->roundPrices($unit_prices, _PS_PRICE_COMPUTE_PRECISION_);
+        }
 
         if ($dynamic_config->multiply_price) {
             $final_prices = $this->multiplyPrices($final_prices, $quantity);
         }
 
         $final_prices = $this->roundPrices($final_prices, 6);
-        $final_prices = $this->roundPrices($final_prices, _PS_PRICE_COMPUTE_PRECISION_);
+        if (defined('_PS_PRICE_COMPUTE_PRECISION_')) {
+            $final_prices = $this->roundPrices($final_prices, _PS_PRICE_COMPUTE_PRECISION_);
+        }
 
         $formatted_unit_prices = $this->formatPrices($unit_prices);
         $formatted_prices = $this->formatPrices($final_prices);
@@ -556,7 +566,7 @@ class DynamicCalculatorHelper
         $dynamic_input->id_attribute = $id_attribute;
         $dynamic_input->cart_quantity = $input_fields['quantity']->value;
 
-        return !DynamicEquation::checkProductStock($dynamic_input);
+        return !DynamicEquation::checkProductStock($dynamic_input, $input_fields);
     }
 
     public function getQuantityDiscounts($id_product, $id_attribute, $calculated_prices)

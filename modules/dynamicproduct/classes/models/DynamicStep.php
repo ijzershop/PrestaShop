@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\models;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use DynamicProduct\classes\helpers\ModelHelper;
 
@@ -58,7 +62,8 @@ class DynamicStep extends DynamicObject
             FROM `' . _DB_PREFIX_ . 'dynamicproduct_step` s
             LEFT JOIN `' . _DB_PREFIX_ . 'dynamicproduct_step_lang` sl
             ON (s.`id_step` = sl.`id_step`' . ($id_lang ? ' AND sl.`id_lang` = ' . (int) $id_lang : '') . ')
-        ');
+        '
+        );
 
         $steps = ModelHelper::groupByLang($steps, $id_lang, ['label']);
 

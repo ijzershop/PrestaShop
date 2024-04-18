@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 $id_uk = Country::getByIso('GB');
 $insert_uk_states = "INSERT INTO `"._DB_PREFIX_."state` (`id_country`, `id_zone`, `iso_code`, `name`,`tax_behavior`, `active`) VALUES
@@ -260,9 +263,6 @@ $insert_uk_states = "INSERT INTO `"._DB_PREFIX_."state` (`id_country`, `id_zone`
 ($id_uk, 1,'GB-WRX','Wrexham','0','1'),
 ($id_uk, 1,'GB-YOR','York','0','1');";
 
-$insert_northIreland = "INSERT INTO `"._DB_PREFIX_."state` (`id_country`, `id_zone`, `iso_code`, `name`,`tax_behavior`, `active`) VALUES
-($id_uk, 1,'GB-NIR','North Ireland','0','1');";
-
 // Create UK states
 if (!State::getStatesByIdCountry($id_uk)) {
     if (Db::getInstance()->execute($insert_uk_states) === false) {
@@ -285,11 +285,4 @@ postcode city
 Country:name
 State:name
 phone')), 'id_country ='.(int)$id_uk);    
-}
-// Create only North Ireland state into UK country.
-else if (!State::getIdByIso('GB-NIR')) {
-    if (Db::getInstance()->execute($insert_northIreland) === false) {
-        die('Error while creating North Ireland state.');
-    }       
-}
-
+} 

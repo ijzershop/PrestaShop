@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\models;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+use DynamicProduct\classes\helpers\ConfigLinkHelper;
 use DynamicProduct\classes\helpers\ModelHelper;
 
 class DynamicFieldGroup extends DynamicObject
@@ -69,7 +74,7 @@ class DynamicFieldGroup extends DynamicObject
 
     public static function getRowsByProduct($id_product, $id_lang): array
     {
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
 
         $groups = \Db::getInstance()->executeS(
             'SELECT fg.*, fgl.*, fg.id_field_group as id FROM `' . _DB_PREFIX_ . 'dynamicproduct_field_group` fg
@@ -90,7 +95,8 @@ class DynamicFieldGroup extends DynamicObject
             FROM `' . _DB_PREFIX_ . 'dynamicproduct_field_group` fg
             LEFT JOIN `' . _DB_PREFIX_ . 'dynamicproduct_field_group_lang` fgl
             ON (fg.`id_field_group` = fgl.`id_field_group`' . ($id_lang ? ' AND fgl.`id_lang` = ' . (int) $id_lang : '') . ')
-        ');
+        '
+        );
 
         $groups = ModelHelper::groupByLang($groups, $id_lang, ['label']);
 

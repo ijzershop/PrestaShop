@@ -1,9 +1,8 @@
 <?php
 
-namespace Http\Message;
+namespace ps_eventbus_v3_0_7\Http\Message;
 
 use Psr\Http\Message\RequestInterface;
-
 /**
  * Add authentication information to a PSR-7 Request.
  *

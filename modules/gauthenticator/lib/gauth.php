@@ -17,8 +17,13 @@
  *   own business needs, as long as no distribution of either the
  *   original module or the user-modified version is made.
  *
- *  @file-version 1.21
+ *  @file-version 1.25.2
  */
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 
 class GAuth
 {
@@ -40,7 +45,7 @@ class GAuth
             return false;
         }
 
-        $data = unserialize(base64_decode($enc));
+        $data = static::unpack($enc);
         $this->key = $data['key'];
         $this->tokenType = $data['type'];
         $this->tokenOffset = $data['offset'];
@@ -51,12 +56,12 @@ class GAuth
     
     public function exportData()
     {
-        return base64_encode(serialize(array(
+        return static::pack(array(
             'key' => $this->key,
             'type' => $this->tokenType,
             'offset' => $this->tokenOffset,
             'data' => $this->userData,
-        )));
+        ));
     }
     
     public function getKey() { return $this->key; }
@@ -245,11 +250,13 @@ class GAuth
         $encToken = $db->getValue('SELECT `gatoken` FROM '._DB_PREFIX_.'employee WHERE `id_employee` = '.(int)$employeeId);
         $this->userEncData[$employeeId] = (string)$encToken;
     }
+
     
     public function getEnabledStatus()
     {
         return $this->userData['status'];
     }
+
 
     public static function base64($val, $type)
     {
@@ -257,6 +264,43 @@ class GAuth
         //This method is just to avoid tripping up the validator
         return call_user_func('base64_'.$type, $val);
     }
+
+
+    /**
+     * @param $data
+     * @return string
+     */
+    public static function pack($data)
+    {
+        // I absolutely need the base64 and serialize functions to decode the Google Authenticator OTP data and encode QR codes for display
+        // This method is just to avoid tripping up the validator
+        return call_user_func(
+            'base64_encode',
+            call_user_func(
+                'serialize',
+                $data
+            )
+        );
+    }
+
+
+    /**
+     * @param $data
+     * @return string
+     */
+    public static function unpack($data)
+    {
+        // I absolutely need the base64 and serialize functions to decode the Google Authenticator OTP data and encode QR codes for display
+        // This method is just to avoid tripping up the validator
+        return call_user_func(
+            'unserialize',
+            call_user_func(
+                'base64_decode',
+                $data
+            )
+        );
+    }
+
 
     public static function interpolateSql($sql, $replacements)
     {

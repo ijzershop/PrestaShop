@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /* @noinspection PhpUnusedPrivateMethodInspection */
 
 use DynamicProduct\classes\DynamicTools;
@@ -31,6 +35,7 @@ use DynamicProduct\classes\helpers\DynamicFieldsHelper;
 use DynamicProduct\classes\helpers\FormulasHelper;
 use DynamicProduct\classes\models\DynamicCommonField;
 use DynamicProduct\classes\models\DynamicField;
+use DynamicProduct\classes\models\input_fields\UploadInputField;
 
 class DynamicProductFieldsController extends ModuleAdminController
 {
@@ -287,6 +292,42 @@ class DynamicProductFieldsController extends ModuleAdminController
         $this->respond([
             'field' => $field,
         ]);
+    }
+
+    private function processDownloadFiles()
+    {
+        $prefix = Tools::getValue('prefix');
+        $id_input_field = (int) Tools::getValue('id_input_field');
+        $input_field = new UploadInputField($id_input_field);
+        $uploads = $input_field->data_obj;
+        $files = [];
+        foreach ($uploads as $upload) {
+            $files[] = [
+                'path' => $input_field->getFilePath($upload['file']),
+                'filename' => $upload['filename'],
+            ];
+        }
+        $files = array_filter($files, function ($file) {
+            return is_file($file['path']);
+        });
+        // zip files and download them
+        $zip = new ZipArchive();
+        $zip_name = (int) $prefix . '-uploads_' . $input_field->name . '_' . $id_input_field . '.zip';
+        if (is_file($zip_name)) {
+            unlink($zip_name);
+        }
+        if ($zip->open($zip_name, ZipArchive::CREATE) === true) {
+            foreach ($files as $file) {
+                $zip->addFile($file['path'], $file['filename']);
+            }
+            $zip->close();
+        }
+        header('Content-Type: application/zip');
+        header('Content-disposition: attachment; filename=' . $zip_name);
+        header('Content-Length: ' . filesize($zip_name));
+        readfile($zip_name);
+        unlink($zip_name);
+        exit;
     }
 
     public function respond(

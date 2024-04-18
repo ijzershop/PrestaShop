@@ -10,7 +10,7 @@
  
 if (!defined('_PS_VERSION_')) {
     exit;
-};
+}
 
 class CustomersOrders extends ObjectModel
 {

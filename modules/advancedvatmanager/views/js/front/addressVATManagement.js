@@ -21,14 +21,15 @@ $(document).ajaxSend(function(e, xhr, opt){
 });
 
 $(function(){   
-    if (advancedvatmanager.ps16) {   
-        // Prevent vatnumber module ajax.
-        $(document).ajaxSend(function(e, xhr, opt){
-            if (opt.url.toLowerCase().indexOf("vatnumber") >= 0) {
-                e.preventDefault();
-                xhr.abort();
+        if (typeof prestashop !== 'undefined') {
+          prestashop.on(
+            'updatedCart',
+            function (event) {
+                console.log(event);
             }
-        });
+          );
+        }
+    if (advancedvatmanager.ps16) {   
         setVATAddressFormat();
         manageFields16(); 
         
@@ -37,32 +38,28 @@ $(function(){
         });
         
         //After AJAX processes
-        $(document).ajaxComplete(function(event, request, settings) {
+        $(document).ajaxStop(function(event) {
             if (advancedvatmanager.ps16) { 
-                if (settings.id !== 'setVATAddressFormat') {
-                    setTimeout(function() {
-                        $('#vat_number, #vat_number_block, #vat_number_block_invoice').show();
-                        setVATAddressFormat();
-                        manageFields16();     
-                    }, 1000); 
-                }
+                setTimeout(function() {
+                    $('#vat_number, #vat_number_block, #vat_number_block_invoice').show();
+                    setVATAddressFormat();
+                    manageFields16();
+                }, 500); 
             }
-        	$('select[name="id_country"]').on('change', function() {
-                setVATAddressFormat();   
-            });
         });
     }
     else {
         // In Prestashop default checkout page
         if (advancedvatmanager.controller == 'order' && advancedvatmanager.NOTALLOW_CHECKOUT_WITHOUT_VALIDATION && !advancedvatmanager.opc_presteamshop_enabled) {
             button = $('button[name="confirm-addresses"]').clone(true);// Clone submit button
-            checkVATErrorInCheckoutAddress();
+            checkoutAddress();
             $('input[name="id_address_delivery"], input[name="id_address_invoice"]').on('change', function(){
-                checkVATErrorInCheckoutAddress();    
+                checkoutAddress();    
             });    
         }
         
-    	$('select[name="id_country"]').on('change', function() {
+    	$('select[name="id_country"]').on('change', function(e) {
+            e.preventDefault();
             setVATAddressFormat17();   
         });
         
@@ -80,21 +77,21 @@ $(function(){
         }
     }
 });
-function checkVATErrorInCheckoutAddress()
+function checkoutAddress()
 {   
 	ajaxProcess = $.ajax({
 		type: 'POST',
 		headers: {"cache-control": "no-cache"},
-        id: 'checkErrorInCheckoutAddress',
+        id: 'checkoutAddress',
 		url: advancedvatmanager.ajax_url_addressVAT,
         dataType : 'json',
         async: false,
         cache: false,
         data : {
             ajax: true,
-            action: 'checkErrorInCheckoutAddress',
+            action: 'checkoutAddress',
             id_address_delivery: $("input[name='id_address_delivery']:checked").val(),
-            id_address_invoice: $("input[name='id_address_invoice']:checked").val()
+            id_address_invoice: $("input[name='id_address_invoice']").is(':checked')?$("input[name='id_address_invoice']:checked").val():$("input[name='id_address_delivery']:checked").val()
             
         },
         beforeSend : function () {  
@@ -114,6 +111,12 @@ function checkVATErrorInCheckoutAddress()
                 if (!button.length) {
                     $('input#not-valid-addresses').before(button);
                 }    
+            }
+           if (!jsonData['not_allow_checkout']) {
+                $('aside#notifications').html('');
+            }
+            else {
+                $('aside#notifications').html('<div class="container"><article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>'+jsonData['not_allow_checkout']+'</li></ul></article></div>');
             }    
         }
     });
@@ -172,6 +175,7 @@ function setVATAddressFormat(focus = false)
         dataType : 'json',
         async: false,
         cache: false,
+        global: false,
         data : {
             ajax: true,
             action: 'updateAddressForm16',

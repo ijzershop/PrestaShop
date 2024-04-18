@@ -17,8 +17,13 @@
  *   own business needs, as long as no distribution of either the
  *   original module or the user-modified version is made.
  *
- * @file-version 1.23.1
+ * @file-version 1.25.2
  */
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 
 class AdminLoginController extends AdminLoginControllerCore
 {

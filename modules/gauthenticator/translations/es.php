@@ -8,12 +8,15 @@ $_MODULE['<{gauthenticator}prestashop>gauthenticator_6e9d9c3e8efb68dddc3af7743fe
 $_MODULE['<{gauthenticator}prestashop>gauthenticator_4341aa4ee37dfc086eb81d0672631a0b'] = 'Este módulo requiere que las sobrecargas estén habilitadas para poder funcionar. Favor de deshabilitar las opciones de \"Desactivar todas las sobrecargas\" en la sección Parametros Avanzados > Rendimiento.';
 $_MODULE['<{gauthenticator}prestashop>gauthenticator_32381af40b9a8f836e474d2d763779e3'] = 'Error consultando el Tab Id del menú superior';
 $_MODULE['<{gauthenticator}prestashop>gauthenticator_df64a17ecd836a70a43c9d26528d5a2f'] = 'Código de Uso Único de Google Authenticator';
+$_MODULE['<{gauthenticator}prestashop>gauthenticator_45904dbc86e1a4f372b3efeec8096107'] = 'El módulo de Google Authenticator ha sido instalado, pero la plantilla de login no fue copiada exitosamente durante la instalación. Por favor sigue las instrucciones en el manual del módulo para copiarla manualmente.';
 $_MODULE['<{gauthenticator}prestashop>gauthenticator_2aeb0ceccf73082c1979a04ffbb8b6e0'] = 'Código de recuperación de Google Authenticator enviado por email.';
 $_MODULE['<{gauthenticator}prestashop>gauthenticator_fe030f2c65779beea430ed9689cf5911'] = 'Código de recuperación de Google Authenticator solicitado para el Back Office de %s';
 $_MODULE['<{gauthenticator}prestashop>gauthenticator_10fbf852284e742ed866b25c09113b6c'] = 'El código de Google Authenticator es incorrecto.';
 $_MODULE['<{gauthenticator}prestashop>gauthenticator_a96ebaf7fa5aa3bbc3fd4761f30897dc'] = 'Intento de conexión al Back Office con código de Google Authenticator incorrecto de %s';
 $_MODULE['<{gauthenticator}prestashop>gauthenticatedemployee_b9f5c797ebbf55adccdd8539a65a0241'] = 'Deshabilitado';
 $_MODULE['<{gauthenticator}prestashop>gauthenticatedemployee_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Habilitado';
+$_MODULE['<{gauthenticator}prestashop>googleauthenticator_b9f5c797ebbf55adccdd8539a65a0241'] = 'Deshabilitado';
+$_MODULE['<{gauthenticator}prestashop>googleauthenticator_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Habilitado';
 $_MODULE['<{gauthenticator}prestashop>admingauthcontroller_b718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_MODULE['<{gauthenticator}prestashop>admingauthcontroller_8d3f5eff9c40ee315d452392bed5309b'] = 'Apellido';
 $_MODULE['<{gauthenticator}prestashop>admingauthcontroller_20db0bfeecd8fe60533206a2b5e9891a'] = 'Nombre';
@@ -50,3 +53,7 @@ $_MODULE['<{gauthenticator}prestashop>admingauthcontroller_21ba97387668de15419e6
 $_MODULE['<{gauthenticator}prestashop>admingauthcontroller_a87c21a7836325f6d25eb4e9468d4db3'] = 'Error ';
 $_MODULE['<{gauthenticator}prestashop>admingauthcontroller_9ba62b4390eb5c89a0ee9e7c99c297ec'] = 'Error de formato de clave, cada clave debe de consistir de 6 dígitos';
 $_MODULE['<{gauthenticator}prestashop>admingauthcontroller_10b71b26fe19c9f0fa51ae605d719d60'] = 'Error de tipo de autentificación seleccionado';
+$_MODULE['<{gauthenticator}prestashop>admingauthcontroller_481b8b0614dc3c5686ca2410badcafe5'] = 'El módulo de Prestashop Accounts está actualmente reemplazando tu página de inicio de sesión de Back Office, permitiendo inicios de sesión a través de cuentas de Prestashop.com que no pueden ser protegidos con la autenticación de 2 factores. Si no necesitas esta funcionalidad, puedes desactivarla haciendo clic en el siguiente enlace: %s';
+$_MODULE['<{gauthenticator}prestashop>admingauthcontroller_ceb5d16637201ef5110445e792459804'] = 'Desactivar los inicios de sesión inseguros de PS Account';
+$_MODULE['<{gauthenticator}prestashop>admingauthcontroller_82f1893e6d93cc1872ebbbcd22c4e1b0'] = 'Se ha desactivado el reemplazo de inicio de sesión del módulo Prestashop Accounts. Si necesitas permitir el inicio de sesión de Back Office a través de cuentas de Prestashop.com que no pueden ser protegidas con autenticación de 2 factores, puedes habilitarlo haciendo clic en el siguiente enlace: %s';
+$_MODULE['<{gauthenticator}prestashop>admingauthcontroller_48bd72e250e094a3b4857de99f9ec7ae'] = 'Activar los inicios de sesión inseguros de PS Account';

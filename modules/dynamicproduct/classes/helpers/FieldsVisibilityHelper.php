@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\helpers;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\models\DynamicEquation;
@@ -73,11 +77,9 @@ class FieldsVisibilityHelper
                 $input_field->setExcludedOptions($hidden_options, $options);
                 if ($input_field->type === _DP_DROPDOWN_ && $input_field->isSelectedOptionExcluded()) {
                     $input_field->selectFirstVisibleOption();
-                }
-                if ($input_field->type === _DP_RADIO_ && $input_field->isSelectedOptionExcluded()) {
-                    $input_field->selectFirstVisibleOption();
-                }
-                if ($input_field->type === _DP_THUMBNAILS_ && $input_field->hasExcludedOptions()) {
+                } elseif ($input_field->type === _DP_RADIO_ && $input_field->isSelectedOptionExcluded()) {
+                    $input_field->removeExcludedOptionsFromSelection();
+                } elseif ($input_field->type === _DP_THUMBNAILS_ && $input_field->hasExcludedOptions()) {
                     $input_field->removeExcludedOptionsFromSelection();
                 }
             }
@@ -86,6 +88,9 @@ class FieldsVisibilityHelper
 
     private function isHidden($visibility, $id_field)
     {
+        if (isset($visibility['fields'][0]) && $visibility['fields'][0] === 0) {
+            return true;
+        }
         return in_array($id_field, $visibility['fields']);
     }
 

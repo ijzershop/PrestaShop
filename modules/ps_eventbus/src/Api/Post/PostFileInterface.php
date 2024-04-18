@@ -3,7 +3,6 @@
 namespace PrestaShop\Module\PsEventbus\Api\Post;
 
 use Psr\Http\Message\StreamInterface;
-
 /**
  * Post file upload interface
  */
@@ -15,21 +14,18 @@ interface PostFileInterface
      * @return string
      */
     public function getName();
-
     /**
      * Get the full path to the file
      *
      * @return string
      */
     public function getFilename();
-
     /**
      * Get the content
      *
      * @return StreamInterface
      */
     public function getContent();
-
     /**
      * Gets all POST file headers.
      *

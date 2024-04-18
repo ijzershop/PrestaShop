@@ -2,5 +2,5 @@ services:
     _defaults:
         tags: ['foo']
 
-    Foo\Bar:
+    ps_eventbus_v3_0_7\Foo\Bar:
         tags: invalid

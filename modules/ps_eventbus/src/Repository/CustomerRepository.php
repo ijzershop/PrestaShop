@@ -8,18 +8,15 @@ class CustomerRepository
      * @var \Db
      */
     private $db;
-
     /**
      * @var \Context
      */
     private $context;
-
-    public function __construct(\Db $db, \Context $context)
+    public function __construct(\Context $context)
     {
-        $this->db = $db;
+        $this->db = \Db::getInstance();
         $this->context = $context;
     }
-
     /**
      * @return \DbQuery
      */
@@ -28,16 +25,11 @@ class CustomerRepository
         if ($this->context->shop === null) {
             throw new \PrestaShopException('No shop context');
         }
-
         $shopId = (int) $this->context->shop->id;
-
         $query = new \DbQuery();
-        $query->from('customer', 'c')
-            ->where('c.id_shop = ' . $shopId);
-
+        $query->from('customer', 'c')->where('c.id_shop = ' . $shopId);
         return $query;
     }
-
     /**
      * @param int $offset
      * @param int $limit
@@ -49,14 +41,10 @@ class CustomerRepository
     public function getCustomers($offset, $limit)
     {
         $query = $this->getBaseQuery();
-
         $this->addSelectParameters($query);
-
         $query->limit($limit, $offset);
-
         return $this->db->executeS($query);
     }
-
     /**
      * @param int $offset
      *
@@ -64,12 +52,9 @@ class CustomerRepository
      */
     public function getRemainingCustomersCount($offset)
     {
-        $query = $this->getBaseQuery()
-            ->select('(COUNT(c.id_customer) - ' . (int) $offset . ') as count');
-
+        $query = $this->getBaseQuery()->select('(COUNT(c.id_customer) - ' . (int) $offset . ') as count');
         return (int) $this->db->getValue($query);
     }
-
     /**
      * @param int $limit
      * @param array $customerIds
@@ -81,15 +66,10 @@ class CustomerRepository
     public function getCustomersIncremental($limit, $customerIds)
     {
         $query = $this->getBaseQuery();
-
         $this->addSelectParameters($query);
-
-        $query->where('c.id_customer IN(' . implode(',', array_map('intval', $customerIds)) . ')')
-            ->limit($limit);
-
+        $query->where('c.id_customer IN(' . \implode(',', \array_map('intval', $customerIds)) . ')')->limit($limit);
         return $this->db->executeS($query);
     }
-
     /**
      * @param int $offset
      * @param int $limit
@@ -101,19 +81,11 @@ class CustomerRepository
     public function getQueryForDebug($offset, $limit)
     {
         $query = $this->getBaseQuery();
-
         $this->addSelectParameters($query);
-
         $query->limit($limit, $offset);
-
-        $queryStringified = preg_replace('/\s+/', ' ', $query->build());
-
-        return array_merge(
-            (array) $query,
-            ['queryStringified' => $queryStringified]
-        );
+        $queryStringified = \preg_replace('/\\s+/', ' ', $query->build());
+        return \array_merge((array) $query, ['queryStringified' => $queryStringified]);
     }
-
     /**
      * @param \DbQuery $query
      *

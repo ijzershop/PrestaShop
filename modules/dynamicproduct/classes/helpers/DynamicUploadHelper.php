@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\helpers;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use DynamicProduct\classes\models\DynamicInput;
 use DynamicProduct\classes\models\input_fields\UploadInputField;
@@ -47,8 +51,7 @@ class DynamicUploadHelper
         $types = [_DP_IMAGE_, _DP_FILE_];
         $dynamic_inputs = DynamicInput::getInputsByIdCart($id_cart);
         foreach ($dynamic_inputs as $dynamic_input) {
-            $dynamic_input->assignInputFields($this->context->language->id);
-            $input_fields = $dynamic_input->input_fields;
+            $input_fields = $dynamic_input->getInputFields($this->context->language->id);
             foreach ($input_fields as $input_field) {
                 if (in_array((int) $input_field->type, $types, true)) {
                     if ($input_field instanceof UploadInputField) {

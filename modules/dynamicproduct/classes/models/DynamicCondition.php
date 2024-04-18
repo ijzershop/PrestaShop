@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\models;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+use DynamicProduct\classes\helpers\ConfigLinkHelper;
 use DynamicProduct\classes\helpers\ModelHelper;
 
 class DynamicCondition extends DynamicObject
@@ -63,7 +68,7 @@ class DynamicCondition extends DynamicObject
 
     public static function getByIdProduct($id_product, $order = false, $id_lang = null)
     {
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
 
         return parent::getByIdProduct($id_source_product, $order, $id_lang);
     }
@@ -75,7 +80,7 @@ class DynamicCondition extends DynamicObject
      */
     public static function getByProduct($id_product)
     {
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
         $dynamic_conditions = [];
         $sql = new \DbQuery();
         $sql->from(self::$definition['table']);
@@ -103,7 +108,7 @@ class DynamicCondition extends DynamicObject
         if (isset(self::$cache[$id_product])) {
             return self::$cache[$id_product];
         }
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
         $conditions = \Db::getInstance()->executeS('
             SELECT c.id_condition as id, c.formula, c.name, c.position
             FROM ' . _DB_PREFIX_ . 'dynamicproduct_condition c
@@ -136,48 +141,58 @@ class DynamicCondition extends DynamicObject
             WHERE c.id_product = ' . (int) $id_source_product);
 
         $hidden_fields_by_condition = [];
-        foreach ($hidden_fields as $hidden_field) {
-            if (!isset($hidden_fields_by_condition[$hidden_field['id_condition']])) {
-                $hidden_fields_by_condition[$hidden_field['id_condition']] = [];
+        if ($hidden_fields) {
+            foreach ($hidden_fields as $hidden_field) {
+                if (!isset($hidden_fields_by_condition[$hidden_field['id_condition']])) {
+                    $hidden_fields_by_condition[$hidden_field['id_condition']] = [];
+                }
+                $hidden_fields_by_condition[$hidden_field['id_condition']][] = (int) $hidden_field['id_field'];
             }
-            $hidden_fields_by_condition[$hidden_field['id_condition']][] = (int) $hidden_field['id_field'];
         }
 
         $hidden_options_by_condition = [];
-        foreach ($hidden_options as $hidden_option) {
-            if (!isset($hidden_options_by_condition[$hidden_option['id_condition']])) {
-                $hidden_options_by_condition[$hidden_option['id_condition']] = [];
+        if (is_array($hidden_options)) {
+            foreach ($hidden_options as $hidden_option) {
+                if (!isset($hidden_options_by_condition[$hidden_option['id_condition']])) {
+                    $hidden_options_by_condition[$hidden_option['id_condition']] = [];
+                }
+                $id_field = $hidden_option['id_field'];
+                if (!isset($hidden_options_by_condition[$hidden_option['id_condition']][$id_field])) {
+                    $hidden_options_by_condition[$hidden_option['id_condition']][$id_field] = [];
+                }
+                $hidden_options_by_condition[$hidden_option['id_condition']][$id_field][] = (int) $hidden_option['id_option'];
             }
-            $id_field = $hidden_option['id_field'];
-            if (!isset($hidden_options_by_condition[$hidden_option['id_condition']][$id_field])) {
-                $hidden_options_by_condition[$hidden_option['id_condition']][$id_field] = [];
-            }
-            $hidden_options_by_condition[$hidden_option['id_condition']][$id_field][] = (int) $hidden_option['id_option'];
         }
 
         $hidden_groups_by_condition = [];
-        foreach ($hidden_groups as $hidden_group) {
-            if (!isset($hidden_groups_by_condition[$hidden_group['id_condition']])) {
-                $hidden_groups_by_condition[$hidden_group['id_condition']] = [];
+        if (is_array($hidden_groups)) {
+            foreach ($hidden_groups as $hidden_group) {
+                if (!isset($hidden_groups_by_condition[$hidden_group['id_condition']])) {
+                    $hidden_groups_by_condition[$hidden_group['id_condition']] = [];
+                }
+                $hidden_groups_by_condition[$hidden_group['id_condition']][] = (int) $hidden_group['id_group'];
             }
-            $hidden_groups_by_condition[$hidden_group['id_condition']][] = (int) $hidden_group['id_group'];
         }
 
         $hidden_steps_by_condition = [];
-        foreach ($hidden_steps as $hidden_step) {
-            if (!isset($hidden_steps_by_condition[$hidden_step['id_condition']])) {
-                $hidden_steps_by_condition[$hidden_step['id_condition']] = [];
+        if (is_array($hidden_steps)) {
+            foreach ($hidden_steps as $hidden_step) {
+                if (!isset($hidden_steps_by_condition[$hidden_step['id_condition']])) {
+                    $hidden_steps_by_condition[$hidden_step['id_condition']] = [];
+                }
+                $hidden_steps_by_condition[$hidden_step['id_condition']][] = (int) $hidden_step['id_step'];
             }
-            $hidden_steps_by_condition[$hidden_step['id_condition']][] = (int) $hidden_step['id_step'];
         }
 
-        foreach ($conditions as &$condition) {
-            $condition = ModelHelper::castNumericRowValues($condition, self::class);
+        if (is_array($conditions)) {
+            foreach ($conditions as &$condition) {
+                $condition = ModelHelper::castNumericRowValues($condition, self::class);
 
-            $condition['hidden_fields'] = $hidden_fields_by_condition[$condition['id']] ?? [];
-            $condition['hidden_options'] = $hidden_options_by_condition[$condition['id']] ?? [];
-            $condition['hidden_groups'] = $hidden_groups_by_condition[$condition['id']] ?? [];
-            $condition['hidden_steps'] = $hidden_steps_by_condition[$condition['id']] ?? [];
+                $condition['hidden_fields'] = $hidden_fields_by_condition[$condition['id']] ?? [];
+                $condition['hidden_options'] = $hidden_options_by_condition[$condition['id']] ?? [];
+                $condition['hidden_groups'] = $hidden_groups_by_condition[$condition['id']] ?? [];
+                $condition['hidden_steps'] = $hidden_steps_by_condition[$condition['id']] ?? [];
+            }
         }
 
         return self::$cache[$id_product] = $conditions;

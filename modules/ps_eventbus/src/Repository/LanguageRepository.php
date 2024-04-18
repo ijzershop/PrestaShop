@@ -8,18 +8,15 @@ class LanguageRepository
      * @var \Db
      */
     private $db;
-
     /**
      * @var \Context
      */
     private $context;
-
-    public function __construct(\Db $db, \Context $context)
+    public function __construct(\Context $context)
     {
-        $this->db = $db;
+        $this->db = \Db::getInstance();
         $this->context = $context;
     }
-
     /**
      * @param int $offset
      * @param int $limit
@@ -31,14 +28,10 @@ class LanguageRepository
     public function getLanguagesSync($offset, $limit)
     {
         $query = $this->getBaseQuery();
-
         $this->addSelectParameters($query);
-
         $query->limit($limit, $offset);
-
         return $this->db->executeS($query);
     }
-
     /**
      * @param int $offset
      *
@@ -46,12 +39,9 @@ class LanguageRepository
      */
     public function getRemainingLanguagesCount($offset)
     {
-        $query = $this->getBaseQuery()
-            ->select('(COUNT(la.id_lang) - ' . (int) $offset . ') as count');
-
+        $query = $this->getBaseQuery()->select('(COUNT(la.id_lang) - ' . (int) $offset . ') as count');
         return (int) $this->db->getValue($query);
     }
-
     /**
      * @param int $limit
      * @param array $languageIds
@@ -63,15 +53,10 @@ class LanguageRepository
     public function getLanguagesIncremental($limit, $languageIds)
     {
         $query = $this->getBaseQuery();
-
         $this->addSelectParameters($query);
-
-        $query->where('la.id_lang IN(' . implode(',', array_map('intval', $languageIds)) . ')')
-            ->limit($limit);
-
+        $query->where('la.id_lang IN(' . \implode(',', \array_map('intval', $languageIds)) . ')')->limit($limit);
         return $this->db->executeS($query);
     }
-
     /**
      * @return \DbQuery
      */
@@ -80,16 +65,11 @@ class LanguageRepository
         if ($this->context->shop === null) {
             throw new \PrestaShopException('No shop context');
         }
-
         $shopId = (int) $this->context->shop->id;
-
         $query = new \DbQuery();
-        $query->from('lang', 'la')
-            ->innerJoin('lang_shop', 'las', 'la.id_lang = las.id_lang AND las.id_shop = ' . $shopId);
-
+        $query->from('lang', 'la')->innerJoin('lang_shop', 'las', 'la.id_lang = las.id_lang AND las.id_shop = ' . $shopId);
         return $query;
     }
-
     /**
      * @param \DbQuery $query
      *
@@ -100,7 +80,6 @@ class LanguageRepository
         $query->select('la.id_lang, la.name, la.active, la.iso_code, la.language_code, la.locale, la.date_format_lite');
         $query->select('la.date_format_full, la.is_rtl, las.id_shop');
     }
-
     /**
      * @return array
      */
@@ -108,26 +87,21 @@ class LanguageRepository
     {
         /** @var array $languages */
         $languages = \Language::getLanguages();
-
-        return array_map(function ($language) {
+        return \array_map(function ($language) {
             return $language['iso_code'];
         }, $languages);
     }
-
     /**
      * @return string
      */
     public function getDefaultLanguageIsoCode()
     {
         $language = \Language::getLanguage((int) \Configuration::get('PS_LANG_DEFAULT'));
-
-        if (is_array($language)) {
+        if (\is_array($language)) {
             return $language['iso_code'];
         }
-
         return '';
     }
-
     /**
      * @param string $isoCode
      *
@@ -137,7 +111,6 @@ class LanguageRepository
     {
         return (int) \Language::getIdByIso($isoCode);
     }
-
     /**
      * @return array
      */
@@ -145,7 +118,6 @@ class LanguageRepository
     {
         return \Language::getLanguages();
     }
-
     /**
      * @param int $offset
      * @param int $limit
@@ -157,16 +129,9 @@ class LanguageRepository
     public function getQueryForDebug($offset, $limit)
     {
         $query = $this->getBaseQuery();
-
         $this->addSelectParameters($query);
-
         $query->limit($limit, $offset);
-
-        $queryStringified = preg_replace('/\s+/', ' ', $query->build());
-
-        return array_merge(
-            (array) $query,
-            ['queryStringified' => $queryStringified]
-        );
+        $queryStringified = \preg_replace('/\\s+/', ' ', $query->build());
+        return \array_merge((array) $query, ['queryStringified' => $queryStringified]);
     }
 }

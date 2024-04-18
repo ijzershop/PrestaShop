@@ -8,8 +8,12 @@
  * 	@module Advanced VAT Manager
  */
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
  
 require_once(_PS_MODULE_DIR_.'advancedvatmanager/classes/ValidationEngine.php');
+require_once(_PS_MODULE_DIR_.'advancedvatmanager/AdvancedVatManagerTaxManager.php');
 
 class AdvancedVatManagerAddressVATModuleFrontController extends ModuleFrontController
 {
@@ -30,7 +34,7 @@ class AdvancedVatManagerAddressVATModuleFrontController extends ModuleFrontContr
                 $vat_field_exists = in_array('vat_number', $addressFormat);
                 if (method_exists('AddressFormat', 'getFieldsRequired')) {
                     $vat_required = in_array('vat_number', AddressFormat::getFieldsRequired());
-                    $company_required = in_array('company', AddressFormat::getFieldsRequired()); 
+                    $company_required = in_array('company', AddressFormat::getFieldsRequired());
                 }
                 else {
                     $address = new Address(Tools::getValue('id_address'));
@@ -42,15 +46,22 @@ class AdvancedVatManagerAddressVATModuleFrontController extends ModuleFrontContr
             }
         } 
         else {
-            if (Tools::getValue('action') == 'checkErrorInCheckoutAddress') {
+            if (Tools::getValue('action') == 'checkoutAddress') {
                 $advancedvatmanager = Module::getInstanceByName('advancedvatmanager');
                 $id_address_invoice = Tools::getValue('id_address_invoice');
                 $id_address_delivery = Tools::getValue('id_address_delivery');
                 $address_invoice_errors = $advancedvatmanager->getCustomerAddressWithError($id_address_invoice);
                 $address_delivery_errors = $advancedvatmanager->getCustomerAddressWithError($id_address_delivery);
+                Context::getContext()->cart->id_address_invoice = $id_address_invoice;
+                Context::getContext()->cart->id_address_delivery = $id_address_delivery;
+                $address = new Address($id_address_delivery);
+                ValidationEngine::$id_address_used = $address->id;            
+                AdvancedVatManagerTaxManager::isAvailableForThisAddress($address);
+                
                 $this->ajaxDie(json_encode([
                         'address_invoice_errors' => $address_invoice_errors,
-                        'address_delivery_errors' => $address_delivery_errors
+                        'address_delivery_errors' => $address_delivery_errors,
+                        'not_allow_checkout' => $advancedvatmanager->checkNotAllowCheckout(),
                 ]));  
             }
             if ($skipvalidation === false) {       
@@ -61,14 +72,20 @@ class AdvancedVatManagerAddressVATModuleFrontController extends ModuleFrontContr
                         $addressForm->loadAddressById($id_address);
                     }
                     
+                    if (Tools::getIsset('id_country')) {
+                        $addressForm->fillWith(['id_country' => Tools::getValue('id_country')]);
+                    }
+                    
                     // Fill form fields after submitting form.
-                    $values = Tools::getValue('data_form');
+                    $fields = Tools::getValue('data_form');
                     $additionalTemplateVariables = array();
-                    if (!empty($values)) {
-                        foreach ($values as $value) {
-                            $addressForm->fillWith([$value['name'] => $value['value']]);
-                            $additionalTemplateVariables[$value['name'] == 'saveAddress'?'type':$value['name']] = $value['value'];                          
+                    if (!empty($fields)) {
+                        $form_values = array();
+                        foreach ($fields as $field_value) {
+                            $form_values[$field_value['name']] =$field_value['value'];
                         }
+                        $addressForm->fillWith($form_values);    
+                        $additionalTemplateVariables['type'] = Tools::getValue('saveAddress');           
                         $additionalTemplateVariables['form_has_continue_button'] = Tools::getValue('form_has_continue_button');
                         $additionalTemplateVariables['use_same_address'] = Tools::getValue('use_same_address');
                     }

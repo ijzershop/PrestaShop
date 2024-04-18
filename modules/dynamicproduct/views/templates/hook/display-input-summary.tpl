@@ -1,5 +1,5 @@
 {*
-* 2007-2023 TuniSoft
+* 2007-2024 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -18,57 +18,58 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    TuniSoft <tunisoft.solutions@gmail.com>
-*  @copyright 2007-2023 TuniSoft
+*  @copyright 2007-2024 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {$displayed_count = 0}
 
 {if !$is_pdf}
-  <div class="dp_cart dp_seven_cart"
-       data-id_customization="{$input->id_customization|intval}"
-  >
-    <div class="dp_input_div dp_input_{$input->id|intval} p-0">
+	<div class="dp_cart dp_seven_cart"
+	     data-id_customization="{$input->id_customization|intval}"
+	>
+		<div class="dp_input_div dp_input_{$input->id|intval}">
         {if count($grouped_fields)}
             {foreach from=$grouped_fields item=group}
                 {if $group.label}
-                  <strong>{$group.label|escape:'htmlall':'UTF-8'}</strong>
-                  <br>
+									<strong>{$group.label|escape:'htmlall':'UTF-8'}</strong>
+									<br>
                 {/if}
                 {foreach from=$group.fields item=input_field}
-                  {if $input_field->type == 2}{continue}{/if}
+                    {if $input_field->isSkippedName()}{continue}{/if}
                     {if $input_field->isSkipped() || $input_field->isAdminField()}{continue}{/if}
+                    {if $input_field->name === "preview" && $is_order_detail}{continue}{/if}
                     {$displayed_count = $displayed_count + 1}
-                  <span class="dp-input-field-{$input_field->name|escape:'htmlall':'UTF-8'}"
-                        style="{if $group.label}padding-left: 1em;{/if}">
-                      {if $input_field->name}
-                        <span>{$input_field->name|escape:'htmlall':'UTF-8'}:</span>
+									<span class="dp-input-field-{$input_field->name|escape:'htmlall':'UTF-8'}"
+									      style="{if $group.label}padding-left: 1em;{/if}">
+                      {if $input_field->label}
+	                      <strong>{$input_field->label|escape:'htmlall':'UTF-8'}:</strong>
                       {/if}
                       {if $input_field->getTemplatePath()}
-                          {include file=$input_field->getTemplatePath()|escape:'htmlall':'UTF-8'}
+                          {include file=$input_field->getTemplatePath()}
                       {else}
-                          {$input_field->getDynamicValue($input->getInputFields())|escape:'htmlall':'UTF-8'}
+                          {$input_field->getDynamicValue($input->getInputFields($id_lang))|escape:'htmlall':'UTF-8'}
                       {/if}
                   </span>
-                  <br class="field-br">
+									<br class="field-br">
                 {/foreach}
                 {if count($grouped_fields) > 1}
-                  <br>
+									<br>
                 {/if}
             {/foreach}
         {/if}
 
         {if $input->canDisplayWeight()}
-          <br>
-          <span>
+					<br>
+					<span>
           <strong>{l s='Weight' mod='dynamicproduct'}:</strong>
-            {$input->weight|floatval} {Configuration::get('PS_WEIGHT_UNIT')|escape:'htmlall':'UTF-8'}
+            {$input->getWeight()|floatval} {Configuration::get('PS_WEIGHT_UNIT')|escape:'htmlall':'UTF-8'}
         </span>
         {/if}
 
         {if isset($params['show_price']) && $params['show_price'] || isset($show_price) && $show_price}
-          <br>
-          <span>
+					<br>
+					<span>
           <strong>{l s='Price' mod='dynamicproduct'}:</strong>
           {$price|escape:'htmlall':'UTF-8'}
         </span>
@@ -77,40 +78,40 @@
         {if $input->is_editable}
             {assign var=show_edit value=(!isset($params['edit_button']) || $params['edit_button'] != false)}
             {if !$is_pdf && !$is_order_detail && $show_edit}
-              <br>
-              <div>
-                <a class="dp_url"
-                   href="{$input->getEditLink()|escape:'htmlall':'UTF-8'}"
-                >{l s='Edit this customization' mod='dynamicproduct'}</a>
-              </div>
+							<br>
+							<div>
+								<a class="dp_url"
+								   href="{$input->getEditLink()|escape:'htmlall':'UTF-8'}"
+								>{l s='Edit this customization' mod='dynamicproduct'}</a>
+							</div>
             {/if}
         {/if}
-    </div>
+		</div>
 
       {if $displayed_count == 0}
-        <style>
+				<style>
           .dp_cart[data-id_customization="{$input->id_customization|intval}"] {
             display: none;
           }
-        </style>
+				</style>
       {/if}
-  </div>
+	</div>
 {else}
-  <br>
+	<br>
     {if count($grouped_fields)}
         {foreach from=$grouped_fields item=group}
             {if $group.label}
-              <strong>{$group.label|escape:'htmlall':'UTF-8'}</strong>
-              <br>
+							<strong>{$group.label|escape:'htmlall':'UTF-8'}</strong>
+							<br>
             {/if}
             {foreach from=$group.fields item=input_field}
-              {if $input_field->type == 2}{continue}{/if}
+                {if $input_field->isSkippedName()}{continue}{/if}
                 {if $input_field->isSkipped() || $input_field->isAdminField()}{continue}{/if}
                 {$displayed_count = $displayed_count + 1}
-              <span class="dp-input-field-{$input_field->name|escape:'htmlall':'UTF-8'}"
-                    style="{if $group.label}padding-left: 1em;{/if}">
-                      {if $input_field->name}
-                        <span>{$input_field->name|escape:'htmlall':'UTF-8'}:</span>
+							<span class="dp-input-field-{$input_field->name|escape:'htmlall':'UTF-8'}"
+							      style="{if $group.label}padding-left: 1em;{/if}">
+                      {if $input_field->label}
+	                      <strong>{$input_field->label|escape:'htmlall':'UTF-8'}:</strong>
                       {/if}
                   {if $input_field->getTemplatePath()}
                       {include file=$input_field->getTemplatePath()}
@@ -118,25 +119,25 @@
                       {$input_field->getDynamicValue($group.fields)|escape:'htmlall':'UTF-8'}
                   {/if}
                   </span>
-              <br class="field-br">
+							<br class="field-br">
             {/foreach}
             {if count($grouped_fields) > 1}
-              <br>
+							<br>
             {/if}
         {/foreach}
     {/if}
 
     {if $input->canDisplayWeight()}
-      <br>
-      <span>
+			<br>
+			<span>
           <strong>{l s='Weight' mod='dynamicproduct'}:</strong>
             {$input->weight|floatval} {Configuration::get('PS_WEIGHT_UNIT')|escape:'htmlall':'UTF-8'}
         </span>
     {/if}
 
     {if isset($params['show_price']) && $params['show_price'] || isset($show_price) && $show_price}
-      <br>
-      <span>
+			<br>
+			<span>
           <strong>{l s='Price' mod='dynamicproduct'}:</strong>
           {$price|escape:'htmlall':'UTF-8'}
         </span>
@@ -145,11 +146,12 @@
     {if $input->is_editable}
         {assign var=show_edit value=(!isset($params['edit_button']) || $params['edit_button'] != false)}
         {if !$is_pdf && !$is_order_detail && $show_edit}
-          <div>
-            <a class="dp_url mt-2"
-               href="{$input->getEditLink()|escape:'htmlall':'UTF-8'}"
-            >{l s='Wijzig dit product' mod='dynamicproduct'}</a>
-          </div>
+					<br>
+					<div>
+						<a class="dp_url"
+						   href="{$input->getEditLink()|escape:'htmlall':'UTF-8'}"
+						>{l s='Edit this customization' mod='dynamicproduct'}</a>
+					</div>
         {/if}
     {/if}
 {/if}

@@ -24,12 +24,16 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * In some cases you should not drop the tables.
  * Maybe the merchant will just try to reset the module
  * but does not want to loose all of the data associated to the module.
  */
-$sql = array('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'advancedvatmanager_customers`;', 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'advancedvatmanager_orders`;', 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'advancedvatmanager_customers_exemption`;', 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'advancedvatmanager_customers_exemption_shop`;');
+$sql = array('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'advancedvatmanager_customers`;', 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'advancedvatmanager_orders`;', 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'advancedvatmanager_customers_exemption`;', 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'advancedvatmanager_customers_exemption_shop`;','DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'advancedvatmanager_customer_cart`;');
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) == false) {
         return false;

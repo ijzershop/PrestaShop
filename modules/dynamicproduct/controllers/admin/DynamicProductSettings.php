@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,18 +19,24 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /* @noinspection PhpUnusedPrivateMethodInspection */
 
 use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\helpers\ConfigLinkHelper;
 use DynamicProduct\classes\helpers\ProductHelper;
 use DynamicProduct\classes\models\DynamicCombinationField;
 use DynamicProduct\classes\models\DynamicCombinationValue;
 use DynamicProduct\classes\models\DynamicConfig;
 use DynamicProduct\classes\models\DynamicField;
+use DynamicProduct\classes\models\DynamicProductConfigCategoryLink;
 use DynamicProduct\classes\models\DynamicProductConfigLink;
 
 class DynamicProductSettingsController extends ModuleAdminController
@@ -79,7 +85,7 @@ class DynamicProductSettingsController extends ModuleAdminController
     {
         $id_product = $this->id_product;
 
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
 
         // get product combinations
         $combinations = $this->module->provider->getProductCombinations($id_product);
@@ -122,7 +128,7 @@ class DynamicProductSettingsController extends ModuleAdminController
     {
         $this->respond([
             'products' => DynamicConfig::getActiveProducts(),
-            'linked_configs' => DynamicProductConfigLink::getLinkedConfigs(),
+            'linked_configs' => ConfigLinkHelper::getLinkedConfigs(),
         ]);
     }
 
@@ -135,7 +141,7 @@ class DynamicProductSettingsController extends ModuleAdminController
         $product_config->saveValue($name, $value);
 
         if ($name === 'active' || $name === 'required') {
-            $this->module->handler->addCustomField($this->id_product, false);
+            $this->module->handler->addCustomField($this->id_product);
         }
 
         if ($name === 'active' && (int) $value === 0) {
@@ -147,10 +153,13 @@ class DynamicProductSettingsController extends ModuleAdminController
 
     private function processCopyProductConfig()
     {
-        $link = (int) Tools::getValue('link');
-        $clear = (int) Tools::getValue('clear');
+        $options = Tools::getValue('options', []);
+        $clear = (int) ($options['clear'] ?? 1);
+        $link = (int) ($options['link'] ?? 0);
+
         $id_target_product = (int) Tools::getValue('id_target_product');
         $id_source_product = (int) Tools::getValue('id_source_product');
+
         if ($link) {
             if ($clear) {
                 $this->module->handler->clearConfig($id_target_product);
@@ -158,12 +167,12 @@ class DynamicProductSettingsController extends ModuleAdminController
             DynamicProductConfigLink::createLink($id_target_product, $id_source_product);
         } else {
             DynamicProductConfigLink::removeLink($id_target_product);
-            $this->module->handler->copyConfig($id_target_product, $id_source_product);
+            $this->module->handler->copyConfig($id_target_product, $id_source_product, false, $options, $clear);
         }
         $this->respond();
     }
 
-    private function processCopyCategoryConfig()
+    private function processLinkCategoryConfig()
     {
         if (DynamicTools::isDemoMode() && !DynamicTools::isSuperAdmin()) {
             $this->respond([
@@ -171,28 +180,25 @@ class DynamicProductSettingsController extends ModuleAdminController
                 'message' => 'This function is not available in the demo mode!',
             ]);
         }
-        $id_category = (int) Tools::getValue('id_target_category');
+        $id_category = (int) Tools::getValue('id_category');
+        $id_product = (int) Tools::getValue('id_product');
 
-        $category = new Category($id_category);
-        $products = $category->getProducts(
-            $this->context->language->id,
-            0,
-            100000000,
-            null,
-            null,
-            false,
-            false,
-            false,
-            1,
-            false
-        );
-        foreach ($products as $product) {
-            $id_destination_product = (int) $product['id_product'];
-            if ($id_destination_product !== $this->id_product) {
-                $this->module->handler->copyConfig($id_destination_product, $this->id_product);
-            }
+        DynamicProductConfigCategoryLink::createLink($id_product, $id_category);
+
+        $this->respond();
+    }
+
+    private function processClearProductConfig()
+    {
+        if (DynamicTools::isDemoMode() && !DynamicTools::isSuperAdmin()) {
+            $this->respond([
+                'error' => true,
+                'message' => 'This function is not available in the demo mode!',
+            ]);
         }
 
+        $id_target_product = (int) Tools::getValue('id_target_product');
+        $this->module->handler->clearConfig($id_target_product);
         $this->respond();
     }
 
@@ -259,6 +265,9 @@ class DynamicProductSettingsController extends ModuleAdminController
         try {
             $this->module->handler->importConfig($this->id_product, $data);
         } catch (Exception $e) {
+            if (_PS_MODE_DEV_) {
+                throw $e;
+            }
             $this->respond([
                 'error' => true,
                 'message' => $e->getMessage(),
@@ -294,6 +303,7 @@ class DynamicProductSettingsController extends ModuleAdminController
     private function processUnlinkConfigs()
     {
         DynamicProductConfigLink::removeLinks($this->id_product);
+        DynamicProductConfigCategoryLink::removeLink($this->id_product);
         $this->respond();
     }
 

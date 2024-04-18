@@ -1,5 +1,5 @@
 {*
-* 2007-2023 TuniSoft
+* 2007-2024 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -18,8 +18,8 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    TuniSoft <tunisoft.solutions@gmail.com>
-*  @copyright 2007-2023 TuniSoft
+*  @copyright 2007-2024 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{$input_field->getDynamicValue($input->input_fields) nofilter} {* html configured by admin *}
+{$input_field->getDynamicValue($input->getInputFields($id_lang)) nofilter} {* html configured by admin *}

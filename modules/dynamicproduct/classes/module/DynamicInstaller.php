@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\module;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\helpers\FolderHelper;
@@ -58,8 +62,9 @@ class DynamicInstaller
         'actionAdminControllerSetMedia',
         'actionOrderStatusPostUpdate',
         'actionClearCompileCache',
-        'displayDashboardToolbarTopMenu',
-        'actionAdminProductsListingFieldsModifier',
+        'actionProductGridDefinitionModifier',
+        'actionProductGridQueryBuilderModifier',
+        'actionProductGridDataModifier',
     ];
 
     private static $controllers = [
@@ -323,6 +328,7 @@ class DynamicInstaller
         if (!$sql = \Tools::file_get_contents($path)) {
             return false;
         }
+        $success = true;
         $sql = str_replace(
             ['ps_dynamicproduct', 'ps_tunisoft', 'InnoDb'],
             [_DB_PREFIX_ . $this->module->name, _DB_PREFIX_ . 'tunisoft', _MYSQL_ENGINE_],
@@ -330,12 +336,16 @@ class DynamicInstaller
         );
         $sql = preg_split('/;\s*[\r\n]+/', $sql);
         foreach ($sql as $query) {
-            if (trim($query) && !\Db::getInstance()->execute(trim($query))) {
-                return false;
+            if (trim($query)) {
+                try {
+                    $success &= \Db::getInstance()->execute(trim($query));
+                } catch (\Exception|\Throwable $e) {
+                    $success = false;
+                }
             }
         }
 
-        return true;
+        return $success;
     }
 
     public function execUninstallScript()
@@ -347,7 +357,7 @@ class DynamicInstaller
         if (is_array($tables)) {
             foreach ($tables as $table) {
                 $table = $this->restoreTableName($table);
-                $sql = 'DROP TABLE IF EXISTS `ps_dynamicproduct_' . pSQL($table) . '`;';
+                $sql = 'DROP TABLE IF EXISTS `' . pSQL($table) . '`;';
                 $sql = str_replace('ps_dynamicproduct', pSQL(_DB_PREFIX_ . $this->module->name), $sql);
                 $success &= \Db::getInstance()->execute($sql);
             }

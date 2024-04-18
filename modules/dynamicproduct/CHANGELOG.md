@@ -2,13 +2,131 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [3.1.62](https://github.com/unlocomqx/tunisoft/compare/v3.1.61...v3.1.62) (2023-09-18)
+### [3.13.1](https://github.com/unlocomqx/tunisoft/compare/v3.13.0...v3.13.1) (2024-03-28)
+
+## [3.12.0](https://github.com/unlocomqx/tunisoft/compare/v1.194.8...v3.12.0) (2024-03-06)
+
+### Features
+
+* Add Label and Ref
+  functions ([2bd383e](https://github.com/unlocomqx/tunisoft/commit/2bd383e30cb9810c0adb94d9572bbbc084aeec38))
+
+## [3.11.0](https://github.com/unlocomqx/tunisoft/compare/v3.10.11...v3.11.0) (2024-03-02)
+
+### Features
+
+* Link a product to a category of
+  products ([51bdfa3](https://github.com/unlocomqx/tunisoft/commit/51bdfa3f78b0e838035ca26480149ed03a180305))
+
+## [3.10.0](https://github.com/unlocomqx/tunisoft/compare/v3.9.3...v3.10.0) (2024-02-14)
+
+### Features
+
+* Add more options to product config
+  copy ([0135fef](https://github.com/unlocomqx/tunisoft/commit/0135fefd51caf58a96f70f60bfaeb12c32798581))
+
+### [3.9.3](https://github.com/unlocomqx/tunisoft/compare/v1.194.0...v3.9.3) (2024-02-12)
+
+### [3.9.2](https://github.com/unlocomqx/tunisoft/compare/v3.9.1...v3.9.2) (2024-02-07)
+
+### [3.9.1](https://github.com/unlocomqx/tunisoft/compare/v3.9.0...v3.9.1) (2024-02-03)
+
+## [3.9.0](https://github.com/unlocomqx/tunisoft/compare/v3.4.45...v3.9.0) (2024-02-02)
+
+### Features
+
+* Add field placeholder
+  property ([cd115b6](https://github.com/unlocomqx/tunisoft/commit/cd115b6273a79b528826c78781ca52b8ad176b7f))
+* Add hover trigger
+  feature ([828fef4](https://github.com/unlocomqx/tunisoft/commit/828fef474cc33850937b4a449491f46027789676))
+* Add layers stock
+  management ([d58f9b7](https://github.com/unlocomqx/tunisoft/commit/d58f9b78ef639e5c18f74bdf96916f1c22050699))
+* Add option to set the max text length for design
+  fields ([3429d72](https://github.com/unlocomqx/tunisoft/commit/3429d729109e1f4b315703abca10daf6cd46eaeb))
+* Add quantity field to
+  intervals ([3ee6ffa](https://github.com/unlocomqx/tunisoft/commit/3ee6ffada7b6d20d6d2999024a7bb66f4d8ec9a6))
+* Allow enabling/disabling single field
+  options ([3b3d296](https://github.com/unlocomqx/tunisoft/commit/3b3d2963b752efd5590276181d98175c0ba63c15))
+
+### Bug Fixes
+
+* Refresh text fields when combination
+  changes ([df4ba78](https://github.com/unlocomqx/tunisoft/commit/df4ba7850cb6aae8f94d95dcc245f0c52cb4f0b2))
+
+### [3.8.1](https://github.com/unlocomqx/tunisoft/compare/v3.8.0...v3.8.1) (2024-01-18)
+
+## [3.8.0](https://github.com/unlocomqx/tunisoft/compare/v3.7.3...v3.8.0) (2024-01-15)
+
+### Features
+
+* Allow enabling/disabling single field
+  options ([3b3d296](https://github.com/unlocomqx/tunisoft/commit/3b3d2963b752efd5590276181d98175c0ba63c15))
+
+### [3.7.3](https://github.com/unlocomqx/tunisoft/compare/v3.7.2...v3.7.3) (2024-01-13)
+
+## [3.7.0](https://github.com/unlocomqx/tunisoft/compare/v3.6.7...v3.7.0) (2024-01-07)
+
+### Features
+
+* Add field placeholder
+  property ([cd115b6](https://github.com/unlocomqx/tunisoft/commit/cd115b6273a79b528826c78781ca52b8ad176b7f))
+
+## [3.5.0](https://github.com/unlocomqx/tunisoft/compare/v1.178.23...v3.5.0) (2023-12-09)
+
+### Features
+
+* Add quantity field to
+  intervals ([2d0c69e](https://github.com/unlocomqx/tunisoft/commit/2d0c69ed13850b36275bb8488500548397ce38f6))
+  All notable changes to this project will be documented in this file.
+  See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [3.4.45](https://github.com/unlocomqx/tunisoft/compare/v3.4.44...v3.4.45) (2023-12-08)
+
+### [3.4.44](https://github.com/unlocomqx/tunisoft/compare/v3.4.43...v3.4.44) (2023-12-07)
+
+### [3.4.43](https://github.com/unlocomqx/tunisoft/compare/v1.182.9...v3.4.43) (2023-12-05)
+
+### [3.4.30](https://github.com/unlocomqx/tunisoft/compare/v1.180.7...v3.4.30) (2023-11-20)
+
+### Bug Fixes
+
+* Apply category discount to category
+  prices ([8f22323](https://github.com/unlocomqx/tunisoft/commit/8f223237329418e0da30f6d532b3bb5da21e72ad))
+
+## [3.4.0](https://github.com/unlocomqx/tunisoft/compare/v3.2.13...v3.4.0) (2023-10-12)
+
+### Features
+
+* Add cron link for DB
+  cleanup ([1be212a](https://github.com/unlocomqx/tunisoft/commit/1be212a2b9416788f505cfd0242c2d89399e6b19))
+
+### Bug Fixes
+
+* Fix editing
+  customization ([6e95c68](https://github.com/unlocomqx/tunisoft/commit/6e95c68eb5c11c099c411c65fe66600f811b4248))
+
+### [3.2.1](https://github.com/unlocomqx/tunisoft/compare/v1.176.18...v3.2.1) (2023-10-03)
+
+### Bug Fixes
+
+* Fix displayed price in
+  summary ([ec19983](https://github.com/unlocomqx/tunisoft/commit/ec1998360822b10038ee21c6cffc4e3a750fe898))
+
+## [3.2.0](https://github.com/unlocomqx/tunisoft/compare/v3.1.73...v3.2.0) (2023-09-29)
+
+### Features
+
+* Add options
+  description ([d0bfc6c](https://github.com/unlocomqx/tunisoft/commit/d0bfc6c6e8ae9b5ac56d6c7ffb577df97f50f2a5))
+
+### [3.1.74](https://github.com/unlocomqx/tunisoft/compare/v3.1.73...v3.1.74) (2023-09-29)
 
 ### [3.1.51](https://github.com/unlocomqx/tunisoft/compare/v1.175.8...v3.1.51) (2023-08-30)
 
 ### Bug Fixes
 
-* attach module to actionFrontControllerInitBefore ([f463393](https://github.com/unlocomqx/tunisoft/commit/f463393886cca7b7da2bc929f531e7dadafccb5b))
+* attach module to
+  actionFrontControllerInitBefore ([f463393](https://github.com/unlocomqx/tunisoft/commit/f463393886cca7b7da2bc929f531e7dadafccb5b))
 
 ## [3.1.0](https://github.com/unlocomqx/tunisoft/compare/v1.160.10...v3.1.0) (2023-05-09)
 

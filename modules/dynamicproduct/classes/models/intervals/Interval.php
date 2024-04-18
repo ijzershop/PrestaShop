@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,19 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\models\intervals;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+use DynamicProduct\classes\helpers\ConfigLinkHelper;
 use DynamicProduct\classes\helpers\ModelHelper;
 use DynamicProduct\classes\models\DynamicObject;
-use DynamicProduct\classes\models\DynamicProductConfigLink;
 
 class Interval extends DynamicObject
 {
@@ -67,7 +71,7 @@ class Interval extends DynamicObject
         if (isset(self::$cache[$key])) {
             return self::$cache[$key];
         }
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
         $intervals = parent::getByIdProduct($id_source_product, $order, $id_lang);
         self::$cache[$key] = $intervals;
 
@@ -80,7 +84,7 @@ class Interval extends DynamicObject
             return self::$cache[$id_product];
         }
 
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
 
         $rows = \Db::getInstance()->executeS('
             SELECT i.id_interval as id, 
@@ -109,8 +113,7 @@ class Interval extends DynamicObject
             icg.id_interval_condition_group, 
             ic.id_interval_condition, 
             icr.id_interval_condition_range, 
-            icv.id_interval_condition_value'
-        );
+            icv.id_interval_condition_value');
 
         $intervals = [];
 
@@ -118,7 +121,7 @@ class Interval extends DynamicObject
             $rows,
             self::class,
             [
-                'int' => ['id_interval_condition_group', 'id_interval_condition', 'id_field'],
+                'int' => ['id_interval_condition_group', 'id_interval_condition'],
                 'float' => ['min', 'max'],
             ]
         );

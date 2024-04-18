@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_main_config`
 (
-    `id_main_config` int(11)    NOT NULL,
-    `debug_mode`     tinyint(1) NOT NULL DEFAULT 0,
+    `id_main_config` int(11)     NOT NULL,
+    `debug_mode`     tinyint(1)  NOT NULL DEFAULT 0,
+    `cron_key`       varchar(50) NOT NULL DEFAULT '',
     PRIMARY KEY (`id_main_config`)
 ) ENGINE = InnoDb
   DEFAULT CHARSET = utf8;
@@ -63,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_field_lang`
     `value`             varchar(100) NOT NULL,
     `short_description` text         NOT NULL,
     `description`       text         NOT NULL,
+    `placeholder`       text         NOT NULL,
     PRIMARY KEY (`id_field`, `id_lang`)
 ) ENGINE = InnoDb
   DEFAULT CHARSET = utf8;
@@ -81,36 +83,37 @@ CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_common_field`
 
 CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_unit_value`
 (
-    `id_unit_value`                 int(11)        NOT NULL AUTO_INCREMENT,
-    `id_field`                      int(11)        NOT NULL,
-    `id_unit`                       int(11)        NOT NULL,
-    `min`                           decimal(20, 6) NOT NULL,
-    `max`                           decimal(20, 6) NOT NULL,
-    `step`                          decimal(20, 6) NOT NULL,
-    `init`                          decimal(20, 6) NOT NULL,
-    `extra`                         varchar(256)   NULL,
-    `required`                      tinyint(1)     NOT NULL DEFAULT 0,
-    `min_width`                     int(11)        NOT NULL,
-    `min_height`                    int(11)        NOT NULL,
-    `max_size`                      int(11)        NOT NULL,
-    `max_files`                     int(11)        NOT NULL DEFAULT 1,
-    `extensions`                    VARCHAR(50)    NOT NULL,
-    `min_date`                      VARCHAR(50)    NOT NULL,
-    `max_date`                      VARCHAR(50)    NOT NULL,
-    `disabled_days`                 VARCHAR(50)    NOT NULL,
-    `multiselect`                   tinyint(1)     NOT NULL DEFAULT 0,
-    `color`                         VARCHAR(10)    NOT NULL,
-    `display_value_price`           tinyint(1)     NOT NULL DEFAULT 0,
-    `display_secondary_value_price` tinyint(1)     NOT NULL DEFAULT 0,
-    `display_price_tax_excl`        tinyint(1)     NOT NULL DEFAULT 0,
-    `custom_suffix`                 varchar(256)   NULL,
-    `display_in_popup`              tinyint(1)     NOT NULL DEFAULT 0,
-    `hide_when_empty`               tinyint(1)     NOT NULL DEFAULT 0,
-    `show_in_summary`               tinyint(1)     NOT NULL DEFAULT 0,
-    `ps_style`                      tinyint(1)     NOT NULL DEFAULT 0,
-    `show_dropzone`                 tinyint(1)     NOT NULL DEFAULT 0,
-    `script_name`                   varchar(256)   NULL,
-    `json_config`                   TEXT,
+    `id_unit_value`                       int(11)        NOT NULL AUTO_INCREMENT,
+    `id_field`                            int(11)        NOT NULL,
+    `id_unit`                             int(11)        NOT NULL,
+    `min`                                 decimal(20, 6) NOT NULL,
+    `max`                                 decimal(20, 6) NOT NULL,
+    `step`                                decimal(20, 6) NOT NULL,
+    `init`                                decimal(20, 6) NOT NULL,
+    `extra`                               varchar(256)   NULL,
+    `required`                            tinyint(1)     NOT NULL DEFAULT 0,
+    `min_width`                           int(11)        NOT NULL,
+    `min_height`                          int(11)        NOT NULL,
+    `max_size`                            int(11)        NOT NULL,
+    `max_files`                           int(11)        NOT NULL DEFAULT 1,
+    `extensions`                          VARCHAR(50)    NOT NULL,
+    `min_date`                            VARCHAR(50)    NOT NULL,
+    `max_date`                            VARCHAR(50)    NOT NULL,
+    `disabled_days`                       VARCHAR(50)    NOT NULL,
+    `multiselect`                         tinyint(1)     NOT NULL DEFAULT 0,
+    `color`                               VARCHAR(10)    NOT NULL,
+    `display_value_price`                 tinyint(1)     NOT NULL DEFAULT 0,
+    `display_secondary_value_price`       tinyint(1)     NOT NULL DEFAULT 0,
+    `display_secondary_value_description` tinyint(1)     NOT NULL DEFAULT 0,
+    `display_price_tax_excl`              tinyint(1)     NOT NULL DEFAULT 0,
+    `custom_suffix`                       varchar(256)   NULL,
+    `display_in_popup`                    tinyint(1)     NOT NULL DEFAULT 0,
+    `hide_when_empty`                     tinyint(1)     NOT NULL DEFAULT 0,
+    `show_in_summary`                     tinyint(1)     NOT NULL DEFAULT 0,
+    `ps_style`                            tinyint(1)     NOT NULL DEFAULT 0,
+    `show_dropzone`                       tinyint(1)     NOT NULL DEFAULT 0,
+    `script_name`                         varchar(256)   NULL,
+    `json_config`                         TEXT,
     PRIMARY KEY (`id_unit_value`)
 ) ENGINE = InnoDb
   DEFAULT CHARSET = utf8;
@@ -244,14 +247,19 @@ CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_dropdown_option`
     `id_dropdown_option` int(11)      NOT NULL AUTO_INCREMENT,
     `id_field`           int(11)      NOT NULL,
     `value`              varchar(100) NOT NULL,
-    `secondary_value`    varchar(100) NOT NULL,
+    `secondary_value`    TEXT         NOT NULL,
     `sku`                varchar(100) NOT NULL,
     `color`              varchar(100) NOT NULL,
     `image`              varchar(100) NOT NULL,
+    `image_width`        int(11),
+    `image_height`       int(11),
     `preview`            varchar(100) NOT NULL,
     `position`           int(11)      NOT NULL,
     `is_default`         tinyint(1)   NOT NULL DEFAULT 0,
     `deleted`            tinyint(1)   NOT NULL DEFAULT 0,
+    `active`             tinyint(1)   NOT NULL DEFAULT 1,
+    `date_add`           datetime     NOT NULL,
+    `date_upd`           datetime     NOT NULL,
     PRIMARY KEY (`id_dropdown_option`)
 ) ENGINE = InnoDb
   DEFAULT CHARSET = utf8
@@ -272,13 +280,16 @@ CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_radio_option`
     `id_radio_option` int(11)      NOT NULL AUTO_INCREMENT,
     `id_field`        int(11)      NOT NULL,
     `value`           varchar(100) NOT NULL,
-    `secondary_value` varchar(100) NOT NULL,
+    `secondary_value` TEXT         NOT NULL,
     `sku`             varchar(100) NOT NULL,
     `color`           varchar(100) NOT NULL,
     `preview`         varchar(100) NOT NULL,
     `position`        int(11)      NOT NULL,
     `is_default`      tinyint(1)   NOT NULL DEFAULT 0,
     `deleted`         tinyint(1)   NOT NULL DEFAULT 0,
+    `active`          tinyint(1)   NOT NULL DEFAULT 1,
+    `date_add`        datetime     NOT NULL,
+    `date_upd`        datetime     NOT NULL,
     PRIMARY KEY (`id_radio_option`)
 ) ENGINE = InnoDb
   DEFAULT CHARSET = utf8
@@ -299,14 +310,19 @@ CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_thumbnails_option`
     `id_thumbnails_option` int(11)      NOT NULL AUTO_INCREMENT,
     `id_field`             int(11)      NOT NULL,
     `value`                varchar(100) NOT NULL,
-    `secondary_value`      varchar(100) NOT NULL,
+    `secondary_value`      TEXT         NOT NULL,
     `sku`                  varchar(100) NOT NULL,
     `color`                varchar(100) NOT NULL,
     `image`                varchar(100) NOT NULL,
+    `image_width`          int(11)      NOT NULL,
+    `image_height`         int(11)      NOT NULL,
     `preview`              varchar(100) NOT NULL,
     `position`             int(11)      NOT NULL,
     `is_default`           tinyint(1)   NOT NULL DEFAULT 0,
     `deleted`              tinyint(1)   NOT NULL DEFAULT 0,
+    `active`               tinyint(1)   NOT NULL DEFAULT 1,
+    `date_add`             datetime     NOT NULL,
+    `date_upd`             datetime     NOT NULL,
     PRIMARY KEY (`id_thumbnails_option`)
 ) ENGINE = InnoDb
   DEFAULT CHARSET = utf8
@@ -330,6 +346,8 @@ CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_preview_option`
     `preview`           varchar(100) NOT NULL,
     `position`          int(11)      NOT NULL,
     `deleted`           tinyint(1)   NOT NULL DEFAULT 0,
+    `date_add`          datetime     NOT NULL,
+    `date_upd`          datetime     NOT NULL,
     PRIMARY KEY (`id_preview_option`)
 ) ENGINE = InnoDb
   DEFAULT CHARSET = utf8
@@ -434,7 +452,7 @@ CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_interval_condition`
 (
     `id_interval_condition`       int(11)                 NOT NULL AUTO_INCREMENT,
     `id_interval_condition_group` int(11)                 NOT NULL,
-    `id_field`                    int(11)                 NOT NULL,
+    `id_field`                    varchar(50)             NOT NULL,
     `type`                        enum ('range','values') NOT NULL,
     PRIMARY KEY (`id_interval_condition`)
 ) ENGINE = InnoDb
@@ -558,6 +576,15 @@ CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_product_config_link`
     `id_product`             int(11) NOT NULL,
     `id_product_source`      int(11) NOT NULL,
     PRIMARY KEY (`id_product_config_link`)
+) ENGINE = InnoDb
+  DEFAULT CHARSET = utf8;
+
+CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_product_config_category_link`
+(
+    `id_product_config_category_link` int(11) NOT NULL AUTO_INCREMENT,
+    `id_product`                      int(11) NOT NULL,
+    `id_category`                     int(11) NOT NULL,
+    PRIMARY KEY (`id_product_config_category_link`)
 ) ENGINE = InnoDb
   DEFAULT CHARSET = utf8;
 

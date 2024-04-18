@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 $id_no = Country::getByIso('NO');
 $insert_no_states = "INSERT INTO `"._DB_PREFIX_."state` (`id_country`, `id_zone`, `name`, `iso_code`, `tax_behavior`, `active`) VALUES

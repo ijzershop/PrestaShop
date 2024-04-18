@@ -17,8 +17,13 @@
  *   own business needs, as long as no distribution of either the
  *   original module or the user-modified version is made.
  *
- *  @file-version 1.25
+ *  @file-version 1.25.2
  */
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 
 class GAuthenticatedEmployee extends ObjectModel
 {
@@ -39,6 +44,7 @@ class GAuthenticatedEmployee extends ObjectModel
         )
     );
 
+
     /**
      * Prevent unwanted updates to underlying employee object
      */
@@ -46,6 +52,7 @@ class GAuthenticatedEmployee extends ObjectModel
     {
         return false;
     }
+
 
     public function update($null_values = false)
     {
@@ -61,8 +68,10 @@ class GAuthenticatedEmployee extends ObjectModel
                 '{GATOKEN}' => $fields['gatoken'],
             )
         );
+
         return Db::getInstance()->execute($query);
     }
+
     
     public static function getEnabledStatus($gatoken)
     {
@@ -78,10 +87,15 @@ class GAuthenticatedEmployee extends ObjectModel
         if ($gatoken == '') {
             return $disabled;
         }
-        $data = unserialize(GAuth::base64($gatoken, 'decode'));
+        $data = GAuth::unpack($gatoken);
 
-        return $data['data']['status'] ? $enabled : $disabled;
+        return (
+            $data['data']['status']
+                ? $enabled
+                : $disabled
+        );
     }
+
     
     public static function getAuthType($gatoken)
     {
@@ -90,8 +104,8 @@ class GAuthenticatedEmployee extends ObjectModel
             return '--';
         }
 
-        $data = unserialize(GAuth::base64($gatoken, 'decode'));
+        $data = GAuth::unpack($gatoken);
+
         return $data['type'];
     }
-    
 }

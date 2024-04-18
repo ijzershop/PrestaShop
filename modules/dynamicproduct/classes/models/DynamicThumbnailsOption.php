@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\models;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\helpers\ModelHelper;
@@ -42,8 +46,11 @@ class DynamicThumbnailsOption extends DynamicObject
     public $label;
 
     public $deleted = 0;
+    public $active = 1;
 
     public $image;
+    public $image_width;
+    public $image_height;
     public $image_url;
     public $thumb_url;
 
@@ -52,6 +59,9 @@ class DynamicThumbnailsOption extends DynamicObject
     public $preview_thumb_url;
 
     public $displayed_value;
+
+    public $date_add;
+    public $date_upd;
 
     public static $definition = [
         'table' => 'dynamicproduct_thumbnails_option',
@@ -66,10 +76,13 @@ class DynamicThumbnailsOption extends DynamicObject
             'sku' => ['type' => self::TYPE_STRING],
             'color' => ['type' => self::TYPE_STRING],
             'image' => ['type' => self::TYPE_STRING],
+            'image_width' => ['type' => self::TYPE_INT],
+            'image_height' => ['type' => self::TYPE_INT],
             'preview' => ['type' => self::TYPE_STRING],
             'is_default' => ['type' => self::TYPE_INT],
             'position' => ['type' => self::TYPE_INT],
             'deleted' => ['type' => self::TYPE_INT],
+            'active' => ['type' => self::TYPE_INT],
             /* Lang fields */
             'label' => [
                 'type' => self::TYPE_STRING,
@@ -78,6 +91,8 @@ class DynamicThumbnailsOption extends DynamicObject
                 'validate' => 'isGenericName',
                 'size' => 200,
             ],
+            'date_add' => ['type' => self::TYPE_DATE],
+            'date_upd' => ['type' => self::TYPE_DATE],
         ],
     ];
 

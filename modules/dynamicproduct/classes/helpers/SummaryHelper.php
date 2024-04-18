@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\helpers;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\models\DynamicInput;
@@ -67,7 +71,6 @@ class SummaryHelper
      * @param $summary_name
      * @param DynamicInput $dynamic_input
      * @param $id_lang
-     * @param $is_pdf
      * @param $is_order_detail
      * @param $summary
      *
@@ -84,7 +87,6 @@ class SummaryHelper
      * @param $summary_name
      * @param DynamicInput $dynamic_input
      * @param $id_lang
-     * @param $is_pdf
      * @param $is_order_detail
      *
      * @return string
@@ -92,9 +94,10 @@ class SummaryHelper
     private function getCacheFile($summary_name, $dynamic_input, $id_lang, $is_pdf, $is_order_detail)
     {
         $date_upd = md5($dynamic_input->date_upd);
+        $version = $this->module->version;
 
         return $this->module->provider->getDataFile(
-            "cache/$summary_name-{$dynamic_input->id}-{$date_upd}-$id_lang-$is_pdf-$is_order_detail.html"
+            "cache/$summary_name-$version-{$dynamic_input->id}-{$date_upd}-$id_lang-$is_pdf-$is_order_detail.html"
         );
     }
 }

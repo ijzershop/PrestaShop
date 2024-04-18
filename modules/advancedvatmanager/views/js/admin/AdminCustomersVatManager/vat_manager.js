@@ -148,8 +148,8 @@ $(document).ready(function(e){
             
             scanProcess();
         }); 
-        $('button[name="reload_page"]').on('click', function(){
-            location.reload(); 
+        $('button[name="submitReloadPage"]').on('click', function(){
+            location.href = reload_page_url
         });                                
     });
     

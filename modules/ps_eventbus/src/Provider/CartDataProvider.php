@@ -5,8 +5,7 @@ namespace PrestaShop\Module\PsEventbus\Provider;
 use PrestaShop\Module\PsEventbus\Config\Config;
 use PrestaShop\Module\PsEventbus\Repository\CartProductRepository;
 use PrestaShop\Module\PsEventbus\Repository\CartRepository;
-
-class CartDataProvider implements PaginatedApiDataProviderInterface
+class CartDataProvider implements \PrestaShop\Module\PsEventbus\Provider\PaginatedApiDataProviderInterface
 {
     /**
      * @var CartRepository
@@ -16,42 +15,28 @@ class CartDataProvider implements PaginatedApiDataProviderInterface
      * @var CartProductRepository
      */
     private $cartProductRepository;
-
     /**
      * @param CartRepository $cartRepository
      * @param CartProductRepository $cartProductRepository
      */
-    public function __construct(
-        CartRepository $cartRepository,
-        CartProductRepository $cartProductRepository
-    ) {
+    public function __construct(CartRepository $cartRepository, CartProductRepository $cartProductRepository)
+    {
         $this->cartRepository = $cartRepository;
         $this->cartProductRepository = $cartProductRepository;
     }
-
     public function getFormattedData($offset, $limit, $langIso)
     {
         $carts = $this->cartRepository->getCarts($offset, $limit);
-
-        if (!is_array($carts)) {
+        if (!\is_array($carts)) {
             return [];
         }
-
         $cartProducts = $this->getCartProducts($carts);
-
         $this->castCartValues($carts);
-
-        $carts = array_map(function ($cart) {
-            return [
-                'id' => $cart['id_cart'],
-                'collection' => Config::COLLECTION_CARTS,
-                'properties' => $cart,
-            ];
+        $carts = \array_map(function ($cart) {
+            return ['id' => $cart['id_cart'], 'collection' => Config::COLLECTION_CARTS, 'properties' => $cart];
         }, $carts);
-
-        return array_merge($carts, $cartProducts);
+        return \array_merge($carts, $cartProducts);
     }
-
     /**
      * @param int $offset
      * @param string $langIso
@@ -62,7 +47,6 @@ class CartDataProvider implements PaginatedApiDataProviderInterface
     {
         return (int) $this->cartRepository->getRemainingCartsCount($offset);
     }
-
     /**
      * @param array $carts
      *
@@ -74,7 +58,6 @@ class CartDataProvider implements PaginatedApiDataProviderInterface
             $cart['id_cart'] = (string) $cart['id_cart'];
         }
     }
-
     /**
      * @param array $cartProducts
      *
@@ -90,7 +73,6 @@ class CartDataProvider implements PaginatedApiDataProviderInterface
             $cartProduct['quantity'] = (int) $cartProduct['quantity'];
         }
     }
-
     /**
      * @param int $limit
      * @param string $langIso
@@ -98,65 +80,45 @@ class CartDataProvider implements PaginatedApiDataProviderInterface
      *
      * @return array
      *
-     * @throws \PrestaShopDatabaseException
+     * @@throws \PrestaShopDatabaseException
      */
     public function getFormattedDataIncremental($limit, $langIso, $objectIds)
     {
         $carts = $this->cartRepository->getCartsIncremental($limit, $objectIds);
-
-        if (!is_array($carts) || empty($carts)) {
+        if (!\is_array($carts) || empty($carts)) {
             return [];
         }
-
         $cartProducts = $this->getCartProducts($carts);
-
         $this->castCartValues($carts);
-
-        $carts = array_map(function ($cart) {
-            return [
-                'id' => $cart['id_cart'],
-                'collection' => Config::COLLECTION_CARTS,
-                'properties' => $cart,
-            ];
+        $carts = \array_map(function ($cart) {
+            return ['id' => $cart['id_cart'], 'collection' => Config::COLLECTION_CARTS, 'properties' => $cart];
         }, $carts);
-
-        return array_merge($carts, $cartProducts);
+        return \array_merge($carts, $cartProducts);
     }
-
     /**
      * @param array $carts
      *
      * @return array
      *
-     * @throws \PrestaShopDatabaseException
+     * @@throws \PrestaShopDatabaseException
      */
     private function getCartProducts(array $carts)
     {
-        $cartIds = array_map(function ($cart) {
+        $cartIds = \array_map(function ($cart) {
             return (string) $cart['id_cart'];
         }, $carts);
-
         $cartProducts = $this->cartProductRepository->getCartProducts($cartIds);
-
-        if (!is_array($cartProducts) || empty($cartProducts)) {
+        if (!\is_array($cartProducts) || empty($cartProducts)) {
             return [];
         }
-
         $this->castCartProductValues($cartProducts);
-
-        if (is_array($cartProducts)) {
-            return array_map(function ($cartProduct) {
-                return [
-                    'id' => "{$cartProduct['id_cart']}-{$cartProduct['id_product']}-{$cartProduct['id_product_attribute']}",
-                    'collection' => Config::COLLECTION_CART_PRODUCTS,
-                    'properties' => $cartProduct,
-                ];
+        if (\is_array($cartProducts)) {
+            return \array_map(function ($cartProduct) {
+                return ['id' => "{$cartProduct['id_cart']}-{$cartProduct['id_product']}-{$cartProduct['id_product_attribute']}", 'collection' => Config::COLLECTION_CART_PRODUCTS, 'properties' => $cartProduct];
             }, $cartProducts);
         }
-
         return [];
     }
-
     /**
      * @param int $offset
      * @param int $limit
@@ -164,7 +126,7 @@ class CartDataProvider implements PaginatedApiDataProviderInterface
      *
      * @return array
      *
-     * @throws \PrestaShopDatabaseException
+     * @@throws \PrestaShopDatabaseException
      */
     public function getQueryForDebug($offset, $limit, $langIso)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,6 +50,12 @@
 
 namespace DynamicProduct\classes\models;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+use DynamicProduct\classes\helpers\ConfigLinkHelper;
+
 class DynamicProportion extends DynamicObject
 {
     public $id_product;
@@ -70,7 +76,7 @@ class DynamicProportion extends DynamicObject
 
     public static function getByIdProduct($id_product, $order = false, $id_lang = null)
     {
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
 
         return parent::getByIdProduct($id_source_product, $order, $id_lang);
     }
@@ -82,7 +88,7 @@ class DynamicProportion extends DynamicObject
      */
     public static function getByProduct($id_product)
     {
-        $id_source_product = DynamicProductConfigLink::getSourceProduct($id_product);
+        $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
         $dynamic_proportions = [];
         $sql = new \DbQuery();
         $sql->from(self::$definition['table']);

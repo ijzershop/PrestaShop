@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\module;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\helpers\FieldOptionHelper;
@@ -76,17 +80,36 @@ class DynamicHandler
         $this->context = $context;
     }
 
-    public function copyConfig($id_product_new, $id_product_old, $duplicating_product = false)
+    public function copyConfig($id_product_new, $id_product_old, $duplicating_product = false, $copy_options = [], $clear = false)
     {
-        $product_fields = DynamicField::getFieldsByIdProduct($id_product_new);
-        foreach ($product_fields as $product_field) {
-            if ((int) $product_field->id_product === (int) $id_product_new) {
-                $unit_value = $product_field->getUnitValues();
-                $unit_value->delete();
-                $product_field->delete();
+        $default_options = [
+            'steps' => true,
+            'groups' => true,
+            'fields' => true,
+            'equations' => true,
+            'combination_values' => true,
+            'combinations_visibility' => true,
+            'proportions' => true,
+            'conditions' => true,
+            'field_formulas' => true,
+            'intervals' => true,
+            'grids' => true,
+            'calculation_order' => true,
+            'settings' => true,
+        ];
+        $copy_options = array_merge($default_options, $copy_options);
+
+        if ($clear) {
+            $product_fields = DynamicField::getFieldsByIdProduct($id_product_new);
+            foreach ($product_fields as $product_field) {
+                if ((int) $product_field->id_product === (int) $id_product_new) {
+                    $unit_value = $product_field->getUnitValues();
+                    $unit_value->delete();
+                    $product_field->delete();
+                }
+                $common_field = DynamicCommonField::getByFieldAndProduct($product_field->id, $id_product_new);
+                $common_field->delete();
             }
-            $common_field = DynamicCommonField::getByFieldAndProduct($product_field->id, $id_product_new);
-            $common_field->delete();
         }
 
         $field_groups_new = [];
@@ -99,364 +122,410 @@ class DynamicHandler
         $intervals_new = [];
         $grids_new = [];
 
-        DynamicProductStep::deleteByProduct($id_product_new);
-        $product_steps = DynamicProductStep::getByIdProduct($id_product_old);
-        foreach ($product_steps as $product_step) {
-            $id_product_step = $product_step->id;
-            $product_step->id_product = $id_product_new;
-            $product_step->add();
-            $product_steps_new[$id_product_step] = $product_step->id;
-        }
-
-        DynamicProductFieldGroup::deleteByProduct($id_product_new);
-        $product_field_groups = DynamicProductFieldGroup::getByIdProduct($id_product_old);
-        foreach ($product_field_groups as $product_field_group) {
-            $id_step_new = (int) $this->module->provider->getNewID(
-                $product_steps_new,
-                $product_field_group->id_step
-            );
-            $id_field_group = $product_field_group->id;
-            $product_field_group->id_product = $id_product_new;
-            $product_field_group->id_step = $id_step_new;
-            $product_field_group->add();
-            $field_groups_new[$id_field_group] = $product_field_group->id;
-        }
-
-        $product_fields = DynamicField::getFieldsByIdProduct($id_product_old);
-        foreach ($product_fields as $field) {
-            $id_group_new = (int) $this->module->provider->getNewID(
-                $field_groups_new,
-                $field->id_group
-            );
-            $id_step_new = (int) $this->module->provider->getNewID(
-                $product_steps_new,
-                $field->id_step
-            );
-            $new_field = $this->copyField($field->id, $id_product_new, $id_product_old, $id_group_new, $id_step_new);
-            $options_new[$field->id] = $new_field['options'];
-            $id_new_field = $new_field['id_field'];
-            if ($id_new_field !== (int) $field->id) {
-                $fields_new[(int) $field->id] = $id_new_field;
+        if ($copy_options['steps']) {
+            if ($clear) {
+                DynamicProductStep::deleteByProduct($id_product_new);
+            }
+            $product_steps = DynamicProductStep::getByIdProduct($id_product_old);
+            foreach ($product_steps as $product_step) {
+                $id_product_step = $product_step->id;
+                $product_step->id_product = $id_product_new;
+                $product_step->add();
+                $product_steps_new[$id_product_step] = $product_step->id;
             }
         }
 
-        $new_field_groups = DynamicProductFieldGroup::getByIdProduct($id_product_new);
-        foreach ($new_field_groups as $new_field_group) {
-            if ($new_field_group->id_control_field) {
-                $new_field_group->id_control_field = (int) $this->module->provider->getNewID(
-                    $fields_new,
-                    $new_field_group->id_control_field
+        if ($copy_options['groups']) {
+            if ($clear) {
+                DynamicProductFieldGroup::deleteByProduct($id_product_new);
+            }
+            $product_field_groups = DynamicProductFieldGroup::getByIdProduct($id_product_old);
+            foreach ($product_field_groups as $product_field_group) {
+                $id_step_new = (int) $this->module->provider->getNewID(
+                    $product_steps_new,
+                    $product_field_group->id_step
                 );
-                $new_field_group->save();
+                $id_field_group = $product_field_group->id;
+                $product_field_group->id_product = $id_product_new;
+                $product_field_group->id_step = $id_step_new;
+                $product_field_group->add();
+                $field_groups_new[$id_field_group] = $product_field_group->id;
             }
         }
 
-        DynamicEquation::deleteByProduct($id_product_new);
-        $product_equations = DynamicEquation::getEquationsByIdProduct($id_product_old);
-        foreach ($product_equations as $product_equation) {
-            $product_equation->id_product = $id_product_new;
-            $product_equation->add();
+        if ($copy_options['fields']) {
+            $product_fields = DynamicField::getFieldsByIdProduct($id_product_old);
+            foreach ($product_fields as $field) {
+                if ($field->deleted) {
+                    continue;
+                }
+                $id_group_new = (int) $this->module->provider->getNewID(
+                    $field_groups_new,
+                    $field->id_group
+                );
+                $id_step_new = (int) $this->module->provider->getNewID(
+                    $product_steps_new,
+                    $field->id_step
+                );
+                $new_field = $this->copyField($field->id, $id_product_new, $id_product_old, $id_group_new, $id_step_new, true);
+                $options_new[$field->id] = $new_field['options'];
+                $id_new_field = $new_field['id_field'];
+                if ($id_new_field !== (int) $field->id) {
+                    $fields_new[(int) $field->id] = $id_new_field;
+                }
+            }
+        }
+
+        if ($copy_options['groups']) {
+            $new_field_groups = DynamicProductFieldGroup::getByIdProduct($id_product_new);
+            foreach ($new_field_groups as $new_field_group) {
+                if ($new_field_group->id_control_field) {
+                    $new_field_group->id_control_field = (int) $this->module->provider->getNewID(
+                        $fields_new,
+                        $new_field_group->id_control_field
+                    );
+                    $new_field_group->save();
+                }
+            }
+        }
+
+        if ($copy_options['equations']) {
+            DynamicEquation::deleteByProduct($id_product_new);
+            $product_equations = DynamicEquation::getEquationsByIdProduct($id_product_old);
+            foreach ($product_equations as $product_equation) {
+                $product_equation->id_product = $id_product_new;
+                $product_equation->add();
+            }
         }
 
         if ($duplicating_product) {
-            DynamicCombinationValue::deleteByProduct($id_product_new);
+            if ($copy_options['combination_values'] && $copy_options['fields']) {
+                DynamicCombinationValue::deleteByProduct($id_product_new);
 
-            $combination_values = DynamicCombinationValue::getValuesByIdProduct($id_product_old);
-            $combination_values = DynamicCombinationValue::organizeByAttributes($combination_values);
-            $attributes_old = \Product::getProductAttributesIds($id_product_old);
-            $attributes_new = \Product::getProductAttributesIds($id_product_new);
+                $combination_values = DynamicCombinationValue::getValuesByIdProduct($id_product_old);
+                $combination_values = DynamicCombinationValue::organizeByAttributes($combination_values);
+                $attributes_old = \Product::getProductAttributesIds($id_product_old);
+                $attributes_new = \Product::getProductAttributesIds($id_product_new);
 
-            $attributes_mapping = DynamicTools::mapAttributes($attributes_old, $attributes_new);
+                $attributes_mapping = DynamicTools::mapAttributes($attributes_old, $attributes_new);
 
-            foreach ($attributes_mapping as $id_attribute_old => $id_attribute_new) {
-                if (isset($combination_values[$id_attribute_old])) {
-                    /** @var DynamicCombinationValue[] $attribute_values */
-                    $attribute_values = $combination_values[$id_attribute_old];
-                    foreach ($attribute_values as $combination_value) {
-                        $combination_value->id_product = $id_product_new;
-                        $combination_value->id_attribute = $id_attribute_new;
-                        $combination_value->id_field = $this->module->provider->getNewID(
-                            $fields_new,
-                            $combination_value->id_field
-                        );
-                        $combination_value->add();
+                foreach ($attributes_mapping as $id_attribute_old => $id_attribute_new) {
+                    if (isset($combination_values[$id_attribute_old])) {
+                        /** @var DynamicCombinationValue[] $attribute_values */
+                        $attribute_values = $combination_values[$id_attribute_old];
+                        foreach ($attribute_values as $combination_value) {
+                            $combination_value->id_product = $id_product_new;
+                            $combination_value->id_attribute = $id_attribute_new;
+                            $combination_value->id_field = $this->module->provider->getNewID(
+                                $fields_new,
+                                $combination_value->id_field
+                            );
+                            $combination_value->add();
+                        }
                     }
+                }
+
+                $combination_fields = DynamicCombinationField::getByIdProduct($id_product_old);
+                foreach ($combination_fields as $combination_field) {
+                    $combination_field->id_product = $id_product_new;
+                    $combination_field->id_field = $this->module->provider->getNewID(
+                        $fields_new,
+                        $combination_field->id_field
+                    );
+                    $combination_field->add();
                 }
             }
 
-            $combination_fields = DynamicCombinationField::getByIdProduct($id_product_old);
-            foreach ($combination_fields as $combination_field) {
-                $combination_field->id_product = $id_product_new;
-                $combination_field->id_field = $this->module->provider->getNewID(
-                    $fields_new,
-                    $combination_field->id_field
-                );
-                $combination_field->add();
-            }
-
-            \Db::getInstance()->delete('dynamicproduct_visibility', 'id_product = ' . (int) $id_product_new);
-            $hidden_fields = $this->module->provider->getVisibilityValues($id_product_old);
-            foreach ($attributes_mapping as $id_attribute_old => $id_attribute_new) {
-                if (isset($hidden_fields[$id_attribute_old])) {
-                    $values = $hidden_fields[$id_attribute_old];
-                    foreach ($values as $id_field => $visible) {
-                        if (isset($fields_new[$id_field]) || (int) $id_field === 0) {
-                            \Db::getInstance()->insert(
-                                $this->module->name . '_visibility',
-                                [
-                                    'id_product' => (int) $id_product_new,
-                                    'id_attribute' => (int) $id_attribute_new,
-                                    'id_field' => (int) $this->module->provider->getNewID($fields_new, $id_field),
-                                    'visible' => (int) $visible,
-                                ]
-                            );
+            if ($copy_options['combinations_visibility'] && $copy_options['fields']) {
+                \Db::getInstance()->delete('dynamicproduct_visibility', 'id_product = ' . (int) $id_product_new);
+                $hidden_fields = $this->module->provider->getVisibilityValues($id_product_old);
+                foreach ($attributes_mapping as $id_attribute_old => $id_attribute_new) {
+                    if (isset($hidden_fields[$id_attribute_old])) {
+                        $values = $hidden_fields[$id_attribute_old];
+                        foreach ($values as $id_field => $visible) {
+                            if (isset($fields_new[$id_field]) || (int) $id_field === 0) {
+                                \Db::getInstance()->insert(
+                                    $this->module->name . '_visibility',
+                                    [
+                                        'id_product' => (int) $id_product_new,
+                                        'id_attribute' => (int) $id_attribute_new,
+                                        'id_field' => (int) $this->module->provider->getNewID($fields_new, $id_field),
+                                        'visible' => (int) $visible,
+                                    ]
+                                );
+                            }
                         }
                     }
                 }
             }
         }
 
-        DynamicProportion::deleteByProduct($id_product_new);
-        $proportions = DynamicProportion::getByProduct($id_product_old);
-        foreach ($proportions as $proportion) {
-            $proportion->id_product = $id_product_new;
-            $proportion->id_field = $this->module->provider->getNewID($fields_new, $proportion->id_field);
-            $proportion->id_field_src = $this->module->provider->getNewID($fields_new, $proportion->id_field_src);
-            $proportion->add();
+        if ($copy_options['proportions']) {
+            if ($clear) {
+                DynamicProportion::deleteByProduct($id_product_new);
+            }
+            $proportions = DynamicProportion::getByProduct($id_product_old);
+            foreach ($proportions as $proportion) {
+                $proportion->id_product = $id_product_new;
+                $proportion->id_field = $this->module->provider->getNewID($fields_new, $proportion->id_field);
+                $proportion->id_field_src = $this->module->provider->getNewID($fields_new, $proportion->id_field_src);
+                $proportion->add();
+            }
         }
 
-        DynamicCondition::deleteByProduct($id_product_new);
-        $conditions = DynamicCondition::getByProduct($id_product_old);
-        foreach ($conditions as $condition) {
-            $hidden_group = $condition->hidden_groups;
-            $hidden_steps = $condition->hidden_steps;
-            $hidden_fields = $condition->hidden_fields;
-            $hidden_options = $condition->hidden_options;
-
-            $id_condition = $condition->id;
-            $condition->id_product = $id_product_new;
-            $condition->add();
-            $id_condition_new = (int) $condition->id;
-            $conditions_new[$id_condition] = $id_condition_new;
-
-            foreach ($hidden_group as $id_group_old) {
-                $id_group_new = $this->module->provider->getNewID($field_groups_new, $id_group_old);
-                $data = [
-                    'id_condition' => (int) $id_condition_new,
-                    'id_group' => (int) $id_group_new,
-                    'visible' => 0,
-                ];
-                \Db::getInstance()->insert(
-                    $this->module->name . '_condition_group_visibility',
-                    $data,
-                    false,
-                    true,
-                    \Db::REPLACE
-                );
+        if ($copy_options['conditions']) {
+            if ($clear) {
+                DynamicCondition::deleteByProduct($id_product_new);
             }
+            $conditions = DynamicCondition::getByProduct($id_product_old);
+            foreach ($conditions as $condition) {
+                $hidden_group = $condition->hidden_groups;
+                $hidden_steps = $condition->hidden_steps;
+                $hidden_fields = $condition->hidden_fields;
+                $hidden_options = $condition->hidden_options;
 
-            foreach ($hidden_steps as $id_step_old) {
-                $id_step_new = $this->module->provider->getNewID($product_steps_new, $id_step_old);
-                $data = [
-                    'id_condition' => (int) $id_condition_new,
-                    'id_step' => (int) $id_step_new,
-                    'visible' => 0,
-                ];
-                \Db::getInstance()->insert(
-                    $this->module->name . '_condition_step_visibility',
-                    $data,
-                    false,
-                    true,
-                    \Db::REPLACE
-                );
-            }
+                $id_condition = $condition->id;
+                $condition->id_product = $id_product_new;
+                $condition->add();
+                $id_condition_new = (int) $condition->id;
+                $conditions_new[$id_condition] = $id_condition_new;
 
-            foreach ($hidden_fields as $id_field_old) {
-                $id_field_new = $this->module->provider->getNewID($fields_new, $id_field_old);
-                $data = [
-                    'id_condition' => (int) $id_condition_new,
-                    'id_field' => (int) $id_field_new,
-                    'visible' => 0,
-                ];
-                \Db::getInstance()->insert(
-                    $this->module->name . '_condition_visibility',
-                    $data,
-                    false,
-                    true,
-                    \Db::REPLACE
-                );
-            }
-
-            foreach ($hidden_options as $id_field_old => $options) {
-                foreach ($options as $id_option_old) {
-                    $id_field_new = $this->module->provider->getNewID($fields_new, $id_field_old);
-                    $id_option_new = $this->module->provider->getNewOption($options_new, $id_field_old, $id_option_old);
+                foreach ($hidden_group as $id_group_old) {
+                    $id_group_new = $this->module->provider->getNewID($field_groups_new, $id_group_old);
                     $data = [
                         'id_condition' => (int) $id_condition_new,
-                        'id_field' => (int) $id_field_new,
-                        'id_option' => (int) $id_option_new,
+                        'id_group' => (int) $id_group_new,
                         'visible' => 0,
                     ];
                     \Db::getInstance()->insert(
-                        $this->module->name . '_condition_option_visibility',
+                        $this->module->name . '_condition_group_visibility',
                         $data,
                         false,
                         true,
                         \Db::REPLACE
                     );
                 }
-            }
-        }
 
-        FieldFormula::deleteByProduct($id_product_new);
-        $field_formulas = FieldFormula::getByProduct($id_product_old);
-        foreach ($field_formulas as $field_formula) {
-            $id_field_formula = $field_formula->id;
-            $field_formula->id_product = $id_product_new;
-            $field_formula->add();
-            $field_formulas_new[$id_field_formula] = $field_formula->id;
-        }
+                foreach ($hidden_steps as $id_step_old) {
+                    $id_step_new = $this->module->provider->getNewID($product_steps_new, $id_step_old);
+                    $data = [
+                        'id_condition' => (int) $id_condition_new,
+                        'id_step' => (int) $id_step_new,
+                        'visible' => 0,
+                    ];
+                    \Db::getInstance()->insert(
+                        $this->module->name . '_condition_step_visibility',
+                        $data,
+                        false,
+                        true,
+                        \Db::REPLACE
+                    );
+                }
 
-        Interval::deleteByProduct($id_product_new);
-        $new_interval_fields = [];
-        $intervals = Interval::getByIdProduct($id_product_old);
-        foreach ($intervals as $interval) {
-            $id_interval = $interval->id;
-            $interval->id_product = $id_product_new;
-            $interval->add();
-            $intervals_new[$id_interval] = $interval->id;
+                foreach ($hidden_fields as $id_field_old) {
+                    $id_field_new = $this->module->provider->getNewID($fields_new, $id_field_old);
+                    $data = [
+                        'id_condition' => (int) $id_condition_new,
+                        'id_field' => (int) $id_field_new,
+                        'visible' => 0,
+                    ];
+                    \Db::getInstance()->insert(
+                        $this->module->name . '_condition_visibility',
+                        $data,
+                        false,
+                        true,
+                        \Db::REPLACE
+                    );
+                }
 
-            $interval_fields = IntervalField::getByInterval($id_interval);
-            foreach ($interval_fields as $interval_field) {
-                $id_interval_field = $interval_field->id;
-                $interval_field->id_interval = $interval->id;
-                $id_field_new = $this->module->provider->getNewID($fields_new, $interval_field->id_field);
-                $interval_field->id_field = $id_field_new;
-                $interval_field->add();
-                $new_interval_fields[$id_interval_field] = $interval_field->id;
-            }
-
-            $condition_groups = IntervalConditionGroup::getByInterval($id_interval);
-            foreach ($condition_groups as $condition_group) {
-                $id_condition_group = $condition_group->id;
-                $condition_group->id_interval = $interval->id;
-                $condition_group->add();
-
-                $interval_conditions = IntervalCondition::getByIntervalConditionGroup($id_condition_group);
-                foreach ($interval_conditions as $interval_condition) {
-                    $id_interval_condition = $interval_condition->id;
-                    $interval_condition->id_interval_condition_group = $condition_group->id;
-                    $id_field_new = $this->module->provider->getNewID($fields_new, $interval_condition->id_field);
-                    $interval_condition->id_field = $id_field_new;
-                    $interval_condition->add();
-
-                    $condition_range = IntervalConditionRange::getByIntervalCondition($id_interval_condition);
-                    if (\Validate::isLoadedObject($condition_range)) {
-                        $condition_range->id_interval_condition = $interval_condition->id;
-                        $condition_range->add();
-                    }
-
-                    $condition_values = IntervalConditionValue::getByIntervalCondition($id_interval_condition);
-                    foreach ($condition_values as $condition_value) {
-                        $condition_value->id_interval_condition = $interval_condition->id;
-                        $condition_value->add();
+                foreach ($hidden_options as $id_field_old => $options) {
+                    foreach ($options as $id_option_old) {
+                        $id_field_new = $this->module->provider->getNewID($fields_new, $id_field_old);
+                        $id_option_new = $this->module->provider->getNewOption($options_new, $id_field_old, $id_option_old);
+                        $data = [
+                            'id_condition' => (int) $id_condition_new,
+                            'id_field' => (int) $id_field_new,
+                            'id_option' => (int) $id_option_new,
+                            'visible' => 0,
+                        ];
+                        \Db::getInstance()->insert(
+                            $this->module->name . '_condition_option_visibility',
+                            $data,
+                            false,
+                            true,
+                            \Db::REPLACE
+                        );
                     }
                 }
+            }
+        }
 
-                $interval_formulas = IntervalFormula::getByConditionGroup($id_condition_group);
-                foreach ($interval_formulas as $interval_formula) {
-                    $interval_formula->id_interval_condition_group = $condition_group->id;
-                    $interval_formula->id_interval_field = $new_interval_fields[$interval_formula->id_interval_field];
-                    $interval_formula->add();
+        if ($copy_options['field_formulas']) {
+            if ($clear) {
+                FieldFormula::deleteByProduct($id_product_new);
+            }
+            $field_formulas = FieldFormula::getByProduct($id_product_old);
+            foreach ($field_formulas as $field_formula) {
+                $id_field_formula = $field_formula->id;
+                $field_formula->id_product = $id_product_new;
+                $field_formula->add();
+                $field_formulas_new[$id_field_formula] = $field_formula->id;
+            }
+        }
+
+        if ($copy_options['intervals']) {
+            if ($clear) {
+                Interval::deleteByProduct($id_product_new);
+            }
+            $new_interval_fields = [];
+            $intervals = Interval::getByIdProduct($id_product_old);
+            foreach ($intervals as $interval) {
+                $id_interval = $interval->id;
+                $interval->id_product = $id_product_new;
+                $interval->add();
+                $intervals_new[$id_interval] = $interval->id;
+
+                $interval_fields = IntervalField::getByInterval($id_interval);
+                foreach ($interval_fields as $interval_field) {
+                    $id_interval_field = $interval_field->id;
+                    $interval_field->id_interval = $interval->id;
+                    $id_field_new = $this->module->provider->getNewID($fields_new, $interval_field->id_field);
+                    $interval_field->id_field = $id_field_new;
+                    $interval_field->add();
+                    $new_interval_fields[$id_interval_field] = $interval_field->id;
+                }
+
+                $condition_groups = IntervalConditionGroup::getByInterval($id_interval);
+                foreach ($condition_groups as $condition_group) {
+                    $id_condition_group = $condition_group->id;
+                    $condition_group->id_interval = $interval->id;
+                    $condition_group->add();
+
+                    $interval_conditions = IntervalCondition::getByIntervalConditionGroup($id_condition_group);
+                    foreach ($interval_conditions as $interval_condition) {
+                        $id_interval_condition = $interval_condition->id;
+                        $interval_condition->id_interval_condition_group = $condition_group->id;
+                        $id_field_new = $this->module->provider->getNewID($fields_new, $interval_condition->id_field);
+                        $interval_condition->id_field = $id_field_new;
+                        $interval_condition->add();
+
+                        $condition_range = IntervalConditionRange::getByIntervalCondition($id_interval_condition);
+                        if (\Validate::isLoadedObject($condition_range)) {
+                            $condition_range->id_interval_condition = $interval_condition->id;
+                            $condition_range->add();
+                        }
+
+                        $condition_values = IntervalConditionValue::getByIntervalCondition($id_interval_condition);
+                        foreach ($condition_values as $condition_value) {
+                            $condition_value->id_interval_condition = $interval_condition->id;
+                            $condition_value->add();
+                        }
+                    }
+
+                    $interval_formulas = IntervalFormula::getByConditionGroup($id_condition_group);
+                    foreach ($interval_formulas as $interval_formula) {
+                        $interval_formula->id_interval_condition_group = $condition_group->id;
+                        $interval_formula->id_interval_field = $new_interval_fields[$interval_formula->id_interval_field];
+                        $interval_formula->add();
+                    }
                 }
             }
         }
 
-        Grid::deleteByProduct($id_product_new);
-
-        $grids = Grid::getByIdProduct($id_product_old);
-        foreach ($grids as $grid) {
-            $grid->id_product = $id_product_new;
-            $grid->id_field_column = $this->module->provider->getNewID(
-                $fields_new,
-                $grid->id_field_column
-            );
-            $grid->id_field_row = $this->module->provider->getNewID(
-                $fields_new,
-                $grid->id_field_row
-            );
-            $grid->id_field_target = $this->module->provider->getNewID(
-                $fields_new,
-                $grid->id_field_target
-            );
-            $id_grid = $grid->id;
-            $grid->add();
-            $id_grid_new = $grid->id;
-            $grids_new[$id_grid] = $id_grid_new;
-
-            $columns = [];
-            foreach ($grid->columns as $column) {
-                $id_column = $column->id;
-                $column->id_grid = $id_grid_new;
-                $column->add();
-                $columns[$id_column] = $column->id;
+        if ($copy_options['grids']) {
+            if ($clear) {
+                Grid::deleteByProduct($id_product_new);
             }
+            $grids = Grid::getByIdProduct($id_product_old);
+            foreach ($grids as $grid) {
+                $grid->id_product = $id_product_new;
+                $grid->id_field_column = $this->module->provider->getNewID(
+                    $fields_new,
+                    $grid->id_field_column
+                );
+                $grid->id_field_row = $this->module->provider->getNewID(
+                    $fields_new,
+                    $grid->id_field_row
+                );
+                $grid->id_field_target = $this->module->provider->getNewID(
+                    $fields_new,
+                    $grid->id_field_target
+                );
+                $id_grid = $grid->id;
+                $grid->add();
+                $id_grid_new = $grid->id;
+                $grids_new[$id_grid] = $id_grid_new;
 
-            $rows = [];
-            foreach ($grid->rows as $row) {
-                $id_row = $row->id;
-                $row->id_grid = $id_grid_new;
-                $row->add();
-                $rows[$id_row] = $row->id;
-            }
+                $columns = [];
+                foreach ($grid->columns as $column) {
+                    $id_column = $column->id;
+                    $column->id_grid = $id_grid_new;
+                    $column->add();
+                    $columns[$id_column] = $column->id;
+                }
 
-            foreach ($grid->values as $value) {
-                $value->id_grid = $id_grid_new;
-                $value->id_grid_column = isset($columns[$value->id_grid_column]) ? $columns[$value->id_grid_column] : 0;
-                $value->id_grid_row = isset($rows[$value->id_grid_row]) ? $rows[$value->id_grid_row] : 0;
-                $value->add();
-            }
-        }
+                $rows = [];
+                foreach ($grid->rows as $row) {
+                    $id_row = $row->id;
+                    $row->id_grid = $id_grid_new;
+                    $row->add();
+                    $rows[$id_row] = $row->id;
+                }
 
-        ExecOrder::deleteByProduct($id_product_new);
-        $exec_orders = ExecOrder::getByIdProduct($id_product_old);
-        foreach ($exec_orders as $exec_order) {
-            $exec_order->id_product = $id_product_new;
-            $exec_order->add();
-        }
-
-        DynamicCalculationItem::deleteByProduct($id_product_new);
-        $calculation_items = DynamicCalculationItem::getByIdProduct($id_product_old);
-        foreach ($calculation_items as $calculation_item) {
-            $calculation_item->id_product = $id_product_new;
-            $item_id_new = $calculation_item->id_item;
-            if ($calculation_item->id_item) {
-                switch ($calculation_item->type) {
-                    case DynamicCalculationItem::CONDITION_ITEM:
-                        $item_id_new = $conditions_new[$calculation_item->id_item];
-                        break;
-                    case DynamicCalculationItem::FIELD_FORMULA_ITEM:
-                        $item_id_new = $field_formulas_new[$calculation_item->id_item];
-                        break;
-                    case DynamicCalculationItem::INTERVAL_ITEM:
-                        $item_id_new = $intervals_new[$calculation_item->id_item];
-                        break;
-                    case DynamicCalculationItem::GRID_ITEM:
-                        $item_id_new = $grids_new[$calculation_item->id_item];
-                        break;
+                foreach ($grid->values as $value) {
+                    $value->id_grid = $id_grid_new;
+                    $value->id_grid_column = isset($columns[$value->id_grid_column]) ? $columns[$value->id_grid_column] : 0;
+                    $value->id_grid_row = isset($rows[$value->id_grid_row]) ? $rows[$value->id_grid_row] : 0;
+                    $value->add();
                 }
             }
-            $calculation_item->id_item = $item_id_new;
-            $calculation_item->add();
         }
 
-        $product_config = DynamicConfig::getByProduct($id_product_new);
-        $product_config->delete();
-        $product_config = DynamicConfig::getByProduct($id_product_old);
-        $product_config->id_product = (int) $id_product_new;
-        $product_config->save();
+        if ($copy_options['calculation_order']) {
+            ExecOrder::deleteByProduct($id_product_new);
+            $exec_orders = ExecOrder::getByIdProduct($id_product_old);
+            foreach ($exec_orders as $exec_order) {
+                $exec_order->id_product = $id_product_new;
+                $exec_order->add();
+            }
 
-        self::addCustomField($id_product_new);
+            if ($clear) {
+                DynamicCalculationItem::deleteByProduct($id_product_new);
+            }
+            $calculation_items = DynamicCalculationItem::getByIdProduct($id_product_old);
+            foreach ($calculation_items as $calculation_item) {
+                $calculation_item->id_product = $id_product_new;
+                $item_id_new = $calculation_item->id_item;
+                if ($calculation_item->id_item) {
+                    switch ($calculation_item->type) {
+                        case DynamicCalculationItem::CONDITION_ITEM:
+                            $item_id_new = $conditions_new[$calculation_item->id_item] ?? 0;
+                            break;
+                        case DynamicCalculationItem::FIELD_FORMULA_ITEM:
+                            $item_id_new = $field_formulas_new[$calculation_item->id_item] ?? 0;
+                            break;
+                        case DynamicCalculationItem::INTERVAL_ITEM:
+                            $item_id_new = $intervals_new[$calculation_item->id_item] ?? 0;
+                            break;
+                        case DynamicCalculationItem::GRID_ITEM:
+                            $item_id_new = $grids_new[$calculation_item->id_item] ?? 0;
+                            break;
+                    }
+                }
+                $calculation_item->id_item = $item_id_new;
+                if ($item_id_new) {
+                    $calculation_item->add();
+                }
+            }
+        }
+
+        if ($copy_options['settings']) {
+            $product_config = DynamicConfig::getByProduct($id_product_new);
+            $product_config->delete();
+            $product_config = DynamicConfig::getByProduct($id_product_old);
+            $product_config->id_product = (int) $id_product_new;
+            $product_config->save();
+        }
     }
 
     public function clearConfig($id_product)
@@ -1208,9 +1277,11 @@ class DynamicHandler
                     );
                     foreach ($interval_formulas as $interval_formula) {
                         $interval_formula->id_interval_condition_group = $condition_group->id;
-                        $interval_formula->id_interval_field =
-                            $new_interval_fields[$interval_formula->id_interval_field];
-                        $interval_formula->add();
+                        if (isset($new_interval_fields[$interval_formula->id_interval_field])) {
+                            $interval_formula->id_interval_field =
+                                $new_interval_fields[$interval_formula->id_interval_field];
+                            $interval_formula->add();
+                        }
                     }
                 }
             }
@@ -1434,28 +1505,21 @@ class DynamicHandler
             }
         }
 
-        $data = [
-            'id_product' => (int) $id_product,
-            'type' => (int) \Product::CUSTOMIZE_TEXTFIELD,
-            'required' => (int) $product_config->required,
-            'is_module' => 1,
-        ];
-
-        \Db::getInstance()->insert('customization_field', $data);
-        $id_customization_field = (int) \Db::getInstance()->Insert_ID();
-
+        $labels = [];
         $languages = \Language::getLanguages();
         foreach ($languages as $lang) {
-            $iso = $lang['iso_code'];
-            $id_lang = $lang['id_lang'];
-            $label = DynamicTools::translate('Customization', $iso, 'display-extra');
-            $data = [
-                'id_customization_field' => (int) $id_customization_field,
-                'id_lang' => (int) $id_lang,
-                'name' => pSQL($label),
-            ];
-            \Db::getInstance()->insert('customization_field_lang', $data);
+            $label = DynamicTools::translate('Customization', $lang['iso_code'], 'display-extra');
+            $labels[$lang['id_lang']] = $label;
         }
+
+        $customization_field = new \CustomizationField();
+        $customization_field->name = $labels;
+        $customization_field->id_product = (int) $id_product;
+        $customization_field->type = \ProductCore::CUSTOMIZE_TEXTFIELD;
+        $customization_field->required = (bool) $product_config->required;
+        $customization_field->is_module = true;
+        $customization_field->save();
+        $id_customization_field = (int) $customization_field->id;
 
         $data = [
             'id_product' => (int) $id_product,
@@ -1694,7 +1758,11 @@ class DynamicHandler
                 $dynamic_input->id_product,
                 $dynamic_input->id_attribute
             );
-            $oos_check = DynamicEquation::checkProductStock($dynamic_input, $inputs_quantity);
+            $oos_check = DynamicEquation::checkProductStock(
+                $dynamic_input,
+                $dynamic_input->getInputFields(),
+                $inputs_quantity
+            );
             if (!$oos_check) {
                 $oos_inputs[] = $dynamic_input;
             }
@@ -1803,21 +1871,29 @@ class DynamicHandler
      *
      * @return array|int|null
      */
-    public function copyField($id_field, $id_product_new, $id_product_old = 0, $id_group_new = 0, $id_step_new = 0)
+    public function copyField($id_field, $id_product_new, $id_product_old = 0, $id_group_new = 0, $id_step_new = 0, $copy_position = false)
     {
         $options_new = [];
         $field = new DynamicField($id_field);
 
-        if (!$id_product_old) {
-            $id_product_old = (int) $field->id_product;
-        }
+        $same_product = !$id_product_old;
 
-        if ($field->common && (int) $field->id_product !== (int) $id_product_new) {
+        if ($field->common && (int) $field->id_product !== (int) $id_product_new && !$same_product) {
             $common_field = DynamicCommonField::getByFieldAndProduct($field->id, $id_product_old);
             $common_field->id_product = (int) $id_product_new;
             $common_field->id_group = $id_group_new;
             $common_field->id_step = $id_step_new;
             $common_field->position = $field->position;
+            // if it's a new common field, find max position
+            if (!$copy_position && !$common_field->id) {
+                $max_common_pos = \Db::getInstance()->getValue(
+                    'SELECT MAX(position) FROM ' . _DB_PREFIX_ . $this->module->name . '_common_field WHERE id_product = ' . (int) $id_product_new
+                );
+                $max_fields_pos = \Db::getInstance()->getValue(
+                    'SELECT MAX(position) FROM ' . _DB_PREFIX_ . $this->module->name . '_field WHERE id_product = ' . (int) $id_product_new
+                );
+                $common_field->position = max($max_common_pos, $max_fields_pos) + 1;
+            }
             $common_field->add();
 
             return [
@@ -1826,17 +1902,26 @@ class DynamicHandler
             ];
         }
 
-        $same_product = $id_product_new === $field->id_product;
-
         if ($same_product) {
             \Db::getInstance()->update(
                 DynamicField::$definition['table'],
                 ['position' => ['type' => 'sql', 'value' => '`position` + 1']],
-                'position > ' . (int) $field->position
+                'position > ' . (int) $field->position . ' AND id_product = ' . (int) $id_product_new
             );
+
+            \Db::getInstance()->update(
+                DynamicCommonField::$definition['table'],
+                ['position' => ['type' => 'sql', 'value' => '`position` + 1']],
+                'position > ' . (int) $field->position . ' AND id_product = ' . (int) $id_product_new
+            );
+
             ++$field->position;
+        }
+        // in case it's a favorite field copy
+        if ($field->id_product === $id_product_new) {
             $field->name .= '_copy';
         }
+        $field->common = false;
 
         $field->id_product = (int) $id_product_new;
         $field->favorite = false;
@@ -1848,11 +1933,9 @@ class DynamicHandler
         $field->copyImagesFrom($id_field_old);
         $id_field_new = (int) $field->id;
 
-        if (!$field->common) {
-            $unit_value = DynamicUnitValue::getUnitValuesByIdField($id_field_old);
-            $unit_value->id_field = $id_field_new;
-            $unit_value->add();
-        }
+        $unit_value = DynamicUnitValue::getUnitValuesByIdField($id_field_old);
+        $unit_value->id_field = $id_field_new;
+        $unit_value->add();
 
         if ((int) $field->type === _DP_DROPDOWN_) {
             $dropdown_options = DynamicDropdownOption::getDropdownOptionsByIdField($id_field_old);
@@ -1917,27 +2000,27 @@ class DynamicHandler
         foreach ($lang_fields as $lang_field) {
             $values = $object->$lang_field;
             $new_value = [];
-            foreach ($values as $id_lang => $value) {
-                if (isset($lang_data[$id_lang])) {
-                    $iso_code = $lang_data[$id_lang];
-                    if (isset($lang_codes[$iso_code])) {
-                        $new_id_lang = $lang_codes[$iso_code];
-                        $new_value[$new_id_lang] = $value;
+            if (is_array($values)) {
+                foreach ($values as $id_lang => $value) {
+                    if (isset($lang_data[$id_lang])) {
+                        $iso_code = $lang_data[$id_lang];
+                        if (isset($lang_codes[$iso_code])) {
+                            $new_id_lang = $lang_codes[$iso_code];
+                            $new_value[$new_id_lang] = $value;
+                        }
                     }
                 }
             }
             $id_lang_default = (int) \Configuration::get('PS_LANG_DEFAULT');
             if (empty($new_value[$id_lang_default])) {
                 $current_lang_value = $object->$lang_field;
-                $new_value[$id_lang_default] = isset($current_lang_value[$import_default_lang]) ?
-                    $current_lang_value[$import_default_lang] :
-                    null;
+                $new_value[$id_lang_default] = $current_lang_value[$import_default_lang] ?? null;
             }
             $object->$lang_field = $new_value;
         }
     }
 
-    private function findFieldGroup($id_group, $label): ?DynamicFieldGroup
+    private function findFieldGroup($id_group, $label)
     {
         $id_lang_default = (int) \Configuration::get('PS_LANG_DEFAULT');
         $field_group = new DynamicFieldGroup((int) $id_group, $id_lang_default);
@@ -1955,7 +2038,7 @@ class DynamicHandler
         return null;
     }
 
-    private function findStep($id_step, $label): ?DynamicStep
+    private function findStep($id_step, $label)
     {
         $id_lang_default = (int) \Configuration::get('PS_LANG_DEFAULT');
         $step = new DynamicStep((int) $id_step, $id_lang_default);
@@ -1973,7 +2056,7 @@ class DynamicHandler
         return null;
     }
 
-    private function findUnit($id_unit, $symbol): ?DynamicUnit
+    private function findUnit($id_unit, $symbol)
     {
         $id_lang_default = (int) \Configuration::get('PS_LANG_DEFAULT');
         $unit = new DynamicUnit((int) $id_unit, $id_lang_default);

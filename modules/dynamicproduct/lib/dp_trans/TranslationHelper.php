@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\lib\dp_trans;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class TranslationHelper
 {
@@ -43,7 +47,7 @@ class TranslationHelper
         $source = 'TranslationHelper';
 
         return [
-            // start admin 961188930
+            // start admin -1262396138
             '3357' => $this->module->l('if', $source),
             '3555' => $this->module->l('or', $source),
             '65665' => $this->module->l('Add', $source),
@@ -65,9 +69,11 @@ class TranslationHelper
             '42255992' => $this->module->l('Show more', $source),
             '42572887' => $this->module->l('Maximum files', $source),
             '46603408' => $this->module->l('Greater than or equal', $source),
+            '60673783' => $this->module->l('Calculation Order', $source),
             '65193517' => $this->module->l('Clear', $source),
             '65203672' => $this->module->l('Close', $source),
-            '67634599' => $this->module->l('Any change will have an effect on the configuration of _nb_ products.', $source),
+            '67634599' =>
+                 $this->module->l('Any change will have an effect on the configuration of _nb_ products.', $source),
             '67875034' => $this->module->l('Field', $source),
             '69070285' => $this->module->l('Grids', $source),
             '70760763' => $this->module->l('Image', $source),
@@ -80,21 +86,26 @@ class TranslationHelper
             '96215082' => $this->module->l('Export configuration to a file', $source),
             '96634189' => $this->module->l('empty', $source),
             '112524536' => $this->module->l('Any change will have an effect on the linked configurations.', $source),
+            '146608883' => $this->module->l('Clear existing elements before copying', $source),
             '168044563' => $this->module->l('Prefix with a space if needed', $source),
             '177208536' => $this->module->l('Not recommended as it can slow down the cart page', $source),
             '188877356' => $this->module->l('Select a product', $source),
             '190258903' => $this->module->l('Important: The name must be a valid css class name', $source),
             '209981527' => $this->module->l('Control field', $source),
-            '213777395' => $this->module->l('Use _Up__ / _Down__ arrows and _Tab__ / _Shift__ _Tab__ to navigate between fields', $source),
+            '213777395' =>
+                 $this->module->l('Use _Up__ / _Down__ arrows and _Tab__ / _Shift__ _Tab__ to navigate between fields', $source),
             '217062059' => $this->module->l('Delete field formula', $source),
             '225214028' => $this->module->l('Import configuration from a file', $source),
             '255574909' => $this->module->l('Add a new condition', $source),
             '309632339' => $this->module->l('Add a new option', $source),
+            '335921277' => $this->module->l('Select All', $source),
             '337710188' => $this->module->l('Delete all items', $source),
             '341682506' => $this->module->l('Example', $source),
             '342988778' => $this->module->l('Collapsible', $source),
             '366478171' => $this->module->l('Disabled days', $source),
-            '391613546' => $this->module->l('This will **ALSO DELETE the original item**. Are you sure that you want to continue?', $source),
+            '391613546' =>
+                 $this->module->l('This will **ALSO DELETE the original item**. Are you sure that you want to continue?', $source),
+            '403974246' => $this->module->l('Display secondary value as option description', $source),
             '414080266' => $this->module->l('Max date', $source),
             '415178366' => $this->module->l('Options', $source),
             '448768363' => $this->module->l('Refresh databases list', $source),
@@ -113,7 +124,8 @@ class TranslationHelper
             '618203353' => $this->module->l('Display dropzone', $source),
             '635062501' => $this->module->l('Interval', $source),
             '641384524' => $this->module->l('Load formula', $source),
-            '642864804' => $this->module->l('If you choose to hide all fields for one or more combinations, make sure to disable the option "Required customization" above', $source),
+            '642864804' =>
+                 $this->module->l('If you choose to hide all fields for one or more combinations, make sure to disable the option "Required customization" above', $source),
             '648178368' => $this->module->l('Enable if the price depends on the cart quantity', $source),
             '674841376' => $this->module->l('This product has no field groups', $source),
             '679767347' => $this->module->l('Display secondary value as option price', $source),
@@ -136,7 +148,8 @@ class TranslationHelper
             '894228158' => $this->module->l('Show in cart summary', $source),
             '896194968' => $this->module->l('Advanced configuration', $source),
             '910258683' => $this->module->l('Date after/before dd days', $source),
-            '936109071' => $this->module->l('This name is a reserved Excel function name, please use another name', $source),
+            '936109071' =>
+                 $this->module->l('This name is a reserved Excel function name, please use another name', $source),
             '941456859' => $this->module->l('add a new field group', $source),
             '942696557' => $this->module->l('Display tax excluded prices', $source),
             '955701460' => $this->module->l('Delete interval field', $source),
@@ -159,7 +172,8 @@ class TranslationHelper
             '1142656251' => $this->module->l('Condition', $source),
             '1152371054' => $this->module->l('Configure options visibility', $source),
             '1201193478' => $this->module->l('Display the "Starting from" label in the category page', $source),
-            '1224131978' => $this->module->l('No custom execution order is configured, the default order will be used', $source),
+            '1224131978' =>
+                 $this->module->l('No custom execution order is configured, the default order will be used', $source),
             '1265447825' => $this->module->l('Minimize condition (Shift + Click to minimize all)', $source),
             '1292109984' => $this->module->l('Script name', $source),
             '1299208205' => $this->module->l('Delete this row', $source),
@@ -170,7 +184,8 @@ class TranslationHelper
             '1365932015' => $this->module->l('Steps Activation', $source),
             '1378058502' => $this->module->l('Delete condition', $source),
             '1382863923' => $this->module->l('Cost formula', $source),
-            '1385751734' => $this->module->l('You can import/export a file containing the product configuration', $source),
+            '1385751734' =>
+                 $this->module->l('You can import/export a file containing the product configuration', $source),
             '1473269982' => $this->module->l('Groups Visibility', $source),
             '1479721030' => $this->module->l('Applies only if the product has a price of 0', $source),
             '1499275331' => $this->module->l('Settings', $source),
@@ -184,7 +199,8 @@ class TranslationHelper
             '1543324436' => $this->module->l('Row field', $source),
             '1547472170' => $this->module->l('Displayed price', $source),
             '1550611840' => $this->module->l('Use a custom calculation order', $source),
-            '1589928967' => $this->module->l('The new Calculation tab displays a unified interface to add and organize calculation items', $source),
+            '1589928967' =>
+                 $this->module->l('The new Calculation tab displays a unified interface to add and organize calculation items', $source),
             '1606304409' => $this->module->l('Show or Hide the fields based on the selected combination', $source),
             '1611563307' => $this->module->l('Interval formula', $source),
             '1616172285' => $this->module->l('This group has already been added', $source),
@@ -192,9 +208,11 @@ class TranslationHelper
             '1620782841' => $this->module->l('Delete this step', $source),
             '1642806840' => $this->module->l('Databases', $source),
             '1652081830' => $this->module->l('Click to toggle the field visibility', $source),
+            '1721653182' => $this->module->l('Deselect All', $source),
             '1741737838' => $this->module->l('Click to insert an option', $source),
             '1772226151' => $this->module->l('If empty, then the field name will be used', $source),
             '1781676314' => $this->module->l('Display weight to customers', $source),
+            '1782805700' => $this->module->l('Quantity (PrestaShop Quantity)', $source),
             '1799432497' => $this->module->l('CSS class name (optional)', $source),
             '1816510966' => $this->module->l('Display label', $source),
             '1821258733' => $this->module->l('Clear the current configuration', $source),
@@ -202,6 +220,8 @@ class TranslationHelper
             '1880571668' => $this->module->l('Minimum width', $source),
             '1887918305' => $this->module->l('unlimited', $source),
             '1890611904' => $this->module->l('Custom suffix', $source),
+            '1907478750' =>
+                 $this->module->l('Linking will affect current and future products of selected category', $source),
             '1926535580' => $this->module->l('Remove this column', $source),
             '1939070905' => $this->module->l('Will show an error when set to 0', $source),
             '1939937161' => $this->module->l('Delete selected fields', $source),
@@ -221,7 +241,11 @@ class TranslationHelper
             '2141373940' => $this->module->l('Groups', $source),
             '-2057845645' => $this->module->l('Field Formulas', $source),
             '-1787898834' => $this->module->l('Intervals', $source),
-            '-343092435' => $this->module->l('You can configure the visibility of each field based on the selected combination. A hidden field will have a null value in the formula', $source),
+            '-321013333' => $this->module->l('Product original price', $source),
+            '-1173076394' => $this->module->l('Product original weight', $source),
+            '-91109833' => $this->module->l('The quantity selected by the customer', $source),
+            '-343092435' =>
+                 $this->module->l('You can configure the visibility of each field based on the selected combination. A hidden field will have a null value in the formula', $source),
             '-360169678' => $this->module->l('Visibility', $source),
             '-984860935' => $this->module->l('Proportions', $source),
             '-1395957536' => $this->module->l('Require all steps to be completed', $source),
@@ -237,26 +261,38 @@ class TranslationHelper
             '-1920372430' => $this->module->l('Required customization', $source),
             '-1640250765' => $this->module->l('Hide quantity input', $source),
             '-911095655' => $this->module->l('Multiply price & weight by quantity', $source),
-            '-319880804' => $this->module->l('If activated, the displayed price & weight on the product page will be multiplied by the quantity', $source),
+            '-319880804' =>
+                 $this->module->l('If activated, the displayed price & weight on the product page will be multiplied by the quantity', $source),
             '-1536078307' => $this->module->l('Split summary by groups', $source),
             '-567220177' => $this->module->l('Per kilo, per litre', $source),
-            '-1105717282' => $this->module->l('You can configure a displayed price if your product has a price of 0', $source),
+            '-1105717282' =>
+                 $this->module->l('You can configure a displayed price if your product has a price of 0', $source),
             '-260281722' => $this->module->l('Display customization cost in customization summary', $source),
             '-72782714' => $this->module->l('Copy configuration to clipboard', $source),
             '-2100928571' => $this->module->l('Import', $source),
             '-839043195' => $this->module->l('Import configuration from clipboard', $source),
             '-266050175' => $this->module->l('Export image links instead of encoding the images', $source),
-            '-970294887' => $this->module->l('Results in a smaller file. Only enable if the images can be accessed from your target shop.', $source),
-            '-1680464031' => $this->module->l('Select a category', $source),
-            '-755060688' => $this->module->l('Will use the same configuration in multiple products instead of copying it', $source),
-            '-969155480' => $this->module->l('Link instead of copying', $source),
-            '-743709137' => $this->module->l('Will not preserve the original configurations of the linked products', $source),
-            '-198824349' => $this->module->l('Clear the configurations of linked products', $source),
-            '-77133620' => $this->module->l('You can copy or link this configuration to all products of the selected category', $source),
+            '-970294887' =>
+                 $this->module->l('Results in a smaller file. Only enable if the images can be accessed from your target shop.', $source),
+            '-512299320' =>
+                 $this->module->l('Please select the elements you want to copy from the source product.', $source),
+            '-1440091513' => $this->module->l('Equations', $source),
+            '-1295811629' => $this->module->l('Combination Values', $source),
+            '-1569442514' => $this->module->l('Combinations Visibility', $source),
             '-1780637860' => $this->module->l('Load configuration', $source),
+            '-1680464031' => $this->module->l('Select a category', $source),
+            '-755060688' =>
+                 $this->module->l('Will use the same configuration in multiple products instead of copying it', $source),
+            '-969155480' => $this->module->l('Link instead of copying', $source),
+            '-743709137' =>
+                 $this->module->l('Will not preserve the original configurations of the linked products', $source),
+            '-198824349' => $this->module->l('Clear the configurations of linked products', $source),
+            '-77133620' =>
+                 $this->module->l('You can copy or link this configuration to all products of the selected category', $source),
             '-97880005' => $this->module->l('Will use the same configuration instead of copying it', $source),
             '-861552729' => $this->module->l('Will not preserve the current configuration', $source),
-            '-814503541' => $this->module->l('You can copy the selected product configuration to the current product', $source),
+            '-814503541' =>
+                 $this->module->l('You can copy the selected product configuration to the current product', $source),
             '-376014216' => $this->module->l('Add a new proportion', $source),
             '-1266890280' => $this->module->l('Add an interval group', $source),
             '-1739945662' => $this->module->l('Values', $source),
@@ -264,11 +300,13 @@ class TranslationHelper
             '-1983196248' => $this->module->l('Less than', $source),
             '-530681616' => $this->module->l('+Infinity (no upper limit)', $source),
             '-813310028' => $this->module->l('Remove this condition group', $source),
-            '-1754233898' => $this->module->l('Allows the customer to expand/collapse the group by clicking on the group label', $source),
+            '-1754233898' =>
+                 $this->module->l('Allows the customer to expand/collapse the group by clicking on the group label', $source),
             '-1203478535' => $this->module->l('Start collapsed', $source),
             '-557346165' => $this->module->l('Select the field that you want to add', $source),
             '-1442032302' => $this->module->l('Pick a field...', $source),
-            '-997806686' => $this->module->l('This feature will duplicate the group based on the value of the selected field', $source),
+            '-997806686' =>
+                 $this->module->l('This feature will duplicate the group based on the value of the selected field', $source),
             '-1306471438' => $this->module->l('Delete this group', $source),
             '-626105070' => $this->module->l('Insert field group', $source),
             '-2074469771' => $this->module->l('Manage field groups', $source),
@@ -280,9 +318,11 @@ class TranslationHelper
             '-1157161804' => $this->module->l('Add a column', $source),
             '-754551441' => $this->module->l('Price formula', $source),
             '-1451894031' => $this->module->l('Quantity formula', $source),
-            '-874003249' => $this->module->l('Some field names are duplicated. You can either rename them or delete them.', $source),
+            '-874003249' =>
+                 $this->module->l('Some field names are duplicated. You can either rename them or delete them.', $source),
             '-1522567076' => $this->module->l('Add a new field', $source),
-            '-597373332' => $this->module->l('Do you want to update the field name in all the product formulas?', $source),
+            '-597373332' =>
+                 $this->module->l('Do you want to update the field name in all the product formulas?', $source),
             '-2043405119' => $this->module->l('Displayed', $source),
             '-2133620278' => $this->module->l('Hidden', $source),
             '-871138304' => $this->module->l('Load a field from favorites', $source),
@@ -304,6 +344,7 @@ class TranslationHelper
             '-2110296218' => $this->module->l('Display info in a popup', $source),
             '-930467021' => $this->module->l('Import images', $source),
             '-812471947' => $this->module->l('Initial value', $source),
+            '-2028851885' => $this->module->l('Placeholder', $source),
             '-124100328' => $this->module->l('Min characters', $source),
             '-781016378' => $this->module->l('Max characters', $source),
             '-563123098' => $this->module->l('Hide in summary when empty or equal to zero', $source),
@@ -331,7 +372,8 @@ class TranslationHelper
             '-1479771459' => $this->module->l('Create a new field formula', $source),
             '-505434665' => $this->module->l('Click to edit', $source),
             '-345562080' => $this->module->l('Field formula', $source),
-            '-1561849983' => $this->module->l('This calculation order is now replaced by the Calculation tab', $source),
+            '-1561849983' =>
+                 $this->module->l('This calculation order is now replaced by the Calculation tab', $source),
             '-198258289' => $this->module->l('Add an execution item', $source),
             '-1450803135' => $this->module->l('deletes all execution items', $source),
             '-1327547091' => $this->module->l('Reset to default', $source),
@@ -368,9 +410,6 @@ class TranslationHelper
             '-2132954502' => $this->module->l('Create a new dynamic variable field', $source),
             '-1783025135' => $this->module->l('Field name', $source),
             '-226074697' => $this->module->l('Save new field', $source),
-            '-321013333' => $this->module->l('Product original price', $source),
-            '-1173076394' => $this->module->l('Product original weight', $source),
-            '-91109833' => $this->module->l('The quantity selected by the customer', $source),
             '-229417419' => $this->module->l('Databases refreshed successfully', $source),
             '-377760440' => $this->module->l('Product attributes', $source),
             '-590915474' => $this->module->l('Product features', $source),
@@ -385,7 +424,7 @@ class TranslationHelper
         $source = 'TranslationHelper';
 
         return [
-            // start front 311353218
+            // start front -1194575082
             '2453' => $this->module->l('MB', $source),
             '77124' => $this->module->l('Max', $source),
             '77362' => $this->module->l('Min', $source),
@@ -398,10 +437,12 @@ class TranslationHelper
             '78727453' => $this->module->l('Range', $source),
             '80208647' => $this->module->l('Steps', $source),
             '234648590' => $this->module->l('Click to expand/collapse this section', $source),
-            '361237766' => $this->module->l('You can disable it in the main configuration page of the module', $source),
+            '361237766' =>
+                $this->module->l('You can disable it in the main configuration page of the module', $source),
             '414535005' => $this->module->l('Max size', $source),
             '437675785' => $this->module->l('Max number of files', $source),
-            '573578838' => $this->module->l('This product is no longer in stock with the selected values, please select smaller values.', $source),
+            '573578838' =>
+                $this->module->l('This product is no longer in stock with the selected values, please select smaller values.', $source),
             '741835352' => $this->module->l('Min width', $source),
             '936937052' => $this->module->l('Import files', $source),
             '1089064661' => $this->module->l('Min height', $source),
@@ -422,9 +463,11 @@ class TranslationHelper
             '-987857235' => $this->module->l('pixels', $source),
             '-512469298' => $this->module->l('Accepted file types', $source),
             '-1213154046' => $this->module->l('Unknown step', $source),
-            '-1310964303' => $this->module->l('An error prevented the dynamic product module from displaying the fields', $source),
+            '-1310964303' =>
+                $this->module->l('An error prevented the dynamic product module from displaying the fields', $source),
             '-1893379118' => $this->module->l('Loading...', $source),
             '-116694267' => $this->module->l('Dynamic Product: Debug mode enabled', $source),
+            '-979257952' => $this->module->l('Please pick a valid HEX color (#FFFFFF)', $source),
             '-328495169' => $this->module->l('Required', $source),
             '-445468723' => $this->module->l('Enlarge image', $source),
             '-906759650' => $this->module->l('Some files were not accepted', $source),
@@ -433,14 +476,14 @@ class TranslationHelper
             '-1124310689' => $this->module->l('Imported image', $source),
             '-1230460266' => $this->module->l('Import a file', $source),
             '-36360968' => $this->module->l('Imported file', $source),
-            '-979257952' => $this->module->l('Please pick a valid HEX color (#FFFFFF)', $source),
             '-1095166702' => $this->module->l('Pick a custom color', $source),
             '-1707725160' => $this->module->l('Weight', $source),
             '-1056574219' => $this->module->l('Please enter a name for your customization', $source),
             '-1904389485' => $this->module->l('The customization was saved successfully', $source),
             '-119700608' => $this->module->l('The link was copied to your clipboard', $source),
             '-1985356111' => $this->module->l('This message is only displayed to Admins', $source),
-            '-2041532723' => $this->module->l('The customizations you save as an Admin can be viewed by anyone', $source),
+            '-2041532723' =>
+                $this->module->l('The customizations you save as an Admin can be viewed by anyone', $source),
             '-1272271923' => $this->module->l('Save in my profile', $source),
             '-2121343663' => $this->module->l('Get customization link', $source),
             '-843746907' => $this->module->l('Copy link', $source),

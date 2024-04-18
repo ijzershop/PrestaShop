@@ -1,22 +1,19 @@
 <?php
 
-namespace Http\Message\Authentication;
+namespace ps_eventbus_v3_0_7\Http\Message\Authentication;
 
-use Http\Message\Authentication;
+use ps_eventbus_v3_0_7\Http\Message\Authentication;
 use Psr\Http\Message\RequestInterface;
-
 class Header implements Authentication
 {
     /**
      * @var string
      */
     private $name;
-
     /**
      * @var string|string[]
      */
     private $value;
-
     /**
      * @param string|string[] $value
      */
@@ -25,7 +22,6 @@ class Header implements Authentication
         $this->name = $name;
         $this->value = $value;
     }
-
     /**
      * {@inheritdoc}
      */

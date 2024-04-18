@@ -24,6 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class TaxRulesTaxManager extends TaxRulesTaxManagerCore
 {
     public function getTaxCalculator()
@@ -76,6 +80,11 @@ class TaxRulesTaxManager extends TaxRulesTaxManagerCore
                             break;
                         }
                     }
+                }
+                else {
+                    $tax = new Tax();
+                    $tax->rate = 0;                                        
+                    $taxes[] = $tax;    
                 }
                 $result = new TaxCalculator($taxes, $behavior);
                 Cache::store($cache_id, $result);

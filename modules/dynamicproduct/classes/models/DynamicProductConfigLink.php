@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\classes\models;
 
-use DynamicProduct\classes\DynamicTools;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class DynamicProductConfigLink extends DynamicObject
 {
@@ -34,8 +36,6 @@ class DynamicProductConfigLink extends DynamicObject
 
     public $id_product;
     public $id_product_source;
-
-    private static $cache = [];
 
     public static $definition = [
         'table' => 'dynamicproduct_product_config_link',
@@ -63,57 +63,6 @@ class DynamicProductConfigLink extends DynamicObject
         return $config_link;
     }
 
-    public static function getSourceProduct($id_product)
-    {
-        if (isset(self::$cache[$id_product])) {
-            return self::$cache[$id_product];
-        }
-        $sql = new \DbQuery();
-        $sql->select('id_product_source');
-        $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int) $id_product);
-        $id_source_product = (int) \Db::getInstance()->getValue($sql);
-        $result = $id_source_product ?: (int) $id_product;
-        self::$cache[$id_product] = $result;
-
-        return $result;
-    }
-
-    public static function getSourceAttribute($id_product_source, $id_product, $id_attribute)
-    {
-        if (!(int) $id_attribute) {
-            return $id_attribute;
-        }
-
-        if ($id_product_source == $id_product) {
-            return $id_attribute;
-        }
-
-        $attributes_source = \Product::getProductAttributesIds($id_product_source);
-        $attributes_current = \Product::getProductAttributesIds($id_product);
-
-        $attributes_mapping = DynamicTools::mapAttributes($attributes_current, $attributes_source, true);
-
-        $source_attribute = $attributes_mapping[$id_attribute] ?? $id_attribute;
-
-        if (!$source_attribute) {
-            $source_attribute = $id_attribute;
-        }
-
-        return $source_attribute;
-    }
-
-    public static function getNbLinkedConfigs($id_source_product)
-    {
-        $sql = new \DbQuery();
-        $sql->select('COUNT(id_product)');
-        $sql->from(self::$definition['table']);
-        $sql->where('id_product_source = ' . (int) $id_source_product);
-        $sql->groupBy('id_product_source');
-
-        return (int) \Db::getInstance()->getValue($sql);
-    }
-
     public static function removeLink($id_product)
     {
         return \Db::getInstance()->delete(self::$definition['table'], 'id_product = ' . (int) $id_product);
@@ -122,15 +71,5 @@ class DynamicProductConfigLink extends DynamicObject
     public static function removeLinks($id_source_product)
     {
         return \Db::getInstance()->delete(self::$definition['table'], 'id_product_source = ' . (int) $id_source_product);
-    }
-
-    public static function getLinkedConfigs()
-    {
-        $sql = new \DbQuery();
-        $sql->select('id_product');
-        $sql->from(self::$definition['table']);
-        $result = \Db::getInstance()->executeS($sql);
-
-        return DynamicTools::organizeBy('id_product', $result);
     }
 }

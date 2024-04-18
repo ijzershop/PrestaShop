@@ -24,13 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class OrderController extends OrderControllerCore
 {
     public function postProcess()
     {
         parent::postProcess();
         if (Module::isEnabled('advancedvatmanager')) {
-            // Compatibility with Advanced Antispam System module
             if (Module::isEnabled('advancedantispamsystem') && Configuration::get('ADVANCEDANTISPAMSYSTEM_ENABLED') == 1) {
                 if (Tools::isSubmit('submitCreate')) {
                     $advancedantispamsystem = Module::getInstanceByName('advancedantispamsystem');
@@ -42,7 +45,6 @@ class OrderController extends OrderControllerCore
                     }  
                 }
             }
-            // Compatibility with recaptcha module
             if (Tools::isSubmit('submitCreate') &&
                 Module::isInstalled('recaptcha') &&
                 Module::isEnabled('recaptcha') &&
@@ -55,7 +57,6 @@ class OrderController extends OrderControllerCore
                     unset($_POST['password']);
                 }
             }
-            // Compatibility with Ei captcha free module
             if (Tools::isSubmit('submitCreate')
                 && Module::isInstalled('eicaptcha')
                 && Module::isEnabled('eicaptcha')
@@ -64,7 +65,6 @@ class OrderController extends OrderControllerCore
             ) {
                 unset($_POST['submitCreate']);
             }
-            // Compatibility with module Minimum and maximum purchase product quantity by Idnovate
             if (Module::isEnabled('minpurchase')) {
                 include_once(_PS_MODULE_DIR_.'minpurchase/minpurchase.php');
                 $mod = new MinpurchaseConfiguration();
@@ -84,7 +84,6 @@ class OrderController extends OrderControllerCore
                     Tools::redirect($this->context->link->getPageLink('cart', true, (int)$id_lang, $params));
                 }
             }
-            // Compatibility with module Hide the product prices and disallow purchases by categories, groups, and more by Idnovate
             if (Module::isEnabled('hideprice')) {
                 include_once(_PS_MODULE_DIR_.'hideprice/hideprice.php');
                 $mod = new HidepriceConfiguration();
@@ -101,7 +100,6 @@ class OrderController extends OrderControllerCore
                     $this->canonicalRedirection($this->context->link->getPageLink('cart', true, (int)$this->context->language->id, $params));
                 }
             }
-            // Compatibility with module One Page Checkout by Presteamshop
             if (Module::isEnabled('onepagecheckoutps') && version_compare(Module::getInstanceByName('onepagecheckoutps')->version, '4.1.5', '>=')) {
                 if (isset($this->is_active_module)?$this->is_active_module:$this->isModuleActived) {
                     $this->bootstrap();
@@ -115,8 +113,15 @@ class OrderController extends OrderControllerCore
                     if (version_compare(_PS_VERSION_, '1.7.0.0', '>=')) {
                         if (version_compare(_PS_VERSION_, '1.7.8.0', '<')) {
                             $this->errors[] = $checkNotAllowCheckout;
-                        }
-                        $this->checkoutProcess->setSteps(array());    
+                            // Remove checkout steps to avoid make an order from customer.
+                            foreach ($this->checkoutProcess->getSteps() as $step) {
+                                if (is_a($step, 'CheckoutAddressesStep')) {
+                                    $step->setCurrent(true);
+                                    break;
+                                }
+                            }
+                            $this->checkoutProcess->invalidateAllStepsAfterCurrent();    
+                        }                             
                     }
                     else {
                         if (!Tools::getValue('ajax') || !Tools::getIsset('add') || !Tools::getIsset('update')) {

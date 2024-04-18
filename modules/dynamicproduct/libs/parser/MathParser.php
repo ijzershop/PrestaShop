@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2023 TuniSoft
+ * 2007-2024 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,16 +19,23 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2023 TuniSoft
+ * @copyright 2007-2024 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 namespace DynamicProduct\libs\parser;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\models\DynamicInputField;
 
 class MathParser
 {
+    /** @var DynamicInputField[] */
+    protected $input_fields;
     protected $expression;
     protected $dirty;
     protected $optimization_on;
@@ -384,7 +391,9 @@ class MathParser
 
         $this->createFunc('STRLEN', 'strLength', 1);
         $this->createFunc('STR', 'str', 1);
+
         $this->createFunc('CHECK', 'checkFunc', 1);
+
         $this->createFunc('SUBSTR', 'mpSubstr', 3);
         $this->createFunc('REPLACE', 'mpReplace', 3);
         $this->createFunc('CONCAT', 'mpConcat', -1);
@@ -402,6 +411,8 @@ class MathParser
         $this->createFunc('CONTAINS', 'mpContains', 2);
 
         $this->createFunc('PRICE', 'mpPrice', 1);
+        $this->createFunc('LABEL', 'mpLabel', 1);
+        $this->createFunc('REF', 'mpRef', 1);
     }
 
     public function createDefaultVars()
@@ -708,6 +719,7 @@ class MathParser
         }
 
         $formula = $this->removeOuterBrackets($exp_to_parse);
+
         if (\Tools::strlen($formula) != $len) {
             $formula = trim($formula);
             if (\Tools::strlen($formula) == 0) {
@@ -742,7 +754,7 @@ class MathParser
                     throw new MathParserParserException($this->getMessage2('ExpNtVld', $param, $formula), $param, $formula);
                 }
                 if ($func_addr != null) {
-                    return new MMathparserNParamNode([$left_node], $func_addr);
+                    return new MMathparserNParamNode([$left_node], $func_addr, $this->input_fields);
                 }
             }
         }
@@ -758,7 +770,7 @@ class MathParser
             }
 
             if ($func_addr != null) {
-                return new MMathparserNParamNode([$left_node, $right_node], $func_addr);
+                return new MMathparserNParamNode([$left_node, $right_node], $func_addr, $this->input_fields);
             }
         }
 
@@ -777,7 +789,7 @@ class MathParser
                 $nodes[$i] = $left_node;
             }
             if ($func_addr != null) {
-                return new MMathparserNParamNode($nodes, $func_addr);
+                return new MMathparserNParamNode($nodes, $func_addr, $this->input_fields);
             }
         }
 
@@ -1084,7 +1096,6 @@ class MathParser
                         $func_addr = self::$mod_func;
                         break;
 
-                        // logical operators:
                     case '<':
                         $func_addr = self::$lt_func;
                         break;
@@ -1148,6 +1159,7 @@ class MathParser
                                     // last character is a ')', that's why we use i>Len-2
                                     $param_left = \Tools::substr($formula, $param_start, $i - $param_start);
                                     $param_right = \Tools::substr($formula, $i + 1, $len - 1 - ($i + 1));
+
                                     // last character is a ')', that's why we use Len-1-i
                                     return true; // we are sure that it is a two parameter function
                                 }
@@ -1356,6 +1368,11 @@ class MathParser
             $this->expression = $value;
             $this->dirty = true;
         }
+    }
+
+    public function setFields($input_fields)
+    {
+        $this->input_fields = $input_fields;
     }
 
     public function isoptimizationOn()

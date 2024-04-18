@@ -1,10 +1,9 @@
 <?php
 
-namespace Http\Message\Encoding;
+namespace ps_eventbus_v3_0_7\Http\Message\Encoding;
 
-use Clue\StreamFilter as Filter;
+use ps_eventbus_v3_0_7\Clue\StreamFilter as Filter;
 use Psr\Http\Message\StreamInterface;
-
 /**
  * Stream decompress (RFC 1950).
  *
@@ -17,16 +16,13 @@ class DecompressStream extends FilteredStream
      */
     public function __construct(StreamInterface $stream, $level = -1)
     {
-        if (!extension_loaded('zlib')) {
+        if (!\extension_loaded('zlib')) {
             throw new \RuntimeException('The zlib extension must be enabled to use this stream');
         }
-
         parent::__construct($stream, ['window' => 15]);
-
         // @deprecated will be removed in 2.0
         $this->writeFilterCallback = Filter\fun($this->writeFilter(), ['window' => 15, 'level' => $level]);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -34,7 +30,6 @@ class DecompressStream extends FilteredStream
     {
         return 'zlib.inflate';
     }
-
     /**
      * {@inheritdoc}
      */

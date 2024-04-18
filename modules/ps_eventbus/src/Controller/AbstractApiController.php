@@ -2,7 +2,6 @@
 
 namespace PrestaShop\Module\PsEventbus\Controller;
 
-use PrestaShop\AccountsAuth\Service\PsAccountsService;
 use PrestaShop\Module\PsEventbus\Config\Config;
 use PrestaShop\Module\PsEventbus\Exception\EnvVarException;
 use PrestaShop\Module\PsEventbus\Exception\FirebaseException;
@@ -14,13 +13,9 @@ use PrestaShop\Module\PsEventbus\Repository\IncrementalSyncRepository;
 use PrestaShop\Module\PsEventbus\Repository\LanguageRepository;
 use PrestaShop\Module\PsEventbus\Service\ApiAuthorizationService;
 use PrestaShop\Module\PsEventbus\Service\ProxyService;
+use PrestaShop\Module\PsEventbus\Service\PsAccountsAdapterService;
 use PrestaShop\Module\PsEventbus\Service\SynchronizationService;
-use PrestaShop\PsAccountsInstaller\Installer\Exception\ModuleNotInstalledException;
-use PrestaShop\PsAccountsInstaller\Installer\Exception\ModuleVersionException;
-use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
-
 const MYSQL_DATE_FORMAT = 'Y-m-d H:i:s';
-
 abstract class AbstractApiController extends \ModuleFrontController
 {
     /**
@@ -52,9 +47,9 @@ abstract class AbstractApiController extends \ModuleFrontController
      */
     private $languageRepository;
     /**
-     * @var PsAccountsService
+     * @var PsAccountsAdapterService
      */
-    private $psAccountsService;
+    private $psAccountsAdapterService;
     /**
      * @var IncrementalSyncRepository
      */
@@ -70,44 +65,37 @@ abstract class AbstractApiController extends \ModuleFrontController
     /**
      * @var bool
      */
-    public $psAccountsInstalled = true;
-
+    public $psAccountsInstalled = \true;
     /**
      * @var ErrorHandler
      */
     public $errorHandler;
-
     public function __construct()
     {
         parent::__construct();
-
-        $this->ajax = true;
-        $this->content_only = true;
+        $this->ajax = \true;
+        $this->content_only = \true;
         $this->controller_type = 'module';
-
         $this->errorHandler = $this->module->getService(ErrorHandler::class);
         try {
-            $this->psAccountsService = $this->module->getService(PsAccounts::class)->getPsAccountsService();
+            $this->psAccountsAdapterService = $this->module->getService(PsAccountsAdapterService::class);
             $this->proxyService = $this->module->getService(ProxyService::class);
             $this->authorizationService = $this->module->getService(ApiAuthorizationService::class);
             $this->synchronizationService = $this->module->getService(SynchronizationService::class);
-        } catch (ModuleVersionException $exception) {
+        } catch (\Exception $exception) {
             $this->errorHandler->handle($exception);
             $this->exitWithExceptionMessage($exception);
         }
-
         $this->eventbusSyncRepository = $this->module->getService(EventbusSyncRepository::class);
         $this->languageRepository = $this->module->getService(LanguageRepository::class);
         $this->incrementalSyncRepository = $this->module->getService(IncrementalSyncRepository::class);
     }
-
     /**
      * @return void
      */
     public function init()
     {
-        $this->startTime = time();
-
+        $this->startTime = \time();
         try {
             $this->authorize();
         } catch (\PrestaShopDatabaseException $exception) {
@@ -121,7 +109,6 @@ abstract class AbstractApiController extends \ModuleFrontController
             $this->exitWithExceptionMessage($exception);
         }
     }
-
     /**
      * @return void
      *
@@ -131,26 +118,21 @@ abstract class AbstractApiController extends \ModuleFrontController
     {
         /** @var string $jobId */
         $jobId = \Tools::getValue('job_id', 'empty_job_id');
-
         $authorizationResponse = $this->authorizationService->authorizeCall($jobId);
-
-        if (is_array($authorizationResponse)) {
+        if (\is_array($authorizationResponse)) {
             $this->exitWithResponse($authorizationResponse);
         } elseif (!$authorizationResponse) {
             throw new \PrestaShopDatabaseException('Failed saving job id to database');
         }
-
         try {
-            $token = $this->psAccountsService->getOrRefreshToken();
+            $token = $this->psAccountsAdapterService->getOrRefreshToken();
         } catch (\Exception $exception) {
             throw new FirebaseException($exception->getMessage());
         }
-
         if (!$token) {
             throw new FirebaseException('Invalid token');
         }
     }
-
     /**
      * @param PaginatedApiDataProviderInterface $dataProvider
      *
@@ -160,95 +142,47 @@ abstract class AbstractApiController extends \ModuleFrontController
     {
         /** @var bool $debug */
         $debug = \Tools::getValue('debug') == 1;
-
         /** @var string $jobId */
         $jobId = \Tools::getValue('job_id');
         /** @var string $langIso */
         $langIso = \Tools::getValue('lang_iso', $this->languageRepository->getDefaultLanguageIsoCode());
         /** @var int $limit */
         $limit = \Tools::getValue('limit', 50);
-
         if ($limit < 0) {
             $this->exitWithExceptionMessage(new QueryParamsException('Invalid URL Parameters', Config::INVALID_URL_QUERY));
         }
-
         /** @var bool $initFullSync */
         $initFullSync = \Tools::getValue('full', 0) == 1;
-
         /** @var \PrestaShop\Module\PsEventbus\Repository\ConfigurationRepository $configurationRepository */
         $configurationRepository = $this->module->getService(\PrestaShop\Module\PsEventbus\Repository\ConfigurationRepository::class);
         $timezone = (string) $configurationRepository->get('PS_TIMEZONE');
-
         $dateNow = (new \DateTime('now', new \DateTimeZone($timezone)))->format(MYSQL_DATE_FORMAT);
         $offset = 0;
-        $incrementalSync = false;
+        $incrementalSync = \false;
         $response = [];
-
         try {
             $typeSync = $this->eventbusSyncRepository->findTypeSync($this->type, $langIso);
-
             if ($debug) {
                 $response = $dataProvider->getQueryForDebug($offset, $limit, $langIso);
-
-                return array_merge(
-                    [
-                        'object_type' => $this->type,
-                    ],
-                    $response
-                );
+                return \array_merge(['object_type' => $this->type], $response);
             }
-
-            if ($typeSync !== false && is_array($typeSync)) {
+            if ($typeSync !== \false && \is_array($typeSync)) {
                 $offset = (int) $typeSync['offset'];
-
                 if ((int) $typeSync['full_sync_finished'] === 1 && !$initFullSync) {
-                    $incrementalSync = true;
+                    $incrementalSync = \true;
                 } elseif ($initFullSync) {
                     $offset = 0;
-                    $this->eventbusSyncRepository->updateTypeSync(
-                        $this->type,
-                        $offset,
-                        $dateNow,
-                        false,
-                        $langIso
-                    );
+                    $this->eventbusSyncRepository->updateTypeSync($this->type, $offset, $dateNow, \false, $langIso);
                 }
             } else {
                 $this->eventbusSyncRepository->insertTypeSync($this->type, $offset, $dateNow, $langIso);
             }
-
             if ($incrementalSync) {
-                $response = $this->synchronizationService->handleIncrementalSync(
-                    $dataProvider,
-                    $this->type,
-                    $jobId,
-                    $limit,
-                    $langIso,
-                    $this->startTime,
-                    $initFullSync
-                );
+                $response = $this->synchronizationService->handleIncrementalSync($dataProvider, $this->type, $jobId, $limit, $langIso, $this->startTime, $initFullSync);
             } else {
-                $response = $this->synchronizationService->handleFullSync(
-                    $dataProvider,
-                    $this->type,
-                    $jobId,
-                    $langIso,
-                    $offset,
-                    $limit,
-                    $dateNow,
-                    $this->startTime,
-                    $initFullSync
-                );
+                $response = $this->synchronizationService->handleFullSync($dataProvider, $this->type, $jobId, $langIso, $offset, $limit, $dateNow, $this->startTime, $initFullSync);
             }
-
-            return array_merge(
-                [
-                    'job_id' => $jobId,
-                    'object_type' => $this->type,
-                    'syncType' => $incrementalSync ? 'incremental' : 'full',
-                ],
-                $response
-            );
+            return \array_merge(['job_id' => $jobId, 'object_type' => $this->type, 'syncType' => $incrementalSync ? 'incremental' : 'full'], $response);
         } catch (\PrestaShopDatabaseException $exception) {
             $this->errorHandler->handle($exception);
             $this->exitWithExceptionMessage($exception);
@@ -262,10 +196,8 @@ abstract class AbstractApiController extends \ModuleFrontController
             $this->errorHandler->handle($exception);
             $this->exitWithExceptionMessage($exception);
         }
-
         return $response;
     }
-
     /**
      * @param array|null $value
      * @param string|null $controller
@@ -277,9 +209,8 @@ abstract class AbstractApiController extends \ModuleFrontController
      */
     public function ajaxDie($value = null, $controller = null, $method = null)
     {
-        parent::ajaxDie(json_encode($value) ?: null, $controller, $method);
+        parent::ajaxDie(\json_encode($value) ?: null, $controller, $method);
     }
-
     /**
      * @param array $response
      *
@@ -288,10 +219,8 @@ abstract class AbstractApiController extends \ModuleFrontController
     protected function exitWithResponse(array $response)
     {
         $httpCode = isset($response['httpCode']) ? (int) $response['httpCode'] : 200;
-
         $this->dieWithResponse($response, $httpCode);
     }
-
     /**
      * @param \Exception $exception
      *
@@ -300,7 +229,6 @@ abstract class AbstractApiController extends \ModuleFrontController
     protected function exitWithExceptionMessage(\Exception $exception)
     {
         $code = $exception->getCode() == 0 ? 500 : $exception->getCode();
-
         if ($exception instanceof \PrestaShopDatabaseException) {
             $code = Config::DATABASE_QUERY_ERROR_CODE;
         } elseif ($exception instanceof EnvVarException) {
@@ -309,22 +237,10 @@ abstract class AbstractApiController extends \ModuleFrontController
             $code = Config::REFRESH_TOKEN_ERROR_CODE;
         } elseif ($exception instanceof QueryParamsException) {
             $code = Config::INVALID_URL_QUERY;
-        } elseif ($exception instanceof ModuleVersionException) {
-            $code = Config::INVALID_PS_ACCOUNTS_VERSION;
-        } elseif ($exception instanceof ModuleNotInstalledException) {
-            $code = Config::PS_ACCOUNTS_NOT_INSTALLED;
         }
-
-        $response = [
-            'object_type' => $this->type,
-            'status' => false,
-            'httpCode' => $code,
-            'message' => $exception->getMessage(),
-        ];
-
+        $response = ['object_type' => $this->type, 'status' => \false, 'httpCode' => $code, 'message' => $exception->getMessage()];
         $this->dieWithResponse($response, (int) $code);
     }
-
     /**
      * @param array $response
      * @param int $code
@@ -333,22 +249,17 @@ abstract class AbstractApiController extends \ModuleFrontController
      */
     private function dieWithResponse(array $response, $code)
     {
-        $httpStatusText = "HTTP/1.1 $code";
-
-        if (array_key_exists((int) $code, Config::HTTP_STATUS_MESSAGES)) {
+        $httpStatusText = "HTTP/1.1 {$code}";
+        if (\array_key_exists((int) $code, Config::HTTP_STATUS_MESSAGES)) {
             $httpStatusText .= ' ' . Config::HTTP_STATUS_MESSAGES[(int) $code];
         } elseif (isset($response['body']['statusText'])) {
             $httpStatusText .= ' ' . $response['body']['statusText'];
         }
-
         $response['httpCode'] = (int) $code;
-
-        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
-        header('Content-Type: application/json;charset=utf-8');
-        header($httpStatusText);
-
-        echo json_encode($response, JSON_UNESCAPED_SLASHES);
-
+        \header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        \header('Content-Type: application/json;charset=utf-8');
+        \header($httpStatusText);
+        echo \json_encode($response, \JSON_UNESCAPED_SLASHES);
         exit;
     }
 }

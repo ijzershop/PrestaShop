@@ -7,6 +7,10 @@
  *  @copyright 2017-2023 www.liewebs.com - Liewebs
  * 	@module Advanced VAT Manager
  */
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
  
 /* Includes files */
 require_once(_PS_MODULE_DIR_ . 'advancedvatmanager/classes/ValidationEngine.php');
@@ -26,26 +30,20 @@ class AdvancedVatManagerCronCurrencyRateUpdateModuleFrontController extends Modu
             $this->ajaxDie('Forbidden call.');
         }
         
-        /* Check to security tocken */
+        /* Check to security token */
         if (Tools::substr(Tools::encrypt('advancedvatmanager'), 0, 12) != Tools::getValue('token')) {
             $this->ajaxDie('Bad token');
         }
         if (!Module::isEnabled('advancedvatmanager')) {
             $this->ajaxDie('Module disabled.');
         }
-        /* Check shop id */
-        if (Tools::getValue('id_shop') == Context::getContext()->shop->id) {
-            if (Currency::refreshCurrencies() != '') {
-                $response = Currency::refreshCurrencies();    
-            }
-            else {
-                $response = 'Currency rates have been updated successfully!.'; 
-                Configuration::updateValue('ADVANCEDVATMANAGER_CURRENCY_RATE_UPDATED', date("d-m-Y H:i:s"));   
-            }
-            $this->ajaxDie($response);
+        if (Currency::refreshCurrencies() != '') {
+            $response = Currency::refreshCurrencies();    
         }
         else {
-            $this->ajaxDie('Bad Shop ID');
+            $response = 'Currency rates have been updated successfully!.'; 
+            Configuration::updateValue('ADVANCEDVATMANAGER_CURRENCY_RATE_UPDATED', date("d-m-Y H:i:s"));   
         }
+        $this->ajaxDie($response);
     }
 }

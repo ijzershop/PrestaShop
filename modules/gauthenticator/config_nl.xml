@@ -2,7 +2,7 @@
 <module>
     <name>gauthenticator</name>
     <displayName><![CDATA[Google Authenticator]]></displayName>
-    <version><![CDATA[1.25]]></version>
+    <version><![CDATA[1.26]]></version>
     <description><![CDATA[Beveilig uw webshop met een two-factor authenticatie voor uw werknemer login met gebruik van de mobiele telefoon.]]></description>
     <author><![CDATA[R. Kazeno]]></author>
     <tab><![CDATA[administration]]></tab>

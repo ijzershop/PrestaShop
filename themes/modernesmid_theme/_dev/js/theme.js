@@ -28,6 +28,7 @@ import 'bootstrap';
 import './selectors';
 import './responsive';
 import './cookie-modal';
+import './checkout';
 import './tagmanager';
 
 import prestashop from 'prestashop';
@@ -650,7 +651,8 @@ $(function () {
   });
 
   // show hide password at login
-  $('button[data-action="show-password"]').on('click', function () {
+  $('button[data-action="show-password"], button[data-action="show-password"] svg').on('click', function (e) {
+    e.stopImmediatePropagation();
     const elm = $(this).closest('.input-group').children('input.js-visible-password');
     if (elm.attr('type') === 'password') {
       elm.attr('type', 'text');

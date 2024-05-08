@@ -13,12 +13,11 @@ namespace Symfony\Component\Cache\Adapter;
 
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\CacheItem;
-use Symfony\Contracts\Cache\CacheInterface;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
  */
-class NullAdapter implements AdapterInterface, CacheInterface
+class NullAdapter implements AdapterInterface
 {
     private $createCacheItem;
 
@@ -35,16 +34,6 @@ class NullAdapter implements AdapterInterface, CacheInterface
             $this,
             CacheItem::class
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get(string $key, callable $callback, float $beta = null, array &$metadata = null)
-    {
-        $save = true;
-
-        return $callback(($this->createCacheItem)($key), $save);
     }
 
     /**
@@ -67,8 +56,6 @@ class NullAdapter implements AdapterInterface, CacheInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     public function hasItem($key)
     {
@@ -77,20 +64,14 @@ class NullAdapter implements AdapterInterface, CacheInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @param string $prefix
-     *
-     * @return bool
      */
-    public function clear(/* string $prefix = '' */)
+    public function clear()
     {
         return true;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     public function deleteItem($key)
     {
@@ -99,8 +80,6 @@ class NullAdapter implements AdapterInterface, CacheInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     public function deleteItems(array $keys)
     {
@@ -109,40 +88,26 @@ class NullAdapter implements AdapterInterface, CacheInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     public function save(CacheItemInterface $item)
     {
-        return true;
+        return false;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     public function saveDeferred(CacheItemInterface $item)
     {
-        return true;
+        return false;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     public function commit()
     {
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function delete(string $key): bool
-    {
-        return $this->deleteItem($key);
+        return false;
     }
 
     private function generateItems(array $keys)

@@ -8,10 +8,12 @@ class CurrencyRepository
      * @var \Db
      */
     private $db;
+
     public function __construct()
     {
         $this->db = \Db::getInstance();
     }
+
     /**
      * @return mixed
      */
@@ -19,24 +21,29 @@ class CurrencyRepository
     {
         return \Tools::version_compare(_PS_VERSION_, '1.7.6', '>=');
     }
+
     /**
      * @return array
      */
     public function getCurrenciesIsoCodes()
     {
         $currencies = \Currency::getCurrencies();
-        return \array_map(function ($currency) {
+
+        return array_map(function ($currency) {
             return $currency['iso_code'];
         }, $currencies);
     }
+
     /**
      * @return string
      */
     public function getDefaultCurrencyIsoCode()
     {
         $currency = \Currency::getDefaultCurrency();
+
         return $currency instanceof \Currency ? $currency->iso_code : '';
     }
+
     /**
      * @param int $offset
      * @param int $limit
@@ -48,10 +55,14 @@ class CurrencyRepository
     public function getCurrencies($offset, $limit)
     {
         $query = $this->getBaseQuery();
+
         $this->addSelectParameters($query);
+
         $query->limit($limit, $offset);
+
         return $this->db->executeS($query);
     }
+
     /**
      * @param int $offset
      *
@@ -59,9 +70,12 @@ class CurrencyRepository
      */
     public function getRemainingCurrenciesCount($offset)
     {
-        $query = $this->getBaseQuery()->select('(COUNT(c.id_currency) - ' . (int) $offset . ') as count');
+        $query = $this->getBaseQuery()
+            ->select('(COUNT(c.id_currency) - ' . (int) $offset . ') as count');
+
         return (int) $this->db->getValue($query);
     }
+
     /**
      * @param int $limit
      * @param array $currencyIds
@@ -73,10 +87,15 @@ class CurrencyRepository
     public function getCurrenciesIncremental($limit, $currencyIds)
     {
         $query = $this->getBaseQuery();
+
         $this->addSelectParameters($query);
-        $query->where('c.id_currency IN(' . \implode(',', \array_map('intval', $currencyIds)) . ')')->limit($limit);
+
+        $query->where('c.id_currency IN(' . implode(',', array_map('intval', $currencyIds)) . ')')
+            ->limit($limit);
+
         return $this->db->executeS($query);
     }
+
     /**
      * @return \DbQuery
      */
@@ -87,8 +106,10 @@ class CurrencyRepository
         if ($this->isLangAvailable()) {
             $query->innerJoin('currency_lang', 'cl', 'cl.id_currency = c.id_currency');
         }
+
         return $query;
     }
+
     /**
      * @param int $offset
      * @param int $limit
@@ -100,11 +121,19 @@ class CurrencyRepository
     public function getQueryForDebug($offset, $limit)
     {
         $query = $this->getBaseQuery();
+
         $this->addSelectParameters($query);
+
         $query->limit($limit, $offset);
-        $queryStringified = \preg_replace('/\\s+/', ' ', $query->build());
-        return \array_merge((array) $query, ['queryStringified' => $queryStringified]);
+
+        $queryStringified = preg_replace('/\s+/', ' ', $query->build());
+
+        return array_merge(
+            (array) $query,
+            ['queryStringified' => $queryStringified]
+        );
     }
+
     /**
      * @param \DbQuery $query
      *
@@ -117,7 +146,7 @@ class CurrencyRepository
         } else {
             $query->select('c.id_currency, \'\' as name, c.iso_code, c.conversion_rate, c.deleted, c.active');
         }
-        if (\version_compare(_PS_VERSION_, '1.7', '>=')) {
+        if (version_compare(_PS_VERSION_, '1.7', '>=')) {
             $query->select('c.precision');
         }
     }

@@ -29,6 +29,7 @@
   {/block}
 
   {block name='header_top'}
+    {assign var=withTax value=Context::getContext()->cookie->price_vat_settings_incl === "true"}
     <div class="header-top">
     <div class="cart_body {if Context::getContext()->cart->nbProducts() == 0} no_show_empty {/if}">
       <div class="side_panel d-none" id="shoppingcart-side-panel">
@@ -138,7 +139,7 @@
             <li class="nav-item p-0 text-center col"><a aria-label="Zoeken" class="nav-link text-white navbar-search-icon" href="#"><i class="fasl fa-2x fa-magnifying-glass"></i></a></li>
           {/if}
           {if Module::isEnabled('ps_shoppingcart')}
-            <li class="nav-item p-0 col-5 col-sm-3"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile-1" href="/winkelmandje?action=show"><i class="fasl fa-cart-shopping"></i><span class="shoppingcart-header-total-price float-right text-white">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
+            <li class="nav-item p-0 col-5 col-sm-3"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile-1" href="/winkelmandje?action=show"><i class="fasl fa-cart-shopping"></i><span class="shoppingcart-header-total-price float-right text-white">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
           {/if}
       </ul>
       <div class="row collapse navbar-collapse">
@@ -166,7 +167,7 @@
         </div>
 
         <ul id="navbar-cart-item-mobile"  class="navbar-nav float-right d-none  col-2 pr-0">
-        <li class="nav-item p-0 col"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile-2" href="/winkelmandje?action=show"><i style="font-size: 1.7em;padding-right: 5px;" class="fasl fa-cart-shopping"></i><span class="shoppingcart-header-total-price float-right text-white" style="font-size: 1.3em;">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
+        <li class="nav-item p-0 col"><a aria-label="Winkelwagen tonen/verbergen" class="nav-link text-white top-header-shoppingcart bg-success" id="top-header-shoppingcart-mobile-2" href="/winkelmandje?action=show"><i style="font-size: 1.7em;padding-right: 5px;" class="fasl fa-cart-shopping"></i><span class="shoppingcart-header-total-price float-right text-white" style="font-size: 1.3em;">{Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_PRODUCTS), 'EUR')} </span><span id="amount_circle" class="amount_circle">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span></a></li>
         </ul>
       </div>
     </div>

@@ -1,4 +1,4 @@
 services:
-    ps_eventbus_v3_0_7\AppBundle\Foo:
+    AppBundle\Foo:
         arguments:
-            - !service {class: ps_eventbus_v3_0_7\AppBundle\Bar }
+            - !service {class: AppBundle\Bar }

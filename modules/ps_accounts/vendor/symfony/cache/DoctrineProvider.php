@@ -13,11 +13,6 @@ namespace Symfony\Component\Cache;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Contracts\Service\ResetInterface;
-
-if (!class_exists(CacheProvider::class)) {
-    return;
-}
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -44,7 +39,7 @@ class DoctrineProvider extends CacheProvider implements PruneableInterface, Rese
      */
     public function reset()
     {
-        if ($this->pool instanceof ResetInterface) {
+        if ($this->pool instanceof ResettableInterface) {
             $this->pool->reset();
         }
         $this->setNamespace($this->getNamespace());
@@ -52,8 +47,6 @@ class DoctrineProvider extends CacheProvider implements PruneableInterface, Rese
 
     /**
      * {@inheritdoc}
-     *
-     * @return mixed
      */
     protected function doFetch($id)
     {
@@ -64,8 +57,6 @@ class DoctrineProvider extends CacheProvider implements PruneableInterface, Rese
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     protected function doContains($id)
     {
@@ -74,8 +65,6 @@ class DoctrineProvider extends CacheProvider implements PruneableInterface, Rese
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     protected function doSave($id, $data, $lifeTime = 0)
     {
@@ -90,8 +79,6 @@ class DoctrineProvider extends CacheProvider implements PruneableInterface, Rese
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     protected function doDelete($id)
     {
@@ -100,8 +87,6 @@ class DoctrineProvider extends CacheProvider implements PruneableInterface, Rese
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     protected function doFlush()
     {
@@ -110,8 +95,6 @@ class DoctrineProvider extends CacheProvider implements PruneableInterface, Rese
 
     /**
      * {@inheritdoc}
-     *
-     * @return array|null
      */
     protected function doGetStats()
     {

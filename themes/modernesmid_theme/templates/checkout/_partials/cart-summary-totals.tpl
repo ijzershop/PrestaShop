@@ -52,7 +52,7 @@
       </div>
     {else}
       <div class="cart-summary-line cart-total">
-                <span class="label">{$cart.totals.total.label}&nbsp;{if $configuration.taxes_enabled && $withTax}{$cart.labels.tax_short}{/if}</span>
+                <span class="label h6 font-weight-bolder">{$cart.totals.total.label}&nbsp;{if $configuration.taxes_enabled && $withTax}{$cart.labels.tax_short}{/if}</span>
                 <span class="value h6 font-weight-bolder">
               {if (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0}
                 {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR')}

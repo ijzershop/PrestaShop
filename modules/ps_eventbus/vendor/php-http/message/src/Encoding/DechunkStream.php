@@ -1,6 +1,6 @@
 <?php
 
-namespace ps_eventbus_v3_0_7\Http\Message\Encoding;
+namespace Http\Message\Encoding;
 
 /**
  * Decorate a stream which is chunked.
@@ -18,6 +18,7 @@ class DechunkStream extends FilteredStream
     {
         return 'dechunk';
     }
+
     /**
      * {@inheritdoc}
      */

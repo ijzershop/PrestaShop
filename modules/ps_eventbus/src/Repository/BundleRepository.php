@@ -8,10 +8,12 @@ class BundleRepository
      * @var \Db
      */
     private $db;
+
     public function __construct()
     {
         $this->db = \Db::getInstance();
     }
+
     /**
      * @param int $productPackId
      *
@@ -20,10 +22,15 @@ class BundleRepository
     private function getBaseQuery($productPackId)
     {
         $query = new \DbQuery();
-        $query->from('pack', 'pac')->innerJoin('product', 'p', 'p.id_product = pac.id_product_item');
+
+        $query->from('pack', 'pac')
+            ->innerJoin('product', 'p', 'p.id_product = pac.id_product_item');
+
         $query->where('pac.id_product_pack = ' . (int) $productPackId);
+
         return $query;
     }
+
     /**
      * @param int $productPackId
      *
@@ -34,10 +41,14 @@ class BundleRepository
     public function getBundleProducts($productPackId)
     {
         $query = $this->getBaseQuery($productPackId);
+
         $this->addSelectParameters($query);
+
         $result = $this->db->executeS($query);
-        return \is_array($result) ? $result : [];
+
+        return is_array($result) ? $result : [];
     }
+
     /**
      * @param \DbQuery $query
      *

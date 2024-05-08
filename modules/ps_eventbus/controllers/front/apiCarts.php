@@ -1,13 +1,13 @@
 <?php
 
-
-
 use PrestaShop\Module\PsEventbus\Config\Config;
 use PrestaShop\Module\PsEventbus\Controller\AbstractApiController;
 use PrestaShop\Module\PsEventbus\Provider\CartDataProvider;
+
 class ps_EventbusApiCartsModuleFrontController extends AbstractApiController
 {
     public $type = Config::COLLECTION_CARTS;
+
     /**
      * @return void
      *
@@ -17,7 +17,9 @@ class ps_EventbusApiCartsModuleFrontController extends AbstractApiController
     {
         /** @var CartDataProvider $cartDataProvider */
         $cartDataProvider = $this->module->getService(CartDataProvider::class);
+
         $response = $this->handleDataSync($cartDataProvider);
+
         $this->exitWithResponse($response);
     }
 }

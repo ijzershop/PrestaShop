@@ -226,6 +226,7 @@ class Ps_Wirepayment extends PaymentModule
         $newOption->setModuleName($this->name)
                 ->setCallToActionText($this->trans('Pay by bank wire', [], 'Modules.Wirepayment.Shop'))
                 ->setAction($this->context->link->getModuleLink($this->name, 'validation', [], true))
+                ->setLogo(_MODULE_DIR_ .'/ps_wirepayment/ps_wirepayment.svg')
                 ->setAdditionalInformation($this->fetch('module:ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl'));
 
         return [

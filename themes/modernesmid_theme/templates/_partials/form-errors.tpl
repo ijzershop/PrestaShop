@@ -23,13 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {if $errors|count}
-  <div class="help-block pt-1">
     {block name='form_errors'}
-      <ul class="list-unstyled">
         {foreach $errors as $error}
-          <li class="alert alert-danger">{$error|nl2br nofilter}</li>
+          <div class="w-100 error-small invalid-feedback">{$error|nl2br nofilter}</div>
         {/foreach}
-      </ul>
     {/block}
-  </div>
 {/if}

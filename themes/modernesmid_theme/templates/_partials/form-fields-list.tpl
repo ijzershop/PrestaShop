@@ -27,50 +27,62 @@
       {if $field.type === 'select'}
         {block name='form_field_item_select'}
         <select autocomplete="off"
-        class="form-control form-control-select" name="{$field.name}" {if $field.required}required{/if}>
+        class="form-control form-control-select  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}" name="{$field.name}" {if $field.required}required{/if}>
           <option value disabled selected>{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
           {foreach from=$field.availableValues item="label" key="value"}
             <option value="{$value}" {if $value eq $field.value} selected {/if}>{$label}</option>
           {/foreach}
         </select>
+        {/block}
+        {block name='form_field_errors'}
+          {include file='_partials/form-errors.tpl' errors=$field.errors}
         {/block}
 
       {elseif $field.type === 'countrySelect'}
         {block name='form_field_item_country'}
         <select
           autocomplete="off"
-          class="form-control form-control-select js-country"
+          class="form-control form-control-select js-country  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
           name="{$field.name}"
           {if $field.required}required{/if}
         >
-          <option value disabled selected>{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
+
+          {assign var="countryId" value="13"}
+          <option value disabled>{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
           {foreach from=$field.availableValues item="label" key="value"}
-            <option value="{$value}" {if $value eq $field.value} selected {/if}>{$label}</option>
+            <option value="{$value}" {if ($value eq $field.value) || (!in_array($field.value, [3, 13]) && $value eq $countryId)} selected {/if}>{$label}</option>
           {/foreach}
         </select>
+        {/block}
+        {block name='form_field_errors'}
+          {include file='_partials/form-errors.tpl' errors=$field.errors}
         {/block}
 {elseif $field.name == 'vat_number'}
   <input
     id="vat_number"
     autocomplete="off"
-    class="form-control"
+    class="form-control  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
     name="{$field.name}"
     type="{$field.type}"
     value="{$field.value}"
     {if isset($field.availableValues.placeholder)}placeholder="{$field.availableValues.placeholder}"{/if}
-    required>
+    {if $field.required}required{/if}>
       {elseif $field.type === 'radio-buttons'}
         {block name='form_field_item_radio'}
         {foreach from=$field.availableValues item="label" key="value"}
           <label class="radio-inline">
             <span class="custom-radio">
               <input
+                class=" {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
                 name="{$field.name}"
                 type="radio"
                 value="{$value}"
                 {if $field.required}required{/if}
                 {if $value eq $field.value} checked {/if}
               >
+                    {block name='form_field_errors'}
+                      {include file='_partials/form-errors.tpl' errors=$field.errors}
+                    {/block}
               <span></span>
             </span>
             <span>{$label}</span>
@@ -81,7 +93,10 @@
         {block name='form_field_item_checkbox'}
         <label class="checkbox-inline flex_container flex_start">
         <span class="custom-input-box">
-          <input class="custom-input" name="{$field.name}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}>
+          <input class="custom-input  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}" name="{$field.name}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}>
+                {block name='form_field_errors'}
+                  {include file='_partials/form-errors.tpl' errors=$field.errors}
+                {/block}
           <span class="custom-input-item custom-input-checkbox"><i class="fto-ok-1 checkbox-checked"></i></span>
         </span>
         <span class="flex_child">{$field.label nofilter}</span >
@@ -91,8 +106,11 @@
       {elseif $field.type === 'date'}
         {block name='form_field_item_date'}
         <input name="{$field.name}" autocomplete="off"
-        class="form-control" type="date" value="{$field.value}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
-        {if isset($field.availableValues.comment)}
+        class="form-control  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}" type="date" value="{$field.value}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
+          {block name='form_field_errors'}
+            {include file='_partials/form-errors.tpl' errors=$field.errors}
+          {/block}
+          {if isset($field.availableValues.comment)}
           <span autocomplete="off"
           class="form-control-comment">
             {$field.availableValues.comment}
@@ -121,6 +139,9 @@
           year_empty={l s='-- year --' d='Shop.Forms.Labels'}
           start_year={'Y'|date}-100 end_year={'Y'|date}
           }
+          {block name='form_field_errors'}
+            {include file='_partials/form-errors.tpl' errors=$field.errors}
+          {/block}
         </div>
         {/block}
       {elseif $field.type === 'password'}
@@ -129,7 +150,7 @@
           <div class="input-group js-parent-focus input-group-with-border">
             <input
               autocomplete="off"
-              class="form-control js-child-focus js-visible-password"
+              class="form-control js-child-focus js-visible-password  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
               name="{$field.name}"
               title="{l s='At least 5 characters long' d='Shop.Forms.Help'}"
               type="password"
@@ -148,6 +169,9 @@
                 <i class="fasl fa-eye-slash"></i>
               </button>
             </span>
+            {block name='form_field_errors'}
+              {include file='_partials/form-errors.tpl' errors=$field.errors}
+            {/block}
           </div>
         {/block}
       {else}
@@ -156,27 +180,34 @@
         {if $field.name == 'house_number'}
           <input
             autocomplete="off"
-            class="form-control"
+            class="form-control  {if !empty($field.errors) || $field.value == ''}is-invalid{else}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
             {if isset($field.availableValues.placeholder)}placeholder="{$field.availableValues.placeholder}"{/if}
             {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
             required>
+          {block name='form_field_errors'}
+            {include file='_partials/form-errors.tpl' errors=$field.errors}
+          {/block}
         {elseif $field.name == 'phone'}
           <input
             autocomplete="off"
-            class="form-control"
+            class="form-control  {if !empty($field.errors) || ($field.value == '')}is-invalid{else}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
             {if isset($field.availableValues.placeholder)}placeholder="{$field.availableValues.placeholder}"{/if}
             {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
             required>
+          {block name='form_field_errors'}
+            {include file='_partials/form-errors.tpl' errors=$field.errors}
+          {/block}
         {elseif $field.name == 'address1' && $countryId != 13}
           <input
+            tabindex="-1"
             autocomplete="off"
-            class="form-control"
+            class="form-control  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
@@ -184,11 +215,15 @@
             {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
             {if $field.required}required{/if}
           >
+          {block name='form_field_errors'}
+            {include file='_partials/form-errors.tpl' errors=$field.errors}
+          {/block}
           <div id="suggesstion-box-street"></div>
           {elseif $field.name == 'address1' && $countryId == 13}
           <input
+            tabindex="-1"
             autocomplete="off"
-            class="form-control"
+            class="form-control  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
@@ -197,11 +232,14 @@
             {if $field.required}required{/if}
             readonly
           >
+          {block name='form_field_errors'}
+            {include file='_partials/form-errors.tpl' errors=$field.errors}
+          {/block}
           <div id="suggesstion-box-street"></div>
           {else}
           <input
             autocomplete="off"
-            class="form-control"
+            class="form-control {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
@@ -210,16 +248,10 @@
             {if $field.required}required{/if}
             {if $field.name == 'city'}readonly{/if}
           >
+          {block name='form_field_errors'}
+            {include file='_partials/form-errors.tpl' errors=$field.errors}
+          {/block}
         {/if}
-        <small class="text-danger address-error-msg"></small>
-          {if isset($field.availableValues.comment)}
-            <span autocomplete="off"
-            class="form-control-comment">
-              {$field.availableValues.comment}
-            </span>
-          {/if}
         {/block}
       {/if}
-      {block name='form_field_errors'}
-        {include file='_partials/form-errors.tpl' errors=$field.errors}
-      {/block}
+

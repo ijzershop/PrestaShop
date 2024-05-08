@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
+
 /**
  * This class has been auto-generated
  * by the Symfony Dependency Injection Component.
@@ -19,26 +20,36 @@ class Container extends \Symfony\Component\DependencyInjection\Dump\AbstractCont
 {
     private $parameters = [];
     private $targetDirs = [];
+
     public function __construct()
     {
         $this->services = [];
+
         $this->aliases = [];
     }
+
     public function getRemovedIds()
     {
-        return ['Psr\\Container\\ContainerInterface' => \true, 'Symfony\\Component\\DependencyInjection\\ContainerInterface' => \true];
+        return [
+            'Psr\\Container\\ContainerInterface' => true,
+            'Symfony\\Component\\DependencyInjection\\ContainerInterface' => true,
+        ];
     }
+
     public function compile()
     {
         throw new LogicException('You cannot compile a dumped container that was already compiled.');
     }
+
     public function isCompiled()
     {
-        return \true;
+        return true;
     }
+
     public function isFrozen()
     {
-        @\trigger_error(\sprintf('The %s() method is deprecated since Symfony 3.3 and will be removed in 4.0. Use the isCompiled() method instead.', __METHOD__), \E_USER_DEPRECATED);
-        return \true;
+        @trigger_error(sprintf('The %s() method is deprecated since Symfony 3.3 and will be removed in 4.0. Use the isCompiled() method instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return true;
     }
 }

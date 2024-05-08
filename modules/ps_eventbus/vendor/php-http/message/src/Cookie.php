@@ -1,6 +1,6 @@
 <?php
 
-namespace ps_eventbus_v3_0_7\Http\Message;
+namespace Http\Message;
 
 /**
  * Cookie Value Object.
@@ -15,36 +15,44 @@ final class Cookie
      * @var string
      */
     private $name;
+
     /**
      * @var string|null
      */
     private $value;
+
     /**
      * @var int|null
      */
     private $maxAge;
+
     /**
      * @var string|null
      */
     private $domain;
+
     /**
      * @var string
      */
     private $path;
+
     /**
      * @var bool
      */
     private $secure;
+
     /**
      * @var bool
      */
     private $httpOnly;
+
     /**
      * Expires attribute is HTTP 1.0 only and should be avoided.
      *
      * @var \DateTime|null
      */
     private $expires;
+
     /**
      * @param string         $name
      * @param string|null    $value
@@ -57,11 +65,20 @@ final class Cookie
      *
      * @throws \InvalidArgumentException if name, value or max age is not valid
      */
-    public function __construct($name, $value = null, $maxAge = null, $domain = null, $path = null, $secure = \false, $httpOnly = \false, \DateTime $expires = null)
-    {
+    public function __construct(
+        $name,
+        $value = null,
+        $maxAge = null,
+        $domain = null,
+        $path = null,
+        $secure = false,
+        $httpOnly = false,
+        \DateTime $expires = null
+    ) {
         $this->validateName($name);
         $this->validateValue($value);
         $this->validateMaxAge($maxAge);
+
         $this->name = $name;
         $this->value = $value;
         $this->maxAge = $maxAge;
@@ -71,6 +88,7 @@ final class Cookie
         $this->secure = (bool) $secure;
         $this->httpOnly = (bool) $httpOnly;
     }
+
     /**
      * Creates a new cookie without any attribute validation.
      *
@@ -83,14 +101,24 @@ final class Cookie
      * @param bool           $httpOnly
      * @param \DateTime|null $expires  Expires attribute is HTTP 1.0 only and should be avoided.
      */
-    public static function createWithoutValidation($name, $value = null, $maxAge = null, $domain = null, $path = null, $secure = \false, $httpOnly = \false, \DateTime $expires = null)
-    {
+    public static function createWithoutValidation(
+        $name,
+        $value = null,
+        $maxAge = null,
+        $domain = null,
+        $path = null,
+        $secure = false,
+        $httpOnly = false,
+        \DateTime $expires = null
+    ) {
         $cookie = new self('name', null, null, $domain, $path, $secure, $httpOnly, $expires);
         $cookie->name = $name;
         $cookie->value = $value;
         $cookie->maxAge = $maxAge;
+
         return $cookie;
     }
+
     /**
      * Returns the name.
      *
@@ -100,6 +128,7 @@ final class Cookie
     {
         return $this->name;
     }
+
     /**
      * Returns the value.
      *
@@ -109,6 +138,7 @@ final class Cookie
     {
         return $this->value;
     }
+
     /**
      * Checks if there is a value.
      *
@@ -118,6 +148,7 @@ final class Cookie
     {
         return isset($this->value);
     }
+
     /**
      * Sets the value.
      *
@@ -128,10 +159,13 @@ final class Cookie
     public function withValue($value)
     {
         $this->validateValue($value);
+
         $new = clone $this;
         $new->value = $value;
+
         return $new;
     }
+
     /**
      * Returns the max age.
      *
@@ -141,6 +175,7 @@ final class Cookie
     {
         return $this->maxAge;
     }
+
     /**
      * Checks if there is a max age.
      *
@@ -150,6 +185,7 @@ final class Cookie
     {
         return isset($this->maxAge);
     }
+
     /**
      * Sets the max age.
      *
@@ -160,10 +196,13 @@ final class Cookie
     public function withMaxAge($maxAge)
     {
         $this->validateMaxAge($maxAge);
+
         $new = clone $this;
         $new->maxAge = $maxAge;
+
         return $new;
     }
+
     /**
      * Returns the expiration time.
      *
@@ -173,6 +212,7 @@ final class Cookie
     {
         return $this->expires;
     }
+
     /**
      * Checks if there is an expiration time.
      *
@@ -182,6 +222,7 @@ final class Cookie
     {
         return isset($this->expires);
     }
+
     /**
      * Sets the expires.
      *
@@ -191,8 +232,10 @@ final class Cookie
     {
         $new = clone $this;
         $new->expires = $expires;
+
         return $new;
     }
+
     /**
      * Checks if the cookie is expired.
      *
@@ -202,6 +245,7 @@ final class Cookie
     {
         return isset($this->expires) and $this->expires < new \DateTime();
     }
+
     /**
      * Returns the domain.
      *
@@ -211,6 +255,7 @@ final class Cookie
     {
         return $this->domain;
     }
+
     /**
      * Checks if there is a domain.
      *
@@ -220,6 +265,7 @@ final class Cookie
     {
         return isset($this->domain);
     }
+
     /**
      * Sets the domain.
      *
@@ -231,8 +277,10 @@ final class Cookie
     {
         $new = clone $this;
         $new->domain = $this->normalizeDomain($domain);
+
         return $new;
     }
+
     /**
      * Checks whether this cookie is meant for this domain.
      *
@@ -245,15 +293,18 @@ final class Cookie
     public function matchDomain($domain)
     {
         // Domain is not set or exact match
-        if (!$this->hasDomain() || 0 === \strcasecmp($domain, $this->domain)) {
-            return \true;
+        if (!$this->hasDomain() || 0 === strcasecmp($domain, $this->domain)) {
+            return true;
         }
+
         // Domain is not an IP address
-        if (\filter_var($domain, \FILTER_VALIDATE_IP)) {
-            return \false;
+        if (filter_var($domain, FILTER_VALIDATE_IP)) {
+            return false;
         }
-        return (bool) \preg_match(\sprintf('/\\b%s$/i', \preg_quote($this->domain)), $domain);
+
+        return (bool) preg_match(sprintf('/\b%s$/i', preg_quote($this->domain)), $domain);
     }
+
     /**
      * Returns the path.
      *
@@ -263,6 +314,7 @@ final class Cookie
     {
         return $this->path;
     }
+
     /**
      * Sets the path.
      *
@@ -274,8 +326,10 @@ final class Cookie
     {
         $new = clone $this;
         $new->path = $this->normalizePath($path);
+
         return $new;
     }
+
     /**
      * Checks whether this cookie is meant for this path.
      *
@@ -287,8 +341,9 @@ final class Cookie
      */
     public function matchPath($path)
     {
-        return $this->path === $path || 0 === \strpos($path, \rtrim($this->path, '/') . '/');
+        return $this->path === $path || (0 === strpos($path, rtrim($this->path, '/').'/'));
     }
+
     /**
      * Checks whether this cookie may only be sent over HTTPS.
      *
@@ -298,6 +353,7 @@ final class Cookie
     {
         return $this->secure;
     }
+
     /**
      * Sets whether this cookie should only be sent over HTTPS.
      *
@@ -309,8 +365,10 @@ final class Cookie
     {
         $new = clone $this;
         $new->secure = (bool) $secure;
+
         return $new;
     }
+
     /**
      * Check whether this cookie may not be accessed through Javascript.
      *
@@ -320,6 +378,7 @@ final class Cookie
     {
         return $this->httpOnly;
     }
+
     /**
      * Sets whether this cookie may not be accessed through Javascript.
      *
@@ -331,8 +390,10 @@ final class Cookie
     {
         $new = clone $this;
         $new->httpOnly = (bool) $httpOnly;
+
         return $new;
     }
+
     /**
      * Checks if this cookie represents the same cookie as $cookie.
      *
@@ -344,6 +405,7 @@ final class Cookie
     {
         return $this->name === $cookie->name && $this->domain === $cookie->domain and $this->path === $cookie->path;
     }
+
     /**
      * Validates cookie attributes.
      *
@@ -356,10 +418,12 @@ final class Cookie
             $this->validateValue($this->value);
             $this->validateMaxAge($this->maxAge);
         } catch (\InvalidArgumentException $e) {
-            return \false;
+            return false;
         }
-        return \true;
+
+        return true;
     }
+
     /**
      * Validates the name attribute.
      *
@@ -371,14 +435,16 @@ final class Cookie
      */
     private function validateName($name)
     {
-        if (\strlen($name) < 1) {
+        if (strlen($name) < 1) {
             throw new \InvalidArgumentException('The name cannot be empty');
         }
+
         // Name attribute is a token as per spec in RFC 2616
-        if (\preg_match('/[\\x00-\\x20\\x22\\x28-\\x29\\x2C\\x2F\\x3A-\\x40\\x5B-\\x5D\\x7B\\x7D\\x7F]/', $name)) {
-            throw new \InvalidArgumentException(\sprintf('The cookie name "%s" contains invalid characters.', $name));
+        if (preg_match('/[\x00-\x20\x22\x28-\x29\x2C\x2F\x3A-\x40\x5B-\x5D\x7B\x7D\x7F]/', $name)) {
+            throw new \InvalidArgumentException(sprintf('The cookie name "%s" contains invalid characters.', $name));
         }
     }
+
     /**
      * Validates a value.
      *
@@ -391,11 +457,12 @@ final class Cookie
     private function validateValue($value)
     {
         if (isset($value)) {
-            if (\preg_match('/[^\\x21\\x23-\\x2B\\x2D-\\x3A\\x3C-\\x5B\\x5D-\\x7E]/', $value)) {
-                throw new \InvalidArgumentException(\sprintf('The cookie value "%s" contains invalid characters.', $value));
+            if (preg_match('/[^\x21\x23-\x2B\x2D-\x3A\x3C-\x5B\x5D-\x7E]/', $value)) {
+                throw new \InvalidArgumentException(sprintf('The cookie value "%s" contains invalid characters.', $value));
             }
         }
     }
+
     /**
      * Validates a Max-Age attribute.
      *
@@ -406,11 +473,12 @@ final class Cookie
     private function validateMaxAge($maxAge)
     {
         if (isset($maxAge)) {
-            if (!\is_int($maxAge)) {
+            if (!is_int($maxAge)) {
                 throw new \InvalidArgumentException('Max-Age must be integer');
             }
         }
     }
+
     /**
      * Remove the leading '.' and lowercase the domain as per spec in RFC 6265.
      *
@@ -425,10 +493,12 @@ final class Cookie
     private function normalizeDomain($domain)
     {
         if (isset($domain)) {
-            $domain = \ltrim(\strtolower($domain), '.');
+            $domain = ltrim(strtolower($domain), '.');
         }
+
         return $domain;
     }
+
     /**
      * Processes path as per spec in RFC 6265.
      *
@@ -441,10 +511,12 @@ final class Cookie
      */
     private function normalizePath($path)
     {
-        $path = \rtrim($path, '/');
-        if (empty($path) or '/' !== \substr($path, 0, 1)) {
+        $path = rtrim($path, '/');
+
+        if (empty($path) or '/' !== substr($path, 0, 1)) {
             $path = '/';
         }
+
         return $path;
     }
 }

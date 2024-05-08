@@ -170,7 +170,7 @@ public function addOrderState($name)
         $newOption->setModuleName($this->name)
                 ->setCallToActionText($this->trans('Betalen met pin', array(), 'Modules.Pinpayment.Shop'))
                 ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
-                ->setLogo(_MODULE_DIR_ .'/ps_pinpayment/ps_pinpayment.png')
+                ->setLogo(_MODULE_DIR_ .'/ps_pinpayment/ps_pinpayment.svg')
                 ->setAdditionalInformation($this->fetch('module:ps_pinpayment/views/templates/hook/ps_pinpayment_intro.tpl'));
         $payment_options = [
             $newOption,

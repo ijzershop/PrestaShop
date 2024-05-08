@@ -12,16 +12,19 @@ class CustomPriceRepository
      * @var \Db
      */
     private $db;
+
     public function __construct(\Context $context)
     {
         $this->db = \Db::getInstance();
         $this->context = $context;
+
         if (!$this->context->employee instanceof \Employee) {
-            if (($employees = \Employee::getEmployees()) !== \false) {
+            if (($employees = \Employee::getEmployees()) !== false) {
                 $this->context->employee = new \Employee($employees[0]['id_employee']);
             }
         }
     }
+
     /**
      * @return \DbQuery
      */
@@ -30,12 +33,20 @@ class CustomPriceRepository
         if ($this->context->shop === null) {
             throw new \PrestaShopException('No shop context');
         }
+
         $shopId = (int) $this->context->shop->id;
+
         $query = new \DbQuery();
-        $query->from('specific_price', 'sp')->leftJoin('country', 'c', 'c.id_country = sp.id_country')->leftJoin('currency', 'cur', 'cur.id_currency = sp.id_currency');
+
+        $query->from('specific_price', 'sp')
+            ->leftJoin('country', 'c', 'c.id_country = sp.id_country')
+            ->leftJoin('currency', 'cur', 'cur.id_currency = sp.id_currency');
+
         $query->where('sp.id_shop = 0 OR sp.id_shop = ' . $shopId);
+
         return $query;
     }
+
     /**
      * @param int $offset
      * @param int $limit
@@ -47,11 +58,16 @@ class CustomPriceRepository
     public function getSpecificPrices($offset, $limit)
     {
         $query = $this->getBaseQuery();
+
         $this->addSelectParameters($query);
+
         $query->limit($limit, $offset);
+
         $result = $this->db->executeS($query);
-        return \is_array($result) ? $result : [];
+
+        return is_array($result) ? $result : [];
     }
+
     /**
      * @param int $offset
      *
@@ -62,9 +78,12 @@ class CustomPriceRepository
     public function getRemainingSpecificPricesCount($offset)
     {
         $query = $this->getBaseQuery();
+
         $query->select('(COUNT(sp.id_specific_price) - ' . (int) $offset . ') as count');
+
         return (int) $this->db->getValue($query);
     }
+
     /**
      * @param \DbQuery $query
      *
@@ -78,6 +97,7 @@ class CustomPriceRepository
         $query->select('c.iso_code as country');
         $query->select('cur.iso_code as currency');
     }
+
     /**
      * @param int $limit
      * @param array $specificPriceIds
@@ -89,11 +109,17 @@ class CustomPriceRepository
     public function getSpecificPricesIncremental($limit, $specificPriceIds)
     {
         $query = $this->getBaseQuery();
+
         $this->addSelectParameters($query);
-        $query->where('sp.id_specific_price IN(' . \implode(',', \array_map('intval', $specificPriceIds)) . ')')->limit($limit);
+
+        $query->where('sp.id_specific_price IN(' . implode(',', array_map('intval', $specificPriceIds)) . ')')
+            ->limit($limit);
+
         $result = $this->db->executeS($query);
-        return \is_array($result) ? $result : [];
+
+        return is_array($result) ? $result : [];
     }
+
     /**
      * @param int $offset
      * @param int $limit
@@ -105,9 +131,16 @@ class CustomPriceRepository
     public function getQueryForDebug($offset, $limit)
     {
         $query = $this->getBaseQuery();
+
         $this->addSelectParameters($query);
+
         $query->limit($limit, $offset);
-        $queryStringified = \preg_replace('/\\s+/', ' ', $query->build());
-        return \array_merge((array) $query, ['queryStringified' => $queryStringified]);
+
+        $queryStringified = preg_replace('/\s+/', ' ', $query->build());
+
+        return array_merge(
+            (array) $query,
+            ['queryStringified' => $queryStringified]
+        );
     }
 }

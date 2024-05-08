@@ -21,7 +21,7 @@ namespace Psr\Http\Message;
  * be implemented such that they retain the internal state of the current
  * message and return an instance that contains the changed state.
  */
-interface RequestInterface extends \Psr\Http\Message\MessageInterface
+interface RequestInterface extends MessageInterface
 {
     /**
      * Retrieves the message's request target.
@@ -40,6 +40,7 @@ interface RequestInterface extends \Psr\Http\Message\MessageInterface
      * @return string
      */
     public function getRequestTarget();
+
     /**
      * Return an instance with the specific request-target.
      *
@@ -58,12 +59,14 @@ interface RequestInterface extends \Psr\Http\Message\MessageInterface
      * @return static
      */
     public function withRequestTarget($requestTarget);
+
     /**
      * Retrieves the HTTP method of the request.
      *
      * @return string Returns the request method.
      */
     public function getMethod();
+
     /**
      * Return an instance with the provided HTTP method.
      *
@@ -80,6 +83,7 @@ interface RequestInterface extends \Psr\Http\Message\MessageInterface
      * @throws \InvalidArgumentException for invalid HTTP methods.
      */
     public function withMethod($method);
+
     /**
      * Retrieves the URI instance.
      *
@@ -90,6 +94,7 @@ interface RequestInterface extends \Psr\Http\Message\MessageInterface
      *     representing the URI of the request.
      */
     public function getUri();
+
     /**
      * Returns an instance with the provided URI.
      *
@@ -120,5 +125,5 @@ interface RequestInterface extends \Psr\Http\Message\MessageInterface
      * @param bool $preserveHost Preserve the original state of the Host header.
      * @return static
      */
-    public function withUri(\Psr\Http\Message\UriInterface $uri, $preserveHost = \false);
+    public function withUri(UriInterface $uri, $preserveHost = false);
 }

@@ -3,6 +3,7 @@
 namespace PrestaShop\Module\PsEventbus\Repository;
 
 use Configuration;
+
 class ConfigurationRepository
 {
     /**

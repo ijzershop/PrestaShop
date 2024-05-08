@@ -55,7 +55,7 @@
               <td class="align-middle">
                 {if Module::isEnabled('dynamicproduct') && Product::isDynamicProduct($product)}
                   {assign var="dynamicProductConfig" value=Module::getInstanceByName('modernesmiddynamicproduct')->returnProductInitData($product)}
-                <span class="h6 product-title p-0"><a class="text-decoration-none text-dark" href="{$product.url}">{$product.name}</a></span><br /><small class="help-text">Indicatie prijs € {$dynamicProductConfig.default_price} is op basis van {$dynamicProductConfig.lengte}mm {$dynamicProductConfig.behandeling} {$product.name}</small><br /><span class="product-description-short">{$product.description_short nofilter}</span>
+                <span class="h6 product-title p-0"><a class="text-decoration-none text-dark" href="{$product.url}">{$product.name}</a></span><br /><small class="help-text">Indicatie prijs € {if Context::getContext()->cookie->price_vat_settings_incl === "true"}{Context::getContext()->currentLocale->formatPrice((float)$productPrices.final_prices.price_ttc_nr, 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice((float)$productPrices.final_prices.price_ht_nr, 'EUR')}{/if}  is op basis van {$dynamicProductConfig.lengte}mm {$dynamicProductConfig.behandeling} {$product.name}</small><br /><span class="product-description-short">{$product.description_short nofilter}</span>
                 {else}
                 <span class="h6 product-title p-0"><a class="text-decoration-none text-dark" href="{$product.url}">{$product.name}</a></span><br /><span class="product-description-short">{$product.description_short nofilter}</span>
                 {/if}

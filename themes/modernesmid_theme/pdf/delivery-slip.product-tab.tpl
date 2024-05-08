@@ -33,8 +33,10 @@
       {foreach $order_details as $idx => $order_detail}
       <tr nobr="true">
         <td></td>
-        <td style="{if count($order_details) > $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;" class="left"> <br><br>{if empty($order_detail.reference)}{else}{$order_detail.reference}{/if}</td>
-        <td style="{if count($order_details) > $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;" class="left"><br><br><span style="color:#000; font-weight: bold;line-height: 12pt">{AttributeGroup::stripSawCutModuleAttributeGroupName($order_detail.product_name)}</span>, <span style="color:#000;">{if isset($order_detail.product_desc_short)}{if (int)$order_detail.id_category_default != (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}{$order_detail.product_desc_short nofilter}{else}{$order_detail.product_desc_short nofilter}{/if}{/if}</span><br/>
+        <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;" class="left"> <br/><br>{if empty($order_detail.reference)}{else}{$order_detail.reference}{/if}</td>
+        <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;" class="left"><br><br><span style="color:#000; font-weight: bold;line-height: 12pt">{AttributeGroup::stripSawCutModuleAttributeGroupName($order_detail.product_name)|strip_tags nofilter}</span>,
+          <span style="color:#000;">{if isset($order_detail.product_desc_short)}{$order_detail.product_desc_short nofilter}{/if}</span>
+          <br/>
           {foreach $order_detail.customizedDatas as $customizationPerAddress}
           {foreach $customizationPerAddress as $customizationId => $customization}
           {if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
@@ -49,9 +51,7 @@
                     <tr>
                       <td colspan="2">
                         <br/>
-                       {* {$customization_infos.technical_image} *}
                         <img src="https://ijzershop.nl/{$customization_infos.technical_image}" width="200"  alt=""/>
-{*                        <img src="{Context::getContext()->shop->getBaseURL(false, false)}{$customization_infos.technical_image}.png" width="200"  alt=""/>*}
                       </td>
                     </tr>
                   </table>
@@ -67,8 +67,8 @@
           {/foreach}
           {/foreach}
         </td>
-        <td style="{if count($order_details) > $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;font-weight:bold;text-align:center;" class="left"><br><br>{$order_detail.product_quantity}</td>
-        <td style="{if count($order_details) > $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;text-align:right;" class="left"><br><br>{round(($order_detail.weight*$order_detail.product_quantity), 2)} {Configuration::get('PS_WEIGHT_UNIT')}</td>
+        <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;font-weight:bold;text-align:center;" class="left"><br><br>{$order_detail.product_quantity}</td>
+        <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;text-align:right;" class="left"><br><br>{round(($order_detail.weight*$order_detail.product_quantity), 2)} {Configuration::get('PS_WEIGHT_UNIT')}</td>
       </tr>
       {/foreach}
       <tr nobr="true"><td colspan="5"></td></tr>

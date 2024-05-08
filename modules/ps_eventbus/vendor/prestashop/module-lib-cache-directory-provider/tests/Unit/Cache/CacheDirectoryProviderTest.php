@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -18,25 +17,32 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
-namespace ps_eventbus_v3_0_7\Tests\Unit\Cache;
 
-use ps_eventbus_v3_0_7\PHPUnit\Framework\TestCase;
-use ps_eventbus_v3_0_7\PrestaShop\ModuleLibCacheDirectoryProvider\Cache\CacheDirectoryProvider;
+namespace Tests\Unit\Cache;
+
+use PHPUnit\Framework\TestCase;
+use PrestaShop\ModuleLibCacheDirectoryProvider\Cache\CacheDirectoryProvider;
+
 class CacheDirectoryProviderTest extends TestCase
 {
     public function testItIsReturnValidPathForVersionLessThan17()
     {
-        $cacheDirectory = new CacheDirectoryProvider('1.6.1.0', __DIR__, \true);
+        $cacheDirectory = new CacheDirectoryProvider('1.6.1.0', __DIR__, true);
+
         $this->assertSame(__DIR__ . '/cache', $cacheDirectory->getPath());
     }
+
     public function testItIsReturnValidPathForVersionLessThan174()
     {
-        $cacheDirectory = new CacheDirectoryProvider('1.7.0.0', __DIR__, \true);
+        $cacheDirectory = new CacheDirectoryProvider('1.7.0.0', __DIR__, true);
+
         $this->assertSame(__DIR__ . '/app/cache/dev', $cacheDirectory->getPath());
     }
+
     public function testItIsReturnValidPathForVersionGreaterThanEq174()
     {
-        $cacheDirectory = new CacheDirectoryProvider('1.7.4.0', __DIR__, \true);
+        $cacheDirectory = new CacheDirectoryProvider('1.7.4.0', __DIR__, true);
+
         $this->assertSame(__DIR__ . '/var/cache/dev', $cacheDirectory->getPath());
     }
 }

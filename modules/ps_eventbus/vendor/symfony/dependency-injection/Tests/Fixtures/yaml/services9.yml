@@ -1,6 +1,6 @@
 parameters:
     baz_class: BazClass
-    foo_class: ps_eventbus_v3_0_7\Bar\FooClass
+    foo_class: Bar\FooClass
     foo: bar
 
 services:
@@ -9,7 +9,7 @@ services:
         public: true
         synthetic: true
     foo:
-        class: ps_eventbus_v3_0_7\Bar\FooClass
+        class: Bar\FooClass
         tags:
             - { name: foo, foo: foo }
             - { name: foo, bar: bar, baz: baz }
@@ -19,7 +19,7 @@ services:
             - [setBar, ['@bar']]
             - [initialize, {  }]
 
-        factory: [ps_eventbus_v3_0_7\Bar\FooClass, getInstance]
+        factory: [Bar\FooClass, getInstance]
         configurator: sc_configure
         public: true
     foo.baz:
@@ -28,7 +28,7 @@ services:
         configurator: ['%baz_class%', configureStatic1]
         public: true
     bar:
-        class: ps_eventbus_v3_0_7\Bar\FooClass
+        class: Bar\FooClass
         arguments: [foo, '@foo.baz', '%foo_bar%']
         configurator: ['@foo.baz', configure]
         public: true
@@ -38,7 +38,7 @@ services:
         arguments: ['@deprecated_service']
         public: true
     method_call1:
-        class: ps_eventbus_v3_0_7\Bar\FooClass
+        class: Bar\FooClass
         file: '%path%foo.php'
         calls:
             - [setBar, ['@foo']]
@@ -119,8 +119,8 @@ services:
         factory: ['@new_factory', getInstance]
         public: true
     service_from_static_method:
-        class: ps_eventbus_v3_0_7\Bar\FooClass
-        factory: [ps_eventbus_v3_0_7\Bar\FooClass, getInstance]
+        class: Bar\FooClass
+        factory: [Bar\FooClass, getInstance]
         public: true
     factory_simple:
         class: SimpleFactoryClass

@@ -1,9 +1,10 @@
 <?php
 
-namespace ps_eventbus_v3_0_7\Http\Message\Encoding;
+namespace Http\Message\Encoding;
 
-use ps_eventbus_v3_0_7\Clue\StreamFilter as Filter;
+use Clue\StreamFilter as Filter;
 use Psr\Http\Message\StreamInterface;
+
 /**
  * Stream deflate (RFC 1951).
  *
@@ -17,9 +18,11 @@ class DeflateStream extends FilteredStream
     public function __construct(StreamInterface $stream, $level = -1)
     {
         parent::__construct($stream, ['window' => -15, 'level' => $level]);
+
         // @deprecated will be removed in 2.0
         $this->writeFilterCallback = Filter\fun($this->writeFilter(), ['window' => -15]);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -27,6 +30,7 @@ class DeflateStream extends FilteredStream
     {
         return 'zlib.deflate';
     }
+
     /**
      * {@inheritdoc}
      */

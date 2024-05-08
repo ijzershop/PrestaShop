@@ -8,11 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Symfony\Component\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\Reference;
+
 /**
  * Checks the validity of references.
  *
@@ -21,19 +23,21 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class CheckReferenceValidityPass extends \Symfony\Component\DependencyInjection\Compiler\AbstractRecursivePass
+class CheckReferenceValidityPass extends AbstractRecursivePass
 {
-    protected function processValue($value, $isRoot = \false)
+    protected function processValue($value, $isRoot = false)
     {
         if ($isRoot && $value instanceof Definition && ($value->isSynthetic() || $value->isAbstract())) {
             return $value;
         }
         if ($value instanceof Reference && $this->container->hasDefinition((string) $value)) {
             $targetDefinition = $this->container->getDefinition((string) $value);
+
             if ($targetDefinition->isAbstract()) {
-                throw new RuntimeException(\sprintf('The definition "%s" has a reference to an abstract definition "%s". Abstract definitions cannot be the target of references.', $this->currentId, $value));
+                throw new RuntimeException(sprintf('The definition "%s" has a reference to an abstract definition "%s". Abstract definitions cannot be the target of references.', $this->currentId, $value));
             }
         }
+
         return parent::processValue($value, $isRoot);
     }
 }

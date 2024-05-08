@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the league/oauth2-client library
  *
@@ -11,8 +12,7 @@
  * @link https://packagist.org/packages/league/oauth2-client Packagist
  * @link https://github.com/thephpleague/oauth2-client GitHub
  */
-
-namespace League\OAuth2\Client\Tool;
+namespace PrestaShop\Module\PsAccounts\Vendor\League\OAuth2\Client\Tool;
 
 /**
  * Provides generic array navigation tools.
@@ -29,24 +29,19 @@ trait ArrayAccessorTrait
      */
     private function getValueByKey(array $data, $key, $default = null)
     {
-        if (!is_string($key) || empty($key) || !count($data)) {
+        if (!\is_string($key) || empty($key) || !\count($data)) {
             return $default;
         }
-
-        if (strpos($key, '.') !== false) {
-            $keys = explode('.', $key);
-
+        if (\strpos($key, '.') !== \false) {
+            $keys = \explode('.', $key);
             foreach ($keys as $innerKey) {
-                if (!is_array($data) || !array_key_exists($innerKey, $data)) {
+                if (!\is_array($data) || !\array_key_exists($innerKey, $data)) {
                     return $default;
                 }
-
                 $data = $data[$innerKey];
             }
-
             return $data;
         }
-
-        return array_key_exists($key, $data) ? $data[$key] : $default;
+        return \array_key_exists($key, $data) ? $data[$key] : $default;
     }
 }

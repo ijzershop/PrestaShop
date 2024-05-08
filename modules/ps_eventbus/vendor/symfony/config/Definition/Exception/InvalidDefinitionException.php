@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Symfony\Component\Config\Definition\Exception;
 
 /**
@@ -15,6 +16,6 @@ namespace Symfony\Component\Config\Definition\Exception;
  *
  * @author Victor Berchet <victor.berchet@suumit.com>
  */
-class InvalidDefinitionException extends \Symfony\Component\Config\Definition\Exception\Exception
+class InvalidDefinitionException extends Exception
 {
 }

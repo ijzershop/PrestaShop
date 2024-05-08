@@ -1,12 +1,7 @@
 {
-    "name": "prestashop\/module-lib-cache-directory-provider",
+    "name": "prestashop/module-lib-cache-directory-provider",
     "description": "Cache directory provider to use on prestashop modules",
-    "keywords": [
-        "prestashop",
-        "modules",
-        "composer",
-        "package"
-    ],
+    "keywords": ["prestashop", "modules", "composer", "package"],
     "license": "AFL-3.0",
     "authors": [
         {
@@ -24,16 +19,16 @@
         "php": ">=5.6.0"
     },
     "require-dev": {
-        "phpunit\/phpunit": "~5.7"
+        "phpunit/phpunit": "~5.7"
     },
     "autoload": {
         "psr-4": {
-            "ps_eventbus_v3_0_7\\PrestaShop\\ModuleLibCacheDirectoryProvider\\": "src\/"
+            "PrestaShop\\ModuleLibCacheDirectoryProvider\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ps_eventbus_v3_0_7\\Tests\\": "tests\/"
+            "Tests\\": "tests/"
         }
     }
 }

@@ -1,6 +1,6 @@
 
 body {
-  font-size: 12px;
+  font-size: .8rem;
   color: $color_1;
 }
 
@@ -2397,4 +2397,12 @@ main {
   list-style: none;
   height: auto;
   bottom:95px;
+}
+
+
+.checkout-payment-step{
+  min-height: 50px;
+}
+body#checkout section.checkout-step.-unreachable .step-title{
+  padding-top: 1.25rem;
 }

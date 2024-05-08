@@ -1,8 +1,4 @@
-{*{extends file='checkout/_partials/steps/checkout-step.tpl'}*}
-
-
-
-
+{extends file='checkout/_partials/steps/checkout-step.tpl'}
 
 {block name='step_content'}
   {hook h='displayPersonalInformationTop' customer=$customer}
@@ -39,7 +35,7 @@
     <div class="clearfix">
       <form method="GET" action="{$urls.pages.order}">
         <button
-          class="continue btn btn-success w-100 float-xs-right"
+          class="continue w-100 btn btn-success float-xs-right"
           name="controller"
           type="submit"
           value="order"
@@ -51,10 +47,10 @@
     </div>
 
   {else}
-    <ul class="nav nav-tabs nav-justified nav-inline mt-4" role="tablist">
-      <li class="nav-item">
+    <ul class="nav nav-inline my-2 border-bottom" role="tablist">
+      <li class="nav-item col text-center">
         <a
-          class="nav-link text-success {if !$show_login_form}active{/if}"
+          class="nav-link h5 {if !$show_login_form}active text-dark{/if}"
           data-toggle="tab"
           href="#checkout-guest-form"
           role="tab"
@@ -68,9 +64,14 @@
           {/if}
         </a>
       </li>
-      <li class="nav-item">
+
+      <li class="nav-item col text-center">
+        <span class="nav-separator h6"> | </span>
+      </li>
+
+      <li class="nav-item col text-center">
         <a
-          class="nav-link text-dark {if $show_login_form}active{/if}"
+          class="nav-link h5 {if $show_login_form}active text-dark{/if}"
           data-link-action="show-login-form"
           data-toggle="tab"
           href="#checkout-login-form"
@@ -84,10 +85,10 @@
     </ul>
 
     <div class="tab-content">
-      <div class="border-left border-right border-bottom p-2 pt-4 tab-pane {if !$show_login_form}active{/if}" id="checkout-guest-form" role="tabpanel" {if $show_login_form}aria-hidden="true"{/if}>
+      <div class="tab-pane {if !$show_login_form}active{/if}" id="checkout-guest-form" role="tabpanel" {if $show_login_form}aria-hidden="true"{/if}>
         {render file='checkout/_partials/customer-form.tpl' ui=$register_form guest_allowed=$guest_allowed}
       </div>
-      <div class="border-left border-right border-bottom p-2 pt-4 tab-pane {if $show_login_form}active{/if}" id="checkout-login-form" role="tabpanel" {if !$show_login_form}aria-hidden="true"{/if}>
+      <div class="tab-pane {if $show_login_form}active{/if}" id="checkout-login-form" role="tabpanel" {if !$show_login_form}aria-hidden="true"{/if}>
         {render file='checkout/_partials/login-form.tpl' ui=$login_form}
       </div>
     </div>

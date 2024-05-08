@@ -1,9 +1,10 @@
 <?php
 
-namespace ps_eventbus_v3_0_7\Http\Message\Authentication;
+namespace Http\Message\Authentication;
 
-use ps_eventbus_v3_0_7\Http\Message\Authentication;
+use Http\Message\Authentication;
 use Psr\Http\Message\RequestInterface;
+
 /**
  * Authenticate a PSR-7 Request using WSSE.
  *
@@ -15,14 +16,17 @@ final class Wsse implements Authentication
      * @var string
      */
     private $username;
+
     /**
      * @var string
      */
     private $password;
+
     /**
      * @var string
      */
     private $hashAlgorithm;
+
     /**
      * @param string $username
      * @param string $password
@@ -32,20 +36,32 @@ final class Wsse implements Authentication
     {
         $this->username = $username;
         $this->password = $password;
-        if (\false === \in_array($hashAlgorithm, \hash_algos())) {
-            throw new \InvalidArgumentException(\sprintf('Unaccepted hashing algorithm: %s', $hashAlgorithm));
+        if (false === in_array($hashAlgorithm, hash_algos())) {
+            throw new \InvalidArgumentException(sprintf('Unaccepted hashing algorithm: %s', $hashAlgorithm));
         }
         $this->hashAlgorithm = $hashAlgorithm;
     }
+
     /**
      * {@inheritdoc}
      */
     public function authenticate(RequestInterface $request)
     {
-        $nonce = \substr(\md5(\uniqid(\uniqid() . '_', \true)), 0, 16);
-        $created = \date('c');
-        $digest = \base64_encode(\hash($this->hashAlgorithm, \base64_decode($nonce) . $created . $this->password, \true));
-        $wsse = \sprintf('UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"', $this->username, $digest, $nonce, $created);
-        return $request->withHeader('Authorization', 'WSSE profile="UsernameToken"')->withHeader('X-WSSE', $wsse);
+        $nonce = substr(md5(uniqid(uniqid().'_', true)), 0, 16);
+        $created = date('c');
+        $digest = base64_encode(hash($this->hashAlgorithm, base64_decode($nonce).$created.$this->password, true));
+
+        $wsse = sprintf(
+            'UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"',
+            $this->username,
+            $digest,
+            $nonce,
+            $created
+        );
+
+        return $request
+            ->withHeader('Authorization', 'WSSE profile="UsernameToken"')
+            ->withHeader('X-WSSE', $wsse)
+        ;
     }
 }

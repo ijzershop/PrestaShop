@@ -40,15 +40,16 @@
 
 
 
-  <form action="{block name='customer_form_actionurl'}{$action}{/block}" id="customer-form" class="js-customer-form" autocomplete="off" method="post">
+  <form action="{block name='customer_form_actionurl'}{$action}{/block}" id="customer-form" class="js-customer-form {$action}" autocomplete="off" method="post">
     <section>
       {block "form_fields"}
       {foreach from=$formFields item="field"}
-        {if $field.name != 'informer_identification'}
+        {if $field.name === 'id_gender'}
+        {elseif $field.name != 'informer_identification'}
           {block "form_field"}
           {form_field field=$field}
           {* Add email validation *}
-          {if $field.name == 'email' && (strpos($action, 'create_account') !== false || strpos($action, 'bestelling') !== false || strpos($action, 'identiteit') !== false)}
+          {if $field.name == 'email' && (strpos($action, 'create_account') !== false || strpos($action, 'bestelling') !== false || strpos($action, 'order') !== false || strpos($action, 'identiteit') !== false)}
             {assign var="validate_email" value=true}
           <div class="form-group row ">
             <label class="col-md-3 form-control-label required">
@@ -56,8 +57,6 @@
             </label>
             <div class="col-md-9">
               <input class="form-control" name="validate_email" type="email" value="" required="required" autocomplete="false">
-            </div>
-            <div class="col-md-3 form-control-comment">
             </div>
           </div>
           {/if}

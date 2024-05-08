@@ -1,8 +1,9 @@
 <?php
 
-namespace ps_eventbus_v3_0_7\Http\Message;
+namespace Http\Message;
 
-use ps_eventbus_v3_0_7\Http\Message\Exception\UnexpectedValueException;
+use Http\Message\Exception\UnexpectedValueException;
+
 final class CookieUtil
 {
     /**
@@ -11,7 +12,17 @@ final class CookieUtil
      *
      * @var array
      */
-    private static $dateFormats = ['D, d M y H:i:s T', 'D, d M Y H:i:s T', 'D, d-M-y H:i:s T', 'D, d-M-Y H:i:s T', 'D, d-m-y H:i:s T', 'D, d-m-Y H:i:s T', 'D M j G:i:s Y', 'D M d H:i:s Y T'];
+    private static $dateFormats = [
+        'D, d M y H:i:s T',
+        'D, d M Y H:i:s T',
+        'D, d-M-y H:i:s T',
+        'D, d-M-Y H:i:s T',
+        'D, d-m-y H:i:s T',
+        'D, d-m-Y H:i:s T',
+        'D M j G:i:s Y',
+        'D M d H:i:s Y T',
+    ];
+
     /**
      * @see https://github.com/symfony/symfony/blob/master/src/Symfony/Component/BrowserKit/Cookie.php
      *
@@ -24,14 +35,19 @@ final class CookieUtil
     public static function parseDate($dateValue)
     {
         foreach (self::$dateFormats as $dateFormat) {
-            if (\false !== ($date = \DateTime::createFromFormat($dateFormat, $dateValue, new \DateTimeZone('GMT')))) {
+            if (false !== $date = \DateTime::createFromFormat($dateFormat, $dateValue, new \DateTimeZone('GMT'))) {
                 return $date;
             }
         }
+
         // attempt a fallback for unusual formatting
-        if (\false !== ($date = \date_create($dateValue, new \DateTimeZone('GMT')))) {
+        if (false !== $date = date_create($dateValue, new \DateTimeZone('GMT'))) {
             return $date;
         }
-        throw new UnexpectedValueException(\sprintf('Unparseable cookie date string "%s"', $dateValue));
+
+        throw new UnexpectedValueException(sprintf(
+            'Unparseable cookie date string "%s"',
+            $dateValue
+        ));
     }
 }

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Symfony\Component\Yaml\Exception;
 
 /**
@@ -15,6 +16,6 @@ namespace Symfony\Component\Yaml\Exception;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class DumpException extends \Symfony\Component\Yaml\Exception\RuntimeException
+class DumpException extends RuntimeException
 {
 }

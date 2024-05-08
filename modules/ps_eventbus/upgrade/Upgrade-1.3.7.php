@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * @param Ps_eventbus $module
  *
@@ -28,5 +26,6 @@ function upgrade_module_1_3_7($module)
     $module->registerhook('actionObjectTaxRulesGroupUpdateAfter');
     $module->registerhook('actionObjectTaxRulesGroupDeleteAfter');
     $module->registerhook('actionShippingPreferencesPageSave');
-    return \true;
+
+    return true;
 }

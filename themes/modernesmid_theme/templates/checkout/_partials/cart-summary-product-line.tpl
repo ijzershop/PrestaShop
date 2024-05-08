@@ -22,32 +22,73 @@
   * @license https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
   * International Registered Trademark & Property of PrestaShop SA
   *}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   {block name='cart_summary_product_line'}
   <table class="w-100">
-    <tr>
-      <td class="text-center" width="90px" {if is_array($product.customizations) && $product.customizations|count}rowspan="2" {/if}> <a href="{$product.url}" title="{$product.name}">
-        <picture>
-          <img class="media-object" width="50px" height="auto" src="{$product.cover.bySize.medium_default.url}" alt="{$product.name}">
-        </picture>
+    <tr><td rowspan="3" class="" style="width: 50px;padding-right:12px; ">
+        <span class="product-quantity" style="font-size:.8rem;font-weight:bold;border-radius: 50%;background-color: #3b56ad;padding:3px;color:#fff;display:inline-block;
+   height:30px;
+   line-height:23px;
+   min-width:30px;
+   text-align: center;
+position: absolute;
+  left: 35px;
+  top: 5px;">
+          {$product.quantity}</span>
+
+             <a href="{$product.url}" title="{$product.name}">
+          {if isset($product.cover.bySize.medium_default.url)}
+            <picture>
+              <img class="media-object" width="100%" height="auto" src="{$product.cover.bySize.medium_default.url}" alt="{$product.name}">
+            </picture>
+          {/if}
         </a>
       </td>
-      <td class="pl-1"><span class="product-quantity font-weight-bold">{$product.quantity}x</span> <span class="product-name font-weight-bold">{$product.name}</span>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <div class="product-title text-left">
+          <a class="pl-1" href="{$product.url|escape:'quotes'}">{$product.name|escape:'quotes'}</a>
+        </div>
       </td>
-      <td class="text-right">
-        <span class="product-price float-xs-right font-weight-bold">{Context::getContext()->currentLocale->formatPrice($product.price_with_reduction_without_tax*(int)$product.quantity, 'EUR')}</span>
+
+    </tr>
+    <tr class="text-condensed">
+      <td colspan="2" class="text-left" style="font-size: 1.2rem;
+  line-height: 1.5rem;
+  font-weight: 600 !important;
+  color: #000 !important;
+  vertical-align: text-top;">
+        <span class="product-price font-weight-bold">{Context::getContext()->currentLocale->formatPrice($product.price_with_reduction_without_tax*(int)$product.quantity, 'EUR')}</span>
         {if $product.price_without_reduction_without_tax != $product.price_with_reduction_without_tax}
-        <br><span class="product-price regular-price float-xs-right">{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax*(int)$product.quantity, 'EUR')}</span>
+          <br><span class="product-price regular-price">
+          {Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax*(int)$product.quantity, 'EUR')}</span>
         {/if}
+
       </td>
     </tr>
     {if is_array($product.customizations) && $product.customizations|count}
     {foreach from=$product.customizations item="customization"}
     {foreach from=$customization.fields item="field"}<li>
-      <tr>
-        {if $field.label === 'zaaginstructies' || $field.label === 'instructies' || $field.label === 'knipinstructies'}
-        <td colspan="2" class="font-italic pl-1">{$field.label}: {$field.text nofilter}</td>{else}
-        <td>{$field.label}
-          {if $field.type == 'text'}
+      <tr class="text-sm">
+        {if ($field.label === 'zaaginstructies' || $field.label === 'instructies' || $field.label === 'knipinstructies') && !Product::isDynamicProduct($product) }
+        <td colspan="2" class="font-italic pl-1">{$field.label}: {$field.text nofilter}</td>
+        {else}
+        <td colspan="2">{if !Product::isDynamicProduct($product)}{$field.label}{/if}
+        {if $field.type == 'text'}
           {$field.text nofilter}</td>
         {elseif $field.type == 'image'}
         <img src="{$field.image.small.url}" alt="{$field.label}" /></td>

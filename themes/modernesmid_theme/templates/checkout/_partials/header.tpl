@@ -22,18 +22,16 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-{block name='header'}
-  {block name='header_nav'}
+
     <nav class="header-nav">
       <div class="container">
         <div class="row">
-      <div class="col-12 col-lg-6 p-0 mx-auto" id="desktop_logo">
-        <a class="header-logo-a" href="{$urls.base_url}">
-          <img id="header-logo-img" class="logo w-100" src="{$shop.logo}" alt="{$shop.name}">
-        </a>
-      </div>
-    </div>
+          <div class="col-12 col-lg-6 p-0 mx-auto" id="desktop_logo">
+            <a class="header-logo-a" href="{$urls.base_url}">
+              <img id="header-logo-img" class="logo w-100" src="{$shop.logo}" alt="{$shop.name}">
+            </a>
+          </div>
+        </div>
       </div>
     </nav>
-  {/block}
-{/block}
+

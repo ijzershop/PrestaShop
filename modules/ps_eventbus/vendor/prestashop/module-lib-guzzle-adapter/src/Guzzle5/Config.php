@@ -1,8 +1,9 @@
 <?php
 
-namespace ps_eventbus_v3_0_7\Prestashop\ModuleLibGuzzleAdapter\Guzzle5;
+namespace Prestashop\ModuleLibGuzzleAdapter\Guzzle5;
 
-use ps_eventbus_v3_0_7\Prestashop\ModuleLibGuzzleAdapter\Interfaces\ConfigInterface;
+use Prestashop\ModuleLibGuzzleAdapter\Interfaces\ConfigInterface;
+
 class Config implements ConfigInterface
 {
     /**
@@ -14,18 +15,23 @@ class Config implements ConfigInterface
             $config['defaults']['timeout'] = $config['timeout'];
             unset($config['timeout']);
         }
+
         if (isset($config['headers'])) {
             $config['defaults']['headers'] = $config['headers'];
             unset($config['headers']);
         }
+
         if (isset($config['http_errors'])) {
             $config['defaults']['exceptions'] = $config['http_errors'];
             unset($config['http_errors']);
         }
+
         if (isset($config['base_uri'])) {
             $config['base_url'] = $config['base_uri'];
+
             unset($config['base_uri']);
         }
+
         return $config;
     }
 }

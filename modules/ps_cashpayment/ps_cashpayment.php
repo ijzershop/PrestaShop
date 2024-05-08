@@ -173,7 +173,7 @@ public function addOrderState($name)
         $newOption->setModuleName($this->name)
                 ->setCallToActionText($this->trans('Cash payment', array(), 'Modules.Cashpayment.Shop'))
                 ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
-                ->setLogo(_MODULE_DIR_ .'/ps_cashpayment/ps_cashpayment.png')
+                ->setLogo(_MODULE_DIR_ .'/ps_cashpayment/ps_cashpayment.svg')
                 ->setAdditionalInformation($this->fetch('module:ps_cashpayment/views/templates/hook/ps_cashpayment_intro.tpl'));
         $payment_options = [
             $newOption,

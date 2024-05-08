@@ -79,7 +79,7 @@
           {block name='form_field_comment'}
             {if (!$field.required && !in_array($field.type, ['radio-buttons', 'checkbox']))}
               {if $field.name != 'phone'}
-                 {l s='(Optional)' d='Shop.Forms.Labels'}
+                <span class="font-italic">{l s='(optioneel)' d='Shop.Forms.Labels'}</span>
               {/if}
             {/if}
           {/block}
@@ -88,7 +88,9 @@
     </label>
     {/if}
     <div class="{if ($field.type === 'radio-buttons')} form-control-valign{/if}">
-
+    {if empty($countryId)}
+      {assign var="countryId" value="13"}
+    {/if}
     {include file='_partials/form-fields-list.tpl' countryId=$countryId}
 
     </div>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the league/oauth2-client library
  *
@@ -11,8 +12,7 @@
  * @link https://packagist.org/packages/league/oauth2-client Packagist
  * @link https://github.com/thephpleague/oauth2-client GitHub
  */
-
-namespace League\OAuth2\Client\Provider\Exception;
+namespace PrestaShop\Module\PsAccounts\Vendor\League\OAuth2\Client\Provider\Exception;
 
 /**
  * Exception thrown if the provider response contains errors.
@@ -23,23 +23,20 @@ class IdentityProviderException extends \Exception
      * @var mixed
      */
     protected $response;
-
     /**
      * @param string $message
      * @param int $code
-     * @param array|string $response The response body
+     * @param mixed $response The response body
      */
     public function __construct($message, $code, $response)
     {
         $this->response = $response;
-
         parent::__construct($message, $code);
     }
-
     /**
      * Returns the exception's response body.
      *
-     * @return array|string
+     * @return mixed
      */
     public function getResponseBody()
     {

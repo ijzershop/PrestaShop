@@ -46,8 +46,11 @@
               {block name='form_field'}
                 {if $field.type == 'countrySelect'}
                   {assign var="countryId" value=$field.value}
+                  {form_field field=$field countryId=$countryId  file="_partials/form-fields-address.tpl"}
+                {elseif $field.name === 'id_gender'}
+                {else}
+                  {form_field field=$field countryId=$countryId  file="_partials/form-fields-address.tpl"}
                 {/if}
-                {form_field field=$field countryId=$countryId  file="_partials/form-fields-address.tpl"}
 
               {/block}
             {/foreach}

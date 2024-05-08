@@ -1,6 +1,6 @@
 <?php
 
-namespace GuzzleHttp\Promise;
+namespace PrestaShop\Module\PsAccounts\Vendor\GuzzleHttp\Promise;
 
 /**
  * Interface used with classes that return a promise.

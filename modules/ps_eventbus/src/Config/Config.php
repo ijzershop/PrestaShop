@@ -15,7 +15,18 @@ class Config
     public const INVALID_URL_QUERY = 458;
     public const INVALID_PS_ACCOUNTS_VERSION = 459;
     public const PS_ACCOUNTS_NOT_INSTALLED = 460;
-    public const HTTP_STATUS_MESSAGES = [self::REFRESH_TOKEN_ERROR_CODE => 'Cannot refresh token', self::ENV_MISCONFIGURED_ERROR_CODE => 'Environment misconfigured', self::DATABASE_QUERY_ERROR_CODE => 'Database syntax error', self::DATABASE_INSERT_ERROR_CODE => 'Failed to write to database', self::PS_FACEBOOK_NOT_INSTALLED => 'Cannot sync Taxonomies without Facebook module', self::INVALID_URL_QUERY => 'Invalid URL query', self::INVALID_PS_ACCOUNTS_VERSION => 'Invalid PsAccounts version', self::PS_ACCOUNTS_NOT_INSTALLED => 'PsAccounts not installed'];
+
+    public const HTTP_STATUS_MESSAGES = [
+        self::REFRESH_TOKEN_ERROR_CODE => 'Cannot refresh token',
+        self::ENV_MISCONFIGURED_ERROR_CODE => 'Environment misconfigured',
+        self::DATABASE_QUERY_ERROR_CODE => 'Database syntax error',
+        self::DATABASE_INSERT_ERROR_CODE => 'Failed to write to database',
+        self::PS_FACEBOOK_NOT_INSTALLED => 'Cannot sync Taxonomies without Facebook module',
+        self::INVALID_URL_QUERY => 'Invalid URL query',
+        self::INVALID_PS_ACCOUNTS_VERSION => 'Invalid PsAccounts version',
+        self::PS_ACCOUNTS_NOT_INSTALLED => 'PsAccounts not installed',
+    ];
+
     public const COLLECTION_CARRIERS = 'carriers';
     public const COLLECTION_CARTS = 'carts';
     public const COLLECTION_CART_PRODUCTS = 'cart_products';
@@ -50,6 +61,7 @@ class Config
     public const COLLECTION_TRANSLATIONS = 'translations';
     public const COLLECTION_IMAGES = 'images';
     public const COLLECTION_IMAGE_TYPES = 'image_types';
+
     /**
      * @param mixed $message
      *
@@ -57,6 +69,6 @@ class Config
      */
     public static function dev_log($message)
     {
-        \file_put_contents('/var/www/html/php.log', $message . \PHP_EOL, \FILE_APPEND);
+        file_put_contents('/var/www/html/php.log', $message . PHP_EOL, FILE_APPEND);
     }
 }

@@ -80,7 +80,3 @@
   </div>
 </section>
 
-
-<script>
-  setSelect2ForOnCredit();
-</script>

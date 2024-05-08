@@ -50,7 +50,7 @@
     </section>
     <br>
     {block name='login_form_footer'}
-      <footer class="form-footer position-absolute col-12 pt-3 pb-3" style="bottom:10px;left:0">
+      <footer class="form-footer col-12 pt-3 pb-3 w-100">
         <input type="hidden" name="submitLogin" value="1">
         {block name='form_buttons'}
           <button id="submit-login" class="btn btn-primary w-100" data-link-action="sign-in" type="submit" class="form-control-submit">

@@ -13,7 +13,10 @@ function renderAddressOption(address){
     'value="">  jelmer Stoker - Ceresweg 8938 BG 1  </option>';
 }
 
-function setSelect2ForOnCredit(){
+
+$(document).ready(function(){
+
+  let setSelect2ForOnCredit = function(){
     $('#on_credit_customer_select').select2({
       ajax: {
         url: prestashop.urls.base_url + 'index.php?fc=module&module=ps_creditpayment&controller=ajax',
@@ -25,3 +28,5 @@ function setSelect2ForOnCredit(){
       cache: true,
     });
   }
+  setSelect2ForOnCredit();
+});

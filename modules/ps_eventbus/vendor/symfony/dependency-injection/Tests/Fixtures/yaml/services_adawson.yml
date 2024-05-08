@@ -1,28 +1,28 @@
 services:
-    ps_eventbus_v3_0_7\App\Db:
+    App\Db:
         public: true
         properties:
-            schema: '@ps_eventbus_v3_0_7\App\Schema'
+            schema: '@App\Schema'
 
-    ps_eventbus_v3_0_7\App\Bus:
+    App\Bus:
         public: true
-        arguments: ['@ps_eventbus_v3_0_7\App\Db']
+        arguments: ['@App\Db']
         properties:
-            handler1: '@ps_eventbus_v3_0_7\App\Handler1'
-            handler2: '@ps_eventbus_v3_0_7\App\Handler2'
+            handler1: '@App\Handler1'
+            handler2: '@App\Handler2'
 
-    ps_eventbus_v3_0_7\App\Handler1:
-        ['@ps_eventbus_v3_0_7\App\Db', '@ps_eventbus_v3_0_7\App\Schema', '@ps_eventbus_v3_0_7\App\Processor']
+    App\Handler1:
+        ['@App\Db', '@App\Schema', '@App\Processor']
 
-    ps_eventbus_v3_0_7\App\Handler2:
-        ['@ps_eventbus_v3_0_7\App\Db', '@ps_eventbus_v3_0_7\App\Schema', '@ps_eventbus_v3_0_7\App\Processor']
+    App\Handler2:
+        ['@App\Db', '@App\Schema', '@App\Processor']
 
-    ps_eventbus_v3_0_7\App\Processor:
-        ['@ps_eventbus_v3_0_7\App\Registry', '@ps_eventbus_v3_0_7\App\Db']
+    App\Processor:
+        ['@App\Registry', '@App\Db']
 
-    ps_eventbus_v3_0_7\App\Registry:
+    App\Registry:
         properties:
-            processor: ['@ps_eventbus_v3_0_7\App\Db', '@ps_eventbus_v3_0_7\App\Bus']
+            processor: ['@App\Db', '@App\Bus']
 
-    ps_eventbus_v3_0_7\App\Schema:
-        arguments: ['@ps_eventbus_v3_0_7\App\Db']
+    App\Schema:
+        arguments: ['@App\Db']

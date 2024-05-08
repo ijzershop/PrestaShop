@@ -1,6 +1,6 @@
 <?php
 
-namespace GuzzleHttp\Exception;
+namespace PrestaShop\Module\PsAccounts\Vendor\GuzzleHttp\Exception;
 
 class TooManyRedirectsException extends RequestException
 {

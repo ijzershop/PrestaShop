@@ -14,6 +14,7 @@ interface PaginatedApiDataProviderInterface
      * @@throws \PrestaShopDatabaseException
      */
     public function getFormattedData($offset, $limit, $langIso);
+
     /**
      * @param int $offset
      * @param string $langIso
@@ -23,6 +24,7 @@ interface PaginatedApiDataProviderInterface
      * @@throws \PrestaShopDatabaseException
      */
     public function getRemainingObjectsCount($offset, $langIso);
+
     /**
      * @param int $limit
      * @param string $langIso
@@ -33,6 +35,7 @@ interface PaginatedApiDataProviderInterface
      * @@throws \PrestaShopDatabaseException
      */
     public function getFormattedDataIncremental($limit, $langIso, $objectIds);
+
     /**
      * @param int $offset
      * @param int $limit

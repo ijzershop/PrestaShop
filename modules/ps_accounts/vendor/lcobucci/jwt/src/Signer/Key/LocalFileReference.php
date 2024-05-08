@@ -1,18 +1,15 @@
 <?php
 
-namespace Lcobucci\JWT\Signer\Key;
+namespace PrestaShop\Module\PsAccounts\Vendor\Lcobucci\JWT\Signer\Key;
 
-use Lcobucci\JWT\Signer\Key;
-
+use PrestaShop\Module\PsAccounts\Vendor\Lcobucci\JWT\Signer\Key;
 use function file_exists;
 use function strpos;
 use function substr;
-
 /** @deprecated Use \Lcobucci\JWT\Signer\Key\InMemory::file() instead */
 final class LocalFileReference extends Key
 {
     const PATH_PREFIX = 'file://';
-
     /**
      * @param string $path
      * @param string $passphrase
@@ -26,7 +23,6 @@ final class LocalFileReference extends Key
         if (strpos($path, self::PATH_PREFIX) === 0) {
             $path = substr($path, 7);
         }
-
         return new self(self::PATH_PREFIX . $path, $passphrase);
     }
 }

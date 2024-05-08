@@ -244,7 +244,7 @@ class Ps_Creditpayment extends PaymentModule
         $is_balie_employee = Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id;
 
         $add_to_list = false;
-        if ($is_balie_employee) {
+//        if ($is_balie_employee) {
             $add_to_list = true;
             for ($i = 0; $i <= count($customersWithGroup); $i++) {
                 if (isset($customersWithGroup[$i])) {
@@ -255,7 +255,7 @@ class Ps_Creditpayment extends PaymentModule
                         'email' => $customersWithGroup[$i]['email']));
                 }
             }
-        }
+//        }
 //        else {
 //
 //            var_export(!Configuration::get('MSTHEMECONFIG_SHOW_ONCREDIT_CUSTOMER'));
@@ -283,7 +283,7 @@ class Ps_Creditpayment extends PaymentModule
             $newOption->setModuleName($this->name)
                 ->setCallToActionText($this->trans('Betalen met credit', array(), 'Modules.Creditpayment.Shop'))
                 ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
-                ->setLogo(_MODULE_DIR_ . '/ps_creditpayment/ps_creditpayment.png')
+                ->setLogo(_MODULE_DIR_ . '/ps_creditpayment/ps_creditpayment.svg')
                 ->setAdditionalInformation($this->fetch('module:ps_creditpayment/views/templates/hook/ps_creditpayment_intro.tpl'));
 
             $payment_options = [

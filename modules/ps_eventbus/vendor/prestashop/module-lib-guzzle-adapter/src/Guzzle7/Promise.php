@@ -1,15 +1,17 @@
 <?php
 
-declare (strict_types=1);
-namespace ps_eventbus_v3_0_7\Prestashop\ModuleLibGuzzleAdapter\Guzzle7;
+declare(strict_types=1);
+
+namespace Prestashop\ModuleLibGuzzleAdapter\Guzzle7;
 
 use GuzzleHttp\Exception as GuzzleExceptions;
 use GuzzleHttp\Promise\PromiseInterface;
 use Http\Client\Exception as HttplugException;
-use ps_eventbus_v3_0_7\Http\Promise\Promise as HttpPromise;
-use ps_eventbus_v3_0_7\Prestashop\ModuleLibGuzzleAdapter\Guzzle7\Exception\UnexpectedValueException;
+use Http\Promise\Promise as HttpPromise;
+use Prestashop\ModuleLibGuzzleAdapter\Guzzle7\Exception\UnexpectedValueException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+
 /**
  * Wrapper around Guzzle promises.
  *
@@ -21,22 +23,27 @@ final class Promise implements HttpPromise
      * @var PromiseInterface
      */
     private $promise;
+
     /**
      * @var string State of the promise
      */
     private $state;
+
     /**
      * @var ResponseInterface
      */
     private $response;
+
     /**
      * @var HttplugException
      */
     private $exception;
+
     /**
      * @var RequestInterface
      */
     private $request;
+
     public function __construct(PromiseInterface $promise, RequestInterface $request)
     {
         $this->request = $request;
@@ -44,9 +51,11 @@ final class Promise implements HttpPromise
         $this->promise = $promise->then(function ($response) {
             $this->response = $response;
             $this->state = self::FULFILLED;
+
             return $response;
-        }, function ($reason) use($request) {
+        }, function ($reason) use ($request) {
             $this->state = self::REJECTED;
+
             if ($reason instanceof HttplugException) {
                 $this->exception = $reason;
             } elseif ($reason instanceof GuzzleExceptions\GuzzleException) {
@@ -56,9 +65,11 @@ final class Promise implements HttpPromise
             } else {
                 $this->exception = new UnexpectedValueException('Reason returned from Guzzle7 must be an Exception');
             }
+
             throw $this->exception;
         });
     }
+
     /**
      * {@inheritdoc}
      */
@@ -66,6 +77,7 @@ final class Promise implements HttpPromise
     {
         return new static($this->promise->then($onFulfilled, $onRejected), $this->request);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -73,19 +85,23 @@ final class Promise implements HttpPromise
     {
         return $this->state;
     }
+
     /**
      * {@inheritdoc}
      */
-    public function wait($unwrap = \true)
+    public function wait($unwrap = true)
     {
-        $this->promise->wait(\false);
+        $this->promise->wait(false);
+
         if ($unwrap) {
             if (self::REJECTED == $this->getState()) {
                 throw $this->exception;
             }
+
             return $this->response;
         }
     }
+
     /**
      * Converts a Guzzle exception into an Httplug exception.
      *
@@ -96,13 +112,21 @@ final class Promise implements HttpPromise
         if ($exception instanceof GuzzleExceptions\ConnectException) {
             return new HttplugException\NetworkException($exception->getMessage(), $exception->getRequest(), $exception);
         }
+
         if ($exception instanceof GuzzleExceptions\RequestException) {
             // Make sure we have a response for the HttpException
             if ($exception->hasResponse()) {
-                return new HttplugException\HttpException($exception->getMessage(), $exception->getRequest(), $exception->getResponse(), $exception);
+                return new HttplugException\HttpException(
+                    $exception->getMessage(),
+                    $exception->getRequest(),
+                    $exception->getResponse(),
+                    $exception
+                );
             }
+
             return new HttplugException\RequestException($exception->getMessage(), $exception->getRequest(), $exception);
         }
+
         return new HttplugException\TransferException($exception->getMessage(), 0, $exception);
     }
 }

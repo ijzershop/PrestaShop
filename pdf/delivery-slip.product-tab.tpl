@@ -46,23 +46,7 @@
 					{/if}
 				</td>
 				<td class="product left">
-					{if $display_product_images}
-						<table width="100%">
-							<tr>
-								<td width="15%">
-									{if isset($order_detail.image) && $order_detail.image->id}
-										{$order_detail.image_tag}
-									{/if}
-								</td>
-								<td width="5%">&nbsp;</td>
-								<td width="80%">
-									{$order_detail.product_name}
-								</td>
-							</tr>
-						</table>
-					{else}
 						{$order_detail.product_name}
-					{/if}
 				</td>
 				<td class="product center">
 					{$order_detail.product_quantity}

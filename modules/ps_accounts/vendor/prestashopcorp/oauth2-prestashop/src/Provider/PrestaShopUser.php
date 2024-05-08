@@ -2,20 +2,17 @@
 
 namespace PrestaShop\OAuth2\Client\Provider;
 
-use League\OAuth2\Client\Provider\ResourceOwnerInterface;
-use League\OAuth2\Client\Tool\ArrayAccessorTrait;
-
+use PrestaShop\Module\PsAccounts\Vendor\League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use PrestaShop\Module\PsAccounts\Vendor\League\OAuth2\Client\Tool\ArrayAccessorTrait;
 class PrestaShopUser implements ResourceOwnerInterface
 {
     use ArrayAccessorTrait;
-
     /**
      * Raw response
      *
      * @var array
      */
     protected $response;
-
     /**
      * Creates new resource owner.
      *
@@ -25,7 +22,6 @@ class PrestaShopUser implements ResourceOwnerInterface
     {
         $this->response = $response;
     }
-
     /**
      * Get resource owner uuid
      *
@@ -35,7 +31,6 @@ class PrestaShopUser implements ResourceOwnerInterface
     {
         return $this->getValueByKey($this->response, 'sub');
     }
-
     /**
      * Get resource owner name
      *
@@ -45,7 +40,6 @@ class PrestaShopUser implements ResourceOwnerInterface
     {
         return $this->getValueByKey($this->response, 'name');
     }
-
     /**
      * Get resource owner email
      *
@@ -55,7 +49,6 @@ class PrestaShopUser implements ResourceOwnerInterface
     {
         return $this->getValueByKey($this->response, 'email');
     }
-
     /**
      * Get resource owner email verified
      *
@@ -65,7 +58,6 @@ class PrestaShopUser implements ResourceOwnerInterface
     {
         return $this->getValueByKey($this->response, 'email_verified');
     }
-
     /**
      * Get resource owner picture
      *
@@ -75,7 +67,6 @@ class PrestaShopUser implements ResourceOwnerInterface
     {
         return $this->getValueByKey($this->response, 'picture');
     }
-
     /**
      * @return array
      */

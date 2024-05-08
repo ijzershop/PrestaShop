@@ -1,9 +1,10 @@
 <?php
 
-namespace ps_eventbus_v3_0_7\Http\Message\Authentication;
+namespace Http\Message\Authentication;
 
-use ps_eventbus_v3_0_7\Http\Message\Authentication;
+use Http\Message\Authentication;
 use Psr\Http\Message\RequestInterface;
+
 /**
  * Authenticate a PSR-7 Request using Basic Auth.
  *
@@ -15,10 +16,12 @@ final class BasicAuth implements Authentication
      * @var string
      */
     private $username;
+
     /**
      * @var string
      */
     private $password;
+
     /**
      * @param string $username
      * @param string $password
@@ -28,12 +31,14 @@ final class BasicAuth implements Authentication
         $this->username = $username;
         $this->password = $password;
     }
+
     /**
      * {@inheritdoc}
      */
     public function authenticate(RequestInterface $request)
     {
-        $header = \sprintf('Basic %s', \base64_encode(\sprintf('%s:%s', $this->username, $this->password)));
+        $header = sprintf('Basic %s', base64_encode(sprintf('%s:%s', $this->username, $this->password)));
+
         return $request->withHeader('Authorization', $header);
     }
 }

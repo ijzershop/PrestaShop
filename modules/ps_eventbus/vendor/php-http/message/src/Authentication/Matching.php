@@ -1,11 +1,13 @@
 <?php
 
-namespace ps_eventbus_v3_0_7\Http\Message\Authentication;
+namespace Http\Message\Authentication;
 
-use ps_eventbus_v3_0_7\Http\Message\Authentication;
-use ps_eventbus_v3_0_7\Http\Message\RequestMatcher\CallbackRequestMatcher;
+use Http\Message\Authentication;
+use Http\Message\RequestMatcher\CallbackRequestMatcher;
 use Psr\Http\Message\RequestInterface;
-@\trigger_error('The ' . __NAMESPACE__ . '\\Matching class is deprecated since version 1.2 and will be removed in 2.0. Use Http\\Message\\Authentication\\RequestConditional instead.', \E_USER_DEPRECATED);
+
+@trigger_error('The '.__NAMESPACE__.'\Matching class is deprecated since version 1.2 and will be removed in 2.0. Use Http\Message\Authentication\RequestConditional instead.', E_USER_DEPRECATED);
+
 /**
  * Authenticate a PSR-7 Request if the request is matching.
  *
@@ -19,20 +21,24 @@ final class Matching implements Authentication
      * @var Authentication
      */
     private $authentication;
+
     /**
      * @var CallbackRequestMatcher
      */
     private $matcher;
+
     public function __construct(Authentication $authentication, callable $matcher = null)
     {
-        if (\is_null($matcher)) {
+        if (is_null($matcher)) {
             $matcher = function () {
-                return \true;
+                return true;
             };
         }
+
         $this->authentication = $authentication;
         $this->matcher = new CallbackRequestMatcher($matcher);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -41,8 +47,10 @@ final class Matching implements Authentication
         if ($this->matcher->matches($request)) {
             return $this->authentication->authenticate($request);
         }
+
         return $request;
     }
+
     /**
      * Creates a matching authentication for an URL.
      *
@@ -52,9 +60,10 @@ final class Matching implements Authentication
      */
     public static function createUrlMatcher(Authentication $authentication, $url)
     {
-        $matcher = function (RequestInterface $request) use($url) {
-            return \preg_match($url, $request->getRequestTarget());
+        $matcher = function (RequestInterface $request) use ($url) {
+            return preg_match($url, $request->getRequestTarget());
         };
+
         return new static($authentication, $matcher);
     }
 }

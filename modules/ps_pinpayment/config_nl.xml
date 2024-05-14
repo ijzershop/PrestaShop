@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>ps_pinpayment</name>
-    <displayName><![CDATA[Pin payment]]></displayName>
+    <displayName><![CDATA[Pinbetaling]]></displayName>
     <version><![CDATA[2.1.0]]></version>
-    <description><![CDATA[Accept pin payments by displaying your account details during the checkout and make it easy for your customers to purchase on your store.]]></description>
+    <description><![CDATA[Accepteer pinbetalingen door uw accountgegevens weer te geven tijdens het afrekenen en maak het uw klanten gemakkelijk om aankopen te doen in uw winkel.]]></description>
     <author><![CDATA[JB Stoker]]></author>
     <tab><![CDATA[payments_gateways]]></tab>
-	<confirmUninstall><![CDATA[Are you sure about removing these details?]]></confirmUninstall>
+	<confirmUninstall><![CDATA[Weet u zeker dat u deze gegevens wilt verwijderen?]]></confirmUninstall>
     <is_configurable>1</is_configurable>
     <need_instance>1</need_instance>
 </module>

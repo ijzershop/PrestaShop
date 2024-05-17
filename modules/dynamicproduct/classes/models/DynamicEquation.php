@@ -323,7 +323,10 @@ class DynamicEquation extends DynamicObject
 
     public static function containsQuantityField($formula)
     {
-        return strpos($formula, '[quantity]') !== false;
+        if(is_null($formula)){
+            $formula = '';
+        }
+        return str_contains($formula, '[quantity]');
     }
 
     /**

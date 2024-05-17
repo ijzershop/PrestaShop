@@ -160,21 +160,21 @@
                   </script>
 
 
-                  <div class="col-12 added-to-order-block" data-id="{$carrier_id}">
+                  <div class="col-11 offset-1 pl-4 pt-2 added-to-order-block" data-id="{$carrier_id}">
                     <input type="hidden" name="added_to_order" data-id="{$carrier_id}" id="added_to_order" value="{if $delivery_option != $carrier_id}{$availableOrders[0].reference}{/if}">
                     <a style="color:#777777;" target="_blank" href="/index.php?controller=order-detail&id_order={$availableOrders[0].id_order}">Bekijk de lopende bestelling {$availableOrders[0].reference} waar u de huidige bestelling aan wilt toevoegen.</a>
                   </div>
 
                 {else}
 {*                  No orders available  *}
-                  <div class="col-12 added-to-order-block" data-id="{$carrier_id}">
+                  <div class="col-11 offset-1 pl-4 pt-2 added-to-order-block" data-id="{$carrier_id}">
                     <a style="color:#777777;">Er is momenteel geen bestaande bestelling beschikbaar waar u deze aan toe kunt voegen.</a>
                   </div>
 
                 {/if}
                 {else}
                   {* Customer is guest *}
-                  <div class="col-12  added-to-order-block" id="order_number_validate" data-id="{$carrier_id}" style="{if $delivery_option != $carrier_id}display:none;{/if}">
+                  <div class="col-11 offset-1 pl-4 pt-2 added-to-order-block" id="order_number_validate" data-id="{$carrier_id}" style="{if $delivery_option != $carrier_id}display:none;{/if}">
                     Wilt u uw bestelling graag toevoegen aan een bestaande bestelling, zoek hieronder naar de gewenste bestelling.
                     <script type="text/javascript">
                       let addToOrderAddress = {};
@@ -199,7 +199,7 @@
                     </div>
                     <span class="col-md-12" id="desired_reference_error"></span>
                   </div>
-                  <div class="col-12  added-to-order-block" style="display:none;" id="order_number_show">
+                  <div class="col-11 offset-1 pl-4 pt-2  added-to-order-block" style="display:none;" id="order_number_show">
                     <div class="row">
                       <div class="col-12" id="order_number_show_block">
                       </div>

@@ -49,6 +49,7 @@ class Payment {
   }
 
   init() {
+
     // eslint-disable-next-line no-unused-vars
     prestashop.on('orderConfirmationErrors', ({resp, paymentObject}) => {
       if (resp.cartUrl !== '') {
@@ -182,7 +183,9 @@ class Payment {
     if (isRedirected) return;
 
     $(`${this.confirmationSelector} button`).addClass('disabled');
-    $(`#pay-with-${option}-form form`).submit();
+
+
+    // $(`#pay-with-${option}-form form`).submit();
   }
 }
 

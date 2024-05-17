@@ -76,12 +76,44 @@ function toggleImage() {
   });
 }
 
+function buildRequestStringData(form) {
+  let select = form.find('select'),
+    input = form.find('input'),
+    requestString = {};
+  for (let i = 0; i < select.length; i++) {
+    requestString[$(select[i]).attr('name')] =  encodeURIComponent($(select[i]).val());
+  }
+
+  for (let i = 0; i < input.length; i++) {
+    if ($(input[i]).attr('type') !== 'checkbox' || ($(input[i]).attr('type') === 'checkbox' && $(input[i]).attr('checked'))) {
+      requestString[$(input[i]).attr('name')] =  encodeURIComponent($(input[i]).val());
+    }
+  }
+  return JSON.stringify(requestString);
+}
+
+
 $(document).ready(() => {
+  $('#payment-confirmation button[type="submit"]').on('click', function(e){
+      e.stopImmediatePropagation();
 
-  document.querySelectorAll('form').forEach(function (item, key) {
-    console.log(item, item.setAttribute('novalidate', true));
+      let id = $('.payment-options input[name="payment-option"]:checked').attr('id');
+      let extraData = buildRequestStringData($('#'+id+'-container'));
+      $('input#dynamic-data').remove();
+      $('<input>', {
+        type: 'hidden',
+        id: 'dynamic-data',
+        name: 'dynamic_data',
+        value: extraData
+      }).appendTo('#payment-'+id+'-form');
 
-  })
+    if ($(this).data('disabled') === true) {
+      e.preventDefault();
+    }
+    $(this).data('disabled', true);
+    $('button[type="submit"]', this).addClass('disabled');
+    $('form#payment-'+id+'-form').submit();
+  });
 
 
   if ($('body#checkout').length === 1) {
@@ -147,7 +179,6 @@ $(document).ready(() => {
 
   function validateEmail(s) {
     let reg = unicode_hack(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, false);
-    console.log(reg);
     return reg.test(s);
   }
 
@@ -301,7 +332,6 @@ $(document).ready(() => {
   $('input[name="vat"]').on('keyup blur input change paste', delayKeyUp(function (e) {
     $(this).val($(this).val().replace(/[.,]+/g, ''));
     $(this).siblings('.error-small').remove();
-    console.log('BTW NUMMER CHECK MIDDELS VAT MODULE');
   }));
 
 
@@ -360,8 +390,6 @@ $(document).ready(() => {
 
   //Postcode on adres form validation
   $('#delivery-address input[name="postcode"], #payment-address input[name="postcode"]').on('keyup blur input change paste', delayKeyUp(function (e) {
-    console.log('test postcode');
-
     $(this).parent().find('.error-small').remove();
     if ($(this).val() === '') {
       $(this).parent().append(inputMessage(required_error));
@@ -372,9 +400,7 @@ $(document).ready(() => {
 
       if($('#cart-postcode-check-toggle').prop('checked') === true){
 
-        console.log(['checking address']);
         checkFormatAddressApiCheckout().then(r => {
-          console.log(['checked address', r]);
 
         });
       }
@@ -401,14 +427,14 @@ $(document).ready(() => {
     }
     if($('#cart-postcode-check-toggle').prop('checked') === true){
       checkFormatAddressApiCheckout().then(r => {
-        console.log(['checked address', r]);
+
       });
     }
   }));
 
   $('#delivery-address input[name="house_number"], #payment-address input[name="house_number"]').on('keyup blur input change paste', delayKeyUp(function (e) {
 
-console.log('housenumber')
+
     $(this).parent().find('.error-small').remove();
     $(this).removeClass('is-valid is-invalid');
     if ($(this).val() === '') {
@@ -427,7 +453,7 @@ console.log('housenumber')
       $(this).removeClass('is-invalid  is-invalid').addClass('is-valid');
       if($('#cart-postcode-check-toggle').prop('checked') === true){
         checkFormatAddressApiCheckout().then(r => {
-          console.log(['checked address', r]);
+
         });
       }
     }
@@ -724,7 +750,7 @@ console.log('housenumber')
           let address1Elem = $('#'+type+' [name="address1"]');
           let houseNumberElem = $('#'+type+' [name="house_number"]');
           let houseNumberExtElem = $('#'+type+' [name="house_number_extension"]');
-          console.log([houseNumberElem, houseNumberExtElem])
+
           if (e.valid !== false && e.hasOwnProperty('address') && e.address.countryCode === 'NL') { // is een nederlands adres
 
             if (e.address.street !== 'undefined') {

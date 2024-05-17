@@ -74,6 +74,7 @@ class Ps_Creditpayment extends PaymentModule
     {
 
         $this->context->controller->addCSS(array(
+            $this->_path . '/views/css/select2-bootstrap.css',
             $this->_path . '/views/css/ps_creditpayment.css',
         ));
 
@@ -322,22 +323,9 @@ class Ps_Creditpayment extends PaymentModule
             $history->changeIdOrderState($newState, (int)$params['order']->id);
             $history->add();
 
-            $this->context->cookie->supercheckout_temp_address_shipping = null;
-            $this->context->cookie->supercheckout_temp_address_invoice = null;
-            $this->context->cookie->supercheckout_perm_address_shipping = null;
-            $this->context->cookie->supercheckout_perm_address_invoice = null;
-
             if(!$this->context->cart){
                 $this->context->cart = new Cart($params['order']->id_cart);
             }
-            $this->context->cart->id_customer = $this->context->cookie->id_selected_customer;
-            $this->context->cart->secure_key = $this->context->cookie->secure_key;
-
-            $this->context->cookie->selected_customer_secure_key = null;
-            $this->context->cookie->selected_customer_customer_firstname = null;
-            $this->context->cookie->selected_customer_customer_lastname = null;
-            $this->context->cookie->selected_customer_id_customer = null;
-            $this->context->cookie->selected_customer_email = null;
 
             $this->smarty->assign(array(
                 'shop_name' => $this->context->shop->name,
@@ -355,7 +343,38 @@ class Ps_Creditpayment extends PaymentModule
             );
         }
 
+        $this->updateContextBalieAccount();
+
         return $this->fetch('module:ps_creditpayment/views/templates/hook/payment_return.tpl');
+    }
+
+    function updateContextBalieAccount()
+    {
+        $id_customer = (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id);
+
+        $customer = new Customer($id_customer);
+        $this->context->customer = $customer;
+        $this->context->customer->logged = true;
+        $this->context->customer->is_guest = false;
+        // Update cart address
+        $this->context->cart->id_customer = (int)$customer->id;
+        $this->context->cart->id_guest = "";
+
+        $this->context->cookie->id_customer = (int)$customer->id;
+        $this->context->cookie->email = $customer->email;
+        $this->context->cookie->customer_lastname = $customer->lastname;
+        $this->context->cookie->customer_firstname = $customer->firstname;
+        $this->context->cookie->logged = true;
+        $this->context->cookie->is_guest = false;
+        $this->context->cookie->passwd = $customer->passwd;
+        $this->context->cookie->selected_customer_secure_key = null;
+        $this->context->cookie->selected_customer_customer_firstname = null;
+        $this->context->cookie->selected_customer_customer_lastname = null;
+        $this->context->cookie->selected_customer_id_customer = null;
+        $this->context->cookie->selected_customer_email = null;
+
+
+        $this->context->smarty->assign('confirmation', 1);
     }
 
     public function checkCurrency($cart)

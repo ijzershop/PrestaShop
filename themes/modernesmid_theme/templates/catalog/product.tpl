@@ -60,7 +60,7 @@
           {/block}
         {/block}
       </div>
-      <div class="col-12 col-lg-5">
+      <div class="col-12 col-lg-6">
         {block name='page_content_container'}
         <section class="page-content" id="content">
           {block name='page_content'}
@@ -80,7 +80,7 @@
         </section>
         {/block}
       </div>
-      <div class="col-12 col-lg-7 mt-lg-0">
+      <div class="col-12 col-lg-6 mt-lg-0">
         <div class="row">
           <div class="col-12 d-none d-lg-block text-right pb-3">
             {block name='page_header_container'}
@@ -203,7 +203,7 @@
       </div>
     </div>
     <div class="row border-bottom">
-      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}col-sm-5 pb-4{/if} pt-3 ">
+      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}col-lg-6 pb-4{/if} pt-3 ">
         {if !empty($product.description)}
           {block name='product_description'}
             <div class="product-description border-bottom pb-4 pt-4 row">
@@ -227,7 +227,7 @@
           {/block}
         {/if}
       </div>
-      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}col-sm-7 pt-2{/if} ">
+      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}col-lg-5 pt-2{/if} ">
         {if Configuration::get('SHOW_PRODUCT_FEATURES') === 'category'}
             {assign var='cat' value=Category::getNestedCategories($product.id_category_default)}
             {if is_null($cat[$product.id_category_default].top_description)}
@@ -256,8 +256,8 @@
             {assign var="technImage" value=$image}
             {/if}
             {/foreach}
-            <div class="row">
-              <span class="description-title font-weight-bold h5 col-12 pt-4">Technische gegevens</span>
+            <div class="row card-body">
+              <span class="description-title font-weight-bold h5 col-12 pt-4 pt-lg-0">Technische gegevens</span>
               {if isset($technImage)}
               <div class="col-12 col-sm-4">
                 <img src="{$technImage.bySize.home_default.url}" alt="{$product.name} technische afbeelding" title="{$product.name} technische afbeelding" width="100" class="img-responsive w-100">
@@ -276,9 +276,9 @@
               {assign var="technImage" value=$image}
             {/if}
           {/foreach}
-          <div class="row">
+          <div class="row card-body">
             {if isset($technImage)}
-              <span class="description-title font-weight-bold h5 col-12 pt-4">Technische gegevens</span>
+              <span class="description-title font-weight-bold h5 col-12 pt-4 pt-lg-0">Technische gegevens</span>
             {/if}
             {if isset($technImage)}
             <div class="col-12 col-md-12">

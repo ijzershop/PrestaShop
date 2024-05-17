@@ -16,8 +16,12 @@ function renderAddressOption(address){
 
 $(document).ready(function(){
 
+
+
+
   let setSelect2ForOnCredit = function(){
     $('#on_credit_customer_select').select2({
+      theme: "bootstrap",
       ajax: {
         url: prestashop.urls.base_url + 'index.php?fc=module&module=ps_creditpayment&controller=ajax',
         processResults: function (data, page) {

@@ -236,6 +236,8 @@ class CartControllerCore extends FrontController
 
     protected function updateCart()
     {
+
+
         // Update the cart ONLY if it's not a bot, in order to avoid ghost carts
         if (!Connection::isBot()
             && !$this->errors
@@ -478,15 +480,15 @@ class CartControllerCore extends FrontController
         // If no errors, process product addition
         if (!$this->errors) {
             // Add cart if no cart found
-            if (!$this->context->cart->id) {
+            if (!$this->context->cart->id && !$this->context->customer->isLogged()) {
                 if (Context::getContext()->cookie->id_guest) {
                     $guest = new Guest((int) Context::getContext()->cookie->id_guest);
                     $this->context->cart->mobile_theme = $guest->mobile_theme;
                 }
-                $this->context->cart->add();
-                if (Validate::isLoadedObject($this->context->cart)) {
-                    $this->context->cookie->id_cart = (int) $this->context->cart->id;
-                }
+            }
+            $this->context->cart->add();
+            if (Validate::isLoadedObject($this->context->cart)) {
+                $this->context->cookie->id_cart = (int) $this->context->cart->id;
             }
 
             // Check customizable fields

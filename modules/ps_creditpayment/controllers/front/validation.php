@@ -39,8 +39,32 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         $logger->setFilename($filePath);
         $logger->logDebug('Starting example logger process.');
 
+        if(Tools::getIsset('dynamic_data')){
+            $data = json_decode(urldecode(Tools::getValue('dynamic_data')));
+            $selectedCreditCustomer = (int)$data->on_credit_customer_select;
 
-		$cart = $this->context->cart;
+            $creditCustomer = new Customer($selectedCreditCustomer);
+            $this->context->cart->id_customer = $selectedCreditCustomer;
+            $this->context->cart->secure_key = $creditCustomer->secure_key;
+            $this->context->cookie->selected_customer_secure_key = $creditCustomer->secure_key;
+            $this->context->cookie->selected_customer_customer_firstname = $creditCustomer->firstname;
+            $this->context->cookie->selected_customer_customer_lastname = $creditCustomer->lastname;
+            $this->context->cookie->selected_customer_id_customer = $selectedCreditCustomer;
+            $this->context->cookie->selected_customer_email = $creditCustomer->email;
+
+            $this->context->cookie->on_credit_reference = $data->on_credit_reference;
+            $this->context->cookie->on_credit_buyer = $data->on_credit_buyer;
+        } else {
+            $this->context->cookie->selected_customer_secure_key = '';
+            $this->context->cookie->selected_customer_customer_firstname = '';
+            $this->context->cookie->selected_customer_customer_lastname = '';
+            $this->context->cookie->selected_customer_id_customer = '';
+            $this->context->cookie->selected_customer_email = '';
+            $this->context->cookie->on_credit_reference = '';
+            $this->context->cookie->on_credit_buyer = '';
+        }
+        $cart = $this->context->cart;
+
 
         if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active){
             Tools::redirect('index.php?controller=order&step=1');
@@ -67,21 +91,17 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 
         $currency = $this->context->currency;
         $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
-
         $this->validateOrder($cart->id, Configuration::get('BANK_CREDIT_COMPLETE_STATE'), $total, 'Op Rekening', NULL, array(), (int)$currency->id, false, $this->context->cookie->selected_customer_secure_key);
-
 
         Tools::redirect('index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key.'&oncredit=true');
     }
 
 
     public function addToInformerApi($order){
-
         $logger = new FileLogger();
         $filePath = _PS_MODULE_DIR_.'ps_creditpayment/log/informer.log';
         $logger->setFilename($filePath);
         $logger->logDebug('Starting example logger process.');
-
 
         if(!empty($this->context->cookie->on_credit_reference)){
             $reference = $this->context->cookie->on_credit_reference;
@@ -187,6 +207,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             "Apikey: ". $api_key,
         );
 
+
         curl_setopt_array($curlCard, array(
             CURLOPT_URL => "https://api.informer.eu/v1/salesorder",
             CURLOPT_RETURNTRANSFER => true,
@@ -290,10 +311,10 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         }
         // Does order already exists ?
         if (Validate::isLoadedObject($this->context->cart) && $this->context->cart->OrderExists() == false) {
-            if ($secure_key !== false && $secure_key != $this->context->cart->secure_key) {
-                PrestaShopLogger::addLog('PaymentModule::validateOrder - Secure key does not match', 3, null, 'Cart', (int) $id_cart, true);
-                die(Tools::displayError());
-            }
+//            if ($secure_key !== false && $secure_key != $this->context->cart->secure_key) {
+//                PrestaShopLogger::addLog('PaymentModule::validateOrder - Secure key does not match', 3, null, 'Cart', (int) $id_cart, true);
+//                die(Tools::displayError());
+//            }
 
 
             // For each package, generate an order
@@ -556,6 +577,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
 
                     // Specify order id for message
                     $old_message = Message::getMessageByCartId((int) $this->context->cart->id);
+                    $customer_thread_id = 0;
                     if ($old_message && !$old_message['private']) {
                         $update_message = new Message((int) $old_message['id_message']);
                         $update_message->id_order = (int) $order->id;
@@ -573,8 +595,10 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
                         $customer_thread->token = Tools::passwdGen(12);
                         $customer_thread->add();
 
+                        $customer_thread_id = $customer_thread->id;
+
                         $customer_message = new CustomerMessage();
-                        $customer_message->id_customer_thread = $customer_thread->id;
+                        $customer_message->id_customer_thread = $customer_thread_id;
                         $customer_message->id_employee = 0;
                         $customer_message->message = $update_message->message;
                         $customer_message->private = 1;
@@ -668,11 +692,8 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             }
 
             $resultApi = $this->addToInformerApi($order);
-            $resultProjectMessage = $this->addProjectAndEmployeeToMessages($order);
-
+            $resultProjectMessage = $this->addProjectAndEmployeeToMessages($order, $customer_thread_id);
             $this->sendAdministrationMsg($order, $resultApi);
-
-
             return true;
         } else {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', array(), 'Admin.Payment.Notification');
@@ -681,7 +702,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         }
     }
 
-    private function addProjectAndEmployeeToMessages($order){
+    private function addProjectAndEmployeeToMessages($order, $customer_thread_id){
         $projectMessage = '';
         if(!empty($this->context->cookie->on_credit_reference)){
             $projectMessage = $projectMessage = strip_tags('Ref: '. $this->context->cookie->on_credit_reference.'<br>', '<br>');
@@ -719,6 +740,29 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             $customerMsg->private = 0;
             $customerMsg->add();
         }
+
+        if($customer_thread_id == 0){
+            // Add this message in the customer thread
+            $customer_thread = new CustomerThread();
+            $customer_thread->id_contact = 0;
+            $customer_thread->id_customer = (int) $order->id_customer;
+            $customer_thread->id_shop = (int) $this->context->shop->id;
+            $customer_thread->id_order = (int) $order->id;
+            $customer_thread->id_lang = (int) $this->context->language->id;
+            $customer_thread->email = $this->context->customer->email;
+            $customer_thread->status = 'open';
+            $customer_thread->token = Tools::passwdGen(12);
+            $customer_thread->add();
+
+            $customer_thread_id = $customer_thread->id;
+        }
+
+        $customer_message = new CustomerMessage();
+        $customer_message->id_customer_thread = $customer_thread_id;
+        $customer_message->id_employee = 0;
+        $customer_message->message = $projectMessage . $customerMessage;
+        $customer_message->private = 0;
+        $customer_message->add();
 
         return true;
     }
@@ -897,7 +941,6 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             $order_carrier->shipping_cost_tax_incl = (float) $order->total_shipping_tax_incl;
             $order_carrier->add();
         }
-
         return ['order' => $order, 'orderDetail' => $order_detail];
     }
 

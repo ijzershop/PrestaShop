@@ -54,15 +54,16 @@ module.exports = (env, argv) => {
     devtool: mode === 'production' ? false : 'source-map',
     optimization: {
       minimize: true,
-      minimizer: [new TerserPlugin({
+      minimizer: [
+        new TerserPlugin({
+        parallel: true,
         extractComments: false,
         terserOptions: {
           output: {
             comments: false,
           }
-        },
-        sourceMap: true
-      })
+        }
+      }),
       ],
     },
   };

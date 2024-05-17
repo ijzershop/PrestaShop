@@ -120,9 +120,10 @@ margin-bottom: 0;
   .search_widget button.btn{
     background-color: #fff;
     background-clip: padding-box;
-    border: 1px solid #ced4da;
+    border: transparent!important;
     border-left:0;
     color:#666666;
+    padding: .38rem .5rem;
   }
 
 

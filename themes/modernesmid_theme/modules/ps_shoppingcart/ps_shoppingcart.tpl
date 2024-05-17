@@ -72,7 +72,7 @@
                   class="fasl fa-cart-shopping d-inline-block pr-1"
                   style="font-size:1.3rem"></i> <span id="amount_circle" class="amount_circle"
                                                       style="left: -48px;top: -12px;font-size: 10px;min-width: 15px;height: 15px;line-height: 11px;display: inline-block;position: relative;">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span><span
-                  class="align-text-bottom d-inline-block d-lg-none d-xl-inline-block">Bestel</span>
+                  class="align-text-bottom d-inline-block d-lg-none d-xl-inline-block" style="position: absolute;left:135px;">Winkelwagen</span>
                 <span class="float-right text-right" id="header-cart-total">
                       {if (float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0 && (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
 

@@ -19,7 +19,7 @@
     </div>
   <div class="row  bg-warning text-white">
     <div class="col-4 text-left">Zending Nummer(s)</div>
-    <div class="col-8">{{ record.shipping_number }}</div>
+    <div class="col-8 tracking_number" data-reference="{{ record.reference }}"> {{ record.shipping_number }} </div>
   </div>
 <div class="row">
   <div class="input-group">
@@ -75,8 +75,6 @@
         <li class="page-item m-1">
           <div class="pallet_selection_box"  data-row-id="{{ record.id_order }}">
             <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="MP" data-collies="1" name="package_total_mini" class="text-decoration-none btn-primary rounded-circle text-button-large collie-selection">Mini</button>
-{#            <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="PLH" data-collies="1" name="package_total_half" class="text-decoration-none btn-primary rounded-circle text-button-large collie-selection">Halve</button>#}
-{#            <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="PL" data-collies="1" name="package_total_pallet" class="text-decoration-none btn-primary rounded-circle text-button-large collie-selection">Pallet</button>#}
           </div>
           <button type="button" data-row-id="{{ record.id_order }}" data-collies="x" name="package_total_pallet" class="page-link p-0 btn-primary rounded-pill">
             <svg style="padding:0.8rem;" width="72px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 256 256" xml:space="preserve">

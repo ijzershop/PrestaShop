@@ -421,46 +421,105 @@ $(function () {
   });
 
 
+  $.fancyConfirmKoopmanLabel = function(reference,  opts ) {
+    opts = $.extend(true, {
+      title: 'Weet je zeker dat je nog een label wilt printen?',
+      message: '',
+      callback: $.noop
+    }, opts || {});
 
-
+    $.fancybox.open({
+        width: 800,
+        height: 800,
+        autoSize: false,
+        href: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=orderlabelstatus&render_template=true&reference=' + reference + '&token=' + token,
+        type: 'ajax',
+        opts : {
+          afterClose : function( instance, current, e ) {
+            let button = e ? e.target || e.currentTarget : null;
+            let value  = button ? $(button).data('value') : 0;
+            opts.callback( value );
+          }
+        }
+      }
+    );
+  }
   //   pallet selectie button
   $(document).on('click', '[name="package_total_pallet"]', function(){
     let orderId = $(this).attr('data-row-id');
       $('.pallet_selection_box[data-row-id="'+orderId+'"]').toggle();
   });
 
+  $(document).on('click', '.remove-collie',  function(){
+    let collie = $(this).attr('data-collo');
+    let shipmentNumber = $(this).attr('data-nrzend');
+    if (confirm("Weet je zeker dat je dit label uit de transmission portal wilt verwijderen?!") == true) {
+      console.debug(['click ok', collie, shipmentNumber]);
+
+
+
+    } else {
+      console.debug('false');
+      return false;
+    }
+  });
+
+
   $(document).on('click', '.collie-selection',function (e) {
     let $clickedLabel = $(this);
     $clickedLabel.toggleClass('temp_disabled', "");
     let $tr = $clickedLabel.closest('TR');
-    $tr.toggleClass('temp_disabled_row', "");
 
-    let orderId = $clickedLabel.attr('data-row-id');
-    let weightOption = $('.package_size_select[data-row-id="'+orderId+'"]').val();
-    let orderWeight = $clickedLabel.attr('data-order-weight');
-    let chosenCollies = $clickedLabel.attr('data-collies');
-    let collieType = $clickedLabel.attr('data-collie-type');
+    //Allready has tracking number
+    if($clickedLabel.parents('td').find('.tracking_number').text().length > 0){
+      let reference = $clickedLabel.parents('td').find('.tracking_number').attr('data-reference');
+      // Open customized confirmation dialog window
+      $.fancyConfirmKoopmanLabel(reference, {
+        callback  : function (value) {
+          if (value) {
+            console.log('OK JA Graag')
 
-    $.ajax({
-      url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=print-label&id_order=' + orderId +
-        '&weight=' + orderWeight +
-        '&weight_option=' + weightOption +
-        '&collies=' + chosenCollies +
-        '&collie_type=' + collieType +
-        '&token=' + token,
-      type: 'GET'
-    }).done(function (data) {
-      if(data === 'printed'){
-        location.reload();
-      } else {
-        $('#updateAddressModal .modal-body').html(data);
-        $('#updateAddressModal').modal('show');
-      }
-    });
+          } else {
+            console.log('NEEEEEEEE!!!!!!!!!!!!!!!')
+          }
+        }
+      });
+
+      // return false;
+
+
+    } else {
+      fetchNewLabel($clickedLabel, $tr);
+    }
   });
 
 
+let fetchNewLabel = function (button, row) {
+  // row.toggleClass('temp_disabled_row', "");
+  let orderId = button.attr('data-row-id');
+  let weightOption = $('.package_size_select[data-row-id="'+orderId+'"]').val();
+  let orderWeight = button.attr('data-order-weight');
+  let chosenCollies = button.attr('data-collies');
 
+  let collieType = button.attr('data-collie-type');
+
+  // $.ajax({
+  //   url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=print-label&id_order=' + orderId +
+  //     '&weight=' + orderWeight +
+  //     '&weight_option=' + weightOption +
+  //     '&collies=' + chosenCollies +
+  //     '&collie_type=' + collieType +
+  //     '&token=' + token,
+  //   type: 'GET'
+  // }).done(function (data) {
+  //   if(data === 'printed'){
+  //     location.reload();
+  //   } else {
+  //     $('#updateAddressModal .modal-body').html(data);
+  //     $('#updateAddressModal').modal('show');
+  //   }
+  // });
+}
 
 
 

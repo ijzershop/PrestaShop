@@ -1,0 +1,97 @@
+<style>
+.shippingStatus table td, .shippingStatus table td b{
+  font-size: 1rem;
+}
+</style>
+<div class="w-100 shippingStatus">
+       <div class="card">
+         <div class="card-header">
+           <h3 id="showShippingStatusLabel">Labels voor bestelling {% if nrorder != '' %}{{ nrorder }}{% endif %} met Verzending ID {% if nrzend != '' %}#{{ nrzend }}{% endif %}</h3>
+         </div>
+         <div class="card-body">
+           <table class="table w-100">
+             <tr>
+               <td class="text-nowrap  font-weight-bold">Klant</td>
+             </tr>
+             <tr>
+               {% if naam != '' %}
+               <table class="w-100 mb-4">
+                 <tr><td><h3>{{ naam }}</h3></td><td><h3>{{ naam2 }}</h3></td></tr>
+                 <tr><td colspan="2">{{ straat }} {{ huisnr }}</td></tr>
+                 <tr><td colspan="2">{{ postcode }}, {{ plaats }}</td></tr>
+                 <tr><td colspan="2"> {{ land }}</td></tr>
+                 <tr><td colspan="2"> {{ telefoon }}</td></tr>
+                 <tr><td colspan="2"> {{ email }}</td></tr>
+                 </table>
+               {% else %}
+               <table class="w-100 mb-4">
+                 <tr><td>Nog geen labels aangemaakt, er staat een fout tracking nummer in de database. Of er zit een storing in de connectie naar transmission.</td></tr>
+               </table>
+                 {% endif %}
+             </tr>
+             {% if collies is not empty %}
+             <tr><td class="h2">Collies</td></tr>
+             <tr>
+               <td>
+                 {# Collies Loop #}
+                 {% for collie in collies %}
+                   <div class="w-100 card p-2">
+                     <h3>Collie {{ loop.index }}</h3>
+                     <table class="table w-100">
+                       {% if collie.weight is not empty %}
+                         <tr>
+                           <td rowspan="2">{{ collie.weight }}</td>
+                           <td class="text-nowrap" style="width:50%">Gewicht</td>
+                           <td>{{ collie.weight | raw  }}<sub>Kg</sub></td>
+                           <td rowspan="2"><button type="button" data-nrzend="{{ nrzend }}" data-collo="{{ collie.nr }}" class="btn btn-xs btn-outline-danger remove-collie h-100 v-100" aria-label="delete-collie" title="Verwijder uit portal">X</button> </td>
+                         </tr>
+                       {% endif %}
+                       {% if collie.length is not empty %}
+                         <tr>
+                           <td class="text-nowrap" style="width:50%">Formaat</td>
+                           <td>{{ collie.length | raw  }}<small>cm</small> X {{ collie.height | raw  }}<small>cm</small> X {{ collie.breedte | raw  }}<small>cm</small></td>
+                         </tr>
+                       {% endif %}
+                     </table>
+                   </div>
+                 {% endfor %}
+               </td>
+             </tr>
+             {% endif %}
+             <tr><td class="h2">Producten Lijst</td></tr>
+             <tr>
+               <td>
+                 {# Collies Loop #}
+                 <div class="w-100 card p-2">
+                   <table class="table w-100">
+                   {% for product in products %}
+                         <tr>
+                           <td>{{ product.product_quantity }} X</td>
+                           <td>{{ product.product_name }}</td>
+                           <td>{{ product.product_reference }}</td>
+                           {% if product.product_weight is not empty %}
+                            <td>{{ product.product_weight | raw  }}<sub>Kg</sub></td>
+                           {% endif %}
+                         </tr>
+                 {% endfor %}
+                   </table>
+                 </div>
+               </td>
+             </tr>
+             <tr>
+               <td>
+                 <button data-value="0" data-fancybox-close class="btn">OK</button>
+               </td>
+               <td>
+                 <button data-value="1" data-fancybox-close class="btn">OK</button>
+               </td>
+             </tr>
+           </table>
+         </div>
+       </div>
+      </div>
+<br>
+
+
+
+

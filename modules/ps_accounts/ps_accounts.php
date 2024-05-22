@@ -34,7 +34,7 @@ class Ps_accounts extends Module
 
     // Needed in order to retrieve the module version easier (in api call headers) than instanciate
     // the module each time to get the version
-    const VERSION = '7.0.1';
+    const VERSION = '7.0.2';
 
     /**
      * Admin tabs
@@ -73,6 +73,12 @@ class Ps_accounts extends Module
             'description' => 'Shop unlinked with PrestaShop Account',
             'position' => 1,
         ],
+        [
+            'name' => 'actionShopAccessTokenRefreshAfter',
+            'title' => 'Shop access token refreshed event',
+            'description' => 'Shop access token refreshed event',
+            'position' => 1,
+        ],
     ];
 
     /**
@@ -89,7 +95,6 @@ class Ps_accounts extends Module
         'actionObjectShopDeleteBefore',
         'actionObjectShopUpdateAfter',
         'actionObjectShopUrlUpdateAfter',
-        'actionShopAccessTokenRefreshAfter',
         'actionShopAccountLinkAfter',
         'actionShopAccountUnlinkAfter',
         'displayAccountUpdateWarning',
@@ -126,7 +131,7 @@ class Ps_accounts extends Module
 
         // We cannot use the const VERSION because the const is not computed by addons marketplace
         // when the zip is uploaded
-        $this->version = '7.0.1';
+        $this->version = '7.0.2';
 
         $this->module_key = 'abf2cd758b4d629b2944d3922ef9db73';
 
@@ -470,8 +475,14 @@ class Ps_accounts extends Module
     {
         $container = $this->getCoreServiceContainer();
         if ($container) {
-            /** @var \PrestaShop\Module\PsAccounts\Session\Session $session */
-            $session = $container->get('session');
+            try {
+                /** @var \PrestaShop\Module\PsAccounts\Session\Session $session */
+                $session = $container->get('session');
+            } catch (\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException $e) {
+                // FIXME: fix for 1.7.7.x
+                global $kernel;
+                $session = $kernel->getContainer()->get('session');
+            }
 
             return $session;
         } else {

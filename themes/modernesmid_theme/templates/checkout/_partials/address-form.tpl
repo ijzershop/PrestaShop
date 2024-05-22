@@ -10,7 +10,7 @@
 
 {block name="address_form_url"}
 
-{var_dump($id_address)}
+{*{var_dump($id_address)}*}
     <form
       method="POST"
       action="{url entity='order' params=['id_address' => $id_address]}"

@@ -1095,7 +1095,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         } catch (Exception $e){
                 PrestaShopLogger::addLog('failing to get order list:' . $e->getMessage());
         }
-                $ref = 'YS-131376';
+//                $ref = 'YS-131376';
         try {
             $status = $client->getAktueleOpdracht($login, $zendingnr, $ref);
             if(empty($status)){

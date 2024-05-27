@@ -222,7 +222,7 @@ class ExportOrdersMultipleCollies
      * @throws PrestaShopDatabaseException
      * @throws SoapFault
      */
-    private function processOrdersNew($orders, int $collies = 1, int|string $weight = 0, string $collieType = 'COL'): void
+    private function processOrdersNew($orders, int $collies = 1, int|float|string $weight = 0, string $collieType = 'COL'): void
     {
         if (empty($orders)) {
             die("Error met melding: Geen order id's beschikbaar<br/>");

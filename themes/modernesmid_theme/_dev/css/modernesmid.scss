@@ -2406,3 +2406,7 @@ main {
 body#checkout section.checkout-step.-unreachable .step-title{
   padding-top: 1.25rem;
 }
+
+.form-control.is-valid + .input-group-append button, .was-validated .form-control:valid + .input-group-append button {
+  border-color:#21a055!important;
+}

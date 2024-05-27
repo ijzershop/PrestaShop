@@ -23,11 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
- {if !isset($countryId)}{assign var="countryId" value=0}{/if}
+ {if !isset($countryId) || !in_array($countryId, ['3','13'])}{assign var="countryId" value=13}{/if}
       {if $field.type === 'select'}
         {block name='form_field_item_select'}
         <select autocomplete="off"
-        class="form-control form-control-select  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}" name="{$field.name}" {if $field.required}required{/if}>
+        class="form-control form-control-select  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}" name="{$field.name}" {if $field.required}required{/if}>
           <option value disabled selected>{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
           {foreach from=$field.availableValues item="label" key="value"}
             <option value="{$value}" {if $value eq $field.value} selected {/if}>{$label}</option>
@@ -42,7 +42,8 @@
         {block name='form_field_item_country'}
         <select
           autocomplete="off"
-          class="form-control form-control-select js-country  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
+          oninvalid="setCustomValidity('Selecteer a.u.b. een ')"
+          class="form-control form-control-select js-country  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
           name="{$field.name}"
           {if $field.required}required{/if}
         >
@@ -50,7 +51,7 @@
           {assign var="countryId" value="13"}
           <option value disabled>{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
           {foreach from=$field.availableValues item="label" key="value"}
-            <option value="{$value}" {if ($value eq $field.value) || (!in_array($field.value, [3, 13]) && $value eq $countryId)} selected {/if}>{$label}</option>
+            <option value="{$value}" {if ($value eq $field.value) || (!in_array($field.value, ["3", "13"]) && $value eq $countryId)} selected {/if}>{$label}</option>
           {/foreach}
         </select>
         {/block}
@@ -61,7 +62,7 @@
   <input
     id="vat_number"
     autocomplete="off"
-    class="form-control  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
+    class="form-control  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
     name="{$field.name}"
     type="{$field.type}"
     value="{$field.value}"
@@ -73,7 +74,7 @@
           <label class="radio-inline">
             <span class="custom-radio">
               <input
-                class=" {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
+                class=" {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
                 name="{$field.name}"
                 type="radio"
                 value="{$value}"
@@ -93,7 +94,7 @@
         {block name='form_field_item_checkbox'}
         <label class="checkbox-inline flex_container flex_start">
         <span class="custom-input-box">
-          <input class="custom-input  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}" name="{$field.name}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}>
+          <input class="custom-input  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}" name="{$field.name}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}>
                 {block name='form_field_errors'}
                   {include file='_partials/form-errors.tpl' errors=$field.errors}
                 {/block}
@@ -106,7 +107,7 @@
       {elseif $field.type === 'date'}
         {block name='form_field_item_date'}
         <input name="{$field.name}" autocomplete="off"
-        class="form-control  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}" type="date" value="{$field.value}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
+        class="form-control  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}" type="date" value="{$field.value}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
           {block name='form_field_errors'}
             {include file='_partials/form-errors.tpl' errors=$field.errors}
           {/block}
@@ -150,7 +151,7 @@
           <div class="input-group js-parent-focus input-group-with-border">
             <input
               autocomplete="off"
-              class="form-control js-child-focus js-visible-password  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
+              class="form-control js-child-focus js-visible-password  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
               name="{$field.name}"
               title="{l s='At least 5 characters long' d='Shop.Forms.Help'}"
               type="password"
@@ -180,7 +181,7 @@
         {if $field.name == 'house_number'}
           <input
             autocomplete="off"
-            class="form-control  {if !empty($field.errors) || $field.value == ''}is-invalid{else}is-valid{/if}"
+            class="form-control  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
@@ -193,7 +194,9 @@
         {elseif $field.name == 'phone'}
           <input
             autocomplete="off"
-            class="form-control  {if !empty($field.errors) || ($field.value == '')}is-invalid{else}is-valid{/if}"
+            oninvalid="this.setCustomValidity('Vul a.u.b. een telefoonnummer in!')"
+            x-moz-errormessage='Vul a.u.b. een telefoonnummer in!'
+            class="form-control  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
@@ -207,7 +210,9 @@
           <input
             tabindex="-1"
             autocomplete="off"
-            class="form-control  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
+            oninvalid="this.setCustomValidity('Vul a.u.b. een straat in!')"
+            x-moz-errormessage='Vul a.u.b. een straat in!'
+            class="form-control  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
@@ -223,7 +228,9 @@
           <input
             tabindex="-1"
             autocomplete="off"
-            class="form-control  {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
+            oninvalid="this.setCustomValidity('Vul a.u.b. een straat in!')"
+            x-moz-errormessage='Vul a.u.b. een straat in!'
+            class="form-control  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
@@ -236,17 +243,35 @@
             {include file='_partials/form-errors.tpl' errors=$field.errors}
           {/block}
           <div id="suggesstion-box-street"></div>
-          {else}
+          {elseif $field.name == 'postcode'}
           <input
             autocomplete="off"
-            class="form-control {if !empty($field.errors) || ($field.required && $field.value == '')}is-invalid{else}is-valid{/if}"
+            oninvalid="this.setCustomValidity('Vul a.u.b. uw postcode en huisnummer in!')"
+            x-moz-errormessage='Vul a.u.b. uw postcode en huisnummer in!'
+            class="form-control {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
             {if isset($field.availableValues.placeholder)}placeholder="{$field.availableValues.placeholder}"{/if}
             {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
             {if $field.required}required{/if}
-            {if $field.name == 'city'}readonly{/if}
+          >
+          {block name='form_field_errors'}
+            {include file='_partials/form-errors.tpl' errors=$field.errors}
+          {/block}
+
+        {else}
+          <input
+            autocomplete="off"
+            class="form-control {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
+            name="{$field.name}"
+            type="{$field.type}"
+            value="{$field.value}"
+            {if isset($field.availableValues.placeholder)}placeholder="{$field.availableValues.placeholder}"{/if}
+            {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
+            {if $field.required}required{/if}
+            {{$countryId}}
+            {if $field.name == 'city' && $countryId === '13'}readonly{/if}
           >
           {block name='form_field_errors'}
             {include file='_partials/form-errors.tpl' errors=$field.errors}

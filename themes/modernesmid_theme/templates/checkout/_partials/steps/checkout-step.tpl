@@ -116,10 +116,22 @@
                     ]|classnames}"
   >
     <h1 class="step-title js-step-title h3 p-2 pt-3 pb-3">
-      <i class="fasl fa-check rtl-no-flip done pl-2 pr-1"></i>
-      <span class="step-number m-0">{$position}</span>
-      {$title}
-      <span class="step-edit text-muted"><i class="fasl fa-pen-to-square edit"></i> <span class="d-none d-md-inline">{l s='Edit' d='Shop.Theme.Actions'}</span></span>
+      <div class="w-100">
+        <table class="w-100">
+        <tr class="row">
+          <td class="col-1" style="min-width:35px; max-width: 35px;text-align: center;vertical-align: center;">
+            <i class="fasl fa-check rtl-no-flip done pl-2 pr-1"></i>
+            <span class="step-number m-0">{$position}</span>
+          </td>
+          <td class="col-9 pl-3">
+            <span>{$title}</span>
+          </td>
+          <td class="col-2 text-right">
+            <span class="step-edit text-muted"><i class="fasl fa-pen-to-square edit"></i> <span class="d-none d-md-inline">{l s='Edit' d='Shop.Theme.Actions'}</span></span>
+          </td>
+        </tr>
+      </table>
+      </div>
     </h1>
 
     <div class="content p-2">

@@ -36,8 +36,8 @@
         {$field.label}
       {/if}
       {block name='form_field_comment'}
-        {if (!$field.required && !in_array($field.type, ['radio-buttons', 'checkbox']))}
-          <span class="font-italic">({l s='optioneel' d='Shop.Forms.Labels'}}</span>
+        {if ($field.required && !in_array($field.type, ['radio-buttons', 'checkbox']))}
+          <span class="font-italic text-danger">*</span>
         {/if}
       {/block}
     </label>
@@ -46,7 +46,7 @@
       {if $field.type === 'select'}
 
         {block name='form_field_item_select'}
-          <select class="form-control form-control-select {if !empty($field.errors)}is-invalid{else}is-valid{/if}" name="{$field.name}" {if $field.required}required{/if}>
+          <select class="form-control form-control-select {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}" name="{$field.name}" {if $field.required}required{/if}>
             <option value disabled selected>{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
             {foreach from=$field.availableValues item="label" key="value"}
               <option value="{$value}" {if $value eq $field.value} selected {/if}>{$label}</option>
@@ -58,7 +58,7 @@
 
         {block name='form_field_item_country'}
           <select
-          class="form-control form-control-select js-country {if !empty($field.errors)}is-invalid{else}is-valid{/if}"
+          class="form-control form-control-select js-country {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
           name="{$field.name}"
           {if $field.required}required{/if}
           >
@@ -76,7 +76,7 @@
             <label class="radio-inline">
               <span class="custom-radio">
                 <input
-                  class="{if !empty($field.errors)}is-invalid{else}is-valid{/if}"
+                  class="{if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
                   name="{$field.name}"
                   type="radio"
                   value="{$value}"
@@ -94,14 +94,14 @@
 
         {block name='form_field_item_checkbox'}
           <span class="custom-checkbox form-check form-check-inline">
-              <input name="{$field.name}" class="form-check-input  {if !empty($field.errors)}is-invalid{else}is-valid{/if}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}><label class="form-check-label">{$field.label nofilter}</label>
+              <input name="{$field.name}" class="form-check-input  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}><label class="form-check-label">{$field.label nofilter}</label>
           </span>
         {/block}
 
       {elseif $field.type === 'date'}
 
         {block name='form_field_item_date'}
-          <input name="{$field.name}" class="form-control  {if !empty($field.errors)}is-invalid{else}is-valid{/if}" type="date" value="{$field.value}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
+          <input name="{$field.name}" class="form-control  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}" type="date" value="{$field.value}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
           {if isset($field.availableValues.comment)}
             <span class="form-control-comment">
               {$field.availableValues.comment}
@@ -136,7 +136,7 @@
         {block name='form_field_item_password'}
           <div class="input-group js-parent-focus">
             <input
-              class="form-control js-child-focus js-visible-password {if !empty($field.errors)}is-invalid{else}is-valid{/if}"
+              class="form-control js-child-focus js-visible-password {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
               name="{$field.name}"
               title="{l s='At least 5 characters long' d='Shop.Forms.Help'}"
               type="password"
@@ -145,8 +145,8 @@
               {if $field.required}required{/if}
             >
             <span class="input-group-append">
-              <button style="font-size: 1.2rem;background-color:#fff"
-                class="input-group-text h5 text-muted btn btn-link border-left-0 border-top border-right border-bottom"
+              <button style="font-size: 1.2rem;background-color:#fff;border:1px solid rgba(0,0,0,.25);"
+                class="input-group-text h5 text-muted btn btn-link border-left-0"
                 type="button"
                 data-action="show-password"
                 data-text-show="<i class='fasl fa-eye pr-1'></i>"
@@ -160,7 +160,7 @@
 
         {block name='form_field_item_other'}
           <input
-            class="form-control {if !empty($field.errors)}is-invalid{else}is-valid{/if}"
+            class="form-control {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"

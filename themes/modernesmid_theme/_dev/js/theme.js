@@ -1054,34 +1054,34 @@ $(function () {
     return citties;
   }
 
-  // address forms
-  var timeout;
-  const delay = 500;
-  //Api address check shipping
-  $(document.body).on('keyup change input :-webkit-autofill', '#customer_address_form [name="postcode"], #customer_address_form [name="house_number"], #customer_address_form [name="address1"], #customer_address_form [name="house_number_extension"]', function (event) {
-    event.preventDefault();
-
-    if (event.currentTarget.name === 'postcode') {
-      if (event.currentTarget.value.length > 4) {
-        $('[name="postcode"]').val(event.currentTarget.value.replace(/(\d{4})/g, '$1 ').replace(/  +/g, ' '));
-      }
-    }
-
-    if (timeout) {
-      clearTimeout(timeout);
-    }
-    timeout = setTimeout(function () {
-      const postcode = $('[name="postcode"]').val().replace(' ', '');
-      const houseNumber = $('[name="house_number"]').val().replace(' ', '');
-      const extension = $('[name="house_number_extension"]').val().replace(' ', '');
-      const street = encodeURIComponent($('[name="address1"]').val());
-      const id_country = $('[name="id_country"]').val().replace(' ', '');
-      if (postcode.length > 3 || houseNumber.length > 0) {
-        validateAddressApi(postcode, street, houseNumber, extension, id_country, event);
-      }
-      return false;
-    }, delay);
-  });
+  // // address forms
+  // var timeout;
+  // const delay = 500;
+  // //Api address check shipping
+  // $(document.body).on('keyup change input :-webkit-autofill', '#customer_address_form [name="postcode"], #customer_address_form [name="house_number"], #customer_address_form [name="address1"], #customer_address_form [name="house_number_extension"]', function (event) {
+  //   event.preventDefault();
+  //
+  //   if (event.currentTarget.name === 'postcode') {
+  //     if (event.currentTarget.value.length > 4) {
+  //       $('[name="postcode"]').val(event.currentTarget.value.replace(/(\d{4})/g, '$1 ').replace(/  +/g, ' '));
+  //     }
+  //   }
+  //
+  //   if (timeout) {
+  //     clearTimeout(timeout);
+  //   }
+  //   timeout = setTimeout(function () {
+  //     const postcode = $('[name="postcode"]').val().replace(' ', '');
+  //     const houseNumber = $('[name="house_number"]').val().replace(' ', '');
+  //     const extension = $('[name="house_number_extension"]').val().replace(' ', '');
+  //     const street = encodeURIComponent($('[name="address1"]').val());
+  //     const id_country = $('[name="id_country"]').val().replace(' ', '');
+  //     if (postcode.length > 3 || houseNumber.length > 0) {
+  //       validateAddressApi(postcode, street, houseNumber, extension, id_country, event);
+  //     }
+  //     return false;
+  //   }, delay);
+  // });
 
   // //Api address check payment
   // $(document.body).on('keyup change input :-webkit-autofill', '#customer_address_form [name="shipping_address[postcode]"], #customer_address_form [name="shipping_address[house_number]"], #customer_address_form [name="shipping_address[address1]"], #customer_address_form [name="shipping_address[house_number_extension]"]', function(event){

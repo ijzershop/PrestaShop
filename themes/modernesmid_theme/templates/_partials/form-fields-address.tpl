@@ -76,14 +76,12 @@
           {/if}
         {else}
           {$field.label nofilter}
-          {block name='form_field_comment'}
-            {if (!$field.required && !in_array($field.type, ['radio-buttons', 'checkbox']))}
-              {if $field.name != 'phone'}
-                <span class="font-italic">{l s='(optioneel)' d='Shop.Forms.Labels'}</span>
-              {/if}
-            {/if}
-          {/block}
         {/if}
+      {block name='form_field_comment'}
+        {if ($field.required && !in_array($field.type, ['radio-buttons', 'checkbox']))}
+          <span class="font-italic text-danger">*</span>
+        {/if}
+      {/block}
 
     </label>
     {/if}

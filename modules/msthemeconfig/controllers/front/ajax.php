@@ -136,6 +136,10 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             return $this->_getKoopmanOrderStatus();
         }
 
+        if (Tools::getValue('method') == 'orderlabelstatus') {
+            return $this->_getKoopmanOrderLabelStatus();
+        }
+
 
         if (Tools::getValue('method') == 'orderretourinit') {
             return $this->_getKoopmanInitRetour();
@@ -1058,6 +1062,156 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     }
 
     /**
+     * @return false|void
+     */
+    private function _getKoopmanOrderLabelStatus()
+    {
+        try {
+            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $this->soapoptions);
+        } catch (Exception $e) {
+
+            echo 'error (new SoapClient) - ' . $e->getMessage();
+
+            return false;
+        }
+
+        $login = new stdClass();
+        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+
+        $date = date('YYYY-MM-DD hh:mm');
+        $zendingnr = null;
+        $renderTemplate = Tools::getValue('render_template', false);
+        $ref = Tools::getValue('reference');
+        $orderDetails = [];
+
+//                $ref = 'YS-092466';
+
+        try {
+            $order =  Order::getByReference($ref)->getFirst();
+            $orderDetails = $order->getOrderDetailList();
+        } catch (Exception $e){
+                PrestaShopLogger::addLog('failing to get order list:' . $e->getMessage());
+        }
+//                $ref = 'YS-131376';
+        try {
+            $status = $client->getAktueleOpdracht($login, $zendingnr, $ref);
+            if(empty($status)){
+                die('<div class="w-100 mt-4 text-center text-danger h2">De bestelling is nog niet aangemeld of is al verzonden!</div>');
+            }
+        } catch (Exception $e) {
+            if ($renderTemplate) {
+                die('<div class="w-100 mt-4 text-center text-danger h2">' . $e->getMessage() . '</div>');
+            } else {
+                die(json_encode(['error' => $e->getMessage()]));
+            }
+        }
+
+        $data = [];
+        $colliesData = [];
+
+        if(isset($status->aRegel)){
+            for ($s = 0; $s < count($status->aRegel); $s++) {
+                $Mgewicht = '';
+                $Mlengte = '';
+                $Mhoogte = '';
+                $Mbreedte = '';
+                $Mnrcollie = '';
+                $Meenheid = '';
+
+                if (isset($status->aRegel[$s]->vrzenh)) {
+                    $Meenheid = $status->aRegel[$s]->vrzenh;
+                }
+
+                if (isset($status->aRegel[$s]->nrcollo)) {
+                    $Mnrcollie = $status->aRegel[$s]->nrcollo;
+                }
+
+                if (isset($status->aRegel[$s]->gewicht)) {
+                    $Mgewicht = $status->aRegel[$s]->gewicht;
+                }
+                if (isset($status->aRegel[$s]->lengte)) {
+                    $Mlengte = $status->aRegel[$s]->lengte;
+                }
+                if (isset($status->aRegel[$s]->hoogte)) {
+                    $Mhoogte = $status->aRegel[$s]->hoogte;
+                }
+
+                if (isset($status->aRegel[$s]->breedte)) {
+                    $Mbreedte = $status->aRegel[$s]->breedte;
+                }
+
+                $colliesData[] =  [
+                    'nr' => $Mnrcollie,
+                    'type' => $Meenheid,
+                    'weight' => $Mgewicht,
+                    'length' => $Mlengte,
+                    'height' => $Mhoogte,
+                    'breedte' => $Mbreedte,
+                ];
+            }
+        }
+
+        $data['collies'] = $colliesData;
+        $data['products'] = $orderDetails;
+
+        $data['datum'] = '';
+        if(isset($status->datum)){
+            $data['datum'] = $status->datum;
+        }
+
+        $data['nrorder'] = $ref;
+        if(isset($status->nrorder)){
+            $data['nrorder'] = $status->nrorder;
+        }
+
+        $data['nrzend'] = '';
+        if(isset($status->nrzend)){
+            $data['nrzend'] = $status->nrzend;
+        }
+        $data['naam'] = '';
+        if(isset($status->geanaam)){
+            $data['naam'] = $status->geanaam;
+        }
+        $data['naam2'] = '';
+        if(isset($status->geanaam2)){
+            $data['naam2'] = $status->geanaam2;
+        }
+        $data['straat'] = '';
+        if(isset($status->geastraat)){
+            $data['straat'] = $status->geastraat;
+        }
+        $data['huisnr'] = '';
+        if(isset($status->geahuisnr)){
+            $data['huisnr'] = $status->geahuisnr;
+        }
+        $data['postcode'] = '';
+        if(isset($status->geapostcode)){
+            $data['postcode'] = $status->geapostcode;
+        }
+        $data['plaats'] = '';
+        if(isset($status->geaplaats)){
+            $data['plaats'] = $status->geaplaats;
+        }
+        $data['land'] = '';
+        if(isset($status->gealand)){
+            $data['land'] = $status->gealand;
+        }
+        $data['telefoon'] = '';
+        if(isset($status->geatelefoon)){
+            $data['telefoon'] = $status->geatelefoon;
+        }
+        $data['email'] = '';
+        if(isset($status->geaemail)){
+            $data['email'] = $status->geaemail;
+        }
+        die($this->kernel->getContainer()->get('twig')->render('@Modules/msthemeconfig/views/templates/admin/label_state_form.html.twig', $data));
+
+    }
+
+    /**
      * @throws SmartyException
      * @throws PrestaShopException
      * @throws PrestaShopDatabaseException
@@ -1371,6 +1525,9 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 $history->changeIdOrderState((int)$readyForShippingStatus, (int)$id_order);
                 $history->add();
             }
+
+
+
             die('printed');
         } else {
             die($export->output);

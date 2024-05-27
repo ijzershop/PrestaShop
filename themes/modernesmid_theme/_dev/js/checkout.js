@@ -514,7 +514,7 @@ $(document).ready(() => {
       $(element).parents('form').find('[name="address1"]').removeAttr('readonly');
       $(element).parents('form').find('[name="city"]').removeAttr('readonly');
     }
-  if(value === true){ 
+  if(value === true){
     checkFormatAddressApiCheckout().then(r => {});
   }
   });

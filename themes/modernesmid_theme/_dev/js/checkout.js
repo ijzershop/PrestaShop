@@ -156,7 +156,6 @@ $(document).ready(() => {
   }
 
   function validatePostCode(s, chosenCountry="13") {
-    console.log(['validatePostcode:', s, chosenCountry]);
     let reg = /^[1-9][0-9]{3}[\s]?[A-Za-z]{2}$/i;
     if(chosenCountry !== "13"){
       //belgiesche Postcode check
@@ -208,7 +207,6 @@ $(document).ready(() => {
     return function (e) {
       let context = this, args = arguments;
       let charTyped = String.fromCharCode(e.which);
-      console.log(['keypup type',e]);
       if(e.type !== 'keyup'){
         callback.apply(context, args);
       }
@@ -216,7 +214,6 @@ $(document).ready(() => {
       if(e.which === 9){
         callback.apply(context, args);
       }
-      console.log(['delayKeyUp',e, charTyped, callback, ms,  timer, context, args]);
       if (/[a-z\d]/i.test(charTyped)) {
         clearTimeout(timer);
         timer = setTimeout(function () {
@@ -744,7 +741,6 @@ $(document).ready(() => {
       $('input[name="conditions_to_approve[terms-and-conditions]"]').siblings('.error-small').remove();
     }
 
-    showNoShippingPhone();
     if ((validated && useForInvoice) || (validated && validatedPayment && !useForInvoice)) {
       $('input[name="no_shipping_phone"]').siblings('.error-small').remove();
       return true;
@@ -915,5 +911,20 @@ $(document).ready(() => {
   });
 
 
+  function errorCheckAddressForm() {
+      if($('.error-small').length > 0){
+        let deliveryHouseNr = $('#delivery-address [name="house_number"]');
+        let paymentHouseNr = $('#payment-address [name="house_number"]');
+        if(deliveryHouseNr.length > 0){
+          validateHouseNumberInputFields(deliveryHouseNr);
+          validatePhoneInputFields($('#delivery-address [name="phone"]'));
+        }
 
+        if(paymentHouseNr.length > 0){
+          validateHouseNumberInputFields(paymentHouseNr);
+          validatePhoneInputFields($('#payment-address [name="phone"]'));
+        }
+      }
+  }
+ errorCheckAddressForm();
 });

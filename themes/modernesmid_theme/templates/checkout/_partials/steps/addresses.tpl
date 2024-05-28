@@ -31,6 +31,7 @@
       data-id-address="{$id_address}"
       action="{url entity='order' params=['id_address' => $id_address]}"
       data-refresh-url="{url entity='order' params=['ajax' => 1, 'action' => 'addressForm']}"
+      novalidate
     >
       {if $use_same_address}
         <p>
@@ -60,9 +61,9 @@
           </label>
         </div>
         <div  style="font-size: .8rem;text-transform: initial;display:none;" id="postcode-check-info-delivery" class="col-12 mt-2 p-0" >
-          <p class="card p-2">Bij het invullen van uw postcode en bijhorende huisnummer word uw adres automatisch aangevuld en gevalideerd.
+          <p class="card p-2">Bij het invullen van uw postcode en bijhorende huisnummer wordt uw adres automatisch aangevuld en gevalideerd.
             Zo helpen we u fouten in uw adres voorkomen. <br/>Mocht u hiervan hinder ondervinden, dan kunt u deze Postcode check uitzetten.<br/>
-            <span class="mt-1"><b>Let op!</b> het adres word niet gevalideerd als de postcode check <b>uit</b> staat, dus kijk uw adres goed na voordat u de bestelling afrekend.</span</p>
+            <span class="mt-1"><b>Let op!</b> Het adres wordt niet gevalideerd als de postcode check <b>uit</b> staat, dus kijk uw adres goed na voordat u de bestelling afrekent.</span</p>
         </div>
       {/if}
 

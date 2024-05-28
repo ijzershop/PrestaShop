@@ -42,7 +42,6 @@
         {block name='form_field_item_country'}
         <select
           autocomplete="off"
-          oninvalid="setCustomValidity('Selecteer a.u.b. een ')"
           class="form-control form-control-select js-country  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
           name="{$field.name}"
           {if $field.required}required{/if}
@@ -194,15 +193,13 @@
         {elseif $field.name == 'phone'}
           <input
             autocomplete="off"
-            oninvalid="this.setCustomValidity('Vul a.u.b. een telefoonnummer in!')"
-            x-moz-errormessage='Vul a.u.b. een telefoonnummer in!'
             class="form-control  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
             {if isset($field.availableValues.placeholder)}placeholder="{$field.availableValues.placeholder}"{/if}
             {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
-            required>
+            {if $field.required}required{/if}>
           {block name='form_field_errors'}
             {include file='_partials/form-errors.tpl' errors=$field.errors}
           {/block}
@@ -210,8 +207,6 @@
           <input
             tabindex="-1"
             autocomplete="off"
-            oninvalid="this.setCustomValidity('Vul a.u.b. een straat in!')"
-            x-moz-errormessage='Vul a.u.b. een straat in!'
             class="form-control  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
@@ -228,8 +223,6 @@
           <input
             tabindex="-1"
             autocomplete="off"
-            oninvalid="this.setCustomValidity('Vul a.u.b. een straat in!')"
-            x-moz-errormessage='Vul a.u.b. een straat in!'
             class="form-control  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"
@@ -246,8 +239,6 @@
           {elseif $field.name == 'postcode'}
           <input
             autocomplete="off"
-            oninvalid="this.setCustomValidity('Vul a.u.b. uw postcode en huisnummer in!')"
-            x-moz-errormessage='Vul a.u.b. uw postcode en huisnummer in!'
             class="form-control {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}"
             name="{$field.name}"
             type="{$field.type}"

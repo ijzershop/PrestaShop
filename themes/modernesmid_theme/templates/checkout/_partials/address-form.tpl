@@ -9,13 +9,13 @@
 {/block}
 
 {block name="address_form_url"}
-
-{*{var_dump($id_address)}*}
     <form
+      id="checkout-form"
       method="POST"
       action="{url entity='order' params=['id_address' => $id_address]}"
       data-id-address="{$id_address}"
       data-refresh-url="{url entity='order' params=['ajax' => 1, 'action' => 'addressForm']}"
+      novalidate="novalidate"
     >
 {/block}
 

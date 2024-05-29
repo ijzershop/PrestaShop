@@ -73,10 +73,10 @@ position: absolute;
   color: #000 !important;
   vertical-align: text-top;">
         <span class="product-price font-weight-bold">{Context::getContext()->currentLocale->formatPrice($product.price_with_reduction_without_tax*(int)$product.quantity, 'EUR')}</span>
-        {if $product.price_without_reduction_without_tax != $product.price_with_reduction_without_tax}
-          <br><span class="product-price regular-price">
-          {Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax*(int)$product.quantity, 'EUR')}</span>
-        {/if}
+{*        {if $product.price_without_reduction_without_tax != $product.price_with_reduction_without_tax}*}
+{*          <br><span class="product-price regular-price">*}
+{*          {Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax*(int)$product.quantity, 'EUR')}</span>*}
+{*        {/if}*}
 
       </td>
     </tr>

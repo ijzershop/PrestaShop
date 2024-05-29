@@ -51,7 +51,7 @@
                     </div>
                     <label for="delivery_option_{$carrier.id}" class="col-xs-9 col-sm-11 delivery-option-2">
                       <div class="row">
-                        <div class="col-sm-2 col-xs-12">
+                        <div class="col-sm-1 col-xs-12">
                           <div class="row carrier{if $carrier.logo} carrier-hasLogo{/if}">
                             {if $carrier.logo}
                             <div class="col-xs-12 carrier-logo">
@@ -60,10 +60,10 @@
                             {/if}
                           </div>
                         </div>
-                        <div class="col-sm-7 col-xs-12">
+                        <div class="col-sm-8 col-xs-12">
                           <span class="carrier-delay">{$carrier.delay}</span>
                         </div>
-                        <div class="col-sm-3 col-xs-12">
+                        <div class="col-sm-3 col-xs-12 text-right">
                           <span class="carrier-price  font-weight-bold">{$carrier.price}</span>
                         </div>
                       </div>
@@ -83,7 +83,7 @@
                     </div>
                     <label for="delivery_option_{$carrier.id}" class="col-xs-9 col-sm-11 delivery-option-2">
                       <div class="row">
-                        <div class="col-sm-2 col-xs-12">
+                        <div class="col-sm-1 col-xs-12">
                           <div class="row carrier {if $carrier.logo} carrier-hasLogo{/if}">
                             {if $carrier.logo}
                               <div class="col-xs-12 carrier-logo">
@@ -92,10 +92,10 @@
                             {/if}
                           </div>
                         </div>
-                        <div class="col-sm-7 col-xs-12">
+                        <div class="col-sm-8 col-xs-12">
                           <span class="carrier-delay">{$carrier.delay}</span>
                         </div>
-                        <div class="col-sm-3 col-xs-12">
+                        <div class="col-sm-3 col-xs-12 text-right">
                           <span class="carrier-price  font-weight-bold">{$carrier.price}</span>
                         </div>
                       </div>
@@ -154,7 +154,7 @@
                   </script>
 
 
-                  <div class="col-11 offset-1 pl-4 pt-2 added-to-order-block" data-id="{$carrier_id}">
+                  <div class="col-9 offset-2 pt-2 added-to-order-block" data-id="{$carrier_id}">
                     <input type="hidden" name="added_to_order" data-id="{$carrier_id}" id="added_to_order" value="{if $delivery_option != $carrier_id}{$availableOrders[0].reference}{/if}">
                     <a style="color:#777777;" target="_blank" href="/index.php?controller=order-detail&id_order={$availableOrders[0].id_order}">Bekijk de lopende bestelling {$availableOrders[0].reference} waar u de huidige bestelling aan wilt toevoegen.</a>
                   </div>

@@ -38,7 +38,7 @@
 {assign var='formObjects' value=[] scope='root'}
 
 
-											
+
 
 
 {assign var='formObjects' value=array_push(['form_id'=> {if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{if isset($smarty.capture.table_count) && $smarty.capture.table_count}_{$smarty.capture.table_count|intval}{/if}{/if}, 'form_action' => {$current|escape:'html':'UTF-8'}{if isset($token) && $token}&amp;token={$token|escape:'html':'UTF-8'}{/if}, 'form_enctype'=> 'multipart/form-data' ,'form_style' => {if isset($style)} style="{$style}"{/if}, 'hidden_identifier' => '{if $form_id}
@@ -48,7 +48,7 @@
 ]) scope='root'}
 
 
-	
+
 {* 	{if !empty($submit_action)}
 		<input type="hidden" name="{$submit_action}" value="1" />
 	{/if} *}

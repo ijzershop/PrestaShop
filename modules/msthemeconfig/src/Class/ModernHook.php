@@ -1088,8 +1088,12 @@ class ModernHook
         if($liveMode){
             $min='.min';
         }
-        if (Dispatcher::getInstance()->getController() == 'cms') {
 
+
+
+        if (Dispatcher::getInstance()->getController() == 'cart') {
+            $this->controller->registerJavascript('tinymce', 'js/tiny_mce/tinymce.min.js', ['priority' => 200, 'attribute' => 'async']);
+        } elseif (Dispatcher::getInstance()->getController() == 'cms') {
             if ((int)$this->controller->cms->id == (int)$reviewPage) {
                 $this->controller->registerJavascript(
                     'module-msthemeconfig-kiyohxmlconvertjs',

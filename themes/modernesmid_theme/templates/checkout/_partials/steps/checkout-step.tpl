@@ -127,7 +127,7 @@
             <span>{$title}</span>
           </td>
           <td class="col-2 text-right">
-            <span class="step-edit text-muted"><i class="fasl fa-pen-to-square edit"></i> <span class="d-none d-md-inline">{l s='Edit' d='Shop.Theme.Actions'}</span></span>
+            <span class="step-edit text-muted"><i class="fasl fa-pen-to-square edit"></i> <span class="d-none d-xl-inline">{l s='Edit' d='Shop.Theme.Actions'}</span></span>
           </td>
         </tr>
       </table>

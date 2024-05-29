@@ -471,7 +471,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->description = strip_tags($description);
             $credit->id_customer = 0;
             $credit->date_from = date('Y-m-d H:i:s');
-            $credit->date_to = date('Y-m-d H:i:s', strtotime("+3 hour"));
+            $credit->date_to = date('Y-m-d H:i:s', strtotime("+15 minutes"));
             $credit->quantity = 1;
             $credit->quantity_per_user = 1;
             $credit->priority = 1;
@@ -505,6 +505,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->gift_product_attribute = 0;
             $credit->highlight = 0;
             $credit->active = 1;
+            $credit->id_connected_cart = $cart->id;
             $credit->add(true);
 
             $values = [

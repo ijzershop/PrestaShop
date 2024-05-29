@@ -911,6 +911,11 @@ $(document).ready(() => {
   });
 
 
+  $('#checkout-personal-information-step a[data-toggle="tab"]').on('show.bs.tab', function (event) {
+    $(event.target).addClass('text-dark').removeClass('btn btn-outline-primary');
+    $(event.relatedTarget).addClass('btn btn-outline-primary').removeClass('text-dark');
+  })
+
   function errorCheckAddressForm() {
       if($('.error-small').length > 0){
         let deliveryHouseNr = $('#delivery-address [name="house_number"]');

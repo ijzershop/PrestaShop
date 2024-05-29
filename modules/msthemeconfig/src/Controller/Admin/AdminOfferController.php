@@ -184,14 +184,17 @@ class AdminOfferController extends FrameworkBundleAdminController {
 
         $adminSelect2DataLink = $this->generateUrl('offerintegration_ajax_select2_products_data');
         $putLink = $this->generateUrl('offerintegration_ajax_put_offer_row');
+        $priceLink = $this->generateUrl('offerintegration_ajax_price_data');
 
         return $this->render('@Modules/msthemeconfig/views/templates/admin/create_offer_integration.html.twig', [
             'offerForm' => $offerForm->createView(),
             'offerRows' => [],
             'offerId' => null,
+            'getPriceLink' => $priceLink,
             'putLink' => $putLink,
             'adminSelect2DataLink' => $adminSelect2DataLink
         ]);
+
     }
 
     /**

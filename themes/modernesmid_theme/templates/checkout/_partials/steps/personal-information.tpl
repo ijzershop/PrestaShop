@@ -48,9 +48,9 @@
 
   {else}
     <ul class="nav nav-inline my-2 border-bottom" role="tablist">
-      <li class="nav-item col text-center">
+      <li class="nav-item col-12 col-sm-5 text-center">
         <a
-          class="nav-link h5 {if !$show_login_form}active text-dark{/if}"
+          class="nav-link h5 {if !$show_login_form}active text-dark {else} btn btn-outline-primary {/if}"
           data-toggle="tab"
           href="#checkout-guest-form"
           role="tab"
@@ -58,20 +58,24 @@
           {if !$show_login_form} aria-selected="true"{/if}
           >
           {if $guest_allowed}
-            {l s='Order as a guest' d='Shop.Theme.Checkout'}
+            Nieuwe Klant
+{*            {l s='Order as a guest' d='Shop.Theme.Checkout'}*}
           {else}
             {l s='Create an account' d='Shop.Theme.Customeraccount'}
           {/if}
         </a>
       </li>
 
-      <li class="nav-item col text-center">
-        <span class="nav-separator h6"> | </span>
+      <li class="nav-item col-12 col-sm-2  text-center">
+        <span class="nav-separator h6 d-none d-sm-block text-center" style="line-height: 2rem;"> | </span>
+        <span class="nav-separator h6 d-block d-sm-none text-center">
+          <hr style="color: #000;opacity: 1;border-color: #000; border-width: 2px;margin:0 auto; width:60%!important"/>
+        </span>
       </li>
 
-      <li class="nav-item col text-center">
+      <li class="nav-item col-12 col-sm-5  text-center">
         <a
-          class="nav-link h5 {if $show_login_form}active text-dark{/if}"
+          class="nav-link h5 {if $show_login_form}active text-dark {else} btn btn-outline-primary {/if}"
           data-link-action="show-login-form"
           data-toggle="tab"
           href="#checkout-login-form"
@@ -79,7 +83,8 @@
           aria-controls="checkout-login-form"
           {if $show_login_form} aria-selected="true"{/if}
         >
-          {l s='Sign in' d='Shop.Theme.Actions'}
+          Bestaande Klant
+{*          {l s='Sign in' d='Shop.Theme.Actions'}*}
         </a>
       </li>
     </ul>

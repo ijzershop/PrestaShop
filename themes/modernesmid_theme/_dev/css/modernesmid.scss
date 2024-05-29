@@ -4,6 +4,9 @@ body {
   color: $color_1;
 }
 
+.btn-outline-primary:hover {
+  color: #fff!important;
+}
 #wrapper.wait-vat-toggle{
   opacity: .4;
   pointer-events: none;

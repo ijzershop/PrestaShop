@@ -912,8 +912,8 @@ $(document).ready(() => {
 
 
   $('#checkout-personal-information-step a[data-toggle="tab"]').on('show.bs.tab', function (event) {
-    $(event.target).addClass('text-dark').removeClass('btn btn-outline-primary');
-    $(event.relatedTarget).addClass('btn btn-outline-primary').removeClass('text-dark');
+    $(event.target).addClass('user-select-none').removeClass('btn btn-outline-primary');
+    $(event.relatedTarget).addClass('btn btn-outline-primary').removeClass('user-select-none');
   })
 
   function errorCheckAddressForm() {

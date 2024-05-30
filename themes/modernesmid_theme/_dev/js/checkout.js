@@ -542,13 +542,13 @@ $(document).ready(() => {
   //   e.stopImmediatePropagation();
   // }));
   //Names on adres form validation
-  $('#delivery-address input[name="firstname"], #delivery-address input[name="lastname"], #payment-address input[name="firstname"], #payment-address input[name="lastname"] ')
+  $('#delivery-address input[name="firstname"], #delivery-address input[name="lastname"], #invoice-address input[name="firstname"], #invoice-address input[name="lastname"] ')
     .on('keyup paste', delayKeyUp(function (e) {
       e.stopImmediatePropagation();
       validateNameInputFields(this);
   }));
   //Postcode on adres form validation
-  $('#delivery-address input[name="postcode"], #payment-address input[name="postcode"]')
+  $('#delivery-address input[name="postcode"], #invoice-address input[name="postcode"]')
     .on('keyup paste', delayKeyUp(function (e) {
       e.stopImmediatePropagation();
       let value = $(this).val();
@@ -559,19 +559,19 @@ $(document).ready(() => {
       }
   }));
   //Address
-  $('#delivery-address input[name="address1"], #payment-address input[name="address1"]')
+  $('#delivery-address input[name="address1"], #invoice-address input[name="address1"]')
     .on('keyup paste', delayKeyUp(function (e) {
       validateAddressInputFields(this);
       e.stopImmediatePropagation();
   }));
   //Huisnummer
-  $('#delivery-address input[name="house_number"], #payment-address input[name="house_number"]')
+  $('#delivery-address input[name="house_number"], #invoice-address input[name="house_number"]')
     .on('keyup paste', delayKeyUp(function (e) {
       validateHouseNumberInputFields(this);
       e.stopImmediatePropagation();
   }));
   //Huisnummer extensie
-  $('#delivery-address input[name="house_number_extension"], #payment-address input[name="house_number_extension"]')
+  $('#delivery-address input[name="house_number_extension"], #invoice-address input[name="house_number_extension"]')
     .on('keyup paste', delayKeyUp(function (e) {
     if($('#cart-postcode-check-toggle').prop('checked') === true){
       checkFormatAddressApiCheckout().then(r => {
@@ -580,41 +580,41 @@ $(document).ready(() => {
     }
   }));
   //woonplaats
-  $('#delivery-address input[name="city"], #payment-address input[name="city"]')
+  $('#delivery-address input[name="city"], #invoice-address input[name="city"]')
     .on('keyup paste', delayKeyUp(function (e) {
       validateCityInputFields(this);
       e.stopImmediatePropagation();
   }));
   //Alias
-  $('#payment-address input[name="alias"], #delivery-address input[name="alias"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#invoice-address input[name="alias"], #delivery-address input[name="alias"]').on('keyup paste', delayKeyUp(function (e) {
       validateAliasInputFields(this);
       e.stopImmediatePropagation();
   }));
   //Company fields address
-  $('#delivery-address input[name="company"], #payment-address input[name="company"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#delivery-address input[name="company"], #invoice-address input[name="company"]').on('keyup paste', delayKeyUp(function (e) {
       validateCompanyInputFields(this);
     e.stopImmediatePropagation();
   }));
 
   //Phone number
-  $('#delivery-address input[name="phone"], #payment-address input[name="phone"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#delivery-address input[name="phone"], #invoice-address input[name="phone"]').on('keyup paste', delayKeyUp(function (e) {
       validatePhoneInputFields(this);
     e.stopImmediatePropagation();
   }));
 
   //mobile phonenumber
-  $('#delivery-address input[name="mobile"], #payment-address input[name="mobile"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#delivery-address input[name="mobile"], #invoice-address input[name="mobile"]').on('keyup paste', delayKeyUp(function (e) {
     validatePhoneInputFields(this, false);
     e.stopImmediatePropagation();
   }));
 
   //Other text data
-  $('#payment-address textarea[name="other"], #delivery-address textarea[name="other"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#invoice-address textarea[name="other"], #delivery-address textarea[name="other"]').on('keyup paste', delayKeyUp(function (e) {
       validateTextInputFields(this);
     e.stopImmediatePropagation();
   }));
 
-  $('#delivery-address select[name="id_country"], #payment-address select[name="id_country"]').on('change', function (e) {
+  $('#delivery-address select[name="id_country"], #invoice-address select[name="id_country"]').on('change', function (e) {
     validateCountryInputFields(this);
     e.stopImmediatePropagation();
 
@@ -695,23 +695,23 @@ $(document).ready(() => {
     if (!useForInvoice) {
       validatedPayment = true;
 
-      if ($('#payment-address input[name="postcode"]').val() !== undefined) {
-        postcodePayment = $('#payment-address input[name="postcode"]').val().replace(' ', '');
+      if ($('#invoice-address input[name="postcode"]').val() !== undefined) {
+        postcodePayment = $('#invoice-address input[name="postcode"]').val().replace(' ', '');
       }
-      if ($('#payment-address input[name="house_number"]').val() !== undefined) {
-        houseNumberPayment = $('#payment-address input[name="house_number"]').val().replace(' ', '');
+      if ($('#invoice-address input[name="house_number"]').val() !== undefined) {
+        houseNumberPayment = $('#invoice-address input[name="house_number"]').val().replace(' ', '');
       }
-      if ($('#payment-address input[name="house_number_extension"]').val() !== undefined) {
-        extensionPayment = $('#payment-address input[name="house_number_extension"]').val().replace(' ', '');
+      if ($('#invoice-address input[name="house_number_extension"]').val() !== undefined) {
+        extensionPayment = $('#invoice-address input[name="house_number_extension"]').val().replace(' ', '');
       }
-      let streetPayment = $('#payment-address input[name="address1"]').val();
+      let streetPayment = $('#invoice-address input[name="address1"]').val();
 
-      let cityPayment = $('#payment-address input[name="city"]').val();
+      let cityPayment = $('#invoice-address input[name="city"]').val();
 
-      let id_countryPayment = $('#payment-address select[name="id_country"]').val();
+      let id_countryPayment = $('#invoice-address select[name="id_country"]').val();
       if (postcodePayment !== undefined && (postcodePayment.length >= 5 || houseNumberPayment.length > 0) &&
         (id_countryPayment === "13" || (id_countryPayment === "3" && streetPayment.length > 0 && cityPayment.length > 0))) {
-        validatedPayment = await validateAddressApiCheckout(postcodePayment.trim(), streetPayment.trim(), houseNumberPayment.trim(), extensionPayment.trim(), id_countryPayment.trim(), cityPayment.trim(), "payment");
+        validatedPayment = await validateAddressApiCheckout(postcodePayment.trim(), streetPayment.trim(), houseNumberPayment.trim(), extensionPayment.trim(), id_countryPayment.trim(), cityPayment.trim(), "invoice");
       }
     }
 
@@ -722,11 +722,11 @@ $(document).ready(() => {
       return false;
     }
 
-    $('#payment-address input[name="phone"]').siblings('.error-small').remove();
+    $('#invoice-address input[name="phone"]').siblings('.error-small').remove();
     if (!$('#use_same_address').is(':checked')) {
-      if ($('#payment-address input[name="phone"]').val() === '' && $('#delivery-address input[name="postcode"]').length > 3) {
-        $('#payment-address input[name="phone"]').removeClass('is-valid').addClass('is-invalid');
-        $('#payment-address input[name="phone"]').parent().append(inputMessage(required_error));
+      if ($('#invoice-address input[name="phone"]').val() === '' && $('#delivery-address input[name="postcode"]').length > 3) {
+        $('#invoice-address input[name="phone"]').removeClass('is-valid').addClass('is-invalid');
+        $('#invoice-address input[name="phone"]').parent().append(inputMessage(required_error));
         return false;
       }
     }
@@ -919,7 +919,7 @@ $(document).ready(() => {
   function errorCheckAddressForm() {
       if($('.error-small').length > 0){
         let deliveryHouseNr = $('#delivery-address [name="house_number"]');
-        let paymentHouseNr = $('#payment-address [name="house_number"]');
+        let paymentHouseNr = $('#invoice-address [name="house_number"]');
         if(deliveryHouseNr.length > 0){
           validateHouseNumberInputFields(deliveryHouseNr);
           validatePhoneInputFields($('#delivery-address [name="phone"]'));
@@ -927,7 +927,7 @@ $(document).ready(() => {
 
         if(paymentHouseNr.length > 0){
           validateHouseNumberInputFields(paymentHouseNr);
-          validatePhoneInputFields($('#payment-address [name="phone"]'));
+          validatePhoneInputFields($('#invoice-address [name="phone"]'));
         }
       }
   }

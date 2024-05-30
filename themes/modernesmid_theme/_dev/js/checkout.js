@@ -536,11 +536,11 @@ $(document).ready(() => {
     e.stopImmediatePropagation();
     validateEmailInputFields(this);
   }));
-  //Password validation
-  $('input[name="password"]').on('keyup paste', delayKeyUp(function (e) {
-    validatePasswordInputFields(this);
-    e.stopImmediatePropagation();
-  }));
+  // //Password validation
+  // $('input[name="password"]').on('keyup paste', delayKeyUp(function (e) {
+  //   validatePasswordInputFields(this);
+  //   e.stopImmediatePropagation();
+  // }));
   //Names on adres form validation
   $('#delivery-address input[name="firstname"], #delivery-address input[name="lastname"], #payment-address input[name="firstname"], #payment-address input[name="lastname"] ')
     .on('keyup paste', delayKeyUp(function (e) {

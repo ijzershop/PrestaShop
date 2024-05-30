@@ -2413,3 +2413,10 @@ body#checkout section.checkout-step.-unreachable .step-title{
 .form-control.is-valid + .input-group-append button, .was-validated .form-control:valid + .input-group-append button {
   border-color:#21a055!important;
 }
+
+
+.user-select-none{
+  text-decoration: none;
+  pointer-events: none;
+  cursor: none;
+}

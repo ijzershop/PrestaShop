@@ -43,7 +43,7 @@
               {foreach from=$delivery_options item=carrier key=carrier_id}
                 {if (int)$carrier_id != (int)Configuration::get('ADDTOORDER_DELIVERY_METHOD')}
                   <div class="row delivery-option js-delivery-option {if $delivery_option == $carrier_id} selected {/if}">
-                    <div class="col-sm-1">
+                    <div class="col-sm-1 text-center">
                       <span class="custom-radio float-xs-left">
                         <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if}>
                         <span></span>
@@ -51,7 +51,7 @@
                     </div>
                     <label for="delivery_option_{$carrier.id}" class="col-xs-9 col-sm-11 delivery-option-2">
                       <div class="row">
-                        <div class="col-sm-1 col-xs-12">
+                        <div class="col-sm-1 col-xs-12 pl-0">
                           <div class="row carrier{if $carrier.logo} carrier-hasLogo{/if}">
                             {if $carrier.logo}
                             <div class="col-xs-12 carrier-logo">
@@ -75,7 +75,7 @@
                   <div class="clearfix"></div>
                 {else}
                   <div class="row delivery-option js-delivery-option pb-0 {if $delivery_option == $carrier_id} selected {/if}">
-                    <div class="col-sm-1">
+                    <div class="col-sm-1 text-center">
                       <span class="custom-radio float-xs-left">
                         <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if}>
                         <span></span>
@@ -83,7 +83,7 @@
                     </div>
                     <label for="delivery_option_{$carrier.id}" class="col-xs-9 col-sm-11 delivery-option-2">
                       <div class="row">
-                        <div class="col-sm-1 col-xs-12">
+                        <div class="col-sm-1 col-xs-12 pl-0">
                           <div class="row carrier {if $carrier.logo} carrier-hasLogo{/if}">
                             {if $carrier.logo}
                               <div class="col-xs-12 carrier-logo">
@@ -154,21 +154,21 @@
                   </script>
 
 
-                  <div class="col-9 offset-2 pt-2 added-to-order-block" data-id="{$carrier_id}">
+                  <div class="col-9 offset-2 pl-2 pt-2 added-to-order-block" data-id="{$carrier_id}">
                     <input type="hidden" name="added_to_order" data-id="{$carrier_id}" id="added_to_order" value="{if $delivery_option != $carrier_id}{$availableOrders[0].reference}{/if}">
                     <a style="color:#777777;" target="_blank" href="/index.php?controller=order-detail&id_order={$availableOrders[0].id_order}">Bekijk de lopende bestelling {$availableOrders[0].reference} waar u de huidige bestelling aan wilt toevoegen.</a>
                   </div>
 
                 {else}
 {*                  No orders available  *}
-                  <div class="col-11 offset-1 pl-4 pt-2 added-to-order-block" data-id="{$carrier_id}">
+                  <div class="col-9 offset-2 pl-2 pt-2 added-to-order-block" data-id="{$carrier_id}">
                     <a style="color:#777777;">Er is momenteel geen bestaande bestelling beschikbaar waar u deze aan toe kunt voegen.</a>
                   </div>
 
                 {/if}
                 {else}
                   {* Customer is guest *}
-                  <div class="col-11 offset-1 pl-4 pt-2 added-to-order-block" id="order_number_validate" data-id="{$carrier_id}" style="{if $delivery_option != $carrier_id}display:none;{/if}">
+                  <div class="col-9 offset-2 pl-2 pt-2 added-to-order-block" id="order_number_validate" data-id="{$carrier_id}" style="{if $delivery_option != $carrier_id}display:none;{/if}">
                     Wilt u uw bestelling graag toevoegen aan een bestaande bestelling, zoek hieronder naar de gewenste bestelling.
                     <script type="text/javascript">
                       let addToOrderAddress = {};
@@ -210,9 +210,9 @@
               <div class="clearfix"></div>
             </div>
           {/block}
-          <div class="order-options">
+          <div class="order-options mt-5 border-top-1">
             <div id="delivery">
-              <label for="delivery_message">{l s='Instructie voor de expediteur' d='Shop.Theme.Checkout'}</label>
+              <label for="delivery_message"><b>{l s='Instructie voor de expediteur' d='Shop.Theme.Checkout'}</b></label>
               <textarea class="form-control" maxlength="70" rows="2" cols="120" id="delivery_message" name="delivery_message" placeholder="{l s='Voeg instructie voor de expediteur toe (max. 70 tekens)' d='Shop.Theme.Checkout'}">{$delivery_message}</textarea>
             </div>
 

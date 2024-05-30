@@ -50,7 +50,7 @@
     <ul class="nav nav-inline my-2 border-bottom" role="tablist">
       <li class="nav-item col-12 col-sm-5 text-center">
         <a
-          class="nav-link h5 {if !$show_login_form}active text-dark {else} btn btn-outline-primary {/if}"
+          class="nav-link h5 {if !$show_login_form}active user-select-none{else} btn btn-outline-primary {/if}"
           data-toggle="tab"
           href="#checkout-guest-form"
           role="tab"
@@ -75,7 +75,7 @@
 
       <li class="nav-item col-12 col-sm-5  text-center">
         <a
-          class="nav-link h5 {if $show_login_form}active text-dark {else} btn btn-outline-primary {/if}"
+          class="nav-link h5 {if $show_login_form}active user-select-none{else} btn btn-outline-primary {/if}"
           data-link-action="show-login-form"
           data-toggle="tab"
           href="#checkout-login-form"

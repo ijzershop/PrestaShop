@@ -536,11 +536,11 @@ $(document).ready(() => {
     e.stopImmediatePropagation();
     validateEmailInputFields(this);
   }));
-  //Password validation
-  $('input[name="password"]').on('keyup paste', delayKeyUp(function (e) {
-    validatePasswordInputFields(this);
-    e.stopImmediatePropagation();
-  }));
+  // //Password validation
+  // $('input[name="password"]').on('keyup paste', delayKeyUp(function (e) {
+  //   validatePasswordInputFields(this);
+  //   e.stopImmediatePropagation();
+  // }));
   //Names on adres form validation
   $('#delivery-address input[name="firstname"], #delivery-address input[name="lastname"], #payment-address input[name="firstname"], #payment-address input[name="lastname"] ')
     .on('keyup paste', delayKeyUp(function (e) {
@@ -912,8 +912,8 @@ $(document).ready(() => {
 
 
   $('#checkout-personal-information-step a[data-toggle="tab"]').on('show.bs.tab', function (event) {
-    $(event.target).addClass('text-dark').removeClass('btn btn-outline-primary');
-    $(event.relatedTarget).addClass('btn btn-outline-primary').removeClass('text-dark');
+    $(event.target).addClass('user-select-none').removeClass('btn btn-outline-primary');
+    $(event.relatedTarget).addClass('btn btn-outline-primary').removeClass('user-select-none');
   })
 
   function errorCheckAddressForm() {

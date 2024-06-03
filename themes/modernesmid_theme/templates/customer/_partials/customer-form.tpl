@@ -40,7 +40,7 @@
 
 
 
-  <form action="{block name='customer_form_actionurl'}{$action}{/block}" id="customer-form" class="js-customer-form {$action}" autocomplete="off" method="post">
+  <form action="{block name='customer_form_actionurl'}{$action}{/block}" id="customer-form" class="js-customer-form" novalidate autocomplete="off" method="post">
     <section>
       {block "form_fields"}
       {foreach from=$formFields item="field"}

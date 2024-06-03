@@ -115,7 +115,7 @@
                         'js-current-step' => $step_is_current
                     ]|classnames}"
   >
-    <h1 class="step-title js-step-title h3 p-2 pt-3 pb-3">
+    <h1 class="step-title js-step-title h3 p-2 pt-3 pb-3 {if $identifier === 'checkout-personal-information-step'}border-0{/if}">
       <div class="w-100">
         <table class="w-100">
         <tr class="row">

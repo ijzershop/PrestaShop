@@ -22,52 +22,54 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-{if $cart.vouchers.allowed}
+
   {block name='cart_voucher'}
-    <div class="block-promo">
-      <div class="cart-voucher">
-        {if $cart.vouchers.added}
+      {if $cart.vouchers.added}
+        <div class="block-promo mb-2 pt-2 border-top" style="border-top-style:dashed!important;">
+        <div class="cart-voucher">
           {block name='cart_voucher_list'}
-            <ul class="promo-name card-block">
+            <ul class="promo-name card-block list-unstyled">
               {foreach from=$cart.vouchers.added item=voucher}
-                <li class="cart-summary-line">
-                  <span class="label">{$voucher.name}</span>
-                  <div class="float-xs-right">
-                    <span>{$voucher.reduction_formatted}</span>
-                    <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
-                  </div>
+                <li class="cart-summary-line" data-toggle="tooltip" data-placement="top" title="Deze korting geeft u een reductie van {str_replace('-','', $voucher.reduction_formatted)} incl. btw">
+                  <table class="w-100 text-muted">
+                    <tr>
+                      <td>{$voucher.name}</td>
+                      {if in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Customer::getGroupsStatic(Context::getContext()->cart->id_customer)) || (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
+                      <td class="text-right"><a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="fasl fa-trash text-danger"></i></a></td>
+                      {/if}
+                    </tr>
+                  </table>
                 </li>
               {/foreach}
             </ul>
           {/block}
         {/if}
+    {if $cart.vouchers.allowed && (in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Customer::getGroupsStatic(Context::getContext()->cart->id_customer)) || (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}
 
-        <p class="promo-code-button display-promo{if $cart.discounts|count > 0} with-discounts{/if}">
-          <a class="collapse-button" href="#promo-code">
-            {l s='Have a promo code?' d='Shop.Theme.Checkout'}
-          </a>
-        </p>
-
-        <div id="promo-code" class="collapse{if $cart.discounts|count > 0} in{/if}">
+        <div id="promo-code" class="collapse show">
           <div class="promo-code">
             {block name='cart_voucher_form'}
               <form action="{$urls.pages.cart}" data-link-action="add-voucher" method="post">
                 <input type="hidden" name="token" value="{$static_token}">
                 <input type="hidden" name="addDiscount" value="1">
-                <input class="promo-input" type="text" name="discount_name" placeholder="{l s='Promo code' d='Shop.Theme.Checkout'}">
-                <button type="submit" class="btn btn-primary"><span>{l s='Add' d='Shop.Theme.Actions'}</span></button>
+                <div class="input-group">
+                  <input class="form-control" type="text" name="discount_name" placeholder="{l s='Vul hier uw kortingscode in' d='Shop.Theme.Checkout'}">
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-success"><i class="fasl fa-check"></i></button>
+                  </div>
+                </div>
               </form>
             {/block}
 
-            {block name='cart_voucher_notifications'}
-              <div class="alert alert-danger js-error" role="alert">
-                <i class="material-icons">&#xE001;</i><span class="ml-1 js-error-text"></span>
-              </div>
-            {/block}
+{*            {block name='cart_voucher_notifications'}*}
+{*              <div class="alert alert-danger js-error" role="alert">*}
+{*                <i class="material-icons">&#xE001;</i><span class="ml-1 js-error-text"></span>*}
+{*              </div>*}
+{*            {/block}*}
 
-            <a class="collapse-button promo-code-button cancel-promo" role="button" data-toggle="collapse" data-target="#promo-code" aria-expanded="true" aria-controls="promo-code">
-              {l s='Close' d='Shop.Theme.Checkout'}
-            </a>
+{*            <a class="collapse-button promo-code-button cancel-promo" role="button" data-toggle="collapse" data-target="#promo-code" aria-expanded="true" aria-controls="promo-code">*}
+{*              {l s='Close' d='Shop.Theme.Checkout'}*}
+{*            </a>*}
           </div>
         </div>
 
@@ -87,5 +89,5 @@
         {/if}
       </div>
     </div>
-  {/block}
 {/if}
+  {/block}

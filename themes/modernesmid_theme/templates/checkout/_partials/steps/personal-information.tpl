@@ -47,10 +47,10 @@
     </div>
 
   {else}
-    <ul class="nav nav-inline my-2 border-bottom" role="tablist">
-      <li class="nav-item col-12 col-sm-5 text-center">
+    <ul class="nav nav-inline my-2" role="tablist">
+      <li style="border-color:#3b56ad !important;" class="nav-item col-12 col-sm-6 text-center {if !$show_login_form}border-right border-top border-left{else}border-bottom{/if}">
         <a
-          class="nav-link h5 {if !$show_login_form}active user-select-none{else} btn btn-outline-primary {/if}"
+          class="nav-link h5 mt-2 {if !$show_login_form}text-dark active user-select-none {else} btn btn-outline-primary {/if}"
           data-toggle="tab"
           href="#checkout-guest-form"
           role="tab"
@@ -58,24 +58,24 @@
           {if !$show_login_form} aria-selected="true"{/if}
           >
           {if $guest_allowed}
-            Nieuwe Klant
+            Nieuwe Klant{if $show_login_form}? Klik dan hier!{/if}
 {*            {l s='Order as a guest' d='Shop.Theme.Checkout'}*}
           {else}
-            {l s='Create an account' d='Shop.Theme.Customeraccount'}
+            {l s='Create an account' d='Shop.Theme.Customeraccount'}{if !$show_login_form}? Klik dan hier!{/if}
           {/if}
         </a>
       </li>
 
-      <li class="nav-item col-12 col-sm-2  text-center">
-        <span class="nav-separator h6 d-none d-sm-block text-center" style="line-height: 2rem;"> | </span>
-        <span class="nav-separator h6 d-block d-sm-none text-center">
-          <hr style="color: #000;opacity: 1;border-color: #000; border-width: 2px;margin:0 auto; width:60%!important"/>
-        </span>
-      </li>
+{*      <li class="nav-item col-12 col-sm-2  text-center p-0">*}
+{*        <span class="nav-separator h6 d-none d-sm-block text-center border-bottom h-100" style="line-height: 2rem;"></span>*}
+{*        <span class="nav-separator h6 d-block d-sm-none text-center">*}
+{*          <hr style="color: #000;opacity: 1;border-color: #000; border-width: 2px;margin:0 auto; width:60%!important"/>*}
+{*        </span>*}
+{*      </li>*}
 
-      <li class="nav-item col-12 col-sm-5  text-center">
+      <li style="border-color:#3b56ad !important;" class="nav-item col-12 col-sm-6 text-center {if $show_login_form}border-left border-top border-right{else}border-bottom{/if}">
         <a
-          class="nav-link h5 {if $show_login_form}active user-select-none{else} btn btn-outline-primary {/if}"
+          class="nav-link h5 mt-2 {if $show_login_form}text-dark active user-select-none{else} btn btn-outline-primary {/if}"
           data-link-action="show-login-form"
           data-toggle="tab"
           href="#checkout-login-form"
@@ -83,7 +83,7 @@
           aria-controls="checkout-login-form"
           {if $show_login_form} aria-selected="true"{/if}
         >
-          Bestaande Klant
+          Bestaande Klant{if !$show_login_form}? Klik dan hier!{/if}
 {*          {l s='Sign in' d='Shop.Theme.Actions'}*}
         </a>
       </li>

@@ -93,7 +93,7 @@
         {block name='form_field_item_checkbox'}
         <label class="checkbox-inline flex_container flex_start">
         <span class="custom-input-box">
-          <input class="custom-input  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && !preg_match('/^\s*$/',(string)$field.value)}is-valid{/if}" name="{$field.name}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}>
+          <input class="custom-input  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && !preg_match('/^\s*$/',(string)$field.value)}is-valid{/if}" name="{$field.name}" type="checkbox" value="1" {if $field.value||in_array($field.name,['customer_privacy','psgdpr'])}checked="checked"{/if} {if $field.required}required{/if}>
                 {block name='form_field_errors'}
                   {include file='_partials/form-errors.tpl' errors=$field.errors}
                 {/block}

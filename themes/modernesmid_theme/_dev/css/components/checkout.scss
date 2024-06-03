@@ -1,7 +1,7 @@
 $carrier-selector: "carrier";
 
 body#checkout {
-  color: $gray-darker;
+  color: $color_1;
 
   .cart-grid-right {
     .card {
@@ -260,7 +260,7 @@ body#checkout {
       margin-left: 0.5rem;
       font-size: 1rem;
       vertical-align: middle;
-      border: 1px solid $gray-darker;
+      border: 1px solid $color_1;
       border-radius: 50%;
     }
 
@@ -334,7 +334,7 @@ body#checkout {
       margin-top: 1.25rem;
 
       a {
-        color: $gray-darker;
+        color: $color_1;
 
         i {
           font-size: $font-size-lg;
@@ -467,11 +467,11 @@ body#checkout {
     h4.h4 {
       margin-top: 0.625rem;
       margin-bottom: 1.25rem;
-      color: $gray-darker;
+      color: $color_1;
     }
 
     h4.black {
-      color: $black;
+      color: $color_1;
     }
 
     h4.addresshead {
@@ -487,7 +487,7 @@ body#checkout {
 
       h3.h3 {
         margin-top: 1.25rem;
-        color: $gray-darker;
+        color: $color_1;
       }
 
       table {
@@ -544,7 +544,7 @@ body#checkout {
   #gift_message,
   #delivery {
     max-width: 100%;
-    border-color: $gray-darker;
+    border-color: $color_1;
 
     textarea {
       max-width: 100%;
@@ -612,7 +612,7 @@ body#checkout {
   }
 
   hr {
-    border-top-color: $gray-darker;
+    border-top-color: $color_1;
   }
 
   table {

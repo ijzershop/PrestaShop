@@ -59,6 +59,7 @@
         </div>
       {/block}
 
+
       {block name='cart_summary_totals'}
        <div class="cart-summary-line summary-total-discount">
         <span class="label">

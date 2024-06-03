@@ -40,6 +40,15 @@
       </div>
     {/if}
   {/block}
+
+
+
+  {block name="cart_vouchers"}
+    {include file='checkout/_partials/cart-voucher.tpl' cart=$cart}
+  {/block}
+
+
+
   {block name='cart_summary_total'}
     {if !$configuration.display_prices_tax_incl && $configuration.taxes_enabled}
       <div class="cart-summary-line  summary-total">

@@ -3449,7 +3449,6 @@ class CartCore extends ObjectModel
             foreach ($options as $key => $option) {
                 if (Configuration::get('PS_CARRIER_DEFAULT') == -1 && $option['is_best_price']) {
                     $delivery_option[$id_address] = $key;
-
                     break;
                 } elseif (Configuration::get('PS_CARRIER_DEFAULT') == -2 && $option['is_best_grade']) {
                     $delivery_option[$id_address] = $key;

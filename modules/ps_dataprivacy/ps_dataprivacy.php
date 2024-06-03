@@ -124,7 +124,7 @@ class Ps_Dataprivacy extends Module
     public function hookAdditionalCustomerFormFields($params)
     {
         $label = $this->trans(
-            'Customer data privacy[1][2]%message%[/2]',
+            '[2]%message%[/2]',
             [
                 '_raw' => true,
                 '[1]' => '<br>',
@@ -140,6 +140,7 @@ class Ps_Dataprivacy extends Module
             ->setType('checkbox')
             ->setLabel($label)
             ->setRequired(true);
+
 
         return [$formField];
     }

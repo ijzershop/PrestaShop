@@ -360,7 +360,7 @@ class PaymentData implements JsonSerializable
         $this->subscriptionOrder = $subscriptionOrder;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $result = [
             'amount' => [

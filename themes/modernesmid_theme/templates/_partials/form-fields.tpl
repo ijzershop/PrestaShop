@@ -34,6 +34,8 @@
     <label class="col-md-3 form-control-label{if $field.required} required{/if}">
       {if $field.type !== 'checkbox'}
         {$field.label}
+        {elseif $field.type === 'checkbox' && in_array($field.name, ['customer_privacy','psgdpr'])}
+        Gegevensverwerking
       {/if}
       {block name='form_field_comment'}
         {if ($field.required && !in_array($field.type, ['radio-buttons', 'checkbox']))}
@@ -91,10 +93,10 @@
         {/block}
 
       {elseif $field.type === 'checkbox'}
-
         {block name='form_field_item_checkbox'}
           <span class="custom-checkbox form-check form-check-inline">
-              <input name="{$field.name}" class="form-check-input  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}><label class="form-check-label">{$field.label nofilter}</label>
+            <input style="position: absolute;top:4px;" id="{$field.name}_input" name="{$field.name}" class="form-check-input  {if !empty($field.errors)}is-invalid{elseif empty($field.errors) && $field.value != ''}is-valid{/if}" type="checkbox" value="1" {if $field.value|| in_array($field.name, ['customer_privacy','psgdpr'])}checked="checked"{/if} {if $field.required}required{/if}>
+            <label for="{$field.name}_input" class="form-check-label">{$field.label nofilter}</label>
           </span>
         {/block}
 

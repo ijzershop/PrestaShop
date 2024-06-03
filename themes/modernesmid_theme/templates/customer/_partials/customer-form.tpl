@@ -49,7 +49,7 @@
           {block "form_field"}
           {form_field field=$field}
           {* Add email validation *}
-          {if $field.name == 'email' && (strpos($action, 'create_account') !== false || strpos($action, 'bestelling') !== false || strpos($action, 'order') !== false || strpos($action, 'identiteit') !== false)}
+          {if $field.name == 'email' && (strpos($action, 'create_account') !== false || strpos($action, 'afrekenen') !== false || strpos($action, 'order') !== false || strpos($action, 'identiteit') !== false)}
             {assign var="validate_email" value=true}
           <div class="form-group row ">
             <label class="col-md-3 form-control-label required">

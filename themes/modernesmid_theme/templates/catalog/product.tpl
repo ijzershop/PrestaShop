@@ -149,7 +149,7 @@
 
                 <div class="row">
                   <div class="add col-12">
-                    <a class="btn btn-success add-to-cart w-100 {if !$product.add_to_cart_url || !$product.available_for_order || ($product.out_of_stock == 0 && $product.quantity <= 0)}disabled{/if}" data-button-action="add-to-cart" data-product-id="{$product.id_product}" aria-label="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" type="button" {if !$product.add_to_cart_url} disabled {/if} href="{$link->getPageLink('cart')}?token={$static_token}">
+                    <a class="btn btn-success add-to-cart w-100 {if !$product.add_to_cart_url || !$product.available_for_order || ($product.out_of_stock == 0 && $product.quantity <= 0)}disabled{/if}" data-button-action="add-to-cart" data-product-id="{$product.id_product}" aria-label="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" type="button" {if !$product.add_to_cart_url} disabled {/if} href="{$link->getPageLink('cart', null, Context::getContext()->language->id,['token'=>$static_token], false, Context::getContext()->shop->id)}">
                       <i class="fasl fa-plus" data-product-id="{$product.id_product}"></i><i class="fasl fa-cart-shopping shopping-cart" data-product-id="{$product.id_product}"></i>
                     </a>
                   </div>

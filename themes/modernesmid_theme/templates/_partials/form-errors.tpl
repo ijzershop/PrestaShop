@@ -23,9 +23,65 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {if $errors|count}
-    {block name='form_errors'}
-        {foreach $errors as $error}
-          <div class="w-100 error-small invalid-feedback">{$error|nl2br nofilter}</div>
-        {/foreach}
-    {/block}
-{/if}
+
+
+
+
+
+<style>
+  .alert{
+    position: fixed;
+    top:20%;
+    left: calc(30% / 2);
+    z-index: 99;
+    width: 70%;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  .alert-heading{
+    opacity: .5;
+  }
+  .alert .close{
+    opacity: .5;
+    color:#ffffff;
+  }
+  .alert .contact-msg{
+    opacity: .5;
+  }
+</style>
+{block name='form_errors'}
+<aside id="notifications">
+  <div class="row">
+
+      {block name='notifications_error'}
+        <article class="alert alert-danger col-12" role="alert" data-alert="danger">
+          <div class="row">
+            <div class="col-2 my-auto"><i class="fasl fa-warning w-100 fa-4x"></i></div>
+            <div class="col-10">
+              <div class="row">
+                <div class="col-12">
+                  <h4 class="alert-heading">Er ging iets fout!
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button></h4>
+                  <ul class="list-unstyled mb-0">
+                    {foreach $errors as $error}
+                      <li>{$error|nl2br nofilter}</li>
+                    {/foreach}
+                  </ul>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <hr class="mt-1">
+                  <p class="contact-msg">Komt u er niet uit? Neem dan even contact met ons op. We helpen u graag verder.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      {/block}
+      {/block}
+
+    {/if}
+

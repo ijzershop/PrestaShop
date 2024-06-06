@@ -28,12 +28,6 @@
   {/block}
 
   <form id="login-form" class="col-12" action="{block name='login_form_actionurl'}{$action}{/block}" method="post">
-
-
-{*   <div class="alert alert-warning alert-dismissible fade show col-md-12" role="alert">
-      De beveiliging van <a href="/informatie-aanvragen" rel="nofollow" title="Neem contact met ons op">IJzershop.nl</a> is recent verbeterd, hierdoor kan het mogelijk zijn dat uw oude account niet meer werkt. U kunt met uw bestaande e-mail adres een nieuw account aanmaken.
-    </div> *}
-
     <section>
       {block name='login_form_fields'}
         {foreach from=$formFields item="field"}

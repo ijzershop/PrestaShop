@@ -26,8 +26,7 @@
 
 {assign var=withTax value=Context::getContext()->cookie->price_vat_settings_incl === "true"}
 <div class="js-cart pl-0" style="padding-left: calc(100% - 345px) !important;"
-     data-refresh-url="{$refresh_url}">{*{strip}*}
-{*  {{dd(Context::getContext()->cart)}}*}
+     data-refresh-url="{$refresh_url}">
   <div id="top-header-shoppingcart-box">
     <table width="100%">
       <tr>
@@ -50,14 +49,13 @@
             {/if}
         </td>
       </tr>
-        {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS) > 0}
-          <tr>
-            <td width="60%" class="text-nowrap" id="header-cart-total-products">Korting</td>
-            <td class="text-right" id="header-cart-subtotal">
+
+          <tr id="tr-header-cart-discounts" {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS) <= 0}style="display: none;" {/if}>
+            <td width="60%" class="text-nowrap">Korting</td>
+            <td class="text-right" id="header-cart-discounts">
               {Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR')}
             </td>
           </tr>
-        {/if}
     </table>
   </div>
   <a href="{$cart_url}" title="{l s='View my shopping cart' d='Shop.Theme.Transformer'}" rel="nofollow"

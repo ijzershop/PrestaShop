@@ -25,8 +25,6 @@
  */
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 
-use AttributeCore as Attribute;
-
 class CartControllerCore extends FrontController
 {
     /** @var string */
@@ -134,8 +132,6 @@ class CartControllerCore extends FrontController
         $updatedProduct = reset($updatedProducts);
         $productQuantity = $updatedProduct['quantity'] ?? 0;
 
-
-
         if (!$this->errors) {
             $presentedCart = $this->cart_presenter->present($this->context->cart);
 
@@ -152,6 +148,7 @@ class CartControllerCore extends FrontController
                 'cart' => $presentedCart,
                 'errors' => empty($this->updateOperationError) ? '' : reset($this->updateOperationError),
             ]));
+
             return;
         } else {
             $this->ajaxRender(json_encode([
@@ -236,8 +233,6 @@ class CartControllerCore extends FrontController
 
     protected function updateCart()
     {
-
-
         // Update the cart ONLY if it's not a bot, in order to avoid ghost carts
         if (!Connection::isBot()
             && !$this->errors
@@ -480,15 +475,15 @@ class CartControllerCore extends FrontController
         // If no errors, process product addition
         if (!$this->errors) {
             // Add cart if no cart found
-            if (!$this->context->cart->id && !$this->context->customer->isLogged()) {
+            if (!$this->context->cart->id ) {
                 if (Context::getContext()->cookie->id_guest) {
                     $guest = new Guest((int) Context::getContext()->cookie->id_guest);
                     $this->context->cart->mobile_theme = $guest->mobile_theme;
                 }
-            }
-            $this->context->cart->add();
-            if (Validate::isLoadedObject($this->context->cart)) {
-                $this->context->cookie->id_cart = (int) $this->context->cart->id;
+                $this->context->cart->add();
+                if (Validate::isLoadedObject($this->context->cart)) {
+                    $this->context->cookie->id_cart = (int) $this->context->cart->id;
+                }
             }
 
             // Check customizable fields
@@ -500,18 +495,17 @@ class CartControllerCore extends FrontController
                 );
             }
 
-                $update_quantity = $this->context->cart->updateQty(
-                    $this->qty,
-                    $this->id_product,
-                    $this->id_product_attribute,
-                    $this->customization_id,
-                    Tools::getValue('op', 'up'),
-                    $this->id_address_delivery,
-                    null,
-                    true,
-                    true
-                );
-
+            $update_quantity = $this->context->cart->updateQty(
+                $this->qty,
+                $this->id_product,
+                $this->id_product_attribute,
+                $this->customization_id,
+                Tools::getValue('op', 'up'),
+                $this->id_address_delivery,
+                null,
+                true,
+                true
+            );
             if ($update_quantity < 0) {
                 // If product has attribute, minimal quantity is set with minimal quantity of attribute
                 $minimal_quantity = ($this->id_product_attribute)
@@ -567,12 +561,12 @@ class CartControllerCore extends FrontController
     public function productInCartMatchesCriteria($productInCart)
     {
         return (
-            !isset($this->id_product_attribute) ||
-            (
-                $productInCart['id_product_attribute'] == $this->id_product_attribute &&
-                $productInCart['id_customization'] == $this->customization_id
-            )
-        ) && isset($this->id_product) && $productInCart['id_product'] == $this->id_product;
+                !isset($this->id_product_attribute) ||
+                (
+                    $productInCart['id_product_attribute'] == $this->id_product_attribute &&
+                    $productInCart['id_customization'] == $this->customization_id
+                )
+            ) && isset($this->id_product) && $productInCart['id_product'] == $this->id_product;
     }
 
     public function getTemplateVarPage()
@@ -648,7 +642,7 @@ class CartControllerCore extends FrontController
 
             if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
                 return $this->trans(
-                   'The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
+                    'The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
                     ['%product%' => $product['name']],
                     'Shop.Notifications.Error'
                 );

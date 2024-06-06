@@ -23,20 +23,58 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
+<style>
+  .alert{
+    position: fixed;
+    top:20%;
+    left: calc(30% / 2);
+    z-index: 99;
+    width: 70%;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  .alert-heading{
+    opacity: .5;
+  }
+  .alert .close{
+    opacity: .5;
+    color:#ffffff;
+  }
+  .alert .contact-msg{
+    opacity: .5;
+  }
+</style>
+
 {if isset($notifications)}
 <aside id="notifications">
   <div class="row">
     {if $notifications.error}
       {block name='notifications_error'}
         <article class="alert alert-danger col-12" role="alert" data-alert="danger">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <ul class="list-unstyled">
-            {foreach $notifications.error as $notif}
-              <li>{$notif nofilter}</li>
-            {/foreach}
-          </ul>
+          <div class="row">
+            <div class="col-2 my-auto"><i class="fasl fa-warning w-100 fa-4x"></i></div>
+            <div class="col-10">
+              <div class="row">
+                <div class="col-12">
+                <h4 class="alert-heading">Er ging iets fout!
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button></h4>
+                <ul class="list-unstyled mb-0">
+                  {foreach $notifications.error as $notif}
+                    <li>{$notif nofilter}</li>
+                  {/foreach}
+                </ul>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <hr class="mt-1">
+                  <p class="contact-msg">Komt u er niet uit? Neem dan even contact met ons op. We helpen u graag verder.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </article>
       {/block}
     {/if}
@@ -44,14 +82,30 @@
     {if $notifications.warning}
       {block name='notifications_warning'}
         <article class="alert alert-warning col-12" role="alert" data-alert="warning">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <ul class="list-unstyled">
-            {foreach $notifications.warning as $notif}
-              <li>{$notif nofilter}</li>
-            {/foreach}
-          </ul>
+          <div class="row">
+            <div class="col-2 my-auto"><i class="fasl fa-exclamation-triangle w-100 fa-4x"></i></div>
+            <div class="col-10">
+              <div class="row">
+                <div class="col-12">
+                  <h4 class="alert-heading">Let op!
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button></h4>
+                  <ul class="list-unstyled mb-0">
+                    {foreach $notifications.warning as $notif}
+                      <li>{$notif nofilter}</li>
+                    {/foreach}
+                  </ul>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <hr class="mt-1">
+                  <p class="contact-msg">Komt u er niet uit? Neem dan even contact met ons op. We helpen u graag verder.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </article>
       {/block}
     {/if}
@@ -59,14 +113,30 @@
     {if $notifications.success}
       {block name='notifications_success'}
         <article class="alert alert-success col-12" role="alert" data-alert="success">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <ul class="list-unstyled">
-            {foreach $notifications.success as $notif}
-              <li>{$notif nofilter}</li>
-            {/foreach}
-          </ul>
+          <div class="row">
+            <div class="col-2 my-auto"><i class="fasl fa-shield-check w-100 fa-4x"></i></div>
+            <div class="col-10">
+              <div class="row">
+                <div class="col-12">
+                  <h4 class="alert-heading">Succes!
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button></h4>
+                  <ul class="list-unstyled mb-0">
+                    {foreach $notifications.success as $notif}
+                      <li>{$notif nofilter}</li>
+                    {/foreach}
+                  </ul>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <hr class="mt-1">
+                  <p class="contact-msg">Heeft u nog vragen? Neem dan even contact met ons op. We helpen u graag verder.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </article>
       {/block}
     {/if}
@@ -74,14 +144,32 @@
     {if $notifications.info}
       {block name='notifications_info'}
         <article class="alert alert-info col-12" role="alert" data-alert="info">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <ul class="list-unstyled">
-            {foreach $notifications.info as $notif}
-              <li>{$notif nofilter}</li>
-            {/foreach}
-          </ul>
+          <div class="row">
+            <div class="col-2 my-auto">
+              <i class="fasl fa-megaphone w-100 fa-4x"></i>
+            </div>
+            <div class="col-10">
+              <div class="row">
+                <div class="col-12">
+                  <h4 class="alert-heading">Informatie!
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button></h4>
+                  <ul class="list-unstyled mb-0">
+                    {foreach $notifications.info as $notif}
+                      <li>{$notif nofilter}</li>
+                    {/foreach}
+                  </ul>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <hr class="mt-1">
+                  <p class="contact-msg">Heeft u nog vragen? Neem dan even contact met ons op. We helpen u graag verder.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </article>
       {/block}
     {/if}

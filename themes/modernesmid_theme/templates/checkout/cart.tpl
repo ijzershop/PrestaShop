@@ -25,7 +25,6 @@
 {extends file=$layout}
 
 {block name='content'}
-
   <section id="main" class="col-12">
     <div class="cart-grid row">
 

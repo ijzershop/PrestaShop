@@ -41,17 +41,13 @@
     {/if}
   {/block}
 
-
-
   {block name="cart_vouchers"}
-    {include file='checkout/_partials/cart-voucher.tpl' cart=$cart}
+    {include file='checkout/_partials/cart-voucher-checkout.tpl' cart=$cart}
   {/block}
-
-
 
   {block name='cart_summary_total'}
     {if !$configuration.display_prices_tax_incl && $configuration.taxes_enabled}
-      <div class="cart-summary-line  summary-total">
+      <div class="cart-summary-line  summary-total mt-4">
         <span class="label">{$cart.totals.total.label}&nbsp;{$cart.labels.tax_short}</span>
         <span class="value">{$cart.totals.total.value}</span>
       </div>
@@ -60,9 +56,9 @@
         <span class="value">{$cart.totals.total_including_tax.value}</span>
       </div>
     {else}
-      <div class="cart-summary-line cart-total">
-                <span class="label h6 font-weight-bolder">{$cart.totals.total.label}&nbsp;{if $configuration.taxes_enabled && $withTax}{$cart.labels.tax_short}{/if}</span>
-                <span class="value h6 font-weight-bolder">
+      <div class="cart-summary-line cart-total mt-4">
+                <span class="label h5 text-black font-weight-bolder">{$cart.totals.total.label}&nbsp;{if $configuration.taxes_enabled && $withTax}{$cart.labels.tax_short}{/if}</span>
+                <span class="value h5 text-black font-weight-bolder">
               {if (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) > 0}
                 {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR')}
               {else}
@@ -72,6 +68,4 @@
       </div>
     {/if}
   {/block}
-
-
 </div>

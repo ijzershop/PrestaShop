@@ -557,6 +557,7 @@ class CartPresenter implements PresenterInterface
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_currency'] = $cartVoucher['reduction_currency'];
             $vouchers[$cartVoucher['id_cart_rule']]['free_shipping'] = (bool) $cartVoucher['free_shipping'];
 
+
             // Voucher reduction depending of the cart tax rule
             // if $cartHasTax & voucher is tax excluded, set amount voucher to tax included
             if ($cartHasTax && $cartVoucher['reduction_tax'] == '0') {
@@ -583,7 +584,12 @@ class CartPresenter implements PresenterInterface
                 $freeShippingOnly = false;
                 $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
             }
-
+//Toegevoegd door JB Stoker
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_value'] = '-' . $this->priceFormatter->format((float)$cartVoucher['value_real'], Context::getContext()->currency);
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_value_tax_excl'] = '-' . $this->priceFormatter->format((float)$cartVoucher['value_tax_exc'], Context::getContext()->currency);
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = (float)$cartVoucher['value_real'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount_tax_excl'] = (float)$cartVoucher['value_tax_exc'];
+//Einde Toevoeging
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
             if ($freeShippingOnly) {
                 $cartVoucher['reduction_formatted'] = $this->translator->trans(

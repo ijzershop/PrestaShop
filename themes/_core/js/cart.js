@@ -175,7 +175,7 @@ $(document).ready(() => {
 
   $body.on('submit', '[data-link-action="add-voucher"]', (event) => {
     event.preventDefault();
-
+console.log('bleeeehe');
     const $addVoucherForm = $(event.currentTarget);
     const getCartViewUrl = $addVoucherForm.attr('action');
 

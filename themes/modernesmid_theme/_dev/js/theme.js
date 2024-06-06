@@ -39,9 +39,14 @@ import ProductMinitature from './components/product-miniature';
 import ProductSelect from './components/product-select';
 
 import $ from 'jquery';
-import jQuery from 'jquery'
 /* eslint-enable */
 import 'lazysizes';
+import {dom, library} from "@fortawesome/fontawesome-svg-core";
+import fa from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/fontawesome.min.js'
+import fak from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/custom-icons.min.js'
+import fasl from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-light.min.js'
+import fab from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/brands.min.js'
+import addToCartAnalyticsPush from "./tagmanager/add-cart";
 // "inherit" EventEmitter
 // eslint-disable-next-line
 for (const i in EventEmitter.prototype) {
@@ -60,16 +65,8 @@ $(document).ready(() => {
   usePasswordPolicy('.field-password-policy');
 });
 
-import { library, dom } from "@fortawesome/fontawesome-svg-core";
-import fa from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/fontawesome.min.js'
-import fak from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/custom-icons.min.js'
-import fasl from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/sharp-light.min.js'
-import fab from '../node_modules/@awesome.me/kit-cc4f3be310/icons/js/brands.min.js'
-
 library.add(fa, fak, fasl, fab);
 dom.watch();
-import alert from "bootstrap/js/src/alert";
-import addToCartAnalyticsPush from "./tagmanager/add-cart";
 
 /**
  *
@@ -131,12 +128,12 @@ $(function () {
 
   $('#product-images-carousel').on('slide.bs.carousel', function (e) {
     $('.carousel-indicators-thumbs li').removeClass('active');
-    $('.carousel-indicators-thumbs li:eq('+e.to+')').addClass('active');
+    $('.carousel-indicators-thumbs li:eq(' + e.to + ')').addClass('active');
   })
 
-  $('#product-images-carousel .carousel-indicators-thumbs li').on('click', function(e){
+  $('#product-images-carousel .carousel-indicators-thumbs li').on('click', function (e) {
     let key = $(this).data('slide-to');
-    $('#product-images-carousel .carousel-indicators li[data-slide-to="'+key+'"]').click();
+    $('#product-images-carousel .carousel-indicators li[data-slide-to="' + key + '"]').click();
   });
 
   function renderMoneyString(price) {
@@ -226,7 +223,7 @@ $(function () {
     let iconSvg = $this.find('.opener > svg');
     let icon = iconSvg.attr('data-icon');
 
-    if(icon === 'plus'){
+    if (icon === 'plus') {
       iconSvg.attr('data-icon', 'minus');
     } else {
       iconSvg.attr('data-icon', 'plus');
@@ -244,7 +241,7 @@ $(function () {
     let iconSvg = $this.children('svg');
     let icon = iconSvg.attr('data-icon');
 
-    if(icon === 'plus'){
+    if (icon === 'plus') {
       iconSvg.attr('data-icon', 'minus');
     } else {
       iconSvg.attr('data-icon', 'plus');
@@ -302,7 +299,7 @@ $(function () {
       opacity: '1',
       'z-index': '1500',
     });
-    $('#main-menu-bar ul.ui-autocomplete').css('opacity',1);
+    $('#main-menu-bar ul.ui-autocomplete').css('opacity', 1);
     $('form.header-search-box span.ui-helper-hidden-accessible').css('clip', 'rect(0 0 0 0)');
 
     event.stopImmediatePropagation();
@@ -315,7 +312,7 @@ $(function () {
       'z-index': '-1',
     });
     $('form.header-search-box span.ui-helper-hidden-accessible').css('clip', 'rect(0 0 0 0)');
-    $('#main-menu-bar ul.ui-autocomplete').css('opacity',0);
+    $('#main-menu-bar ul.ui-autocomplete').css('opacity', 0);
 
     event.stopImmediatePropagation();
   });
@@ -567,10 +564,10 @@ $(function () {
   //   }
   // });
 
-      $(document.body).on('click','a.updateCartBurron svg', function (event) {
-        $(this).parents('a.updateCartBurron').click();
-        event.stopImmediatePropagation();
-      });
+  $(document.body).on('click', 'a.updateCartBurron svg', function (event) {
+    $(this).parents('a.updateCartBurron').click();
+    event.stopImmediatePropagation();
+  });
 
   $(document.body).on('click', 'a.updateCartBurron', function (event) {
     const qty = parseInt($(this).parents('.qty_wrap').find('input').val());
@@ -727,7 +724,7 @@ $(function () {
 
         if (json.product_price_incl_w_reduction_w_tax !== json.product_price_incl) {
           $('.regular-price[data-product-id="' + json.id_product + '"]').html(renderMoneyString(json.product_price_incl));
-          if(inclVat){
+          if (inclVat) {
             $('.inclusive-price[data-product-id="' + json.id_product + '"]').html(renderMoneyString(json.product_price_incl_w_reduction_w_tax));
           } else {
             $('.inclusive-price[data-product-id="' + json.id_product + '"]').html(renderMoneyString(json.product_price_incl_w_reduction));
@@ -739,7 +736,7 @@ $(function () {
           }
         } else {
           $('.regular-price[data-product-id="' + json.id_product + '"]').html('');
-          if(inclVat){
+          if (inclVat) {
             $('.inclusive-price[data-product-id="' + json.id_product + '"]').html(renderMoneyString(json.product_price_incl_w_reduction_w_tax));
           } else {
             $('.inclusive-price[data-product-id="' + json.id_product + '"]').html(renderMoneyString(json.product_price_incl_w_reduction));
@@ -783,7 +780,7 @@ $(function () {
     $('#header-cart-vat').text(renderMoneyString(cart.subtotals.tax.amount));
 
     let cartTotal = renderMoneyString(cart.totals.total.amount);
-    if(!withTaxSelection){
+    if (!withTaxSelection) {
       cartTotal = renderMoneyString(cart.totals.total_excluding_tax.amount);
     }
 
@@ -806,12 +803,10 @@ $(function () {
     $('#header-cart-total-products').text(countLabel + '(' + productCount + ')');
     $('.top-header-shoppingcart .amount_circle').text(productCount);
 
-
-
     var totalForAllProducts = 0;
     var productsTotal = 0;
     for (var i = cart.products.length - 1; i >= 0; i--) {
-      if(withTaxSelection){
+      if (withTaxSelection) {
         productsTotal = cart.products[i].price_with_reduction * cart.products[i].quantity;
       } else {
         productsTotal = cart.products[i].price_with_reduction_without_tax * cart.products[i].quantity
@@ -827,8 +822,8 @@ $(function () {
     $('#header-cart-subtotal').text(renderMoneyString(totalForAllProducts));
 
     let shippingCost = cart.subtotals.shipping.amount;
-    if(!withTaxSelection){
-      shippingCost = shippingCost/1.21;
+    if (!withTaxSelection) {
+      shippingCost = shippingCost / 1.21;
     }
     if (shippingCost === 0) {
       $('input.carrier-selection[value="pickup"]').prop('checked', true);
@@ -838,14 +833,24 @@ $(function () {
     $('#header-cart-shipping').text(renderMoneyString(shippingCost));
 
 
+    let vData = cart.vouchers.added;
+    let totalDiscount = 0;
+    for (const voucher in vData) {
+      if (withTaxSelection) {
+        totalDiscount = totalDiscount + vData[voucher].reduction_amount;
+      } else {
+        totalDiscount = totalDiscount + vData[voucher].reduction_amount_tax_excl;
+      }
+    }
 
-    // if (totalForAllProducts === 0 || totalForAllProducts >= parseFloat($('#header-cart-small-order-fee').attr('data-amount'))) {
-    //   $('#header-cart-vat').css("border-bottom", "2px solid #777777");
-    //   $('#header-cart-small-order-fee').hide();
-    // } else {
-    //   $('#header-cart-vat').css("border-bottom", "none");
-    //   $('#header-cart-small-order-fee').show();
-    // }
+    if (totalDiscount > 0) {
+      $('#tr-header-cart-discounts').css('display', 'table-row').fadeIn(500);
+    } else {
+      $('#tr-header-cart-discounts').css('display', 'none').fadeOut(500);
+    }
+    $('#header-cart-discounts').text('-' + renderMoneyString(totalDiscount));
+
+
     $('.info-icon-with-showhide').on('click', function (event) {
       event.preventDefault();
       const id = $(this).attr('data-id');
@@ -853,86 +858,90 @@ $(function () {
     });
   };
 
-  function updateSideBarCart(cart) {
-    return cart;
-
-  }
+  // function updateSideBarCart(cart) {
+  //   return cart;
+  //
+  // }
 
   prestashop.on('updateCart', function (event) {
     prestashop.cart = event.reason.cart;
+
     if (prestashop.cart) {
       updateHeaderCart(prestashop.cart);
     } else {
       updateHeaderCart(prestashop.summaryDetails);
     }
 
-    const getCartViewUrl = $('.js-cart').data('refresh-url');
-    if (!getCartViewUrl) {
-      return;
-    }
-
-    var requestData = {};
-    if (event && event.reason) {
-      if (event.reason.idProductAttribute !== undefined) {
-        requestData = {
-          id_product_attribute: event.reason.idProductAttribute,
-          id_product: event.reason.idProduct,
-        };
-      } else {
-        requestData = {
-          id_product_attribute: event.reason.id_product_attribute,
-          id_product: event.reason.id_product,
-        };
-      }
-    }
-    $.post(getCartViewUrl, requestData).then(function (resp) {
-      const product = $('a[data-product-id="' + requestData.id_product + '"]');
-      showAddedToCartGlow(product);
-      if (resp.cart_detailed_totals !== undefined) {
-        $('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
-        $('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
-        $('.cart-summary-subtotals-container').replaceWith(resp.cart_summary_subtotals_container);
-        $('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
-        $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
-        $('.cart-voucher').replaceWith(resp.cart_voucher);
-        $('.cart-overview').replaceWith(resp.cart_detailed);
-
-        $('#product_customization_id').val(0);
-
-        $('.js-cart-line-product-quantity').each(function (index, input) {
-          const $input = $(input);
-          $input.attr('value', $input.val());
-        });
-
-        if ($('.js-cart-payment-step-refresh').length) {
-          // we get the refresh flag : on payment step we need to refresh page to be sure
-          // amount is correctly updated on payment modules
-          refreshCheckoutPage();
-        }
-      } else { // normal refresh cart
-        $('#shoppingcart-side-panel').html(resp.modal);
-        $('.cart_details_toggle').on('click', function (event) {
-          const checked = $(this).prop('checked');
-          if (checked) {
-            $('.cart_price_details').show();
-          } else {
-            $('.cart_price_details').hide();
-          }
-          const listHeight = calcShoppingCartListItemsColumnHeight();
-          document.getElementById('shoppingcart-list-items').style.height = listHeight;
-        });
-      }
-
-      prestashop.emit('updatedCart', {
-        eventType: 'updateCart',
-        resp: resp,
-      });
-    }).fail(function (resp) {
-      prestashop.emit('handleError', {
-        eventType: 'updateCart',
-        resp: resp,
-      });
-    });
+    // const getCartViewUrl = $('.js-cart').data('refresh-url');
+    // if (!getCartViewUrl) {
+    //   return;
+    // }
+    //
+    // var requestData = {};
+    // if (event && event.reason) {
+    //   if (event.reason.idProductAttribute !== undefined) {
+    //     requestData = {
+    //       id_product_attribute: event.reason.idProductAttribute,
+    //       id_product: event.reason.idProduct,
+    //     };
+    //   } else {
+    //     requestData = {
+    //       id_product_attribute: event.reason.id_product_attribute,
+    //       id_product: event.reason.id_product,
+    //     };
+    //   }
+    // }
+    // $.post(getCartViewUrl, requestData).then(function (resp) {
+    //   console.log(resp);
+    //
+    //   const product = $('a[data-product-id="' + requestData.id_product + '"]');
+    //   showAddedToCartGlow(product);
+    //   if (resp.cart_detailed_totals !== undefined) {
+    //     $('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
+    //     $('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
+    //     $('.cart-summary-subtotals-container').replaceWith(resp.cart_summary_subtotals_container);
+    //     $('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
+    //     $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
+    //     $('.cart-voucher').replaceWith(resp.cart_voucher);
+    //     $('.cart-overview').replaceWith(resp.cart_detailed);
+    //
+    //     $('#product_customization_id').val(0);
+    //
+    //     $('.js-cart-line-product-quantity').each(function (index, input) {
+    //       const $input = $(input);
+    //       $input.attr('value', $input.val());
+    //     });
+    //
+    //     if ($('.js-cart-payment-step-refresh').length) {
+    //       // we get the refresh flag : on payment step we need to refresh page to be sure
+    //       // amount is correctly updated on payment modules
+    //       refreshCheckoutPage();
+    //     }
+    //   }
+    //   // else { // normal refresh cart
+    //   //   $('#shoppingcart-side-panel').html(resp.modal);
+    //   //   $('.cart_details_toggle').on('click', function (event) {
+    //   //     const checked = $(this).prop('checked');
+    //   //     if (checked) {
+    //   //       $('.cart_price_details').show();
+    //   //     } else {
+    //   //       $('.cart_price_details').hide();
+    //   //     }
+    //   //     const listHeight = calcShoppingCartListItemsColumnHeight();
+    //   //     document.getElementById('shoppingcart-list-items').style.height = listHeight;
+    //   //   });
+    //   // }
+    //
+    //   prestashop.emit('updatedCart', {
+    //     eventType: 'updateCart',
+    //     resp: resp,
+    //   });
+    // }).fail(function (resp) {
+    //   prestashop.emit('handleError', {
+    //     eventType: 'updateCart',
+    //     resp: resp,
+    //   });
+    // });
 
     $('.info-icon-with-showhide').on('click', function (event) {
       event.preventDefault();
@@ -951,7 +960,7 @@ $(function () {
     const product_id = $(this).attr('data-product-id');
 
     let inputElem = $(this).parents('.product-quantity').find('#quantity_wanted_' + product_id);
-    if(inputElem.length === 0){
+    if (inputElem.length === 0) {
       //is single input
       inputElem = $('#quantity_wanted_' + product_id);
     }
@@ -976,7 +985,7 @@ $(function () {
 
     const clickedHref = $(this).attr('href');
     $('svg.fa-plus[data-product-id="' + product_id + '"]').hide();
-    $('svg.shopping-cart[data-product-id="' + product_id + '"]').attr('data-icon','arrows-rotate');
+    $('svg.shopping-cart[data-product-id="' + product_id + '"]').attr('data-icon', 'arrows-rotate');
     if ($('#quantity_wanted_' + product_id).val() > $('[data-stock]').data('stock') && $('[data-allow-oosp]').data('allow-oosp').length === 0) {
       $('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
     } else {
@@ -1000,18 +1009,18 @@ $(function () {
         .done(function (resp) {
           $('a.add-to-cart[data-product-id="' + product_id + '"]').removeClass('active');
           $('svg.fa-plus[data-product-id="' + product_id + '"]').show();
-          $('svg.shopping-cart[data-product-id="' + product_id + '"]').attr('data-icon','cart-shopping');
+          $('svg.shopping-cart[data-product-id="' + product_id + '"]').attr('data-icon', 'cart-shopping');
           if (resp.hasError === true) {
             let errorList = resp.errors.join("<br/>");
             let contentWidth = $('#content-wrapper').width();
 
-            let alertBlock = '<div style="z-index: 99999999;position:absolute;width:'+contentWidth+'px;top:75px;" id="alert-error-msg" class="col-12 alert alert-danger show alert-dismissible fade mx-auto" role="alert"><strong>Fout!</strong><br/>'  + errorList +
+            let alertBlock = '<div style="z-index: 99999999;position:absolute;width:' + contentWidth + 'px;top:75px;" id="alert-error-msg" class="col-12 alert alert-danger show alert-dismissible fade mx-auto" role="alert"><strong>Fout!</strong><br/>' + errorList +
               '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
 
             $('#content-wrapper').prepend(alertBlock);
             let alertMsg = $('#alert-error-msg');
             alertMsg.alert();
-            setTimeout(function() {
+            setTimeout(function () {
               alertMsg.alert('close');
               alertMsg.alert('dispose');
             }, 5000);
@@ -1143,7 +1152,7 @@ $(function () {
         let isValidForConfirm = false;
         $('.address-error-msg').text(null);
 
-        if (e.valid != false &&  e.address.countryCode === 'NL') { // is een nederlands adres
+        if (e.valid != false && e.address.countryCode === 'NL') { // is een nederlands adres
 
           $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
           $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
@@ -1193,76 +1202,76 @@ $(function () {
 
 
 
-        // else if (e.valid != false && e.address.length == 1 && e.address[0].hasOwnProperty('street_nl')) {
-        //
-        //
-        //   $('[name="address1"]').val(e.address.street).removeClass('is-invalid').addClass('was-validated is-valid');
-        //   if ($('[name="house_number"]').val().length > 0) {
-        //     $('[name="house_number"]').removeClass('is-invalid').addClass('was-validated is-valid');
-        //     $('[name="house_number_extension"]').removeClass('is-invalid').addClass('was-validated is-valid');
-        //     isValidForConfirm = true;
-        //   } else {
-        //     $('[name="house_number"]').addClass('is-invalid');
-        //
-        //     $('[name="house_number_extension"]').addClass('is-invalid');
-        //     isValidForConfirm = false;
-        //   }
-        //   // is een belgisch adres
-        // } else if (e.valid != false && e.address.length > 1) {
-        //   isValidForConfirm = false;
-        //   var htmlList = '<ul>';
-        //   for (var i = 0; i < e.address.length; i++) {
-        //     htmlList += '<li class="selectStreetAutoFill">' + e.address[i].street + '</li>';
-        //   }
-        //   htmlList += '</ul>';
-        //   $('#suggesstion-box-street').html(htmlList);
-        //   // is een belgisch adres
-        // } else {
-        //   if (e.msg == 'Fetching address failed') {
-        //     $('[name="address1"]').val('').addClass('is-invalid').removeClass('was-validated is-valid');
-        //     isValidForConfirm = false;
-        //   }
-        //
-        //   if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field !== undefined) {
-        //     isValidForConfirm = false;
-        //   }
-        //   $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
-        //
-        //   $('[name="house_number"]').removeClass('is-invalid').removeClass('was-validated is-valid');
-        //   $('[name="house_number_extension"]').removeClass('is-invalid').removeClass('was-validated is-valid');
-        //   $('[name="address1"]').removeClass('is-invalid').removeClass('was-validated is-valid');
-        //
-        //   $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
-        //
-        //   $('[name="city"]').removeClass('is-invalid').addClass('is-valid');
-        //
-        //   if (e.msg !== 'ok') {
-        //     if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field) {
-        //       if (e.msg.field === 'house_number') {
-        //         $('[name="house_number_extension"]').removeClass('is-valid').addClass('is-invalid');
-        //         $('[name="address1"]').removeClass('is-valid').addClass('is-invalid');
-        //         $('[name="address1"]').siblings('.address-error-msg').text(null).text('Het huisnummer kan niet gevonden worden mogelijk is de straat onjuist');
-        //       }
-        //       $('[name="' + e.msg.field + '"]').removeClass('is-valid').addClass('is-invalid');
-        //       $('[name="' + e.msg.field + '"]').siblings('.address-error-msg').text(null).text(e.msg.msg);
-        //       isValidForConfirm = false;
-        //     }
-          //}
-          else if (e.msg === 'ok' && e.valid) {
-            $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
-            $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
+          // else if (e.valid != false && e.address.length == 1 && e.address[0].hasOwnProperty('street_nl')) {
+          //
+          //
+          //   $('[name="address1"]').val(e.address.street).removeClass('is-invalid').addClass('was-validated is-valid');
+          //   if ($('[name="house_number"]').val().length > 0) {
+          //     $('[name="house_number"]').removeClass('is-invalid').addClass('was-validated is-valid');
+          //     $('[name="house_number_extension"]').removeClass('is-invalid').addClass('was-validated is-valid');
+          //     isValidForConfirm = true;
+          //   } else {
+          //     $('[name="house_number"]').addClass('is-invalid');
+          //
+          //     $('[name="house_number_extension"]').addClass('is-invalid');
+          //     isValidForConfirm = false;
+          //   }
+          //   // is een belgisch adres
+          // } else if (e.valid != false && e.address.length > 1) {
+          //   isValidForConfirm = false;
+          //   var htmlList = '<ul>';
+          //   for (var i = 0; i < e.address.length; i++) {
+          //     htmlList += '<li class="selectStreetAutoFill">' + e.address[i].street + '</li>';
+          //   }
+          //   htmlList += '</ul>';
+          //   $('#suggesstion-box-street').html(htmlList);
+          //   // is een belgisch adres
+          // } else {
+          //   if (e.msg == 'Fetching address failed') {
+          //     $('[name="address1"]').val('').addClass('is-invalid').removeClass('was-validated is-valid');
+          //     isValidForConfirm = false;
+          //   }
+          //
+          //   if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field !== undefined) {
+          //     isValidForConfirm = false;
+          //   }
+          //   $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
+          //
+          //   $('[name="house_number"]').removeClass('is-invalid').removeClass('was-validated is-valid');
+          //   $('[name="house_number_extension"]').removeClass('is-invalid').removeClass('was-validated is-valid');
+          //   $('[name="address1"]').removeClass('is-invalid').removeClass('was-validated is-valid');
+          //
+          //   $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
+          //
+          //   $('[name="city"]').removeClass('is-invalid').addClass('is-valid');
+          //
+          //   if (e.msg !== 'ok') {
+          //     if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field) {
+          //       if (e.msg.field === 'house_number') {
+          //         $('[name="house_number_extension"]').removeClass('is-valid').addClass('is-invalid');
+          //         $('[name="address1"]').removeClass('is-valid').addClass('is-invalid');
+          //         $('[name="address1"]').siblings('.address-error-msg').text(null).text('Het huisnummer kan niet gevonden worden mogelijk is de straat onjuist');
+          //       }
+          //       $('[name="' + e.msg.field + '"]').removeClass('is-valid').addClass('is-invalid');
+          //       $('[name="' + e.msg.field + '"]').siblings('.address-error-msg').text(null).text(e.msg.msg);
+          //       isValidForConfirm = false;
+          //     }
+        //}
+        else if (e.msg === 'ok' && e.valid) {
+          $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
+          $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
 
-            if ($('[name="house_number"]').val().length > 0) {
-              $('[name="house_number"]').removeClass('is-invalid').addClass('was-validated is-valid');
-              $('[name="house_number_extension"]').removeClass('is-invalid').addClass('was-validated is-valid');
-            } else {
-              $('[name="house_number"]').addClass('is-invalid');
-              $('[name="house_number_extension"]').addClass('is-invalid');
-            }
-            $('[name="city"]').removeClass('is-invalid').addClass('was-validated is-valid');
-            $('[name="address1"]').removeClass('is-invalid').addClass('was-validated is-valid');
-            isValidForConfirm = true;
+          if ($('[name="house_number"]').val().length > 0) {
+            $('[name="house_number"]').removeClass('is-invalid').addClass('was-validated is-valid');
+            $('[name="house_number_extension"]').removeClass('is-invalid').addClass('was-validated is-valid');
+          } else {
+            $('[name="house_number"]').addClass('is-invalid');
+            $('[name="house_number_extension"]').addClass('is-invalid');
           }
+          $('[name="city"]').removeClass('is-invalid').addClass('was-validated is-valid');
+          $('[name="address1"]').removeClass('is-invalid').addClass('was-validated is-valid');
+          isValidForConfirm = true;
+        }
         // }
 
         if (isValidForConfirm) {
@@ -1280,15 +1289,15 @@ $(function () {
           $('[name="id_country"]').addClass('is-invalid').removeClass('was-validated is-valid');
         }
       }).fail(function (e) {
-        disEnConfirmButtonAddress(true);
-        $('[name="address1"]').addClass('is-invalid').removeClass('was-validated is-valid');
-        $('[name="house_number"]').addClass('is-invalid').removeClass('was-validated is-valid');
-        $('[name="house_number_extension"]').addClass('is-invalid').removeClass('was-validated is-valid');
-        $('[name="id_country"]').addClass('is-invalid').removeClass('was-validated is-valid');
-        $('[name="postcode"]').addClass('is-invalid').removeClass('was-validated is-valid');
-        $('[name="city"]').addClass('is-invalid').removeClass('was-validated is-valid');
-        $('[name="id_country"]').addClass('is-invalid').removeClass('was-validated is-valid');
-      });
+      disEnConfirmButtonAddress(true);
+      $('[name="address1"]').addClass('is-invalid').removeClass('was-validated is-valid');
+      $('[name="house_number"]').addClass('is-invalid').removeClass('was-validated is-valid');
+      $('[name="house_number_extension"]').addClass('is-invalid').removeClass('was-validated is-valid');
+      $('[name="id_country"]').addClass('is-invalid').removeClass('was-validated is-valid');
+      $('[name="postcode"]').addClass('is-invalid').removeClass('was-validated is-valid');
+      $('[name="city"]').addClass('is-invalid').removeClass('was-validated is-valid');
+      $('[name="id_country"]').addClass('is-invalid').removeClass('was-validated is-valid');
+    });
 
     event.stopImmediatePropagation();
   }
@@ -1331,7 +1340,7 @@ $(function () {
     }
   });
 
-  function searchForAddToOrder(event){
+  function searchForAddToOrder(event) {
     event.preventDefault();
     const desiredReference = $('#desired_reference').val();
 
@@ -1411,14 +1420,14 @@ $(function () {
   // toevoegen aan order check
   // test reference failing: YS-53931, success: YS-53936, YS-53935
   $(document).on('click', '#search_order_for_shipping', function (event) {
-      return searchForAddToOrder(event);
+    return searchForAddToOrder(event);
   });
 
 
   // toevoegen aan order check
   // test reference failing: YS-53931, success: YS-53936, YS-53935
   $(document).on('keyup', '#desired_reference', function (event) {
-    if($(this).val().length === 9){
+    if ($(this).val().length === 9) {
       $('#search_order_for_shipping').trigger('click');
     }
   });
@@ -1688,7 +1697,6 @@ $(function () {
 });
 
 
-
 var showAddedToCartGlow = function (caller_element) {
   var i = 1;
   var times = 0;
@@ -1799,7 +1807,7 @@ $(document).on('click', '#addCustomProductByEmployee', function (event) {
     '<td>' +
     '<button  data-cart="' + cart + '" class="btn btn-secondary btn-danger removeCustomProductEmployee"><i class="fasl fa-xmark"></i></button>' +
     '<button data-cart="' + cart + '" class="btn btn-secondary btn-success saveCustomProductEmployee" data-id="' + rowId + '"><i class="fasl fa-check"></i></button>' +
-    '</td>'+
+    '</td>' +
     '</tr>' +
     '</table>' +
     '</div>' +
@@ -2058,37 +2066,34 @@ $('#retour_order_search').on('click', function (e) {
 });
 
 
-$('.nav-contact').on('mouseenter',function() {
+$('.nav-contact').on('mouseenter', function () {
   let $this = $(this);
-  if(!$this.hasClass('hover-show')){
+  if (!$this.hasClass('hover-show')) {
     $('.nav-contact').addClass('hover-show');
     $('.nav-contact .dropdown-menu').addClass('hover-show');
   }
 });
 
-$('.nav-contact').on('mouseleave',function() {
+$('.nav-contact').on('mouseleave', function () {
   let $this = $(this);
-  if($this.hasClass('hover-show')){
+  if ($this.hasClass('hover-show')) {
     $('.nav-contact').removeClass('hover-show');
     $('.nav-contact .dropdown-menu').removeClass('hover-show');
   }
 });
 
 
-
-
-
-$(function() {
+$(function () {
 
   $.widget("custom.icon_select_menu", $.ui.selectmenu, {
-    _resizeMenu: function() {
-      let menuWidth = $('#'+this.element[0].id+'-button').width()+26;
-      this.menu.outerWidth( menuWidth );
+    _resizeMenu: function () {
+      let menuWidth = $('#' + this.element[0].id + '-button').width() + 26;
+      this.menu.outerWidth(menuWidth);
     },
     _renderItem: function (ul, item) {
       let li = $("<li>");
-      let wrapper = $("<li href='"+item.element.attr('data-url')+"'>");
-      wrapper.html('<span class="product-name w-100">'+item.label+'<span class="float-right text-black price">'+item.element[0].dataset.price+'</span></span>');
+      let wrapper = $("<li href='" + item.element.attr('data-url') + "'>");
+      wrapper.html('<span class="product-name w-100">' + item.label + '<span class="float-right text-black price">' + item.element[0].dataset.price + '</span></span>');
 
       if (item.disabled) {
         li.addClass("ui-state-disabled");
@@ -2103,10 +2108,10 @@ $(function() {
 
       return li.append(wrapper).appendTo(ul);
     },
-    _select: function( item, event ) {
+    _select: function (item, event) {
       window.location.href = item.element.attr('data-url');
 
-      this.close( event );
+      this.close(event);
     }
   });
 
@@ -2131,7 +2136,7 @@ $(function() {
     var inclVat = $('#vat_toggler').prop('checked');
     $('.btw-slider span.slider').addClass('active');
     $('#wrapper').addClass('wait-vat-toggle');
-    if(inclVat){
+    if (inclVat) {
       let alertText = 'Price with vat is set';
     } else {
       let alertText = 'Price without vat is set';
@@ -2147,10 +2152,15 @@ $(function() {
         incl_vat: inclVat,
       },
     }).done(function (e) {
-      window.location = String(document.location).replace(/\?.*$/, '').replace('#','');
+      window.location = String(document.location).replace(/\?.*$/, '').replace('#', '');
     });
   });
-
 });
 
-
+$(document).ready(function () {
+  window.setTimeout(function () {
+    $(".alert").fadeTo(1000, 0).slideUp(1000, function () {
+      $(this).remove();
+    });
+  }, 3000);
+});

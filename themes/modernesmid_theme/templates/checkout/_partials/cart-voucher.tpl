@@ -24,70 +24,104 @@
  *}
 
   {block name='cart_voucher'}
-      {if $cart.vouchers.added}
-        <div class="block-promo mb-2 pt-2 border-top" style="border-top-style:dashed!important;">
-        <div class="cart-voucher">
-          {block name='cart_voucher_list'}
-            <ul class="promo-name card-block list-unstyled">
-              {foreach from=$cart.vouchers.added item=voucher}
-                <li class="cart-summary-line" data-toggle="tooltip" data-placement="top" title="Deze korting geeft u een reductie van {str_replace('-','', $voucher.reduction_formatted)} incl. btw">
-                  <table class="w-100 text-muted">
-                    <tr>
-                      <td>{$voucher.name}</td>
-                      {if in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Customer::getGroupsStatic(Context::getContext()->cart->id_customer)) || (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
-                      <td class="text-right"><a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="fasl fa-trash text-danger"></i></a></td>
+{if $cart.vouchers.added}
+{block name='cart_voucher_list'}
+  <div class="col-12"><h6>Toegepaste korting</h6></div>
+{foreach from=$cart.vouchers.added item=voucher}
+<div class="product-line-grid col-12">
+  <div class="row">
+    <!--  product left content: image-->
+    <div class="product-line-grid-left col-12 col-sm-2 col-md-2 col-lg-2">
+      <span class="product-image media-middle row mx-auto"></span>
+    </div>
+    <!--  product left body: description -->
+    <div class="product-line-grid-body col-12 col-sm-10 col-md-10 col-lg-10 pl-lg-0 pr-0 text-center text-sm-left">
+      <div class="row">
+        <div class="product-line-info col-12 col-sm-6 col-md-6 col-lg-6 pl-3 pr-3 pl-sm-0 pr-sm-0 pt-2">
+          <a class="label text-decoration-none text-dark" data-toggle="tooltip" data-placement="top" title="Deze korting geeft u een reductie van {str_replace('-','', $voucher.reduction_formatted)} incl. btw">{$voucher.name}</a></div>
+
+        <!--  product left body: description -->
+        <div class="product-line-grid-right product-line-actions col-12 col-sm-6 col-md-6 col-lg-6">
+          <div class="row">
+            <div class="col-md-10 col-sm-10 col-12 pl-3 pl-sm-2 pr-3 pr-sm-2">
+              <div class="row">
+                <div class="col-12 col-sm-6 qty">
+                  <div class="row">
+                    <div class="col-2 p-0 pt-2">
+                      {if in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Customer::getGroupsStatic(Context::getContext()->cart->id_customer))}
+                        <a href="{$voucher.delete_url}" data-link-action="remove-voucher" class="text-dark"><i class="fasl fa-trash fa-2x"></i></a>
                       {/if}
-                    </tr>
-                  </table>
-                </li>
-              {/foreach}
-            </ul>
-          {/block}
-        {/if}
-    {if $cart.vouchers.allowed && (in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Customer::getGroupsStatic(Context::getContext()->cart->id_customer)) || (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}
+                    </div>
+                    <div class="col-10">
 
-        <div id="promo-code" class="collapse show">
-          <div class="promo-code">
-            {block name='cart_voucher_form'}
-              <form action="{$urls.pages.cart}" data-link-action="add-voucher" method="post">
-                <input type="hidden" name="token" value="{$static_token}">
-                <input type="hidden" name="addDiscount" value="1">
-                <div class="input-group">
-                  <input class="form-control" type="text" name="discount_name" placeholder="{l s='Vul hier uw kortingscode in' d='Shop.Theme.Checkout'}">
-                  <div class="input-group-append">
-                    <button type="submit" class="btn btn-success"><i class="fasl fa-check"></i></button>
+                    </div>
                   </div>
+
                 </div>
-              </form>
-            {/block}
-
-{*            {block name='cart_voucher_notifications'}*}
-{*              <div class="alert alert-danger js-error" role="alert">*}
-{*                <i class="material-icons">&#xE001;</i><span class="ml-1 js-error-text"></span>*}
-{*              </div>*}
-{*            {/block}*}
-
-{*            <a class="collapse-button promo-code-button cancel-promo" role="button" data-toggle="collapse" data-target="#promo-code" aria-expanded="true" aria-controls="promo-code">*}
-{*              {l s='Close' d='Shop.Theme.Checkout'}*}
-{*            </a>*}
+                <div class="col-12 col-sm-6 price pl-0 mt-2 mt-sm-0">
+            <span class="product-price" style="line-height: .7rem;">
+              <strong>
+                    <span class="inclusive-price">{$voucher.reduction_value_tax_excl}</span>
+              </strong>
+            </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {if $cart.discounts|count > 0}
-          <p class="block-promo promo-highlighted">
-            {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
-          </p>
-          <ul class="js-discount card-block promo-discounts">
-            {foreach from=$cart.discounts item=discount}
-              <li class="cart-summary-line">
+      </div>
+    </div>
+    <hr class="text-dark" style="opacity: 0.8"></hr>
+    {/foreach}
+    {/block}
+    {/if}
+
+
+
+    {if $cart.vouchers.allowed && (in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Customer::getGroupsStatic(Context::getContext()->cart->id_customer)))}
+    <div class="row">
+
+    <p class="col-12 pl-4 pt-2 promo-code-button display-promo{if $cart.discounts|count > 0} with-discounts{/if}">
+      <a class="collapse-button" href="#promo-code"  data-toggle="collapse" href="#promo-code" role="button" aria-expanded="false" aria-controls="promo-code">
+        {l s='Heeft u een kortingscode? Klik dan hier om deze te verzilveren!' d='Shop.Theme.Checkout'}
+      </a>
+    </p>
+
+    <div id="promo-code" class="collapse{if $cart.discounts|count > 0} show{/if} w-100 px-4">
+      <div class="promo-code">
+        {block name='cart_voucher_form'}
+          <form action="{$urls.pages.cart}" data-link-action="add-voucher" method="post">
+            <input type="hidden" name="token" value="{$static_token}">
+            <input type="hidden" name="addDiscount" value="1">
+            <div class="input-group">
+              <input class="form-control" type="text" name="discount_name" placeholder="{l s='Vul hier uw kortingscode in' d='Shop.Theme.Checkout'}">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-success"><i class="fasl fa-check"></i></button>
+              </div>
+            </div>
+          </form>
+        {/block}
+      </div>
+    </div>
+
+    {if $cart.discounts|count > 0}
+      <p class="block-promo promo-highlighted">
+        {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
+      </p>
+      <ul class="js-discount card-block promo-discounts">
+        {foreach from=$cart.discounts item=discount}
+          <li class="cart-summary-line">
                 <span class="label">
                   <span class="code">{$discount.code}</span> - {$discount.name}
                 </span>
-              </li>
-            {/foreach}
-          </ul>
-        {/if}
-      </div>
-    </div>
+          </li>
+        {/foreach}
+      </ul>
+    {/if}
+  </div>
+</div>
 {/if}
+
+</div>
   {/block}

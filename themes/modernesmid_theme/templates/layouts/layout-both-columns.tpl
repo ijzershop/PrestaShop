@@ -51,9 +51,9 @@
         {/block}
       </header>
 
-{*       {block name='notifications'}
+      {block name='notifications'}
         {include file='_partials/notifications.tpl'}
-      {/block} *}
+      {/block}
 
       <section id="wrapper">
         {hook h="displayWrapperTop"}

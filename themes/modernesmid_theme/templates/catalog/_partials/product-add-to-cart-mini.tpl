@@ -52,7 +52,7 @@
         </div>
 
         <div class="add col-12 col-sm-6 float-right p-0 pl-sm-1 pr-sm-0 pr-lg-2 mb-3 mb-sm-0">
-          <a aria-label="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" alt="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" href="{$link->getPageLink('cart')}?token={$static_token}"
+          <a aria-label="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" alt="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" href="{$link->getPageLink('cart')}&token={$static_token}"
             data-product-id="{$product.id_product}"
             data-product-customization="{json_encode($product.id_customization)}"
             class="btn btn-success add-to-cart w-100 text-nowrap {if !Product::productIsOrderable($product.id_product)}disabled{/if}"

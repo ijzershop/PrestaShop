@@ -912,14 +912,14 @@ $(document).ready(() => {
 
 
   $('#checkout-personal-information-step a[data-toggle="tab"]').on('show.bs.tab', function (event) {
-    let additionText = '? Klik dan hier!'
-    $(event.target).addClass('user-select-none text-dark').removeClass('btn btn-outline-primary');
-    $(event.target).parent('li').addClass('border-top border-left border-right').removeClass('border-bottom');
-    $(event.target).text($(event.target).text().replace(additionText,''));
 
-    $(event.relatedTarget).addClass('btn btn-outline-primary').removeClass('user-select-none text-dark');
+    $(event.target).addClass('user-select-none text-dark').removeClass('btn btn-outline-white');
+    $(event.target).parent('li').addClass('border-top border-left border-right').removeClass('border-bottom');
+    $(event.target).text($(event.target).text());
+
+    $(event.relatedTarget).addClass('btn btn-outline-white').removeClass('user-select-none text-dark');
     $(event.relatedTarget).parent('li').removeClass('border-top border-left border-right').addClass('border-bottom');
-    $(event.relatedTarget).text($(event.relatedTarget).text().trim()+additionText);
+    $(event.relatedTarget).text($(event.relatedTarget).text().trim());
   });
 
 

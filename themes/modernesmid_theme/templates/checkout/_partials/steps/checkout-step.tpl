@@ -101,6 +101,7 @@
     }
     .selected{
       background-color: #f0f0f0;
+      color:#000000;
     }
   </style>
 
@@ -115,16 +116,16 @@
                         'js-current-step' => $step_is_current
                     ]|classnames}"
   >
-    <h1 class="step-title js-step-title h3 p-2 pt-3 pb-3 {if $identifier === 'checkout-personal-information-step'}border-0{/if}">
+    <h1 class="step-title js-step-title h5 w-100 text-dark p-2 pt-3 pb-3 {if $identifier === 'checkout-personal-information-step'}border-0{/if}">
       <div class="w-100">
         <table class="w-100">
         <tr class="row">
-          <td class="col-1" style="min-width:35px; max-width: 35px;text-align: center;vertical-align: center;">
+          <td class="col-1 text-success" style="min-width:35px; max-width: 35px;text-align: center;vertical-align: center;">
             <i class="fasl fa-check rtl-no-flip done pl-2 pr-1"></i>
             <span class="step-number m-0">{$position}</span>
           </td>
-          <td class="col-9 pl-3">
-            <span>{$title}</span>
+          <td class="col-9" style="padding-left: 1.2rem;padding-top: .2rem;">
+            {$title}
           </td>
           <td class="col-2 text-right">
             <span class="step-edit text-muted"><i class="fasl fa-pen-to-square edit"></i> <span class="d-none d-xl-inline">{l s='Edit' d='Shop.Theme.Actions'}</span></span>

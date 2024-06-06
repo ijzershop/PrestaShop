@@ -78,7 +78,6 @@ body#checkout {
       margin-bottom: 0;
       font-size: 1.5rem;
       font-weight: 500;
-      text-transform: uppercase;
       cursor: pointer;
       border-bottom: 1px solid $border-gray;
     }
@@ -131,6 +130,7 @@ body#checkout {
     &.-current {
       .step-title {
         cursor: default;
+        color: $black;
       }
 
       .content {
@@ -829,4 +829,22 @@ body#checkout {
       display: block;
     }
   }
+}
+
+
+.btn-outline-white:hover{
+  background-color: #ebebeb;
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn-outline-white{
+  color: #333;
+  width: 100%;
+  background-color: #fff;
+  border-color: #ccc;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
 }

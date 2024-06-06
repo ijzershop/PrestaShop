@@ -34,9 +34,15 @@
         </li>
         {if is_array($product.customizations) && $product.customizations|count >1}<hr>{/if}
       {/foreach}
+      <li class="cart-item">
+        {block name="cart_vouchers"}
+          {include file='checkout/_partials/cart-voucher.tpl' cart=$cart}
+        {/block}
+      </li>
     </ul>
     {else}
       <span class="no-items col-12 text-center mt-4">{l s='There are no more items in your cart' d='Shop.Theme.Checkout'}</span>
     {/if}
   </div>
+
 {/block}

@@ -42,11 +42,6 @@
           {/block}
             {if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id}
                 <div class="col">
-    {*            {block name='continue_shopping'}*}
-    {*              <a class="btn btn-dark mt-2" href="{$urls.pages.index}">*}
-    {*                <i class="fasl fa-chevron-left"></i> {l s='Continue shopping' d='Shop.Theme.Actions'}*}
-    {*              </a>*}
-    {*            {/block}*}
                   {* Show print cart button *}
                   <a href="#" id="addCustomProductByEmployee" data-cart="{Context::getContext()->cart->id}"  class="btn btn-success float-right mt-2" alt="Extra product toevoegen"><i class="fasl fa-plus"></i> Regel toevoegen</a>
                   <a href="#" id="removeShoppingCartDefaultDiscount" data-cart="{Context::getContext()->cart->id}"  class="btn btn-warning float-right text-white mt-2" alt="Winkelwagen korting verwijderen"><i class="fasl fa-times"></i> Korting verwijderen</a>
@@ -61,12 +56,6 @@
         {/block}
       </div>
       <div class="cart-grid-right col-xs-12 col-lg-4">
-{*        <div class="card cart-summary">*}
-{*          <div class="card-body">*}
-{*              <b>Bestel nog {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getTotalBeforeNextAutoDiscount(false, 'amount'),'EUR')} extra {Context::getContext()->cart->getTotalBeforeNextAutoDiscount(true, 'name')}</b>*}
-{*          </div>*}
-{*        </div>*}
-
         {block name='cart_summary'}
           <style>
             .cart-summary-next-shipment, .cart-discount{

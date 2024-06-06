@@ -72,7 +72,9 @@
 
       </div>
     </div>
-    <hr class="text-dark" style="opacity: 0.8"></hr>
+    <hr class="text-dark" style="opacity: 0.8">
+  </div>
+</div>
     {/foreach}
     {/block}
     {/if}
@@ -120,8 +122,5 @@
       </ul>
     {/if}
   </div>
-</div>
 {/if}
-
-</div>
   {/block}

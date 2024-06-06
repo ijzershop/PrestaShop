@@ -27,7 +27,7 @@
     {include file='_partials/form-errors.tpl' errors=$errors['']}
   {/block}
 
-  <form id="login-form" action="{block name='login_form_actionurl'}{$action}{/block}" method="post">
+  <form id="login-form" class="col-12" action="{block name='login_form_actionurl'}{$action}{/block}" method="post">
 
 
 {*   <div class="alert alert-warning alert-dismissible fade show col-md-12" role="alert">

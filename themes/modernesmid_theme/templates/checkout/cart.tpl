@@ -27,11 +27,8 @@
 {block name='content'}
   <section id="main" class="col-12">
     <div class="cart-grid row">
-
-
       <!-- Left Block: cart product informations & shpping -->
-      <div class="cart-grid-body col-xs-12 col-lg-8">
-
+      <div class="cart-grid-body col-xs-12 col-lg-8 p-0">
         <!-- cart products detailed -->
         <div class="card cart-container border-0 row">
           <div class="p-2 col">
@@ -49,13 +46,13 @@
                 </div>
             {/if}
         </div>
-          <br>
+        <br>
         <!-- shipping informations -->
         {block name='hook_shopping_cart_footer'}
           {hook h='displayShoppingCartFooter'}
         {/block}
       </div>
-      <div class="cart-grid-right col-xs-12 col-lg-4">
+      <div class="cart-grid-right col-xs-12 col-lg-4 p-0">
         {block name='cart_summary'}
           <style>
             .cart-summary-next-shipment, .cart-discount{
@@ -66,7 +63,6 @@
               font-weight: bold;
             }
           </style>
-
         <div class="cart-summary-small mb-2">
           <div class="card-body bg-light">
               {block name='cart_totals'}

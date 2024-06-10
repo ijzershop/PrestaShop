@@ -64,11 +64,11 @@
        <div class="cart-summary-line summary-total-discount">
         <span class="label">
           {if Context::getContext()->cart->id_carrier == (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}
-            Verzending
+            Bezorging
           {elseif Context::getContext()->cart->id_carrier == (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
-             Afhalen
+            Afhalen
           {else}
-              Toevoegen
+            Toevoegen
           {/if}
         </span>
         <span class="value price">{if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}

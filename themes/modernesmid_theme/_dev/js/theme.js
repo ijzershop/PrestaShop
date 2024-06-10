@@ -1389,12 +1389,12 @@ $(function () {
           $('#added_to_order').val(desiredReference);
           $('.add-to-existing-order-form .add2order-allowed').removeClass('not-allowed');
           $('.add-to-existing-order-form input[type="radio"]').removeAttr('disabled').prop('checked', true);
-          $('#desired_reference').addClass('ok-form');
+          $('#desired_reference').addClass('is-valid');
         } else {
-          htmlBlock = '<div class="alert alert-danger" role="alert"><strong>De gewenste bestelling is niet meer voor toevoegen beschikbaar!</strong> Zoek nogmaal op referentie of selecteer een andere verzendmethode</div>';
+          htmlBlock = '<strong>De gewenste bestelling is niet meer voor toevoegen beschikbaar!</strong> Zoek nogmaal op referentie of selecteer een andere verzendmethode';
           $('#desired_reference_error').html(htmlBlock);
           $('#desired_reference_error').show();
-          $('#desired_reference').addClass('error-form');
+          $('#desired_reference').addClass('is-invalid');
         }
 
         $('#searchOrderByReferenceAgain').on('click', function (event) {
@@ -2158,9 +2158,31 @@ $(function () {
 });
 
 $(document).ready(function () {
-  window.setTimeout(function () {
-    $(".alert").fadeTo(1000, 0).slideUp(1000, function () {
-      $(this).remove();
-    });
-  }, 3000);
+// Init a timeout variable to be used below
+    let timeoutAlertFunction =
+    setTimeout(function () {
+        $('.alert').fadeTo(1000, 0).slideUp(1000, function () {
+          $(this).remove();
+        });
+    }, 5000);
+
+
+
+    $(document).on('show','.alert', function(elem){
+      $('.alert').hover(function(){
+        clearTimeout(timeoutAlertFunction);
+        timeoutAlertFunction =
+          setTimeout(function () {
+            $('.alert').fadeTo(1000, 0).slideUp(1000, function () {
+              $(this).remove();
+            });
+          }, 5000);
+      });
+
+    })
+
+
+
+
+
 });

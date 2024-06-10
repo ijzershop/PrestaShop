@@ -36,21 +36,26 @@
           {/block}
         {/foreach}
       {/block}
-      <div class="forgot-password mb-3">
-        <a href="{$urls.pages.password}" class="text-decoration-none text-dark" rel="nofollow">
-          {l s='Forgot your password?' d='Shop.Theme.Customeraccount'}
-        </a>
+      <div class="forgot-password form-group row mt-4 mt-mb-0">
+        <div class="col-md-3 form-control-label"></div>
+        <div class="col-md-9">
+          <a href="{$urls.pages.password}" class="w-100 btn btn-sm btn-outline-primary rounded-0" rel="nofollow">
+            {l s='Forgot your password?' d='Shop.Theme.Customeraccount'}?
+          </a>
+        </div>
       </div>
     </section>
     <br>
     {block name='login_form_footer'}
-      <footer class="form-footer col-12 pt-3 pb-3 w-100">
-        <input type="hidden" name="submitLogin" value="1">
-        {block name='form_buttons'}
-          <button id="submit-login" class="btn btn-primary w-100" data-link-action="sign-in" type="submit" class="form-control-submit">
-             <i class="fasl fa-lock"></i> {l s='Sign in' d='Shop.Theme.Actions'}
-          </button>
-        {/block}
+      <footer class="form-footer form-group pt-2 pb-3 row">
+        <div class="col-12">
+          <input type="hidden" name="submitLogin" value="1">
+          {block name='form_buttons'}
+            <button id="submit-login" class="btn btn-primary col-12" data-link-action="sign-in" type="submit" class="form-control-submit">
+              <i class="fasl fa-lock"></i> {l s='Sign in' d='Shop.Theme.Actions'}
+            </button>
+          {/block}
+        </div>
       </footer>
     {/block}
 

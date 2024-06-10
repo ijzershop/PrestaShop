@@ -33,7 +33,7 @@
         <span class="label">
           <div class="form-check form-check-inline p-0 m-0 justify-content-start">
               <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_checkout_cart" id="carrier_selection_checkout_cart1" value="shipping" {if Context::getContext()->cart->id_carrier == (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) || Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}checked{/if}>
-              <label class="form-check-label carrier-selection-label" for="carrier_selection_checkout_cart1">Verzenden</label>
+              <label class="form-check-label carrier-selection-label" for="carrier_selection_checkout_cart1">Bezorging</label>
             </div>
             <div class="form-check form-check-inline p-0 m-0 pl-2 justify-content-start">
               <input class="form-check-input carrier-selection" type="radio" name="carrier_selection_checkout_cart" id="carrier_selection_checkout_cart2" value="pickup" {if Context::getContext()->cart->id_carrier == (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}checked{/if}>

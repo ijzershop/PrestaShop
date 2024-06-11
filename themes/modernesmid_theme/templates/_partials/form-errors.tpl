@@ -81,6 +81,8 @@
           </div>
         </article>
       {/block}
+  </div>
+</aside>
       {/block}
 
     {/if}

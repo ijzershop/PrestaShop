@@ -149,7 +149,7 @@ app/config/config.php
 
 modules/*
 !modules/msthemeconfig
-override/*
+
 #themes/*/
 themes/classic
 !themes/_core

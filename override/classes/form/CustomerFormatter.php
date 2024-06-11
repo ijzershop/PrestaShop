@@ -153,7 +153,7 @@ class CustomerFormatter extends CustomerFormatterCore
                 ->setType('text')
                 ->setLabel($this->translator->trans(
                 // Please localize this string with the applicable registration number type in your country. For example : "SIRET" in France and "Código fiscal" in Spain.
-                    'Vat Identification number',
+                    'Btw nummer',
                     [],
                     'Shop.Forms.Labels'
                 ));

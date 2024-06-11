@@ -1194,12 +1194,15 @@ class ModernHook
         $fmt = numfmt_create('nl_NL', \NumberFormatter::CURRENCY);
 
         $cartRules = $this->context->cart->getCartRules();
+        $nextCartRule = $first;
         if(count($cartRules) > 0){
             foreach ($cartRules as $index => $cartRule){
                 if ((int)$cartRule['id_cart_rule'] == (int)$first && $noDiscountCounterAction != 1) {
                     $isElegibleForDiscount = 1;
+                    $nextCartRule = $second;
                 } elseif ((int)$cartRule['id_cart_rule'] == (int)$second && $noDiscountCounterAction != 1) {
                     $isElegibleForDiscount = 2;
+                    $nextCartRule = $third;
                 } elseif ((int)$cartRule['id_cart_rule'] == (int)$third && $noDiscountCounterAction != 1) {
                     $isElegibleForDiscount = 3;
                 }
@@ -1217,25 +1220,26 @@ class ModernHook
                     'name' => $name,
                     'minimum_amount' => $cartRule['minimum_amount'],
                     'discount' => $cartRule['reduction_percent'],
-                    'next_discount' => 0
+                    'next_discount' => $nextCartRule
                 ];
 
+                $nextCartRuleObject = new CartRule($nextCartRule);
 
-                if((float)$currentCartValue < (float)$cartRule['minimum_amount']){
+                if((float)$currentCartValue <= (float)$nextCartRuleObject->minimum_amount){
                     $vatText = " excl. btw";
-                    $minAmountText = (int)$cartRule['minimum_amount'];
+                    $minAmountText = (int)$nextCartRuleObject->minimum_amount;
                     if($withTax !== "false"){
                         $vatText = " incl. btw";
-                        $minAmountText = (int)$cartRule['minimum_amount']*1.21;
+                        $minAmountText = (int)$nextCartRuleObject->minimum_amount*1.21;
                     }
 
-                    $activeDiscountRules[$index]['next_discount'] = 1;
-                    $discountText[] = (int)$cartRule['reduction_percent'].'% korting vanaf '.numfmt_format_currency($fmt,  $minAmountText, "EUR").' '. $vatText .'<br/>';
+                    $activeDiscountRules[$index]['next_discount'] = $nextCartRule;
+                    $discountText[] = (int)$nextCartRuleObject->reduction_percent.'% korting vanaf '.numfmt_format_currency($fmt,  $minAmountText, "EUR").' '. $vatText .'<br/><br/>';
                     $isElegibleForDiscount = 1;
                 }
 
-                if((int)$cartRule['reduction_percent'] > (int)$maxReductionPercent){
-                    $maxReductionPercent = $cartRule['reduction_percent'];
+                if((int)$nextCartRuleObject->reduction_percent > (int)$maxReductionPercent){
+                    $maxReductionPercent = $nextCartRuleObject->reduction_percent;
                 }
             }
         } else {
@@ -1247,12 +1251,10 @@ class ModernHook
                 'name' => $name,
                 'minimum_amount' => $firstRule->minimum_amount,
                 'discount' => $firstRule->reduction_percent,
-                'next_discount' => 0
+                'next_discount' => $second
             ];
 
             if((float)$currentCartValue < (float)$firstRule->minimum_amount){
-                $activeDiscountRules[0]['next_discount'] = 1;
-
                 $vatText = " excl. btw";
                 $minAmountText = (int)$firstRule->minimum_amount;
                 if($withTax !== "false"){
@@ -1260,7 +1262,7 @@ class ModernHook
                     $minAmountText = (int)$firstRule->minimum_amount*1.21;
                 }
 
-                $discountText[] = (int)$firstRule->reduction_percent.'% korting vanaf '.numfmt_format_currency($fmt,  $minAmountText, "EUR").' '. $vatText .'<br/>';
+                $discountText[] = (int)$firstRule->reduction_percent.'% korting vanaf '.numfmt_format_currency($fmt,  $minAmountText, "EUR").' '. $vatText .'<br/><br/>';
                 $isElegibleForDiscount = 1;
             }
 
@@ -1302,9 +1304,18 @@ class ModernHook
         $withTax = Context::getContext()->cookie->price_vat_settings_incl;
         $msgSet = 0;
         $msg = '';
+
+//
+//        usort($discounts, function ($item1, $item2) {
+//            return $item2['minimum_amount'] <=> $item1['minimum_amount'];
+//        });
+
+
         for ($i = 0; $i < count($discounts); $i++) {
-            if((float)$discounts[$i]['minimum_amount'] >= (float)$currentOrderTotal && $msgSet === 0){
-                $remaining = (float)$discounts[$i]['minimum_amount'] - (float)$currentOrderTotal;
+            $nextCartRuleObject = new CartRule((int)$discounts[$i]['next_discount']);
+
+            if((float)$nextCartRuleObject->minimum_amount >= (float)$currentOrderTotal){
+                $remaining = (float)$nextCartRuleObject->minimum_amount - (float)$currentOrderTotal;
                 if($withTax !== "false"){
                         $remaining = $remaining * 1.12;
                 }
@@ -1319,11 +1330,13 @@ class ModernHook
                     $msg .= " incl. btw";
                 }
 
-                $msg .='</span> extra voor <span id="percentage-next-discount">'.(int)$discounts[$i]['discount'].'%</span> korting!</b>';
+//                $msg .='</span> extra voor <span id="percentage-next-discount">'.(int)$nextCartRuleObject->reduction_percent.'%</span> korting!</b>';
+                $msg .='</span> extra voor meer korting!</b>';
                 $msgSet = 1;
             }
-            continue;
+
         }
+//        dd($msg, (float)$discounts[0]['minimum_amount'] , (float)$currentOrderTotal);
         return ['msg' => $msg, 'current_order_total' => $currentOrderTotal];
     }
 
@@ -1740,7 +1753,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
                 'hideTabs' => false,
                 'required' => false,
                 'options' => [
-                    'limit' => 100,
+                    'limit' => 2500,
                     'constraints' => [
             new CleanHtml([
                 'message' => $this->module->getTranslator()->trans('This field is invalid',[], 'Admin.Notifications.Error'),
@@ -1927,7 +1940,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
             'hideTabs' => false,
             'required' => false,
             'options' => [
-                'limit' => 100,
+                'limit' => 2500,
                 'constraints' => [
                     new CleanHtml([
                         'message' => $this->module->getTranslator()->trans('This field is invalid',[], 'Admin.Notifications.Error'),

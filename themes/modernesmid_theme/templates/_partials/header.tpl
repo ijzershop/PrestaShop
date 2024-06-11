@@ -57,9 +57,13 @@
             </div>
           </div>
           <div class="col-6 pr-0">
-            <a class="text-white text-decoration-none" href="{$urls.pages.authentication}"><i class="fasl fa-user-circle"></i>  Inloggen </span>  <a class="text-white text-decoration-none d-none menu-chevron-close pl-2" href="#" id="navbar-menu-chevron"><i class="float-right mt-1 mb-1 mr-3 fasl fa-times"></i></a>
-            <a class="text-white text-decoration-none d-none menu-chevron-close" href="#" id="navbar-search-chevron"><i class="float-right mt-1 mb-1 mr-1 fasl fa-times"></i> Zoeken</a>
+            <div class="row">
+              <a class="col-12 text-white text-decoration-none d-none menu-chevron-close" href="#" id="navbar-search-chevron"><i class="float-right mt-1 mb-1 mr-1 ml-1 fasl fa-times"></i> Zoeken</a>
+              <a class="col-12 text-white text-decoration-none d-none menu-chevron-close" href="#" id="navbar-menu-chevron"><i class="float-right mt-1 mb-1 mr-3 fasl fa-times"></i></a>
+
+            </div>
           </div>
+          <a class="col-12 text-white text-decoration-none text-left" href="{$urls.pages.authentication}"><i class="fasl fa-user-circle" style="height: .8em;"></i>  Inloggen </a>
         </div>
         <div class="row m-0">
           <div class="col-12 d-none p-0" id="side-panel-menu-block">

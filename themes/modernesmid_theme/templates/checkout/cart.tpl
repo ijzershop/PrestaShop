@@ -56,6 +56,7 @@
         {block name='cart_summary'}
           <style>
             .cart-summary-next-shipment, .cart-discount{
+              line-height: 1.2rem;
               font-size: 13px;
               color:#000000;
             }

@@ -33,7 +33,7 @@
        <div class="block-category-inner col-12">
                 {if $category.top_description != ''}
                     <div class="row">
-                      <div id="category-description" class="text-muted col-12 col-sm-8">{$category.top_description|unescape: "html" nofilter}</div>
+                      <div id="category-description" class="text-muted col-12 col-sm-8">{$category.top_description nofilter}</div>
                       {if $category.image.large.url}
                           <div class="category-cover float-right col-12 col-sm-4">
                               <img style="width:100%;max-height: 225px;" class="mx-auto" src="{$category.image.large.url}" alt="{if !empty($category.image.legend)}{$category.image.legend}{else}{$category.name}{/if}">

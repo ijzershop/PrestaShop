@@ -1302,6 +1302,13 @@ class ModernHook
         $withTax = Context::getContext()->cookie->price_vat_settings_incl;
         $msgSet = 0;
         $msg = '';
+
+        usort($discounts, function ($item1, $item2) {
+            return $item2['minimum_amount'] <=> $item1['minimum_amount'];
+        });
+
+// dd($discounts);
+
         for ($i = 0; $i < count($discounts); $i++) {
             if((float)$discounts[$i]['minimum_amount'] >= (float)$currentOrderTotal && $msgSet === 0){
                 $remaining = (float)$discounts[$i]['minimum_amount'] - (float)$currentOrderTotal;
@@ -1320,9 +1327,7 @@ class ModernHook
                 }
 
                 $msg .='</span> extra voor <span id="percentage-next-discount">'.(int)$discounts[$i]['discount'].'%</span> korting!</b>';
-                $msgSet = 1;
             }
-            continue;
         }
         return ['msg' => $msg, 'current_order_total' => $currentOrderTotal];
     }
@@ -1740,7 +1745,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
                 'hideTabs' => false,
                 'required' => false,
                 'options' => [
-                    'limit' => 100,
+                    'limit' => 2500,
                     'constraints' => [
             new CleanHtml([
                 'message' => $this->module->getTranslator()->trans('This field is invalid',[], 'Admin.Notifications.Error'),
@@ -1927,7 +1932,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
             'hideTabs' => false,
             'required' => false,
             'options' => [
-                'limit' => 100,
+                'limit' => 2500,
                 'constraints' => [
                     new CleanHtml([
                         'message' => $this->module->getTranslator()->trans('This field is invalid',[], 'Admin.Notifications.Error'),

@@ -74,7 +74,7 @@
                   </div>
                   <div class="clearfix"></div>
                 {else}
-                  <div class="row delivery-option js-delivery-option pb-0 {if $delivery_option == $carrier_id} selected {/if} {if $added_to_order_msg.field == $delivery_option}border-danger{/if}">
+                  <div class="row delivery-option js-delivery-option pb-0 {if $delivery_option == $carrier_id} selected {/if} {if  isset($added_to_order_msg) && $added_to_order_msg.field == $delivery_option}border-danger{/if}">
                     <div class="col-sm-1 text-center p-2 p-md-0">
                       <span class="custom-radio float-xs-left">
                         <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if}>
@@ -184,15 +184,15 @@
                       addToOrderAddress.phone = "";
                     </script>
                     <div class="input-group mb-2">
-                      <input type="text" class="form-control {if $added_to_order_msg.field == $delivery_option}{$added_to_order_msg.class}{/if}" id="desired_reference" placeholder="YS-000000">
+                      <input type="text" class="form-control {if  isset($added_to_order_msg) && $added_to_order_msg.field == $delivery_option}{$added_to_order_msg.class}{/if}" id="desired_reference" placeholder="YS-000000">
                       <input type="hidden" name="added_to_order" id="added_to_order" value="">
                       <div class="input-group-append">
                         <button id="search_order_for_shipping" class="btn btn-sm btn-success"><i class="fasl fa-magnifying-glass"></i></button>
                       </div>
                     </div>
                     <span class="w-100 text-danger text-center text-md-left" id="desired_reference_error">
-                      {if $added_to_order_msg.field == $delivery_option}
-                        {$added_to_order_msg.validation_msg}
+                      {if  isset($added_to_order_msg) && $added_to_order_msg.field == $delivery_option}
+                        { isset($added_to_order_msg) && $added_to_order_msg.validation_msg}
                       {/if}
                     </span>
 

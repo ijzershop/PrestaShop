@@ -1184,10 +1184,14 @@ class ModernHook
         $isElegibleForDiscount = 0;
         $noDiscountCounterAction = 0;
 
+        $withTax = Context::getContext()->cookie->price_vat_settings_incl;
+
         $currentCartValue = $this->context->cart->getOrderTotal(false, CART::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING);
         $activeMatchingRule = null;
         $activeDiscountRules = [];
         $discountText = [];
+
+        $fmt = numfmt_create('nl_NL', \NumberFormatter::CURRENCY);
 
         $cartRules = $this->context->cart->getCartRules();
         if(count($cartRules) > 0){
@@ -1216,9 +1220,17 @@ class ModernHook
                     'next_discount' => 0
                 ];
 
+
                 if((float)$currentCartValue < (float)$cartRule['minimum_amount']){
+                    $vatText = " excl. btw";
+                    $minAmountText = (int)$cartRule['minimum_amount'];
+                    if($withTax !== "false"){
+                        $vatText = " incl. btw";
+                        $minAmountText = (int)$cartRule['minimum_amount']*1.21;
+                    }
+
                     $activeDiscountRules[$index]['next_discount'] = 1;
-                    $discountText[] = (int)$cartRule['reduction_percent'].'% korting vanaf '.(int)$cartRule['minimum_amount'].' euro<br/>';
+                    $discountText[] = (int)$cartRule['reduction_percent'].'% korting vanaf '.numfmt_format_currency($fmt,  $minAmountText, "EUR").' '. $vatText .'<br/>';
                     $isElegibleForDiscount = 1;
                 }
 
@@ -1240,7 +1252,15 @@ class ModernHook
 
             if((float)$currentCartValue < (float)$firstRule->minimum_amount){
                 $activeDiscountRules[0]['next_discount'] = 1;
-                $discountText[] = (int)$firstRule->reduction_percent.'% korting vanaf '.(int)$firstRule->minimum_amount.' euro<br/>';
+
+                $vatText = " excl. btw";
+                $minAmountText = (int)$firstRule->minimum_amount;
+                if($withTax !== "false"){
+                    $vatText = " incl. btw";
+                    $minAmountText = (int)$firstRule->minimum_amount*1.21;
+                }
+
+                $discountText[] = (int)$firstRule->reduction_percent.'% korting vanaf '.numfmt_format_currency($fmt,  $minAmountText, "EUR").' '. $vatText .'<br/>';
                 $isElegibleForDiscount = 1;
             }
 
@@ -1279,15 +1299,26 @@ class ModernHook
 
     private function getRemainingAmountBeforeNextDiscount($discounts){
         $currentOrderTotal = Context::getContext()->cart->getOrderTotal(false, CART::ONLY_PRODUCTS);
+        $withTax = Context::getContext()->cookie->price_vat_settings_incl;
         $msgSet = 0;
         $msg = '';
         for ($i = 0; $i < count($discounts); $i++) {
             if((float)$discounts[$i]['minimum_amount'] >= (float)$currentOrderTotal && $msgSet === 0){
+                $remaining = (float)$discounts[$i]['minimum_amount'] - (float)$currentOrderTotal;
+                if($withTax !== "false"){
+                        $remaining = $remaining * 1.12;
+                }
 
                 $fmt = numfmt_create('nl_NL', \NumberFormatter::CURRENCY);
-                $remainingTotal =  numfmt_format_currency($fmt, (float)$discounts[$i]['minimum_amount'] - (float)$currentOrderTotal, "EUR");
+                $remainingTotal =  numfmt_format_currency($fmt,  $remaining, "EUR");
 
                 $msg = '<b id="next-discount-message">Bestel nog <span id="total-until-discount">'.$remainingTotal;
+                if($withTax === "false"){
+                    $msg .= " excl. btw";
+                } else {
+                    $msg .= " incl. btw";
+                }
+
                 $msg .='</span> extra voor <span id="percentage-next-discount">'.(int)$discounts[$i]['discount'].'%</span> korting!</b>';
                 $msgSet = 1;
             }

@@ -410,7 +410,7 @@ class OrderData implements JsonSerializable
         $this->title = $title;
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
         $lines = [];
         foreach ($this->getLines() as $line) {
@@ -433,6 +433,7 @@ class OrderData implements JsonSerializable
                 'familyName' => $this->cleanUpInput($this->getBillingAddress()->lastname),
                 'email' => $this->cleanUpInput($this->getEmail()),
                 'title' => $this->cleanUpInput($this->getTitle()),
+                'phone' => $this->cleanUpInput($this->getBillingPhoneNumber()),
             ],
             'shippingAddress' => [
                 'organizationName' => $this->cleanUpInput($this->getShippingAddress()->company),
@@ -445,6 +446,7 @@ class OrderData implements JsonSerializable
                 'familyName' => $this->cleanUpInput($this->getShippingAddress()->lastname),
                 'email' => $this->cleanUpInput($this->getEmail()),
                 'title' => $this->cleanUpInput($this->getTitle()),
+                'phone' => $this->cleanUpInput($this->getDeliveryPhoneNumber()),
             ],
             'redirectUrl' => $this->getRedirectUrl(),
             'webhookUrl' => $this->getWebhookUrl(),

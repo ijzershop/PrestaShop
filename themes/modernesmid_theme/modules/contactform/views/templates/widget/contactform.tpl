@@ -27,7 +27,7 @@
   {l s='Customer service - Contact us' d='Modules.Contactform.Shop'}
 {/block} *}
 
-<section class="contact-form text-left">
+<section class="contact-form text-left row w-100">
 {if Context::getContext()->controller->php_self == 'category' || Context::getContext()->controller->php_self == 'contact' || Context::getContext()->controller->php_self == 'search' }
      <div class="col-12 ">
       <div class="row justify-content-center">
@@ -36,7 +36,7 @@
       </div>
         <div class="col-12 text-left">
 {/if}
- <div class="card card-block bg-info">
+ <div class="card card-block bg-info col-12">
     {if Context::getContext()->controller->php_self == 'contactoffer'}
       <form action="/offerte-aanvragen" class="needs-validation" novalidate method="post" {if $contact.allow_file_upload}enctype="multipart/form-data"{/if}>
         <input type="hidden" value="offer" name="template_type"/>
@@ -53,7 +53,7 @@
         <input type="hidden" value="contact" name="template_type"/>
     {/if}
 
-    <header class="card-header bg-primary p-2 pl-3">
+    <header class="card-header bg-primary p-2 pl-3 row">
       {if Context::getContext()->controller->php_self == 'contactoffer'}
       <h5 class="h5 text-white m-0">{l s='Offerte aanvraag' d='Modules.Contactform.Shop'}</h5>
       {else if Context::getContext()->controller->php_self == 'contactinformation'}

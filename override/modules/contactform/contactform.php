@@ -60,7 +60,7 @@ class ContactformOverride extends Contactform
         }
 
         if(($record == null && Tools::getRemoteAddr() != '::1') || ($record != null && !in_array(strtolower($record->country->isoCode), ['nl', 'be']))){
-            $widgetVariables['notifications']['messages'] =  'Het is niet mogelijk dit formulier buiten Nedereland of België te versturen.';
+            $widgetVariables['notifications']['messages'] =  'Het is niet mogelijk dit formulier buiten Nederland of België te versturen.';
             $widgetVariables['notifications']['nw_error'] = true;
             $widgetVariables['geo_location_block'] = true;
         }

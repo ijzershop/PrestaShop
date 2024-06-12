@@ -60,9 +60,6 @@
               font-size: 13px;
               color:#000000;
             }
-            #next-shipping-time,#next-discount-message{
-              font-weight: bold;
-            }
           </style>
         <div class="cart-summary-small mb-2">
           <div class="card-body bg-light">
@@ -74,7 +71,7 @@
 
           <div class="cart-summary-next-shipment mb-2 text-black">
             <div class="card-body bg-light text-bold"><span id="next-shipping-time-icon" class="fasl fa-truck-fast fa-3x float-right"></span>
-              Elke werkdag versturen we bestellingen.<br/> Eerstvolgende verzending  is over <br/><b id="next-shipping-time"><span id="next-shipping-time-days"></span><span id="next-shipping-time-hours"></span><span id="next-shipping-time-minutes"></span></b>
+              Elke werkdag versturen we bestellingen.<br/> <b>Eerstvolgende verzending is over </b><br/><b id="next-shipping-time"><span id="next-shipping-time-days"></span><span id="next-shipping-time-hours"></span><span id="next-shipping-time-minutes"></span></b>
             </div>
           </div>
 

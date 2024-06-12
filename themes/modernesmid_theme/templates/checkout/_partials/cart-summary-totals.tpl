@@ -31,7 +31,7 @@
               <span class="label sub">Korting</span><span class="value sub">{Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS), 'EUR')}</span>
             </div>
       {/if}
-    {if $cart.subtotals.tax > 0 && $withTax}
+    {if $cart.subtotals.tax > 0}
       <div class="cart-summary-line summary-total-tax">
         <span class="label sub">Btw (21%)</span>
         <span class="value sub" {if (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) == 0}style="border-bottom:1px solid #c0c0c0c0;"{/if}>

@@ -1195,6 +1195,7 @@ class ModernHook
 
         $cartRules = $this->context->cart->getCartRules();
         $nextCartRule = $first;
+        $vatText = " excl. btw";
         if(count($cartRules) > 0){
             foreach ($cartRules as $index => $cartRule){
                 if ((int)$cartRule['id_cart_rule'] == (int)$first && $noDiscountCounterAction != 1) {
@@ -1226,7 +1227,6 @@ class ModernHook
                 $nextCartRuleObject = new CartRule($nextCartRule);
 
                 if((float)$currentCartValue <= (float)$nextCartRuleObject->minimum_amount){
-                    $vatText = " excl. btw";
                     $minAmountText = (int)$nextCartRuleObject->minimum_amount;
                     if($withTax !== "false"){
                         $vatText = " incl. btw";
@@ -1234,12 +1234,12 @@ class ModernHook
                     }
 
                     $activeDiscountRules[$index]['next_discount'] = $nextCartRule;
-                    $discountText[] = (int)$nextCartRuleObject->reduction_percent.'% korting vanaf '.numfmt_format_currency($fmt,  $minAmountText, "EUR").' '. $vatText .'<br/><br/>';
+                    $discountText[] = (int)$nextCartRuleObject->reduction_percent.'% korting vanaf € '.$minAmountText.',-<sup>*</sup><br/>';
                     $isElegibleForDiscount = 1;
                 }
 
-                if((int)$nextCartRuleObject->reduction_percent > (int)$maxReductionPercent){
-                    $maxReductionPercent = $nextCartRuleObject->reduction_percent;
+                if((int)$cartRule['reduction_percent'] > (int)$maxReductionPercent){
+                    $maxReductionPercent = $cartRule['reduction_percent'];
                 }
             }
         } else {
@@ -1251,18 +1251,18 @@ class ModernHook
                 'name' => $name,
                 'minimum_amount' => $firstRule->minimum_amount,
                 'discount' => $firstRule->reduction_percent,
-                'next_discount' => $second
+                'next_discount' => $first
             ];
 
             if((float)$currentCartValue < (float)$firstRule->minimum_amount){
-                $vatText = " excl. btw";
+
                 $minAmountText = (int)$firstRule->minimum_amount;
                 if($withTax !== "false"){
                     $vatText = " incl. btw";
                     $minAmountText = (int)$firstRule->minimum_amount*1.21;
                 }
 
-                $discountText[] = (int)$firstRule->reduction_percent.'% korting vanaf '.numfmt_format_currency($fmt,  $minAmountText, "EUR").' '. $vatText .'<br/><br/>';
+                $discountText[] = (int)$firstRule->reduction_percent.'% korting vanaf € '.$minAmountText.',-<sup>*</sup><br/>';
                 $isElegibleForDiscount = 1;
             }
 
@@ -1271,17 +1271,19 @@ class ModernHook
             }
         }
 
+        $footer_msg = '<br/><br/><i><sup>*</sup>'. $vatText . ' & excl. bezorging</i>';
+
 
         $message = '';
         switch ($isElegibleForDiscount){
             case 1:
-                    $message = 'Ontvang '.implode(' of ',$discountText);
+                    $message = '<a>Ontvang '.implode(' of ',$discountText).'</a>';
                 break;
             case 2:
-                    $message = 'U heeft de maximale korting van '.(int)$maxReductionPercent.'% al in uw winkelwagen! <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'">Toch graag een aanbod op maat,<br/> neem dan contact met ons op.</a>';
+                    $message = '<a>U heeft de maximale korting van '.(int)$maxReductionPercent.'% al in uw winkelwagen! <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'">Toch graag een aanbod op maat,<br/> neem dan contact met ons op.</a></a>';
                 break;
             case 3:
-                    $message = 'U heeft de maximale korting van '.(int)$maxReductionPercent.'% al in uw winkelwagen! <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'">Toch graag een aanbod op maat,<br/> neem dan contact met ons op.</a>';
+                    $message = '<a>U heeft de maximale korting van '.(int)$maxReductionPercent.'% al in uw winkelwagen! <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'">Toch graag een aanbod op maat,<br/> neem dan contact met ons op.</a></a>';
                 break;
         }
 
@@ -1294,7 +1296,7 @@ class ModernHook
             $remainingMessage = $this->getRemainingAmountBeforeNextDiscount($activeDiscountRules);
         }
 
-        return ['rules' => $activeDiscountRules, 'message' => $message.$remainingMessage['msg'], 'order_total' => $remainingMessage['current_order_total']];
+        return ['rules' => $activeDiscountRules, 'message' => $message.$remainingMessage['msg'].$footer_msg, 'order_total' => $remainingMessage['current_order_total']];
     }
 
 
@@ -1302,13 +1304,7 @@ class ModernHook
     private function getRemainingAmountBeforeNextDiscount($discounts){
         $currentOrderTotal = Context::getContext()->cart->getOrderTotal(false, CART::ONLY_PRODUCTS);
         $withTax = Context::getContext()->cookie->price_vat_settings_incl;
-        $msgSet = 0;
         $msg = '';
-
-//
-//        usort($discounts, function ($item1, $item2) {
-//            return $item2['minimum_amount'] <=> $item1['minimum_amount'];
-//        });
 
 
         for ($i = 0; $i < count($discounts); $i++) {
@@ -1317,21 +1313,16 @@ class ModernHook
             if((float)$nextCartRuleObject->minimum_amount >= (float)$currentOrderTotal){
                 $remaining = (float)$nextCartRuleObject->minimum_amount - (float)$currentOrderTotal;
                 if($withTax !== "false"){
-                        $remaining = $remaining * 1.12;
+                        $remaining = $remaining*1.21;
                 }
-
                 $fmt = numfmt_create('nl_NL', \NumberFormatter::CURRENCY);
                 $remainingTotal =  numfmt_format_currency($fmt,  $remaining, "EUR");
 
                 $msg = '<b id="next-discount-message">Bestel nog <span id="total-until-discount">'.$remainingTotal;
-                if($withTax === "false"){
-                    $msg .= " excl. btw";
-                } else {
-                    $msg .= " incl. btw";
-                }
 
-//                $msg .='</span> extra voor <span id="percentage-next-discount">'.(int)$nextCartRuleObject->reduction_percent.'%</span> korting!</b>';
-                $msg .='</span> extra voor meer korting!</b>';
+
+                $msg .='<sup>*</sup></span> extra voor <span id="percentage-next-discount">'.(int)$nextCartRuleObject->reduction_percent.'%</span> korting!  </b>';
+//                $msg .='<sup>*</sup></span> aan producten voor meer korting!';
                 $msgSet = 1;
             }
 

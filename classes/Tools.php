@@ -1730,13 +1730,17 @@ class ToolsCore
      *
      * @note : PHP 5.3.0 introduce a 3rd parameter mode in round function
      *
-     * @param float $value
+     * @param float|null $value
      * @param int $precision
      *
      * @return float
      */
     public static function ps_round($value, $precision = 0, $round_mode = null)
     {
+        if($value === null){
+            $value = 0;
+        }
+
         if ($round_mode === null) {
             if (Tools::$round_mode == null) {
                 Tools::$round_mode = (int) Configuration::get('PS_PRICE_ROUND_MODE');

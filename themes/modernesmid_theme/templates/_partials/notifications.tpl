@@ -29,7 +29,7 @@
     top:20%;
     left: calc(30% / 2);
     z-index: 99;
-    width: 70%;
+    width: 70%!important;
     font-size: 1rem;
     font-weight: bold;
   }

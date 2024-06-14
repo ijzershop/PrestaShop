@@ -3,29 +3,33 @@ declare(strict_types=1);
 
 namespace MsThemeConfig\Controller\Admin;
 
-use MsThemeConfig\Class\Offer;
-use mysqli_result;
 use Category;
 use Configuration;
 use Context;
 use Db;
 use DbQuery;
+use MsThemeConfig\Class\Offer;
+use mysqli_result;
 use Pack;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopDatabaseException;
 use Product;
 use Shop;
 use StockAvailable;
-use Tools;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShopDatabaseException;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use StockManagerFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use ValidateCore;
+use Tools;
+use Warehouse;
+use WarehouseProductLocation;
 
 /**
  *
  */
-class MsAdminAjaxController  extends FrameworkBundleAdminController {
+class MsAdminAjaxController extends FrameworkBundleAdminController
+{
 
     private string $moduleName;
     private \Context $context;
@@ -122,7 +126,7 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
         $attr_names = array_column($combinations, 'attribute_name');
         array_multisort($attr_names, SORT_ASC, $combinations);
 
-        if((int)$customization > 0) {
+        if ((int)$customization > 0) {
             $customizationValue = $customization;
             $attr_key = (int)$customizationValue - 1;
         } else {
@@ -130,8 +134,8 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
             $attr_key = 0;
         }
 
-        if(count($combinations) > 0){
-            if($customizationValue > count($combinations)){
+        if (count($combinations) > 0) {
+            if ($customizationValue > count($combinations)) {
                 $neededAttribute = end($combinations);
             } else {
                 $neededAttribute = $combinations[$attr_key];
@@ -142,13 +146,13 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
             $id_product_attribute = 0;
         }
 
-        $staticPrice = Product::getPriceStatic($id_product,false, $id_product_attribute);
+        $staticPrice = Product::getPriceStatic($id_product, false, $id_product_attribute);
         $name = Product::getProductName($id_product, $id_product_attribute, Context::getContext()->language->id);
         $price = $staticPrice * $qty;
-        if(is_numeric($price)){
-            return  Response::create(json_encode(['product_name' => $name, 'id_product_attribute' => $id_product_attribute ,'price' => $price]));
+        if (is_numeric($price)) {
+            return Response::create(json_encode(['product_name' => $name, 'id_product_attribute' => $id_product_attribute, 'price' => $price]));
         } else {
-            return Response::create(json_encode(['product_name' => $name, 'id_product_attribute' => $id_product_attribute ,'price' => 0.00]));
+            return Response::create(json_encode(['product_name' => $name, 'id_product_attribute' => $id_product_attribute, 'price' => 0.00]));
         }
     }
 
@@ -165,140 +169,72 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
         $catID = Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
         $categoryArray = [$catID];
 
+        if ((int)Tools::getValue('offer-id') == 0) {
+            $newOfferIntegration = new Offer();
+            $newOfferIntegration->code = Tools::getValue('offer-code');
+            $newOfferIntegration->name = Tools::getValue('offer-name');
+            $newOfferIntegration->email = Tools::getValue('offer-email');
+            $newOfferIntegration->phone = Tools::getValue('offer-phone');
+            $newOfferIntegration->message = Tools::getValue('offer-message');
+            $newOfferIntegration->date_exp = Tools::getValue('offer-date-exp');
+            $newOfferIntegration->save(true);
+            $newOfferId = $newOfferIntegration->id;
+        } else {
+            $newOfferId = (int)Tools::getValue('offer-id');
+        }
 
-        if((int)$catID > 0){
+        if ((int)$catID > 0) {
             $category = new Category($catID);
             $categoryArray[] = $category->id_parent;
         }
 
         if (Tools::getValue('offer-new') === "false") {
+            //Manage items voor pakket
             $id_product = Tools::getValue('offer-row-id');
-            $offer = new Pack($id_product);
-            $offer->price = number_format((float)Tools::getValue('offer-price'), 6, '.', '');
-            $offer->weight = Tools::getValue('offer-weight');
-            $offer->name = [1 => $_POST['offer-row-title']];
-            $offer->saw_loss = 0;
-            $offer->min_saw_size = 0;
-            $offer->min_cut_size = 0;
-            $offer->min_cut_remainder = 0;
-            $offer->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
-            $offer->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
-            $offer->id_category_default = $catID;
-            $offer->id_tax_rules_group = 1;
-            $offer->out_of_stock = 0;
-
-
-            Pack::deleteItems($id_product, true);
-            if(Tools::getIsset('stock_selected_product_id') && count(Tools::getValue('stock_selected_product_id')) > 0){
-                $offer->product_type = ProductType::TYPE_PACK;
-                $ids = Tools::getValue('stock_selected_product_id');
-                $totals = Tools::getValue('stock_selected_product_qty');
-                $customizedValue = Tools::getValue('stock_selected_product_customization');
-
-                for ($i=0; $i < count($ids); $i++){
-                    $attachProduct = new Product($ids[$i]);
-                    $combinations = $attachProduct->getAttributeCombinations();
-
-                    $attr_names = array_column($combinations, 'attribute_name');
-                    array_multisort($attr_names, SORT_ASC, $combinations);
-
-                        if((int)$customizedValue[$i] > 0) {
-                            $customizationValue = $customizedValue[$i];
-                            $attr_key = (int)$customizationValue - 1;
-                        } else {
-                            $customizationValue = 0;
-                            $attr_key = 0;
-                        }
-
-                    if(count($combinations) > 0){
-                        if($customizationValue > count($combinations)){
-                            $neededAttribute = end($combinations);
-                        } else {
-                            $neededAttribute = $combinations[$attr_key];
-                        }
-
-                        $id_product_attribute = $neededAttribute['id_product_attribute'];
-                    } else {
-                        $id_product_attribute = 0;
-                    }
-                    Pack::addItem($offer->id, $ids[$i], (int)$totals[$i], $id_product_attribute);
-                }
-            } else {
-                $offer->product_type = ProductType::TYPE_STANDARD;
-            }
-            $offer->update();
-
+            $id_pack_attribute = null;
+            $id_shop = Context::getContext()->shop->getShopId();
             $qty = (int)Tools::getValue('offer-qty', 0);
-            StockAvailable::setQuantity((int)$id_product, 0, $qty);
-            StockAvailable::setProductOutOfStock((int)$offer->id, false, Context::getContext()->shop->id, 0);
-            $offer->addToCategories($categoryArray);
+            $currentQty = (int)StockAvailable::getQuantityAvailableByProduct($id_product);
+            $delta = $qty-$currentQty;
 
-            $offer->quantity = $qty;
-            $offer->id_product = $id_product;
+            $pack = new Pack($id_product);
+            $pack->price = number_format((float)Tools::getValue('offer-price'), 6, '.', '');
+            $pack->weight = Tools::getValue('offer-weight');
+            $pack->name = [1 => $_POST['offer-row-title']];
+            $pack->saw_loss = 0;
+            $pack->min_saw_size = 0;
+            $pack->min_cut_size = 0;
+            $pack->min_cut_remainder = 0;
+            $pack->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
+            $pack->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
+            $pack->id_category_default = $catID;
+            $pack->id_tax_rules_group = 1;
+            $pack->out_of_stock = 0;
+            $pack->quantity = $qty;
+            $pack->depends_on_stock = 1;
+            $pack->pack_stock_type = PackStockType::STOCK_TYPE_BOTH;
+            $pack->product_type = ProductType::TYPE_PACK;
 
+            $pack->addToCategories($categoryArray);
+            $pack->setAdvancedStockManagement(1);
+            StockAvailable::setProductOutOfStock((int)$id_product, false);
+            StockAvailable::updateQuantity((int)$id_product, (int)$id_pack_attribute, $delta);
 
-            $offer->packedProducts = Pack::getItems($offer->id_product, 1);
+            Pack::deleteItems($id_product);
 
-            foreach ($offer->packedProducts as $key => $pack){
-                $offer->packedProducts[$key]->attributes = Product::getAttributesParams($pack->id, $pack->id_pack_product_attribute);
-            }
-
-            return Response::create(json_encode(['msg' => 'Offer updated', 'offer' => $offer, 'error' => false]));
-
-        } else {
-            $newOfferId = "";
-            if((int)Tools::getValue('offer-id') == 0){
-                $newOfferIntegration = new Offer();
-                $newOfferIntegration->code = Tools::getValue('offer-code');
-                $newOfferIntegration->name = Tools::getValue('offer-name');
-                $newOfferIntegration->email = Tools::getValue('offer-email');
-                $newOfferIntegration->phone = Tools::getValue('offer-phone');
-                $newOfferIntegration->message = Tools::getValue('offer-message');
-                $newOfferIntegration->date_exp = Tools::getValue('offer-date-exp');
-                $newOfferIntegration->save(true);
-                $newOfferId = $newOfferIntegration->id;
-            }
-
-            $offer = new Pack(Tools::getValue('offer-row-product'));
-            $offer->id = null;
-
-            $offer->link_rewrite =  substr( "abcdefghilkmnopqrstuvwxyz" ,mt_rand( 0 ,25 ) ,1 ) .substr( md5((string)time()) ,1 );
-            $offer->available_date =  date('Y-m-d');
-
-            if($newOfferId != ""){
-                $offer->id_oi_offer = $newOfferId;
-            } else {
-                $offer->id_oi_offer = Tools::getValue('offer-id');
-            }
-
-            $offer->price = number_format((float)Tools::getValue('offer-price'), 6, '.', '');
-            $offer->weight = Tools::getValue('offer-weight');
-            $offer->name = [1 => $_POST['offer-row-title']];
-            $offer->saw_loss = 0;
-            $offer->min_saw_size = 0;
-            $offer->min_cut_size = 0;
-            $offer->min_cut_remainder = 0;
-            $offer->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
-            $offer->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
-            $offer->out_of_stock = 0;
-            $offer->id_category_default = $catID;
-            $offer->id_tax_rules_group = 1;
-
-            Pack::deleteItems($offer->id);
-            if(Tools::getIsset('stock_selected_product_id') && count(Tools::getValue('stock_selected_product_id')) > 0){
-                $offer->product_type = ProductType::TYPE_PACK;
+            if (Tools::getIsset('stock_selected_product_id') && count(Tools::getValue('stock_selected_product_id')) > 0) {
                 $ids = Tools::getValue('stock_selected_product_id');
                 $totals = Tools::getValue('stock_selected_product_qty');
                 $customizedValue = Tools::getValue('stock_selected_product_customization');
 
-                for ($i=0; $i < count($ids); $i++){
+                for ($i = 0; $i < count($ids); $i++) {
                     $attachProduct = new Product($ids[$i]);
                     $combinations = $attachProduct->getAttributeCombinations();
 
                     $attr_names = array_column($combinations, 'attribute_name');
                     array_multisort($attr_names, SORT_ASC, $combinations);
 
-                    if((int)$customizedValue[$i] > 0) {
+                    if ((int)$customizedValue[$i] > 0) {
                         $customizationValue = $customizedValue[$i];
                         $attr_key = (int)$customizationValue - 1;
                     } else {
@@ -306,8 +242,8 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
                         $attr_key = 0;
                     }
 
-                    if(count($combinations) > 0){
-                        if($customizationValue > count($combinations)){
+                    if (count($combinations) > 0) {
+                        if ($customizationValue > count($combinations)) {
                             $neededAttribute = end($combinations);
                         } else {
                             $neededAttribute = $combinations[$attr_key];
@@ -317,44 +253,105 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
                     } else {
                         $id_product_attribute = 0;
                     }
-                    Pack::addItem($offer->id, $ids[$i], (int)$totals[$i], $id_product_attribute);
+                    Pack::addItem($pack->id, $ids[$i], (int)$totals[$i], $id_product_attribute);
                 }
-            } else {
-                $offer->product_type = ProductType::TYPE_STANDARD;
+            }
+            //Voeg zaagsnedes toe
+            $pack->packedProducts = Pack::getItems($pack->id, 1);
+            foreach ($pack->packedProducts as $key => $packItem) {
+                $pack->packedProducts[$key]->attributes = Product::getAttributesParams($packItem->id, $packItem->id_pack_product_attribute);
+            }
+            $pack->update();
+
+            return Response::create(json_encode(['msg' => 'Offer updated', 'offer' => $pack, 'error' => false]));
+
+        }
+        else {
+            $id_pack_attribute = null;
+            $id_shop = Context::getContext()->shop->getShopId();
+            $qty = (int)Tools::getValue('offer-qty', 0);
+
+            $pack = new Pack();
+            $pack->new = true;
+            $pack->link_rewrite = substr("abcdefghilkmnopqrstuvwxyz", mt_rand(0, 25), 1) . substr(md5((string)time()), 1);
+            $pack->available_date = date('Y-m-d');
+
+
+            $pack->id_oi_offer = $newOfferId;
+
+            $pack->price = number_format((float)Tools::getValue('offer-price'), 6, '.', '');
+            $pack->weight = Tools::getValue('offer-weight');
+            $pack->name = [1 => $_POST['offer-row-title']];
+            $pack->saw_loss = 0;
+            $pack->min_saw_size = 0;
+            $pack->min_cut_size = 0;
+            $pack->min_cut_remainder = 0;
+            $pack->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
+            $pack->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
+            $pack->id_category_default = $catID;
+            $pack->id_tax_rules_group = 1;
+            $pack->out_of_stock = 0;
+            $pack->quantity = $qty;
+            $pack->depends_on_stock = 1;
+            $pack->pack_stock_type = PackStockType::STOCK_TYPE_BOTH;
+            $pack->product_type = ProductType::TYPE_PACK;
+            $pack->save();
+            $pack->addToCategories($categoryArray);
+            $pack->setAdvancedStockManagement(1);
+
+            StockAvailable::setProductOutOfStock((int)$pack->id, false);
+            StockAvailable::updateQuantity((int)$pack->id, (int)$id_pack_attribute, $qty);
+            if (Tools::getIsset('stock_selected_product_id') && count(Tools::getValue('stock_selected_product_id')) > 0) {
+                $ids = Tools::getValue('stock_selected_product_id');
+                $totals = Tools::getValue('stock_selected_product_qty');
+                $customizedValue = Tools::getValue('stock_selected_product_customization');
+
+                for ($i = 0; $i < count($ids); $i++) {
+                    $attachProduct = new Product($ids[$i]);
+                    $combinations = $attachProduct->getAttributeCombinations();
+
+                    $attr_names = array_column($combinations, 'attribute_name');
+                    array_multisort($attr_names, SORT_ASC, $combinations);
+
+                    if ((int)$customizedValue[$i] > 0) {
+                        $customizationValue = $customizedValue[$i];
+                        $attr_key = (int)$customizationValue - 1;
+                    } else {
+                        $customizationValue = 0;
+                        $attr_key = 0;
+                    }
+
+                    if (count($combinations) > 0) {
+                        if ($customizationValue > count($combinations)) {
+                            $neededAttribute = end($combinations);
+                        } else {
+                            $neededAttribute = $combinations[$attr_key];
+                        }
+
+                        $id_product_attribute = $neededAttribute['id_product_attribute'];
+                    } else {
+                        $id_product_attribute = 0;
+                    }
+                    Pack::addItem($pack->id, $ids[$i], (int)$totals[$i], $id_product_attribute);
+                }
+            }
+            //Voeg zaagsnedes toe
+            $pack->packedProducts = Pack::getItems($pack->id, 1);
+            foreach ($pack->packedProducts as $key => $packItem) {
+                $pack->packedProducts[$key]->attributes = Product::getAttributesParams($packItem->id, $packItem->id_pack_product_attribute);
             }
 
-            $offer->save();
+            $this->afterAdd($pack);
 
-            $offer->addToCategories($categoryArray);
-
-            $qty = (int)Tools::getValue('offer-qty', 0);
-            StockAvailable::setQuantity((int)$offer->id, 0, $qty);
-            StockAvailable::setProductOutOfStock((int)$offer->id, false, Context::getContext()->shop->id, 0);
-
-            $this->afterAdd($offer);
-
-            $offer->quantity = $qty;
-            $offer->new = true;
-            return Response::create(json_encode(['msg' => 'Offer created', 'offer' => $offer, 'error' => false, 'offer-id' => $newOfferId]));
+            return Response::create(json_encode(['msg' => 'Offer created', 'offer' => $pack, 'error' => false, 'offer-id' => $newOfferId]));
         }
     }
 
-    /**
-     * Process delete action
-     * @return Response
-     */
-    public function deleteAction($offer_id, Request $req): Response
+    private function setCurrencyValue()
     {
-        if((int)$offer_id == 0){
-            return Response::create(json_encode(['msg' => 'Offer failed to remove', 'error' => true]));
+        if (Tools::getIsset('price')) {
+            $_POST['price'] = str_replace(',', '.', Tools::getValue('price', 0));
         }
-        try {
-            $offer = new Product($offer_id);
-            $offer->delete();
-        } catch (\PrestaShopException $e) {
-            return Response::create(json_encode(['msg' => 'Offer failed to remove', 'error' => true]));
-        }
-        return Response::create(json_encode(['msg' => 'Offer removed','offer'=>$offer, 'error' => false]));
     }
 
     /**
@@ -373,10 +370,22 @@ class MsAdminAjaxController  extends FrameworkBundleAdminController {
         return true;
     }
 
-    private function setCurrencyValue() {
-        if (Tools::getIsset('price')) {
-            $_POST['price'] = str_replace(',', '.', Tools::getValue('price',0));
+    /**
+     * Process delete action
+     * @return Response
+     */
+    public function deleteAction($offer_id, Request $req): Response
+    {
+        if ((int)$offer_id == 0) {
+            return Response::create(json_encode(['msg' => 'Offer failed to remove', 'error' => true]));
         }
+        try {
+            $offer = new Product($offer_id);
+            $offer->delete();
+        } catch (\PrestaShopException $e) {
+            return Response::create(json_encode(['msg' => 'Offer failed to remove', 'error' => true]));
+        }
+        return Response::create(json_encode(['msg' => 'Offer removed', 'offer' => $offer, 'error' => false]));
     }
 
 }

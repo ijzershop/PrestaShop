@@ -35,11 +35,12 @@
             data-product-id="{$product.id_product}"
             data-product-customization="{$product.id_customization}"
             value="{$product.quantity_wanted}"
-            class="form-control {if !Product::productIsOrderable($product.id_product)}disabled{/if}"
+            class="form-control {Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'class')}"
             min="{$product.minimal_quantity}"
-            {if  ($product.low_stock_threshold >= $product.quantity) && ($product.out_of_stock == 0)}max="{$product.quantity}"{/if}
+            max="{Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'max')}"
             aria-label="{l s='Quantity' d='Shop.Theme.Actions'}"
-            style="{if !$product.add_to_cart_url}pointer-events:none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') &&  (int)$product.quantity <= 0 && (int)$product.out_of_stock == 0}pointer-events:none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') && (int)$product.quantity != 0 && (int)$product.quantity < 100 && (int)$product.quantity < 0 && (int)$product.out_of_stock == 0}pointer-events:none;{/if}"
+            style="{Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'style')}"
+            {Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'attr')}
           >
         </div>
 

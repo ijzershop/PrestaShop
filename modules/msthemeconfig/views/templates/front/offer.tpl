@@ -88,8 +88,9 @@
                   <div class="row">
                     <div class="input-group col-sm-12">
                       <input
-                        class="quantity form-control input-group {if !$product.available_for_order || $date_exp_days <= 0}disabled{/if}"
-                        {if  $product.available_for_order && ($product.low_stock_threshold >= $product.quantity || $product.out_of_stock == 0)}max="{$product.quantity}"{/if}
+                        class="quantity form-control input-group {Product::isAvailableForOrderCustom((int)$product.id_product, 0, 'class')}"
+                        max="{Product::isAvailableForOrderCustom((int)$product.id_product, 0, 'max')}"
+                        {Product::isAvailableForOrderCustom((int)$product.id_product, 0, 'attr')}
                         id="quantity_wanted_{$product.id_product}"
                         type="number"
                         data-product-id="{$product.id_product|intval}"

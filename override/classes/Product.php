@@ -443,4 +443,64 @@ class Product extends ProductCore {
         }
         return json_encode(['is_orderable' => $is_orderable, 'remaining_qty_msg' => $msg, 'remaining_stock' => $available_stock]);
     }
+
+
+
+    public static function isAvailableForOrderCustom($idProduct, $idProductAttr=0, $type=null){
+        $qty = 0;
+        $min = 1;
+        $max = 9999;
+        $restrictedByStock = false;
+
+        $style = '';
+        $attr = '';
+        $class = '';
+
+        $availableForOrder = true;
+
+        $product = new Product($idProduct);
+        $qty = StockAvailable::getQuantityAvailableByProduct($idProduct);
+        $out_of_stock = StockAvailable::outOfStock($idProduct);
+        $location = StockAvailable::getLocation($idProduct) ?: '';
+
+        if(Configuration::get('PS_STOCK_MANAGEMENT') && $out_of_stock === 0){
+            $max = $qty;
+            $restrictedByStock = true;
+            if($qty <= 0){
+                $availableForOrder = false;
+                $style = "pointer-events:none;";
+                $attr = 'disabled="disabled"';
+                $class = "disabled";
+            }
+        }
+
+        switch ($type){
+            case 'qty':
+                return $qty;
+
+            case 'min':
+                return $min;
+
+            case 'max':
+                return $max;
+
+            case 'restricted_by_stock':
+                return $restrictedByStock;
+
+            case 'available_for_order':
+                return $availableForOrder;
+
+            case 'style':
+                return $style;
+
+            case 'attr':
+                return $attr;
+
+            case 'class':
+                return $class;
+
+            default:
+                return $availableForOrder;
+        }
+    }
 }

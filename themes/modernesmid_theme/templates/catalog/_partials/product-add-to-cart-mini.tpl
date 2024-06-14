@@ -27,7 +27,7 @@
     {block name='product_quantity'}
       <div class="product-quantity clearfix">
         <div class="qty col-12 col-sm-6 float-left p-0 pr-sm-1 pl-sm-2">
-            {if !Product::productIsOrderable($product.id_product)}
+            {if !Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute)}
             <span class="help-text text-warning col-12 p-0">
                       <span class="d-inline-block w-100  mb-3 mb-md-0" data-toggle="popover" data-title="Geen vooraad" data-content="Disabled popover">
                         <button class="badge badge-danger w-100 text-wrap border-0" style="min-height: 2.67em;pointer-events: none;font-size: 0.9rem;font-weight: inherit;" type="button" disabled>
@@ -42,11 +42,12 @@
             name="qty_{$product.id_product}"
             id="quantity_wanted_{$product.id_product}"
             value="1"
-            class="form-control mb-3 mb-md-0 input-group {if !Product::productIsOrderable($product.id_product)}disabled{/if}"
+            class="form-control mb-3 mb-md-0 input-group {Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'class')}"
             min="{$product.minimal_quantity}"
-            {if ($product.low_stock_threshold >= $product.quantity) && ($product.out_of_stock == 0)}max="{$product.quantity}"{/if}
+            max="{Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'max')}"
             aria-label="{l s='Quantity' d='Shop.Theme.Actions'}"
-            style="{if !$product.add_to_cart_url}pointer-events:none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') &&  (int)$product.quantity <= 0 && (int)$product.out_of_stock == 0}pointer-events:none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') && (int)$product.quantity != 0 && (int)$product.quantity < 100 && (int)$product.quantity < 0 && (int)$product.out_of_stock == 0}pointer-events:none;{/if}"
+            style="{Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'style')}"
+            {Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'attr')}
           >
             {/if}
         </div>
@@ -55,8 +56,9 @@
           <a aria-label="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" alt="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" href="{$link->getPageLink('cart', null, Context::getContext()->language->id,['token'=>$static_token], false, Context::getContext()->shop->id)}"
             data-product-id="{$product.id_product}"
             data-product-customization="{json_encode($product.id_customization)}"
-            class="btn btn-success add-to-cart w-100 text-nowrap {if !Product::productIsOrderable($product.id_product)}disabled{/if}"
+            class="btn btn-success add-to-cart w-100 text-nowrap {Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'class')}"
             data-button-action="add-to-cart"
+            {Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'attr')}
           ><i data-product-id="{$product.id_product}" class="fasl fa-cart-shopping shopping-cart"></i></a>
         </div>
         {hook h='displayProductActions' product=$product}

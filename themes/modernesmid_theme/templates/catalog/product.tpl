@@ -109,7 +109,7 @@
                   {/if}
                   </div>
                   {if !Product::isDynamicProduct($product)}
-                  <div class="product-actions col-6 col-md-4">
+                  <div class="product-actions col-12 col-md-4">
                     {block name='product_buy'}
                     <form action="{$urls.pages.cart}" method="post" id="add-to-cart-or-refresh">
                       <input type="hidden" name="token" value="{$static_token}">
@@ -149,11 +149,13 @@
 
                 <div class="row">
                   <div class="add col-12">
-                    <a class="btn btn-success add-to-cart w-100 {if !$product.add_to_cart_url || !$product.available_for_order || ($product.out_of_stock == 0 && $product.quantity <= 0)}disabled{/if}" data-button-action="add-to-cart" data-product-id="{$product.id_product}" aria-label="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" type="button" {if !$product.add_to_cart_url} disabled {/if} href="{$link->getPageLink('cart', null, Context::getContext()->language->id,['token'=>$static_token], false, Context::getContext()->shop->id)}">
+                    <a class="btn btn-success add-to-cart w-100 {Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'class')}" data-button-action="add-to-cart" data-product-id="{$product.id_product}" aria-label="Voeg {$product.name|truncate:30:'...'} toe aan winkelwagen" type="button" {Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'attr')} href="{$link->getPageLink('cart', null, Context::getContext()->language->id,['token'=>$static_token], false, Context::getContext()->shop->id)}">
                       <i class="fasl fa-plus" data-product-id="{$product.id_product}"></i><i class="fasl fa-cart-shopping shopping-cart" data-product-id="{$product.id_product}"></i>
                     </a>
                   </div>
-                  {if !$product.add_to_cart_url || !$product.available_for_order}
+
+
+                  {if !Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute)}
                     <div class="col-12">
                       <span class="help-text text-warning">Dit product is momenteel niet op vooraad, <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>neem contact met ons op</a> of <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}"vertical-align: top;width:20%;>vraag een offerte aan</a> voor een alternatief en/of de mogelijke levertijden</span>
                     </div>
@@ -163,7 +165,7 @@
           </div>
                   {/if}
 
-                  <div class="col-12" {if !$product.add_to_cart_url || !$product.available_for_order}style="pointer-events:none;" {/if}>
+                  <div class="col-12" style="{Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'style')}">
                     {hook h='displayProductSawAndCutButtons' product=$product}
                   </div>
 

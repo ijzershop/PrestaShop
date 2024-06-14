@@ -33,20 +33,21 @@
             {hook h='displayProductPriceBlock' product=$product type="before_price"}
             {if $product.price_reduction_after_cartrule_reduction_without_tax > 0}
               <span class="regular-price text-center text-md-right"
-                    data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc_nr, 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht_nr, 'EUR')}{/if} </span>
+                    data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{Context::getContext()->currentLocale->formatPrice((float)$productPrices.final_prices.price_ttc_nr, 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice((float)$productPrices.final_prices.price_ht_nr, 'EUR')}{/if} </span>
             {/if}
             <span class="inclusive-price text-center text-md-right"
-                  data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ttc ,'EUR')}}{else}{{Context::getContext()->currentLocale->formatPrice($productPrices.final_prices.price_ht ,'EUR')}}{/if}  </span>
+                  data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{{Context::getContext()->currentLocale->formatPrice((float)$productPrices.final_prices.price_ttc ,'EUR')}}{else}{{Context::getContext()->currentLocale->formatPrice((float)$productPrices.final_prices.price_ht ,'EUR')}}{/if}  </span>
             <br>
           </div>
         {else}
         <div class="current-price">
-          {if $product.price_reduction_after_cartrule_reduction_without_tax > 0}
+
+          {if $product.price_reduction_after_cartrule_reduction_without_tax > 0 && (int)$product.id_oi_offer <= 0}
             <span class="regular-price text-center text-md-right"
-                  data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction, 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice($product.price_without_reduction_without_tax, 'EUR')}{/if} </span>
+                  data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{Context::getContext()->currentLocale->formatPrice((float)$product.price_without_reduction, 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice((float)$product.price_without_reduction_without_tax, 'EUR')}{/if} </span>
           {/if}
           <span class="inclusive-price text-center text-md-right"
-                data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{Context::getContext()->currentLocale->formatPrice($product.price_after_cartrule_reduction_with_tax, 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice($product.price_after_cartrule_reduction_without_tax, 'EUR')}{/if}  </span>
+                data-product-id="{$product.id_product}">{if Context::getContext()->cookie->price_vat_settings_incl === "true"}{Context::getContext()->currentLocale->formatPrice((float)$product.price_after_cartrule_reduction_with_tax, 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice((float)$product.price_after_cartrule_reduction_without_tax, 'EUR')}{/if}  </span>
           <br>
         </div>
         {/if}

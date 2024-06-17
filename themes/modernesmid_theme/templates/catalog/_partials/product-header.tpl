@@ -68,8 +68,8 @@
                 </div>
                 <div class="d-none d-sm-flex col-sm-4 pl-0">
                     {if $category.image.large.url}
-                        <div class="category-cover text-center w-100 mx-auto">
-                            <img style="max-width: 225px;max-height: 225px;"  class="mx-auto" src="{$link->getCatImageLink($category.link_rewrite, $category.id)}" alt="{if !empty($category.image.legend)}{$category.image.legend}{else}{$category.name}{/if}">
+                        <div class="category-cover text-center mx-auto">
+                            <img style="max-width: 225px;max-height: auto;"  class="mx-auto" src="{$link->getCatImageLink($category.link_rewrite, $category.id, 'category_default')}" alt="{if !empty($category.image.legend)}{$category.image.legend}{else}{$category.name}{/if}">
                         </div>
                     {/if}
                 </div>

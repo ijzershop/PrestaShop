@@ -92,8 +92,8 @@
               <a href="{$urls.base_url}" class="header-logo-a w-100  pr-sm-5">
                 <ul class="list-group mx-auto">
                   <li class="list-group-item border-0 p-0">
-                    <img rel="preload" is="image" class="logo w-100 d-none d-md-block lazyload" data-src="{$shop.logo}" alt="{$shop.name}">
-                    <img rel="preload" is="image" class="logo w-100 d-block d-md-none lazyload" data-src="/themes/modernesmid_theme/assets/logo/{strtolower($shop.name)}_mobile.svg" alt="{$shop.name}">
+                    <img rel="preload" is="image" class="logo w-100 d-none d-md-block" src="{$shop.logo}" alt="{$shop.name}">
+                    <img rel="preload" is="image" class="logo w-100 d-block d-md-none" src="/themes/modernesmid_theme/assets/logo/{strtolower($shop.name)}_mobile.svg" alt="{$shop.name}">
                   </li>
                 </ul>
               </a>
@@ -122,10 +122,10 @@
   </div>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary mainmenu-navbar p-0 p-md-0" data-toggle="sticky-onscroll" id="main-menu-bar">
     <div class="container">
-      <a id="navbar-brand-item-lg" class="navbar-brand d-none d-lg-block" href="/"><img  rel="preload" as="image" data-src="/themes/modernesmid_theme/assets/logo/{strtolower($shop.name)}-menu-logo.svg" class="lazyload" width="auto" height="22px" alt="Home" title="Ga naar de startpagina"></a>
+      <a id="navbar-brand-item-lg" class="navbar-brand d-none d-lg-block" href="/"><img  rel="preload" as="image" src="/themes/modernesmid_theme/assets/logo/{strtolower($shop.name)}-menu-logo.svg" class="" width="auto" height="22px" alt="Home" title="Ga naar de startpagina"></a>
       <ul class="nav col d-flex d-lg-none p-0">
         <li id="navbar-brand-item-mobile" class="nav-item p-0 text-center col">
-          <a class="navbar-brand d-block d-lg-none col p-0 m-0 pt-1" href="/"><img  rel="preload" as="image" data-src="/themes/modernesmid_theme/assets/logo/{strtolower($shop.name)}_mobile_white.svg" class="lazyload" style="height:30px;width: auto;float: left;margin-left: 15px;" alt="Home" title="Ga naar de startpagina"></a>
+          <a class="navbar-brand d-block d-lg-none col p-0 m-0 pt-1" href="/"><img  rel="preload" as="image" src="/themes/modernesmid_theme/assets/logo/{strtolower($shop.name)}_mobile_white.svg" class="" style="height:30px;width: auto;float: left;margin-left: 15px;" alt="Home" title="Ga naar de startpagina"></a>
         </li>
         {if Module::isEnabled('ps_categorytree') || (int)Configuration::get('MSTHEMECONFIG_HEADER_PHONENUMBER_LINK', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '') == 1}
         <li class="nav-item p-0 text-center col">

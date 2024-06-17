@@ -197,8 +197,9 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             $currentQty = (int)StockAvailable::getQuantityAvailableByProduct($id_product);
             $delta = $qty-$currentQty;
 
+
             $pack = new Pack($id_product);
-            $pack->price = number_format((float)Tools::getValue('offer-price'), 6, '.', '');
+            $pack->price = (float)number_format((float)Tools::getValue('offer-price'), 6, '.', '');
             $pack->weight = Tools::getValue('offer-weight');
             $pack->name = [1 => $_POST['offer-row-title']];
             $pack->saw_loss = 0;
@@ -214,11 +215,14 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             $pack->depends_on_stock = 1;
             $pack->pack_stock_type = PackStockType::STOCK_TYPE_BOTH;
             $pack->product_type = ProductType::TYPE_PACK;
-
+            $pack->update();
             $pack->addToCategories($categoryArray);
             $pack->setAdvancedStockManagement(1);
             StockAvailable::setProductOutOfStock((int)$id_product, false);
             StockAvailable::updateQuantity((int)$id_product, (int)$id_pack_attribute, $delta);
+
+
+
 
             Pack::deleteItems($id_product);
 
@@ -279,7 +283,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
 
             $pack->id_oi_offer = $newOfferId;
 
-            $pack->price = number_format((float)Tools::getValue('offer-price'), 6, '.', '');
+            $pack->price = (float)number_format((float)Tools::getValue('offer-price'), 6, '.', '');
             $pack->weight = Tools::getValue('offer-weight');
             $pack->name = [1 => $_POST['offer-row-title']];
             $pack->saw_loss = 0;
@@ -340,7 +344,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             foreach ($pack->packedProducts as $key => $packItem) {
                 $pack->packedProducts[$key]->attributes = Product::getAttributesParams($packItem->id, $packItem->id_pack_product_attribute);
             }
-
+            $pack->update();
             $this->afterAdd($pack);
 
             return Response::create(json_encode(['msg' => 'Offer created', 'offer' => $pack, 'error' => false, 'offer-id' => $newOfferId]));

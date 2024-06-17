@@ -1208,6 +1208,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         if(isset($status->geaemail)){
             $data['email'] = $status->geaemail;
         }
+
+
         die($this->kernel->getContainer()->get('twig')->render('@Modules/msthemeconfig/views/templates/admin/label_state_form.html.twig', $data));
 
     }

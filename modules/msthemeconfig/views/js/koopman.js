@@ -212,61 +212,62 @@ $(function () {
     });
 
 
-    $(document).on('click', 'div.koopman label',function (e) {
-      let $clickedLabel = $(this);
-      let $input = $clickedLabel.prev('input');
-      let $btnRow = $clickedLabel.closest('div.koopman');
-      let $tr = $clickedLabel.closest('TR');
-      let orderId = $input.attr('data-id-order');
-      let type = $input.val();
-      let gewicht = 0;
+    // $(document).on('click', 'div.koopman label',function (e) {
+    //   let $clickedLabel = $(this);
+    //   let $input = $clickedLabel.prev('input');
+    //   let $btnRow = $clickedLabel.closest('div.koopman');
+    //   let $tr = $clickedLabel.closest('TR');
+    //   let orderId = $input.attr('data-id-order');
+    //   let type = $input.val();
+    //   let gewicht = 0;
+    //
+    //   $clickedLabel.toggleClass('temp_disabled', "");
+    //   $tr.toggleClass('temp_disabled_row', "");
+    //   /*
+    //   *  Gewijzigd door JB Stoker - Moderne Smid
+    //   *  Pakket maten en soorten aangepast, tevens type pakket toegevoegd voor maatvoering
+    //   *  1 -Envelop : (50 x 30 x 1=1Kg) / value = envelope
+    //   *  2 -Plaat : (50 x 30 x 1=15Kg) / value = plaat
+    //   *  3 -1 Meter : (50 x 30 x 1=15Kg) / value = 1-meter
+    //   *  4 -2 Meter < 15 : (50 x 30 x 1= 14Kg) / value = 2-meter-smaller
+    //   *  5 -2 Meter > 15 : (50 x 30 x 1= 30Kg) / value = 2-meter-larger
+    //   *
+    //   */
+    //   if (type !== -1) {
+    //     switch (type) {
+    //       case 'envelope':
+    //         gewicht = 5;
+    //         break;
+    //       case 'plaat':
+    //         gewicht = 10;
+    //         break;
+    //       case '1-meter':
+    //         gewicht = 15;
+    //         break;
+    //       case '2-meter-smaller':
+    //         gewicht = 20;
+    //         break;
+    //       case '2-meter-larger':
+    //         gewicht = 30;
+    //         break;
+    //     }
+    //
+    //     $.ajax({
+    //       url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=print-label&id_order=' +
+    //         orderId + '&weight='+gewicht+'&type='+type+'&token=' + token,
+    //       type: 'GET'
+    //     })
+    //       .done(function (data) {
+    //         if(data === 'printed'){
+    //           location.reload();
+    //         } else {
+    //           $('#updateAddressModal .modal-content').html(data);
+    //           $('#updateAddressModal').modal('show');
+    //         }
+    //       });
+    //     }
+    // });
 
-      $clickedLabel.toggleClass('temp_disabled', "");
-      $tr.toggleClass('temp_disabled_row', "");
-      /*
-      *  Gewijzigd door JB Stoker - Moderne Smid
-      *  Pakket maten en soorten aangepast, tevens type pakket toegevoegd voor maatvoering
-      *  1 -Envelop : (50 x 30 x 1=1Kg) / value = envelope
-      *  2 -Plaat : (50 x 30 x 1=15Kg) / value = plaat
-      *  3 -1 Meter : (50 x 30 x 1=15Kg) / value = 1-meter
-      *  4 -2 Meter < 15 : (50 x 30 x 1= 14Kg) / value = 2-meter-smaller
-      *  5 -2 Meter > 15 : (50 x 30 x 1= 30Kg) / value = 2-meter-larger
-      *
-      */
-      if (type !== -1) {
-        switch (type) {
-          case 'envelope':
-            gewicht = 5;
-            break;
-          case 'plaat':
-            gewicht = 10;
-            break;
-          case '1-meter':
-            gewicht = 15;
-            break;
-          case '2-meter-smaller':
-            gewicht = 20;
-            break;
-          case '2-meter-larger':
-            gewicht = 30;
-            break;
-        }
-
-        $.ajax({
-          url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=print-label&id_order=' + orderId + '&weight='+gewicht+'&type='+type+'&token=' + token,
-          type: 'GET'
-        })
-          .done(function (data) {
-            if(data === 'printed'){
-              location.reload();
-
-            } else {
-              $('#updateAddressModal .modal-content').html(data);
-              $('#updateAddressModal').modal('show');
-            }
-          });
-        }
-    });
 
   $(document).on('click', '.updateAddress',function () {
     let orderId = $('#updateAddressKoopman [name="id_order"]').val();
@@ -274,6 +275,11 @@ $(function () {
     let type = $('#updateAddressKoopman [name="type"]').val();
     let gewicht = $('#updateAddressKoopman [name="weight"]').val();
     let token = $('#updateAddressKoopman [name="token"]').val();
+
+    let chosenCollies = $('#updateAddressKoopman [name="collies"]').val();
+    let collieType = $('#updateAddressKoopman [name="collie_type"]').val();
+    let weightOption = $('#updateAddressKoopman [name="weight_option"]').val();
+
 
     let address1 = $('.address-input-text#address1').val();
     let house_number = $('.address-input-text#house_number').val();
@@ -316,6 +322,9 @@ $(function () {
         'id_order': orderId,
         'type': type,
         'weight': gewicht,
+        'collies': chosenCollies,
+        'collie_type': collieType,
+        'weight_option': weightOption,
         'address1': address1,
         'house_number': house_number,
         'house_number_extension': house_number_extension,
@@ -330,7 +339,6 @@ $(function () {
         data: data
       })
         .done(function (data) {
-          console.log([data === 'printed', data])
           if(data === 'printed'){
             location.reload();
           } else {
@@ -469,7 +477,7 @@ $(function () {
     $clickedLabel.toggleClass('temp_disabled', "");
     let $tr = $clickedLabel.closest('TR');
     //Allready has tracking number
-    if($clickedLabel.parents('td').find('.tracking_number').text().length > 0){
+    if($clickedLabel.parents('td').find('.tracking_number').text().trim().length > 0){
       let reference = $clickedLabel.parents('td').find('.tracking_number').attr('data-reference');
       // Open customized confirmation dialog window
       $.fancyConfirmKoopmanLabel(reference, $clickedLabel, $tr);

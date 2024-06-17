@@ -60,7 +60,7 @@
           {/block}
         {/block}
       </div>
-      <div class="col-12 {if (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == (int)$product.id_category_default}d-none{else} col-lg-6{/if}">
+      <div class="col-12  col-lg-6">
         {block name='page_content_container'}
         <section class="page-content" id="content">
           {block name='page_content'}
@@ -80,14 +80,14 @@
         </section>
         {/block}
       </div>
-      <div class="col-12 {if (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == (int)$product.id_category_default}col-lg-12{else} col-lg-6 mt-lg-0{/if}">
+      <div class="col-12 col-lg-6 mt-lg-0">
         <div class="row">
           <div class="col-12 d-none d-lg-block text-right pb-3">
             {block name='page_header_container'}
             {block name='page_header'}
             <h1 class="product-title h4 m-0 text-black">{block name='page_title'}{$product.name}{/block}</h1>
                 {block name='product_description_short'}
-                <div id="product-description-short-{$product.id}">{if !empty($product.description_short) && (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}{$product.description_short nofilter}{else}<span class="d-none"><span>{/if}</div>
+                <div id="product-description-short-{$product.id}">{if !empty($product.description_short) && (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != (int)$product.id_category_default}{$product.description_short nofilter}{else}<span class="d-none"><span>{/if}</div>
                 {/block}
             {/block}
             {/block}
@@ -117,7 +117,7 @@
                       <input type="hidden" name="id_customization" value="{$product.id_customization}" id="product_customization_id">
                       {if !Module::isEnabled('dynamicproduct') || !Product::isDynamicProduct($product)}
 <!--                       {block name='product_pack'}
-                      {if $packItems && (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}
+                      {if $packItems && (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != (int)$product.id_category_default}
                       <section class="product-pack">
                         <p class="h4">{l s='This pack contains' d='Shop.Theme.Catalog'}</p>
                         {foreach from=$packItems item="product_pack"}
@@ -205,7 +205,7 @@
       </div>
     </div>
     <div class="row border-bottom">
-      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}col-lg-6 pb-4{/if} pt-3 ">
+      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != (int)$product.id_category_default}col-lg-6 pb-4{/if} pt-3 ">
         {if !empty($product.description)}
           {block name='product_description'}
             <div class="product-description border-bottom pb-4 pt-4 row">
@@ -213,7 +213,7 @@
                   <div class="col-12">{$product.description nofilter}</div>
             </div>
           {/block}
-          {elseif (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') == (int)$product.id_category_default}
+          {elseif (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == (int)$product.id_category_default}
           {block name='product_description'}
             <div class="product-description border-bottom pb-4 pt-4 row">
               <span class="description-title font-weight-bold h5 col-12">Beschrijving</span>
@@ -229,7 +229,7 @@
           {/block}
         {/if}
       </div>
-      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}col-lg-5 pt-2{/if} ">
+      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != (int)$product.id_category_default}col-lg-5 pt-2{/if} ">
         {if Configuration::get('SHOW_PRODUCT_FEATURES') === 'category'}
             {assign var='cat' value=Category::getNestedCategories($product.id_category_default)}
             {if is_null($cat[$product.id_category_default].top_description)}

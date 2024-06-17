@@ -60,7 +60,7 @@
           {/block}
         {/block}
       </div>
-      <div class="col-12 col-lg-6">
+      <div class="col-12 {if (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == (int)$product.id_category_default}d-none{else} col-lg-6{/if}">
         {block name='page_content_container'}
         <section class="page-content" id="content">
           {block name='page_content'}
@@ -80,7 +80,7 @@
         </section>
         {/block}
       </div>
-      <div class="col-12 col-lg-6 mt-lg-0">
+      <div class="col-12 {if (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == (int)$product.id_category_default}col-lg-12{else} col-lg-6 mt-lg-0{/if}">
         <div class="row">
           <div class="col-12 d-none d-lg-block text-right pb-3">
             {block name='page_header_container'}
@@ -116,7 +116,7 @@
                       <input type="hidden" name="id_product" value="{$product.id}" id="product_page_product_id">
                       <input type="hidden" name="id_customization" value="{$product.id_customization}" id="product_customization_id">
                       {if !Module::isEnabled('dynamicproduct') || !Product::isDynamicProduct($product)}
-                      {block name='product_pack'}
+<!--                       {block name='product_pack'}
                       {if $packItems && (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID') != (int)$product.id_category_default}
                       <section class="product-pack">
                         <p class="h4">{l s='This pack contains' d='Shop.Theme.Catalog'}</p>
@@ -127,7 +127,7 @@
                         {/foreach}
                       </section>
                       {/if}
-                      {/block}
+                      {/block} -->
                       {block name='product_add_to_cart'}
                       {include file='catalog/_partials/product-add-to-cart.tpl'}
                       {/block}

@@ -104,7 +104,7 @@ $(document).ready(() => {
   $('#payment-confirmation button[type="submit"]').on('click', function(e){
       e.stopImmediatePropagation();
 
-      if( $('.delivery-option input[type="radio"]:checked').val() === '11,' && $('#added_to_order').val() <= 0){
+      if( $('.delivery-option input[type="radio"]:checked').val() === '11,' && ($('#added_to_order').length === 0 || $('#added_to_order').val().length <= 0)){
         $('#checkout-delivery-step').trigger('click');
         let htmlBlock = '<div class="error-text alert-danger p-2" role="alert"><strong>Er is geen bestelling geselecteerd!</strong><br/> ' +
           'Zoek eerst een nog lopende bestelling of selecteer een andere verzendmethode. <br/>' +
@@ -112,27 +112,29 @@ $(document).ready(() => {
         $('.added-to-order-block a').hide();
         $('.added-to-order-block').append(htmlBlock);
           return false;
+      } else {
+
+        let id = $('.payment-options input[name="payment-option"]:checked').attr('id');
+        let extraData = buildRequestStringData($('#'+id+'-container'));
+        $('input#dynamic-data').remove();
+        $('<input>', {
+          type: 'hidden',
+          id: 'dynamic-data',
+          name: 'dynamic_data',
+          value: extraData
+        }).appendTo('#payment-'+id+'-form');
+
+        if ($(this).data('disabled') === true) {
+          e.preventDefault();
+        }
+        $(this).data('disabled', true);
+        $('button[type="submit"]', this).addClass('disabled');
+
+        showPaymentLoad();
+
+        $('form#payment-'+id+'-form').submit();
+
       }
-
-      let id = $('.payment-options input[name="payment-option"]:checked').attr('id');
-      let extraData = buildRequestStringData($('#'+id+'-container'));
-      $('input#dynamic-data').remove();
-      $('<input>', {
-        type: 'hidden',
-        id: 'dynamic-data',
-        name: 'dynamic_data',
-        value: extraData
-      }).appendTo('#payment-'+id+'-form');
-
-    if ($(this).data('disabled') === true) {
-      e.preventDefault();
-    }
-    $(this).data('disabled', true);
-    $('button[type="submit"]', this).addClass('disabled');
-
-    showPaymentLoad();
-
-    $('form#payment-'+id+'-form').submit();
   });
 
 

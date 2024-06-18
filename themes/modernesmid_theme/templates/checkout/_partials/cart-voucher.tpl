@@ -81,46 +81,46 @@
 
 
 
-    {if $cart.vouchers.allowed && (in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Customer::getGroupsStatic(Context::getContext()->cart->id_customer)))}
-    <div class="row">
+{*    {if $cart.vouchers.allowed && (in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Customer::getGroupsStatic(Context::getContext()->cart->id_customer)))}*}
+{*    <div class="row">*}
 
-    <p class="col-12 pl-4 pt-2 promo-code-button display-promo{if $cart.discounts|count > 0} with-discounts{/if}">
-      <a class="collapse-button" href="#promo-code"  data-toggle="collapse" href="#promo-code" role="button" aria-expanded="false" aria-controls="promo-code">
-        {l s='Heeft u een kortingscode? Klik dan hier om deze te verzilveren!' d='Shop.Theme.Checkout'}
-      </a>
-    </p>
+{*    <p class="col-12 pl-4 pt-2 promo-code-button display-promo{if $cart.discounts|count > 0} with-discounts{/if}">*}
+{*      <a class="collapse-button" href="#promo-code"  data-toggle="collapse" href="#promo-code" role="button" aria-expanded="false" aria-controls="promo-code">*}
+{*        {l s='Heeft u een kortingscode? Klik dan hier om deze te verzilveren!' d='Shop.Theme.Checkout'}*}
+{*      </a>*}
+{*    </p>*}
 
-    <div id="promo-code" class="collapse{if $cart.discounts|count > 0} show{/if} w-100 px-4">
-      <div class="promo-code">
-        {block name='cart_voucher_form'}
-          <form action="{$urls.pages.cart}" data-link-action="add-voucher" method="post">
-            <input type="hidden" name="token" value="{$static_token}">
-            <input type="hidden" name="addDiscount" value="1">
-            <div class="input-group">
-              <input class="form-control" type="text" name="discount_name" placeholder="{l s='Vul hier uw kortingscode in' d='Shop.Theme.Checkout'}">
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-success"><i class="fasl fa-check"></i></button>
-              </div>
-            </div>
-          </form>
-        {/block}
-      </div>
-    </div>
+{*    <div id="promo-code" class="collapse{if $cart.discounts|count > 0} show{/if} w-100 px-4">*}
+{*      <div class="promo-code">*}
+{*        {block name='cart_voucher_form'}*}
+{*          <form action="{$urls.pages.cart}" data-link-action="add-voucher" method="post">*}
+{*            <input type="hidden" name="token" value="{$static_token}">*}
+{*            <input type="hidden" name="addDiscount" value="1">*}
+{*            <div class="input-group">*}
+{*              <input class="form-control" type="text" name="discount_name" placeholder="{l s='Vul hier uw kortingscode in' d='Shop.Theme.Checkout'}">*}
+{*              <div class="input-group-append">*}
+{*                <button type="submit" class="btn btn-success"><i class="fasl fa-check"></i></button>*}
+{*              </div>*}
+{*            </div>*}
+{*          </form>*}
+{*        {/block}*}
+{*      </div>*}
+{*    </div>*}
 
-    {if $cart.discounts|count > 0}
-      <p class="block-promo promo-highlighted">
-        {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
-      </p>
-      <ul class="js-discount card-block promo-discounts">
-        {foreach from=$cart.discounts item=discount}
-          <li class="cart-summary-line">
-                <span class="label">
-                  <span class="code">{$discount.code}</span> - {$discount.name}
-                </span>
-          </li>
-        {/foreach}
-      </ul>
-    {/if}
-  </div>
-{/if}
+{*    {if $cart.discounts|count > 0}*}
+{*      <p class="block-promo promo-highlighted">*}
+{*        {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}*}
+{*      </p>*}
+{*      <ul class="js-discount card-block promo-discounts">*}
+{*        {foreach from=$cart.discounts item=discount}*}
+{*          <li class="cart-summary-line">*}
+{*                <span class="label">*}
+{*                  <span class="code">{$discount.code}</span> - {$discount.name}*}
+{*                </span>*}
+{*          </li>*}
+{*        {/foreach}*}
+{*      </ul>*}
+{*    {/if}*}
+{*  </div>*}
+{*{/if}*}
   {/block}

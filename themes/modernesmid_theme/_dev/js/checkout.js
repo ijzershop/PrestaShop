@@ -92,10 +92,27 @@ function buildRequestStringData(form) {
   return JSON.stringify(requestString);
 }
 
+let showPaymentLoad = function (){
+  $('#wrapper').css({
+    'opacity': '.2',
+    'pointer-events': 'none',
+  });
+  $('.loader-container-card').css('display', 'flex');
+}
 
 $(document).ready(() => {
   $('#payment-confirmation button[type="submit"]').on('click', function(e){
       e.stopImmediatePropagation();
+
+      if( $('.delivery-option input[type="radio"]:checked').val() === '8,' && $('#added_to_order').val() <= 0){
+        $('#checkout-delivery-step').trigger('click');
+        let htmlBlock = '<div class="error-text alert-danger p-2" role="alert"><strong>Er is geen bestelling geselecteerd!</strong><br/> ' +
+          'Zoek eerst een nog lopende bestelling of selecteer een andere verzendmethode. <br/>' +
+          'Heeft u wel een bestelling geselecteerd? Neem dan contact met ons op, we helpen u graag verder</div>';
+        $('.added-to-order-block a').hide();
+        $('.added-to-order-block').append(htmlBlock);
+          return false;
+      }
 
       let id = $('.payment-options input[name="payment-option"]:checked').attr('id');
       let extraData = buildRequestStringData($('#'+id+'-container'));
@@ -112,6 +129,9 @@ $(document).ready(() => {
     }
     $(this).data('disabled', true);
     $('button[type="submit"]', this).addClass('disabled');
+
+    showPaymentLoad();
+
     $('form#payment-'+id+'-form').submit();
   });
 
@@ -548,7 +568,7 @@ $(document).ready(() => {
       validateNameInputFields(this);
   }));
   //Postcode on adres form validation
-  $('#delivery-address input[name="postcode"], #invoice-address input[name="postcode"]')
+  $('#customer_address_form input[name="postcode"], #delivery-address input[name="postcode"], #invoice-address input[name="postcode"]')
     .on('keyup paste', delayKeyUp(function (e) {
       e.stopImmediatePropagation();
       let value = $(this).val();
@@ -559,19 +579,19 @@ $(document).ready(() => {
       }
   }));
   //Address
-  $('#delivery-address input[name="address1"], #invoice-address input[name="address1"]')
+  $('#customer_address_form input[name="address1"], #delivery-address input[name="address1"], #invoice-address input[name="address1"]')
     .on('keyup paste', delayKeyUp(function (e) {
       validateAddressInputFields(this);
       e.stopImmediatePropagation();
   }));
   //Huisnummer
-  $('#delivery-address input[name="house_number"], #invoice-address input[name="house_number"]')
+  $('#customer_address_form input[name="house_number"], #delivery-address input[name="house_number"], #invoice-address input[name="house_number"]')
     .on('keyup paste', delayKeyUp(function (e) {
       validateHouseNumberInputFields(this);
       e.stopImmediatePropagation();
   }));
   //Huisnummer extensie
-  $('#delivery-address input[name="house_number_extension"], #invoice-address input[name="house_number_extension"]')
+  $('#customer_address_form input[name="house_number_extension"], #delivery-address input[name="house_number_extension"], #invoice-address input[name="house_number_extension"]')
     .on('keyup paste', delayKeyUp(function (e) {
     if($('#cart-postcode-check-toggle').prop('checked') === true){
       checkFormatAddressApiCheckout().then(r => {
@@ -580,41 +600,41 @@ $(document).ready(() => {
     }
   }));
   //woonplaats
-  $('#delivery-address input[name="city"], #invoice-address input[name="city"]')
+  $('#customer_address_form input[name="city"], #delivery-address input[name="city"], #invoice-address input[name="city"]')
     .on('keyup paste', delayKeyUp(function (e) {
       validateCityInputFields(this);
       e.stopImmediatePropagation();
   }));
   //Alias
-  $('#invoice-address input[name="alias"], #delivery-address input[name="alias"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#invoice-address input[name="alias"], #customer_address_form input[name="alias"], #delivery-address input[name="alias"]').on('keyup paste', delayKeyUp(function (e) {
       validateAliasInputFields(this);
       e.stopImmediatePropagation();
   }));
   //Company fields address
-  $('#delivery-address input[name="company"], #invoice-address input[name="company"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#customer_address_form input[name="company"], #delivery-address input[name="company"], #invoice-address input[name="company"]').on('keyup paste', delayKeyUp(function (e) {
       validateCompanyInputFields(this);
     e.stopImmediatePropagation();
   }));
 
   //Phone number
-  $('#delivery-address input[name="phone"], #invoice-address input[name="phone"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#customer_address_form input[name="phone"], #delivery-address input[name="phone"], #invoice-address input[name="phone"]').on('keyup paste', delayKeyUp(function (e) {
       validatePhoneInputFields(this);
     e.stopImmediatePropagation();
   }));
 
   //mobile phonenumber
-  $('#delivery-address input[name="mobile"], #invoice-address input[name="mobile"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#customer_address_form input[name="mobile"], #delivery-address input[name="mobile"], #invoice-address input[name="mobile"]').on('keyup paste', delayKeyUp(function (e) {
     validatePhoneInputFields(this, false);
     e.stopImmediatePropagation();
   }));
 
   //Other text data
-  $('#invoice-address textarea[name="other"], #delivery-address textarea[name="other"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#invoice-address textarea[name="other"], #customer_address_form textarea[name="other"], #delivery-address textarea[name="other"]').on('keyup paste', delayKeyUp(function (e) {
       validateTextInputFields(this);
     e.stopImmediatePropagation();
   }));
 
-  $('#delivery-address select[name="id_country"], #invoice-address select[name="id_country"]').on('change', function (e) {
+  $('#customer_address_form select[name="id_country"], #delivery-address select[name="id_country"], #invoice-address select[name="id_country"]').on('change', function (e) {
     validateCountryInputFields(this);
     e.stopImmediatePropagation();
 

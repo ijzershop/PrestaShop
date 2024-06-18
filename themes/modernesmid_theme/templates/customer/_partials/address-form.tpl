@@ -26,6 +26,88 @@
 {block name="address_form"}
   <div class="js-address-form">
     {include file='_partials/form-errors.tpl' errors=$errors['']}
+    <style>
+      #toggle-postcode-check .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 12px;
+        line-height: 12px;
+        margin-top:.6rem;
+      }
+
+      /* Hide default HTML checkbox */
+      #toggle-postcode-check .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      /* The slider */
+      #toggle-postcode-check .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      #toggle-postcode-check .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 0px;
+        bottom: -4px;
+        border: 1px solid #ccc;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      #cart-postcode-check-toggle:checked+.slider {
+        background-color: #2196F3;
+      }
+
+      #cart-postcode-check-toggle:focus+.slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
+
+      #cart-postcode-check-toggle:checked+.slider:before {
+        border: 1px solid #2196F3;
+        -webkit-transform: translateX(30px);
+        -ms-transform: translateX(30px);
+        transform: translateX(30px);
+      }
+
+      /* Rounded sliders */
+      #toggle-postcode-check .slider.round {
+        border-radius: 12px;
+      }
+
+      #toggle-postcode-check .slider.round:before {
+        border-radius: 50%;
+      }
+      #toggle-postcode-check label:first-child {
+        line-height: 27px;
+      }
+      #toggle-postcode-check label svg{
+        vertical-align: -.3em!important;
+      }
+      #postcode-check-info{
+        color:#3b56ad;
+        display:none;
+      }
+      .selected{
+        background-color: #f0f0f0;
+        color:#000000;
+      }
+    </style>
+
 
     {block name="address_form_url"}
     <form autocomplete="off"
@@ -38,6 +120,23 @@
     >
     {/block}
 
+      <div style="font-size: .8rem;min-height: 35px;" class="form-group d-block col-12 col-lg-6 p-0" id="toggle-postcode-check">
+        <label class="col-7 p-0">
+          <span class="info-icon-with-showhide-address" data-id="postcode-check-info-delivery">
+            <i class="icon-info cart-info-btn"></i>
+          </span>
+          <span id="postcode-check-switch-label">Postcode validatie <b class="text-success"><i class="fasl fa-check fa-2x"></i></b></span>
+        </label>
+        <label class="switch col-5 float-right">
+          <input type="checkbox" id="cart-postcode-check-toggle" checked>
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <div  style="font-size: .8rem;text-transform: initial;display:none;" id="postcode-check-info-delivery" class="col-12 mt-2 p-0" >
+        <p class="card p-2">Bij het invullen van uw postcode en bijhorende huisnummer wordt uw adres automatisch aangevuld en gevalideerd.
+          Zo helpen we u fouten in uw adres voorkomen. <br/>Mocht u hiervan hinder ondervinden, dan kunt u deze Postcode check uitzetten.<br/>
+          <span class="mt-1"><b>Let op!</b> Het adres wordt niet gevalideerd als de postcode check <b>uit</b> staat, dus kijk uw adres goed na voordat u de bestelling afrekent.</span</p>
+      </div>
 
       {block name="address_form_fields"}
         <section class="form-fields row">

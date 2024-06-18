@@ -1,0 +1,235 @@
+.loader-container-card{
+  position: fixed;
+  z-index: 999;
+  top: 30vh;
+  display:none;
+}
+#loader-icon-block{
+  min-height:100px;
+}
+
+.loader-container-card .loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  background: #fff;
+}
+
+.loader-container-card .loader-container .icon {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  font-size: 90px;
+  overflow: hidden;
+}
+
+.loader-container-card .loader-container .icon * {
+  position: absolute;
+  transform-origin: 50% 100%;
+}
+
+.loader-container-card .loader-container .icon .first {
+  background-image: url("../../../assets/img/loader/ijzershop.svg");
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  animation: fallingIcons-1 4s 0s linear infinite;
+  opacity: 1;
+  display: block;
+  height: 1.6em;
+  width: 1.6em;
+  overflow: visible;
+  box-sizing: content-box;
+  top:-30px;
+}
+
+@keyframes fallingIcons-1 {
+  from {
+    transform: rotate(15deg) translateY(-800%);
+    opacity: 0;
+  }
+  10% {
+    transform: rotate(15deg) translateY(-200%);
+    opacity: 1;
+  }
+  20% {
+    transform: rotate(15deg);
+  }
+  22% {
+    transform: rotate(-12deg);
+  }
+  23% {
+    transform: rotate(5deg);
+  }
+  24% {
+    transform: rotate(-3deg);
+  }
+  35% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  45% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(0) translateY(-800%);
+    opacity: 0;
+  }
+}
+
+.loader-container-card .loader-container .icon .second {
+  color: #7C7C7C;
+  animation: fallingIcons-2 4s 1s linear infinite;
+  opacity: 0;
+  top:-10px;
+}
+
+@keyframes fallingIcons-2 {
+  from {
+    transform: rotate(15deg) translateY(-800%);
+    opacity: 0;
+  }
+  10% {
+    transform: rotate(15deg) translateY(-200%);
+    opacity: 1;
+  }
+  20% {
+    transform: rotate(15deg);
+  }
+  22% {
+    transform: rotate(-12deg);
+  }
+  23% {
+    transform: rotate(5deg);
+  }
+  24% {
+    transform: rotate(-3deg);
+  }
+  35% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  45% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(0) translateY(-800%);
+    opacity: 0;
+  }
+}
+
+.loader-container-card .loader-container .icon .third {
+  color: #3b56ad;
+  animation: fallingIcons-3 4s 2s linear infinite;
+  opacity: 0;
+  top:-10px;
+}
+
+@keyframes fallingIcons-3 {
+  from {
+    transform: rotate(15deg) translateY(-800%);
+    opacity: 0;
+  }
+  10% {
+    transform: rotate(15deg) translateY(-200%);
+    opacity: 1;
+  }
+  20% {
+    transform: rotate(15deg);
+  }
+  22% {
+    transform: rotate(-12deg);
+  }
+  23% {
+    transform: rotate(5deg);
+  }
+  24% {
+    transform: rotate(-3deg);
+  }
+  35% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  45% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(0) translateY(-800%);
+    opacity: 0;
+  }
+}
+
+div.loader-container {
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 3px solid #3b56ad;
+    transition: all .5s;
+    animation: borderAnimation 5s infinite linear;
+  }
+}
+
+@keyframes borderAnimation {
+  0%,
+  100% {
+    clip-path: inset(0 0 95% 0);
+  }
+
+  25% {
+    clip-path: inset(0 95% 0 0);
+  }
+  50% {
+    clip-path: inset(95% 0 0 0);
+  }
+  75% {
+    clip-path: inset(0 0 0 95%);
+  }
+}
+
+.bg::before {
+  background: rgba(255, 215, 0, .5);
+}
+
+
+.loader-container-card .wait-img{
+  background-image: url("../../../assets/img/loader/moment.svg");
+  width: 50vw;
+  height: 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.loader-container-card .wait-text-msg{
+  width: 50vw;
+  height: 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: slideImgText 8s linear infinite;
+}
+
+@keyframes slideImgText {
+  0% {
+    background-image: url("../../../assets/img/loader/uw_bestelling_gevalideerd.svg");
+  }
+  45% {
+    background-image: url("../../../assets/img/loader/and.svg");
+  }
+  50%{
+    background-image: url("../../../assets/img/loader/betaalscherm_wordt_geladen.svg");
+  }
+  95% {
+    background-image: url("../../../assets/img/loader/and.svg");
+  }
+  100%{
+    background-image: url("../../../assets/img/loader/uw_bestelling_gevalideerd.svg");
+  }
+}
+
+
+

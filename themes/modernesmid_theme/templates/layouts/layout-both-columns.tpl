@@ -55,6 +55,7 @@
         {include file='_partials/notifications.tpl'}
       {/block}
 
+
       <section id="wrapper">
         {hook h="displayWrapperTop"}
         <div class="container-fluid breadcrumb p-0 mt-1 mb-1 rounded-0 d-none d-sm-flex">

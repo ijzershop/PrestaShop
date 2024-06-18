@@ -42,6 +42,7 @@
   {/block}
 </header>
 
+{include file='_partials/loader.tpl'}
 
 <section id="wrapper" class="w-100 bg-light">
   {hook h="displayWrapperTop"}

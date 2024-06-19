@@ -625,7 +625,7 @@ $(document).ready(() => {
   }));
 
   //mobile phonenumber
-  $('#customer_address_form input[name="mobile"], #delivery-address input[name="mobile"], #invoice-address input[name="mobile"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#customer_address_form input[name="phone_mobile"], #delivery-address input[name="phone_mobile"], #invoice-address input[name="phone_mobile"]').on('keyup paste', delayKeyUp(function (e) {
     validatePhoneInputFields(this, false);
     e.stopImmediatePropagation();
   }));

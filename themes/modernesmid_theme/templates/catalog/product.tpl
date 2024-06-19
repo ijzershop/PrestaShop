@@ -229,7 +229,7 @@
           {/block}
         {/if}
       </div>
-      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != (int)$product.id_category_default}col-lg-5 pt-2{/if} ">
+      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != (int)$product.id_category_default}col-lg-6 pt-2{/if} ">
         {if Configuration::get('SHOW_PRODUCT_FEATURES') === 'category'}
             {assign var='cat' value=Category::getNestedCategories($product.id_category_default)}
             {if is_null($cat[$product.id_category_default].top_description)}
@@ -247,7 +247,7 @@
                 <img src="{$technImage.bySize.home_default.url}" alt="{$product.name} technische afbeelding" title="{$product.name} technische afbeelding" width="100" class="img-responsive w-100">
               </div>
               {/if}
-              <div class="col-12 {if isset($technImage)} col-sm-8 {else} col-sm-12 {/if}">
+              <div class="col-12 {if isset($technImage)} col-sm-8 {else} col-sm-12 {/if} p-1">
                 {html_entity_decode($catParent[$cat[$product.id_category_default].id_parent].top_description) nofilter}
               </div>
             </div>
@@ -265,7 +265,7 @@
                 <img src="{$technImage.bySize.home_default.url}" alt="{$product.name} technische afbeelding" title="{$product.name} technische afbeelding" width="100" class="img-responsive w-100">
               </div>
               {/if}
-              <div class="col-12 {if isset($technImage)} col-sm-8 {else} col-sm-12 {/if}">
+              <div class="col-12 {if isset($technImage)} col-sm-8 {else} col-sm-12 {/if} p-1">
                 {html_entity_decode($cat[$product.id_category_default].top_description) nofilter}
               </div>
             </div>

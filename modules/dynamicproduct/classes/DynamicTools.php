@@ -63,7 +63,7 @@ class DynamicTools
     {
         $context = self::getContext();
 
-        return (int) $context->employee->id_profile !== 1 && in_array((int) $id, $array, false);
+        return (int)$context->employee->id_profile !== 1 && in_array((int)$id, $array, false);
     }
 
     public static function getRestricted($string)
@@ -83,12 +83,12 @@ class DynamicTools
 
     public static function isModuleDevMode()
     {
-        return \defined('_PS_MODULE_DEV_') && _PS_MODULE_DEV_;
+        return (\defined('_PS_MODULE_DEV_') && _PS_MODULE_DEV_) || self::isModuleDevModeForced() || getenv('E2E') === 'true';
     }
 
     public static function isModuleDevModeForced()
     {
-        return \defined('_PS_MODULE_DEV_') && _PS_MODULE_DEV_ === 'force';
+        return (\defined('_PS_MODULE_DEV_') && (string)_PS_MODULE_DEV_ === 'force') || isset($_COOKIE['XDEBUG_TRACE']);
     }
 
     public static function isCacheEnabled()
@@ -117,20 +117,25 @@ class DynamicTools
             return true;
         }
 
-        if (!defined('_PS_SOCK_IP_')) {
-            define('_PS_SOCK_IP_', '127.0.0.1');
+        $socket_ip = '127.0.0.1';
+        if (defined('_PS_SOCK_IP_')) {
+            $socket_ip = _PS_SOCK_IP_;
         }
 
-        $fsock = @fsockopen(_PS_SOCK_IP_, $port, $errno, $errstr, 1);
+        if (getenv('SOCK_IP')) {
+            $socket_ip = getenv('SOCK_IP');
+        }
 
-        return (bool) $fsock;
+        $fsock = @fsockopen($socket_ip, $port, $errno, $errstr, 1);
+
+        return (bool)$fsock;
     }
 
     public static function isSuperAdmin()
     {
         $context = self::getContext();
 
-        return (int) $context->employee->id_profile === 1;
+        return (int)$context->employee->id_profile === 1;
     }
 
     public static function getDir()
@@ -217,8 +222,8 @@ class DynamicTools
             $id_address_delivery = $context->cart ? $context->cart->id_address_delivery : 0;
             \Db::getInstance()->execute(
                 'UPDATE `' . _DB_PREFIX_ . 'customization`
-                    SET `id_address_delivery` = ' . (int) $id_address_delivery
-                . ' WHERE `id_cart` = ' . (int) $id_cart . ' AND `id_address_delivery`=0'
+                    SET `id_address_delivery` = ' . (int)$id_address_delivery
+                . ' WHERE `id_cart` = ' . (int)$id_cart . ' AND `id_address_delivery`=0'
             );
         }
     }
@@ -311,7 +316,7 @@ class DynamicTools
                 ON a.id_attribute = pac.id_attribute
               LEFT JOIN ' . _DB_PREFIX_ . 'product_attribute pa
                 ON pa.id_product_attribute = pac.id_product_attribute
-              WHERE pa.id_product = ' . (int) $id_product . ' AND ag.id_attribute_group = ' . (int) $id_group
+              WHERE pa.id_product = ' . (int)$id_product . ' AND ag.id_attribute_group = ' . (int)$id_group
         );
     }
 
@@ -363,10 +368,10 @@ class DynamicTools
     {
         $dynamic_product = self::getModule();
         $cache = $dynamic_product->provider->getDataFile('cache/' . md5($url) . '.cache');
-        $should_use_cache = (bool) $minutes;
+        $should_use_cache = (bool)$minutes;
         if ($should_use_cache) {
             if (file_exists($cache)) {
-                $is_cache_valid = filemtime($cache) > time() - 60 * (float) $minutes;
+                $is_cache_valid = filemtime($cache) > time() - 60 * (float)$minutes;
                 if ($is_cache_valid) {
                     return \Tools::file_get_contents($cache);
                 }
@@ -409,9 +414,9 @@ class DynamicTools
 
         foreach ($attributes_old as $index => $attribute) {
             if (isset($attributes_new[$index])) {
-                $mapping[(int) $attribute['id_product_attribute']] = (int) $attributes_new[$index]['id_product_attribute'];
+                $mapping[(int)$attribute['id_product_attribute']] = (int)$attributes_new[$index]['id_product_attribute'];
             } else {
-                $mapping[(int) $attribute['id_product_attribute']] = 0;
+                $mapping[(int)$attribute['id_product_attribute']] = 0;
             }
         }
 
@@ -428,5 +433,10 @@ class DynamicTools
         }
 
         return "{$e->getMessage()} ({$e->getFile()}:{$e->getLine()})";
+    }
+
+    public static function addScriptBase(string $script)
+    {
+        return 'http://localhost:2001/__vite_base__/' . $script;
     }
 }

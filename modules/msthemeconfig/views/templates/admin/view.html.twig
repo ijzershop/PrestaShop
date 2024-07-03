@@ -37,6 +37,13 @@
     .customer_search_input{
       min-width: 600px;
     }
+    .ui-menu.customer_search_input li{
+      cursor: pointer;
+    }
+    .ui-menu.customer_search_input{
+      background-color: #fff;
+      list-style: none;
+    }
   </style>
 
   <div id="order-view-page"
@@ -144,7 +151,7 @@
         "source": function( request, response ) {
           $.ajax( {
             method:'post',
-            url: '/index.php?fc=module&module=modernesmidthemeconfigurator&controller=ajax',
+            url: '/index.php?fc=module&module=msthemeconfig&controller=ajax',
             data: {
               action: 'search_customer',
               ajax: true,

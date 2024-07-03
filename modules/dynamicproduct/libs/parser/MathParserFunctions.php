@@ -36,7 +36,7 @@ use DynamicProduct\libs\parser\MathParserParserException;
 
 function mpAdd($p1, $p2)
 {
-    return (float) $p1 + (float) $p2;
+    return (float)$p1 + (float)$p2;
 }
 
 function mpAddStr($p1, $p2)
@@ -52,27 +52,27 @@ function mpAddStr($p1, $p2)
 
 function mpSubtract($p1, $p2)
 {
-    return (float) $p1 - (float) $p2;
+    return (float)$p1 - (float)$p2;
 }
 
 function mpMult($p1, $p2)
 {
-    return (float) $p1 * (float) $p2;
+    return (float)$p1 * (float)$p2;
 }
 
 function mpDiv($p1, $p2)
 {
-    return (float) $p1 / (float) $p2;
+    return (float)$p1 / (float)$p2;
 }
 
 function mpPower($p1, $p2)
 {
-    return pow((float) $p1, (float) $p2);
+    return pow((float)$p1, (float)$p2);
 }
 
 function mpMod($p1, $p2)
 {
-    return (float) $p1 % (float) $p2;
+    return (float)$p1 % (float)$p2;
 }
 
 function mpNotequals($p1, $p2)
@@ -193,24 +193,24 @@ function ifFunc($cond, $true_case, $false_case)
 function mpNum($val)
 {
     if (is_numeric($val)) {
-        return (float) $val;
+        return (float)$val;
     }
     throw new MathParserParserException(MathParser::getMessage2('InvNum', $val), 'NUM', 'NUM');
 }
 
 function checkFunc($val)
 {
-    return (int) (Tools::strlen($val) > 0);
+    return (int)(Tools::strlen($val) > 0);
 }
 
 function mpContains($val, $partial)
 {
-    return (int) (strpos($val, $partial) !== false);
+    return (int)(strpos($val, $partial) !== false);
 }
 
 function strLength($val)
 {
-    return (int) Tools::strlen($val);
+    return (int)Tools::strlen($val);
 }
 
 function mpSubstr($str, $start, $length = false)
@@ -264,7 +264,7 @@ function mpTrunc($val)
 
 function mpFloat($val)
 {
-    return (float) $val;
+    return (float)$val;
 }
 
 function mpLogn($base, $val)
@@ -281,17 +281,17 @@ function mpRand()
 
 function mpRound($val, $precision = 0)
 {
-    return Tools::ps_round($val, (int) $precision);
+    return Tools::ps_round($val, (int)$precision);
 }
 
 function mpRoundUp($val, $precision = 0)
 {
-    return Tools::ps_round($val, (int) $precision, PS_ROUND_UP);
+    return Tools::ps_round($val, (int)$precision, PS_ROUND_UP);
 }
 
 function mpRoundDown($val, $precision = 0)
 {
-    return Tools::ps_round($val, (int) $precision, PS_ROUND_DOWN);
+    return Tools::ps_round($val, (int)$precision, PS_ROUND_DOWN);
 }
 
 function mpConcat()
@@ -311,42 +311,83 @@ function mpPrice($val)
 }
 
 /**
- * @param $field_name
+ * @param $id_field
  * @param DynamicInputField[] $input_fields
  *
  * @return mixed|string
  */
-function mpLabel($field_name, $input_fields = null)
+function mpLabel($id_field, $input_fields = null)
 {
-    if (empty($input_fields) || !isset($input_fields[$field_name])) {
-        return '';
+    if (empty($input_fields)) {
+        return 0;
     }
 
-    $selected_options = $input_fields[$field_name]->selected_options;
+    $input_fields_array = array_values($input_fields);
+    $index = array_search((int)$id_field, array_column($input_fields_array, 'id_field'));
+
+    if ($index === false || !isset($input_fields_array[$index])) {
+        return 0;
+    }
+
+    $input_field = $input_fields_array[$index];
+
+    $selected_options = $input_field->selected_options;
     if (empty($selected_options)) {
         return '';
     }
 
-    $selected_option = (int) $selected_options[0];
+    $selected_option = (int)$selected_options[0];
 
     if (!$selected_option) {
         return '';
     }
 
-    return DynamicField::getLabelForDefaultLang($selected_option, $input_fields[$field_name]->getDynamicField()['type']);
+    return DynamicField::getLabelForDefaultLang($selected_option, $input_field->getDynamicField()['type']);
 }
 
 /**
- * @param $field_name
+ * @param $id_field
  * @param DynamicInputField[] $input_fields
  *
  * @return string
  */
-function mpRef($field_name, $input_fields = null)
+function mpRef($id_field, $input_fields = null)
 {
-    if (empty($input_fields) || !isset($input_fields[$field_name])) {
+    if (empty($input_fields)) {
         return '';
     }
 
-    return $input_fields[$field_name]->setSKU();
+    $input_fields_array = array_values($input_fields);
+    $index = array_search((int)$id_field, array_column($input_fields_array, 'id_field'));
+
+    if ($index === false || !isset($input_fields_array[$index])) {
+        return '';
+    }
+
+    $input_field = $input_fields_array[$index];
+
+    return $input_field->setSKU();
+}
+
+/**
+ * @param $id_field
+ * @param $input_fields
+ * @return int
+ */
+function mpNumSelected($id_field, $input_fields = null)
+{
+    if (empty($input_fields)) {
+        return 0;
+    }
+
+    $input_fields_array = array_values($input_fields);
+    $index = array_search((int)$id_field, array_column($input_fields_array, 'id_field'));
+
+    if ($index === false || !isset($input_fields_array[$index])) {
+        return 0;
+    }
+
+    $input_field = $input_fields_array[$index];
+
+    return count($input_field->selected_options);
 }

@@ -2,7 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [3.13.1](https://github.com/unlocomqx/tunisoft/compare/v3.13.0...v3.13.1) (2024-03-28)
+### [3.17.6](https://github.com/unlocomqx/tunisoft/compare/v3.17.5...v3.17.6) (2024-06-17)
+
+## [3.17.0](https://github.com/unlocomqx/tunisoft/compare/v1.196.34...v3.17.0) (2024-06-16)
+
+### Features
+
+* Add matched conditions classes to cart
+  summary ([8e4162d](https://github.com/unlocomqx/tunisoft/commit/8e4162da29c38552a506daf71160aab597f24873))
+
+### [3.16.1](https://github.com/unlocomqx/tunisoft/compare/v1.196.19...v3.16.1) (2024-06-10)
+
+## [3.16.0](https://github.com/unlocomqx/tunisoft/compare/v3.15.14...v3.16.0) (2024-06-07)
+
+### Features
+
+* Select step dynamically from the
+  formulas ([bcecdf0](https://github.com/unlocomqx/tunisoft/commit/bcecdf0b24d1a291fec53a798fd330c76fa578e7))
+
+## [3.15.0](https://github.com/unlocomqx/tunisoft/compare/v3.14.2...v3.15.0) (2024-05-07)
+
+### Features
+
+* Add num_selected function to return the number of selected items in an image
+  list ([96cf893](https://github.com/unlocomqx/tunisoft/commit/96cf893648496b5d0a945fa097ead1fd08e8cc30))
+
+## [3.14.0](https://github.com/unlocomqx/tunisoft/compare/v3.13.38...v3.14.0) (2024-05-03)
+
+### Features
+
+* Add option to disable replacing field values in html (for demo
+  purposes) ([467ff84](https://github.com/unlocomqx/tunisoft/commit/467ff84bfc400ef992328b934d89e8c1b09b00e5))
+
+### [3.13.38](https://github.com/unlocomqx/tunisoft/compare/v1.196.6...v3.13.38) (2024-05-03)
 
 ## [3.12.0](https://github.com/unlocomqx/tunisoft/compare/v1.194.8...v3.12.0) (2024-03-06)
 

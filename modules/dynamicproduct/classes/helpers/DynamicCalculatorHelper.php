@@ -297,7 +297,7 @@ class DynamicCalculatorHelper
     public function getPriceEquationResult($id_product, $id_attribute, $input_fields)
     {
         $price_equation = DynamicEquation::getPriceEquation($id_product);
-
+//dd($price_equation, $id_product);
         // 6 decimals is the database float precision in this case
         return \Tools::ps_round(DynamicEquation::calculatePriceFormula(
             $id_product,

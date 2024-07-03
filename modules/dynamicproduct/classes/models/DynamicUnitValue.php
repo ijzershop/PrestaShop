@@ -57,6 +57,7 @@ class DynamicUnitValue extends DynamicObject
     public $display_in_popup;
     public $hide_when_empty;
     public $show_in_summary;
+    public $is_dynamic_value = 1;
     public $price_unit;
     public $ps_style;
     public $show_dropzone;
@@ -96,6 +97,7 @@ class DynamicUnitValue extends DynamicObject
             'display_in_popup' => ['type' => self::TYPE_INT],
             'hide_when_empty' => ['type' => self::TYPE_INT],
             'show_in_summary' => ['type' => self::TYPE_INT],
+            'is_dynamic_value' => ['type' => self::TYPE_INT],
             /* Lang fields */
             'price_unit' => [
                 'type' => self::TYPE_STRING,
@@ -124,10 +126,10 @@ class DynamicUnitValue extends DynamicObject
         $sql = new \DbQuery();
         $sql->select('id_unit_value');
         $sql->from(self::$definition['table']);
-        $sql->where('id_field = ' . (int) $id_field);
+        $sql->where('id_field = ' . (int)$id_field);
         $id_unit_value = \Db::getInstance()->getValue($sql);
         $dynamic_unit_value = new self($id_unit_value, $id_lang);
-        $dynamic_unit_value->id_field = (int) $id_field;
+        $dynamic_unit_value->id_field = (int)$id_field;
 
         return self::$unit_values[$key] = $dynamic_unit_value;
     }

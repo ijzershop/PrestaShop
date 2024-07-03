@@ -54,16 +54,16 @@ class DynamicProductFieldsController extends ModuleAdminController
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
-        $this->id_product = (int) Tools::getValue('id_product');
-        $this->id_field = (int) Tools::getValue('id_field');
-        $this->id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+        $this->id_product = (int)Tools::getValue('id_product');
+        $this->id_field = (int)Tools::getValue('id_field');
+        $this->id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
     }
 
     public function postProcess()
     {
         $source = basename(__FILE__, '.php');
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
-        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
+        if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(json_encode([
                 'error' => true,
                 'message' => $this->module->l('This product is for viewing only!', $source),
@@ -80,8 +80,8 @@ class DynamicProductFieldsController extends ModuleAdminController
 
     private function processAddField()
     {
-        $type = (int) Tools::getValue('type', 1);
-        $id_field_after = (int) Tools::getValue('after', 0);
+        $type = (int)Tools::getValue('type', 1);
+        $id_field_after = (int)Tools::getValue('after', 0);
 
         $dynamic_field = new DynamicField();
         $dynamic_field->id_product = $this->id_product;
@@ -95,12 +95,12 @@ class DynamicProductFieldsController extends ModuleAdminController
                 Db::getInstance()->update(
                     DynamicField::$definition['table'],
                     ['position' => ['type' => 'sql', 'value' => '`position` + 1']],
-                    'id_product = ' . (int) $this->id_product . ' AND position > ' . (int) $position
+                    'id_product = ' . (int)$this->id_product . ' AND position > ' . (int)$position
                 );
                 Db::getInstance()->update(
                     DynamicCommonField::$definition['table'],
                     ['position' => ['type' => 'sql', 'value' => '`position` + 1']],
-                    'id_product = ' . (int) $this->id_product . ' AND position > ' . (int) $position
+                    'id_product = ' . (int)$this->id_product . ' AND position > ' . (int)$position
                 );
             }
         }
@@ -120,10 +120,10 @@ class DynamicProductFieldsController extends ModuleAdminController
 
     private function processSaveField()
     {
-        $id_field = (int) Tools::getValue('id');
+        $id_field = (int)Tools::getValue('id');
         $dynamic_field = new DynamicField($id_field);
         $original_name = $dynamic_field->name;
-        $id_product_original = (int) $dynamic_field->id_product;
+        $id_product_original = (int)$dynamic_field->id_product;
         $dynamic_field->saveFromPost();
         if ($id_product_original !== $this->id_product) {
             $dynamic_field->id_product = $id_product_original;
@@ -166,7 +166,7 @@ class DynamicProductFieldsController extends ModuleAdminController
         $fields_helper = new DynamicFieldsHelper($this->module, $this->context);
 
         foreach ($fields as $id_field) {
-            $fields_helper->deleteField($this->id_product, (int) $id_field);
+            $fields_helper->deleteField($this->id_product, (int)$id_field);
         }
 
         $this->respond();
@@ -231,12 +231,12 @@ class DynamicProductFieldsController extends ModuleAdminController
         if (is_array($order)) {
             foreach ($order as $position => $id_field) {
                 $field = new DynamicField($id_field);
-                if ((int) $field->id_product !== $this->id_product) {
+                if ((int)$field->id_product !== $this->id_product) {
                     $common_field = DynamicCommonField::getByFieldAndProduct($id_field, $this->id_product);
                     $common_field->position = $position;
                     $common_field->save();
                 } else {
-                    $field->position = (int) $position;
+                    $field->position = (int)$position;
                     $field->save();
                 }
             }
@@ -246,7 +246,7 @@ class DynamicProductFieldsController extends ModuleAdminController
 
     private function processLoadFavoriteField()
     {
-        $id_field = (int) Tools::getValue('id_field');
+        $id_field = (int)Tools::getValue('id_field');
         $field = new DynamicField($id_field);
         $new_field = $this->module->handler->copyField($field->id, $this->id_product);
         $id_new_field = $new_field['id_field'];
@@ -264,7 +264,7 @@ class DynamicProductFieldsController extends ModuleAdminController
     private function processLoadCommonField()
     {
         $source = basename(__FILE__, '.php');
-        $id_field = (int) Tools::getValue('id_field');
+        $id_field = (int)Tools::getValue('id_field');
         $dynamic_field = new DynamicField($id_field);
 
         $common_field = DynamicCommonField::getByFieldAndProduct($id_field, $this->id_product);
@@ -297,33 +297,38 @@ class DynamicProductFieldsController extends ModuleAdminController
     private function processDownloadFiles()
     {
         $prefix = Tools::getValue('prefix');
-        $id_input_field = (int) Tools::getValue('id_input_field');
+        $id_input_field = (int)Tools::getValue('id_input_field');
         $input_field = new UploadInputField($id_input_field);
         $uploads = $input_field->data_obj;
         $files = [];
         foreach ($uploads as $upload) {
-            $files[] = [
-                'path' => $input_field->getFilePath($upload['file']),
-                'filename' => $upload['filename'],
-            ];
+            $path = $input_field->getFilePath($upload['file']);
+            $keep_path = $input_field->getKeepFilePath($upload['file']);
+            if ($keep_path || $path) {
+                $files[] = [
+                    'path' => $keep_path ?: $path,
+                    'filename' => $upload['filename'],
+                ];
+            }
         }
-        $files = array_filter($files, function ($file) {
-            return is_file($file['path']);
-        });
+
         // zip files and download them
         $zip = new ZipArchive();
-        $zip_name = (int) $prefix . '-uploads_' . $input_field->name . '_' . $id_input_field . '.zip';
-        if (is_file($zip_name)) {
-            unlink($zip_name);
-        }
+        $zip_name = '/tmp/' . (int)$prefix . '-uploads_' . $input_field->name . '_' . $id_input_field . '.zip';
         if ($zip->open($zip_name, ZipArchive::CREATE) === true) {
             foreach ($files as $file) {
+                if (!is_file($file['path'])) {
+                    continue;
+                }
                 $zip->addFile($file['path'], $file['filename']);
             }
             $zip->close();
+        } else {
+            exit('Failed to create zip file');
         }
+
         header('Content-Type: application/zip');
-        header('Content-disposition: attachment; filename=' . $zip_name);
+        header('Content-disposition: attachment; filename=' . basename($zip_name));
         header('Content-Length: ' . filesize($zip_name));
         readfile($zip_name);
         unlink($zip_name);
@@ -333,8 +338,9 @@ class DynamicProductFieldsController extends ModuleAdminController
     public function respond(
         $data = [],
         $success = 1
-    ) {
-        $success = $success && (int) !array_key_exists('error', $data);
+    )
+    {
+        $success = $success && (int)!array_key_exists('error', $data);
         $arr = [
             'success' => $success,
         ];

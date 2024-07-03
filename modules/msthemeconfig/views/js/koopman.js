@@ -429,7 +429,7 @@ $(function () {
   });
 
 
-  $.fancyConfirmKoopmanLabel = function(reference, button, row) {
+  $.fancyConfirmKoopmanLabel = function(reference, button, row, trackingNumbers="") {
     $.fancybox.open({
       type: 'ajax',
       width: 800,
@@ -476,11 +476,13 @@ $(function () {
     let $clickedLabel = $(this);
     $clickedLabel.toggleClass('temp_disabled', "");
     let $tr = $clickedLabel.closest('TR');
+    let trackingEl = $clickedLabel.parents('td').find('.tracking_number');
     //Allready has tracking number
-    if($clickedLabel.parents('td').find('.tracking_number').text().trim().length > 0){
-      let reference = $clickedLabel.parents('td').find('.tracking_number').attr('data-reference');
+    let trackingNumbers = trackingEl.text().trim();
+    if(trackingEl.text().trim().length > 0){
+      let reference = trackingEl.attr('data-reference');
       // Open customized confirmation dialog window
-      $.fancyConfirmKoopmanLabel(reference, $clickedLabel, $tr);
+      $.fancyConfirmKoopmanLabel(reference, $clickedLabel, $tr, trackingNumbers);
     } else {
       fetchNewLabel($clickedLabel, $tr);
     }
@@ -494,6 +496,7 @@ $(function () {
     let chosenCollies = button.attr('data-collies');
 
     let collieType = button.attr('data-collie-type');
+
     $.ajax({
       url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=print-label&id_order=' + orderId +
         '&weight=' + orderWeight +
@@ -511,4 +514,42 @@ $(function () {
       }
     });
   }
+
+  $(document).on('click', '#toevoegingForm button', function (e) {
+    let weight = 0;
+    let idProfile = $('#toevoegingForm [name="profile"]').val();
+    let idOrder = $('#toevoegingForm [name="id_order"]').val();
+    let defaultWeight = $('#toevoegingForm [name="weight"]').val();
+    let weightOption = $('#toevoegingForm [name="weight_option"]').val();
+    let collies = $('#toevoegingForm [name="collies"]').val();
+    let collieType = $('#toevoegingForm [name="collie_type"]').val();
+    let connectedOrders =[];
+
+    if($(e).attr('data-all') !== "0"){
+      //current and all selected orders
+      $('#toevoegingForm .linked_order:checked').each(function (key,  val) {
+        weight = parseFloat(weight) + parseFloat($(val).attr('data-weight'));
+        connectedOrders.push($(val).val());
+      });
+      defaultWeight = parseFloat(defaultWeight)+parseFloat(weight);
+    }
+
+    $.ajax({
+      url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+idProfile+'&method=print-label&id_order=' + idOrder +
+        '&connected_orders=' + connectedOrders +
+        '&weight=' + defaultWeight +
+        '&weight_option=' + weightOption +
+        '&collies=' + collies +
+        '&collie_type=' + collieType +
+        '&token=' + token,
+      type: 'GET'
+    }).done(function (data) {
+      if(data === 'printed'){
+        location.reload();
+      } else {
+        $('#updateAddressModal .modal-body').html(data);
+        $('#updateAddressModal').modal('show');
+      }
+    });
+  });
 });

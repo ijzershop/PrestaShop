@@ -252,7 +252,7 @@ class MathParser
             throw new \Exception('Variable name cannot be null.');
         }
         if (is_numeric($new_val)) {
-            $new_val = (float) $new_val;
+            $new_val = (float)$new_val;
         } else {
             if (!is_string($new_val)) {
                 throw new \Exception('Variable should be floating point or string value: ' . $new_val);
@@ -331,7 +331,7 @@ class MathParser
         $this->setVariable($varname, $var_value, $value_provider);
     }
 
-    public function createFunc($new_func_name, $func_addr, $param_count)
+    public function createFunc($new_func_name, $func_addr, $param_count, $add_fields = false)
     {
         if ($new_func_name == null) {
             throw new \Exception('Function name cannot be null.');
@@ -348,9 +348,9 @@ class MathParser
         if ($this->isFunction($upcname)) {
             throw new \Exception($this->getMessage1('FncExst', $new_func_name));
         } elseif ($param_count < -1) {
-            throw new \Exception($this->getMessage2('WrngNPrms', $new_func_name, (string) $param_count));
+            throw new \Exception($this->getMessage2('WrngNPrms', $new_func_name, (string)$param_count));
         } else {
-            $func = new MathParserParserFunction($upcname, $func_addr, $param_count);
+            $func = new MathParserParserFunction($upcname, $func_addr, $param_count, $add_fields);
             $this->functions[$upcname] = $func;
         }
         $this->dirty = true;
@@ -411,8 +411,9 @@ class MathParser
         $this->createFunc('CONTAINS', 'mpContains', 2);
 
         $this->createFunc('PRICE', 'mpPrice', 1);
-        $this->createFunc('LABEL', 'mpLabel', 1);
-        $this->createFunc('REF', 'mpRef', 1);
+        $this->createFunc('LABEL', 'mpLabel', 1, true);
+        $this->createFunc('REF', 'mpRef', 1, true);
+        $this->createFunc('NUM_SELECTED', 'mpNumSelected', 1, true);
     }
 
     public function createDefaultVars()
@@ -568,12 +569,12 @@ class MathParser
     {
         $obj = $this->evaluate();
 
-        return (float) $obj;
+        return (float)$obj;
     }
 
     public function getValueAsString()
     {
-        return (string) $this->evaluate();
+        return (string)$this->evaluate();
     }
 
     private function isValidChar($index, $c)
@@ -659,7 +660,7 @@ class MathParser
     protected static function isValidDouble($formula, &$dbl_val)
     {
         if (is_numeric($formula)) {
-            $dbl_val = (float) $formula;
+            $dbl_val = (float)$formula;
 
             return true;
         }

@@ -65,7 +65,9 @@ class MMathparserNParamNode extends MathParserNode
                 $p[] = $value;
             }
 
-            $p[] = $this->input_fields;
+            if ($this->fptr->add_fields) {
+                $p[] = $this->input_fields;
+            }
             return call_user_func_array($this->fptr->event_handler, $p);
         }
     }
@@ -78,7 +80,7 @@ class MMathparserNParamNode extends MathParserNode
         }
 
         if (is_numeric($value)) {
-            return (float) $value;
+            return (float)$value;
         }
 
         throw new \Exception('Value is not numeric: ' . $value);
@@ -86,7 +88,7 @@ class MMathparserNParamNode extends MathParserNode
 
     public function getValueAsString()
     {
-        return (string) $this->getValue();
+        return (string)$this->getValue();
     }
 
     public function isFunctionUsed($name)

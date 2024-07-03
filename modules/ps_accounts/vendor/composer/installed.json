@@ -827,17 +827,17 @@
         },
         {
             "name": "prestashopcorp/oauth2-prestashop",
-            "version": "dev-refactor/php-compat-range",
-            "version_normalized": "dev-refactor/php-compat-range",
+            "version": "v2.0.0",
+            "version_normalized": "2.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShopCorp/oauth2-prestashop.git",
-                "reference": "eff1c2891a0815bd0df9c63c9f4fdd45a085146b"
+                "reference": "694ea5b33527f3d5d2ef91d3f7e040a5dd2ec048"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShopCorp/oauth2-prestashop/zipball/eff1c2891a0815bd0df9c63c9f4fdd45a085146b",
-                "reference": "eff1c2891a0815bd0df9c63c9f4fdd45a085146b",
+                "url": "https://api.github.com/repos/PrestaShopCorp/oauth2-prestashop/zipball/694ea5b33527f3d5d2ef91d3f7e040a5dd2ec048",
+                "reference": "694ea5b33527f3d5d2ef91d3f7e040a5dd2ec048",
                 "shasum": ""
             },
             "require": {
@@ -849,7 +849,7 @@
                 "phpunit/phpunit": "^8.0 || ^9.0",
                 "prestashop/php-dev-tools": "^4.2"
             },
-            "time": "2024-03-05T08:20:27+00:00",
+            "time": "2024-05-22T12:33:38+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -880,7 +880,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PrestaShopCorp/oauth2-prestashop/issues",
-                "source": "https://github.com/PrestaShopCorp/oauth2-prestashop/tree/refactor/php-compat-range"
+                "source": "https://github.com/PrestaShopCorp/oauth2-prestashop/tree/v2.0.0"
             },
             "install-path": "../prestashopcorp/oauth2-prestashop"
         },

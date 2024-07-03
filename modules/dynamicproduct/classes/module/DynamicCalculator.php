@@ -204,7 +204,6 @@ class DynamicCalculator
         $id_product = (int) $product['id_product'];
 
         $dynamic_config = DynamicConfig::getByProduct($id_product);
-
         $id_attribute = isset($product['id_product_attribute']) ?
             (int) $product['id_product_attribute'] :
             (int) \Product::getDefaultAttribute($id_product);
@@ -231,6 +230,7 @@ class DynamicCalculator
         );
 
         $dynamic_calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
+
         if ($dynamic_config->display_dynamic_price) {
             try {
                 $cache_helper = new CachedCalculationHelper($this->module, $this->context);
@@ -242,6 +242,7 @@ class DynamicCalculator
                         $id_product,
                         $id_attribute
                     );
+
                     $cache_helper->cache($id_product, $id_attribute, $display_price);
                 }
             } catch (\Exception $e) {
@@ -255,6 +256,7 @@ class DynamicCalculator
                 );
             }
         }
+
 
         $specific_price = $this->module->calculator->getReduction([
             'id_product' => $id_product,

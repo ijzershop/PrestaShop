@@ -30,7 +30,8 @@ if (!defined('_PS_VERSION_')) {
 }
 
 use DynamicProduct\classes\models\DynamicInput;
-use DynamicProduct\classes\models\input_fields\UploadInputField;
+use DynamicProduct\classes\models\input_fields\FileInputField;
+use DynamicProduct\classes\models\input_fields\ImageInputField;
 
 class DynamicUploadHelper
 {
@@ -47,23 +48,34 @@ class DynamicUploadHelper
 
     public function copyOrderFilesToKeep($id_cart)
     {
+        $summary_helper = new SummaryHelper($this->module, $this->context);
+        $this->module->logger->logInfo('copyOrderFilesToKeep');
         $dest = $this->module->provider->getDataDir('upload_keep');
+        $this->module->logger->logInfo('copyOrderFilesToKeep: dest ->' . $dest);
         $types = [_DP_IMAGE_, _DP_FILE_];
         $dynamic_inputs = DynamicInput::getInputsByIdCart($id_cart);
         foreach ($dynamic_inputs as $dynamic_input) {
             $input_fields = $dynamic_input->getInputFields($this->context->language->id);
             foreach ($input_fields as $input_field) {
-                if (in_array((int) $input_field->type, $types, true)) {
-                    if ($input_field instanceof UploadInputField) {
-                        if (is_array($input_field->data)) {
-                            foreach ($input_field->data as $upload) {
+                if (in_array((int)$input_field->type, $types, true)) {
+                    if ($input_field instanceof FileInputField || $input_field instanceof ImageInputField) {
+                        if (is_array($input_field->data_obj)) {
+                            foreach ($input_field->data_obj as $upload) {
                                 $file_path = $input_field->getFilePath($upload['file']);
+                                $this->module->logger->logInfo('copyOrderFilesToKeep: ' . $file_path);
                                 $thumb_path = $input_field->getThumbFilePath($upload['file']);
+                                $copied = true;
                                 if (is_file($file_path)) {
-                                    copy($file_path, $dest . basename($file_path));
+                                    $copied &= copy($file_path, $dest . basename($file_path));
+                                    $summary_helper->clearCache($dynamic_input);
                                 }
                                 if (is_file($thumb_path)) {
-                                    copy($thumb_path, $dest . basename($thumb_path));
+                                    $copied &= copy($thumb_path, $dest . basename($thumb_path));
+                                    $summary_helper->clearCache($dynamic_input);
+                                }
+                                if ($copied) {
+                                    unlink($file_path);
+                                    unlink($thumb_path);
                                 }
                             }
                         }

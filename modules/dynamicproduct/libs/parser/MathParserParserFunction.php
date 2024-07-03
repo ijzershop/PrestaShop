@@ -34,11 +34,13 @@ class MathParserParserFunction
     public $event_handler;
     public $name;
     public $param_count;
+    public $add_fields;
 
-    public function __construct($name, $event_handler, $param_count)
+    public function __construct($name, $event_handler, $param_count, $add_fields = false)
     {
         $this->event_handler = $event_handler;
         $this->name = $name;
         $this->param_count = $param_count;
+        $this->add_fields = $add_fields;
     }
 }

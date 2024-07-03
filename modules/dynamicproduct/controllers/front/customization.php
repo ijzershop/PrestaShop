@@ -43,12 +43,12 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
     {
         $id_product = $this->id_product;
         $id_attribute = $this->id_attribute;
-        $quantity = (int) Tools::getValue('quantity');
-        $add_to_cart = (int) Tools::getValue('add_to_cart');
+        $quantity = (int)Tools::getValue('quantity');
+        $add_to_cart = (int)Tools::getValue('add_to_cart');
         $id_customizations = Tools::getValue('id_customizations');
-        $dp_input = (int) Tools::getValue('dp_id_input');
+        $dp_input = (int)Tools::getValue('dp_id_input');
         $fields = Tools::getValue('fields');
-        $dp_cart = (int) Tools::getValue('dp_cart', 0);
+        $dp_cart = (int)Tools::getValue('dp_cart', 0);
 
         $customization_helper = new DynamicCustomizationHelper($this->module, $this->context);
 
@@ -79,7 +79,7 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
             ]);
         }
 
-        $id_input = (int) Tools::getValue('dp_id_input');
+        $id_input = (int)Tools::getValue('dp_id_input');
         $dynamic_input = new DynamicInput($id_input);
 
         $fields = Tools::getValue('fields');
@@ -209,8 +209,8 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
         $order->save();
 
         // get order invoice
-        $id_invoice = (int) Db::getInstance()->getValue(
-            'SELECT id_order_invoice FROM ' . _DB_PREFIX_ . 'order_invoice WHERE id_order = ' . (int) $order->id
+        $id_invoice = (int)Db::getInstance()->getValue(
+            'SELECT id_order_invoice FROM ' . _DB_PREFIX_ . 'order_invoice WHERE id_order = ' . (int)$order->id
         );
 
         if ($id_invoice) {
@@ -230,7 +230,7 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
     public function processSaveDynamicProduct()
     {
         $name = Tools::getValue('name');
-        $id_product_attribute = (int) Tools::getValue('id_attribute');
+        $id_product_attribute = (int)Tools::getValue('id_attribute');
         $fields = Tools::getValue('fields');
         list($input_fields) = DynamicInputField::getInputFieldsFromData(
             $this->id_product,
@@ -256,6 +256,8 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
             $input_fields
         );
 
+        $true_conditions = DynamicEquation::getTrueConditions();
+
         $dynamic_input = $customization_helper->saveDynamicInput(
             $this->id_product,
             $id_product_attribute,
@@ -265,8 +267,9 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
             $price_equation_result,
             $weight_equation_result,
             $input_fields,
+            $true_conditions,
             $name,
-            (int) Tools::getValue('bookmark'),
+            (int)Tools::getValue('bookmark'),
             $this->module->provider->isAdmin()
         );
 

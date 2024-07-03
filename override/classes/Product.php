@@ -97,7 +97,6 @@ class Product extends ProductCore {
         }
 
         if (isset($row['quantity_wanted'])) {
-            // 'quantity_wanted' may very well be zero even if set
             $quantity = max((int) $row['minimal_quantity'], (int) $row['quantity_wanted']);
         } elseif (isset($row['cart_quantity'])) {
             $quantity = max((int) $row['minimal_quantity'], (int) $row['cart_quantity']);
@@ -162,7 +161,6 @@ class Product extends ProductCore {
         $result['price_after_cartrule_reduction_with_tax'] = ($spec_price - $specific_price_reduction) * 1.21;
 
 
-        /** @var DynamicProduct $module */
         $module = Module::getInstanceByName('dynamicproduct');
         if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
             $id_product = (int) $result['id_product'];
@@ -170,7 +168,6 @@ class Product extends ProductCore {
             $controller = Tools::getValue('controller');
             if ($controller == 'product') {
                 $current_product = (int) Tools::getValue('id_product');
-                // if it's the current product, we don't modify its property
                 if ($current_product == $id_product) {
                     return $result;
                 }
@@ -302,7 +299,6 @@ class Product extends ProductCore {
         }
 
         $customized_datas = [];
-
         foreach ($result as $row) {
             if ((int) $row['id_module'] && (int) $row['type'] == Product::CUSTOMIZE_TEXTFIELD) {
                 $row['value'] = Hook::exec('displayCustomization', ['customization' => $row], (int) $row['id_module']);

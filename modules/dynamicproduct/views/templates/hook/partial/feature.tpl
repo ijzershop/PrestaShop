@@ -22,4 +22,4 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{$input_field->getDynamicValue($input->getInputFields($id_lang))|escape:'htmlall':'UTF-8'}
+{$input_field->getDynamicValue($input->input_fields)|escape:'htmlall':'UTF-8'}

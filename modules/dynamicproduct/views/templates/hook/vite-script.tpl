@@ -22,4 +22,4 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="module" src="https://localhost:2001/front/product-buttons.ts"></script>
+<script type="module" src="{$script|escape:'htmlall':'UTF-8'}"></script>

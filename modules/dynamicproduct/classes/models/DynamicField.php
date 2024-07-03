@@ -167,7 +167,7 @@ class DynamicField extends DynamicObject
         $sql->select('id_field');
         $sql->select('type');
         $sql->from(self::$definition['table']);
-        $sql->where('id_product = ' . (int) $id_source_product);
+        $sql->where('id_product = ' . (int)$id_source_product);
         $sql->where('name = "' . pSQL($field_name) . '"');
         $sql->where('!deleted');
         $field = \Db::getInstance()->getRow($sql);
@@ -191,22 +191,22 @@ class DynamicField extends DynamicObject
         $dynamic_fields = [];
         $sql = 'SELECT `id_field`, `id_group`, `type`, `id_step`, `position`, false as linked 
         FROM `' . _DB_PREFIX_ . 'dynamicproduct_field`
-        WHERE id_product = ' . (int) $id_source_product . ' AND !deleted 
+        WHERE id_product = ' . (int)$id_source_product . ' AND !deleted 
         UNION
         (SELECT cf.`id_field`, cf.`id_group`, f.`type`, cf.`id_step`, cf.`position`, true as linked 
         FROM `' . _DB_PREFIX_ . 'dynamicproduct_common_field` cf
         JOIN `' . _DB_PREFIX_ . 'dynamicproduct_field` f
         ON f.`id_field` = cf.`id_field`
-        WHERE cf.`id_product` = ' . (int) $id_source_product . ')
+        WHERE cf.`id_product` = ' . (int)$id_source_product . ')
         ORDER BY `position`';
         $rows = \Db::getInstance()->executeS($sql, false);
         while ($row = \Db::getInstance()->nextRow($rows)) {
-            $id_field = (int) $row['id_field'];
-            $dynamic_field = DynamicFieldFactory::create((int) $row['type'], $id_field, $id_lang);
+            $id_field = (int)$row['id_field'];
+            $dynamic_field = DynamicFieldFactory::create((int)$row['type'], $id_field, $id_lang);
             $dynamic_field->linked = $row['linked'];
-            $dynamic_field->id_step = (int) $row['id_step'];
-            $dynamic_field->position = (int) $row['position'];
-            $dynamic_field->id_group = (int) $row['id_group'];
+            $dynamic_field->id_step = (int)$row['id_step'];
+            $dynamic_field->position = (int)$row['position'];
+            $dynamic_field->id_group = (int)$row['id_group'];
             $dynamic_fields[$id_field] = $dynamic_field;
         }
 
@@ -243,19 +243,19 @@ class DynamicField extends DynamicObject
             _DP_PREVIEW_ => [],
         ];
 
-        $id_lang_fallback = $id_lang ?: (int) \Configuration::get('PS_LANG_DEFAULT');
+        $id_lang_fallback = $id_lang ?: (int)\Configuration::get('PS_LANG_DEFAULT');
 
         $sql = 'SELECT f.id_field as id, f.id_product, f.name, f.type, f.active, f.common, f.favorite, f.image, f.init, f.id_unit, f.id_group, f.id_step, f.position, false as linked, 
         fl.id_lang, fl.label, fl.value, fl.short_description, fl.description, fl.placeholder,
         ul.name as unit_name, u.symbol as unit_symbol, u.displayed as unit_displayed
         
         FROM ' . _DB_PREFIX_ . 'dynamicproduct_field f
-        LEFT JOIN ' . _DB_PREFIX_ . 'dynamicproduct_field_lang fl ON (f.id_field = fl.id_field' . ($id_lang ? ' AND fl.id_lang = ' . (int) $id_lang : '') . ')
+        LEFT JOIN ' . _DB_PREFIX_ . 'dynamicproduct_field_lang fl ON (f.id_field = fl.id_field' . ($id_lang ? ' AND fl.id_lang = ' . (int)$id_lang : '') . ')
         
         LEFT JOIN ' . _DB_PREFIX_ . 'dynamicproduct_unit u ON (f.id_unit = u.id_unit)
-        LEFT JOIN ' . _DB_PREFIX_ . 'dynamicproduct_unit_lang ul ON (u.id_unit = ul.id_unit AND ul.id_lang = ' . (int) $id_lang_fallback . ')
+        LEFT JOIN ' . _DB_PREFIX_ . 'dynamicproduct_unit_lang ul ON (u.id_unit = ul.id_unit AND ul.id_lang = ' . (int)$id_lang_fallback . ')
         
-        WHERE f.id_product = ' . (int) $id_source_product . ' AND !f.deleted
+        WHERE f.id_product = ' . (int)$id_source_product . ' AND !f.deleted
         UNION
         (SELECT cf.id_field as id, cf.id_product, f.name, f.type, f.active, f.common, f.favorite, f.image, f.init, f.id_unit, cf.id_group, cf.id_step, cf.position, true as linked, 
         fl.id_lang, fl.label, fl.value, fl.short_description, fl.description, fl.placeholder,
@@ -263,12 +263,12 @@ class DynamicField extends DynamicObject
         FROM ' . _DB_PREFIX_ . 'dynamicproduct_common_field cf
         
         JOIN ' . _DB_PREFIX_ . 'dynamicproduct_field f ON (cf.id_field = f.id_field)
-        JOIN ' . _DB_PREFIX_ . 'dynamicproduct_field_lang fl ON (f.id_field = fl.id_field' . ($id_lang ? ' AND fl.id_lang = ' . (int) $id_lang : '') . ')
+        JOIN ' . _DB_PREFIX_ . 'dynamicproduct_field_lang fl ON (f.id_field = fl.id_field' . ($id_lang ? ' AND fl.id_lang = ' . (int)$id_lang : '') . ')
         
         LEFT JOIN ' . _DB_PREFIX_ . 'dynamicproduct_unit u ON (f.id_unit = u.id_unit)
-        LEFT JOIN ' . _DB_PREFIX_ . 'dynamicproduct_unit_lang ul ON (u.id_unit = ul.id_unit AND ul.id_lang = ' . (int) $id_lang_fallback . ')
+        LEFT JOIN ' . _DB_PREFIX_ . 'dynamicproduct_unit_lang ul ON (u.id_unit = ul.id_unit AND ul.id_lang = ' . (int)$id_lang_fallback . ')
         
-        WHERE cf.id_product = ' . (int) $id_source_product . ')
+        WHERE cf.id_product = ' . (int)$id_source_product . ')
         ORDER BY position;';
 
         $rows = \Db::getInstance()->executeS($sql);
@@ -278,8 +278,8 @@ class DynamicField extends DynamicObject
         $field_base_url = $module->provider->getDataDirUrl('images/field');
 
         foreach ($rows as $row) {
-            $id_field = (int) $row['id'];
-            $row['linked'] = (int) $row['linked'];
+            $id_field = (int)$row['id'];
+            $row['linked'] = (int)$row['linked'];
 
             if (!empty($row['image'])) {
                 $row['image_url'] = $field_base_url . $row['image'];
@@ -311,7 +311,7 @@ class DynamicField extends DynamicObject
                 FROM ' . _DB_PREFIX_ . 'dynamicproduct_unit_value uv
                 LEFT JOIN ' . _DB_PREFIX_ . 'dynamicproduct_unit_value_lang uvl 
                 ON (
-                    uvl.id_unit_value = uv.id_unit_value' . ($id_lang ? ' AND uvl.id_lang = ' . (int) $id_lang : '') . '
+                    uvl.id_unit_value = uv.id_unit_value' . ($id_lang ? ' AND uvl.id_lang = ' . (int)$id_lang : '') . '
                     )
                 WHERE uv.id_field IN (' . implode(',', array_keys($dynamic_fields)) . ')
         ');
@@ -322,7 +322,7 @@ class DynamicField extends DynamicObject
 
         // assign the settings to each field
         foreach ($settings as $setting) {
-            $id_field = (int) $setting['id_field'];
+            $id_field = (int)$setting['id_field'];
             $dynamic_fields[$id_field]['settings'] = $setting;
         }
 
@@ -339,7 +339,7 @@ class DynamicField extends DynamicObject
                         JOIN ' . _DB_PREFIX_ . 'dynamicproduct_dropdown_option_lang ol 
                         ON ol.id_dropdown_option = o.id_dropdown_option
                         WHERE o.id_field IN (' . implode(',', $ids) . ')
-                        ' . ($id_lang ? ' AND ol.id_lang = ' . (int) $id_lang : '') . '
+                        ' . ($id_lang ? ' AND ol.id_lang = ' . (int)$id_lang : '') . '
                         AND o.deleted = 0
                         ORDER BY o.position ASC');
 
@@ -368,11 +368,11 @@ class DynamicField extends DynamicObject
 
                         $field_settings = $dynamic_fields[$id_field]['settings'];
 
-                        if ((int) $field_settings['display_value_price']) {
+                        if ((int)$field_settings['display_value_price']) {
                             $option = OptionPriceHelper::displayValue($option, $id_source_product, $field_settings);
                         }
 
-                        if ((int) $field_settings['display_secondary_value_price']) {
+                        if ((int)$field_settings['display_secondary_value_price']) {
                             $option = OptionPriceHelper::displaySecondaryValue(
                                 $option,
                                 $id_source_product,
@@ -392,7 +392,7 @@ class DynamicField extends DynamicObject
                         JOIN ' . _DB_PREFIX_ . 'dynamicproduct_radio_option_lang ol 
                         ON ol.id_radio_option = o.id_radio_option
                         WHERE o.id_field IN (' . implode(',', $ids) . ')
-                        ' . ($id_lang ? ' AND ol.id_lang = ' . (int) $id_lang : '') . '
+                        ' . ($id_lang ? ' AND ol.id_lang = ' . (int)$id_lang : '') . '
                         AND o.deleted = 0
                         ORDER BY o.position ASC');
 
@@ -417,11 +417,11 @@ class DynamicField extends DynamicObject
 
                         $field_settings = $dynamic_fields[$id_field]['settings'];
 
-                        if ((int) $field_settings['display_value_price']) {
+                        if ((int)$field_settings['display_value_price']) {
                             $option = OptionPriceHelper::displayValue($option, $id_source_product, $field_settings);
                         }
 
-                        if ((int) $field_settings['display_secondary_value_price']) {
+                        if ((int)$field_settings['display_secondary_value_price']) {
                             $option = OptionPriceHelper::displaySecondaryValue(
                                 $option,
                                 $id_source_product,
@@ -441,7 +441,7 @@ class DynamicField extends DynamicObject
                         JOIN ' . _DB_PREFIX_ . 'dynamicproduct_thumbnails_option_lang ol 
                         ON ol.id_thumbnails_option = o.id_thumbnails_option
                         WHERE o.id_field IN (' . implode(',', $ids) . ')
-                        ' . ($id_lang ? ' AND ol.id_lang = ' . (int) $id_lang : '') . '
+                        ' . ($id_lang ? ' AND ol.id_lang = ' . (int)$id_lang : '') . '
                         AND o.deleted = 0
                         ORDER BY o.position ASC');
 
@@ -470,11 +470,11 @@ class DynamicField extends DynamicObject
 
                         $field_settings = $dynamic_fields[$id_field]['settings'];
 
-                        if ((int) $field_settings['display_value_price']) {
+                        if ((int)$field_settings['display_value_price']) {
                             $option = OptionPriceHelper::displayValue($option, $id_source_product, $field_settings);
                         }
 
-                        if ((int) $field_settings['display_secondary_value_price']) {
+                        if ((int)$field_settings['display_secondary_value_price']) {
                             $option = OptionPriceHelper::displaySecondaryValue(
                                 $option,
                                 $id_source_product,
@@ -529,11 +529,11 @@ class DynamicField extends DynamicObject
             }
         }
 
-        if ((int) $id_field) {
+        if ((int)$id_field) {
             $id_product = \Db::getInstance()->getValue(
-                'SELECT id_product FROM ' . _DB_PREFIX_ . 'dynamicproduct_field WHERE id_field = ' . (int) $id_field
+                'SELECT id_product FROM ' . _DB_PREFIX_ . 'dynamicproduct_field WHERE id_field = ' . (int)$id_field
             );
-            if ((int) $id_product && !isset(self::$cached_fields[$id_lang][$id_product])) {
+            if ((int)$id_product && !isset(self::$cached_fields[$id_lang][$id_product])) {
                 $dynamic_fields = self::getFieldRowsByProduct($id_product, $id_lang);
                 if (isset($dynamic_fields[$id_field])) {
                     return $dynamic_fields[$id_field];
@@ -683,21 +683,21 @@ class DynamicField extends DynamicObject
 
     public static function getLabelForDefaultLang($id_option, $type)
     {
-        $id_default_lang = (int) \Configuration::get('PS_LANG_DEFAULT');
+        $id_default_lang = (int)\Configuration::get('PS_LANG_DEFAULT');
 
         switch ($type) {
             case _DP_DROPDOWN_:
                 return \Db::getInstance()->getValue('SELECT label FROM ' . _DB_PREFIX_ . 'dynamicproduct_dropdown_option_lang
-                    WHERE id_dropdown_option = ' . (int) $id_option . ' AND id_lang = ' . (int) $id_default_lang);
+                    WHERE id_dropdown_option = ' . (int)$id_option . ' AND id_lang = ' . (int)$id_default_lang);
             case _DP_RADIO_:
                 return \Db::getInstance()->getValue('SELECT label FROM ' . _DB_PREFIX_ . 'dynamicproduct_radio_option_lang
-                    WHERE id_radio_option = ' . (int) $id_option . ' AND id_lang = ' . (int) $id_default_lang);
+                    WHERE id_radio_option = ' . (int)$id_option . ' AND id_lang = ' . (int)$id_default_lang);
             case _DP_THUMBNAILS_:
                 return \Db::getInstance()->getValue('SELECT label FROM ' . _DB_PREFIX_ . 'dynamicproduct_thumbnails_option_lang
-                    WHERE id_thumbnails_option = ' . (int) $id_option . ' AND id_lang = ' . (int) $id_default_lang);
+                    WHERE id_thumbnails_option = ' . (int)$id_option . ' AND id_lang = ' . (int)$id_default_lang);
             case _DP_PREVIEW_:
                 return \Db::getInstance()->getValue('SELECT label FROM ' . _DB_PREFIX_ . 'dynamicproduct_preview_option_lang
-                    WHERE id_preview_option = ' . (int) $id_option . ' AND id_lang = ' . (int) $id_default_lang);
+                    WHERE id_preview_option = ' . (int)$id_option . ' AND id_lang = ' . (int)$id_default_lang);
         }
 
         return '';

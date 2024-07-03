@@ -47,7 +47,7 @@ class TranslationHelper
         $source = 'TranslationHelper';
 
         return [
-            // start admin -1262396138
+            // start admin -177737261
             '3357' => $this->module->l('if', $source),
             '3555' => $this->module->l('or', $source),
             '65665' => $this->module->l('Add', $source),
@@ -234,6 +234,7 @@ class TranslationHelper
             '2008912283' => $this->module->l('Add condition group', $source),
             '2011110042' => $this->module->l('Cancel', $source),
             '2030152089' => $this->module->l('Minimum height', $source),
+            '2050679770' => $this->module->l('Replace field names with their respective values', $source),
             '2076495866' => $this->module->l('Insert all items', $source),
             '2089680852' => $this->module->l('Export', $source),
             '2104126169' => $this->module->l('Fields', $source),
@@ -267,6 +268,7 @@ class TranslationHelper
             '-567220177' => $this->module->l('Per kilo, per litre', $source),
             '-1105717282' =>
                  $this->module->l('You can configure a displayed price if your product has a price of 0', $source),
+            '-350941306' => $this->module->l('You may need to clear the cache after changing this setting', $source),
             '-260281722' => $this->module->l('Display customization cost in customization summary', $source),
             '-72782714' => $this->module->l('Copy configuration to clipboard', $source),
             '-2100928571' => $this->module->l('Import', $source),

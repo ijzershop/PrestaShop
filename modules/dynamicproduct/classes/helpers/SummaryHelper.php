@@ -80,6 +80,10 @@ class SummaryHelper
     {
         $cache_file = $this->getCacheFile($summary_name, $dynamic_input, $id_lang, $is_pdf, $is_order_detail);
 
+        if (!is_dir(dirname($cache_file))) {
+            mkdir(dirname($cache_file), 0777, true);
+        }
+
         return file_put_contents($cache_file, $summary);
     }
 
@@ -97,7 +101,21 @@ class SummaryHelper
         $version = $this->module->version;
 
         return $this->module->provider->getDataFile(
-            "cache/$summary_name-$version-{$dynamic_input->id}-{$date_upd}-$id_lang-$is_pdf-$is_order_detail.html"
+            "cache/$dynamic_input->id/$summary_name-$version-{$date_upd}-$id_lang-$is_pdf-$is_order_detail.html"
         );
+    }
+
+    /**
+     * @param DynamicInput $dynamic_input
+     * @return bool
+     */
+    public function clearCache($dynamic_input)
+    {
+        $cache_dir = $this->module->provider->getDataDir("cache/$dynamic_input->id");
+        if (!is_dir($cache_dir)) {
+            return true;
+        }
+
+        \Tools::deleteDirectory($cache_dir, false);
     }
 }

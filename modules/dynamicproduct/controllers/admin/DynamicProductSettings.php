@@ -58,15 +58,15 @@ class DynamicProductSettingsController extends ModuleAdminController
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
-        $this->id_product = (int) Tools::getValue('id_product');
-        $this->id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+        $this->id_product = (int)Tools::getValue('id_product');
+        $this->id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
     }
 
     public function postProcess()
     {
         $source = basename(__FILE__, '.php');
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
-        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted)) {
+        if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted)) {
             exit(json_encode([
                 'error' => true,
                 'message' => $this->module->l('This product is for viewing only!', $source),
@@ -144,7 +144,7 @@ class DynamicProductSettingsController extends ModuleAdminController
             $this->module->handler->addCustomField($this->id_product);
         }
 
-        if ($name === 'active' && (int) $value === 0) {
+        if ($name === 'active' && (int)$value === 0) {
             $this->module->handler->setCustomFieldRequired($this->id_product, false);
         }
 
@@ -154,11 +154,11 @@ class DynamicProductSettingsController extends ModuleAdminController
     private function processCopyProductConfig()
     {
         $options = Tools::getValue('options', []);
-        $clear = (int) ($options['clear'] ?? 1);
-        $link = (int) ($options['link'] ?? 0);
+        $clear = (int)($options['clear'] ?? 1);
+        $link = (int)($options['link'] ?? 0);
 
-        $id_target_product = (int) Tools::getValue('id_target_product');
-        $id_source_product = (int) Tools::getValue('id_source_product');
+        $id_target_product = (int)Tools::getValue('id_target_product');
+        $id_source_product = (int)Tools::getValue('id_source_product');
 
         if ($link) {
             if ($clear) {
@@ -174,14 +174,26 @@ class DynamicProductSettingsController extends ModuleAdminController
 
     private function processLinkCategoryConfig()
     {
+        $source = basename(__FILE__, '.php');
         if (DynamicTools::isDemoMode() && !DynamicTools::isSuperAdmin()) {
             $this->respond([
                 'error' => true,
                 'message' => 'This function is not available in the demo mode!',
             ]);
         }
-        $id_category = (int) Tools::getValue('id_category');
-        $id_product = (int) Tools::getValue('id_product');
+        $id_category = (int)Tools::getValue('id_category');
+        $id_product = (int)Tools::getValue('id_product');
+
+        // allow linking to multiple categories
+        // DynamicProductConfigLink::removeLinks($id_product);
+
+        $existing_link = DynamicProductConfigCategoryLink::getLinkByCategory($id_category);
+        if (is_array($existing_link) && count($existing_link) > 0) {
+            $this->respond([
+                'error' => true,
+                'message' => sprintf($this->module->l('This category is already linked to product #%d!', $source), $existing_link['id_product']),
+            ]);
+        }
 
         DynamicProductConfigCategoryLink::createLink($id_product, $id_category);
 
@@ -197,14 +209,15 @@ class DynamicProductSettingsController extends ModuleAdminController
             ]);
         }
 
-        $id_target_product = (int) Tools::getValue('id_target_product');
+        $id_target_product = (int)Tools::getValue('id_target_product');
         $this->module->handler->clearConfig($id_target_product);
+        DynamicProductConfigLink::removeLink($id_target_product);
         $this->respond();
     }
 
     private function processGetCategoryProducts()
     {
-        $id_category = (int) Tools::getValue('id_target_category');
+        $id_category = (int)Tools::getValue('id_target_category');
 
         $category = new Category($id_category);
         $products = $category->getProducts(
@@ -221,14 +234,14 @@ class DynamicProductSettingsController extends ModuleAdminController
         );
         $this->respond([
             'products' => array_map(function ($product) {
-                return (int) $product['id_product'];
+                return (int)$product['id_product'];
             }, $products),
         ]);
     }
 
     private function processExportConfig()
     {
-        $link_images = (int) Tools::getValue('link_images');
+        $link_images = (int)Tools::getValue('link_images');
         $data = $this->module->handler->exportConfig($this->id_product, $link_images);
         $this->respond([
             'data' => $data,
@@ -309,7 +322,7 @@ class DynamicProductSettingsController extends ModuleAdminController
 
     public function respond($data = [], $success = 1)
     {
-        $success = $success && (int) !array_key_exists('error', $data);
+        $success = $success && (int)!array_key_exists('error', $data);
         $arr = [
             'success' => $success,
         ];

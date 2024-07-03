@@ -363,6 +363,7 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_2e4edd453344e584f5a52d4d
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_b17672d0d507b5d2a3ebcbbf3822d014'] = 'Agregar grupo de condiciones';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_ea4788705e6873b424c65e91c2846b19'] = 'Cancelar';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_db00a95a0a4b5c1d40e04aa5ecf42542'] = 'Altura mínima';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_2d1d114d532f328394c5773aae420610'] = 'Sustituir los nombres de los campos por sus respectivos valores';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_ea4df7725e002975cea7be377188cd62'] = 'Insertar todos los elementos';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_0095a9fa74d1713e43e370a7d7846224'] = 'Exportar';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_a4ca5edd20d0b5d502ebece575681f58'] = 'Campos';
@@ -393,6 +394,7 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_9b5015272209b6a9479e8772
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_ba445f2feccd11cd11d997d8055dc252'] = 'Dividir el resumen por grupos de campos';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_420f46a170eef476454fa134085a85a2'] = 'Por kilo, por litro';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_20472ef5f339d4fc68d3d701a933d4e9'] = 'Puede configurar un precio mostrado si su producto tiene un precio de 0';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_1a46c53adfb1c55efdb5089ca0a517b0'] = 'Es posible que tenga que borrar la memoria caché después de cambiar esta configuración';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_0cbace71708c3606c8740b6fa11861e2'] = 'Mostrar el costo de personalización en el resumen';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_99ba7327b146535cdfa59cc5e37f67ba'] = 'Copiar la configuración al portapapeles';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_72d6d7a1885885bb55a565fd1070581a'] = 'Importar';
@@ -577,6 +579,7 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_b75833669968adbef6344956
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_663299bdc0a3b2d7b0b06b63de5aa53e'] = 'Nombre de personalización';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_3413a051d0c09056fe51952a6208e492'] = 'Por favor complete todos los pasos de arriba, intente de nuevo';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproductsettings_d2f1938c3b81377b26ece3fc8d79f74d'] = '¡Este producto es solo para ver!';
+$_MODULE['<{dynamicproduct}prestashop>dynamicproductsettings_cc5607913ac5f81c873d41562df1d0e6'] = '¡Esta categoría ya está vinculada al producto #%d!';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproductsettings_1fcee602884bcc346b32abf670fca0dd'] = 'No se pudieron importar los datos, verifique su archivo';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproductfieldsoptions_d2f1938c3b81377b26ece3fc8d79f74d'] = '¡Este producto es solo para ver!';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproductsteps_d2f1938c3b81377b26ece3fc8d79f74d'] = '¡Este producto es solo para ver!';

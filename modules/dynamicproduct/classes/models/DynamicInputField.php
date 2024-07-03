@@ -157,11 +157,11 @@ class DynamicInputField extends DynamicObject
         $input_fields = [];
         $sql = new \DbQuery();
         $sql->from(self::$definition['table']);
-        $sql->where('id_input = ' . (int) $id_input);
+        $sql->where('id_input = ' . (int)$id_input);
         $rows = \Db::getInstance()->executeS($sql, false, false);
         while ($row = \Db::getInstance()->nextRow($rows)) {
             $id_input_field = $row['id_input_field'];
-            $dynamic_input_field = InputFieldFactory::create((int) $row['type'], (int) $id_input_field, $id_lang);
+            $dynamic_input_field = InputFieldFactory::create((int)$row['type'], (int)$id_input_field, $id_lang);
             if (\Validate::isLoadedObject($dynamic_input_field)) {
                 $input_fields[$dynamic_input_field->name] = $dynamic_input_field;
             }
@@ -201,7 +201,7 @@ class DynamicInputField extends DynamicObject
     {
         $this->value_formatted = $this->value;
         if ($this->type === _DP_PRICE_) {
-            $this->value_formatted = $this->module->provider->convertAndFormatPrice((float) $this->value);
+            $this->value_formatted = $this->module->provider->convertAndFormatPrice((float)$this->value);
         }
     }
 
@@ -239,7 +239,7 @@ class DynamicInputField extends DynamicObject
         $this->secondary_value = 0;
         foreach ($this->field['options'] as $option) {
             if (is_numeric($this->value)) {
-                if ((float) $option['value'] === (float) $this->value) {
+                if ((float)$option['value'] === (float)$this->value) {
                     $this->selected_options = [$option['id']];
                     $this->secondary_value = $option['secondary_value'];
                     break;
@@ -317,13 +317,13 @@ class DynamicInputField extends DynamicObject
                     if ($has_strings) {
                         $str_values[] = $option_value;
                     } else {
-                        $value += (float) $option_value;
+                        $value += (float)$option_value;
                     }
                 }
             }
         }
         if (count($str_values)) {
-            if (count($str_values) === 1 && !(int) $this->field['settings']['multiselect']) {
+            if (count($str_values) === 1 && !(int)$this->field['settings']['multiselect']) {
                 return $str_values[0];
             }
 
@@ -380,7 +380,7 @@ class DynamicInputField extends DynamicObject
                     if (!is_numeric($option_secondary_value) && !empty($option_secondary_value)) {
                         return $option_secondary_value;
                     }
-                    $value += (float) $option_secondary_value;
+                    $value += (float)$option_secondary_value;
                 }
             }
         }
@@ -400,6 +400,42 @@ class DynamicInputField extends DynamicObject
     public function getDynamicValue($input_fields)
     {
         $value = $this->displayValue();
+
+        if (!$this->field['settings']['is_dynamic_value']) {
+            return $value;
+        }
+
+        foreach ($input_fields as $input_field) {
+            $value = str_replace(
+                [
+                    "[[{$input_field->name}]]",
+                    "[{$input_field->name}]",
+                    "{{$input_field->name}}",
+                ],
+                [
+                    htmlspecialchars($input_field->secondary_value),
+                    htmlspecialchars($input_field->value_formatted),
+                    htmlspecialchars($input_field->display_value ?? ''),
+                ],
+                $value
+            );
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param DynamicInputField[] $input_fields
+     *
+     * @return string
+     */
+    public function getDynamicLabel($input_fields)
+    {
+        $value = $this->label;
+
+        if (!$this->field['settings']['is_dynamic_value']) {
+            return $value;
+        }
 
         foreach ($input_fields as $input_field) {
             $value = str_replace(
@@ -441,7 +477,7 @@ class DynamicInputField extends DynamicObject
         $value = $this->getValueForCalculation($input_fields);
 
         return $value >= $interval_condition['min']
-            && ($value < $interval_condition['max'] || (float) $interval_condition['max'] === 0.0);
+            && ($value < $interval_condition['max'] || (float)$interval_condition['max'] === 0.0);
     }
 
     public function isWithinValues(array $interval_condition, array $input_fields)
@@ -454,11 +490,15 @@ class DynamicInputField extends DynamicObject
         $id_lang = $this->context->language->id;
         $this->setLabel($id_lang);
 
+        if (is_string($this->label)) {
+            return $this->label;
+        }
+
         if (isset($this->label[$id_lang])) {
             return $this->label[$id_lang];
         }
 
-        $id_default_lang = (int) \Configuration::get('PS_LANG_DEFAULT');
+        $id_default_lang = (int)\Configuration::get('PS_LANG_DEFAULT');
         if (isset($this->label[$id_default_lang])) {
             return $this->label[$id_default_lang];
         }
@@ -530,7 +570,7 @@ class DynamicInputField extends DynamicObject
                 if (!is_numeric($value)) {
                     return $value;
                 }
-                $total_value += (float) $value;
+                $total_value += (float)$value;
             }
         }
 
@@ -546,7 +586,7 @@ class DynamicInputField extends DynamicObject
                 if (!is_numeric($secondary_value)) {
                     return $secondary_value;
                 }
-                $total_value += (float) $secondary_value;
+                $total_value += (float)$secondary_value;
             }
         }
 
@@ -573,7 +613,7 @@ class DynamicInputField extends DynamicObject
     {
         $selected_options = [];
         foreach ($this->selected_options as $selected_option) {
-            if (!in_array((int) $selected_option, $this->excluded_options)) {
+            if (!in_array((int)$selected_option, $this->excluded_options)) {
                 $selected_options[] = $selected_option;
             }
         }
@@ -598,7 +638,7 @@ class DynamicInputField extends DynamicObject
     private function setSelectOption($option)
     {
         if (!$this->locked_value) {
-            $id_option = (int) $option['id'];
+            $id_option = (int)$option['id'];
             $this->setValue($option['value']);
             $this->setSecondaryValue($option['secondary_value']);
             $this->selected_options = [$id_option];
@@ -608,7 +648,7 @@ class DynamicInputField extends DynamicObject
 
     protected function getFirstOption()
     {
-        return isset($this->selected_options[0]) ? (int) $this->selected_options[0] : 0;
+        return isset($this->selected_options[0]) ? (int)$this->selected_options[0] : 0;
     }
 
     public static function getDefaultInputFields($id_product, $id_attribute, $load = self::LOAD_NONE, $values = [])
@@ -637,7 +677,8 @@ class DynamicInputField extends DynamicObject
         $fields,
         $load = self::LOAD_NONE,
         array $values = []
-    ): array {
+    ): array
+    {
         $module = DynamicTools::getModule();
         $context = DynamicTools::getContext();
 
@@ -731,7 +772,7 @@ class DynamicInputField extends DynamicObject
         $input_field->setData($id_lang);
 
         // Disallow setting the html value from javascript
-        if ((int) $field['type'] === _DP_HTML_) {
+        if (isset($field['type']) && (int)$field['type'] === _DP_HTML_) {
             $input_field->value = '';
             $input_field->value_formatted = '';
         }
@@ -751,7 +792,7 @@ class DynamicInputField extends DynamicObject
 
         $has_changed_field = !empty($changed['value']);
 
-        if (!$has_changed_field && $input_field->type === _DP_INPUT_ && !(float) $input_field->value) {
+        if (!$has_changed_field && $input_field->type === _DP_INPUT_ && !(float)$input_field->value) {
             $dynamic_calculator_helper = new DynamicCalculatorHelper(
                 DynamicTools::getModule(),
                 DynamicTools::getContext()
@@ -771,7 +812,7 @@ class DynamicInputField extends DynamicObject
 
     public function isSkipped()
     {
-        return !(int) $this->visible || in_array($this->name, $this->skipped_names, true);
+        return !(int)$this->visible || in_array($this->name, $this->skipped_names, true);
     }
 
     public function isSkippedName()

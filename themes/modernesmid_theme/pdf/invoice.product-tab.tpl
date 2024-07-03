@@ -81,6 +81,7 @@
                                       </tr>
                                 {else}
                                   <tr>
+
                                     <td colspan="4">{$customization_infos.value|strip_tags:true|strip}</td>
                                   </tr>
                                 {/if}

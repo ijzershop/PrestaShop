@@ -128,14 +128,35 @@ class PriceModificationRepository extends EntityRepository
             $res = $qb->executeS($sqlSelect);
 
             if(count($res) > 0){
-                foreach($res as $existingProduct){
-                    if($existingProduct['id_store_product'] > 0){
-                        $product = new Product($existingProduct['id_store_product']);
-                        $data = json_decode($supplier_data);
-                        $product->weight = (float)$data->attributes->gewicht;
-                        $product->save();
-                    }
-                }
+//                foreach($res as $existingProduct){
+//                    if($existingProduct['id_store_product'] > 0){
+//                        $product = new Product($existingProduct['id_store_product']);
+//                        $data = json_decode($supplier_data);
+//                        $selectedFeatureLength = 2;
+//                        foreach ($product->getFeatures() as $feature){
+//                            if((int)$feature['id_feature_value'] === 61 || (int)$feature['id_feature_value'] == 194 || (int)$feature['id_feature_value'] == 1320){
+//                                $selectedFeatureLength = 1;
+//                                continue;
+//                            }
+//                        }
+//
+//                        if((float)$data->attributes->kilo_per_meter > 0 && (float)$data->attributes->gewicht == 0){
+//                            //koker is * 2
+//                            $product->weight = (float)$data->attributes->kilo_per_meter * $selectedFeatureLength;
+//
+//                        } elseif((float)$data->attributes->handelslengte > 0 && (float)$data->attributes->kilo_per_meter == 0 && (float)$data->attributes->gewicht > 0){
+//                            //lengte / gewicht
+//                            $product->weight = (float)$data->attributes->gewicht/(float)$data->attributes->handelslengte * $selectedFeatureLength;
+//                        }elseif((float)$data->attributes->handelslengte == 0 && (float)$data->attributes->kilo_per_meter == 0 && (float)$data->attributes->gewicht > 0){
+//                            //plaat / 4
+//                            $product->weight = (float)$data->attributes->gewicht/4;
+//                        }else{
+//                            $product->weight = (float)$data->attributes->gewicht;
+//                        }
+//
+//                        $product->save();
+//                    }
+//                }
 
                 $sqlUpdate = "UPDATE `" . _DB_PREFIX_ . "price_modification` SET `name_supplier` = '".$name."',
                 `file_supplier`='".$file_supplier."',

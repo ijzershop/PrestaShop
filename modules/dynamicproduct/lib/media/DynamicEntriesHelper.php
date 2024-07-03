@@ -47,11 +47,24 @@ class DynamicEntriesHelper
     public function getEntry($name)
     {
         if (!self::$entries) {
-            self::$entries = json_decode(\Tools::file_get_contents(__DIR__ . '/dist/assets-manifest.json'), true);
+            self::$entries = json_decode(\Tools::file_get_contents(__DIR__ . '/dist/.vite/manifest.json'), true);
         }
 
         if (isset(self::$entries[$name])) {
-            return 'lib/media/dist/' . self::$entries[$name];
+            return 'lib/media/dist/' . self::$entries[$name]['file'];
+        }
+
+        return false;
+    }
+
+    public function getCSS($name)
+    {
+        if (!self::$entries) {
+            self::$entries = json_decode(\Tools::file_get_contents(__DIR__ . '/dist/.vite/manifest.json'), true);
+        }
+
+        if (isset(self::$entries[$name])) {
+            return self::$entries[$name]['css'];
         }
 
         return false;

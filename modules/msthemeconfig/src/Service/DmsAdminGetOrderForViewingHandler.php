@@ -721,17 +721,17 @@ final class DmsAdminGetOrderForViewingHandler extends AbstractOrderHandler imple
 
             $messages[] = new OrderMessageForViewing(
                 (int) $orderMessage['id_customer_message'],
-                $orderMessage['message'],
+                (string)$orderMessage['message'],
                 new OrderMessageDateForViewing(
                     new DateTimeImmutable($orderMessage['date_add']),
                     $this->context->language->date_format_full
                 ),
                 $messageEmployeeId,
                 $isCurrentEmployeesMessage,
-                $orderMessage['efirstname'],
-                $orderMessage['elastname'],
-                $orderMessage['cfirstname'],
-                $orderMessage['clastname'],
+                (string)$orderMessage['efirstname'],
+                (string)$orderMessage['elastname'],
+                (string)$orderMessage['cfirstname'],
+                (string)$orderMessage['clastname'],
                 (bool) $orderMessage['private']
             );
         }

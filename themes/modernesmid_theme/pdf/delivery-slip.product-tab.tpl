@@ -51,7 +51,7 @@
                     <tr>
                       <td colspan="2">
                         <br/>
-                        <img src="https://ijzershop.nl/{$customization_infos.technical_image}" width="200"  alt=""/>
+                        <img src="https://{Context::getContext()->shop->getBaseURL(true)}/{$customization_infos.technical_image}" width="200"  alt=""/>
                       </td>
                     </tr>
                   </table>

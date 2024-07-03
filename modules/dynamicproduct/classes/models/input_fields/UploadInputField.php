@@ -105,4 +105,19 @@ class UploadInputField extends DynamicInputField
 
         return $folder_url . str_replace('.' . $extension, $this->thumb_suffix, basename($file));
     }
+
+    public function save($null_values = false, $auto_date = true)
+    {
+        if (is_string($this->data)) {
+            $data = json_decode($this->data, true);
+            if (is_array($data)) {
+                foreach ($data as &$upload) {
+                    unset($upload['thumb_url']);
+                    unset($upload['image_url']);
+                }
+                $this->data = json_encode($data);
+            }
+        }
+        return parent::save($null_values, $auto_date);
+    }
 }

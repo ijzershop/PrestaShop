@@ -102,7 +102,7 @@ class DynamicHandler
         if ($clear) {
             $product_fields = DynamicField::getFieldsByIdProduct($id_product_new);
             foreach ($product_fields as $product_field) {
-                if ((int) $product_field->id_product === (int) $id_product_new) {
+                if ((int)$product_field->id_product === (int)$id_product_new) {
                     $unit_value = $product_field->getUnitValues();
                     $unit_value->delete();
                     $product_field->delete();
@@ -141,7 +141,7 @@ class DynamicHandler
             }
             $product_field_groups = DynamicProductFieldGroup::getByIdProduct($id_product_old);
             foreach ($product_field_groups as $product_field_group) {
-                $id_step_new = (int) $this->module->provider->getNewID(
+                $id_step_new = (int)$this->module->provider->getNewID(
                     $product_steps_new,
                     $product_field_group->id_step
                 );
@@ -159,19 +159,19 @@ class DynamicHandler
                 if ($field->deleted) {
                     continue;
                 }
-                $id_group_new = (int) $this->module->provider->getNewID(
+                $id_group_new = (int)$this->module->provider->getNewID(
                     $field_groups_new,
                     $field->id_group
                 );
-                $id_step_new = (int) $this->module->provider->getNewID(
+                $id_step_new = (int)$this->module->provider->getNewID(
                     $product_steps_new,
                     $field->id_step
                 );
                 $new_field = $this->copyField($field->id, $id_product_new, $id_product_old, $id_group_new, $id_step_new, true);
                 $options_new[$field->id] = $new_field['options'];
                 $id_new_field = $new_field['id_field'];
-                if ($id_new_field !== (int) $field->id) {
-                    $fields_new[(int) $field->id] = $id_new_field;
+                if ($id_new_field !== (int)$field->id) {
+                    $fields_new[(int)$field->id] = $id_new_field;
                 }
             }
         }
@@ -180,7 +180,7 @@ class DynamicHandler
             $new_field_groups = DynamicProductFieldGroup::getByIdProduct($id_product_new);
             foreach ($new_field_groups as $new_field_group) {
                 if ($new_field_group->id_control_field) {
-                    $new_field_group->id_control_field = (int) $this->module->provider->getNewID(
+                    $new_field_group->id_control_field = (int)$this->module->provider->getNewID(
                         $fields_new,
                         $new_field_group->id_control_field
                     );
@@ -237,20 +237,20 @@ class DynamicHandler
             }
 
             if ($copy_options['combinations_visibility'] && $copy_options['fields']) {
-                \Db::getInstance()->delete('dynamicproduct_visibility', 'id_product = ' . (int) $id_product_new);
+                \Db::getInstance()->delete('dynamicproduct_visibility', 'id_product = ' . (int)$id_product_new);
                 $hidden_fields = $this->module->provider->getVisibilityValues($id_product_old);
                 foreach ($attributes_mapping as $id_attribute_old => $id_attribute_new) {
                     if (isset($hidden_fields[$id_attribute_old])) {
                         $values = $hidden_fields[$id_attribute_old];
                         foreach ($values as $id_field => $visible) {
-                            if (isset($fields_new[$id_field]) || (int) $id_field === 0) {
+                            if (isset($fields_new[$id_field]) || (int)$id_field === 0) {
                                 \Db::getInstance()->insert(
                                     $this->module->name . '_visibility',
                                     [
-                                        'id_product' => (int) $id_product_new,
-                                        'id_attribute' => (int) $id_attribute_new,
-                                        'id_field' => (int) $this->module->provider->getNewID($fields_new, $id_field),
-                                        'visible' => (int) $visible,
+                                        'id_product' => (int)$id_product_new,
+                                        'id_attribute' => (int)$id_attribute_new,
+                                        'id_field' => (int)$this->module->provider->getNewID($fields_new, $id_field),
+                                        'visible' => (int)$visible,
                                     ]
                                 );
                             }
@@ -287,14 +287,14 @@ class DynamicHandler
                 $id_condition = $condition->id;
                 $condition->id_product = $id_product_new;
                 $condition->add();
-                $id_condition_new = (int) $condition->id;
+                $id_condition_new = (int)$condition->id;
                 $conditions_new[$id_condition] = $id_condition_new;
 
                 foreach ($hidden_group as $id_group_old) {
                     $id_group_new = $this->module->provider->getNewID($field_groups_new, $id_group_old);
                     $data = [
-                        'id_condition' => (int) $id_condition_new,
-                        'id_group' => (int) $id_group_new,
+                        'id_condition' => (int)$id_condition_new,
+                        'id_group' => (int)$id_group_new,
                         'visible' => 0,
                     ];
                     \Db::getInstance()->insert(
@@ -309,8 +309,8 @@ class DynamicHandler
                 foreach ($hidden_steps as $id_step_old) {
                     $id_step_new = $this->module->provider->getNewID($product_steps_new, $id_step_old);
                     $data = [
-                        'id_condition' => (int) $id_condition_new,
-                        'id_step' => (int) $id_step_new,
+                        'id_condition' => (int)$id_condition_new,
+                        'id_step' => (int)$id_step_new,
                         'visible' => 0,
                     ];
                     \Db::getInstance()->insert(
@@ -325,8 +325,8 @@ class DynamicHandler
                 foreach ($hidden_fields as $id_field_old) {
                     $id_field_new = $this->module->provider->getNewID($fields_new, $id_field_old);
                     $data = [
-                        'id_condition' => (int) $id_condition_new,
-                        'id_field' => (int) $id_field_new,
+                        'id_condition' => (int)$id_condition_new,
+                        'id_field' => (int)$id_field_new,
                         'visible' => 0,
                     ];
                     \Db::getInstance()->insert(
@@ -343,9 +343,9 @@ class DynamicHandler
                         $id_field_new = $this->module->provider->getNewID($fields_new, $id_field_old);
                         $id_option_new = $this->module->provider->getNewOption($options_new, $id_field_old, $id_option_old);
                         $data = [
-                            'id_condition' => (int) $id_condition_new,
-                            'id_field' => (int) $id_field_new,
-                            'id_option' => (int) $id_option_new,
+                            'id_condition' => (int)$id_condition_new,
+                            'id_field' => (int)$id_field_new,
+                            'id_option' => (int)$id_option_new,
                             'visible' => 0,
                         ];
                         \Db::getInstance()->insert(
@@ -523,7 +523,7 @@ class DynamicHandler
             $product_config = DynamicConfig::getByProduct($id_product_new);
             $product_config->delete();
             $product_config = DynamicConfig::getByProduct($id_product_old);
-            $product_config->id_product = (int) $id_product_new;
+            $product_config->id_product = (int)$id_product_new;
             $product_config->save();
         }
     }
@@ -532,7 +532,7 @@ class DynamicHandler
     {
         $product_fields = DynamicField::getFieldsByIdProduct($id_product);
         foreach ($product_fields as $product_field) {
-            if ((int) $product_field->id_product === (int) $id_product) {
+            if ((int)$product_field->id_product === (int)$id_product) {
                 $unit_value = $product_field->getUnitValues();
                 $unit_value->delete();
                 $product_field->delete();
@@ -544,7 +544,7 @@ class DynamicHandler
         DynamicProductFieldGroup::deleteByProduct($id_product);
 
         DynamicCombinationValue::deleteByProduct($id_product);
-        \Db::getInstance()->delete('dynamicproduct_visibility', 'id_product = ' . (int) $id_product);
+        \Db::getInstance()->delete('dynamicproduct_visibility', 'id_product = ' . (int)$id_product);
 
         DynamicEquation::deleteByProduct($id_product);
 
@@ -560,7 +560,7 @@ class DynamicHandler
 
         ExecOrder::deleteByProduct($id_product);
 
-        $product_config = DynamicConfig::getByProduct($id_product);
+        $product_config = new DynamicConfig($id_product);
         $product_config->delete();
     }
 
@@ -574,11 +574,11 @@ class DynamicHandler
         $languages = \Language::getLanguages(false);
         $lang_data = [];
         foreach ($languages as $language) {
-            $lang_data[(int) $language['id_lang']] = $language['iso_code'];
+            $lang_data[(int)$language['id_lang']] = $language['iso_code'];
         }
         $data['lang_data'] = $lang_data;
 
-        $data['id_lang_default'] = (int) \Configuration::get('PS_LANG_DEFAULT');
+        $data['id_lang_default'] = (int)\Configuration::get('PS_LANG_DEFAULT');
 
         $units = [];
 
@@ -632,7 +632,7 @@ class DynamicHandler
             }
 
             $data['fields'][$product_field->id] = $field_values;
-            $id_unit = (int) $product_field->id_unit;
+            $id_unit = (int)$product_field->id_unit;
             if ($id_unit) {
                 $unit = new DynamicUnit($id_unit);
                 $units[$id_unit] = $unit->getObjectValues(true);
@@ -704,7 +704,7 @@ class DynamicHandler
         $product_field_groups = DynamicProductFieldGroup::getRowsByProduct($id_product);
         foreach ($product_field_groups as $field_group) {
             $data['product_field_groups'][$field_group['id']] = $field_group;
-            $id_field_group = (int) $field_group['id_field_group'];
+            $id_field_group = (int)$field_group['id_field_group'];
             $field_group = new DynamicFieldGroup($id_field_group);
             $field_groups[$id_field_group] = $field_group->getObjectValues(true);
         }
@@ -714,7 +714,7 @@ class DynamicHandler
         $product_steps = DynamicProductStep::getRowsByProduct($id_product);
         foreach ($product_steps as $product_step) {
             $data['product_steps'][$product_step['id']] = $product_step;
-            $id_step = (int) $product_step['id_step'];
+            $id_step = (int)$product_step['id_step'];
             $step = new DynamicStep($id_step);
             $steps[$id_step] = $step->getObjectValues(true);
         }
@@ -744,17 +744,17 @@ class DynamicHandler
         if ($lang_data) {
             $languages = \Language::getLanguages(false);
             foreach ($languages as $language) {
-                $lang_codes[$language['iso_code']] = (int) $language['id_lang'];
+                $lang_codes[$language['iso_code']] = (int)$language['id_lang'];
             }
         }
 
         $first_lang_id = is_array($lang_data) && count(array_keys($lang_data)) ? array_keys($lang_data)[0] : 0;
-        $id_lang_default = isset($data['id_lang_default']) ? (int) $data['id_lang_default'] : $first_lang_id;
-        $current_lang = (int) \Configuration::get('PS_LANG_DEFAULT');
+        $id_lang_default = isset($data['id_lang_default']) ? (int)$data['id_lang_default'] : $first_lang_id;
+        $current_lang = (int)\Configuration::get('PS_LANG_DEFAULT');
 
         $product_fields = DynamicField::getFieldsByIdProduct($id_product_new);
         foreach ($product_fields as $product_field) {
-            if (!(int) $product_field->common || (int) $product_field->id_product === $id_product_new) {
+            if (!(int)$product_field->common || (int)$product_field->id_product === $id_product_new) {
                 $unit_value = $product_field->getUnitValues();
                 $unit_value->delete();
                 $product_field->delete();
@@ -784,14 +784,14 @@ class DynamicHandler
                 $units = $this->getObjectsFromData($data['units'], DynamicUnit::class);
                 foreach ($units as $unit) {
                     if (isset($unit->name[$id_lang_default])) {
-                        $id_unit_old = (int) $unit->id;
+                        $id_unit_old = (int)$unit->id;
                         $existing = $this->findUnit($id_unit_old, $unit->symbol);
                         if ($existing) {
                             $units_new[$id_unit_old] = $existing->id;
                         } else {
                             $unit->name[$current_lang] = $unit->name[$id_lang_default];
                             $unit->add();
-                            $units_new[$id_unit_old] = (int) $unit->id;
+                            $units_new[$id_unit_old] = (int)$unit->id;
                         }
                     }
                 }
@@ -802,7 +802,7 @@ class DynamicHandler
                 $field_groups = $this->getObjectsFromData($data['field_groups'], DynamicFieldGroup::class);
                 foreach ($field_groups as $field_group) {
                     if (isset($field_group->label[$id_lang_default])) {
-                        $id_field_group_old = (int) $field_group->id;
+                        $id_field_group_old = (int)$field_group->id;
                         $label = $field_group->label[$id_lang_default];
                         $existing = $this->findFieldGroup($id_field_group_old, $label);
                         if ($existing) {
@@ -810,7 +810,7 @@ class DynamicHandler
                         } else {
                             $field_group->label[$current_lang] = $label;
                             $field_group->add();
-                            $field_groups_new[$id_field_group_old] = (int) $field_group->id;
+                            $field_groups_new[$id_field_group_old] = (int)$field_group->id;
                         }
                     }
                 }
@@ -821,7 +821,7 @@ class DynamicHandler
                 $steps = $this->getObjectsFromData($data['steps'], DynamicStep::class);
                 foreach ($steps as $step) {
                     if (isset($step->label[$id_lang_default])) {
-                        $id_step_old = (int) $step->id;
+                        $id_step_old = (int)$step->id;
                         $label = $step->label[$id_lang_default];
                         $existing = $this->findStep($id_step_old, $label);
                         if ($existing) {
@@ -829,7 +829,7 @@ class DynamicHandler
                         } else {
                             $step->label[$current_lang] = $label;
                             $step->add();
-                            $steps_new[$id_step_old] = (int) $step->id;
+                            $steps_new[$id_step_old] = (int)$step->id;
                         }
                     }
                 }
@@ -842,7 +842,7 @@ class DynamicHandler
             $product_steps = $this->getObjectsFromData($data['product_steps'], DynamicProductStep::class);
             foreach ($product_steps as $product_step) {
                 $id_product_step = $product_step->id;
-                $id_step_new = (int) $this->module->provider->getNewID(
+                $id_step_new = (int)$this->module->provider->getNewID(
                     $steps_new,
                     $product_step->id_step
                 );
@@ -862,11 +862,11 @@ class DynamicHandler
                 DynamicProductFieldGroup::class
             );
             foreach ($product_field_groups as $product_field_group) {
-                $id_product_step_new = (int) $this->module->provider->getNewID(
+                $id_product_step_new = (int)$this->module->provider->getNewID(
                     $product_steps_new,
                     $product_field_group->id_step
                 );
-                $id_field_group_new = (int) $this->module->provider->getNewID(
+                $id_field_group_new = (int)$this->module->provider->getNewID(
                     $field_groups_new,
                     $product_field_group->id_field_group
                 );
@@ -890,20 +890,20 @@ class DynamicHandler
             /** @var DynamicField[] $product_fields */
             $product_fields = $this->getObjectsFromData($data['fields'], DynamicField::class);
             foreach ($product_fields as $field) {
-                $id_group_new = (int) $this->module->provider->getNewID(
+                $id_group_new = (int)$this->module->provider->getNewID(
                     $product_field_groups_new,
                     $field->id_group
                 );
-                $id_product_step_new = (int) $this->module->provider->getNewID(
+                $id_product_step_new = (int)$this->module->provider->getNewID(
                     $product_steps_new,
                     $field->id_step
                 );
-                $id_unit_new = (int) $this->module->provider->getNewID(
+                $id_unit_new = (int)$this->module->provider->getNewID(
                     $units_new,
                     $field->id_unit
                 );
-                $field->id_product = (int) $id_product_new;
-                $field->id_unit = (int) $id_unit_new;
+                $field->id_product = (int)$id_product_new;
+                $field->id_unit = (int)$id_unit_new;
                 $field->id_group = $id_group_new;
                 $field->id_step = $id_product_step_new;
                 $field->favorite = false;
@@ -938,7 +938,7 @@ class DynamicHandler
                     }
                 }
 
-                $id_field_new = (int) $field->id;
+                $id_field_new = (int)$field->id;
 
                 $field_options_new = [];
                 $options_class = $option_types[$field->type] ?? null;
@@ -1013,7 +1013,7 @@ class DynamicHandler
         $new_field_groups = DynamicProductFieldGroup::getByIdProduct($id_product_new);
         foreach ($new_field_groups as $new_field_group) {
             if ($new_field_group->id_control_field) {
-                $new_field_group->id_control_field = (int) $this->module->provider->getNewID(
+                $new_field_group->id_control_field = (int)$this->module->provider->getNewID(
                     $fields_new,
                     $new_field_group->id_control_field
                 );
@@ -1072,20 +1072,20 @@ class DynamicHandler
         }
 
         if (isset($data['hidden_fields'])) {
-            \Db::getInstance()->delete('dynamicproduct_visibility', 'id_product = ' . (int) $id_product_new);
+            \Db::getInstance()->delete('dynamicproduct_visibility', 'id_product = ' . (int)$id_product_new);
             $hidden_fields = $data['hidden_fields'];
             foreach ($attributes_mapping as $id_attribute_old => $id_attribute_new) {
                 if (isset($hidden_fields[$id_attribute_old])) {
                     $values = $hidden_fields[$id_attribute_old];
                     foreach ($values as $id_field => $visible) {
-                        if (isset($fields_new[$id_field]) || (int) $id_field === 0) {
+                        if (isset($fields_new[$id_field]) || (int)$id_field === 0) {
                             \Db::getInstance()->insert(
                                 $this->module->name . '_visibility',
                                 [
-                                    'id_product' => (int) $id_product_new,
-                                    'id_attribute' => (int) $id_attribute_new,
-                                    'id_field' => (int) $this->module->provider->getNewID($fields_new, $id_field),
-                                    'visible' => (int) $visible,
+                                    'id_product' => (int)$id_product_new,
+                                    'id_attribute' => (int)$id_attribute_new,
+                                    'id_field' => (int)$this->module->provider->getNewID($fields_new, $id_field),
+                                    'visible' => (int)$visible,
                                 ]
                             );
                         }
@@ -1116,16 +1116,16 @@ class DynamicHandler
                 $hidden_options = $data['conditions'][$condition->id]['hidden_options'];
 
                 $condition->id_product = $id_product_new;
-                $id_condition = (int) $condition->id;
+                $id_condition = (int)$condition->id;
                 $condition->add();
-                $id_condition_new = (int) $condition->id;
+                $id_condition_new = (int)$condition->id;
                 $conditions_new[$id_condition] = $id_condition_new;
 
                 foreach ($hidden_groups as $id_group_old) {
                     $id_group_new = $this->module->provider->getNewID($product_field_groups_new, $id_group_old);
                     $visibility_data = [
-                        'id_condition' => (int) $id_condition_new,
-                        'id_group' => (int) $id_group_new,
+                        'id_condition' => (int)$id_condition_new,
+                        'id_group' => (int)$id_group_new,
                         'visible' => 0,
                     ];
                     \Db::getInstance()->insert(
@@ -1140,8 +1140,8 @@ class DynamicHandler
                 foreach ($hidden_steps as $id_step_old) {
                     $id_product_step_new = $this->module->provider->getNewID($product_steps_new, $id_step_old);
                     $visibility_data = [
-                        'id_condition' => (int) $id_condition_new,
-                        'id_step' => (int) $id_product_step_new,
+                        'id_condition' => (int)$id_condition_new,
+                        'id_step' => (int)$id_product_step_new,
                         'visible' => 0,
                     ];
                     \Db::getInstance()->insert(
@@ -1156,8 +1156,8 @@ class DynamicHandler
                 foreach ($hidden_fields as $id_field_old) {
                     $id_field_new = $this->module->provider->getNewID($fields_new, $id_field_old);
                     $visibility_data = [
-                        'id_condition' => (int) $id_condition_new,
-                        'id_field' => (int) $id_field_new,
+                        'id_condition' => (int)$id_condition_new,
+                        'id_field' => (int)$id_field_new,
                         'visible' => 0,
                     ];
                     \Db::getInstance()->insert(
@@ -1178,9 +1178,9 @@ class DynamicHandler
                             $id_option_old
                         );
                         $visibility_data = [
-                            'id_condition' => (int) $id_condition_new,
-                            'id_field' => (int) $id_field_new,
-                            'id_option' => (int) $id_option_new,
+                            'id_condition' => (int)$id_condition_new,
+                            'id_field' => (int)$id_field_new,
+                            'id_option' => (int)$id_option_new,
                             'visible' => 0,
                         ];
                         \Db::getInstance()->insert(
@@ -1355,16 +1355,16 @@ class DynamicHandler
                 if ($calculation_item->id_item) {
                     switch ($calculation_item->type) {
                         case DynamicCalculationItem::CONDITION_ITEM:
-                            $item_id_new = (int) ($conditions_new[$calculation_item->id_item] ?? 0);
+                            $item_id_new = (int)($conditions_new[$calculation_item->id_item] ?? 0);
                             break;
                         case DynamicCalculationItem::FIELD_FORMULA_ITEM:
-                            $item_id_new = (int) ($field_formulas_new[$calculation_item->id_item] ?? 0);
+                            $item_id_new = (int)($field_formulas_new[$calculation_item->id_item] ?? 0);
                             break;
                         case DynamicCalculationItem::INTERVAL_ITEM:
-                            $item_id_new = (int) ($intervals_new[$calculation_item->id_item] ?? 0);
+                            $item_id_new = (int)($intervals_new[$calculation_item->id_item] ?? 0);
                             break;
                         case DynamicCalculationItem::GRID_ITEM:
-                            $item_id_new = (int) ($grids_new[$calculation_item->id_item] ?? 0);
+                            $item_id_new = (int)($grids_new[$calculation_item->id_item] ?? 0);
                             break;
                     }
                 }
@@ -1377,7 +1377,7 @@ class DynamicHandler
         $product_config->delete();
         if (isset($data['config'])) {
             $product_config = DynamicConfig::copyFromArray($data['config']);
-            $product_config->id_product = (int) $id_product_new;
+            $product_config->id_product = (int)$id_product_new;
             $product_config->save();
         }
     }
@@ -1413,25 +1413,25 @@ class DynamicHandler
         $field_table = $this->module->name . '_customization_field';
         $sql = new \DbQuery();
         $sql->from($field_table);
-        $sql->where('id_product = ' . (int) $id_product);
+        $sql->where('id_product = ' . (int)$id_product);
         $row = \Db::getInstance()->getRow($sql);
 
-        if ($row && !$this->isReserved((int) $row['id_customization_field'])) {
-            $id_customization_field = (int) $row['id_customization_field'];
+        if ($row && !$this->isReserved((int)$row['id_customization_field'])) {
+            $id_customization_field = (int)$row['id_customization_field'];
             // check if customization really exists
             $sql = new \DbQuery();
             $sql->from('customization_field');
-            $sql->where('id_product = ' . (int) $id_product);
-            $sql->where('id_customization_field = ' . (int) $id_customization_field);
+            $sql->where('id_product = ' . (int)$id_product);
+            $sql->where('id_customization_field = ' . (int)$id_customization_field);
             $customization_field = \Db::getInstance()->getRow($sql);
             if (!$customization_field) {
-                \Db::getInstance()->delete($field_table, 'id_product = ' . (int) $id_product);
+                \Db::getInstance()->delete($field_table, 'id_product = ' . (int)$id_product);
 
                 return $this->addCustomField($id_product);
             }
 
             $product_config = DynamicConfig::getByProduct($id_product);
-            if ((int) $customization_field['required'] !== (int) $product_config->required) {
+            if ((int)$customization_field['required'] !== (int)$product_config->required) {
                 $active = $product_config->active;
                 $required = $product_config->required;
                 $data = [
@@ -1441,12 +1441,12 @@ class DynamicHandler
                 \Db::getInstance()->update(
                     'customization_field',
                     $data,
-                    'id_customization_field = ' . (int) $id_customization_field
+                    'id_customization_field = ' . (int)$id_customization_field
                 );
                 if ($no_add) {
                     $this->reserveCustomField($id_customization_field);
 
-                    return (int) $id_customization_field;
+                    return (int)$id_customization_field;
                 }
             } else {
                 $data = [
@@ -1455,7 +1455,7 @@ class DynamicHandler
                 \Db::getInstance()->update(
                     'customization_field',
                     $data,
-                    'id_customization_field = ' . (int) $id_customization_field
+                    'id_customization_field = ' . (int)$id_customization_field
                 );
             }
 
@@ -1480,22 +1480,22 @@ class DynamicHandler
         // check if product has customization field before adding
         $sql = new \DbQuery();
         $sql->from('customization_field');
-        $sql->where('id_product = ' . (int) $id_product);
-        $sql->where('type = ' . (int) \Product::CUSTOMIZE_TEXTFIELD);
+        $sql->where('id_product = ' . (int)$id_product);
+        $sql->where('type = ' . (int)\Product::CUSTOMIZE_TEXTFIELD);
         $customization_fields = \Db::getInstance()->executeS($sql);
         if (count($customization_fields)) {
             $customization_field = $customization_fields[0];
-            $id_customization_field = (int) $customization_field['id_customization_field'];
+            $id_customization_field = (int)$customization_field['id_customization_field'];
             if (!$this->isReserved($id_customization_field)) {
                 $data = [
-                    'required' => (int) $product_config->required,
+                    'required' => (int)$product_config->required,
                     'is_module' => 1,
                 ];
 
                 \Db::getInstance()->update(
                     'customization_field',
                     $data,
-                    'id_customization_field = ' . (int) $id_customization_field
+                    'id_customization_field = ' . (int)$id_customization_field
                 );
 
                 $this->updateCustomizableProp($id_product);
@@ -1514,20 +1514,20 @@ class DynamicHandler
 
         $customization_field = new \CustomizationField();
         $customization_field->name = $labels;
-        $customization_field->id_product = (int) $id_product;
+        $customization_field->id_product = (int)$id_product;
         $customization_field->type = \ProductCore::CUSTOMIZE_TEXTFIELD;
-        $customization_field->required = (bool) $product_config->required;
+        $customization_field->required = (bool)$product_config->required;
         $customization_field->is_module = true;
         $customization_field->save();
-        $id_customization_field = (int) $customization_field->id;
+        $id_customization_field = (int)$customization_field->id;
 
         $data = [
-            'id_product' => (int) $id_product,
-            'id_customization_field' => (int) $id_customization_field,
+            'id_product' => (int)$id_product,
+            'id_customization_field' => (int)$id_customization_field,
         ];
 
         \Db::getInstance()->insert($field_table, $data);
-        $id_customization_field = (int) \Db::getInstance()->Insert_ID();
+        $id_customization_field = (int)\Db::getInstance()->Insert_ID();
 
         $this->updateCustomizableProp($id_product);
         $this->reserveCustomField($id_customization_field);
@@ -1543,29 +1543,29 @@ class DynamicHandler
     {
         $sql = new \DbQuery();
         $sql->from('customization_field');
-        $sql->where('id_product = ' . (int) $id_product);
-        $sql->where('type = ' . (int) \Product::CUSTOMIZE_TEXTFIELD);
+        $sql->where('id_product = ' . (int)$id_product);
+        $sql->where('type = ' . (int)\Product::CUSTOMIZE_TEXTFIELD);
         $customization_fields = \Db::getInstance()->executeS($sql);
         $count = count($customization_fields);
 
         $product = new \Product($id_product);
         $customizable = $this->module->provider->hasRequiredField($id_product) ? 2 : 1;
-        if ((int) $product->customizable !== $customizable || (int) $product->text_fields !== $count) {
+        if ((int)$product->customizable !== $customizable || (int)$product->text_fields !== $count) {
             \Db::getInstance()->update(
                 'product',
                 [
-                    'text_fields' => (int) $count,
+                    'text_fields' => (int)$count,
                     'customizable' => $customizable,
                 ],
-                'id_product = ' . (int) $id_product
+                'id_product = ' . (int)$id_product
             );
             \Db::getInstance()->update(
                 'product_shop',
                 [
-                    'text_fields' => (int) $count,
+                    'text_fields' => (int)$count,
                     'customizable' => $customizable,
                 ],
-                'id_product = ' . (int) $id_product
+                'id_product = ' . (int)$id_product
             );
         }
     }
@@ -1575,8 +1575,8 @@ class DynamicHandler
         $id_customization_field = $this->addCustomField($id_product);
         \Db::getInstance()->update(
             'customization_field',
-            ['required' => (int) $required],
-            'id_customization_field = ' . (int) $id_customization_field
+            ['required' => (int)$required],
+            'id_customization_field = ' . (int)$id_customization_field
         );
 
         $customizable = $this->module->provider->hasRequiredField($id_product) ? 2 : 1;
@@ -1585,22 +1585,22 @@ class DynamicHandler
             [
                 'customizable' => $customizable,
             ],
-            'id_product = ' . (int) $id_product
+            'id_product = ' . (int)$id_product
         );
         \Db::getInstance()->update(
             'product_shop',
             [
                 'customizable' => $customizable,
             ],
-            'id_product = ' . (int) $id_product
+            'id_product = ' . (int)$id_product
         );
     }
 
     public function reserveCustomField($id_customization_field)
     {
         \Db::getInstance()->insert('tunisoft_customization_field', [
-            'id_customization_field' => (int) $id_customization_field,
-            'id_module' => (int) $this->module->id,
+            'id_customization_field' => (int)$id_customization_field,
+            'id_module' => (int)$this->module->id,
         ], false, true, \Db::REPLACE);
     }
 
@@ -1609,36 +1609,36 @@ class DynamicHandler
         $sql = new \DbQuery();
         $sql->select('id_module');
         $sql->from('tunisoft_customization_field');
-        $sql->where('id_customization_field = ' . (int) $id_customization_field);
-        $id_module = (int) \Db::getInstance()->getValue($sql);
+        $sql->where('id_customization_field = ' . (int)$id_customization_field);
+        $id_module = (int)\Db::getInstance()->getValue($sql);
 
-        return $id_module && $id_module !== (int) $this->module->id;
+        return $id_module && $id_module !== (int)$this->module->id;
     }
 
     public function makeProductCustomizable($id_product)
     {
-        $customizable = (int) $this->module->provider->hasRequiredField($id_product) ? 2 : 1;
+        $customizable = (int)$this->module->provider->hasRequiredField($id_product) ? 2 : 1;
 
         \Db::getInstance()->update(
             'product',
             ['customizable' => $customizable],
-            'id_product = ' . (int) $id_product
+            'id_product = ' . (int)$id_product
         );
 
         \Db::getInstance()->update(
             'product_shop',
             ['customizable' => $customizable],
-            'id_product = ' . (int) $id_product
+            'id_product = ' . (int)$id_product
         );
     }
 
     public function duplicateInputs($id_cart_old, $id_cart_new)
     {
         $has_errors = false;
-        if (!(int) $id_cart_new) {
+        if (!(int)$id_cart_new) {
             return false;
         }
-        if (!(int) $id_cart_old) {
+        if (!(int)$id_cart_old) {
             return false;
         }
         $dynamic_inputs = DynamicInput::getInputsByIdCart($id_cart_old);
@@ -1653,9 +1653,9 @@ class DynamicHandler
                 $sql = '
                 SELECT c.id_customization FROM `' . _DB_PREFIX_ . 'customization` c
                 JOIN    `' . _DB_PREFIX_ . 'customized_data` cd ON cd.id_customization = c.id_customization
-                WHERE   (cd.value = "' . pSQL($old_value) . '" OR cd.value = ' . (int) $id_input . ') 
-                        AND c.id_cart = ' . (int) $id_cart_new . ';';
-                $id_customization_new = (int) \Db::getInstance()->getValue($sql);
+                WHERE   (cd.value = "' . pSQL($old_value) . '" OR cd.value = ' . (int)$id_input . ') 
+                        AND c.id_cart = ' . (int)$id_cart_new . ';';
+                $id_customization_new = (int)\Db::getInstance()->getValue($sql);
 
                 $dynamic_input->id_customization = $id_customization_new;
                 $dynamic_input->save();
@@ -1664,15 +1664,15 @@ class DynamicHandler
                 UPDATE  `' . _DB_PREFIX_ . 'customized_data` cd
                 JOIN    `' . _DB_PREFIX_ . 'customization` c ON cd.id_customization = c.id_customization
                 SET     cd.value = "' . pSQL($new_value) . '"
-                WHERE   cd.value = "' . pSQL($old_value) . '" AND c.id_cart = ' . (int) $id_cart_new . ';';
+                WHERE   cd.value = "' . pSQL($old_value) . '" AND c.id_cart = ' . (int)$id_cart_new . ';';
                 \Db::getInstance()->execute($sql);
 
                 // replace id_input directly
                 $sql = '
                 UPDATE  `' . _DB_PREFIX_ . 'customized_data` cd
                 JOIN    `' . _DB_PREFIX_ . 'customization` c ON cd.id_customization = c.id_customization
-                SET     cd.value = ' . (int) $id_input_new . '
-                WHERE   cd.value = ' . (int) $id_input . ' AND c.id_cart = ' . (int) $id_cart_new . ';';
+                SET     cd.value = ' . (int)$id_input_new . '
+                WHERE   cd.value = ' . (int)$id_input . ' AND c.id_cart = ' . (int)$id_cart_new . ';';
                 \Db::getInstance()->execute($sql);
             }
 
@@ -1680,7 +1680,7 @@ class DynamicHandler
                 $sql = '
                 SELECT id_customization FROM `' . _DB_PREFIX_ . 'customized_data`
                  WHERE   value = "' . pSQL($new_value) . '"';
-                $id_customization = (int) \Db::getInstance()->getValue($sql);
+                $id_customization = (int)\Db::getInstance()->getValue($sql);
                 $this->context->cart->deleteProduct(
                     $dynamic_input->id_product,
                     $dynamic_input->id_attribute,
@@ -1695,8 +1695,8 @@ class DynamicHandler
 
     public function addCart()
     {
-        if ((int) $this->context->cookie->id_cart) {
-            $id_cart = (int) $this->context->cookie->id_cart;
+        if ((int)$this->context->cookie->id_cart) {
+            $id_cart = (int)$this->context->cookie->id_cart;
             if (!\Validate::isLoadedObject($this->context->cart)) {
                 $prev_cart = new \Cart($id_cart);
                 if (\Validate::isLoadedObject($prev_cart)) {
@@ -1726,21 +1726,21 @@ class DynamicHandler
             $this->context->cart->id_address_invoice = $id_address;
         }
 
-        if (!(int) $this->context->cart->id_shop) {
+        if (!(int)$this->context->cart->id_shop) {
             $this->context->cart->id_shop = $this->context->shop->id;
         }
-        if (!(int) $this->context->cart->id_currency) {
+        if (!(int)$this->context->cart->id_currency) {
             $this->context->cart->id_currency = $this->module->provider->getCurrency();
         }
 
         $this->context->cart->add();
         if ($this->context->cart->id) {
-            $this->context->cookie->id_cart = (int) $this->context->cart->id;
+            $this->context->cookie->id_cart = (int)$this->context->cart->id;
             $this->context->cookie->write();
-            $this->context->cart->id = (int) $this->context->cart->id;
+            $this->context->cart->id = (int)$this->context->cart->id;
         }
 
-        return (int) $this->context->cart->id;
+        return (int)$this->context->cart->id;
     }
 
     /**
@@ -1795,7 +1795,7 @@ class DynamicHandler
              JOIN `' . _DB_PREFIX_ . 'dynamicproduct_input_field` dpif
                   ON dpif.`id_input` = i.`id_input`
              WHERE c.`formula` = 1
-                AND i.id_cart = ' . (int) $this->context->cart->id . '
+                AND i.id_cart = ' . (int)$this->context->cart->id . '
                 AND cus.in_cart = 1';
 
         $rows = \Db::getInstance()->executeS($sql);
@@ -1878,19 +1878,19 @@ class DynamicHandler
 
         $same_product = !$id_product_old;
 
-        if ($field->common && (int) $field->id_product !== (int) $id_product_new && !$same_product) {
+        if ($field->common && (int)$field->id_product !== (int)$id_product_new && !$same_product) {
             $common_field = DynamicCommonField::getByFieldAndProduct($field->id, $id_product_old);
-            $common_field->id_product = (int) $id_product_new;
+            $common_field->id_product = (int)$id_product_new;
             $common_field->id_group = $id_group_new;
             $common_field->id_step = $id_step_new;
             $common_field->position = $field->position;
             // if it's a new common field, find max position
             if (!$copy_position && !$common_field->id) {
                 $max_common_pos = \Db::getInstance()->getValue(
-                    'SELECT MAX(position) FROM ' . _DB_PREFIX_ . $this->module->name . '_common_field WHERE id_product = ' . (int) $id_product_new
+                    'SELECT MAX(position) FROM ' . _DB_PREFIX_ . $this->module->name . '_common_field WHERE id_product = ' . (int)$id_product_new
                 );
                 $max_fields_pos = \Db::getInstance()->getValue(
-                    'SELECT MAX(position) FROM ' . _DB_PREFIX_ . $this->module->name . '_field WHERE id_product = ' . (int) $id_product_new
+                    'SELECT MAX(position) FROM ' . _DB_PREFIX_ . $this->module->name . '_field WHERE id_product = ' . (int)$id_product_new
                 );
                 $common_field->position = max($max_common_pos, $max_fields_pos) + 1;
             }
@@ -1906,13 +1906,13 @@ class DynamicHandler
             \Db::getInstance()->update(
                 DynamicField::$definition['table'],
                 ['position' => ['type' => 'sql', 'value' => '`position` + 1']],
-                'position > ' . (int) $field->position . ' AND id_product = ' . (int) $id_product_new
+                'position > ' . (int)$field->position . ' AND id_product = ' . (int)$id_product_new
             );
 
             \Db::getInstance()->update(
                 DynamicCommonField::$definition['table'],
                 ['position' => ['type' => 'sql', 'value' => '`position` + 1']],
-                'position > ' . (int) $field->position . ' AND id_product = ' . (int) $id_product_new
+                'position > ' . (int)$field->position . ' AND id_product = ' . (int)$id_product_new
             );
 
             ++$field->position;
@@ -1923,64 +1923,64 @@ class DynamicHandler
         }
         $field->common = false;
 
-        $field->id_product = (int) $id_product_new;
+        $field->id_product = (int)$id_product_new;
         $field->favorite = false;
         $field->id_group = $id_group_new;
         $field->id_step = $id_step_new;
-        $id_field_old = (int) $field->id;
+        $id_field_old = (int)$field->id;
         $field->add();
 
         $field->copyImagesFrom($id_field_old);
-        $id_field_new = (int) $field->id;
+        $id_field_new = (int)$field->id;
 
         $unit_value = DynamicUnitValue::getUnitValuesByIdField($id_field_old);
         $unit_value->id_field = $id_field_new;
         $unit_value->add();
 
-        if ((int) $field->type === _DP_DROPDOWN_) {
+        if ((int)$field->type === _DP_DROPDOWN_) {
             $dropdown_options = DynamicDropdownOption::getDropdownOptionsByIdField($id_field_old);
             foreach ($dropdown_options as $dropdown_option) {
-                $id_dropdown_option = (int) $dropdown_option['id'];
+                $id_dropdown_option = (int)$dropdown_option['id'];
                 $new_dropdown_option = new DynamicDropdownOption($id_dropdown_option);
                 $new_dropdown_option->id_field = $id_field_new;
                 $new_dropdown_option->add();
-                $options_new[$id_dropdown_option] = (int) $new_dropdown_option->id;
+                $options_new[$id_dropdown_option] = (int)$new_dropdown_option->id;
                 $new_dropdown_option->copyImagesFrom($id_dropdown_option);
             }
         }
 
-        if ((int) $field->type === _DP_RADIO_) {
+        if ((int)$field->type === _DP_RADIO_) {
             $radio_options = DynamicRadioOption::getRadioOptionsByIdField($id_field_old);
             foreach ($radio_options as $radio_option) {
-                $id_radio_option = (int) $radio_option['id'];
+                $id_radio_option = (int)$radio_option['id'];
                 $new_radio_option = new DynamicRadioOption($id_radio_option);
                 $new_radio_option->id_field = $id_field_new;
                 $new_radio_option->add();
-                $options_new[$id_radio_option] = (int) $new_radio_option->id;
+                $options_new[$id_radio_option] = (int)$new_radio_option->id;
                 $new_radio_option->copyImagesFrom($id_radio_option);
             }
         }
 
-        if ((int) $field->type === _DP_THUMBNAILS_) {
+        if ((int)$field->type === _DP_THUMBNAILS_) {
             $thumbnails_options = DynamicThumbnailsOption::getThumbnailsOptionsByIdField($id_field_old);
             foreach ($thumbnails_options as $thumbnails_option) {
                 $id_thumbnails_option = $thumbnails_option['id'];
                 $new_thumbnails_option = new DynamicThumbnailsOption($id_thumbnails_option);
                 $new_thumbnails_option->id_field = $id_field_new;
                 $new_thumbnails_option->add();
-                $options_new[$id_thumbnails_option] = (int) $new_thumbnails_option->id;
+                $options_new[$id_thumbnails_option] = (int)$new_thumbnails_option->id;
                 $new_thumbnails_option->copyImagesFrom($id_thumbnails_option);
             }
         }
 
-        if ((int) $field->type === _DP_PREVIEW_) {
+        if ((int)$field->type === _DP_PREVIEW_) {
             $previews_options = DynamicPreviewOption::getPreviewOptionsByIdField($id_field_old);
             foreach ($previews_options as $previews_option) {
                 $id_previews_option = $previews_option['id'];
                 $new_preview_option = new DynamicPreviewOption($id_previews_option);
                 $new_preview_option->id_field = $id_field_new;
                 $new_preview_option->add();
-                $options_new[$id_previews_option] = (int) $new_preview_option->id;
+                $options_new[$id_previews_option] = (int)$new_preview_option->id;
                 $new_preview_option->copyImagesFrom($id_previews_option);
             }
         }
@@ -2011,7 +2011,7 @@ class DynamicHandler
                     }
                 }
             }
-            $id_lang_default = (int) \Configuration::get('PS_LANG_DEFAULT');
+            $id_lang_default = (int)\Configuration::get('PS_LANG_DEFAULT');
             if (empty($new_value[$id_lang_default])) {
                 $current_lang_value = $object->$lang_field;
                 $new_value[$id_lang_default] = $current_lang_value[$import_default_lang] ?? null;
@@ -2022,8 +2022,8 @@ class DynamicHandler
 
     private function findFieldGroup($id_group, $label)
     {
-        $id_lang_default = (int) \Configuration::get('PS_LANG_DEFAULT');
-        $field_group = new DynamicFieldGroup((int) $id_group, $id_lang_default);
+        $id_lang_default = (int)\Configuration::get('PS_LANG_DEFAULT');
+        $field_group = new DynamicFieldGroup((int)$id_group, $id_lang_default);
         if (\Validate::isLoadedObject($field_group) && $field_group->label === $label) {
             return $field_group;
         }
@@ -2040,8 +2040,8 @@ class DynamicHandler
 
     private function findStep($id_step, $label)
     {
-        $id_lang_default = (int) \Configuration::get('PS_LANG_DEFAULT');
-        $step = new DynamicStep((int) $id_step, $id_lang_default);
+        $id_lang_default = (int)\Configuration::get('PS_LANG_DEFAULT');
+        $step = new DynamicStep((int)$id_step, $id_lang_default);
         if (\Validate::isLoadedObject($step) && $step->label === $label) {
             return $step;
         }
@@ -2058,8 +2058,8 @@ class DynamicHandler
 
     private function findUnit($id_unit, $symbol)
     {
-        $id_lang_default = (int) \Configuration::get('PS_LANG_DEFAULT');
-        $unit = new DynamicUnit((int) $id_unit, $id_lang_default);
+        $id_lang_default = (int)\Configuration::get('PS_LANG_DEFAULT');
+        $unit = new DynamicUnit((int)$id_unit, $id_lang_default);
         if (\Validate::isLoadedObject($unit) && $unit->symbol === $symbol) {
             return $unit;
         }

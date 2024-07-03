@@ -338,8 +338,6 @@ class Cart extends CartCore
             return false;
         }
         if (Db::getInstance()->numRows() && (int)$result['quantity']) {
-
-
             return Db::getInstance()->execute(
                 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
                 SET `quantity` = ' . (int)$result['quantity'] . '
@@ -790,73 +788,32 @@ class Cart extends CartCore
         }
         return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
     }
-
-
-    public function duplicate()
-    {
-        $id_cart_old = (int) $this->id;
-        $result = parent::duplicate();
-        $id_cart_new = (int) $result['cart']->id;
-        Module::getInstanceByName('dynamicproduct');
-        if (Module::isEnabled('dynamicproduct')) {
-            /** @var DynamicProduct $module */
-            $module = Module::getInstanceByName('dynamicproduct');
-            $module->hookCartDuplicated([
-                'id_cart_old' => $id_cart_old,
-                'id_cart_new' => $id_cart_new,
-            ]);
-        }
-
-        return $result;
-    }
-
-
-    /**
-     * Get the delivery option selected, or if no delivery option was selected,
-     * the cheapest option for each address.
-     *
-     * @param Country|null $default_country Default country
-     * @param bool $dontAutoSelectOptions Do not auto select delivery option
-     * @param bool $use_cache Use cache
-     *
-     * @return array|false Delivery option
-     */
     public function getDeliveryOption($default_country = null, $dontAutoSelectOptions = false, $use_cache = true)
     {
         $cache_id = (int) (is_object($default_country) ? $default_country->id : 0) . '-' . (int) $dontAutoSelectOptions;
         if (isset(static::$cacheDeliveryOption[$cache_id]) && $use_cache) {
             return static::$cacheDeliveryOption[$cache_id];
         }
-
         $delivery_option_list = $this->getDeliveryOptionList($default_country);
-
-        // The delivery option was selected
         if (isset($this->delivery_option) && $this->delivery_option != '') {
             $delivery_option = json_decode($this->delivery_option, true);
             $validated = true;
-
             if (is_array($delivery_option)) {
                 foreach ($delivery_option as $id_address => $key) {
                     if (!isset($delivery_option_list[$id_address][$key])) {
                         $validated = false;
-
                         break;
                     }
                 }
-
                 if ($validated) {
                     static::$cacheDeliveryOption[$cache_id] = $delivery_option;
-
                     return $delivery_option;
                 }
             }
         }
-
         if ($dontAutoSelectOptions) {
             return false;
         }
-
-        // No delivery option selected or delivery option selected is not valid, get the better for all options
         $delivery_option = [];
         foreach ($delivery_option_list as $id_address => $options) {
             $context = Context::getContext()->cloneContext();
@@ -866,7 +823,6 @@ class Cart extends CartCore
                     break;
                 } elseif (Configuration::get('PS_CARRIER_DEFAULT') == -2 && $option['is_best_grade']) {
                     $delivery_option[$id_address] = $key;
-
                     break;
                 } elseif ($option['unique_carrier'] && in_array(Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER', $context->language->id,
                         $context->shop->id_shop_group,
@@ -876,26 +832,21 @@ class Cart extends CartCore
                         $context->shop->id_shop_group,
                         $context->shop->id) == (int)$context->customer->id) {
                     $delivery_option[$id_address] = $key;
-
                     break;
                 } elseif ($option['unique_carrier'] && in_array(Configuration::get('PS_CARRIER_DEFAULT'), array_keys($option['carrier_list'])) && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',
                         $context->language->id,
                         $context->shop->id_shop_group,
                         $context->shop->id) != $context->customer->id) {
                     $delivery_option[$id_address] = $key;
-
                     break;
                 }
             }
-
             reset($options);
             if (!isset($delivery_option[$id_address])) {
                 $delivery_option[$id_address] = key($options);
             }
         }
-
         static::$cacheDeliveryOption[$cache_id] = $delivery_option;
-
         return $delivery_option;
     }
 }

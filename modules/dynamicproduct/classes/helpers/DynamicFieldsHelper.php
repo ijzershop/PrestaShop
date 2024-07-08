@@ -207,8 +207,8 @@ class DynamicFieldsHelper
     private function getCombinationFields($id_product): array
     {
         $rows = \Db::getInstance()->executeS('
-        SELECT id_field
-        FROM ' . _DB_PREFIX_ . 'dynamicproduct_combination_field
+        SELECT id_field 
+        FROM ' . _DB_PREFIX_ . 'dynamicproduct_combination_field 
         WHERE id_product = ' . (int) $id_product);
 
         return array_map(function ($row) {

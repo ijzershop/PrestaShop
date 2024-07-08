@@ -104,14 +104,11 @@ class DynamicEquation extends DynamicObject
     public static function getEquationByIdFormula($id_product, $id_formula)
     {
         $id_source_product = ConfigLinkHelper::getSourceProduct($id_product);
-
         $sql = new \DbQuery();
         $sql->select('id_equation');
         $sql->from(self::$definition['table']);
         $sql->where('id_product = ' . (int)$id_source_product);
         $sql->where('id_formula = ' . (int)$id_formula);
-
-
         $id_equation = \Db::getInstance()->getValue($sql, false);
 
         return new DynamicEquation($id_equation);
@@ -302,7 +299,6 @@ class DynamicEquation extends DynamicObject
         if (empty($formula)) {
             return '';
         }
-
         $matches = self::matchFields($formula);
         if (!count($matches)) {
             return $formula;
@@ -312,7 +308,6 @@ class DynamicEquation extends DynamicObject
         $module = DynamicTools::getModule();
 
         list($formula_fields, $field_names) = $matches;
-
         foreach ($formula_fields as $index => $formula_field) {
             $field_name = trim($field_names[$index]);
             if (!isset($input_fields[$field_name]) && !in_array($field_name, self::$extraFields, true)) {

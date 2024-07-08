@@ -184,11 +184,11 @@ CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_input`
     `inputs`           text           NOT NULL,
     `records`          text           NOT NULL,
     `hash`             varchar(100)   NOT NULL,
-    `true_conditions`  text       DEFAULT '[]',
+    `true_conditions`  varchar(100) DEFAULT '[]',
     `name`             varchar(100)   NOT NULL,
     `is_bookmarked`    tinyint(1)     NOT NULL,
     `is_admin`         tinyint(1)     NOT NULL,
-    `is_editable`      tinyint(1) DEFAULT 1,
+    `is_editable`      tinyint(1)   DEFAULT 1,
     `date_add`         datetime       NOT NULL,
     `date_upd`         datetime       NOT NULL,
     PRIMARY KEY (`id_input`)

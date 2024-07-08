@@ -133,7 +133,7 @@ class DynamicCustomizationHelper
                 $price_equation_result,
                 $weight_equation_result,
                 $input_fields,
-                $true_conditions,
+                $true_conditions
             );
 
             $id_inputs[$id_product_attribute] = $dynamic_input->id;

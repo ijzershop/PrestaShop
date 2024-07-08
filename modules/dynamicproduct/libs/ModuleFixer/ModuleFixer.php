@@ -107,7 +107,7 @@ class ModuleFixer
 
         foreach ($module_hooks as $hook_name) {
             if (!\Hook::isModuleRegisteredOnHook($this->module, $hook_name, $this->context->shop->id)) {
-                $id_hook = (int) \Hook::getIdByName($hook_name);
+                $id_hook = (int)\Hook::getIdByName($hook_name);
                 $hook = new \Hook($id_hook, $this->context->language->id);
                 $hooks_list[] = [
                     'id_hook' => $id_hook,
@@ -135,7 +135,7 @@ class ModuleFixer
 
     private function restoreHooks()
     {
-        $hooks = (array) \Tools::getValue('hooks');
+        $hooks = (array)\Tools::getValue('hooks');
         if (is_array($hooks)) {
             $hook_names = array_keys($hooks);
             foreach ($hook_names as $hook_name) {
@@ -244,7 +244,7 @@ class ModuleFixer
     public function cleanUp()
     {
         $start_time = microtime(true);
-        $max_execution_time = (int) ini_get('max_execution_time');
+        $max_execution_time = (int)ini_get('max_execution_time');
 
         $min_age = \Tools::getValue('min_age');
 
@@ -252,11 +252,11 @@ class ModuleFixer
 
         $old_inputs = \Db::getInstance()->executeS('SELECT i.id_input FROM ' . _DB_PREFIX_ . 'dynamicproduct_input i
                 LEFT JOIN ' . _DB_PREFIX_ . 'order_detail od ON od.id_customization = i.id_customization
-                WHERE i.date_upd < NOW() - INTERVAL ' . (int) $min_age . ' DAY
+                WHERE i.date_upd < NOW() - INTERVAL ' . (int)$min_age . ' DAY
                 AND ISNULL(od.id_order_detail) AND NOT i.is_admin AND NOT i.is_bookmarked;');
 
         foreach ($old_inputs as $old_input) {
-            $id_input = (int) $old_input['id_input'];
+            $id_input = (int)$old_input['id_input'];
             $input = new DynamicInput($id_input);
             if (\Validate::isLoadedObject($input)) {
                 $input->delete();

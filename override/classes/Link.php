@@ -1,5 +1,4 @@
 <?php
-
 class Link extends LinkCore
 {
     
@@ -99,7 +98,7 @@ class Link extends LinkCore
     }
     /*
     * module: wkwebp
-    * date: 2024-04-04 08:26:51
+    * date: 2024-07-03 14:05:51
     * version: 4.1.2
     */
     public function getImageLink($name, $ids, $type = null, $extension = 'jpg')
@@ -135,7 +134,7 @@ class Link extends LinkCore
     }
     /*
     * module: wkwebp
-    * date: 2024-04-04 08:26:51
+    * date: 2024-07-03 14:05:51
     * version: 4.1.2
     */
     public function getCatImageLink($name, $idCategory, $type = null, $extension = 'jpg')
@@ -171,7 +170,7 @@ class Link extends LinkCore
     }
     /*
     * module: wkwebp
-    * date: 2024-04-04 08:26:51
+    * date: 2024-07-03 14:05:51
     * version: 4.1.2
     */
     public function getStoreImageLink($name, $idStore, $type = null, $extension = 'jpg')
@@ -198,7 +197,7 @@ class Link extends LinkCore
     }
     /*
     * module: wkwebp
-    * date: 2024-04-04 08:26:51
+    * date: 2024-07-03 14:05:51
     * version: 4.1.2
     */
     public function getManufacturerImageLink($idManufacturer, $type = null, $extension = 'jpg')
@@ -226,7 +225,7 @@ class Link extends LinkCore
     }
     /*
     * module: wkwebp
-    * date: 2024-04-04 08:26:51
+    * date: 2024-07-03 14:05:51
     * version: 4.1.2
     */
     public function getSupplierImageLink($idSupplier, $type = null, $extension = 'jpg')

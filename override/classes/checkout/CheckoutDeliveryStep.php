@@ -1,11 +1,7 @@
 <?php
-
-
 class CheckoutDeliveryStep extends CheckoutDeliveryStepCore
 {
-
 public $shippingFieldError;
-
     public function handleRequest(array $requestParams = [])
     {
         if (isset($requestParams['delivery_option'])) {
@@ -16,20 +12,17 @@ public $shippingFieldError;
             $this->getCheckoutSession()->setRecyclable(
                 isset($requestParams['recyclable']) ? $requestParams['recyclable'] : false
             );
-
             $useGift = isset($requestParams['gift']) ? $requestParams['gift'] : false;
             $this->getCheckoutSession()->setGift(
                 $useGift,
                 ($useGift && isset($requestParams['gift_message'])) ? $requestParams['gift_message'] : ''
             );
         }
-
         $delivery_option = "";
         if(isset($requestParams['delivery_option']) && !is_null($requestParams['delivery_option'])){
             $delivery_option = (int)reset($requestParams['delivery_option']);
         }
         if((int)Configuration::get('ADDTOORDER_DELIVERY_METHOD') == $delivery_option || (int)Configuration::get('ADDTOORDER_DELIVERY_METHOD') == (int)$this->context->cart->id_carrier){
-
             if(isset($requestParams['added_to_order'])){
                 if($requestParams['added_to_order'] === ''){
                     $this->getCheckoutProcess()->setHasErrors(true);
@@ -39,20 +32,14 @@ public $shippingFieldError;
                 $this->context->cart->added_to_order = $requestParams['added_to_order'];
                 $this->context->cart->update();
             } else {
-                //geen added to order parameter
             }
         } else {
             $this->context->cart->added_to_order = null;
             $this->context->cart->update();
         }
-
-
-
-
         if (isset($requestParams['delivery_message'])) {
             $this->getCheckoutSession()->setMessage($requestParams['delivery_message']);
         }
-
         if ($this->isReachable() && isset($requestParams['confirmDeliveryOption'])) {
             $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
             $this->setNextStepAsCurrent();
@@ -62,12 +49,9 @@ public $shippingFieldError;
                 && $this->isModuleComplete($requestParams)
             );
         }
-
         $this->setTitle($this->getTranslator()->trans('Shipping Method', [], 'Shop.Theme.Checkout'));
-
         Hook::exec('actionCarrierProcess', ['cart' => $this->getCheckoutSession()->getCart()]);
     }
-
     private function setAddedToOrderValidationMsg ($msg, $field, $type='error')
     {
         $notificationsType = 'Error';
@@ -105,17 +89,14 @@ public $shippingFieldError;
                     [],
                     'Shop.Notifications.'.$notificationsType);
             }
-
     }
-
     private function getAddedToOrderValidationMsg()
     {
         return $this->shippingFieldError;
     }
-
     /*
     * module: wkwebp
-    * date: 2024-04-04 08:26:51
+    * date: 2024-07-03 14:05:51
     * version: 4.1.2
     */
     public function render(array $extraParams = [])
@@ -124,8 +105,7 @@ public $shippingFieldError;
             && Configuration::get('WK_WEBP_ENABLE_MODULE')
             && !Context::getContext()->cookie->wk_webp_safari
         ) {
-            $wkDeliveryOptions = array_reverse($this->getCheckoutSession()->getDeliveryOptions(), true);
-
+            $wkDeliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
             if ($wkDeliveryOptions) {
                 foreach ($wkDeliveryOptions as &$option) {
                     if (file_exists(_PS_MODULE_DIR_ . 'wkwebp/views/img/carrier/' . $option['id'] . '.webp')) {
@@ -134,7 +114,6 @@ public $shippingFieldError;
                     }
                 }
             }
-
             return $this->renderTemplate(
                 $this->getTemplate(),
                 $extraParams,
@@ -143,7 +122,6 @@ public $shippingFieldError;
                     'hookDisplayAfterCarrier' => Hook::exec('displayAfterCarrier', ['cart' => $this->getCheckoutSession()->getCart()]),
                     'id_address' => $this->getCheckoutSession()->getIdAddressDelivery(),
                     'delivery_options' => $wkDeliveryOptions,
-                    'added_to_order_msg' => $this->getAddedToOrderValidationMsg(),
                     'delivery_option' => $this->getCheckoutSession()->getSelectedDeliveryOption(),
                     'recyclable' => $this->getCheckoutSession()->isRecyclable(),
                     'recyclablePackAllowed' => $this->isRecyclablePackAllowed(),
@@ -169,7 +147,6 @@ public $shippingFieldError;
                     'hookDisplayAfterCarrier' => Hook::exec('displayAfterCarrier', ['cart' => $this->getCheckoutSession()->getCart()]),
                     'id_address' => $this->getCheckoutSession()->getIdAddressDelivery(),
                     'delivery_options' => $this->getCheckoutSession()->getDeliveryOptions(),
-                    'added_to_order_msg' => $this->getAddedToOrderValidationMsg(),
                     'delivery_option' => $this->getCheckoutSession()->getSelectedDeliveryOption(),
                     'recyclable' => $this->getCheckoutSession()->isRecyclable(),
                     'recyclablePackAllowed' => $this->isRecyclablePackAllowed(),

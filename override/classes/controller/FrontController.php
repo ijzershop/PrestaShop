@@ -22,22 +22,22 @@ if (!defined('_PS_VERSION_')) {
 }
 class FrontController extends FrontControllerCore
 {
-    /*
-    * module: wkwebp
-    * date: 2024-04-04 08:26:51
-    * version: 4.1.2
-    */
     public function getTemplateVarShop()
     {
         $shop = parent::getTemplateVarShop();
         if (Module::isEnabled('wkwebp')
             && Configuration::get('WK_WEBP_ENABLE_MODULE')
             && Configuration::get('WK_WEBP_SHOW_SHOP_LOGO')) {
+                $filename = Configuration::get('PS_LOGO', (int)Context::getContext()->language->id, (int)Context::getContext()->shop->id_shop_group, (int)Context::getContext()->shop->id);
+                $lastDotPosition = strrpos(Configuration::get('PS_LOGO', (int)Context::getContext()->language->id, (int)Context::getContext()->shop->id_shop_group, (int)Context::getContext()->shop->id), '.');
+                if ($lastDotPosition !== false) {
+                    $filename = substr($filename, 0, $lastDotPosition);
+                }
             $shop['logo'] = Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .
-            'modules/wkwebp/views/img/store/logo.webp';
+            'modules/wkwebp/views/img/store/'.$filename.'.webp';
             if (isset($shop['logo_details'])) {
                 $shop['logo_details']['src'] = Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .
-                'modules/wkwebp/views/img/store/logo.webp';
+                'modules/wkwebp/views/img/store/'.$filename.'.webp';
             }
         }
         return $shop;

@@ -1,5 +1,4 @@
 <?php
-
 class Tools extends ToolsCore {
     public static function addonsRequest($request, $params = array())
     {
@@ -7,7 +6,7 @@ class Tools extends ToolsCore {
     }
     /*
     * module: wkwebp
-    * date: 2024-04-04 08:26:51
+    * date: 2024-07-03 14:05:51
     * version: 4.1.2
     */
     public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
@@ -336,6 +335,4 @@ FileETag none
         return true;
     }
 }
-
-
 ?>

@@ -4,7 +4,7 @@ Bericht van een {shop_name} klant
 
 E-mailadres van de klant: {email}
 
-Bestelreferentie:  {order_reference}
+Order reference:  {order_reference}
 
 Bijlage: {attached_file}
 

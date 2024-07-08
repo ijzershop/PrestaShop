@@ -97,6 +97,10 @@
                   </li>
                 </ul>
               </a>
+            {*     /All stores dropdown       *}
+            {if Shop::getTotalShops() > 0}
+              {include file='_partials/shops-dropdown.tpl'}
+            {/if}
               {*     / Header column      *}
           </td>
           <td id="kiyoh_header_column" class="{if Module::isEnabled('ps_shoppingcart')}col col-lg-4{else} col offset-lg-2 col-lg-4{/if} p-0 align-middle">

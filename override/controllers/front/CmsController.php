@@ -29,7 +29,7 @@ class CmsController extends CmsControllerCore
      */
     /*
     * module: wkwebp
-    * date: 2024-04-04 08:26:51
+    * date: 2024-07-03 14:05:51
     * version: 4.1.2
     */
     public function initContent()

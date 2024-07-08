@@ -8,7 +8,7 @@ Postcode:  {postcode}
 
 Phone number:  {phonenumber}
 
-Bestelreferentie:  {order_reference}
+Order reference:  {order_reference}
 
 Bijlage: {attached_file}
 

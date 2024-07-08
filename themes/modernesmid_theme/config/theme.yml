@@ -1,6 +1,6 @@
 name: modernesmid_theme
 display_name: Moderne Smid Theme 8
-version: 1.0.0
+version: 2.0.0
 author:
   name: "JB Stoker"
   email: "jelmer@ijzershop.nl"
@@ -12,9 +12,9 @@ meta:
     to: ~
 
   available_layouts:
-    layout-full-width:
-      name: Full Width
-      description: No side columns, ideal for distraction-free pages such as product pages.
+    layout-full-width
+    name: Full Width
+    description: No side columns, ideal for distraction-free pages such as product pages.
     layout-both-columns:
       name: Three Columns
       description: One large central column and 2 side columns.
@@ -26,12 +26,12 @@ meta:
       description: Two columns with a small right column
 
 assets:
-# If you're using this theme as child and you want to load
-# the parent theme assets, uncomment this line.
-#  use_parent_assets: true
+  # If you're using this theme as child and you want to load
+  # the parent theme assets, uncomment this line.
+  #  use_parent_assets: true
 
-# The following lines are showing how to load assets in your page
-# Uncomment and change value to start loading css or js files
+  # The following lines are showing how to load assets in your page
+  # Uncomment and change value to start loading css or js files
   css:
     all:
       - id: modernesmid-style
@@ -119,66 +119,66 @@ theme_settings:
   default_layout: layout-left-column
   layouts:
     home: layout-left-column
-    address: layout-left-column,
-    addresses: layout-left-column,
-    authentication: layout-left-column,
-    best-sales: layout-left-column,
-    cart: layout-full-width,
-    category: layout-left-column,
-    cms: layout-left-column,
-    contact: layout-left-column,
-    contactinformation: layout-left-column,
-    contactoffer: layout-left-column,
-    contactretour: layout-left-column,
-    discount: layout-left-column,
-    guest-tracking: layout-left-column,
-    history: layout-left-column,
-    identity: layout-left-column,
-    index: layout-left-column,
-    manufacturer: layout-full-width,
-    module-advancedvatmanager-AdminAVMSettings: layout-full-width,
-    module-advancedvatmanager-AdminCheckVAT: layout-full-width,
-    module-advancedvatmanager-AdminCustomersExemptionManager: layout-full-width,
-    module-advancedvatmanager-AdminCustomersOrdersManager: layout-full-width,
-    module-advancedvatmanager-AdminCustomersVatManager: layout-full-width,
-    module-advancedvatmanager-AdvancedVatManager: layout-full-width,
-    module-bankwire-payment: layout-full-width,
-    module-bankwire-validation: layout-full-width,
-    module-cashondelivery-validation: layout-full-width,
-    module-cheque-payment: layout-full-width,
-    module-cheque-validation: layout-full-width,
-    module-litespeedcache-esi: layout-full-width,
-    module-msthemeconfig-offer: layout-full-width,
-    module-ps_cashpayment-payment: layout-full-width,
-    module-ps_cashpayment-validation: layout-full-width,
-    module-ps_checkpayment-payment: layout-full-width,
-    module-ps_checkpayment-validation: layout-full-width,
-    module-ps_creditpayment-payment: layout-full-width,
-    module-ps_creditpayment-validation: layout-full-width,
-    module-ps_emailalerts-account: layout-full-width,
-    module-ps_emailsubscription-subscription: layout-full-width,
-    module-ps_emailsubscription-verification: layout-full-width,
-    module-ps_metrics-AdminAjaxDashboard: layout-full-width,
-    module-ps_metrics-AdminAjaxSettings: layout-full-width,
-    module-ps_metrics-AdminOauthCallback: layout-full-width,
-    module-ps_pinpayment-payment: layout-full-width,
-    module-ps_pinpayment-validation: layout-full-width,
-    module-ps_shoppingcart-ajax: layout-full-width,
-    module-ps_wirepayment-payment: layout-full-width,
-    module-ps_wirepayment-validation: layout-full-width,
-    module-sisow-payment: layout-full-width,
-    module-sisow-validation: layout-full-width,
-    module-supercheckout-supercheckout: layout-full-width,
-    my-account: layout-full-width,
-    new-products: layout-left-column,
-    order-confirmation: layout-left-column,
-    order-follow: layout-full-width,
-    order-slip: layout-full-width,
-    pagenotfound: layout-full-width,
-    password: layout-left-column,
-    prices-drop: layout-left-column,
-    product: layout-left-column,
-    search: layout-left-column,
-    sitemap: layout-left-column,
-    stores: layout-left-column,
-    supplier: layout-left-column,
+    address: layout-left-column
+    addresses: layout-left-column
+    authentication: layout-left-column
+    best-sales: layout-left-column
+    cart: layout-full-width
+    category: layout-left-column
+    cms: layout-left-column
+    contact: layout-left-column
+    contactinformation: layout-left-column
+    contactoffer: layout-left-column
+    contactretour: layout-left-column
+    discount: layout-left-column
+    guest-tracking: layout-left-column
+    history: layout-left-column
+    identity: layout-left-column
+    index: layout-left-column
+    manufacturer: layout-full-width
+    module-advancedvatmanager-AdminAVMSettings: layout-full-width
+    module-advancedvatmanager-AdminCheckVAT: layout-full-width
+    module-advancedvatmanager-AdminCustomersExemptionManager: layout-full-width
+    module-advancedvatmanager-AdminCustomersOrdersManager: layout-full-width
+    module-advancedvatmanager-AdminCustomersVatManager: layout-full-width
+    module-advancedvatmanager-AdvancedVatManager: layout-full-width
+    module-bankwire-payment: layout-full-width
+    module-bankwire-validation: layout-full-width
+    module-cashondelivery-validation: layout-full-width
+    module-cheque-payment: layout-full-width
+    module-cheque-validation: layout-full-width
+    module-litespeedcache-esi: layout-full-width
+    module-msthemeconfig-offer: layout-full-width
+    module-ps_cashpayment-payment: layout-full-width
+    module-ps_cashpayment-validation: layout-full-width
+    module-ps_checkpayment-payment: layout-full-width
+    module-ps_checkpayment-validation: layout-full-width
+    module-ps_creditpayment-payment: layout-full-width
+    module-ps_creditpayment-validation: layout-full-width
+    module-ps_emailalerts-account: layout-full-width
+    module-ps_emailsubscription-subscription: layout-full-width
+    module-ps_emailsubscription-verification: layout-full-width
+    module-ps_metrics-AdminAjaxDashboard: layout-full-width
+    module-ps_metrics-AdminAjaxSettings: layout-full-width
+    module-ps_metrics-AdminOauthCallback: layout-full-width
+    module-ps_pinpayment-payment: layout-full-width
+    module-ps_pinpayment-validation: layout-full-width
+    module-ps_shoppingcart-ajax: layout-full-width
+    module-ps_wirepayment-payment: layout-full-width
+    module-ps_wirepayment-validation: layout-full-width
+    module-sisow-payment: layout-full-width
+    module-sisow-validation: layout-full-width
+    module-supercheckout-supercheckout: layout-full-width
+    my-account: layout-full-width
+    new-products: layout-left-column
+    order-confirmation: layout-left-column
+    order-follow: layout-full-width
+    order-slip: layout-full-width
+    pagenotfound: layout-full-width
+    password: layout-left-column
+    prices-drop: layout-left-column
+    product: layout-left-column
+    search: layout-left-column
+    sitemap: layout-left-column
+    stores: layout-left-column
+    supplier: layout-left-column

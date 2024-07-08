@@ -56,7 +56,7 @@ class DynamicCalculator
         }
 
         if (\Validate::isLoadedObject($cart)) {
-            $id_customer = (int) $cart->id_customer;
+            $id_customer = (int)$cart->id_customer;
         } else {
             $id_customer = $this->module->provider->getCustomer();
         }
@@ -66,9 +66,9 @@ class DynamicCalculator
         }
 
         if ($id_customer) {
-            $tax_calculation_method = (int) \Group::getPriceDisplayMethod(\Customer::getDefaultGroupId($id_customer));
+            $tax_calculation_method = (int)\Group::getPriceDisplayMethod(\Customer::getDefaultGroupId($id_customer));
         } else {
-            $tax_calculation_method = (int) \Group::getPriceDisplayMethod((int) \Group::getCurrent()->id);
+            $tax_calculation_method = (int)\Group::getPriceDisplayMethod((int)\Group::getCurrent()->id);
         }
 
         if ($tax_calculation_method === PS_TAX_EXC && !$force_tax) {
@@ -81,9 +81,9 @@ class DynamicCalculator
             $address = new \Address(0);
         }
 
-        return (float) \Tax::getProductTaxRate(
-            (int) $id_product,
-            (int) $address->id,
+        return (float)\Tax::getProductTaxRate(
+            (int)$id_product,
+            (int)$address->id,
             DynamicTools::getContext()
         );
     }
@@ -104,30 +104,30 @@ class DynamicCalculator
     public function getReduction($customized_data)
     {
         return \SpecificPrice::getSpecificPrice(
-            (int) $customized_data['id_product'],
-            (int) $this->context->shop->id,
-            (int) $this->module->provider->getCurrency(),
-            (int) $this->module->provider->getCountry(),
-            (int) ($this->context->customer ? $this->context->customer->id_default_group : 0),
-            (int) $customized_data['quantity'],
-            (int) $customized_data['id_product_attribute'],
-            (int) $this->module->provider->getCustomer(),
-            (int) $customized_data['id_cart']
+            (int)$customized_data['id_product'],
+            (int)$this->context->shop->id,
+            (int)$this->module->provider->getCurrency(),
+            (int)$this->module->provider->getCountry(),
+            (int)($this->context->customer ? $this->context->customer->id_default_group : 0),
+            (int)$customized_data['quantity'],
+            (int)$customized_data['id_product_attribute'],
+            (int)$this->module->provider->getCustomer(),
+            (int)$customized_data['id_cart']
         );
     }
 
     public function getProductReduction($id_product)
     {
         return \SpecificPrice::getSpecificPrice(
-            (int) $id_product,
-            (int) $this->context->shop->id,
-            (int) $this->module->provider->getCurrency(),
-            (int) $this->module->provider->getCountry(),
-            (int) $this->module->provider->getCustomerGroup(),
+            (int)$id_product,
+            (int)$this->context->shop->id,
+            (int)$this->module->provider->getCurrency(),
+            (int)$this->module->provider->getCountry(),
+            (int)$this->module->provider->getCustomerGroup(),
             1,
             \Product::getDefaultAttribute($id_product),
-            (int) $this->module->provider->getCustomer(),
-            (int) $this->module->provider->getCart()
+            (int)$this->module->provider->getCustomer(),
+            (int)$this->module->provider->getCart()
         );
     }
 
@@ -136,9 +136,8 @@ class DynamicCalculator
         if (!$specific_price) {
             return $price;
         }
-        $type = $specific_price['reduction_type'];
-        $reduction = (float) $specific_price['reduction'];
-        if ($type === 'percentage') {
+        $reduction = (float)$specific_price['reduction'];
+        if ($specific_price['reduction_type'] === 'percentage') {
             $price -= $price * $reduction;
         }
 
@@ -153,7 +152,7 @@ class DynamicCalculator
             $id_customer = $this->module->provider->getCustomerFromCart($id_cart);
         }
         $group_reduction = \Group::getReduction($id_customer);
-        $reduction = (float) $group_reduction / 100;
+        $reduction = (float)$group_reduction / 100;
         $price -= $price * $reduction;
 
         return $price;
@@ -166,9 +165,9 @@ class DynamicCalculator
         } else {
             $id_customer = $this->module->provider->getCustomerFromCart($id_cart);
         }
-        $id_group = $id_customer ? (int) \Customer::getDefaultGroupId($id_customer) : (int) \Group::getCurrent()->id;
+        $id_group = $id_customer ? (int)\Customer::getDefaultGroupId($id_customer) : (int)\Group::getCurrent()->id;
         $reduction = \GroupReductionCore::getValueForProduct($id_product, $id_group);
-        $price -= $price * (float) $reduction;
+        $price -= $price * (float)$reduction;
 
         return [$price, $reduction];
     }
@@ -201,12 +200,13 @@ class DynamicCalculator
 
     public function assignProductPrices($product, $display_price, &$result)
     {
-        $id_product = (int) $product['id_product'];
+        $id_product = (int)$product['id_product'];
 
         $dynamic_config = DynamicConfig::getByProduct($id_product);
+
         $id_attribute = isset($product['id_product_attribute']) ?
-            (int) $product['id_product_attribute'] :
-            (int) \Product::getDefaultAttribute($id_product);
+            (int)$product['id_product_attribute'] :
+            (int)\Product::getDefaultAttribute($id_product);
         $product_price_ttc = \Product::getPriceStatic(
             $id_product,
             !\Product::getTaxCalculationMethod(),
@@ -230,7 +230,6 @@ class DynamicCalculator
         );
 
         $dynamic_calculator_helper = new DynamicCalculatorHelper($this->module, $this->context);
-
         if ($dynamic_config->display_dynamic_price) {
             try {
                 $cache_helper = new CachedCalculationHelper($this->module, $this->context);
@@ -242,7 +241,6 @@ class DynamicCalculator
                         $id_product,
                         $id_attribute
                     );
-
                     $cache_helper->cache($id_product, $id_attribute, $display_price);
                 }
             } catch (\Exception $e) {
@@ -256,7 +254,6 @@ class DynamicCalculator
                 );
             }
         }
-
 
         $specific_price = $this->module->calculator->getReduction([
             'id_product' => $id_product,

@@ -136,6 +136,13 @@ class DynamicProductFieldsController extends ModuleAdminController
             $updates = FormulasHelper::updateFormulas($dynamic_field, $original_name, $dynamic_field->name);
         }
 
+        if ($reason === 'toggle_common' && !$dynamic_field->common) {
+            $common_fields = DynamicCommonField::getByIdField($id_field);
+            foreach ($common_fields as $common_field) {
+                $common_field->delete();
+            }
+        }
+
         $this->respond([
             'field' => DynamicFieldFactory::create($dynamic_field->type, $dynamic_field->id),
             'updates' => $updates,

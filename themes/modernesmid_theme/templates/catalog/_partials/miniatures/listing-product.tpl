@@ -40,9 +40,7 @@
                     <span class="h6 product-title p-0" data-id-product="{$product.id_product}"><a
                         class="text-decoration-none text-black" href="{$product.url}">{$product.name}</a></span>
                     <br/>
-                    <a class="help-text product-description-short text-decoration-none">Indicatie prijs
-                      € {if Context::getContext()->cookie->price_vat_settings_incl === "true"}{$dynamicProductConfig.price_ttc}{else}{$dynamicProductConfig.price_ht}{/if} is op basis van {$dynamicProductConfig.lengte}
-                      mm {$dynamicProductConfig.behandeling} {$product.name}</a>
+                    <a class="help-text product-description-short text-decoration-none">{$dynamicProductConfig.indication_msg} {$product.name}</a>
                     <br/>
                     <span class="product-description-short">{$product.description_short nofilter}</span>
                   {else}

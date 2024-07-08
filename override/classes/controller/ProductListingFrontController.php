@@ -34,17 +34,21 @@ abstract class ProductListingFrontController extends ProductListingFrontControll
         /**
          * Start add module dynamic prices
          */
-        foreach ($search['products'] as $product) {
-            if($product->price_amount == 0 && class_exists('DynamicProductController')){
-                $dynModule = new DynamicProductController();
-                $data = $dynModule->getDefaultDynamicProductPrices($product, $product->id_attribute);
+        foreach ($search['products'] as $key => $product) {
+            if(!$this->checkIfActiveInShop($product, Context::getContext())){
+                unset($search['products'][$key]);
+            } else {
+                if($product->price_amount == 0 && class_exists('DynamicProductController')){
+                    $dynModule = new DynamicProductController();
+                    $data = $dynModule->getDefaultDynamicProductPrices($product, $product->id_attribute);
 
-                if(array_key_exists('formatted_prices', $data) && array_key_exists('final_prices', $data) && array_key_exists('unit_prices', $data)){
-                    $product->price = $data['formatted_prices']['price_ttc'];
-                    $product->price_amount = $data['final_prices']['price_ttc'];
-                    $product->regular_price = $data['formatted_prices']['price_ttc'];
-                    $product->regular_price_amount = $data['unit_prices']['price_ttc_nr'];
-                    $product->unit_price = $data['unit_prices']['price_ttc'];
+                    if(array_key_exists('formatted_prices', $data) && array_key_exists('final_prices', $data) && array_key_exists('unit_prices', $data)){
+                        $product->price = $data['formatted_prices']['price_ttc'];
+                        $product->price_amount = $data['final_prices']['price_ttc'];
+                        $product->regular_price = $data['formatted_prices']['price_ttc'];
+                        $product->regular_price_amount = $data['unit_prices']['price_ttc_nr'];
+                        $product->unit_price = $data['unit_prices']['price_ttc'];
+                    }
                 }
             }
         }
@@ -73,4 +77,17 @@ abstract class ProductListingFrontController extends ProductListingFrontControll
 
         return $data;
     }
+
+    private function checkIfActiveInShop($product, $context){
+
+        $db = Db::getInstance(_PS_USE_SQL_SLAVE_);
+
+        $query = 'SELECT COUNT(id_product) as active FROM `' . _DB_PREFIX_ . 'product_shop` WHERE `id_shop` = ' . (int) $context->shop->id .
+            ' AND `id_product` = ' . $product['id_product'] . ' ' .
+            ' AND `active` = 1 ' .
+            ' AND `visibility` IN ("both", "search");';
+        $result = $db->executeS($query);
+        return  boolval($result[0]['active']);
+    }
+
 }

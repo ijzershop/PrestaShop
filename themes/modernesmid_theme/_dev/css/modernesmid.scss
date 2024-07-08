@@ -2172,9 +2172,9 @@ main {
   }
   .header-logo-a {
     img.logo {
-      margin: 20px 20px;
-      max-height: 77px;
-      width: auto !important;
+      margin: 20px 20px 0px 20px;
+      max-height: auto;
+      width: 80% !important;
     }
   }
 }
@@ -2416,4 +2416,22 @@ body#checkout section.checkout-step.-unreachable .step-title{
   text-decoration: none;
   pointer-events: none;
   cursor: none;
+}
+
+
+.btn-group#store-switcher .dropdown-toggle{
+  font-size: .8rem;
+  line-height: .85rem;
+  padding: .1rem;
+  text-align:center;
+}
+.btn-group#store-switcher{
+  height: 1.4rem;
+  float: left;
+  position: absolute;
+  top: 80%;
+  padding-left:.75rem;
+}
+.store-switcher-shop-logo{
+  border-radius: 5px!important;
 }

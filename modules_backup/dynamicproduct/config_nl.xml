@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>dynamicproduct</name>
+    <displayName><![CDATA[Dynamisch product]]></displayName>
+    <version><![CDATA[3.17.6]]></version>
+    <description><![CDATA[Laat uw klanten hun bestellingen personaliseren door de producten aan te passen]]></description>
+    <author><![CDATA[Tuni-Soft]]></author>
+    <tab><![CDATA[front_office_features]]></tab>
+    <is_configurable>1</is_configurable>
+    <need_instance>0</need_instance>
+</module>

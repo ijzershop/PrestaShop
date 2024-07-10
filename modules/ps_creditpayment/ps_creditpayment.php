@@ -310,14 +310,14 @@ class Ps_Creditpayment extends PaymentModule
             in_array(
                 $state,
                 array(
-                    Configuration::get('PS_OS_BANKCREDIT'),
-                    Configuration::get('PS_OS_OUTOFSTOCK'),
-                    Configuration::get('PS_OS_OUTOFSTOCK_UNPAID'),
+                    Configuration::get('PS_OS_BANKCREDIT',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
+                    Configuration::get('PS_OS_OUTOFSTOCK',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
+                    Configuration::get('PS_OS_OUTOFSTOCK_UNPAID', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
                 )
             )) {
             $totalToPaid = (float)$params['order']->total_paid;
 
-            $newState = (int)Configuration::get('BANK_CREDIT_COMPLETE_STATE');
+            $newState = (int)Configuration::get('BANK_CREDIT_COMPLETE_STATE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
             $history = new OrderHistory();
             $history->id_order = (int)$params['order']->id;
             $history->changeIdOrderState($newState, (int)$params['order']->id);
@@ -396,8 +396,8 @@ class Ps_Creditpayment extends PaymentModule
     {
         $curlCard = curl_init();
 
-        $security_code = Configuration::get('CREDITPAYMENT_INFORMER_SECURITY_CODE', null, null, null, "62356");
-        $api_key = Configuration::get('CREDITPAYMENT_INFORMER_API_KEY', null, null, null, "MEUGbrj3nT8Z4orUVznSQRMCYFxP6SySePckp0tVfJPrcB1DjO2");
+        $security_code = Configuration::get('CREDITPAYMENT_INFORMER_SECURITY_CODE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, "62356");
+        $api_key = Configuration::get('CREDITPAYMENT_INFORMER_API_KEY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, "MEUGbrj3nT8Z4orUVznSQRMCYFxP6SySePckp0tVfJPrcB1DjO2");
 
         $headers = array(
             "accept: application/json",
@@ -448,7 +448,7 @@ class Ps_Creditpayment extends PaymentModule
 
     public function renderForm()
     {
-        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
         $orderStates = OrderState::getOrderStates($lang->id);
 
 
@@ -560,9 +560,9 @@ class Ps_Creditpayment extends PaymentModule
         $helper = new HelperForm();
         $helper->show_toolbar = false;
         $helper->table = $this->table;
-        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
         $helper->default_form_language = $lang->id;
-        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ?: 0;
+        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) ?: 0;
         $helper->id = (int)Tools::getValue('id_carrier');
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'btnSubmit';
@@ -589,16 +589,16 @@ class Ps_Creditpayment extends PaymentModule
             );
         }
 
-        $newState = Tools::getValue('BANK_CREDIT_COMPLETE_STATE', Configuration::get('BANK_CREDIT_COMPLETE_STATE'));
-        $creditpayment_informer_payment_condition_id = Tools::getValue('CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID', Configuration::get('CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID'));
-        $creditpayment_informer_currency_id = Tools::getValue('CREDITPAYMENT_INFORMER_CURRENCY_ID', Configuration::get('CREDITPAYMENT_INFORMER_CURRENCY_ID'));
-        $creditpayment_informer_vat_option = Tools::getValue('CREDITPAYMENT_INFORMER_VAT_OPTION', Configuration::get('CREDITPAYMENT_INFORMER_VAT_OPTION'));
-        $creditpayment_informer_template_id = Tools::getValue('CREDITPAYMENT_INFORMER_TEMPLATE_ID', Configuration::get('CREDITPAYMENT_INFORMER_TEMPLATE_ID'));
-        $creditpayment_informer_line_vat_id = Tools::getValue('CREDITPAYMENT_INFORMER_LINE_VAT_ID', Configuration::get('CREDITPAYMENT_INFORMER_LINE_VAT_ID'));
-        $creditpayment_informer_line_ledger_id = Tools::getValue('CREDITPAYMENT_INFORMER_LINE_LEDGER_ID', Configuration::get('CREDITPAYMENT_INFORMER_LINE_LEDGER_ID'));
-        $creditpayment_informer_security_code = Tools::getValue('CREDITPAYMENT_INFORMER_SECURITY_CODE', Configuration::get('CREDITPAYMENT_INFORMER_SECURITY_CODE'));
-        $creditpayment_informer_api_key = Tools::getValue('CREDITPAYMENT_INFORMER_API_KEY', Configuration::get('CREDITPAYMENT_INFORMER_API_KEY'));
-        $creditpayment_informer_footer_text = Tools::getValue('CREDITPAYMENT_INFORMER_FOOTER_TEXT', Configuration::get('CREDITPAYMENT_INFORMER_FOOTER_TEXT'));
+        $newState = Tools::getValue('BANK_CREDIT_COMPLETE_STATE', Configuration::get('BANK_CREDIT_COMPLETE_STATE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
+        $creditpayment_informer_payment_condition_id = Tools::getValue('CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID', Configuration::get('CREDITPAYMENT_INFORMER_PAYMENT_CONDITION_ID', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
+        $creditpayment_informer_currency_id = Tools::getValue('CREDITPAYMENT_INFORMER_CURRENCY_ID', Configuration::get('CREDITPAYMENT_INFORMER_CURRENCY_ID', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
+        $creditpayment_informer_vat_option = Tools::getValue('CREDITPAYMENT_INFORMER_VAT_OPTION', Configuration::get('CREDITPAYMENT_INFORMER_VAT_OPTION', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
+        $creditpayment_informer_template_id = Tools::getValue('CREDITPAYMENT_INFORMER_TEMPLATE_ID', Configuration::get('CREDITPAYMENT_INFORMER_TEMPLATE_ID', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
+        $creditpayment_informer_line_vat_id = Tools::getValue('CREDITPAYMENT_INFORMER_LINE_VAT_ID', Configuration::get('CREDITPAYMENT_INFORMER_LINE_VAT_ID', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
+        $creditpayment_informer_line_ledger_id = Tools::getValue('CREDITPAYMENT_INFORMER_LINE_LEDGER_ID', Configuration::get('CREDITPAYMENT_INFORMER_LINE_LEDGER_ID', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
+        $creditpayment_informer_security_code = Tools::getValue('CREDITPAYMENT_INFORMER_SECURITY_CODE', Configuration::get('CREDITPAYMENT_INFORMER_SECURITY_CODE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
+        $creditpayment_informer_api_key = Tools::getValue('CREDITPAYMENT_INFORMER_API_KEY', Configuration::get('CREDITPAYMENT_INFORMER_API_KEY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
+        $creditpayment_informer_footer_text = Tools::getValue('CREDITPAYMENT_INFORMER_FOOTER_TEXT', Configuration::get('CREDITPAYMENT_INFORMER_FOOTER_TEXT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
 
         return array(
             'BANK_CREDIT_CUSTOM_TEXT' => $custom_text,

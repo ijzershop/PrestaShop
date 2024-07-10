@@ -1,0 +1,35 @@
+{
+  "name": "ijzershop/msthemeconfig",
+  "description": "Prestashop Configuratie module voor de Moderne Smid webshops",
+  "authors": [
+    {
+      "name": "Jelmer Stoker",
+      "email": "jelmer@ijzershop.bnl"
+    }
+  ],
+  "require": {
+    "php": ">=8.0.0",
+    "ext-intl": "*",
+    "ext-soap": "*",
+    "ext-mysqli": "*",
+    "ext-pdo": "*",
+    "jketelaar/php-kiyoh-api": "^2.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "MsThemeConfig\\": ["src/", "views/templates/"]
+    },
+    "classmap": [
+      "msthemeconfig.php",
+      "classes/"
+    ],
+    "exclude-from-classmap": []
+  },
+  "config": {
+    "preferred-install": "dist",
+    "prepend-autoloader": false
+  },
+  "type": "prestashop-module",
+  "author": "Jelmer Stoker",
+  "license": "AFL-3.0"
+}

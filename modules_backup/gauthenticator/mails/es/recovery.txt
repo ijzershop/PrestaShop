@@ -1,0 +1,13 @@
+
+[{shop_url}]
+
+Hola {firstname} {lastname},
+
+Un código de recuperación de Google Authenticator ha sido solicitado por tu cuenta de Back Office. Puedes usar el siguiente código para obtener acceso nuevamente a tu Back Office:
+{recovery_token}
+
+Este código funcionará solo una vez, y será deshabilitado cuando cualquier cuenta que use Google Authenticator accese el Back Office de la tienda.
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

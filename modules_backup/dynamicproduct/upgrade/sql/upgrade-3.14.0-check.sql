@@ -1,0 +1,3 @@
+SELECT is_dynamic_value
+FROM ps_dynamicproduct_unit_value
+LIMIT 1;

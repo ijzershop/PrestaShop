@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 66.936 32.949" height="124.53" width="252.985">
+    <title>Eenvoudige Knip Voorbeeld</title>
+    <path d="M.066 6.5h59.812v26.383H.066z" opacity=".99" fill="#e9ecef" stroke="#000" stroke-width=".132" stroke-miterlimit="2.4000001" stroke-opacity=".881" />
+    <path d="M62.097 7.466l.098 24.24.172-.002-.098-24.238z" />
+    <path d="M62.172 6.816l.524 1.721-1.034.004zm.112 25.751l-.524-1.721 1.034-.004z" stroke="#000" stroke-width=".172" />
+    <path d="M58.574 4.079l-5.986.025-39.322.025-5.986.025-5.986.023v.174l5.986-.025 5.986-.025 39.322-.023 5.986-.025z" />
+    <path d="M.639 4.277l1.728-.526.004 1.038zm58.8-.114l-1.728.526-.004-1.038z" stroke="#000" stroke-width=".173" />
+    <text id="preview_single_cut_length" transform="matrix(.950813 0 0 1.051731 -6.446 -7.483)" y="10.5" x="42%" xml:space="preserve" font-size="4.154" font-family="sans-serif" letter-spacing="0" word-spacing="0" fill="#000" text-anchor="left">L=1000mm</text>
+    <text id="preview_single_cut_width" transform="matrix(0 .950813 -1.051731 0 -6.446 -7.483)" y="-65.95" x="28%" xml:space="preserve" font-size="4.154" font-family="sans-serif" letter-spacing="0" word-spacing="0" fill="#000" text-anchor="left">B=500mm</text>
+</svg>

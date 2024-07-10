@@ -1,0 +1,107 @@
+services:
+  _defaults:
+    public: true
+
+  #Add address
+  modernesmid.adapter.address.command_handler.add_customer_address_handler:
+    class: 'MsThemeConfig\Adapter\Address\CommandHandler\AddCustomerAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'MsThemeConfig\Core\Domain\Address\Command\AddCustomerAddressCommand'
+
+#    #Edit address
+#    modernesmid.adapter.address.command_handler.edit_customer_address_handler:
+#        class: 'MsThemeConfig\Adapter\Address\CommandHandler\EditCustomerAddressHandler'
+#        tags:
+#            - name: tactician.handler
+#              command: 'MsThemeConfig\Core\Domain\Address\Command\EditCustomerAddressCommand'
+#
+#
+#    #edit cart address
+#    modernesmid.adapter.address.command_handler.edit_cart_address_handler:
+#        class: 'MsThemeConfig\Adapter\Address\CommandHandler\EditCartAddressHandler'
+#        arguments:
+#            - 'msthemeconfig.adapter.address.command_handler.edit_customer_address_handler'
+#        tags:
+#            - name: tactician.handler
+#              command: 'MsThemeConfig\Core\Domain\Address\Command\EditCartAddressCommand'
+#
+
+  prestashop.adapter.address.command_handler.edit_customer_address_handler:
+    class: 'MsThemeConfig\Adapter\Address\CommandHandler\EditCustomerAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'MsThemeConfig\Core\Domain\Address\Command\EditCustomerAddressCommand'
+
+  #edit cart address
+  modernesmid.adapter.address.command_handler.edit_order_address_handler:
+    class: 'MsThemeConfig\Adapter\Address\CommandHandler\EditOrderAddressHandler'
+    arguments:
+      - "@prestashop.adapter.address.command_handler.edit_customer_address_handler"
+      - "@prestashop.adapter.order.command_handler.change_order_delivery_address_handler"
+      - "@prestashop.adapter.order.command_handler.change_order_invoice_address_handler"
+    tags:
+      - name: tactician.handler
+        command: 'MsThemeConfig\Core\Domain\Address\Command\EditOrderAddressCommand'
+
+  #Get address
+  prestashop.adapter.address.query_handler.get_customer_address_for_editing_handler:
+    class: 'MsThemeConfig\Adapter\Address\QueryHandler\GetCustomerAddressForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'MsThemeConfig\Core\Domain\Address\Query\GetCustomerAddressForEditing'
+
+  modernesmid.core.form.identifiable_object.data_handler.order_address_form_data_handler:
+    class: 'MsThemeConfig\Core\Form\IdentifiableObject\DataHandler\OrderAddressFormDataHandler'
+    arguments:
+      - "@prestashop.core.command_bus"
+
+  modernesmid.core.form.identifiable_object.handler.order_address_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory:
+      [
+        "@prestashop.core.form.identifiable_object.handler.form_handler_factory",
+        "create",
+      ]
+    arguments:
+      - "@modernesmid.core.form.identifiable_object.data_handler.order_address_form_data_handler"
+
+  modernesmid.core.form.identifiable_object.data_provider.address_form_data_provider:
+    class: 'MsThemeConfig\Core\Form\IdentifiableObject\DataProvider\AddressFormDataProvider'
+    arguments:
+      - "@prestashop.core.query_bus"
+      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+
+  modernesmid.core.form.identifiable_object.builder.address_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ "@prestashop.core.form.builder.form_builder_factory", "create" ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Address\CustomerAddressType'
+      - "@modernesmid.core.form.identifiable_object.data_provider.address_form_data_provider"
+
+  modernesmid.core.form.identifiable_object.handler.address_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory:
+      [
+        "@prestashop.core.form.identifiable_object.handler.form_handler_factory",
+        "create",
+      ]
+    arguments:
+      - "@modernesmid.core.form.identifiable_object.data_handler.address_form_data_handler"
+
+  modernesmid.core.form.identifiable_object.data_handler.address_form_data_handler:
+    class: 'MsThemeConfig\Core\Form\IdentifiableObject\DataHandler\AddressFormDataHandler'
+    arguments:
+      - "@prestashop.core.command_bus"
+      - "@prestashop.adapter.data_provider.customer"
+
+
+  prestashop.core.grid.query_builder.customer_address:
+    class: 'MsThemeConfig\Core\Grid\Query\CustomerAddressQueryBuilder'
+    parent: "prestashop.core.grid.abstract_query_builder"
+    arguments:
+      - "@prestashop.core.query.doctrine_search_criteria_applicator"
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - '@=service("prestashop.adapter.shop.context").getContextListShopIDUsingCustomerSharingSettings()'
+    public: true
+

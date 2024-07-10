@@ -1,0 +1,14 @@
+[/{shop_url}]
+
+MODULE ADVANCED VAT MANAGER
+Company address validation
+
+Hi [/{customer_name}],
+
+The company address that you have saved in the address form is not valid or has not yet been validated with official systems. Please go to your address details and insert a valid company address that you have registered when you issued VAT number.
+
+You can insert your company address going into your address section in the following link:
+[{customer_account_addr}]
+
+Email sent by Advanced VAT Manager module, developed by Liewebs [http://www.prestashop.com/] 
+

@@ -1,0 +1,3 @@
+<div class="modal" id="saw-modal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="saw-modal"></div>
+<div class="modal" id="cut-modal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="cut-modal"></div>
+<div class="modal" id="staffel-modal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="staffel-modal"></div>

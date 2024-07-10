@@ -85,7 +85,7 @@ class LogoUploader
     public function updateHeader()
     {
         if ($this->update('PS_LOGO', 'logo')) {
-            list($width, $height) = getimagesize($this->imageDirection . Configuration::get('PS_LOGO'));
+            list($width, $height) = getimagesize($this->imageDirection . Configuration::get('PS_LOGO', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group,  Context::getContext()->shop->id ));
             Configuration::updateValue('SHOP_LOGO_HEIGHT', (int) round($height));
             Configuration::updateValue('SHOP_LOGO_WIDTH', (int) round($width));
         }

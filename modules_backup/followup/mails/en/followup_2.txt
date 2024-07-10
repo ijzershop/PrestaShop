@@ -1,0 +1,9 @@
+{shop_url}
+
+We are pleased to offer you a discount of {amount}% off your next order. And this offer is valid for {days} days, so do not wait any longer!
+
+Here is your VOUCHER CODE: {voucher_num}
+
+Enter this code in your shopping cart to get the discount.
+
+ijzershop.localÂ |Â Ceresweg 1Â |Â 8938BG LeeuwardenÂ |Â 0900-2502500Â Â De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

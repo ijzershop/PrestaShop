@@ -1,0 +1,172 @@
+{# modules/msthemeconfig/views/PrestaShop/Admin/Common/Grid/Columns/Content/koopman_label_button_2.html.twig #}
+<div class="col-12" style="min-width: 500px;">
+  <div class="text-center">
+    <div class="w-100">
+      <div class="badge badge-important koopman-current-status-badge status_{{ record.current_state }}" style="background-color: {{ record.color }};">
+        {% if record.carrier is same as column.options.stateCarrier.shipping %}
+          <i class="koopman-current-status-badge-label">{{ column.options.stateCarrier.shipping_label }}</i> | <b> {{ record.osname }} </b>
+        {% elseif record.carrier is same as column.options.stateCarrier.pickup %}
+          <i class="koopman-current-status-badge-label">{{ column.options.stateCarrier.pickup_label }}</i> | <b> {{ record.osname }} </b>
+        {% elseif record.carrier is same as column.options.stateCarrier.added %}
+          <i class="koopman-current-status-badge-label">{{ column.options.stateCarrier.added_label }}</i> | <b> {{ record.osname }} </b>
+        {% else %}
+          <i class="koopman-current-status-badge-label"></i> | <b> {{ record.osname }} </b>
+        {% endif %}
+        <span class="calculated_weight float-right {% if record.color is not empty %} text-white {% endif %}">
+          {{ record.total_order_weight|number_format(2) }}<sub>Kg</sub>
+        </span>
+      </div>
+    </div>
+  <div class="row  bg-warning text-white">
+    <div class="col-4 text-left">Zending Nummer(s)</div>
+    <div class="col-8 tracking_number" data-reference="{{ record.reference }}"> {{ record.shipping_number }} </div>
+  </div>
+<div class="row">
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <button type="button" data-row-id="{{ record.id_order }}" name="package_size_minus" class="btn btn-primary w-100 text-button-large rounded-0 rounded-bottom">-</button>
+    </div>
+    <select class="package_size_select form-control input-lg w-100" data-row-id="{{ record.id_order }}" name="package_size" {% if record.shipping_number is not empty %}style="border-color:#ff0000;border-width: 2px;border-style: dashed;" {% endif %}>
+      <option value="1" {% if record.total_order_weight|number_format(2) == 0 and record.total_order_weight|number_format(2) <= 1 %} selected {% endif %}>0 - 1kg</option>
+      <option value="3" {% if record.total_order_weight|number_format(2) > 1 and record.total_order_weight|number_format(2) <= 3 %} selected {% endif %}>1 - 3kg</option>
+      <option value="5" {% if record.total_order_weight|number_format(2) > 3 and record.total_order_weight|number_format(2) <= 5 %} selected {% endif %}>3 - 5kg</option>
+      <option value="7" {% if record.total_order_weight|number_format(2) > 5 and record.total_order_weight|number_format(2) <= 7 %} selected {% endif %}>5 - 7kg</option>
+      <option value="10" {% if record.total_order_weight|number_format(2) > 7 and record.total_order_weight|number_format(2) <= 10 %} selected {% endif %}>7 - 10kg</option>
+      <option value="15" {% if record.total_order_weight|number_format(2) > 10 and record.total_order_weight|number_format(2) <= 15 %} selected {% endif %}>10 - 15kg</option>
+      <option value="20" {% if record.total_order_weight|number_format(2) > 15 and record.total_order_weight|number_format(2) <= 20 %} selected {% endif %}>15 - 20kg</option>
+      <option value="25" {% if record.total_order_weight|number_format(2) > 20 and record.total_order_weight|number_format(2) <= 25 %} selected {% endif %}>20 - 25kg</option>
+      <option value="30" {% if record.total_order_weight|number_format(2) > 25 and record.total_order_weight|number_format(2) <= 30 %} selected {% endif %}>25 - 30kg</option>
+      <option value="40" {% if record.total_order_weight|number_format(2) > 30 and record.total_order_weight|number_format(2) <= 40 %} selected {% endif %}>30 - 40kg</option>
+      <option value="50" {% if record.total_order_weight|number_format(2) > 40 and record.total_order_weight|number_format(2) <= 50 %} selected {% endif %}>40 - 50kg</option>
+      <option value="60" {% if record.total_order_weight|number_format(2) > 50 and record.total_order_weight|number_format(2) <= 60 %} selected {% endif %}>50 - 60kg</option>
+      <option value="70" {% if record.total_order_weight|number_format(2) > 60 and record.total_order_weight|number_format(2) <= 70 %} selected {% endif %}>60 - 70kg</option>
+      <option value="80" {% if record.total_order_weight|number_format(2) > 70 and record.total_order_weight|number_format(2) <= 80 %} selected {% endif %}>70 - 80kg</option>
+      <option value="90" {% if record.total_order_weight|number_format(2) > 80 and record.total_order_weight|number_format(2) <= 90 %} selected {% endif %}>80 - 90kg</option>
+      <option value="100" {% if record.total_order_weight|number_format(2) > 90 and record.total_order_weight|number_format(2) <= 100 %} selected {% endif %}>90 - 100kg</option>
+      <option value="125" {% if record.total_order_weight|number_format(2) > 100 and record.total_order_weight|number_format(2) <= 125 %} selected {% endif %}>100 - 125kg</option>
+      <option value="150" {% if record.total_order_weight|number_format(2) > 125 and record.total_order_weight|number_format(2) <= 150 %} selected {% endif %}>125 - 150kg</option>
+      <option value="175" {% if record.total_order_weight|number_format(2) > 150 and record.total_order_weight|number_format(2) <= 175 %} selected {% endif %}>150 - 175kg</option>
+      <option value="200" {% if record.total_order_weight|number_format(2) > 175 and record.total_order_weight|number_format(2) <= 200 %} selected {% endif %}>175 - 200kg</option>
+      <option value="0" {% if record.total_order_weight|number_format(2) > 200 %} selected {% endif %}>200+</option>
+    </select>
+    <div class="input-group-append">
+      <button type="button" data-row-id="{{ record.id_order }}" name="package_size_plus"  class="btn btn-primary w-100 text-button-large rounded-0">+</button>
+    </div>
+  </div>
+</div>
+  <div class="row mt-3">
+    <div class="col-12 p-0">
+      <ul class="pagination pagination-lg  justify-content-center">
+        <li class="page-item m-1">
+          <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="1" name="package_total_1" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">1</button>
+        </li>
+        <li class="page-item m-1">
+          <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="2" name="package_total_2" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">2</button>
+        </li>
+        <li class="page-item m-1">
+          <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="3" name="package_total_3" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">3</button>
+        </li>
+        <li class="page-item m-1">
+          <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="4" name="package_total_4" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">4</button>
+        </li>
+        <li class="page-item m-1">
+          <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="COL" data-collies="5" name="package_total_5" class="text-decoration-none page-link btn-primary rounded-circle text-button-large collie-selection">5</button>
+        </li>
+        <li class="page-item m-1">
+          <div class="pallet_selection_box"  data-row-id="{{ record.id_order }}">
+            <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="MP" data-collies="1" name="package_total_mini" class="text-decoration-none btn-primary rounded-circle text-button-large collie-selection">Mini</button>
+            <button type="button" data-order-weight="{{ record.total_order_weight|number_format(2) }}" data-row-id="{{ record.id_order }}" data-collie-type="SP" data-collies="1" name="package_total_out" class="text-decoration-none btn-primary rounded-circle text-button-large collie-selection">Out</button>
+          </div>
+          <button type="button" data-row-id="{{ record.id_order }}" data-collies="x" name="package_total_pallet" class="page-link p-0 btn-primary rounded-pill">
+            <svg style="padding:0.8rem;" width="72px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 256 256" xml:space="preserve">
+              <g>
+                <g>
+                  <path fill="#ffffff" d="M59.4,116.5v17.2c0.3,0.5,0.5,0.8,0.5,0.8c0.1-0.1,1.8-2.9,1.8-2.9l3.3,5.3l2.9-5.6l2.7,5.1l0.5-5l2.1,3l1.4-5l3.4,5.5l3-3.2v-15.1H59.4L59.4,116.5z"></path>
+                  <path fill="#ffffff" d="M26,207.8c-4.9,0-8.8-3.9-8.8-8.8l0,0v-81.1c0-5.4,4.3-9.7,9.7-9.7l0,0h86.4c5.4,0,9.7,4.3,9.7,9.7l0,0V199c0,4.9-3.9,8.8-8.8,8.8l0,0L26,207.8L26,207.8z M26,201.9h88.3c1.6,0,2.9-1.3,2.9-2.9l0,0v-81.1c0-2.1-1.7-3.9-3.9-3.9l0,0H27c-2.1,0-3.9,1.7-3.9,3.9l0,0V199C23.1,200.6,24.4,201.9,26,201.9L26,201.9z"></path>
+                  <path fill="#ffffff" d="M29.8,181.9c0.4,0,0.7-0.2,1-0.4l0,0l1.7-1.7v12.4c0,0.8,0.7,1.5,1.5,1.5c0.8,0,1.5-0.7,1.5-1.5v-12.4l1.7,1.7c0.6,0.6,1.5,0.6,2.1,0c0.6-0.6,0.6-1.5,0-2.1l-4.2-4.2c-0.6-0.6-1.5-0.6-2.1,0l-4.2,4.2c-0.6,0.6-0.6,1.5,0,2.1C29.1,181.8,29.5,181.9,29.8,181.9z M42.3,181.9c0.4,0,0.8-0.2,1-0.4l0,0l1.7-1.7v12.4c0,0.8,0.7,1.5,1.5,1.5s1.5-0.7,1.5-1.5v-12.4l1.7,1.7c0.6,0.6,1.5,0.6,2.1,0s0.6-1.5,0-2.1l-4.2-4.2c-0.6-0.6-1.5-0.6-2.1,0l-4.2,4.2c-0.6,0.6-0.6,1.5,0,2.1C41.5,181.8,41.9,181.9,42.3,181.9z M50.5,195.3H30c-0.8,0-1.5,0.7-1.5,1.5c0,0.8,0.7,1.5,1.5,1.5h20.5c0.8,0,1.5-0.7,1.5-1.5C52,195.9,51.3,195.3,50.5,195.3z"></path>
+                  <path fill="#ffffff" d="M175.1,116.5v17.2c0.3,0.5,0.5,0.8,0.5,0.8c0.1-0.1,1.8-2.9,1.8-2.9l3.3,5.3l2.9-5.6l2.7,5.1l0.5-5l2.1,3l1.4-5l3.4,5.5l3-3.2v-15.1H175.1L175.1,116.5z"></path>
+                  <path fill="#ffffff" d="M141.7,207.8c-4.9,0-8.8-3.9-8.8-8.8l0,0v-81.1c0-5.4,4.3-9.7,9.7-9.7l0,0H229c5.4,0,9.7,4.3,9.7,9.7l0,0V199c0,4.9-3.9,8.8-8.8,8.8l0,0L141.7,207.8L141.7,207.8z M141.7,201.9H230c1.6,0,2.9-1.3,2.9-2.9l0,0v-81.1c0-2.1-1.7-3.9-3.9-3.9l0,0h-86.4c-2.1,0-3.9,1.7-3.9,3.9l0,0V199C138.8,200.6,140.1,201.9,141.7,201.9L141.7,201.9z"></path>
+                  <path fill="#ffffff" d="M145.5,181.9c0.4,0,0.7-0.2,1-0.4l0,0l1.7-1.7v12.4c0,0.8,0.7,1.5,1.5,1.5s1.5-0.7,1.5-1.5v-12.4l1.7,1.7c0.6,0.6,1.5,0.6,2.1,0c0.6-0.6,0.6-1.5,0-2.1l-4.2-4.2c-0.6-0.6-1.5-0.6-2.1,0l-4.2,4.2c-0.6,0.6-0.6,1.5,0,2.1C144.8,181.8,145.1,181.9,145.5,181.9z M158,181.9c0.4,0,0.8-0.2,1-0.4l0,0l1.7-1.7v12.4c0,0.8,0.7,1.5,1.5,1.5c0.8,0,1.5-0.7,1.5-1.5v-12.4l1.7,1.7c0.6,0.6,1.5,0.6,2.1,0c0.6-0.6,0.6-1.5,0-2.1l-4.2-4.2c-0.6-0.6-1.5-0.6-2.1,0l-4.2,4.2c-0.6,0.6-0.6,1.5,0,2.1C157.2,181.8,157.6,181.9,158,181.9z M166.2,195.3h-20.5c-0.8,0-1.5,0.7-1.5,1.5c0,0.8,0.7,1.5,1.5,1.5h20.5c0.8,0,1.5-0.7,1.5-1.5C167.7,195.9,167,195.3,166.2,195.3z"></path>
+                  <path fill="#ffffff" d="M101.7,11.1v17.2c0.3,0.5,0.5,0.8,0.5,0.8c0.1-0.1,1.8-2.9,1.8-2.9l3.3,5.3l2.9-5.6l2.7,5.1l0.5-5l2.1,3l1.4-5l3.4,5.5l3-3.2V11.1H101.7z"></path>
+                  <path fill="#ffffff" d="M68.3,102.4c-4.9,0-8.8-3.9-8.8-8.8l0,0V12.5c0-5.4,4.3-9.7,9.7-9.7l0,0h86.4c5.4,0,9.7,4.3,9.7,9.7l0,0v81.1c0,4.9-3.9,8.8-8.8,8.8l0,0L68.3,102.4L68.3,102.4z M68.3,96.5h88.3c1.6,0,2.9-1.3,2.9-2.9l0,0V12.5c0-2.1-1.7-3.9-3.9-3.9l0,0H69.2c-2.1,0-3.9,1.7-3.9,3.9l0,0v81.1C65.4,95.2,66.7,96.5,68.3,96.5L68.3,96.5z"></path>
+                  <path fill="#ffffff" d="M72.1,76.6c0.4,0,0.7-0.2,1-0.4l0,0l1.7-1.7v12.4c0,0.8,0.7,1.5,1.5,1.5c0.8,0,1.5-0.7,1.5-1.5V74.4l1.7,1.7c0.6,0.6,1.5,0.6,2.1,0c0.6-0.6,0.6-1.5,0-2.1l-4.2-4.2c-0.6-0.6-1.5-0.6-2.1,0l-4.2,4.2c-0.6,0.6-0.6,1.5,0,2.1C71.3,76.4,71.7,76.6,72.1,76.6z M84.5,76.6c0.4,0,0.8-0.2,1-0.4l0,0l1.7-1.7v12.4c0,0.8,0.7,1.5,1.5,1.5c0.8,0,1.5-0.7,1.5-1.5V74.4l1.7,1.7c0.6,0.6,1.5,0.6,2.1,0c0.6-0.6,0.6-1.5,0-2.1l-4.2-4.2c-0.6-0.6-1.5-0.6-2.1,0l-4.2,4.2c-0.6,0.6-0.6,1.5,0,2.1C83.8,76.4,84.2,76.6,84.5,76.6z M92.8,89.9H72.3c-0.8,0-1.5,0.7-1.5,1.5c0,0.8,0.7,1.5,1.5,1.5h20.5c0.8,0,1.5-0.7,1.5-1.5C94.2,90.6,93.6,89.9,92.8,89.9z"></path>
+                  <path fill="#ffffff" d="M10,211.7v41.5h29.4V229h73.9v24.2h29.4V229h73.9v24.2H246v-41.5H10z"></path>
+                </g>
+              </g>
+            </svg>
+          </button>
+        </li>
+      </ul>
+  </div>
+</div>
+  <div class="row">
+    <div class="col-12 p-0 btn-toolbar">
+      <div class="btn-group  btn-group-justified m-0" role="group" aria-label="First group">
+      {#     Pickup Carrier #}
+      {% if record.carrier is same as column.options.stateCarrier.pickup %}
+        {#  Afgehaald State  #}
+        {% if record.current_state is not same as column.options.stateType.pickup %}
+          {#  Af te halen State  #}
+          <div class="cc-koopman aftehalen-btn btn" data-order="{{ record.id_order }}" title="Af te halen">
+            <input id="aftehalen_{{ record.id_order }}" type="radio" name="af-halen-pakket" value="aftehalen"/>
+            <label class="type-cc w-100 aftehalen" for="aftehalen_{{ record.id_order }}">Klaar voor Afhalen</label>
+          </div>
+        {% else %}
+          <div class="cc-koopman  afgehaald-btn btn" data-order="{{ record.id_order }}" title="Afgehaald">
+            <input id="afgehaald_{{ record.id_order }}" type="radio" name="afgehaald-pakket" value="afgehaald"/>
+            <label class="type-cc w-100 afgehaald" for="afgehaald_{{ record.id_order }}">Opgehaald</label>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {% if record.carrier is same as column.options.stateCarrier.added %}
+        {#  Toevoegen State  #}
+        {% if record.current_state not in column.options.stateType.added %}
+          <div class="cc-koopman toegevoegd-btn btn" data-order="{{ record.id_order }}" title="Toegevoegd">
+            <input id="toegevoegd_{{ record.id_order }}" type="radio" name="toegevoegd-aan-pakket" value="toegevoegd"/>
+            <label class="type-cc w-100 toegevoegd" for="toegevoegd_{{ record.id_order }}">Toegevoegd</label>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {#  Backorder Waiting State  #}
+      {% if record.current_state is not same as column.options.stateType.waiting %}
+        <div class="cc-koopman backorder-btn btn btn-warning"
+             data-order="{{ record.id_order }}" title="Status wijzigen naar achtend op vooraad">
+          <input id="backorder_{{ record.id_order }}" type="radio" name="backorder-pakket" value="backorder"/>
+          <label class="type-cc backorder" for="backorder_{{ record.id_order }}">
+            Voorraad = Op
+          </label>
+        </div>
+      {% endif %}
+
+      {#  Send to Workshop State  #}
+      {% if record.current_state is not same as column.options.stateType.workshop %}
+        <div data-toggle="modal" data-target="#trelloModal" class="cc-koopman workshop-btn btn btn-success"
+             data-order="{{ record.id_order }}" title="Status wijzigen naar werkplaats">
+          <input id="workshop_{{ record.id_order }}" type="radio" name="workshop-pakket" value="workshop"/>
+          <label class="type-cc workshop" for="workshop_{{ record.id_order }}">
+            Werkplaats klus
+          </label>
+        </div>
+      {% endif %}
+
+
+{#      #}{#  Being prepared State  #}
+{#      {% if record.current_state is not same as column.options.stateType.shipping %}#}
+{#        <div class="cc-koopman beingprepared-btn btn btn-warning"#}
+{#             data-order="{{ record.id_order }}" title="Status wijzigen naar word voorbereid">#}
+{#          <input id="beingprepared_{{ record.id_order }}" type="radio" name="beingprepared-pakket" value="beingprepared"/>#}
+{#          <label class="type-cc beingprepared" for="beingprepared_{{ record.id_order }}">#}
+{#            Voorbereiden#}
+{#          </label>#}
+{#        </div>#}
+{#      {% endif %}#}
+    </div>
+  </div>
+  </div>
+</div>
+
+
+</div>
+

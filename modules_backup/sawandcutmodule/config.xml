@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>sawandcutmodule</name>
+    <displayName><![CDATA[SawAndCutmodule]]></displayName>
+    <version><![CDATA[1.0.6]]></version>
+    <description><![CDATA[Geef klant de mogelijkheid producten binnen de geselecteerde categorie op maat te laten zagen.]]></description>
+    <author><![CDATA[PropX]]></author>
+    <tab><![CDATA[dashboard]]></tab>
+    <confirmUninstall><![CDATA[Weet u zeker dat u deze module wilt verwijderen?]]></confirmUninstall>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+    <limited_countries></limited_countries>
+</module>

@@ -1,0 +1,199 @@
+td.koopman_label_button-type.column-label{
+  min-width: 550px;
+}
+
+
+.column-customer a, .column-reference {
+  color: #000 !important;
+  font-weight: 700;
+  font-size: 1.2em !important;
+  text-transform: capitalize
+}
+
+.column-osname .dropdown-toggle {
+  margin-bottom: 8px
+}
+
+.cc-koopman input {
+  display: none;
+  z-index: 999
+}
+
+.cc-koopman.btn {
+  padding: 0;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.btn-group .cc-koopman:first-child{
+  border-top-left-radius: 0px!important;
+  border-bottom-left-radius: 6px!important;
+}
+
+.btn-group .cc-koopman:last-child{
+  border-top-right-radius: 0px!important;
+  border-bottom-right-radius: 6px!important;
+}
+
+.cc-koopman label {
+  cursor: pointer;
+  line-height: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 1rem .5rem;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+.btn-group-justified .btn{
+  display: table-cell;
+  float: none;
+  width: 1%;
+}
+
+.btn-group-justified {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+}
+
+.cc-koopman label:hover, .cc-koopman label:focus {
+  opacity: .8
+}
+
+.cc-koopman.backorder-btn {
+  background-color: #3498D8
+}
+
+.cc-koopman.backorder-btn:hover {
+  opacity: .9
+}
+
+.cc-koopman label span.koopman-label-icon {
+  width: 40px;
+  height: 47px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle
+}
+
+.toegevoegd {
+  background-color: #73c27a
+}
+
+.aftehalen {
+  background-color: #caff82
+}
+
+.afgehaald {
+  background-color: #028102;
+  color:#ffffff;
+}
+
+.koopman-current-status-badge {
+  font-weight: 700;
+  font-size: 1.2rem;
+  border-radius: 5px 5px 0 0;
+  width: 100% !important;
+  padding: 1rem .5rem;
+}
+
+.koopman-current-status-badge .type-cc {
+  width: 100% !important
+}
+
+.koopman-current-status-badge-label {
+  font-size: .7rem
+}
+
+.koopman-current-status-badge.status_10 {
+  color: #fff
+}
+
+
+.reverse {
+  transform: rotate(180deg);
+}
+
+.temp_disabled {
+  cursor: not-allowed!important;
+  pointer-events: none!important;
+  animation-duration: 3s;
+  animation-iteration-count: 100;
+  animation-name: rotatingDisabled;
+  animation-timing-function: linear;
+}
+
+.temp_disabled_row {
+  cursor: not-allowed!important;
+  pointer-events: none!important;
+}
+
+@keyframes rotatingDisabled {
+  from { transform: rotate(  0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.koopman_label_button_2-type .text-button-large{
+  font-size: 1.6rem!important;
+  background-color: #028102!important;
+}
+.koopman_label_button_2-type .input-lg{
+  font-size: 1.6rem;
+}
+.koopman_label_button_2-type .pagination-lg .page-link {
+  padding: .75rem 1.8rem;
+  font-size: 1rem;
+  line-height: 1.8;
+  background-color: #3d57ae!important;
+}
+.koopman_label_button_2-type .pallet_selection_box button{
+  font-size: 1.2rem !important;
+  width: 70px;
+  height: 70px;
+  margin: 5px 0;
+  background-color: #3d57ae!important;
+  border: 1px solid #3d57ae;
+}
+.koopman_label_button_2-type .pagination-lg .page-link:hover,
+.koopman_label_button_2-type .pallet_selection_box button:hover,
+.koopman_label_button_2-type .pagination-lg .page-link[type="button"]::-moz-focus-inner,
+.koopman_label_button_2-type .pallet_selection_box button[type="button"]::-moz-focus-inner,
+.koopman_label_button_2-type .pallet_selection_box button:not([disabled]):not(.disabled).active,
+.koopman_label_button_2-type .pagination-lg .page-link:not([disabled]):not(.disabled):active {
+  background-color: #7a9ffc!important;
+  border-color: #7a9ffc!important;
+  border-width: 2px!important;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.koopman_label_button_2-type .pallet_selection_box{
+  display: none;
+  text-align: center;
+  position: absolute;
+  bottom:100px;
+  right:-10px;
+  width: 100px;
+  height: 245px;
+  background-color: #ffffff;
+  border: 3px dashed #3d57ae;
+  z-index: 2;
+  border-radius: 5px;
+}
+.koopman_label_button_2-type .input-group .input-group-prepend, .koopman_label_button_2-type .input-group .input-group-append{
+  width: 90px;
+}
+.koopman_label_button_2-type .package_size_select{
+  text-align: center;
+  text-align-last: center;
+  pointer-events: none;
+}
+
+.calculated_weight{
+  font-size: 1.2rem;
+  position: absolute;
+  right: 20px;
+}

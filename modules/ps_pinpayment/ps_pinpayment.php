@@ -180,7 +180,7 @@ public function addOrderState($name)
 
     public function hookDisplayPaymentReturn($params)
     {
-        if (!$this->active || !Configuration::get(self::FLAG_DISPLAY_PAYMENT_INVITE)) {
+        if (!$this->active || !Configuration::get(self::FLAG_DISPLAY_PAYMENT_INVITE, Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)) {
             return;
         }
 
@@ -189,14 +189,14 @@ public function addOrderState($name)
             in_array(
                 $state,
                 array(
-                    Configuration::get('PS_OS_BANKPIN'),
-                    Configuration::get('PS_OS_OUTOFSTOCK'),
-                    Configuration::get('PS_OS_OUTOFSTOCK_UNPAID'),
+                    Configuration::get('PS_OS_BANKPIN', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
+                    Configuration::get('PS_OS_OUTOFSTOCK', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
+                    Configuration::get('PS_OS_OUTOFSTOCK_UNPAID', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
                 )
         )) {
             $totalToPaid = $params['order']->getOrdersTotalPaid() - $params['order']->getTotalPaid();
 
-            $newState = Configuration::get('BANK_PIN_COMPLETE_STATE');
+            $newState = Configuration::get('BANK_PIN_COMPLETE_STATE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
             $history = new OrderHistory();
             $history->id_order = (int)$params['order']->id;
             $history->changeIdOrderState($newState, (int)$params['order']->id);
@@ -241,7 +241,7 @@ public function addOrderState($name)
 
     public function renderForm()
     {
-        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
         $orderStates = OrderState::getOrderStates($lang->id);
         $fields_form_customization = array(
             'form' => array(
@@ -279,9 +279,9 @@ public function addOrderState($name)
         $helper = new HelperForm();
         $helper->show_toolbar = false;
         $helper->table = $this->table;
-        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
         $helper->default_form_language = $lang->id;
-        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? : 0;
+        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) ? : 0;
         $helper->id = (int)Tools::getValue('id_carrier');
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'btnSubmit';
@@ -304,11 +304,11 @@ public function addOrderState($name)
         foreach ($languages as $lang) {
             $custom_text[$lang['id_lang']] = Tools::getValue(
                 'BANK_PIN_CUSTOM_TEXT_'.$lang['id_lang'],
-                Configuration::get('BANK_PIN_CUSTOM_TEXT', $lang['id_lang'])
+                Configuration::get('BANK_PIN_CUSTOM_TEXT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)
             );
         }
 
-        $newState = Tools::getValue('BANK_PIN_COMPLETE_STATE', Configuration::get('BANK_PIN_COMPLETE_STATE'));
+        $newState = Tools::getValue('BANK_PIN_COMPLETE_STATE', Configuration::get('BANK_PIN_COMPLETE_STATE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
 
         return array(
             'BANK_PIN_CUSTOM_TEXT' => $custom_text,
@@ -324,7 +324,7 @@ public function addOrderState($name)
             Context::getContext()->currentLocale->formatPrice($cart->getOrderTotal(true, Cart::BOTH), 'EUR')
         );
 
-        $bankpinCustomText = Tools::nl2br(Configuration::get('BANK_PIN_CUSTOM_TEXT', $this->context->language->id));
+        $bankpinCustomText = Tools::nl2br(Configuration::get('BANK_PIN_CUSTOM_TEXT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
         if (false === $bankpinCustomText) {
             $bankpinCustomText = '';
         }

@@ -1,0 +1,118 @@
+<div class="card">
+  <div class="card-header">
+    Kiyoh
+  </div>
+  <div class="card-body">
+
+
+    {#   En/Dis able Kiyoh Header   #}
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4">
+        Enable Kiyoh Header
+      </label>
+      <div class="col-xs-8">
+
+        <div class="radio">
+          <label><input type="radio" name="IJZERSHOPKIYOH_LIVE_MODE" id="yes"
+                        value="1"
+                        {% if IJZERSHOPKIYOH_LIVE_MODE == 1 %}checked="checked"{% endif %}>Yes</label>
+        </div>
+        <div class="radio ">
+          <label><input type="radio" name="MSTHEMECONFIG_FIRST_BOX_ACTIVE" id="no" value="0"
+                        {% if IJZERSHOPKIYOH_LIVE_MODE == 0 %}checked="checked"{% endif %}>No</label>
+        </div>
+      </div>
+    </div>
+
+
+    {#   Kiyoh Token   #}
+    <div class="form-group col-xs-12" data-tab-id="main_settings">
+      <br>
+      <label class="control-label col-xs-4 text-right">Kiyoh token</label>
+      <div class="col-xs-8">
+        <div class="input-group"><span class="input-group-addon"><i class="icon-key"></i></span>
+          <input type="text" name="IJZERSHOPKIYOH_TOKEN" id="IJZERSHOPKIYOH_TOKEN"
+                 value="{{ IJZERSHOPKIYOH_TOKEN }}" class="form-control">
+        </div>
+        <p class="help-block">Enter your token given by kiyoh</p>
+      </div>
+    </div>
+
+
+    {#   Reviews per page   #}
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 text-right">
+        Aantal reviews per pagina
+      </label>
+      <div class="col-xs-8">
+        <select name="IJZERSHOPKIYOH_TOTAL_PER_PAGE" class="w-100"
+                id="IJZERSHOPKIYOH_TOTAL_PER_PAGE">
+          <option {% if IJZERSHOPKIYOH_TOTAL_PER_PAGE == '10' %}selected{% endif %}
+                  value="10" title="10">10
+          </option>
+          <option {% if IJZERSHOPKIYOH_TOTAL_PER_PAGE == '20' %}selected{% endif %}
+                  value="20" title="20">20
+          </option>
+          <option {% if IJZERSHOPKIYOH_TOTAL_PER_PAGE == '30' %}selected{% endif %}
+                  value="30" title="30">30
+          </option>
+          <option {% if IJZERSHOPKIYOH_TOTAL_PER_PAGE == '40' %}selected{% endif %}
+                  value="40" title="40">40
+          </option>
+          <option {% if IJZERSHOPKIYOH_TOTAL_PER_PAGE == '50' %}selected{% endif %}
+                  value="50" title="50">50
+          </option>
+          <option {% if IJZERSHOPKIYOH_TOTAL_PER_PAGE == '75' %}selected{% endif %}
+                  value="75" title="75">75
+          </option>
+          <option {% if IJZERSHOPKIYOH_TOTAL_PER_PAGE == '100' %}selected{% endif %}
+                  value="100" title="100">100
+          </option>
+        </select>
+        <p class="help-block">Selecteer het aantal reviews die u wilt laten zien</p>
+      </div>
+    </div>
+
+
+    {#   Update interval   #}
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 text-right">
+        Update interval
+      </label>
+      <div class="col-xs-8">
+        <select name="IJZERSHOPKIYOH_UPDATE_INTERVAL" class="w-100"
+                id="IJZERSHOPKIYOH_UPDATE_INTERVAL">
+          <option {% if IJZERSHOPKIYOH_UPDATE_INTERVAL == '6' %}selected{% endif %}
+                  value="6" title="6 uur">6 uur
+          </option>
+          <option {% if IJZERSHOPKIYOH_UPDATE_INTERVAL == '12' %}selected{% endif %}
+                  value="12" title="12 uur">12 uur
+          </option>
+          <option {% if IJZERSHOPKIYOH_UPDATE_INTERVAL == '24' %}selected{% endif %}
+                  value="24" title="24 uur">24 uur
+          </option>
+          <option {% if IJZERSHOPKIYOH_UPDATE_INTERVAL == '48' %}selected{% endif %}
+                  value="48" title="48 uur">48 uur
+          </option>
+        </select>
+        <p class="help-block">Selecteer de wachttijd voor de nieuwe verversing vanaf kiyoh api</p>
+      </div>
+    </div>
+
+    {#   Kiyoh review cms page   #}
+    <div class="form-group col-xs-12">
+      <br>
+      <label class="control-label col-xs-4 text-right">
+        Pagina's waar kiyoh reviews worden getoond
+      </label>
+      <div class="col-xs-8">
+        <select name="IJZERSHOPKIYOH_REVIEW_PAGE" class="w-100 select2-data-input"
+                data-type="pages" id="IJZERSHOPKIYOH_REVIEW_PAGE">
+          {{ IJZERSHOPKIYOH_REVIEW_PAGE|raw }}
+        </select>
+        <p class="help-block">Selecteer de pagina waar u de Kiyoh review lijst wilt laten tonen</p>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -108,7 +108,7 @@ abstract class HTMLTemplateCore
     {
         $id_shop = (int) $this->shop->id;
 
-        $invoiceLogo = Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
+        $invoiceLogo = Configuration::get('PS_LOGO_MAIL', null, null, $id_shop);
         if ($invoiceLogo && file_exists(_PS_IMG_DIR_ . $invoiceLogo)) {
             return $invoiceLogo;
         }

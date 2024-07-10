@@ -332,11 +332,6 @@
       <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/psr/http-factory" />
       <path value="$PROJECT_DIR$/vendor/pcloud/pcloud-php-sdk" />
-      <path value="$PROJECT_DIR$/modules/ps_wirepayment/vendor/composer" />
-      <path value="$PROJECT_DIR$/modules/ps_emailsubscription/vendor/composer" />
-      <path value="$PROJECT_DIR$/modules/ps_themecusto/vendor/composer" />
-      <path value="$PROJECT_DIR$/modules/ps_facetedsearch/vendor/doctrine/collections" />
-      <path value="$PROJECT_DIR$/modules/ps_facetedsearch/vendor/composer" />
       <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/symfony/polyfill-ctype" />
     </include_path>
   </component>

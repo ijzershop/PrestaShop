@@ -41,7 +41,7 @@ class Cart extends CartCore
             AND cp.`id_product_attribute` = '.(int)$id_product_attribute.'
             AND cp.`id_customization` = '.(int)$id_customization.'
             AND cp.`id_cart` = '.(int)$this->id;
-        if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
+        if (Configuration::get('PS_ALLOW_MULTISHIPPING',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) && $this->isMultiAddressDelivery()) {
             $sql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
         }
 
@@ -65,7 +65,7 @@ class Cart extends CartCore
         }
         return $ret;
     }
-    
+
     /**
      * Update Product quantity
      *
@@ -109,7 +109,7 @@ class Cart extends CartCore
         $quantity = (int)$quantity;
         $id_product = (int)$id_product;
         $id_product_attribute = (int)$id_product_attribute;
-        $product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $shop->id);
+        $product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $shop->id);
 
         if ($id_product_attribute) {
             $combination = new Combination((int)$id_product_attribute);
@@ -206,7 +206,7 @@ class Cart extends CartCore
                         WHERE `id_product` = '.(int)$id_product.
                         ' AND `id_customization` = '.(int)$id_customization.
                         (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
-                        AND `id_cart` = '.(int)$this->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
+                        AND `id_cart` = '.(int)$this->id.(Configuration::get('PS_ALLOW_MULTISHIPPING', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
                         LIMIT 1'
                     );
                 }

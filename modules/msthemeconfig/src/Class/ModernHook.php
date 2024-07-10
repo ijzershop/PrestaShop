@@ -2633,7 +2633,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
         $themes = $hookParams['mailThemes'];
         $scanner = new FolderThemeScanner();
         try {
-            $moderneSmidTheme = $scanner->scan(PS_ROOT_DIR._MODULE_DIR_.'/'.$this->module->name.'/mails/themes/modernesmid');
+            $moderneSmidTheme = $scanner->scan(realpath(_MODULE_DIR_.'/'.$this->module->name.'/mails/themes/modernesmid'));
 
             if (null !== $moderneSmidTheme &&  $moderneSmidTheme->getName() !== 'modernesmid' && $moderneSmidTheme->getLayouts()->count() > 0) {
                 $themes->add($moderneSmidTheme);

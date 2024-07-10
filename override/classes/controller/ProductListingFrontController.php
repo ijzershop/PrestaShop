@@ -82,11 +82,15 @@ abstract class ProductListingFrontController extends ProductListingFrontControll
 
         $db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 
-        $query = 'SELECT COUNT(id_product) as active FROM `' . _DB_PREFIX_ . 'product_shop` WHERE `id_shop` = ' . (int) $context->shop->id .
-            ' AND `id_product` = ' . $product['id_product'] . ' ' .
-            ' AND `active` = 1 ' .
-            ' AND `visibility` IN ("both", "search");';
+        $query = 'SELECT COUNT(id_product) as active FROM `' . _DB_PREFIX_ . 'product_shop` ps 
+        INNER JOIN `' . _DB_PREFIX_ . 'category_shop` cs ON ps.`id_shop` = cs.`id_shop` WHERE ps.`id_shop` = ' . (int) $context->shop->id .
+            ' AND ps.`id_product` = ' . $product['id_product'] . ' ' .
+            ' AND ps.`active` = 1 ' .
+            ' AND ps.`visibility` IN ("both", "search");';
+
+
         $result = $db->executeS($query);
+
         return  boolval($result[0]['active']);
     }
 

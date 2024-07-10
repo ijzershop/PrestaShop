@@ -28,9 +28,9 @@
     id="product_{$product.id_product}" data-id-product="{$product.id_product}"
     data-id-product-attribute="{$product.id_product_attribute}">
       {assign var="productFeatures" value=unserialize(Configuration::get('SAWANDCUTMODULE'))}
-      {assign var="sawButtonVisible" value=in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}
+      {assign var="sawButtonVisible" value=is_array($productFeatures) && (in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product)))}
     <div style="{if $sawButtonVisible}min-height: 55px;{else}min-height: 105px;{/if}"
-         class="product-description col-12 {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}col-sm-8 {if Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')}col-md-7{elseif Configuration::get('PS_CATALOG_MODE') && !Configuration::get('PS_CATALOG_MODE_WITH_PRICES')}col-md-9{else}col-md-4{/if}{else} {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == 'col-sm-4 col-md-2'}col-sm-8 col-md-5{else}col-sm-4 col-md-4{/if}{/if} pl-0  pl-sm-2 pr-0 mb-0 mb-sm-3 mb-md-0 float-right">
+         class="product-description col-12 {if is_array($productFeatures) && (in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product)))}col-sm-8 {if Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')}col-md-7{elseif Configuration::get('PS_CATALOG_MODE') && !Configuration::get('PS_CATALOG_MODE_WITH_PRICES')}col-md-9{else}col-md-4{/if}{else} {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == 'col-sm-4 col-md-2'}col-sm-8 col-md-5{else}col-sm-4 col-md-4{/if}{/if} pl-0  pl-sm-2 pr-0 mb-0 mb-sm-3 mb-md-0 float-right">
         {block name='product_name'}
           <table class="h-100 w-100">
             <tr>
@@ -77,7 +77,7 @@
           {/block}
           {if (Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) || !Configuration::get('PS_CATALOG_MODE')}
             <div
-              class="product-price col-7 d-flex d-sm-flex d-md-none {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}col-sm-8{/if} col-md-2 pr-2 float-right text-right text-sm-right">
+              class="product-price col-7 d-flex d-sm-flex d-md-none {if is_array($productFeatures) && (in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product)))}col-sm-8{/if} col-md-2 pr-2 float-right text-right text-sm-right">
               <table class="h-100 w-100">
                 <tr>
                   <td class="align-right">
@@ -160,7 +160,7 @@
 
 
           {if !Configuration::get('PS_CATALOG_MODE')}
-              {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}
+              {if is_array($productFeatures) && (in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product)))}
                 <div class="pl-0 pl-sm-2 pr-0 col-7 col-sm-8 col-md-1 float-right mb-3 mb-sm-3 mb-md-0"
                      style="pointer-events:{if !$product.add_to_cart_url}none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') &&  (int)$product.quantity <= 0 && (int)$product.out_of_stock == 0}none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') && (int)$product.quantity != 0 && (int)$product.quantity < 100 && (int)$product.quantity < 0 && (int)$product.out_of_stock == 0}none;{/if}">
                     {hook h='displayProductSawAndCutButtons' product=$product}
@@ -213,10 +213,11 @@
                 {/block} *}
             </div>
           {/block}
-          {assign var="productFeatures" value=unserialize(Configuration::get('SAWANDCUTMODULE'))}
-          {assign var="sawButtonVisible" value=in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}
+          {assign var="productFeatures" value=unserialize(Configuration::get('SAWANDCUTMODULE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))}
+
+        {assign var="sawButtonVisible" value=is_array($productFeatures) && (is_array($productFeatures) && (in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))))}
         <div style="{if $sawButtonVisible}min-height: 55px;{else}min-height: 105px;{/if}"
-             class="product-description col-12 {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}col-sm-8 {if Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')}col-md-7{elseif Configuration::get('PS_CATALOG_MODE') && !Configuration::get('PS_CATALOG_MODE_WITH_PRICES')}col-md-9{else}col-md-4{/if}{else} {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == 'col-sm-4 col-md-2'}col-sm-8 col-md-5{else}col-sm-4 col-md-4{/if}{/if} pl-0  pl-sm-2 pr-0 mb-3 mb-sm-3 mb-md-0 float-right">
+             class="product-description col-12 {if is_array($productFeatures) && (in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product)))}col-sm-8 {if Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')}col-md-7{elseif Configuration::get('PS_CATALOG_MODE') && !Configuration::get('PS_CATALOG_MODE_WITH_PRICES')}col-md-9{else}col-md-4{/if}{else} {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == 'col-sm-4 col-md-2'}col-sm-8 col-md-5{else}col-sm-4 col-md-4{/if}{/if} pl-0  pl-sm-2 pr-0 mb-3 mb-sm-3 mb-md-0 float-right">
             {block name='product_name'}
               <table class="h-100 w-100">
                 <tr>
@@ -246,7 +247,7 @@
           </a>
         </div>
           {if !Configuration::get('PS_CATALOG_MODE')}
-              {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}
+              {if is_array($productFeatures) && (in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product)))}
                 <div class="pl-0 pl-sm-2 pr-0 col-12 col-sm-8 col-md-1 float-right mb-3 mb-sm-3 mb-md-0"
                      style="pointer-events:{if !$product.add_to_cart_url}none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') &&  (int)$product.quantity <= 0 && (int)$product.out_of_stock == 0}none;{elseif Configuration::get('PS_STOCK_MANAGEMENT') && (int)$product.quantity != 0 && (int)$product.quantity < 100 && (int)$product.quantity < 0 && (int)$product.out_of_stock == 0}none;{/if}">
                     {hook h='displayProductSawAndCutButtons' product=$product}
@@ -256,7 +257,7 @@
 
           {if (Configuration::get('PS_CATALOG_MODE') && Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) || !Configuration::get('PS_CATALOG_MODE')}
             <div
-              class="product-price col-12 d-flex d-sm-none d-md-block {if in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product))}col-sm-8{/if} col-md-2 pr-2 float-right text-center text-sm-right">
+              class="product-price col-12 d-flex d-sm-none d-md-block {if is_array($productFeatures) && (in_array((int)$productFeatures.id_attribute_group,array_keys($product->getAttributes())) || in_array((int)$productFeatures.id_attribute_group_cut,array_keys($product->getAttributes())) || !empty(SpecificPrice::getByProductId($product->id_product)))}col-sm-8{/if} col-md-2 pr-2 float-right text-center text-sm-right">
 {*              {{dd($product)}}*}
               <table class="h-100 w-100">
                 <tr>

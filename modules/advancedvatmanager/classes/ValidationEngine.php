@@ -1,10 +1,11 @@
 <?php
 /**
- * 2017-2023 liewebs - Prestashop module developers and website designers.
+ * 2017-2024 liewebs - prestashop module developers and website designers.
  *
  * NOTICE OF LICENSE
  *  @author    liewebs <info@liewebs.com>
- *  @copyright 2017-2023 www.liewebs.com - Liewebs
+ *  @copyright 2017-2024 www.liewebs.com - Liewebs
+ *  @license See "License registration" section
  * 	@module Advanced VAT Manager
  */
  
@@ -15,34 +16,52 @@ if (!defined('_PS_VERSION_')) {
 require_once(_PS_MODULE_DIR_.'advancedvatmanager/classes/CustomersVAT.php');
 require_once(_PS_MODULE_DIR_.'advancedvatmanager/classes/CustomersCart.php');
 require_once(_PS_MODULE_DIR_.'advancedvatmanager/classes/CustomersExemption.php');
-require_once(_PS_MODULE_DIR_.'advancedvatmanager/classes/AdvancedVatManagerOC.php');
 
 class ValidationEngine extends Module
 {
-    private static $valid;
-    private static $system_fail = null;
-    private static $registered_company_name;
     private static $vat;
     private static $vat_number;
     private static $vat_iso_code;
-    private static $status = array();   
-    private $requestDate;
+    
+    private static $valid;
+    private static $system_fail = null;  
+    private static $status = array();  
+    
+    // API response data
+    private static $traderStreet;
+    private static $traderPostcode;
+    private static $traderCity;
+    private static $traderName;
     private $address;
+    private static $registered_company_name;
     private $website;
     private $requester_vat_number;
     private $requester_vat_iso_code;
-    private $error_code;
+    private $requestDate; 
+    public static $skip_api_fails = false;
+    
+    private $error_code_vies;
+    private $error_code_govUK;
     
     protected $eu_prefix = array();
+    
     // Add more ISO code to update European countries
     public static $european_countries_iso = array('AT','BE','BG','CY','CZ','DE','DK','EE','ES','FI','FR','GR','HR','HU','IE','IT','LT','LU','LV','MT','NL','PL','PT','RO','SE','SI','SK');
+    public static $european_zipCodeFormat = array('AT' => 'NNNN','BE' => 'NNNN','BG' => 'NNNN','CY' => 'NNNN','CZ' => 'NNN NN','DE' => 'NNNNN','DK' => 'NNNN','EE' => 'NNNNN','ES' => 'NNNNN','FI' => 'NNNNN','FR' => 'NNNNN','GR' => 'NNNNN','HR' => 'NNNNN','HU' => 'NNNN','IE' => 'NNNNNNN','IT' => 'NNNNN','LT' => 'NNNNN','LU' => 'NNNN','LV' => 'C-NNNN','MT' => 'LLL NNNN','NL' => 'NNNN LL','PL' => 'NNNNN','PT' => 'NNNN-NNN','RO' => 'NNNNNN','SE' => 'NNN NN','SI' => 'NNNN','SK' => 'NNN NN');
     public static $north_ireland_states = array('GB-NIR', 'GB-ANT','GB-ARM','GB-DOW','GB-BFS','GB-BNB','GB-BLA','GB-BLY','GB-CKF','GB-CLR','GB-CKT','GB-CGV','GB-DRY','GB-DGN','GB-FER','GB-LRN','GB-LMV','GB-LSB','GB-MFT','GB-NTA','GB-NYM','GB-OMH');
     public static $brexit_countries_iso = array('GB');
     public static $voec_countries_iso = array('NO');
+    
     public static $country_state_iso = null;
+    public static $countryID;
+    public static $country_iso;
+    
     public static $company_valid = 2;// 1 Valid, 0 Invalid, 2 Not checked
+    public static $companyAddress_valid = 2;// 1 Valid, 0 Invalid, 2 Not checked
     public static $validation_process = false;
     public static $skip_validation_process = false;
+    public static $addressValidationError = false;
+    public static $fieldValidationError = false; //Save field name and error message to be displayed in address form.
     public static $duplicated = false;
     public static $notax_customer = false;
     public static $customer_with_vat_valid = false;
@@ -57,9 +76,10 @@ class ValidationEngine extends Module
     public static $merchant_validation = false;
     public static $checkVatCron = false; // True when it is using the Check VAT Cron task 
     public static $checkVatProcess = false; // True when it is using the Check VAT in customer VAT number management 
+    public static $checkVATTool = false;
     public $message;
-    public $skip_api_fails = false;
     public static $admin_scan = false;
+    public static $company_autoinsert_otion = false;
 
     /**
      * Characters to scape from Documents
@@ -75,8 +95,8 @@ class ValidationEngine extends Module
      * @return
      */
     public function __construct($vat = null)
-    {
-        $this->error_code = array(
+    {         
+        $this->error_code_vies = array(
             'INVALID_INPUT' => $this->l('Invalid country ISO code', 'ValidationEngine'),
             'INVALID_REQUESTER_INFO' => $this->l('Invalid Merchant VAT information', 'ValidationEngine'),
             'SERVICE_UNAVAILABLE' => $this->l('Service unavailable', 'ValidationEngine'),
@@ -92,6 +112,25 @@ class ValidationEngine extends Module
             'INVALID_REQUEST' => $this->l('Invalid API request', 'ValidationEngine'),
             'INTERNAL_SERVER_ERROR' => $this->l('Internal server error', 'ValidationEngine'),
         );
+        
+        $this->error_code_govUK = array(
+            '400' => Configuration::get('ADVANCEDVATMANAGER_VALIDATION_SYSTEM') == '1-way'?$this->l('Invalid VAT number. Number should be 9 or 12 digits', 'ValidationEngine'):$this->l('Invalid merchant VAT number. Number should be 9 or 12 digits', 'ValidationEngine'),
+            '404' => $this->l('VAT number does not match a registered company.', 'ValidationEngine'),
+            '403' => $this->l('Merchant VAT number does not match a registered company.', 'ValidationEngine'),
+        );
+        
+        // Company address validation resuts. None for no validation. success or error depends on the validation results.
+        self::$addressValidationError = array(
+            'address1' => array('validation' => '', 'message' => sprintf($this->l('The content of this field [%s] must match what is registered in the company address.', 'ValidationEngine'), $this->l('Address', 'ValidationEngine'))), 
+            'postcode' => array('validation' => '', 'message' => sprintf($this->l('The content of this field [%s] must match what is registered in the company address.', 'ValidationEngine'), $this->l('Postcode', 'ValidationEngine'))), 
+            'city' => array('validation' => '', 'message' => sprintf($this->l('The content of this field [%s] must match what is registered in the company address.', 'ValidationEngine'), $this->l('City', 'ValidationEngine')))
+        );
+        
+        self::$fieldValidationError = array(
+            'vat_number' => array('validation' => '', 'message' => ''),
+            'company' => array('validation' => '', 'message' => '')
+        ); 
+
         // Save countries ISO code for VAT
         $countries_id = CustomersVAT::getCountriesIDForValidation();
         if (!empty($countries_id)) {
@@ -118,19 +157,21 @@ class ValidationEngine extends Module
             $this->requester_vat_number = Tools::substr(configuration::get('ADVANCEDVATMANAGER_MERCHANT_VAT'), 2);
             $this->requester_vat_iso_code = Tools::substr(configuration::get('ADVANCEDVATMANAGER_MERCHANT_VAT'), 0, 2);     
         }
+        else {
+            $this->requester_vat_number = '';
+            $this->requester_vat_iso_code = '';    
+        }
         
         self::$vat = $this->formatVAT($vat);// Format VAT number
         self::$vat_number = Tools::substr(self::$vat, 2);
         self::$vat_iso_code = Tools::substr(self::$vat, 0, 2);  
         self::$status = array();
         self::$company_valid = 2;
+        self::$companyAddress_valid = 2;
         
-        if (
-            (Configuration::get('ADVANCEDVATMANAGER_SKIPAPISYSTEMFAIL') == 1 && self::$checkVatCron == false && self::$checkVatProcess == false) ||
-            (Configuration::get('ADVANCEDVATMANAGER_CRON_SKIPAPISYSTEMFAIL') == 1 && self::$checkVatCron && self::$checkVatProcess == false)
-        )
+        if ((Configuration::get('ADVANCEDVATMANAGER_SKIPAPISYSTEMFAIL') == 1 && self::$checkVatCron == false && self::$checkVatProcess == false && self::$checkVATTool == false))
         {
-            $this->skip_api_fails = true;
+            self::$skip_api_fails = true;
         }
         parent::__construct();
     }
@@ -153,7 +194,7 @@ class ValidationEngine extends Module
      */
     public static function setVATValidation($valid = null)
     {
-        if ($valid != null) {
+        if ($valid !== null) {
             self::$valid = $valid;    
         }
         return self::$valid;
@@ -190,6 +231,46 @@ class ValidationEngine extends Module
     {
         return $this->address;
     }
+    
+    /**
+     * ValidationEngine::getTraderStreet()
+     * 
+     * @return
+     */
+    public static function getTraderStreet()
+    {
+        return self::$traderStreet;
+    }
+    
+    /**
+     * ValidationEngine::getTraderCity()
+     * 
+     * @return
+     */
+    public static function getTraderCity()
+    {
+        return self::$traderCity;
+    }
+    
+    /**
+     * ValidationEngine::getTraderPostcode()
+     * 
+     * @return
+     */
+    public static function getTraderPostcode()
+    {
+        return self::$traderPostcode;
+    }
+    
+    /**
+     * ValidationEngine::getTraderName()
+     * 
+     * @return
+     */
+    public static function getTraderName()
+    {
+        return self::$traderName;
+    }    
     
     /**
      * ValidationEngine::getWebsite()
@@ -239,7 +320,7 @@ class ValidationEngine extends Module
      */
     public static function setVat($vat)
     {
-        if ($vat != null) {
+        if ($vat !== null) {
             self::$vat = $vat;    
         }
         return self::$vat;
@@ -333,7 +414,7 @@ class ValidationEngine extends Module
      */
     public static function getStatus()
     {
-        return implode(PHP_EOL, self::$status);
+        return implode(' | ', self::$status);
     }
     
     /**
@@ -344,7 +425,7 @@ class ValidationEngine extends Module
      */
     public static function setStatus($status = null)
     {
-        if ($status != null) {
+        if ($status !== null) {
             self::$status[] = $status;    
         }
     }
@@ -367,8 +448,13 @@ class ValidationEngine extends Module
      */
     public function setMessage($message = null)
     {
-        if ($message != null) {
-            $this->message = $message;    
+        if ($message !== null) {
+            if (!empty($this->message)) {
+                $this->message .= '<br />'.$message;
+            }
+            else {
+                $this->message = $message;     
+            } 
         }
         return $this->message;
     }
@@ -429,7 +515,7 @@ class ValidationEngine extends Module
         // Skip validation for modules selected
         if ($disabled_mod = json_decode(Configuration::get('ADVANCEDVATMANAGER_DISABLE_FORMODULES'), true)) {
             foreach ($disabled_mod as $module) {
-                if (AdvancedVatManagerOC::checkModuleController($module)) {
+                if (self::checkModuleController($module)) {
                     return true;
                 }    
             }    
@@ -480,11 +566,14 @@ class ValidationEngine extends Module
      * @param mixed $country_id
      * @param mixed $id_customer
      * @param mixed $id_address
+     * @param mixed $company
+     * @param array $company_address
      * @return
      */
-    public function VATValidationProcess($country_id = null, $id_customer = null, $id_address = null, $company = null)
+    public function VATValidationProcess($country_id = null, $id_customer = null, $id_address = null, $company = null, $company_address = null)
     { 
         self::$init_validation_process = true;
+        
         if ($id_customer == null) {
             $id_customer = (isset(Context::getContext()->customer->id) && Context::getContext()->customer->id?Context::getContext()->customer->id:Tools::getValue('id_customer'));    
         }
@@ -494,15 +583,35 @@ class ValidationEngine extends Module
         
         $customer = new Customer($id_customer);
         
-        // Company name
+        // Company name for validation
         if ($company == null) {
             $company = Tools::getValue('company');  
         }
+        self::$traderName = $company;
+
+        // Company address for validation
+        if (Configuration::get('ADVANCEDVATMANAGER_COMPANY_ADDRESS_VALIDATION')) {
+            if ($company_address == null) {
+                self::$traderStreet = (Tools::getValue('address1')?Tools::getValue('address1'):'').(Tools::getValue('address2')?' '.Tools::getValue('address2'):'');
+                self::$traderCity = Tools::getValue('city')?Tools::getValue('city'):'';
+                self::$traderPostcode = Tools::getValue('postcode')?Tools::getValue('postcode'):'';
+            }
+            else {
+                self::$traderStreet = $company_address['address1'].' '.$company_address['address2'];
+                self::$traderCity = $company_address['city'];
+                self::$traderPostcode = $company_address['postcode'];
+            }
+        }
         
+        // Customer info for email sends
         $customer_info = array('id_customer' => $customer->id, 'firstname' => $customer->firstname, 'lastname' => $customer->lastname, 'id_country' => $country_id, 'vat' => self::$vat, 'email' => $customer->email, 'id_address' => $id_address);
         
+        if ($country_id == null) {
+            $country_id = Tools::getValue('id_country');        
+        }
         if ($country_id) {
-            $country_iso = Country::getIsoById($country_id);
+            self::$countryID = $country_id;
+            self::$country_iso = Country::getIsoById($country_id);
             if (Tools::getValue('id_state')) {
                 $state = new State((int)Tools::getValue('id_state'));
                 self::$country_state_iso = $state->iso_code;
@@ -510,7 +619,7 @@ class ValidationEngine extends Module
         }
         
         // Skip validation process
-        if (self::skipVATValidation($country_id, $company, self::$vat) == false) {
+        if (self::skipVATValidation($country_id, self::$traderName, self::$vat) == false) {
             // Checks blacklist
             if (Configuration::get('ADVANCEDVATMANAGER_BLACKLIST') != '') {
                 $blacklist = explode(',', Configuration::get('ADVANCEDVATMANAGER_BLACKLIST'));
@@ -522,12 +631,12 @@ class ValidationEngine extends Module
             }
             // Validation type
             if (Configuration::get('ADVANCEDVATMANAGER_VALIDATION_TYPE') == 'format') {
-                $this->formatValidation($country_id, $company);
+                $this->formatValidation($country_id, self::$traderName);
             }
             elseif (Configuration::get('ADVANCEDVATMANAGER_VALIDATION_TYPE') == 'api') {
-                if ($this->formatValidation($country_id, $company)) {
+                if ($this->formatValidation($country_id, self::$traderName)) {
                     //UK VAT
-                    if ($country_iso == 'GB' && self::$vat_iso_code != $this->eu_prefix['GB']) {
+                    if (self::$country_iso == 'GB' && self::$vat_iso_code != $this->eu_prefix['GB']) {
                         if (Configuration::get('ADVANCEDVATMANAGER_BREXIT_ENABLED') == 1) {
                             $this->validationForUKVAT();      
                         }
@@ -537,7 +646,7 @@ class ValidationEngine extends Module
                             self::$status[] = $this->l('The VAT number belongs to the United Kingdom and Brexit option is disabled.', 'ValidationEngine');
                         }
                     }
-                    if ($country_iso == 'NO') {
+                    else if (self::$country_iso == 'NO') {
                         if (Configuration::get('ADVANCEDVATMANAGER_VOEC_ENABLED') == 1) {
                             $this->validationForNORWVAT();      
                         }
@@ -547,8 +656,8 @@ class ValidationEngine extends Module
                             self::$status[] = $this->l('The VAT number %s belongs to the Norway and VOEC option is disabled.', 'ValidationEngine');
                         }
                     }
-                    else if ($country_iso != 'GB' || ($country_iso == 'GB' && self::$vat_iso_code == $this->eu_prefix['GB'])) {
-                        Configuration::get('ADVANCEDVATMANAGER_VALIDATION_TYPE') == '1-way'?$this->vatValidationViesOneWay():(configuration::get('ADVANCEDVATMANAGER_MERCHANT_VAT')?$this->vatValidationViesTwoWay():$this->vatValidationViesOneWay());  
+                    else if (self::$country_iso != 'GB' || (self::$country_iso == 'GB' && self::$vat_iso_code == $this->eu_prefix['GB'])) {
+                        $this->vatValidationVies();  
                     } 
                 }
                 // No admin scan and send email after API validation
@@ -589,39 +698,69 @@ class ValidationEngine extends Module
                     self::$status[] = $this->l('The VAT number is duplicated.', 'ValidationEngine');
                     self::$valid = true;
                 }   
-            }             
-            //Checks company name
-            if (self::$valid && Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION') && !empty(self::$registered_company_name)) {
-                if (!empty($company) && Tools::strtolower(self::$registered_company_name) != Tools::strtolower($company)) {
-                    self::$company_valid = 0;
-                    self::$status[] = sprintf($this->l('The company name %s does not match the company name registered in VIES/GOV.UK', 'ValidationEngine'), $company);
-                    $this->message = sprintf($this->l('The company name %s is not valid. Please enter the exact name of the company that is registered under that VAT number', 'ValidationEngine'), $company);      
-                }
-                else if (!empty($company) && Tools::strtolower(self::$registered_company_name) == Tools::strtolower($company)) {
-                    self::$company_valid = 1;
-                    self::$status[] = $this->l('The company validation is successfully', 'ValidationEngine');
-                    $this->message = $this->l('The company validation is successfully', 'ValidationEngine');
-                }
-                else if (empty($company)) {
-                    self::$company_valid = 0; 
-                    self::$status[] = $this->l('The company name field is empty', 'ValidationEngine');
-                    $this->message = $this->l('The company name field is empty', 'ValidationEngine');  
-                }  
             }
-            if (self::$valid && (Tools::getValue('autofillcompany') == 1 || Configuration::get('ADVANCEDVATMANAGER_COMPANY_AUTOINSERT'))) {
-                if (Tools::strtolower(self::$registered_company_name) != Tools::strtolower($company)) {
-                    $this->message = sprintf($this->l('The company name %s has beend changed to %s which is the company registered in VIES or GOV.UK for the VAT number validated'),$company, self::$registered_company_name);
+            
+            // Save validation in field vat_number
+            self::$fieldValidationError['vat_number'] = ['validation' => self::$valid?'success':'error', 'message' => $this->message];     
+                    
+            //Checks company name
+            if (self::$valid && Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION')) {
+                // If company is not checked yet
+                if (self::$company_valid == 2) {
+                    if (!empty(self::$traderName) && !$this->companyNameCheckEngine(self::$registered_company_name, self::$traderName)) {
+                        self::$company_valid = 0;
+                        self::$status[] = sprintf($this->l('The company name %s does not match the company name registered in API system', 'ValidationEngine'), self::$traderName);
+                        $this->message = sprintf($this->l('The company name %s is not valid. Please enter the exact name of the company that is registered under that VAT number', 'ValidationEngine'), self::$traderName); 
+                        self::$fieldValidationError['company'] = ['validation' => 'error', 'message' => $this->message];     
+                    }
+                    else if (!empty(self::$traderName) && $this->companyNameCheckEngine(self::$registered_company_name, self::$traderName)) {
+                        self::$company_valid = 1;
+                        self::$status[] = $this->l('The company validation is successfully', 'ValidationEngine');
+                        $this->message = $this->l('The company validation is successfully', 'ValidationEngine');
+                        self::$fieldValidationError['company'] = ['validation' => 'success', 'message' => $this->message]; 
+                    }
+                    else if (empty(self::$traderName)) {
+                        self::$company_valid = 0; 
+                        self::$status[] = $this->l('The company name field is empty', 'ValidationEngine');
+                        $this->message = $this->l('The company name field is empty', 'ValidationEngine'); 
+                        self::$fieldValidationError['company'] = ['validation' => 'error', 'message' => $this->message]; 
+                    }   
+                }
+                else if (self::$company_valid == 0) {
+                    self::$status[] = sprintf($this->l('The company name %s does not match the company name registered in API system', 'ValidationEngine'), self::$traderName);
+                    $this->message = sprintf($this->l('The company name %s is not valid. Please enter the exact name of the company that is registered under that VAT number', 'ValidationEngine'), self::$traderName); 
+                }
+            }
+            if (self::$valid && (Configuration::get('ADVANCEDVATMANAGER_COMPANY_AUTOINSERT') || self::$company_autoinsert_otion)) {
+                if (!$this->companyNameCheckEngine(self::$registered_company_name, self::$traderName)) {
+                    $this->message = sprintf($this->l('The company name %s has been changed to %s which is the company registered in API system for the VAT number validated'),self::$traderName, self::$registered_company_name);
                 }
                 self::$company_valid = 1;
             }
             
-            // Assign customer group after validating
-            self::manageCustomerGroups($country_id, $id_customer, $id_address, self::$valid);
+            // Check company address validation
+            if (Configuration::get('ADVANCEDVATMANAGER_COMPANY_ADDRESS_VALIDATION')) {
+                $addressValidatorError = array_column(self::$addressValidationError, 'validation');
+                $addressValidatorError = array_count_values($addressValidatorError);
+                if (isset($addressValidatorError['error']) && $addressValidatorError['error'] > 0) {
+                    self::$companyAddress_valid = 0;
+                    self::$status[] = $this->l('The company address inserted by client does not match with the registered in API system.', 'ValidationEngine');
+                    //$this->message = $this->l('The company address inserted by client does not match with the registered in API system.', 'ValidationEngine');
+                }
+                else if (isset($addressValidatorError['success']) && $addressValidatorError['success'] == 3) {
+                    self::$status[] = $this->l('The company address validation is successfully.', 'ValidationEngine');
+                    //$this->message = $this->l('The company address validation is successfully.', 'ValidationEngine');
+                    self::$companyAddress_valid = 1;    
+                }
+            }
             
+            // Assign customer group after validating
+            if (!self::$checkVatProcess) {
+                self::manageCustomerGroups($country_id, $id_customer, $id_address, self::$valid);    
+            }
             // Save static values
             self::$validation_process = true;
             self::$skip_validation_process = false;
-            
             return self::$valid;
         }
         else {
@@ -630,14 +769,15 @@ class ValidationEngine extends Module
             self::$skip_validation_process = true;
             
             // Assign customer group after validating
-            self::manageCustomerGroups($country_id, $id_customer, $id_address, self::$valid);
-            
+            if (!self::$checkVatProcess) {
+                self::manageCustomerGroups($country_id, $id_customer, $id_address, self::$valid);    
+            }
             return false;
         }
     }
 
     /**
-     * ValidationEngine::vatValidationViesOneWay()
+     * ValidationEngine::vatValidationVies()
      * API to check VAT number in VIES
      * Example of object response
      * public 'countryCode' => string 'ES'
@@ -650,32 +790,118 @@ class ValidationEngine extends Module
      * @param bool $skip_api_system_fail (Skip validation if API system fails))
      * @return self::$valid boolean (true if validation is OK)
     */
-    public function vatValidationViesOneWay()
+    public function vatValidationVies()
     {
         self::$system_fail = false;
         self::$valid = false;
         // Initialize SOAP Client
-        $client = new SoapClient("https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl", array("trace" => 1, "exception" => 1));
+        $options = [
+            'cache_wsdl'     => WSDL_CACHE_NONE,
+            'trace'          => 1,
+            'stream_context' => stream_context_create(
+                [
+                    'ssl' => [
+                        'verify_peer'       => false,
+                        'verify_peer_name'  => false,
+                        'allow_self_signed' => true
+                    ]
+                ]
+            )
+        ];
+        $client = new SoapClient("https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl", $options);
+
         try {
-            $validation = $client->checkVat(array(
-                'countryCode' => self::$vat_iso_code,
-                'vatNumber' => self::$vat_number
-            ));
+            if (Configuration::get('ADVANCEDVATMANAGER_VALIDATION_SYSTEM') == '1-way') {
+                $data = array(
+                    'countryCode' => self::$vat_iso_code,
+                    'vatNumber' => self::$vat_number,
+                );
+            }
+            if (Configuration::get('ADVANCEDVATMANAGER_VALIDATION_SYSTEM') == '2-way') {
+                $data['requesterVatNumber'] = $this->requester_vat_number;
+                $data['requesterCountryCode'] = $this->requester_vat_iso_code;
+            }
+            if (Configuration::get('ADVANCEDVATMANAGER_COMPANY_ADDRESS_VALIDATION')) {
+                $data['traderStreet'] = self::$traderStreet;
+                $data['traderPostcode'] = self::$traderPostcode;  
+                $data['traderCity'] = self::$traderCity;
+            }
+            
+            if (Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION')) {
+                $data['traderName'] = self::$traderName;
+                $data['traderCompanyType'] = '';
+            }
+            
+            $validation = $client->checkVatApprox($data);
             self::$valid = $validation->valid; 
             $this->requestDate = $validation->requestDate;
-            self::$registered_company_name = $validation->name;
-            $this->address = $validation->address;
+            
+            if (isset($validation->traderNameMatch)) {
+                if ($validation->traderNameMatch == 1) {
+                    self::$registered_company_name = $validation->traderName;
+                    self::$company_valid = 1;
+                }
+                else if ($validation->traderNameMatch == 2) {
+                    self::$registered_company_name = '';
+                    self::$company_valid = 0;
+                }
+                else if ($validation->traderNameMatch == 3) {
+                    self::$company_valid = 2;        
+                }
+            }
+            else if (!isset($validation->traderNameMatch) && !empty($validation->traderName)) {
+                self::$registered_company_name = $validation->traderName;        
+            }
+            else {
+                self::$registered_company_name = '';    
+            }
+            
+            $this->address = isset($validation->traderAddress) && !empty($validation->traderAddress)?$validation->traderAddress:'';  
             // Gets response code (200 is OK)
             preg_match("/HTTP\/\d\.\d\s*\K[\d]+/", $client->__getLastResponseHeaders(), $response);
+            
             if ((int)$response[0] != 200) {
                 self::$system_fail =  true; 
-                if ($this->skip_api_fails) {
+                if (self::$skip_api_fails) {
                     self::$valid =  true;             
                 }
                 $this->message = sprintf($this->l('An error occurred while the validation process was running [%s]', 'ValidationEngine'), $response[0]);
             }
             else {
                 if (self::$valid) {
+                    if (Configuration::get('ADVANCEDVATMANAGER_COMPANY_ADDRESS_VALIDATION') && !self::$checkVATTool) {
+                        if ($this->address) {
+                            if (isset($validation->traderStreetMatch)) {
+                                self::$addressValidationError['address1']['validation'] = $validation->traderStreetMatch == 1 || $validation->traderStreetMatch == 3?'success':'error';    
+                            }
+                            else {
+                                self::$addressValidationError['address1']['validation'] = $this->companyAddressCheckEngine($this->address, self::$traderStreet, false)?'success':'error';  
+                            }
+                            if (isset($validation->traderCityMatch)) {
+                                self::$addressValidationError['city']['validation'] = $validation->traderCityMatch == 1 || $validation->traderCityMatch == 3?'success':'error';
+                            }
+                            else {
+                                self::$addressValidationError['city']['validation'] = $this->companyAddressCheckEngine($this->address, self::$traderCity, false, 'city')?'success':'error';  
+                            }
+                            if (isset($validation->traderPostcodeMatch)) {
+                                self::$addressValidationError['postcode']['validation'] = $validation->traderPostcodeMatch == 1 || $validation->traderPostcodeMatch == 3?'success':'error';
+                            }
+                            else {
+                                self::$addressValidationError['postcode']['validation'] = $this->companyAddressCheckEngine($this->address, self::$traderPostcode, false, 'postcode')?'success':'error'; 
+                            }
+                        }
+                        else {
+                            if (isset($validation->traderStreetMatch)) {
+                                self::$addressValidationError['address1']['validation'] = $validation->traderStreetMatch == 1 || $validation->traderStreetMatch == 3?'success':'error';    
+                            }
+                            if (isset($validation->traderCityMatch)) {
+                                self::$addressValidationError['city']['validation'] = $validation->traderCityMatch == 1 || $validation->traderCityMatch == 3?'success':'error';
+                            }
+                            if (isset($validation->traderPostcodeMatch)) {
+                                self::$addressValidationError['postcode']['validation'] = $validation->traderPostcodeMatch == 1 || $validation->traderPostcodeMatch == 3?'success':'error';
+                            }
+                        }
+                    }
                     $this->message = $this->l('VAT number has been validated successfully by VIES.', 'ValidationEngine');        
                 }
                 else {
@@ -685,77 +911,14 @@ class ValidationEngine extends Module
             self::$status[] = sprintf($this->l('[HTTP code %s | VIES API validation mode %s] - %s'), $response[0],Configuration::get('ADVANCEDVATMANAGER_VALIDATION_SYSTEM'), $this->message);
         } catch (Exception $e)  {
             self::$system_fail =  true; 
-            if ($this->skip_api_fails) {
+            if (self::$skip_api_fails) {
                 self::$valid =  true;
-                self::$status[] = sprintf($this->l('An error occurred during the VAT number validation process but system has validated the VAT number to avoid blocking ordering. The error code is [%s].', 'ValidationEngine'), $this->error_code[$e->getMessage()]);
-                $this->message = sprintf($this->l('An error occurred during the VAT number validation process. The error code is [%s].', 'ValidationEngine'), $this->error_code[$e->getMessage()]);
+                self::$status[] = sprintf($this->l('An error occurred during the VAT number validation process but system has validated the VAT number to avoid blocking ordering. The error code is [%s].', 'ValidationEngine'), $this->error_code_vies[$e->getMessage()]);
+                $this->message = sprintf($this->l('An error occurred during the VAT number validation process. The error code is [%s].', 'ValidationEngine'), $this->error_code_vies[$e->getMessage()]);
             }
             else {
-                self::$status[] = sprintf($this->l('%s', 'ValidationEngine'), $this->error_code[$e->getMessage()]);
-                $this->message = sprintf($this->l('An error occurred during the VAT number validation process. The error code is [%s].', 'ValidationEngine'), $this->error_code[$e->getMessage()]);
-            } 
-        }
-        return self::$valid;
-    }
-    
-    /**
-     * ValidationEngine::vatValidationViesTwoWay()
-     * API to check VAT number in VIES
-     * Example of object response
-     * public 'countryCode' => string 'ES'
-     * public 'vatNumber' => string '98715847R'
-     * public 'requestDate' => string '2021-10-12+02:00'
-     * public 'valid' => boolean true
-     * public 'name' => string '---'
-     * public 'address' => string '---'
-     * @params $vat string (Full VAT number with iso code included)
-     * @param bool $skip_api_system_fail (Skip validation if API system fails))
-     * @return self::$valid boolean (true if validation is OK)
-     */
-    public function vatValidationViesTwoWay()
-    {
-        self::$system_fail = false;
-        self::$valid = false;
-        // Initialize SOAP Client
-        $client = new SoapClient("https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl", array("trace" => 1, "exception" => 1));
-        try {
-            $validation = $client->checkVatApprox(array(
-                'countryCode' => self::$vat_iso_code,
-                'vatNumber' => self::$vat_number,
-                'requesterVatNumber' => $this->requester_vat_number,
-                'requesterCountryCode' => $this->requester_vat_iso_code,
-            ));
-            self::$valid = $validation->valid;
-            $this->requestDate = isset($validation->requestDate)?$validation->requestDate:'';
-            self::$registered_company_name = isset($validation->traderName)?$validation->traderName:'';
-            $this->address = isset($validation->traderAddress)?$validation->traderAddress:'';
-             // Gets response code (200 is OK)
-            preg_match("/HTTP\/\d\.\d\s*\K[\d]+/", $client->__getLastResponseHeaders(), $response);
-            if ((int)$response[0] != 200) {
-                self::$system_fail =  true; 
-                if ($this->skip_api_fails) {
-                    self::$valid =  true;             
-                }
-                $this->message = sprintf($this->l('An error occurred while the validation process was running [%s]', 'ValidationEngine'), $response[0]);
-            }
-            else {
-                if (self::$valid) {
-                    $this->message = $this->l('VAT number has been validated successfully by VIES.', 'ValidationEngine');
-                }
-                else {
-                    $this->message = $this->l('VAT number is invalid.', 'ValidationEngine');       
-                }
-            }
-            self::$status[] = sprintf($this->l('[HTTP code %s | VIES API validation mode %s] - %s'), $response[0],Configuration::get('ADVANCEDVATMANAGER_VALIDATION_SYSTEM'), $this->message);
-        } catch (Exception $e)  {
-            self::$system_fail =  true; 
-            if ($this->skip_api_fails) {
-                self::$valid =  true; 
-                self::$status[] = sprintf($this->l('An error occurred during the VAT number validation process but system has validated the VAT number to avoid blocking ordering. The error code is [%s].', 'ValidationEngine'), $this->error_code[$e->getMessage()]);           
-            }
-            else {
-                self::$status[] = sprintf($this->l('%s', 'ValidationEngine'), $this->error_code[$e->getMessage()]);
-                $this->message = sprintf($this->l('An error occurred during the VAT number validation process. The error code is [%s].', 'ValidationEngine'), $this->error_code[$e->getMessage()]);
+                self::$status[] = sprintf($this->l('%s', 'ValidationEngine'), isset($this->error_code_vies[$e->getMessage()])?$this->error_code_vies[$e->getMessage()]:$e->getMessage());
+                $this->message = sprintf($this->l('An error occurred during the VAT number validation process. The error code is [%s].', 'ValidationEngine'), isset($this->error_code_vies[$e->getMessage()])?$this->error_code_vies[$e->getMessage()]:$e->getMessage());
             } 
         }
         return self::$valid;
@@ -802,33 +965,38 @@ class ValidationEngine extends Module
             $this->message = $this->l('UK VAT number has been validated successfully by HMRC GOV.UK system.', 'ValidationEngine');
             self::$registered_company_name = $response['target']['name'];
             $address = '';
-            if (isset($response['target']['address']['line1'])) {
-                $address .= $response['target']['address']['line1'].PHP_EOL;
-            }
-            if (isset($response['target']['address']['line2'])) {
-                $address .= $response['target']['address']['line2'].PHP_EOL;
-            }
-            if (isset($response['target']['address']['line3'])) {
-                $address .= $response['target']['address']['line3'].PHP_EOL;
+            if (isset($response['target']['address'])) {
+                foreach ($response['target']['address'] as $value => $line) {
+                    if ($value != 'countryCode') {
+                        $address .= $line.PHP_EOL;       
+                    } 
+                }
             }
             $this->address = $address;
             $this->requestDate = $response['processingDate'];
-            
+            if (Configuration::get('ADVANCEDVATMANAGER_COMPANY_ADDRESS_VALIDATION') && !self::$checkVATTool) {   
+                self::$addressValidationError['address1']['validation'] = $this->companyAddressCheckEngine($address,self::$traderStreet, false)?'success':'error';
+                self::$addressValidationError['city']['validation'] = $this->companyAddressCheckEngine($address, self::$traderCity, false, 'city')?'success':'error'; 
+                self::$addressValidationError['postcode']['validation'] = $this->companyAddressCheckEngine($response['target']['address']['postcode'], self::$traderPostcode, true)?'success':'error';
+            }
         }
-        else if ($http_code != 404 && $http_code != 400 && $http_code < 500) {
-            $this->message = sprintf($this->l('An error occurred during the UK VAT number validation process. The error code is [%s].', 'ValidationEngine'), $http_code);    
+        else if ($http_code < 500) {
+            if (isset($this->error_code_govUK[$http_code])) {
+                $this->message = $this->error_code_govUK[$http_code];    
+            }
+            else {
+                $this->message = sprintf($this->l('An error occurred during the UK VAT number validation process. The error code is [%s].', 'ValidationEngine'), $http_code);    
+            }     
         }
         else if ($http_code >= 500) {
-            if ($this->skip_api_fails) {
+            if (self::$skip_api_fails) {
                 self::$valid =  true;
                 self::$system_fail =  true;   
                 self::$status[] = $this->l('An error occurred during the VAT number validation process but system has validated the VAT number to avoid blocking ordering.', 'ValidationEngine');           
             }
             $this->message = sprintf($this->l('An error occurred during the UK VAT number validation process. The error code is [%s].', 'ValidationEngine'), $http_code);    
         }
-        else {
-            $this->message = sprintf($this->l('VAT number %s is invalid', 'ValidationEngine'), $this->requester_vat_iso_code.$this->requester_vat_number);       
-        }
+        
         self::$status[] = sprintf($this->l('[HTTP code %s | HMRC GOV.UK API validation mode %s] - %s'), $http_code,Configuration::get('ADVANCEDVATMANAGER_VALIDATION_SYSTEM'), $this->message);
         return self::$valid;
     }
@@ -865,10 +1033,19 @@ class ValidationEngine extends Module
             $this->message = $this->l('Norwegian VAT number has been validated successfully by data.brreg.no system.', 'ValidationEngine');
             
             self::$registered_company_name = isset($response['navn'])?$response['navn']:'';
-            $this->address = (isset($response['forretningsadresse'])?'<strong>'.$this->l('Business address', 'ValidationEngine').'</strong><br /><br />'.implode('<br />', $response['forretningsadresse']['adresse']).'<br />'.$response['forretningsadresse']['postnummer'].' '.$response['forretningsadresse']['poststed'].'<br />'.$response['forretningsadresse']['land']:'').(isset($response['postadresse'])?'<br /><br /><strong>'.$this->l('Postal address', 'ValidationEngine').'</strong><br /><br />'.implode('<br />', $response['postadresse']['adresse']).'<br />'.$response['postadresse']['postnummer'].' '.$response['postadresse']['poststed'].'<br />'.$response['postadresse']['land']:'');
-            
+            $this->address = (isset($response['forretningsadresse'])?'<strong>'.$this->l('Business address', 'ValidationEngine').'</strong><br /><br />'.implode('<br />', $response['forretningsadresse']['adresse']).'<br />'.$response['forretningsadresse']['postnummer'].' '.$response['forretningsadresse']['kommune'].'<br />'.$response['forretningsadresse']['land']:'').(isset($response['postadresse'])?'<br /><br /><strong>'.$this->l('Postal address', 'ValidationEngine').'</strong><br /><br />'.implode('<br />', $response['postadresse']['adresse']).'<br />'.$response['postadresse']['postnummer'].' '.$response['postadresse']['kommune'].'<br />'.$response['postadresse']['land']:'');           
             $this->requestDate = date("Y-m-d H:i:s"); 
-            $this->website = isset($response['hjemmeside'])?$response['hjemmeside']:'';           
+            $this->website = isset($response['hjemmeside'])?$response['hjemmeside']:''; 
+            
+            $address = isset($response['forretningsadresse'])?implode('', $response['forretningsadresse']['adresse']):'';
+            $postcode = isset($response['forretningsadresse'])?$response['forretningsadresse']['postnummer']:'';
+            $city = isset($response['forretningsadresse'])?$response['forretningsadresse']['kommune']:'';
+
+            if (Configuration::get('ADVANCEDVATMANAGER_COMPANY_ADDRESS_VALIDATION') && !self::$checkVATTool) {   
+                self::$addressValidationError['address1']['validation'] = $this->companyAddressCheckEngine($address, self::$traderStreet, false)?'success':'error';
+                self::$addressValidationError['city']['validation'] = $this->companyAddressCheckEngine($city, self::$traderCity, true)?'success':'error';
+                self::$addressValidationError['postcode']['validation'] = $this->companyAddressCheckEngine($postcode, self::$traderPostcode, true)?'success':'error';
+            }       
         }
         else if ($http_code == 404) {
             $this->message = sprintf($this->l('VAT number %s does not exist', 'ValidationEngine'), self::$vat);
@@ -877,7 +1054,7 @@ class ValidationEngine extends Module
             $this->message = sprintf($this->l('VAT number %s is invalid', 'ValidationEngine'), self::$vat);
         }
         else if ($http_code >= 500) {
-            if ($this->skip_api_fails) {
+            if (self::$skip_api_fails) {
                 self::$valid =  true;
                 self::$system_fail =  true;   
                 self::$status[] = $this->l('An error occurred during the VAT number validation process but system has validated the VAT number to avoid blocking ordering.', 'ValidationEngine');           
@@ -886,6 +1063,141 @@ class ValidationEngine extends Module
         }
         self::$status[] = sprintf($this->l('[HTTP code %s | data.brreg.no API validation mode %s] - %s'), $http_code,Configuration::get('ADVANCEDVATMANAGER_VALIDATION_SYSTEM'), $this->message);
         return self::$valid;
+    }
+    
+    /**
+     * ValidationEngine::companyAddressCheckEngine()
+     * Checks company address by score and matches
+     * @param string $registeredAddress
+     * @param string $contentToCheck
+     * @param boolean $exact_match (true for one string comparison mode, false for concurrences mode)
+     * @params string $extraContent (content to be added for string comparison)
+     * @params string $type (postcode, city, address)
+     * @return
+     */
+    private function companyAddressCheckEngine($registeredAddress, $contentToCheck, $exact_match = false, $type = null)
+    {
+        $dataExtracted  = array();
+        $dataExtracted2 = array(); 
+        $dataExtracted3 = array();
+        $country_iso = self::$country_iso;
+        $special_symbols = array('.',',','_',':',';','(',')','nº','n.',"\r","\n");
+        $zipFormat = isset(self::$european_zipCodeFormat[$country_iso])?self::$european_zipCodeFormat[$country_iso]:'';
+        
+        
+        // To lower all strings
+        $contentToCheck = Tools::strtolower($contentToCheck);
+        $registeredAddress = Tools::strtolower($registeredAddress);
+        
+        // Remove symbols
+        $registeredAddress =  str_ireplace($special_symbols, ' ', $registeredAddress);
+        $contentToCheck = str_ireplace($special_symbols, ' ',$contentToCheck);
+        
+        // Remove double spaces
+        $registeredAddress =  str_ireplace('  ', ' ',$registeredAddress);
+        $contentToCheck =  str_ireplace('  ', ' ',$contentToCheck);
+        
+        // Remove extra spaces at beginning and at the end.
+        $registeredAddress = trim($registeredAddress);
+        $contentToCheck = trim($contentToCheck);
+        
+                
+        $contentToCheck_utf8 = iconv('UTF-8','ASCII//TRANSLIT', $contentToCheck);
+        $registeredAddress_utf8 = iconv('UTF-8','ASCII//TRANSLIT', $registeredAddress);
+        
+        if ($zipFormat) {
+            // Build pattern from zip format
+            $zipFormatRegex = str_replace('-', '\-', $zipFormat);
+            $zipFormatRegex = str_replace(array('L', 'N', 'C', ' '), array('[a-zA-Z]', '[0-9]', $country_iso, '\s?'), $zipFormatRegex);
+            // Extracted all strings matches like pattern built in Zip format from registered address to figure out wich one is the postcode
+            preg_match("/(\b$zipFormatRegex\b){1}/i", $registeredAddress, $dataExtracted);
+            preg_match("/(\b$country_iso$zipFormatRegex\b){1}/i", $registeredAddress, $dataExtracted2);
+            preg_match("/(\b$country_iso\-$zipFormatRegex\b){1}/i", $registeredAddress, $dataExtracted3);
+        }
+        
+        if ($exact_match) {
+            return ($contentToCheck == $registeredAddress) || ($contentToCheck_utf8 == $registeredAddress_utf8);
+        }
+        else {
+            // If it is a zip code then calculate zip code format to figure out easily the postcode and perform valdiation
+            if ($type == 'postcode') {
+                if (isset($dataExtracted) && !empty($dataExtracted)) {
+                    // Remove space in postalcodes to fix issue with VIES returning postalcodes with no spaces
+                    $contentToCheck_space_removed = str_replace(' ', '', $contentToCheck);
+                    // Search postcode inserted by customer within data extracted.
+                    return in_array($contentToCheck, $dataExtracted) || in_array($contentToCheck_space_removed, $dataExtracted); 
+                }
+                // In last instance, then compare two strings knowing that matches with space in the middle is like two words separated.
+                return preg_match("/\s*(\b$contentToCheck\b){1}\s*/i", $registeredAddress);   
+            }
+            else if ($type == 'city') {
+                // utf8 to avoid issues with strange symbols or accents.
+                return preg_match("/\s*(\b$contentToCheck_utf8\b){1}\s*/i", $registeredAddress_utf8);      
+            }
+            else {
+                if (!empty($dataExtracted) || !empty($dataExtracted2) || !empty($dataExtracted3)) {
+                    // Remove Postcode from registered address full string
+                    $registeredAddress_utf8 = str_replace('  ', ' ', str_replace(array_merge($dataExtracted3, $dataExtracted2, $dataExtracted), '', $registeredAddress_utf8)); 
+                }
+                // Help removing city inserted by client if it matches into whole string
+                if (self::$traderCity) {
+                    $registeredAddress_utf8 = trim(str_ireplace(self::$traderCity, '', $registeredAddress_utf8));     
+                }
+
+                // Use similar_text function to compare string with utf8 and original content.
+                $sim1 = similar_text($contentToCheck, $registeredAddress, $percen1);
+                $sim2 = similar_text($contentToCheck_utf8 , $registeredAddress_utf8 , $percen2);
+                $max_percent_matches = Tools::ps_round(max(array($percen1, $percen2)));
+                
+                /*$levenshtein_score1 = levenshtein($contentToCheck, $registeredAddress);
+                $levenshtein_score2 = levenshtein($contentToCheck_utf8, $registeredAddress_utf8);
+                $best_lv_score = min(array($levenshtein_score1, $levenshtein_score2));*/
+
+                if ($max_percent_matches >= Configuration::get('ADVANCEDVATMANAGER_COMPANY_ADDRESS_VALIDATION')) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * ValidationEngine::companyAddressCheckEngine()
+     * Checks company name by score and matches
+     * @param string $registeredCompany
+     * @param string $contentToCheck
+     * @return
+     */
+    private function companyNameCheckEngine($registeredCompany, $contentToCheck)
+    {
+        $special_symbols = array('.',',','-','_',':',';','(',')','[',']');
+        // To lower all strings
+        $contentToCheck = Tools::strtolower($contentToCheck);
+        $registeredCompany = Tools::strtolower($registeredCompany);
+        
+        // Remove symbols
+        $registeredCompany =  str_ireplace($special_symbols, ' ', $registeredCompany);
+        $contentToCheck = str_ireplace($special_symbols, ' ',$contentToCheck);
+        
+        // Remove double spaces
+        $registeredCompany =  str_ireplace('  ', ' ',$registeredCompany);
+        $contentToCheck =  str_ireplace('  ', ' ',$contentToCheck);
+        
+        // Remove extra spaces at beginning and at the end.
+        $registeredCompany = trim($registeredCompany);
+        $contentToCheck = trim($contentToCheck);
+        
+                
+        $contentToCheck_utf8 = iconv('UTF-8','ASCII//TRANSLIT', $contentToCheck);
+        $registeredCompany_utf8 = iconv('UTF-8','ASCII//TRANSLIT', $registeredCompany);
+        
+        $sim1 = similar_text($contentToCheck, $registeredCompany, $percen1);
+        $sim2 = similar_text($contentToCheck_utf8 , $registeredCompany_utf8 , $percen2);
+        $max_percent_matches = Tools::ps_round(max(array($percen1, $percen2)));
+        if ($max_percent_matches >= Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION')) {
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -920,7 +1232,7 @@ class ValidationEngine extends Module
         // First char
         $first_char = Tools::substr(self::$vat, 0, 1);
         $country_iso = Country::getIsoById($country_id);
-
+        
         // Add ISO Code if it is missed by client and if smart validation mode is enabled
         if (Configuration::get('ADVANCEDVATMANAGER_VALIDATION_MODE') == 'smart') {  
             // checks iso code digits except Norway
@@ -1006,7 +1318,6 @@ class ValidationEngine extends Module
                 }
             }
         }
-        
         // Format validation success
         self::$status[] = $this->l('Format validation', 'ValidationEngine');
         self::$valid = true;
@@ -1292,11 +1603,11 @@ class ValidationEngine extends Module
         self::$no_voec_product = false;
         self::$voec_product = false;
         
-        if ($country_id != null) {
+        if ($country_id !== null) {
             $country_iso = Country::getIsoById($country_id);
         }        
         
-        if ($id_address != null) {
+        if ($id_address !== null) {
             $address = new Address($id_address);
             ValidationEngine::$id_address_used = $address->id;
         }
@@ -1326,14 +1637,14 @@ class ValidationEngine extends Module
         // Skip tax for modules selected
         if ($disabled_mod = json_decode(Configuration::get('ADVANCEDVATMANAGER_DISABLE_FORMODULES'), true)) {
             foreach ($disabled_mod as $module) {
-                if (AdvancedVatManagerOC::checkModuleController($module)) {
+                if (self::checkModuleController($module)) {
                     return false;
                 }    
             }    
         }
                 
         // Checks local country for tax or if country is not set as country for VAT validations
-        if ($country_id && $country_id == Configuration::get('ADVANCEDVATMANAGER_LOCAL_COUNTRY')) { 
+        if (Configuration::get('ADVANCEDVATMANAGER_LOCAL_COUNTRY') && $country_id && $country_id == Configuration::get('ADVANCEDVATMANAGER_LOCAL_COUNTRY')) { 
             return false;
         }
            
@@ -1360,6 +1671,7 @@ class ValidationEngine extends Module
                    
         // Brexit mode for VAT exemption when country address is UK
         if (self::$brexit_customer) {
+            self::$customer_with_vat_valid = CustomersVAT::checkCustomerVATValid($id_customer, $id_address);
             $advancedvatmanager = Module::getInstanceByName('advancedvatmanager');
             if ($total_cart && $advancedvatmanager->checkNotAllowCheckoutBrexit($total_cart)) {
                 self::$allow_checkout = false;     
@@ -1369,10 +1681,9 @@ class ValidationEngine extends Module
                 self::$notax_customer = true;  
             }
             // Less or equal than 135GBP
-            else if (CustomersVAT::checkCustomerVATValid($id_customer, $id_address) && Configuration::get('ADVANCEDVATMANAGER_BREXIT_VATEXEMPT_LESSTHAN135GBP') == 1) {
+            else if (self::$customer_with_vat_valid && Configuration::get('ADVANCEDVATMANAGER_BREXIT_VATEXEMPT_LESSTHAN135GBP') == 1) {
                 // If company with UK VAT number valid, then no tax
                 self::$notax_customer = true; 
-                self::$customer_with_vat_valid = true;    
             }
         }
         // VOEC mode for VAT exemtpion depends on the VOEC mode selected
@@ -1445,6 +1756,48 @@ class ValidationEngine extends Module
     }
     
     /**
+     * Checks if the controller belongs to a module
+     *
+     * @param string $module Module name lowcase
+     * @param string $controller Module name lowcase
+     *
+     * @return bool
+     */
+    public static function checkModuleController($module) 
+    {   
+        if (isset (Context::getContext()->controller->module)) {
+            return Context::getContext()->controller->module instanceof $module;    
+        }
+        return false;
+    }
+    
+    /**
+     * ValidationEngine::checkClientType()
+     * Checks client type 
+     * @return string (consumer, company_nv, company or certified_company)
+     */
+    public static function checkClientType()
+    {
+        if (self::getVATValidation()) {
+            if (self::$company_valid == 1 && self::$companyAddress_valid == 1) {
+                return 'certified_company';
+            }
+            else if (self::$company_valid == 1 || self::$companyAddress_valid == 1) {
+                return 'company';    
+            } 
+            else {
+                return 'company_nv';    
+            } 
+        }
+        else {
+            if (self::getTraderName()) {
+                return 'company_nv';
+            }
+            return 'consumer';
+        }     
+    }
+    
+    /**
      * ValidationEngine::checkGroupExemption()
      * Checks customer group exemptions
      * @param int $id_customer
@@ -1492,17 +1845,18 @@ class ValidationEngine extends Module
      * Manage customer groups depends on valid or not valid VAT number.
      * @param int $id_country
      * @param int $id_customer
+     * @param int $id_address
      * @param bool $vat_valid
-     * @return $output_msg (Displays message in Cron task and Customer VAT scanner)
+     * @return array $output_msg (Displays message in Cron task and Customer VAT scanner)
      */
     public static function manageCustomerGroups($id_country, $id_customer, $id_address, $vat_valid = false)
     {
         $group_assignation_bycountry = Configuration::get('ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_COUNTRY_'.$id_country);
-        $countries_with_valid_vat = CustomersVAT::getCountryAddressWithValidVAT($id_customer);
+        $countries_with_valid_vat = CustomersVAT::getCustomerAddressesWithVATValidWithAddressExemption($id_customer, $id_address);
         $customer = new Customer($id_customer);
         $customer_groups = $customer->getGroups();
         $assigned_groups = array();
-        $output_msg = '';
+        $output_msg = array();
 
         // Checks countries address with valid VAT
         if (!empty($countries_with_valid_vat)) {
@@ -1530,17 +1884,17 @@ class ValidationEngine extends Module
                     // Add to group by country
                     $customer->addGroups(array($group_assignation_bycountry));  
                 }                
-                $output_msg = sprintf(Translate::getModuleTranslation('advancedvatmanager','The client with ID#%s has been assigned to the group %s','ValidationEngine'),$id_customer, self::getGroupAssignation($group_assignation_bycountry));  
+                $output_msg[] = sprintf(Translate::getModuleTranslation('advancedvatmanager','The client with ID#%s has been assigned to the group %s by the address ID#%s','ValidationEngine'),$id_customer, self::getGroupAssignation($group_assignation_bycountry), $id_address);  
                 
                 // Set as default group.
                 if (Configuration::get('ADVANCEDVATMANAGER_DEFAULT_GROUP_ASSIGNATION')) {
                     self::setDefaultCustomerGroup($id_customer, (int)$group_assignation_bycountry);// Set default customer group.
-                    $output_msg .= sprintf(Translate::getModuleTranslation('advancedvatmanager','The client with ID#%s has been assigned to the default group %s','ValidationEngine'),$id_customer, self::getGroupAssignation($group_assignation_bycountry));  
+                    $output_msg[] = sprintf(Translate::getModuleTranslation('advancedvatmanager','The client with ID#%s has been assigned to the default group %s by the address ID#%s','ValidationEngine'),$id_customer, self::getGroupAssignation($group_assignation_bycountry),  $id_address);  
                 }
             }
             else {
-                // Remove customer group if the customer has not a valid VAT in this country
-                if (!CustomersVAT::checkCustomerHasVATValidByCountryWithAddressExemption($id_customer, $id_country, $id_address)) {  
+                // Remove customer group if the customer has not a valid VAT in this country and not having same group assigned by another VAt valid address.
+                if (!CustomersVAT::checkCustomerHasVATValidByCountryWithAddressExemption($id_customer, $id_country, $id_address) && !in_array($group_assignation_bycountry, $assigned_groups)) {  
                     // If customer is assigned into a group
                     if ($customer_groups) {
                         if (in_array($group_assignation_bycountry, $customer_groups)) {
@@ -1555,7 +1909,7 @@ class ValidationEngine extends Module
                                 if (!empty($assigned_groups)) {
                                     // Set one default group by country configured in this module by customer
                                     self::setDefaultCustomerGroup($id_customer, (int)max($assigned_groups));
-                                    $output_msg .= sprintf(Translate::getModuleTranslation('advancedvatmanager', 'The client with ID#%s has been assigned to the default group %s','ValidationEngine'),$id_customer, self::getGroupAssignation((int)$assigned_groups[0]));   
+                                    $output_msg[] = sprintf(Translate::getModuleTranslation('advancedvatmanager', 'The client with ID#%s has been assigned to the default group %s by the address ID#%s','ValidationEngine'),$id_customer, self::getGroupAssignation((int)$assigned_groups[0], $id_address));   
                                 } 
                                 // Assign to Prestashop default group another group from Prestashop
                                 else {
@@ -1579,8 +1933,47 @@ class ValidationEngine extends Module
                 }    
             } 
         }
+        $noVATGroup = Configuration::get('ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_NOVAT_COMPANY');
+        $noVATConsumerGroup = Configuration::get('ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_NOVAT_CONSUMER');
+        if (($noVATConsumerGroup || $noVATGroup) && (!$vat_valid || empty(self::$vat))) {
+            if (!empty(self::$traderName) && $noVATGroup) {
+                if (Configuration::get('ADVANCEDVATMANAGER_DELETE_PREVIOUS_GROUPS')) {
+                    // Removes customer previous groups and only add the group by country selected in this module.
+                    $customer->cleanGroups();
+                    $customer->addGroups(array($noVATGroup)); 
+                    // Set by default Group to avoid issues with no default group assignation after deleting all previous customer groups.
+                    self::setDefaultCustomerGroup($id_customer, (int)$noVATGroup);
+                }
+                else {
+                    $customer->addGroups(array($noVATGroup));     
+                }
+                // Set as default group.
+                if (Configuration::get('ADVANCEDVATMANAGER_DEFAULT_GROUP_ASSIGNATION')) {
+                    self::setDefaultCustomerGroup($id_customer, (int)$noVATGroup);// Set default customer group.
+                    $output_msg[] = sprintf(Translate::getModuleTranslation('advancedvatmanager','The client with ID#%s has been assigned to the default group %s by the address ID#%s','ValidationEngine'),$id_customer, self::getGroupAssignation($noVATGroup), $id_address);  
+                }
+            }
+            else if (empty(self::$traderName) && $noVATConsumerGroup) {
+                if (Configuration::get('ADVANCEDVATMANAGER_DELETE_PREVIOUS_GROUPS')) {
+                    // Removes customer previous groups and only add the group by country selected in this module.
+                    $customer->cleanGroups();
+                    $customer->addGroups(array($noVATConsumerGroup)); 
+                    // Set by default Group to avoid issues with no default group assignation after deleting all previous customer groups.
+                    self::setDefaultCustomerGroup($id_customer, (int)$noVATConsumerGroup);
+                }
+                else {
+                    $customer->addGroups(array($noVATConsumerGroup));     
+                }
+                // Set as default group.
+                if (Configuration::get('ADVANCEDVATMANAGER_DEFAULT_GROUP_ASSIGNATION')) {
+                    self::setDefaultCustomerGroup($id_customer, (int)$noVATConsumerGroup);// Set default customer group.
+                    $output_msg[] = sprintf(Translate::getModuleTranslation('advancedvatmanager','The client with ID#%s has been assigned to the default group %s by the address ID#%s','ValidationEngine'),$id_customer, self::getGroupAssignation($noVATConsumerGroup), $id_address);  
+                }
+            }
+        }
+        
         if (empty($output_msg)) {
-            $output_msg = sprintf(Translate::getModuleTranslation('advancedvatmanager', 'The client with ID#%s has not been assigned to any customer groups','ValidationEngine'),$id_customer);       
+            $output_msg[] = sprintf(Translate::getModuleTranslation('advancedvatmanager', 'The client with ID#%s has not been assigned to any customer groups by the address ID#%s','ValidationEngine'),$id_customer, $id_address);       
         }
         return $output_msg; 
     }
@@ -1615,9 +2008,20 @@ class ValidationEngine extends Module
         $group_assignation_bycountry = configuration::get('ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_COUNTRY_'.$address['id_country']);
         $customer_groups = Customer::getGroupsStatic($id_customer);
         // Checks if the customer belongs to this group to assign as default.
-        if ($group_assignation_bycountry && in_array($group_assignation_bycountry, $customer_groups)) {
-            if (CustomersVAT::checkCustomerVATValid($id_customer, $id_address)) {
-                return self::setDefaultCustomerGroup($id_customer, $group_assignation_bycountry);// Set default customer group.
+        if ($group_assignation_bycountry && in_array($group_assignation_bycountry, $customer_groups) && CustomersVAT::checkCustomerVATValid($id_customer, $id_address)) {
+            return self::setDefaultCustomerGroup($id_customer, $group_assignation_bycountry);// Set default customer group.
+        }
+        else if (!CustomersVAT::checkCustomerVATValid($id_customer, $id_address)) {
+            $addressObject = new Address($id_address);
+            if (Configuration::get('ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_NOVAT_COMPANY') != 0) {
+                if (!empty($addressObject->company)) {
+                    return self::setDefaultCustomerGroup($id_customer, Configuration::get('ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_NOVAT_COMPANY'));// Set default customer group.        
+                }
+            }
+            if (Configuration::get('ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_NOVAT_CONSUMER') != 0) {
+                if (empty($addressObject->company)) {
+                    return self::setDefaultCustomerGroup($id_customer, Configuration::get('ADVANCEDVATMANAGER_GROUPS_ASSIGNATION_NOVAT_CONSUMER'));// Set default customer group.        
+                }
             }
         }
         // Assign default customer group if VAt is not valid or group is not assigned within customer groups
@@ -1649,18 +2053,4 @@ class ValidationEngine extends Module
             Tools::clearSmartyCache();    
         }
     }
-    
-    /**
-     * ValidationEngine::l()
-     * Fix language translations
-     * @return
-     */
-    public function l($string, $class = null, $addslashes = false, $htmlentities = true)
-    {
-        if ( _PS_VERSION_ >= '1.7') {
-            return Translate::getModuleTranslation('advancedvatmanager',$string, $class);
-        } else {
-            return parent::l($string, $class, $addslashes, $htmlentities);
-        }
-    } 
 }

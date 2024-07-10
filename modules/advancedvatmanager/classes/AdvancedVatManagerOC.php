@@ -1,11 +1,11 @@
 <?php
 /**
- * 2017-2022 liewebs - Prestashop module developers and website designers.
+ * 2017-2024 liewebs - prestashop module developers and website designers.
  *
  * NOTICE OF LICENSE
  *  @author    liewebs <info@liewebs.com>
- *  @copyright 2017-2022 www.liewebs.com - Liewebs
- *  @license see file:license_es.html and license_en.html
+ *  @copyright 2017-2024 www.liewebs.com - Liewebs
+ *  @license See "License registration" section
  * 	@module Advanced VAT Manager
  */
  
@@ -262,21 +262,5 @@ class AdvancedVatManagerOC extends Module
         }
 
         return true;
-    }
-    
-    /**
-     * Checks if the controller belongs to a module
-     *
-     * @param string $module Module name lowcase
-     * @param string $controller Module name lowcase
-     *
-     * @return bool
-     */
-    public static function checkModuleController($module) 
-    {   
-        if (isset (Context::getContext()->controller->module)) {
-            return Context::getContext()->controller->module instanceof $module;    
-        }
-        return false;
     }
 }

@@ -1,9 +1,10 @@
 {**
- * 2017-2023 liewebs - Prestashop module developers and website designers.
+ * 2017-2024 liewebs - prestashop module developers and website designers.
  *
  * NOTICE OF LICENSE
  *  @author    liewebs <info@liewebs.com>
- *  @copyright 2017-2023 www.liewebs.com - Liewebs
+ *  @copyright 2017-2024 www.liewebs.com - Liewebs
+ *  @license See "License registration" section
  * 	@module Advanced VAT Manager
  *}
  
@@ -35,6 +36,14 @@
         <div class="form-group clearfix">
             <label class="col-lg-2">{l s='Brexit' mod='advancedvatmanager'}</label>
             <div class="col-lg-9">{if $advancedvatmanager->brexit}{l s='Yes' mod='advancedvatmanager'}{else}{l s='No' mod='advancedvatmanager'}{/if}</div>
+        </div>
+        <div class="form-group clearfix">
+            <label class="col-lg-2">{l s='Voec' mod='advancedvatmanager'}</label>
+            <div class="col-lg-9">{if $advancedvatmanager->voec}{l s='Yes' mod='advancedvatmanager'}{else}{l s='No' mod='advancedvatmanager'}{/if}</div>
+        </div>
+        <div class="form-group clearfix">
+            <label class="col-lg-2">{l s='Client type' mod='advancedvatmanager'}</label>
+            <div class="col-lg-9">{if $advancedvatmanager->client_type == 'company'}{l s='Company' mod='advancedvatmanager'}{else}{l s='Consumer' mod='advancedvatmanager'}{/if}</div>
         </div>
         <div class="form-group clearfix">
             <label class="col-lg-2">{l s='Invoice number' mod='advancedvatmanager'}</label>

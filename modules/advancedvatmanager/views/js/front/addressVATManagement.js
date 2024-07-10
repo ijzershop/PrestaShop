@@ -1,9 +1,10 @@
 /**
- * 2017-2023 liewebs - Prestashop module developers and website designers.
+ * 2017-2024 liewebs - prestashop module developers and website designers.
  *
  * NOTICE OF LICENSE
  *  @author    liewebs <info@liewebs.com>
- *  @copyright 2017-2023 www.liewebs.com - Liewebs
+ *  @copyright 2017-2024 www.liewebs.com - Liewebs
+ *  @license See "License registration" section
  * 	@module Advanced VAT Manager
  */
 
@@ -108,14 +109,15 @@ function checkoutAddress()
                 }
             }
             else {
-                if (!button.length) {
-                    $('input#not-valid-addresses').before(button);
-                }    
+                $('button[name="confirm-addresses"]').remove();
+                $('input#not-valid-addresses').before(button);
+                $('input[name="submitAddress"]').before(button);  
             }
            if (!jsonData['not_allow_checkout']) {
                 $('aside#notifications').html('');
             }
             else {
+                $('button[name="confirm-addresses"]').remove(); 
                 $('aside#notifications').html('<div class="container"><article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>'+jsonData['not_allow_checkout']+'</li></ul></article></div>');
             }    
         }

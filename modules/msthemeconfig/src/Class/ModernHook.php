@@ -1,45 +1,40 @@
 <?php
+/** @noinspection ALL */
 declare(strict_types=1);
 
 namespace MsThemeConfig\Class;
 
+use Address;
+use AppKernel;
+use Carrier;
+use Cart;
+use CartRule;
+use Category;
+use Configuration;
+use Contact;
+use Context;
+use Currency;
+use Customer;
+use Db;
+use Dispatcher;
 use Exception;
-use MsThemeConfig\Controller\Admin\DmsMailThemeController;
+use Feature;
+use FeatureValue;
+use FormField;
+use Mail;
+use Module;
 use MsThemeConfig\Controller\Admin\DmsAdminOrderController;
-use MsThemeConfig\Grid\Column\ButtonColumn;
+use MsThemeConfig\Controller\Admin\DmsMailThemeController;
 use MsThemeConfig\Grid\Action\Type\ShippingStateAction;
+use MsThemeConfig\Grid\Column\ButtonColumn;
 use MsThemeConfig\Grid\Column\LabelButtonColumn;
+use Order;
 use PDFCore;
-use PrestaShop\PrestaShop\Adapter\Entity\Context;
-use PrestaShop\PrestaShop\Adapter\Entity\Currency;
-use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
-use PrestaShop\PrestaShop\Adapter\Entity\Address;
-use PrestaShop\PrestaShop\Adapter\Entity\Carrier;
-use PrestaShop\PrestaShop\Adapter\Entity\Cart;
-use PrestaShop\PrestaShop\Adapter\Entity\CartRule;
-use PrestaShop\PrestaShop\Adapter\Entity\Category;
-use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
-use PrestaShop\PrestaShop\Adapter\Entity\Contact;
-use PrestaShop\PrestaShop\Adapter\Entity\Customer;
-use PrestaShop\PrestaShop\Adapter\Entity\Db;
-use PrestaShop\PrestaShop\Adapter\Entity\Dispatcher;
-use PrestaShop\PrestaShop\Adapter\Entity\Feature;
-use PrestaShop\PrestaShop\Adapter\Entity\FeatureValue;
-use PrestaShop\PrestaShop\Adapter\Entity\FormField;
-use PrestaShop\PrestaShop\Adapter\Entity\Link;
-use PrestaShop\PrestaShop\Adapter\Entity\Mail;
-use PrestaShop\PrestaShop\Adapter\Entity\Media;
-use PrestaShop\PrestaShop\Adapter\Entity\Module;
-use PrestaShop\PrestaShop\Adapter\Entity\Order;
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopDatabaseException;
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException;
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopLogger;
-use PrestaShop\PrestaShop\Adapter\Entity\Product;
-use PrestaShop\PrestaShop\Adapter\Entity\SpecificPrice;
-use PrestaShop\PrestaShop\Adapter\Entity\Store;
-use PrestaShop\PrestaShop\Adapter\Entity\Tools;
-use PrestaShop\PrestaShop\Adapter\Entity\Validate;
-use PrestaShop\PrestaShop\Adapter\Entity\Zone;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
@@ -54,18 +49,18 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeScanner;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollectionInterface;
-use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
-use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
-use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use Product;
 use SmartyException;
+use SpecificPrice;
+use Store;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
-use AppKernel;
-use Symfony\Component\Validator\Constraints\Length;
+use Tools;
+use Validate;
+use Zone;
 
 /**
  *
@@ -95,7 +90,7 @@ class ModernHook
     /**
      * @param $module
      * @param $context
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function __construct($module, $context)
     {
@@ -175,10 +170,9 @@ class ModernHook
      *
      * Show categorie jsonld on homepage
      *
-     * @param $hookArgs
      * @return string
      */
-    public function hookDisplayHome($hookArgs): string
+    public function hookDisplayHome(): string
     {
         $selectedCats = explode(',', Configuration::get('MSTHEMECONFIG_HOMEPAGE_SELECTED_CATEGORIES', $this->idLang, $this->idShop, $this->idShopGroup));
         $itemList = [];
@@ -232,7 +226,7 @@ class ModernHook
      * @param $params
      * @return void
      * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      * @throws Exception
      */
     public function hookDisplayOrderConfirmation($params): void
@@ -247,7 +241,6 @@ class ModernHook
             $total_discount = 0;
             foreach ($cartRules as $rule) {
 
-                $ruleObject = new CartRule($rule['id_cart_rule']);
                 if ((float)$rule['value_tax_excl'] != '0.000000') {
                     $total_discount += (float)$rule['value_tax_excl'];
                 }
@@ -272,7 +265,7 @@ class ModernHook
             $order = new Order($hookArgs['object']->id_order);
             $hookArgs['object']->added_to_order = $order->added_to_order;
             $hookArgs['object']->desired_delivery_date = $order->desired_delivery_date;
-        } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
+        } catch (\PrestaShopDatabaseException|PrestaShopException) {
         }
     }
     /**
@@ -292,7 +285,7 @@ class ModernHook
         try {
             $jsonLD = $this->createProductJSONLD($params['object']['id_product']);
             $params['object']['jsonld_product_seo'] = json_encode($jsonLD, JSON_UNESCAPED_SLASHES);
-        } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
+        } catch (\PrestaShopDatabaseException|PrestaShopException) {
         }
         return $params;
     }
@@ -315,7 +308,7 @@ class ModernHook
      * @param $idProduct
      * @return array
      * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     private function createProductJSONLD($idProduct): array
     {
@@ -419,7 +412,7 @@ class ModernHook
 
         $specificPrices = SpecificPrice::getByProductId((int)$product->id);
         $priceSpecification = [];
-        $price = $product->getPrice(true);
+        $price = $product->getPrice();
 
         if (empty($specificPrices)) {
             $priceSpecification[] = [
@@ -519,7 +512,7 @@ class ModernHook
             ];
         }
 
-        $jsonLD = [
+        return [
             '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'sku' => $this->shopName . '-' . $product->reference,
@@ -661,8 +654,6 @@ class ModernHook
                 ]
             ]
         ];
-
-        return $jsonLD;
     }
     /**
      * Modify search result content
@@ -673,7 +664,7 @@ class ModernHook
      * @return void
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @throws \PrestaShopDatabaseException|\PrestaShopException
+     * @throws \PrestaShopDatabaseException|PrestaShopException
      */
     public function hookActionProductSearchProviderRunQueryAfter($hookArgs): void
     {
@@ -742,7 +733,7 @@ class ModernHook
      * @param $params
      * @return mixed
      */
-    public function hookDisplayAdminProductsSeoStepBottom($params)
+    public function hookDisplayAdminProductsSeoStepBottom($params): mixed
     {
         $kernel = new AppKernel('prod', false);
         $kernel->boot();
@@ -810,7 +801,7 @@ class ModernHook
      *
      * @param $params
      * @return mixed
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function hookActionAdminProductsControllerSaveAfter($params): mixed
     {
@@ -847,7 +838,7 @@ class ModernHook
      * @return bool|void
      * @throws LocalizationException
      * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function hookActionOrderStatusPostUpdate($data)
     {
@@ -1074,11 +1065,10 @@ class ModernHook
 
     /**
      *
-     * @param $params
      * @throws PrestaShopException
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
-    public function hookActionFrontControllerSetMedia($params)
+    public function hookActionFrontControllerSetMedia(): bool
     {
         //check live mode to use minified files
         $liveMode = false;
@@ -1127,7 +1117,7 @@ class ModernHook
      * @throws SmartyException
      * @throws \PrestaShopDatabaseException
      */
-    public function hookKiyohBanner()
+    public function hookKiyohBanner(): bool|string
     {
         $query = "SELECT * FROM `" . _DB_PREFIX_ . "kiyoh_custom` where `id` = '1'";
         $results = Db::getInstance()->executeS($query);
@@ -1165,7 +1155,13 @@ class ModernHook
         return $this->smarty->fetch(_PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->module->name . '/views/templates/front/kiyoh-score-header-block.tpl');
     }
 
-    protected function getDiscountAdvertisement(){
+    /**
+     * @return array
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    protected function getDiscountAdvertisement(): array
+    {
         $maxReductionPercent = 0;
         $idLang = Context::getContext()->language->id;
         $idShopGroup = Context::getContext()->shop->id_shop_group;
@@ -1187,7 +1183,6 @@ class ModernHook
         $withTax = Context::getContext()->cookie->price_vat_settings_incl;
 
         $currentCartValue = $this->context->cart->getOrderTotal(false, CART::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING);
-        $activeMatchingRule = null;
         $activeDiscountRules = [];
         $discountText = [];
 
@@ -1266,7 +1261,7 @@ class ModernHook
                 $isElegibleForDiscount = 1;
             }
 
-            if((int)$firstRule->reduction_percent > (int)$maxReductionPercent){
+            if((int)$firstRule->reduction_percent > $maxReductionPercent){
                 $maxReductionPercent = $firstRule->reduction_percent;
             }
         }
@@ -1279,10 +1274,8 @@ class ModernHook
             case 1:
                     $message = '<a>Ontvang '.implode(' of ',$discountText).'</a>';
                 break;
-            case 2:
-                    $message = '<a>U heeft de maximale korting van '.(int)$maxReductionPercent.'% al in uw winkelwagen! <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'">Toch graag een aanbod op maat,<br/> neem dan contact met ons op.</a></a>';
-                break;
             case 3:
+            case 2:
                     $message = '<a>U heeft de maximale korting van '.(int)$maxReductionPercent.'% al in uw winkelwagen! <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'">Toch graag een aanbod op maat,<br/> neem dan contact met ons op.</a></a>';
                 break;
         }
@@ -1300,8 +1293,13 @@ class ModernHook
     }
 
 
-
-    private function getRemainingAmountBeforeNextDiscount($discounts){
+    /**
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws Exception
+     */
+    private function getRemainingAmountBeforeNextDiscount($discounts): array
+    {
         $currentOrderTotal = Context::getContext()->cart->getOrderTotal(false, CART::ONLY_PRODUCTS);
         $withTax = Context::getContext()->cookie->price_vat_settings_incl;
         $msg = '';
@@ -1518,19 +1516,24 @@ public function hookActionFrontControllerSetVariables(&$param): void
                         'discount' => $_SESSION['analytics_data']['product']['data']['discount'],
                         'item_category' => $_SESSION['analytics_data']['product']['data']['item_category'],
                         'item_category2' => $_SESSION['analytics_data']['product']['data']['item_category2'],
-                        'price' => $_SESSION['analytics_data']['product']['data']['price_before_discount'],
+                        'price_without_discount' => $_SESSION['analytics_data']['product']['data']['price_before_discount'],
                         'quantity' => $_SESSION['analytics_data']['product']['data']['quantity'],
                     ];
                     $_SESSION['analytics_data'] = null;
                 } else {
                     $product = Context::getContext()->controller->getProduct();
                     $product_categories = $product->getParentCategories($this->context->cookie->id_lang);
+                    $name1 = '';
+                    $name2 = '';
+
                     if(count($product_categories) >= 2){
                         $cat1 = $product_categories[count($product_categories)-2];
+                        $name2 = $cat1['name'];
                     }
 
                     if(count($product_categories) >= 3){
                         $cat2 = $product_categories[count($product_categories)-3];
+                        $name1 = $cat2['name'];
                     }
 
                     $param['templateVars']['analytics_data']['product'] =  [
@@ -1541,8 +1544,8 @@ public function hookActionFrontControllerSetVariables(&$param): void
                         'item_id' => $product->id,
                         'item_name' => $product->name,
                         'discount' => $product->getPrice(true, null, 6, null, true, false, 1),
-                        'item_category' => $cat2['name'],
-                        'item_category2' => $cat1['name'],
+                        'item_category' => $name1,
+                        'item_category2' => $name2,
                         'quantity' => 1,
                     ];
                 }
@@ -1566,20 +1569,25 @@ public function hookActionFrontControllerSetVariables(&$param): void
                 foreach ($cart->getProducts() as $product){
                     $prod = new Product($product['id_product']);
                     $product_categories = $prod->getParentCategories($this->context->cookie->id_lang);
+                    $name1 = '';
+                    $name2 = '';
+
                     if(count($product_categories) >= 2){
                         $cat1 = $product_categories[count($product_categories)-2];
+                        $name2 = $cat1['name'];
                     }
 
                     if(count($product_categories) >= 3){
                         $cat2 = $product_categories[count($product_categories)-3];
+                        $name1 = $cat2['name'];
                     }
                     $item = [];
                     $item['item_id'] = $product['id_product'];
                     $item['item_name'] = $product['name'];
                     $item['discount'] = $product['price_without_reduction_without_tax'] - $product['price_with_reduction_without_tax'];
                     $item['index'] = 0;
-                    $item['item_category'] = $cat2['name'];
-                    $item['item_category2'] = $cat1['name'];
+                    $item['item_category'] = $name1;
+                    $item['item_category2'] = $name2;
                     $item['price'] = $product['price_with_reduction_without_tax'];
                     $item['quantity'] = $product['quantity'];
                     $items[] = $item;
@@ -1603,7 +1611,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
                     'coupon' => $coupon,
                     'discount' => $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
                     'shipping' => $cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
-                    'tax' => $cart->getOrderTotal(true) - $cart->getOrderTotal(false),
+                    'tax' => $cart->getOrderTotal() - $cart->getOrderTotal(false),
                     'items' => $items,
                 ];
                 break;
@@ -1619,21 +1627,26 @@ public function hookActionFrontControllerSetVariables(&$param): void
             foreach ($cart['products'] as $product){
                 $prod = new Product($product['id_product']);
                     $product_categories = $prod->getParentCategories($this->context->cookie->id_lang);
-                    if(count($product_categories) >= 2){
-                        $cat1 = $product_categories[count($product_categories)-2];
-                    }
+                $name1 = '';
+                $name2 = '';
 
-                    if(count($product_categories) >= 3){
-                        $cat2 = $product_categories[count($product_categories)-3];
-                    }
+                if(count($product_categories) >= 2){
+                    $cat1 = $product_categories[count($product_categories)-2];
+                    $name2 = $cat1['name'];
+                }
+
+                if(count($product_categories) >= 3){
+                    $cat2 = $product_categories[count($product_categories)-3];
+                    $name1 = $cat2['name'];
+                }
                     $item = [];
 
                     $item['item_id'] = $product['id_product'];
                     $item['item_name'] = $product['name'];
                     $item['discount'] = $product['discount_amount'];
                     $item['index'] = 0;
-                    $item['item_category'] = $cat2['name'];
-                    $item['item_category2'] = $cat1['name'];
+                    $item['item_category'] = $name1;
+                    $item['item_category2'] = $name2;
                     $item['price'] = $product['price_with_reduction_without_tax'];
                     $item['quantity'] = $product['quantity'];
                     $items[] = $item;
@@ -1782,10 +1795,9 @@ public function hookActionFrontControllerSetVariables(&$param): void
      *
      * @TODO check function
      *
-     * @param array $params
      * @return array
      */
-    public function hookDisplayAdditionalCategoryFields(array $params): array
+    public function hookDisplayAdditionalCategoryFields(): array
     {
         return [
             (new FormField())
@@ -1814,7 +1826,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
      * @param array $params
      *
      */
-    public function hookActionObjectCategoryUpdateAfter(array $params)
+    public function hookActionObjectCategoryUpdateAfter(array $params): array
     {
         return $this->updateCustomCategoryFields($params);
     }
@@ -1824,18 +1836,13 @@ public function hookActionFrontControllerSetVariables(&$param): void
      *
      * @param array $params
      *
-     * @throws ModuleErrorException
      */
-    private function updateCustomCategoryFields(array $params)
+    private function updateCustomCategoryFields(array $params): array
     {
         $idLang = Context::getContext()->language->id;
         $form_values = Tools::getAllValues();
 
-        if(isset($params['object'])){
-            $object = $params['object'];
-        } else {
-            $object = new Category($params['id']);
-        }
+        $object = $params['object'] ?? new Category($params['id']);
 
 
 
@@ -1869,19 +1876,14 @@ public function hookActionFrontControllerSetVariables(&$param): void
             $jsonld = $categoryFormData['jsonld'][$idLang];
         }
 
-        $fields = [
-            'top_description' => $top_description,
-            'second_name' => $second_name,
-            'jsonld' => $jsonld,
-        ];
+//        $fields = [
+//            'top_description' => $top_description,
+//            'second_name' => $second_name,
+//            'jsonld' => $jsonld,
+//        ];
 
-        if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'category_lang WHERE id_category=' . $object->id .' AND id_lang='.$idLang)) {
-            $result = Db::getInstance()->update('category_lang', $fields,  'id_category=' . $object->id .' AND id_lang='.$idLang);
-        } else {
-            $result = Db::getInstance()->insert('category_lang', $fields);
-        }
-
-        $object->clearCache();
+//        Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'category_lang WHERE id_category=' . $object->id .' AND id_lang='.$idLang)
+//        $object->clearCache();
 
         return $params;
     }
@@ -1893,7 +1895,6 @@ public function hookActionFrontControllerSetVariables(&$param): void
      *
      * @param array $params
      *
-     * @throws ModuleErrorException
      */
     public function hookActionAfterCreateCategoryFormHandler(array $params): void
     {
@@ -1968,10 +1969,9 @@ public function hookActionFrontControllerSetVariables(&$param): void
     /**
      * @TODO check function
      *
-     * @param array $params
      * @return array
      */
-    public function hookDisplayAdditionalRootCategoryFields(array $params): array
+    public function hookDisplayAdditionalRootCategoryFields(): array
     {
         return [
             (new FormField())
@@ -2000,7 +2000,6 @@ public function hookActionFrontControllerSetVariables(&$param): void
      *
      * @param array $params
      *
-     * @throws ModuleErrorException
      */
     public function hookActionAfterUpdateRootCategoryFormHandler(array $params): void
     {
@@ -2014,7 +2013,6 @@ public function hookActionFrontControllerSetVariables(&$param): void
      *
      * @param array $params
      *
-     * @throws ModuleErrorException
      */
     public function hookActionAfterCreateRootCategoryFormHandler(array $params): void
     {
@@ -2086,7 +2084,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
                 foreach ($products as $prod) {
                     try {
                         $jsonLD[] = $this->createProductJSONLD($prod['id_product']);
-                    } catch (PrestaShopDatabaseException|PrestaShopException $e) {
+                    } catch (PrestaShopDatabaseException|PrestaShopException) {
                     }
                 }
             }
@@ -2130,30 +2128,25 @@ public function hookActionFrontControllerSetVariables(&$param): void
     /**
      * @TODO check function
      *
-     * @param $params
      * @return void
      */
-    public function hookDisplayFooter($params): void
+    public function hookDisplayFooter(): void
     {
-        return;
     }
 
     /**
      * @TODO check function
      *
-     * @param $params
      * @return void
      */
-    public function hookActionAddressFormBuilderModifier($params): void
+    public function hookActionAddressFormBuilderModifier(): void
     {
-        return;
     }
 
     /**
-     * @param $params
      * @return void
      */
-    public function hookDisplayHeader($params): void
+    public function hookDisplayHeader(): void
     {
         $this->context->controller->addCSS('modules/'.$this->module->name.'/views/css/ijzershopkiyoh.css', 'all');
         $consent_cookie = isset($_COOKIE['cookie-consent']);
@@ -2258,10 +2251,9 @@ public function hookActionFrontControllerSetVariables(&$param): void
 
 
     /**
-     * @param array $params
      * @return array
      */
-    public function hookAdditionalCustomerFields(array $params): array
+    public function hookAdditionalCustomerFields(): array
     {
         return [
             (new FormField())
@@ -2301,7 +2293,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
      * @param array $params
      *
      * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     private function updateCustomCustomerFields(array $params): array
     {
@@ -2315,7 +2307,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
         }
         $customer = new Customer($customerId);
         $customer->informer_identification = $informer_identification;
-        $customer->update(false);
+        $customer->update();
 
         return $params;
     }
@@ -2338,9 +2330,10 @@ public function hookActionFrontControllerSetVariables(&$param): void
      * Generate Label for koopman and other status changes
      *
      * @param $object
-     * @return mixed
+     * @return void
      */
-    private function generateKoopmanLabelButtons($object){
+    private function generateKoopmanLabelButtons($object): void
+    {
         $shippingCarrier = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop);
         $pickupCarrier = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop);
         $addedCarrier = (int)Configuration::get('KOOPMANORDEREXPORT_SELECT_ADDEDORDER_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop);
@@ -2383,7 +2376,6 @@ public function hookActionFrontControllerSetVariables(&$param): void
         ]);
         $object->addBefore('osname', $labelColumn);
         $object->remove('osname');
-        return $object;
     }
 
     /**
@@ -2641,7 +2633,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
         $themes = $hookParams['mailThemes'];
         $scanner = new FolderThemeScanner();
         try {
-            $moderneSmidTheme = $scanner->scan(_MODULE_DIR_.'/'.$this->module->name.'/mails/themes/modernesmid');
+            $moderneSmidTheme = $scanner->scan(PS_ROOT_DIR._MODULE_DIR_.'/'.$this->module->name.'/mails/themes/modernesmid');
 
             if (null !== $moderneSmidTheme &&  $moderneSmidTheme->getName() !== 'modernesmid' && $moderneSmidTheme->getLayouts()->count() > 0) {
                 $themes->add($moderneSmidTheme);

@@ -1,9 +1,10 @@
 /**
- * 2017-2023 liewebs - Prestashop module developers and website designers.
+ * 2017-2024 liewebs - prestashop module developers and website designers.
  *
  * NOTICE OF LICENSE
  *  @author    liewebs <info@liewebs.com>
- *  @copyright 2017-2023 www.liewebs.com - Liewebs
+ *  @copyright 2017-2024 www.liewebs.com - Liewebs
+ *  @license See "License registration" section
  * 	@module Advanced VAT Manager
  */
 
@@ -22,7 +23,7 @@ $(document).ready(function(){
     if (advancedvatmanager.PS1770) {
         $('form[name="customer_address"] button, form[id="address_form"] button').on('click', function(e){
             e.preventDefault();
-            validateVATNumber(advancedvatmanager.input_name_avm, $('form[name="customer_address"]'));
+            validateVATNumber(advancedvatmanager.vat_number_name, $('form[name="customer_address"]'));
         });
     } 
 });
@@ -42,9 +43,13 @@ function validateVATNumber(input, form)
             ajax: true,
     		action: 'checkVATnumberAdminAddresses',
             country: $('[name="'+advancedvatmanager.country_name+'"]').val(),
-            vat_number: $('[name="'+advancedvatmanager.input_name_avm+'"]').val(),
+            vat_number: $('[name="'+advancedvatmanager.vat_number+'"]').val(),
             id_customer: $('[name="'+advancedvatmanager.id_customer_field+'"]').val(),
-            company: $('[name="'+advancedvatmanager.company_name+'"]').val(),
+            company: $('[name="'+advancedvatmanager.company+'"]').val(),
+            address1: $('[name="'+advancedvatmanager.address1+'"]').val(),
+            address2:$('[name="'+advancedvatmanager.address2+'"]').val(),
+            postcode: $('[name="'+advancedvatmanager.postcode+'"]').val(),
+            city: $('[name="'+advancedvatmanager.city+'"]').val(),
             address: advancedvatmanager.id_address
     	},
         beforeSend : function () {
@@ -55,21 +60,17 @@ function validateVATNumber(input, form)
             $('form[name="customer_address"] button, form[id="address_form"] button').prop("disabled",false);
             if (jsonData) {
                 if (jsonData['success'] !== true) {
-                    // If company is not checked by option
-                    if (jsonData['company'] === true) {
-                        $('[name="'+advancedvatmanager.input_name_avm+'"]').after('<div class="invalid-feedback-container advancedvatmanager"><div class="d-inline-block text-danger align-top"><i class="material-icons form-error-icon">error_outline</i></div><div class="d-inline-block"><div class="text-danger">'+jsonData['message']+'</div></div></div>');
-                        // Scroll to DNI field.
-                        $('html, body').animate({ scrollTop: $('[name="'+advancedvatmanager.input_name_avm+'"]').parent().parent().position().top - 100 }, 1000);
-                    }
-                    else {
-                        $('[name="'+advancedvatmanager.company_name+'"]').after('<div class="invalid-feedback-container advancedvatmanager"><div class="d-inline-block text-danger align-top"><i class="material-icons form-error-icon">error_outline</i></div><div class="d-inline-block"><div class="text-danger">'+jsonData['message']+'</div></div></div>');
-                        // Scroll to Company field.
-                        $('html, body').animate({ scrollTop: $('[name="'+advancedvatmanager.company_name+'"]').parent().parent().position().top - 100 }, 1000);
-                    }
+                    $.each(jsonData['message'], function(key, value) {
+                        if (value['validation'] == 'error') {
+                            $('[name="'+advancedvatmanager[key]+'"]').after('<div class="invalid-feedback-container advancedvatmanager"><div class="d-inline-block text-danger align-top"><i class="material-icons form-error-icon">error_outline</i></div><div class="d-inline-block"><div class="text-danger">'+value['message']+'</div></div></div>');
+                            // Scroll to DNI field.
+                            $('html, body').animate({ scrollTop: $('[name="'+advancedvatmanager[key]+'"]').parent().parent().position().top - 100 }, 1000); 
+                        }
+                    });
                 }
                 else {
                     // Submit form
-                    if (!$('.invalid-feedback-container.dniverificator').length) {
+                    if (!$('.invalid-feedback-container.advancedvatmanager').length) {
                          form.submit();
                     }
                 }

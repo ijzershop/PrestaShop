@@ -1,12 +1,12 @@
 /**
- * 2017-2023 liewebs - Prestashop module developers and website designers.
+ * 2017-2024 liewebs - prestashop module developers and website designers.
  *
  * NOTICE OF LICENSE
  *  @author    liewebs <info@liewebs.com>
- *  @copyright 2017-2023 www.liewebs.com - Liewebs
+ *  @copyright 2017-2024 www.liewebs.com - Liewebs
+ *  @license See "License registration" section
  * 	@module Advanced VAT Manager
  */
-
 /* Table list */
 table#table-advancedvatmanager_customers span.title_box {
     word-wrap: break-word;
@@ -19,6 +19,16 @@ table#table-advancedvatmanager_customers thead>tr>th {
     vertical-align: middle;    
 }
 
+/* Legend */
+#vatmanagement_legend .vatmanagement_legend_container ul {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+}
+#vatmanagement_legend .vatmanagement_legend_container li {
+    margin-bottom: 7px;
+}
+
+/* Progress circle */
 .avm_process_container,  .progress_circle {
     text-align:  center;
 }
@@ -37,13 +47,13 @@ table#table-advancedvatmanager_customers thead>tr>th {
     bottom: 112px;
     font-size: 33px;
     font-weight: 500;
-    color: #363a41;
+    color: #332E20;
 }
 
 #avm_scanstatus_container {
     font-size: 20px;
-    color: #00a1ff;
-    border: 2px solid #3498db;
+    color: #332E20;
+    border: 2px solid #332E20;
     max-width: 700px;
     padding: 10px;
     text-align: center;
@@ -86,31 +96,34 @@ table#table-advancedvatmanager_customers thead>tr>th {
 }
 
 #avm_results_container .avm_results {
-    border:  1px solid #dbe6e9;
+    border:  1px solid #e2e2e2;
     min-height:  250px;
-    max-height:  500px;
+    max-height:  750px;
     overflow-y: auto;
     padding: 15px;
     text-align: justify;
 }
 
 #avm_results_container .results_header {
-    background: rgb(52, 152, 219);
+    background: #332E20;
     height: 100%;
 }
+
 #avm_results_container .results_header h2 {
     font-size: 22px;
 }
 
 #avm_results_container .results_data {
-    border-right:  1px solid #dbe6e9;
-    border-left:  1px solid #dbe6e9;
+    border-right:  1px solid #e2e2e2;
+    border-left:  1px solid #e2e2e2;
     padding: 10px;
     font-size: 16px;
 }
+
 .results_data .row {
     margin-bottom: 5px;    
 }
+
 .results_data span.total {
     text-align: center;
     margin: 0 auto;
@@ -122,21 +135,10 @@ table#table-advancedvatmanager_customers thead>tr>th {
     padding: 5px;
     margin-bottom: 15px;
 }
-#avm_results_container .withError, #avm_results_container .invalidCompany {
-    color: #f44336;
-}
 
-#avm_results_container .withEmpty, #avm_results_container .duplicated, #avm_results_container .emptyCompany, #avm_results_container .valid_skipping_validation {
-    color: #fdc700;
+#avm_results_container .withError, #avm_results_container .invalidCompany, #avm_results_container .invalidCompanyAddress, #avm_results_container .withEmpty, #avm_results_container .duplicated, #avm_results_container .emptyCompany, #avm_results_container .valid_skipping_validation, #avm_results_container .allow_duplicated, #avm_results_container .valid {
+    font-weight: 600;
 }
-#avm_results_container .allow_duplicated {
-    color: #09bcd9;
-}
-
-#avm_results_container .valid {
-    color: #53d572;
-}
-
 #avm_results_container .results_header h2 {
     margin: 0;
     padding: 10px;
@@ -159,36 +161,28 @@ table#table-advancedvatmanager_customers thead>tr>th {
 }
 
 .vat_statistics_panel .icon_container {
-    font-size: 40px;
-    color: #45dd57;
+    font-size: 30px;
+    color: #000;
     text-align: center; 
 }
 
-.icon_container.valid_value {
+.icon_container.valid_value, .counter_description.valid_value {
     color: #45dd57;
 }
 
-.icon_container.invalid_value {
+.icon_container.invalid_value, .counter_description.invalid_value {
     color: #f92727;
 }
 
-.vat_statistics_panel .icon_container {
-    font-size: 40px;
-    text-align: center; 
+.icon_container.notvalidated_value, .counter_description.notvalidated_value {
+    color: #000;
 }
 
 .counter_description {
-    font-size: 16px;
+    font-size: 13px;
     text-align: center; 
 }
 
-.counter_description.valid_value {
-    color: #45dd57;
-}
-
-.counter_description.invalid_value {
-    color: #f92727;
-}
 
 /* Modal */
 
@@ -198,7 +192,7 @@ table#table-advancedvatmanager_customers thead>tr>th {
 
 #avm_perform_scan .slickmodal-header {
     text-align: center;
-    color: #3498db;
+    color: #332E20;
 }
 
 #avm_perform_scan .scan_mode_switch {
@@ -209,6 +203,7 @@ table#table-advancedvatmanager_customers thead>tr>th {
     font-weight: 700;
     font-size: 14px;
 }
+
 #avm_perform_scan button {
     font-size:  14px;
 }
@@ -268,6 +263,7 @@ table#table-advancedvatmanager_customers thead>tr>th {
     height: 150px;
     display: grid;
 }
+
 .avm_modal_messages .content {
     max-height: 200px;
     overflow: auto;
@@ -276,6 +272,7 @@ table#table-advancedvatmanager_customers thead>tr>th {
     padding: 5px;
     font-size: 13px;
 }
+
 .avm_modal_messages .title {
     font-weight: 700;
     font-size: 16px;
@@ -283,24 +280,31 @@ table#table-advancedvatmanager_customers thead>tr>th {
     padding-bottom: 2px;
     text-transform: uppercase;
 }
+
 .avm_modal_messages * {
     color: #fff;
 }
+
 .avm_modal_messages[data-state="success"], .content-success {
     background-color: #25d06d;
 }
+
 .avm_modal_messages[data-state="danger"], .content-danger {
     background-color: #ea2433;
 }
+
 .avm_modal_messages[data-state="info"], .content-info {
     background-color: #18a0d4;
 }
+
 .avm_modal_messages[data-state="warning"], .content-warning {
     background-color: #ffa90c;
 }
+
 .content-info, .content-success, .content-danger, .content-warning {
     padding: 15px;
 }
+
 .sm-wrapper .sm-button:not([data-sm-button-style*=simple])[data-sm-button-style*=cancel][data-sm-button-place=inside], .sm-wrapper .sm-button:not([data-sm-button-style*=simple])[data-sm-button-style*=cancel][data-sm-button-place=outside]:after, .sm-wrapper .sm-button:not([data-sm-button-style*=simple])[data-sm-button-style*=cancel][data-sm-button-place=outside]:before, .sm-wrapper .sm-button[data-sm-button-style*="cancel simple"][data-sm-button-place=inside]:after, .sm-wrapper .sm-button[data-sm-button-style*="cancel simple"][data-sm-button-place=inside]:before {
     background: #fff;
 }
@@ -308,7 +312,7 @@ table#table-advancedvatmanager_customers thead>tr>th {
 /* Spinner */
 .loader_left {
     border: 3px solid #f3f3f3;
-    border-top: 3px solid #3498db;
+    border-top: 3px solid #ff5100;
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -316,9 +320,10 @@ table#table-advancedvatmanager_customers thead>tr>th {
     float: left;
     margin-right: 5px;
 }
+
 .loader_center {
     border: 10px solid #f3f3f3;
-    border-top: 10px solid #3498db;
+    border-top: 10px solid #ff5100;
     border-radius: 50%;
     width: 100px;
     height: 100px;

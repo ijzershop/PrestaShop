@@ -1,7 +1,7 @@
 <?php
-use DynamicProduct\classes\models\DynamicConfig;
-use DynamicProduct\classes\models\DynamicEquation;
+
 use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
+
 class Product extends ProductCore {
         /*
     * module: offerintegration
@@ -173,9 +173,9 @@ class Product extends ProductCore {
                 }
             }
 
-            $dynamic_config = DynamicProduct\classes\models\DynamicConfig::getByProduct($id_product);
+            $dynamic_config = \DynamicConfig::getByProduct($id_product);
             if ($dynamic_config->active) {
-                $displayed_price = DynamicProduct\classes\models\DynamicConfig::getDisplayedPrice($id_product);
+                $displayed_price = \DynamicConfig::getDisplayedPrice($id_product);
                 if ($displayed_price || $dynamic_config->display_dynamic_price) {
                     $module->calculator->assignProductPrices($row, $displayed_price, $result);
                 }
@@ -184,7 +184,6 @@ class Product extends ProductCore {
 
         return $result;
     }
-
 
     public function getAttributesGroups($id_lang, $id_product_attribute = null)
     {
@@ -236,6 +235,7 @@ class Product extends ProductCore {
         }
         return $ret;
     }
+
     public static function isDynamicProduct($product){
         if(is_array($product)){
             $id_product = $product['id_product'];
@@ -243,8 +243,7 @@ class Product extends ProductCore {
             $id_product = $product->id;
         }
 
-
-        $equation = DynamicEquation::getEquationsByIdProduct($id_product);
+        $equation = \DynamicEquation::getEquationsByIdProduct($id_product);
 
         if(array_key_exists(0, $equation) && !empty($equation[0]->formula)){
             return true;

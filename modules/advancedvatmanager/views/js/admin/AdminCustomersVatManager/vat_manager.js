@@ -1,11 +1,13 @@
 /**
- * 2017-2022 liewebs - Prestashop module developers and website designers.
+ * 2017-2024 liewebs - prestashop module developers and website designers.
  *
  * NOTICE OF LICENSE
  *  @author    liewebs <info@liewebs.com>
- *  @copyright 2017-2022 www.liewebs.com - Liewebs
+ *  @copyright 2017-2024 www.liewebs.com - Liewebs
+ *  @license See "License registration" section
  * 	@module Advanced VAT Manager
  */
+ 
 var timer = new easytimer.Timer();// Timer
 var messages = [];// Messages container array
 var position_available = [];
@@ -20,10 +22,10 @@ var step_progress = 0;
 var empty_vat = [];
 var duplicated_vat = [];
 var invalid_vat = [];
-var invalid_company, empty_company = [];
+var invalid_company, empty_company, invalid_companyAddress = [];
 var valid_vat = [];
 var valid_vat_skipping_validation = [];
-var customer_toassigngroup;
+var customer_toassigngroup = [];
 var ajaxCheckTotalAddress, ajaxCheckVATNumber, ajaxremoveEmptyVAT, ajaxremoveInvalidVAT, ajaxCreateFile, ajaxsendEmail, ajaxProcess, ajaxResetListTable, ajaxremoveDuplicatedVAT, ajaxCheckCustomerVAT; 
 
 $(document).ready(function(e){  
@@ -47,7 +49,7 @@ $(document).ready(function(e){
             'background': '#fff',
             'padding': '0px',
             'margin': 'auto',
-            'border': '5px solid #3498db'
+            'border': '5px solid #332E20'
         },
         popup_enableESC: false,
         popup_closeButtonEnable: false,
@@ -67,7 +69,7 @@ $(document).ready(function(e){
         }
     });
     
-    // Slick modal to check VAT by VIES or GOV.UK
+    // Slick modal to check VAT by Official systems
     $('.avm_modal_check_vat').SlickModals({
         popup_animation: 'zoomIn',
         popup_position: 'center',
@@ -80,7 +82,7 @@ $(document).ready(function(e){
             'background': '#fff',
             'padding': '20px',
             'margin': 'auto',
-            'border': '5px solid #3498db'
+            'border': '5px solid #332E20'
         },
         popup_enableESC: true,
         popup_closeButtonEnable: true,
@@ -111,11 +113,11 @@ $(document).ready(function(e){
         size: 170,
         thickness: '15',
         fill: {
-            gradient: [['#3498db']], 
+            gradient: [['#ff5100']], 
         },
         startAngle: -Math.PI/4*2,
         value: 0,
-        emptyFill: 'rgb(0 196 255 / 25%)',
+        emptyFill: '#e2e2e2',
         animation: { duration: 500, easing: "circleProgressEasing" },
     });
     // Reset progress bar percent
@@ -143,6 +145,7 @@ $(document).ready(function(e){
             options['fill_company_name'] = $('input[name="fill_company_name"]').is(':checked');
             options['sendEmail_invalidcompany_mode'] = $('input[name="sendEmail_invalidcompany_mode"]').is(':checked');
             options['sendEmail_emptycompany_mode'] = $('input[name="sendEmail_emptycompany_mode"]').is(':checked');
+            options['sendEmail_invalidcompanyaddress_mode'] = $('input[name="sendEmail_invalidcompanyaddress_mode"]').is(':checked');
             options['scanfromlast_mode'] = $('input[name="scanfromlast_mode"]').is(':checked');
             options['skip_apisystemfails'] = $('input[name="skip_apisystemfails"]').is(':checked');
             
@@ -226,7 +229,7 @@ function checkTotalAddress()
 
 
     /** 
-    * Perform Check VAT in VIES or GOV.UK
+    * Perform Check VAT in Official systems
     */
     function checkCustomerVAT(vat, customer, country_iso)
     {
@@ -344,13 +347,15 @@ function checkVATNumber()
             finish = false;
         },
         success : function (jsonData) {
-            console.log('sasa')
             query += 1;
             SetprogressBar();
             displayMessageOnLive(jsonData['message_onlive']);
             if (Object.keys(jsonData['empty_vat']).length > 0) {
                 insertMessageContainer('warning', jsonData['message']);
-                empty_vat.push(jsonData['empty_vat']); 
+                empty_vat.push(jsonData['empty_vat']);
+                if (!empty(jsonData['company'])) {
+                   customer_toassigngroup.push({invalid_vat:jsonData['empty_vat']}); 
+                } 
             }
             else if (Object.keys(jsonData['duplicated_vat']).length > 0) {
                 insertMessageContainer((allow_duplicated?'info':'warning'), jsonData['message']);
@@ -358,34 +363,41 @@ function checkVATNumber()
             }
             else if (Object.keys(jsonData['invalid_vat']).length > 0) {
                 insertMessageContainer('danger', jsonData['message']);
-                invalid_vat.push(jsonData['invalid_vat']);    
-            }
-            else if (Object.keys(jsonData['invalid_company']).length > 0) {
-                insertMessageContainer('warning', jsonData['message']);
-                invalid_company.push(jsonData['invalid_company']);    
+                invalid_vat.push(jsonData['invalid_vat']);
+                customer_toassigngroup.push({invalid_vat:jsonData['invalid_vat']}); 
             }
             else if (Object.keys(jsonData['empty_company']).length > 0) {
                 insertMessageContainer('warning', jsonData['message']);
                 empty_company.push(jsonData['empty_company']);    
             }
             else if (Object.keys(jsonData['valid_vat']).length > 0) {
-                insertMessageContainer('success', jsonData['message']);                   
-                valid_vat.push(jsonData['valid_vat']); 
-                customer_toassigngroup.push(jsonData['valid_vat']);                   
+                if (Object.keys(jsonData['invalid_company']).length > 0) {
+                    insertMessageContainer('danger', jsonData['message']);
+                    invalid_company.push(jsonData['invalid_company']);    
+                }
+                else if (Object.keys(jsonData['invalid_companyAddress']).length > 0) {
+                    insertMessageContainer('danger', jsonData['message']);
+                    invalid_companyAddress.push(jsonData['invalid_companyAddress']); 
+                }
+                else {
+                    insertMessageContainer('success', jsonData['message']);                   
+                    valid_vat.push(jsonData['valid_vat']); 
+                    customer_toassigngroup.push({valid_vat:jsonData['valid_vat']});  
+                }                 
             }
             else if (Object.keys(jsonData['valid_vat_skipping_validation']).length > 0) {
                 insertMessageContainer('warning', jsonData['message']);
                 valid_vat_skipping_validation.push(jsonData['valid_vat']); 
-                customer_toassigngroup.push(jsonData['valid_vat_skipping_validation']);      
+                customer_toassigngroup.push({valid_vat:jsonData['valid_vat_skipping_validation']});     
             }
             $('.results_data .empty_value').html(Object.keys(empty_vat).length).fadeIn(300);
             $('.results_data .duplicated_value').html(Object.keys(duplicated_vat).length).fadeIn(300);
             $('.results_data .error_value').html(Object.keys(invalid_vat).length).fadeIn(300);
             $('.results_data .invalid_company_value').html(Object.keys(invalid_company).length).fadeIn(300);
+            $('.results_data .invalid_company_address_value').html(Object.keys(invalid_companyAddress).length).fadeIn(300);
             $('.results_data .empty_company_value').html(Object.keys(empty_company).length).fadeIn(300);
             $('.results_data .valid_value').html(Object.keys(valid_vat).length).fadeIn(300);
             $('.results_data .valid_skipping_validation_value').html(Object.keys(valid_vat_skipping_validation).length).fadeIn(300);
-            console.log('sasas');
             if (query < Object.keys(addresses).length ) {
                 checkVATNumber();
             }
@@ -670,6 +682,9 @@ function sendEmail(mode)
     else if (mode == 7) {
         customer_address = empty_company    
     }
+    else if (mode == 9) {
+        customer_address = invalid_companyAddress    
+    }
     
     ajaxProcess = ajaxsendEmail = $.ajax({
         url: ajax_url_avm_scanner,
@@ -690,10 +705,11 @@ function sendEmail(mode)
             $('#stop_scan_btn').show();// Show stop scan button
             $('.avm_scanstatus').html(send_email+'... <br />['+(Object.keys(customer_address).length - query)+'] '+remaining_addresses).fadeIn(300);
             finish = false;
+            
         },
-        success : function (jsonData) {
-            query += 1;
+        success : function (jsonData) {          
             SetprogressBar();
+            query += 1;
             displayMessageOnLive(jsonData['message']);
             if (query < Object.keys(customer_address).length ) {
                 sendEmail(mode, customer_address);
@@ -714,6 +730,9 @@ function sendEmail(mode)
                 }
                 else if (mode == 7) {
                     empty_company = [];       
+                }
+                else if (mode == 9) {
+                    invalid_companyAddress  = [];       
                 }
                 finish = true;
             }
@@ -777,6 +796,7 @@ function startProcess(button_id)
     $('.results_data .valid_value').html('-').fadeIn(300);
     $('.results_data .duplicated_value').html('-').fadeIn(300);
     $('.results_data .invalid_company_value').html('-').fadeIn(300);
+    $('.results_data .invalid_company_address_value').html('-').fadeIn(300);
     $('.results_data .empty_company_value').html('-').fadeIn(300);
     $('.results_data .valid_skipping_validation_value').html('-').fadeIn(300);
     // Init timer
@@ -876,6 +896,7 @@ function resetValues()
     empty_vat = [];
     invalid_vat = [];
     invalid_company = [];
+    invalid_companyAddress = [];
     empty_company = [];
     valid_vat = [];
     valid_vat_skipping_validation = [];
@@ -970,6 +991,11 @@ function scanProcess()
                     calculateStepProgress(Object.keys(empty_company).length);
                     sendEmail(7);
                 }
+                else if (Object.keys(invalid_companyAddress).length > 0 && options['sendEmail_invalidcompanyaddress_mode'] === true) {
+                    resetProgressBar();
+                    calculateStepProgress(Object.keys(invalid_companyAddress).length);
+                    sendEmail(9);
+                }
                 else if (Object.keys(customer_toassigngroup).length > 0 && options['assign_group_mode'] === true) {
                     resetProgressBar();
                     setTimeout(function(){ 
@@ -1036,21 +1062,21 @@ function manageOptions()
         }
     });    
     $('input[name="sendEmail_invalidcompany_mode"]').on('switchChange.bootstrapSwitch', function(){
-        if ($('input[name="sendEmail_invalidcompany_mode"]').bootstrapSwitch('state') && $('input[name="fill_company_name"]').bootstrapSwitch('state')) {
+        if ($('input[name="sendEmail_invalidcompany_mode"]').bootstrapSwitch('state')) {
             $('input[name="fill_company_name"]').bootstrapSwitch('state', false);
             $('input[name="sendEmail_emptycompany_mode"]').bootstrapSwitch('state', false);
         }
     });    
-    $('input[name="sendEmail_invalidcompany_mode"]').on('switchChange.bootstrapSwitch', function(){
-        if ($('input[name="sendEmail_invalidcompany_mode"]').bootstrapSwitch('state') && $('input[name="fill_company_name"]').bootstrapSwitch('state')) {
+    $('input[name="sendEmail_emptycompany_mode"]').on('switchChange.bootstrapSwitch', function(){
+        if ($('input[name="sendEmail_emptycompany_mode"]').bootstrapSwitch('state')) {
             $('input[name="fill_company_name"]').bootstrapSwitch('state', false);
-            $('input[name="sendEmail_emptycompany_mode"]').bootstrapSwitch('state', false);
+            $('input[name="sendEmail_invalidcompany_mode"]').bootstrapSwitch('state', false);
         }
     });   
     if (!company_validation) {
         $('input[name="sendEmail_invalidcompany_mode"]').bootstrapSwitch('disabled', true);
         $('input[name="sendEmail_emptycompany_mode"]').bootstrapSwitch('disabled', true)
-    }  
+    }   
 }
 
 /*

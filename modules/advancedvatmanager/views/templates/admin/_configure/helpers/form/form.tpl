@@ -896,7 +896,7 @@
                 
                 <h5 class="module_compatible_item"><a style="color:#555;text-decoration:none" href="https://addons.prestashop.com/{Context::getContext()->language->iso_code|escape:'htmlall':'UTF-8'}/accounting-invoicing/21817-pdf-invoice-template-delivery-custom-number.html" target="_blank">{l s='PDF Invoice Template + Delivery + Custom Number Module favorite by Globo' mod='advancedvatmanager'}</a>&nbsp;&nbsp;{if Module::isInstalled('gwadvancedinvoice')}<span style="color:#00E10E;" class="mod_installed"><i class="fal fa-check-circle"></i> {l s='Version installed:' mod='advancedvatmanager'} {Module::getInstanceByName('gwadvancedinvoice')->version|escape:'htmlall':'UTF-8'}</span>{else}<span style="color:#f51d1d" class="mod_not_installed"><i class="fal fa-times-circle"></i> {l s='Not installed' mod='advancedvatmanager'}</span>{/if}</h5>
                 
-                 <h5 class="module_compatible_item"><a style="color:#555;text-decoration:none" href="https://addons.prestashop.com/{Context::getContext()->language->iso_code|escape:'htmlall':'UTF-8'}/accounting-invoicing/21817-pdf-invoice-template-delivery-custom-number.html" target="_blank">{l s='Payment With Fee by PrestaHero' mod='advancedvatmanager'}</a>&nbsp;&nbsp;{if Module::isInstalled('ets_payment_with_fee')}<span style="color:#00E10E;" class="mod_installed"><i class="fal fa-check-circle"></i> {l s='Version installed:' mod='advancedvatmanager'} {Module::getInstanceByName('ets_payment_with_fee')->version|escape:'htmlall':'UTF-8'}</span>{else}<span style="color:#f51d1d" class="mod_not_installed"><i class="fal fa-times-circle"></i> {l s='Not installed' mod='advancedvatmanager'}</span>{/if}</h5>                   
+                 <h5 class="module_compatible_item"><a style="color:#555;text-decoration:none" href="https://addons.prestashop.com/{Context::getContext()->language->iso_code|escape:'htmlall':'UTF-8'}/other-payment-methods/28289-payment-with-fee-paypal-cod-custom-payment-methods.html" target="_blank">{l s='Payment With Fee by PrestaHero' mod='advancedvatmanager'}</a>&nbsp;&nbsp;{if Module::isInstalled('ets_payment_with_fee')}<span style="color:#00E10E;" class="mod_installed"><i class="fal fa-check-circle"></i> {l s='Version installed:' mod='advancedvatmanager'} {Module::getInstanceByName('ets_payment_with_fee')->version|escape:'htmlall':'UTF-8'}</span>{else}<span style="color:#f51d1d" class="mod_not_installed"><i class="fal fa-times-circle"></i> {l s='Not installed' mod='advancedvatmanager'}</span>{/if}</h5>                   
             </div>  
         </div>
         <br />
@@ -946,9 +946,20 @@
    <div class="panel" id="fieldset_license_tab{if isset($smarty.capture.identifier_count) && $smarty.capture.identifier_count}_{$smarty.capture.identifier_count|intval}{/if}{if $smarty.capture.fieldset_name > 1}_{($smarty.capture.fieldset_name - 1)|intval}{/if}">
 <div id="documentation" class="documentation">
     <div class="panel-heading">
-        <i class="fal fa-gavel"></i>&nbsp;{l s='License' mod='advancedvatmanager'}
+        <i class="fal fa-key"></i>&nbsp;{l s='License registration' mod='advancedvatmanager'}
     </div>
-    <div class="content">  
+    <div class="content">
+        {if AdvancedVatManager::checkIsLicenseRegistered() != 'localhost' && isset(AdvancedVatManager::checkIsLicenseRegistered()->success) && AdvancedVatManager::checkIsLicenseRegistered()->success === true}
+            <div class="alert alert-info">
+                <p>{l s='This module has been registered successfully with the following license code:' mod='advancedvatmanager'}</p>
+                <p><strong>{Configuration::get('ADVANCEDVATMANAGER_LICENSE')|escape:'htmlall':'UTF-8'}</strong></p><br />
+                <p>{l s='You can deactivate the license for this shop by clicking the deactivation button below' mod='advancedvatmanager'}</p>  
+                <br />
+                <button type="submit" class="btn btn-danger" name="submitLicenseDeactivation" value="1"><i class="far fa-power-off"></i> {l s='Deactivate license' mod='advancedvatmanager'}</button> 
+            </div> 
+            <br />
+            <br />
+        {/if}
         {$license_content nofilter}
     </div>
 </div>

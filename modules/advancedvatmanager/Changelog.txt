@@ -1,3 +1,22 @@
+#1.7.0 (17/06/2024)
+- [FIX] PHP code issue due array index.
+- [FIX] Bug to add to cart in some Prestashop 1.7 versions.
+- [FIX] Issue checking VAT number in VAT check tool when try to check VAT number with same shop country ISO Code.
+- [FIX] Issue with cached address ID when it is not selected.
+- [FIX] Issue calculating all Intra-community operations current year and last year for threashold instead only for consumers operations.
+- [FIX] Translations issues.
+- [FIX] Issue with non float total amounts in operation from order statistics.
+- [IMP] API system validation enhacements.
+- [IMP] PHP code enhacements.
+- [IMP] Company name validation enhacements with accuracy threshold.
+- [IMP] Group assignation engine system enhacements.
+- [IMP] Visual enhacements.
+- [ADD] Client type column (consumer/company) with representative icons into Orders and VAT table of module section.
+- [ADD] Option to assign customer groups to companies with no VAT or invalid VAT but company field filled.
+- [ADD] Option to assign customer groups to companies with no VAT or invalid VAT and company field empty.
+- [ADD] Legend in Customers VAT Management section.
+- [NEW] Company address validation via API with accuracy threshold.
+
 #1.6.6.2 (25/03/2024)
 - [FIX] Fatal error when add to cart action is perfomed when customer is logged.
 

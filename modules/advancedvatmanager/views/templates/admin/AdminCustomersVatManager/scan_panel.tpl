@@ -1,9 +1,10 @@
 {**
- * 2017-2023 liewebs - Prestashop module developers and website designers.
+ * 2017-2024 liewebs - prestashop module developers and website designers.
  *
  * NOTICE OF LICENSE
  *  @author    liewebs <info@liewebs.com>
- *  @copyright 2017-2023 www.liewebs.com - Liewebs
+ *  @copyright 2017-2024 www.liewebs.com - Liewebs
+ *  @license See "License registration" section
  * 	@module Advanced VAT Manager
  *}
  
@@ -13,16 +14,25 @@
     </div>
     <div class="alert alert-info">
         <li>{l s='If this module is just installed recently and you have not performed first scan, you should do it in order to validate and save customers VAT number information in the module database table.' mod='advancedvatmanager'}</li>
+        <li>{l s='The scanning function scans through each of the customer addresses stored in the database, checking and validating the VAT numbers according to the options configured in the module settings section. If you want the scan to be done with different settings than those selected, you will have to do it through the cron task, configuring it in the cron settings.' mod='advancedvatmanager'}</li>
         <li>{l s='Whenever you make changes to the [Validation settings - VAT field settings - VAT exemption settings] options, you must perform a new scan to validate the VAT numbers with the new conditions configured in the mentioned options.' mod='advancedvatmanager'}</li>
     </div>
     <div class="alert alert-success">
         <p>{l s='The scan feature will analyze and check VAT numbers from customer addresses with the following conditions:' mod='advancedvatmanager'}</p>
         <ul>
             {if !empty($countries)}<li>{l s='Customer addresses located in one of the following countries:' mod='advancedvatmanager'} <strong>{l s='%s' sprintf=[$countries]  mod='advancedvatmanager'}</strong></li>{/if}
+            <li>{l s='Validation type:' mod='advancedvatmanager'} <strong>{$validation_type|escape:'htmlall':'UTF-8'}</strong></li>
+            <li>{l s='Validation mode:' mod='advancedvatmanager'} <strong>{$validation_mode|escape:'htmlall':'UTF-8'}</strong></li>
             <li>{l s='The VAT number field is set as' mod='advancedvatmanager'} <strong>{l s='%s' sprintf=[$field_condition]  mod='advancedvatmanager'}</strong></li>
-            {if $show_with_company}<li>{l s='The VAT number field is displayed and validated only when customers have filled the company field' mod='advancedvatmanager'}</li>{/if}
-            {if $allow_duplicated}<li>{l s='Duplicated VAT numbers are allowed' mod='advancedvatmanager'}</li>{else}<li>{l s='Duplicated VAT numbers are not allowed' mod='advancedvatmanager'}</li>{/if}
+            <li>{l s='Save VAT in uppercase:' mod='advancedvatmanager'} <strong>{if $saveVATuppercase}{l s='Enabled' mod='advancedvatmanager'}{else}{l s='Disabled' mod='advancedvatmanager'}{/if}</strong></li>
             <li>{l s='Company validation:' mod='advancedvatmanager'} <strong>{if $company_validation}{l s='Enabled' mod='advancedvatmanager'}{else}{l s='Disabled' mod='advancedvatmanager'}{/if}</strong></li>
+            <li>{l s='Company address validation:' mod='advancedvatmanager'} <strong>{if $company_validation_address}{l s='Enabled' mod='advancedvatmanager'}{else}{l s='Disabled' mod='advancedvatmanager'}{/if}</strong></li>
+            {if $show_with_company}
+                <li>{l s='The VAT number field is displayed and validated only when customers have filled the company field' mod='advancedvatmanager'}</li>
+            {/if}
+            {if $allow_duplicated}
+                <li>{l s='Duplicated VAT numbers are allowed' mod='advancedvatmanager'}</li>{else}<li>{l s='Duplicated VAT numbers are not allowed' mod='advancedvatmanager'}</li>
+            {/if} 
         </ul>
     </div>
     <div class="alert alert-warning">
@@ -65,12 +75,19 @@
             <div class="row">
                 <div class="col-lg-12"><span class="withError"><i class="fal fa-exclamation-circle"></i> {l s='Invalid VAT:' mod='advancedvatmanager'} <span class="error_value"></span></span></div>
             </div>
-            <div class="row">
-                {if $company_validation}<div class="col-lg-12"> <span class="invalidCompany"><i class="fal fa-exclamation-circle"></i> {l s='Invalid Company:' mod='advancedvatmanager'} <span class="invalid_company_value"></span></span></div>{/if}
-            </div>
-            <div class="row">
-                {if $company_validation}<div class="col-lg-12"> <span class="emptyCompany"><i class="fal fa-exclamation-circle"></i> {l s='Empty Company:' mod='advancedvatmanager'} <span class="empty_company_value"></span></span></div>{/if}
-            </div> 
+            {if $company_validation}
+                <div class="row">
+                    <div class="col-lg-12"> <span class="invalidCompany"><i class="fal fa-exclamation-circle"></i> {l s='Invalid Company:' mod='advancedvatmanager'} <span class="invalid_company_value"></span></span></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12"> <span class="emptyCompany"><i class="fal fa-exclamation-circle"></i> {l s='Empty Company:' mod='advancedvatmanager'} <span class="empty_company_value"></span></span></div>
+                </div>
+            {/if}
+            {if $company_validation_address}
+                <div class="row">
+                    <div class="col-lg-12"> <span class="invalidCompanyAddress"><i class="fal fa-exclamation-circle"></i> {l s='Invalid company address:' mod='advancedvatmanager'} <span class="invalid_company_address_value"></span></span></div>
+                </div>
+            {/if} 
         </div>
         <div class="avm_results"></div>
     </div>
@@ -95,6 +112,10 @@
         <div class="form-check scan_mode_switch">
             <p class="scan_mode_label"><i class="fas fa-question-circle" data-toggle="tooltip" data-placement="right" title="{l s='This option skips validation in case the VIES/GOV.UK API system fails during the validation process. The VAT number will appear as [Validated] and the system status will appear in red color as [API request processing error] in VAT Management list.' mod='advancedvatmanager'}"></i> {l s='Skip API system fail' mod='advancedvatmanager'}</p>
             <input type="checkbox" class="avm_switch toggle-checkbox" id="skip_apisystemfails" name="skip_apisystemfails" data-size="mini" data-toggle="switch" data-on-text="{l s='ON' mod='advancedvatmanager'}" data-off-text="{l s='OFF' mod='advancedvatmanager'}">
+        </div>
+        <div class="form-check scan_mode_switch">
+            <p class="scan_mode_label"><i class="fas fa-question-circle" data-toggle="tooltip" data-placement="right" title="{l s='This option will overwrite the company name stored previously by the client.' mod='advancedvatmanager'}"></i> {l s='Fill company field in address with company registered in Official systems when VAT number is valid' mod='advancedvatmanager'}</p>
+            <input type="checkbox" class="avm_switch toggle-checkbox" id="fill_company_name" name="fill_company_name" data-size="mini" data-toggle="switch" data-on-text="{l s='ON' mod='advancedvatmanager'}" data-off-text="{l s='OFF' mod='advancedvatmanager'}">
         </div>
         <div class="form-check scan_mode_switch">
             <p class="scan_mode_label">{l s='Delete address with empty VAT number field' mod='advancedvatmanager'}</p>
@@ -125,10 +146,6 @@
             <input type="checkbox" class="avm_switch toggle-checkbox" id="assign_group_mode" name="assign_group_mode" data-size="mini" data-toggle="switch" data-on-text="{l s='ON' mod='advancedvatmanager'}" data-off-text="{l s='OFF' mod='advancedvatmanager'}">
         </div>
         <div class="form-check scan_mode_switch">
-            <p class="scan_mode_label"><i class="fas fa-question-circle" data-toggle="tooltip" data-placement="right" title="{l s='This option will overwrite the company name stored previously by the client.' mod='advancedvatmanager'}"></i> {l s='Fill company field in address with company registered in VIES or GOV.UK when VAT number is valid' mod='advancedvatmanager'}</p>
-            <input type="checkbox" class="avm_switch toggle-checkbox" id="fill_company_name" name="fill_company_name" data-size="mini" data-toggle="switch" data-on-text="{l s='ON' mod='advancedvatmanager'}" data-off-text="{l s='OFF' mod='advancedvatmanager'}">
-        </div>
-        <div class="form-check scan_mode_switch">
             <p class="scan_mode_label">{l s='Send email to customers with not valid company name registered' mod='advancedvatmanager'}</p>
             <input type="checkbox" class="avm_switch toggle-checkbox" id="sendEmail_invalidcompany_mode" name="sendEmail_invalidcompany_mode" data-size="mini" data-toggle="switch" data-on-text="{l s='ON' mod='advancedvatmanager'}" data-off-text="{l s='OFF' mod='advancedvatmanager'}">
             {if !$company_validation}<small>{l s='Option disabled because company validation option is disabled' mod='advancedvatmanager'}</small>{/if}
@@ -137,6 +154,11 @@
             <p class="scan_mode_label">{l s='Send email to customers with empty company name' mod='advancedvatmanager'}</p>
             <input type="checkbox" class="avm_switch toggle-checkbox" id="sendEmail_emptycompany_mode" name="sendEmail_emptycompany_mode" data-size="mini" data-toggle="switch" data-on-text="{l s='ON' mod='advancedvatmanager'}" data-off-text="{l s='OFF' mod='advancedvatmanager'}">
             {if !$company_validation}<small>{l s='Option disabled because company validation option is disabled' mod='advancedvatmanager'}</small>{/if}
+        </div>
+        <div class="form-check scan_mode_switch">
+            <p class="scan_mode_label">{l s='Send email to customers with invalid or not validated company address' mod='advancedvatmanager'}</p>
+            <input type="checkbox" class="avm_switch toggle-checkbox" id="sendEmail_invalidcompanyaddress_mode" name="sendEmail_invalidcompanyaddress_mode" data-size="mini" data-toggle="switch" data-on-text="{l s='ON' mod='advancedvatmanager'}" data-off-text="{l s='OFF' mod='advancedvatmanager'}">
+            {if !$company_validation_address}<small>{l s='Option disabled because company address validation option is disabled' mod='advancedvatmanager'}</small>{/if}
         </div>
         <button type="button" name="submit_scan" class="btn btn-default"><span><i class="far fa-check-circle"></i> {l s='Start scan' mod='advancedvatmanager'}</span></button>
         <button type="button" name="submit_cancel_scan" class="btn btn-danger"><span><i class="far fa-times-circle"></i> {l s='Cancel' mod='advancedvatmanager'}</span></button>

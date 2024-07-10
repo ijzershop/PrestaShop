@@ -1,10 +1,11 @@
 <?php
 /**
- * 2017-2023 liewebs - Prestashop module developers and website designers.
+ * 2017-2024 liewebs - prestashop module developers and website designers.
  *
  * NOTICE OF LICENSE
  *  @author    liewebs <info@liewebs.com>
- *  @copyright 2017-2023 www.liewebs.com - Liewebs
+ *  @copyright 2017-2024 www.liewebs.com - Liewebs
+ *  @license See "License registration" section
  * 	@module Advanced VAT Manager
  */
 
@@ -18,13 +19,22 @@ class AdminVATValidationController extends ModuleAdminController
 {
     public function __construct()
     {
-        $this->controller_name = 'AdminVATValidationController';
+        $this->controller_name = 'AdminVATValidation';
         parent::__construct();
     }
     
     public function initContent()
     {
         $this->ajax = true;
+        //License feature
+        if (!AdvancedVatManager::$prestashopAddons) {
+            $APIresponse = AdvancedVatManager::checkIsLicenseRegistered();
+            if ($APIresponse != 'localhost') {    
+                if (!$APIresponse || (isset($APIresponse->success) && $APIresponse->success === false)) {
+                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules', false) . '&configure=advancedvatmanager&tab_module=others&module_name=advancedvatmanager&token=' . Tools::getAdminTokenLite('AdminModules'));   
+                }
+            }
+        }
         parent::initContent();
     }
     
@@ -41,24 +51,33 @@ class AdminVATValidationController extends ModuleAdminController
     {
         if (Tools::getValue('token')) {
             $vat_number = new ValidationEngine(Tools::getValue('vat_number'));
-            $result = $vat_number->VATValidationProcess(Tools::getValue('country'), Tools::getValue('id_customer'), Tools::getValue('address'), Tools::getValue('company'));               
-            $message = $vat_number->getMessage();
-            $company = true;
-            if (ValidationEngine::$skip_validation_process) {
-                 die(json_encode(array('success'=> true)));
+            $company_address = array(
+                'address1' => Tools::getValue('address1'),
+                'address2' => Tools::getValue('address2'),
+                'city' => Tools::getValue('city'),
+                'postcode' => Tools::getValue('postcode'),
+            );
+            $result = $vat_number->VATValidationProcess(Tools::getValue('country'), Tools::getValue('id_customer'), Tools::getValue('address'), Tools::getValue('company'), $company_address);            
+            if (!ValidationEngine::$skip_validation_process) {
+                if (ValidationEngine::getVATValidation()) {
+                    if (Configuration::get('ADVANCEDVATMANAGER_COMPANY_ADDRESS_VALIDATION') && ValidationEngine::$companyAddress_valid == 0) {
+                        ValidationEngine::setVATValidation(false);
+                    } 
+                    if (Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION') && ValidationEngine::$company_valid == 0)
+                    {
+                        ValidationEngine::setVATValidation(false);
+                    }
+                }
+                else {
+                    if (Configuration::get('ADVANCEDVATMANAGER_ALLOW_REGISTERADDRESS_VATINVALID') == 1) {
+                        die(json_encode(array('success'=> true, 'message' => array_merge(ValidationEngine::$addressValidationError, ValidationEngine::$fieldValidationError))));    
+                    }
+                }
+                die(json_encode(array('success'=> ValidationEngine::getVATValidation(), 'message' => array_merge(ValidationEngine::$addressValidationError, ValidationEngine::$fieldValidationError))));     
             }
-            if (Configuration::get('ADVANCEDVATMANAGER_COMPANY_VALIDATION') == 1 && ValidationEngine::getVATValidation() && ValidationEngine::$company_valid == 0) {
-                $company = false;
-                $result = false; 
+            else {
+                die(json_encode(array('success'=> true)));  
             }
-            else if (!ValidationEngine::getVATValidation() && ValidationEngine::$skip_validation_process === false) {
-                $result = false;       
-            }
-            else if (!ValidationEngine::getVATValidation() && ValidationEngine::$skip_validation_process === true) {
-                $result = true; 
-            }
-            
-            die(json_encode(array('message'=> $message, 'success'=> $result, 'company'=> $company)));
         }
         else {
             die('Token is not valid!');

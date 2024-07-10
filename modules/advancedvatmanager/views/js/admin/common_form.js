@@ -1,9 +1,10 @@
 /**
- * 2017-2023 liewebs - Prestashop module developers and website designers.
+ * 2017-2024 liewebs - prestashop module developers and website designers.
  *
  * NOTICE OF LICENSE
  *  @author    liewebs <info@liewebs.com>
- *  @copyright 2017-2023 www.liewebs.com - Liewebs
+ *  @copyright 2017-2024 www.liewebs.com - Liewebs
+ *  @license See "License registration" section
  * 	@module Advanced VAT Manager
  */
 
@@ -50,7 +51,7 @@ $(document).ready(function(){
     }); 
     $('#ADVANCEDVATMANAGER_CRON_SENDEMAIL_EMPTY_COMPANY_on').click(function() {
         $('#ADVANCEDVATMANAGER_CRON_AUTOINSERT_COMPANY_off').click(); 
-    });   
+    }); 
 });
 (function() {
     'use strict';

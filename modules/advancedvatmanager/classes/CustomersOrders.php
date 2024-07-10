@@ -1,10 +1,11 @@
 <?php
 /**
- * 2017-2023 liewebs - Prestashop module developers and website designers.
+ * 2017-2024 liewebs - prestashop module developers and website designers.
  *
  * NOTICE OF LICENSE
  *  @author    liewebs <info@liewebs.com>
- *  @copyright 2017-2023 www.liewebs.com - Liewebs
+ *  @copyright 2017-2024 www.liewebs.com - Liewebs
+ *  @license See "License registration" section
  * 	@module Advanced VAT Manager
  */
  
@@ -22,6 +23,7 @@ class CustomersOrders extends ObjectModel
     public $notax;
     public $brexit;
     public $voec;
+    public $client_type;
     public $invoice;
     public $date_upd;
     public $date_add;
@@ -37,6 +39,7 @@ class CustomersOrders extends ObjectModel
             'notax' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
             'brexit' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'allow_null' =>true, 'required' => false),
             'voec' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'allow_null' =>true, 'required' => false),
+            'client_type' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'required' => false),
             'invoice' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'allow_null' =>true, 'required' => false),
             'date_upd' => array('type' => self::TYPE_DATE,'validate' => 'isDate','size' => 40,'copy_post' => false),
             'date_add' => array('type' => self::TYPE_DATE,'validate' => 'isDate','size' => 40,'copy_post' => false)
@@ -66,7 +69,7 @@ class CustomersOrders extends ObjectModel
      * @param mixed $brexit
      * @return
      */
-    public function addCustomersOrders($order, $id_customer, $notax, $invoice, $brexit, $voec)
+    public function addCustomersOrders($order, $id_customer, $notax, $invoice, $brexit, $voec, $client_type)
     {    
         // Checks if element exists to update it.
         if (self::checkCustomerOrderExists($id_customer, $order->id)) {
@@ -79,6 +82,7 @@ class CustomersOrders extends ObjectModel
             $update->invoice = $invoice;
             $update->brexit = $brexit;
             $update->voec = $voec;
+            $update->client_type = $client_type;
             return $update->update();
         }
         // Insert new elements
@@ -91,6 +95,7 @@ class CustomersOrders extends ObjectModel
             $insert->invoice = $invoice;
             $insert->brexit = $brexit;
             $insert->voec = $voec;
+            $insert->client_type = $client_type;
             return $insert->add();
         }
     }
@@ -282,7 +287,7 @@ class CustomersOrders extends ObjectModel
         }
         $sql = 'SELECT SUM('.($withTax?'ord.total_paid':'ord.total_paid_tax_excl').') FROM `' . _DB_PREFIX_ . 'advancedvatmanager_orders` aor LEFT JOIN `' . _DB_PREFIX_ . 'orders` ord ON (ord.`id_order` = aor.`id_order`) WHERE '.($from?'aor.date_add >= "'.$from.'" AND ':'').($to?'aor.date_add <= "'.$to.'" AND ':'').'aor.brexit = 1 AND aor.invoice != 0'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'ord');     
         
-        $result = (int)Db::getInstance()->getValue($sql);
+        $result = (float)Db::getInstance()->getValue($sql);
         return $result;
     }
     
@@ -303,18 +308,20 @@ class CustomersOrders extends ObjectModel
         }
         $sql = 'SELECT SUM(ord.total_paid) FROM `' . _DB_PREFIX_ . 'advancedvatmanager_orders` aor LEFT JOIN `' . _DB_PREFIX_ . 'orders` ord ON (ord.`id_order` = aor.`id_order`) WHERE '.($from?'aor.date_add >= "'.$from.'" AND ':'').($to?'aor.date_add <= "'.$to.'" AND ':'').'aor.notax = 1 AND aor.invoice != 0'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'ord');     
         
-        $result = (int)Db::getInstance()->getValue($sql);
+        $result = (float)Db::getInstance()->getValue($sql);
         return $result;
     }
     
     /**
      * CustomersOrders::getTotalIntracommunity()
      * Gets total paid in orders from intracommunity operations
+     * @params string $clientType (consumer or business)
+     * @param bool $withTax
      * @param mixed $from
      * @param mixed $to
      * @return
      */
-    public static function getTotalIntracommunity($withTax = true, $from = null, $to = null)
+    public static function getTotalIntracommunity($clientType = null, $withTax = true, $from = null, $to = null)
     {
         if ($from){
             $from = date('Y-m-d H:i:s',strtotime(str_replace('/', '-', $from)));  
@@ -322,12 +329,11 @@ class CustomersOrders extends ObjectModel
         if ($to) {
             $to = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $to)));    
         }
-        $sql = 'SELECT SUM('.($withTax?'ord.total_paid':'ord.total_paid_tax_excl').') FROM `' . _DB_PREFIX_ . 'advancedvatmanager_orders` aor LEFT JOIN `' . _DB_PREFIX_ . 'orders` ord ON (ord.`id_order` = aor.`id_order`) WHERE '.($from?'aor.date_add >= "'.$from.'" AND ':'').($to?'aor.date_add <= "'.$to.'" AND ':'').'aor.brexit = 0 AND aor.voec = 0 AND aor.invoice != 0'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'ord');     
+        $sql = 'SELECT SUM('.($withTax?'ord.total_paid':'ord.total_paid_tax_excl').') FROM `' . _DB_PREFIX_ . 'advancedvatmanager_orders` aor LEFT JOIN `' . _DB_PREFIX_ . 'orders` ord ON (ord.`id_order` = aor.`id_order`) WHERE '.($from?'aor.date_add >= "'.$from.'" AND ':'').($to?'aor.date_add <= "'.$to.'" AND ':'').($clientType?'aor.client_type = "'.pSQL($clientType).'" AND ':'').'aor.brexit = 0 AND aor.voec = 0 AND aor.invoice != 0'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'ord');     
         
-        $result = (int)Db::getInstance()->getValue($sql);
+        $result = (float)Db::getInstance()->getValue($sql);
         return $result;
     }
-    
     
     /**
      * CustomersOrders::getTotalVOEC()
@@ -346,7 +352,7 @@ class CustomersOrders extends ObjectModel
         }
         $sql = 'SELECT SUM('.($withTax?'ord.total_paid':'ord.total_paid_tax_excl').')  FROM `' . _DB_PREFIX_ . 'advancedvatmanager_orders` aor LEFT JOIN `' . _DB_PREFIX_ . 'orders` ord ON (ord.`id_order` = aor.`id_order`) WHERE '.($from?'aor.date_add >= "'.$from.'" AND ':'').($to?'aor.date_add <= "'.$to.'" AND ':'').'aor.voec = 1 AND aor.invoice != 0'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'ord');     
         
-        $result = (int)Db::getInstance()->getValue($sql);
+        $result = (float)Db::getInstance()->getValue($sql);
         return $result;
     }
 }

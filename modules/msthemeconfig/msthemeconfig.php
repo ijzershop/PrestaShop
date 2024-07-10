@@ -560,7 +560,7 @@ class MsThemeConfig extends Module
     public function hookDisplayHome($params):string
     {
         $hookClass = $this->getModernHooks();
-        return $hookClass->hookDisplayHome($params);
+        return $hookClass->hookDisplayHome();
     }
     /**
      * @param $params
@@ -571,7 +571,7 @@ class MsThemeConfig extends Module
     public function hookDisplayFooter($params): void
     {
         $hookClass = $this->getModernHooks();
-        $hookClass->hookDisplayFooter($params);
+        $hookClass->hookDisplayFooter();
     }
     /**
      * @param $params
@@ -594,7 +594,7 @@ class MsThemeConfig extends Module
     public function hookDisplayHeader($params): void
     {
         $hookClass = $this->getModernHooks();
-        $hookClass->hookDisplayHeader($params);
+        $hookClass->hookDisplayHeader();
     }
 
     /**
@@ -754,7 +754,7 @@ class MsThemeConfig extends Module
     public function hookActionAddressFormBuilderModifier($params): void
     {
         $hookClass = $this->getModernHooks();
-        $hookClass->hookActionAddressFormBuilderModifier($params);
+        $hookClass->hookActionAddressFormBuilderModifier();
     }
 
     /**
@@ -775,7 +775,7 @@ class MsThemeConfig extends Module
     public function hookActionFrontControllerSetMedia($params)
     {
         $hookClass = $this->getModernHooks();
-        return $hookClass->hookActionFrontControllerSetMedia($params);
+        return $hookClass->hookActionFrontControllerSetMedia();
     }
 
 
@@ -829,7 +829,7 @@ class MsThemeConfig extends Module
     public function hookDisplayAdditionalCategoryFields($params): void
     {
         $hookClass = $this->getModernHooks();
-        $hookClass->hookDisplayAdditionalCategoryFields($params);
+        $hookClass->hookDisplayAdditionalCategoryFields();
     }
 
     /**
@@ -869,7 +869,7 @@ class MsThemeConfig extends Module
     public function hookDisplayAdditionalRootCategoryFields($params): void
     {
         $hookClass = $this->getModernHooks();
-        $hookClass->hookDisplayAdditionalRootCategoryFields($params);
+        $hookClass->hookDisplayAdditionalRootCategoryFields();
     }
 
     /**
@@ -923,7 +923,7 @@ class MsThemeConfig extends Module
     public function hookAdditionalCustomerFields($params): void
     {
         $hookClass = $this->getModernHooks();
-        $hookClass->hookAdditionalCustomerFields($params);
+        $hookClass->hookAdditionalCustomerFields();
     }
 
 

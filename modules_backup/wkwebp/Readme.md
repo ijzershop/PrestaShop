@@ -1,1 +1,0 @@
-- Module Version: 4.1.3 compatible with PrestaShop V1.7.x.x and V8.x.x

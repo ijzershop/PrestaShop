@@ -1,1 +1,0 @@
-<div class="modal" id="dynamicproduct-modal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="dynamicproduct-modal"></div>

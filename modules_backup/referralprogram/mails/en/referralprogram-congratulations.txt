@@ -1,7 +1,0 @@
-{shop_url}
-
-Your referred friend {sponsored_firstname} {sponsored_lastname} has placed his/her first order on [> {shop_name}]({shop_url})!
-
-We are pleased to offer you a voucher worth {discount_display} (VOUCHER # {discount_name}) that you can use on your next order.
-
-ijzershop.localÂ |Â Ceresweg 1Â |Â 8938BG LeeuwardenÂ |Â 0900-2502500Â Â De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

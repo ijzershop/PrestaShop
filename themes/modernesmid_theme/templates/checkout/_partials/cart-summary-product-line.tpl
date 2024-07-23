@@ -38,15 +38,12 @@
 
   {block name='cart_summary_product_line'}
   <table class="w-100">
-    <tr><td rowspan="3" class="" style="width: 50px;padding-right:12px; ">
+    <tr><td rowspan="3" class="" style="width: 50px;vertical-align: middle;text-align: center; ">
         <span class="product-quantity" style="font-size:.8rem;font-weight:bold;border-radius: 50%;background-color: #3b56ad;padding:3px;color:#fff;display:inline-block;
    height:30px;
    line-height:23px;
    min-width:30px;
-   text-align: center;
-position: absolute;
-  left: 35px;
-  top: 5px;">
+   text-align: center;">
           {$product.quantity}</span>
 
              <a href="{$product.url}" title="{$product.name}">

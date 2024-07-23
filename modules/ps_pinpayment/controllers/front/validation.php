@@ -49,9 +49,10 @@ class Ps_PinpaymentValidationModuleFrontController extends ModuleFrontController
 			Tools::redirect('index.php?controller=order&step=1');
 
 		$currency = $this->context->currency;
-		$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
+        $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
+//        dd('test', $total, $cart->id, Configuration::get('BANK_PIN_COMPLETE_STATE', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id), $total, 'PIN Betaling', NULL, array(), (int)$currency->id, false, $customer->secure_key, $this->context->shop->id);
 
-		$this->module->validateOrder($cart->id, Configuration::get('BANK_PIN_COMPLETE_STATE'), $total, 'PIN Betaling', NULL, array(), (int)$currency->id, false, $customer->secure_key);
+        $this->module->validateOrder($cart->id, Configuration::get('BANK_PIN_COMPLETE_STATE', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id), $total, 'PIN Betaling', NULL, array(), (int)$currency->id, false, $customer->secure_key, $this->context->shop);
 		Tools::redirect('index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
 	}
 }

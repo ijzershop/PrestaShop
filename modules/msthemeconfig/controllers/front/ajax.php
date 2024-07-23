@@ -176,6 +176,11 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             return $this->_runKoopmanDayClosing();
         }
 
+        if (Tools::getValue('method') == 'set-viewed-be-vat-msg') {
+            Context::getContext()->cookie->accepted_vat_be = true;
+            return true;
+        }
+
         if (Tools::getValue('action') == 'fetch_products_for_retour') {
             $idOrder = $_POST['id_order'];
             $postcode = $_POST['postalcode'];

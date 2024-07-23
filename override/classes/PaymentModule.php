@@ -21,6 +21,7 @@ class PaymentModule extends PaymentModuleCore
         $this->context = Context::getContext();
         $this->context->cart = new Cart((int) $id_cart);
         $this->context->customer = new Customer((int) $this->context->cart->id_customer);
+        // The tax cart is loaded before the customer so re-cache the tax calculation method
         $this->context->cart->setTaxCalculationMethod();
         $this->context->language = $this->context->cart->getAssociatedLanguage();
         $this->context->shop = ($shop ? $shop : new Shop((int) $this->context->cart->id_shop));
@@ -33,13 +34,21 @@ class PaymentModule extends PaymentModuleCore
         $order_status = new OrderState((int) $id_order_state, (int) $this->context->language->id);
         if (!Validate::isLoadedObject($order_status)) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status cannot be loaded', 3, null, 'Cart', (int) $id_cart, true);
-            throw new PrestaShopException('Can\'t load Order status');
+
+            throw new PrestaShopException('Error processing order. Can\'t load Order status.');
         }
+
+
+
         if (!$this->active) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Module is not active', 3, null, 'Cart', (int) $id_cart, true);
-            die(Tools::displayError());
+            die(Tools::displayError('Error processing order. Payment module is not active.'));
         }
+
+        // Make sure cart is loaded and not related to an existing order
         $cart_is_loaded = Validate::isLoadedObject($this->context->cart);
+
+
         if (!$cart_is_loaded || $this->context->cart->OrderExists()) {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', [], 'Admin.Payment.Notification');
             PrestaShopLogger::addLog($error, 4, 1, 'Cart', (int) ($this->context->cart->id));
@@ -48,6 +57,8 @@ class PaymentModule extends PaymentModuleCore
         $delivery_option_list = $this->context->cart->getDeliveryOptionList();
         $package_list = $this->context->cart->getPackageList();
         $cart_delivery_option = $this->context->cart->getDeliveryOption();
+
+        // If some delivery options are not defined, or not valid, use the first valid option
         foreach ($delivery_option_list as $id_address => $package) {
             if (!isset($cart_delivery_option[$id_address]) || !array_key_exists($cart_delivery_option[$id_address], $package)) {
                 foreach ($package as $key => $val) {
@@ -58,6 +69,7 @@ class PaymentModule extends PaymentModuleCore
         }
         $order_list = [];
         $order_detail_list = [];
+
         if ($order_reference === null) {
             do {
                 $reference = Order::generateReference();
@@ -65,6 +77,8 @@ class PaymentModule extends PaymentModuleCore
         } else {
             $reference = $order_reference;
         }
+
+
         $this->currentOrderReference = $reference;
         $cart_total_paid = (float) Tools::ps_round(
             (float) $this->context->cart->getOrderTotal(true, Cart::BOTH),
@@ -73,11 +87,14 @@ class PaymentModule extends PaymentModuleCore
         foreach ($cart_delivery_option as $id_address => $key_carriers) {
             foreach ($delivery_option_list[$id_address][$key_carriers]['carrier_list'] as $id_carrier => $data) {
                 foreach ($data['package_list'] as $id_package) {
+                    // Rewrite the id_warehouse
                     $package_list[$id_address][$id_package]['id_warehouse'] = (int) $this->context->cart->getPackageIdWarehouse($package_list[$id_address][$id_package], (int) $id_carrier);
                     $package_list[$id_address][$id_package]['id_carrier'] = $id_carrier;
                 }
             }
         }
+
+        // Make sure CartRule caches are empty
         CartRule::cleanCache();
         $cart_rules = $this->context->cart->getCartRules();
         foreach ($cart_rules as $cart_rule) {
@@ -95,6 +112,11 @@ class PaymentModule extends PaymentModuleCore
                 }
             }
         }
+
+        // Amount paid by customer is not the right one -> Status = payment error
+        // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
+        // if ($order->total_paid != $order->total_paid_real)
+        // We use number_format to convert the numbers to strings and strict inequality to compare them to avoid auto reconversions to numbers in PHP < 8.0
         $comp_precision = Context::getContext()->getComputingPrecision();
         if ($order_status->logable && (number_format($cart_total_paid, $comp_precision) !== number_format($amount_paid, $comp_precision))) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Total paid amount does not match cart total', 3, null, 'Cart', (int) $id_cart, true);
@@ -126,6 +148,8 @@ class PaymentModule extends PaymentModuleCore
                 $order_detail_list[] = $orderData['orderDetail'];
             }
         }
+
+        // The country can only change if the address used for the calculation is the delivery address, and if multi-shipping is activated
         if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery' && isset($context_country)) {
             $this->context->country = $context_country;
         }
@@ -136,7 +160,12 @@ class PaymentModule extends PaymentModuleCore
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Payment is about to be added', 1, null, 'Cart', (int) $id_cart, true);
         }
+
+        // Register Payment only if the order status validate the order
         if ($order_status->logable) {
+            // $order is the last order loop in the foreach
+            // The method addOrderPayment of the class Order make a create a paymentOrder
+            // linked to the order reference and not to the order id
             if (isset($extra_vars['transaction_id'])) {
                 $transaction_id = $extra_vars['transaction_id'];
             } else {
@@ -147,9 +176,14 @@ class PaymentModule extends PaymentModuleCore
                 throw new PrestaShopException('Can\'t save Order Payment');
             }
         }
+
+        // Next !
         $products = $this->context->cart->getProducts();
+
+        // Make sure CartRule caches are empty
         CartRule::cleanCache();
         foreach ($order_detail_list as $key => $order_detail) {
+            /** @var Order $order */
             $order = $order_list[$key];
             if (!isset($order->id)) {
                 $error = $this->trans('Order creation failed', [], 'Admin.Payment.Notification');
@@ -159,6 +193,7 @@ class PaymentModule extends PaymentModuleCore
             if (!$secure_key) {
                 $message .= '<br />' . $this->trans('Warning: the secure key is empty, check your payment account before validation', [], 'Admin.Payment.Notification');
             }
+            // Optional message to attach to this order
             if (!empty($message)) {
                 $message = strip_tags($message, '<br>');
                 if (Validate::isCleanHtml($message)) {
@@ -174,6 +209,12 @@ class PaymentModule extends PaymentModuleCore
                     $msg->add();
                 }
             }
+
+            // Insert new Order detail list using cart for the current order
+            //$orderDetail = new OrderDetail(null, null, $this->context);
+            //$orderDetail->createList($order, $this->context->cart, $id_order_state);
+
+            // Construct order detail table for the email
             $virtual_product = true;
             $product_var_tpl_list = [];
             foreach ($order->product_list as $product) {
@@ -218,6 +259,7 @@ class PaymentModule extends PaymentModuleCore
                     }
                 }
                 $product_var_tpl_list[] = $product_var_tpl;
+                // Check if is not a virtual product for the displaying of shipping
                 if (!$product['is_virtual']) {
                     $virtual_product &= false;
                 }
@@ -244,11 +286,15 @@ class PaymentModule extends PaymentModuleCore
                 $cart_rules_list_txt = $this->getEmailTemplateContent('order_conf_cart_rules.txt', Mail::TYPE_TEXT, $cart_rules_list);
                 $cart_rules_list_html = $this->getEmailTemplateContent('order_conf_cart_rules.tpl', Mail::TYPE_HTML, $cart_rules_list);
             }
+
+            // Specify order id for message
             $old_message = Message::getMessageByCartId((int) $this->context->cart->id);
             if ($old_message && !$old_message['private']) {
                 $update_message = new Message((int) $old_message['id_message']);
                 $update_message->id_order = (int) $order->id;
                 $update_message->update();
+
+                // Add this message in the customer thread
                 $customer_thread = new CustomerThread();
                 $customer_thread->id_contact = 0;
                 $customer_thread->id_customer = (int) $order->id_customer;
@@ -271,6 +317,8 @@ class PaymentModule extends PaymentModuleCore
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Hook validateOrder is about to be called', 1, null, 'Cart', (int) $id_cart, true);
             }
+
+            // Hook validate order
             Hook::exec('actionValidateOrder', [
                 'cart' => $this->context->cart,
                 'order' => $order,
@@ -294,9 +342,11 @@ class PaymentModule extends PaymentModuleCore
                 $new_history->addWithemail(true, $extra_vars);
             }
 
+            // Switch to back order if needed
             if (Configuration::get('PS_STOCK_MANAGEMENT') &&
+                    Configuration::get('PS_ENABLE_BACKORDER_STATUS') &&
                     ($order_detail->getStockState() ||
-                    $order_detail->product_quantity_in_stock < 0) && StockAvailable::outOfStock($order_detail->id_product)) {
+                    $order_detail->product_quantity_in_stock < 0) && StockAvailable::outOfStock($order_detail->id_product, $this->context->shop->id)) {
                 $history = new OrderHistory();
                 $history->id_order = (int) $order->id;
                 $history->changeIdOrderState(
@@ -307,7 +357,11 @@ class PaymentModule extends PaymentModuleCore
                 $history->addWithemail();
             }
             unset($order_detail);
+
+            // Order is reloaded because the status just changed
             $order = new Order((int) $order->id);
+
+            // Send an e-mail to customer (one order = one email)
             if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && $this->context->customer->id) {
                 $invoice = new Address((int) $order->id_address_invoice);
                 $delivery = new Address((int) $order->id_address_delivery);
@@ -315,6 +369,8 @@ class PaymentModule extends PaymentModuleCore
                 $invoice_state = $invoice->id_state ? new State((int) $invoice->id_state) : false;
                 $carrier = $order->id_carrier ? new Carrier($order->id_carrier) : false;
                 $orderLanguage = new Language((int) $order->id_lang);
+
+                // Join PDF invoice
                 if ((int) Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number) {
                     $currentLanguage = $this->context->language;
                     $this->context->language = $orderLanguage;
@@ -323,7 +379,7 @@ class PaymentModule extends PaymentModuleCore
                     Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
                     $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
                     $file_attachement['content'] = $pdf->render(false);
-                    $file_attachement['name'] = $pdf->filename;
+                    $file_attachement['name'] = $pdf->getFilename();
                     $file_attachement['mime'] = 'application/pdf';
                     $this->context->language = $currentLanguage;
                     $this->context->getTranslator()->setLocale($currentLanguage->locale);
@@ -381,10 +437,12 @@ class PaymentModule extends PaymentModuleCore
                         '{discounts}' => $cart_rules_list_html,
                         '{discounts_txt}' => $cart_rules_list_txt,
                         '{total_paid}' => Tools::getContextLocale($this->context)->formatPrice($order->total_paid, $this->context->currency->iso_code),
+                        '{total_paid_tax_excl}' => Tools::getContextLocale($this->context)->formatPrice($order->total_paid_tax_excl, $this->context->currency->iso_code),
                         '{total_shipping_tax_excl}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_excl, $this->context->currency->iso_code),
                         '{total_shipping_tax_incl}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_incl, $this->context->currency->iso_code),
                         '{total_tax_paid}' => Tools::getContextLocale($this->context)->formatPrice(($order->total_paid_tax_incl - $order->total_paid_tax_excl), $this->context->currency->iso_code),
                         '{recycled_packaging_label}' => $order->recyclable ? $this->trans('Yes', [], 'Shop.Theme.Global') : $this->trans('No', [], 'Shop.Theme.Global'),
+                        '{message}' => $order->getFirstMessage(),
                     ];
                     if (Product::getTaxCalculationMethod() == PS_TAX_EXC) {
                         $data = array_merge($data, [
@@ -426,15 +484,23 @@ class PaymentModule extends PaymentModuleCore
                     );
                 }
             }
+
+            // updates stock in shops
             if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                 $product_list = $order->getProducts();
+
                 foreach ($product_list as $product) {
+
+                    // if the available quantities depends on the physical stock
                     if (StockAvailable::dependsOnStock($product['product_id'])) {
+                        // synchronizes
                         StockAvailable::synchronize($product['product_id'], $order->id_shop);
                     }
                 }
             }
             $order->updateOrderDetailTax();
+
+            // sync all stock
             (new StockManager())->updatePhysicalProductQuantity(
                 (int) $order->id_shop,
                 (int) Configuration::get('PS_OS_ERROR'),
@@ -443,6 +509,8 @@ class PaymentModule extends PaymentModuleCore
                 (int) $order->id
             );
         } // End foreach $order_detail_list
+
+        // Use the last order as currentOrder
         if (isset($order) && $order->id) {
             $this->currentOrder = (int) $order->id;
         }
@@ -460,6 +528,8 @@ class PaymentModule extends PaymentModuleCore
                 'orderStatus' => new OrderState(isset($order) ? $order->current_state : null),
             ]
         );
+
+
         return true;
     }
     protected function createOrderFromCart(

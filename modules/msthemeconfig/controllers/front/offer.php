@@ -1,9 +1,5 @@
 <?php
-
-
-
 use MsThemeConfig\Class\Offer;
-use PrestaShop\PrestaShop\Adapter\Entity\ModuleFrontController;
 use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 
@@ -76,7 +72,6 @@ class MsThemeConfigOfferModuleFrontController extends ModuleFrontController {
         if(!$this->offer){
             Tools::redirect('index.php');
         }
-
 
         $this->context->smarty->assign([
             'robots_follow' => 'nofollow',

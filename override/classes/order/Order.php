@@ -93,25 +93,26 @@ public $shipping_number;
 
     public static function generateReference()
     {
+        $context = Context::getContext();
         if (! Module::isEnabled('gmnumeric')) {
             return parent::generateReference();
         }
-        $isRandom = Configuration::get('GMNUMERIC_RANDOM');
-        $prefix = Configuration::get('GMNUMERIC_PREFIX');
+        $isRandom = Configuration::get('GMNUMERIC_RANDOM', $context->language->id, $context->shop->id_shop_group, $context->shop->id);
+        $prefix = Configuration::get('GMNUMERIC_PREFIX', $context->language->id, $context->shop->id_shop_group, $context->shop->id);
         $prefixLength = strlen($prefix);
         $restLength = 9 - $prefixLength;
 
         if ($isRandom) {
             $reference = Tools::passwdGen($restLength, 'NO_NUMERIC');
         } else {
-            $query = 'SELECT `reference` FROM '._DB_PREFIX_.'orders ORDER BY `id_order` DESC';
+            $query = 'SELECT `reference` FROM '._DB_PREFIX_.'orders WHERE `id_shop` = '.Context::getContext()->shop->id.' ORDER BY `id_order` DESC';
 
             $previousOrderId = Db::getInstance()->getValue($query);
 
-            $prefix = Configuration::get('GMNUMERIC_PREFIX');
+            $prefix = Configuration::get('GMNUMERIC_PREFIX', $context->language->id, $context->shop->id_shop_group, $context->shop->id);
             $nextOrderId = (int) str_replace($prefix, '', $previousOrderId) + 1;
 
-            $zeros = Configuration::get('GMNUMERIC_ZEROS');
+            $zeros = Configuration::get('GMNUMERIC_ZEROS', $context->language->id, $context->shop->id_shop_group, $context->shop->id);
             if ($zeros == 'on') {
                 $reference = sprintf('%0'.$restLength.'d', $nextOrderId);
             } else {

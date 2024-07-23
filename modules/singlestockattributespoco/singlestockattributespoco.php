@@ -344,32 +344,58 @@ class SingleStockAttributesPoco extends Module
             if (Configuration::get('PS_STOCK_MANAGEMENT') != 1) {
                 continue;
             }
+            //Check if is packedProduct
+            if(Pack::isPack((int)$product['id_product'])){
+                $packedItems = Pack::getItems($product['id_product'], (int) Configuration::get('PS_LANG_DEFAULT'));
+                foreach ($packedItems as $productItem) {
 
-            if (!$this->useSSA($product['id_product'])) {
-                continue;
-            }
 
-            $combinations = $this->getProductCombinationIDs($product['id_product']);
 
-            if (!$combinations) {
-                continue;
-            }
 
-            foreach ($combinations as $combination) {
-                if ($combination['id_product_attribute'] == $product['id_product_attribute']) {
+                    if (!$this->useSSA($productItem->id)) {
+                        continue;
+                    }
+
+
+                    $combinations = $this->getProductCombinationIDs($productItem->id);
+                    if (!$combinations) {
+                        continue;
+                    }
+                    foreach ($combinations as $combination) {
+                        if ($combination['id_product_attribute'] == $productItem->id_pack_product_attribute) {
+                            continue;
+                        }
+
+                        $current_stock = StockAvailable::getQuantityAvailableByProduct($productItem->id, $combination['id_product_attribute']);
+                        $this->removeStock(new Product($productItem->id), $combination['id_product_attribute'], Context::getContext()->shop->id, ($current_stock - ((int)$productItem->pack_quantity*(int)$product['cart_quantity'])));
+                    }
+                }
+            } else {
+                if (!$this->useSSA($product['id_product'])) {
                     continue;
                 }
 
-                $current_stock = StockAvailable::getQuantityAvailableByProduct($product['id_product'], $combination['id_product_attribute'], Context::getContext()->shop->id);
+                $combinations = $this->getProductCombinationIDs($product['id_product']);
 
-                $this->removeStock(new Product($product['id_product']), $combination['id_product_attribute'], Context::getContext()->shop->id, ($current_stock - $product['cart_quantity']));
+                if (!$combinations) {
+                    continue;
+                }
+
+                foreach ($combinations as $combination) {
+                    if ($combination['id_product_attribute'] == $product['id_product_attribute']) {
+                        continue;
+                    }
+
+                    $current_stock = StockAvailable::getQuantityAvailableByProduct($product['id_product'], $combination['id_product_attribute']);
+                    $this->removeStock(new Product($product['id_product']), $combination['id_product_attribute'], Context::getContext()->shop->id, ($current_stock - $product['cart_quantity']));
+                }
             }
         }
     }
 
     public function removeStock($product, $id_ac, $id_shop, $stock)
     {
-        StockAvailable::setQuantity((int)$product->id, (int)$id_ac, $stock, $id_shop);
+        StockAvailable::setQuantity((int)$product->id, (int)$id_ac, $stock, $id_shop, true);
     }
 
     public function addStock($product, $id_product_attribute, $stock)
@@ -399,6 +425,7 @@ class SingleStockAttributesPoco extends Module
 
     public function updateStock($id_product, $id_product_attribute, $quantity, $decrease = true)
     {
+
         $combinations = $this->getCombinationsForStockUpdate($id_product);
         foreach ($combinations as $combination) {
             if ($combination['id_product_attribute'] == $id_product_attribute) {
@@ -452,7 +479,7 @@ class SingleStockAttributesPoco extends Module
 
         $sql .=' AND cp.`id_customization` = '.(int)$id_customization.'
             AND cp.`id_cart` = '.(int)$this->context->cart->id;
-        if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
+        if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->context->cart->isMultiAddressDelivery()) {
             $sql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
         }
 

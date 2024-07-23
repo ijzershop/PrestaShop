@@ -329,16 +329,21 @@ class Product extends ProductCore {
         if ($id_oi_offer == null || !is_numeric($id_oi_offer)) {
             return array();
         }
+        $id_shop = Context::getContext()->shop->id;
+
         $query = 'SELECT p.*, product_shop.*, pl.* , m.`name` AS manufacturer_name, s.`name` AS supplier_name FROM `' . _DB_PREFIX_ . 'product` as `p`
                     '.Shop::addSqlAssociation('product', 'p').'
                     LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` AS `pl` ON `p`.`id_product` = `pl`.`id_product`
                     LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
                     LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (s.`id_supplier` = p.`id_supplier`)
                     WHERE `p`.`id_oi_offer` = ' . $id_oi_offer . '
-                    AND `pl`.`id_lang` = ' . $id_lang . ';';
+                    AND `pl`.`id_lang` = ' . $id_lang . ' GROUP BY `p`.`id_product`;';
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
         $results_array = array();
-        foreach ($result as $row) {
+        foreach ($result as $key => $row) {
+        if($row['id_shop'] !== $id_shop){
+            unset($result[$key]);
+        }
             $row['price_tax_inc'] = Product::getPriceStatic($row['id_product'], true, null, 2);
             $row['price_tax_exc'] = Product::getPriceStatic($row['id_product'], false, null, 2);
             $row['quantity'] = (int)StockAvailable::getQuantityAvailableByProduct($row['id_product'], null);

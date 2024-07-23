@@ -69,7 +69,33 @@
           </div>
         </div>
       </section>
+
+      <div class="modal" id="be-btw-msg" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-primary">Let op! Voor klanten uit België</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Ook vanuit belgië betaalt u altijd 21% btw.<br>
+                Aangezien wij uitsluitend aan particuliere klanten in België leveren,<br> wordt het BTW-bedrag ook in België door berekend.<br><br>
+                <strong>Het is daarom niet mogelijk om een factuur met 0% BTW te ontvangen.</strong>
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary w-100" data-dismiss="modal">OK, gelezen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
       <script>
+
+
         let required_error = "{l s='Verplicht veld' mod='msthemeconfig'}";
         let invalid_email = "{l s='Email is ongeldig' mod='msthemeconfig'}";
         let pwd_error = "{l s='(Minimaal vijf tekens)' mod='msthemeconfig'}";
@@ -108,6 +134,16 @@
 
 {block name='javascript_bottom'}
   {include file="_partials/javascript.tpl" javascript=$javascript.bottom}
+
+  <script type="text/javascript">
+    {if Context::getContext()->country->iso_code === 'BE' && !Context::getContext()->cookie->accepted_vat_be}
+      $('#be-btw-msg').modal('show');
+      $('#be-btw-msg').on('hide.bs.modal', function (e) {
+        // Set cookie data to show only once
+        $.get(postcodeApiUrl+"?method=set-viewed-be-vat-msg");
+      });
+    {/if}
+  </script>
 {/block}
 
 {block name='hook_before_body_closing_tag'}

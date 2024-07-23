@@ -2240,12 +2240,15 @@ main {
 }
 
 
+#cookiesModal{
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
 //Cookie check modal
 #cookiesModal .modal-dialog-centered{
   min-height: 100%;
 }
-@media only screen and (min-width: 768px){ #cookiesModal .w-47{width:47%;} }
-@media only screen and (max-width: 767px){ #cookiesModal .w-47{width: 100%; display: block; } .m-col-rev{ flex-direction: column-reverse; }}
+
 #cookiesModal .cookie-input {
   position: absolute;
   opacity: 0;
@@ -2274,7 +2277,7 @@ main {
   border-radius: 50%;
   transition: all .2s ease-in-out;
   margin-top: 3px;
-  background-color: white;
+  background-color: #ffffff!important;
   margin-left: 3px;
 }
 #cookiesModal input.cookie-input:checked + div.cookie-toggle .cookie-bubble {
@@ -2283,7 +2286,14 @@ main {
 #cookiesModal input.cookie-input:checked:not(:disabled) + div.cookie-toggle {
   background-color: var(--primary)!important;
 }
-
+#cookiesModal .modal-content{
+  max-height: 85vh;
+  overflow: auto;
+}
+#cookiesModal .modal-footer > a{
+  min-height: 40px!important;
+  margin: .2rem 0 !important;
+}
 
 //contactform-user-code-input
 .contactform-user-code-input{

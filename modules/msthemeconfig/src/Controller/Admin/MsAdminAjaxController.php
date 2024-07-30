@@ -98,10 +98,9 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             foreach ($items as $likes) {
                 $where .= ' AND (' . implode(' OR ', $likes) . ') ';
             }
-
             $sql->where($where);
         }
-        $where .= ' AND cl.`id_category` NOT IN (6,382) ';
+        $where .= ' AND cl.`id_category` NOT IN (6,382) '. Shop::addSqlRestriction();
 
         $sql->where($where);
 

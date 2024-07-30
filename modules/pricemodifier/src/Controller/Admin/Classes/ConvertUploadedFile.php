@@ -139,10 +139,10 @@ class ConvertUploadedFile
                         $sheetName = preg_replace(["/^([0-9]\s*-\s*)/", " /\s\s+/"], ["", " "], rtrim($sheet_name));
 
 
-                            $result = $this->processMcbXmlCells($worksheet, $sheetName);
-                            if (!is_null($result)) {
-                                array_push($new_data_array, $result);
-                            }
+                        $result = $this->processMcbXmlCells($worksheet, $sheetName);
+                        if (!is_null($result)) {
+                            array_push($new_data_array, $result);
+                        }
                     }
 
                     $data = $this->formatArray($new_data_array);
@@ -433,21 +433,21 @@ class ConvertUploadedFile
 
 
                 //MCB specifiek
-                 $arr['standaard_prijs'] = isset($sheet_array[$i]['standaard_prijs']) ? $sheet_array[$i]['standaard_prijs'] : '';
-                 $arr['prijs_aantal_1'] = isset($sheet_array[$i]['prijs_aantal_1']) ? $sheet_array[$i]['prijs_aantal_1'] : '';
-                 $arr['prijs_1'] = isset($sheet_array[$i]['prijs_1']) ? $sheet_array[$i]['prijs_1'] : '';
-                 $arr['prijs_aantal_2'] = isset($sheet_array[$i]['prijs_aantal_2']) ? $sheet_array[$i]['prijs_aantal_2'] : '';
-                 $arr['prijs_2'] = isset($sheet_array[$i]['prijs_2']) ? $sheet_array[$i]['prijs_2'] : '';
-                 $arr['prijs_aantal_3'] = isset($sheet_array[$i]['prijs_aantal_3']) ? $sheet_array[$i]['prijs_aantal_3'] : '';
-                 $arr['prijs_3'] = isset($sheet_array[$i]['prijs_3']) ? $sheet_array[$i]['prijs_3'] : '';
-                 $arr['prijs_aantal_4'] = isset($sheet_array[$i]['prijs_aantal_4']) ? $sheet_array[$i]['prijs_aantal_4'] : '';
-                 $arr['prijs_4'] = isset($sheet_array[$i]['prijs_4']) ? $sheet_array[$i]['prijs_4'] : '';
-                 $arr['prijs_aantal_5'] = isset($sheet_array[$i]['prijs_aantal_5']) ? $sheet_array[$i]['prijs_aantal_5'] : '';
-                 $arr['prijs_5'] = isset($sheet_array[$i]['prijs_5']) ? $sheet_array[$i]['prijs_5'] : '';
-                 $arr['prijs_aantal_6'] = isset($sheet_array[$i]['prijs_aantal_6']) ? $sheet_array[$i]['prijs_aantal_6'] : '';
-                 $arr['prijs_6'] = isset($sheet_array[$i]['prijs_6']) ? $sheet_array[$i]['prijs_6'] : '';
-                 $arr['prijs_aantal_7'] = isset($sheet_array[$i]['prijs_aantal_7']) ? $sheet_array[$i]['prijs_aantal_7'] : '';
-                 $arr['prijs_7'] = isset($sheet_array[$i]['prijs_7']) ? $sheet_array[$i]['prijs_7'] : '';
+                $arr['standaard_prijs'] = isset($sheet_array[$i]['standaard_prijs']) ? $sheet_array[$i]['standaard_prijs'] : '';
+                $arr['prijs_aantal_1'] = isset($sheet_array[$i]['prijs_aantal_1']) ? $sheet_array[$i]['prijs_aantal_1'] : '';
+                $arr['prijs_1'] = isset($sheet_array[$i]['prijs_1']) ? $sheet_array[$i]['prijs_1'] : '';
+                $arr['prijs_aantal_2'] = isset($sheet_array[$i]['prijs_aantal_2']) ? $sheet_array[$i]['prijs_aantal_2'] : '';
+                $arr['prijs_2'] = isset($sheet_array[$i]['prijs_2']) ? $sheet_array[$i]['prijs_2'] : '';
+                $arr['prijs_aantal_3'] = isset($sheet_array[$i]['prijs_aantal_3']) ? $sheet_array[$i]['prijs_aantal_3'] : '';
+                $arr['prijs_3'] = isset($sheet_array[$i]['prijs_3']) ? $sheet_array[$i]['prijs_3'] : '';
+                $arr['prijs_aantal_4'] = isset($sheet_array[$i]['prijs_aantal_4']) ? $sheet_array[$i]['prijs_aantal_4'] : '';
+                $arr['prijs_4'] = isset($sheet_array[$i]['prijs_4']) ? $sheet_array[$i]['prijs_4'] : '';
+                $arr['prijs_aantal_5'] = isset($sheet_array[$i]['prijs_aantal_5']) ? $sheet_array[$i]['prijs_aantal_5'] : '';
+                $arr['prijs_5'] = isset($sheet_array[$i]['prijs_5']) ? $sheet_array[$i]['prijs_5'] : '';
+                $arr['prijs_aantal_6'] = isset($sheet_array[$i]['prijs_aantal_6']) ? $sheet_array[$i]['prijs_aantal_6'] : '';
+                $arr['prijs_6'] = isset($sheet_array[$i]['prijs_6']) ? $sheet_array[$i]['prijs_6'] : '';
+                $arr['prijs_aantal_7'] = isset($sheet_array[$i]['prijs_aantal_7']) ? $sheet_array[$i]['prijs_aantal_7'] : '';
+                $arr['prijs_7'] = isset($sheet_array[$i]['prijs_7']) ? $sheet_array[$i]['prijs_7'] : '';
 
                 if(!empty($arr['artikel_nummer']) && !empty($arr['artikel_groep'])){
                     $arr['type'] = $arr['artikel_groep'] . ' - ' . $arr['artikel_nummer'];
@@ -571,14 +571,14 @@ class ConvertUploadedFile
     {
 
         if (in_array($sheet_name,
-         [
-             "CS WGW Ronde Buis overig",
-             "CS WGW Ronde Buis S235",
-             "CS Blank Naadloos Buis",
-             "CS Blanke buis",
-             "CS Kokers S235 + blank",
-             "CS Kokers S275 - S355",
-        ])) {
+            [
+                "CS WGW Ronde Buis overig",
+                "CS WGW Ronde Buis S235",
+                "CS Blank Naadloos Buis",
+                "CS Blanke buis",
+                "CS Kokers S235 + blank",
+                "CS Kokers S275 - S355",
+            ])) {
             return $this->mcbStaalIterator($worksheet, $sheet_name);
         }
 
@@ -1051,33 +1051,33 @@ class ConvertUploadedFile
                     };
                 }
 
-                //Prijst < 250 veld
+                //Prijst per 100kg veld
                 if ($index == 'D') {
                     if (floatval($cell_data) > 0) {
-                        $new_row_data['prijs_tot_250'] = floatval($cell_data);
+                        $new_row_data['prijs_tot_100'] = floatval($cell_data);
                     }
                     if ($this->moneyFormatter->parse($cell_data) > 0) {
-                        $new_row_data['prijs_tot_250'] = $this->moneyFormatter->parse($cell_data);
+                        $new_row_data['prijs_tot_100'] = $this->moneyFormatter->parse($cell_data);
                     }
                 }
 
-                //Prijst < 500 veld
+                //Prijst < stalen per 100
                 if ($index == 'E') {
                     if (floatval($cell_data) > 0) {
-                        $new_row_data['prijs_tot_500'] = floatval($cell_data);
+                        $new_row_data['stralen_per_100'] = floatval($cell_data);
                     }
                     if ($this->moneyFormatter->parse($cell_data) > 0) {
-                        $new_row_data['prijs_tot_500'] = $this->moneyFormatter->parse($cell_data);
+                        $new_row_data['stralen_per_100'] = $this->moneyFormatter->parse($cell_data);
                     }
                 }
 
-                //Prijst < 1000 veld
+                //Prijst stralen per menieen veld
                 if ($index == 'F') {
                     if (floatval($cell_data) > 0) {
-                        $new_row_data['prijs_tot_1000'] = floatval($cell_data);
+                        $new_row_data['stralen_menieen_per_100'] = floatval($cell_data);
                     }
                     if ($this->moneyFormatter->parse($cell_data) > 0) {
-                        $new_row_data['prijs_tot_1000'] = $this->moneyFormatter->parse($cell_data);
+                        $new_row_data['stralen_menieen_per_100'] = $this->moneyFormatter->parse($cell_data);
                     }
                 }
 
@@ -1736,7 +1736,7 @@ class ConvertUploadedFile
                 $new_data_list[] = $new_row_data;
             }
         }
-                return $new_data_list;
+        return $new_data_list;
     }
 
     /**

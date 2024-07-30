@@ -4,10 +4,11 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitbf9e4fba170cfcbaab4cd872179cda91
+class ComposerStaticInitb77c47057df16d8bd70ee8dd51c2dd1e
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        '2a9afd012ba84c341672875ae49cd5cd' => __DIR__ . '/..' . '/segmentio/analytics-php/lib/Segment.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -18,7 +19,6 @@ class ComposerStaticInitbf9e4fba170cfcbaab4cd872179cda91
         ),
         'P' => 
         array (
-            'PrestaShop\\Module\\AutoUpgrade\\Temp\\' => 35,
             'PrestaShop\\Module\\AutoUpgrade\\' => 30,
         ),
     );
@@ -31,10 +31,6 @@ class ComposerStaticInitbf9e4fba170cfcbaab4cd872179cda91
         'Symfony\\Component\\Filesystem\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/filesystem',
-        ),
-        'PrestaShop\\Module\\AutoUpgrade\\Temp\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/templates',
         ),
         'PrestaShop\\Module\\AutoUpgrade\\' => 
         array (
@@ -66,10 +62,14 @@ class ComposerStaticInitbf9e4fba170cfcbaab4cd872179cda91
         'Doctrine\\Common\\Collections\\ExpressionBuilder' => __DIR__ . '/..' . '/doctrine/collections/lib/Doctrine/Common/Collections/ExpressionBuilder.php',
         'Doctrine\\Common\\Collections\\Selectable' => __DIR__ . '/..' . '/doctrine/collections/lib/Doctrine/Common/Collections/Selectable.php',
         'PrestaShop\\Module\\AutoUpgrade\\AjaxResponse' => __DIR__ . '/../..' . '/classes/AjaxResponse.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Analytics' => __DIR__ . '/../..' . '/classes/Analytics.php',
         'PrestaShop\\Module\\AutoUpgrade\\BackupFinder' => __DIR__ . '/../..' . '/classes/BackupFinder.php',
         'PrestaShop\\Module\\AutoUpgrade\\ChannelInfo' => __DIR__ . '/../..' . '/classes/ChannelInfo.php',
         'PrestaShop\\Module\\AutoUpgrade\\Cookie' => __DIR__ . '/../..' . '/classes/Cookie.php',
         'PrestaShop\\Module\\AutoUpgrade\\ErrorHandler' => __DIR__ . '/../..' . '/classes/ErrorHandler.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Exceptions\\DistributionApiException' => __DIR__ . '/../..' . '/classes/Exceptions/DistributionApiException.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Exceptions\\UpgradeException' => __DIR__ . '/../..' . '/classes/Exceptions/UpgradeException.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Exceptions\\ZipActionException' => __DIR__ . '/../..' . '/classes/Exceptions/ZipActionException.php',
         'PrestaShop\\Module\\AutoUpgrade\\Log\\LegacyLogger' => __DIR__ . '/../..' . '/classes/Log/LegacyLogger.php',
         'PrestaShop\\Module\\AutoUpgrade\\Log\\Logger' => __DIR__ . '/../..' . '/classes/Log/Logger.php',
         'PrestaShop\\Module\\AutoUpgrade\\Log\\LoggerInterface' => __DIR__ . '/../..' . '/classes/Log/LoggerInterface.php',
@@ -81,32 +81,34 @@ class ComposerStaticInitbf9e4fba170cfcbaab4cd872179cda91
         'PrestaShop\\Module\\AutoUpgrade\\Parameters\\UpgradeConfigurationStorage' => __DIR__ . '/../..' . '/classes/Parameters/UpgradeConfigurationStorage.php',
         'PrestaShop\\Module\\AutoUpgrade\\Parameters\\UpgradeFileNames' => __DIR__ . '/../..' . '/classes/Parameters/UpgradeFileNames.php',
         'PrestaShop\\Module\\AutoUpgrade\\PrestashopConfiguration' => __DIR__ . '/../..' . '/classes/PrestashopConfiguration.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Services\\DistributionApiService' => __DIR__ . '/../..' . '/classes/Services/DistributionApiService.php',
         'PrestaShop\\Module\\AutoUpgrade\\State' => __DIR__ . '/../..' . '/classes/State.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\AbstractTask' => __DIR__ . '/../..' . '/classes/TaskRunner/AbstractTask.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\ChainedTasks' => __DIR__ . '/../..' . '/classes/TaskRunner/ChainedTasks.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Miscellaneous\\CheckFilesVersion' => __DIR__ . '/../..' . '/classes/TaskRunner/Miscellaneous/CheckFilesVersion.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Miscellaneous\\CompareReleases' => __DIR__ . '/../..' . '/classes/TaskRunner/Miscellaneous/CompareReleases.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Miscellaneous\\GetChannelInfo' => __DIR__ . '/../..' . '/classes/TaskRunner/Miscellaneous/GetChannelInfo.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Miscellaneous\\UpdateConfig' => __DIR__ . '/../..' . '/classes/TaskRunner/Miscellaneous/UpdateConfig.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\NullTask' => __DIR__ . '/../..' . '/classes/TaskRunner/NullTask.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Rollback\\AllRollbackTasks' => __DIR__ . '/../..' . '/classes/TaskRunner/Rollback/AllRollbackTasks.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Rollback\\NoRollbackFound' => __DIR__ . '/../..' . '/classes/TaskRunner/Rollback/NoRollbackFound.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Rollback\\RestoreDb' => __DIR__ . '/../..' . '/classes/TaskRunner/Rollback/RestoreDb.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Rollback\\RestoreFiles' => __DIR__ . '/../..' . '/classes/TaskRunner/Rollback/RestoreFiles.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Rollback\\Rollback' => __DIR__ . '/../..' . '/classes/TaskRunner/Rollback/Rollback.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Rollback\\RollbackComplete' => __DIR__ . '/../..' . '/classes/TaskRunner/Rollback/RollbackComplete.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Upgrade\\AllUpgradeTasks' => __DIR__ . '/../..' . '/classes/TaskRunner/Upgrade/AllUpgradeTasks.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Upgrade\\BackupDb' => __DIR__ . '/../..' . '/classes/TaskRunner/Upgrade/BackupDb.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Upgrade\\BackupFiles' => __DIR__ . '/../..' . '/classes/TaskRunner/Upgrade/BackupFiles.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Upgrade\\CleanDatabase' => __DIR__ . '/../..' . '/classes/TaskRunner/Upgrade/CleanDatabase.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Upgrade\\Download' => __DIR__ . '/../..' . '/classes/TaskRunner/Upgrade/Download.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Upgrade\\RemoveSamples' => __DIR__ . '/../..' . '/classes/TaskRunner/Upgrade/RemoveSamples.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Upgrade\\Unzip' => __DIR__ . '/../..' . '/classes/TaskRunner/Upgrade/Unzip.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Upgrade\\UpgradeComplete' => __DIR__ . '/../..' . '/classes/TaskRunner/Upgrade/UpgradeComplete.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Upgrade\\UpgradeDb' => __DIR__ . '/../..' . '/classes/TaskRunner/Upgrade/UpgradeDb.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Upgrade\\UpgradeFiles' => __DIR__ . '/../..' . '/classes/TaskRunner/Upgrade/UpgradeFiles.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Upgrade\\UpgradeModules' => __DIR__ . '/../..' . '/classes/TaskRunner/Upgrade/UpgradeModules.php',
-        'PrestaShop\\Module\\AutoUpgrade\\TaskRunner\\Upgrade\\UpgradeNow' => __DIR__ . '/../..' . '/classes/TaskRunner/Upgrade/UpgradeNow.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\AbstractTask' => __DIR__ . '/../..' . '/classes/Task/AbstractTask.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\ExitCode' => __DIR__ . '/../..' . '/classes/Task/ExitCode.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Miscellaneous\\CheckFilesVersion' => __DIR__ . '/../..' . '/classes/Task/Miscellaneous/CheckFilesVersion.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Miscellaneous\\CompareReleases' => __DIR__ . '/../..' . '/classes/Task/Miscellaneous/CompareReleases.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Miscellaneous\\GetChannelInfo' => __DIR__ . '/../..' . '/classes/Task/Miscellaneous/GetChannelInfo.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Miscellaneous\\UpdateConfig' => __DIR__ . '/../..' . '/classes/Task/Miscellaneous/UpdateConfig.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\NullTask' => __DIR__ . '/../..' . '/classes/Task/NullTask.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Rollback\\NoRollbackFound' => __DIR__ . '/../..' . '/classes/Task/Rollback/NoRollbackFound.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Rollback\\RestoreDb' => __DIR__ . '/../..' . '/classes/Task/Rollback/RestoreDb.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Rollback\\RestoreFiles' => __DIR__ . '/../..' . '/classes/Task/Rollback/RestoreFiles.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Rollback\\Rollback' => __DIR__ . '/../..' . '/classes/Task/Rollback/Rollback.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Rollback\\RollbackComplete' => __DIR__ . '/../..' . '/classes/Task/Rollback/RollbackComplete.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Runner\\AllRollbackTasks' => __DIR__ . '/../..' . '/classes/Task/Runner/AllRollbackTasks.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Runner\\AllUpgradeTasks' => __DIR__ . '/../..' . '/classes/Task/Runner/AllUpgradeTasks.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Runner\\ChainedTasks' => __DIR__ . '/../..' . '/classes/Task/Runner/ChainedTasks.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Runner\\SingleTask' => __DIR__ . '/../..' . '/classes/Task/Runner/SingleTask.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Upgrade\\BackupDb' => __DIR__ . '/../..' . '/classes/Task/Upgrade/BackupDb.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Upgrade\\BackupFiles' => __DIR__ . '/../..' . '/classes/Task/Upgrade/BackupFiles.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Upgrade\\CleanDatabase' => __DIR__ . '/../..' . '/classes/Task/Upgrade/CleanDatabase.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Upgrade\\Download' => __DIR__ . '/../..' . '/classes/Task/Upgrade/Download.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Upgrade\\Unzip' => __DIR__ . '/../..' . '/classes/Task/Upgrade/Unzip.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Upgrade\\UpgradeComplete' => __DIR__ . '/../..' . '/classes/Task/Upgrade/UpgradeComplete.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Upgrade\\UpgradeDb' => __DIR__ . '/../..' . '/classes/Task/Upgrade/UpgradeDb.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Upgrade\\UpgradeFiles' => __DIR__ . '/../..' . '/classes/Task/Upgrade/UpgradeFiles.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Upgrade\\UpgradeModules' => __DIR__ . '/../..' . '/classes/Task/Upgrade/UpgradeModules.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Task\\Upgrade\\UpgradeNow' => __DIR__ . '/../..' . '/classes/Task/Upgrade/UpgradeNow.php',
         'PrestaShop\\Module\\AutoUpgrade\\Tools14' => __DIR__ . '/../..' . '/classes/Tools14.php',
         'PrestaShop\\Module\\AutoUpgrade\\Twig\\Block\\ChannelInfoBlock' => __DIR__ . '/../..' . '/classes/Twig/Block/ChannelInfoBlock.php',
         'PrestaShop\\Module\\AutoUpgrade\\Twig\\Block\\RollbackForm' => __DIR__ . '/../..' . '/classes/Twig/Block/RollbackForm.php',
@@ -118,7 +120,6 @@ class ComposerStaticInitbf9e4fba170cfcbaab4cd872179cda91
         'PrestaShop\\Module\\AutoUpgrade\\Twig\\TransFilterExtension' => __DIR__ . '/../..' . '/classes/Twig/TransFilterExtension.php',
         'PrestaShop\\Module\\AutoUpgrade\\Twig\\TransFilterExtension3' => __DIR__ . '/../..' . '/classes/Twig/TransFilterExtension3.php',
         'PrestaShop\\Module\\AutoUpgrade\\UpgradeContainer' => __DIR__ . '/../..' . '/classes/UpgradeContainer.php',
-        'PrestaShop\\Module\\AutoUpgrade\\UpgradeException' => __DIR__ . '/../..' . '/classes/UpgradeException.php',
         'PrestaShop\\Module\\AutoUpgrade\\UpgradePage' => __DIR__ . '/../..' . '/classes/UpgradePage.php',
         'PrestaShop\\Module\\AutoUpgrade\\UpgradeSelfCheck' => __DIR__ . '/../..' . '/classes/UpgradeSelfCheck.php',
         'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\CacheCleaner' => __DIR__ . '/../..' . '/classes/UpgradeTools/CacheCleaner.php',
@@ -136,6 +137,7 @@ class ComposerStaticInitbf9e4fba170cfcbaab4cd872179cda91
         'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Translation' => __DIR__ . '/../..' . '/classes/UpgradeTools/Translation.php',
         'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Translator' => __DIR__ . '/../..' . '/classes/UpgradeTools/Translator.php',
         'PrestaShop\\Module\\AutoUpgrade\\Upgrader' => __DIR__ . '/../..' . '/classes/Upgrader.php',
+        'PrestaShop\\Module\\AutoUpgrade\\VersionUtils' => __DIR__ . '/../..' . '/classes/VersionUtils.php',
         'PrestaShop\\Module\\AutoUpgrade\\Workspace' => __DIR__ . '/../..' . '/classes/Workspace.php',
         'PrestaShop\\Module\\AutoUpgrade\\Xml\\ChecksumCompare' => __DIR__ . '/../..' . '/classes/Xml/ChecksumCompare.php',
         'PrestaShop\\Module\\AutoUpgrade\\Xml\\FileLoader' => __DIR__ . '/../..' . '/classes/Xml/FileLoader.php',
@@ -152,10 +154,10 @@ class ComposerStaticInitbf9e4fba170cfcbaab4cd872179cda91
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitbf9e4fba170cfcbaab4cd872179cda91::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitbf9e4fba170cfcbaab4cd872179cda91::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitbf9e4fba170cfcbaab4cd872179cda91::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitbf9e4fba170cfcbaab4cd872179cda91::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb77c47057df16d8bd70ee8dd51c2dd1e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb77c47057df16d8bd70ee8dd51c2dd1e::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitb77c47057df16d8bd70ee8dd51c2dd1e::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitb77c47057df16d8bd70ee8dd51c2dd1e::$classMap;
 
         }, null, ClassLoader::class);
     }

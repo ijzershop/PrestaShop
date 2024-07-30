@@ -1051,33 +1051,33 @@ class ConvertUploadedFile
                     };
                 }
 
-                //Prijst < 250 veld
+                //Prijst per 100kg veld
                 if ($index == 'D') {
                     if (floatval($cell_data) > 0) {
-                        $new_row_data['prijs_tot_250'] = floatval($cell_data);
+                        $new_row_data['prijs_tot_100'] = floatval($cell_data);
                     }
                     if ($this->moneyFormatter->parse($cell_data) > 0) {
-                        $new_row_data['prijs_tot_250'] = $this->moneyFormatter->parse($cell_data);
+                        $new_row_data['prijs_tot_100'] = $this->moneyFormatter->parse($cell_data);
                     }
                 }
 
-                //Prijst < 500 veld
+                //Prijst < stalen per 100
                 if ($index == 'E') {
                     if (floatval($cell_data) > 0) {
-                        $new_row_data['prijs_tot_500'] = floatval($cell_data);
+                        $new_row_data['stralen_per_100'] = floatval($cell_data);
                     }
                     if ($this->moneyFormatter->parse($cell_data) > 0) {
-                        $new_row_data['prijs_tot_500'] = $this->moneyFormatter->parse($cell_data);
+                        $new_row_data['stralen_per_100'] = $this->moneyFormatter->parse($cell_data);
                     }
                 }
 
-                //Prijst < 1000 veld
+                //Prijst stralen per menieen veld
                 if ($index == 'F') {
                     if (floatval($cell_data) > 0) {
-                        $new_row_data['prijs_tot_1000'] = floatval($cell_data);
+                        $new_row_data['stralen_menieen_per_100'] = floatval($cell_data);
                     }
                     if ($this->moneyFormatter->parse($cell_data) > 0) {
-                        $new_row_data['prijs_tot_1000'] = $this->moneyFormatter->parse($cell_data);
+                        $new_row_data['stralen_menieen_per_100'] = $this->moneyFormatter->parse($cell_data);
                     }
                 }
 

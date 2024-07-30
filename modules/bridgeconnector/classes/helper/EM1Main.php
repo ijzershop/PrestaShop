@@ -16,17 +16,20 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 includeMainFiles();
 
 class EM1Main extends EM1Database
 {
-    const RESPONSE_CODE             = 'response_code';
-    const RESPONSE_CODE_SUCCESS     = 'success';
-    const ERROR_MESSAGE             = 'error_message';
+    const RESPONSE_CODE = 'response_code';
+    const RESPONSE_CODE_SUCCESS = 'success';
+    const ERROR_MESSAGE = 'error_message';
 
     protected $languageId;
     protected $shopId;
@@ -47,9 +50,10 @@ class EM1Main extends EM1Database
             return null;
         }
         if (is_string($timestamp)) {
-            $timestamp = strtotime($timestamp);
+            $timestamp = strtotime($timestamp . ' UTC');
         }
-        return (int)$timestamp * 1000;
+
+        return (int) $timestamp * 1000;
     }
 
     public static function convertMillisecondsTimestampToTimestamp($timestamp)
@@ -57,41 +61,44 @@ class EM1Main extends EM1Database
         if ($timestamp === null) {
             return null;
         }
-        return (int)$timestamp/1000;
+
+        return (int) $timestamp / 1000;
     }
 
     public function round($number, $precision = 6)
     {
-        return round((float)$number, $precision);
+        return round((float) $number, $precision);
     }
 
     public static function displayPrice($price, $currencyId, $languageId)
     {
         $context = Context::getContext();
         $context->language->locale = (new Language($languageId))->locale;
-        return (string)Tools::displayPrice((float)$price, (int)$currencyId, false, $context);
+
+        return (string) Tools::displayPrice((float) $price, (int) $currencyId, false, $context);
     }
 
     public static function getDefaultLanguageId()
     {
-        return (int)Configuration::get('PS_LANG_DEFAULT');
+        return (int) Configuration::get('PS_LANG_DEFAULT');
     }
 
     /**
      * Generate response
      *
-     * @param   array $data Prepared data
-     * @param   string $code Response code. If everything is ok self::RESPONSE_CODE_SUCCESS
-     * @param   string $message Error message if exists
-     * @return  void Returns response data
+     * @param array $data Prepared data
+     * @param string $code Response code. If everything is ok self::RESPONSE_CODE_SUCCESS
+     * @param string $message Error message if exists
+     *
+     * @return void Returns response data
      */
-    public static function generateResponse($data = array(), $code = self::RESPONSE_CODE_SUCCESS, $message = '')
+    public static function generateResponse($data = [], $code = self::RESPONSE_CODE_SUCCESS, $message = '')
     {
         self::responseHandler(
             array_merge(
                 $data,
-                array(self::RESPONSE_CODE => (string)$code),
-                array(self::ERROR_MESSAGE => (string)$message)
+                [self::RESPONSE_CODE => (string) $code],
+                [self::ERROR_MESSAGE => (string) $message]
             )
         );
     }
@@ -100,7 +107,7 @@ class EM1Main extends EM1Database
     {
         header('Content-Type: application/json;');
         echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        die();
+        exit;
     }
 
     public static function snakeCaseToCamelCase($string)
@@ -109,24 +116,25 @@ class EM1Main extends EM1Database
             return '';
         }
 
-        $str    = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
+        $str = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
         $str[0] = Tools::strtolower($str[0]);
 
         return $str;
     }
 
-    public function getOrderTotalField() {
-        $total_field = "o.`total_products`/o.`conversion_rate`";
+    public function getOrderTotalField()
+    {
+        $total_field = 'o.`total_products`/o.`conversion_rate` - o.`total_discounts`/o.`conversion_rate`';
+        if ($this->taxIncl && !$this->shippingIncl) {
+            $total_field = 'o.`total_products_wt`/o.`conversion_rate` - o.`total_discounts_tax_incl`/o.`conversion_rate`';
+        }
+        if (!$this->taxIncl && $this->shippingIncl) {
+            $total_field = 'o.`total_paid_tax_excl`/o.`conversion_rate`';
+        }
+        if ($this->taxIncl && $this->shippingIncl) {
+            $total_field = 'o.`total_paid_tax_incl`/o.`conversion_rate`';
+        }
 
-        if($this->taxIncl && !$this->shippingIncl) {
-            $total_field = "o.`total_products_wt`/o.`conversion_rate`";
-        }
-        if(!$this->taxIncl && $this->shippingIncl) {
-            $total_field = "o.`total_paid_tax_excl`/o.`conversion_rate`";
-        }
-        if($this->taxIncl && $this->shippingIncl) {
-            $total_field = "o.`total_paid_tax_incl`/o.`conversion_rate`";
-        }
         return $total_field;
     }
 }

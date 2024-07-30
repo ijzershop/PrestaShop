@@ -16,35 +16,37 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 includedWidgetFiles();
 
 /**
  * Class MAWidget
  */
-
 class MAWidget extends EM1Main implements EM1WidgetInterface
 {
-    /** @var int $dateFrom date_from from request in format of timestamp with milliseconds */
+    /** @var int date_from from request in format of timestamp with milliseconds */
     private $dateFrom;
 
-    /** @var int $dateTo date_to from request in format of timestamp with milliseconds */
+    /** @var int date_to from request in format of timestamp with milliseconds */
     private $dateTo;
 
-    /** @var string $orderStatuses order_statuses from request */
+    /** @var string order_statuses from request */
     private $orderStatuses;
 
-    /** @var string $orderStatuses order_statuses from request */
+    /** @var string order_statuses from request */
     private $whereQuery = '1';
 
     /**
      * MAWidget constructor.
-     * @param   $shopId   int
+     *
+     * @param $shopId int
      */
-
     public function __construct($shopId, $taxIncl = false, $shippingIncl = false)
     {
         parent::__construct($shopId, 0, $taxIncl, $shippingIncl);
@@ -54,9 +56,10 @@ class MAWidget extends EM1Main implements EM1WidgetInterface
      * @param $dateFrom
      * @param $dateTo
      * @param array $orderStatuses
+     *
      * @throws EM1Exception
      */
-    public function getWidgetData($dateFrom, $dateTo, $orderStatuses = array())
+    public function getWidgetData($dateFrom, $dateTo, $orderStatuses = [])
     {
         $this->prepareData($dateFrom, $dateTo, $orderStatuses);
         $this->widgetResponse(
@@ -67,19 +70,20 @@ class MAWidget extends EM1Main implements EM1WidgetInterface
         );
     }
 
-    public function widgetResponse($widgetData = array())
+    public function widgetResponse($widgetData = [])
     {
         self::generateResponse(
-            array(
-                self::KEY_CUSTOMERS_COUNT           => (int)$widgetData['customers_count'],
-                self::KEY_ORDERS_COUNT              => (int)$widgetData['orders_count'],
-                self::KEY_FORMATTED_ORDERS_TOTAL    => Tools::displayPrice((float)$widgetData['orders_total'])
-            )
+            [
+                self::KEY_CUSTOMERS_COUNT => (int) $widgetData['customers_count'],
+                self::KEY_ORDERS_COUNT => (int) $widgetData['orders_count'],
+                self::KEY_FORMATTED_ORDERS_TOTAL => Tools::displayPrice((float) $widgetData['orders_total']),
+            ]
         );
     }
 
     /**
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getOrdersData()
@@ -103,7 +107,7 @@ class MAWidget extends EM1Main implements EM1WidgetInterface
                     'order_state_lang',
                     'osl',
                     'osl.`id_order_state` = o.`current_state` AND osl.`id_lang` = '
-                    . (int)Configuration::get('PS_LANG_DEFAULT')
+                    . (int) Configuration::get('PS_LANG_DEFAULT')
                 )
                 ->where($this->whereQuery)
         );
@@ -111,6 +115,7 @@ class MAWidget extends EM1Main implements EM1WidgetInterface
 
     /**
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getCustomerData()
@@ -133,6 +138,7 @@ class MAWidget extends EM1Main implements EM1WidgetInterface
      * @param $dateFrom
      * @param $dateTo
      * @param $orderStatuses
+     *
      * @throws EM1Exception
      */
     private function prepareData($dateFrom, $dateTo, $orderStatuses)
@@ -140,7 +146,7 @@ class MAWidget extends EM1Main implements EM1WidgetInterface
         // Prepare dates before using
         if (!empty($dateFrom) && !empty($dateTo) && $dateFrom !== -1 && $dateTo !== -1) {
             $this->dateFrom = self::convertMillisecondsTimestampToTimestamp($dateFrom);
-            $this->dateTo   = self::convertMillisecondsTimestampToTimestamp($dateTo);
+            $this->dateTo = self::convertMillisecondsTimestampToTimestamp($dateTo);
         }
 
         if ($dateTo === -1 || $dateFrom === -1) {
@@ -163,7 +169,12 @@ class MAWidget extends EM1Main implements EM1WidgetInterface
             }
         }
 
-        $this->orderStatuses = implode(',', $orderStatuses);
+        //      $this->orderStatuses = implode(',', $orderStatuses);
+        if (is_array($orderStatuses)) {
+            $this->orderStatuses = implode(',', $orderStatuses);
+        } else {
+            $this->orderStatuses = $orderStatuses;
+        }
     }
 
     private function prepareConditions($includeOrderStatuses = false, $alias = null)
@@ -171,18 +182,18 @@ class MAWidget extends EM1Main implements EM1WidgetInterface
         // Prepare where statements
         $this->whereQuery = '1';
         if ($this->dateFrom !== $this->dateTo) {
-            $this->whereQuery .= ' AND ' . ($alias ? pSQL($alias.'.') : '')
+            $this->whereQuery .= ' AND ' . ($alias ? pSQL($alias . '.') : '')
                 . '`date_add` >= \'' . date(self::WIDGET_DATE_FORMAT, $this->dateFrom) . '\'';
-            $this->whereQuery .= ' AND ' . ($alias ? pSQL($alias.'.') : '')
+            $this->whereQuery .= ' AND ' . ($alias ? pSQL($alias . '.') : '')
                 . '`date_add` <= \'' . date(self::WIDGET_DATE_FORMAT, $this->dateTo) . '\'';
         }
 
         if ($this->shopId > 0) {
-            $this->whereQuery .= ' AND ' . ($alias ? pSQL($alias.'.') : '') . '`id_shop` = ' . $this->shopId;
+            $this->whereQuery .= ' AND ' . ($alias ? pSQL($alias . '.') : '') . '`id_shop` = ' . $this->shopId;
         }
 
         if ($includeOrderStatuses && !empty($this->orderStatuses)) {
-            $this->whereQuery .= ' AND ' . ($alias ? pSQL($alias.'.') : '')
+            $this->whereQuery .= ' AND ' . ($alias ? pSQL($alias . '.') : '')
                 . '`current_state` IN (' . pSQL($this->orderStatuses) . ')';
         }
 
@@ -190,9 +201,6 @@ class MAWidget extends EM1Main implements EM1WidgetInterface
     }
 }
 
-/**
- *
- */
 function includedWidgetFiles()
 {
     require_once _PS_MODULE_DIR_ . '/' . EM1Constants::MODULE_NAME . '/classes/helper/EM1Main.php';

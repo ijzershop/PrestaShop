@@ -80,6 +80,10 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             'p.`id_product` = pl.`id_product`
             AND pl.`id_lang` = ' . (int)$id_lang . Shop::addSqlRestrictionOnLang('pl')
         );
+        $sql->leftJoin(
+            'product_shop',
+            'ps',
+            'p.`id_product` = ps.`id_product`');
         $sql->leftJoin('category_lang', 'cl', 'cl.`id_category` = p.`id_category_default`');
         $sql->orderBy('cl.`name` ASC');
         $sql->limit('50');
@@ -102,9 +106,9 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             $sql->where($where);
         }
         $where .= ' AND cl.`id_category` NOT IN (6,382) ';
-
+        $where .= ' AND ps.`id_shop` = '. Context::getContext()->shop->id;
         $sql->where($where);
-
+        $sql->groupBy('id');
         $result = Db::getInstance()->executeS($sql);
 
         if (!$result) {

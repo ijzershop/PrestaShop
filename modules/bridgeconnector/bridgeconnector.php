@@ -16,14 +16,17 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 /**
- * @property int    $is_configurable
- * @property int    $confirmUninstall
- * @property bool   $bootstrap
+ * @property int $is_configurable
+ * @property int $confirmUninstall
+ * @property bool $bootstrap
  * @property string $defaultShop
  */
 class Bridgeconnector extends Module
@@ -40,27 +43,25 @@ class Bridgeconnector extends Module
         include_once _PS_MODULE_DIR_ . '/bridgeconnector/functions/for_ajax.php';
 
         // Module settings
-        $this->name                 = 'bridgeconnector';
-        $this->tab                  = 'others';
-        $this->version              = '3.0.13';
-        $this->author               = 'eMagicOne';
-        $this->module_key           = '0d90a4ec7c4a83fa979f710a1ead2c72';
-        $this->need_instance        = 0;
-        $this->is_configurable      = 1;
-        $this->bootstrap            = true;
+        $this->name = 'bridgeconnector';
+        $this->tab = 'others';
+        $this->version = '3.1.8';
+        $this->author = 'eMagicOne';
+        $this->module_key = '2939fcd625448e7b3d9713696cbd1beb';
+        $this->need_instance = 0;
+        $this->is_configurable = 1;
+        $this->bootstrap = true;
 
-        $this->cartVersion          = Configuration::get('PS_INSTALL_VERSION');
-        $this->defaultShop          = Configuration::get('PS_SHOP_DEFAULT');
-        $this->defaultTmpDirectory  = '/modules/' . $this->name . '/tmp';
+        $this->cartVersion = Configuration::get('PS_INSTALL_VERSION');
+        $this->defaultShop = Configuration::get('PS_SHOP_DEFAULT');
+        $this->defaultTmpDirectory = '/modules/' . $this->name . '/tmp';
 
         if (Tools::getIsset('auth_key')) {
             include_once _PS_MODULE_DIR_ . '/bridgeconnector/functions/ajax.php';
-            die();
+            exit;
         }
 
-        if (version_compare($this->cartVersion, '1.7.0.1', '!=')) {
-            $this->ps_versions_compliancy = array('min' => '1.5.1', 'max' => '1.7');
-        }
+        $this->ps_versions_compliancy = ['min' => '1.6.0.4', 'max' => '8.5'];
 
         // Initialize logger
         $this->eM1Logger = new EM1FileLogger();
@@ -68,13 +69,11 @@ class Bridgeconnector extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('eMagicOne Store Manager Bridge Connector');
+        $this->displayName = $this->l('Bridge Connector');
         $this->description = $this->l(
-            'Install eMagicOne Bridge Connector module to fluently connect Store Manager desktop application to
-            PrestaShop database and connect to Mobile Assistant app installed on your mobile device. Increase
-            speed of data management, take advantage of simplicity and reliability with all-in-one Store
-            Manager and have access to the real-time store data reports at your fingertips from your Android
-            device wherever you are.'
+            'Install Bridge Connector module to fluently connect Store Manager desktop application to PrestaShop 
+            database. Increase speed of data management, take advantage of simplicity and reliability with all-in-one 
+            Store Manager via Bridge Connector.'
         );
 
         $this->checkAndUpdateToNewVersion();
@@ -98,22 +97,20 @@ class Bridgeconnector extends Module
             }
         }
 
-        return (
+        return
             parent::install()
             && $this->registerHook(EM1Constants::HOOK_ACTION_VALIDATE_ORDER)
             && $this->registerHook(EM1Constants::HOOK_ACTION_ORDER_STATUS_POST_UPDATE)
             && $this->registerHook('actionOrderHistoryAddAfter')
-            && $this->registerHook('actionAdminCustomerThreadsControllerDeleteBefore')
             && $this->registerHook('actionAdminCustomerThreadsControllerDeleteAfter')
             && $this->registerHook('actionObjectCustomerMessageAddAfter')
-            && $this->registerHook('actionObjectCustomerThreadAddAfter')
             && (version_compare(_PS_VERSION_, '1.7', '>=')
                 ? $this->registerHook(EM1Constants::HOOK_ACTION_CUSTOMER_ACCOUNT_ADD)
                 : $this->registerHook(EM1Constants::HOOK_CREATE_ACCOUNT))
             && $this->createTables()
             && $this->populateTableUsers()
             && $this->saveBridgeData()
-        );
+        ;
     }
 
     public function uninstall()
@@ -129,6 +126,12 @@ class Bridgeconnector extends Module
 
     public function getContent()
     {
+        $options = Configuration::get(EM1Constants::OPTIONS_KEY);
+
+        if ($options && @unserialize($options)) {
+            Configuration::updateGlobalValue(EM1Constants::OPTIONS_KEY, json_encode(unserialize($options)));
+        }
+
         $output = null;
 
         if (Tools::getIsset('bridgeconnector_login')
@@ -145,12 +148,12 @@ class Bridgeconnector extends Module
             }
         }
 
-        $bridge_options = unserialize(Configuration::get(EM1Constants::OPTIONS_KEY));
+        $bridge_options = json_decode(Configuration::get(EM1Constants::OPTIONS_KEY), true);
 
         if ($bridge_options['bridge_hash'] === md5('11')) {
             $output .= $this->displayError(
                 $this->l(
-                    'Store Manager Bridge Connector: Default login and password are "1".
+                    'Store Manager Bridge Connector: Default login and password are "1". 
                     Change them because of security reasons, please!'
                 )
             );
@@ -168,192 +171,192 @@ class Bridgeconnector extends Module
     private function displayForm($bridgeOptions)
     {
         // Get default language
-        $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
 
         // Init Fields form array
-        $fields_form = array();
+        $fields_form = [];
 
         // Init Fields form array
-        $fields_form[0]['form'] = array(
-            'legend' => array(
+        $fields_form[0]['form'] = [
+            'legend' => [
                 'title' => $this->l('Store Manager Bridge Connector Settings'),
-            ),
-            'input' => array(
-                array(
-                    'type'  => 'text',
+            ],
+            'input' => [
+                [
+                    'type' => 'text',
                     'label' => $this->l('Login'),
-                    'name'  => 'bridgeconnector_login',
-                    'id'    => 'bridgeconnector_login',
-                    'desc'  => $this->l(
+                    'name' => 'bridgeconnector_login',
+                    'id' => 'bridgeconnector_login',
+                    'desc' => $this->l(
                         'Login for accessing Bridge Connector from eMagicOne Store Manager for PrestaShop.'
-                    )
-                ),
-                array(
+                    ),
+                ],
+                [
                     // To avoid auto fill
-                    'type'  => 'password',
-                    'name'  => 'bridgeconnector_password_fake',
-                    'id'    => 'bridgeconnector_password_fake',
-                ),
-                array(
-                    'type'  => 'password',
+                    'type' => 'password',
+                    'name' => 'bridgeconnector_password_fake',
+                    'id' => 'bridgeconnector_password_fake',
+                ],
+                [
+                    'type' => 'password',
                     'label' => $this->l('Password'),
-                    'name'  => 'bridgeconnector_password',
-                    'id'    => 'bridgeconnector_password',
-                    'desc'  => $this->l(
+                    'name' => 'bridgeconnector_password',
+                    'id' => 'bridgeconnector_password',
+                    'desc' => $this->l(
                         'Password for accessing Bridge Connector from eMagicOne Store Manager for PrestaShop.'
                     ),
-                ),
-                array(
-                    'type'  => 'text',
+                ],
+                [
+                    'type' => 'text',
                     'label' => $this->l('Directory for Module Operations'),
-                    'name'  => 'bridgeconnector_tmp_dir',
-                    'id'    => 'bridgeconnector_tmp_dir',
-                    'desc'  => $this->l('Enter temporary folder path. It should be writable.'),
-                ),
-                array(
-                    'type'      => 'switch',
-                    'label'     => $this->l('Allow Compression'),
-                    'is_bool'   => true,
-                    'name'      => 'bridgeconnector_allow_compression',
-                    'id'        => 'bridgeconnector_allow_compression',
-                    'desc'      => $this->l(
+                    'name' => 'bridgeconnector_tmp_dir',
+                    'id' => 'bridgeconnector_tmp_dir',
+                    'desc' => $this->l('Enter temporary folder path. It should be writable.'),
+                ],
+                [
+                    'type' => 'switch',
+                    'label' => $this->l('Allow Compression'),
+                    'is_bool' => true,
+                    'name' => 'bridgeconnector_allow_compression',
+                    'id' => 'bridgeconnector_allow_compression',
+                    'desc' => $this->l(
                         'Compression of generated dump file. It is recommended for save space and faster getting data
                         in Store Manager.'
                     ),
-                    'values'    => array(
-                        array(
-                            'id'    => 'active_on',
+                    'values' => [
+                        [
+                            'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
-                        ),
-                        array(
-                            'id'    => 'active_off',
+                            'label' => $this->l('Enabled'),
+                        ],
+                        [
+                            'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
-                        )
-                    ),
-                ),
-                array(
-                    'type'  => 'text',
+                            'label' => $this->l('Disabled'),
+                        ],
+                    ],
+                ],
+                [
+                    'type' => 'text',
                     'label' => $this->l('Compress Level'),
-                    'name'  => 'bridgeconnector_compress_level',
-                    'id'    => 'bridgeconnector_compress_level',
-                    'desc'  => $this->l(
+                    'name' => 'bridgeconnector_compress_level',
+                    'id' => 'bridgeconnector_compress_level',
+                    'desc' => $this->l(
                         'Values between 1 and 9 will trade off speed and efficiency. The 1 flag means "fast but less
                         efficient" compression, and 9 means "slow but most efficient" compression.'
                     ),
-                    'class' => 'fixed-width-xs'
-                ),
-                array(
-                    'type'  => 'text',
+                    'class' => 'fixed-width-xs',
+                ],
+                [
+                    'type' => 'text',
                     'label' => $this->l('Selection Query Size'),
-                    'name'  => 'bridgeconnector_limit_query_size',
-                    'id'    => 'bridgeconnector_limit_query_size',
-                    'desc'  => $this->l('Restrict capacity of queries per one request (kB).'),
-                    'class' => 'fixed-width-xl'
-                ),
-                array(
-                    'type'  => 'text',
+                    'name' => 'bridgeconnector_limit_query_size',
+                    'id' => 'bridgeconnector_limit_query_size',
+                    'desc' => $this->l('Restrict capacity of queries per one request (kB).'),
+                    'class' => 'fixed-width-xl',
+                ],
+                [
+                    'type' => 'text',
                     'label' => $this->l('Package Size'),
-                    'name'  => 'bridgeconnector_package_size',
-                    'id'    => 'bridgeconnector_package_size',
-                    'desc'  => 'Size of parts for getting dump file (kB).',
-                    'class' => 'fixed-width-xl'
-                ),
-                array(
-                    'type'  => 'text',
+                    'name' => 'bridgeconnector_package_size',
+                    'id' => 'bridgeconnector_package_size',
+                    'desc' => 'Size of parts for getting dump file (kB).',
+                    'class' => 'fixed-width-xl',
+                ],
+                [
+                    'type' => 'text',
                     'label' => $this->l('Exclude Tables'),
-                    'name'  => 'bridgeconnector_db_tables_invisible',
-                    'id'    => 'bridgeconnector_db_tables_invisible',
+                    'name' => 'bridgeconnector_db_tables_invisible',
+                    'id' => 'bridgeconnector_db_tables_invisible',
                     'class' => 'bridgeconnector_invisible',
-                ),
-                array(
-                    'type'  => 'hidden',
-                    'name'  => 'bridgeconnector_db_tables_hidden',
-                    'id'    => 'bridgeconnector_db_tables_hidden',
-                ),
-                array(
-                    'type'  => 'text',
+                ],
+                [
+                    'type' => 'hidden',
+                    'name' => 'bridgeconnector_db_tables_hidden',
+                    'id' => 'bridgeconnector_db_tables_hidden',
+                ],
+                [
+                    'type' => 'text',
                     'label' => $this->l('Allowed IPs'),
-                    'name'  => 'bridgeconnector_allowed_ips',
-                    'id'    => 'bridgeconnector_allowed_ips',
-                    'desc'  => $this->l(
+                    'name' => 'bridgeconnector_allowed_ips',
+                    'id' => 'bridgeconnector_allowed_ips',
+                    'desc' => $this->l(
                         'In order to allow module using only from specific IP address you should add IP address here
                         (for example, 48.78.88.98 - only one IP address; 48.78.88.98, 15.25.35.45 - two IP addresses;
                         48.78.x.x - all IP addresses which begin from 48.78.)'
                     ),
-                ),
-            ),
-            'submit' => array(
+                ],
+            ],
+            'submit' => [
                 'title' => version_compare($this->cartVersion, '1.6.0.0', '<')
                     ? $this->l('Update settings')
                     : $this->l('Save'),
-                'class' => 'btn btn-default pull-right'
-            )
-        );
+                'class' => 'btn btn-default pull-right',
+            ],
+        ];
 
-        $fields_form[1]['form'] = array(
-            'legend' => array(
+        $fields_form[1]['form'] = [
+            'legend' => [
                 'title' => $this->l('Mobile Assistant Connector Settings'),
-            ),
-            'input' => array(
-                array(
-                    'type'  => 'text',
+            ],
+            'input' => [
+                [
+                    'type' => 'text',
                     'label' => $this->l('Users'),
-                    'name'  => 'mobassistantconnector_users',
-                    'id'    => 'mobassistantconnector_users',
+                    'name' => 'mobassistantconnector_users',
+                    'id' => 'mobassistantconnector_users',
                     'class' => 'mobassistantconnector_invisible',
-                ),
-                array(
+                ],
+                [
                     'type' => 'hidden',
                     'name' => 'mobassistantconnector_base_url',
-                    'id'   => 'mobassistantconnector_base_url',
-                ),
-                array(
+                    'id' => 'mobassistantconnector_base_url',
+                ],
+                [
                     'type' => 'hidden',
                     'name' => 'mobassistantconnector_admin_module_url',
-                    'id'   => 'mobassistantconnector_admin_module_url',
-                ),
-                array(
+                    'id' => 'mobassistantconnector_admin_module_url',
+                ],
+                [
                     'type' => 'hidden',
                     'name' => 'mobassistantconnector_key',
-                    'id'   => 'mobassistantconnector_key',
-                ),
-            ),
-            'submit' => array(
+                    'id' => 'mobassistantconnector_key',
+                ],
+            ],
+            'submit' => [
                 'title' => (Tools::substr($this->cartVersion, 0, 3) === '1.5')
                     ? $this->l('Update settings')
                     : $this->l('Save'),
-                'class' => 'btn btn-default pull-right'
-            )
-        );
+                'class' => 'btn btn-default pull-right',
+            ],
+        ];
 
-        $fields_form[2]['form'] = array(
-            'legend' => array(
+        /*$fields_form[2]['form'] = [
+            'legend' => [
                 'title' => $this->l('Get the Mobile Assistant for PrestaShop App from Google Play'),
-            ),
-            'input' => array(
-                array(
-                    'type'  => 'text',
+            ],
+            'input' => [
+                [
+                    'type' => 'text',
                     'label' => $this->l('QR-code for the Mobile Assistant for PrestaShop App'),
-                    'name'  => 'mobassistantconnector_qrcode_app',
-                    'id'    => 'mobassistantconnector_qrcode_app',
-                    'desc'  => 'Use your device camera to read the QR-code',
+                    'name' => 'mobassistantconnector_qrcode_app',
+                    'id' => 'mobassistantconnector_qrcode_app',
+                    'desc' => 'Use your device camera to read the QR-code',
                     'class' => 'mobassistantconnector_invisible',
-                ),
-            )
-        );
+                ],
+            ],
+        ];*/
 
         $helper = new HelperForm();
 
         // Module, token and currentIndex
-        $helper->module          = $this;
+        $helper->module = $this;
         $helper->name_controller = $this->name;
-        $helper->token           = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex    = AdminController::$currentIndex . '&configure=' . $this->name;
+        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
 
         // Language
-        $helper->default_form_language    = $default_lang;
+        $helper->default_form_language = $default_lang;
         $helper->allow_employee_form_lang = $default_lang;
 
         // Title and toolbar
@@ -363,42 +366,41 @@ class Bridgeconnector extends Module
             ? $helper->show_toolbar = false
             : $helper->show_toolbar = true;         // false -> remove toolbar
         $helper->toolbar_scroll = true;             // yes -> Toolbar is always visible on the top of the screen.
-        $helper->submit_action  = 'submit' . $this->name;
-        $helper->toolbar_btn    = array(
-            'save' =>
-                array(
+        $helper->submit_action = 'submit' . $this->name;
+        $helper->toolbar_btn = [
+            'save' => [
                     'desc' => $this->l('Save'),
                     'href' => AdminController::$currentIndex . '&configure=' . $this->name . '&save' . $this->name .
                         '&token=' . Tools::getAdminTokenLite('AdminModules'),
-                ),
-            'back' => array(
-                'href' => AdminController::$currentIndex.'&token=' . Tools::getAdminTokenLite('AdminModules'),
-                'desc' => $this->l('Back to list')
-            )
-        );
+                ],
+            'back' => [
+                'href' => AdminController::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminModules'),
+                'desc' => $this->l('Back to list'),
+            ],
+        ];
 
-        $helper->tpl_vars = array(
+        $helper->tpl_vars = [
             'fields_value' => $this->getConfigFieldsValues($bridgeOptions),
-            'languages'    => $this->context->controller->getLanguages(),
-            'id_language'  => $this->context->language->id
-        );
+            'languages' => $this->context->controller->getLanguages(),
+            'id_language' => $this->context->language->id,
+        ];
 
         // todo: find other way to clear old js files from web browser
-        $cssSources = array(
+        $cssSources = [
             $this->_path . 'views/css/jquery-ui.min.css',
             $this->_path . 'views/css/mobassistantconnector.css',
-            $this->_path . 'views/css/bridgeconnector.css'
-        );
+            $this->_path . 'views/css/bridgeconnector.css',
+        ];
 
         if (version_compare($this->cartVersion, '1.6', '>=')) {
             $cssSources[] = $this->_path . 'views/css/1.5_more.css';
         }
 
-        $jsSources = array(
+        $jsSources = [
             $this->_path . 'views/js/jquery-ui.min.js',
             $this->_path . 'views/js/qrcode.min.js',
-            $this->_path . 'views/js/common.js'
-        );
+            $this->_path . 'views/js/common.js',
+        ];
 
         if (version_compare($this->cartVersion, '1.6.0.0', '<')) {
             $jsSources[] = $this->_path . 'views/js/ps_1.5.js';
@@ -410,6 +412,7 @@ class Bridgeconnector extends Module
         $this->context->controller->addJS($jsSources);
 
         $helper->fields_value['submitbridgeconnector'] = Configuration::get('submitbridgeconnector');
+
         return $helper->generateForm($fields_form);
     }
 
@@ -420,13 +423,13 @@ class Bridgeconnector extends Module
      */
     private function getConfigFieldsValues($bridge_options)
     {
-        $baseUrl        = '';
+        $baseUrl = '';
         $adminModuleUrl = '';
-        $languages      = Language::getLanguages(false);
+        $languages = Language::getLanguages(false);
 
         try {
-            $shopUrl        = new ShopUrl((int)Configuration::get('PS_SHOP_DEFAULT'));
-            $baseUrl        = self::prepareUrlProtocol($shopUrl->getURL(Configuration::get('PS_SSL_ENABLED')));
+            $shopUrl = new ShopUrl((int) Configuration::get('PS_SHOP_DEFAULT'));
+            $baseUrl = self::prepareUrlProtocol($shopUrl->getURL(Configuration::get('PS_SSL_ENABLED')));
             $adminModuleUrl = AdminController::$currentIndex . "&configure=$this->name&token="
                 . Tools::getAdminTokenLite('AdminModules') . "&tab_module=$this->tab&module_name=$this->name";
         } catch (PrestaShopDatabaseException $e) {
@@ -441,16 +444,16 @@ class Bridgeconnector extends Module
             );
         }
 
-        $data = array(
-            'bridgeconnector_login'               => $bridge_options['login'],
-            'bridgeconnector_password'            => $bridge_options['password'],
-            'bridgeconnector_tmp_dir'             => $bridge_options['tmp_dir'],
-            'bridgeconnector_allow_compression'   => $bridge_options['allow_compression'],
-            'bridgeconnector_compress_level'      => $bridge_options['compress_level'],
-            'bridgeconnector_limit_query_size'    => $bridge_options['limit_query_size'],
-            'bridgeconnector_package_size'        => $bridge_options['package_size'],
-            'bridgeconnector_allowed_ips'         => $bridge_options['allowed_ips'],
-            'bridgeconnector_db_tables_hidden'    => '',
+        $data = [
+            'bridgeconnector_login' => $bridge_options['login'],
+            'bridgeconnector_password' => $bridge_options['password'],
+            'bridgeconnector_tmp_dir' => $bridge_options['tmp_dir'],
+            'bridgeconnector_allow_compression' => $bridge_options['allow_compression'],
+            'bridgeconnector_compress_level' => $bridge_options['compress_level'],
+            'bridgeconnector_limit_query_size' => $bridge_options['limit_query_size'],
+            'bridgeconnector_package_size' => $bridge_options['package_size'],
+            'bridgeconnector_allowed_ips' => $bridge_options['allowed_ips'],
+            'bridgeconnector_db_tables_hidden' => '',
             'bridgeconnector_db_tables_invisible' => '',
             'mobassistantconnector_tracknum_message_lng_all' => Configuration::get(
                 EM1Constants::MODULE_TN_LNG
@@ -460,7 +463,7 @@ class Bridgeconnector extends Module
             'mobassistantconnector_base_url' => $baseUrl,
             'mobassistantconnector_admin_module_url' => $adminModuleUrl,
             'mobassistantconnector_key' => hash('sha256', _COOKIE_KEY_),
-        );
+        ];
 
         foreach ($languages as $lang) {
             $data['mobassistantconnector_tracknum_template_text'][$lang['id_lang']] = Configuration::get(
@@ -474,23 +477,23 @@ class Bridgeconnector extends Module
 
     private function saveBridgeData($is_submit = false)
     {
-        $config = array();
+        $config = [];
 
         if ($is_submit) {
             $excluded_tables = Tools::getValue('bridgeconnector_exclude_db_tables_checked');
 
-            $stored_data                 = unserialize(Configuration::get(EM1Constants::OPTIONS_KEY));
-            $config['login']             = (string)Tools::getValue('bridgeconnector_login');
-            $config['password']          = $this->getDecryptedPassword($stored_data['password']);
-            $config['tmp_dir']           = (string)Tools::getValue('bridgeconnector_tmp_dir');
-            $config['allow_compression'] = (int)Tools::getValue('bridgeconnector_allow_compression');
-            $config['compress_level']    = (int)Tools::getValue('bridgeconnector_compress_level');
-            $config['limit_query_size']  = (int)Tools::getValue('bridgeconnector_limit_query_size');
-            $config['package_size']      = (int)Tools::getValue('bridgeconnector_package_size');
-            $config['exclude_db_tables'] = !empty($excluded_tables) ? implode(';', $excluded_tables) : array();
-            $config['allowed_ips']       = (string)Tools::getValue('bridgeconnector_allowed_ips');
-            $config['last_clear_date']   = isset($stored_data['last_clear_date'])
-                ? (int)$stored_data['last_clear_date']
+            $stored_data = json_decode(Configuration::get(EM1Constants::OPTIONS_KEY), true);
+            $config['login'] = (string) Tools::getValue('bridgeconnector_login');
+            $config['password'] = $this->getDecryptedPassword($stored_data['password']);
+            $config['tmp_dir'] = (string) Tools::getValue('bridgeconnector_tmp_dir');
+            $config['allow_compression'] = (int) Tools::getValue('bridgeconnector_allow_compression');
+            $config['compress_level'] = (int) Tools::getValue('bridgeconnector_compress_level');
+            $config['limit_query_size'] = (int) Tools::getValue('bridgeconnector_limit_query_size');
+            $config['package_size'] = (int) Tools::getValue('bridgeconnector_package_size');
+            $config['exclude_db_tables'] = !empty($excluded_tables) ? implode(';', $excluded_tables) : [];
+            $config['allowed_ips'] = (string) Tools::getValue('bridgeconnector_allowed_ips');
+            $config['last_clear_date'] = isset($stored_data['last_clear_date'])
+                ? (int) $stored_data['last_clear_date']
                 : time();
 
             $request_password = Tools::getValue('bridgeconnector_password');
@@ -501,22 +504,23 @@ class Bridgeconnector extends Module
 
             $config = $this->prepareData($config);
         } else {
-            $config['login']             = EM1Constants::BRIDGECONNECTOR_DEFAULT_LOGIN;
-            $config['password']          = EM1Constants::BRIDGECONNECTOR_DEFAULT_PASSWORD;
-            $config['tmp_dir']           = $this->defaultTmpDirectory;
+            $excluded_tables = $this->getDefaultExcludedTables();
+            $config['login'] = EM1Constants::BRIDGECONNECTOR_DEFAULT_LOGIN;
+            $config['password'] = EM1Constants::BRIDGECONNECTOR_DEFAULT_PASSWORD;
+            $config['tmp_dir'] = $this->defaultTmpDirectory;
             $config['allow_compression'] = EM1Constants::BRIDGECONNECTOR_DEFAULT_ALLOW_COMPRESSION;
-            $config['compress_level']    = EM1Constants::BRIDGECONNECTOR_DEFAULT_COMPRESS_LEVEL;
-            $config['limit_query_size']  = EM1Constants::BRIDGECONNECTOR_DEFAULT_LIMIT_QUERY_SIZE;
-            $config['package_size']      = EM1Constants::BRIDGECONNECTOR_DEFAULT_PACKAGE_SIZE;
-            $config['exclude_db_tables'] = implode(';', $this->getDefaultExcludedTables());
-            $config['allowed_ips']       = EM1Constants::BRIDGECONNECTOR_DEFAULT_ALLOWED_IPS;
-            $config['last_clear_date']   = time();
+            $config['compress_level'] = EM1Constants::BRIDGECONNECTOR_DEFAULT_COMPRESS_LEVEL;
+            $config['limit_query_size'] = EM1Constants::BRIDGECONNECTOR_DEFAULT_LIMIT_QUERY_SIZE;
+            $config['package_size'] = EM1Constants::BRIDGECONNECTOR_DEFAULT_PACKAGE_SIZE;
+            $config['exclude_db_tables'] = !empty($excluded_tables) ? implode(';', $excluded_tables) : [];
+            $config['allowed_ips'] = EM1Constants::BRIDGECONNECTOR_DEFAULT_ALLOWED_IPS;
+            $config['last_clear_date'] = time();
         }
 
         $config['bridge_hash'] = md5($config['login'] . $config['password']);
-        $config['password']    = $this->getEncryptedPassword($config['password']);
+        $config['password'] = $this->getEncryptedPassword($config['password']);
 
-        return Configuration::updateGlobalValue(EM1Constants::OPTIONS_KEY, serialize($config));
+        return Configuration::updateGlobalValue(EM1Constants::OPTIONS_KEY, json_encode($config));
     }
 
     public function hookActionValidateOrder($params)
@@ -562,50 +566,34 @@ class Bridgeconnector extends Module
         if (Module::isEnabled($this->name)) {
             switch (true) {
                 // Forward message to employee or other email
-                case (isset($_REQUEST['id_employee_forward'], $_REQUEST['submitForward'])
-                    && (
-                        ($_REQUEST['id_employee_forward'] > 0)
-                        || ((string)$_REQUEST['id_employee_forward'] === '0' && !empty($_REQUEST['email']))
-                    )
-                    && !empty($_REQUEST['message_forward'])
-                ):
+                case isset($_REQUEST['id_employee_forward'], $_REQUEST['submitForward'])
+                && (
+                    ($_REQUEST['id_employee_forward'] > 0)
+                    || ((string) $_REQUEST['id_employee_forward'] === '0' && !empty($_REQUEST['email']))
+                )
+                && !empty($_REQUEST['message_forward']):
                     break;
-                // From Admin Customer Service reply
-                case (
-                    isset($_REQUEST['submitReply']) && !empty($_REQUEST['msg_email'])
-                    && !empty($_REQUEST['reply_message'])
-                ):
+                    // From Admin Customer Service reply
+                case isset($_REQUEST['submitReply']) && !empty($_REQUEST['msg_email'])
+                && !empty($_REQUEST['reply_message']):
                     break;
-                // From Admin Order messages
-                case (
-                    !empty($_REQUEST['id_order']) && !empty($_REQUEST['id_customer'])
-                    && !empty($_REQUEST['submitMessage']) && !empty($_REQUEST['message'])
-                    && (isset($_REQUEST['order_message']) || $_REQUEST['order_message'] === '0')
-                ):
+                    // From Admin Order messages
+                case !empty($_REQUEST['id_order']) && !empty($_REQUEST['id_customer'])
+                && !empty($_REQUEST['submitMessage']) && !empty($_REQUEST['message'])
+                && (isset($_REQUEST['order_message']) || $_REQUEST['order_message'] === '0'):
                     break;
-                // From Customer Account to specific order
-                case (
-                    isset($_REQUEST['submitMessage']) && !empty($_REQUEST['id_order']) && !empty($_REQUEST['msgText'])
-                ):
+                    // From Customer Account to specific order
+                case isset($_REQUEST['submitMessage']) && !empty($_REQUEST['id_order']) && !empty($_REQUEST['msgText']):
                     break;
-                // From Contact Form reply
-                case (
-                    !empty($_REQUEST['id_order']) && $_REQUEST['message']
-                    && (string)$_REQUEST['submitMessage'] === 'Send' && $_REQUEST['from']
-                ):
+                    // From Contact Form reply
+                case !empty($_REQUEST['id_order']) && $_REQUEST['message']
+                && (string) $_REQUEST['submitMessage'] === 'Send' && $_REQUEST['from']:
                     break;
             }
 
             // for forward message write other logic
             $this->sendCustomerThreadNewMessage($params);
         }
-    }
-
-    public function hookActionObjectCustomerThreadAddAfter($params)
-    {
-        // Customer new thread/ contact us form / order create if not exists
-        file_put_contents('./hook.log', var_export($params, true), FILE_APPEND);
-//        var_dump($params);
     }
 
     public function sendOrderHistoryUpdate($params)
@@ -618,7 +606,7 @@ class Bridgeconnector extends Module
             foreach ($activeDevices as $device) {
                 $device = $this->preparePushSettings($device);
 
-                $registrationId  = $device['registration_id'];
+                $registrationId = $device['registration_id'];
                 $appConnectionId = $device['app_connection_id'];
 
                 if (!empty($appConnectionId)
@@ -629,28 +617,29 @@ class Bridgeconnector extends Module
                         && file_exists(_PS_UPLOAD_DIR_ . $customerThreadActions->file_name)
                         && Validate::isFileName($customerThreadActions->file_name)
                     ) {
-//                        $fileLink = EM1Main::getUploadedFileLink($customerThreadActions->file_name);
+                        //                        $fileLink = EM1Main::getUploadedFileLink($customerThreadActions->file_name);
                     }
 
-                    $employeeId = (int)$customerThreadActions->id_employee;
+                    $employeeId = (int) $customerThreadActions->id_employee;
                     /** @var EmployeeCore $employee */
                     $employee = new Employee($employeeId);
                     $employeeFullName = ($employee->firstname . ' ' . $employee->lastname);
                     $orderMessageTimestamp = strtotime($customerThreadActions->date_add);
-                    $orderMessageTimestamp = $orderMessageTimestamp * 1000; // workaround EM1Main::convertTimestampToMillisecondsTimestamp($orderMessageTimestamp)
+                    $orderMessageTimestamp = $orderMessageTimestamp * 1000;
+                    // workaround EM1Main::convertTimestampToMillisecondsTimestamp($orderMessageTimestamp)
 
-                    $response = $this->sendFCM(array(
+                    $response = $this->sendFCM([
                         'notification_type' => $notificationType,
-                        'app_connection_id' => (string)$appConnectionId,
-                        'customer_thread_id' => (int)$customerThreadActions->id_customer_thread,
-                        'message_id' => (int)$customerThreadActions->id,
+                        'app_connection_id' => (string) $appConnectionId,
+                        'customer_thread_id' => (int) $customerThreadActions->id_customer_thread,
+                        'message_id' => (int) $customerThreadActions->id,
                         'employee_id' => $employeeId,
                         'from' => $employeeFullName,
-                        'message' => (string)$customerThreadActions->message,
-                        'url_attachment' => (int)$fileLink,
-                        'is_private' => (bool)$customerThreadActions->private,
+                        'message' => (string) $customerThreadActions->message,
+                        'url_attachment' => (int) $fileLink,
+                        'is_private' => (bool) $customerThreadActions->private,
                         'date_add' => $orderMessageTimestamp,
-                    ), $registrationId);
+                    ], $registrationId);
 
                     $this->proceedFCMResponse($response, $registrationId);
                 }
@@ -668,21 +657,21 @@ class Bridgeconnector extends Module
             foreach ($activeDevices as $device) {
                 $device = $this->preparePushSettings($device);
 
-                $registrationId  = $device['registration_id'];
+                $registrationId = $device['registration_id'];
                 $appConnectionId = $device['app_connection_id'];
 
                 if (!empty($appConnectionId)
                    && !empty($registrationId)
                 ) {
-                    $response = $this->sendFCM(array(
+                    $response = $this->sendFCM([
                        'notification_type' => $notificationType,
-                       'app_connection_id' => (string)$appConnectionId,
-                       'thread_id' => (int)$deletedCustomerThread['id'],
-                       'shop_id' => (int)$deletedCustomerThread['id_shop'],
-                       'language_id' => (int)$deletedCustomerThread['id_lang'],
-                       'order_id' => (int)$deletedCustomerThread['id_order'],
-                       'customer_id' => (int)$deletedCustomerThread['id_customer']
-                    ), $registrationId);
+                       'app_connection_id' => (string) $appConnectionId,
+                       'thread_id' => (int) $deletedCustomerThread['id'],
+                       'shop_id' => (int) $deletedCustomerThread['id_shop'],
+                       'language_id' => (int) $deletedCustomerThread['id_lang'],
+                       'order_id' => (int) $deletedCustomerThread['id_order'],
+                       'customer_id' => (int) $deletedCustomerThread['id_customer'],
+                    ], $registrationId);
 
                     $this->proceedFCMResponse($response, $registrationId);
                 }
@@ -700,7 +689,7 @@ class Bridgeconnector extends Module
             foreach ($activeDevices as $device) {
                 $device = $this->preparePushSettings($device);
 
-                $registrationId  = $device['registration_id'];
+                $registrationId = $device['registration_id'];
                 $appConnectionId = $device['app_connection_id'];
 
                 if (!empty($appConnectionId)
@@ -711,28 +700,29 @@ class Bridgeconnector extends Module
                         && file_exists(_PS_UPLOAD_DIR_ . $customerThreadActions->file_name)
                         && Validate::isFileName($customerThreadActions->file_name)
                     ) {
-//                        $fileLink = EM1Main::getUploadedFileLink($customerThreadActions->file_name);
+                        //                        $fileLink = EM1Main::getUploadedFileLink($customerThreadActions->file_name);
                     }
 
-                    $employeeId = (int)$customerThreadActions->id_employee;
+                    $employeeId = (int) $customerThreadActions->id_employee;
                     /** @var EmployeeCore $employee */
                     $employee = new Employee($employeeId);
                     $employeeFullName = ($employee->firstname . ' ' . $employee->lastname);
                     $orderMessageTimestamp = strtotime($customerThreadActions->date_add);
-                    $orderMessageTimestamp = $orderMessageTimestamp * 1000; // workaround EM1Main::convertTimestampToMillisecondsTimestamp($orderMessageTimestamp)
+                    $orderMessageTimestamp = $orderMessageTimestamp * 1000;
+                    // workaround EM1Main::convertTimestampToMillisecondsTimestamp($orderMessageTimestamp)
 
-                    $response = $this->sendFCM(array(
+                    $response = $this->sendFCM([
                         'notification_type' => $notificationType,
-                        'app_connection_id' => (string)$appConnectionId,
-                        'customer_thread_id' => (int)$customerThreadActions->id_customer_thread,
-                        'message_id' => (int)$customerThreadActions->id,
+                        'app_connection_id' => (string) $appConnectionId,
+                        'customer_thread_id' => (int) $customerThreadActions->id_customer_thread,
+                        'message_id' => (int) $customerThreadActions->id,
                         'employee_id' => $employeeId,
                         'from' => $employeeFullName,
-                        'message' => (string)$customerThreadActions->message,
-                        'url_attachment' => (int)$fileLink,
-                        'is_private' => (bool)$customerThreadActions->private,
+                        'message' => (string) $customerThreadActions->message,
+                        'url_attachment' => (int) $fileLink,
+                        'is_private' => (bool) $customerThreadActions->private,
                         'date_add' => $orderMessageTimestamp,
-                    ), $registrationId);
+                    ], $registrationId);
 
                     $this->proceedFCMResponse($response, $registrationId);
                 }
@@ -747,50 +737,50 @@ class Bridgeconnector extends Module
         $notificationType = 'order_status_changed';
 
         try {
-            $order    = new Order($data['id_order']);
+            $order = new Order($data['id_order']);
             $customer = $order->getCustomer();
         } catch (PrestaShopDatabaseException $e) {
-            EM1Main::generateResponse(array(), 'could_not_load_order_object');
+            EM1Main::generateResponse([], 'could_not_load_order_object');
         } catch (PrestaShopException $e) {
-            EM1Main::generateResponse(array(), 'could_not_load_order_object');
+            EM1Main::generateResponse([], 'could_not_load_order_object');
         }
 
-        $statusId = (int)$data['newOrderStatus']->id;
+        $statusId = (int) $data['newOrderStatus']->id;
         foreach ($activeDevices as $device) {
-            $device                    = $this->preparePushSettings($device);
+            $device = $this->preparePushSettings($device);
             $excludedPushOrderStatuses = $this->getPushStatuses($device['not_notified_order_status_ids']);
 
-            $registrationId  = $device['registration_id'];
+            $registrationId = $device['registration_id'];
             $appConnectionId = $device['app_connection_id'];
 
             if (!empty($appConnectionId)
                 && !empty($registrationId)
                 && $device['status'] === 1
                 && $device['push_order_statuses'] === 1
+                && strpos($device['allowed_actions'], 'push_change_order_statuses') !== false
                 && !in_array($statusId, $excludedPushOrderStatuses, true)
             ) {
-
                 /** @var $order */
                 /** @var $customer */
-                $response = $this->sendFCM(array(
-                    'notification_type'     => $notificationType,
-                    'app_connection_id'     => (string)$appConnectionId,
-                    'shop_id'               => (int)$order->id_shop,
-                    'order_id'              => (int)$order->id,
-                    'reference'             => (string)$order->reference,
-                    'customer_id'           => (int)$customer->id,
-                    'customer_email'        => (string)$customer->email,
-                    'customer_first_name'   => (string)$customer->firstname,
-                    'customer_last_name'    => (string)$customer->lastname,
-                    'status_id'             => $statusId,
-                    'total'                 => round((float)$order->total_paid, 6),
-                    'formatted_total'       => (string)Tools::displayPrice(
-                        (float)$order->total_paid,
-                        Currency::getCurrencyInstance((int)$order->id_currency)
+                $response = $this->sendFCM([
+                    'notification_type' => $notificationType,
+                    'app_connection_id' => (string) $appConnectionId,
+                    'shop_id' => (int) $order->id_shop,
+                    'order_id' => (int) $order->id,
+                    'reference' => (string) $order->reference,
+                    'customer_id' => (int) $customer->id,
+                    'customer_email' => (string) $customer->email,
+                    'customer_first_name' => (string) $customer->firstname,
+                    'customer_last_name' => (string) $customer->lastname,
+                    'status_id' => $statusId,
+                    'total' => round((float) $order->total_paid, 6),
+                    'formatted_total' => (string) Tools::displayPrice(
+                        (float) $order->total_paid,
+                        Currency::getCurrencyInstance((int) $order->id_currency)
                     ),
-                    'date_add'              => (float)$order->date_add,
-                    'products_count'        => count($order->getOrderDetailList()),
-                ), $registrationId);
+                    'date_add' => (float) $order->date_add,
+                    'products_count' => count($order->getOrderDetailList()),
+                ], $registrationId);
 
                 $this->proceedFCMResponse($response, $registrationId);
             }
@@ -802,33 +792,34 @@ class Bridgeconnector extends Module
         $activeDevices = $this->getActiveDevices();
 
         $notificationType = 'new_customer';
-        $customer         = $data['newCustomer'];
+        $customer = $data['newCustomer'];
         foreach ($activeDevices as $device) {
-            $device          = $this->preparePushSettings($device);
+            $device = $this->preparePushSettings($device);
 
-            $registrationId  = $device['registration_id'];
+            $registrationId = $device['registration_id'];
             $appConnectionId = $device['app_connection_id'];
 
             if (!empty($appConnectionId)
                 && !empty($registrationId)
+                && strpos($device['allowed_actions'], 'push_new_customer') !== false
                 && $device['push_new_customer'] === 1
             ) {
-                $response = $this->sendFCM(array(
-                    'notification_type'         => $notificationType,
-                    'app_connection_id'         => (string)$appConnectionId,
-                    'shop_id'                   => (int)$customer->id_shop,
-                    'customer_id'               => (int)$customer->id,
-                    'email'                     => (string)$customer->email,
-                    'first_name'                => (string)$customer->firstname,
-                    'last_name'                 => (string)$customer->lastname,
-                    'date_add'                  => (int)strtotime($customer->date_add),
-                    'orders_count'              => 0,
-                    'orders_total'              => 0,
-                    'formatted_orders_total'    => (string)Tools::displayPrice(
-                        (float)0,
+                $response = $this->sendFCM([
+                    'notification_type' => $notificationType,
+                    'app_connection_id' => (string) $appConnectionId,
+                    'shop_id' => (int) $customer->id_shop,
+                    'customer_id' => (int) $customer->id,
+                    'email' => (string) $customer->email,
+                    'first_name' => (string) $customer->firstname,
+                    'last_name' => (string) $customer->lastname,
+                    'date_add' => (int) strtotime($customer->date_add),
+                    'orders_count' => 0,
+                    'orders_total' => 0,
+                    'formatted_orders_total' => (string) Tools::displayPrice(
+                        (float) 0,
                         Currency::getCurrencyInstance(1)
-                    )
-                ), $registrationId);
+                    ),
+                ], $registrationId);
 
                 $this->proceedFCMResponse($response, $registrationId);
             }
@@ -837,41 +828,42 @@ class Bridgeconnector extends Module
 
     private function sendNewOrderMessage($data)
     {
-        $activeDevices      = $this->getActiveDevices();
-        $order              = $data['order'];
-        $customer           = $data['customer'];
-        $notificationType   = 'new_order';
+        $activeDevices = $this->getActiveDevices();
+        $order = $data['order'];
+        $customer = $data['customer'];
+        $notificationType = 'new_order';
 
         $GLOBALS['hookNewOrder'] = 1;
-        $statusId                = $data['orderStatus']->id;
+        $statusId = $data['orderStatus']->id;
         foreach ($activeDevices as $device) {
-            $device          = $this->preparePushSettings($device);
-            $registrationId  = $device['registration_id'];
+            $device = $this->preparePushSettings($device);
+            $registrationId = $device['registration_id'];
             $appConnectionId = $device['app_connection_id'];
             if (!empty($appConnectionId)
                 && !empty($registrationId)
                 && $device['push_new_order'] === 1
+                && strpos($device['allowed_actions'], 'push_new_order') !== false
                 && $device['status'] === 1
             ) {
-                $data = array(
-                    'notification_type'     => $notificationType,
-                    'app_connection_id'     => (string)$appConnectionId,
-                    'shop_id'               => (int)$order->id_shop,
-                    'order_id'              => (int)$order->id,
-                    'reference'             => (string)$order->reference,
-                    'customer_id'           => (int)$customer->id,
-                    'customer_email'        => (string)$customer->email,
-                    'customer_first_name'   => (string)$customer->firstname,
-                    'customer_last_name'    => (string)$customer->lastname,
-                    'status_id'             => (int)$statusId,
-                    'total'                 => round((float)$order->total_paid, 6),
-                    'formatted_total'       => (string)Tools::displayPrice(
-                        (float)$order->total_paid,
-                        Currency::getCurrencyInstance((int)$order->id_currency)
+                $data = [
+                    'notification_type' => $notificationType,
+                    'app_connection_id' => (string) $appConnectionId,
+                    'shop_id' => (int) $order->id_shop,
+                    'order_id' => (int) $order->id,
+                    'reference' => (string) $order->reference,
+                    'customer_id' => (int) $customer->id,
+                    'customer_email' => (string) $customer->email,
+                    'customer_first_name' => (string) $customer->firstname,
+                    'customer_last_name' => (string) $customer->lastname,
+                    'status_id' => (int) $statusId,
+                    'total' => round((float) $order->total_paid, 6),
+                    'formatted_total' => (string) Tools::displayPrice(
+                        (float) $order->total_paid,
+                        Currency::getCurrencyInstance((int) $order->id_currency)
                     ),
-                    'date_add'              => (int)strtotime($order->date_add),
-                    'products_count'        => count($order->product_list)
-                );
+                    'date_add' => (int) strtotime($order->date_add),
+                    'products_count' => count($order->product_list),
+                ];
                 $response = $this->sendFCM($data, $registrationId);
 
                 $this->proceedFCMResponse($response, $registrationId);
@@ -945,13 +937,14 @@ class Bridgeconnector extends Module
 
     private function getDefaultExcludedTables()
     {
-        $query = array();
+        $query = [];
         try {
             $query = Db::getInstance()->executeS(
                 "SELECT `table_name`
                     FROM information_schema.tables
                     WHERE table_schema = '" . _DB_NAME_ . "'
-                        AND table_name NOT LIKE '" . str_replace('_', '\_', _DB_PREFIX_) . "%'"
+                        AND (table_name NOT LIKE '" . str_replace('_', '\_', _DB_PREFIX_) . "%'
+                            AND table_name NOT LIKE '" . str_replace('_', '\_', 'sm_') . "%')"
             );
 
             if (!is_array($query)) {
@@ -967,15 +960,15 @@ class Bridgeconnector extends Module
             );
         }
 
-        $tableExcluded = array(
+        $tableExcluded = [
             _DB_PREFIX_ . 'connections',
             _DB_PREFIX_ . 'guest',
             _DB_PREFIX_ . 'pagenotfound',
             _DB_PREFIX_ . 'log',
-        );
+        ];
 
         foreach ($query as $table) {
-            $tableExcluded[] = $table;
+            $tableExcluded[] = array_shift($table);
         }
 
         return $tableExcluded;
@@ -989,7 +982,7 @@ class Bridgeconnector extends Module
             $query = Db::getInstance()->executeS(
                 $dbQuery->select('version')
                     ->from('module')
-                    ->where('id_module = ' . (int)$this->id)
+                    ->where('id_module = ' . (int) $this->id)
                     ->build()
             );
 
@@ -998,6 +991,7 @@ class Bridgeconnector extends Module
                     'Failed while executing query',
                     $this->eM1Logger->level
                 );
+
                 return false;
             }
         } catch (PrestaShopDatabaseException $e) {
@@ -1005,12 +999,14 @@ class Bridgeconnector extends Module
                 'Exception while executing query - ' . $e->getMessage(),
                 $this->eM1Logger->level
             );
+
             return false;
         } catch (PrestaShopException $e) {
             $this->eM1Logger->logMessageCall(
                 'Exception while executing query - ' . $e->getMessage(),
                 $this->eM1Logger->level
             );
+
             return false;
         }
 
@@ -1063,7 +1059,7 @@ class Bridgeconnector extends Module
 
     private function getActiveDevices()
     {
-        $query   = array();
+        $query = [];
         $dbQuery = new DbQuery();
         try {
             $query = Db::getInstance()->executeS(
@@ -1072,6 +1068,7 @@ class Bridgeconnector extends Module
                     mpn.`registration_id`,
                     mpn.`app_connection_id`,
                     mu.`status`,
+                    mu.`allowed_actions`,
                     mpn.`push_new_customer`,
                     mpn.`push_new_order`,
                     mpn.`push_order_statuses`,
@@ -1107,37 +1104,37 @@ class Bridgeconnector extends Module
     private function preparePushSettings($data)
     {
         if (!is_array($data)) {
-            $data = array();
+            $data = [];
         }
 
         $data['registration_id'] = (!isset($data['registration_id']) || $data['registration_id'] === null)
             ? ''
-            : (string)$data['registration_id'];
-        $data['app_connection_id'] = empty((string)$data['app_connection_id'])
+            : (string) $data['registration_id'];
+        $data['app_connection_id'] = empty((string) $data['app_connection_id'])
             ? ''
-            : (string)$data['app_connection_id'];
+            : (string) $data['app_connection_id'];
         $data['status'] = !isset($data['status'])
             ? 1
-            : (int)$data['status'];
+            : (int) $data['status'];
         $data['push_new_customer'] = !isset($data['push_new_customer'])
             ? 1
-            : (int)$data['push_new_customer'];
+            : (int) $data['push_new_customer'];
         $data['push_new_order'] = !isset($data['push_new_order'])
             ? 1
-            : (int)$data['push_new_order'];
+            : (int) $data['push_new_order'];
         $data['push_order_statuses'] = !isset($data['push_order_statuses'])
             ? 1
-            : (int)$data['push_order_statuses'];
+            : (int) $data['push_order_statuses'];
         $data['not_notified_order_status_ids'] = !isset($data['not_notified_order_status_ids'])
             ? ''
-            : (string)$data['not_notified_order_status_ids'];
+            : (string) $data['not_notified_order_status_ids'];
 
         return $data;
     }
 
     private function getPushStatuses($data)
     {
-        $statuses = array();
+        $statuses = [];
 
         if (!$data || !is_string($data)) {
             return $statuses;
@@ -1145,7 +1142,7 @@ class Bridgeconnector extends Module
 
         $statuses = explode(',', $data);
         foreach ($statuses as $status) {
-            $status[] = (int)trim($status);
+            $status[] = (int) trim($status);
         }
 
         return $statuses;
@@ -1160,6 +1157,7 @@ class Bridgeconnector extends Module
             `date_added` DATETIME NOT NULL,
             `last_activity` DATETIME NOT NULL,
             PRIMARY KEY (`id`))';
+
         return Db::getInstance()->execute($sql);
     }
 
@@ -1234,7 +1232,7 @@ class Bridgeconnector extends Module
 
     private function addEmployeeIdColumnToMATableUsers()
     {
-        $sql = 'ALTER TABLE `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_USERS . '`
+        $sql = 'ALTER TABLE `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_USERS . '` 
                 ADD COLUMN `employee_id` VARCHAR(5)';
 
         return Db::getInstance()->execute($sql);
@@ -1254,8 +1252,8 @@ class Bridgeconnector extends Module
 
     private function getActionsCodes()
     {
-        $preparedActions = array();
-        $actions         = emoGetRestrictedActions();
+        $preparedActions = [];
+        $actions = emoGetRestrictedActions();
         foreach ($actions as $action) {
             foreach ($action['items'] as $item) {
                 $preparedActions[] = $item['code'];
@@ -1267,7 +1265,7 @@ class Bridgeconnector extends Module
 
     private function populateTableUsers()
     {
-        $count = (int)Db::getInstance()->getValue(
+        $count = (int) Db::getInstance()->getValue(
             'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_USERS . '`'
         );
 
@@ -1277,14 +1275,14 @@ class Bridgeconnector extends Module
 
         return Db::getInstance()->insert(
             EM1Constants::TABLE_MA_USERS,
-            array(
-                'username'        => 'user',
-                'password'        => md5(time()),
-                'employee_id'     => (int)Context::getContext()->employee->id,
+            [
+                'username' => 'user',
+                'password' => md5(time()),
+                'employee_id' => (int) Context::getContext()->employee->id,
                 'allowed_actions' => pSQL(implode(';', $this->getActionsCodes())),
-                'qr_code_hash'    => hash('sha256', time()),
-                'status'          => 1,
-            )
+                'qr_code_hash' => hash('sha256', time()),
+                'status' => 1,
+            ]
         );
     }
 
@@ -1321,7 +1319,7 @@ class Bridgeconnector extends Module
 
     private function addDefaultUserOnUpdate()
     {
-        $count = (int)Db::getInstance()->getValue(
+        $count = (int) Db::getInstance()->getValue(
             'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_USERS . '`'
         );
 
@@ -1334,14 +1332,14 @@ class Bridgeconnector extends Module
 
         Db::getInstance()->insert(
             EM1Constants::TABLE_MA_USERS,
-            array(
-                'username'        => 'user',
-                'password'        => md5(time()),
-                'employee_id'     => $employeeId,
+            [
+                'username' => 'user',
+                'password' => md5(time()),
+                'employee_id' => $employeeId,
                 'allowed_actions' => pSQL(implode(';', $this->getActionsCodes())),
-                'qr_code_hash'    => hash('sha256', time()),
-                'status'          => 1,
-            )
+                'qr_code_hash' => hash('sha256', time()),
+                'status' => 1,
+            ]
         );
 
         return true;
@@ -1349,23 +1347,23 @@ class Bridgeconnector extends Module
 
     private function addPermissionsOnUpdate()
     {
-        $count = (int)Db::getInstance()->getValue(
+        $count = (int) Db::getInstance()->getValue(
             'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_USERS . '`'
         );
 
         if ($count > 0) {
             Db::getInstance()->update(
                 EM1Constants::TABLE_MA_USERS,
-                array(
+                [
                     'allowed_actions' => pSQL(implode(';', $this->getActionsCodes())),
-                )
+                ]
             );
         }
     }
 
     private function addNewUserPermissions()
     {
-        $users = array();
+        $users = [];
         try {
             $users = Db::getInstance()->executeS(
                 'SELECT `user_id`, `allowed_actions` FROM `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_USERS . '`'
@@ -1388,9 +1386,9 @@ class Bridgeconnector extends Module
             return;
         }
 
-        $userAllPermissions        = $this->getActionsCodes();
-        $userAllPermissionsCount   = count($userAllPermissions);
-        $addedInReleaseRequests    = EM1Constants::MA_MODULE_NEW_REQUESTS;
+        $userAllPermissions = $this->getActionsCodes();
+        $userAllPermissionsCount = count($userAllPermissions);
+        $addedInReleaseRequests = EM1Constants::MA_MODULE_NEW_REQUESTS;
         foreach ($users as $user) {
             $userPermissions = explode(';', $user['allowed_actions']);
             if (empty($userPermissions)) {
@@ -1404,10 +1402,10 @@ class Bridgeconnector extends Module
 
             Db::getInstance()->update(
                 EM1Constants::TABLE_MA_USERS,
-                array(
+                [
                     'allowed_actions' => pSQL(implode(';', $userAllPermissions)),
-                ),
-                '`user_id` = ' . (int)$user['user_id']
+                ],
+                '`user_id` = ' . (int) $user['user_id']
             );
         }
     }
@@ -1419,10 +1417,10 @@ class Bridgeconnector extends Module
 
     private static function prepareUrlProtocol($url)
     {
-        return self::getCurrentProtocol() . str_replace(array('http://', 'https://'), '', $url);
+        return self::getCurrentProtocol() . str_replace(['http://', 'https://'], '', $url);
     }
 
-    //todo use other way to send if curl not active
+    // todo use other way to send if curl not active
 
     /**
      * @param $dataBody
@@ -1434,8 +1432,8 @@ class Bridgeconnector extends Module
     {
         $result = false;
         if (is_callable('curl_init')) {
-            $data = array(
-                'to'            => $registrationId,
+            $data = [
+                'to' => $registrationId,
                 // If we ever will work with notification title/body.
                 // Should be fixed firstly from firebase side - https://github.com/firebase/quickstart-android/issues/4
                 // 'notification'  => array(
@@ -1445,30 +1443,30 @@ class Bridgeconnector extends Module
                 //     'sound'         => 'default',
                 //     'badge'         => '1'
                 // ),
-                'data'          => $dataBody,
-                'priority'      => 'high'
-            );
+                'data' => $dataBody,
+                'priority' => 'high',
+            ];
 
-            $headers = array(
+            $headers = [
                 'Authorization: key=' . EM1Constants::FSM_SERVER_KEY,
-                'Content-Type: application/json'
-            );
+                'Content-Type: application/json',
+            ];
 
             $url = 'https://fcm.googleapis.com/fcm/send';
-            $ch  = curl_init();
+            $ch = curl_init();
             // Disabled Inspection in some cases
-            /** @noinspection CurlSslServerSpoofingInspection */
+            /* @noinspection CurlSslServerSpoofingInspection */
             curl_setopt_array(
                 $ch,
-                array(
-                    CURLOPT_URL             => $url,
-                    CURLOPT_POST            => true,
-                    CURLOPT_HTTPHEADER      => $headers,
-                    CURLOPT_RETURNTRANSFER  => true,
-                    CURLOPT_SSL_VERIFYHOST  => 0,
-                    CURLOPT_SSL_VERIFYPEER  => false,
-                    CURLOPT_POSTFIELDS      => json_encode($data)
-                )
+                [
+                    CURLOPT_URL => $url,
+                    CURLOPT_POST => true,
+                    CURLOPT_HTTPHEADER => $headers,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_SSL_VERIFYHOST => 0,
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_POSTFIELDS => json_encode($data),
+                ]
             );
 
             $result = curl_exec($ch);
@@ -1490,12 +1488,12 @@ class Bridgeconnector extends Module
 
     private function proceedFCMResponse($response, $registrationId)
     {
-        $json = array();
+        $json = [];
         if ($response && !empty($response)) {
             $json = json_decode($response, true);
 
             if (!is_array($json)) {
-                $json = array();
+                $json = [];
             }
         }
 
@@ -1503,14 +1501,14 @@ class Bridgeconnector extends Module
             return;
         }
 
-        $results = is_array($json['results']) ? $json['results'] : array();
+        $results = is_array($json['results']) ? $json['results'] : [];
 
         foreach ($results as $result) {
             if ((isset($result['registration_id'], $json['canonical_ids'])
-                    && (int)$json['canonical_ids'] > 0) || (isset($result['error'])
+                    && (int) $json['canonical_ids'] > 0) || (isset($result['error'])
                     && ($result['error'] === 'NotRegistered' || $result['error'] === 'InvalidRegistration'))
             ) {
-                if ((int)$json['canonical_ids'] > 0 && isset($result['registration_id'], $json['canonical_ids'])) {
+                if ((int) $json['canonical_ids'] > 0 && isset($result['registration_id'], $json['canonical_ids'])) {
                     // Delete old records if new push settings are stored
                     Db::getInstance()->execute(
                         'DELETE mp FROM `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_PUSH_NOTIFICATIONS . '` mp
@@ -1523,7 +1521,7 @@ class Bridgeconnector extends Module
                     // Replace old registration ids with new
                     Db::getInstance()->update(
                         EM1Constants::TABLE_MA_PUSH_NOTIFICATIONS,
-                        array('registration_id' => $result['registration_id']),
+                        ['registration_id' => $result['registration_id']],
                         "registration_id = '$registrationId'"
                     );
                 } else {

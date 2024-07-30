@@ -16,34 +16,37 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class EM1Settings extends EM1Main
 {
-    const KEY_STORE_TITLE           = 'store_title';
-    const KEY_SHOP_GROUP_ID         = 'shop_group_id';
-    const KEY_NAME                  = 'name';
-    const KEY_SHOPS                 = 'shops';
-    const KEY_SHARE_ORDERS          = 'share_orders';
-    const KEY_SHARE_CUSTOMERS       = 'share_customers';
-    const KEY_SHARE_STOCK           = 'share_stock';
-    const KEY_IS_DEFAULT            = 'is_default';
-    const KEY_SHOP_ID               = 'shop_id';
-    const KEY_SHOW_SHOP_TREE        = 'show_shop_tree';
-    const KEY_SHOP_GROUPS           = 'shop_groups';
-    const KEY_TOKEN                 = 'token';
-    const KEY_CURRENCIES            = 'currencies';
-    const KEY_ID                    = 'id';
-    const KEY_COLOR                 = 'color';
-    const KEY_LANGUAGE_ID           = 'language_id';
-    const KEY_ISO_CODE              = 'iso_code';
-    const KEY_LANGUAGES             = 'languages';
-    const KEY_MODULE_VERSION        = 'module_version';
-    const KEY_CART_VERSION          = 'cart_version';
-    const KEY_CARRIERS              = 'carriers';
-    const KEY_DEFAULT_CURRENCY_ID   = 'default_currency_id';
+    const KEY_STORE_TITLE = 'store_title';
+    const KEY_SHOP_GROUP_ID = 'shop_group_id';
+    const KEY_NAME = 'name';
+    const KEY_SHOPS = 'shops';
+    const KEY_SHARE_ORDERS = 'share_orders';
+    const KEY_SHARE_CUSTOMERS = 'share_customers';
+    const KEY_SHARE_STOCK = 'share_stock';
+    const KEY_IS_DEFAULT = 'is_default';
+    const KEY_SHOP_ID = 'shop_id';
+    const KEY_SHOW_SHOP_TREE = 'show_shop_tree';
+    const KEY_SHOP_GROUPS = 'shop_groups';
+    const KEY_TOKEN = 'token';
+    const KEY_CURRENCIES = 'currencies';
+    const KEY_ID = 'id';
+    const KEY_COLOR = 'color';
+    const KEY_LANGUAGE_ID = 'language_id';
+    const KEY_ISO_CODE = 'iso_code';
+    const KEY_LANGUAGES = 'languages';
+    const KEY_MODULE_VERSION = 'module_version';
+    const KEY_CART_VERSION = 'cart_version';
+    const KEY_CARRIERS = 'carriers';
+    const KEY_DEFAULT_CURRENCY_ID = 'default_currency_id';
 
     public static function getQrCode($hash)
     {
@@ -59,10 +62,10 @@ class EM1Settings extends EM1Main
 
         if ($query) {
             include _PS_MODULE_DIR_ . '/bridgeconnector/views/qr_code.phtml';
-            die();
+            exit;
         }
 
-        self::generateResponse(array(), EM1Constants::RESPONSE_CODE_AUTH_ERROR);
+        self::generateResponse([], EM1Constants::RESPONSE_CODE_AUTH_ERROR);
     }
 
     public function getTokenValue($hash, $token = '')
@@ -70,57 +73,58 @@ class EM1Settings extends EM1Main
         if ($hash && !$token) {
             $token = EM1Access::getToken($hash);
             if ($token && EM1Access::checkToken($token)) {
-                return array(self::KEY_TOKEN => $token);
+                return [self::KEY_TOKEN => $token];
             }
         }
 
-        self::generateResponse(array(), EM1Constants::RESPONSE_CODE_AUTH_ERROR);
+        self::generateResponse([], EM1Constants::RESPONSE_CODE_AUTH_ERROR);
     }
 
     public function getStoreTitle($shopId = null)
     {
         if (empty($shopId) || $shopId < 1) {
-            $shopId = (int)Configuration::get('PS_SHOP_DEFAULT');
+            $shopId = (int) Configuration::get('PS_SHOP_DEFAULT');
         }
 
         $shop = new Shop($shopId);
-        return array(self::KEY_STORE_TITLE => $shop->name);
+
+        return [self::KEY_STORE_TITLE => $shop->name];
     }
 
     public function getStores()
     {
-        $shopGroup      = array();
-        $showShopTree   = false;
+        $shopGroup = [];
+        $showShopTree = false;
 
-        $defaultShopId      = (int)Configuration::get('PS_SHOP_DEFAULT');
-        $defaultCurrencyId  = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+        $defaultShopId = (int) Configuration::get('PS_SHOP_DEFAULT');
+        $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
         foreach (Shop::getTree() as $shopGroupTree) {
-            $shopGroupShops = array();
+            $shopGroupShops = [];
 
             foreach ($shopGroupTree[self::KEY_SHOPS] as $shop) {
-                if ((int)$shop['active'] !== 1 || empty($shop['uri'])) {
+                if ((int) $shop['active'] !== 1 || empty($shop['uri'])) {
                     continue;
                 }
 
-                $currencyId = (int)Configuration::get(
+                $currencyId = (int) Configuration::get(
                     'PS_CURRENCY_DEFAULT',
                     null,
                     null,
-                    (int)$shop['id_shop']
+                    (int) $shop['id_shop']
                 );
 
-                $dimensionUnit = (string)Configuration::get(
+                $dimensionUnit = (string) Configuration::get(
                     'PS_DIMENSION_UNIT',
                     null,
                     null,
-                    (int)$shop['id_shop']
+                    (int) $shop['id_shop']
                 );
 
-                $weightUnit = (string)Configuration::get(
+                $weightUnit = (string) Configuration::get(
                     'PS_WEIGHT_UNIT',
                     null,
                     null,
-                    (int)$shop['id_shop']
+                    (int) $shop['id_shop']
                 );
 
                 if (!empty($currencyId) && $defaultCurrencyId !== $currencyId) {
@@ -128,13 +132,13 @@ class EM1Settings extends EM1Main
                 }
 
                 $shopGroupShops[] = [
-                    self::KEY_SHOP_ID             => (int)$shop['id_shop'],
-                    self::KEY_SHOP_GROUP_ID       => (int)$shop['id_shop_group'],
-                    self::KEY_NAME                => (string)$shop['name'],
-                    self::KEY_IS_DEFAULT          => $defaultShopId === (int)$shop['id_shop'],
+                    self::KEY_SHOP_ID => (int) $shop['id_shop'],
+                    self::KEY_SHOP_GROUP_ID => (int) $shop['id_shop_group'],
+                    self::KEY_NAME => (string) $shop['name'],
+                    self::KEY_IS_DEFAULT => $defaultShopId === (int) $shop['id_shop'],
                     self::KEY_DEFAULT_CURRENCY_ID => $defaultCurrencyId,
-                    'dimension_unit'              => $dimensionUnit,
-                    'weight_unit'                 => $weightUnit
+                    'dimension_unit' => $dimensionUnit,
+                    'weight_unit' => $weightUnit,
                 ];
             }
 
@@ -142,54 +146,57 @@ class EM1Settings extends EM1Main
                 continue;
             }
 
-            $shopGroup[] = array(
-                self::KEY_SHOP_GROUP_ID     => (int)$shopGroupTree['id'],
-                self::KEY_NAME              => (string)$shopGroupTree['name'],
-                self::KEY_SHARE_ORDERS      => (bool)$shopGroupTree['share_order'],
-                self::KEY_SHARE_CUSTOMERS   => (bool)$shopGroupTree['share_customer'],
-                self::KEY_SHARE_STOCK       => (bool)$shopGroupTree['share_stock'],
-                self::KEY_SHOPS             => $shopGroupShops
-            );
+            $shopGroup[] = [
+                self::KEY_SHOP_GROUP_ID => (int) $shopGroupTree['id'],
+                self::KEY_NAME => (string) $shopGroupTree['name'],
+                self::KEY_SHARE_ORDERS => (bool) $shopGroupTree['share_order'],
+                self::KEY_SHARE_CUSTOMERS => (bool) $shopGroupTree['share_customer'],
+                self::KEY_SHARE_STOCK => (bool) $shopGroupTree['share_stock'],
+                self::KEY_SHOPS => $shopGroupShops,
+            ];
 
             if (!$showShopTree) {
                 $showShopTree = count($shopGroupShops) > 0;
             }
         }
 
-        return array(
-            self::KEY_SHOP_GROUPS       => $shopGroup,
-            self::KEY_SHOW_SHOP_TREE    => $showShopTree && Shop::isFeatureActive()
-        );
+        return [
+            self::KEY_SHOP_GROUPS => $shopGroup,
+            self::KEY_SHOW_SHOP_TREE => $showShopTree && Shop::isFeatureActive(),
+        ];
     }
 
     public function getCurrencies()
     {
-        $currencyIds            = array();
-        $currencyResult         = array();
-        $currencies             = Currency::getCurrencies();
+        $currencyIds = [];
+        $currencyResult = [];
+        $currencies = Currency::getCurrencies();
 
-        $defaultCurrencyId      = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+        $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
         $i = 0;
         foreach ($currencies as $currency) {
-            if (!in_array((int)$currency['id_currency'], $currencyIds, true)) {
-                $currencyResult[$i]['code'] = (int)$currency['id_currency'];
-                $currencyResult[$i]['symbol'] = !empty($sign = (string)$currency['sign'])
+            if (!in_array((int) $currency['id_currency'], $currencyIds, true)) {
+                $currencyResult[$i]['code'] = (int) $currency['id_currency'];
+                $currencyResult[$i]['symbol'] = !empty($sign = (string) $currency['sign'])
                     ? $sign
-                    : (string)$currency['id_currency'];
-                $currencyResult[$i]['name'] = (string)$currency['name'];
+                    : (string) $currency['id_currency'];
+                $currencyResult[$i]['name'] = (string) $currency['name'];
                 $currencyResult[$i]['is_default_for_all_shops'] =
-                    (bool)($defaultCurrencyId === (int)$currency['id_currency']);
-                $currencyIds[] = (int)$currency['id_currency'];
-                $i++;
+                    (bool) ($defaultCurrencyId === (int) $currency['id_currency']);
+                $currencyIds[] = (int) $currency['id_currency'];
+                ++$i;
             }
         }
 
-        return array(self::KEY_CURRENCIES => $currencyResult);
+        return [self::KEY_CURRENCIES => $currencyResult];
     }
 
+    /**
+     * phpcs:disable
+     */
     public function getOrdersStatuses($langId)
     {
-        $statuses = array();
+        $statuses = [];
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT os.id_order_state, osl.name, os.color 
@@ -199,37 +206,39 @@ class EM1Settings extends EM1Main
             ORDER BY `name` ASC');
 
         foreach ($result as $status) {
-            $statuses[] = array(
-                self::KEY_ID        => (int)$status['id_order_state'],
-                self::KEY_NAME      => (string)$status['name'],
-                self::KEY_COLOR     => (string)$status['color']
-            );
+            $statuses[] = [
+                self::KEY_ID => (int) $status['id_order_state'],
+                self::KEY_NAME => (string) $status['name'],
+                self::KEY_COLOR => (string) $status['color'],
+            ];
         }
 
-        return array('order_statuses' => $statuses);
+        return ['order_statuses' => $statuses];
     }
 
+    /** phpcs:enable */
     public function getLanguages()
     {
-        $storeLanguagesResult = array();
+        $storeLanguagesResult = [];
 
         // Get field based on language
-        $defaultLangId = (int)Configuration::get('PS_LANG_DEFAULT');
+        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
         foreach (Language::getLanguages() as $langValue) {
-            $langId = (int)$langValue['id_lang'];
-            $storeLanguagesResult[] = array(
-                self::KEY_LANGUAGE_ID           => (int)$langValue['id_lang'],
-                self::KEY_NAME                  => (string)$langValue['name'],
-                self::KEY_ISO_CODE              => (string)$langValue['iso_code'],
-                self::KEY_IS_DEFAULT            => (bool)($langId === $defaultLangId ? 1 : 0)
-            );
+            $langId = (int) $langValue['id_lang'];
+            $storeLanguagesResult[] = [
+                self::KEY_LANGUAGE_ID => (int) $langValue['id_lang'],
+                self::KEY_NAME => (string) $langValue['name'],
+                self::KEY_ISO_CODE => (string) $langValue['iso_code'],
+                self::KEY_IS_DEFAULT => (bool) ($langId === $defaultLangId ? 1 : 0),
+            ];
         }
 
-        return array(self::KEY_LANGUAGES => $storeLanguagesResult);
+        return [self::KEY_LANGUAGES => $storeLanguagesResult];
     }
 
     /**
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getCarriersData()
@@ -247,48 +256,49 @@ class EM1Settings extends EM1Main
 
     /**
      * @return array
+     *
      * @throws EM1Exception
      */
-    //todo: refactor this code in future
+    // todo: refactor this code in future
     public function getCarriers()
     {
-        $carriersResponse = array();
-        $carrierLanguageValues = array();
+        $carriersResponse = [];
+        $carrierLanguageValues = [];
         $carrierData = $this->getCarriersData();
         foreach ($carrierData as $carrier) {
-            if ((int)$carrier['id_lang'] === (int)Configuration::get('PS_LANG_DEFAULT')) {
-                $carrierObject =  new Carrier((int)$carrier['id_carrier']);
-                $carriersResponse[(int)$carrier['id_carrier']] = array(
-                    'carrier_id'        => (int)$carrier['id_carrier'],
-                    'name'              => (string)$carrierObject->name,
-                    'status'            => (bool)$carrier['active'],
-                    'url'               => (string)$carrier['url']
-                );
+            if ((int) $carrier['id_lang'] === (int) Configuration::get('PS_LANG_DEFAULT')) {
+                $carrierObject = new Carrier((int) $carrier['id_carrier']);
+                $carriersResponse[(int) $carrier['id_carrier']] = [
+                    'carrier_id' => (int) $carrier['id_carrier'],
+                    'name' => (string) $carrierObject->name,
+                    'status' => (bool) $carrier['active'],
+                    'url' => (string) $carrier['url'],
+                ];
             }
 
-            $uniqueIdentifier = (int)$carrier['id_lang'].(int)$carrier['id_shop'];
-            $carrierLanguageValues[(int)$carrier['id_carrier']]['language_values'][$uniqueIdentifier] = array(
-                'shop_id'           => (int)$carrier['id_shop'],
-                'language_id'       => (int)$carrier['id_lang'],
-                'delay'             => (string)$carrier['delay']
-            );
-            $carriersResponse[(int)$carrier['id_carrier']]['language_values']
-                = array_values($carrierLanguageValues[(int)$carrier['id_carrier']]['language_values']);
+            $uniqueIdentifier = (int) $carrier['id_lang'] . (int) $carrier['id_shop'];
+            $carrierLanguageValues[(int) $carrier['id_carrier']]['language_values'][$uniqueIdentifier] = [
+                'shop_id' => (int) $carrier['id_shop'],
+                'language_id' => (int) $carrier['id_lang'],
+                'delay' => (string) $carrier['delay'],
+            ];
+            $carriersResponse[(int) $carrier['id_carrier']]['language_values']
+                = array_values($carrierLanguageValues[(int) $carrier['id_carrier']]['language_values']);
         }
 
-        return array('carriers' => array_values($carriersResponse));
+        return ['carriers' => array_values($carriersResponse)];
     }
 
     public function getCountries()
     {
-        $countryResult = array();
+        $countryResult = [];
         $languages = Language::getIDs();
         foreach ($languages as $languageId) {
-            $countries = Country::getCountries((int)$languageId);
+            $countries = Country::getCountries((int) $languageId);
             foreach ($countries as $country) {
-                $countryResult[] = array(
-                    'id' => $country
-                );
+                $countryResult[] = [
+                    'id' => $country,
+                ];
             }
         }
 
@@ -297,51 +307,51 @@ class EM1Settings extends EM1Main
 
     public function getEmployees()
     {
-        $employeesReturnData = array();
+        $employeesReturnData = [];
         $employees = Employee::getEmployees();
         foreach ($employees as $employee) {
-            $employeesReturnData[] = array(
-                'employee_id'   => (int)$employee['id_employee'],
-                'first_name'    => (string)$employee['firstname'],
-                'last_name'     => (string)$employee['lastname']
-            );
+            $employeesReturnData[] = [
+                'employee_id' => (int) $employee['id_employee'],
+                'first_name' => (string) $employee['firstname'],
+                'last_name' => (string) $employee['lastname'],
+            ];
         }
 
-        return array('employees' => $employeesReturnData);
+        return ['employees' => $employeesReturnData];
     }
 
     public function getTaxes()
     {
-        $taxs = array();
+        $taxs = [];
         TaxRulesGroup::getTaxRulesGroupsForOptions();
         foreach (Language::getLanguages() as $langValue) {
-            $langId = (int)$langValue['id_lang'];
+            $langId = (int) $langValue['id_lang'];
             $tax = Tax::getTaxes($langId);
-            $taxs[(int)$tax['id']] = array(
-                'carrier_id'        => (int)$tax['id'],
-                'name'              => (string)$tax['name'],
-                'status'            => (string)$tax['status'],
-            );
+            $taxs[(int) $tax['id']] = [
+                'carrier_id' => (int) $tax['id'],
+                'name' => (string) $tax['name'],
+                'status' => (string) $tax['status'],
+            ];
 
-            $taxs[(int)$tax['id']]['language_values'][] = array(
-                'shop_id'           => (int)$tax['shop_id'],
-                'language_id'       => (int)$tax['language_id'],
-                'delay'             => (string)$tax['delay']
-            );
+            $taxs[(int) $tax['id']]['language_values'][] = [
+                'shop_id' => (int) $tax['shop_id'],
+                'language_id' => (int) $tax['language_id'],
+                'delay' => (string) $tax['delay'],
+            ];
         }
 
-        return array('tax' => array_values($taxs));
+        return ['tax' => array_values($taxs)];
     }
 
     public static function getMaxFileUploadInBytes()
     {
-        //select maximum upload size
+        // select maximum upload size
         $max_upload = self::calculateBytes(ini_get('upload_max_filesize'));
 
-        //select post limit
+        // select post limit
         $max_post = self::calculateBytes(ini_get('post_max_size'));
 
-        //select memory limit
+        // select memory limit
         $memory_limit = self::calculateBytes(ini_get('memory_limit'));
 
         // return the smallest of them, this defines the real limit
@@ -355,13 +365,13 @@ class EM1Settings extends EM1Main
 
         switch ($last) {
             case 'g':
-                $val = (int)$val * 1024 * 1024 * 1024;
+                $val = (int) $val * 1024 * 1024 * 1024;
                 break;
             case 'm':
-                $val = (int)$val * 1024 * 1024;
+                $val = (int) $val * 1024 * 1024;
                 break;
             case 'k':
-                $val = (int)$val * 1024;
+                $val = (int) $val * 1024;
                 break;
         }
 
@@ -370,9 +380,9 @@ class EM1Settings extends EM1Main
 
     public function getVersions()
     {
-        return array(
-            self::KEY_MODULE_VERSION    => EM1Constants::MA_MODULE_REVISION,
-            self::KEY_CART_VERSION      => _PS_VERSION_
-        );
+        return [
+            self::KEY_MODULE_VERSION => EM1Constants::MA_MODULE_REVISION,
+            self::KEY_CART_VERSION => _PS_VERSION_,
+        ];
     }
 }

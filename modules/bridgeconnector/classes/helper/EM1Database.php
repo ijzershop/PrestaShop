@@ -16,18 +16,23 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class EM1Database
 {
     /**
      * Executes return the result of $query as array.
      *
-     * @param   string|DbQuery  $query  Query to execute in raw sql string or DBQuery object format
-     * @return  array                   Returns an associative array or invoke exception if error occur
-     * @throws  EM1Exception            Custom exception handler
+     * @param string|DbQuery $query Query to execute in raw sql string or DBQuery object format
+     *
+     * @return array Returns an associative array or invoke exception if error occur
+     *
+     * @throws EM1Exception Custom exception handler
      */
     public static function getQueryResult($query)
     {
@@ -38,7 +43,7 @@ class EM1Database
 
             $result = Db::getInstance()->executeS($query);
             if (!is_array($result) || $result === false) {
-                return array();
+                return [];
             }
         } catch (PrestaShopDatabaseException $exception) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_QUERY_EXECUTION_ERROR, $exception->getMessage());
@@ -53,9 +58,11 @@ class EM1Database
      * Returns an associative array containing the first row of the query
      * This function automatically adds "LIMIT 1" to the query.
      *
-     * @param   string|DbQuery $query   The select query (without "LIMIT 1")
-     * @return  array                   Returns an associative array or invoke exception if error occur
-     * @throws  EM1Exception            Custom exception handler
+     * @param string|DbQuery $query The select query (without "LIMIT 1")
+     *
+     * @return array Returns an associative array or invoke exception if error occur
+     *
+     * @throws EM1Exception Custom exception handler
      */
     public static function getQueryRow($query)
     {
@@ -66,7 +73,7 @@ class EM1Database
 
             $result = Db::getInstance()->getRow($query);
             if (!is_array($result) || $result === false) {
-                return array();
+                return [];
             }
         } catch (PrestaShopDatabaseException $exception) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_QUERY_EXECUTION_ERROR, $exception->getMessage());
@@ -80,9 +87,11 @@ class EM1Database
     /**
      * Returns a value from the first row, first column of a SELECT query.
      *
-     * @param   string|DbQuery  $query  Query to execute in raw sql string or DBQuery object format
-     * @return  string                  Returns an associative array or invoke exception if error occur
-     * @throws  EM1Exception            Custom exception handler
+     * @param string|DbQuery $query Query to execute in raw sql string or DBQuery object format
+     *
+     * @return string Returns an associative array or invoke exception if error occur
+     *
+     * @throws EM1Exception Custom exception handler
      */
     public static function getQueryValue($query)
     {
@@ -92,7 +101,7 @@ class EM1Database
             }
 
             $result = Db::getInstance()->getValue($query);
-            if (!is_string($result) || $result === false) {
+            if ((!is_string($result) && !is_numeric($result)) || $result === false) {
                 return '';
             }
         } catch (PrestaShopDatabaseException $exception) {

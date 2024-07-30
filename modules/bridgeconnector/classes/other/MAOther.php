@@ -16,9 +16,12 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 includedOtherFiles();
 
@@ -30,15 +33,15 @@ class MAOther extends EM1Main
     public function getCountries()
     {
         $responseArray = [
-            'countries' => []
+            'countries' => [],
         ];
         try {
             $countries = $this->getCountriesArray();
             foreach ($countries as $countryId => $country) {
                 $responseArray['countries'][] = [
-                    'country_id'  => (int)$countryId,
-                    'shops'       => $country['shops'],
-                    'languages'   => $country['languages']
+                    'country_id' => (int) $countryId,
+                    'shops' => $country['shops'],
+                    'languages' => $country['languages'],
                 ];
             }
         } catch (Exception $e) {
@@ -50,6 +53,7 @@ class MAOther extends EM1Main
 
     /**
      * @return array
+     *
      * @throws PrestaShopDatabaseException
      */
     private function getCountriesArray()
@@ -61,21 +65,24 @@ class MAOther extends EM1Main
             foreach ($countries as $country) {
                 if (!array_key_exists($country['id_country'], $countriesArray)) {
                     $countriesArray[$country['id_country']] = [
-                        'shops' => $this->getCountryShops($country['id_country'])
+                        'shops' => $this->getCountryShops($country['id_country']),
                     ];
                 }
                 $countriesArray[$country['id_country']]['languages'][] = [
-                    'language_id' => (int)$languageId,
-                    'name' => $country['name']
+                    'language_id' => (int) $languageId,
+                    'name' => $country['name'],
                 ];
             }
         }
+
         return $countriesArray;
     }
 
     /**
      * @param $countryId
+     *
      * @return array|false|mysqli_result|PDOStatement|resource|null
+     *
      * @throws PrestaShopDatabaseException
      */
     private function getCountryShops($countryId)
@@ -83,19 +90,20 @@ class MAOther extends EM1Main
         $countryShopIds = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT id_shop as shop_id
 		FROM `' . _DB_PREFIX_ . 'country_shop` c
-		WHERE `id_country` = ' . (int)$countryId);
+		WHERE `id_country` = ' . (int) $countryId);
         foreach ($countryShopIds as $key => $countryShopId) {
             foreach ($countryShopId as $index => $value) {
-                $countryShopIds[$key][$index] = (int)$value;
+                $countryShopIds[$key][$index] = (int) $value;
             }
         }
+
         return $countryShopIds;
     }
 
     public function getGroups()
     {
         $responseArray = [
-            'groups' => []
+            'groups' => [],
         ];
         $languageIds = Language::getLanguages(true, false, true);
         $groupsResponse = [];
@@ -103,11 +111,11 @@ class MAOther extends EM1Main
             $groups = Group::getGroups($languageId);
             foreach ($groups as $group) {
                 if (!array_key_exists($group['id_group'], $groupsResponse)) {
-                    $groupsResponse[$group['id_group']]['group_id'] = (int)$group['id_group'];
+                    $groupsResponse[$group['id_group']]['group_id'] = (int) $group['id_group'];
                 }
                 $groupsResponse[$group['id_group']]['languages'][] = [
-                    'language_id' => (int)$languageId,
-                    'name' => (string)$group['name']
+                    'language_id' => (int) $languageId,
+                    'name' => (string) $group['name'],
                 ];
             }
         }
@@ -123,7 +131,7 @@ class MAOther extends EM1Main
     public function getTaxRulesGroups()
     {
         $responseArray = [
-            'tax_rules_groups' => []
+            'tax_rules_groups' => [],
         ];
 
         $taxRulesGroups = TaxRulesGroup::getTaxRulesGroups();
@@ -140,16 +148,18 @@ class MAOther extends EM1Main
 
     /**
      * @param $taxRulesGroup
+     *
      * @return array
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
     private function getTaxRulesGroupDto($taxRulesGroup)
     {
         $returnArray = [
-            'tax_rule_group_id' => (int)$taxRulesGroup['id_tax_rules_group'],
-            'name'              => $taxRulesGroup['name'],
-            'shops'             => []
+            'tax_rule_group_id' => (int) $taxRulesGroup['id_tax_rules_group'],
+            'name' => $taxRulesGroup['name'],
+            'shops' => [],
         ];
 
         $taxRulesGroup = new TaxRulesGroup($taxRulesGroup['id_tax_rules_group']);
@@ -164,25 +174,26 @@ class MAOther extends EM1Main
 
     /**
      * @param $shopId
+     *
      * @return array
      */
     private function getTaxRulesGroupToShopDto($shopId)
     {
         return [
-            'shop_id' => (int)$shopId
+            'shop_id' => (int) $shopId,
         ];
     }
 
     public function getProductEditAttributes($shopId)
     {
         $responseArray = [
-            'attribute_groups' => []
+            'attribute_groups' => [],
         ];
 
         if ($shopId === -1 || $shopId === null) {
-            Shop::setContext(Shop::CONTEXT_SHOP, (int)Configuration::get('PS_SHOP_DEFAULT'));
+            Shop::setContext(Shop::CONTEXT_SHOP, (int) Configuration::get('PS_SHOP_DEFAULT'));
         } else {
-            Shop::setContext(Shop::CONTEXT_SHOP, (int)$shopId);
+            Shop::setContext(Shop::CONTEXT_SHOP, (int) $shopId);
         }
 
         $attributeGroups = AttributeGroup::getAttributesGroups(self::getDefaultLanguageId());
@@ -194,15 +205,16 @@ class MAOther extends EM1Main
 
     /**
      * @param $attributeGroupData
+     *
      * @return array
      */
     private function getAttributesGroupDto($attributeGroupData)
     {
         $returnArray = [
-            'attribute_group_id' => (int)$attributeGroupData['id_attribute_group'],
-            'name'               => $attributeGroupData['name'],
-            'type'               => $attributeGroupData['group_type'],
-            'attributes'         => []
+            'attribute_group_id' => (int) $attributeGroupData['id_attribute_group'],
+            'name' => $attributeGroupData['name'],
+            'type' => $attributeGroupData['group_type'],
+            'attributes' => [],
         ];
 
         $attributes = AttributeGroup::getAttributes(
@@ -220,6 +232,7 @@ class MAOther extends EM1Main
 
     /**
      * @param $attributeData
+     *
      * @return array
      */
     private function getAttributeDto($attributeData)
@@ -234,10 +247,10 @@ class MAOther extends EM1Main
             $textureUrl = null;
         }
         $returnArray = [
-            'attribute_id' => (int)$attributeData['id_attribute'],
-            'name'         => $attributeData['name'],
-            'color'        => $attributeData['color'] ? $attributeData['color'] : null,
-            'texture_url'  => $textureUrl
+            'attribute_id' => (int) $attributeData['id_attribute'],
+            'name' => $attributeData['name'],
+            'color' => $attributeData['color'] ? $attributeData['color'] : null,
+            'texture_url' => $textureUrl,
         ];
 
         return $returnArray;

@@ -16,9 +16,12 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 includeBrandFiles();
 
@@ -33,7 +36,7 @@ class MABrand extends EM1Main implements EM1BrandInterface
     public function getManufacturers()
     {
         $responseArray = [
-            'manufacturers' => []
+            'manufacturers' => [],
         ];
         try {
             $brands = $this->getBrandsList();
@@ -46,13 +49,13 @@ class MABrand extends EM1Main implements EM1BrandInterface
             $shops = [];
             foreach ($brand->getAssociatedShops() as $shopId) {
                 $shops[] = [
-                    'shop_id' => (int)$shopId
+                    'shop_id' => (int) $shopId,
                 ];
             }
             $manufacturers[] = [
-                'manufacturer_id' => (int)$brand->id,
-                'name'            => (string)$brand->name,
-                'shops'           => $shops
+                'manufacturer_id' => (int) $brand->id,
+                'name' => (string) $brand->name,
+                'shops' => $shops,
             ];
             unset($brand);
         }
@@ -87,6 +90,7 @@ class MABrand extends EM1Main implements EM1BrandInterface
 
     /**
      * @param $brandId
+     *
      * @return Manufacturer
      */
     public function getBrand($brandId)

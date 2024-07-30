@@ -16,9 +16,12 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 /**
  * Class which has common bridge functionality
@@ -32,15 +35,15 @@ class BridgeConnectorCommon
     private $sql_delimiter = '/*DELIMITER*/';
     private $count_sql_exec_prev = 0;
     private $request_params;
-    private $db_tables = array();
+    private $db_tables = [];
     private $log_file_reset = false;
     private $db_file_handler;
     private $shop_cart;
     private $tmp_folder_path;
-    private $searched_files = array();
+    private $searched_files = [];
     private $module_version;
     private $revision;
-    private $post_replace_from_sm = array('-' => '+', '_' => '/', ',' => '='); /* Replace symbols in chunk */
+    private $post_replace_from_sm = ['-' => '+', '_' => '/', ',' => '=']; /* Replace symbols in chunk */
     private $image_url;
     private $code_response;
     private $key_message;
@@ -57,59 +60,59 @@ class BridgeConnectorCommon
     private $dump_file_current;
     private $dump_file_part_number = 1;
 
-    const BRIDGE_COMMON_VERSION              = 4;
-    const TEST_POST_STRING                   = '////AjfiIkllsomsdjUNNLkdsuinmJNFIkmsiidmfmiOKSFKMI/////';
-    const QOUTE_CHAR                         = '"';
-    const LOG_FILENAME                       = 'bridgeconnector.log';
-    const DB_FILE_PREFIX                     = 'm1bridge_';
-    const TMP_FILE_PREFIX                    = 'm1bridgetmp_';
-    const INTERMEDIATE_FILE_NAME             = 'sm_intermediate.txt';
-    const DB_FILE_MAIN                       = 'em1_bridge_db_dump';
-    const DB_FILE_COMPRESSION_NO             = 'em1_bridge_db_dump.sql';
-    const DB_FILE_COMPRESSION_YES            = 'em1_bridge_db_dump.gz';
-    const DB_DATA_TMP                        = 'em1_dump_data_tmp.txt';
-    const FILE_TMP_GET_SQL                   = 'em1_tmp_get_sql.txt';
-    const FILE_TMP_PUT_SQL                   = 'em1_tmp_put_sql.txt';
-    const GET_SQL_CANCEL_MESSAGE             = 'Generating database dump is canceled';
-    const GET_SQL_CANCEL_PARAM               = 'get_sql_cancel';
-    const GET_SQL_TABLE                      = 'get_sql_table';
-    const GET_SQL_PERCENTAGE                 = 'get_sql_percentage';
-    const GET_SQL_FILE_PART                  = 'get_sql_file_part';
-    const GET_SQL_FILE_PART_NAME             = 'get_sql_file_part_name';
-    const GET_SQL_FILE_NAME_GENERATING       = 'get_sql_file_name_generating';
-    const FILE_NAME_FILE_LIST                = 'em1_bridge_file_list';
-    const FILE_NAME_GET_FILE_LIST_TMP        = 'sm_tmp_get_file_list.txt';
-    const KEY_PROCESS_ID                     = 'process_id';
-    const DB_FILE_EXT_COMPRESSION_NO         = '.sql';
-    const DB_FILE_EXT_COMPRESSION_YES        = '.gz';
-    const FILE_EXT_TXT                       = '.txt';
+    const BRIDGE_COMMON_VERSION = 4;
+    const TEST_POST_STRING = '////AjfiIkllsomsdjUNNLkdsuinmJNFIkmsiidmfmiOKSFKMI/////';
+    const QOUTE_CHAR = '"';
+    const LOG_FILENAME = 'bridgeconnector.log';
+    const DB_FILE_PREFIX = 'm1bridge_';
+    const TMP_FILE_PREFIX = 'm1bridgetmp_';
+    const INTERMEDIATE_FILE_NAME = 'sm_intermediate.txt';
+    const DB_FILE_MAIN = 'em1_bridge_db_dump';
+    const DB_FILE_COMPRESSION_NO = 'em1_bridge_db_dump.sql';
+    const DB_FILE_COMPRESSION_YES = 'em1_bridge_db_dump.gz';
+    const DB_DATA_TMP = 'em1_dump_data_tmp.txt';
+    const FILE_TMP_GET_SQL = 'em1_tmp_get_sql.txt';
+    const FILE_TMP_PUT_SQL = 'em1_tmp_put_sql.txt';
+    const GET_SQL_CANCEL_MESSAGE = 'Generating database dump is canceled';
+    const GET_SQL_CANCEL_PARAM = 'get_sql_cancel';
+    const GET_SQL_TABLE = 'get_sql_table';
+    const GET_SQL_PERCENTAGE = 'get_sql_percentage';
+    const GET_SQL_FILE_PART = 'get_sql_file_part';
+    const GET_SQL_FILE_PART_NAME = 'get_sql_file_part_name';
+    const GET_SQL_FILE_NAME_GENERATING = 'get_sql_file_name_generating';
+    const FILE_NAME_FILE_LIST = 'em1_bridge_file_list';
+    const FILE_NAME_GET_FILE_LIST_TMP = 'sm_tmp_get_file_list.txt';
+    const KEY_PROCESS_ID = 'process_id';
+    const DB_FILE_EXT_COMPRESSION_NO = '.sql';
+    const DB_FILE_EXT_COMPRESSION_YES = '.gz';
+    const FILE_EXT_TXT = '.txt';
     const FILE_NAME_PART_NUMBER_COUNT_DIGITS = 3;
-    const NUMERIC                            = 1;
-    const ASSOC                              = 0;
-    const PUT_SQL_ENCODED                    = 'base_64_encoded_';
-    const SESSION_NAME                       = 'emagicone_bridge';
-    const UPLOAD_FILE_NAME                   = 'file';
-    const FILE_READ_SIZE                     = 102400; /* B */
-    const DELAY_TO_GENERATE_DUMP             = 10; /* seconds */
+    const NUMERIC = 1;
+    const ASSOC = 0;
+    const PUT_SQL_ENCODED = 'base_64_encoded_';
+    const SESSION_NAME = 'emagicone_bridge';
+    const UPLOAD_FILE_NAME = 'file';
+    const FILE_READ_SIZE = 102400; /* B */
+    const DELAY_TO_GENERATE_DUMP = 10; /* seconds */
 
     /* Section of default values which are stored in database */
-    const DEFAULT_LOGIN              = '1';
-    const DEFAULT_PASSWORD           = '1';
-    const DEFAULT_ALLOW_COMPRESSION  = 1;
-    const DEFAULT_COMPRESS_LEVEL     = 6;      /* 1 - 9 */
-    const DEFAULT_LIMIT_QUERY_SIZE   = 8192;      /* kB */
-    const DEFAULT_PACKAGE_SIZE       = 1024;      /* kB */
-    const DEFAULT_EXCLUDE_DB_TABLES  = '';
+    const DEFAULT_LOGIN = '1';
+    const DEFAULT_PASSWORD = '1';
+    const DEFAULT_ALLOW_COMPRESSION = 1;
+    const DEFAULT_COMPRESS_LEVEL = 6;      /* 1 - 9 */
+    const DEFAULT_LIMIT_QUERY_SIZE = 8192;      /* kB */
+    const DEFAULT_PACKAGE_SIZE = 1024;      /* kB */
+    const DEFAULT_EXCLUDE_DB_TABLES = '';
     const DEFAULT_NOTIFICATION_EMAIL = '';
-    const DEFAULT_ALLOWED_IPS        = '';
-    const MIN_COMPRESS_LEVEL         = 1;
-    const MAX_COMPRESS_LEVEL         = 9;
-    const MIN_LIMIT_QUERY_SIZE       = 100;    /* kB */
-    const MAX_LIMIT_QUERY_SIZE       = 100000;    /* kB */
-    const MIN_PACKAGE_SIZE           = 100;    /* kB */
-    const MAX_PACKAGE_SIZE           = 30000;    /* kB */
+    const DEFAULT_ALLOWED_IPS = '';
+    const MIN_COMPRESS_LEVEL = 1;
+    const MAX_COMPRESS_LEVEL = 9;
+    const MIN_LIMIT_QUERY_SIZE = 100;    /* kB */
+    const MAX_LIMIT_QUERY_SIZE = 100000;    /* kB */
+    const MIN_PACKAGE_SIZE = 100;    /* kB */
+    const MAX_PACKAGE_SIZE = 30000;    /* kB */
 
-    const MAX_KEY_LIFETIME   = 86400; /* 24 hours */
+    const MAX_KEY_LIFETIME = 86400; /* 24 hours */
     const TABLE_SESSION_KEYS = 'bridgeconnector_session_keys';
     const TABLE_FAILED_LOGIN = 'bridgeconnector_failed_login';
 
@@ -121,18 +124,19 @@ class BridgeConnectorCommon
     const POST_ERROR_SQL_INDEX = 22;
 
     const ERROR_CODE_AUTHENTICATION = 25;
-    const ERROR_CODE_SESSION_KEY    = 26;
+    const ERROR_CODE_SESSION_KEY = 26;
     const ERROR_TEXT_AUTHENTICATION = 'Authentication error';
-    const ERROR_TEXT_SESSION_KEY    = 'Session key error';
+    const ERROR_TEXT_SESSION_KEY = 'Session key error';
 
     /* It is used to retry putting sql when server is temporary unavailable */
     const MAX_COUNT_ATTEMPT_POST = 3;   /* maximum count of attempts */
-    const DELAY_BETWEEN_POST     = 20;  /* delay between attempts (seconds) */
+    const DELAY_BETWEEN_POST = 20;  /* delay between attempts (seconds) */
 
     public function __construct($shop_cart_overrider, $module_version, $revision)
     {
+
         $this->shop_cart = $shop_cart_overrider;
-        $this->default_tmp_dir = '/modules/'.$this->shop_cart->module_name.'/tmp';
+        $this->default_tmp_dir = '/modules/' . $this->shop_cart->module_name . '/tmp';
         $this->image_url = $shop_cart_overrider::IMAGE_URL;
         $this->code_response = $shop_cart_overrider::CODE_RESPONSE;
         $this->key_message = $shop_cart_overrider::KEY_MESSAGE;
@@ -148,11 +152,11 @@ class BridgeConnectorCommon
         $this->revision = $revision;
         $this->getErrors();
         $this->bridge_options = $this->shop_cart->getBridgeOptions();
-        $this->tmp_folder_path = $this->shop_cart->getShopRootDir().$this->bridge_options['tmp_dir'];
+        $this->tmp_folder_path = $this->shop_cart->getShopRootDir() . $this->bridge_options['tmp_dir'];
         $timestamp = time();
 
         if (!isset($this->bridge_options['last_clear_date'])
-            || ($timestamp - (int)$this->bridge_options['last_clear_date']) > self::MAX_KEY_LIFETIME
+            || ($timestamp - (int) $this->bridge_options['last_clear_date']) > self::MAX_KEY_LIFETIME
         ) {
             $this->clearOldData();
             $this->bridge_options['last_clear_date'] = $timestamp;
@@ -175,16 +179,16 @@ class BridgeConnectorCommon
             $this->bridgeAction();
         } else {
             $this->deleteSessionKey();
-            die($this->shop_cart->jsonEncode(array(
+            exit($this->shop_cart->jsonEncode([
                 $this->code_response => $this->error_code_common,
-                $this->key_message   => 'Missing parameters',
-            )));
+                $this->key_message => 'Missing parameters',
+            ]));
         }
     }
 
     private function getErrors()
     {
-        $this->br_errors = array(
+        $this->br_errors = [
             'authentification' => "BridgeConnector (v.{$this->module_version}): Authentication Error",
             'create_tmp_file' => "BridgeConnector (v.{$this->module_version}): Can't Create Temporary File",
             'open_tmp_file' => "BridgeConnector (v.{$this->module_version}): Can't Open Temporary File",
@@ -242,7 +246,7 @@ class BridgeConnectorCommon
             'zip_archive_not_supported' => 'ZipArchive is supported in php version >= 5.2.0',
             'zip_not_loaded' => 'Zip extension not loaded',
             'cannot_archive_files' => 'Cannot archive files',
-        );
+        ];
     }
 
     private function checkBridgeOptions()
@@ -258,27 +262,27 @@ class BridgeConnectorCommon
         if (!isset($this->bridge_options['allow_compression'])) {
             $this->bridge_options['allow_compression'] = self::DEFAULT_ALLOW_COMPRESSION;
         } else {
-            $this->bridge_options['allow_compression'] = (int)$this->bridge_options['allow_compression'];
+            $this->bridge_options['allow_compression'] = (int) $this->bridge_options['allow_compression'];
         }
 
         if (!isset($this->bridge_options['limit_query_size'])) {
             $this->bridge_options['limit_query_size'] = self::DEFAULT_LIMIT_QUERY_SIZE;
-        } elseif ((int)$this->bridge_options['limit_query_size'] < self::MIN_LIMIT_QUERY_SIZE) {
+        } elseif ((int) $this->bridge_options['limit_query_size'] < self::MIN_LIMIT_QUERY_SIZE) {
             $this->bridge_options['limit_query_size'] = self::MIN_LIMIT_QUERY_SIZE;
-        } elseif ((int)$this->bridge_options['limit_query_size'] > self::MAX_LIMIT_QUERY_SIZE) {
+        } elseif ((int) $this->bridge_options['limit_query_size'] > self::MAX_LIMIT_QUERY_SIZE) {
             $this->bridge_options['limit_query_size'] = self::MAX_LIMIT_QUERY_SIZE;
         } else {
-            $this->bridge_options['limit_query_size'] = (int)$this->bridge_options['limit_query_size'];
+            $this->bridge_options['limit_query_size'] = (int) $this->bridge_options['limit_query_size'];
         }
 
         if (!isset($this->bridge_options['package_size'])) {
             $this->bridge_options['package_size'] = self::DEFAULT_PACKAGE_SIZE * 1024; // B
-        } elseif ((int)$this->bridge_options['package_size'] < self::MIN_PACKAGE_SIZE) {
+        } elseif ((int) $this->bridge_options['package_size'] < self::MIN_PACKAGE_SIZE) {
             $this->bridge_options['package_size'] = self::MIN_PACKAGE_SIZE * 1024;
-        } elseif ((int)$this->bridge_options['package_size'] > self::MAX_PACKAGE_SIZE) {
+        } elseif ((int) $this->bridge_options['package_size'] > self::MAX_PACKAGE_SIZE) {
             $this->bridge_options['package_size'] = self::MAX_PACKAGE_SIZE * 1024;
         } else {
-            $this->bridge_options['package_size'] = (int)$this->bridge_options['package_size'] * 1024;
+            $this->bridge_options['package_size'] = (int) $this->bridge_options['package_size'] * 1024;
         }
 
         if (!isset($this->bridge_options['exclude_db_tables'])) {
@@ -293,12 +297,12 @@ class BridgeConnectorCommon
         // The 1 flag means "fast but less efficient" compression, and 9 means "slow but most efficient" compression.
         if (!isset($this->bridge_options['compress_level'])) {
             $this->bridge_options['compress_level'] = self::DEFAULT_COMPRESS_LEVEL;
-        } elseif ((int)$this->bridge_options['compress_level'] < self::MIN_COMPRESS_LEVEL) {
+        } elseif ((int) $this->bridge_options['compress_level'] < self::MIN_COMPRESS_LEVEL) {
             $this->bridge_options['compress_level'] = self::MIN_COMPRESS_LEVEL;
-        } elseif ((int)$this->bridge_options['compress_level'] > self::MAX_COMPRESS_LEVEL) {
+        } elseif ((int) $this->bridge_options['compress_level'] > self::MAX_COMPRESS_LEVEL) {
             $this->bridge_options['compress_level'] = self::MAX_COMPRESS_LEVEL;
         } else {
-            $this->bridge_options['compress_level'] = (int)$this->bridge_options['compress_level'];
+            $this->bridge_options['compress_level'] = (int) $this->bridge_options['compress_level'];
         }
 
         if (!isset($this->bridge_options['allowed_ips'])) {
@@ -309,7 +313,7 @@ class BridgeConnectorCommon
     private function checkAuth()
     {
         if ($this->shop_cart->issetRequestParam('key')) {
-            $key = (string)$this->shop_cart->getRequestParam('key');
+            $key = (string) $this->shop_cart->getRequestParam('key');
 
             if (empty($key)) {
                 $this->addFailedAttempt();
@@ -318,15 +322,15 @@ class BridgeConnectorCommon
 
             if (!$this->isSessionKeyValid($key)) {
                 $this->addFailedAttempt();
-                die($this->shop_cart->jsonEncode(
-                    array(
+                exit($this->shop_cart->jsonEncode(
+                    [
                         $this->code_response => self::ERROR_CODE_SESSION_KEY,
-                        $this->key_message   => self::ERROR_TEXT_SESSION_KEY,
-                    )
+                        $this->key_message => self::ERROR_TEXT_SESSION_KEY,
+                    ]
                 ));
             }
         } elseif ($this->shop_cart->issetRequestParam('hash')) {
-            $hash = (string)$this->shop_cart->getRequestParam('hash');
+            $hash = (string) $this->shop_cart->getRequestParam('hash');
 
             if (empty($hash)) {
                 $this->addFailedAttempt();
@@ -335,11 +339,11 @@ class BridgeConnectorCommon
 
             if (!$this->isHashValid($hash)) {
                 $this->addFailedAttempt();
-                die($this->shop_cart->jsonEncode(
-                    array(
+                exit($this->shop_cart->jsonEncode(
+                    [
                         $this->code_response => self::ERROR_CODE_AUTHENTICATION,
-                        $this->key_message   => self::ERROR_TEXT_AUTHENTICATION,
-                    )
+                        $this->key_message => self::ERROR_TEXT_AUTHENTICATION,
+                    ]
                 ));
             }
 
@@ -349,30 +353,30 @@ class BridgeConnectorCommon
                 $task = $this->shop_cart->getRequestParam('task');
 
                 if ($task == 'get_version') {
-                    die($this->shop_cart->jsonEncode(
-                        array(
+                    exit($this->shop_cart->jsonEncode(
+                        [
                             $this->code_response => $this->successful_code,
-                            'revision'          => $this->revision,
-                            'module_version'    => $this->module_version,
-                            'session_key'       => $key,
-                        )
+                            'revision' => $this->revision,
+                            'module_version' => $this->module_version,
+                            'session_key' => $key,
+                        ]
                     ));
                 }
             }
 
-            die($this->shop_cart->jsonEncode(
-                array(
+            exit($this->shop_cart->jsonEncode(
+                [
                     $this->code_response => $this->successful_code,
-                    'session_key'       => $key,
-                )
+                    'session_key' => $key,
+                ]
             ));
         } else {
             $this->addFailedAttempt();
-            die($this->shop_cart->jsonEncode(
-                array(
+            exit($this->shop_cart->jsonEncode(
+                [
                     $this->code_response => self::ERROR_CODE_AUTHENTICATION,
-                    $this->key_message   => self::ERROR_TEXT_AUTHENTICATION,
-                )
+                    $this->key_message => self::ERROR_TEXT_AUTHENTICATION,
+                ]
             ));
         }
     }
@@ -390,39 +394,34 @@ class BridgeConnectorCommon
     {
         $this->checkDataBeforeRun();
 
-        // Disabling magic quotes at runtime
-        if (get_magic_quotes_runtime() || get_magic_quotes_gpc()) {
-            $_REQUEST = array_map(array($this, 'stripslashesDeep'), $_REQUEST);
-        }
-
         $this->request_params = $this->validateTypes(
             $_REQUEST,
-            array(
-                'task'                => 'STR',
-                'category'            => 'STR',
-                'include_tables'      => 'STR',
-                'sql'                 => 'STR',
-                'filename'            => 'STR',
-                'position'            => 'INT',
-                'vars_names'          => 'STR',
-                'vars_main_dir'       => 'STR',
-                'xml_path'            => 'STR',
-                'xml_fields'          => 'STR',
-                'xml_items_node'      => 'STR',
+            [
+                'task' => 'STR',
+                'category' => 'STR',
+                'include_tables' => 'STR',
+                'sql' => 'STR',
+                'filename' => 'STR',
+                'position' => 'INT',
+                'vars_names' => 'STR',
+                'vars_main_dir' => 'STR',
+                'xml_path' => 'STR',
+                'xml_fields' => 'STR',
+                'xml_items_node' => 'STR',
                 'xml_items_info_node' => 'STR',
-                'xml_filters'         => 'STR',
-                'search_path'         => 'STR',
-                'mask'                => 'STR',
-                'ignore_dir'          => 'STR',
-                'checksum_sm'         => 'STR',
-                'fc'                  => 'STR',
-                'module'              => 'STR',
-                'controller'          => 'STR',
-                'hash'                => 'STR',
-                'entity_type'         => 'STR',
-                'image_id'            => 'STR',
-                'to_image_id'         => 'INT',
-            )
+                'xml_filters' => 'STR',
+                'search_path' => 'STR',
+                'mask' => 'STR',
+                'ignore_dir' => 'STR',
+                'checksum_sm' => 'STR',
+                'fc' => 'STR',
+                'module' => 'STR',
+                'controller' => 'STR',
+                'hash' => 'STR',
+                'entity_type' => 'STR',
+                'image_id' => 'STR',
+                'to_image_id' => 'INT',
+            ]
         );
 
         switch ($this->request_params['task']) {
@@ -515,16 +514,7 @@ class BridgeConnectorCommon
                 break;
         }
 
-        die();
-    }
-
-    private function stripslashesDeep($value)
-    {
-        $value = is_array($value)
-            ? array_map(array($this, 'stripslashesDeep'), $value)
-            : $this->shop_cart->stripSlashes($value);
-
-        return $value;
+        exit;
     }
 
     private function checkDataBeforeRun()
@@ -566,12 +556,12 @@ class BridgeConnectorCommon
         }
 
         $tmp_file_stat = $this->shop_cart->stat($this->tmp_folder_path);
-        if (function_exists('getmyuid') && (ini_get('safe_mode') && getmyuid() != (int)$tmp_file_stat['uid'])) {
+        if (function_exists('getmyuid') && (ini_get('safe_mode') && getmyuid() != (int) $tmp_file_stat['uid'])) {
             $this->generateError($this->br_errors['file_uid_mismatch']);
         }
 
         if ($this->shop_cart->getRequestParam('task') == 'test_post') {
-            die(self::TEST_POST_STRING);
+            exit(self::TEST_POST_STRING);
         }
     }
 
@@ -581,14 +571,14 @@ class BridgeConnectorCommon
             if (isset($array[$name])) {
                 switch ($type) {
                     case 'INT':
-                        $array[$name] = (int)$array[$name];
+                        $array[$name] = (int) $array[$name];
                         break;
                     case 'FLOAT':
-                        $array[$name] = (float)$array[$name];
+                        $array[$name] = (float) $array[$name];
                         break;
                     case 'STR':
                         $array[$name] = str_replace(
-                            array("\r", "\n"),
+                            ["\r", "\n"],
                             ' ',
                             addslashes(htmlspecialchars(trim(urldecode($array[$name]))))
                         );
@@ -659,16 +649,16 @@ class BridgeConnectorCommon
 
         if (!$this->dump_data_prev) {
             $this->setGeneratingDumpValue(
-                array(
+                [
                     self::GET_SQL_CANCEL_PARAM => 0,
-                    self::GET_SQL_TABLE        => '',
-                    self::GET_SQL_PERCENTAGE   => 0,
-                    self::GET_SQL_FILE_PART    => 0
-                )
+                    self::GET_SQL_TABLE => '',
+                    self::GET_SQL_PERCENTAGE => 0,
+                    self::GET_SQL_FILE_PART => 0,
+                ]
             );
         } else {
             if ($this->isDumpGenerating()) {
-                die('Dump is being generated. Could not run next attempt');
+                exit('Dump is being generated. Could not run next attempt');
             }
 
             $this->log_file_reset = true;
@@ -683,7 +673,7 @@ class BridgeConnectorCommon
         $this->createDump();
 
         $this->setGeneratingDumpValue(
-            array(self::GET_SQL_CANCEL_PARAM => 0, self::GET_SQL_TABLE => '', self::GET_SQL_PERCENTAGE => 0)
+            [self::GET_SQL_CANCEL_PARAM => 0, self::GET_SQL_TABLE => '', self::GET_SQL_PERCENTAGE => 0]
         );
 
         // Output generated database dump information
@@ -692,17 +682,18 @@ class BridgeConnectorCommon
 
     private function getDumpData()
     {
-        $file_with_prev_data    = $this->tmp_folder_path.'/'.self::DB_DATA_TMP;
+        $file_with_prev_data = $this->tmp_folder_path . '/' . self::DB_DATA_TMP;
 
         if ($this->shop_cart->fileExists($file_with_prev_data)) {
             $content = $this->shop_cart->fileGetContents($file_with_prev_data);
-            $content = $this->shop_cart->unserialize($content);
+            $content = $this->shop_cart->json_decode($content, true);
 
             if (isset($content[self::GET_SQL_FILE_NAME_GENERATING])) {
-                $file_db_prev = $this->tmp_folder_path.'/'.$content[GET_SQL_FILE_NAME_GENERATING];
+                $file_db_prev = $this->tmp_folder_path . '/' . $content[GET_SQL_FILE_NAME_GENERATING];
 
                 if (file_exists($file_db_prev) && (time() - $this->shop_cart->filemtime($file_db_prev)) > 600) {
                     $this->shop_cart->unlink($file_db_prev);
+
                     return false;
                 } elseif (!file_exists($file_db_prev)) {
                     return false;
@@ -717,7 +708,7 @@ class BridgeConnectorCommon
 
     private function isDumpGenerating()
     {
-        $file = $this->tmp_folder_path.'/'.self::LOG_FILENAME;
+        $file = $this->tmp_folder_path . '/' . self::LOG_FILENAME;
 
         if ($this->shop_cart->fileExists($file)) {
             $checksum_prev = md5_file($file);
@@ -734,7 +725,7 @@ class BridgeConnectorCommon
     private function setGeneratingDumpValue($arr)
     {
         if (!is_array($arr)) {
-            $arr = array($arr);
+            $arr = [$arr];
         }
 
         $file_data = $this->getGeneratingDumpValueFromFile();
@@ -743,16 +734,16 @@ class BridgeConnectorCommon
             $file_data[$key] = $value;
         }
 
-        $this->shop_cart->filePutContents($this->tmp_folder_path.'/'.self::FILE_TMP_GET_SQL, serialize($file_data));
+        $this->shop_cart->filePutContents($this->tmp_folder_path . '/' . self::FILE_TMP_GET_SQL, json_encode($file_data));
     }
 
     private function getGeneratingDumpValue($name)
     {
-        $ret    = false;
+        $ret = false;
         $values = $this->getGeneratingDumpValueFromFile();
 
         if (is_array($name)) {
-            $ret = array();
+            $ret = [];
 
             foreach ($name as $val) {
                 if (isset($values[$val])) {
@@ -770,12 +761,12 @@ class BridgeConnectorCommon
 
     private function getGeneratingDumpValueFromFile()
     {
-        $ret = array();
-        $file = $this->tmp_folder_path.'/'.self::FILE_TMP_GET_SQL;
+        $ret = [];
+        $file = $this->tmp_folder_path . '/' . self::FILE_TMP_GET_SQL;
 
         if ($this->shop_cart->fileExists($file)) {
             $content = $this->shop_cart->fileGetContents($file);
-            $ret     = $this->shop_cart->unserialize($content);
+            $ret = $this->shop_cart->json_decode($content, true);
         }
 
         return $ret;
@@ -793,21 +784,21 @@ class BridgeConnectorCommon
         }
 
         $this->putLog('Creating backup file');
-        $this->dump_file_current = self::DB_FILE_MAIN.$this->getPartNumber($this->dump_file_part_number)
-            .self::DB_FILE_EXT_COMPRESSION_NO;
-        $this->db_file_handler = $this->shop_cart->fileOpen($this->tmp_folder_path.'/'.$this->dump_file_current, 'ab');
+        $this->dump_file_current = self::DB_FILE_MAIN . $this->getPartNumber($this->dump_file_part_number)
+            . self::DB_FILE_EXT_COMPRESSION_NO;
+        $this->db_file_handler = $this->shop_cart->fileOpen($this->tmp_folder_path . '/' . $this->dump_file_current, 'ab');
     }
 
     private function createDump()
     {
-        $tabinfo        = array();
-        $table_sizes    = array();
-        $handled_tables = array();
-        $tabsize        = array();
-        $tabinfo[0]     = 0;
-        $db_size        = 0;
-        $t              = 0;
-        $continue       = false;
+        $tabinfo = [];
+        $table_sizes = [];
+        $handled_tables = [];
+        $tabsize = [];
+        $tabinfo[0] = 0;
+        $db_size = 0;
+        $t = 0;
+        $continue = false;
 
         // Get information about all tables
         $this->getTables();
@@ -816,7 +807,7 @@ class BridgeConnectorCommon
 
         if (!$result) {
             $this->generateError(
-                'Error selecting table status. Error: '.$this->shop_cart->error_no.'; '.$this->shop_cart->error_msg
+                'Error selecting table status. Error: ' . $this->shop_cart->error_no . '; ' . $this->shop_cart->error_msg
             );
         }
 
@@ -836,7 +827,7 @@ class BridgeConnectorCommon
         if (!$this->dump_data_prev) {
             $result = $this->shop_cart->getSqlResults(
                 "SELECT DEFAULT_CHARACTER_SET_NAME AS charset FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = '"
-                .$this->shop_cart->pSQL($this->shop_cart->getDbName())."'"
+                . $this->shop_cart->pSQL($this->shop_cart->getDbName()) . "'"
             );
 
             if (!$result) {
@@ -865,17 +856,17 @@ class BridgeConnectorCommon
             }
 
             if (!$this->dump_data_prev || $this->dump_data_prev['table'] != $table) {
-                $this->putLog("Handling table `{$table}` [".$this->getFormatedIntNumber($tabinfo[$table]).'].');
+                $this->putLog("Handling table `{$table}` [" . $this->getFormatedIntNumber($tabinfo[$table]) . '].');
             }
 
             $table_empty = true;
-            $result = $this->shop_cart->getSqlResults('SHOW CREATE TABLE `' .$this->shop_cart->pSQL($table)
+            $result = $this->shop_cart->getSqlResults('SHOW CREATE TABLE `' . $this->shop_cart->pSQL($table)
                 . '`', self::NUMERIC);
 
             if ($result === false) {
                 $this->generateError(
-                    'Error selecting table structure. Error: '.$this->shop_cart->error_no.'; '
-                    .$this->shop_cart->error_msg
+                    'Error selecting table structure. Error: ' . $this->shop_cart->error_no . '; '
+                    . $this->shop_cart->error_msg
                 );
             }
 
@@ -887,21 +878,21 @@ class BridgeConnectorCommon
             );
             $this->dbFileWrite("DROP TABLE IF EXISTS `{$table}`;\n{$tab[1]};\n\n");
 
-            $numeric_column = array();
-            $result = $this->shop_cart->getSqlResults('SHOW COLUMNS FROM `' .$this->shop_cart->pSQL($table)
+            $numeric_column = [];
+            $result = $this->shop_cart->getSqlResults('SHOW COLUMNS FROM `' . $this->shop_cart->pSQL($table)
                 . '`', self::NUMERIC);
 
             if ($result === false) {
                 $this->generateError(
-                    'Error selecting table columns. Error: '.$this->shop_cart->error_no.'; '
-                    .$this->shop_cart->error_msg
+                    'Error selecting table columns. Error: ' . $this->shop_cart->error_no . '; '
+                    . $this->shop_cart->error_msg
                 );
             }
 
             $field = 0;
 
             foreach ($result as $col) {
-                $numeric_column[$field ++] = preg_match('/^(\w*int|year)/', $col[1]) ? 1 : 0;
+                $numeric_column[$field++] = preg_match('/^(\w*int|year)/', $col[1]) ? 1 : 0;
             }
 
             if ($this->dump_data_prev && $this->dump_data_prev['table'] == $table) {
@@ -911,15 +902,15 @@ class BridgeConnectorCommon
             }
 
             $fields = $field;
-            $limit  = $tabsize[$table];
-            $i      = 0;
-            $query  = "SELECT * FROM `".$this->shop_cart->pSQL($table)."` LIMIT ".(int)$from.", ".(int)$limit;
+            $limit = $tabsize[$table];
+            $i = 0;
+            $query = 'SELECT * FROM `' . $this->shop_cart->pSQL($table) . '` LIMIT ' . (int) $from . ', ' . (int) $limit;
             $result = $this->shop_cart->getSqlResults($query, self::NUMERIC);
 
             if ($result === false) {
                 $this->generateError(
-                    "Error selecting data from table `{$table}`. Error: ".$this->shop_cart->error_no.'; '
-                    .$this->shop_cart->error_msg
+                    "Error selecting data from table `{$table}`. Error: " . $this->shop_cart->error_no . '; '
+                    . $this->shop_cart->error_msg
                 );
             }
 
@@ -931,19 +922,19 @@ class BridgeConnectorCommon
 
             while ($result && $count_result > 0) {
                 $table_empty = false;
-                $this->putLog('-'.$query);
+                $this->putLog('-' . $query);
 
                 foreach ($result as $row) {
-                    $i ++;
-                    $t ++;
+                    ++$i;
+                    ++$t;
 
-                    for ($k = 0; $k < $fields; $k ++) {
+                    for ($k = 0; $k < $fields; ++$k) {
                         if ($numeric_column[$k]) {
                             $row[$k] = isset($row[$k]) ? $row[$k] : 'NULL';
                         } else {
                             if (isset($row[$k])) {
-                                $row[$k] = ' '.self::QOUTE_CHAR.$this->shop_cart->sanitizeSql($row[$k])
-                                    .self::QOUTE_CHAR.' ';
+                                $row[$k] = ' ' . self::QOUTE_CHAR . $this->shop_cart->sanitizeSql($row[$k])
+                                    . self::QOUTE_CHAR . ' ';
                             } else {
                                 $row[$k] = 'NULL';
                             }
@@ -961,7 +952,7 @@ class BridgeConnectorCommon
                         $row_ex = '';
                     }
 
-                    $this->dbFileWrite($row_ex."\n(".implode(', ', $row).')');
+                    $this->dbFileWrite($row_ex . "\n(" . implode(', ', $row) . ')');
                 }
 
                 // Set data of generating database dump progress
@@ -972,9 +963,9 @@ class BridgeConnectorCommon
                 // Check if generating database dump should be canceled
                 if ($this->getGeneratingDumpValue(self::GET_SQL_CANCEL_PARAM)) {
                     $this->putLog(self::GET_SQL_CANCEL_PARAM);
-                    $path_sm_tmp_get_sql_txt = $this->tmp_folder_path.'/'.self::FILE_TMP_GET_SQL;
-                    $path_dump_data_tmp_txt = $this->tmp_folder_path.'/'.self::DB_DATA_TMP;
-                    $path_em1_bridge_db_dump_sql = $this->tmp_folder_path.'/'.self::DB_FILE_COMPRESSION_NO;
+                    $path_sm_tmp_get_sql_txt = $this->tmp_folder_path . '/' . self::FILE_TMP_GET_SQL;
+                    $path_dump_data_tmp_txt = $this->tmp_folder_path . '/' . self::DB_DATA_TMP;
+                    $path_em1_bridge_db_dump_sql = $this->tmp_folder_path . '/' . self::DB_FILE_COMPRESSION_NO;
 
                     if ($this->shop_cart->fileExists($path_sm_tmp_get_sql_txt)) {
                         $this->shop_cart->unlink($path_sm_tmp_get_sql_txt);
@@ -989,7 +980,7 @@ class BridgeConnectorCommon
                         $this->shop_cart->unlink($path_em1_bridge_db_dump_sql);
                     }
 
-                    die(self::GET_SQL_CANCEL_MESSAGE);
+                    exit(self::GET_SQL_CANCEL_MESSAGE);
                 }
 
                 // If store manager needs to get part of dump
@@ -997,12 +988,12 @@ class BridgeConnectorCommon
                     $this->dbFileClose();
                     $this->generateArchive();
                     $this->setGeneratingDumpValue(
-                        array(
+                        [
                             self::GET_SQL_FILE_PART_NAME => $this->dump_file_current,
-                            self::GET_SQL_FILE_PART      => 0
-                        )
+                            self::GET_SQL_FILE_PART => 0,
+                        ]
                     );
-                    $this->dump_file_part_number++;
+                    ++$this->dump_file_part_number;
                     $this->openDbFile();
                 }
 
@@ -1010,14 +1001,14 @@ class BridgeConnectorCommon
                     break;
                 }
 
-                $from  += $limit;
-                $query  = "SELECT * FROM ".$this->shop_cart->pSQL($table)." LIMIT ".(int)$from.", ".(int)$limit;
+                $from += $limit;
+                $query = 'SELECT * FROM ' . $this->shop_cart->pSQL($table) . ' LIMIT ' . (int) $from . ', ' . (int) $limit;
                 $result = $this->shop_cart->getSqlResults($query, self::NUMERIC);
 
                 if ($result === false) {
                     $this->generateError(
-                        "Error selecting data from table `{$table}`. Error: ".$this->shop_cart->error_no.'; '
-                        .$this->shop_cart->error_msg
+                        "Error selecting data from table `{$table}`. Error: " . $this->shop_cart->error_no . '; '
+                        . $this->shop_cart->error_msg
                     );
                 }
 
@@ -1042,13 +1033,13 @@ class BridgeConnectorCommon
     private function generateArchive()
     {
         if ($this->bridge_options['allow_compression']) {
-//            $fname_gz_path = $this->tmp_folder_path.'/'.self::DB_FILE_COMPRESSION_YES;
-            $file_gz = self::DB_FILE_MAIN.$this->getPartNumber($this->dump_file_part_number)
-                .self::DB_FILE_EXT_COMPRESSION_YES;
-            $fname_gz_path = $this->tmp_folder_path."/$file_gz";
+            //            $fname_gz_path = $this->tmp_folder_path.'/'.self::DB_FILE_COMPRESSION_YES;
+            $file_gz = self::DB_FILE_MAIN . $this->getPartNumber($this->dump_file_part_number)
+                . self::DB_FILE_EXT_COMPRESSION_YES;
+            $fname_gz_path = $this->tmp_folder_path . "/$file_gz";
             $fp_gz = $this->shop_cart->gzFileOpen($fname_gz_path, "wb{$this->bridge_options['compress_level']}");
 
-            $fname_path = $this->tmp_folder_path."/$this->dump_file_current";
+            $fname_path = $this->tmp_folder_path . "/$this->dump_file_current";
             $fp = $this->shop_cart->fileOpen($fname_path, 'r');
 
             if ($fp_gz && $fp) {
@@ -1085,35 +1076,35 @@ class BridgeConnectorCommon
 
     private function putDumpData($table, $from)
     {
-        $data = array(
+        $data = [
             'table' => $table,
             'from' => $from,
-            self::GET_SQL_FILE_NAME_GENERATING => $this->dump_file_current
-        );
+            self::GET_SQL_FILE_NAME_GENERATING => $this->dump_file_current,
+        ];
 
-        $this->shop_cart->filePutContents($this->tmp_folder_path.'/'.self::DB_DATA_TMP, serialize($data));
+        $this->shop_cart->filePutContents($this->tmp_folder_path . '/' . self::DB_DATA_TMP, json_encode($data));
     }
 
     private function getTables()
     {
         $this->putLog('Selecting tables');
         $result = $this->shop_cart->getSqlResults(
-            'SHOW FULL TABLES FROM `'.$this->shop_cart->getDbName()."` WHERE Table_type = 'BASE TABLE'",
+            'SHOW FULL TABLES FROM `' . $this->shop_cart->getDbName() . "` WHERE Table_type = 'BASE TABLE'",
             self::NUMERIC
         );
 
         if ($result === false) {
             $this->generateError(
-                'Error selecting tables. Error: '.$this->shop_cart->error_no.'; '.$this->shop_cart->error_msg
+                'Error selecting tables. Error: ' . $this->shop_cart->error_no . '; ' . $this->shop_cart->error_msg
             );
         }
 
-        $quoted_tbls = array();
-        if (isset($this->bridge_options['exclude_db_tables']{0})) {
+        $quoted_tbls = [];
+        if (isset($this->bridge_options['exclude_db_tables'][0])) {
             $arr_exclude_db_tables = explode(';', $this->bridge_options['exclude_db_tables']);
             $count = count($arr_exclude_db_tables);
 
-            for ($i = 0; $i < $count; $i++) {
+            for ($i = 0; $i < $count; ++$i) {
                 $arr_exclude_db_tables[$i] = preg_quote($arr_exclude_db_tables[$i], '/');
                 $arr_exclude_db_tables[$i] = str_replace('\*', '.*', $arr_exclude_db_tables[$i]);
                 $arr_exclude_db_tables[$i] = str_replace('\?', '?', $arr_exclude_db_tables[$i]);
@@ -1122,33 +1113,33 @@ class BridgeConnectorCommon
         }
         $tables_exclude_pattern = implode('|', $quoted_tbls);
 
-        $quoted_tbls = array();
-        if (isset($this->request_params['include_tables']{0})) {
+        $quoted_tbls = [];
+        if (isset($this->request_params['include_tables'][0])) {
             $arr_include_db_tables = explode(';', $this->request_params['include_tables']);
             $count = count($arr_include_db_tables);
 
-            for ($i = 0; $i < $count; $i++) {
+            for ($i = 0; $i < $count; ++$i) {
                 $arr_include_db_tables[$i] = preg_quote($arr_include_db_tables[$i], '/');
                 $arr_include_db_tables[$i] = str_replace('\*', '.*', $arr_include_db_tables[$i]);
                 $arr_include_db_tables[$i] = str_replace('\?', '?', $arr_include_db_tables[$i]);
-                $quoted_tbls[] = '^'.$this->shop_cart->getDbPrefix()."$arr_include_db_tables[$i]$";
+                $quoted_tbls[] = '^' . $this->shop_cart->getDbPrefix() . "$arr_include_db_tables[$i]$";
             }
             $quoted_tbls[] = '^sm_.*$';
         }
         $tables_include_pattern = implode('|', $quoted_tbls);
 
-        $tables = array();
+        $tables = [];
         $inc_tables = 0;
         foreach ($result as $table) {
             if (preg_match("/$tables_include_pattern/", $table[0])) {
-                $inc_tables++;
+                ++$inc_tables;
             }
 
             $tables[] = $table[0];
         }
 
         $count = count($tables);
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             if (!empty($tables_exclude_pattern) && preg_match("/$tables_exclude_pattern/", $tables[$i])) {
                 continue;
             }
@@ -1192,24 +1183,25 @@ class BridgeConnectorCommon
 
     private function dbFileClose()
     {
-//        if ($this->bridge_options['allow_compression'])
-//            gzclose($this->db_file_handler);
-//        else
+        //        if ($this->bridge_options['allow_compression'])
+        //            gzclose($this->db_file_handler);
+        //        else
         $this->shop_cart->fileClose($this->db_file_handler);
     }
 
     /**
      * Set table name and percentage of processed data in session
+     *
      * @param array $handled_tables
-     * Array of processed tables
+     *                              Array of processed tables
      * @param array $table_sizes
-     * Information about size of each table
+     *                           Information about size of each table
      * @param string $handling_table
-     * Table name which is being processing at the moment
+     *                               Table name which is being processing at the moment
      * @param int $handled_rows
-     * Count of processed rows in table name which is being processing at the moment
+     *                          Count of processed rows in table name which is being processing at the moment
      * @param int $db_size
-     * Size of all data in database which will be processed
+     *                     Size of all data in database which will be processed
      */
     private function setCreateDbDumpProgress($handled_tables, $table_sizes, $handling_table, $handled_rows, $db_size)
     {
@@ -1230,7 +1222,7 @@ class BridgeConnectorCommon
 
         $percentage = round($size_handled / $db_size * 100, 0);
         $this->setGeneratingDumpValue(
-            array(self::GET_SQL_TABLE => $handling_table, self::GET_SQL_PERCENTAGE => $percentage)
+            [self::GET_SQL_TABLE => $handling_table, self::GET_SQL_PERCENTAGE => $percentage]
         );
     }
 
@@ -1247,7 +1239,7 @@ class BridgeConnectorCommon
             $fname = $this->tmp_folder_path.'/'.self::DB_FILE_COMPRESSION_NO;
         }*/
 
-        $fname = $this->tmp_folder_path.'/'.$file_name;
+        $fname = $this->tmp_folder_path . '/' . $file_name;
 
         if (!$this->shop_cart->fileExists($fname)) {
             $this->putLog('File not exists.');
@@ -1257,11 +1249,11 @@ class BridgeConnectorCommon
             $this->putLog('File is not readable.');
         }
 
-        $file_size     = $this->shop_cart->fileSize($fname);
+        $file_size = $this->shop_cart->fileSize($fname);
         $file_checksum = md5_file($fname);
-        $outpustr      = "0\r\n";
+        $outpustr = "0\r\n";
 
-//        if ($this->backup_file_ext == 'gz') {
+        //        if ($this->backup_file_ext == 'gz') {
         if ($is_compressed) {
             $outpustr .= '1';
         } else {
@@ -1284,14 +1276,14 @@ class BridgeConnectorCommon
             $outpustr .= '';
         } else {
             $res = array_shift($res);
-            $outpustr .= '|'.$res['charset'];
+            $outpustr .= '|' . $res['charset'];
         }
 
         $outpustr .= "\r\n$file_name\r\n$file_checksum\r\n";
 
         if (!headers_sent()) {
-            header('Content-Length: '.$this->shop_cart->strLen($outpustr));
-            header('Content-Length-Alternative: '.$this->shop_cart->strLen($outpustr));
+            header('Content-Length: ' . $this->shop_cart->strLen($outpustr));
+            header('Content-Length-Alternative: ' . $this->shop_cart->strLen($outpustr));
             header('Expires: 0');
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
             header('Pragma: public');
@@ -1314,8 +1306,8 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['position_param_missing']);
         }
 
-        $filename = (string)$this->tmp_folder_path.'/'.$this->shop_cart->getRequestParam('filename');
-        $position = (int)$this->shop_cart->getRequestParam('position');
+        $filename = (string) $this->tmp_folder_path . '/' . $this->shop_cart->getRequestParam('filename');
+        $position = (int) $this->shop_cart->getRequestParam('position');
 
         if (!$this->shop_cart->fileExists($filename)) {
             $this->generateError($this->br_errors['temporary_file_exist_not']);
@@ -1325,10 +1317,10 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['temporary_file_readable_not']);
         }
 
-        $outpustr       = '';
-        $package_size   = $this->bridge_options['package_size'];
-        $filesize       = $this->shop_cart->fileSize($filename);
-        $filesize       = $filesize - $position * $package_size;
+        $outpustr = '';
+        $package_size = $this->bridge_options['package_size'];
+        $filesize = $this->shop_cart->fileSize($filename);
+        $filesize = $filesize - $position * $package_size;
         $delete_db_file = false;
 
         if ($filesize > $package_size) {
@@ -1344,8 +1336,8 @@ class BridgeConnectorCommon
         }
 
         if (!headers_sent()) {
-            header('Content-Length: '.($this->shop_cart->strLen($outpustr) + $filesize));
-            header('Content-Length-Alternative: '.($this->shop_cart->strLen($outpustr) + $filesize));
+            header('Content-Length: ' . ($this->shop_cart->strLen($outpustr) + $filesize));
+            header('Content-Length-Alternative: ' . ($this->shop_cart->strLen($outpustr) + $filesize));
             header('Expires: 0');
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
             header('Pragma: public');
@@ -1356,7 +1348,7 @@ class BridgeConnectorCommon
 
         $fp = $this->shop_cart->fileOpen($filename, 'rb');
         fseek($fp, $package_size * $position);
-        $read_size = (int)self::FILE_READ_SIZE;
+        $read_size = (int) self::FILE_READ_SIZE;
 
         while (($read_size > 0) && ($package_size > 0)) {
             if ($package_size >= $read_size) {
@@ -1378,7 +1370,7 @@ class BridgeConnectorCommon
 
         if ($delete_db_file) {
             $this->shop_cart->unlink($filename);
-            $this->shop_cart->unlink($this->tmp_folder_path.'/'.self::DB_DATA_TMP);
+            $this->shop_cart->unlink($this->tmp_folder_path . '/' . self::DB_DATA_TMP);
         }
     }
 
@@ -1410,12 +1402,12 @@ class BridgeConnectorCommon
 
     private function putSqlRun($data)
     {
-        $ret                       = '';
-        $checksum_prev             = '';
+        $ret = '';
+        $checksum_prev = '';
         $this->count_sql_exec_prev = 0;
-        $post_replace_to_sm        = array_flip($this->post_replace_from_sm);
-        $sql_delimiter_pv          = $this->shop_cart->getRequestParam('sql_delimiter');
-        $sql_compatibility_pv      = $this->shop_cart->getRequestParam('sql_compatibility');
+        $post_replace_to_sm = array_flip($this->post_replace_from_sm);
+        $sql_delimiter_pv = $this->shop_cart->getRequestParam('sql_delimiter');
+        $sql_compatibility_pv = $this->shop_cart->getRequestParam('sql_compatibility');
 
         // Read checksum and count of processed SQLs from file
         $checksum_arr = $this->getChecksumPrev();
@@ -1429,12 +1421,12 @@ class BridgeConnectorCommon
         }
 
         if ($sql_delimiter_pv !== false && !empty($sql_delimiter_pv)) {
-            $this->sql_delimiter = (string)$this->shop_cart->getRequestParam('sql_delimiter');
+            $this->sql_delimiter = (string) $this->shop_cart->getRequestParam('sql_delimiter');
         }
 
         $this->shop_cart->execSql("SET SQL_MODE = ''");
         if ($sql_compatibility_pv !== false && !empty($sql_compatibility_pv)) {
-            $this->shop_cart->execSql("SET SQL_MODE = '".(string)$sql_compatibility_pv."'");
+            $this->shop_cart->execSql("SET SQL_MODE = '" . (string) $sql_compatibility_pv . "'");
         }
 
         $checksum_current = str_pad($this->shop_cart->strToUpper(dechex(crc32($data))), 8, '0', STR_PAD_LEFT);
@@ -1443,7 +1435,7 @@ class BridgeConnectorCommon
         if ($this->shop_cart->issetRequestParam('checksum')
             && $this->shop_cart->getRequestParam('checksum') != $checksum_current
         ) {
-            return self::POST_ERROR_CHUNK_CHECKSUM_DIF.'|'.$this->br_errors['checksum_dif'];
+            return self::POST_ERROR_CHUNK_CHECKSUM_DIF . '|' . $this->br_errors['checksum_dif'];
         } else {
             if ($this->shop_cart->issetRequestParam('checksum')) {
                 if (strpos($data, $encoded_data_begin) === 0) {
@@ -1489,7 +1481,7 @@ class BridgeConnectorCommon
         }
 
         if ($ret == '' && $this->shop_cart->issetRequestParam('checksum')) {
-            $ret = $this->successful_code.'|Data were posted successfully';
+            $ret = $this->successful_code . '|Data were posted successfully';
         }
 
         return $ret;
@@ -1498,7 +1490,7 @@ class BridgeConnectorCommon
     private function getChecksumPrev()
     {
         $checksum_arr = false;
-        $file_name_intermediate = $this->tmp_folder_path.'/'.self::INTERMEDIATE_FILE_NAME;
+        $file_name_intermediate = $this->tmp_folder_path . '/' . self::INTERMEDIATE_FILE_NAME;
 
         if ($this->shop_cart->fileExists($file_name_intermediate)) {
             $fp = $this->shop_cart->fileOpen($file_name_intermediate, 'r');
@@ -1511,8 +1503,8 @@ class BridgeConnectorCommon
                     $checksum_arr = explode('|', $content);
 
                     if (count($checksum_arr) == 2) {
-                        $checksum_arr[0] = (string)$checksum_arr[0];
-                        $checksum_arr[1] = (int)$checksum_arr[1];
+                        $checksum_arr[0] = (string) $checksum_arr[0];
+                        $checksum_arr[1] = (int) $checksum_arr[1];
 
                         if ($checksum_arr[1] < 0) {
                             $checksum_arr[1] = 0;
@@ -1546,19 +1538,19 @@ class BridgeConnectorCommon
         if ($result) {
             if ($this->shop_cart->issetRequestParam('checksum')) {
                 $this->shop_cart->filePutContents(
-                    $this->tmp_folder_path.'/'.self::INTERMEDIATE_FILE_NAME,
-                    $checksum.'|'.++$this->count_sql_exec_prev
+                    $this->tmp_folder_path . '/' . self::INTERMEDIATE_FILE_NAME,
+                    $checksum . '|' . ++$this->count_sql_exec_prev
                 );
             }
         } else {
-            $ret .= self::POST_ERROR_SQL_INDEX.'|'.($this->count_sql_exec_prev + 1).'|'
-                .$this->shop_cart->error_no.'; '.$this->shop_cart->error_msg.PHP_EOL.htmlspecialchars($query)
-                .PHP_EOL;
+            $ret .= self::POST_ERROR_SQL_INDEX . '|' . ($this->count_sql_exec_prev + 1) . '|'
+                . $this->shop_cart->error_no . '; ' . $this->shop_cart->error_msg . PHP_EOL . htmlspecialchars($query)
+                . PHP_EOL;
 
             if ($this->shop_cart->issetRequestParam('checksum')) {
                 $this->shop_cart->filePutContents(
-                    $this->tmp_folder_path.'/'.self::INTERMEDIATE_FILE_NAME,
-                    $checksum.'|'.$this->count_sql_exec_prev
+                    $this->tmp_folder_path . '/' . self::INTERMEDIATE_FILE_NAME,
+                    $checksum . '|' . $this->count_sql_exec_prev
                 );
             }
         }
@@ -1570,7 +1562,7 @@ class BridgeConnectorCommon
     {
         $result = false;
 
-        for ($i = 0; $i < self::MAX_COUNT_ATTEMPT_POST; $i ++) {
+        for ($i = 0; $i < self::MAX_COUNT_ATTEMPT_POST; ++$i) {
             sleep(self::DELAY_BETWEEN_POST);
             $result = $this->shop_cart->execSql($query, true);
 
@@ -1584,28 +1576,28 @@ class BridgeConnectorCommon
 
     private function getModuleVersion()
     {
-        die($this->shop_cart->jsonEncode(
-            array(
+        exit($this->shop_cart->jsonEncode(
+            [
                 $this->code_response => $this->successful_code,
-                'revision'           => $this->revision,
-                'module_version'     => $this->module_version,
-            )
+                'revision' => $this->revision,
+                'module_version' => $this->module_version,
+            ]
         ));
     }
 
     private function getConfig()
     {
         echo "0\r\n";
-        echo 'database_host='.$this->shop_cart->getDbHost().PHP_EOL;
-        echo 'database_name='.$this->shop_cart->getDbName().PHP_EOL;
-        echo 'database_username='.$this->shop_cart->getDbUsername().PHP_EOL;
-        echo 'database_password='.$this->shop_cart->getDbPassword().PHP_EOL;
-        echo 'database_table_prefix='.$this->shop_cart->getDbPrefix().PHP_EOL;
-        echo 'php_version='.phpversion().PHP_EOL;
-        echo 'gzip='.(int)extension_loaded('zlib').PHP_EOL;
+        echo 'database_host=' . $this->shop_cart->getDbHost() . PHP_EOL;
+        echo 'database_name=' . $this->shop_cart->getDbName() . PHP_EOL;
+        echo 'database_username=' . $this->shop_cart->getDbUsername() . PHP_EOL;
+        echo 'database_password=' . $this->shop_cart->getDbPassword() . PHP_EOL;
+        echo 'database_table_prefix=' . $this->shop_cart->getDbPrefix() . PHP_EOL;
+        echo 'php_version=' . phpversion() . PHP_EOL;
+        echo 'gzip=' . (int) extension_loaded('zlib') . PHP_EOL;
 
         if (defined('VM_VERSION')) {
-            echo 'vm_version='.VM_VERSION.PHP_EOL;
+            echo 'vm_version=' . VM_VERSION . PHP_EOL;
         }
     }
 
@@ -1622,7 +1614,7 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['category_param_empty']);
         }
 
-        $dir = (string)$this->shop_cart->getRequestParam('category');
+        $dir = (string) $this->shop_cart->getRequestParam('category');
         if (empty($dir)) {
             $this->putLog('Error: Category name is empty');
             $this->generateError($this->br_errors['category_param_missing']);
@@ -1639,22 +1631,22 @@ class BridgeConnectorCommon
                     $this->shop_cart->strLen(self::TMP_FILE_PREFIX)
                 ) == self::TMP_FILE_PREFIX
             ) {
-                $this->shop_cart->unlink($this->tmp_folder_path.'/'.$entry);
+                $this->shop_cart->unlink($this->tmp_folder_path . '/' . $entry);
             }
         }
 
-        $tmpfname = $this->shop_cart->strToLower(self::TMP_FILE_PREFIX.date('H_i_s-d_M_Y'));
+        $tmpfname = $this->shop_cart->strToLower(self::TMP_FILE_PREFIX . date('H_i_s-d_M_Y'));
         $this->putLog('Creating and opening tmp file for get category path');
 
         if ($this->bridge_options['allow_compression']) {
             $tmpfname .= '.txt.gz';
             $tmpfd = $this->shop_cart->gzFileOpen(
-                $this->tmp_folder_path.'/'.$tmpfname,
-                'wb'.$this->bridge_options['compress_level']
+                $this->tmp_folder_path . '/' . $tmpfname,
+                'wb' . $this->bridge_options['compress_level']
             );
         } else {
             $tmpfname .= '.txt';
-            $tmpfd = $this->shop_cart->fileOpen($this->tmp_folder_path.'/'.$tmpfname, 'wb');
+            $tmpfd = $this->shop_cart->fileOpen($this->tmp_folder_path . '/' . $tmpfname, 'wb');
         }
 
         if (!$tmpfd) {
@@ -1663,7 +1655,7 @@ class BridgeConnectorCommon
         }
 
         $files = $this->shop_cart->getFilesRecursively(
-            $this->shop_cart->getShopRootDir().ltrim($dir, '/'),
+            $this->shop_cart->getShopRootDir() . ltrim($dir, '/'),
             $this->shop_cart->getIgnoreDirs(),
             '*',
             true
@@ -1679,13 +1671,13 @@ class BridgeConnectorCommon
             ? $this->shop_cart->gzFileClose($tmpfd)
             : $this->shop_cart->fileClose($tmpfd);
 
-        die($this->generateFileData($this->tmp_folder_path.'/'.$tmpfname, $this->bridge_options['allow_compression']));
+        exit($this->generateFileData($this->tmp_folder_path . '/' . $tmpfname, $this->bridge_options['allow_compression']));
     }
 
     private function runIndexer()
     {
         $this->shop_cart->runIndexer();
-        die();
+        exit;
     }
 
     /**
@@ -1701,11 +1693,11 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['varsnames_param_missing']);
         }
 
-        $translations = array();
-        $vars_main_dir = (string)$this->shop_cart->getRequestParam('vars_main_dir');
+        $translations = [];
+        $vars_main_dir = (string) $this->shop_cart->getRequestParam('vars_main_dir');
         $vars_main_dir = trim('\\', trim('/', $vars_main_dir));
-        $vars_main_dir = $this->shop_cart->getShopRootDir().'/'.$vars_main_dir;
-        $vars_names = (string)$this->shop_cart->getRequestParam('vars_names');
+        $vars_main_dir = $this->shop_cart->getShopRootDir() . '/' . $vars_main_dir;
+        $vars_names = (string) $this->shop_cart->getRequestParam('vars_names');
 
         if ($vars_main_dir == '') {
             $this->generateError($this->br_errors['varsmaindir_param_empty']);
@@ -1719,11 +1711,11 @@ class BridgeConnectorCommon
 
         while (($item = $this->shop_cart->readDirectory($item_handler)) !== false) {
             if ($this->shop_cart->subStr($item, 0, 1) != '.' && !$this->shop_cart->isDirectory($item)) {
-                $translations[(string)$item] = $this->getVarsFromScript($vars_main_dir.'/'.$item, $vars_names);
+                $translations[(string) $item] = $this->getVarsFromScript($vars_main_dir . '/' . $item, $vars_names);
             }
         }
 
-        echo '1|'.$this->shop_cart->jsonEncode($translations);
+        echo '1|' . $this->shop_cart->jsonEncode($translations);
     }
 
     /**
@@ -1731,18 +1723,18 @@ class BridgeConnectorCommon
      */
     private function getVarsFromScript($path_to_script, $vars_names)
     {
-        if ($this->shop_cart->fileExists('./'.$path_to_script)
-            && $this->shop_cart->isReadable('./'.$path_to_script)
-            && $this->shop_cart->fileSize('./'.$path_to_script) > 0
+        if ($this->shop_cart->fileExists('./' . $path_to_script)
+            && $this->shop_cart->isReadable('./' . $path_to_script)
+            && $this->shop_cart->fileSize('./' . $path_to_script) > 0
         ) {
-            $current_translations = array();
-            $content = call_user_func('file_get_contents', './'.$path_to_script);
+            $current_translations = [];
+            $content = call_user_func('file_get_contents', './' . $path_to_script);
 
             if (!$content) {
-                $this->generateError('Cannot open file: '.$path_to_script);
+                $this->generateError('Cannot open file: ' . $path_to_script);
             }
 
-            $rows     = explode("\n", $content);
+            $rows = explode("\n", $content);
             $pattern = '/^\$\_\[\'(.*)\']\s*\=\s*(.*)\;/i';
 
             foreach ($rows as $data) {
@@ -1780,12 +1772,12 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['xmlitemsinfonode_param_missing']);
         }
 
-        $xml_path            = (string)$this->shop_cart->getRequestParam('xml_path');
-        $xml_fields          = (string)$this->shop_cart->getRequestParam('xml_fields');
-        $xml_items_node      = (string)$this->shop_cart->getRequestParam('xml_items_node');
-        $xml_items_info_node = (string)$this->shop_cart->getRequestParam('xml_items_info_node');
-        $xml_filters         = array();
-        $xml_filters_pv      = $this->shop_cart->getRequestParam('xml_filters');
+        $xml_path = (string) $this->shop_cart->getRequestParam('xml_path');
+        $xml_fields = (string) $this->shop_cart->getRequestParam('xml_fields');
+        $xml_items_node = (string) $this->shop_cart->getRequestParam('xml_items_node');
+        $xml_items_info_node = (string) $this->shop_cart->getRequestParam('xml_items_info_node');
+        $xml_filters = [];
+        $xml_filters_pv = $this->shop_cart->getRequestParam('xml_filters');
 
         if ($xml_path == '') {
             $this->generateError($this->br_errors['xmlpath_param_empty']);
@@ -1804,10 +1796,10 @@ class BridgeConnectorCommon
         }
 
         if ($xml_filters_pv !== false && !empty($xml_filters_pv)) {
-            $xml_filters = explode(';', (string)$xml_filters_pv);
+            $xml_filters = explode(';', (string) $xml_filters_pv);
         }
 
-        $path_xml_file = $this->shop_cart->getShopRootDir().'/'.$xml_path;
+        $path_xml_file = $this->shop_cart->getShopRootDir() . '/' . $xml_path;
 
         if (!$this->shop_cart->fileExists($path_xml_file)) {
             $this->generateError("File {$xml_path} not found!");
@@ -1821,9 +1813,9 @@ class BridgeConnectorCommon
      */
     private function getItemsList($path_xml_file, $fields, $items_node, $items_info_node, $filters)
     {
-        $items_list      = array();
-        $filters_matched = array();
-        $xml             = simplexml_load_file($path_xml_file);
+        $items_list = [];
+        $filters_matched = [];
+        $xml = simplexml_load_file($path_xml_file);
 
         foreach ($filters as $filter) {
             preg_match('/^(.*)\:(.*)$/', $filter, $matches);
@@ -1831,9 +1823,9 @@ class BridgeConnectorCommon
         }
 
         $count_filters_matched = count($filters_matched);
-        $fields                = explode(',', $fields);
-        $items                 = $xml->xpath("{$items_node}");
-        $items_keys            = array_keys($items[0]);
+        $fields = explode(',', $fields);
+        $items = $xml->xpath("{$items_node}");
+        $items_keys = array_keys($items[0]);
 
         foreach ($items_keys as $item_name) {
             if ($items_node != $items_info_node) {
@@ -1845,18 +1837,18 @@ class BridgeConnectorCommon
 
             if ($count_filters_matched > 0) {
                 foreach ($filters_matched as $filter_name => $filter_value) {
-                    if ((string)$items_info->$filter_name != $filter_value) {
+                    if ((string) $items_info->$filter_name != $filter_value) {
                         continue 2;
                     }
                 }
             }
 
             foreach ($fields as $field) {
-                $items_list[$item_name][$field] = (string)$items_info->$field;
+                $items_list[$item_name][$field] = (string) $items_info->$field;
             }
         }
 
-        echo '1|'.$this->shop_cart->jsonEncode($items_list)."\r\n";
+        echo '1|' . $this->shop_cart->jsonEncode($items_list) . "\r\n";
     }
 
     /**
@@ -1868,7 +1860,7 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['searchpath_param_missing']);
         }
 
-        $path = (string)$this->shop_cart->getRequestParam('search_path');
+        $path = (string) $this->shop_cart->getRequestParam('search_path');
         $mask = '*';
 
         if ($path == '') {
@@ -1876,7 +1868,7 @@ class BridgeConnectorCommon
         }
 
         if ($this->shop_cart->issetRequestParam('mask')) {
-            $mask = (string)$this->shop_cart->getRequestParam('mask');
+            $mask = (string) $this->shop_cart->getRequestParam('mask');
 
             if (empty($mask)) {
                 $mask = '*';
@@ -1884,20 +1876,20 @@ class BridgeConnectorCommon
         }
 
         $include_subdir = $this->shop_cart->issetRequestParam('include_subdir')
-            && (int)$this->shop_cart->getRequestParam('include_subdir') == 1;
+            && (int) $this->shop_cart->getRequestParam('include_subdir') == 1;
 
         $files = $this->shop_cart->getFilesRecursively(
-            $this->shop_cart->getShopRootDir().ltrim($path, '/'),
+            $this->shop_cart->getShopRootDir() . ltrim($path, '/'),
             $this->shop_cart->getIgnoreDirs(),
             $mask,
             $include_subdir
         );
 
         echo $this->shop_cart->jsonEncode(
-            array(
+            [
                 $this->shop_cart->getCodeResponse() => $this->shop_cart->getCodeSuccessful(),
-                $this->shop_cart->getKeyMessage()   => $files,
-            )
+                $this->shop_cart->getKeyMessage() => $files,
+            ]
         );
     }
 
@@ -1905,53 +1897,53 @@ class BridgeConnectorCommon
     {
         if (!$this->shop_cart->issetRequestParam('search_path')) {
             $this->generateJsonResponse(
-                array($this->key_message => $this->br_errors['searchpath_param_missing']),
+                [$this->key_message => $this->br_errors['searchpath_param_missing']],
                 true
             );
         }
 
-        $searchPath = (string)$this->shop_cart->getRequestParam('search_path');
+        $searchPath = (string) $this->shop_cart->getRequestParam('search_path');
 
         if (empty($searchPath)) {
-            $this->generateJsonResponse(array($this->key_message => $this->br_errors['searchpath_param_empty']), true);
+            $this->generateJsonResponse([$this->key_message => $this->br_errors['searchpath_param_empty']], true);
         }
 
-        $filePathTxt = '.'.$this->bridge_options['tmp_dir'].'/'.self::FILE_NAME_FILE_LIST.self::FILE_EXT_TXT;
-        $filePathGz = '.'.$this->bridge_options['tmp_dir'].'/'
-                      .self::FILE_NAME_FILE_LIST
-                      .self::DB_FILE_EXT_COMPRESSION_YES;
+        $filePathTxt = '.' . $this->bridge_options['tmp_dir'] . '/' . self::FILE_NAME_FILE_LIST . self::FILE_EXT_TXT;
+        $filePathGz = '.' . $this->bridge_options['tmp_dir'] . '/'
+                      . self::FILE_NAME_FILE_LIST
+                      . self::DB_FILE_EXT_COMPRESSION_YES;
         $filePathFinal = $filePathTxt;
 
         $includeMask = $this->shop_cart->issetRequestParam('include_mask')
-            ? (string)$this->shop_cart->getRequestParam('include_mask')
+            ? (string) $this->shop_cart->getRequestParam('include_mask')
             : '';
         if (!empty($includeMask)) {
             $includeMask = '{' . str_replace(';', ',', $includeMask) . '}';
         }
 
         $excludeMask = $this->shop_cart->issetRequestParam('exclude_mask')
-            ? (string)$this->shop_cart->getRequestParam('exclude_mask')
+            ? (string) $this->shop_cart->getRequestParam('exclude_mask')
             : '';
         if (!empty($excludeMask)) {
             $excludeMask = '{' . str_replace(';', ',', $excludeMask) . '}';
         }
 
-        $includeRegexp = (string)$this->shop_cart->getRequestParam('include_regexp');
+        $includeRegexp = (string) $this->shop_cart->getRequestParam('include_regexp');
         if (!empty($includeRegexp)) {
-            $includeRegexp = '\\'.$includeRegexp.'\\';
+            $includeRegexp = '\\' . $includeRegexp . '\\';
         }
 
-        $excludeRegexp = (string)$this->shop_cart->getRequestParam('exclude_regexp');
+        $excludeRegexp = (string) $this->shop_cart->getRequestParam('exclude_regexp');
         if (!empty($excludeRegexp)) {
-            $excludeRegexp = '\\'.$excludeRegexp.'\\';
+            $excludeRegexp = '\\' . $excludeRegexp . '\\';
         }
 
-        $excludeDirectoryList = (string)$this->shop_cart->getRequestParam('exclude_dirs');
+        $excludeDirectoryList = (string) $this->shop_cart->getRequestParam('exclude_dirs');
         $excludeDirectoryList = str_replace('\\', '/', $excludeDirectoryList);
 
         $excludeDirectories = !empty($excludeDirectoryList)
             ? explode(';', $excludeDirectoryList)
-            : array();
+            : [];
 
         $excludeIsAbsolute = strpos($excludeDirectoryList, '/') !== false;
 
@@ -1959,7 +1951,7 @@ class BridgeConnectorCommon
             $this->shop_cart->unlink($filePathGz);
         }
 
-        $fileTmp = $this->tmp_folder_path.'/'.self::FILE_NAME_GET_FILE_LIST_TMP;
+        $fileTmp = $this->tmp_folder_path . '/' . self::FILE_NAME_GET_FILE_LIST_TMP;
         $processId = md5(rand());
         $this->setValueByKeyToFile($fileTmp, self::KEY_PROCESS_ID, $processId);
 
@@ -1976,7 +1968,7 @@ class BridgeConnectorCommon
             $includeRegexp,
             $excludeRegexp,
             $this->shop_cart->issetRequestParam('include_subdir')
-                ? (string)$this->shop_cart->getRequestParam('include_subdir') == '1'
+                ? (string) $this->shop_cart->getRequestParam('include_subdir') == '1'
                 : true,
             $excludeDirectories,
             $excludeIsAbsolute
@@ -1987,7 +1979,7 @@ class BridgeConnectorCommon
             $this->generateArchiveByFile($filePathTxt, $filePathFinal);
         }
 
-        die($this->getDownloadableFileInfo($filePathFinal, $this->bridge_options['allow_compression']));
+        exit($this->getDownloadableFileInfo($filePathFinal, $this->bridge_options['allow_compression']));
     }
 
     private function recursiveScanFolder(
@@ -2000,12 +1992,12 @@ class BridgeConnectorCommon
         $includeRegexp,
         $excludeRegexp,
         $includeSubDirectories,
-        $excludeDirs = array(),
+        $excludeDirs = [],
         $excludeIsAbsolute = true,
-        $skipArray = array('.', '..')
+        $skipArray = ['.', '..']
     ) {
         if ($this->getValueByKeyFromFile($fileTmp, self::KEY_PROCESS_ID) != $processId) {
-            $this->generateJsonResponse(array(KEY_MESSAGE => 'Another process has been run'), true);
+            $this->generateJsonResponse([KEY_MESSAGE => 'Another process has been run'], true);
         }
 
         if (!($objectPath = opendir($searchPath))) {
@@ -2021,8 +2013,8 @@ class BridgeConnectorCommon
                 $files = $this->globNot($searchPath, $excludeMask, GLOB_BRACE);
             }
 
-            for ($i = 0, $count = count($files); $i < $count; $i++) {
-                $this->shop_cart->filePutContents($temporaryFileLocation, $files[$i]."\r\n", FILE_APPEND);
+            for ($i = 0, $count = count($files); $i < $count; ++$i) {
+                $this->shop_cart->filePutContents($temporaryFileLocation, $files[$i] . "\r\n", FILE_APPEND);
             }
 
             $filesProcessed = true;
@@ -2044,7 +2036,7 @@ class BridgeConnectorCommon
                     if (preg_match($includeRegexp, $objectName)) {
                         $this->shop_cart->filePutContents(
                             $temporaryFileLocation,
-                            $searchObjectPath."\r\n",
+                            $searchObjectPath . "\r\n",
                             FILE_APPEND
                         );
                     }
@@ -2054,7 +2046,7 @@ class BridgeConnectorCommon
                     if (!preg_match($excludeRegexp, $objectName)) {
                         $this->shop_cart->filePutContents(
                             $temporaryFileLocation,
-                            $searchObjectPath."\r\n",
+                            $searchObjectPath . "\r\n",
                             FILE_APPEND
                         );
                     }
@@ -2064,7 +2056,7 @@ class BridgeConnectorCommon
 
                 $this->shop_cart->filePutContents(
                     $temporaryFileLocation,
-                    $searchObjectPath."\r\n",
+                    $searchObjectPath . "\r\n",
                     FILE_APPEND
                 );
             } elseif ($this->shop_cart->isDirectory($searchObjectPath)
@@ -2107,11 +2099,11 @@ class BridgeConnectorCommon
         $fileSize = filesize($file);
         $divLastPart = $fileSize % $this->bridge_options['package_size'];
 
-        return "0\r\n".($isCompressed ? '1' : '0').'|'
-            .floor($divLastPart > 0
+        return "0\r\n" . ($isCompressed ? '1' : '0') . '|'
+            . floor($divLastPart > 0
                        ? $fileSize / $this->bridge_options['package_size'] + 1
                        : $fileSize / $this->bridge_options['package_size'])
-            ."|$fileSize\r\n".basename($file)."\r\n".md5_file($file);
+            . "|$fileSize\r\n" . basename($file) . "\r\n" . md5_file($file);
     }
 
     private function getDownloadableFileInfoJson($file, $isCompressed)
@@ -2119,25 +2111,24 @@ class BridgeConnectorCommon
         $fileSize = $this->shop_cart->fileSize($file);
         $divLastPart = $fileSize % $this->bridge_options['package_size'];
 
-        return array(
+        return [
             $this->key_is_compressed => $isCompressed,
             $this->key_file_size => $fileSize,
-            $this->key_parts_count =>
-                floor($divLastPart > 0
+            $this->key_parts_count => floor($divLastPart > 0
                     ? $fileSize / $this->bridge_options['package_size'] + 1
                     : $fileSize / $this->bridge_options['package_size']),
             $this->key_checksum => md5_file($file),
-            $this->key_file_name => basename($file)
-        );
+            $this->key_file_name => basename($file),
+        ];
     }
 
     private function setValueByKeyToFile($file, $key, $value)
     {
         $content = $this->shop_cart->fileGetContents($file);
-        $content = !empty($content) ? unserialize($content) : array();
+        $content = !empty($content) ? json_decode($content, true) : [];
         $content[$key] = $value;
 
-        $this->shop_cart->filePutContents($file, serialize($content));
+        $this->shop_cart->filePutContents($file, json_encode($content));
     }
 
     private function getValueByKeyFromFile($file, $key)
@@ -2148,7 +2139,7 @@ class BridgeConnectorCommon
             return false;
         }
 
-        $content = unserialize($content);
+        $content = json_decode($content, true);
 
         return array_key_exists($key, $content) ? $content[$key] : false;
     }
@@ -2164,7 +2155,7 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['tablename_param_missing']);
         }
 
-        $table_name = (string)$this->shop_cart->getRequestParam('table_name');
+        $table_name = (string) $this->shop_cart->getRequestParam('table_name');
 
         if (empty($table_name)) {
             $this->generateError($this->br_errors['tablename_param_empty']);
@@ -2179,7 +2170,7 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['orderid_param_missing']);
         }
 
-        $order_id = (int)$this->shop_cart->getRequestParam('order_id');
+        $order_id = (int) $this->shop_cart->getRequestParam('order_id');
 
         if ($order_id < 1) {
             $this->generateError($this->br_errors['orderid_param_incorrect']);
@@ -2193,7 +2184,7 @@ class BridgeConnectorCommon
      */
     private function createDbDumpCancel()
     {
-        $this->setGeneratingDumpValue(array(self::GET_SQL_CANCEL_PARAM => 1));
+        $this->setGeneratingDumpValue([self::GET_SQL_CANCEL_PARAM => 1]);
     }
 
     /**
@@ -2201,14 +2192,14 @@ class BridgeConnectorCommon
      */
     private function createDbDumpProgress()
     {
-        $ret = array();
+        $ret = [];
         $str = '0|';
 
-        $ret['table']      = $this->getGeneratingDumpValue(self::GET_SQL_TABLE);
+        $ret['table'] = $this->getGeneratingDumpValue(self::GET_SQL_TABLE);
         $ret['percentage'] = $this->getGeneratingDumpValue(self::GET_SQL_PERCENTAGE);
 
         if ($ret['table'] !== false && $ret['percentage'] !== false) {
-            $str = '1|'.$this->shop_cart->jsonEncode($ret);
+            $str = '1|' . $this->shop_cart->jsonEncode($ret);
         }
 
         echo $str;
@@ -2216,9 +2207,9 @@ class BridgeConnectorCommon
 
     private function getSqlFilePartInfo()
     {
-        $this->setGeneratingDumpValue(array(self::GET_SQL_FILE_PART => 1));
+        $this->setGeneratingDumpValue([self::GET_SQL_FILE_PART => 1]);
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             sleep(10);
             $file_part = $this->getGeneratingDumpValue(self::GET_SQL_FILE_PART_NAME);
 
@@ -2230,12 +2221,12 @@ class BridgeConnectorCommon
                 }
 
                 $this->downloadDump($file_part, $is_compressed);
-                $this->setGeneratingDumpValue(array(self::GET_SQL_FILE_PART_NAME => ''));
-                die();
+                $this->setGeneratingDumpValue([self::GET_SQL_FILE_PART_NAME => '']);
+                exit;
             }
         }
 
-        die('Cannot give a file');
+        exit('Cannot give a file');
     }
 
     private function getImage()
@@ -2248,8 +2239,8 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['imageid_param_missing']);
         }
 
-        $entity_type = (string)$this->shop_cart->getRequestParam('entity_type');
-        $image_id    = (string)$this->shop_cart->getRequestParam('image_id');
+        $entity_type = (string) $this->shop_cart->getRequestParam('entity_type');
+        $image_id = (string) $this->shop_cart->getRequestParam('image_id');
 
         if (!isset($entity_type[0])) {
             $this->generateError($this->br_errors['entitytype_param_empty']);
@@ -2263,7 +2254,7 @@ class BridgeConnectorCommon
 
         if ($image_path && $this->shop_cart->fileExists($image_path)) {
             header('Content-Type: image/jpeg');
-            header('Content-Length: '.$this->shop_cart->fileSize($image_path));
+            header('Content-Length: ' . $this->shop_cart->fileSize($image_path));
             readfile($image_path);
         } else {
             $this->generateError('Image is missing');
@@ -2280,8 +2271,8 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['imageid_param_missing']);
         }
 
-        $entity_type = (string)$this->shop_cart->getRequestParam('entity_type');
-        $image_id    = (string)$this->shop_cart->getRequestParam('image_id');
+        $entity_type = (string) $this->shop_cart->getRequestParam('entity_type');
+        $image_id = (string) $this->shop_cart->getRequestParam('image_id');
 
         if (!isset($entity_type[0])) {
             $this->generateError($this->br_errors['entitytype_param_empty']);
@@ -2291,8 +2282,12 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['imageid_param_incorrect']);
         }
 
+        if ($entity_type === 'upload') {
+            $this->shop_cart->setCustomizationFile($entity_type, $image_id, self::UPLOAD_FILE_NAME, self::UPLOAD_FILE_NAME);
+        }
+
         if ($this->shop_cart->issetRequestParam('image_url')) {
-            $image_url = (string)$this->shop_cart->getRequestParam('image_url');
+            $image_url = (string) $this->shop_cart->getRequestParam('image_url');
 
             if (empty($image_url)) {
                 $this->generateError($this->br_errors['imageurl_param_empty']);
@@ -2318,16 +2313,16 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['imageid_param_missing']);
         }
 
-        $entity_type = (string)$this->shop_cart->getRequestParam('entity_type');
-//        $image_id    = $this->shop_cart->getRequestParam('image_id');
+        $entity_type = (string) $this->shop_cart->getRequestParam('entity_type');
+        //        $image_id    = $this->shop_cart->getRequestParam('image_id');
 
         if (!isset($entity_type[0])) {
             $this->generateError($this->br_errors['entitytype_param_empty']);
         }
 
-//        if ($image_id < 1) {
-//            $this->generateError($this->br_errors['imageid_param_incorrect']);
-//        }
+        //        if ($image_id < 1) {
+        //            $this->generateError($this->br_errors['imageid_param_incorrect']);
+        //        }
 
         $this->shop_cart->deleteImage($entity_type, $this->shop_cart->getRequestParam('image_id'));
     }
@@ -2338,13 +2333,16 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['path_param_missing']);
         }
 
-        $filepath = (string)$this->shop_cart->getRequestParam('path');
+        $filepath = (string) $this->shop_cart->getRequestParam('path');
 
         if (empty($filepath)) {
             $this->generateError($this->br_errors['path_param_empty']);
         }
 
-        $filepath = $this->shop_cart->getShopRootDir().'/'.$filepath;
+        $filepath = preg_replace(
+            '/.*(?=(download))/',
+            '',
+            $this->shop_cart->getShopRootDir() . '/' . $filepath);
 
         if (!$this->shop_cart->fileExists($filepath)) {
             $this->generateError($this->br_errors['delete_file_error']);
@@ -2367,9 +2365,9 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['toimageid_param_missing']);
         }
 
-        $entity_type   = (string)$this->shop_cart->getRequestParam('entity_type');
-        $from_image_id = (int)$this->shop_cart->getRequestParam('image_id');
-        $to_image_id   = (int)$this->shop_cart->getRequestParam('to_image_id');
+        $entity_type = (string) $this->shop_cart->getRequestParam('entity_type');
+        $from_image_id = (int) $this->shop_cart->getRequestParam('image_id');
+        $to_image_id = (int) $this->shop_cart->getRequestParam('to_image_id');
 
         if (!isset($entity_type[0])) {
             $this->generateError($this->br_errors['entitytype_param_empty']);
@@ -2396,8 +2394,8 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['filename_param_missing']);
         }
 
-        $entity_type = (string)$this->shop_cart->getRequestParam('entity_type');
-        $filename    = (string)$this->shop_cart->getRequestParam('filename');
+        $entity_type = (string) $this->shop_cart->getRequestParam('entity_type');
+        $filename = (string) $this->shop_cart->getRequestParam('filename');
 
         if (empty($entity_type)) {
             $this->generateError($this->br_errors['entitytype_param_empty']);
@@ -2411,7 +2409,7 @@ class BridgeConnectorCommon
 
         if ($file_path && $this->shop_cart->fileExists($file_path)) {
             header('Content-Type: image/jpeg');
-            header('Content-Length: '.$this->shop_cart->fileSize($file_path));
+            header('Content-Length: ' . $this->shop_cart->fileSize($file_path));
             readfile($file_path);
         } else {
             $this->generateError('File is missing');
@@ -2428,8 +2426,8 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['filename_param_missing']);
         }
 
-        $entity_type = (string)$this->shop_cart->getRequestParam('entity_type');
-        $filename    = (string)$this->shop_cart->getRequestParam('filename');
+        $entity_type = (string) $this->shop_cart->getRequestParam('entity_type');
+        $filename = (string) $this->shop_cart->getRequestParam('filename');
 
         if (empty($entity_type)) {
             $this->generateError($this->br_errors['entitytype_param_empty']);
@@ -2485,9 +2483,9 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['not_writeable_dir']);
         }
 
-        $result         = false;
-        $arr_ignore_dir = array();
-        $file           = "$this->tmp_folder_path/emagicone_store.zip";
+        $result = false;
+        $arr_ignore_dir = [];
+        $file = "$this->tmp_folder_path/emagicone_store.zip";
 
         if ($this->shop_cart->issetRequestParam('ignore_dir')) {
             $ignore_dir = $this->shop_cart->getRequestParam('ignore_dir');
@@ -2519,12 +2517,12 @@ class BridgeConnectorCommon
             $this->generateError($this->br_errors['cannot_archive_files'], $this->error_generate_store_file_archive);
         }
 
-        die($result);
+        exit($result);
     }
 
     private function generateFileArchive($zipObj, $path, $store_root_dir_length, $arr_ignore_dir)
     {
-        $skip = array('.', '..');
+        $skip = ['.', '..'];
 
         if ($fp = opendir($path)) {
             while (false !== ($value = $this->shop_cart->readDirectory($fp))) {
@@ -2571,56 +2569,56 @@ class BridgeConnectorCommon
             echo "1\r\n";
             echo $err_text;
         } else {
-            echo $this->shop_cart->jsonEncode(array(
-                $this->code_response => $error_code ? : $this->error_code_common,
-                $this->key_message   => $err_text,
-            ));
+            echo $this->shop_cart->jsonEncode([
+                $this->code_response => $error_code ?: $this->error_code_common,
+                $this->key_message => $err_text,
+            ]);
         }
 
-        die();
+        exit;
     }
 
     private function generateJsonResponse($data, $isError = false)
     {
         if (!is_array($data)) {
-            $data = array($data);
+            $data = [$data];
         }
 
         $data[$this->code_response] = $isError ? $this->error_code_common : $this->successful_code;
 
-        die($this->shop_cart->jsonEncode($data));
+        exit($this->shop_cart->jsonEncode($data));
     }
 
     private function putLog($data)
     {
         if (!$this->log_file_reset) {
-            $log_file_handler = $this->shop_cart->fileOpen($this->tmp_folder_path.'/'.self::LOG_FILENAME, 'w');
+            $log_file_handler = $this->shop_cart->fileOpen($this->tmp_folder_path . '/' . self::LOG_FILENAME, 'w');
             $this->log_file_reset = true;
         } else {
-            $log_file_handler = $this->shop_cart->fileOpen($this->tmp_folder_path.'/'.self::LOG_FILENAME, 'a');
+            $log_file_handler = $this->shop_cart->fileOpen($this->tmp_folder_path . '/' . self::LOG_FILENAME, 'a');
         }
 
-        fputs($log_file_handler, '['.date('r').']'.$data."\r\n");
+        fputs($log_file_handler, '[' . date('r') . ']' . $data . "\r\n");
         $this->shop_cart->fileClose($log_file_handler);
     }
 
     private function runSelfTest()
     {
-        die($this->shop_cart->jsonEncode(array(
+        exit($this->shop_cart->jsonEncode([
             $this->key_message => 'test ok',
-        )));
+        ]));
     }
 
     private function isSessionKeyValid($key)
     {
-        $date = date('Y-m-d H:i:s', (time() - self::MAX_KEY_LIFETIME));
-        $sql = 'SELECT `id` FROM `'.$this->shop_cart->getDbPrefix().self::TABLE_SESSION_KEYS
-            ."` WHERE `session_key` = '".$this->shop_cart->pSQL($key)."' AND `last_activity` > '".$date."'";
+        $date = date('Y-m-d H:i:s', time() - self::MAX_KEY_LIFETIME);
+        $sql = 'SELECT `id` FROM `' . $this->shop_cart->getDbPrefix() . self::TABLE_SESSION_KEYS
+            . "` WHERE `session_key` = '" . $this->shop_cart->pSQL($key) . "' AND `last_activity` > '" . $date . "'";
         $result = $this->shop_cart->getSqlResults($sql);
 
         if ($result && isset($result[0]['id'])) {
-            $sql = 'UPDATE `'.$this->shop_cart->getDbPrefix().self::TABLE_SESSION_KEYS."` SET `last_activity` = '"
-                .date('Y-m-d H:i:s')."' WHERE `id` = ".(int)$result[0]['id'];
+            $sql = 'UPDATE `' . $this->shop_cart->getDbPrefix() . self::TABLE_SESSION_KEYS . "` SET `last_activity` = '"
+                . date('Y-m-d H:i:s') . "' WHERE `id` = " . (int) $result[0]['id'];
             $this->shop_cart->execSql($sql);
 
             return true;
@@ -2632,19 +2630,19 @@ class BridgeConnectorCommon
     private function addFailedAttempt()
     {
         $timestamp = time();
-        $sql = 'INSERT INTO `'.$this->shop_cart->getDbPrefix().self::TABLE_FAILED_LOGIN
-            ."` (`ip`, `date_added`) VALUES ('".$this->shop_cart->pSQL($_SERVER['REMOTE_ADDR'])."', '"
-            .date('Y-m-d H:i:s', $timestamp)."')";
+        $sql = 'INSERT INTO `' . $this->shop_cart->getDbPrefix() . self::TABLE_FAILED_LOGIN
+            . "` (`ip`, `date_added`) VALUES ('" . $this->shop_cart->pSQL($_SERVER['REMOTE_ADDR']) . "', '"
+            . date('Y-m-d H:i:s', $timestamp) . "')";
         $this->shop_cart->execSql($sql);
 
         // Get count of failed attempts for last 24 hours and set delay
-        $sql = 'SELECT COUNT(`id`) AS count_rows FROM `'.$this->shop_cart->getDbPrefix().self::TABLE_FAILED_LOGIN
-            ."` WHERE `ip` = '".$this->shop_cart->pSQL($_SERVER['REMOTE_ADDR'])."' AND `date_added` > '"
-            .date('Y-m-d H:i:s', ($timestamp - self::MAX_KEY_LIFETIME))."'";
+        $sql = 'SELECT COUNT(`id`) AS count_rows FROM `' . $this->shop_cart->getDbPrefix() . self::TABLE_FAILED_LOGIN
+            . "` WHERE `ip` = '" . $this->shop_cart->pSQL($_SERVER['REMOTE_ADDR']) . "' AND `date_added` > '"
+            . date('Y-m-d H:i:s', $timestamp - self::MAX_KEY_LIFETIME) . "'";
         $result = $this->shop_cart->getSqlResults($sql);
 
         if ($result) {
-            self::setDelay((int)$result[0]['count_rows']);
+            self::setDelay((int) $result[0]['count_rows']);
         }
     }
 
@@ -2652,25 +2650,25 @@ class BridgeConnectorCommon
     {
         $timestamp = time();
         $date = date('Y-m-d H:i:s', $timestamp);
-        $sql = 'SELECT `session_key` FROM `'.$this->shop_cart->pSQL($this->shop_cart->getDbPrefix()
-            .self::TABLE_SESSION_KEYS) ."` WHERE `last_activity` > '"
-            .$this->shop_cart->pSQL(date('Y-m-d H:i:s', ($timestamp - self::MAX_KEY_LIFETIME)))
-            ."' ORDER BY `last_activity` DESC LIMIT 1";
+        $sql = 'SELECT `session_key` FROM `' . $this->shop_cart->pSQL($this->shop_cart->getDbPrefix()
+            . self::TABLE_SESSION_KEYS) . "` WHERE `last_activity` > '"
+            . $this->shop_cart->pSQL(date('Y-m-d H:i:s', $timestamp - self::MAX_KEY_LIFETIME))
+            . "' ORDER BY `last_activity` DESC LIMIT 1";
         $result = $this->shop_cart->getSqlResults($sql);
 
         if ($result && isset($result[0]['session_key'])) {
-            $sql = 'UPDATE `'.$this->shop_cart->getDbPrefix().self::TABLE_SESSION_KEYS."` SET `last_activity` = '"
-                .$this->shop_cart->pSQL($date)."' WHERE `session_key` = '"
-                .$this->shop_cart->pSQL($result[0]['session_key'])."'";
+            $sql = 'UPDATE `' . $this->shop_cart->getDbPrefix() . self::TABLE_SESSION_KEYS . "` SET `last_activity` = '"
+                . $this->shop_cart->pSQL($date) . "' WHERE `session_key` = '"
+                . $this->shop_cart->pSQL($result[0]['session_key']) . "'";
             $this->shop_cart->execSql($sql);
 
             return $result[0]['session_key'];
         }
 
-        $key = hash('sha256', $hash.$timestamp);
-        $sql = 'INSERT INTO `'.$this->shop_cart->getDbPrefix().self::TABLE_SESSION_KEYS
-            ."` (`session_key`, `date_added`, `last_activity`) VALUES ('".$this->shop_cart->pSQL($key)."', '"
-            .$this->shop_cart->pSQL($date)."', '".$this->shop_cart->pSQL($date)."')";
+        $key = hash('sha256', $hash . $timestamp);
+        $sql = 'INSERT INTO `' . $this->shop_cart->getDbPrefix() . self::TABLE_SESSION_KEYS
+            . "` (`session_key`, `date_added`, `last_activity`) VALUES ('" . $this->shop_cart->pSQL($key) . "', '"
+            . $this->shop_cart->pSQL($date) . "', '" . $this->shop_cart->pSQL($date) . "')";
         $this->shop_cart->execSql($sql);
 
         return $key;
@@ -2679,11 +2677,11 @@ class BridgeConnectorCommon
     private function deleteSessionKey()
     {
         if ($this->shop_cart->issetRequestParam('key')) {
-            $key = (string)$this->shop_cart->getRequestParam('key');
+            $key = (string) $this->shop_cart->getRequestParam('key');
 
             if (!empty($key)) {
-                $sql = 'DELETE FROM `'.$this->shop_cart->getDbPrefix().self::TABLE_SESSION_KEYS
-                    ."` WHERE `session_key` = '".$this->shop_cart->pSQL($key)."'";
+                $sql = 'DELETE FROM `' . $this->shop_cart->getDbPrefix() . self::TABLE_SESSION_KEYS
+                    . "` WHERE `session_key` = '" . $this->shop_cart->pSQL($key) . "'";
                 $this->shop_cart->execSql($sql);
             }
         }
@@ -2692,14 +2690,14 @@ class BridgeConnectorCommon
     private function clearOldData()
     {
         $timestamp = time();
-        $date = date('Y-m-d H:i:s', ($timestamp - self::MAX_KEY_LIFETIME));
+        $date = date('Y-m-d H:i:s', $timestamp - self::MAX_KEY_LIFETIME);
         $this->shop_cart->execSql(
-            'DELETE FROM `'.$this->shop_cart->getDbPrefix().self::TABLE_SESSION_KEYS."` WHERE `last_activity` < '"
-            .$this->shop_cart->pSQL($date)."'"
+            'DELETE FROM `' . $this->shop_cart->getDbPrefix() . self::TABLE_SESSION_KEYS . "` WHERE `last_activity` < '"
+            . $this->shop_cart->pSQL($date) . "'"
         );
         $this->shop_cart->execSql(
-            'DELETE FROM `'.$this->shop_cart->getDbPrefix().self::TABLE_FAILED_LOGIN."` WHERE `date_added` < '"
-            .$this->shop_cart->pSQL($date)."'"
+            'DELETE FROM `' . $this->shop_cart->getDbPrefix() . self::TABLE_FAILED_LOGIN . "` WHERE `date_added` < '"
+            . $this->shop_cart->pSQL($date) . "'"
         );
     }
 

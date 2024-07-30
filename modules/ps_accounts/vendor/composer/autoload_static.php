@@ -366,9 +366,9 @@ class ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9
         'PrestaShop\\Module\\PsAccounts\\Account\\Dto\\UpgradeModule' => __DIR__ . '/../..' . '/src/Account/Dto/UpgradeModule.php',
         'PrestaShop\\Module\\PsAccounts\\Account\\Dto\\User' => __DIR__ . '/../..' . '/src/Account/Dto/User.php',
         'PrestaShop\\Module\\PsAccounts\\Account\\LinkShop' => __DIR__ . '/../..' . '/src/Account/LinkShop.php',
+        'PrestaShop\\Module\\PsAccounts\\Account\\Session\\Firebase\\FirebaseSession' => __DIR__ . '/../..' . '/src/Account/Session/Firebase/FirebaseSession.php',
         'PrestaShop\\Module\\PsAccounts\\Account\\Session\\Firebase\\OwnerSession' => __DIR__ . '/../..' . '/src/Account/Session/Firebase/OwnerSession.php',
         'PrestaShop\\Module\\PsAccounts\\Account\\Session\\Firebase\\ShopSession' => __DIR__ . '/../..' . '/src/Account/Session/Firebase/ShopSession.php',
-        'PrestaShop\\Module\\PsAccounts\\Account\\Session\\RefreshFirebaseTokens' => __DIR__ . '/../..' . '/src/Account/Session/RefreshFirebaseTokens.php',
         'PrestaShop\\Module\\PsAccounts\\Account\\Session\\Session' => __DIR__ . '/../..' . '/src/Account/Session/Session.php',
         'PrestaShop\\Module\\PsAccounts\\Account\\Session\\SessionInterface' => __DIR__ . '/../..' . '/src/Account/Session/SessionInterface.php',
         'PrestaShop\\Module\\PsAccounts\\Account\\Session\\ShopSession' => __DIR__ . '/../..' . '/src/Account/Session/ShopSession.php',
@@ -383,6 +383,7 @@ class ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9
         'PrestaShop\\Module\\PsAccounts\\Api\\Controller\\AbstractRestController' => __DIR__ . '/../..' . '/src/Api/Controller/AbstractRestController.php',
         'PrestaShop\\Module\\PsAccounts\\Api\\Controller\\AbstractShopRestController' => __DIR__ . '/../..' . '/src/Api/Controller/AbstractShopRestController.php',
         'PrestaShop\\Module\\PsAccounts\\Api\\Controller\\Request\\Request' => __DIR__ . '/../..' . '/src/Api/Controller/Request/Request.php',
+        'PrestaShop\\Module\\PsAccounts\\Api\\Controller\\Request\\ShopHealthCheckRequest' => __DIR__ . '/../..' . '/src/Api/Controller/Request/ShopHealthCheckRequest.php',
         'PrestaShop\\Module\\PsAccounts\\Api\\Controller\\Request\\UpdateShopLinkAccountRequest' => __DIR__ . '/../..' . '/src/Api/Controller/Request/UpdateShopLinkAccountRequest.php',
         'PrestaShop\\Module\\PsAccounts\\Api\\Controller\\Request\\UpdateShopOauth2ClientRequest' => __DIR__ . '/../..' . '/src/Api/Controller/Request/UpdateShopOauth2ClientRequest.php',
         'PrestaShop\\Module\\PsAccounts\\Api\\Controller\\RestMethod' => __DIR__ . '/../..' . '/src/Api/Controller/RestMethod.php',
@@ -1097,6 +1098,7 @@ class ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9
         'ps_AccountsApiV1ShopOauth2ClientModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopOauth2Client.php',
         'ps_AccountsApiV1ShopTokenModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopToken.php',
         'ps_AccountsApiV1ShopUrlModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV1ShopUrl.php',
+        'ps_AccountsApiV2ShopHealthCheckModuleFrontController' => __DIR__ . '/../..' . '/controllers/front/apiV2ShopHealthCheck.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

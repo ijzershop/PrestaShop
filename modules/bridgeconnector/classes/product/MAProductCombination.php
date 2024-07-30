@@ -16,9 +16,12 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 includedProductCombinationFiles();
 
@@ -29,6 +32,7 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
 {
     /**
      * MAProductCombination constructor.
+     *
      * @param null $languageId
      */
     public function __construct($languageId = null)
@@ -45,11 +49,11 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
         $combinationObject = new Combination($combinationId);
         $imageIds = [];
         foreach (Image::getImages($languageId, $combinationObject->id_product, $combinationObject->id) as $image) {
-            $imageIds[] = (int)$image['id_image'];
+            $imageIds[] = (int) $image['id_image'];
         }
-//        if ($imageIds === [] && $coverImage = Image::getGlobalCover($combinationObject->id_product)) {
-//            $imageIds[] = (int)$coverImage['id_image'];
-//        }
+        //        if ($imageIds === [] && $coverImage = Image::getGlobalCover($combinationObject->id_product)) {
+        //            $imageIds[] = (int)$coverImage['id_image'];
+        //        }
 
         $shops = [];
         foreach ($shopIds as $shopId) {
@@ -67,15 +71,15 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
         }
 
         return [
-            'combination_id' => (int)$combinationObject->id,
-            'name'           => (string)self::getCombinationName($combinationObject, $languageId),
-            'reference'      => (string)$combinationObject->reference,
-            'ean13'          => (string)$combinationObject->ean13,
-            'isbn'           => (string)$combinationObject->isbn,
-            'upc'            => (string)$combinationObject->upc,
-            'location'       => (string)$combinationObject->location,
-            'image_ids'      => $imageIds,
-            'shops'          => $shops
+            'combination_id' => (int) $combinationObject->id,
+            'name' => (string) self::getCombinationName($combinationObject, $languageId),
+            'reference' => (string) $combinationObject->reference,
+            'ean13' => (string) $combinationObject->ean13,
+            'isbn' => (string) $combinationObject->isbn,
+            'upc' => (string) $combinationObject->upc,
+            'location' => (string) $combinationObject->location,
+            'image_ids' => $imageIds,
+            'shops' => $shops,
         ];
     }
 
@@ -84,6 +88,7 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
      *
      * @param $combinationObject
      * @param null $languageId
+     *
      * @return string
      */
     public static function getCombinationName($combinationObject, $languageId)
@@ -111,33 +116,35 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
     {
         $availableDate = null;
         if ($combinationObject->available_date !== '0000-00-00') {
-            $availableDate = (int)self::convertTimestampToMillisecondsTimestamp(
-                strtotime($combinationObject->available_date)
+            $availableDate = (int) self::convertTimestampToMillisecondsTimestamp(
+                $combinationObject->available_date
             );
         }
 
         $shop = new Shop($shopId);
+
         return [
-            'shop_id'               => (int)$shop->id,
-            'is_default'            => (bool)$shop->isDefaultShop(),
-            'quantity'              => (int)StockAvailable::getQuantityAvailableByProduct(
+            'shop_id' => (int) $shop->id,
+            'is_default' => (bool) $shop->isDefaultShop(),
+            'quantity' => (int) StockAvailable::getQuantityAvailableByProduct(
                 $combinationObject->id_product,
                 $combinationObject->id,
                 $shop->id
             ),
-            'available_date'        => $availableDate,
-            'min_quantity_for_sale' => (int)$combinationObject->minimal_quantity,
-            'low_stock_threshold'   => (int)$combinationObject->low_stock_threshold,
-            'low_stock_alert'       => (bool)$combinationObject->low_stock_alert,
-            'wholesale_price'       => (float)$combinationObject->wholesale_price,
-            'price_impact'          => (float)$combinationObject->price,
-            'unit_price_impact'     => (float)$combinationObject->unit_price_impact,
-            'weight_impact'         => (float)$combinationObject->weight,
-            'final_price'           => self::displayPrice(
+            'available_date' => $availableDate,
+            'min_quantity_for_sale' => (int) $combinationObject->minimal_quantity,
+            'low_stock_threshold' => (int) $combinationObject->low_stock_threshold,
+            'low_stock_alert' => (bool) $combinationObject->low_stock_alert,
+            'wholesale_price' => (float) $combinationObject->wholesale_price,
+            'price_impact' => (float) $combinationObject->price,
+            'unit_price_impact' => (float) $combinationObject->unit_price_impact,
+            'weight_impact' => (float) $combinationObject->weight,
+            'final_price' => self::displayPrice(
                 $productObject->getPriceWithoutReduct(false, $combinationObject->id),
                 Currency::getDefaultCurrency()->id,
                 $languageId
-            )
+            ),
+            'default_on' => (bool) $combinationObject->default_on,
         ];
     }
 
@@ -147,8 +154,9 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
             SELECT 
                 id_shop
             FROM ' . _DB_PREFIX_ . 'product_attribute_shop
-            WHERE id_product_attribute = ' . (int)$combinationId . ' LIMIT 1');
-        return (int)$queryResult[0]['id_shop'];
+            WHERE id_product_attribute = ' . (int) $combinationId . ' LIMIT 1');
+
+        return (int) $queryResult[0]['id_shop'];
     }
 
     public static function getProductCombinationsCount($productId, $shopId = null)
@@ -159,10 +167,11 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
                 (
                     SELECT pa.id_product_attribute
                     FROM ' . _DB_PREFIX_ . 'product_attribute pa
-                    WHERE pa.id_product = ' . (int)$productId . '
+                    WHERE pa.id_product = ' . (int) $productId . '
                     GROUP BY pa.id_product_attribute
                 ) AS t');
-            return (int)$queryResult[0]['cnt'];
+
+            return (int) $queryResult[0]['cnt'];
         }
         $queryResult = self::getQueryResult('
             SELECT 
@@ -170,9 +179,10 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
             FROM ' . _DB_PREFIX_ . 'product_attribute pa
             INNER JOIN ' . _DB_PREFIX_ . 'product_attribute_shop pas ON
             (pas.id_product_attribute = pa.id_product_attribute
-            AND pas.id_shop IN ('. $shopId .'))
-            WHERE pa.id_product = ' . (int)$productId);
-        return (int)$queryResult[0]['cnt'];
+            AND pas.id_shop IN (' . $shopId . '))
+            WHERE pa.id_product = ' . (int) $productId);
+
+        return (int) $queryResult[0]['cnt'];
     }
 
     /**
@@ -181,13 +191,14 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
      * @param $attributes
      * @param $pageIndex
      * @param $pageSize
+     *
      * @throws EM1Exception
      */
     public function generateProductCombinations($productId, $shopId, $attributes, $pageIndex, $pageSize)
     {
         $responseArray = [
-            'combinations'       => [],
-            'combinations_count' => 0
+            'combinations' => [],
+            'combinations_count' => 0,
         ];
 
         if ($shopId === null || $shopId === -1) {
@@ -211,6 +222,7 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
                 $this->languageId
             );
         }
+        $productObject->checkDefaultAttributes();
         $responseArray['combinations'] =
             array_slice($responseArray['combinations'], ($pageIndex - 1) * $pageSize, $pageSize);
         $responseArray['combinations_count'] = self::getProductCombinationsCount($productId, $shopId);
@@ -222,7 +234,9 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
      *
      * @param $productObject
      * @param $attributeIds
+     *
      * @return array
+     *
      * @throws EM1Exception
      */
     private function generateProductCombinationsByAttributeIds($productObject, $attributeIds)
@@ -234,16 +248,16 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
         }
         $combinations = array_values(AdminAttributeGeneratorController::createCombinations(array_values($options)));
         $combinationsValues = array_values(array_map(function () use ($productObject) {
-            return array(
+            return [
                 'id_product' => $productObject->id,
-            );
+            ];
         }, $combinations));
 
         $productObject->generateMultipleCombinations($combinationsValues, $combinations, false);
 
         Product::updateDefaultAttribute($productObject->id);
         SpecificPriceRule::enableAnyApplication();
-        SpecificPriceRule::applyAllRules(array((int) $productObject->id));
+        SpecificPriceRule::applyAllRules([(int) $productObject->id]);
 
         return $this->getLastGeneratedProductCombinationsIds($productObject->id, count($combinationsValues));
     }
@@ -252,14 +266,16 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
      * workaround for generate_product_combinations
      *
      * @param $attributeId
+     *
      * @return int
+     *
      * @throws EM1Exception
      */
     private function getAttributeGroupIdByAttributeId($attributeId)
     {
         $dbQuery = new DbQuery();
 
-        $attributesTableData =  self::getQueryResult(
+        $attributesTableData = self::getQueryResult(
             $dbQuery->select(
                 'id_attribute_group'
             )
@@ -267,7 +283,7 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
                 ->where('id_attribute = ' . $attributeId)
         );
 
-        return (int)$attributesTableData[0]['id_attribute_group'];
+        return (int) $attributesTableData[0]['id_attribute_group'];
     }
 
     /**
@@ -275,7 +291,9 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
      *
      * @param $productId
      * @param $numberOfCombinations
+     *
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getLastGeneratedProductCombinationsIds($productId, $numberOfCombinations)
@@ -298,21 +316,29 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
      * @param $shopId
      * @param $pageIndex
      * @param $pageSize
+     *
      * @throws EM1Exception
      */
     public function getProductEditCombinations($productId, $shopId, $pageIndex, $pageSize)
     {
+        $responseArray = [
+            'combinations' => [],
+            'combinations_count' => 0,
+        ];
+
         if ($shopId === null || $shopId === -1) {
             $shopIds = Shop::getShops(true, null, true);
         } else {
-            $shopIds = $shopId;
+            $shopIds = [$shopId];
         }
+
         $combinationIds = self::getProductCombinationIds($productId, $shopIds);
-        $responseArray = [
-            'combinations'       => [],
-            'combinations_count' => self::getProductCombinationsCount($productId, $shopId)
-        ];
-        $productObject = new Product($productId);
+        try {
+            $productObject = new Product($productId, false, null, $shopId);
+        } catch (Exception $exception) {
+            throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $exception->getMessage());
+        }
+
         foreach ($combinationIds as $combination) {
             $responseArray['combinations'][] = self::productEditCombinationDto(
                 $combination['id_product_attribute'],
@@ -321,28 +347,58 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
                 self::getDefaultLanguageId()
             );
         }
-        $responseArray['combinations'] = array_slice(
-            $responseArray['combinations'],
-            ($pageIndex - 1) * $pageSize,
-            $pageSize
-        );
+
+        $responseArray['combinations'] =
+            array_slice($responseArray['combinations'], ($pageIndex - 1) * $pageSize, $pageSize);
+        $responseArray['combinations_count'] = self::getProductCombinationsCount($productId, $shopId);
+
         self::generateResponse($responseArray);
     }
+    // older function from 11.21.2021
+    /*   public function getProductEditCombinations($productId, $shopId, $pageIndex, $pageSize)
+       {
+           if ($shopId === null || $shopId === -1) {
+               $shopIds = Shop::getShops(true, null, true);
+           } else {
+               $shopIds = $shopId;
+           }
+           $combinationIds = self::getProductCombinationIds($productId, $shopIds);
+           $responseArray = [
+               'combinations'       => [],
+               'combinations_count' => self::getProductCombinationsCount($productId, $shopId)
+           ];
+           $productObject = new Product($productId);
+           foreach ($combinationIds as $combination) {
+               $responseArray['combinations'][] = self::productEditCombinationDto(
+                   $combination['id_product_attribute'],
+                   $productObject,
+                   $shopIds,
+                   self::getDefaultLanguageId()
+               );
+           }
+           $responseArray['combinations'] = array_slice(
+               $responseArray['combinations'],
+               ($pageIndex - 1) * $pageSize,
+               $pageSize
+           );
+           self::generateResponse($responseArray);
+       }*/
 
     public static function getProductCombinationIds($productId, $shopIds)
     {
         return self::getQueryResult('
-            SELECT 
+            SELECT
                 DISTINCT(pa.id_product_attribute)
             FROM ' . _DB_PREFIX_ . 'product_attribute pa
             INNER JOIN ' . _DB_PREFIX_ . 'product_attribute_shop pas ON
             (pas.id_product_attribute = pa.id_product_attribute
-            AND pas.id_shop IN ('. implode(',', $shopIds) .'))
-            WHERE pa.id_product = ' . (int)$productId);
+            AND pas.id_shop IN (' . implode(',', $shopIds) . '))
+            WHERE pa.id_product = ' . (int) $productId);
     }
 
     /**
      * @param $combination
+     *
      * @throws EM1Exception
      */
     public function saveProductCombination($combination)
@@ -357,6 +413,7 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
                         null,
                         $combinationObject->id
                     );
+                    $combinationObject->location = $value;
                 } elseif (!is_array($value) && $value !== null) {
                     $combinationObject->$field = $value;
                 } elseif ($field === 'image_ids' && $value !== null) {
@@ -382,12 +439,16 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
                             $shopId,
                             $shopField
                         );
-                        StockAvailable::setQuantity(
-                            $combinationObject->id_product,
-                            $combinationObject->id,
-                            $combinationObjectShopData['quantity'],
-                            $shopId
-                        );
+                        if (!is_null($combinationObjectShopData['quantity'])) {
+                            StockAvailable::setQuantity(
+                                $combinationObject->id_product,
+                                $combinationObject->id,
+                                $combinationObjectShopData['quantity'],
+                                $shopId
+                            );
+
+                            $combinationObjectShop->quantity = $combinationObjectShopData['quantity'];
+                        }
                         $combinationObjectShop->available_date = $combinationObjectShopData['available_date'];
                         $combinationObjectShop->minimal_quantity = $combinationObjectShopData['min_quantity_for_sale'];
                         $combinationObjectShop->low_stock_threshold = $combinationObjectShopData['low_stock_threshold'];
@@ -398,6 +459,12 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
                         $combinationObjectShop->weight = $combinationObjectShopData['weight_impact'];
                         try {
                             $combinationObjectShop->save();
+
+                            if ($combinationObjectShopData['default_on'] === true) {
+                                $productObject = new Product($combinationObject->id_product);
+                                $productObject->setWsDefaultCombination($combination['combination_id']);
+                                unset($productObject);
+                            }
                         } catch (Exception $exception) {
                             throw new EM1Exception(EM1Exception::ERROR_CODE_DATA_NOT_UPDATED, $exception->getMessage());
                         }
@@ -423,38 +490,47 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
      * @param $combinationId
      * @param $shopId
      * @param $shop
+     *
      * @return array
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
     private function getPreparedCombinationShopData($combinationId, $shopId, $shop)
     {
         $combinationObject = $this->getProductCombination($combinationId, $shopId);
+
+        $quantity = !empty($combinationObject->quantity) ? $combinationObject->quantity : null;
+
         $combinationObjectShopData = [
-            'quantity'              => $combinationObject->quantity,
-            'available_date'        => $combinationObject->available_date,
+            'quantity' => $quantity,
+            'available_date' => $combinationObject->available_date,
             'min_quantity_for_sale' => $combinationObject->minimal_quantity,
-            'low_stock_threshold'   => $combinationObject->low_stock_threshold,
-            'low_stock_alert'       => $combinationObject->low_stock_alert,
-            'wholesale_price'       => $combinationObject->wholesale_price,
-            'price_impact'          => $combinationObject->price,
-            'unit_price_impact'     => $combinationObject->unit_price_impact,
-            'weight_impact'         => $combinationObject->weight
+            'low_stock_threshold' => $combinationObject->low_stock_threshold,
+            'low_stock_alert' => $combinationObject->low_stock_alert,
+            'wholesale_price' => $combinationObject->wholesale_price,
+            'price_impact' => $combinationObject->price,
+            'unit_price_impact' => $combinationObject->unit_price_impact,
+            'weight_impact' => $combinationObject->weight,
         ];
         foreach ($shop as $key => $value) {
             if ($key === 'available_date' && $value !== null) {
-                $combinationObjectShopData[$key] = date('Y-m-d', self::convertMillisecondsTimestampToTimestamp($value));
+                $date = self::convertMillisecondsTimestampToTimestamp($value);
+                $combinationObjectShopData[$key] = gmdate('Y-m-d', $date);
             } elseif ($value !== null) {
                 $combinationObjectShopData[$key] = $value;
             }
         }
+
         return $combinationObjectShopData;
     }
 
     /**
      * @param $combinationId
      * @param null $shopId
+     *
      * @return Combination
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -470,6 +546,7 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
     /**
      * @param $productId
      * @param $shopId
+     *
      * @throws EM1Exception
      */
     public function getProductEditSpecificPriceCombinations($productId, $shopId)
@@ -494,8 +571,8 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
                 }
             }
             $responseArray['combinations'][] = [
-                'combination_id' => (int)$combination->id,
-                'name'           => (string)implode(', ', $combinationName)
+                'combination_id' => (int) $combination->id,
+                'name' => (string) implode(', ', $combinationName),
             ];
         }
         self::generateResponse($responseArray);
@@ -504,7 +581,9 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
     /**
      * @param $productId
      * @param null $shopId
+     *
      * @return array
+     *
      * @throws EM1Exception
      */
     public function getProductCombinations($productId, $shopId = null)
@@ -513,7 +592,7 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
             SELECT *
             FROM ' . _DB_PREFIX_ . 'product_attribute pa' .
             Shop::addSqlAssociation('product_attribute', 'pa') . '
-            WHERE pa.id_product = ' . (int)$productId . '
+            WHERE pa.id_product = ' . (int) $productId . '
             GROUP BY pa.id_product_attribute');
         $combinations = [];
         foreach ($productCombinations as $combination) {
@@ -525,12 +604,14 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
             $combinations[] = $combinationObject;
             unset($combinationObject);
         }
+
         return $combinations;
     }
 
     /**
      * @param $combinationId
      * @param $shopId
+     *
      * @throws EM1Exception
      */
     public function deleteProductCombination($combinationId, $shopId)
@@ -542,6 +623,9 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
             $productCombination = $this->getProductCombination($combinationId, $shopId);
             $productId = $productCombination->id_product;
             $productCombination->delete();
+            $productObject = new Product($productId, false, null, $shopId);
+            $productObject->checkDefaultAttributes();
+            unset($productObject);
         } catch (Exception $e) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $e->getMessage());
         }
@@ -550,15 +634,12 @@ class MAProductCombination extends EM1Main implements EM1ProductCombinationInter
         }
         self::generateResponse(
             [
-                'combinations_count' => self::getProductCombinationsCount($productId, $shopId)
+                'combinations_count' => self::getProductCombinationsCount($productId, $shopId),
             ]
         );
     }
 }
 
-/**
- *
- */
 function includedProductCombinationFiles()
 {
     require_once _PS_MODULE_DIR_ . '/' . EM1Constants::MODULE_NAME . '/classes/helper/EM1Main.php';

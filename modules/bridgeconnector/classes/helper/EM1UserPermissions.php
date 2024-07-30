@@ -16,165 +16,168 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 includedUserPermissionsFiles();
 
 class EM1UserPermissions extends EM1Main
 {
     // General permissions constants
-    const KEY_TITLE                                     = 'title';
-    const KEY_ITEMS                                     = 'items';
-    const KEY_CODE                                      = 'code';
-    const KEY_NAME                                      = 'name';
+    const KEY_TITLE = 'title';
+    const KEY_ITEMS = 'items';
+    const KEY_CODE = 'code';
+    const KEY_NAME = 'name';
 
     // Dashboard permissions constants
-    const CODE_DASHBOARD_VIEW                           = 'dashboard_view';
+    const CODE_DASHBOARD_VIEW = 'dashboard_view';
 
     // Widget permissions constants
-    const CODE_WIDGET_VIEW                              = 'widget_view';
+    const CODE_WIDGET_VIEW = 'widget_view';
 
     // Notifications permissions constants
-    const CODE_NOTIFICATION_PUSH_NEW_ORDER              = 'push_new_order';
-    const CODE_NOTIFICATION_PUSH_NEW_CUSTOMER           = 'push_new_customer';
-    const CODE_NOTIFICATION_PUSH_CHANGE_ORDER_STATUSES  = 'push_change_order_statuses';
+    const CODE_NOTIFICATION_PUSH_NEW_ORDER = 'push_new_order';
+    const CODE_NOTIFICATION_PUSH_NEW_CUSTOMER = 'push_new_customer';
+    const CODE_NOTIFICATION_PUSH_CHANGE_ORDER_STATUSES = 'push_change_order_statuses';
 
     // Products permissions constants
-    const CODE_PRODUCTS_VIEW                            = 'products_view';
-//    const CODE_PRODUCTS_EDIT                            = 'products_edit';
-//    const CODE_PRODUCTS_DELETE                          = 'products_delete';
+    const CODE_PRODUCTS_VIEW = 'products_view';
+    //    const CODE_PRODUCTS_EDIT                            = 'products_edit';
+    //    const CODE_PRODUCTS_DELETE                          = 'products_delete';
 
     // Customers permissions constants
-    const CODE_CUSTOMERS_VIEW                           = 'customers_view';
-//    const CODE_CUSTOMERS_EDIT                           = 'customers_edit';
-//    const CODE_CUSTOMERS_DELETE                         = 'customers_delete';
+    const CODE_CUSTOMERS_VIEW = 'customers_view';
+    //    const CODE_CUSTOMERS_EDIT                           = 'customers_edit';
+    //    const CODE_CUSTOMERS_DELETE                         = 'customers_delete';
 
     // Orders permissions constants
-    const CODE_ORDERS_VIEW                              = 'orders_view';
-//    const CODE_ORDERS_EDIT                              = 'orders_edit';
-//    const CODE_ORDERS_DELETE                            = 'orders_delete';
-    const CODE_ORDERS_DETAILS_PDF                       = 'order_details_pdf';
-    const CODE_ORDERS_UPDATE_ORDER_STATUS               = 'update_order_status';
-    const CODE_ORDERS_EDIT_SHIPPING_DETAILS             = 'edit_order_shipping_details';
+    const CODE_ORDERS_VIEW = 'orders_view';
+    //    const CODE_ORDERS_EDIT                              = 'orders_edit';
+    //    const CODE_ORDERS_DELETE                            = 'orders_delete';
+    const CODE_ORDERS_DETAILS_PDF = 'order_details_pdf';
+    const CODE_ORDERS_UPDATE_ORDER_STATUS = 'update_order_status';
+    const CODE_ORDERS_EDIT_SHIPPING_DETAILS = 'edit_order_shipping_details';
 
     // Abandoned carts permissions constants
-    const CODE_ABANDONED_CARTS_VIEW                     = 'abandoned_carts_view';
-//    const CODE_ABANDONED_CARTS_EDIT                     = 'abandoned_carts_edit';
-//    const CODE_ABANDONED_CARTS_DELETE                   = 'abandoned_carts_delete';
+    const CODE_ABANDONED_CARTS_VIEW = 'abandoned_carts_view';
+    //    const CODE_ABANDONED_CARTS_EDIT                     = 'abandoned_carts_edit';
+    //    const CODE_ABANDONED_CARTS_DELETE                   = 'abandoned_carts_delete';
 
     // Dashboard permissions list
-    const DASHBOARD_PERMISSIONS = array(
+    const DASHBOARD_PERMISSIONS = [
         self::KEY_TITLE => 'Dashboard',
-        self::KEY_ITEMS => array(
-            array(
-                self::KEY_CODE      => self::CODE_DASHBOARD_VIEW,
-                self::KEY_NAME      => 'View Dashboard',
-            )
-        )
-    );
+        self::KEY_ITEMS => [
+            [
+                self::KEY_CODE => self::CODE_DASHBOARD_VIEW,
+                self::KEY_NAME => 'View Dashboard',
+            ],
+        ],
+    ];
 
     // Widget permissions list
-    const WIDGET_PERMISSIONS = array(
+    const WIDGET_PERMISSIONS = [
         self::KEY_TITLE => 'Widget',
-        self::KEY_ITEMS => array(
-            array(
-                self::KEY_CODE      => self::CODE_WIDGET_VIEW,
-                self::KEY_NAME      => 'View Widget',
-            ),
-        ),
-    );
+        self::KEY_ITEMS => [
+            [
+                self::KEY_CODE => self::CODE_WIDGET_VIEW,
+                self::KEY_NAME => 'View Widget',
+            ],
+        ],
+    ];
 
     // Notifications permissions list
-    const NOTIFICATION_PERMISSIONS = array(
+    const NOTIFICATION_PERMISSIONS = [
         self::KEY_TITLE => 'Notifications',
-        self::KEY_ITEMS => array(
-            array(
-                self::KEY_CODE  => self::CODE_NOTIFICATION_PUSH_NEW_ORDER,
-                self::KEY_NAME  => 'Receive New Order'
-            ),
-            array(
-                self::KEY_CODE  => self::CODE_NOTIFICATION_PUSH_NEW_CUSTOMER,
-                self::KEY_NAME  => 'Receive New Customer'
-            ),
-            array(
+        self::KEY_ITEMS => [
+            [
+                self::KEY_CODE => self::CODE_NOTIFICATION_PUSH_NEW_ORDER,
+                self::KEY_NAME => 'Receive New Order',
+            ],
+            [
+                self::KEY_CODE => self::CODE_NOTIFICATION_PUSH_NEW_CUSTOMER,
+                self::KEY_NAME => 'Receive New Customer',
+            ],
+            [
                 self::KEY_CODE => self::CODE_NOTIFICATION_PUSH_CHANGE_ORDER_STATUSES,
-                self::KEY_NAME => 'Receive Order Status Change'
-            )
-        )
-    );
+                self::KEY_NAME => 'Receive Order Status Change',
+            ],
+        ],
+    ];
 
     // Products permissions list
-    const PRODUCTS_PERMISSIONS = array(
+    const PRODUCTS_PERMISSIONS = [
         self::KEY_TITLE => 'Products',
-        self::KEY_ITEMS => array(
-            array(
+        self::KEY_ITEMS => [
+            [
                 self::KEY_CODE => self::CODE_PRODUCTS_VIEW,
-                self::KEY_NAME => 'View Products'
-            )
-        )
-    );
+                self::KEY_NAME => 'View Products',
+            ],
+        ],
+    ];
 
     // Customers permissions list
-    const CUSTOMERS_PERMISSIONS = array(
+    const CUSTOMERS_PERMISSIONS = [
         self::KEY_TITLE => 'Customers',
-        self::KEY_ITEMS => array(
-            array(
+        self::KEY_ITEMS => [
+            [
                 self::KEY_CODE => self::CODE_CUSTOMERS_VIEW,
-                self::KEY_NAME => 'View Customers'
-            )
-        )
-    );
+                self::KEY_NAME => 'View Customers',
+            ],
+        ],
+    ];
 
     // Orders permissions list
-    const ORDERS_PERMISSIONS = array(
+    const ORDERS_PERMISSIONS = [
         self::KEY_TITLE => 'Orders',
-        self::KEY_ITEMS => array(
-            array(
+        self::KEY_ITEMS => [
+            [
                 self::KEY_CODE => self::CODE_ORDERS_VIEW,
-                self::KEY_NAME => 'View Orders'
-            ),
-            array(
+                self::KEY_NAME => 'View Orders',
+            ],
+            [
                 self::KEY_CODE => self::CODE_ORDERS_DETAILS_PDF,
-                self::KEY_NAME => 'View Order Details In PDF'
-            ),
-            array(
+                self::KEY_NAME => 'View Order Details In PDF',
+            ],
+            [
                 self::KEY_CODE => self::CODE_ORDERS_UPDATE_ORDER_STATUS,
-                self::KEY_NAME => 'Update Order Status'
-            ),
-            array(
+                self::KEY_NAME => 'Update Order Status',
+            ],
+            [
                 self::KEY_CODE => self::CODE_ORDERS_EDIT_SHIPPING_DETAILS,
-                self::KEY_NAME => 'Edit Shipping Details'
-            )
-        )
-    );
+                self::KEY_NAME => 'Edit Shipping Details',
+            ],
+        ],
+    ];
 
     // Abandoned carts permissions list
-    const ABANDONED_CARTS_PERMISSIONS = array(
+    const ABANDONED_CARTS_PERMISSIONS = [
         self::KEY_TITLE => 'Abandoned carts',
-        self::KEY_ITEMS => array(
-            array(
+        self::KEY_ITEMS => [
+            [
                 self::KEY_CODE => self::CODE_ABANDONED_CARTS_VIEW,
-                self::KEY_NAME => 'View Abandoned Carts'
-            )
-        )
-    );
+                self::KEY_NAME => 'View Abandoned Carts',
+            ],
+        ],
+    ];
 
     // Permissions list
-    private static $permissions = array(
+    private static $permissions = [
         self::DASHBOARD_PERMISSIONS,
         self::WIDGET_PERMISSIONS,
         self::NOTIFICATION_PERMISSIONS,
         self::PRODUCTS_PERMISSIONS,
         self::CUSTOMERS_PERMISSIONS,
         self::ORDERS_PERMISSIONS,
-        self::ABANDONED_CARTS_PERMISSIONS
-    );
+        self::ABANDONED_CARTS_PERMISSIONS,
+    ];
 
     // Action list related to permission
-    private static $actions = array(
-        self::CODE_DASHBOARD_VIEW => array(
+    private static $actions = [
+        self::CODE_DASHBOARD_VIEW => [
             'getDashboard',
             'getCountries',
             'getGroups',
@@ -182,23 +185,23 @@ class EM1UserPermissions extends EM1Main
             'getEmployees',
             'getPredefinedOrderMessages',
             'getTaxRulesGroups',
-        ),
-        self::CODE_WIDGET_VIEW => array(
-            'getWidgetData'
-        ),
-        self::CODE_NOTIFICATION_PUSH_NEW_ORDER => array(
+        ],
+        self::CODE_WIDGET_VIEW => [
+            'getWidgetData',
+        ],
+        self::CODE_NOTIFICATION_PUSH_NEW_ORDER => [
             'pushNotificationSettings',
-            'deletePushConfig'
-        ),
-        self::CODE_NOTIFICATION_PUSH_NEW_CUSTOMER => array(
+            'deletePushConfig',
+        ],
+        self::CODE_NOTIFICATION_PUSH_NEW_CUSTOMER => [
             'pushNotificationSettings',
-            'deletePushConfig'
-        ),
-        self::CODE_NOTIFICATION_PUSH_CHANGE_ORDER_STATUSES => array(
+            'deletePushConfig',
+        ],
+        self::CODE_NOTIFICATION_PUSH_CHANGE_ORDER_STATUSES => [
             'pushNotificationSettings',
-            'deletePushConfig'
-        ),
-        self::CODE_PRODUCTS_VIEW => array(
+            'deletePushConfig',
+        ],
+        self::CODE_PRODUCTS_VIEW => [
             'getCountries',
             'getGroups',
             'getManufacturers',
@@ -256,57 +259,58 @@ class EM1UserPermissions extends EM1Main
             'addProductFeature',
             'updateProductFeature',
             'deleteProductFeatures',
-        ),
-        self::CODE_CUSTOMERS_VIEW => array(
+        ],
+        self::CODE_CUSTOMERS_VIEW => [
             'getCustomers',
             'getCustomerDetails',
             'searchCustomers',
             'getCustomerOrders',
             'searchProductEditCustomers',
-        ),
-        self::CODE_ORDERS_VIEW => array(
+        ],
+        self::CODE_ORDERS_VIEW => [
             'getOrders',
             'searchOrders',
             'getOrderDetails',
             'getOrderTimeline',
             'getOrderProducts',
-            'getOrderPickingProducts'
-        ),
-        self::CODE_ORDERS_DETAILS_PDF=> array(
+            'getOrderPickingProducts',
+        ],
+        self::CODE_ORDERS_DETAILS_PDF => [
             'checkDownloadOrderInvoiceAvailability',
-            'downloadOrderInvoice'
-        ),
-        self::CODE_ORDERS_UPDATE_ORDER_STATUS => array(
+            'downloadOrderInvoice',
+        ],
+        self::CODE_ORDERS_UPDATE_ORDER_STATUS => [
             'changeOrderStatus',
             'changeCustomerThreadStatus',
             'forwardCustomerThread',
             'deleteCustomerThread',
-            'sendOrderMessage'
-        ),
-        self::CODE_ORDERS_EDIT_SHIPPING_DETAILS => array(
-            'updateOrderShippingDetails'
-        ),
-        self::CODE_ABANDONED_CARTS_VIEW => array(
+            'sendOrderMessage',
+        ],
+        self::CODE_ORDERS_EDIT_SHIPPING_DETAILS => [
+            'updateOrderShippingDetails',
+        ],
+        self::CODE_ABANDONED_CARTS_VIEW => [
             'getAbandonedCarts',
             'getAbandonedCartDetails',
             'getAbandonedCartProducts',
-            'searchAbandonedCarts'
-        )
-    );
+            'searchAbandonedCarts',
+        ],
+    ];
 
     // Always allowed actions
-    private static $allowedActions = array(
+    private static $allowedActions = [
         'runSelfTest',
         'getQrCode',
         'getToken',
         'getStores',
         'getSettings',
         'getOrdersStatuses',
-        'checkConnectivity'
-    );
+        'checkConnectivity',
+    ];
 
     /**
      * Static getter for permissions
+     *
      * @return array
      */
     public static function getPermissionsList()
@@ -316,6 +320,7 @@ class EM1UserPermissions extends EM1Main
 
     /**
      * Static getter for actions
+     *
      * @return array
      */
     public static function getActionsList()
@@ -330,8 +335,11 @@ class EM1UserPermissions extends EM1Main
 
     /**
      * Static getter to get specific user permissions
-     * @param   $userId
+     *
+     * @param $userId
+     *
      * @return string
+     *
      * @throws EM1Exception
      */
     private static function getUserPermissions($userId)
@@ -343,23 +351,26 @@ class EM1UserPermissions extends EM1Main
         return self::getQueryValue(
             $dbQuery->select('`allowed_actions`')
                 ->from(EM1Constants::TABLE_MA_USERS)
-                ->where('`user_id` = ' . (int)$userId . ' AND `status` = 1')
+                ->where('`user_id` = ' . (int) $userId . ' AND `status` = 1')
         );
     }
 
     /**
      * To check if action allowed for specific user
+     *
      * @param $userId
      * @param $actionName
+     *
      * @return bool
+     *
      * @throws EM1Exception
      */
     public static function isActionAllowed($userId, $actionName)
     {
-        $allowedActionsList    = explode(';', self::getUserPermissions($userId));
-        $actionAllowed         = false;
+        $allowedActionsList = explode(';', self::getUserPermissions($userId));
+        $actionAllowed = false;
         foreach ($allowedActionsList as $restriction) {
-            //todo: check related permissions here, by priority
+            // todo: check related permissions here, by priority
             if (array_key_exists($restriction, self::$actions)
                 && in_array($actionName, self::$actions[$restriction], true)) {
                 $actionAllowed = true;
@@ -372,7 +383,9 @@ class EM1UserPermissions extends EM1Main
 
     /**
      * To check if action always allowed
+     *
      * @param $actionName
+     *
      * @return bool
      */
     public static function isActionAlwaysAllowed($actionName)

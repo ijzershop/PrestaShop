@@ -16,15 +16,18 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class PrestaShopOverrider extends BridgeConnectorCore
 {
     public function __construct($module_name, $options_name)
     {
-        $this->module_name  = $module_name;
+        $this->module_name = $module_name;
         $this->options_name = $options_name;
     }
 
@@ -37,7 +40,7 @@ class PrestaShopOverrider extends BridgeConnectorCore
     {
         $options = Configuration::get($this->options_name);
 
-        return $options ? unserialize($options) : false;
+        return $options ? json_decode($options, true) : false;
     }
 
     public function getShopRootDir()
@@ -72,7 +75,7 @@ class PrestaShopOverrider extends BridgeConnectorCore
 
     public function getSqlResults($sql, $type = self::ASSOC)
     {
-        $ret = array();
+        $ret = [];
         $db = Db::getInstance();
         /*$time_current = time();
 
@@ -146,10 +149,10 @@ class PrestaShopOverrider extends BridgeConnectorCore
     public function getStoreLink($ssl = false)
     {
         if ($ssl) {
-            return _PS_BASE_URL_SSL_.__PS_BASE_URI__;
+            return _PS_BASE_URL_SSL_ . __PS_BASE_URI__;
         }
 
-        return _PS_BASE_URL_.__PS_BASE_URI__;
+        return _PS_BASE_URL_ . __PS_BASE_URI__;
     }
 
     public function runIndexer()
@@ -161,23 +164,25 @@ class PrestaShopOverrider extends BridgeConnectorCore
 
     public function getCartVersion()
     {
-        return json_encode(
-            array(
-                'cart_version'  => _PS_VERSION_,
-                'cookie_key'    => _COOKIE_KEY_,
-            )
+        return $this->jsonEncode(
+            [
+                'cart_version' => _PS_VERSION_,
+                'cookie_key' => _COOKIE_KEY_,
+            ]
         );
     }
 
     public function getImage($entity_type, $image_id)
     {
-        $image_id = (int)$image_id;
+        if ($entity_type !== self::CUSTOMIZATION) {
+            $image_id = (int) $image_id;
 
-        if ($image_id < 1) {
-            die($this->jsonEncode(array(
-                self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-                self::KEY_MESSAGE   => 'Image id is incorrect',
-            )));
+            if ($image_id < 1) {
+                exit($this->jsonEncode([
+                    self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+                    self::KEY_MESSAGE => 'Image id is incorrect',
+                ]));
+            }
         }
 
         $img_path = false;
@@ -186,27 +191,25 @@ class PrestaShopOverrider extends BridgeConnectorCore
             case self::PRODUCT:
                 $entity = new Image($image_id);
                 $entity->id = $image_id;
-                $img_path = $this->getImageDir(self::PRODUCT).$entity->getExistingImgPath().'.'.$entity->image_format;
+                $img_path = $this->getImageDir(self::PRODUCT) . $entity->getExistingImgPath() . '.' . $entity->image_format;
                 break;
             case self::CATEGORY:
-                $entity = new Category($image_id);
-
-                if ($entity->id_image) {
-                    $img_path = $this->getImageDir(self::CATEGORY).$entity->id_image.'.jpg';
-                }
-
+                $img_path = $this->getImageDir(self::CATEGORY) . $image_id . '.jpg';
                 break;
             case self::MANUFACTURER:
-                $img_path = $this->getImageDir(self::MANUFACTURER).$image_id.'.jpg';
+                $img_path = $this->getImageDir(self::MANUFACTURER) . $image_id . '.jpg';
                 break;
             case self::CARRIER:
-                $img_path = $this->getImageDir(self::CARRIER).$image_id.'.jpg';
+                $img_path = $this->getImageDir(self::CARRIER) . $image_id . '.jpg';
                 break;
             case self::SUPPLIER:
-                $img_path = $this->getImageDir(self::SUPPLIER).$image_id.'.jpg';
+                $img_path = $this->getImageDir(self::SUPPLIER) . $image_id . '.jpg';
                 break;
             case self::ATTRIBUTE:
-                $img_path = $this->getImageDir(self::ATTRIBUTE).$image_id.'.jpg';
+                $img_path = $this->getImageDir(self::ATTRIBUTE) . $image_id . '.jpg';
+                break;
+            case self::CUSTOMIZATION:
+                $img_path = _PS_UPLOAD_DIR_ . $image_id;
                 break;
         }
 
@@ -215,24 +218,24 @@ class PrestaShopOverrider extends BridgeConnectorCore
 
     public function setImage($entity_type, $image_id, $img, $type)
     {
-        $image_id = (int)$image_id;
+        $image_id = (int) $image_id;
 
         if ($image_id < 1) {
-            die($this->jsonEncode(array(
+            exit($this->jsonEncode([
                 self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-                self::KEY_MESSAGE   => 'Image id is incorrect',
-            )));
+                self::KEY_MESSAGE => 'Image id is incorrect',
+            ]));
         }
 
         if ($type == self::IMAGE_URL) {
             $options = $this->getBridgeOptions();
-            $img_file = tempnam($this->getShopRootDir().$options['tmp_dir'], 'emo');
+            $img_file = tempnam($this->getShopRootDir() . $options['tmp_dir'], 'emo');
 
             if (!$img_file) {
-                die($this->jsonEncode(array(
+                exit($this->jsonEncode([
                     self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-                    self::KEY_MESSAGE   => 'Could not create file in temporary folder',
-                )));
+                    self::KEY_MESSAGE => 'Could not create file in temporary folder',
+                ]));
             }
 
             $img = str_replace(' ', '%20', $img);
@@ -247,17 +250,34 @@ class PrestaShopOverrider extends BridgeConnectorCore
         }
 
         if (!ImageManager::isRealImage($img_file)) {
-            if ($type == self::IMAGE_URL && $this->fileExists($img_file)) {
-                $this->unlink($img_file);
-            }
+            $mime_type = @getimagesize($img_file);
+            if (version_compare(_PS_VERSION_, '8.0', '<=') && $mime_type['mime'] == 'image/webp') {
+                $webp_image = imagecreatefromwebp($img_file);
+                $img_file = str_replace('webp', 'jpg', $img_file);
+                imagejpeg($webp_image, $img_file, 100);
+                imagedestroy($webp_image);
 
-            die($this->jsonEncode(array(
-                self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-                self::KEY_MESSAGE   => 'File is not an image',
-            )));
+                if ($type == self::IMAGE_URL && $this->fileExists($img_file)) {
+                    $this->unlink($img_file);
+
+                    exit($this->jsonEncode([
+                        self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+                        self::KEY_MESSAGE => 'File is not an image',
+                    ]));
+                }
+            } else {
+                if ($type == self::IMAGE_URL && $this->fileExists($img_file)) {
+                    $this->unlink($img_file);
+                }
+
+                exit($this->jsonEncode([
+                    self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+                    self::KEY_MESSAGE => 'File is not an image',
+                ]));
+            }
         }
 
-        $image_types = array();
+        $image_types = [];
         $image_path = '';
         $res = false;
 
@@ -308,16 +328,17 @@ class PrestaShopOverrider extends BridgeConnectorCore
         }
 
         // Add extra values to create base image
-        $image_types[] = array('name' => '', 'width' => false, 'height' => false);
+        $image_types[] = ['name' => '', 'width' => false, 'height' => false];
 
         // Create all images for entity
         foreach ($image_types as $image_type) {
             $image_type['name'] = $this->stripSlashes($image_type['name']);
 
             if ($image_type['name'] == '') {
-                $image_path_name = $image_path.$image_id.'.jpg';
+                $image_path_name = $image_path . $image_id . '.jpg';
             } else {
-                $image_path_name = $image_path.$image_id.'-'.$image_type['name'].'.jpg';
+                $image_path_name = $image_path . $image_id . '-' . $image_type['name'] . '.jpg';
+                $image_path_name_2x = $image_path . $image_id . '-' . $image_type['name'] . '2x.jpg';
             }
 
             $res = ImageManager::resize(
@@ -326,6 +347,16 @@ class PrestaShopOverrider extends BridgeConnectorCore
                 $image_type['width'],
                 $image_type['height']
             );
+
+            $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
+            if ($generate_hight_dpi_images) {
+                $res_2x = ImageManager::resize(
+                    $img_file,
+                    $image_path_name_2x,
+                    $image_type['width'] * 2,
+                    $image_type['height'] * 2
+                );
+            }
 
             if (!$res) {
                 break;
@@ -337,16 +368,87 @@ class PrestaShopOverrider extends BridgeConnectorCore
         }
 
         if (!$res) {
-            die($this->jsonEncode(array(
+            exit($this->jsonEncode([
                 self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-                self::KEY_MESSAGE   => 'Unable to resize one or more of your pictures',
-            )));
+                self::KEY_MESSAGE => 'Unable to resize one or more of your pictures',
+            ]));
+        } elseif ($generate_hight_dpi_images && !$res_2x) {
+            exit($this->jsonEncode([
+                self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+                self::KEY_MESSAGE => 'Unable to resize one or more of your high resolution pictures',
+            ]));
         }
 
-        die($this->jsonEncode(array(
+        exit($this->jsonEncode([
             self::CODE_RESPONSE => self::SUCCESSFUL,
-            self::KEY_MESSAGE   => 'Upload and resize of images has been executed successfully',
-        )));
+            self::KEY_MESSAGE => 'Upload and resize of images has been executed successfully',
+        ]));
+    }
+
+    public function setCustomizationFile($entity_type, $image_id, $img, $type)
+    {
+        if ($type == self::IMAGE_URL) {
+            $options = $this->getBridgeOptions();
+            $img_file = tempnam($this->getShopRootDir() . $options['tmp_dir'], 'emo');
+
+            if (!$img_file) {
+                exit($this->jsonEncode([
+                    self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+                    self::KEY_MESSAGE => 'Could not create file in temporary folder',
+                ]));
+            }
+
+            $img = str_replace(' ', '%20', $img);
+            $file_download = file_put_contents($img_file, $this->fileGetContents($img));
+
+            // If file_get_contents can not get image from temporary storage
+            if (!$file_download) {
+                file_put_contents($img_file, $this->fileGetCurlContents($img));
+            }
+        } else {
+            $img_file = $_FILES[$img]['tmp_name'];
+        }
+
+        if (!ImageManager::isRealImage($img_file)) {
+            if ($type == self::IMAGE_URL && $this->fileExists($img_file)) {
+                $this->unlink($img_file);
+            }
+
+            exit($this->jsonEncode([
+                self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+                self::KEY_MESSAGE => 'File is not an image',
+            ]));
+        }
+
+        $res = false;
+
+        $image_path_name = _PS_UPLOAD_DIR_ . $image_id;
+
+        if (!ImageManager::resize($img_file, $image_path_name)) {
+            exit($this->jsonEncode([
+                self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+                self::KEY_MESSAGE => 'Unable to resize customization picture',
+            ]));
+        } elseif (!ImageManager::resize($img_file, $image_path_name . '_small', (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
+            exit($this->jsonEncode([
+                self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+                self::KEY_MESSAGE => 'Unable to resize customization picture',
+            ]));
+        } elseif (!chmod($image_path_name, 0777) || !chmod($image_path_name . '_small', 0777)) {
+            exit($this->jsonEncode([
+                self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+                self::KEY_MESSAGE => 'Unable to upload customization picture',
+            ]));
+        }
+
+        if ($type == self::IMAGE_URL) {
+            unlink($img_file);
+        }
+
+        exit($this->jsonEncode([
+            self::CODE_RESPONSE => self::SUCCESSFUL,
+            self::KEY_MESSAGE => 'Upload and resize of images has been executed successfully',
+        ]));
     }
 
     public function getImageDir($type)
@@ -381,13 +483,15 @@ class PrestaShopOverrider extends BridgeConnectorCore
 
     public function deleteImage($entity_type, $image_id)
     {
-        $image_id = (int)$image_id;
+        if ($entity_type !== self::CUSTOMIZATION) {
+            $image_id = (int) $image_id;
 
-        if ($image_id < 1) {
-            die($this->jsonEncode(array(
-                self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-                self::KEY_MESSAGE   => 'Parameter "image_id" is incorrect',
-            )));
+            if ($image_id < 1) {
+                exit($this->jsonEncode([
+                    self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+                    self::KEY_MESSAGE => 'Parameter "image_id" is incorrect',
+                ]));
+            }
         }
 
         $obj = false;
@@ -415,6 +519,18 @@ class PrestaShopOverrider extends BridgeConnectorCore
             case self::ATTRIBUTE:
                 $obj = new Attribute($image_id);
                 break;
+            case self::CUSTOMIZATION:
+                $image_path = _PS_UPLOAD_DIR_ . $image_id;
+                if (!$this->unlink($image_path) && !$this->unlink($image_path . '_small')) {
+                    exit($this->jsonEncode([
+                        self::CODE_RESPONSE => self::SUCCESSFUL,
+                        self::KEY_MESSAGE => 'Image was not deleted from FTP Server',
+                    ]));
+                }
+                exit($this->jsonEncode([
+                    self::CODE_RESPONSE => self::SUCCESSFUL,
+                    self::KEY_MESSAGE => 'Image was deleted from FTP Server successfully',
+                ]));
             default:
                 break;
         }
@@ -423,37 +539,37 @@ class PrestaShopOverrider extends BridgeConnectorCore
             $res = $obj->deleteImage(true);
 
             if ($res) {
-                die($this->jsonEncode(array(
+                exit($this->jsonEncode([
                     self::CODE_RESPONSE => self::SUCCESSFUL,
-                    self::KEY_MESSAGE   => 'Image was deleted from FTP Server successfully',
-                )));
+                    self::KEY_MESSAGE => 'Image was deleted from FTP Server successfully',
+                ]));
             }
 
-            die($this->jsonEncode(array(
+            exit($this->jsonEncode([
                 self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-                self::KEY_MESSAGE   => 'Image was not deleted from FTP Server',
-            )));
+                self::KEY_MESSAGE => 'Image was not deleted from FTP Server',
+            ]));
         }
 
-        die($this->jsonEncode(array(
+        exit($this->jsonEncode([
             self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-            self::KEY_MESSAGE   => 'Image was not deleted from FTP Server',
-        )));
+            self::KEY_MESSAGE => 'Image was not deleted from FTP Server',
+        ]));
     }
 
     public function deleteFile($filepath)
     {
         if (unlink($filepath)) {
-            die($this->jsonEncode(array(
+            exit($this->jsonEncode([
                 self::CODE_RESPONSE => self::SUCCESSFUL,
-                self::KEY_MESSAGE   => 'File was deleted from FTP Server successfully',
-            )));
+                self::KEY_MESSAGE => 'File was deleted from FTP Server successfully',
+            ]));
         }
 
-        die($this->jsonEncode(array(
+        exit($this->jsonEncode([
             self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-            self::KEY_MESSAGE   => 'File was not deleted from FTP Server',
-        )));
+            self::KEY_MESSAGE => 'File was not deleted from FTP Server',
+        ]));
     }
 
     public function copyImage($entity_type, $from_image_id, $to_image_id)
@@ -461,16 +577,16 @@ class PrestaShopOverrider extends BridgeConnectorCore
         $from_image_path = $this->getImage(self::PRODUCT, $from_image_id);
 
         if (!$from_image_path) {
-            die($this->jsonEncode(array(
+            exit($this->jsonEncode([
                 self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-                self::KEY_MESSAGE   => 'Could not get image to copy',
-            )));
+                self::KEY_MESSAGE => 'Could not get image to copy',
+            ]));
         }
 
-        $image_types = array();
-        $to_image_path  = '';
-        $res         = false;
-        $image_ext   = 'jpg';
+        $image_types = [];
+        $to_image_path = '';
+        $res = false;
+        $image_ext = 'jpg';
 
         switch ($entity_type) {
             case self::PRODUCT:
@@ -490,16 +606,17 @@ class PrestaShopOverrider extends BridgeConnectorCore
         }
 
         // Add extra values to create base image
-        $image_types[] = array('name' => '', 'width' => false, 'height' => false);
+        $image_types[] = ['name' => '', 'width' => false, 'height' => false];
 
         // Create all images for entity
         foreach ($image_types as $image_type) {
             $image_type['name'] = $this->stripSlashes($image_type['name']);
 
             if ($image_type['name'] == '') {
-                $image_path_name = $to_image_path.$to_image_id.'.'.$image_ext;
+                $image_path_name = $to_image_path . $to_image_id . '.' . $image_ext;
             } else {
-                $image_path_name = $to_image_path.$to_image_id.'-'.$image_type['name'].'.'.$image_ext;
+                $image_path_name = $to_image_path . $to_image_id . '-' . $image_type['name'] . '.' . $image_ext;
+                $image_path_name_2x = $to_image_path . $to_image_id . '-' . $image_type['name'] . '2x.' . $image_ext;
             }
 
             $res = ImageManager::resize(
@@ -509,42 +626,58 @@ class PrestaShopOverrider extends BridgeConnectorCore
                 $image_type['height'],
                 $image_ext
             );
+
+            $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
+            if ($generate_hight_dpi_images) {
+                $res_2x = ImageManager::resize(
+                    $from_image_path,
+                    $image_path_name_2x,
+                    $image_type['width'] * 2,
+                    $image_type['height'] * 2,
+                    $image_ext
+                );
+            }
         }
 
         if (!$res) {
-            die($this->jsonEncode(array(
+            exit($this->jsonEncode([
                 self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-                self::KEY_MESSAGE   => 'Unable to resize copied image',
-            )));
+                self::KEY_MESSAGE => 'Unable to resize copied image',
+            ]));
+        } elseif ($generate_hight_dpi_images && !$res_2x) {
+            exit($this->jsonEncode([
+                self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
+                self::KEY_MESSAGE => 'Unable to resize copied high resolution image',
+            ]));
         } else {
-            die($this->jsonEncode(array(
+            exit($this->jsonEncode([
                 self::CODE_RESPONSE => self::SUCCESSFUL,
-                self::KEY_MESSAGE   => 'Image has been copied successfully',
-            )));
+                self::KEY_MESSAGE => 'Image has been copied successfully',
+            ]));
         }
     }
 
     public function getFile($folder, $filename)
     {
-        return $this->getShopRootDir().'/'.$folder.'/'.$filename;
+        return $this->getShopRootDir() . '/' . $folder . '/' . $filename;
     }
 
     public function setFile($folder, $filename, $file)
     {
-        $destination_path = $this->getShopRootDir().'/'.$folder.'/'.$filename;
+        $destination_path = $this->getShopRootDir() . '/' . $folder . '/' . $filename;
         $result = move_uploaded_file($_FILES[$file]['tmp_name'], $destination_path);
 
         if ($result) {
-            die($this->jsonEncode(array(
+            exit($this->jsonEncode([
                 self::CODE_RESPONSE => self::SUCCESSFUL,
-                self::KEY_MESSAGE   => 'File was successfully uploaded',
-            )));
+                self::KEY_MESSAGE => 'File was successfully uploaded',
+            ]));
         }
 
-        die($this->jsonEncode(array(
+        exit($this->jsonEncode([
             self::CODE_RESPONSE => self::ERROR_CODE_COMMON,
-            self::KEY_MESSAGE   => 'File was not uploaded',
-        )));
+            self::KEY_MESSAGE => 'File was not uploaded',
+        ]));
     }
 
     public function checkDataChanges($tables_arr = '')
@@ -562,9 +695,9 @@ class PrestaShopOverrider extends BridgeConnectorCore
         $cache_type = 'smarty';
         $cache_type_pv = $this->getRequestParam('cache_type');
 
-//        if ($this->issetRequestParam('cache_type') && isset($this->getRequestParam('cache_type')[0]))
+        //        if ($this->issetRequestParam('cache_type') && isset($this->getRequestParam('cache_type')[0]))
         if ($cache_type_pv !== false && !empty($cache_type_pv)) {
-            $cache_type = (string)$cache_type_pv;
+            $cache_type = (string) $cache_type_pv;
         }
 
         switch ($cache_type) {
@@ -604,7 +737,11 @@ class PrestaShopOverrider extends BridgeConnectorCore
 
     public function jsonEncode($arr)
     {
-        return json_encode($arr);
+        if (version_compare(_PS_VERSION_, '1.7', '>=')) {
+            return json_encode($arr);
+        } else {
+            return Tools::jsonEncode($arr);
+        }
     }
 
     public function stripSlashes($str)
@@ -624,6 +761,7 @@ class PrestaShopOverrider extends BridgeConnectorCore
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $data = curl_exec($ch);
         curl_close($ch);
+
         return $data;
     }
 
@@ -639,7 +777,7 @@ class PrestaShopOverrider extends BridgeConnectorCore
 
     public function saveConfigData($data)
     {
-        Configuration::updateGlobalValue(EM1Constants::OPTIONS_KEY, serialize($data));
+        Configuration::updateGlobalValue(EM1Constants::OPTIONS_KEY, json_encode($data));
     }
 
     public function fileOpen($path, $mode)
@@ -682,7 +820,7 @@ class PrestaShopOverrider extends BridgeConnectorCore
         $data = glob("$path/$pattern");
 
         if ($onlyDir) {
-            $dirs = array();
+            $dirs = [];
 
             foreach ($data as $item) {
                 if ($this->isDirectory($item)) {
@@ -768,9 +906,9 @@ class PrestaShopOverrider extends BridgeConnectorCore
         return dirname($path);
     }
 
-    public function unserialize($data)
+    public function json_decode($data, $is_array = true)
     {
-        return unserialize($data);
+        return json_decode($data, $is_array);
     }
 
     public function getPaymentAndShippingMethods()

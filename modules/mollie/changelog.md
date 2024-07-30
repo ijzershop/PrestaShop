@@ -2,6 +2,17 @@
 
 # Changelog #
 
+## Changes in release 6.2.2 ##
++ Error handling improvements
++ Mobile phone fix then field is removed
++ Riverty, Trustly, Payconiq payment methods added and GiroPay removed
++ HTTP status
++ Dependencies version bump
++ Improved installation process
+
+## Changes in release 6.2.1 ##
++ Ideal v2 payment method improvement
+
 ## Changes in release 6.2.0 ##
 + New payment methods: Bancomat and Alma
 + Apple certificate update
@@ -18,6 +29,7 @@
 + Fixed issue where fatal exception was thrown in case of ps accounts version being too low
 + Fixed issue where in case of familyName error from mollie 502 was returned instead of 400
 + Fixed issue with credit card iframe not translating errors
+
 
 ## Changes in release 6.1.0 ##
 + New payment methods: Twint, Blik and Klarna

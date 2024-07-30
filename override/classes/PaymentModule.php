@@ -77,7 +77,7 @@ class PaymentModule extends PaymentModuleCore
         } else {
             $reference = $order_reference;
         }
-
+        
 
         $this->currentOrderReference = $reference;
         $cart_total_paid = (float) Tools::ps_round(
@@ -264,6 +264,8 @@ class PaymentModule extends PaymentModuleCore
                     $virtual_product &= false;
                 }
             }
+
+
             $product_list_txt = '';
             $product_list_html = '';
             if (count($product_var_tpl_list) > 0) {
@@ -517,6 +519,7 @@ class PaymentModule extends PaymentModuleCore
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
         }
+
         Hook::exec(
             'actionValidateOrderAfter',
             [

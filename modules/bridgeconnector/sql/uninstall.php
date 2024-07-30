@@ -16,17 +16,21 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
 
-/**
-* In some cases you should not drop the tables.
-* Maybe the merchant will just try to reset the module
-* but does not want to loose all of the data associated to the module.
-*/
+/*
+ * In some cases you should not drop the tables.
+ * Maybe the merchant will just try to reset the module
+ * but does not want to loose all of the data associated to the module.
+ */
 
-$sql = array();
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+$sql = [];
 
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) === false) {

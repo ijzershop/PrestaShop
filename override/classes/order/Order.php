@@ -105,7 +105,7 @@ public $shipping_number;
         if ($isRandom) {
             $reference = Tools::passwdGen($restLength, 'NO_NUMERIC');
         } else {
-            $query = 'SELECT `reference` FROM '._DB_PREFIX_.'orders WHERE `id_shop` = '.Context::getContext()->shop->id.' ORDER BY `id_order` DESC';
+            $query = 'SELECT `reference` FROM '._DB_PREFIX_.'orders WHERE `id_shop` = '.$context->shop->id.' ORDER BY `id_order` DESC';
 
             $previousOrderId = Db::getInstance()->getValue($query);
 

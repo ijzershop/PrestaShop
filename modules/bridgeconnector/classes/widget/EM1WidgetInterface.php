@@ -16,19 +16,22 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 /**
  * Interface EM1WidgetInterface
  */
 interface EM1WidgetInterface
 {
-    const WIDGET_DATE_FORMAT                = 'Y-m-d H:i:s';
-    const KEY_CUSTOMERS_COUNT               = 'customers_count';
-    const KEY_ORDERS_COUNT                  = 'orders_count';
-    const KEY_FORMATTED_ORDERS_TOTAL        = 'formatted_orders_total';
+    const WIDGET_DATE_FORMAT = 'Y-m-d H:i:s';
+    const KEY_CUSTOMERS_COUNT = 'customers_count';
+    const KEY_ORDERS_COUNT = 'orders_count';
+    const KEY_FORMATTED_ORDERS_TOTAL = 'formatted_orders_total';
 
     public function getWidgetData(
         $dateFrom,

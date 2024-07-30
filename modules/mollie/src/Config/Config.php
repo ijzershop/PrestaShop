@@ -47,7 +47,6 @@ class Config
         'ideal' => ['nl'],
         'bancontact' => ['be'],
         'paypal' => [],
-        'giropay' => ['de'],
         'eps' => ['at'],
         'belfius' => ['be'],
         'inghomepay' => ['be'],
@@ -64,6 +63,9 @@ class Config
             'ro', 'bl', 'mf', 'pm', 'sm', 'sk', 'sl', 'es', 'se', 'ch', 'gb', 'uk',
         ],
         'mybank' => [],
+        'trustly' => ['at', 'de', 'ee', 'es', 'fi', 'lt', 'lv', 'nl'],
+        'riverty' => ['nl', 'be', 'de', 'at'],
+        'payconiq' => [],
     ];
 
     const SUPPORTED_PHP_VERSION = '5.6';
@@ -82,8 +84,6 @@ class Config
     const LOGOS_NORMAL = 'normal';
     const LOGOS_HIDE = 'hide';
 
-    const ISSUERS_ON_CLICK = 'on-click';
-    const ISSUERS_PAYMENT_PAGE = 'payment-page';
     const METHODS_CONFIG = 'MOLLIE_METHODS_CONFIG';
 
     const ENVIRONMENT_TEST = 0;
@@ -113,10 +113,7 @@ class Config
 
     const MOLLIE_IMAGES = 'MOLLIE_IMAGES';
     const MOLLIE_SHOW_RESEND_PAYMENT_LINK = 'MOLLIE_SHOW_RESEND_PAYMENT_LINK';
-    const MOLLIE_ISSUERS = [
-        'sandbox' => 'MOLLIE_SANDBOX_ISSUERS',
-        'production' => 'MOLLIE_PRODUCTION_ISSUERS',
-    ];
+
     const MOLLIE_CSS = 'MOLLIE_CSS';
     const MOLLIE_DEBUG_LOG = 'MOLLIE_DEBUG_LOG';
     const MOLLIE_METHOD_COUNTRIES = 'MOLLIE_METHOD_COUNTRIES';
@@ -245,6 +242,7 @@ class Config
     const MOLLIE_METHOD_ID_APPLE_PAY = 'applepay';
     const MOLLIE_VOUCHER_METHOD_ID = 'voucher';
     const MOLLIE_in3_METHOD_ID = 'in3';
+    const RIVERTY = 'riverty';
 
     const MOLLIE_VOUCHER_CATEGORY_NULL = 'null';
     const MOLLIE_VOUCHER_CATEGORY_MEAL = 'meal';
@@ -280,6 +278,7 @@ class Config
         PaymentMethod::BILLIE,
         self::MOLLIE_VOUCHER_METHOD_ID,
         self::MOLLIE_in3_METHOD_ID,
+        self::RIVERTY,
     ];
 
     const PAYMENT_API_ONLY_METHODS = [
@@ -306,7 +305,6 @@ class Config
         'directdebit' => 'Direct Debit',
         'eps' => 'EPS',
         'giftcard' => 'Giftcard',
-        'giropay' => 'Giropay',
         'ideal' => 'iDEAL',
         'inghomepay' => 'ING Homepay',
         'kbc' => 'KBC',
@@ -327,6 +325,9 @@ class Config
         'alma' => 'Alma',
         'blik' => 'BLIK',
         'klarna' => 'Pay with Klarna.',
+        'riverty' => 'Riverty',
+        'payconiq' => 'Payconiq',
+        'trustly' => 'Trustly',
     ];
 
     const MOLLIE_BUTTON_ORDER_TOTAL_REFRESH = 'MOLLIE_BUTTON_ORDER_TOTAL_REFRESH';

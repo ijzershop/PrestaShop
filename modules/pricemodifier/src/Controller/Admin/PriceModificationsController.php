@@ -528,22 +528,20 @@ class PriceModificationsController extends FrameworkBundleAdminController
             $priceMod->setIdStoreProduct((int)$store_product);
         }
 
-//        $supData = $priceMod->getSupplierData();
-//        if(is_object($supData['prices'])){
-//            $supData['prices']->{'basis_prijs'} = $basisPrijs;
-//            $supData['attributes']->{'gewicht'} = $gewicht;
-//            $supData['attributes']->{'kilo_per_meter'} = $gewichtPerMeter;
-//            $supData['attributes']->{'handelslengte'} = $handelsLengte;
-//        } else {
-//
-//            $supData['prices']['basis_prijs'] = $basisPrijs;
-//            $supData['attributes']['gewicht'] = $gewicht;
-//            $supData['attributes']['kilo_per_meter'] = $gewichtPerMeter;
-//            $supData['attributes']['handelslengte'] = $handelsLengte;
-//        }
-//
-//
-//        $priceMod->setSupplierData(json_encode($supData));
+        // $supData = $priceMod->getSupplierData();
+        // if(is_object($supData['prices'])){
+        //     $supData['prices']->{'basis_prijs'} = $basisPrijs;
+        //     $supData['attributes']->{'gewicht'} = $gewicht;
+        //     $supData['attributes']->{'kilo_per_meter'} = $gewichtPerMeter;
+        //     $supData['attributes']->{'handelslengte'} = $handelsLengte;
+        // } else {
+
+        //     $supData['prices']['basis_prijs'] = $basisPrijs;
+        //     $supData['attributes']['gewicht'] = $gewicht;
+        //     $supData['attributes']['kilo_per_meter'] = $gewichtPerMeter;
+        //     $supData['attributes']['handelslengte'] = $handelsLengte;
+        // }
+        // $priceMod->setSupplierData(json_encode($supData));
 
 
         if ($supplier_price != "" && $store_product > 0) {

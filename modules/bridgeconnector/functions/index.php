@@ -16,10 +16,9 @@
  *   along with eMagicOne Store Manager Bridge Connector.  If not, see <http://www.gnu.org/licenses/>.
  *
  *  @author    eMagicOne <contact@emagicone.com>
- *  @copyright 2014-2019 eMagicOne
+ *  @copyright 2014-2024 eMagicOne
  *  @license   http://www.gnu.org/licenses   GNU General Public License
  */
-
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 

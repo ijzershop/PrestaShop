@@ -16,21 +16,24 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class EM1Access
 {
-    const HASH_ALGORITHM     = 'sha256';
-    const MAX_LIFETIME       = 86400; /* 24 hours */
-    const TABLE_TOKENS       = 'bridgeconnector_ma_tokens';
+    const HASH_ALGORITHM = 'sha256';
+    const MAX_LIFETIME = 86400; /* 24 hours */
+    const TABLE_TOKENS = 'bridgeconnector_ma_tokens';
     const TABLE_FAILED_LOGIN = 'bridgeconnector_ma_failed_login';
-    const TABLE_USERS        = 'bridgeconnector_ma_users';
+    const TABLE_USERS = 'bridgeconnector_ma_users';
 
     public static function deleteExpiredData()
     {
-        //todo: implement range detection and row count in one query without other checking
+        // todo: implement range detection and row count in one query without other checking
         Db::getInstance()->execute(
             'DELETE LOW_PRIORITY FROM ' . _DB_PREFIX_ . self::TABLE_TOKENS .
             ' WHERE DATE_SUB(NOW(), INTERVAL 1 DAY) > `date_added`'
@@ -47,29 +50,30 @@ class EM1Access
         $userData = self::checkAuth($hash);
 
         if ($userData) {
-            return self::generateToken((int)$userData['user_id']);
+            return self::generateToken((int) $userData['user_id']);
         }
 
         self::addFailedAttempt();
+
         return '';
     }
 
     public static function checkToken($key, $user_id = false)
     {
         $timestamp = time();
-        $where = array(
-            "s.`token` = '".pSQL($key)."'",
-            "s.`date_added` > '".pSQL(date('Y-m-d H:i:s', ($timestamp - self::MAX_LIFETIME)))."'",
-            'u.`status` = 1'
-        );
+        $where = [
+            "s.`token` = '" . pSQL($key) . "'",
+            "s.`date_added` > '" . pSQL(date('Y-m-d H:i:s', $timestamp - self::MAX_LIFETIME)) . "'",
+            'u.`status` = 1',
+        ];
 
         if ($user_id) {
-            $where[] = 'u.`user_id` = '.(int)$user_id;
+            $where[] = 'u.`user_id` = ' . (int) $user_id;
         }
 
         $db_key = Db::getInstance()->getValue(
-            'SELECT s.`token` FROM `'._DB_PREFIX_.self::TABLE_TOKENS.'` s LEFT JOIN `'._DB_PREFIX_
-            .self::TABLE_USERS.'` u ON s.`user_id` = u.`user_id` WHERE '.implode(' AND ', $where)
+            'SELECT s.`token` FROM `' . _DB_PREFIX_ . self::TABLE_TOKENS . '` s LEFT JOIN `' . _DB_PREFIX_
+            . self::TABLE_USERS . '` u ON s.`user_id` = u.`user_id` WHERE ' . implode(' AND ', $where)
         );
 
         if ($db_key) {
@@ -77,6 +81,7 @@ class EM1Access
         }
 
         self::addFailedAttempt();
+
         return false;
     }
 
@@ -88,8 +93,8 @@ class EM1Access
 
         $timestamp = time();
         $key = Db::getInstance()->getValue(
-            'SELECT `token` FROM `'._DB_PREFIX_.self::TABLE_TOKENS.'` WHERE `user_id` = '.(int)$user_id
-            ." AND `date_added` > '".pSQL(date('Y-m-d H:i:s', ($timestamp - self::MAX_LIFETIME)))."'"
+            'SELECT `token` FROM `' . _DB_PREFIX_ . self::TABLE_TOKENS . '` WHERE `user_id` = ' . (int) $user_id
+            . " AND `date_added` > '" . pSQL(date('Y-m-d H:i:s', $timestamp - self::MAX_LIFETIME)) . "'"
         );
 
         if ($key) {
@@ -97,11 +102,11 @@ class EM1Access
         }
 
         $date = date('Y-m-d H:i:s', $timestamp);
-        $key = hash(self::HASH_ALGORITHM, _COOKIE_KEY_.$timestamp);
+        $key = hash(self::HASH_ALGORITHM, _COOKIE_KEY_ . $timestamp);
         Db::getInstance()->execute(
-            'INSERT INTO `'._DB_PREFIX_.self::TABLE_TOKENS."` (`token`, `user_id`, `date_added`) VALUES ('"
-            .pSQL($key)."', ".(int)$user_id.", '".pSQL($date)."') ON DUPLICATE KEY UPDATE `token` = '".pSQL($key)
-            ."', `date_added` = '".pSQL($date)."'"
+            'INSERT INTO `' . _DB_PREFIX_ . self::TABLE_TOKENS . "` (`token`, `user_id`, `date_added`) VALUES ('"
+            . pSQL($key) . "', " . (int) $user_id . ", '" . pSQL($date) . "') ON DUPLICATE KEY UPDATE `token` = '" . pSQL($key)
+            . "', `date_added` = '" . pSQL($date) . "'"
         );
 
         return $key;
@@ -112,37 +117,36 @@ class EM1Access
         $timestamp = time();
         Db::getInstance()->insert(
             self::TABLE_FAILED_LOGIN,
-            array('ip' => pSQL($_SERVER['REMOTE_ADDR']), 'date_added' => date('Y-m-d H:i:s', $timestamp))
+            ['ip' => pSQL($_SERVER['REMOTE_ADDR']), 'date_added' => date('Y-m-d H:i:s', $timestamp)]
         );
 
         // Get count of failed attempts for last 24 hours and set delay
         $count_failed_attempts = Db::getInstance()->getValue(
-            'SELECT COUNT(`ip`) FROM `'._DB_PREFIX_.self::TABLE_FAILED_LOGIN."` WHERE `ip` = '"
-            .pSQL($_SERVER['REMOTE_ADDR'])."' AND `date_added` > '"
-            .pSQL(date('Y-m-d H:i:s', ($timestamp - self::MAX_LIFETIME)))."'"
+            'SELECT COUNT(`ip`) FROM `' . _DB_PREFIX_ . self::TABLE_FAILED_LOGIN . "` WHERE `ip` = '"
+            . pSQL($_SERVER['REMOTE_ADDR']) . "' AND `date_added` > '"
+            . pSQL(date('Y-m-d H:i:s', $timestamp - self::MAX_LIFETIME)) . "'"
         );
-        self::setDelay((int)$count_failed_attempts);
+        self::setDelay((int) $count_failed_attempts);
     }
 
     public static function checkAuth($hash, $file_logger = null)
     {
         $login_data = Db::getInstance()->executeS(
-            'SELECT `user_id`, `username`, `password` FROM `'.pSQL(_DB_PREFIX_.self::TABLE_USERS).'` WHERE `status` = 1'
+            'SELECT `user_id`, `username`, `password` FROM `' . pSQL(_DB_PREFIX_ . self::TABLE_USERS) . '` WHERE `status` = 1'
         );
-
 
         if ($login_data) {
             $count = count($login_data);
 
-            for ($i = 0; $i < $count; $i++) {
-                if (hash(self::HASH_ALGORITHM, $login_data[$i]['username'].$login_data[$i]['password']) == $hash) {
+            for ($i = 0; $i < $count; ++$i) {
+                if (hash(self::HASH_ALGORITHM, $login_data[$i]['username'] . $login_data[$i]['password']) == $hash) {
                     return $login_data[$i];
                 }
             }
         }
 
         if ($file_logger) {
-            $file_logger->logMessageCall("Hash accepted is incorrect", $file_logger->level);
+            $file_logger->logMessageCall('Hash accepted is incorrect', $file_logger->level);
         }
 
         return false;
@@ -150,10 +154,10 @@ class EM1Access
 
     public static function getAllowedActionsByToken($key)
     {
-        $result = array();
+        $result = [];
         $actions = Db::getInstance()->getValue(
-            'SELECT u.`allowed_actions` FROM `'._DB_PREFIX_.self::TABLE_TOKENS.'` s LEFT JOIN `'._DB_PREFIX_
-            .self::TABLE_USERS."` u ON u.`user_id` = s.`user_id` WHERE s.`token` = '".pSQL($key)."'"
+            'SELECT u.`allowed_actions` FROM `' . _DB_PREFIX_ . self::TABLE_TOKENS . '` s LEFT JOIN `' . _DB_PREFIX_
+            . self::TABLE_USERS . "` u ON u.`user_id` = s.`user_id` WHERE s.`token` = '" . pSQL($key) . "'"
         );
 
         if ($actions) {
@@ -165,9 +169,9 @@ class EM1Access
 
     public static function getAllowedActionsByUserId($user_id)
     {
-        $result = array();
+        $result = [];
         $actions = Db::getInstance()->getValue(
-            'SELECT `allowed_actions` FROM `'._DB_PREFIX_.self::TABLE_USERS.'` WHERE `user_id` = '.(int)$user_id
+            'SELECT `allowed_actions` FROM `' . _DB_PREFIX_ . self::TABLE_USERS . '` WHERE `user_id` = ' . (int) $user_id
         );
 
         if ($actions) {
@@ -180,17 +184,17 @@ class EM1Access
     public static function getUserIdByToken($key)
     {
         return Db::getInstance()->getValue(
-            'SELECT `user_id` FROM `'._DB_PREFIX_.self::TABLE_TOKENS."` WHERE `token` = '".pSQL($key)."'"
+            'SELECT `user_id` FROM `' . _DB_PREFIX_ . self::TABLE_TOKENS . "` WHERE `token` = '" . pSQL($key) . "'"
         );
     }
 
     public static function getEmployeeIdByToken($key)
     {
         return Db::getInstance()->getValue(
-            'SELECT employee_id FROM '._DB_PREFIX_.self::TABLE_USERS.' AS u
-                  JOIN '._DB_PREFIX_.self::TABLE_TOKENS.' AS t
+            'SELECT employee_id FROM ' . _DB_PREFIX_ . self::TABLE_USERS . ' AS u
+                  JOIN ' . _DB_PREFIX_ . self::TABLE_TOKENS . ' AS t
                   ON u.user_id = t.user_id
-                  WHERE t.token = \''.pSQL($key)."'"
+                  WHERE t.token = \'' . pSQL($key) . "'"
         );
     }
 

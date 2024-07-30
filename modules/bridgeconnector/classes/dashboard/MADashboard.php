@@ -16,9 +16,12 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 includedDashboardFiles();
 
@@ -27,35 +30,36 @@ includedDashboardFiles();
  */
 class MADashboard extends EM1Main implements EM1DashboardInterface
 {
-    /** @var int $languageId lang_id from request, id_lang field in database */
+    /** @var int lang_id from request, id_lang field in database */
     protected $languageId;
 
-    /** @var int $currencyId currency_id from request, id_currency field in database */
+    /** @var int currency_id from request, id_currency field in database */
     protected $currencyId;
 
-    /** @var int $dateFrom date_from from request in format of timestamp with milliseconds */
+    /** @var int date_from from request in format of timestamp with milliseconds */
     protected $dateFrom;
 
-    /** @var int $dateTo date_to from request in format of timestamp with milliseconds */
+    /** @var int date_to from request in format of timestamp with milliseconds */
     protected $dateTo;
 
-    /** @var array $orderStatuses order_statuses from request */
+    /** @var array order_statuses from request */
     protected $orderStatuses;
 
-    /** @var string $dashboardGrouping dashboard grouping value */
+    /** @var string dashboard grouping value */
     protected $dashboardGrouping;
 
     /**
      * MADashboard constructor.
      *
-     * @param $shopId                   int
-     * @param $languageId               int
-     * @param $currencyId               int
-     * @param $dateFrom                 int
-     * @param $dateTo                   int
-     * @param $orderStatuses            array
+     * @param $shopId int
+     * @param $languageId int
+     * @param $currencyId int
+     * @param $dateFrom int
+     * @param $dateTo int
+     * @param $orderStatuses array
      * @param bool $taxIncl
      * @param bool $shippingIncl
+     *
      * @throws EM1Exception
      */
     public function __construct(
@@ -64,7 +68,7 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
         $currencyId,
         $dateFrom,
         $dateTo,
-        $orderStatuses = array(),
+        $orderStatuses = [],
         $taxIncl = false,
         $shippingIncl = false
     ) {
@@ -75,7 +79,7 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
         // Prepare dates before using
         if (!empty($dateFrom) && !empty($dateTo) && $dateFrom !== -1 && $dateTo !== -1) {
             $this->dateFrom = self::convertMillisecondsTimestampToTimestamp($dateFrom);
-            $this->dateTo   = self::convertMillisecondsTimestampToTimestamp($dateTo);
+            $this->dateTo = self::convertMillisecondsTimestampToTimestamp($dateTo);
         }
 
         if ($dateTo === -1 || $dateFrom === -1) {
@@ -102,36 +106,35 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
             }
         }
 
-        $this->dashboardGrouping    = $this->getDashboardGrouping($this->dateFrom, $this->dateTo);
+        $this->dashboardGrouping = $this->getDashboardGrouping($this->dateFrom, $this->dateTo);
     }
 
     /**
      * @param $timestampFrom
      * @param $timestampTo
+     *
      * @return string
+     *
      * @throws EM1Exception
      */
     private function getDashboardGrouping($timestampFrom, $timestampTo)
     {
         try {
-            $dateTo     = new DateTime(date(EM1Constants::GLOBAL_DATE_FORMAT, $timestampTo));
-            $dateFrom   = new DateTime(date(EM1Constants::GLOBAL_DATE_FORMAT, $timestampFrom));
+            $dateTo = new DateTime(date(EM1Constants::GLOBAL_DATE_FORMAT, $timestampTo));
+            $dateFrom = new DateTime(date(EM1Constants::GLOBAL_DATE_FORMAT, $timestampFrom));
         } catch (Exception $e) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT,
-                $e->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT, $e->getMessage());
         }
 
         /** @var DateTime $dateTo */
         /** @var DateTime $dateFrom */
         $timestampDifferences = date_diff($dateTo, $dateFrom);
         switch (true) {
-            case ($timestampDifferences->y >= 1):
+            case $timestampDifferences->y >= 1:
                 return self::GROUP_BY_MONTH;
-            case ($timestampDifferences->y === 0 && $timestampDifferences->m >= 3):
+            case $timestampDifferences->y === 0 && $timestampDifferences->m >= 3:
                 return self::GROUP_BY_WEEK;
-            case ($timestampDifferences->y === 0 && $timestampDifferences->days <= 3):
+            case $timestampDifferences->y === 0 && $timestampDifferences->days <= 3:
                 return self::GROUP_BY_HOUR;
             default:
                 return self::GROUP_BY_DAY;
@@ -140,33 +143,35 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
 
     /**
      * Here we get full store statistics -  orders customers total sales
+     *
      * @throws EM1Exception
      */
     public function getDashboard()
     {
-        $storeStatisticData = array();
+        $storeStatisticData = [];
 
         // Get statistics data
-        $statisticData              = $this->getStoreStatisticsData();
-        $dataGraphsData             = $this->getGraphsData();
-        $orderStatusStatisticData   = $this->getStatusStatistic();
+        $statisticData = $this->getStoreStatisticsData();
+        $dataGraphsData = $this->getGraphsData();
+        $orderStatusStatisticData = $this->getStatusStatistic();
 
         // Convert total sales price depending on currency
         // Add count and sum of orders into return array
         // Add count and sum of products into return array
         // Add count of customers into return array
-        $storeStatisticData[self::KEY_STORE_STATISTICS] = array(
-            self::KEY_ORDERS_TOTAL      => (double)$statisticData[self::KEY_ORDERS]['orders_total'],
-            self::KEY_ORDERS_COUNT      => (int)$statisticData[self::KEY_ORDERS]['orders_count'],
-            self::KEY_PRODUCTS_COUNT    => (int)$statisticData[self::KEY_PRODUCTS]['products_count'],
-            self::KEY_CUSTOMERS_COUNT   => (int)$statisticData[self::KEY_CUSTOMERS]['customers_count'],
-        );
+        $storeStatisticData[self::KEY_STORE_STATISTICS] = [
+            self::KEY_ORDERS_TOTAL => (float) $statisticData[self::KEY_ORDERS]['orders_total'],
+            self::KEY_ORDERS_COUNT => (int) $statisticData[self::KEY_ORDERS]['orders_count'],
+            self::KEY_PRODUCTS_COUNT => (int) $statisticData[self::KEY_PRODUCTS]['products_count'],
+            self::KEY_CUSTOMERS_COUNT => (int) $statisticData[self::KEY_CUSTOMERS]['customers_count'],
+        ];
 
         self::generateResponse(array_merge($storeStatisticData, $dataGraphsData, $orderStatusStatisticData));
     }
 
     /**
      * Prepare data with sql requests
+     *
      * @throws EM1Exception
      */
     private function getStoreStatisticsData()
@@ -174,20 +179,21 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
         // Get statistics data of orders
         // Get statistics data of products
         // Get count of customers
-        return array(
-            self::KEY_ORDERS    => $this->getOrdersStoreStatisticData(),
-            self::KEY_PRODUCTS  => $this->getProductsStoreStatisticsData(),
+        return [
+            self::KEY_ORDERS => $this->getOrdersStoreStatisticData(),
+            self::KEY_PRODUCTS => $this->getProductsStoreStatisticsData(),
             self::KEY_CUSTOMERS => $this->getCustomersStoreStatisticsData(),
-        );
+        ];
     }
 
     /**
      * @return array
+     *
      * @throws EM1Exception
      */
     public function getOrdersStoreStatisticData()
     {
-        $queryDBWhereParts = array();
+        $queryDBWhereParts = [];
         // Prepare where statements
         if ($this->dateFrom !== $this->dateTo) {
             $queryDBWhereParts[] = 'o.date_add >= \'' . date(EM1Constants::GLOBAL_DATE_FORMAT, $this->dateFrom) . '\'';
@@ -209,7 +215,7 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
         // Execute query after build it
         return self::getQueryRow(
             $dbQuery
-                ->select('COUNT(o.id_order) AS orders_count, IFNULL(SUM(' . $total_field .'), 0) AS orders_total')
+                ->select('COUNT(o.id_order) AS orders_count, IFNULL(SUM(' . $total_field . '), 0) AS orders_total')
                 ->from('orders', 'o')
                 ->leftJoin(
                     'order_state_lang',
@@ -222,11 +228,12 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
 
     /**
      * @return array
+     *
      * @throws EM1Exception
      */
     public function getProductsStoreStatisticsData()
     {
-        $queryDBWhereParts = array();
+        $queryDBWhereParts = [];
         // Prepare where statements
         if ($this->dateFrom !== $this->dateTo) {
             $queryDBWhereParts[] = 'o.date_add >= \'' . date(EM1Constants::GLOBAL_DATE_FORMAT, $this->dateFrom) . '\'';
@@ -261,11 +268,12 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
 
     /**
      * @return array
+     *
      * @throws EM1Exception
      */
     public function getCustomersStoreStatisticsData()
     {
-        $queryDBWhereParts = array();
+        $queryDBWhereParts = [];
         if ($this->dateFrom !== $this->dateTo) {
             $queryDBWhereParts[] = 'date_add >= \'' . date(EM1Constants::GLOBAL_DATE_FORMAT, $this->dateFrom) . '\'';
             $queryDBWhereParts[] = 'date_add <= \'' . date(EM1Constants::GLOBAL_DATE_FORMAT, $this->dateTo) . '\'';
@@ -285,24 +293,131 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
         return self::getQueryRow($qry);
     }
 
+    // added 10.21: select new customer IDs
+    /**
+     * @return array
+     *
+     * @throws EM1Exception
+     */
+    public function getNewCustomerIds()
+    {
+        $queryDBWhereParts = [];
+        if ($this->dateFrom !== $this->dateTo) {
+            $queryDBWhereParts[] = 'date_add >= \'' . date(EM1Constants::GLOBAL_DATE_FORMAT, $this->dateFrom) . '\'';
+            $queryDBWhereParts[] = 'date_add <= \'' . date(EM1Constants::GLOBAL_DATE_FORMAT, $this->dateTo) . '\'';
+        }
+        if ($this->shopId > 0) {
+            $queryDBWhereParts[] = 'id_shop = ' . $this->shopId;
+        }
+
+        /** @var DbQueryCore $dbQuery */
+        $dbQuery = new DbQuery();
+
+        $qry = $dbQuery->select('DISTINCT(id_customer) AS new_customers_id')
+            ->from('customer')
+            ->where(implode(' AND ', $queryDBWhereParts));
+
+        // Execute query after build it
+        return self::getQueryRow($qry);
+    }
+
+    // added 10.21: get order total by new customers
+    /**
+     * @return array
+     *
+     * @throws EM1Exception
+     */
+    public function getOrdersTotalFromNewCustomer()
+    {
+        $queryDBWhereParts = [];
+        // Prepare where statements
+        if ($this->dateFrom !== $this->dateTo) {
+            $queryDBWhereParts[] = 'o.date_add >= \'' . date(EM1Constants::GLOBAL_DATE_FORMAT, $this->dateFrom) . '\'';
+            $queryDBWhereParts[] = 'o.date_add <= \'' . date(EM1Constants::GLOBAL_DATE_FORMAT, $this->dateTo) . '\'';
+        }
+        if ($this->shopId > 0) {
+            $queryDBWhereParts[] = 'o.id_shop = ' . $this->shopId;
+        }
+
+        if (!empty($this->orderStatuses)) {
+            $queryDBWhereParts[] = 'o.current_state IN (' . pSQL($this->orderStatuses) . ')';
+        }
+
+        $new_customer_id = $this->getNewCustomerIds()['new_customers_id'];
+        $queryDBWhereParts[] = 'o.id_customer IN (' . $new_customer_id . ')';
+
+        /** @var DbQueryCore $dbQuery */
+        $dbQuery = new DbQuery();
+
+        $total_field = $this->getOrderTotalField();
+
+        // Execute query after build it
+        return self::getQueryRow(
+            $dbQuery
+                ->select('COUNT(o.id_order), IFNULL(SUM(' . $total_field . '), 0) AS orders_total_by_new_customer')
+                ->from('orders', 'o')
+                ->leftJoin(
+                    'order_state_lang',
+                    'osl',
+                    'osl.id_order_state = o.current_state AND osl.id_lang = ' . $this->languageId
+                )
+                ->where(implode(' AND ', $queryDBWhereParts))
+        );
+    }
+
+    // added 10.21: select customer, who made order
+    public function getCustomersCountFromOrders()
+    {
+        $queryDBWhereParts = [];
+        // Prepare where statements
+        if ($this->dateFrom !== $this->dateTo) {
+            $queryDBWhereParts[] = 'o.date_add >= \'' . date(EM1Constants::GLOBAL_DATE_FORMAT, $this->dateFrom) . '\'';
+            $queryDBWhereParts[] = 'o.date_add <= \'' . date(EM1Constants::GLOBAL_DATE_FORMAT, $this->dateTo) . '\'';
+        }
+        if ($this->shopId > 0) {
+            $queryDBWhereParts[] = 'o.id_shop = ' . $this->shopId;
+        }
+
+        if (!empty($this->orderStatuses)) {
+            $queryDBWhereParts[] = 'o.current_state IN (' . pSQL($this->orderStatuses) . ')';
+        }
+
+        /** @var DbQueryCore $dbQuery */
+        $dbQuery = new DbQuery();
+
+        // Execute query after build it
+        return self::getQueryRow(
+            $dbQuery
+                ->select('COUNT(DISTINCT(o.id_customer)) AS customer_count')
+                ->from('orders', 'o')
+                ->leftJoin(
+                    'order_state_lang',
+                    'osl',
+                    'osl.id_order_state = o.current_state AND osl.id_lang = ' . $this->languageId
+                )
+                ->where(implode(' AND ', $queryDBWhereParts))
+        );
+    }
+
     /**
      * Prepare data with sql requests
      *
      * @return array
+     *
      * @throws EM1Exception
      */
     public function getGraphsData()
     {
-        $startDate  = !empty($this->dateFrom) ? $this->dateFrom : time();
-        $endDate    = !empty($this->dateTo) ? $this->dateTo : time();
+        $startDate = !empty($this->dateFrom) ? $this->dateFrom : time();
+        $endDate = !empty($this->dateTo) ? $this->dateTo : time();
 
         $startDateFormatted = date(EM1Constants::GLOBAL_DATE_FORMAT, $startDate);
-        $endDateFormatted   = date(EM1Constants::GLOBAL_DATE_FORMAT, $endDate);
+        $endDateFormatted = date(EM1Constants::GLOBAL_DATE_FORMAT, $endDate);
 
         $generalWhereStatement = '';
         $generalWhereIdShop = '';
         if ($this->shopId > 0) {
-            $generalWhereIdShop     = ' AND id_shop = ' . $this->shopId . ' ';
+            $generalWhereIdShop = ' AND id_shop = ' . $this->shopId . ' ';
             $generalWhereStatement .= ' AND id_shop = ' . $this->shopId . ' ';
         }
 
@@ -311,7 +426,7 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
             $generalWhereStatuses = ' AND o.current_state IN (' . pSQL($this->orderStatuses) . ') ';
         }
         // Start get orders
-        $ordersWhereStatement    = "AND o.date_add >= '{$startDateFormatted}' AND o.date_add <= '{$endDateFormatted}' "
+        $ordersWhereStatement = "AND o.date_add >= '{$startDateFormatted}' AND o.date_add <= '{$endDateFormatted}' "
             . $generalWhereStatement . $generalWhereStatuses;
         $customersWhereStatement = "AND `date_add` >= '{$startDateFormatted}' AND `date_add` <= '{$endDateFormatted}' "
             . $generalWhereIdShop;
@@ -330,16 +445,20 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
     /**
      * @param $orders
      * @param $customers
+     *
      * @return array
+     *
      * @throws EM1Exception
+     *
+     * phpcs:disable
      */
     private function getGraphsValues($orders, $customers)
     {
-//        if (empty($orders) && empty($customers)) {
-//            $this->graphResponse();
-//        }
+        //        if (empty($orders) && empty($customers)) {
+        //            $this->graphResponse();
+        //        }
 
-        if(!empty($orders) && !empty($customers)) {
+        if (!empty($orders) && !empty($customers)) {
             try {
                 $orderMinDate = $this->getDateTimeTimestamp(reset($orders)[self::KEY_ORDERS_DATE]);
                 $orderMaxDate = $this->getDateTimeTimestamp(end($orders)[self::KEY_ORDERS_DATE]);
@@ -350,30 +469,21 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
                 $minDate = $orderMinDate > $customerMinDate ? $customerMinDate : $orderMinDate;
                 $maxDate = $orderMaxDate > $customerMaxDate ? $orderMaxDate : $customerMaxDate;
             } catch (Exception $e) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT,
-                    $e->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT, $e->getMessage());
             }
         } elseif (!empty($orders)) {
             try {
                 $minDate = $this->getDateTimeTimestamp(reset($orders)[self::KEY_ORDERS_DATE]);
                 $maxDate = $this->getDateTimeTimestamp(end($orders)[self::KEY_ORDERS_DATE]);
             } catch (Exception $e) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT,
-                    $e->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT, $e->getMessage());
             }
         } elseif (!empty($customers)) {
             try {
                 $minDate = $this->getDateTimeTimestamp(reset($customers)[self::KEY_CUSTOMERS_DATE]);
                 $maxDate = $this->getDateTimeTimestamp(end($customers)[self::KEY_CUSTOMERS_DATE]);
             } catch (Exception $e) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT,
-                    $e->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT, $e->getMessage());
             }
         }
 
@@ -381,10 +491,7 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
             try {
                 $minDate = $this->getDateTimeTimestamp($this->dateFrom);
             } catch (Exception $e) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT,
-                    $e->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT, $e->getMessage());
             }
         }
 
@@ -392,10 +499,7 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
             try {
                 $maxDate = $this->getDateTimeTimestamp($this->dateTo);
             } catch (Exception $e) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT,
-                    $e->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT, $e->getMessage());
             }
         }
 
@@ -403,22 +507,16 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
         $sumOrdersTotal = 0;
         $sumOrdersCount = 0;
         $sumCustomersCount = 0;
-        $ordersResult = array();
+        $ordersResult = [];
         $newMaxDate = $maxDate;
-        for ($timestamp = $minDate, $dateTime = new DateTime(),
-             $dateInterval = new DateInterval(self::INTERVAL[$this->dashboardGrouping]);
-             $timestamp <= $maxDate;
-             $timestamp = $dateTime->setTimestamp($timestamp)->add($dateInterval)->getTimestamp()) {
+        for ($timestamp = $minDate, $dateTime = new DateTime(), $dateInterval = new DateInterval(self::INTERVAL[$this->dashboardGrouping]); $timestamp <= $maxDate; $timestamp = $dateTime->setTimestamp($timestamp)->add($dateInterval)->getTimestamp()) {
             $newMaxDate = $dateTime->setTimestamp($timestamp)->add($dateInterval)->getTimestamp();
         }
 
         $maxDate = $newMaxDate;
 
         try {
-            for ($timestamp = $minDate, $dateTime = new DateTime(),
-                 $dateInterval = new DateInterval(self::INTERVAL[$this->dashboardGrouping]);
-                 $timestamp <= $maxDate;
-                 $timestamp = $dateTime->setTimestamp($timestamp)->add($dateInterval)->getTimestamp()) {
+            for ($timestamp = $minDate, $dateTime = new DateTime(), $dateInterval = new DateInterval(self::INTERVAL[$this->dashboardGrouping]); $timestamp <= $maxDate; $timestamp = $dateTime->setTimestamp($timestamp)->add($dateInterval)->getTimestamp()) {
                 $ordersTotal = 0;
                 $ordersCount = 0;
                 $customerCount = 0;
@@ -427,8 +525,8 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
                     $orderDateTime = new DateTime($orderValue[self::KEY_ORDERS_DATE]);
                     $orderTimestamp = $orderDateTime->getTimestamp();
                     if ($this->compareDatesByGrouping($timestamp, $orderTimestamp)) {
-                        $ordersTotal += (float)$orderValue[self::KEY_ORDERS_TOTAL];
-                        $ordersCount += (int)$orderValue[self::KEY_ORDERS_COUNT];
+                        $ordersTotal += (float) $orderValue[self::KEY_ORDERS_TOTAL];
+                        $ordersCount += (int) $orderValue[self::KEY_ORDERS_COUNT];
                         continue;
                     }
                 }
@@ -438,20 +536,20 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
                     $customerTimestamp = $customerDateTime->getTimestamp();
 
                     if ($this->compareDatesByGrouping($timestamp, $customerTimestamp)) {
-                        $customerCount += (int)$customerValue[self::KEY_CUSTOMERS_COUNT];
+                        $customerCount += (int) $customerValue[self::KEY_CUSTOMERS_COUNT];
                         continue;
                     }
                 }
 
-                $ordersResult[] = array(
-                    self::KEY_TIMESTAMP         => self::convertTimestampToMillisecondsTimestamp($timestamp),
-                    self::KEY_ORDERS_TOTAL      => (float)$ordersTotal,
-                    self::KEY_ORDERS_COUNT      => $ordersCount,
-                    self::KEY_CUSTOMERS_COUNT   => $customerCount
-                );
+                $ordersResult[] = [
+                    self::KEY_TIMESTAMP => self::convertTimestampToMillisecondsTimestamp($timestamp),
+                    self::KEY_ORDERS_TOTAL => (float) $ordersTotal,
+                    self::KEY_ORDERS_COUNT => $ordersCount,
+                    self::KEY_CUSTOMERS_COUNT => $customerCount,
+                ];
 
-                $period++;
-                $sumOrdersTotal += (float)$ordersTotal;
+                ++$period;
+                $sumOrdersTotal += (float) $ordersTotal;
                 $sumOrdersCount += $ordersCount;
                 $sumCustomersCount += $customerCount;
             }
@@ -459,49 +557,56 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
             throw new EM1Exception(EM1Exception::ERROR_CODE_QUERY_EXECUTION_ERROR, $e->getMessage());
         }
 
-        $averageOrdersTotal     = 0;
-        $averageOrdersCount     = 0;
-        $averageCustomersCount  = 0;
+        $averageOrdersTotal = 0;
+        $averageOrdersCount = 0;
+        $averageCustomersCount = 0;
         if ($period > 0) {
-            $averageOrdersTotal = (float)($sumOrdersTotal / $period);
-            $averageOrdersCount = (float)($sumOrdersCount / $period);
-            $averageCustomersCount = (float)($sumCustomersCount / $period);
+            $averageOrdersTotal = (float) ($sumOrdersTotal / $period);
+            $averageOrdersCount = (float) ($sumOrdersCount / $period);
+            $averageCustomersCount = (float) ($sumCustomersCount / $period);
         }
-        $averageOrdersTotalPerCustomer = ($sumOrdersTotal > 0 && $sumCustomersCount > 0)
-            ? $sumOrdersTotal / $sumCustomersCount
+        $customer_count = $this->getCustomersCountFromOrders()['customer_count'];
+        $averageOrdersTotalPerCustomer = ($sumOrdersTotal > 0 && $customer_count > 0)
+            ? $sumOrdersTotal / $customer_count
             : 0;
+        $ordersTotalByNewCustomer = $this->getOrdersTotalFromNewCustomer()['orders_total_by_new_customer'];
+        $ordersTotalByNewCustomer = $ordersTotalByNewCustomer > 0 ? $ordersTotalByNewCustomer : 0;
 
-        $average = array(
-            self::KEY_ORDERS_TOTAL              => Tools::displayPrice($averageOrdersTotal),
-            self::KEY_ORDERS_COUNT              => $this->round($averageOrdersCount, 2),
-            self::KEY_CUSTOMERS_COUNT           => $this->round($averageCustomersCount, 2),
-            self::KEY_ORDERS_TOTAL_PER_CUSTOMER => Tools::displayPrice($averageOrdersTotalPerCustomer)
-        );
+        $average = [
+            self::KEY_ORDERS_TOTAL => Tools::displayPrice($averageOrdersTotal),
+            self::KEY_ORDERS_COUNT => $this->round($averageOrdersCount, 2),
+            self::KEY_CUSTOMERS_COUNT => $this->round($averageCustomersCount, 2),
+            self::KEY_ORDERS_TOTAL_PER_CUSTOMER => Tools::displayPrice($averageOrdersTotalPerCustomer),
+            self::KEY_ORDER_TOTAL_NEW_CUSTOMER => Tools::displayPrice($ordersTotalByNewCustomer),
+        ];
 
-        $total = array(
-            self::KEY_ORDERS_TOTAL => Tools::displayPrice((float)$sumOrdersTotal),
+        $total = [
+            self::KEY_ORDERS_TOTAL => Tools::displayPrice((float) $sumOrdersTotal),
             self::KEY_ORDERS_COUNT => $sumOrdersCount,
             self::KEY_PRODUCTS_COUNT => $this->getProductsStoreStatisticsData()['products_count'],
-            self::KEY_CUSTOMERS_COUNT => $sumCustomersCount
-        );
+            self::KEY_CUSTOMERS_COUNT => $sumCustomersCount,
+        ];
 
         return $this->graphResponse($ordersResult, $average, $total);
     }
 
-    public function graphResponse($graphData = array(), $average = array(), $total = array())
+    public function graphResponse($graphData = [], $average = [], $total = [])
     {
-        return array(
-            self::KEY_GRAPH_DATA        => $graphData,
-            self::KEY_AVERAGE           => $average,
-            self::KEY_TOTAL             => $total,
-            self::KEY_GROUP_BY          => self::GROUP_BY[$this->dashboardGrouping],
-            self::KEY_CURRENCY_SYMBOL   => Currency::getDefaultCurrency()->sign
-        );
+        return [
+            self::KEY_GRAPH_DATA => $graphData,
+            self::KEY_AVERAGE => $average,
+            self::KEY_TOTAL => $total,
+            self::KEY_GROUP_BY => self::GROUP_BY[$this->dashboardGrouping],
+            self::KEY_CURRENCY_SYMBOL => Currency::getDefaultCurrency()->sign,
+        ];
     }
+    /** phpcs:enable */
 
     /**
      * @param $timestamp
+     *
      * @return int
+     *
      * @throws EM1Exception
      */
     private function getDateTimeTimestamp($timestamp)
@@ -513,10 +618,7 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
             $dateTime = new DateTime();
             $dateTimeTimestamp = $dateTime->setTimestamp($timestamp)->getTimestamp();
         } catch (Exception $e) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT,
-                $e->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_CREATE_DATETIME_OBJECT, $e->getMessage());
         }
 
         return $dateTimeTimestamp;
@@ -526,29 +628,29 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
     {
         switch ($this->dashboardGrouping) {
             case self::GROUP_BY_HOUR:
-                return (
+                return
                     date('H', $timestamp) === date('H', $comparedTimestamp)
                     && date('d', $timestamp) === date('d', $comparedTimestamp)
                     && date('m', $timestamp) === date('m', $comparedTimestamp)
                     && date('Y', $timestamp) === date('Y', $comparedTimestamp)
-                );
+                ;
             case self::GROUP_BY_DAY:
-                return (
+                return
                     date('d', $timestamp) === date('d', $comparedTimestamp)
                     && date('m', $timestamp) === date('m', $comparedTimestamp)
                     && date('Y', $timestamp) === date('Y', $comparedTimestamp)
-                );
-//                return $timestamp === $comparedTimestamp;
+                ;
+                //                return $timestamp === $comparedTimestamp;
             case self::GROUP_BY_WEEK:
-                return (
+                return
                     date('W', $timestamp) === date('W', $comparedTimestamp)
                     && date('o', $timestamp) === date('o', $comparedTimestamp)
-                );
+                ;
             case self::GROUP_BY_MONTH:
-                return (
+                return
                     date('m', $timestamp) === date('m', $comparedTimestamp)
                     && date('Y', $timestamp) === date('Y', $comparedTimestamp)
-                );
+                ;
             default:
                 return false;
         }
@@ -557,12 +659,15 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
     /**
      * @param $ordersWhereStatement
      * @param $groupingByDay
+     *
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getOrderGraphResultData($ordersWhereStatement, $groupingByDay)
     {
         $total_field = $this->getOrderTotalField();
+
         // Execute query
         return self::getQueryResult(
             'SELECT ' .
@@ -584,7 +689,9 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
     /**
      * @param $customersWhereStatement
      * @param $groupingByDay
+     *
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getCustomersGraphResultData($customersWhereStatement, $groupingByDay)
@@ -605,38 +712,42 @@ class MADashboard extends EM1Main implements EM1DashboardInterface
 
     /**
      * @return array
+     *
      * @throws EM1Exception
      */
     public function getStatusStatistic()
     {
-        $orderStatusesReturn = array();
+        $orderStatusesReturn = [];
         $orderStatuses = OrderState::getOrderStates($this->languageId);
         foreach ($this->getStatusStatisticData() as $orderStatus) {
-            $orderStateId = (int)$orderStatus['id'];
+            $orderStateId = (int) $orderStatus['id'];
             if ($orderStateId > 0) {
                 $statusName = '';
                 foreach ($orderStatuses as $status) {
-                    if ((int)$status['id_order_state'] == $orderStateId) {
-                        $statusName = (string)$status['name'];
+                    if ((int) $status['id_order_state'] == $orderStateId) {
+                        $statusName = (string) $status['name'];
                         break;
                     }
                 }
-                if(empty($statusName)) $statusName = "[no title]";
+                if (empty($statusName)) {
+                    $statusName = '[no title]';
+                }
 
-                $orderStatusesReturn[] = array(
-                    self::KEY_ID                        => $orderStateId,
-                    self::KEY_TITLE                     => $statusName,
-                    self::KEY_FORMATTED_ORDERS_TOTAL    => Tools::displayPrice((float)$orderStatus['total']),
-                    self::KEY_ORDERS_COUNT              => (int)$orderStatus['count'],
-                );
+                $orderStatusesReturn[] = [
+                    self::KEY_ID => $orderStateId,
+                    self::KEY_TITLE => $statusName,
+                    self::KEY_FORMATTED_ORDERS_TOTAL => Tools::displayPrice((float) $orderStatus['total']),
+                    self::KEY_ORDERS_COUNT => (int) $orderStatus['count'],
+                ];
             }
         }
 
-        return array(self::KEY_ORDER_STATUSES_STATISTICS => $orderStatusesReturn);
+        return [self::KEY_ORDER_STATUSES_STATISTICS => $orderStatusesReturn];
     }
 
     /**
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getStatusStatisticData()

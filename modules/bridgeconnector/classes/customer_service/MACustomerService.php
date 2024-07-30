@@ -16,9 +16,12 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 includedCustomerServiceFiles();
 
@@ -28,21 +31,21 @@ includedCustomerServiceFiles();
 class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
 {
     /**
-     * @var int $languageId
+     * @var int
      */
     private $employeeId;
 
     /**
-     * @var int $languageId
+     * @var int
      */
     private $customerThreadId;
 
     /**
      * MACustomerService constructor.
      *
-     * @param int   $languageId
-     * @param int   $customerThreadId
-     * @param int   $employeeId
+     * @param int $languageId
+     * @param int $customerThreadId
+     * @param int $employeeId
      */
     public function __construct($languageId, $customerThreadId = null, $employeeId = null)
     {
@@ -56,20 +59,21 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
      * @param $orderId
      *
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getOrderMessages($customerMail, $orderId)
     {
-        $ordersMessagesResponse = array();
+        $ordersMessagesResponse = [];
 
         try {
             /** @var CustomerThreadCore */
-            $customerThreadId = (int)Db::getInstance()->getValue(
+            $customerThreadId = (int) Db::getInstance()->getValue(
                 '
                     SELECT cm.id_customer_thread
                     FROM ' . _DB_PREFIX_ . 'customer_thread cm
                     WHERE cm.email = \'' . pSQL($customerMail) . '\'
-                        AND cm.id_order = ' . (int)$orderId
+                        AND cm.id_order = ' . (int) $orderId
             );
             $orderMessages = CustomerThread::getMessageCustomerThreads($customerThreadId);
 
@@ -83,48 +87,54 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
                 }
 
                 $orderMessageTimestamp = strtotime($message[self::FIELD_DATE_ADD]);
-                $ordersMessagesResponse[$message[self::FIELD_DATE_ADD]] = array(
-                    self::KEY_MESSAGE_ID        => (int)$message['id_customer_message'],
-                    self::KEY_EMPLOYEE_ID       => (int)$message['id_employee'],
-                    self::KEY_FROM              => (string)$message['employee_name'],
-                    self::KEY_MESSAGE           => (string)$message[self::FIELD_MESSAGE],
-                    self::KEY_URL_ATTACHMENT    => $fileLink,
-                    self::KEY_IS_PRIVATE        => (bool)$message[self::FIELD_PRIVATE],
-                    self::KEY_DATE_ADD          => self::convertTimestampToMillisecondsTimestamp(
+                $ordersMessagesResponse[$message[self::FIELD_DATE_ADD]] = [
+                    self::KEY_MESSAGE_ID => (int) $message['id_customer_message'],
+                    self::KEY_EMPLOYEE_ID => (int) $message['id_employee'],
+                    self::KEY_FROM => $message['id_employee'] > 0 ? (string) $message['employee_name'] : (string) $message['email'],
+                    self::KEY_MESSAGE => (string) $message[self::FIELD_MESSAGE],
+                    self::KEY_URL_ATTACHMENT => $fileLink,
+                    self::KEY_IS_PRIVATE => (bool) $message[self::FIELD_PRIVATE],
+                    self::KEY_DATE_ADD => self::convertTimestampToMillisecondsTimestamp(
                         $orderMessageTimestamp
                     ),
-                );
+                ];
             }
         } catch (PrestaShopDatabaseException $e) {
-            //todo: write specific Exception code for this section
+            // todo: write specific Exception code for this section
             throw new EM1Exception('code', $e->getMessage());
         } catch (PrestaShopException $e) {
-            //todo: write specific Exception code for this section
+            // todo: write specific Exception code for this section
             throw new EM1Exception('code', $e->getMessage());
         }
 
         return $ordersMessagesResponse;
     }
 
+    public static function getUploadedFileLink($filename)
+    {
+        return _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . 'upload/' . $filename;
+    }
+
     /**
-     * @param   int $orderId    Order Id
-     * @param   int $languageId Language Id
+     * @param int $orderId Order Id
+     * @param int $languageId Language Id
      *
-     * @return  array Returns an array of timeline object
-     * @throws  EM1Exception
+     * @return array Returns an array of timeline object
+     *
+     * @throws EM1Exception
      */
     public static function getTimelineDetails($orderId, $languageId)
     {
-        $order              = new Order($orderId);
-        $customerThreadId = (int)Db::getInstance()->getValue(
+        $order = new Order($orderId);
+        $customerThreadId = (int) Db::getInstance()->getValue(
             '
 			SELECT cm.id_customer_thread
 			FROM ' . _DB_PREFIX_ . 'customer_thread cm
 			WHERE cm.email = \'' . pSQL($order->getCustomer()->email) . '\'
-				AND cm.id_order = ' . (int)$orderId
+				AND cm.id_order = ' . (int) $orderId
         );
 
-        $customerThreadMessagesCount = (int)self::getQueryValue('
+        $customerThreadMessagesCount = (int) self::getQueryValue('
             SELECT COUNT(`id_customer_message`)
             FROM `' . _DB_PREFIX_ . 'customer_message`
             WHERE `id_customer_thread` = ' . $customerThreadId);
@@ -133,7 +143,7 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
             return null;
         }
 
-        $customerThreadLastEmployeeId = (int)self::getQueryValue('
+        $customerThreadLastEmployeeId = (int) self::getQueryValue('
             SELECT `id_employee`
             FROM `' . _DB_PREFIX_ . 'customer_message`
             WHERE `id_customer_thread` = ' . $customerThreadId . ' 
@@ -141,36 +151,37 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
 
         $customerThread = new CustomerThread($customerThreadId);
         $itemsCount = ($customerThreadMessagesCount + count($order->getHistory($languageId)));
-        return array(
-            'customer_thread_id'    => $customerThreadId,
-            'status'                => $customerThread->status,
-            'employee_id'           => $customerThreadLastEmployeeId,
-            'items_count'           => $itemsCount
-        );
+
+        return [
+            'customer_thread_id' => $customerThreadId,
+            'status' => $customerThread->status,
+            'employee_id' => $customerThreadLastEmployeeId,
+            'items_count' => $itemsCount,
+        ];
     }
 
     /**
-     * @param   OrderCore $order
+     * @param OrderCore $order
      *
-     * @return  array
+     * @return array
      */
     private function getOrderHistory($order)
     {
         $orderHistoryResponse = [];
         if ($order instanceof OrderCore) {
-            $orderHistory         = $order->getHistory($this->languageId);
+            $orderHistory = $order->getHistory($this->languageId);
             foreach ($orderHistory as $history) {
-                $historyTimestamp                                     = strtotime($history[self::FIELD_DATE_ADD]);
-                $employeeFullName                                     = trim(
+                $historyTimestamp = strtotime($history[self::FIELD_DATE_ADD]);
+                $employeeFullName = trim(
                     $history[self::FIELD_EMPLOYEE_FIRSTNAME] . ' ' . $history[self::FIELD_EMPLOYEE_LASTNAME]
                 );
 
                 $orderHistoryResponse[] = [
-                    self::KEY_ORDER_HISTORY_ID  => (int)$history[self::FIELD_ID_ORDER_HISTORY],
-                    self::KEY_EMPLOYEE_ID       => (int)$history[self::FIELD_ID_EMPLOYEE],
-                    self::KEY_EMPLOYEE_NAME     => $employeeFullName,
-                    self::KEY_ORDER_STATUS_ID   => (int)$history[self::FIELD_ID_ORDER_STATE],
-                    self::KEY_DATE_ADD          => self::convertTimestampToMillisecondsTimestamp($historyTimestamp)
+                    self::KEY_ORDER_HISTORY_ID => (int) $history[self::FIELD_ID_ORDER_HISTORY],
+                    self::KEY_EMPLOYEE_ID => (int) $history[self::FIELD_ID_EMPLOYEE],
+                    self::KEY_EMPLOYEE_NAME => $employeeFullName,
+                    self::KEY_ORDER_STATUS_ID => (int) $history[self::FIELD_ID_ORDER_STATE],
+                    self::KEY_DATE_ADD => self::convertTimestampToMillisecondsTimestamp($historyTimestamp),
                 ];
             }
         }
@@ -180,14 +191,15 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
 
     /**
      * @param $orderId
+     *
      * @throws EM1Exception
      */
     public function getOrderTimeline($orderId)
     {
         $responseArray = [
-            'timeline'       => [],
-            'order_history'  => [],
-            'order_messages' => []
+            'timeline' => [],
+            'order_history' => [],
+            'order_messages' => [],
         ];
 
         $order = new Order($orderId);
@@ -197,12 +209,12 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
         $responseArray['timeline'] = self::getTimelineDetails($orderId, $this->languageId);
         $responseArray['order_history'] = $this->getOrderHistory($order);
 
-        $customerThreadId = (int)Db::getInstance()->getValue(
+        $customerThreadId = (int) Db::getInstance()->getValue(
             '
                     SELECT cm.id_customer_thread
                     FROM ' . _DB_PREFIX_ . 'customer_thread cm
                     WHERE cm.email = \'' . pSQL($customer->email) . '\'
-                        AND cm.id_order = ' . (int)$orderId
+                        AND cm.id_order = ' . (int) $orderId
         );
         $orderMessages = CustomerThread::getMessageCustomerThreads($customerThreadId);
 
@@ -214,6 +226,7 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
 
     /**
      * @param $message
+     *
      * @return array
      */
     public static function getOrderMessageDto($message)
@@ -227,41 +240,42 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
         }
 
         $orderMessageTimestamp = strtotime($message[self::FIELD_DATE_ADD]);
+
         return [
-            self::KEY_MESSAGE_ID     => (int)$message['id_customer_message'],
-            self::KEY_EMPLOYEE_ID    => (int)$message['id_employee'],
-            self::KEY_FROM           => (string)$message['employee_name'],
-            self::KEY_MESSAGE        => (string)$message[self::FIELD_MESSAGE],
+            self::KEY_MESSAGE_ID => (int) $message['id_customer_message'],
+            self::KEY_EMPLOYEE_ID => (int) $message['id_employee'],
+            self::KEY_FROM => (int) $message['id_employee'] > 0 ? (string) $message['employee_name'] : (string) $message['email'],
+            self::KEY_MESSAGE => (string) $message[self::FIELD_MESSAGE],
             self::KEY_URL_ATTACHMENT => $fileLink,
-            self::KEY_IS_PRIVATE     => (bool)$message[self::FIELD_PRIVATE],
-            self::KEY_DATE_ADD       => self::convertTimestampToMillisecondsTimestamp(
+            self::KEY_IS_PRIVATE => (bool) $message[self::FIELD_PRIVATE],
+            self::KEY_DATE_ADD => self::convertTimestampToMillisecondsTimestamp(
                 $orderMessageTimestamp
             ),
         ];
     }
 
-    //todo: write annotation for getOrderMessageData method
+    // todo: write annotation for getOrderMessageData method
     public function getPredefinedOrderMessages()
     {
-        $predefinedOrderMessagesResult = array();
+        $predefinedOrderMessagesResult = [];
         $predefinedOrderMessages = OrderMessage::getOrderMessages($this->languageId);
         foreach ($predefinedOrderMessages as $message) {
-            $predefinedOrderMessagesResult[] = array(
-                'message_id' => (int)$message['id_order_message'],
+            $predefinedOrderMessagesResult[] = [
+                'message_id' => (int) $message['id_order_message'],
                 'name' => $message['name'],
-                'message' => $message['message']
-            );
+                'message' => $message['message'],
+            ];
         }
 
-        //todo: add key to constants
+        // todo: add key to constants
         self::generateResponse(
-            array('messages' => $predefinedOrderMessagesResult)
+            ['messages' => $predefinedOrderMessagesResult]
         );
     }
 
     public function changeCustomerThreadStatus($status)
     {
-        if (!in_array($status, array('open', 'closed', 'pending1', 'pending2'))) {
+        if (!in_array($status, ['open', 'closed', 'pending1', 'pending2'])) {
             new EM1Exception('incorrect_thread_status');
         }
 
@@ -283,30 +297,30 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
         $output
     ) {
         $responseArray = [
-            'message'     => [],
-            'items_count' => 0
+            'message' => [],
+            'items_count' => 0,
         ];
 
         $customerMessage = new CustomerMessage();
-        $customerMessage->id_employee = (int)$this->employeeId;
-        $customerMessage->id_customer_thread = (int)$this->customerThreadId;
-        $customerMessage->ip_address = (int)ip2long(Tools::getRemoteAddr());
+        $customerMessage->id_employee = (int) $this->employeeId;
+        $customerMessage->id_customer_thread = (int) $this->customerThreadId;
+        $customerMessage->ip_address = (int) ip2long(Tools::getRemoteAddr());
 
         $currentEmployee = new Employee($this->employeeId);
         $forwardEmployee = new Employee($forwardEmployeeId);
         if ($forwardEmployee && Validate::isLoadedObject($forwardEmployee)) {
-            $validationResult = $customerMessage->validateField('message', $forwardMessage, null, array(), true);
+            $validationResult = $customerMessage->validateField('message', $forwardMessage, null, [], true);
             if ($validationResult !== true) {
                 throw new EM1Exception('forward_message_issue', $validationResult);
             }
 
-            $params = array(
-                '{messages}'    => Tools::stripslashes($output),
-                '{employee}'    => $currentEmployee->firstname . ' ' . $currentEmployee->lastname,
-                '{comment}'     => Tools::stripslashes(Tools::nl2br($forwardMessage)),
-                '{firstname}'   => $forwardEmployee->firstname,
-                '{lastname}'    => $forwardEmployee->lastname,
-            );
+            $params = [
+                '{messages}' => Tools::stripslashes($output),
+                '{employee}' => $currentEmployee->firstname . ' ' . $currentEmployee->lastname,
+                '{comment}' => Tools::stripslashes(Tools::nl2br($forwardMessage)),
+                '{firstname}' => $forwardEmployee->firstname,
+                '{lastname}' => $forwardEmployee->lastname,
+            ];
 
             $send = Mail::Send(
                 $this->languageId,
@@ -336,10 +350,7 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
             }
         }
 
-        throw new EM1Exception(
-            'message_was_not_sent',
-            'An error occurred. Your message was not sent. Please contact your system administrator.'
-        );
+        throw new EM1Exception('message_was_not_sent', 'An error occurred. Your message was not sent. Please contact your system administrator.');
     }
 
     public function forwardCustomerThreadMessagesByEmail(
@@ -349,18 +360,18 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
         $output
     ) {
         $customerMessage = new CustomerMessage();
-        $customerMessage->id_employee = (int)$this->employeeId;
-        $customerMessage->id_customer_thread = (int)$this->customerThreadId;
-        $customerMessage->ip_address = (int)ip2long(Tools::getRemoteAddr());
+        $customerMessage->id_employee = (int) $this->employeeId;
+        $customerMessage->id_customer_thread = (int) $this->customerThreadId;
+        $customerMessage->ip_address = (int) ip2long(Tools::getRemoteAddr());
 
         $currentEmployee = new Employee($this->employeeId);
-        $params = array(
-            '{messages}'    => Tools::nl2br(Tools::stripslashes($output)),
-            '{employee}'    => $currentEmployee->firstname . ' ' . $currentEmployee->lastname,
-            '{comment}'     => Tools::stripslashes($forwardMessage),
-            '{firstname}'   => '',
-            '{lastname}'    => '',
-        );
+        $params = [
+            '{messages}' => Tools::nl2br(Tools::stripslashes($output)),
+            '{employee}' => $currentEmployee->firstname . ' ' . $currentEmployee->lastname,
+            '{comment}' => Tools::stripslashes($forwardMessage),
+            '{firstname}' => '',
+            '{lastname}' => '',
+        ];
 
         $send = Mail::Send(
             $this->languageId,
@@ -383,10 +394,7 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
             self::generateResponse();
         }
 
-        throw new EM1Exception(
-            'message_was_not_sent',
-            'An error occurred. Your message was not sent. Please contact your system administrator.'
-        );
+        throw new EM1Exception('message_was_not_sent', 'An error occurred. Your message was not sent. Please contact your system administrator.');
     }
 
     public function getCustomerThreadMessages()
@@ -420,7 +428,7 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
         }
     }
 
-    //todo: write annotation for sendOrderMessage method
+    // todo: write annotation for sendOrderMessage method
     public function sendOrderMessage($orderId, $message, $isPrivate, $translatedFields)
     {
         $order = new Order($orderId);
@@ -428,17 +436,17 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
         $email = $customer->email;
 
         // todo check if exists
-        $customerThreadId = (int)Db::getInstance()->getValue(
+        $customerThreadId = (int) Db::getInstance()->getValue(
             '
                     SELECT cm.id_customer_thread
                     FROM ' . _DB_PREFIX_ . 'customer_thread cm
                     WHERE cm.email = \'' . pSQL($email) . '\'
-                        AND cm.id_order = ' . (int)$orderId
+                        AND cm.id_order = ' . (int) $orderId
         );
         if ($customerThreadId < 0 || $customerThreadId == false) {
             $contacts = Contact::getContacts($this->languageId);
             foreach ($contacts as $contact) {
-                //check if exists contact
+                // check if exists contact
                 if (strpos($email, $contact['email']) !== false) {
                     $id_contact = $contact['id_contact'];
                 }
@@ -449,15 +457,15 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
             }
 
             $ct = new CustomerThread();
-            if (isset($order->id_customer)) { //if mail is owned by a customer assign to him
+            if (isset($order->id_customer)) { // if mail is owned by a customer assign to him
                 $ct->id_customer = $order->id_customer;
             }
 
             $ct->email = $email;
             $ct->id_contact = $id_contact;
             $ct->id_lang = self::getDefaultLanguageId();
-            $ct->id_shop = $order->id_shop; //new customer threads for unrecognized mails are not shown without shop id
-            $ct->id_order = $order->id; //new customer threads for unrecognized mails are not shown without shop id
+            $ct->id_shop = $order->id_shop; // new customer threads for unrecognized mails are not shown without shop id
+            $ct->id_order = $order->id; // new customer threads for unrecognized mails are not shown without shop id
             $ct->status = 'open';
             $ct->token = Tools::passwdGen(12);
             $ct->save();
@@ -473,7 +481,7 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
         $customerMessage->ip_address = (int) ip2long(Tools::getRemoteAddr());
         $customerMessage->private = $isPrivate;
         $customerMessage->message = $message;
-        $validationResult = $customerMessage->validateField('message', $customerMessage->message, null, array(), true);
+        $validationResult = $customerMessage->validateField('message', $customerMessage->message, null, [], true);
         if ($validationResult !== true) {
             throw new EM1Exception('not_valid_send_order_message_field', $validationResult);
         }
@@ -481,8 +489,8 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
         if ($customerMessage->add()) {
             $customer = new Customer($customerThread->id_customer);
             $params = [
-                '{reply}'     => Tools::nl2br($message),
-                '{link}'      => Tools::url(
+                '{reply}' => Tools::nl2br($message),
+                '{link}' => Tools::url(
                     Context::getContext()->link->getPageLink(
                         'contact',
                         true,
@@ -491,17 +499,17 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
                         false,
                         $customerThread->id_shop
                     ),
-                    'id_customer_thread=' . (int)$customerThread->id . '&token=' . $customerThread->token
+                    'id_customer_thread=' . (int) $customerThread->id . '&token=' . $customerThread->token
                 ),
                 '{firstname}' => $customer->firstname,
-                '{lastname}'  => $customer->lastname,
+                '{lastname}' => $customer->lastname,
             ];
 
-            $fromName   = null;
-            $fromEmail  = null;
-            $contact    = new Contact((int)$customerThread->id_contact, (int)$customerThread->id_lang);
+            $fromName = null;
+            $fromEmail = null;
+            $contact = new Contact((int) $customerThread->id_contact, (int) $customerThread->id_lang);
             if (Validate::isLoadedObject($contact)) {
-                $fromName  = $contact->name;
+                $fromName = $contact->name;
                 $fromEmail = $contact->email;
             }
 
@@ -509,7 +517,7 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
                 $send = true;
             } else {
                 $send = Mail::Send(
-                    (int)$customerThread->id_lang,
+                    (int) $customerThread->id_lang,
                     'reply_msg',
                     $translatedFields['subject'],
                     $params,
@@ -527,27 +535,24 @@ class MACustomerService extends EM1Main implements EM1CustomerServiceInterface
 
             if ($send !== false) {
                 $responseArray = [
-                    'message'  => [
-                        'message_id'  => (int)$customerMessage->id,
-                        'employee_id' => (int)$this->employeeId,
-                        'from'        => $fromName,
-                        'message'     => $customerMessage->message,
-                        'is_private'  => (bool)$customerMessage->private,
-                        'date_add'    => self::convertTimestampToMillisecondsTimestamp($customerMessage->date_add)
+                    'message' => [
+                        'message_id' => (int) $customerMessage->id,
+                        'employee_id' => (int) $this->employeeId,
+                        'from' => $fromName,
+                        'message' => $customerMessage->message,
+                        'is_private' => (bool) $customerMessage->private,
+                        'date_add' => self::convertTimestampToMillisecondsTimestamp($customerMessage->date_add),
                     ],
                     'timeline' => self::getTimelineDetails(
                         $orderId,
                         $this->languageId
-                    )
+                    ),
                 ];
                 self::generateResponse($responseArray);
             }
         }
 
-        throw new EM1Exception(
-            'message_was_not_sent',
-            'An error occurred. Your message was not sent. Please contact your system administrator.'
-        );
+        throw new EM1Exception('message_was_not_sent', 'An error occurred. Your message was not sent. Please contact your system administrator.');
     }
 }
 

@@ -16,9 +16,12 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 includeOrderFiles();
 
@@ -28,13 +31,13 @@ includeOrderFiles();
 
 class MAOrder extends EM1Main implements EM1OrderInterface
 {
-    /** @var int $orderId order_id from request, id_order field in database */
+    /** @var int order_id from request, id_order field in database */
     protected $orderId = 0;
 
-    /** @var string $whereQuery preparation of where query part */
+    /** @var string preparation of where query part */
     private $whereQuery = '1';
 
-    /** @var string $orderByQuery preparation of order by query part */
+    /** @var string preparation of order by query part */
     private $orderByQuery;
 
     /**
@@ -78,10 +81,10 @@ class MAOrder extends EM1Main implements EM1OrderInterface
             $orderStatuses
         );
 
-        $ordersIds    = $this->getOrdersInformation($pageSize, $pageIndex);
-        $ordersResult = array();
+        $ordersIds = $this->getOrdersInformation($pageSize, $pageIndex);
+        $ordersResult = [];
         foreach ($ordersIds as $orderValue) {
-            $orderId = (int)$orderValue['id_order'];
+            $orderId = (int) $orderValue['id_order'];
 
             try {
                 /** @var OrderCore $order */
@@ -90,7 +93,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                     continue;
                 }
 
-                $customerId = (int)$order->id_customer;
+                $customerId = (int) $order->id_customer;
 
                 /** @var CustomerCore $orderCustomer */
                 $orderCustomer = new Customer($customerId);
@@ -98,46 +101,47 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                 throw new EM1Exception(EM1Exception::ERROR_CODE_ORDER_OBJECT_EXECUTION_ERROR, $exception->getMessage());
             }
 
-            $total_val = (float)$order->total_products;
-            if($this->taxIncl && !$this->shippingIncl) {
-                $total_val = (float)$order->total_products_wt;
+            $total_val = (float) ($order->total_products - $order->total_discounts);
+            if ($this->taxIncl && !$this->shippingIncl) {
+                $total_val = (float) ($order->total_products_wt - $order->total_discounts_tax_incl);
             }
-            if(!$this->taxIncl && $this->shippingIncl) {
-                $total_val = (float)$order->total_paid_tax_excl;
+            if (!$this->taxIncl && $this->shippingIncl) {
+                $total_val = (float) $order->total_paid_tax_excl;
             }
-            if($this->taxIncl && $this->shippingIncl) {
-                $total_val = (float)$order->total_paid_tax_incl;
+            if ($this->taxIncl && $this->shippingIncl) {
+                $total_val = (float) $order->total_paid_tax_incl;
             }
-            $total_val = $total_val/(float)$order->conversion_rate;
-            $orderTotal         = $this->round($total_val);
+            // commented 10.21: decide to show the price in original currency
+            //          $total_val = $total_val/(float)$order->conversion_rate;
+            $orderTotal = $this->round($total_val);
 
-            $orderPayments     = $this->getOrderPayments((string)$order->reference, (int)$order->id_lang);
+            $orderPayments = $this->getOrderPayments((string) $order->reference, (int) $order->id_lang);
 
-            $orderResult = array(
-                self::KEY_ORDER_ID              => (int)$order->id,
-                self::KEY_REFERENCE             => (string)$order->reference,
-                self::KEY_SHOP_ID               => (int)$order->id_shop,
-                self::KEY_CUSTOMER_ID           => $customerId,
-                self::KEY_CUSTOMER_EMAIL        => (string)$orderCustomer->email,
-                self::KEY_CUSTOMER_FIRST_NAME   => (string)$orderCustomer->firstname,
-                self::KEY_CUSTOMER_LAST_NAME    => (string)$orderCustomer->lastname,
-                self::KEY_STATUS_ID             => (int)$order->current_state,
-                self::KEY_TOTAL                 => $orderTotal,
-                self::KEY_FORMATTED_TOTAL       => $this->displayPrice(
+            $orderResult = [
+                self::KEY_ORDER_ID => (int) $order->id,
+                self::KEY_REFERENCE => (string) $order->reference,
+                self::KEY_SHOP_ID => (int) $order->id_shop,
+                self::KEY_CUSTOMER_ID => $customerId,
+                self::KEY_CUSTOMER_EMAIL => (string) $orderCustomer->email,
+                self::KEY_CUSTOMER_FIRST_NAME => (string) $orderCustomer->firstname,
+                self::KEY_CUSTOMER_LAST_NAME => (string) $orderCustomer->lastname,
+                self::KEY_STATUS_ID => (int) $order->current_state,
+                self::KEY_TOTAL => $orderTotal,
+                self::KEY_FORMATTED_TOTAL => $this->displayPrice(
                     $orderTotal,
                     $order->id_currency,
                     $order->id_lang
                 ),
-                self::KEY_DATE_ADD              => self::convertTimestampToMillisecondsTimestamp(
-                    (int)strtotime($order->date_add)
+                self::KEY_DATE_ADD => self::convertTimestampToMillisecondsTimestamp(
+                    (int) strtotime($order->date_add)
                 ),
-                self::KEY_PRODUCTS_COUNT        => (int)$orderValue['items_count'],
-                self::KEY_PAYMENTS_COUNT        => count($orderPayments),
-            );
+                self::KEY_PRODUCTS_COUNT => (int) $orderValue['items_count'],
+                self::KEY_PAYMENTS_COUNT => count($orderPayments),
+            ];
 
             $ordersResult[] = array_merge(
                 $orderResult,
-                $this->getOrderCarrier($orderId, (int)$this->languageId)
+                $this->getOrderCarrier($orderId, (int) $this->languageId)
             );
         }
 
@@ -147,7 +151,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
     public function getOrderPickingProducts($orderIds, $pageSize, $pageIndex)
     {
         $responseArray = [
-            'products' => []
+            'products' => [],
         ];
         foreach ($orderIds as $orderId) {
             $orderObject = new Order($orderId);
@@ -172,18 +176,19 @@ class MAOrder extends EM1Main implements EM1OrderInterface
         } else {
             $imageUrl = '';
         }
+
         return [
-            'order_id'             => (int)$product['id_order'],
-            'product_id'           => (int)$product['product_id'],
-            'product_attribute_id' => (int)$product['product_attribute_id'],
-            'product_name'         => (string)$product['product_name'],
-            'reference'            => (string)$product['product_reference'],
-            'ean13'                => (string)$product['ean13'],
-            'isbn'                 => (string)$product['isbn'],
-            'upc'                  => (string)$product['upc'],
-            'quantity'             => (int)$product['product_quantity'],
-            'image_url'            => $imageUrl,
-            'location'             => (string)$product['location'],
+            'order_id' => (int) $product['id_order'],
+            'product_id' => (int) $product['product_id'],
+            'product_attribute_id' => (int) $product['product_attribute_id'],
+            'product_name' => (string) $product['product_name'],
+            'reference' => (string) $product['product_reference'],
+            'ean13' => (string) $product['ean13'],
+            'isbn' => (string) $product['isbn'],
+            'upc' => (string) $product['upc'],
+            'quantity' => (int) $product['product_quantity'],
+            'image_url' => $imageUrl,
+            'location' => (string) $product['location'],
         ];
     }
 
@@ -192,12 +197,14 @@ class MAOrder extends EM1Main implements EM1OrderInterface
      * Request is get_order_details&data={"id":?}
      *
      * @param $orderId
-     * @param $pageSize         int     Pagination page size number
-     * @param $pageIndex        int     Pagination page index number
+     * @param $pageSize int     Pagination page size number
+     * @param $pageIndex int     Pagination page index number
      *
      * @return void Returns formatted order response with order details, or empty order response with error code
      *
      * @throws EM1Exception
+     *
+     * phpcs:disable
      */
     public function getOrderDetails($orderId, $pageSize, $pageIndex)
     {
@@ -210,44 +217,43 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                 throw new EM1Exception(EM1Exception::ERROR_CODE_ORDER_NOT_FOUND);
             }
 
-            $customerId = (int)$order->id_customer;
+            $customerId = (int) $order->id_customer;
 
             /** @var CustomerCore $orderCustomer */
             $customer = new Customer($customerId);
         } catch (PrestaShopException $exception) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT,
-                $exception->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT, $exception->getMessage());
         }
 
-        $orderId             = (int)$order->id;
-        $orderCurrencyId     = (int)$order->id_currency;
-        $orderConversionRate = (float)$order->conversion_rate;
-        $orderPayments      = $this->getOrderPayments((string)$order->reference, (int)$order->id_lang);
+        $orderId = (int) $order->id;
+        $orderCurrencyId = (int) $order->id_currency;
+        // commented 10.21: decide to show the price in original currency
+        //      $orderConversionRate = (float)$order->conversion_rate;
+        $orderPayments = $this->getOrderPayments((string) $order->reference, (int) $order->id_lang);
 
-        $total_val = (float)$order->total_products;
-        if($this->taxIncl && !$this->shippingIncl) {
-            $total_val = (float)$order->total_products_wt;
+        $total_val = (float) $order->total_products;
+        if ($this->taxIncl && !$this->shippingIncl) {
+            $total_val = (float) $order->total_products_wt;
         }
-        if(!$this->taxIncl && $this->shippingIncl) {
-            $total_val = (float)$order->total_paid_tax_excl;
+        if (!$this->taxIncl && $this->shippingIncl) {
+            $total_val = (float) $order->total_paid_tax_excl;
         }
-        if($this->taxIncl && $this->shippingIncl) {
-            $total_val = (float)$order->total_paid_tax_incl;
+        if ($this->taxIncl && $this->shippingIncl) {
+            $total_val = (float) $order->total_paid_tax_incl;
         }
-        $total_val = $total_val/(float)$order->conversion_rate;
-        $orderTotal         = $this->round($total_val);
+        // commented 10.21: decide to show the price in original currency
+        //      $total_val = $total_val/(float)$order->conversion_rate;
+        $orderTotal = $this->round($total_val);
 
-        $orderResult         = array(
+        $orderResult = [
             self::KEY_ORDER_ID => $orderId,
-            self::KEY_REFERENCE => (string)$order->reference,
-            self::KEY_SHOP_ID => (int)$order->id_shop,
-            self::KEY_CUSTOMER_ID => (int)$order->id_customer,
-            self::KEY_CUSTOMER_EMAIL => (string)$customer->email,
-            self::KEY_CUSTOMER_FIRST_NAME => (string)$customer->firstname,
-            self::KEY_CUSTOMER_LAST_NAME => (string)$customer->lastname,
-            self::KEY_STATUS_ID => (int)$order->current_state,
+            self::KEY_REFERENCE => (string) $order->reference,
+            self::KEY_SHOP_ID => (int) $order->id_shop,
+            self::KEY_CUSTOMER_ID => (int) $order->id_customer,
+            self::KEY_CUSTOMER_EMAIL => (string) $customer->email,
+            self::KEY_CUSTOMER_FIRST_NAME => (string) $customer->firstname,
+            self::KEY_CUSTOMER_LAST_NAME => (string) $customer->lastname,
+            self::KEY_STATUS_ID => (int) $order->current_state,
             self::KEY_TOTAL => $orderTotal,
             self::KEY_FORMATTED_TOTAL => $this->displayPrice(
                 $orderTotal,
@@ -255,50 +261,46 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                 $order->id_lang
             ),
             self::KEY_FORMATTED_TOTAL_PAID => $this->displayPrice(
-                $order->total_paid / $orderConversionRate,
+                $order->total_paid, // / $orderConversionRate,
                 $orderCurrencyId,
                 $order->id_lang
             ),
             self::KEY_FORMATTED_TOTAL_DISCOUNTS => $this->displayPrice(
-                $order->total_discounts / $orderConversionRate,
+                $order->total_discounts, // / $orderConversionRate,
                 $orderCurrencyId,
                 $order->id_lang
             ),
             self::KEY_FORMATTED_TOTAL_SHIPPING => $this->displayPrice(
-                $order->total_shipping / $orderConversionRate,
+                $order->total_shipping, // / $orderConversionRate,
                 $orderCurrencyId,
                 $order->id_lang
             ),
             self::KEY_FORMATTED_TOTAL_WRAPPING => $this->displayPrice(
-                $order->total_wrapping / $orderConversionRate,
+                $order->total_wrapping, // / $orderConversionRate,
                 $orderCurrencyId,
                 $order->id_lang
             ),
             self::KEY_FORMATTED_TOTAL_PRODUCTS => $this->displayPrice(
-                $order->total_products / $orderConversionRate,
+                $order->total_products, // / $orderConversionRate,
                 $orderCurrencyId,
                 $order->id_lang
             ),
             self::KEY_FORMATTED_TOTAL_PRODUCTS_WITH_TAX => $this->displayPrice(
-                $order->total_products_wt / $orderConversionRate,
+                $order->total_products_wt, // / $orderConversionRate,
                 $orderCurrencyId,
                 $order->id_lang
             ),
             self::KEY_FORMATTED_TOTAL_PAID_WITH_TAX => $this->displayPrice(
-                $order->total_paid_tax_incl / $orderConversionRate,
+                $order->total_paid_tax_incl, // / $orderConversionRate,
                 $orderCurrencyId,
                 $order->id_lang
             ),
             self::KEY_DATE_ADD => self::convertTimestampToMillisecondsTimestamp(
-                (int)strtotime($order->date_add)
+                (int) strtotime($order->date_add)
             ),
-            self::KEY_SHIPPING_ADDRESS => (array)$this->getOrderAddress(
-                $order->id_address_delivery
-            ),
-            self::KEY_INVOICE_ADDRESS => (array)$this->getOrderAddress(
-                $order->id_address_invoice
-            ),
-            self::KEY_PRODUCTS_COUNT => (int)$this->getOrderItemsCount(
+            self::KEY_SHIPPING_ADDRESS => (array) $this->getOrderAddress($order->id_address_delivery, (int) $order->id_customer),
+            self::KEY_INVOICE_ADDRESS => (array) $this->getOrderAddress($order->id_address_invoice, (int) $order->id_customer),
+            self::KEY_PRODUCTS_COUNT => (int) $this->getOrderItemsCount(
                 $orderId
             ),
             self::KEY_PAYMENTS => $orderPayments,
@@ -306,17 +308,18 @@ class MAOrder extends EM1Main implements EM1OrderInterface
             self::KEY_TIMELINE => MACustomerService::getTimelineDetails(
                 $orderId,
                 $this->languageId
-            )
-        );
+            ),
+        ];
 
         $this->orderResponse(
             array_merge(
                 $orderResult,
-                $this->getOrderCarrier($orderId, (int)$this->languageId),
+                $this->getOrderCarrier($orderId, (int) $this->languageId),
                 $this->getOrderItemsData($orderId, $pageSize, $pageIndex)
             )
         );
     }
+    /** phpcs:enable */
 
     /**
      * @param $orderId
@@ -334,10 +337,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                 throw new EM1Exception(EM1Exception::ERROR_CODE_ORDER_NOT_FOUND);
             }
         } catch (PrestaShopException $exception) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT,
-                $exception->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT, $exception->getMessage());
         }
 
         self::generateResponse($this->getOrderItemsData($orderId, $pageSize, $pageIndex));
@@ -387,7 +387,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
      *
      * @throws EM1Exception
      */
-    public function changeOrderStatus($orderId, $orderStatusId)
+    public function changeOrderStatus($orderId, $orderStatusId, $key)
     {
         // Check if orderId is set
         try {
@@ -401,7 +401,9 @@ class MAOrder extends EM1Main implements EM1OrderInterface
 
         try {
             Context::getContext()->cart = new Cart($order->id_cart); // to avoid conflict with giftcard module
-            $order->setCurrentState($orderStatusId);
+            $employee_id = EM1Access::getEmployeeIdByToken($key);
+            $employee_id = $employee_id > 0 ? $employee_id : 0;
+            $order->setCurrentState($orderStatusId, $employee_id);
         } catch (Exception $exception) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_CHANGE_STATUS_ORDER_FAILED, $exception->getMessage());
         }
@@ -422,14 +424,11 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                 throw new EM1Exception(EM1Exception::ERROR_CODE_ORDER_NOT_FOUND);
             }
 
-            if (!(int)Configuration::get('PS_INVOICE') || !$order->invoice_number) {
+            if (!(int) Configuration::get('PS_INVOICE') || !$order->invoice_number) {
                 throw new EM1Exception(EM1Exception::ERROR_CODE_INVOICE_NOT_AVAILABLE_FOR_THIS_ORDER);
             }
         } catch (PrestaShopException $exception) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT,
-                $exception->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT, $exception->getMessage());
         }
 
         self::generateResponse();
@@ -448,10 +447,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                 throw new EM1Exception(EM1Exception::ERROR_CODE_ORDER_NOT_FOUND);
             }
         } catch (PrestaShopException $exception) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT,
-                $exception->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT, $exception->getMessage());
         }
 
         $orderInvoices = $order->getInvoicesCollection();
@@ -461,12 +457,12 @@ class MAOrder extends EM1Main implements EM1OrderInterface
             try {
                 $language = new Language($order->id_lang);
                 $template = 'OrderPdf';
-                $pdf      = new MAOrderPDF($language->iso_code, $order, $template, Context::getContext()->smarty);
+                $pdf = new MAOrderPDF($language->iso_code, $order, $template, Context::getContext()->smarty);
 
                 if (version_compare(_PS_VERSION_, '1.5.6.3', '<=')) {
                     $template = PDFCore::TEMPLATE_INVOICE;
                     // todo if version lower than 1.6 use other logic
-                    Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => $orderInvoices));
+                    Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $orderInvoices]);
                     $pdf = new MAOrderPDF(
                         $language->iso_code,
                         $orderInvoices,
@@ -475,20 +471,14 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                     );
                 }
             } catch (PrestaShopException $exception) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT,
-                    $exception->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT, $exception->getMessage());
             }
         }
 
         try {
-            die($pdf->render());
+            exit($pdf->render());
         } catch (PrestaShopException $exception) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT,
-                $exception->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT, $exception->getMessage());
         }
     }
 
@@ -499,30 +489,25 @@ class MAOrder extends EM1Main implements EM1OrderInterface
      * @param $notifyCustomer
      *
      * @return void
+     *
      * @throws EM1Exception
      */
     public function updateOrderShippingDetails($orderId, $carrierId, $trackingNumber, $notifyCustomer = false)
     {
         try {
-            $order = new Order((int)$orderId);
+            $order = new Order((int) $orderId);
             if (!Validate::isLoadedObject($order)) {
                 throw new EM1Exception(EM1Exception::ERROR_CODE_ORDER_NOT_FOUND);
             }
 
-            $orderCarrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+            $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
             if (!Validate::isLoadedObject($orderCarrier)) {
                 throw new EM1Exception(EM1Exception::ERROR_THE_ORDER_CARRIER_ID_IS_INVALID);
             }
         } catch (PrestaShopDatabaseException $exception) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT,
-                $exception->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT, $exception->getMessage());
         } catch (PrestaShopException $exception) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT,
-                $exception->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT, $exception->getMessage());
         }
 
         if (!empty($trackingNumber) && !Validate::isTrackingNumber($trackingNumber)) {
@@ -530,22 +515,16 @@ class MAOrder extends EM1Main implements EM1OrderInterface
         }
 
         // Update carrier - ONLY if changed - then refresh shipping cost
-        $oldCarrierId = (int)$orderCarrier->id_carrier;
-        if (!empty($carrierId) && $oldCarrierId !== (int)$carrierId) {
-            $order->id_carrier        = (int)$carrierId;
-            $orderCarrier->id_carrier = (int)$carrierId;
+        $oldCarrierId = (int) $orderCarrier->id_carrier;
+        if (!empty($carrierId) && $oldCarrierId !== (int) $carrierId) {
+            $order->id_carrier = (int) $carrierId;
+            $orderCarrier->id_carrier = (int) $carrierId;
             try {
                 $orderCarrier->update();
             } catch (PrestaShopDatabaseException $exception) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_WHILE_UPDATING_ORDER_CARRIER,
-                    $exception->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_WHILE_UPDATING_ORDER_CARRIER, $exception->getMessage());
             } catch (PrestaShopException $exception) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_WHILE_UPDATING_ORDER_CARRIER,
-                    $exception->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_WHILE_UPDATING_ORDER_CARRIER, $exception->getMessage());
             }
 
             try {
@@ -557,17 +536,11 @@ class MAOrder extends EM1Main implements EM1OrderInterface
 
         // Load fresh order carrier because updated just before
         try {
-            $orderCarrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+            $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
         } catch (PrestaShopDatabaseException $exception) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_WHILE_LOADING_REFRESHED_ORDER_CARRIER_OBJECT,
-                $exception->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_WHILE_LOADING_REFRESHED_ORDER_CARRIER_OBJECT, $exception->getMessage());
         } catch (PrestaShopException $exception) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_WHILE_LOADING_REFRESHED_ORDER_CARRIER_OBJECT,
-                $exception->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_WHILE_LOADING_REFRESHED_ORDER_CARRIER_OBJECT, $exception->getMessage());
         }
 
         // Update shipping number
@@ -598,40 +571,31 @@ class MAOrder extends EM1Main implements EM1OrderInterface
             try {
                 $orderCarrier->update();
             } catch (PrestaShopDatabaseException $exception) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_THE_ORDER_CARRIER_CANNOT_BE_UPDATED,
-                    $exception->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_THE_ORDER_CARRIER_CANNOT_BE_UPDATED, $exception->getMessage());
             } catch (PrestaShopException $exception) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_THE_ORDER_CARRIER_CANNOT_BE_UPDATED,
-                    $exception->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_THE_ORDER_CARRIER_CANNOT_BE_UPDATED, $exception->getMessage());
             }
         }
 
         // Send mail only if tracking number is different AND not empty
-        if ((bool)$notifyCustomer) {
+        if ((bool) $notifyCustomer) {
             try {
                 $sendTransitEmail = $orderCarrier->sendInTransitEmail($order);
             } catch (PrestaShopException $exception) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_AN_ERROR_OCCURRED_WHILE_SENDING_AN_EMAIL_TO_THE_CUSTOMER,
-                    $exception->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_AN_ERROR_OCCURRED_WHILE_SENDING_AN_EMAIL_TO_THE_CUSTOMER, $exception->getMessage());
             }
 
-            //todo@ hook functionality will added soon
+            // todo@ hook functionality will added soon
             if ($sendTransitEmail) {
-                $customer = new Customer((int)$order->id_customer);
-                $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
+                $customer = new Customer((int) $order->id_customer);
+                $carrier = new Carrier((int) $order->id_carrier, $order->id_lang);
 
                 try {
-                    Hook::exec('actionAdminOrdersTrackingNumberUpdate', array(
+                    Hook::exec('actionAdminOrdersTrackingNumberUpdate', [
                         'order' => $order,
                         'customer' => $customer,
                         'carrier' => $carrier,
-                    ), null, false, true, false, $order->id_shop);
+                    ], null, false, true, false, $order->id_shop);
                 } catch (PrestaShopException $e) {
                     throw new EM1Exception('an_error_occurred_while_triggering_order_tracking_number_update_hook');
                 }
@@ -647,32 +611,27 @@ class MAOrder extends EM1Main implements EM1OrderInterface
      * @param $pageIndex
      *
      * @return array
+     *
      * @throws EM1Exception
      */
-    //todo:
+    // todo:
     private function getOrderItemsData($orderId, $pageSize, $pageIndex)
     {
-        $ordersItemsResult = array();
+        $ordersItemsResult = [];
         foreach ($this->getOrderItemsInformation($orderId, $pageSize, $pageIndex) as $orderItemValue) {
             try {
-                $order      = new Order($orderId);
-                $orderItem  = new OrderDetail($orderItemValue['id_order_detail']);
+                $order = new Order($orderId);
+                $orderItem = new OrderDetail($orderItemValue['id_order_detail']);
             } catch (PrestaShopDatabaseException $exception) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT,
-                    $exception->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT, $exception->getMessage());
             } catch (PrestaShopException $exception) {
-                throw new EM1Exception(
-                    EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT,
-                    $exception->getMessage()
-                );
+                throw new EM1Exception(EM1Exception::ERROR_CODE_COULD_NOT_LOAD_PRESTASHOP_ORDER_OBJECT, $exception->getMessage());
             }
 
-            $productId = (int)$orderItem->product_id;
+            $productId = (int) $orderItem->product_id;
             $productImages = Image::getImages($this->languageId, $productId, $orderItem->product_attribute_id);
             if ($orderItem->product_attribute_id !== null
-                && $orderItem->product_attribute_id !== "0"
+                && $orderItem->product_attribute_id !== '0'
                 && $productImages) {
                 $imageUrl = $this->getProductImageUrl(
                     $this->getProductLinkRewrite(
@@ -689,51 +648,51 @@ class MAOrder extends EM1Main implements EM1OrderInterface
                 );
             }
 
-            $total_val = (float)$orderItem->total_price_tax_excl;
-            if($this->taxIncl) {
-                $total_val = (float)$orderItem->total_price_tax_incl;
+            $total_val = (float) $orderItem->total_price_tax_excl;
+            if ($this->taxIncl) {
+                $total_val = (float) $orderItem->total_price_tax_incl;
             }
 
             $orderItemTotal = $this->round($total_val);
 
-            $orderItems = array(
-                self::KEY_ORDER_PRODUCT_ID                  => (int)$orderItem->id_order_detail,
-                self::KEY_PRODUCT_ID                        => $productId,
-                self::KEY_ORDER_ID                          => (int)$orderItem->id_order,
-                self::KEY_SHOP_ID                           => (int)$orderItem->id_shop,
-                self::KEY_PRODUCT_NAME                      => (string)strip_tags($orderItem->product_name),
-                self::KEY_REFERENCE                         => (string)$orderItem->product_reference,
-                self::KEY_EAN13                             => (string)$orderItem->product_ean13,
-                self::KEY_UPC                               => (string)$orderItem->product_upc,
-                self::KEY_ISBN                              => (string)(
-                property_exists($orderItem, 'product_isbn') ? $orderItem->product_isbn : null
+            $orderItems = [
+                self::KEY_ORDER_PRODUCT_ID => (int) $orderItem->id_order_detail,
+                self::KEY_PRODUCT_ID => $productId,
+                self::KEY_ORDER_ID => (int) $orderItem->id_order,
+                self::KEY_SHOP_ID => (int) $orderItem->id_shop,
+                self::KEY_PRODUCT_NAME => (string) strip_tags($orderItem->product_name),
+                self::KEY_REFERENCE => (string) $orderItem->product_reference,
+                self::KEY_EAN13 => (string) $orderItem->product_ean13,
+                self::KEY_UPC => (string) $orderItem->product_upc,
+                self::KEY_ISBN => (string) (
+                    property_exists($orderItem, 'product_isbn') ? $orderItem->product_isbn : null
                 ),
-                self::KEY_QUANTITY                          => (int)$orderItem->product_quantity,
-                self::KEY_TOTAL_PRICE_WITHOUT_TAX           => $orderItemTotal,
+                self::KEY_QUANTITY => (int) $orderItem->product_quantity,
+                self::KEY_TOTAL_PRICE_WITHOUT_TAX => $orderItemTotal,
                 self::KEY_FORMATTED_TOTAL_PRICE_WITHOUT_TAX => $this->displayPrice(
                     $orderItemTotal,
                     $orderItemValue['id_currency'],
                     $order->id_lang
                 ),
                 self::KEY_IMAGE_URL => $imageUrl,
-                self::KEY_SHOPS => $this->getProductShopAssociation($productId)
-            );
+                self::KEY_SHOPS => $this->getProductShopAssociation($productId),
+            ];
 
             $ordersItemsResult[] = $orderItems;
         }
 
-        return array(self::KEY_PRODUCTS => $ordersItemsResult);
+        return [self::KEY_PRODUCTS => $ordersItemsResult];
     }
 
     private function getProductShopAssociation($productId)
     {
-        $productShopsResult = array();
+        $productShopsResult = [];
         $product = new Product($productId);
         $productAssociatedShops = $product->getAssociatedShops();
         foreach ($productAssociatedShops as $shopId) {
-            $productShopsResult[] = array(
-                self::KEY_SHOP_ID => (int)$shopId
-            );
+            $productShopsResult[] = [
+                self::KEY_SHOP_ID => (int) $shopId,
+            ];
         }
 
         return $productShopsResult;
@@ -745,6 +704,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
      * @param $shopId
      *
      * @return string
+     *
      * @throws EM1Exception
      */
     private function getProductLinkRewrite($productId, $languageId, $shopId)
@@ -752,9 +712,9 @@ class MAOrder extends EM1Main implements EM1OrderInterface
         return self::getQueryValue(
             'SELECT `link_rewrite`
                       FROM `' . _DB_PREFIX_ . 'product_lang`
-                    WHERE `id_product` = ' . (int)$productId . '
-                      AND `id_lang` = ' . (int)$languageId . '
-                      AND `id_shop` = ' . (int)$shopId
+                    WHERE `id_product` = ' . (int) $productId . '
+                      AND `id_lang` = ' . (int) $languageId . '
+                      AND `id_shop` = ' . (int) $shopId
         );
     }
 
@@ -764,6 +724,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
      * @param $pageIndex
      *
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getOrderItemsInformation($orderId, $pageSize, $pageIndex)
@@ -819,22 +780,22 @@ class MAOrder extends EM1Main implements EM1OrderInterface
     /**
      * Prepare date range query part before using in where statement
      *
-     * @param $dateFrom         int     Date from get information in format of timestamp with milliseconds
-     * @param $dateTo           int     Date to get information in format of timestamp with milliseconds
+     * @param $dateFrom int     Date from get information in format of timestamp with milliseconds
+     * @param $dateTo int     Date to get information in format of timestamp with milliseconds
      *
-     * @return                  string  Return part of where statement and date range values
+     * @return string Return part of where statement and date range values
      */
     private function prepareDateRangeWherePart($dateFrom, $dateTo)
     {
         // Prepare dates range query part
         if (!empty($dateFrom) && !empty($dateTo) && $dateTo !== -1 && $dateFrom !== -1) {
-            return /** @lang MySQL */
+            return /* @lang MySQL */
                 " AND o.`date_add` >= '" . date(
                     EM1Constants::GLOBAL_DATE_FORMAT,
-                    $dateFrom/1000
+                    $dateFrom / 1000
                 ) . "' AND o.`date_add` <= '" . date(
                     EM1Constants::GLOBAL_DATE_FORMAT,
-                    $dateTo/1000
+                    $dateTo / 1000
                 ) . "' ";
         }
 
@@ -844,10 +805,11 @@ class MAOrder extends EM1Main implements EM1OrderInterface
     /**
      * Get abandoned carts ids and additional information
      *
-     * @param $pageSize         int     Pagination page size number
-     * @param $pageIndex        int     Pagination page index number
+     * @param $pageSize int     Pagination page size number
+     * @param $pageIndex int     Pagination page index number
      *
-     * @return                  array   Return array with result or error code if fails
+     * @return array Return array with result or error code if fails
+     *
      * @throws EM1Exception
      */
     private function getOrdersInformation($pageSize, $pageIndex)
@@ -858,7 +820,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
         // Execute query after build it
         return self::getQueryResult(
             $dbQuery->select(
-                'o.`id_order`,
+                'o.`id_order`, 
                 COUNT(od.`id_order_detail`) AS items_count'
             )
                 ->from('orders', 'o')
@@ -875,6 +837,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
      * @param $orderId
      *
      * @return string
+     *
      * @throws EM1Exception
      */
     private function getOrderItemsCount($orderId)
@@ -904,13 +867,13 @@ class MAOrder extends EM1Main implements EM1OrderInterface
     private function prepareSearchData($searchPhrase)
     {
         if (preg_match('/^\d+(?:,\d+)*$/', $searchPhrase)) {
-            return /** @lang MySQL */
+            return /* @lang MySQL */
                 ' AND o.`id_order` IN (' . pSQL($searchPhrase) . ')';
         }
 
-        return /** @lang MySQL */
+        return /* @lang MySQL */
             " AND (
-          CONCAT(c.`firstname`, ' ', c.`lastname`) LIKE '%" . pSQL($searchPhrase) . "%'
+          CONCAT(c.`firstname`, ' ', c.`lastname`) LIKE '%" . pSQL($searchPhrase) . "%' 
           OR c.`email` LIKE '%" . pSQL($searchPhrase) . "%'
           OR o.`reference` LIKE '%" . pSQL($searchPhrase) . "%'
         ) ";
@@ -920,9 +883,10 @@ class MAOrder extends EM1Main implements EM1OrderInterface
      * @param $addressId
      *
      * @return array
+     *
      * @throws EM1Exception
      */
-    private function getOrderAddress($addressId)
+    private function getOrderAddress($addressId, $orderCustomerId)
     {
         // Check if orderId is set
         if ($addressId < 1) {
@@ -930,42 +894,43 @@ class MAOrder extends EM1Main implements EM1OrderInterface
         }
 
         $orderAddress = new Address($addressId);
+        $id_customer = (int) $orderAddress->id_customer ? (int) $orderAddress->id_customer : $orderCustomerId;
 
         return [
-            self::KEY_ADDRESS_ID  => (int)$orderAddress->id,
-            self::KEY_CUSTOMER_ID => (int)$orderAddress->id_customer,
-            self::KEY_FIRST_NAME  => (string)$orderAddress->firstname,
-            self::KEY_LAST_NAME   => (string)$orderAddress->lastname,
-            self::KEY_COMPANY     => (string)$orderAddress->company,
-            self::KEY_ADDRESS1    => (string)$orderAddress->address1,
-            self::KEY_ADDRESS2    => (string)$orderAddress->address2,
-            self::KEY_VAT_NUMBER  => (string)$orderAddress->vat_number,
-            self::KEY_POST_CODE   => (string)$orderAddress->postcode,
-            self::KEY_CITY        => (string)$orderAddress->city,
-            self::KEY_COUNTRY     => (string)$orderAddress->country,
-            self::KEY_STATE       => (string)State::getNameById($orderAddress->id_state),
-            self::KEY_PHONE       => (string)$orderAddress->phone,
-            'phone_mobile'        => (string)$orderAddress->phone_mobile
+            self::KEY_ADDRESS_ID => (int) $orderAddress->id,
+            self::KEY_CUSTOMER_ID => $id_customer,
+            self::KEY_FIRST_NAME => (string) $orderAddress->firstname,
+            self::KEY_LAST_NAME => (string) $orderAddress->lastname,
+            self::KEY_COMPANY => (string) $orderAddress->company,
+            self::KEY_ADDRESS1 => (string) $orderAddress->address1,
+            self::KEY_ADDRESS2 => (string) $orderAddress->address2,
+            self::KEY_VAT_NUMBER => (string) $orderAddress->vat_number,
+            self::KEY_POST_CODE => (string) $orderAddress->postcode,
+            self::KEY_CITY => (string) $orderAddress->city,
+            self::KEY_COUNTRY => (string) $orderAddress->country,
+            self::KEY_STATE => (string) State::getNameById($orderAddress->id_state),
+            self::KEY_PHONE => (string) $orderAddress->phone,
+            'phone_mobile' => (string) $orderAddress->phone_mobile,
         ];
     }
 
     private function getOrderPayments($orderReference, $languageId)
     {
-        $orderPayments = array();
+        $orderPayments = [];
         foreach (OrderPayment::getByOrderReference($orderReference) as $orderPayment) {
-            $orderPayment = (array)$orderPayment;
-            $orderPayments[] = array(
-                'payment_id'        => (int)$orderPayment['id'],
-                'date'              => self::convertTimestampToMillisecondsTimestamp(
-                    (int)strtotime($orderPayment['date_add'])
+            $orderPayment = (array) $orderPayment;
+            $orderPayments[] = [
+                'payment_id' => (int) $orderPayment['id'],
+                'date' => self::convertTimestampToMillisecondsTimestamp(
+                    (int) strtotime($orderPayment['date_add'])
                 ),
-                'payment_method'    => (string)$orderPayment['payment_method'],
-                'formatted_amount'  => $this->displayPrice(
+                'payment_method' => (string) $orderPayment['payment_method'],
+                'formatted_amount' => $this->displayPrice(
                     $orderPayment['amount'],
                     $orderPayment['id_currency'],
                     $languageId
-                )
-            );
+                ),
+            ];
         }
 
         return $orderPayments;
@@ -975,6 +940,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
      * @param $orderId
      *
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getOrderCarrier($orderId, $id_lang = null)
@@ -985,20 +951,20 @@ class MAOrder extends EM1Main implements EM1OrderInterface
         $carrierId = self::getQueryValue(
             $dbQuery->select('id_order_carrier')
                 ->from('order_carrier')
-                ->where('id_order = ' . (int)$orderId)
+                ->where('id_order = ' . (int) $orderId)
         );
         try {
             $orderCarrier = new OrderCarrier($carrierId);
-            $carrier      = new Carrier($orderCarrier->id_carrier, $id_lang);
+            $carrier = new Carrier($orderCarrier->id_carrier, $id_lang);
 
-           return array(
-                self::KEY_CARRIER_ID      => (int)$orderCarrier->id_carrier,
-                self::KEY_TRACKING_CODE   => (string)$orderCarrier->tracking_number,
-                self::KEY_TRACKING_URL    => str_replace('@', $orderCarrier->tracking_number, $carrier->url),
-                self::KEY_WEIGHT          => (float)$orderCarrier->weight,
-                self::KEY_NAME           => (string)$carrier->name,
-                self::KEY_DELAY           => (string)$carrier->delay,
-            );
+            return [
+                self::KEY_CARRIER_ID => (int) $orderCarrier->id_carrier,
+                self::KEY_TRACKING_CODE => (string) $orderCarrier->tracking_number,
+                self::KEY_TRACKING_URL => str_replace('@', $orderCarrier->tracking_number, $carrier->url),
+                self::KEY_WEIGHT => (float) $orderCarrier->weight,
+                self::KEY_NAME => (string) $carrier->name,
+                self::KEY_DELAY => (string) $carrier->delay,
+            ];
         } catch (PrestaShopException $exception) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_FAILED_WHEN_LOAD_ORDER_CARRIER, $exception->getMessage());
         }
@@ -1007,33 +973,33 @@ class MAOrder extends EM1Main implements EM1OrderInterface
     /**
      * Get product cover image url link
      *
-     * @param $productId    int     Product Id
-     * @param $linkRewrite  string  Product Link Rewrite
-     * @param $imageName    string  Image Type
+     * @param $productId int     Product Id
+     * @param $linkRewrite string  Product Link Rewrite
+     * @param $imageName string  Image Type
      *
-     * @return              string  Returns product cover image url link
+     * @return string Returns product cover image url link
      */
     private function getProductCoverImageUrl($productId, $linkRewrite, $imageName = self::IMAGE_NAME_TYPE_HOME)
     {
         $image = Product::getCover($productId);
 
-        return $this->getProductImageUrl($linkRewrite, (int)$image['id_image'], $imageName);
+        return $this->getProductImageUrl($linkRewrite, (int) $image['id_image'], $imageName);
     }
 
     /**
      * Get product image url link
      *
-     * @param $linkRewrite  string  Product Link Rewrite
-     * @param $imageId      int     Image Id
-     * @param $imageName    string  Image Type
+     * @param $linkRewrite string  Product Link Rewrite
+     * @param $imageId int     Image Id
+     * @param $imageName string  Image Type
      *
-     * @return              string  Returns product image url link
+     * @return string Returns product image url link
      */
     private function getProductImageUrl($linkRewrite, $imageId, $imageName = self::IMAGE_NAME_TYPE_HOME)
     {
-        $imageUrl    = '';
-        $imageId     = (int)$imageId;
-        $linkRewrite = (string)$linkRewrite;
+        $imageUrl = '';
+        $imageId = (int) $imageId;
+        $linkRewrite = (string) $linkRewrite;
 
         if (method_exists('ImageType', 'getFormattedName')) {
             $imageType = ImageType::{'getFormattedName'}($imageName);
@@ -1052,6 +1018,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
 
     /**
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getOrdersCountAndTotal()
@@ -1063,7 +1030,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
 
         return self::getQueryRow(
             $dbQuery->select(
-                'IFNULL(SUM(' . $total_field . '), 0) AS orders_total,
+                'IFNULL(SUM(' . $total_field . '), 0) AS orders_total, 
                 COUNT(o.`id_order`) AS orders_count'
             )
                 ->leftJoin('customer', 'c', 'c.`id_customer` = o.`id_customer`')
@@ -1087,6 +1054,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
      * @param $sortDirection
      *
      * @return string
+     *
      * @throws EM1Exception
      */
     private function getOrderBy($sortField, $sortDirection)
@@ -1097,7 +1065,7 @@ class MAOrder extends EM1Main implements EM1OrderInterface
             throw new EM1Exception(EM1Exception::ERROR_CODE_INCORRECT_SORT_DATA);
         }
 
-        $orderBy          = self::KEY_ORDER_BY[$sortField];
+        $orderBy = self::KEY_ORDER_BY[$sortField];
         $orderByDirection = self::KEY_ORDER_BY_DIRECTION[$sortDirection];
 
         return "$orderBy $orderByDirection";
@@ -1108,37 +1076,37 @@ class MAOrder extends EM1Main implements EM1OrderInterface
      *
      * @throws EM1Exception
      */
-    public function ordersResponse($orders = array())
+    public function ordersResponse($orders = [])
     {
         $ordersCountAndTotal = $this->getOrdersCountAndTotal();
 
         self::generateResponse(
-            array(
+            [
                 self::KEY_ORDERS => $orders,
-                self::KEY_ORDERS_COUNT => (int)$ordersCountAndTotal['orders_count'],
+                self::KEY_ORDERS_COUNT => (int) $ordersCountAndTotal['orders_count'],
                 self::KEY_FORMATTED_ORDERS_TOTAL => $this->displayPrice(
                     $ordersCountAndTotal['orders_total'],
                     Configuration::get('PS_CURRENCY_DEFAULT'),
                     $this->languageId
-                )
-            )
+                ),
+            ]
         );
     }
 
     public function orderResponse($order)
     {
         self::generateResponse(
-            array(self::KEY_ORDER => $order)
+            [self::KEY_ORDER => $order]
         );
     }
 }
-
 
 /**
  * Included files
  */
 function includeOrderFiles()
 {
+    require_once _PS_MODULE_DIR_ . '/' . EM1Constants::MODULE_NAME . '/classes/helper/EM1Access.php';
     require_once _PS_MODULE_DIR_ . '/' . EM1Constants::MODULE_NAME . '/classes/helper/EM1Main.php';
     require_once _PS_MODULE_DIR_ . '/' . EM1Constants::MODULE_NAME . '/classes/order/EM1OrderInterface.php';
     require_once _PS_MODULE_DIR_ . '/' . EM1Constants::MODULE_NAME . '/classes/order/MAOrderPDF.php';

@@ -16,9 +16,12 @@
  *   along with eMagicOne Store Manager Bridge Connector.  If not, see <http://www.gnu.org/licenses/>.
  *
  *  @author    eMagicOne <contact@emagicone.com>
- *  @copyright 2014-2019 eMagicOne
+ *  @copyright 2014-2024 eMagicOne
  *  @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 function emoIsAuthenticated($key)
 {
@@ -35,7 +38,7 @@ function emoChangeStatus($userIds, $value)
 
     $result = Db::getInstance()->update(
         'bridgeconnector_ma_users',
-        array('status' => (int)$value),
+        ['status' => (int) $value],
         '`user_id` IN (' . pSQL($ids) . ')'
     );
 
@@ -54,7 +57,7 @@ function emoDeletePush($ids)
         return 'Parameters are incorrect';
     }
 
-    $result = Db::getInstance()->delete('bridgeconnector_ma_push_notifications', '`id` IN ('.pSQL($ids).')');
+    $result = Db::getInstance()->delete('bridgeconnector_ma_push_notifications', '`id` IN (' . pSQL($ids) . ')');
 
     if ($result) {
         return 'success';
@@ -93,7 +96,7 @@ function emoDeleteUser($userIds)
 
 function emoGetUsers()
 {
-    $dbQuery    = new DbQuery();
+    $dbQuery = new DbQuery();
     try {
         $users = Db::getInstance()->executeS(
             $dbQuery->select(
@@ -112,11 +115,11 @@ function emoGetUsers()
         return 'error';
     }
 
-    $shopUrl    = emoGetShopUrl();
+    $shopUrl = emoGetShopUrl();
     foreach ($users as $i => $user) {
         if ($user['employee_id']) {
-            $employee = Db::getInstance()->executeS("
-            SELECT firstname, lastname FROM " . _DB_PREFIX_ . "employee WHERE id_employee = ${user['employee_id']}
+            $employee = Db::getInstance()->executeS('
+            SELECT firstname, lastname FROM ' . _DB_PREFIX_ . "employee WHERE id_employee = ${user['employee_id']}
             ");
         }
         if (array_key_exists('firstname', reset($employee))
@@ -128,14 +131,14 @@ function emoGetUsers()
         }
         $users[$i]['employee'] = $employeeName;
         $users[$i]['allowed_actions'] = emoGetUserActionsFromCodes($user['allowed_actions']);
-        $users[$i]['qr_code_data']    =  call_user_func(
+        $users[$i]['qr_code_data'] = call_user_func(
             'base64_encode',
             json_encode(
-                array(
-                    'url'       => $shopUrl,
-                    'login'     => $user['username'],
-                    'password'  => $user['password']
-                )
+                [
+                    'url' => $shopUrl,
+                    'login' => $user['username'],
+                    'password' => $user['password'],
+                ]
             )
         );
     }
@@ -148,7 +151,7 @@ function emoGetActions($user_id)
     $userActions = Db::getInstance()->getValue(
         'SELECT `allowed_actions` 
           FROM `' . _DB_PREFIX_ . 'bridgeconnector_ma_users` 
-          WHERE `user_id` = ' . (int)$user_id
+          WHERE `user_id` = ' . (int) $user_id
     );
 
     if ($userActions === false) {
@@ -162,8 +165,8 @@ function emoSaveUserActions($userId, $selectedActions)
 {
     $result = Db::getInstance()->update(
         'bridgeconnector_ma_users',
-        array('allowed_actions' => pSQL($selectedActions)),
-        '`user_id` = '.(int)$userId
+        ['allowed_actions' => pSQL($selectedActions)],
+        '`user_id` = ' . (int) $userId
     );
 
     $allowedActions = explode(';', $selectedActions);
@@ -179,11 +182,11 @@ function emoSaveUserActions($userId, $selectedActions)
 function emoDoOperationsAfterUserActionsSaved($userId, $allowedActions)
 {
     require_once _PS_MODULE_DIR_ . '/' . EM1Constants::MODULE_NAME . '/classes/helper/EM1UserPermissions.php';
-    $data = array(
-        'push_new_order'        => 0,
-        'push_new_customer'     => 0,
-        'push_order_statuses'   => 0
-    );
+    $data = [
+        'push_new_order' => 0,
+        'push_new_customer' => 0,
+        'push_order_statuses' => 0,
+    ];
 
     if (!in_array(EM1UserPermissions::CODE_NOTIFICATION_PUSH_NEW_ORDER, $allowedActions, true)) {
         $data['push_new_order'] = 1;
@@ -200,7 +203,7 @@ function emoDoOperationsAfterUserActionsSaved($userId, $allowedActions)
     Db::getInstance()->update(
         'bridgeconnector_ma_push_notifications',
         $data,
-        '`user_id` = ' . (int)$userId
+        '`user_id` = ' . (int) $userId
     );
 }
 
@@ -209,7 +212,7 @@ function emoGetUserActions($user_id)
     $userActions = Db::getInstance()->getValue(
         'SELECT `allowed_actions` 
         FROM `' . _DB_PREFIX_ . 'bridgeconnector_ma_users` 
-        WHERE `user_id` = ' . (int)$user_id
+        WHERE `user_id` = ' . (int) $user_id
     );
 
     if ($userActions !== false) {
@@ -222,7 +225,7 @@ function emoGetUserActions($user_id)
 function emoGetActionsByCodes($actionsCodes)
 {
     $restrictedActions = emoGetRestrictedActions();
-    $actions = array();
+    $actions = [];
 
     if (!empty($actionsCodes)) {
         $actions = explode(';', $actionsCodes);
@@ -236,7 +239,7 @@ function emoCheckUserData($login, $userId)
     $isLoginExists = Db::getInstance()->getValue(
         'SELECT `user_id` 
         FROM `' . _DB_PREFIX_ . "bridgeconnector_ma_users` 
-        WHERE `username` = '" . pSQL($login) . "' AND `user_id` <> " . (int)$userId
+        WHERE `username` = '" . pSQL($login) . "' AND `user_id` <> " . (int) $userId
     );
 
     if (!$isLoginExists) {
@@ -251,20 +254,20 @@ function emoSaveUser($userId, $login, $password, $actionsCodes, $value, $isNewUs
     if ($isNewUser == '1') {
         $result = Db::getInstance()->insert(
             'bridgeconnector_ma_users',
-            array(
-                'username'          => pSQL($login),
-                'password'          => md5($password),
-                'employee_id'       => Context::getContext()->employee->id,
-                'allowed_actions'   => pSQL($actionsCodes),
-                'status'            => (int)$value,
-                'qr_code_hash'      => hash('sha256', time())
-            )
+            [
+                'username' => pSQL($login),
+                'password' => md5($password),
+                'employee_id' => Context::getContext()->employee->id,
+                'allowed_actions' => pSQL($actionsCodes),
+                'status' => (int) $value,
+                'qr_code_hash' => hash('sha256', time()),
+            ]
         );
     } else {
         $currentPassword = Db::getInstance()->getValue(
             'SELECT `password` 
             FROM `' . _DB_PREFIX_ . 'bridgeconnector_ma_users` 
-            WHERE `user_id` = '.(int)$userId
+            WHERE `user_id` = ' . (int) $userId
         );
 
         if ($currentPassword != $password) {
@@ -273,10 +276,10 @@ function emoSaveUser($userId, $login, $password, $actionsCodes, $value, $isNewUs
 
         $result = Db::getInstance()->update(
             'bridgeconnector_ma_users',
-            array('username' => pSQL($login), 'password' => pSQL($password)),
-            '`user_id` = '.(int)$userId
+            ['username' => pSQL($login), 'password' => pSQL($password)],
+            '`user_id` = ' . (int) $userId
         );
-        Db::getInstance()->delete('bridgeconnector_ma_tokens', '`user_id` = ' . (int)$userId);
+        Db::getInstance()->delete('bridgeconnector_ma_tokens', '`user_id` = ' . (int) $userId);
     }
 
     if ($result) {
@@ -288,7 +291,7 @@ function emoSaveUser($userId, $login, $password, $actionsCodes, $value, $isNewUs
 
 function emoGetUserByUsername($login)
 {
-    $result = array();
+    $result = [];
     $user_obj = new DbQuery();
     $user_obj->select(
         'mu.`user_id`,
@@ -300,7 +303,7 @@ function emoGetUserByUsername($login)
         mu.`status`'
     );
     $user_obj->from('bridgeconnector_ma_users', 'mu');
-    $user_obj->where("mu.`username` = '".pSQL($login)."'");
+    $user_obj->where("mu.`username` = '" . pSQL($login) . "'");
     $user_sql = $user_obj->build();
     $user = Db::getInstance()->executeS($user_sql);
 
@@ -311,11 +314,11 @@ function emoGetUserByUsername($login)
         $user[0]['qr_code_data'] = call_user_func(
             'base64_encode',
             json_encode(
-                array(
-                    'url'       => emoGetShopUrl(),
-                    'login'     => $user[0]['username'],
-                    'password'  => $user[0]['password']
-                )
+                [
+                    'url' => emoGetShopUrl(),
+                    'login' => $user[0]['username'],
+                    'password' => $user[0]['password'],
+                ]
             )
         );
         $result = $user[0];
@@ -329,14 +332,14 @@ function emoRegenerateQrCodeHash($userId)
     $hash = hash('sha256', time());
     $result = Db::getInstance()->update(
         'bridgeconnector_ma_users',
-        array(
-            'qr_code_hash' => pSQL($hash)
-        ),
-        '`user_id` = '.(int)$userId
+        [
+            'qr_code_hash' => pSQL($hash),
+        ],
+        '`user_id` = ' . (int) $userId
     );
 
     if ($result) {
-        return array('hash' => $hash);
+        return ['hash' => $hash];
     }
 
     return 'error';
@@ -344,7 +347,7 @@ function emoRegenerateQrCodeHash($userId)
 
 function emoGetOrderStatuses()
 {
-    $statuses = array();
+    $statuses = [];
     $orderStatuses = OrderState::getOrderStates(Configuration::get('PS_LANG_DEFAULT'));
 
     foreach ($orderStatuses as $status) {
@@ -357,7 +360,7 @@ function emoGetOrderStatuses()
 function emoReplaceNull($data)
 {
     if (!is_array($data)) {
-        $data = array();
+        $data = [];
     }
 
     foreach ($data as $index => $values) {
@@ -377,12 +380,12 @@ function emoPrepareIds($data)
         return false;
     }
 
-    $ids   = array();
-    $arr   = explode(',', $data);
+    $ids = [];
+    $arr = explode(',', $data);
     $count = count($arr);
 
-    for ($i = 0; $i < $count; $i++) {
-        $ids[] = (int)trim($arr[$i]);
+    for ($i = 0; $i < $count; ++$i) {
+        $ids[] = (int) trim($arr[$i]);
     }
 
     return implode(',', $ids);
@@ -396,7 +399,7 @@ function emoGetUserActionsFromCodes($codes = '')
         $result = 'Nothing';
     } else {
         $action_codes = explode(';', $codes);
-        $result       = emoGetUserAllowedActionsAsString($action_codes, $restricted_actions);
+        $result = emoGetUserAllowedActionsAsString($action_codes, $restricted_actions);
     }
 
     return $result;
@@ -404,10 +407,10 @@ function emoGetUserActionsFromCodes($codes = '')
 
 function emoGetActionsAsArray($restrictedActions, $actionsCodes)
 {
-    $preparedActions = array();
+    $preparedActions = [];
 
     foreach ($restrictedActions as $restrictions) {
-        $restrictionsItems = array();
+        $restrictionsItems = [];
         foreach ($restrictions['items'] as $item) {
             $actionAllowed = 0;
             if (!empty($actionsCodes)
@@ -416,17 +419,17 @@ function emoGetActionsAsArray($restrictedActions, $actionsCodes)
                 $actionAllowed = 1;
             }
 
-            $restrictionsItems[] = array(
+            $restrictionsItems[] = [
                 'code' => $item['code'],
                 'name' => $item['name'],
-                'allowed' => $actionAllowed
-            );
+                'allowed' => $actionAllowed,
+            ];
         }
 
-        $preparedActions[] = array(
+        $preparedActions[] = [
             'group_name' => $restrictions['title'],
-            'child' => $restrictionsItems
-        );
+            'child' => $restrictionsItems,
+        ];
     }
 
     return $preparedActions;
@@ -463,9 +466,9 @@ function emoGetUserAllowedActionsAsString($actionCodes, $restrictedActions)
 
 function emoGetShopUrl()
 {
-    $shop_info = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
+    $shop_info = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
     $shop_url = $shop_info->getBaseURL();
-    $shop_url = str_replace(array('http://', 'https://'), '', $shop_url);
+    $shop_url = str_replace(['http://', 'https://'], '', $shop_url);
     preg_replace('/\/*$/i', '', $shop_url);
 
     return $shop_url;
@@ -473,17 +476,17 @@ function emoGetShopUrl()
 
 function bridgeGetTables()
 {
-    $tableList = array();
+    $tableList = [];
     $databaseTables = Db::getInstance()->executeS('SHOW TABLES');
-    $bridgeOptions  = unserialize(Configuration::get('BRIDGE_OPTIONS'));
+    $bridgeOptions = json_decode(Configuration::get('BRIDGE_OPTIONS'), true);
     $excludedTables = explode(';', $bridgeOptions['exclude_db_tables']);
 
     foreach ($databaseTables as $tableName) {
         $tableName = array_shift($tableName);
-        $tableList[] = array(
+        $tableList[] = [
             'table_name' => $tableName,
-            'checked' => in_array($tableName, $excludedTables, true) ? 'checked' : ''
-        );
+            'checked' => in_array($tableName, $excludedTables, true) ? 'checked' : '',
+        ];
     }
 
     return $tableList;
@@ -491,7 +494,7 @@ function bridgeGetTables()
 
 function emoGetEmployees($userId)
 {
-    $employeesData = array();
+    $employeesData = [];
     if (strpos('new', $userId) !== false) {
         $selectedEmployeeId = Db::getInstance()->execute(
             "SELECT employee_id FROM bridgeconnector_ma_users WHERE user_id = $userId"
@@ -499,21 +502,21 @@ function emoGetEmployees($userId)
     }
     $employees = Employee::getEmployees();
     foreach ($employees as $employee) {
-        $employeesData[] = array(
-            'employee_id'  => (int)$employee['id_employee'],
-            'full_name'    => (string)$employee['firstname'] . ' ' . (string)$employee['lastname'],
-            'selected'     => $selectedEmployeeId == $employee['id_employee'] ? 1 : 0
-        );
+        $employeesData[] = [
+            'employee_id' => (int) $employee['id_employee'],
+            'full_name' => (string) $employee['firstname'] . ' ' . (string) $employee['lastname'],
+            'selected' => $selectedEmployeeId == $employee['id_employee'] ? 1 : 0,
+        ];
     }
 
-    return array('employees' => $employeesData);
+    return ['employees' => $employeesData];
 }
 
 function emoSaveUserEmployee($userId, $employeeId)
 {
     $result = Db::getInstance()->update(
         'bridgeconnector_ma_users',
-        array('employee_id' => (int) $employeeId),
+        ['employee_id' => (int) $employeeId],
         '`user_id` = ' . (int) $userId
     );
 
@@ -532,10 +535,10 @@ function emoGetUserEmployee($userId)
         WHERE `user_id` = ' . (int) $userId
     );
 
-
     if ($userEmployee !== false) {
-        $employee = new Employee((int)$userEmployee);
-        return array('full_name' => (string)$employee->firstname . ' ' . (string)$employee->lastname);
+        $employee = new Employee((int) $userEmployee);
+
+        return ['full_name' => (string) $employee->firstname . ' ' . (string) $employee->lastname];
     }
 
     return 'error';

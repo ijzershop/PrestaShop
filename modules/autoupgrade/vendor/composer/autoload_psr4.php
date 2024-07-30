@@ -8,6 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
-    'PrestaShop\\Module\\AutoUpgrade\\Temp\\' => array($baseDir . '/templates'),
     'PrestaShop\\Module\\AutoUpgrade\\' => array($baseDir . '/classes'),
 );

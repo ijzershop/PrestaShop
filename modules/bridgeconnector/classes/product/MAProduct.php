@@ -16,29 +16,27 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
-use PrestaShopBundle\Controller\Admin\ProductController;
-use PrestaShopBundle\Controller\Admin\ProductImageController;
-use Psr\Container\ContainerInterface;
 
 includedProductFiles();
 
 /**
  * Class MAProducts
  */
-
 class MAProduct extends EM1Main implements EM1ProductInterface
 {
-    /** @var string $whereQuery preparation of where query part */
+    /** @var string preparation of where query part */
     private $whereQuery = '1';
 
-    /** @var string $orderByQuery preparation of order by query part */
+    /** @var string preparation of order by query part */
     private $orderByQuery;
-
 
     /**
      * MAProduct constructor.
@@ -71,7 +69,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $pageIndex
      * @param $sortField
      * @param $sortDirection
+     *
      * @return void Returns formatted products response with products or error code
+     *
      * @throws EM1Exception
      */
     public function getProducts($pageSize, $pageIndex, $sortField, $sortDirection)
@@ -91,8 +91,11 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * }
      *
      * @param int $productId
+     *
      * @return void Returns formatted product response with product details, or error code
+     *
      * @throws EM1Exception
+     *                      phpcs:disable
      */
     public function getProductDetails($productId)
     {
@@ -102,9 +105,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
 
         try {
-            $productShopsResult     = array();
-            $productImagesResult    = array();
-            $productLanguagesResult = array();
+            $productShopsResult = [];
+            $productImagesResult = [];
+            $productLanguagesResult = [];
 
             // Create Product object and validate after initialisation
             /** @var ProductCore $product */
@@ -124,24 +127,24 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
                 $quantity = 0;
                 foreach ($stocksByShops as $stock) {
-                    if ((int)$stock['id_shop'] === (int)$shopId) {
-                        $quantity = (int)$stock['quantity'];
+                    if ((int) $stock['id_shop'] === (int) $shopId) {
+                        $quantity = (int) $stock['quantity'];
                         break;
                     }
                 }
 
                 $taxRuleName = '';
                 foreach ($taxRules as $taxRule) {
-                    if ((int)$productFields->id_tax_rules_group === (int)$taxRule['id_tax_rules_group']) {
-                        $taxRuleName = (string)$taxRule['name'];
+                    if ((int) $productFields->id_tax_rules_group === (int) $taxRule['id_tax_rules_group']) {
+                        $taxRuleName = (string) $taxRule['name'];
                         break;
                     }
                 }
 
                 $combinationsCount = 0;
                 foreach ($combinationsCountByShops as $combinationsCountData) {
-                    if ((int)$combinationsCountData['id_shop'] === (int)$shopId) {
-                        $combinationsCount = (int)$combinationsCountData['combinations_count'];
+                    if ((int) $combinationsCountData['id_shop'] === (int) $shopId) {
+                        $combinationsCount = (int) $combinationsCountData['combinations_count'];
                         break;
                     }
                 }
@@ -151,40 +154,40 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                 } else {
                     // base_price is deprecated from @deprecated 1.6.0.13
                     $productPrice = $this->round(
-                        (property_exists($productFields, 'base_price') ? $productFields->base_price : 0)
+                        property_exists($productFields, 'base_price') ? $productFields->base_price : 0
                     );
                 }
 
                 if (empty($productPrice)) {
                     $productPrice = $this->round(
-                        (property_exists($productFields, 'base_price') ? $productFields->base_price : 0)
+                        property_exists($productFields, 'base_price') ? $productFields->base_price : 0
                     );
                 }
 
-                $productShopsResult[] = array(
-                    self::KEY_SHOP_ID                               => (int)$shopId,
-                    self::KEY_STATUS                                => (bool)$productFields->active,
-                    self::KEY_FORMATTED_COST_PRICE_WITHOUT_TAX      => Tools::displayPrice(
+                $productShopsResult[] = [
+                    self::KEY_SHOP_ID => (int) $shopId,
+                    self::KEY_STATUS => (bool) $productFields->active,
+                    self::KEY_FORMATTED_COST_PRICE_WITHOUT_TAX => Tools::displayPrice(
                         $productFields->wholesale_price
                     ),
-                    self::KEY_RETAIL_PRICE_WITHOUT_TAX              => $productPrice,
-                    self::KEY_FORMATTED_RETAIL_PRICE_WITHOUT_TAX    => Tools::displayPrice($productPrice),
-                    self::KEY_QUANTITY                              => $quantity,
-                    self::KEY_TAX_RULE                              => $taxRuleName,
-                    self::KEY_COMBINATION_COUNT                     => $combinationsCount,
-                );
+                    self::KEY_RETAIL_PRICE_WITHOUT_TAX => $productPrice,
+                    self::KEY_FORMATTED_RETAIL_PRICE_WITHOUT_TAX => Tools::displayPrice($productPrice),
+                    self::KEY_QUANTITY => $quantity,
+                    self::KEY_TAX_RULE => $taxRuleName,
+                    self::KEY_COMBINATION_COUNT => $combinationsCount,
+                ];
 
                 // Get all shops language values
                 $productLanguageFields = $productFields->getFieldsLang();
                 foreach ($productLanguageFields as $langValue) {
-                    $productLanguagesResult[] = array(
-                        self::KEY_LANGUAGE_ID           => (int)$langValue['id_lang'],
-                        self::KEY_SHOP_ID               => (int)$langValue['id_shop'],
-                        self::KEY_PRODUCT_NAME          => Tools::stripslashes($langValue['name']),
-                        self::KEY_SHORT_DESCRIPTION     => Tools::stripslashes($langValue['description_short']),
-                        self::KEY_DESCRIPTION           => Tools::stripslashes($langValue['description']),
-                        self::KEY_LINK_REWRITE          => Tools::stripslashes($langValue['link_rewrite'])
-                    );
+                    $productLanguagesResult[] = [
+                        self::KEY_LANGUAGE_ID => (int) $langValue['id_lang'],
+                        self::KEY_SHOP_ID => (int) $langValue['id_shop'],
+                        self::KEY_PRODUCT_NAME => Tools::stripslashes($langValue['name']),
+                        self::KEY_SHORT_DESCRIPTION => Tools::stripslashes($langValue['description_short']),
+                        self::KEY_DESCRIPTION => Tools::stripslashes($langValue['description']),
+                        self::KEY_LINK_REWRITE => Tools::stripslashes($langValue['link_rewrite']),
+                    ];
                 }
             }
 
@@ -192,21 +195,19 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             $shopImageCovers = $this->getShopImageCovers($productId);
             $images = Image::getImages($this->languageId, $product->id);
             foreach ($images as $image) {
-                $shopImages = array();
+                $shopImages = [];
 
-                for ($j = 0, $productAssociatedShopsCount = count($productAssociatedShops);
-                     $j < $productAssociatedShopsCount;
-                     $j++) {
+                for ($j = 0, $productAssociatedShopsCount = count($productAssociatedShops); $j < $productAssociatedShopsCount; ++$j) {
                     // Check image cover assigning to shops
                     $imageAdded = false;
                     foreach ($shopImageCovers as $shopImageCoverValue) {
-                        if ((int)$productAssociatedShops[$j] === (int)$shopImageCoverValue['id_shop'] &&
-                            (int)$image['id_image'] === (int)$shopImageCoverValue['id_image']
+                        if ((int) $productAssociatedShops[$j] === (int) $shopImageCoverValue['id_shop']
+                            && (int) $image['id_image'] === (int) $shopImageCoverValue['id_image']
                         ) {
-                            $shopImages[] = array(
-                                self::KEY_SHOP_ID   => (int)$shopImageCoverValue['id_shop'],
-                                self::KEY_COVER     => (bool)$shopImageCoverValue['cover']
-                            );
+                            $shopImages[] = [
+                                self::KEY_SHOP_ID => (int) $shopImageCoverValue['id_shop'],
+                                self::KEY_COVER => (bool) $shopImageCoverValue['cover'],
+                            ];
                             $imageAdded = true;
                             continue;
                         }
@@ -216,49 +217,51 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                         continue;
                     }
 
-                    $shopImages[] = array(
-                        self::KEY_SHOP_ID   => (int)$productShopsResult[$j]['shop_id'],
-                        self::KEY_COVER     => false
-                    );
+                    $shopImages[] = [
+                        self::KEY_SHOP_ID => (int) $productShopsResult[$j]['shop_id'],
+                        self::KEY_COVER => false,
+                    ];
                 }
 
-                $productImagesResult[] = array(
-                    self::KEY_IMAGE_ID  => (int)$image['id_image'],
-                    self::KEY_POSITION  => (int)$image['position'],
-                    self::KEY_IMAGE_URL => (string)$this->getProductImageUrl(
+                $productImagesResult[] = [
+                    self::KEY_IMAGE_ID => (int) $image['id_image'],
+                    self::KEY_POSITION => (int) $image['position'],
+                    self::KEY_IMAGE_URL => (string) $this->getProductImageUrl(
                         $product->link_rewrite[$this->languageId],
-                        (int)$image['id_image']
+                        (int) $image['id_image']
                     ),
-                    self::KEY_SHOPS     => $shopImages
-                );
+                    self::KEY_SHOPS => $shopImages,
+                ];
             }
 
             $link = new Link();
             $productUrl = $link->getProductLink($product->id);
 
-            $productResult = array(
-                self::KEY_PRODUCT_ID                            => (int)$product->id,
-                self::KEY_PRODUCT_TYPE                          => (string)$this->getProductType(
-                    (int)$product->getType()
+            $productResult = [
+                self::KEY_PRODUCT_ID => (int) $product->id,
+                self::KEY_PRODUCT_TYPE => (string) $this->getProductType(
+                    (int) $product->getType()
                 ),
-                self::KEY_REFERENCE                             => (string)$product->reference,
-                self::KEY_EAN13                                 => (string)$product->ean13,
-                self::KEY_UPC                                   => (string)$product->upc,
-                self::KEY_ISBN                                  => (string)(
-                property_exists($product, self::KEY_ISBN) ? $product->isbn : null
+                self::KEY_REFERENCE => (string) $product->reference,
+                self::KEY_EAN13 => (string) $product->ean13,
+                self::KEY_UPC => (string) $product->upc,
+                self::KEY_ISBN => (string) (
+                    property_exists($product, self::KEY_ISBN) ? $product->isbn : null
                 ),
-                'url'                                           => $productUrl,
-                self::KEY_TOTAL_ORDERED                         => $this->getOrderedProductQuantity($productId),
-                self::KEY_LANGUAGE_VALUES                       => $productLanguagesResult,
-                self::KEY_IMAGES                                => $productImagesResult,
-                self::KEY_SHOPS                                 => $productShopsResult
-            );
+                self::KEY_MPN => (string) $product->mpn,
+                'url' => $productUrl,
+                self::KEY_TOTAL_ORDERED => $this->getOrderedProductQuantity($productId),
+                self::KEY_LANGUAGE_VALUES => $productLanguagesResult,
+                self::KEY_IMAGES => $productImagesResult,
+                self::KEY_SHOPS => $productShopsResult,
+            ];
         } catch (Exception $exception) {
             throw new EM1Exception(EM1Exception::ERROR_PRODUCT_NOT_FOUND, $exception->getMessage());
         }
 
         self::generateResponse($this->productResponse($productResult));
     }
+    /** phpcs:enable */
 
     /**
      * Prepare response with searched products
@@ -279,7 +282,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $pageIndex
      * @param $sortField
      * @param $sortDirection
+     *
      * @return void Returns formatted products response with products or error code
+     *
      * @throws EM1Exception
      */
     public function searchProducts($searchValue, $pageSize, $pageIndex, $sortField, $sortDirection)
@@ -296,7 +301,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $pageIndex
      * @param $sortField
      * @param $sortDirection
+     *
      * @return array Returns formatted products response with products or error code
+     *
      * @throws EM1Exception
      */
     // TODO: Write annotation for getProductsByIds() method.
@@ -304,33 +311,37 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     {
         $this->prepareProductsConditions($sortField, $sortDirection);
         $this->prepareWhereIdsQueryPart($ids);
+
         return $this->getProductsData($pageSize, $pageIndex);
     }
 
     /**
      * @param $pageSize
      * @param $pageIndex
+     *
      * @return array Returns
+     *
      * @throws EM1Exception
+     *                      phpcs:disable
      */
     // TODO: Write annotation for getProductsData() method.
     private function getProductsData($pageSize, $pageIndex)
     {
-        $productsResult = array();
+        $productsResult = [];
         // 1.6 and older does not have state column
         if (version_compare(_PS_VERSION_, 1.7, '>=')) {
             $this->whereQuery .= ' AND p.state = 1'; // get only active products
         }
         $productIds = $this->getProductsIds($pageSize, $pageIndex);
         foreach ($productIds as $productIdValue) {
-            $productId = (int)$productIdValue['id_product'];
+            $productId = (int) $productIdValue['id_product'];
 
             // Create product response based on product object
-            $product                = null;
-            $productShopsResult     = array();
-            $productImagesResult    = array();
-            $productLanguagesResult = array();
-            $productImagesError     = '';
+            $product = null;
+            $productShopsResult = [];
+            $productImagesResult = [];
+            $productLanguagesResult = [];
+            $productImagesError = '';
             $productLangValuesError = '';
             try {
                 $product = new Product($productId, true);
@@ -345,16 +356,16 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
                     $quantity = 0;
                     foreach ($stocks as $stock) {
-                        if ((int)$stock['id_shop'] === (int)$shopId) {
-                            $quantity = (int)$stock['quantity'];
+                        if ((int) $stock['id_shop'] === (int) $shopId) {
+                            $quantity = (int) $stock['quantity'];
                             break;
                         }
                     }
 
                     $combinationsCount = 0;
                     foreach ($combinationsCounts as $combinationsCountData) {
-                        if ((int)$combinationsCountData['id_shop'] === (int)$shopId) {
-                            $combinationsCount = (int)$combinationsCountData['combinations_count'];
+                        if ((int) $combinationsCountData['id_shop'] === (int) $shopId) {
+                            $combinationsCount = (int) $combinationsCountData['combinations_count'];
                             break;
                         }
                     }
@@ -364,29 +375,29 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                     } else {
                         // base_price is deprecated from @deprecated 1.6.0.13
                         $productPrice = $this->round(
-                            (property_exists($productFields, 'base_price') ? $productFields->{'base_price'} : 0)
+                            property_exists($productFields, 'base_price') ? $productFields->{'base_price'} : 0
                         );
                     }
 
                     if (empty($productPrice)) {
                         $productPrice = $this->round(
-                            (property_exists($productFields, 'base_price') ? $productFields->{'base_price'} : 0)
+                            property_exists($productFields, 'base_price') ? $productFields->{'base_price'} : 0
                         );
                     }
 
-                    $productShopsResult[] = array(
-                        self::KEY_SHOP_ID                               => (int)$shopId,
-                        self::KEY_STATUS                                => (bool)$productFields->active,
-                        self::KEY_FORMATTED_COST_PRICE_WITHOUT_TAX      => Tools::displayPrice(
+                    $productShopsResult[] = [
+                        self::KEY_SHOP_ID => (int) $shopId,
+                        self::KEY_STATUS => (bool) $productFields->active,
+                        self::KEY_FORMATTED_COST_PRICE_WITHOUT_TAX => Tools::displayPrice(
                             $productFields->wholesale_price
                         ),
-                        self::KEY_RETAIL_PRICE_WITHOUT_TAX              => $productPrice,
-                        self::KEY_FORMATTED_RETAIL_PRICE_WITHOUT_TAX    => Tools::displayPrice($productPrice),
-                        self::KEY_QUANTITY                              => $quantity,
-                        self::KEY_COMBINATION_COUNT                     => $combinationsCount,
-                    );
+                        self::KEY_RETAIL_PRICE_WITHOUT_TAX => $productPrice,
+                        self::KEY_FORMATTED_RETAIL_PRICE_WITHOUT_TAX => Tools::displayPrice($productPrice),
+                        self::KEY_QUANTITY => $quantity,
+                        self::KEY_COMBINATION_COUNT => $combinationsCount,
+                    ];
 
-                    $productLanguageFields = array();
+                    $productLanguageFields = [];
                     try {
                         $productLanguageFields = $productFields->getFieldsLang();
                     } catch (Exception $exception) {
@@ -395,21 +406,21 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
                     if (!empty($productLanguageFields)) {
                         foreach ($productLanguageFields as $langValue) {
-                            $productLanguagesResult[] = array(
-                                self::KEY_LANGUAGE_ID   => (int)$langValue['id_lang'],
-                                self::KEY_SHOP_ID       => (int)$langValue['id_shop'],
-                                self::KEY_PRODUCT_NAME  => Tools::stripslashes($langValue['name'])
-                            );
+                            $productLanguagesResult[] = [
+                                self::KEY_LANGUAGE_ID => (int) $langValue['id_lang'],
+                                self::KEY_SHOP_ID => (int) $langValue['id_shop'],
+                                self::KEY_PRODUCT_NAME => Tools::stripslashes($langValue['name']),
+                            ];
                         }
                     } else {
                         $productId = $product->id;
                         foreach (Language::getIDs(false) as $languageId) {
-                            $productName = Product::getProductName((int)$product->id, null, (int)$languageId);
-                            $productLanguagesResult[] = array(
-                                self::KEY_LANGUAGE_ID   => (int)$languageId,
-                                self::KEY_SHOP_ID       => (int)$shopId,
-                                self::KEY_PRODUCT_NAME  => (!$productName ? '' : $productName)
-                            );
+                            $productName = Product::getProductName((int) $product->id, null, (int) $languageId);
+                            $productLanguagesResult[] = [
+                                self::KEY_LANGUAGE_ID => (int) $languageId,
+                                self::KEY_SHOP_ID => (int) $shopId,
+                                self::KEY_PRODUCT_NAME => (!$productName ? '' : $productName),
+                            ];
                         }
                     }
                 }
@@ -419,21 +430,19 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                     $shopImageCovers = $this->getShopImageCovers($productId);
                     $images = Image::getImages($this->languageId, $product->id);
                     foreach ($images as $image) {
-                        $shopImages = array();
+                        $shopImages = [];
 
-                        for ($j = 0, $productAssociatedShopsCount = count($productAssociatedShops);
-                            $j < $productAssociatedShopsCount;
-                            $j++) {
+                        for ($j = 0, $productAssociatedShopsCount = count($productAssociatedShops); $j < $productAssociatedShopsCount; ++$j) {
                             // Check image cover assigning to shops
                             $imageAdded = false;
                             foreach ($shopImageCovers as $shopImageCoversValue) {
-                                if ((int)$productAssociatedShops[$j] === (int)$shopImageCoversValue['id_shop']
-                                    && (int)$image['id_image'] === (int)$shopImageCoversValue['id_image']
+                                if ((int) $productAssociatedShops[$j] === (int) $shopImageCoversValue['id_shop']
+                                    && (int) $image['id_image'] === (int) $shopImageCoversValue['id_image']
                                 ) {
-                                    $shopImages[] = array(
-                                        self::KEY_SHOP_ID   => (int)$productShopsResult[$j]['shop_id'],
-                                        self::KEY_COVER     => (bool)$shopImageCoversValue['cover']
-                                    );
+                                    $shopImages[] = [
+                                        self::KEY_SHOP_ID => (int) $productShopsResult[$j]['shop_id'],
+                                        self::KEY_COVER => (bool) $shopImageCoversValue['cover'],
+                                    ];
 
                                     $imageAdded = true;
                                     continue;
@@ -444,21 +453,21 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                                 continue;
                             }
 
-                            $shopImages[] = array(
-                                self::KEY_SHOP_ID   => (int)$productShopsResult[$j]['shop_id'],
-                                self::KEY_COVER     => false
-                            );
+                            $shopImages[] = [
+                                self::KEY_SHOP_ID => (int) $productShopsResult[$j]['shop_id'],
+                                self::KEY_COVER => false,
+                            ];
                         }
 
-                        $productImagesResult[] = array(
-                            self::KEY_IMAGE_ID  => (int)$image['id_image'],
-                            self::KEY_POSITION  => (int)$image['position'],
-                            self::KEY_IMAGE_URL => (string)$this->getProductImageUrl(
+                        $productImagesResult[] = [
+                            self::KEY_IMAGE_ID => (int) $image['id_image'],
+                            self::KEY_POSITION => (int) $image['position'],
+                            self::KEY_IMAGE_URL => (string) $this->getProductImageUrl(
                                 $product->link_rewrite[$this->languageId],
-                                (int)$image['id_image']
+                                (int) $image['id_image']
                             ),
-                            self::KEY_SHOPS     => $shopImages
-                        );
+                            self::KEY_SHOPS => $shopImages,
+                        ];
                     }
                 } catch (Exception $exception) {
                     $productImagesError = $exception->getMessage();
@@ -473,26 +482,28 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                     $errorMessage .= 'language_exception - ' . $productLangValuesError;
                 }
 
-                 throw new EM1Exception('error_while_generating_products', $errorMessage);
+                throw new EM1Exception('error_while_generating_products', $errorMessage);
             }
 
-            $productsResult[] = array(
-                self::KEY_PRODUCT_ID      => (int)$product->id,
-                self::KEY_PRODUCT_TYPE    => $this->getProductType($product->getType()),
-                self::KEY_REFERENCE       => (string)$product->reference,
-                self::KEY_EAN13           => (string)$product->ean13,
+            $productsResult[] = [
+                self::KEY_PRODUCT_ID => (int) $product->id,
+                self::KEY_PRODUCT_TYPE => $this->getProductType($product->getType()),
+                self::KEY_REFERENCE => (string) $product->reference,
+                self::KEY_EAN13 => (string) $product->ean13,
                 self::KEY_LANGUAGE_VALUES => $productLanguagesResult,
-                self::KEY_IMAGES          => $productImagesResult,
-                self::KEY_SHOPS           => $productShopsResult
-            );
+                self::KEY_IMAGES => $productImagesResult,
+                self::KEY_SHOPS => $productShopsResult,
+            ];
         }
 
         return $this->productsResponse($productsResult);
     }
+    /** phpcs:enable */
 
     /**
      * @param $sortField
      * @param $sortDirection
+     *
      * @throws EM1Exception
      */
     // TODO: Write annotation for prepareProductsConditions() method.
@@ -513,7 +524,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         $searchValue = pSQL($searchValue);
         $id_product_query_part = '';
         if (preg_match('/^\d+(?:,\d+)*$/', $searchValue)) {
-            $id_product_query_part = /** @lang MySQL */ "p.`id_product` IN ({$searchValue}) OR";
+            $id_product_query_part = /* @lang MySQL */ "p.`id_product` IN ({$searchValue}) OR";
         }
 
         // todo: should search product_id or product_name
@@ -530,7 +541,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $sortField
      * @param $sortDirection
+     *
      * @return string
+     *
      * @throws EM1Exception
      */
     // TODO: Write annotation for getOrderByQueryPart() method.
@@ -550,26 +563,29 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param array $productData
+     *
      * @return array
      */
     // TODO: Write annotation for productResponse() method.
-    private function productResponse($productData = array())
+    private function productResponse($productData = [])
     {
-        return array(self::KEY_PRODUCT => $productData);
+        return [self::KEY_PRODUCT => $productData];
     }
 
     /**
      * @param array $productsData
+     *
      * @return array
+     *
      * @throws EM1Exception
      */
     // TODO: Write annotation for productsResponse() method.
-    private function productsResponse($productsData = array())
+    private function productsResponse($productsData = [])
     {
-        return array(
-            self::KEY_PRODUCTS       => $productsData,
-            self::KEY_PRODUCTS_COUNT => (int)$this->getProductsCount()
-        );
+        return [
+            self::KEY_PRODUCTS => $productsData,
+            self::KEY_PRODUCTS_COUNT => (int) $this->getProductsCount(),
+        ];
     }
 
     // TODO: Write annotation for getProductType() method.
@@ -583,16 +599,17 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * Get product image url link
      *
-     * @param $linkRewrite  string  Product Link Rewrite
-     * @param $imageId      int     Image Id
-     * @param $imageName    string  Image Type
-     * @return              string  Returns product image url link
+     * @param $linkRewrite string  Product Link Rewrite
+     * @param $imageId int     Image Id
+     * @param $imageName string  Image Type
+     *
+     * @return string Returns product image url link
      */
     public static function getProductImageUrl($linkRewrite, $imageId, $imageName = self::IMAGE_NAME_TYPE_HOME)
     {
         $imageUrl = '';
-        $imageId = (int)$imageId;
-        $linkRewrite = (string)$linkRewrite;
+        $imageId = (int) $imageId;
+        $linkRewrite = (string) $linkRewrite;
 
         if (method_exists('ImageType', 'getFormattedName')) {
             $imageType = ImageType::{'getFormattedName'}($imageName);
@@ -611,12 +628,14 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $productId
+     *
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getProductStock($productId)
     {
-        $product  = new Product($productId);
+        $product = new Product($productId);
         $shops = $product->getAssociatedShops();
         $product_stock = [];
 
@@ -628,21 +647,24 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                 $dbQuery->select('`quantity`')
                     ->from('stock_available')
                     ->where(
-                        "`id_product` = {$productId}".
-                        ' AND `id_product_attribute` = 0'.
-                        StockAvailable::addSqlShopRestriction(null, (int)$id_shop)
+                        "`id_product` = {$productId}" .
+                        ' AND `id_product_attribute` = 0' .
+                        StockAvailable::addSqlShopRestriction(null, (int) $id_shop)
                     )
             );
             if (is_array($result) && $result !== []) {
                 $product_stock[] = array_merge(['id_shop' => $id_shop], $result[0]);
             }
         }
+
         return $product_stock;
     }
 
     /**
      * @param $productId
+     *
      * @return int
+     *
      * @throws EM1Exception
      */
     private function getOrderedProductQuantity($productId)
@@ -656,12 +678,14 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                 ->where('product_id = ' . $productId)
         );
 
-        return !empty($orderedProductQuantity) ? (int)reset($orderedProductQuantity)['quantity'] : 0;
+        return !empty($orderedProductQuantity) ? (int) reset($orderedProductQuantity)['quantity'] : 0;
     }
 
     /**
      * @param $productId
+     *
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getShopImageCovers($productId)
@@ -691,16 +715,16 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
         $context = Context::getContext();
 
-        $sql = pSQL('SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, 
+        $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, 
                     p.`quantity`, pl.`name`, image_shop.`id_image` id_image, il.`legend`, p.`cache_default_attribute`
                 FROM `' . _DB_PREFIX_ . 'product` p ' . Shop::addSqlAssociation('product', 'p') . '
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (pl.id_product = p.id_product 
-                    AND pl.id_lang = ' . (int)$this->languageId . Shop::addSqlRestrictionOnLang('pl') . ')
+                    AND pl.id_lang = ' . (int) $this->languageId . Shop::addSqlRestrictionOnLang('pl') . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
                     ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 
-                    AND image_shop.id_shop=' . (int)$shopId . ')
+                    AND image_shop.id_shop=' . (int) $shopId . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` 
-                    AND il.`id_lang` = ' . (int)$this->languageId . ')
+                    AND il.`id_lang` = ' . (int) $this->languageId . ')
                 WHERE (pl.name LIKE \'%' . pSQL($searchPhrase) . '%\' 
                     OR p.reference LIKE \'%' . pSQL($searchPhrase) . '%\')' .
             ($excludeVirtuals ?
@@ -708,7 +732,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                 'product_download` pd WHERE (pd.id_product = p.id_product))' :
                 '') .
             ($excludePacks ? 'AND (p.cache_is_pack IS NULL OR p.cache_is_pack = 0)' : '') .
-            ' GROUP BY p.id_product');
+            ' GROUP BY p.id_product';
 
         $items = Db::getInstance()->executeS($sql);
 
@@ -716,12 +740,12 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             $results = [];
             foreach ($items as $item) {
                 $results[] = [
-                    'product_id'           => (int)$item['id_product'],
-                    'product_attribute_id' => (int)0,
-                    'name'                 => $item['name'] . (!empty($item['reference']) ?
+                    'product_id' => (int) $item['id_product'],
+                    'product_attribute_id' => (int) 0,
+                    'name' => $item['name'] . (!empty($item['reference']) ?
                             ' (ref: ' . $item['reference'] . ')' : ''),
-                    'reference'            => (!empty($item['reference']) ? $item['reference'] : ''),
-                    'image_url'            => str_replace(
+                    'reference' => (!empty($item['reference']) ? $item['reference'] : ''),
+                    'image_url' => str_replace(
                         'http://',
                         Tools::getShopProtocol(),
                         $context->link->getImageLink(
@@ -741,7 +765,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             foreach ($items as $item) {
                 // check if product have combination
                 if (Combination::isFeatureActive() && $item['cache_default_attribute']) {
-                    $sql = pSQL('SELECT pa.`id_product_attribute`, pa.`reference`, pa.`quantity`, 
+                    $sql = 'SELECT pa.`id_product_attribute`, pa.`reference`, pa.`quantity`, 
                                 ag.`id_attribute_group`, 
                                 pai.`id_image`, agl.`name` AS group_name, al.`name` AS attribute_name,
                                 a.`id_attribute`
@@ -753,22 +777,22 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                             LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag 
                             ON ag.`id_attribute_group` = a.`id_attribute_group`
                             LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al 
-                            ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int)$this->languageId . ')
+                            ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $this->languageId . ')
                             LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl 
                             ON (ag.`id_attribute_group` = agl.`id_attribute_group` 
-                            AND agl.`id_lang` = ' . (int)$this->languageId . ')
+                            AND agl.`id_lang` = ' . (int) $this->languageId . ')
                             LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_image` pai 
                             ON pai.`id_product_attribute` = pa.`id_product_attribute`
-                            WHERE pa.`id_product` = ' . (int)$item['id_product'] . '
+                            WHERE pa.`id_product` = ' . (int) $item['id_product'] . '
                             GROUP BY pa.`id_product_attribute`, ag.`id_attribute_group`
-                            ORDER BY pa.`id_product_attribute`');
+                            ORDER BY pa.`id_product_attribute`';
 
                     $combinations = Db::getInstance()->executeS($sql);
                     if (!empty($combinations)) {
                         foreach ($combinations as $combination) {
-                            $results[$combination['id_product_attribute']]['product_id'] = (int)$item['id_product'];
+                            $results[$combination['id_product_attribute']]['product_id'] = (int) $item['id_product'];
                             $results[$combination['id_product_attribute']]['product_attribute_id'] =
-                                (int)$combination['id_product_attribute'];
+                                (int) $combination['id_product_attribute'];
                             !empty($results[$combination['id_product_attribute']]['name']) ?
                                 $results[$combination['id_product_attribute']]['name'] .= ' ' .
                                     $combination['group_name'] . '-' . $combination['attribute_name']
@@ -800,19 +824,19 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                                     )
                                 );
                             if (empty($combination['quantity'])) {
-                                $results[$combination['id_product_attribute']]['quantity'] = (int)$item['quantity'];
+                                $results[$combination['id_product_attribute']]['quantity'] = (int) $item['quantity'];
                             } else {
                                 $results[$combination['id_product_attribute']]['quantity'] =
-                                    (int)$combination['quantity'];
+                                    (int) $combination['quantity'];
                             }
                         }
                     } else {
                         $results[] = [
-                            'product_id'             => (int)$item['id_product'],
-                            'product_attribute_id'   => (int)0,
-                            'name'                   => $item['name'],
-                            'reference'              => (!empty($item['reference']) ? $item['reference'] : ''),
-                            'image_url'              => str_replace(
+                            'product_id' => (int) $item['id_product'],
+                            'product_attribute_id' => (int) 0,
+                            'name' => $item['name'],
+                            'reference' => (!empty($item['reference']) ? $item['reference'] : ''),
+                            'image_url' => str_replace(
                                 'http://',
                                 Tools::getShopProtocol(),
                                 $context->link->getImageLink(
@@ -824,16 +848,16 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                             'formatted_retail_price' => Tools::displayPrice(
                                 Product::getPriceStatic($item['id_product'])
                             ),
-                            'quantity'               => (int)$item['id_product']
+                            'quantity' => (int) $item['id_product'],
                         ];
                     }
                 } else {
                     $results[] = [
-                        'product_id'             => (int)$item['id_product'],
-                        'product_attribute_id'   => (int)0,
-                        'name'                   => $item['name'],
-                        'reference'              => (!empty($item['reference']) ? $item['reference'] : ''),
-                        'image_url'              => str_replace(
+                        'product_id' => (int) $item['id_product'],
+                        'product_attribute_id' => (int) 0,
+                        'name' => $item['name'],
+                        'reference' => (!empty($item['reference']) ? $item['reference'] : ''),
+                        'image_url' => str_replace(
                             'http://',
                             Tools::getShopProtocol(),
                             $context->link->getImageLink(
@@ -843,13 +867,14 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                             )
                         ),
                         'formatted_retail_price' => Tools::displayPrice(Product::getPriceStatic($item['id_product'])),
-                        'quantity'               => (int)$item['id_product']
+                        'quantity' => (int) $item['id_product'],
                     ];
                 }
             }
 
             return $results;
         }
+
         return [];
     }
 
@@ -858,13 +883,14 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $searchPhrase
      * @param $pageSize
      * @param $pageIndex
+     *
      * @throws EM1Exception
      */
     public function searchProductsToAddInPack($shopId, $searchPhrase, $pageSize, $pageIndex)
     {
         $responseArray = [
             'products_count' => null,
-            'products'       => []
+            'products' => [],
         ];
         $products = $this->searchProductsLikePresta($searchPhrase, $shopId, true, true);
         $responseArray['products_count'] = count($products);
@@ -881,7 +907,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     {
         $responseArray = [
             'products_count' => null,
-            'products'       => []
+            'products' => [],
         ];
         $products = $this->searchProductsLikePresta(
             $searchPhrase,
@@ -913,6 +939,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $productData
+     *
      * @return array
      */
     private function getRelatedProductToAddDto($productData)
@@ -930,14 +957,14 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
         $result = self::getQueryResult(
             'SELECT * FROM `' . _DB_PREFIX_ . 'accessory` 
-            WHERE `id_product_1` = ' . (int)$productId . ' AND `id_product_2` = ' . (int)$relatedProductId
+            WHERE `id_product_1` = ' . (int) $productId . ' AND `id_product_2` = ' . (int) $relatedProductId
         );
 
         // check related product link existence
         if (count($result) == 0) {
             $result = Db::getInstance()->execute(
-                pSQL('INSERT INTO `' . _DB_PREFIX_ . 'accessory` 
-            (`id_product_1`, `id_product_2`) VALUES (' . (int)$productId . ', ' . (int)$relatedProductId . ')')
+                'INSERT INTO `' . _DB_PREFIX_ . 'accessory` 
+            (`id_product_1`, `id_product_2`) VALUES (' . (int) $productId . ', ' . (int) $relatedProductId . ')'
             );
             if (!$result) {
                 throw new EM1Exception(EM1Exception::ERROR_CODE_QUERY_EXECUTION_ERROR);
@@ -946,7 +973,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         $productObject = new Product($productId);
         self::generateResponse(
             [
-                'related_products_count' => count($productObject->getAccessories($this->languageId))
+                'related_products_count' => count($productObject->getAccessories($this->languageId)),
             ]
         );
     }
@@ -954,24 +981,28 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $pageSize
      * @param $pageIndex
+     *
      * @return array
+     *
      * @throws EM1Exception
+     *                      phpcs:disable
      */
     private function getProductsIds($pageSize, $pageIndex)
     {
         $query = 'SELECT p.`id_product` FROM `' . _DB_PREFIX_ . 'product` p' . Shop::addSqlAssociation('product', 'p')
             . ' LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON p.`id_product` = pl.`id_product` 
-                AND pl.`id_lang` = ' . $this->languageId . Shop::addSqlRestrictionOnLang('pl', (int)Shop::getContextShopID()) .
+                AND pl.`id_lang` = ' . $this->languageId . Shop::addSqlRestrictionOnLang('pl', (int) Shop::getContextShopID()) .
             ' LEFT JOIN `' . _DB_PREFIX_ . 'stock_available` sa ON sa.`id_product` = p.`id_product` 
-                AND sa.`id_product_attribute` = 0 ' . StockAvailable::addSqlShopRestriction(null, (int)Shop::getContextShopID(), 'sa') .
+                AND sa.`id_product_attribute` = 0 ' . StockAvailable::addSqlShopRestriction(null, (int) Shop::getContextShopID(), 'sa') .
             ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product = p.`id_product`' .
             ' WHERE ' . $this->whereQuery .
             ' GROUP BY p.`id_product` ' .
-            ' ORDER BY '.$this->orderByQuery .
+            ' ORDER BY ' . $this->orderByQuery .
             ' LIMIT ' . (($pageIndex - 1) * $pageSize) . ',' . $pageSize;
 
         return self::getQueryResult($query);
     }
+    /** phpcs:enable */
 
     /**
      * @throws EM1Exception
@@ -979,10 +1010,11 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     private function getProductsCount()
     {
         return self::getQueryValue(
-            /** @lang MySQL */'SELECT COUNT(DISTINCT p.`id_product`) AS `count` FROM `' . _DB_PREFIX_ . 'product` p
+            /* @lang MySQL */
+            'SELECT COUNT(DISTINCT p.`id_product`) AS `count` FROM `' . _DB_PREFIX_ . 'product` p
             LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product = p.`id_product` 
             LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = ' .
-            $this->languageId . Shop::addSqlRestrictionOnLang('pl', (int)Shop::getContextShopID()) . ') ' .
+            $this->languageId . Shop::addSqlRestrictionOnLang('pl', (int) Shop::getContextShopID()) . ') ' .
             Shop::addSqlAssociation('product', 'p') .
             ' WHERE ' . $this->whereQuery
         );
@@ -993,6 +1025,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $productItemId
      * @param $productAttributeId
      * @param $quantity
+     *
      * @throws EM1Exception
      */
     public function addProductToPack(
@@ -1013,20 +1046,21 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
         self::generateResponse(
             [
-                'pack_products_count' => self::getPackProductsCount($productId)
+                'pack_products_count' => self::getPackProductsCount($productId),
             ]
         );
     }
 
     public static function getPackProductsCount($productId)
     {
-        return (int)count(Pack::getItems($productId, self::getDefaultLanguageId()));
+        return (int) count(Pack::getItems($productId, self::getDefaultLanguageId()));
     }
 
     /**
      * @param $productId
      * @param $pageIndex
      * @param $pageSize
+     *
      * @throws EM1Exception
      */
     public function getProductEditPackItems($productId, $pageIndex, $pageSize)
@@ -1035,8 +1069,8 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             throw new EM1Exception(EM1Exception::ERROR_CODE_PRODUCT_NOT_FOUND);
         }
         $responseArray = [
-            'pack_products'       => [],
-            'pack_products_count' => self::getPackProductsCount($productId)
+            'pack_products' => [],
+            'pack_products_count' => self::getPackProductsCount($productId),
         ];
         $packProducts = Pack::getItems($productId, $this->languageId);
         foreach ($packProducts as $packProduct) {
@@ -1056,20 +1090,22 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             $packProduct->getImages($this->languageId) ?
                 $packProduct->getImages($this->languageId)[0]['id_image'] :
                 null;
+
         return [
-            'product_item_id'           => (int)$packProduct->id,
-            'product_attribute_item_id' => (int)$packProduct->id_pack_product_attribute,
-            'name'                      => $packProduct->name,
-            'reference'                 => $packProduct->reference,
-            'image_url'                 => $imageId ?
+            'product_item_id' => (int) $packProduct->id,
+            'product_attribute_item_id' => (int) $packProduct->id_pack_product_attribute,
+            'name' => $packProduct->name,
+            'reference' => $packProduct->reference,
+            'image_url' => $imageId ?
                 self::getProductImageUrl($packProduct->link_rewrite, $imageId) :
                 null,
-            'quantity'                  => (int)$packProduct->quantity
+            'quantity' => (int) $packProduct->quantity,
         ];
     }
 
     /**
      * @param $productId
+     *
      * @throws EM1Exception
      */
     public function getProductEditAttachedFiles($productId)
@@ -1078,22 +1114,27 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             throw new EM1Exception(EM1Exception::ERROR_CODE_PRODUCT_NOT_FOUND);
         }
         $responseArray = [
-            'attached_files'       => [],
-            'attached_files_count' => 0
+            'attached_files' => [],
+            'attached_files_count' => 0,
+            'all_files_count' => 0,
         ];
 
         $attachedFiles = $this->getAllProductAttachmentsData($productId);
 
         foreach ($attachedFiles as $attachedFile) {
-            $responseArray['attached_files'][] = $this->getProductAttachedFileDto($attachedFile);
+            $attachedFileData = $this->getProductAttachedFileDto($attachedFile);
+            $responseArray['attached_files'][] = $attachedFileData;
+            if ($attachedFileData['is_assigned'] === true) {
+                ++$responseArray['attached_files_count'];
+            }
         }
-        $responseArray['attached_files_count'] = count($responseArray['attached_files']);
-
+        $responseArray['all_files_count'] = count($responseArray['attached_files']);
         self::generateResponse($responseArray);
     }
 
     /**
      * @param $productId
+     *
      * @return array
      */
     private function getAllProductAttachmentsData($productId)
@@ -1104,7 +1145,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             $isAssignedFlag = true; // to determine which is attached to product
             $attachmentArrays = [
                 Attachment::getAttachments($languageId, $productId, true), // attached to product
-                Attachment::getAttachments($languageId, $productId, false) // not attached to product
+                Attachment::getAttachments($languageId, $productId, false), // not attached to product
             ];
             foreach ($attachmentArrays as $attachments) {
                 foreach ($attachments as $attachment) {
@@ -1120,13 +1161,13 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                         $attachedFiles[$attachment['id_attachment']] = $attachment;
                         $attachedFiles[$attachment['id_attachment']]['is_assigned'] = $isAssignedFlag;
                         $attachedFiles[$attachment['id_attachment']]['id_lang'] = [
-                            $attachment['id_lang']
+                            $attachment['id_lang'],
                         ];
                         $attachedFiles[$attachment['id_attachment']]['name'] = [
-                            $attachment['name']
+                            $attachment['name'],
                         ];
                         $attachedFiles[$attachment['id_attachment']]['description'] = [
-                            $attachment['description']
+                            $attachment['description'],
                         ];
                     }
                 }
@@ -1146,22 +1187,23 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $attachedFileData
+     *
      * @return array
      */
     private function getProductAttachedFileDto($attachedFileData)
     {
         $returnArray = [
-            'file_id'     => (int)$attachedFileData['id_attachment'],
-            'mime'        => $attachedFileData['mime'],
-            'is_assigned' => (bool)$attachedFileData['is_assigned'],
-            'languages'   => []
+            'file_id' => (int) $attachedFileData['id_attachment'],
+            'mime' => $attachedFileData['mime'],
+            'is_assigned' => (bool) $attachedFileData['is_assigned'],
+            'languages' => [],
         ];
 
         foreach ($attachedFileData['id_lang'] as $key => $attachedFileLanguageId) {
             $attachedFileLanguageData = [
-                'id_lang'     => $attachedFileLanguageId,
-                'name'        => $attachedFileData['name'][$key],
-                'description' => $attachedFileData['description'][$key]
+                'id_lang' => $attachedFileLanguageId,
+                'name' => $attachedFileData['name'][$key],
+                'description' => $attachedFileData['description'][$key],
             ];
             $returnArray['languages'][] = $this->getProductAttachedFileToLanguageDto($attachedFileLanguageData);
         }
@@ -1171,14 +1213,15 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $attachedFileLanguageData
+     *
      * @return array
      */
     private function getProductAttachedFileToLanguageDto($attachedFileLanguageData)
     {
         return [
-            'language_id' => (int)$attachedFileLanguageData['id_lang'],
-            'title'       => $attachedFileLanguageData['name'],
-            'description' => $attachedFileLanguageData['description']
+            'language_id' => (int) $attachedFileLanguageData['id_lang'],
+            'title' => $attachedFileLanguageData['name'],
+            'description' => $attachedFileLanguageData['description'],
         ];
     }
 
@@ -1186,6 +1229,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $productId
      * @param $pageIndex
      * @param $pageSize
+     *
      * @throws EM1Exception
      */
     public function getProductEditRelatedProducts($productId, $pageIndex, $pageSize)
@@ -1194,8 +1238,8 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             throw new EM1Exception(EM1Exception::ERROR_CODE_PRODUCT_NOT_FOUND);
         }
         $responseArray = [
-            'related_products'       => [],
-            'related_products_count' => 0
+            'related_products' => [],
+            'related_products_count' => 0,
         ];
 
         $productObject = new Product($productId, true);
@@ -1221,24 +1265,26 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             $productObject = new Product($relatedProductData['id_product'], true, $this->languageId);
         }
         $imageId = $productObject->getImages($this->languageId)[0]['id_image'];
+
         return [
-            'product_id'             => $productObject->id,
-            'product_type'           => $this->getProductType($productObject->getType()),
-            'name'                   => $productObject->name,
-            'reference'              => $productObject->reference,
-            'image_url'              => self::getProductImageUrl(
+            'product_id' => $productObject->id,
+            'product_type' => $this->getProductType($productObject->getType()),
+            'name' => $productObject->name,
+            'reference' => $productObject->reference,
+            'image_url' => self::getProductImageUrl(
                 $productObject->link_rewrite,
                 $imageId
             ),
-            'quantity'               => $productObject->quantity,
+            'quantity' => $productObject->quantity,
             'formatted_retail_price' => Tools::displayPrice($productObject->price),
-            'combinations_count'     => MAProductCombination::getProductCombinationsCount($productObject->id)
+            'combinations_count' => MAProductCombination::getProductCombinationsCount($productObject->id),
         ];
     }
 
     /**
      * @param $productId
      * @param $relatedProductId
+     *
      * @throws EM1Exception
      */
     public function deleteRelatedProduct($productId, $relatedProductId)
@@ -1258,7 +1304,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         $productObject = new Product($productId, true, $this->languageId);
         self::generateResponse(
             [
-                'related_products_count' => count($productObject->getAccessories($this->languageId))
+                'related_products_count' => count($productObject->getAccessories($this->languageId)),
             ]
         );
     }
@@ -1267,6 +1313,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $productId
      * @param $productItemId
      * @param $productAttributeId
+     *
      * @throws EM1Exception
      */
     public function deleteProductFromPack(
@@ -1289,10 +1336,10 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         } catch (Exception $exception) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $exception->getMessage());
         }
-        $packProductsCount = (int)count(Pack::getItems($productId, $this->languageId));
+        $packProductsCount = (int) count(Pack::getItems($productId, $this->languageId));
         self::generateResponse(
             [
-                'pack_products_count' => $packProductsCount
+                'pack_products_count' => $packProductsCount,
             ]
         );
     }
@@ -1303,15 +1350,16 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $shopId
      * @param $pageIndex
      * @param $pageSize
+     *
      * @throws EM1Exception
      */
     public function getProductEditData($productId, $languageId, $shopId, $pageIndex, $pageSize)
     {
         $responseArray = [
-            'product'              => null,
-            'pack_products'        => [],
-            'pack_products_count'  => 0,
-            'max_file_upload_size' => EM1Settings::getMaxFileUploadInBytes()
+            'product' => null,
+            'pack_products' => [],
+            'pack_products_count' => 0,
+            'max_file_upload_size' => EM1Settings::getMaxFileUploadInBytes(),
         ];
         // Check if productId is set and greater then 0
         if ($productId < 1) {
@@ -1342,7 +1390,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      *
      * @param $productId
      * @param $shopId
+     *
      * @return array|false|mysqli_result|PDOStatement|resource|null
+     *
      * @throws PrestaShopDatabaseException
      */
     public static function getProductPackItemIds($productId, $shopId)
@@ -1352,19 +1402,20 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         } else {
             $shopIds = [$shopId];
         }
+
         return Db::getInstance()
             ->executeS('
                 SELECT id_product_item, id_product_attribute_item, quantity 
-                FROM `' . _DB_PREFIX_ . 'pack` where id_product_pack = ' . (int)$productId . '
+                FROM `' . _DB_PREFIX_ . 'pack` where id_product_pack = ' . (int) $productId . '
                 AND id_product_item IN (SELECT id_product 
-                    FROM product_shop WHERE id_shop IN (' . implode(',', $shopIds) .')
+                    FROM ' . _DB_PREFIX_ . 'product_shop WHERE id_shop IN (' . implode(',', $shopIds) . ')
                 )
             ');
     }
 
     private function productEditDto($productId, $languageId, $shopId, $pageIndex, $pageSize)
     {
-        $defaultShopId = (int)Configuration::get('PS_SHOP_DEFAULT');
+        $defaultShopId = (int) Configuration::get('PS_SHOP_DEFAULT');
         if ($shopId === null) {
             $productObject = new Product($productId, true, $languageId, $defaultShopId);
             $shopIds = Shop::getShops(true, null, true);
@@ -1382,9 +1433,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             FROM ' . _DB_PREFIX_ . 'product_attribute pa
             INNER JOIN ' . _DB_PREFIX_ . 'product_attribute_shop pas ON
             (pas.id_product_attribute = pa.id_product_attribute
-            AND pas.id_shop IN ('. implode(',', $shopIds) .'))
-            WHERE pa.id_product = ' . (int)$productObject->id . '
-            LIMIT ' . (($pageIndex - 1) * $pageSize). ', ' . $pageSize);
+            AND pas.id_shop IN (' . implode(',', $shopIds) . '))
+            WHERE pa.id_product = ' . (int) $productObject->id . '
+            LIMIT ' . (($pageIndex - 1) * $pageSize) . ', ' . $pageSize);
         foreach ($productCombinationIds as $combination) {
             $combinations[] = MAProductCombination::productEditCombinationDto(
                 $combination['id_product_attribute'],
@@ -1417,22 +1468,22 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
 
         return [
-            'product_id'                   => (int)$productObject->id,
-            'product_type'                 => (string)$this->getProductType($productObject->getType()),
-            'reference'                    => (string)$productObject->reference,
-            'manufacturer_id'              => (int)$productObject->id_manufacturer,
-            'related_products_count'       => (int)count($productObject->getAccessories($languageId)),
-            'features_count'               => (int)count($productObject->getFeatures()),
-            'all_shops_combinations_count' => (int)$allShopsCombinationsCount,
-            'width'                        => (float)$productObject->width,
-            'height'                       => (float)$productObject->height,
-            'depth'                        => (float)$productObject->depth,
-            'weight'                       => (float)$productObject->weight,
-            'delivery_time'                => (int)$productObject->additional_delivery_times,
-            'combinations'                 => $combinations,
-            'shops'                        => $shops,
-            'language_values'              => $languageValues,
-            'images'                       => $images
+            'product_id' => (int) $productObject->id,
+            'product_type' => (string) $this->getProductType($productObject->getType()),
+            'reference' => (string) $productObject->reference,
+            'manufacturer_id' => (int) $productObject->id_manufacturer,
+            'related_products_count' => (int) count($productObject->getAccessories($languageId)),
+            'features_count' => (int) count($productObject->getFeatures()),
+            'all_shops_combinations_count' => (int) $allShopsCombinationsCount,
+            'width' => (float) $productObject->width,
+            'height' => (float) $productObject->height,
+            'depth' => (float) $productObject->depth,
+            'weight' => (float) $productObject->weight,
+            'delivery_time' => (int) $productObject->additional_delivery_times,
+            'combinations' => $combinations,
+            'shops' => $shops,
+            'language_values' => $languageValues,
+            'images' => $images,
         ];
     }
 
@@ -1440,20 +1491,30 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     {
         $assignedCarrierIds = [];
         foreach ($productObject->getCarriers() as $carrier) {
-            $assignedCarrierIds[] = (int)$carrier['id_carrier'];
+            $assignedCarrierIds[] = (int) $carrier['id_carrier'];
         }
 
         $combinationsCount = MAProductCombination::getProductCombinationsCount($productObject->id, $shopId);
 
+        if (version_compare(_PS_VERSION_, '1.6', '>=')) {
+            $productPrice = $productObject->getPriceWithoutReduct(true);
+        } else {
+            // base_price is deprecated from @deprecated 1.6.0.13
+            $productPrice = round(
+                (float) (property_exists($productObject, 'base_price') ? $productObject->base_price : 0),
+                6
+            );
+        }
+
         return [
-            'shop_id'                   => (int)$shopId,
-            'status'                    => (bool)$productObject->active,
-            'quantity'                  => (int)$productObject->quantity,
-            'price_without_tax'         => (float)$productObject->getPrice(false),
-            'additional_shipping_cost'  => (float)$productObject->additional_shipping_cost,
-            'assigned_carrier_ids'      => $assignedCarrierIds,
-            'combinations_count'        => $combinationsCount,
-            'assigned_categories_count' => (int)count(self::getProductCategoryIds($productObject->id, $shopId))
+            'shop_id' => (int) $shopId,
+            'status' => (bool) $productObject->active,
+            'quantity' => (int) $productObject->quantity,
+            'price_without_tax' => (float) $productPrice,
+            'additional_shipping_cost' => (float) $productObject->additional_shipping_cost,
+            'assigned_carrier_ids' => $assignedCarrierIds,
+            'combinations_count' => $combinationsCount,
+            'assigned_categories_count' => (int) count(self::getProductCategoryIds($productObject->id, $shopId)),
         ];
     }
 
@@ -1464,21 +1525,23 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         } else {
             $shopIds = [$shopId];
         }
-        return array_column(self::getQueryResult(pSQL('
+
+        return array_column(self::getQueryResult('
             SELECT cp.id_category
             FROM ' . _DB_PREFIX_ . 'category_product cp
-            WHERE id_product = ' . (int)$productId . ' AND 
+            WHERE id_product = ' . (int) $productId . ' AND 
             id_category IN (
                 SELECT id_category
                 FROM ' . _DB_PREFIX_ . 'category_shop
-                WHERE id_shop IN (' . implode(',', $shopIds) . ')
+                WHERE id_shop IN (' . pSQL(implode(',', $shopIds)) . ')
             )
-        ')), 'id_category');
+        '), 'id_category');
     }
 
     /**
      * @param $productId
      * @param $categoryId
+     *
      * @return bool
      */
     public static function unassignProductCategory($productId, $categoryId)
@@ -1493,16 +1556,16 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     public static function productEditLanguageValuesDto($productFieldsLanguage)
     {
         return [
-            'shop_id'                     => (int)$productFieldsLanguage['id_shop'],
-            'language_id'                 => (int)$productFieldsLanguage['id_lang'],
-            'product_name'                => (string)$productFieldsLanguage['name'],
-            'is_description_filled'       => (bool)$productFieldsLanguage['description'],
-            'is_short_description_filled' => (bool)$productFieldsLanguage['description_short'],
-            'delivery_in_stock'           => (string)$productFieldsLanguage['delivery_in_stock'],
-            'delivery_out_of_stock'       => (string)$productFieldsLanguage['delivery_out_stock'],
-            'meta_title'                  => (string)$productFieldsLanguage['meta_title'],
-            'meta_description'            => (string)$productFieldsLanguage['meta_description'],
-            'link_rewrite'                => (string)$productFieldsLanguage['link_rewrite']
+            'shop_id' => (int) $productFieldsLanguage['id_shop'],
+            'language_id' => (int) $productFieldsLanguage['id_lang'],
+            'product_name' => (string) $productFieldsLanguage['name'],
+            'is_description_filled' => (bool) $productFieldsLanguage['description'],
+            'is_short_description_filled' => (bool) $productFieldsLanguage['description_short'],
+            'delivery_in_stock' => (string) $productFieldsLanguage['delivery_in_stock'],
+            'delivery_out_of_stock' => (string) $productFieldsLanguage['delivery_out_stock'],
+            'meta_title' => (string) $productFieldsLanguage['meta_title'],
+            'meta_description' => (string) $productFieldsLanguage['meta_description'],
+            'link_rewrite' => (string) $productFieldsLanguage['link_rewrite'],
         ];
     }
 
@@ -1531,27 +1594,27 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
 
         return [
-            'image_id'        => (int)$imageObject->id,
-            'image_url'       => (string)self::getProductImageUrl($productObject->link_rewrite, $imageObject->id),
-            'position'        => (int)$imageObject->position,
-            'shops'           => $shops,
-            'language_values' => $languageValues
+            'image_id' => (int) $imageObject->id,
+            'image_url' => (string) self::getProductImageUrl($productObject->link_rewrite, $imageObject->id),
+            'position' => (int) $imageObject->position,
+            'shops' => $shops,
+            'language_values' => $languageValues,
         ];
     }
 
     public static function productEditImageToShopDto($image, $shopId)
     {
         return [
-            'shop_id' => (int)$shopId,
-            'cover'   => (bool)$image->cover
+            'shop_id' => (int) $shopId,
+            'cover' => (bool) $image->cover,
         ];
     }
 
     public static function productEditImageToLanguageDto($languageId, $image)
     {
         return [
-            'language_id' => (int)$languageId,
-            'caption'     => (string)$image->legend
+            'language_id' => (int) $languageId,
+            'caption' => (string) $image->legend,
         ];
     }
 
@@ -1573,13 +1636,14 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         } else {
             $imageUrl = '';
         }
+
         return [
-            'product_item_id'           => (int)$packProduct->id,
-            'product_attribute_item_id' => (int)$packProduct->id_pack_product_attribute,
-            'name'                      => (string)$packProduct->name,
-            'reference'                 => (string)$packProduct->reference,
-            'image_url'                 => (string)$imageUrl,
-            'quantity'                  => (int)$packQuantity
+            'product_item_id' => (int) $packProduct->id,
+            'product_attribute_item_id' => (int) $packProduct->id_pack_product_attribute,
+            'name' => (string) $packProduct->name,
+            'reference' => (string) $packProduct->reference,
+            'image_url' => (string) $imageUrl,
+            'quantity' => (int) $packQuantity,
         ];
     }
 
@@ -1592,6 +1656,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $shopId
      * @param $pageIndex
      * @param $pageSize
+     *
      * @throws EM1Exception
      */
     public function duplicateProduct($productId, $languageId, $shopId, $pageIndex, $pageSize)
@@ -1637,17 +1702,14 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                         $product->id,
                         $combination_images
                     )) {
-                        throw new EM1Exception(
-                            EM1Exception::ERROR_CODE_UNKNOWN,
-                            'An error occurred while copying the image.'
-                        );
+                        throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, 'An error occurred while copying the image.');
                     } else {
                         Hook::exec(
                             'actionProductAdd',
                             [
                                 'id_product_old' => $id_product_old,
-                                'id_product'     => (int)$product->id,
-                                'product'        => $product
+                                'id_product' => (int) $product->id,
+                                'product' => $product,
                             ]
                         );
                         if (in_array($product->visibility, ['both', 'search'])
@@ -1656,10 +1718,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                         }
                     }
                 } else {
-                    throw new EM1Exception(
-                        EM1Exception::ERROR_CODE_UNKNOWN,
-                        'An error occurred while creating an object.'
-                    );
+                    throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, 'An error occurred while creating an object.');
                 }
             }
         } catch (Exception $exception) {
@@ -1685,7 +1744,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         $product->active = 0;
         $product->state = Product::STATE_TEMP;
 
-        //set name and link_rewrite in each lang
+        // set name and link_rewrite in each lang
         $languages = Language::getLanguages();
         foreach ($languages as $lang) {
             $product->name[$lang['id_lang']] = '';
@@ -1700,8 +1759,8 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         $product->addToCategories([Context::getContext()->shop->id_category]);
         self::generateResponse(
             [
-                'product_id'           => (int)$product->id,
-                'max_file_upload_size' => (int)EM1Settings::getMaxFileUploadInBytes()
+                'product_id' => (int) $product->id,
+                'max_file_upload_size' => (int) EM1Settings::getMaxFileUploadInBytes(),
             ]
         );
     }
@@ -1709,7 +1768,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $productId
      * @param $languageId
+     *
      * @throws EM1Exception
+     *                      phpcs:disable
      */
     // TODO: Write annotation for getProductEditData() method.
     public function getProductEditData1($productId, $languageId)
@@ -1720,9 +1781,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
 
         try {
-            $productShopsResult     = array();
-            $productImagesResult    = array();
-            $productLanguagesResult = array();
+            $productShopsResult = [];
+            $productImagesResult = [];
+            $productLanguagesResult = [];
 
             // Create Product object and validate after initialisation
             /** @var ProductCore $product */
@@ -1742,23 +1803,23 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
                 $quantity = 0;
                 foreach ($stocks as $stock) {
-                    if ((int)$stock['id_shop'] === (int)$shopId) {
-                        $quantity = (int)$stock['quantity'];
+                    if ((int) $stock['id_shop'] === (int) $shopId) {
+                        $quantity = (int) $stock['quantity'];
                         break;
                     }
                 }
 
                 foreach ($taxRules as $taxRule) {
-                    if ((int)$productFields->id_tax_rules_group === (int)$taxRule['id_tax_rules_group']) {
-                        $taxRuleId      = (int)$taxRule['id_tax_rules_group'];
+                    if ((int) $productFields->id_tax_rules_group === (int) $taxRule['id_tax_rules_group']) {
+                        $taxRuleId = (int) $taxRule['id_tax_rules_group'];
                         break;
                     }
                 }
 
                 $combinationsCount = 0;
                 foreach ($combinationsCounts as $combinationsCountData) {
-                    if ((int)$combinationsCountData['id_shop'] === (int)$shopId) {
-                        $combinationsCount = (int)$combinationsCountData['combinations_count'];
+                    if ((int) $combinationsCountData['id_shop'] === (int) $shopId) {
+                        $combinationsCount = (int) $combinationsCountData['combinations_count'];
                         break;
                     }
                 }
@@ -1768,70 +1829,70 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                 } else {
                     // base_price is deprecated from @deprecated 1.6.0.13
                     $productPrice = round(
-                        (float)(property_exists($productFields, 'base_price') ? $productFields->base_price : 0),
+                        (float) (property_exists($productFields, 'base_price') ? $productFields->base_price : 0),
                         6
                     );
                 }
 
                 if (empty($productPrice)) {
                     $productPrice = round(
-                        (float)(property_exists($productFields, 'base_price') ? $productFields->base_price : 0),
+                        (float) (property_exists($productFields, 'base_price') ? $productFields->base_price : 0),
                         6
                     );
                 }
 
-                $productShopsResult[] = array(
-                    'shop_id'                                       => (int)$shopId,
-                    'status'                                        => (bool)$productFields->active,
-                    'quantity'                                      => (int)$quantity,
-                    'price_without_tax'                             => (float)$productPrice,
-                    'additional_shipping_cost'                      => (int)$productFields->additional_shipping_cost,
-                    //ENUM('both', 'catalog', 'search', 'none')
-                    'visibility'                                    => (string)$productFields->visibility,
-                    'out_of_stock'                                  => (int)$productFields->out_of_stock,
-                    'available_for_order'                           => (bool)$productFields->available_for_order,
-                    'available_date'                                => (string)$productFields->available_date,
-                    'minimal_quantity'                              => (int)$productFields->minimal_quantity,
-                    'location'                                      => (string)$productFields->location,
-                    'low_stock_level'                               => (int)$productFields->low_stock_threshold,
-                    'low_stock_alert'                               => (bool)$productFields->low_stock_alert,
-                    'retail_price_without_tax'                      => (float)$productPrice,
-                    'cost_price_without_tax'                        => (float)$productFields->wholesale_price,
-                    'formatted_retail_price_without_tax'            => Tools::displayPrice((float)$productPrice),
-                    'formatted_cost_price_without_tax'              => Tools::displayPrice(
-                        (float)$productFields->wholesale_price
+                $productShopsResult[] = [
+                    'shop_id' => (int) $shopId,
+                    'status' => (bool) $productFields->active,
+                    'quantity' => (int) $quantity,
+                    'price_without_tax' => (float) $productPrice,
+                    'additional_shipping_cost' => (int) $productFields->additional_shipping_cost,
+                    // ENUM('both', 'catalog', 'search', 'none')
+                    'visibility' => (string) $productFields->visibility,
+                    'out_of_stock' => (int) $productFields->out_of_stock,
+                    'available_for_order' => (bool) $productFields->available_for_order,
+                    'available_date' => (string) $productFields->available_date,
+                    'minimal_quantity' => (int) $productFields->minimal_quantity,
+                    'location' => (string) $productFields->location,
+                    'low_stock_level' => (int) $productFields->low_stock_threshold,
+                    'low_stock_alert' => (bool) $productFields->low_stock_alert,
+                    'retail_price_without_tax' => (float) $productPrice,
+                    'cost_price_without_tax' => (float) $productFields->wholesale_price,
+                    'formatted_retail_price_without_tax' => Tools::displayPrice((float) $productPrice),
+                    'formatted_cost_price_without_tax' => Tools::displayPrice(
+                        (float) $productFields->wholesale_price
                     ),
-                    'tax_rule_id'                                   => (int)$taxRuleId,
-                    'on_sale'                                       => (bool)$productFields->on_sale,
-                    'show_price'                                    => (bool)$productFields->show_price,
-                    'online_only'                                   => (bool)$productFields->online_only,
-                    'unit_price_ratio'                              => (float)$productFields->unit_price_ratio,
-                    'unity'                                         => (string)$productFields->unity,
-                    //ENUM('new', 'used', 'refurbished')
-                    'condition'                                     => (string)$productFields->condition,
-                    'show_condition'                                => (bool)$productFields->show_condition,
-                    'combinations_count'                            => (int)$combinationsCount,
-                    'specific_prices_count'                         => (int)0,
-                    'features_count'                                => (int)0,
-                );
+                    'tax_rule_id' => (int) $taxRuleId,
+                    'on_sale' => (bool) $productFields->on_sale,
+                    'show_price' => (bool) $productFields->show_price,
+                    'online_only' => (bool) $productFields->online_only,
+                    'unit_price_ratio' => (float) $productFields->unit_price_ratio,
+                    'unity' => (string) $productFields->unity,
+                    // ENUM('new', 'used', 'refurbished')
+                    'condition' => (string) $productFields->condition,
+                    'show_condition' => (bool) $productFields->show_condition,
+                    'combinations_count' => (int) $combinationsCount,
+                    'specific_prices_count' => (int) 0,
+                    'features_count' => (int) 0,
+                ];
 
                 // Get all shops language values
                 $productLanguageFields = $productFields->getFieldsLang();
                 foreach ($productLanguageFields as $langValue) {
-                    $productLanguagesResult[] = array(
-                        self::KEY_LANGUAGE_ID           => (int)$langValue['id_lang'],
-                        self::KEY_PRODUCT_NAME          => Tools::stripslashes($langValue['name']),
-                        self::KEY_SHORT_DESCRIPTION     => Tools::stripslashes($langValue['description_short']),
-                        self::KEY_DESCRIPTION           => Tools::stripslashes($langValue['description']),
-                        self::KEY_LINK_REWRITE          => Tools::stripslashes($langValue['link_rewrite']),
-                        'meta_title'                    => Tools::stripslashes($langValue['meta_title']),
-                        'meta_description'              => Tools::stripslashes($langValue['meta_description']),
-                        'label_when_in_stock'           => Tools::stripslashes($langValue['label_when_in_stock']),
-                        'label_when_out_of_stock'       => Tools::stripslashes($langValue['label_when_out_of_stock']),
-                        'delivery_in_stock'             => Tools::stripslashes($langValue['delivery_in_stock']),
-                        'delivery_out_of_stock'         => Tools::stripslashes($langValue['delivery_out_of_stock']),
-                        self::KEY_SHOP_ID               => (int)$langValue['id_shop'],
-                    );
+                    $productLanguagesResult[] = [
+                        self::KEY_LANGUAGE_ID => (int) $langValue['id_lang'],
+                        self::KEY_PRODUCT_NAME => Tools::stripslashes($langValue['name']),
+                        self::KEY_SHORT_DESCRIPTION => Tools::stripslashes($langValue['description_short']),
+                        self::KEY_DESCRIPTION => Tools::stripslashes($langValue['description']),
+                        self::KEY_LINK_REWRITE => Tools::stripslashes($langValue['link_rewrite']),
+                        'meta_title' => Tools::stripslashes($langValue['meta_title']),
+                        'meta_description' => Tools::stripslashes($langValue['meta_description']),
+                        'label_when_in_stock' => Tools::stripslashes($langValue['label_when_in_stock']),
+                        'label_when_out_of_stock' => Tools::stripslashes($langValue['label_when_out_of_stock']),
+                        'delivery_in_stock' => Tools::stripslashes($langValue['delivery_in_stock']),
+                        'delivery_out_of_stock' => Tools::stripslashes($langValue['delivery_out_of_stock']),
+                        self::KEY_SHOP_ID => (int) $langValue['id_shop'],
+                    ];
                 }
             }
 
@@ -1839,21 +1900,19 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             $shopImageCovers = $this->getShopImageCovers($productId);
             $images = Image::getImages($this->languageId, $product->id);
             foreach ($images as $image) {
-                $shopImages = array();
+                $shopImages = [];
 
-                for ($j = 0, $productAssociatedShopsCount = count($productAssociatedShops);
-                    $j < $productAssociatedShopsCount;
-                    $j++) {
+                for ($j = 0, $productAssociatedShopsCount = count($productAssociatedShops); $j < $productAssociatedShopsCount; ++$j) {
                     // Check image cover assigning to shops
                     $imageAdded = false;
                     foreach ($shopImageCovers as $shopImageCoverValue) {
-                        if ((int)$productAssociatedShops[$j] === (int)$shopImageCoverValue['id_shop'] &&
-                            (int)$image['id_image'] === (int)$shopImageCoverValue['id_image']
+                        if ((int) $productAssociatedShops[$j] === (int) $shopImageCoverValue['id_shop']
+                            && (int) $image['id_image'] === (int) $shopImageCoverValue['id_image']
                         ) {
-                            $shopImages[] = array(
-                                self::KEY_SHOP_ID   => (int)$shopImageCoverValue['id_shop'],
-                                self::KEY_COVER     => (bool)$shopImageCoverValue['cover']
-                            );
+                            $shopImages[] = [
+                                self::KEY_SHOP_ID => (int) $shopImageCoverValue['id_shop'],
+                                self::KEY_COVER => (bool) $shopImageCoverValue['cover'],
+                            ];
                             $imageAdded = true;
                             continue;
                         }
@@ -1863,82 +1922,87 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                         continue;
                     }
 
-                    $shopImages[] = array(
-                        self::KEY_SHOP_ID   => (int)$productShopsResult[$j]['shop_id'],
-                        self::KEY_COVER     => false
-                    );
+                    $shopImages[] = [
+                        self::KEY_SHOP_ID => (int) $productShopsResult[$j]['shop_id'],
+                        self::KEY_COVER => false,
+                    ];
                 }
 
-                $productImagesResult[] = array(
-                    self::KEY_IMAGE_ID  => (int)$image['id_image'],
-                    self::KEY_POSITION  => (int)$image['position'],
-                    self::KEY_IMAGE_URL => (string)$this->getProductImageUrl(
+                $productImagesResult[] = [
+                    self::KEY_IMAGE_ID => (int) $image['id_image'],
+                    self::KEY_POSITION => (int) $image['position'],
+                    self::KEY_IMAGE_URL => (string) $this->getProductImageUrl(
                         $product->link_rewrite[$this->languageId],
-                        (int)$image['id_image']
+                        (int) $image['id_image']
                     ),
-                    self::KEY_SHOPS     => $shopImages
-                );
+                    self::KEY_SHOPS => $shopImages,
+                ];
             }
 
-            $productCarriers = array();
+            $productCarriers = [];
             $productCarrier = $product->getCarriers();
             foreach ($productCarrier as $carrier) {
-                $productCarriers[] = array('carrier_id' => $carrier['id_carrier']);
+                $productCarriers[] = ['carrier_id' => $carrier['id_carrier']];
             }
 
-            $tags = array();
+            $tags = [];
             $tagIds = $product->getWsTags();
             foreach ($tagIds as $id) {
                 $tag = new Tag($id);
-                $tags[] = array(
-                    'language_id'   => $tag->id_lang,
-                    'tag_id'        => $tag->id,
-                    'name'          => $tag->name,
-                );
+                $tags[] = [
+                    'language_id' => $tag->id_lang,
+                    'tag_id' => $tag->id,
+                    'name' => $tag->name,
+                ];
             }
 
-            $productResult = array(
-                self::KEY_PRODUCT_ID                            => (int)$product->id,
-                self::KEY_REFERENCE                             => (string)$product->reference,
-                'width'                                         => (float)$product->width,
-                'height'                                        => (float)$product->height,
-                'depth'                                         => (float)$product->depth,
-                'weight'                                        => (float)$product->weight,
-                'delivery_time'                                 => (int)$product->additional_delivery_times,
-                'priority'                                      => array(),
-                self::KEY_EAN13                                 => (string)$product->ean13,
-                self::KEY_UPC                                   => (string)$product->upc,
-                self::KEY_ISBN                                  => (string)(
+            $productResult = [
+                self::KEY_PRODUCT_ID => (int) $product->id,
+                self::KEY_REFERENCE => (string) $product->reference,
+                'width' => (float) $product->width,
+                'height' => (float) $product->height,
+                'depth' => (float) $product->depth,
+                'weight' => (float) $product->weight,
+                'delivery_time' => (int) $product->additional_delivery_times,
+                'priority' => [],
+                self::KEY_EAN13 => (string) $product->ean13,
+                self::KEY_UPC => (string) $product->upc,
+                self::KEY_ISBN => (string) (
                     property_exists($product, self::KEY_ISBN) ? $product->isbn : null
                 ),
-                self::KEY_PRODUCT_TYPE                          => (string)$this->getProductType(
-                    (int)$product->getType()
+                self::KEY_PRODUCT_TYPE => (string) $this->getProductType(
+                    (int) $product->getType()
                 ),
-                'manufacturer_id'                               => (int)$product->id_manufacturer,
-                'pack_products_count'                           => (int)0,
-                'related_products_count'                        => (int)0,
-                'associated_products_count'                     => (int)0,
-                self::KEY_TOTAL_ORDERED                         => $this->getOrderedProductQuantity($productId),
-                self::KEY_SHOPS                                 => $productShopsResult,
-                self::KEY_LANGUAGE_VALUES                       => $productLanguagesResult,
-                self::KEY_IMAGES                                => $productImagesResult,
-                'carriers'                                      => $productCarriers,
-                'tags'                                          => $tags,
-            );
+                'manufacturer_id' => (int) $product->id_manufacturer,
+                'pack_products_count' => (int) 0,
+                'related_products_count' => (int) 0,
+                'associated_products_count' => (int) 0,
+                self::KEY_TOTAL_ORDERED => $this->getOrderedProductQuantity($productId),
+                self::KEY_SHOPS => $productShopsResult,
+                self::KEY_LANGUAGE_VALUES => $productLanguagesResult,
+                self::KEY_IMAGES => $productImagesResult,
+                'carriers' => $productCarriers,
+                'tags' => $tags,
+            ];
         } catch (Exception $exception) {
             throw new EM1Exception(EM1Exception::ERROR_PRODUCT_NOT_FOUND, $exception->getMessage());
         }
 
         self::generateResponse($this->productResponse($productResult));
     }
+    /** phpcs:enable */
 
     // TODO: Write annotation for getProducts() method
+
+    /**
+     * phpcs:disable
+     */
     public function getProductCreateData($languageId)
     {
         try {
-            $productShopsResult     = array();
-            $productImagesResult    = array();
-            $productLanguagesResult = array();
+            $productShopsResult = [];
+            $productImagesResult = [];
+            $productLanguagesResult = [];
 
             // Create Product object and validate after initialisation
             /** @var ProductCore $product */
@@ -1958,23 +2022,23 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
                 $quantity = 0;
                 foreach ($stocks as $stock) {
-                    if ((int)$stock['id_shop'] === (int)$shopId) {
-                        $quantity = (int)$stock['quantity'];
+                    if ((int) $stock['id_shop'] === (int) $shopId) {
+                        $quantity = (int) $stock['quantity'];
                         break;
                     }
                 }
 
                 foreach ($taxRules as $taxRule) {
-                    if ((int)$productFields->id_tax_rules_group === (int)$taxRule['id_tax_rules_group']) {
-                        $taxRuleId      = (int)$taxRule['id_tax_rules_group'];
+                    if ((int) $productFields->id_tax_rules_group === (int) $taxRule['id_tax_rules_group']) {
+                        $taxRuleId = (int) $taxRule['id_tax_rules_group'];
                         break;
                     }
                 }
 
                 $combinationsCount = 0;
                 foreach ($combinationsCounts as $combinationsCountData) {
-                    if ((int)$combinationsCountData['id_shop'] === (int)$shopId) {
-                        $combinationsCount = (int)$combinationsCountData['combinations_count'];
+                    if ((int) $combinationsCountData['id_shop'] === (int) $shopId) {
+                        $combinationsCount = (int) $combinationsCountData['combinations_count'];
                         break;
                     }
                 }
@@ -1984,69 +2048,69 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                 } else {
                     // base_price is deprecated from @deprecated 1.6.0.13
                     $productPrice = round(
-                        (float)(property_exists($productFields, 'base_price') ? $productFields->base_price : 0),
+                        (float) (property_exists($productFields, 'base_price') ? $productFields->base_price : 0),
                         6
                     );
                 }
 
                 if (empty($productPrice)) {
                     $productPrice = round(
-                        (float)(property_exists($productFields, 'base_price') ? $productFields->base_price : 0),
+                        (float) (property_exists($productFields, 'base_price') ? $productFields->base_price : 0),
                         6
                     );
                 }
 
-                $productShopsResult[] = array(
-                    'shop_id'                                       => (int)$shopId,
-                    'status'                                        => (bool)$productFields->active,
-                    //ENUM('both', 'catalog', 'search', 'none')
-                    'visibility'                                    => (string)$productFields->visibility,
-                    'out_of_stock'                                  => (int)$productFields->out_of_stock,
-                    'available_for_order'                           => (bool)$productFields->available_for_order,
-                    'available_date'                                => (string)$productFields->available_date,
-                    'quantity'                                      => (int)$quantity,
-                    'minimal_quantity'                              => (int)$productFields->minimal_quantity,
-                    'location'                                      => (string)$productFields->location,
-                    'low_stock_level'                               => (int)$productFields->low_stock_threshold,
-                    'low_stock_alert'                               => (bool)$productFields->low_stock_alert,
-                    'additional_shipping_cost'                      => (int)$productFields->additional_shipping_cost,
-                    'retail_price_without_tax'                      => (float)$productPrice,
-                    'cost_price_without_tax'                        => (float)$productFields->wholesale_price,
-                    'formatted_retail_price_without_tax'            => Tools::displayPrice((float)$productPrice),
-                    'formatted_cost_price_without_tax'              => Tools::displayPrice(
-                        (float)$productFields->wholesale_price
+                $productShopsResult[] = [
+                    'shop_id' => (int) $shopId,
+                    'status' => (bool) $productFields->active,
+                    // ENUM('both', 'catalog', 'search', 'none')
+                    'visibility' => (string) $productFields->visibility,
+                    'out_of_stock' => (int) $productFields->out_of_stock,
+                    'available_for_order' => (bool) $productFields->available_for_order,
+                    'available_date' => (string) $productFields->available_date,
+                    'quantity' => (int) $quantity,
+                    'minimal_quantity' => (int) $productFields->minimal_quantity,
+                    'location' => (string) $productFields->location,
+                    'low_stock_level' => (int) $productFields->low_stock_threshold,
+                    'low_stock_alert' => (bool) $productFields->low_stock_alert,
+                    'additional_shipping_cost' => (int) $productFields->additional_shipping_cost,
+                    'retail_price_without_tax' => (float) $productPrice,
+                    'cost_price_without_tax' => (float) $productFields->wholesale_price,
+                    'formatted_retail_price_without_tax' => Tools::displayPrice((float) $productPrice),
+                    'formatted_cost_price_without_tax' => Tools::displayPrice(
+                        (float) $productFields->wholesale_price
                     ),
-                    'tax_rule_id'                                   => (int)$taxRuleId,
-                    'on_sale'                                       => (bool)$productFields->on_sale,
-                    'show_price'                                    => (bool)$productFields->show_price,
-                    'online_only'                                   => (bool)$productFields->online_only,
-                    'unit_price_ratio'                              => (float)$productFields->unit_price_ratio,
-                    'unity'                                         => (string)$productFields->unity,
-                    //ENUM('new', 'used', 'refurbished')
-                    'condition'                                     => (string)$productFields->condition,
-                    'show_condition'                                => (bool)$productFields->show_condition,
-                    'combinations_count'                            => (int)$combinationsCount,
-                    'specific_prices_count'                         => (int)0,
-                    'features_count'                                => (int)0,
-                );
+                    'tax_rule_id' => (int) $taxRuleId,
+                    'on_sale' => (bool) $productFields->on_sale,
+                    'show_price' => (bool) $productFields->show_price,
+                    'online_only' => (bool) $productFields->online_only,
+                    'unit_price_ratio' => (float) $productFields->unit_price_ratio,
+                    'unity' => (string) $productFields->unity,
+                    // ENUM('new', 'used', 'refurbished')
+                    'condition' => (string) $productFields->condition,
+                    'show_condition' => (bool) $productFields->show_condition,
+                    'combinations_count' => (int) $combinationsCount,
+                    'specific_prices_count' => (int) 0,
+                    'features_count' => (int) 0,
+                ];
 
                 // Get all shops language values
                 $productLanguageFields = $productFields->getFieldsLang();
                 foreach ($productLanguageFields as $langValue) {
-                    $productLanguagesResult[] = array(
-                        self::KEY_LANGUAGE_ID           => (int)$langValue['id_lang'],
-                        self::KEY_PRODUCT_NAME          => Tools::stripslashes($langValue['name']),
-                        self::KEY_SHORT_DESCRIPTION     => Tools::stripslashes($langValue['description_short']),
-                        self::KEY_DESCRIPTION           => Tools::stripslashes($langValue['description']),
-                        self::KEY_LINK_REWRITE          => Tools::stripslashes($langValue['link_rewrite']),
-                        'meta_title'                    => Tools::stripslashes($langValue['meta_title']),
-                        'meta_description'              => Tools::stripslashes($langValue['meta_description']),
-                        'label_when_in_stock'           => Tools::stripslashes($langValue['label_when_in_stock']),
-                        'label_when_out_of_stock'       => Tools::stripslashes($langValue['label_when_out_of_stock']),
-                        'delivery_in_stock'             => Tools::stripslashes($langValue['delivery_in_stock']),
-                        'delivery_out_of_stock'         => Tools::stripslashes($langValue['delivery_out_of_stock']),
-                        self::KEY_SHOP_ID               => (int)$langValue['id_shop'],
-                    );
+                    $productLanguagesResult[] = [
+                        self::KEY_LANGUAGE_ID => (int) $langValue['id_lang'],
+                        self::KEY_PRODUCT_NAME => Tools::stripslashes($langValue['name']),
+                        self::KEY_SHORT_DESCRIPTION => Tools::stripslashes($langValue['description_short']),
+                        self::KEY_DESCRIPTION => Tools::stripslashes($langValue['description']),
+                        self::KEY_LINK_REWRITE => Tools::stripslashes($langValue['link_rewrite']),
+                        'meta_title' => Tools::stripslashes($langValue['meta_title']),
+                        'meta_description' => Tools::stripslashes($langValue['meta_description']),
+                        'label_when_in_stock' => Tools::stripslashes($langValue['label_when_in_stock']),
+                        'label_when_out_of_stock' => Tools::stripslashes($langValue['label_when_out_of_stock']),
+                        'delivery_in_stock' => Tools::stripslashes($langValue['delivery_in_stock']),
+                        'delivery_out_of_stock' => Tools::stripslashes($langValue['delivery_out_of_stock']),
+                        self::KEY_SHOP_ID => (int) $langValue['id_shop'],
+                    ];
                 }
             }
 
@@ -2054,21 +2118,19 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             $shopImageCovers = $this->getShopImageCovers($product->id);
             $images = Image::getImages($this->languageId, $product->id);
             foreach ($images as $image) {
-                $shopImages = array();
+                $shopImages = [];
 
-                for ($j = 0, $productAssociatedShopsCount = count($productAssociatedShops);
-                    $j < $productAssociatedShopsCount;
-                    $j++) {
+                for ($j = 0, $productAssociatedShopsCount = count($productAssociatedShops); $j < $productAssociatedShopsCount; ++$j) {
                     // Check image cover assigning to shops
                     $imageAdded = false;
                     foreach ($shopImageCovers as $shopImageCoverValue) {
-                        if ((int)$productAssociatedShops[$j] === (int)$shopImageCoverValue['id_shop'] &&
-                            (int)$image['id_image'] === (int)$shopImageCoverValue['id_image']
+                        if ((int) $productAssociatedShops[$j] === (int) $shopImageCoverValue['id_shop']
+                            && (int) $image['id_image'] === (int) $shopImageCoverValue['id_image']
                         ) {
-                            $shopImages[] = array(
-                                self::KEY_SHOP_ID   => (int)$shopImageCoverValue['id_shop'],
-                                self::KEY_COVER     => (bool)$shopImageCoverValue['cover']
-                            );
+                            $shopImages[] = [
+                                self::KEY_SHOP_ID => (int) $shopImageCoverValue['id_shop'],
+                                self::KEY_COVER => (bool) $shopImageCoverValue['cover'],
+                            ];
                             $imageAdded = true;
                             continue;
                         }
@@ -2078,75 +2140,75 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                         continue;
                     }
 
-                    $shopImages[] = array(
-                        self::KEY_SHOP_ID   => (int)$productShopsResult[$j]['shop_id'],
-                        self::KEY_COVER     => false
-                    );
+                    $shopImages[] = [
+                        self::KEY_SHOP_ID => (int) $productShopsResult[$j]['shop_id'],
+                        self::KEY_COVER => false,
+                    ];
                 }
 
-                $productImagesResult[] = array(
-                    self::KEY_IMAGE_ID  => (int)$image['id_image'],
-                    self::KEY_POSITION  => (int)$image['position'],
-                    self::KEY_IMAGE_URL => (string)$this->getProductImageUrl(
+                $productImagesResult[] = [
+                    self::KEY_IMAGE_ID => (int) $image['id_image'],
+                    self::KEY_POSITION => (int) $image['position'],
+                    self::KEY_IMAGE_URL => (string) $this->getProductImageUrl(
                         $product->link_rewrite[$this->languageId],
-                        (int)$image['id_image']
+                        (int) $image['id_image']
                     ),
-                    self::KEY_SHOPS     => $shopImages
-                );
+                    self::KEY_SHOPS => $shopImages,
+                ];
             }
 
-            $productCarriers = array();
+            $productCarriers = [];
             $productCarrier = $product->getCarriers();
             foreach ($productCarrier as $carrier) {
-                $productCarriers[] = array('carrier_id' => $carrier['id_carrier']);
+                $productCarriers[] = ['carrier_id' => $carrier['id_carrier']];
             }
 
-            $tags = array();
+            $tags = [];
             $tagIds = $product->getWsTags();
             foreach ($tagIds as $id) {
                 $tag = new Tag($id);
-                $tags[] = array(
-                    'language_id'   => $tag->id_lang,
-                    'tag_id'        => $tag->id,
-                    'name'          => $tag->name,
-                );
+                $tags[] = [
+                    'language_id' => $tag->id_lang,
+                    'tag_id' => $tag->id,
+                    'name' => $tag->name,
+                ];
             }
 
-            $productResult = array(
-                self::KEY_PRODUCT_ID                            => (int)$product->id,
-                self::KEY_REFERENCE                             => (string)$product->reference,
-                'width'                                         => (float)$product->width,
-                'height'                                        => (float)$product->height,
-                'depth'                                         => (float)$product->depth,
-                'weight'                                        => (float)$product->weight,
-                'delivery_time'                                 => (int)$product->additional_delivery_times,
-                'priority'                                      => array(),
-                self::KEY_EAN13                                 => (string)$product->ean13,
-                self::KEY_UPC                                   => (string)$product->upc,
-                self::KEY_ISBN                                  => (string)(
-                property_exists($product, self::KEY_ISBN) ? $product->isbn : null
+            $productResult = [
+                self::KEY_PRODUCT_ID => (int) $product->id,
+                self::KEY_REFERENCE => (string) $product->reference,
+                'width' => (float) $product->width,
+                'height' => (float) $product->height,
+                'depth' => (float) $product->depth,
+                'weight' => (float) $product->weight,
+                'delivery_time' => (int) $product->additional_delivery_times,
+                'priority' => [],
+                self::KEY_EAN13 => (string) $product->ean13,
+                self::KEY_UPC => (string) $product->upc,
+                self::KEY_ISBN => (string) (
+                    property_exists($product, self::KEY_ISBN) ? $product->isbn : null
                 ),
-                self::KEY_PRODUCT_TYPE                          => (string)$this->getProductType(
-                    (int)$product->getType()
+                self::KEY_PRODUCT_TYPE => (string) $this->getProductType(
+                    (int) $product->getType()
                 ),
-                'manufacturer_id'                               => (int)$product->id_manufacturer,
-                'pack_products_count'                           => (int)0,
-                'related_products_count'                        => (int)0,
-                'associated_products_count'                     => (int)0,
-                self::KEY_TOTAL_ORDERED                         => $this->getOrderedProductQuantity($product->id),
-                self::KEY_SHOPS                                 => $productShopsResult,
-                self::KEY_LANGUAGE_VALUES                       => $productLanguagesResult,
-                self::KEY_IMAGES                                => $productImagesResult,
-                'carriers'                                      => $productCarriers,
-                'tags'                                          => $tags,
-            );
+                'manufacturer_id' => (int) $product->id_manufacturer,
+                'pack_products_count' => (int) 0,
+                'related_products_count' => (int) 0,
+                'associated_products_count' => (int) 0,
+                self::KEY_TOTAL_ORDERED => $this->getOrderedProductQuantity($product->id),
+                self::KEY_SHOPS => $productShopsResult,
+                self::KEY_LANGUAGE_VALUES => $productLanguagesResult,
+                self::KEY_IMAGES => $productImagesResult,
+                'carriers' => $productCarriers,
+                'tags' => $tags,
+            ];
         } catch (Exception $exception) {
             throw new EM1Exception(EM1Exception::ERROR_PRODUCT_NOT_FOUND, $exception->getMessage());
         }
 
         self::generateResponse($this->productResponse($productResult));
     }
-
+    /** phpcs:enable */
 
     // TODO: Write annotation for getProducts() method.
     public function getProductSpecificPriceData()
@@ -2160,6 +2222,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             ];
         }
         $module = new Bridgeconnector();
+
         return [
             $module->l('Shop', [], 'Admin.Global') => 'id_shop',
             $module->l('Currency', [], 'Admin.Global') => 'id_currency',
@@ -2170,7 +2233,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $data
+     *
      * @return mixed|void
+     *
      * @throws EM1Exception
      */
     public function saveProduct($data)
@@ -2214,6 +2279,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         $product->meta_description = $productData['meta_description'];
         $product->delivery_in_stock = $productData['delivery_in_stock'];
         $product->delivery_out_stock = $productData['delivery_out_of_stock'];
+        $product->modifierWsLinkRewrite();
         try {
             $product->save();
         } catch (Exception $e) {
@@ -2336,21 +2402,21 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     private function getPreparedProductData($productObject, $productData)
     {
         $data = [
-            'product_id'               => (int)$productObject->id,
-            'product_type'             => (string)$this->getProductType($productObject->getType()),
-            'reference'                => (string)$productObject->reference,
-            'width'                    => (float)$productObject->width,
-            'height'                   => (float)$productObject->height,
-            'depth'                    => (float)$productObject->depth,
-            'weight'                   => (float)$productObject->weight,
-            'delivery_time'            => (int)$productObject->additional_delivery_times,
-            'manufacturer_id'          => (int)$productObject->id_manufacturer,
-            'product_name'             => $productObject->name,
-            'link_rewrite'             => $productObject->link_rewrite,
-            'meta_title'               => $productObject->meta_title,
-            'meta_description'         => $productObject->meta_description,
-            'delivery_in_stock'        => $productObject->delivery_in_stock,
-            'delivery_out_of_stock'    => $productObject->delivery_out_stock,
+            'product_id' => (int) $productObject->id,
+            'product_type' => (string) $this->getProductType($productObject->getType()),
+            'reference' => (string) $productObject->reference,
+            'width' => (float) $productObject->width,
+            'height' => (float) $productObject->height,
+            'depth' => (float) $productObject->depth,
+            'weight' => (float) $productObject->weight,
+            'delivery_time' => (int) $productObject->additional_delivery_times,
+            'manufacturer_id' => (int) $productObject->id_manufacturer,
+            'product_name' => $productObject->name,
+            'link_rewrite' => $productObject->link_rewrite,
+            'meta_title' => $productObject->meta_title,
+            'meta_description' => $productObject->meta_description,
+            'delivery_in_stock' => $productObject->delivery_in_stock,
+            'delivery_out_of_stock' => $productObject->delivery_out_stock,
         ];
         foreach ($productData as $key => $value) {
             if ($key === 'product_type' && $productData[$key] === 'pack' && $productObject->hasCombinations()) {
@@ -2371,27 +2437,29 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                 }
             }
         }
+
         return $data;
     }
 
     /**
      * @param $shopId
      * @param $productId
+     *
      * @throws EM1Exception
      */
     public function getProductQuantitySettings($shopId, $productId)
     {
         $responseArray = [
-            'download_id'      => null,
-            'filename'         => null,
+            'download_id' => null,
+            'filename' => null,
             'display_filename' => null,
-            'file_size'        => null,
-            'mime'             => null,
-            'expiration_date'  => null,
+            'file_size' => null,
+            'mime' => null,
+            'expiration_date' => null,
             'downloads_number' => null,
-            'days_number'      => null,
-            'shops'            => [],
-            'languages'        => []
+            'days_number' => null,
+            'shops' => [],
+            'languages' => [],
         ];
         try {
             $productObject = new Product($productId, true, null, $shopId);
@@ -2403,31 +2471,31 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
         $availableDate = null;
         if ($productObject->available_date !== '0000-00-00') {
-            $availableDate = (int)self::convertTimestampToMillisecondsTimestamp(
-                strtotime($productObject->available_date)
+            $availableDate = (int) self::convertTimestampToMillisecondsTimestamp(
+                $productObject->available_date
             );
         }
         $shop = [
-            'shop_id'                 => (int)$shopId,
-            'quantity'                => (int)$productObject->quantity,
-            'min_quantity_for_sale'   => (int)$productObject->minimal_quantity,
-            'stock_location'          => (string)$productObject->location,
-            'low_stock_level'         => $productObject->low_stock_threshold ?
-                (int)$productObject->low_stock_threshold : null,
-            'low_stock_alert'         => (bool)$productObject->low_stock_alert,
-            'out_of_stock'            => (int)$productObject->out_of_stock,
-            'available_date'          => $availableDate,
-            'default_pack_stock_type' => (int)Configuration::get('PS_PACK_STOCK_TYPE'),
-            'pack_stock_type'         => (int)$productObject->pack_stock_type
+            'shop_id' => (int) $shopId,
+            'quantity' => (int) $productObject->quantity,
+            'min_quantity_for_sale' => (int) $productObject->minimal_quantity,
+            'stock_location' => (string) $productObject->location,
+            'low_stock_level' => $productObject->low_stock_threshold ?
+                (int) $productObject->low_stock_threshold : null,
+            'low_stock_alert' => (bool) $productObject->low_stock_alert,
+            'out_of_stock' => (int) $productObject->out_of_stock,
+            'available_date' => $availableDate,
+            'default_pack_stock_type' => (int) Configuration::get('PS_PACK_STOCK_TYPE'),
+            'pack_stock_type' => (int) $productObject->pack_stock_type,
         ];
         $responseArray['shops'][] = $shop;
         $languageIds = Language::getLanguages(true, $shopId, true);
         foreach ($languageIds as $languageId) {
             $language = [
-                'shop_id'            => (int)$shopId,
-                'language_id'        => (int)$languageId,
-                'label_in_stock'     => (string)$productObject->available_now[$languageId],
-                'label_out_of_stock' => (string)$productObject->available_later[$languageId]
+                'shop_id' => (int) $shopId,
+                'language_id' => (int) $languageId,
+                'label_in_stock' => (string) $productObject->available_now[$languageId],
+                'label_out_of_stock' => (string) $productObject->available_later[$languageId],
             ];
             $responseArray['languages'][] = $language;
         }
@@ -2437,6 +2505,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $responseArray
      * @param $productId
+     *
      * @return mixed
      */
     private function fillDownloadFileInfo($responseArray, $productId)
@@ -2447,15 +2516,15 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             return $responseArray;
         }
 
-        $responseArray['download_id'] = (int)$productDownloadObject->id;
+        $responseArray['download_id'] = (int) $productDownloadObject->id;
         $responseArray['filename'] = $fileName = $productDownloadObject->filename;
         $responseArray['display_filename'] = $productDownloadObject->display_filename;
-        $responseArray['file_size'] = (int)filesize(_PS_DOWNLOAD_DIR_ . $fileName);
+        $responseArray['file_size'] = (int) filesize(_PS_DOWNLOAD_DIR_ . $fileName);
         $responseArray['mime'] = mime_content_type(_PS_DOWNLOAD_DIR_ . $fileName);
-        $responseArray['expiration_date'] =
-            (int)self::convertTimestampToMillisecondsTimestamp($productDownloadObject->date_expiration);
-        $responseArray['downloads_number'] = (int)$productDownloadObject->nb_downloadable;
-        $responseArray['days_number'] = (int)$productDownloadObject->nb_days_accessible;
+        $responseArray['expiration_date'] = (int) self::convertTimestampToMillisecondsTimestamp($productDownloadObject->date_expiration) > 0 ?
+            (int) self::convertTimestampToMillisecondsTimestamp($productDownloadObject->date_expiration) : null;
+        $responseArray['downloads_number'] = (int) $productDownloadObject->nb_downloadable;
+        $responseArray['days_number'] = (int) $productDownloadObject->nb_days_accessible;
 
         return $responseArray;
     }
@@ -2464,6 +2533,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $shopId
      * @param $productId
      * @param $quantitySettings
+     *
      * @throws EM1Exception
      */
     public function saveProductQuantitySettings(
@@ -2485,9 +2555,16 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                         ProductDownload::getIdFromIdProduct($productObject->id)
                     );
                 } else {
+                    if (ProductDownload::getIdFromIdProduct($productId) > 0
+                        && $quantitySettings['has_associated_file'] === null
+                        && $quantitySettings['has_new_file'] === true) {
+                        $this->deleteProductDownloadableFile(
+                            ProductDownload::getIdFromIdProduct($productObject->id)
+                        );
+                    }
                     $fileData = $this->uploadProductDownloadableFile(
                         $productId,
-                        $quantitySettings['display_name'],
+                        $quantitySettings['display_filename'],
                         $quantitySettings['days_number'],
                         $quantitySettings['downloads_number'],
                         $quantitySettings['expiration_date']
@@ -2512,19 +2589,19 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                     throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $e->getMessage());
                 }
                 $productShopData = [
-                    'quantity'                => (int)$productObject->quantity,
-                    'min_quantity_for_sale'   => (int)$productObject->minimal_quantity,
-                    'stock_location'          => $productObject->location,
-                    'low_stock_level'         => $productObject->low_stock_threshold,
-                    'low_stock_alert'         => (bool)$productObject->low_stock_alert,
-                    'out_of_stock'            => (int)$productObject->out_of_stock,
-                    'available_date'          => $productObject->available_date,
-                    'pack_stock_type'         => (int)$productObject->pack_stock_type
+                    'quantity' => (int) $productObject->quantity,
+                    'min_quantity_for_sale' => (int) $productObject->minimal_quantity,
+                    'stock_location' => $productObject->location,
+                    'low_stock_level' => $productObject->low_stock_threshold,
+                    'low_stock_alert' => (bool) $productObject->low_stock_alert,
+                    'out_of_stock' => (int) $productObject->out_of_stock,
+                    'available_date' => $productObject->available_date,
+                    'pack_stock_type' => (int) $productObject->pack_stock_type,
                 ];
                 unset($productObject);
                 foreach ($shop as $key => $value) {
                     if ($key === 'available_date' && $value !== null) {
-                        $shop[$key] = date('Y-m-d', self::convertMillisecondsTimestampToTimestamp($value));
+                        $shop[$key] = gmdate('Y-m-d', self::convertMillisecondsTimestampToTimestamp($value));
                     } elseif ($value === null) {
                         $shop[$key] = $productShopData[$key];
                     }
@@ -2541,7 +2618,10 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                         $productObject = new Product($productId, true, null, $shopId);
                         StockAvailable::setQuantity($productId, null, $shop['quantity'], $shopId);
                         $productObject->minimal_quantity = $shop['min_quantity_for_sale'];
-//                        StockAvailable::setLocation($productId, $shop['stock_location'], $shopId);
+                        if (version_compare(_PS_VERSION_, '1.7.5', '>=')) {
+                            StockAvailable::setLocation($productId, $shop['stock_location'], $shopId);
+                            $productObject->location = $shop['stock_location'];
+                        }
                         $productObject->low_stock_threshold = $shop['low_stock_level'];
                         $productObject->low_stock_alert = $shop['low_stock_alert'];
                         StockAvailable::setProductOutOfStock($productId, $shop['out_of_stock'], $shopId);
@@ -2565,9 +2645,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                     throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $e->getMessage());
                 }
                 $languageShopData = [
-                    'language_id'        => (int)$language['language_id'],
-                    'label_in_stock'     => (string)$productObject->available_now[$language['language_id']],
-                    'label_out_of_stock' => (string)$productObject->available_later[$language['language_id']]
+                    'language_id' => (int) $language['language_id'],
+                    'label_in_stock' => (string) $productObject->available_now[$language['language_id']],
+                    'label_out_of_stock' => (string) $productObject->available_later[$language['language_id']],
                 ];
                 foreach ($language as $key => $value) {
                     if ($value === null) {
@@ -2599,6 +2679,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $productDownloadId
+     *
      * @throws PrestaShopException
      */
     private function deleteProductDownloadableFile($productDownloadId)
@@ -2615,7 +2696,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $daysNumber
      * @param $downloadsNumber
      * @param $expirationDate
+     *
      * @return array
+     *
      * @throws EM1Exception
      * @throws PrestaShopException
      */
@@ -2626,19 +2709,24 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         $downloadsNumber,
         $expirationDate
     ) {
+        $fileDataArray = [
+            'display_filename' => $displayName,
+            'nb_days_accessible' => $daysNumber,
+            'nb_downloadable' => $downloadsNumber,
+            'date_expiration' => $expirationDate,
+        ];
+
         if (!empty($_FILES)) {
             $fileName = sha1($_FILES['file']['name']);
             move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_ . $fileName);
+
+            $fileDataArray['filename'] = $fileName;
         }
 
-        $fileDataArray = [
-            'display_filename'   => $displayName,
-            'nb_days_accessible' => $daysNumber,
-            'nb_downloadable'    => $downloadsNumber,
-            'date_expiration'    => $expirationDate
-        ];
-
-        if (count(array_filter($fileDataArray, 'notEmpty')) > 0) {
+        if ($fileDataArray['display_filename'] !== null
+            || $fileDataArray['nb_days_accessible'] !== null
+            || $fileDataArray['nb_downloadable'] !== null
+            || $fileDataArray['date_expiration'] !== null) {
             if ($productDownloadId = ProductDownload::getIdFromIdProduct($productId)) {
                 $productDownloadObject = new ProductDownload($productDownloadId);
             } else {
@@ -2650,12 +2738,19 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                 $productDownloadObject->filename = $fileName;
             }
             foreach ($fileDataArray as $field => $value) {
-                if ($field === 'date_expiration') {
-                    $productDownloadObject->$field =
-                        date('Y-m-d', self::convertMillisecondsTimestampToTimestamp($value));
+                if ($field === 'date_expiration' && $value !== null) {
+                    if ($value === 0) {
+                        $productDownloadObject->$field = null;
+                    } else {
+                        $productDownloadObject->$field =
+                            gmdate('Y-m-d', self::convertMillisecondsTimestampToTimestamp($value));
+                    }
                 } elseif ($value !== null) {
                     $productDownloadObject->$field = $value;
                 }
+            }
+            if ($productDownloadObject->date_expiration == '0000-00-00 00:00:00') {
+                $productDownloadObject->date_expiration = null;
             }
             $productDownloadObject->save();
         } else {
@@ -2664,16 +2759,16 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
 
         return [
-            'download_id' => (int)$productDownloadObject->id,
-            'filename'    => $productDownloadObject->filename,
-            'mime'        => mime_content_type(_PS_DOWNLOAD_DIR_ . $productDownloadObject->filename)
+            'download_id' => (int) $productDownloadObject->id,
+            'filename' => $productDownloadObject->filename,
+            'mime' => mime_content_type(_PS_DOWNLOAD_DIR_ . $productDownloadObject->filename),
         ];
     }
 
     public function getProductPricingSettings($shopId, $productId)
     {
         $responseArray = [
-            'shops' => []
+            'shops' => [],
         ];
         $shopIdFromRequest = $shopId;
         if ($shopId === null) {
@@ -2684,19 +2779,29 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         } catch (Exception $e) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $e->getMessage());
         }
+
+        if (version_compare(_PS_VERSION_, '1.6', '>=')) {
+            $productPrice = $productObject->getPriceWithoutReduct(true);
+        } else {
+            // base_price is deprecated from @deprecated 1.6.0.13
+            $productPrice = round(
+                (float) (property_exists($productObject, 'base_price') ? $productObject->base_price : 0),
+                6
+            );
+        }
         $shop = [
-            'shop_id'               => (int)$shopId,
-            'price'                 => (float)$productObject->price,
-            'tax_rules_group_id'    => (int)$productObject->id_tax_rules_group,
-            'on_sale'               => (bool)$productObject->on_sale,
-            'price_per_unit'        => (float)$productObject->unit_price,
-            'unity'                 => (string)$productObject->unity,
-            'wholesale_price'       => (float)$productObject->wholesale_price,
-            'specific_prices_count' => (int)count(self::getSpecificPriceIdsByProductId($productId, $shopIdFromRequest)),
-            'priority1'             => SpecificPrice::getPriority($productId)[1],
-            'priority2'             => SpecificPrice::getPriority($productId)[2],
-            'priority3'             => SpecificPrice::getPriority($productId)[3],
-            'priority4'             => SpecificPrice::getPriority($productId)[4],
+            'shop_id' => (int) $shopId,
+            'price' => (float) $productPrice,
+            'tax_rules_group_id' => (int) $productObject->id_tax_rules_group,
+            'on_sale' => (bool) $productObject->on_sale,
+            'price_per_unit' => (float) $productObject->unit_price,
+            'unity' => (string) $productObject->unity,
+            'wholesale_price' => (float) $productObject->wholesale_price,
+            'specific_prices_count' => (int) count(self::getSpecificPriceIdsByProductId($productId, $shopIdFromRequest)),
+            'priority1' => SpecificPrice::getPriority($productId)[1],
+            'priority2' => SpecificPrice::getPriority($productId)[2],
+            'priority3' => SpecificPrice::getPriority($productId)[3],
+            'priority4' => SpecificPrice::getPriority($productId)[4],
         ];
         $responseArray['shops'][] = $shop;
         self::generateResponse($responseArray);
@@ -2709,7 +2814,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $idShop
      * @param bool $idProductAttribute
      * @param int $idCart
+     *
      * @return array|false|mysqli_result|PDOStatement|resource|null
+     *
      * @throws PrestaShopDatabaseException
      */
     public static function getSpecificPriceIdsByProductId(
@@ -2721,6 +2828,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         if ($idShop === -1 || $idShop === null) {
             $idShop = implode(', ', Shop::getShops(true, null, true));
         }
+
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(pSQL('
 			SELECT `id_specific_price`
 			FROM `' . _DB_PREFIX_ . 'specific_price`
@@ -2733,6 +2841,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $productId
      * @param $productPricingSettings
+     *
      * @throws EM1Exception
      */
     public function saveProductPricingSettings($productId, $productPricingSettings)
@@ -2749,17 +2858,17 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                     throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $e->getMessage());
                 }
                 $productPricingData = [
-                    'shop_id'            => (int)$shopId,
-                    'price'              => (float)$productObject->price,
-                    'tax_rules_group_id' => (int)$productObject->id_tax_rules_group,
-                    'on_sale'            => (bool)$productObject->on_sale,
-                    'price_per_unit'     => (float)$productObject->unit_price,
-                    'unity'              => (string)$productObject->unity,
-                    'wholesale_price'    => (float)$productObject->wholesale_price,
-                    'priority1'          => SpecificPrice::getPriority($productId)[1],
-                    'priority2'          => SpecificPrice::getPriority($productId)[2],
-                    'priority3'          => SpecificPrice::getPriority($productId)[3],
-                    'priority4'          => SpecificPrice::getPriority($productId)[4]
+                    'shop_id' => (int) $shopId,
+                    'price' => (float) $productObject->price,
+                    'tax_rules_group_id' => (int) $productObject->id_tax_rules_group,
+                    'on_sale' => (bool) $productObject->on_sale,
+                    'price_per_unit' => (float) $productObject->unit_price,
+                    'unity' => (string) $productObject->unity,
+                    'wholesale_price' => (float) $productObject->wholesale_price,
+                    'priority1' => SpecificPrice::getPriority($productId)[1],
+                    'priority2' => SpecificPrice::getPriority($productId)[2],
+                    'priority3' => SpecificPrice::getPriority($productId)[3],
+                    'priority4' => SpecificPrice::getPriority($productId)[4],
                 ];
                 foreach ($productPricingSetting as $key => $value) {
                     if ($value === null) {
@@ -2795,23 +2904,25 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     {
         $codes = [
             'Customer' => 'id_customer',
-            'Country'  => 'id_country',
+            'Country' => 'id_country',
             'Currency' => 'id_currency',
-            'Group'    => 'id_group',
-            'Shop'     => 'id_shop'
+            'Group' => 'id_group',
+            'Shop' => 'id_shop',
         ];
-        return (string)$codes[$label];
+
+        return (string) $codes[$label];
     }
 
     /**
      * @param $shopId
      * @param $productId
+     *
      * @throws EM1Exception
      */
     public function getProductEditShortDescription($shopId, $productId)
     {
         $responseArray = [
-            'languages' => []
+            'languages' => [],
         ];
         $languageIds = Language::getLanguages(true, $shopId, true);
         foreach ($languageIds as $languageId) {
@@ -2821,9 +2932,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                 throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $e->getMessage());
             }
             $responseArray['languages'][] = [
-                'shop_id'     => (int)$shopId,
-                'language_id' => (int)$languageId,
-                'description' => (string)$productObject->description_short
+                'shop_id' => (int) $shopId,
+                'language_id' => (int) $languageId,
+                'description' => (string) $productObject->description_short,
             ];
         }
         self::generateResponse($responseArray);
@@ -2832,12 +2943,13 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $shopId
      * @param $productId
+     *
      * @throws EM1Exception
      */
     public function getProductEditDescription($shopId, $productId)
     {
         $responseArray = [
-            'languages' => []
+            'languages' => [],
         ];
         $languageIds = Language::getLanguages(true, $shopId, true);
         foreach ($languageIds as $languageId) {
@@ -2847,9 +2959,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                 throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $e->getMessage());
             }
             $responseArray['languages'][] = [
-                'shop_id'     => (int)$shopId,
-                'language_id' => (int)$languageId,
-                'description' => (string)$productObject->description
+                'shop_id' => (int) $shopId,
+                'language_id' => (int) $languageId,
+                'description' => (string) $productObject->description,
             ];
         }
         self::generateResponse($responseArray);
@@ -2857,6 +2969,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $data
+     *
      * @throws EM1Exception
      */
     public function saveProductShortDescription($data)
@@ -2882,6 +2995,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $data
+     *
      * @throws EM1Exception
      */
     public function saveProductDescription($data)
@@ -2908,6 +3022,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $shopId
      * @param $productId
+     *
      * @throws EM1Exception
      */
     public function getProductEditOptions($shopId, $productId)
@@ -2915,38 +3030,39 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         try {
             $productObject = new Product($productId, true, null, $shopId);
             $allAttachments = Db::getInstance()->executeS(
-                pSQL('SELECT COUNT(id_attachment) AS cnt
-			FROM ' . _DB_PREFIX_ . 'attachment a')
+                'SELECT COUNT(id_attachment) AS cnt
+			FROM ' . _DB_PREFIX_ . 'attachment'
             );
         } catch (Exception $e) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $e->getMessage());
         }
         $responseArray = [
-            'isbn'                 => (string)$productObject->isbn,
-            'ean13'                => (string)$productObject->ean13,
-            'upc'                  => (string)$productObject->upc,
-            'customizations_count' => $productObject->getCustomizationFields(false, $shopId) ?
-                (int)count($productObject->getCustomizationFields(false, $shopId)) : 0,
+            'isbn' => (string) $productObject->isbn,
+            'ean13' => (string) $productObject->ean13,
+            'upc' => (string) $productObject->upc,
+            'mpn' => (string) $productObject->mpn,
+            'customizations_count' => $productObject->getCustomizationFields(self::getDefaultLanguageId(), $shopId) ?
+                (int) count($productObject->getCustomizationFields(self::getDefaultLanguageId(), $shopId)) : 0,
             'attached_files_count' => $productObject->getAttachments(self::getDefaultLanguageId()) ?
-                (int)count($productObject->getAttachments(self::getDefaultLanguageId())) : 0,
-            'all_files_count'      => (int)$allAttachments[0]['cnt'],
-            'shops'                => [],
-            'tags'                 => []
+                (int) count($productObject->getAttachments(self::getDefaultLanguageId())) : 0,
+            'all_files_count' => (int) $allAttachments[0]['cnt'],
+            'shops' => [],
+            'tags' => [],
         ];
         $responseArray['shops'][] = [
-            'shop_id'             => (int)$shopId,
-            'visibility'          => (string)$productObject->visibility,
-            'available_for_order' => (bool)$productObject->available_for_order,
-            'show_price'          => (bool)$productObject->show_price,
-            'online_only'         => (bool)$productObject->online_only,
-            'condition'           => (string)$productObject->condition,
-            'show_condition'      => (string)$productObject->show_condition
+            'shop_id' => (int) $shopId,
+            'visibility' => (string) $productObject->visibility,
+            'available_for_order' => (bool) $productObject->available_for_order,
+            'show_price' => (bool) $productObject->show_price,
+            'online_only' => (bool) $productObject->online_only,
+            'condition' => (string) $productObject->condition,
+            'show_condition' => (string) $productObject->show_condition,
         ];
         $languageIds = Language::getLanguages(true, $shopId, true);
         foreach ($languageIds as $languageId) {
             $responseArray['tags'][] = [
-                'language_id' => (int)$languageId,
-                'tags'        => (string)$productObject->getTags($languageId)
+                'language_id' => (int) $languageId,
+                'tags' => (string) $productObject->getTags($languageId),
             ];
         }
         self::generateResponse($responseArray);
@@ -2954,6 +3070,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $data
+     *
      * @throws EM1Exception
      */
     public function saveProductOptions($data)
@@ -3025,6 +3142,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $id
+     *
      * @throws EM1Exception
      */
     public function deleteProductCustomizationField($id)
@@ -3042,6 +3160,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $data
+     *
      * @throws EM1Exception
      */
     public function saveProductCustomizationField($data)
@@ -3068,6 +3187,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $data
+     *
      * @throws EM1Exception
      */
     public function createProductCustomizationField($data)
@@ -3080,7 +3200,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             $name = [];
             $shopIds = [];
             foreach ($data['languages'] as $language) {
-                $name[$language['language_id']] = $language['label'];
+                $name[self::getDefaultLanguageId()] = $language['label'];
                 $shopIds[] = $language['shop_id'];
             }
             $customizationField->id_shop_list = $shopIds;
@@ -3104,6 +3224,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $data
+     *
      * @throws EM1Exception
      */
     public function uploadProductAttachedFile($data)
@@ -3137,8 +3258,8 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             }
             $attachment->attachProduct($data['product_id']);
             self::generateResponse([
-                'file_id' => (int)$attachment->id,
-                'mime'    => $attachment->mime
+                'file_id' => (int) $attachment->id,
+                'mime' => $attachment->mime,
             ]);
         } else {
             throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, '$_FILES is empty');
@@ -3148,6 +3269,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $productId
      * @param $shopId
+     *
      * @throws EM1Exception
      */
     public function getProductEditLanguageValues($productId, $shopId)
@@ -3159,17 +3281,17 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
         $responseArray = [
             'language_values' => [
-                'shop_id'                     => (int)$shopId,
-                'language_id'                 => (int)$this->languageId,
-                'product_name'                => (string)$productObject->name,
-                'is_description_filled'       => (bool)$productObject->description,
-                'is_short_description_filled' => (bool)$productObject->description_short,
-                'delivery_in_stock'           => (string)$productObject->delivery_in_stock,
-                'delivery_out_of_stock'       => (string)$productObject->delivery_out_stock,
-                'meta_title'                  => (string)$productObject->meta_title,
-                'meta_description'            => (string)$productObject->meta_description,
-                'link_rewrite'                => (string)$productObject->link_rewrite
-            ]
+                'shop_id' => (int) $shopId,
+                'language_id' => (int) $this->languageId,
+                'product_name' => (string) $productObject->name,
+                'is_description_filled' => (bool) $productObject->description,
+                'is_short_description_filled' => (bool) $productObject->description_short,
+                'delivery_in_stock' => (string) $productObject->delivery_in_stock,
+                'delivery_out_of_stock' => (string) $productObject->delivery_out_stock,
+                'meta_title' => (string) $productObject->meta_title,
+                'meta_description' => (string) $productObject->meta_description,
+                'link_rewrite' => (string) $productObject->link_rewrite,
+            ],
         ];
 
         self::generateResponse($responseArray);
@@ -3178,13 +3300,14 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $productId
      * @param $shopId
+     *
      * @throws EM1Exception
      */
     public function getProductEditCustomizationFields($productId, $shopId)
     {
         $responseArray = [
             'customization_fields_count' => null,
-            'customization_fields'       => []
+            'customization_fields' => [],
         ];
         try {
             $productObject = new Product($productId, true, null, $shopId);
@@ -3199,16 +3322,16 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                     foreach ($languagesArray as $languageArray) {
                         if ($customizationFieldResponse === null) {
                             $customizationFieldResponse = [
-                                'customization_field_id' => (int)$languageArray['id_customization_field'],
-                                'is_required'            => (bool)$languageArray['required'],
-                                'type'                   => (int)$languageArray['type'],
-                                'languages'              => []
+                                'customization_field_id' => (int) $languageArray['id_customization_field'],
+                                'is_required' => (bool) $languageArray['required'],
+                                'type' => (int) $languageArray['type'],
+                                'languages' => [],
                             ];
                         }
                         $customizationFieldResponse['languages'][] = [
-                            'shop_id'     => (int)$shopId,
-                            'language_id' => (int)$languageArray['id_lang'],
-                            'label'       => (string)$languageArray['name']
+                            'shop_id' => (int) $shopId,
+                            'language_id' => (int) $languageArray['id_lang'],
+                            'label' => (string) $languageArray['name'],
                         ];
                     }
                     if ($customizationField !== null) {
@@ -3224,6 +3347,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $productId
+     *
      * @throws EM1Exception
      */
     public function deleteProduct($productId)
@@ -3248,21 +3372,21 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         try {
             $product = new Product($productId);
             $product->setFieldsToUpdate(
-                array(
-                    'description' => true
-                )
+                [
+                    'description' => true,
+                ]
             );
 
-            //map translatable
-            $descriptionValues = array();
+            // map translatable
+            $descriptionValues = [];
             foreach ($product->getFieldsLang() as $productLang) {
-                if ($this->languageId === (int)$productLang['id_lang']) {
-                    $descriptionValues[(int)$productLang['id_lang']] = '';
+                if ($this->languageId === (int) $productLang['id_lang']) {
+                    $descriptionValues[(int) $productLang['id_lang']] = '';
                     continue;
                 }
 
-                $descriptionValues[(int)$productLang['id_lang']] =
-                    $product->getFieldByLang('description', (int)$productLang['id_lang']);
+                $descriptionValues[(int) $productLang['id_lang']] =
+                    $product->getFieldByLang('description', (int) $productLang['id_lang']);
             }
 
             $product->description = $descriptionValues;
@@ -3275,14 +3399,17 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $productId
+     *
      * @return array
+     *
      * @throws EM1Exception
      */
     private function getProductCombinationsCountByShops($productId)
     {
         return self::getQueryResult(
-            /** @lang MySQL */'SELECT COUNT(*) AS combinations_count, `id_shop` 
-            FROM `'._DB_PREFIX_.'product_attribute` pa 
+            /* @lang MySQL */
+            'SELECT COUNT(*) AS combinations_count, `id_shop` 
+            FROM `' . _DB_PREFIX_ . 'product_attribute` pa 
             ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
             WHERE pa.`id_product` = ' . $productId . '
             GROUP BY `id_shop`'
@@ -3291,6 +3418,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $specificPrice
+     *
      * @throws EM1Exception
      */
     public function createProductSpecificPrice($specificPrice)
@@ -3313,28 +3441,35 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         $specificPriceObject->id_product_attribute = $specificPrice['combination_id'];
         $specificPriceObject->price = $specificPrice['price'];
         $specificPriceObject->from_quantity = $specificPrice['from_quantity'];
-        $specificPriceObject->reduction = $specificPrice['reduction'];
+        // because MA send reduction like it shown in the admin we need to convert it to DB format
+        if ($specificPrice['reduction_type'] === 'percentage') {
+            $specificPriceObject->reduction = $specificPrice['reduction'] / 100;
+        } elseif ($specificPrice['reduction_type'] === 'amount'
+        ) {
+            $specificPriceObject->reduction = $specificPrice['reduction'];
+        }
+        // $specificPriceObject->reduction = $specificPrice['reduction']; //added condition above
         $specificPriceObject->reduction_tax = $specificPrice['tax_included'];
         $specificPriceObject->reduction_type = $specificPrice['reduction_type'];
-        $specificPriceObject->from = $specificPrice['available_date']
-            ? date('Y-m-d', self::convertMillisecondsTimestampToTimestamp($specificPrice['available_date']))
+        $specificPriceObject->from = $specificPrice['available_from']
+            ? gmdate('Y-m-d', self::convertMillisecondsTimestampToTimestamp($specificPrice['available_from']))
             : '0000-00-00 00:00:00';
         $specificPriceObject->to = $specificPrice['available_to']
-            ? date('Y-m-d', self::convertMillisecondsTimestampToTimestamp($specificPrice['available_to']))
+            ? gmdate('Y-m-d', self::convertMillisecondsTimestampToTimestamp($specificPrice['available_to']))
             : '0000-00-00 00:00:00';
         try {
             $specificPriceObject->add();
-            if ((int)$specificPriceObject->id === 0) {
+            if ((int) $specificPriceObject->id === 0) {
                 throw new EM1Exception(EM1Exception::ERROR_CODE_SPECIFIC_PRICE_UNIQUE_CONSTRAINT);
             }
 
             $responseArray = [
-                'specific_price_id'     => (int)$specificPriceObject->id,
-                'formatted_reduction'   => (string)Tools::displayPrice((float)$specificPriceObject->reduction),
+                'specific_price_id' => (int) $specificPriceObject->id,
+                'formatted_reduction' => (string) Tools::displayPrice((float) $specificPriceObject->reduction),
                 'specific_prices_count' => self::getSpecificPricesCount(
                     $specificPriceObject->id_product,
                     $specificPrice['shop_id']
-                )
+                ),
             ];
         } catch (Exception $exception) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_SPECIFIC_PRICE_UNIQUE_CONSTRAINT);
@@ -3344,6 +3479,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $data
+     *
      * @throws EM1Exception
      */
     public function uploadProductImage($data)
@@ -3372,35 +3508,51 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                     if ($shop['cover'] === true) {
                         $productCoverImage = Image::getCover($data['product_id']);
                         if ($productCoverImage !== null) {
+                            /* // cover image uploads two times here
                             $productCoverImageId = $productCoverImage['id_image'];
                             $productCoverImage = new Image($productCoverImageId);
                             $productCoverImage->id_product = $data['product_id'];
                             $productCoverImage->cover = false;
                             $productCoverImage->save();
-                            unset($productCoverImage);
+                            unset($productCoverImage);*/
+                            Image::deleteCover($data['product_id']);
                         }
                     }
                 }
                 // move to specific folder manually cuz core method for product image upload has protected flag
-                if (($image->validateFields(false, true)) === true &&
-                    ($image->validateFieldsLang(false, true)) === true && $image->add()) {
+                if ($image->validateFields(false, true) === true
+                    && $image->validateFieldsLang(false, true) === true && $image->add()) {
                     $image->associateTo([$data['shop_id']]);
-                    move_uploaded_file(
+                    /*move_uploaded_file(
                         $_FILES['image']['tmp_name'],
                         $image->getPathForCreation() . '-' . ImageType::getFormattedName('home') . '.jpg'
-                    );
+                    );*/
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $image->getPathForCreation() . '.jpg')) {
+                        $pathForCreation = $image->getPathForCreation();
+
+                        $new_image_name_cart = $pathForCreation . '-' . ImageType::getFormattedName('cart') . '.jpg';
+                        ImageManagerCore::resize($pathForCreation . '.jpg', $new_image_name_cart, 125, 125, 'jpg');
+                        $new_image_name_home = $pathForCreation . '-' . ImageType::getFormattedName('home') . '.jpg';
+                        ImageManagerCore::resize($pathForCreation . '.jpg', $new_image_name_home, 250, 250, 'jpg');
+                        $new_image_name_large = $pathForCreation . '-' . ImageType::getFormattedName('large') . '.jpg';
+                        ImageManagerCore::resize($pathForCreation . '.jpg', $new_image_name_large, 800, 800, 'jpg');
+                        $new_image_name_med = $pathForCreation . '-' . ImageType::getFormattedName('medium') . '.jpg';
+                        ImageManagerCore::resize($pathForCreation . '.jpg', $new_image_name_med, 452, 452, 'jpg');
+                        $new_image_name_small = $pathForCreation . '-' . ImageType::getFormattedName('small') . '.jpg';
+                        ImageManagerCore::resize($pathForCreation . '.jpg', $new_image_name_small, 98, 98, 'jpg');
+                    }
                 }
             } catch (Exception $e) {
                 throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $e->getMessage());
             }
             $defaultLanguageId = self::getDefaultLanguageId();
             self::generateResponse([
-                'image_id'  => (int)$image->id,
-                'image_url' => (string)self::getProductImageUrl(
+                'image_id' => (int) $image->id,
+                'image_url' => (string) self::getProductImageUrl(
                     $productObject->link_rewrite[$defaultLanguageId],
                     $image->id
                 ),
-                'position'  => (int)$image->position
+                'position' => (int) $image->position,
             ]);
         } else {
             throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, '$_FILES is empty');
@@ -3410,6 +3562,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $specificPrice
      * @param $shopId
+     *
      * @throws EM1Exception
      */
     public function saveProductSpecificPrice($specificPrice, $shopId)
@@ -3420,35 +3573,26 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $exception->getMessage());
         }
         $specificPriceOldData = [
-            'product_id'     => $specificPriceObject->id_product,
-            'shop_id'        => $specificPriceObject->id_shop,
-            'currency_id'    => $specificPriceObject->id_currency,
-            'country_id'     => $specificPriceObject->id_country,
-            'group_id'       => $specificPriceObject->id_group,
-            'customer_id'    => $specificPriceObject->id_customer,
+            'product_id' => $specificPriceObject->id_product,
+            'shop_id' => $specificPriceObject->id_shop,
+            'currency_id' => $specificPriceObject->id_currency,
+            'country_id' => $specificPriceObject->id_country,
+            'group_id' => $specificPriceObject->id_group,
+            'customer_id' => $specificPriceObject->id_customer,
             'combination_id' => $specificPriceObject->id_product_attribute,
-            'price'          => $specificPriceObject->price,
-            'from_quantity'  => $specificPriceObject->from_quantity,
-            'reduction'      => $specificPriceObject->reduction,
-            'tax_included'   => $specificPriceObject->reduction_tax,
+            'price' => $specificPriceObject->price,
+            'from_quantity' => $specificPriceObject->from_quantity,
+            'reduction' => $specificPriceObject->reduction,
+            'tax_included' => $specificPriceObject->reduction_tax,
             'reduction_type' => $specificPriceObject->reduction_type,
             'available_from' => self::convertTimestampToMillisecondsTimestamp($specificPriceObject->from),
-            'available_to'   => self::convertTimestampToMillisecondsTimestamp($specificPriceObject->to)
+            'available_to' => self::convertTimestampToMillisecondsTimestamp($specificPriceObject->to),
         ];
 
         foreach ($specificPrice as $field => $value) {
             if ($value === null) {
                 $specificPrice[$field] = $specificPriceOldData[$field];
             }
-        }
-
-        // because MA send reduction like it shown in the admin we need to convert it to DB format
-        if ($specificPriceObject->reduction_type === 'amount' && $specificPrice['reduction_type'] === 'percentage') {
-            $specificPrice['reduction'] /= 100;
-        } elseif ($specificPriceObject->reduction_type === 'percentage'
-            && $specificPrice['reduction_type'] === 'amount'
-        ) {
-            $specificPrice['reduction'] *= 100;
         }
 
         $specificPriceObject->id_product = $specificPrice['product_id'];
@@ -3460,27 +3604,41 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         $specificPriceObject->id_product_attribute = $specificPrice['combination_id'];
         $specificPriceObject->price = $specificPrice['price'];
         $specificPriceObject->from_quantity = $specificPrice['from_quantity'];
-        $specificPriceObject->reduction = $specificPrice['reduction'];
+
+        // because MA send reduction like it shown in the admin we need to convert it to DB format
+        if ($specificPrice['reduction_type'] === 'percentage') {
+            $specificPriceObject->reduction = $specificPrice['reduction'] / 100;
+        } elseif ($specificPrice['reduction_type'] === 'amount'
+        ) {
+            $specificPriceObject->reduction = $specificPrice['reduction'];
+        }
+
+        // $specificPriceObject->reduction = $specificPrice['reduction'];
         $specificPriceObject->reduction_tax = $specificPrice['tax_included'];
         $specificPriceObject->reduction_type = $specificPrice['reduction_type'];
-        $specificPriceObject->from =
-            date('Y-m-d', self::convertMillisecondsTimestampToTimestamp($specificPrice['available_from']));
-        $specificPriceObject->to =
-            date('Y-m-d', self::convertMillisecondsTimestampToTimestamp($specificPrice['available_to']));
+        if ($specificPrice['available_from'] > 0) {
+            $specificPriceObject->from =
+                gmdate('Y-m-d', self::convertMillisecondsTimestampToTimestamp($specificPrice['available_from']));
+        }
+
+        if ($specificPrice['available_from'] > 0) {
+            $specificPriceObject->to =
+                gmdate('Y-m-d', self::convertMillisecondsTimestampToTimestamp($specificPrice['available_to']));
+        }
         try {
             $specificPriceObject->update();
 
             if ($specificPriceObject->reduction_type == 'amount') {
-                $reduction = (float)$specificPriceObject->reduction;
+                $reduction = (float) $specificPriceObject->reduction;
                 $formattedReduction = Tools::displayPrice($reduction);
             } else {
-                $reduction = $this->round((float)$specificPriceObject->reduction * 100);
+                $reduction = $this->round((float) $specificPriceObject->reduction * 100);
                 $formattedReduction = $reduction . ' %';
             }
 
             $responseArray = [
-                'formatted_reduction'   => $formattedReduction,
-                'specific_prices_count' => self::getSpecificPricesCount($specificPriceObject->id_product, $shopId)
+                'formatted_reduction' => $formattedReduction,
+                'specific_prices_count' => self::getSpecificPricesCount($specificPriceObject->id_product, $shopId),
             ];
         } catch (Exception $exception) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $exception->getMessage());
@@ -3491,29 +3649,33 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $productId
      * @param $shopId
+     *
      * @return int
+     *
      * @throws PrestaShopDatabaseException
      */
     public static function getSpecificPricesCount($productId, $shopId)
     {
         if ($shopId === null || $shopId === -1) {
-            $specificPricesCount = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(pSQL('
+            $specificPricesCount = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT COUNT(id_specific_price) AS cnt
 			FROM `' . _DB_PREFIX_ . 'specific_price`
-			WHERE `id_product` = ' . (int)$productId));
+			WHERE `id_product` = ' . (int) $productId);
         } else {
-            $specificPricesCount = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(pSQL('
+            $specificPricesCount = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT COUNT(id_specific_price) AS cnt
 			FROM `' . _DB_PREFIX_ . 'specific_price`
-			WHERE `id_product` = ' . (int)$productId . '
-			AND id_shop = ' . (int)$shopId));
+			WHERE `id_product` = ' . (int) $productId . '
+			AND id_shop = ' . (int) $shopId);
         }
-        return (int)$specificPricesCount[0]['cnt'];
+
+        return (int) $specificPricesCount[0]['cnt'];
     }
 
     /**
      * @param $productId
      * @param $shopId
+     *
      * @throws EM1Exception
      */
     public function getProductEditSpecificPrices($productId, $shopId)
@@ -3528,13 +3690,13 @@ class MAProduct extends EM1Main implements EM1ProductInterface
                 $shops = [$shopId];
             }
             $shops[] = 0;
-            $specificPrices = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(pSQL('
+            $specificPrices = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
 			FROM `' . _DB_PREFIX_ . 'specific_price`
-			WHERE `id_product` = ' . (int) $productId . ' AND `id_shop` IN (' . implode(', ', $shops) . ')'));
+			WHERE `id_product` = ' . (int) $productId . ' AND `id_shop` IN (' . pSQL(implode(', ', $shops)) . ')');
             $responseArray = [
                 'specific_prices_count' => count($specificPrices),
-                'specific_prices'       => []
+                'specific_prices' => [],
             ];
             foreach ($specificPrices as $specificPrice) {
                 $responseArray['specific_prices'][] =
@@ -3550,7 +3712,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $specificPriceId
      * @param $shopId
+     *
      * @return array
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -3560,10 +3724,10 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         $customer = new Customer($specificPriceObject->id_customer);
 
         if ($specificPriceObject->reduction_type == 'amount') {
-            $reduction = (float)$specificPriceObject->reduction;
+            $reduction = (float) $specificPriceObject->reduction;
             $formattedReduction = Tools::displayPrice($reduction);
         } else {
-            $reduction = $this->round((float)$specificPriceObject->reduction * 100);
+            $reduction = $this->round((float) $specificPriceObject->reduction * 100);
             $formattedReduction = $reduction . ' %';
         }
         $availableFrom = $specificPriceObject->from;
@@ -3574,37 +3738,39 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         if ($specificPriceObject->to == '0000-00-00 00:00:00') {
             $availableTo = null;
         }
+
         return [
-            'specific_price_id'   => (int)$specificPriceObject->id,
-            'shop_id'             => (int)$specificPriceObject->id_shop,
-            'currency_id'         => (int)$specificPriceObject->id_currency,
-            'country_id'          => (int)$specificPriceObject->id_country,
-            'group_id'            => (int)$specificPriceObject->id_group,
-            'customer_id'         => (int)$specificPriceObject->id_customer,
+            'specific_price_id' => (int) $specificPriceObject->id,
+            'shop_id' => (int) $specificPriceObject->id_shop,
+            'currency_id' => (int) $specificPriceObject->id_currency,
+            'country_id' => (int) $specificPriceObject->id_country,
+            'group_id' => (int) $specificPriceObject->id_group,
+            'customer_id' => (int) $specificPriceObject->id_customer,
             'customer_first_name' => $customer->firstname,
-            'customer_last_name'  => $customer->lastname,
-            'combination_id'      => (int)$specificPriceObject->id_product_attribute,
-            'price'               => (float)$specificPriceObject->price,
-            'from_quantity'       => (int)$specificPriceObject->from_quantity,
-            'reduction'           => $reduction,
+            'customer_last_name' => $customer->lastname,
+            'combination_id' => (int) $specificPriceObject->id_product_attribute,
+            'price' => (float) $specificPriceObject->price,
+            'from_quantity' => (int) $specificPriceObject->from_quantity,
+            'reduction' => $reduction,
             'formatted_reduction' => $formattedReduction,
-            'tax_included'        => (bool)$specificPriceObject->reduction_tax,
-            'reduction_type'      => (string)$specificPriceObject->reduction_type,
-            'available_from'      => self::convertTimestampToMillisecondsTimestamp($availableFrom),
-            'available_to'        => self::convertTimestampToMillisecondsTimestamp($availableTo)
+            'tax_included' => (bool) $specificPriceObject->reduction_tax,
+            'reduction_type' => (string) $specificPriceObject->reduction_type,
+            'available_from' => self::convertTimestampToMillisecondsTimestamp($availableFrom),
+            'available_to' => self::convertTimestampToMillisecondsTimestamp($availableTo),
         ];
     }
 
     /**
      * @param $productId
      * @param $shopId
+     *
      * @throws EM1Exception
      */
     public function getProductEditAssignedCategories($productId, $shopId)
     {
         $responseArray = [
-            'categories'       => [],
-            'categories_count' => count(self::getProductCategoryIds($productId, $shopId))
+            'categories' => [],
+            'categories_count' => count(self::getProductCategoryIds($productId, $shopId)),
         ];
 
         if (!Product::existsInDatabase($productId, 'product')) {
@@ -3628,6 +3794,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $categoryId
      * @param $categoryDefault
+     *
      * @return array
      */
     private function getAssignedProductCategoryDto($categoryId, $categoryDefault)
@@ -3637,10 +3804,10 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         $categoryPath = $this->getCategoryPath($categoryId);
 
         return [
-            'category_id' => (int)$categoryObject->id,
-            'name'        => $categoryObject->name,
-            'path'        => $categoryPath,
-            'is_main'     => (bool)($categoryObject->id == $categoryDefault)
+            'category_id' => (int) $categoryObject->id,
+            'name' => $categoryObject->name,
+            'path' => $categoryPath,
+            'is_main' => (bool) ($categoryObject->id == $categoryDefault),
         ];
     }
 
@@ -3653,7 +3820,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             $shopId = Configuration::get('PS_SHOP_DEFAULT');
         }
         $responseArray = [
-            'categories' => []
+            'categories' => [],
         ];
         $categories = Category::getSimpleCategories($this->languageId);
         foreach ($categories as $category) {
@@ -3666,23 +3833,26 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $categoryId
      * @param $shopId
+     *
      * @return array
      */
     public function getProductCategoryDto($categoryId, $shopId)
     {
         $categoryObject = new Category($categoryId, $this->languageId, $shopId);
+
         return [
-            'category_id'        => (int)$categoryObject->id,
-            'parent_category_id' => (int)$categoryObject->id_parent,
-            'name'               => $categoryObject->name,
-            'path'               => self::getCategoryPath($categoryObject->id),
-            'position'           => (int)$categoryObject->position,
-            'is_root'            => $categoryObject->level_depth == 1
+            'category_id' => (int) $categoryObject->id,
+            'parent_category_id' => (int) $categoryObject->id_parent,
+            'name' => $categoryObject->name,
+            'path' => self::getCategoryPath($categoryObject->id),
+            'position' => (int) $categoryObject->position,
+            'is_root' => $categoryObject->level_depth == 1,
         ];
     }
 
     /**
      * @param $productId
+     *
      * @throws EM1Exception
      */
     public function getProductEditFeatures($productId)
@@ -3692,9 +3862,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
 
         $responseArray = [
-            'all_features'           => [],
-            'product_features'       => [],
-            'product_features_count' => ''
+            'all_features' => [],
+            'product_features' => [],
+            'product_features_count' => '',
         ];
         $features = Feature::getFeatures($this->languageId);
         try {
@@ -3707,7 +3877,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             foreach ($productFeatures as $productFeature) {
                 $responseArray['product_features'][] = self::getProductFeatureDto($productFeature);
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $exception->getMessage());
         }
 
@@ -3718,7 +3888,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $featureId
+     *
      * @return array
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -3726,11 +3898,11 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     {
         $featureObject = new Feature($featureId);
         $returnArray = [
-            'feature_id'     => (int)$featureObject->id,
-            'position'       => (int)$featureObject->position,
-            'languages'      => [],
-            'shops'          => [],
-            'feature_values' => []
+            'feature_id' => (int) $featureObject->id,
+            'position' => (int) $featureObject->position,
+            'languages' => [],
+            'shops' => [],
+            'feature_values' => [],
         ];
 
         if (is_array($featureObject->name)) {
@@ -3743,7 +3915,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
 
         foreach ($featureObject->getAssociatedShops() as $shopId) {
-            $returnArray['shops'][] = (int)$shopId;
+            $returnArray['shops'][] = (int) $shopId;
         }
 
         $featureValues = FeatureValue::getFeatureValues($featureObject->id);
@@ -3757,19 +3929,22 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $featureName
      * @param $languageId
+     *
      * @return array
      */
     public static function getFeatureToLanguageDto($featureName, $languageId)
     {
         return [
-            'language_id' => (int)$languageId,
-            'name'        => $featureName
+            'language_id' => (int) $languageId,
+            'name' => $featureName,
         ];
     }
 
     /**
      * @param $featureValueData
+     *
      * @return array
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -3777,9 +3952,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     {
         $featureValueObject = new FeatureValue($featureValueData['id_feature_value']);
         $returnArray = [
-            'feature_value_id' => (int)$featureValueObject->id,
-            'custom'           => (bool)$featureValueObject->custom,
-            'languages'        => []
+            'feature_value_id' => (int) $featureValueObject->id,
+            'custom' => (bool) $featureValueObject->custom,
+            'languages' => [],
         ];
         if (is_array($featureValueObject->value)) {
             foreach ($featureValueObject->value as $languageId => $value) {
@@ -3798,30 +3973,33 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $value
      * @param $languageId
+     *
      * @return array
      */
     public static function getFeatureValueToLanguageDto($value, $languageId)
     {
         return [
             'language_id' => $languageId,
-            'value'       => $value
+            'value' => $value,
         ];
     }
 
     /**
      * @param $productFeature
+     *
      * @return array
      */
     public static function getProductFeatureDto($productFeature)
     {
         return [
-            'feature_id'       => (int)$productFeature['id_feature'],
-            'feature_value_id' => (int)$productFeature['id_feature_value']
+            'feature_id' => (int) $productFeature['id_feature'],
+            'feature_value_id' => (int) $productFeature['id_feature_value'],
         ];
     }
 
     /**
      * @param $data
+     *
      * @throws EM1Exception
      */
     public function addProductFeature($data)
@@ -3831,7 +4009,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
         try {
             $productObject = new Product($data['product_id']);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $exception->getMessage());
         }
         $custom = is_array($data['custom_values']);
@@ -3851,14 +4029,14 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
         try {
             $productObject->save();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $exception->getMessage());
         }
 
         self::generateResponse(
             [
-                'feature_value_id'      => (int)$featureValueId,
-                'product_features_count' => count($productObject->getFeatures())
+                'feature_value_id' => (int) $featureValueId,
+                'product_features_count' => count($productObject->getFeatures()),
             ]
         );
     }
@@ -3866,6 +4044,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $featureValueId
      * @param $data
+     *
      * @throws EM1Exception
      */
     public function updateProductFeature($featureValueId, $data)
@@ -3878,7 +4057,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
         try {
             $productObject = new Product($data['product_id']);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new EM1Exception(EM1Exception::ERROR_CODE_UNKNOWN, $exception->getMessage());
         }
         self::deleteProductFeature($featureValueId, $data['product_id']);
@@ -3900,8 +4079,8 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
         self::generateResponse(
             [
-                'feature_value_id' => (int)$featureValueId,
-                'product_features_count' => count($productObject->getFeatures())
+                'feature_value_id' => (int) $featureValueId,
+                'product_features_count' => count($productObject->getFeatures()),
             ]
         );
     }
@@ -3909,6 +4088,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $productId
      * @param $features
+     *
      * @throws EM1Exception
      */
     public function deleteProductFeatures($productId, $features)
@@ -3928,7 +4108,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
         self::generateResponse(
             [
-                'product_features_count' => count($productObject->getFeatures())
+                'product_features_count' => count($productObject->getFeatures()),
             ]
         );
     }
@@ -3939,13 +4119,13 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      */
     public static function deleteProductFeature($featureValueId, $productId)
     {
-        Db::getInstance(_PS_USE_SQL_SLAVE_)->delete(
-            _DB_PREFIX_ . 'feature_product',
+        Db::getInstance()->delete(
+            'feature_product',
             '`id_product` = ' . (int) $productId . '
                     AND `id_feature_value` = ' . (int) $featureValueId
         );
-        Db::getInstance(_PS_USE_SQL_SLAVE_)->delete(
-            _DB_PREFIX_ . 'feature_value',
+        Db::getInstance()->delete(
+            'feature_value',
             '`custom` = 1
                     AND `id_feature_value` = ' . (int) $featureValueId
         );
@@ -3954,6 +4134,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $productId
      * @param $categories
+     *
      * @throws EM1Exception
      */
     public function updateAssignedProductCategories($productId, $categories)
@@ -3978,7 +4159,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
         $responseArray = [
             'categories' => [],
-            'categories_count' => 0
+            'categories_count' => 0,
         ];
         foreach (self::getProductCategoryIds($productId) as $categoryId) {
             $responseArray['categories'][] = self::getAssignedProductCategoryDto(
@@ -3995,6 +4176,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
      * @param $productId
      * @param $categoryId
      * @param $shopId
+     *
      * @throws EM1Exception
      */
     public function deleteProductCategory($productId, $categoryId, $shopId)
@@ -4016,8 +4198,8 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             }
             self::generateResponse(
                 [
-                    'main_category_id' => (int)$mainCategoryId,
-                    'categories_count' => count(self::getProductCategoryIds($productId, $shopId))
+                    'main_category_id' => (int) $mainCategoryId,
+                    'categories_count' => count(self::getProductCategoryIds($productId, $shopId)),
                 ]
             );
         }
@@ -4027,7 +4209,9 @@ class MAProduct extends EM1Main implements EM1ProductInterface
     /**
      * @param $productId
      * @param null $shopId
+     *
      * @return int
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -4048,6 +4232,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
         }
         $productObject->id_category_default = $categoryId;
         $productObject->save();
+
         return $categoryId;
     }
 
@@ -4068,6 +4253,7 @@ class MAProduct extends EM1Main implements EM1ProductInterface
 
     /**
      * @param $categoryId
+     *
      * @return mixed|string
      */
     private function getCategoryPath($categoryId)
@@ -4078,13 +4264,11 @@ class MAProduct extends EM1Main implements EM1ProductInterface
             $categoryObject = new Category($categoryObject->id_parent, $this->languageId);
             $categoryPath = $categoryObject->name . '>' . $categoryPath;
         }
+
         return $categoryPath;
     }
 }
 
-/**
- *
- */
 function includedProductFiles()
 {
     require_once _PS_MODULE_DIR_ . '/' . EM1Constants::MODULE_NAME . '/classes/helper/EM1Main.php';

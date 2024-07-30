@@ -16,9 +16,12 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class MAOrderPDF extends PDFCore
 {
@@ -26,12 +29,12 @@ class MAOrderPDF extends PDFCore
 
     /**
      * MAOrderPDF constructor.
+     *
      * @param $languageIsoCode
      * @param $objects
      * @param $template
      * @param $smarty
      */
-
     public function __construct($languageIsoCode, $objects, $template, $smarty)
     {
         $this->languageIsoCode = $languageIsoCode;
@@ -64,6 +67,7 @@ class MAOrderPDF extends PDFCore
 
         if ($render) {
             $this->pdf_renderer->Output($this->filename, $display);
+
             return true;
         }
 

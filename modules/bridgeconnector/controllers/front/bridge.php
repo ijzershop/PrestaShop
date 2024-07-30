@@ -16,9 +16,12 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class BridgeconnectorBridgeModuleFrontController extends ModuleFrontController
 {
@@ -26,10 +29,16 @@ class BridgeconnectorBridgeModuleFrontController extends ModuleFrontController
 
     public function __construct()
     {
-        require_once _PS_MODULE_DIR_.'/'.EM1Constants::MODULE_NAME.'/classes/helper/EM1Constants.php';
-        require_once _PS_MODULE_DIR_.'/'.EM1Constants::MODULE_NAME.'/classes/bridge/BridgeConnectorCore.php';
-        require_once _PS_MODULE_DIR_.'/'.EM1Constants::MODULE_NAME.'/classes/bridge/BridgeConnectorCommon.php';
-        require_once _PS_MODULE_DIR_.'/'.EM1Constants::MODULE_NAME.'/classes/PrestaShopOverrider.php';
+        require_once _PS_MODULE_DIR_ . '/' . EM1Constants::MODULE_NAME . '/classes/helper/EM1Constants.php';
+        require_once _PS_MODULE_DIR_ . '/' . EM1Constants::MODULE_NAME . '/classes/bridge/BridgeConnectorCore.php';
+        require_once _PS_MODULE_DIR_ . '/' . EM1Constants::MODULE_NAME . '/classes/bridge/BridgeConnectorCommon.php';
+        require_once _PS_MODULE_DIR_ . '/' . EM1Constants::MODULE_NAME . '/classes/PrestaShopOverrider.php';
+
+        $options = Configuration::get(EM1Constants::OPTIONS_KEY);
+
+        if ($options && @unserialize($options)) {
+            Configuration::updateGlobalValue(EM1Constants::OPTIONS_KEY, json_encode(unserialize($options)));
+        }
 
         $this->shop_cart_overrider = new PrestaShopOverrider(
             EM1Constants::MODULE_NAME,

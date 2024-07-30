@@ -15,20 +15,27 @@ class AttributeGroup extends AttributeGroupCore
     public static function getSawCutModuleAttributeGroupNames(int $idLang = 1): array
     {
         $sawCutConf = unserialize(Configuration::get('SAWANDCUTMODULE'));
-
-        $resultSawCut = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'attribute_group_lang` WHERE `id_attribute_group` = ' . (int)$sawCutConf['id_attribute_group_cut'] . ' AND `id_lang` = ' . (int)$idLang);
-        $resultCut = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'attribute_group_lang` WHERE `id_attribute_group` = ' . (int)$sawCutConf['id_attribute_group'] . ' AND `id_lang` = ' . (int)$idLang);
-
+        $resultSawCut = false;
+        $resultCut = false;
         $attributeGroupNames = [];
+        
+        if($sawCutConf){
+            $resultSawCut = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'attribute_group_lang` WHERE `id_attribute_group` = ' . (int)$sawCutConf['id_attribute_group_cut'] . ' AND `id_lang` = ' . (int)$idLang);
 
-        if ($resultSawCut) {
-            $attributeGroupNames[] = $resultSawCut[0]['name'];
-            $attributeGroupNames[] = $resultSawCut[0]['public_name'];
-        }
+            $resultCut = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'attribute_group_lang` WHERE `id_attribute_group` = ' . (int)$sawCutConf['id_attribute_group'] . ' AND `id_lang` = ' . (int)$idLang);
 
-        if ($resultCut) {
-            $attributeGroupNames[] = $resultCut[0]['name'];
-            $attributeGroupNames[] = $resultCut[0]['public_name'];
+
+            if ($resultSawCut) {
+                $attributeGroupNames[] = $resultSawCut[0]['name'];
+                $attributeGroupNames[] = $resultSawCut[0]['public_name'];
+            }
+
+            if ($resultCut) {
+                $attributeGroupNames[] = $resultCut[0]['name'];
+                $attributeGroupNames[] = $resultCut[0]['public_name'];
+            }
+        } else {
+
         }
 
         return $attributeGroupNames;

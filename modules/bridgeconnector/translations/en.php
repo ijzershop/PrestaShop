@@ -16,12 +16,11 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
-
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{bridgeconnector}prestashop>bridgeconnector_93c9f6eb4a57cd77d28b9feb4ec87c25'] = 'eMagicOne Store Manager Bridge Connector';
 $_MODULE['<{bridgeconnector}prestashop>bridgeconnector_876f23178c29dc2552c0b48bf23cd9bd'] = 'Are you sure you want to uninstall?';
 $_MODULE['<{bridgeconnector}prestashop>bridgeconnector_0f40e8817b005044250943f57a21c5e7'] = 'No name provided';

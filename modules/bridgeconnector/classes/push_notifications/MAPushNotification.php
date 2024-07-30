@@ -16,15 +16,17 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 includedPushNotificationFiles();
 
 class MAPushNotification extends EM1Main implements EM1PushNotificationInterface
 {
-
     /**
      * Some desc
      *
@@ -45,7 +47,9 @@ class MAPushNotification extends EM1Main implements EM1PushNotificationInterface
      * @param $pushOrderStatuses
      * @param $pushNewCustomer
      * @param $notNotifiedOrderStatusIds
+     *
      * @return void
+     *
      * @throws EM1Exception
      */
     public function setPushNotificationSettings(
@@ -67,7 +71,7 @@ class MAPushNotification extends EM1Main implements EM1PushNotificationInterface
 
         $deleteQuery = false;
         $updateQuery = false;
-    //         Delete empty record
+        //         Delete empty record
         try {
             if ($pushNewOrder === 0
                 && $pushOrderStatuses === 0
@@ -81,24 +85,24 @@ class MAPushNotification extends EM1Main implements EM1PushNotificationInterface
                 );
             } else {
                 $idExists = Db::getInstance()->getValue(
-                    'SELECT `id` FROM `' . _DB_PREFIX_ . "bridgeconnector_ma_push_notifications` WHERE " .
+                    'SELECT `id` FROM `' . _DB_PREFIX_ . 'bridgeconnector_ma_push_notifications` WHERE ' .
                     "`app_connection_id` = '" . pSQL($appConnectionId) . "' AND `registration_id` = '" .
                     pSQL($registrationId) . "'"
                 );
 
-                $data = array(
-                    'user_id'                           => $userId,
-                    'push_new_order'                    => (int)$pushNewOrder,
-                    'push_new_customer'                 => (int)$pushNewCustomer,
-                    'push_order_statuses'               => (int)$pushOrderStatuses,
-                    'not_notified_order_status_ids'     => (string)$notNotifiedOrderStatusIds
-                );
+                $data = [
+                    'user_id' => $userId,
+                    'push_new_order' => (int) $pushNewOrder,
+                    'push_new_customer' => (int) $pushNewCustomer,
+                    'push_order_statuses' => (int) $pushOrderStatuses,
+                    'not_notified_order_status_ids' => (string) $notNotifiedOrderStatusIds,
+                ];
 
                 if ($idExists) {
                     $updateQuery = Db::getInstance()->update(
                         'bridgeconnector_ma_push_notifications',
                         $data,
-                        '`id` = ' . (int)$idExists
+                        '`id` = ' . (int) $idExists
                     );
                 } else {
                     $data['app_connection_id'] = pSQL($appConnectionId);
@@ -107,10 +111,7 @@ class MAPushNotification extends EM1Main implements EM1PushNotificationInterface
                 }
             }
         } catch (PrestaShopDatabaseException $exception) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_CODE_QUERY_EXECUTION_ERROR,
-                $exception->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_CODE_QUERY_EXECUTION_ERROR, $exception->getMessage());
         }
 
         if ($deleteQuery || $updateQuery) {
@@ -125,7 +126,9 @@ class MAPushNotification extends EM1Main implements EM1PushNotificationInterface
      *
      * @param $appConnectionId
      * @param $registrationId
+     *
      * @return void
+     *
      * @throws EM1Exception
      */
     public function deletePushNotificationSettings($appConnectionId, $registrationId)
@@ -137,14 +140,11 @@ class MAPushNotification extends EM1Main implements EM1PushNotificationInterface
         try {
             $query = Db::getInstance()->delete(
                 'bridgeconnector_ma_push_notifications',
-                "`app_connection_id` = '".pSQL($appConnectionId)."' AND `registration_id` = '"
+                "`app_connection_id` = '" . pSQL($appConnectionId) . "' AND `registration_id` = '"
                 . pSQL($registrationId) . "'"
             );
         } catch (PrestaShopDatabaseException $exception) {
-            throw new EM1Exception(
-                EM1Exception::ERROR_CODE_QUERY_EXECUTION_ERROR,
-                $exception->getMessage()
-            );
+            throw new EM1Exception(EM1Exception::ERROR_CODE_QUERY_EXECUTION_ERROR, $exception->getMessage());
         }
 
         if (!$query) {

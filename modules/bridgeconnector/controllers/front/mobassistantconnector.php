@@ -16,10 +16,9 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
-
 class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFrontController
 {
     // module name
@@ -57,7 +56,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
     private $pushOrderStatuses;
     private $pushNewCustomer;
     private $statusCode;
-    private $notNotifiedOrderStatusIds = array();
+    private $notNotifiedOrderStatusIds = [];
     private $employeeId;
     private $email;
     private $comment;
@@ -117,18 +116,18 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
         }
 
         $this->checkToken();
-        if (EM1UserPermissions::isActionAllowed((int)EM1Access::getUserIdByToken($this->token), $methodName)) {
+        if (EM1UserPermissions::isActionAllowed((int) EM1Access::getUserIdByToken($this->token), $methodName)) {
             $this->{$methodName}();
         }
 
-        EM1Main::generateResponse(array(), EM1Exception::ERROR_CODE_FORBIDDEN);
+        EM1Main::generateResponse([], EM1Exception::ERROR_CODE_FORBIDDEN);
     }
 
     private function runSelfTest()
     {
         $html = 'eMagicOne Store Manager Bridge Connector (v. ' .
             Module::getInstanceByName($this->moduleName)->version . ')';
-        die($html);
+        exit($html);
     }
 
     /**
@@ -143,14 +142,14 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
 
         // Prepare parameters
         $this->languageId = empty($this->languageId)
-            ? (int)Configuration::get('PS_LANG_DEFAULT')
-            : (int)$this->languageId;
-        $this->languageLocale = (string)$this->getLanguageLocal();
+            ? (int) Configuration::get('PS_LANG_DEFAULT')
+            : (int) $this->languageId;
+        $this->languageLocale = (string) $this->getLanguageLocal();
         $this->currencyId = empty($this->currencyId)
-            ? (int)Configuration::get('PS_CURRENCY_DEFAULT')
-            : (int)$this->currencyId;
-        $this->pageSize = (empty($this->pageSize) || $this->pageSize < 1) ? 25 : (int)$this->pageSize;
-        $this->pageIndex = (empty($this->pageIndex) || $this->pageIndex < 1) ? 1 : (int)$this->pageIndex;
+            ? (int) Configuration::get('PS_CURRENCY_DEFAULT')
+            : (int) $this->currencyId;
+        $this->pageSize = (empty($this->pageSize) || $this->pageSize < 1) ? 25 : (int) $this->pageSize;
+        $this->pageIndex = (empty($this->pageIndex) || $this->pageIndex < 1) ? 1 : (int) $this->pageIndex;
         $this->notNotifiedOrderStatusIds = implode(',', $this->notNotifiedOrderStatusIds);
 
         // Can put some validation here
@@ -160,7 +159,9 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
     private function getLanguageLocal()
     {
         $lang = new Language($this->languageId);
-        if (method_exists($lang, "getLocale")) return $lang->getLocale();
+        if (method_exists($lang, 'getLocale')) {
+            return $lang->getLocale();
+        }
 
         return $lang->language_code;
     }
@@ -170,29 +171,30 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
         $uploadFileCallFuctions = [
             'upload_product_attached_file',
             'upload_product_image',
-            'save_product_quantity_settings'
+            'save_product_quantity_settings',
         ];
         if (in_array($_REQUEST['call_function'], $uploadFileCallFuctions)) {
             $dataArray = [];
             $dataArray['data'] = json_decode($_REQUEST['data'], true);
             $dataArray['token'] = $dataArray['data']['token'];
+
             return $dataArray;
         }
         $data = Tools::getIsset('data') ? Tools::getValue('data') : null;
         $content = json_decode(
-            (fopen('php://input', 'rb') !== false
-                ? Tools::file_get_contents('php://input')
-                : '{}'
-            ),
+            fopen('php://input', 'rb') !== false
+            ? Tools::file_get_contents('php://input')
+            : '{}',
             true
         );
 
-        //todo: add exception if json object can not be parsed with json error
-        return (array)(empty($content) ? json_decode($data, true) : $content);
+        // todo: add exception if json object can not be parsed with json error
+        return (array) (empty($content) ? json_decode($data, true) : $content);
     }
 
     /**
      * @param bool $forceAllShops
+     *
      * @throws EM1Exception
      */
     private function changeInstanceContext($forceAllShops = false)
@@ -203,19 +205,22 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
             } catch (PrestaShopException $e) {
                 throw new EM1Exception(EM1Exception::ERROR_CODE_FAILED_TO_SET_SHOP_CONTEXT, $e->getMessage());
             }
+
             return;
         }
 
         if (!Shop::isFeatureActive()) {
-            $this->shopId = (int)Configuration::get('PS_SHOP_DEFAULT');
+            $this->shopId = (int) Configuration::get('PS_SHOP_DEFAULT');
+
             return;
         }
 
-        $this->shopId = $this->shopId > 0 ? (int)$this->shopId : null;
-        $this->shopGroupId = $this->shopGroupId > 0 ? (int)$this->shopGroupId : null;
+        $this->shopId = $this->shopId > 0 ? (int) $this->shopId : null;
+        $this->shopGroupId = $this->shopGroupId > 0 ? (int) $this->shopGroupId : null;
         $method_name = EM1Main::snakeCaseToCamelCase(Tools::getValue('call_function'));
         if ($this->shopId <= 0 && $this->isContextShopRequiredInMethod($method_name)) {
-            Shop::setContext(Shop::CONTEXT_SHOP, (int)Configuration::get('PS_SHOP_DEFAULT'));
+            Shop::setContext(Shop::CONTEXT_SHOP, (int) Configuration::get('PS_SHOP_DEFAULT'));
+
             return;
         }
 
@@ -234,7 +239,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
 
     private function isContextShopRequiredInMethod($method_name)
     {
-        return (in_array($method_name, EM1Constants::METHODS_THAT_REQUIRE_CONTEXT_SHOP, true));
+        return in_array($method_name, EM1Constants::METHODS_THAT_REQUIRE_CONTEXT_SHOP, true);
     }
 
     /**
@@ -245,12 +250,12 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
         if ($this->token || $this->token === '') {
             if (!EM1Access::checkToken($this->token)) {
                 $this->fileLogger->logMessageCall('Token accepted is incorrect', $this->fileLogger->level);
-                EM1Main::generateResponse(array(), EM1Exception::ERROR_CODE_BAD_TOKEN);
+                EM1Main::generateResponse([], EM1Exception::ERROR_CODE_BAD_TOKEN);
             }
         } else {
             EM1Access::addFailedAttempt();
             $this->fileLogger->logMessageCall('Authorization error', $this->fileLogger->level);
-            EM1Main::generateResponse(array(), EM1Exception::ERROR_CODE_AUTH_ERROR);
+            EM1Main::generateResponse([], EM1Exception::ERROR_CODE_AUTH_ERROR);
         }
     }
 
@@ -259,17 +264,17 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
         if (isset($this->test)) {
             $response = [
                 'response_code' => 'success',
-                'error_message' => ''
+                'error_message' => '',
             ];
         } else {
             $response = [
                 'response_code' => 'no_connection',
-                'error_message' => 'no connection'
+                'error_message' => 'no connection',
             ];
         }
         header('Content-Type: application/json;');
         echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        die();
+        exit;
     }
 
     /**
@@ -277,7 +282,8 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function getDashboard()
     {
-        $dashboard = new MADashboard($this->shopId,
+        $dashboard = new MADashboard(
+            $this->shopId,
             $this->languageId,
             $this->currencyId,
             $this->dateFrom,
@@ -377,8 +383,8 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function changeOrderStatus()
     {
-        $order = new MAOrder($this->shopId, $this->languageId);
-        $order->changeOrderStatus($this->id, $this->orderStatusId);
+        $order = new MAOrder($this->shopId, $this->languageId, $this->token);
+        $order->changeOrderStatus($this->id, $this->orderStatusId, $this->token);
     }
 
     /**
@@ -1053,7 +1059,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function pushNotificationSettings()
     {
-        $userId = (int)EM1Access::getUserIdByToken($this->token);
+        $userId = (int) EM1Access::getUserIdByToken($this->token);
 
         $pushNotificationSettings = new MAPushNotification();
         $pushNotificationSettings->setPushNotificationSettings(
@@ -1096,7 +1102,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
 
         $customerService = new MACustomerService($this->languageId, $this->id, 1);
         $messages = $customerService->getCustomerThreadMessages();
-        $output = $this->displayMessage($messages, true, (int)$messages);
+        $output = $this->displayMessage($messages, true, (int) $messages);
         $translatedFields = $this->prepareTranslatedFields();
         if ($this->employeeId) {
             $customerService->forwardCustomerThreadMessages(
@@ -1226,6 +1232,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
 
     /**
      * unfinished
+     *
      * @throws EM1Exception
      */
     private function updateProductFeature()
@@ -1270,7 +1277,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
     private static function checkVersionDefined()
     {
         if (!defined('_PS_VERSION_')) {
-            die();
+            exit;
         }
     }
 
@@ -1282,50 +1289,51 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
             $forwardEmployee = new Employee($this->employeeId);
             $translatedEmailSubject = $this->trans(
                 'Fwd: Customer message',
-                array(),
+                [],
                 'Emails.Subject',
                 $this->languageLocale
             );
             $translatedEmailMessage = $this->trans(
-                    'Message forwarded to',
-                    array(),
-                    'Admin.Catalog.Feature'
-                ) . ' ' .
+                'Message forwarded to',
+                [],
+                'Admin.Catalog.Feature'
+            ) . ' ' .
                 $forwardEmployee->firstname . ' ' .
                 $forwardEmployee->lastname . "\n" .
                 $this->trans('Comment:') . ' ' .
                 $this->comment;
         } elseif ($this->email && Validate::isEmail($this->email)) {
             $translatedEmailSubject =
-                $this->trans('Fwd: Customer message', array(), 'Emails.Subject', $this->languageLocale);
-            $translatedEmailMessage = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature') . ' '
+                $this->trans('Fwd: Customer message', [], 'Emails.Subject', $this->languageLocale);
+            $translatedEmailMessage = $this->trans('Message forwarded to', [], 'Admin.Catalog.Feature') . ' '
                 . $this->email . "\n" . $this->trans('Comment:') . ' ' . $this->comment;
         } elseif ($this->message) {
             $customerThread = new CustomerThread($this->id);
             $translatedEmailSubject = $this->trans(
                 'An answer to your message is available #ct%thread_id% #tc%thread_token%',
-                array(
+                [
                     '%thread_id%' => $customerThread->id,
                     '%thread_token%' => $customerThread->token,
-                ),
+                ],
                 'Emails.Subject',
                 $this->languageLocale
             );
         }
 
-        return array(
+        return [
             'subject' => $translatedEmailSubject,
-            'message' => $translatedEmailMessage
-        );
+            'message' => $translatedEmailMessage,
+        ];
     }
 
-    protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
+    protected function trans($id, array $parameters = [], $domain = null, $locale = null)
     {
         $parameters['legacy'] = 'htmlspecialchars';
         if (version_compare(_PS_VERSION_, 1.7, '>=')) {
             return $this->translator->trans($id, $parameters, $domain, $locale);
         }
         $module = new Bridgeconnector();
+
         return $module->l($id, $parameters, $domain, $locale);
     }
 
@@ -1343,7 +1351,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
 
         if (!$email) {
             if (!empty($message['id_product']) && empty($message['employee_name'])) {
-                $id_order_product = Order::getIdOrderProduct((int)$message['id_customer'], (int)$message['id_product']);
+                $id_order_product = Order::getIdOrderProduct((int) $message['id_customer'], (int) $message['id_product']);
             }
         }
         $message['date_add'] = Tools::displayDate($message['date_add'], null, true);
@@ -1359,7 +1367,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
         );
 
         $is_valid_order_id = true;
-        $order = new Order((int)$message['id_order']);
+        $order = new Order((int) $message['id_order']);
 
         if (!Validate::isLoadedObject($order)) {
             $is_valid_order_id = false;
@@ -1367,10 +1375,10 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
 
         Context::getContext()->employee = new Employee(1);
         $tpl->assign(
-            array(
+            [
                 'thread_url' => Tools::getAdminUrl(basename(_PS_ADMIN_DIR_) . '/' .
                     $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
-                    . (int)$message['id_customer_thread'] . '&amp;viewcustomer_thread=1'),
+                    . (int) $message['id_customer_thread'] . '&amp;viewcustomer_thread=1'),
                 'link' => Context::getContext()->link,
                 'current' => 'index.php?controller=AdminCustomerThreads',
                 'token' => Tools::getAdminTokenLite('AdminCustomerThreadsController'),
@@ -1382,7 +1390,7 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
                 'file_name' => file_exists(_PS_UPLOAD_DIR_ . $message['file_name']),
                 'contacts' => $contacts,
                 'is_valid_order_id' => $is_valid_order_id,
-            )
+            ]
         );
 
         return $tpl->fetch();
@@ -1390,7 +1398,9 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
 
     protected function createTemplate($tpl_name)
     {
-        return Context::getContext()->smarty->createTemplate(_PS_MODULE_DIR_ . '/bridgeconnector/views/templates/front/' . $tpl_name);
+        $template_path = '/bridgeconnector/views/templates/front/';
+
+        return Context::getContext()->smarty->createTemplate(_PS_MODULE_DIR_ . $template_path . $tpl_name);
     }
 
     /**
@@ -1400,43 +1410,45 @@ class BridgeconnectorMobassistantconnectorModuleFrontController extends ModuleFr
      */
     private function getAdminFolder()
     {
-        //====================================================================//
+        // ====================================================================//
         // Detect Prestashop Admin Dir
         if (defined('_PS_ADMIN_DIR_')) {
             return _PS_ADMIN_DIR_;
         }
-        //====================================================================//
+        // ====================================================================//
         // Compute Prestashop Home Folder Address
         $homedir = _PS_ROOT_DIR_;
-        //====================================================================//
+        // ====================================================================//
         // Scan All Folders from Root Directory
-        $scan = array_diff(scandir($homedir, 1), array('..', '.'));
+        $scan = array_diff(scandir($homedir, 1), ['..', '.']);
         if (false == $scan) {
             return false;
         }
-        //====================================================================//
+        // ====================================================================//
         // Identify Admion Folder
         foreach ($scan as $filename) {
-            //====================================================================//
+            // ====================================================================//
             // Filename Is Folder
-            if (!is_dir($homedir . "/" . $filename)) {
+            if (!is_dir($homedir . '/' . $filename)) {
                 continue;
             }
-            //====================================================================//
+            // ====================================================================//
             // This Folder Includes Admin Files
-            if (!is_file($homedir . "/" . $filename . "/" . "ajax-tab.php")) {
+            if (!is_file($homedir . '/' . $filename . '/ajax-tab.php')) {
                 continue;
             }
-            //====================================================================//
+            // ====================================================================//
             // This Folder Includes Admin Files
-            if (!is_file($homedir . "/" . $filename . "/" . "backup.php")) {
+            if (!is_file($homedir . '/' . $filename . '/backup.php')) {
                 continue;
             }
-            //====================================================================//
+            // ====================================================================//
             // Define Folder As Admin Folder
-            define('_PS_ADMIN_DIR_', $homedir . "/" . $filename);
+            define('_PS_ADMIN_DIR_', $homedir . '/' . $filename);
+
             return _PS_ADMIN_DIR_;
         }
+
         return false;
     }
 

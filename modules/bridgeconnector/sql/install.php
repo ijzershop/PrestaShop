@@ -16,16 +16,19 @@
  *   along with eMagicOne Store Manager Bridge Connector. If not, see <http://www.gnu.org/licenses/>.
  *
  * @author    eMagicOne <contact@emagicone.com>
- * @copyright 2014-2019 eMagicOne
+ * @copyright 2014-2024 eMagicOne
  * @license   http://www.gnu.org/licenses   GNU General Public License
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
-$sql = array();
+$sql = [];
 
-//$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'mobassistantconnector` (
+// $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'mobassistantconnector` (
 //    `id_mobassistantconnector` int(11) NOT NULL AUTO_INCREMENT,
 //    PRIMARY KEY  (`id_mobassistantconnector`)
-//) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+// ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) === false) {

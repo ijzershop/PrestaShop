@@ -333,6 +333,9 @@
       <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/psr/http-factory" />
       <path value="$PROJECT_DIR$/vendor/pcloud/pcloud-php-sdk" />
       <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/segmentio/analytics-php" />
+      <path value="$PROJECT_DIR$/modules/ps_facetedsearch/vendor/doctrine/collections" />
+      <path value="$PROJECT_DIR$/modules/ps_facetedsearch/vendor/composer" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

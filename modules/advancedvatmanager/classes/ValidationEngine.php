@@ -1121,11 +1121,38 @@ class ValidationEngine extends Module
         else {
             // If it is a zip code then calculate zip code format to figure out easily the postcode and perform valdiation
             if ($type == 'postcode') {
+                $matches = false;
+                $container = array();
+                $container2 = array();
+                $container3 = array();
+                // Remove space in postalcodes to fix issue with VIES returning postalcodes with no spaces
+                $contentToCheck_space_removed = str_replace(' ', '', $contentToCheck);
                 if (isset($dataExtracted) && !empty($dataExtracted)) {
-                    // Remove space in postalcodes to fix issue with VIES returning postalcodes with no spaces
-                    $contentToCheck_space_removed = str_replace(' ', '', $contentToCheck);
                     // Search postcode inserted by customer within data extracted.
-                    return in_array($contentToCheck, $dataExtracted) || in_array($contentToCheck_space_removed, $dataExtracted); 
+                    // Use preg_filter to add the country iso code to fix prestaShop zip format different than VIES zip format returned.
+                     $dataExtracted_withiso = preg_filter('/^/', $country_iso.'-',  $dataExtracted);
+                     $dataExtracted_withiso2 = preg_filter('/^/', $country_iso,  $dataExtracted);
+                     $dataExtracted = array_merge($dataExtracted, $dataExtracted_withiso, $dataExtracted_withiso2);
+                     $container = array_merge(array_map('strtolower', $dataExtracted), array_map('strtoupper', $dataExtracted));
+                    
+                }
+                // Extract postcode with iso
+                if (isset($dataExtracted3) && !empty($dataExtracted3)) {
+                   $container3 = array_merge(array_map('strtolower', $dataExtracted3), array_map('strtoupper', $dataExtracted3));
+                }
+                // Extract postcode with iso
+                if (isset($dataExtracted2) && !empty($dataExtracted2)) {
+                    $container2  = array_merge(array_map('strtolower', $dataExtracted2), array_map('strtoupper', $dataExtracted2));
+                }
+                
+                // Join all results in one array to check it
+                $dataExtracted = array_merge($container, $container2, $container3);
+                
+                // Check content with space removed or not
+                $matches = in_array($contentToCheck, $dataExtracted) || in_array($contentToCheck_space_removed, $dataExtracted); 
+                
+                if ($matches) {
+                    return true;
                 }
                 // In last instance, then compare two strings knowing that matches with space in the middle is like two words separated.
                 return preg_match("/\s*(\b$contentToCheck\b){1}\s*/i", $registeredAddress);   

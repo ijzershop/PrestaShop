@@ -34,7 +34,7 @@ class Ps_accounts extends Module
 
     // Needed in order to retrieve the module version easier (in api call headers) than instanciate
     // the module each time to get the version
-    const VERSION = '7.0.5';
+    const VERSION = '7.0.6';
 
     /**
      * Admin tabs
@@ -131,7 +131,7 @@ class Ps_accounts extends Module
 
         // We cannot use the const VERSION because the const is not computed by addons marketplace
         // when the zip is uploaded
-        $this->version = '7.0.5';
+        $this->version = '7.0.6';
 
         $this->module_key = 'abf2cd758b4d629b2944d3922ef9db73';
 
@@ -499,30 +499,14 @@ class Ps_accounts extends Module
      * @return void
      *
      * @throws PrestaShopException
+     *
+     * @phpstan-ignore-next-line
      */
     private function autoReonboardOnV5()
     {
         /** @var \PrestaShop\Module\PsAccounts\Service\PsAccountsService $psAccountsService */
         $psAccountsService = $this->getService(\PrestaShop\Module\PsAccounts\Service\PsAccountsService::class);
         $psAccountsService->autoReonboardOnV5();
-    }
-
-    /**
-     * @deprecated shouldn't exist anymore
-     *
-     * @return void
-     *
-     * @throws Exception
-     */
-    private function installEventBus()
-    {
-        if ($this->getShopContext()->isShop17()) {
-            /** @var \PrestaShop\Module\PsAccounts\Installer\Installer $moduleInstaller */
-            $moduleInstaller = $this->getService(\PrestaShop\Module\PsAccounts\Installer\Installer::class);
-
-            // Ignore fail on ps_eventbus install
-            $moduleInstaller->installModule('ps_eventbus');
-        }
     }
 
     /**

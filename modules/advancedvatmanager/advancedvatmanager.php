@@ -48,7 +48,7 @@ class AdvancedVatManager extends Module
     {
         $this->name = 'advancedvatmanager';
         $this->tab = 'checkout';
-        $this->version = '1.7.0';
+        $this->version = '1.7.0.2';
         $this->author = 'Liewebs';
         $this->module_key = 'a0ec580e4f441fe99e13f86d087bf8a7';
         $this->controllers = array(
@@ -912,7 +912,7 @@ class AdvancedVatManager extends Module
             'getGBPThreshold' => $this->getCurrencyAmount('GBP', AVM_BREXIT_LIMIT).(method_exists('Currency', 'getSymbol')?$this->context->currency->getSymbol():$this->context->currency->sign),
             'getNOKThreshold' => $this->getCurrencyAmount('NOK', AVM_NOK_YEAR_LIMIT).(method_exists('Currency', 'getSymbol')?$this->context->currency->getSymbol():$this->context->currency->sign), 
             'getNOKProductThreshold' => $this->getCurrencyAmount('NOK', AVM_NOK_PRODUCT_LIMIT).(method_exists('Currency', 'getSymbol')?$this->context->currency->getSymbol():$this->context->currency->sign),
-            'license_content' => Tools::file_get_contents(file_exists(_PS_MODULE_DIR_.'advancedvatmanager/license_'.(self::$prestashopAddons?'addons_':'').$this->context->language->iso_code.'.html')?_PS_MODULE_DIR_.'advancedvatmanager/license_'.$this->context->language->iso_code.'.html':_PS_MODULE_DIR_.'advancedvatmanager/license_en.html'),
+            'license_content' => Tools::file_get_contents(file_exists(_PS_MODULE_DIR_.$this->name.'/license_'.(self::$prestashopAddons?'addons_':'').$this->context->language->iso_code.'.html')?_PS_MODULE_DIR_.$this->name.'/license_'.$this->context->language->iso_code.'.html':_PS_MODULE_DIR_.$this->name.'/license_en.html'),
             'faq_content' => $this->context->smarty->fetch($this->local_path . 'views/templates/admin/faq.tpl'),
             'troubleshooting_content' => $this->context->smarty->fetch($this->local_path . 'views/templates/admin/troubleshooting.tpl'),
             'opc_presteamshop_enabled' => $this->opc_presteamshop_enabled,
@@ -3338,8 +3338,8 @@ class AdvancedVatManager extends Module
         if (Module::isEnabled($this->name)) {
             if ($this->context->controller instanceof FrontController) {
                 if (Module::isEnabled($this->name) && ($this->context->customer->isLogged() || $this->context->customer->isGuest()) && (Configuration::get('ADVANCEDVATMANAGER_BREXIT_ENABLED') == 1 || Configuration::get('ADVANCEDVATMANAGER_VOEC_ENABLED') == 1)) {
-                    if (Validate::isLoadedObject($params['cart'])) {
-                        $this->saveCartAndCustomerCookie($params['cart']);
+                    if (Validate::isLoadedObject($this->context->cart)) {
+                        $this->saveCartAndCustomerCookie($this->context->cart);
                     }
                 }
             }
@@ -3352,13 +3352,13 @@ class AdvancedVatManager extends Module
      * @params Cart $cart
      * @return
      */
-    public function saveCartAndCustomerCookie(Cart $cart)
+    public function saveCartAndCustomerCookie($cart)
     {
         if (isset($cart->id)) {  
-            $cart = new Cart($cart->id);
+            $cartObject = new Cart($cart->id);
             // Save in table advancedvatmanager_customer_cart
             $customerCart = new CustomersCart();
-            $products = $cart->getProducts(true);
+            $products = $cartObject->getProducts(true);
             $non_voec_product = false;
             if (!empty($products)) {
                 $product_price = array();

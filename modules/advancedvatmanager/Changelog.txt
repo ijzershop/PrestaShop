@@ -1,3 +1,9 @@
+#1.7.0.2 (16/07/2024)
+- [FIX] Issue when changing language in Frontend when customer is logged and shopping cart has products.
+
+#1.7.0.1 (11/07/2024)
+- [IMP] Postcode validation engine to fix PrestaShop zip format issue with iso code with value returned in VIES without iso code.
+
 #1.7.0 (17/06/2024)
 - [FIX] PHP code issue due array index.
 - [FIX] Bug to add to cart in some Prestashop 1.7 versions.

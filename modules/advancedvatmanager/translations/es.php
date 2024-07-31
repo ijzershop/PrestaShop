@@ -51,6 +51,7 @@ $_MODULE['<{advancedvatmanager}prestashop>advancedvatmanager_431b72694cb1d3de822
 $_MODULE['<{advancedvatmanager}prestashop>advancedvatmanager_b3be619681d9ca7e5121e2bc428cf919'] = 'Este módulo no es compatible con esta versión de PrestaShop.';
 $_MODULE['<{advancedvatmanager}prestashop>advancedvatmanager_1fc8bb316905488c3c19c18baa60fefa'] = 'Las extensiones mínimas [%s] no están instaladas ni cargadas. Contacta con tu proveedor de hosting para conseguirlo.';
 $_MODULE['<{advancedvatmanager}prestashop>advancedvatmanager_1b498d127f444e97678210e65851e067'] = '¡El módulo ha sido instalado!';
+$_MODULE['<{advancedvatmanager}prestashop>advancedvatmanager_50a0a356b6a1a9d26eb150cb7e36d1fa'] = '¡El módulo ha sido desinstalado!';
 $_MODULE['<{advancedvatmanager}prestashop>advancedvatmanager_f42a27b4019ad9ec75d0319a71e46745'] = '¡El módulo ha sido habilitado!';
 $_MODULE['<{advancedvatmanager}prestashop>advancedvatmanager_8631b548821522f579db5aeb6b71eac4'] = '¡El módulo ha sido deshabilitado!';
 $_MODULE['<{advancedvatmanager}prestashop>advancedvatmanager_a9a62e70841c4d06dd16306a85700d36'] = 'Activación';

@@ -323,6 +323,9 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_mbo_backup/vendor/symfony/service-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_mbo_backup/vendor/symfony/string" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_mbo_backup/vendor/symfony/workflow" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/segmentio/analytics-php" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_facetedsearch/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_facetedsearch/vendor/doctrine/collections" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9
+class ComposerStaticInit6e055dca05422e341b9113dee727fc68
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -365,6 +365,7 @@ class ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9
         'PrestaShop\\Module\\PsAccounts\\Account\\Dto\\UpdateShop' => __DIR__ . '/../..' . '/src/Account/Dto/UpdateShop.php',
         'PrestaShop\\Module\\PsAccounts\\Account\\Dto\\UpgradeModule' => __DIR__ . '/../..' . '/src/Account/Dto/UpgradeModule.php',
         'PrestaShop\\Module\\PsAccounts\\Account\\Dto\\User' => __DIR__ . '/../..' . '/src/Account/Dto/User.php',
+        'PrestaShop\\Module\\PsAccounts\\Account\\Exception\\InconsistentAssociationStateException' => __DIR__ . '/../..' . '/src/Account/Exception/InconsistentAssociationStateException.php',
         'PrestaShop\\Module\\PsAccounts\\Account\\LinkShop' => __DIR__ . '/../..' . '/src/Account/LinkShop.php',
         'PrestaShop\\Module\\PsAccounts\\Account\\Session\\Firebase\\FirebaseSession' => __DIR__ . '/../..' . '/src/Account/Session/Firebase/FirebaseSession.php',
         'PrestaShop\\Module\\PsAccounts\\Account\\Session\\Firebase\\OwnerSession' => __DIR__ . '/../..' . '/src/Account/Session/Firebase/OwnerSession.php',
@@ -390,7 +391,6 @@ class ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9
         'PrestaShop\\Module\\PsAccounts\\Context\\ShopContext' => __DIR__ . '/../..' . '/src/Context/ShopContext.php',
         'PrestaShop\\Module\\PsAccounts\\Cqrs\\Bus' => __DIR__ . '/../..' . '/src/Cqrs/Bus.php',
         'PrestaShop\\Module\\PsAccounts\\Cqrs\\CommandBus' => __DIR__ . '/../..' . '/src/Cqrs/CommandBus.php',
-        'PrestaShop\\Module\\PsAccounts\\Cqrs\\CommandBusTest' => __DIR__ . '/../..' . '/src/Cqrs/CommandBusTest.php',
         'PrestaShop\\Module\\PsAccounts\\DependencyInjection\\ContainerProvider' => __DIR__ . '/../..' . '/src/DependencyInjection/ContainerProvider.php',
         'PrestaShop\\Module\\PsAccounts\\DependencyInjection\\ServiceContainer' => __DIR__ . '/../..' . '/src/DependencyInjection/ServiceContainer.php',
         'PrestaShop\\Module\\PsAccounts\\Entity\\EmployeeAccount' => __DIR__ . '/../..' . '/src/Entity/EmployeeAccount.php',
@@ -430,7 +430,6 @@ class ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9
         'PrestaShop\\Module\\PsAccounts\\Hook\\Hook' => __DIR__ . '/../..' . '/src/Hook/Hook.php',
         'PrestaShop\\Module\\PsAccounts\\Hook\\HookableTrait' => __DIR__ . '/../..' . '/src/Hook/HookableTrait.php',
         'PrestaShop\\Module\\PsAccounts\\Http\\Client\\CircuitBreaker\\CircuitBreaker' => __DIR__ . '/../..' . '/src/Http/Client/CircuitBreaker/CircuitBreaker.php',
-        'PrestaShop\\Module\\PsAccounts\\Http\\Client\\CircuitBreaker\\CircuitBreakerTest' => __DIR__ . '/../..' . '/src/Http/Client/CircuitBreaker/CircuitBreakerTest.php',
         'PrestaShop\\Module\\PsAccounts\\Http\\Client\\CircuitBreaker\\InMemoryCircuitBreaker' => __DIR__ . '/../..' . '/src/Http/Client/CircuitBreaker/InMemoryCircuitBreaker.php',
         'PrestaShop\\Module\\PsAccounts\\Http\\Client\\CircuitBreaker\\PersistentCircuitBreaker' => __DIR__ . '/../..' . '/src/Http/Client/CircuitBreaker/PersistentCircuitBreaker.php',
         'PrestaShop\\Module\\PsAccounts\\Http\\Client\\CircuitBreaker\\State' => __DIR__ . '/../..' . '/src/Http/Client/CircuitBreaker/State.php',
@@ -443,6 +442,7 @@ class ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9
         'PrestaShop\\Module\\PsAccounts\\Middleware\\Oauth2Middleware' => __DIR__ . '/../..' . '/src/Middleware/Oauth2Middleware.php',
         'PrestaShop\\Module\\PsAccounts\\Module\\Install' => __DIR__ . '/../..' . '/src/Module/Install.php',
         'PrestaShop\\Module\\PsAccounts\\Module\\Uninstall' => __DIR__ . '/../..' . '/src/Module/Uninstall.php',
+        'PrestaShop\\Module\\PsAccounts\\Polyfill\\Traits\\AjaxRender' => __DIR__ . '/../..' . '/src/Polyfill/Traits/AjaxRender.php',
         'PrestaShop\\Module\\PsAccounts\\Presenter\\DependenciesPresenter' => __DIR__ . '/../..' . '/src/Presenter/DependenciesPresenter.php',
         'PrestaShop\\Module\\PsAccounts\\Presenter\\PresenterInterface' => __DIR__ . '/../..' . '/src/Presenter/PresenterInterface.php',
         'PrestaShop\\Module\\PsAccounts\\Presenter\\PsAccountsPresenter' => __DIR__ . '/../..' . '/src/Presenter/PsAccountsPresenter.php',
@@ -1104,10 +1104,10 @@ class ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit98e8498a3566cb10fc3cb6e99e0441c9::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit6e055dca05422e341b9113dee727fc68::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit6e055dca05422e341b9113dee727fc68::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit6e055dca05422e341b9113dee727fc68::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit6e055dca05422e341b9113dee727fc68::$classMap;
 
         }, null, ClassLoader::class);
     }

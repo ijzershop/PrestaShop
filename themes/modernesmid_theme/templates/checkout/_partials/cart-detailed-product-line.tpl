@@ -26,25 +26,11 @@
   {assign var="has_remaining_stock" value=json_decode(Product::hasMaxProductsRemainingStock($product.id_product, 50))}
   <div class="row">
     <!--  product left content: image-->
-    <div class="product-line-grid-left col-12 col-sm-2 col-md-2 col-lg-2">
-      {*      <a*}
-      {*        class="remove-from-cart btn btn-outline-danger d-block d-sm-none"*}
-      {*        style="position: absolute;right: 2px;"*}
-      {*        rel="nofollow"*}
-      {*        href="{$product.remove_from_cart_url}"*}
-      {*        data-link-action="delete-from-cart"*}
-      {*        data-id-product="{$product.id_product|escape:'javascript'}"*}
-      {*        data-id-product-attribute="{$product.id_product_attribute|escape:'javascript'}"*}
-      {*        data-id-customization="{$product.id_customization|escape:'javascript'}"*}
-      {*      >*}
-      {*        {if !isset($product.is_gift) || !$product.is_gift}*}
-      {*          <i class="fasl fa-trash float-right"></i>*}
-      {*        {/if}*}
-      {*      </a>*}
+    <div class="product-line-grid-left col-12 col-sm-2 col-md-2 col-lg-2 my-auto">
       <span class="product-image media-middle row mx-auto">
       {if isset($product.cover.bySize.medium_default.url)}
-        <img src="{$product.cover.bySize.medium_default.url}" class="col-12 mx-auto"
-             alt="{$product.name|escape:'quotes'}" style="max-width:200px">
+        <img src="{$product.cover.bySize.medium_default.url}" class="cart-img col-12 mx-auto"
+             alt="{$product.name|escape:'quotes'}">
       {/if}
     </span>
     </div>
@@ -97,9 +83,9 @@
           <div class="row">
             <div class="col-md-10 col-sm-10 col-12 pl-3 pl-sm-2 pr-3 pr-sm-2">
               <div class="row">
-                <div class="col-12 col-sm-6 qty">
+                <div class="col-7 col-sm-6 qty">
                   <div class="row">
-                    <div class="col-2 p-0 pt-2">
+                    <div class="col-2 p-0 pt-1">
                       <a
                         class="remove-from-cart text-dark"
                         rel="nofollow"
@@ -114,7 +100,7 @@
                         {/if}
                       </a>
                     </div>
-                    <div class="col-10">
+                    <div class="col-10 col-sm-10">
 
                       {if isset($product.is_gift) && $product.is_gift}
                         <span class="gift-quantity">{$product.quantity}</span>
@@ -139,7 +125,7 @@
                   </div>
 
                 </div>
-                <div class="col-12 col-sm-6 price pl-0 mt-2 mt-sm-0">
+                <div class="col-5 col-sm-6 price pl-0 mt-sm-0 pt-1">
             <span class="product-price" style="line-height: .7rem;">
               <strong>
                 {if isset($product.is_gift) && $product.is_gift}

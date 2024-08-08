@@ -14,14 +14,12 @@ import LinkRowActionExtension from '@components/grid/extension/link-row-action-e
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-import "select2";
 import initPrestashopComponents from "@app/utils/init-components";
 import {forEach} from "lodash";
 import exports from "@node_modules/webpack";
 import forEachRuntime = exports.util.runtime.forEachRuntime;
-
 const {$} = window;
-
+require('select2/dist/js/select2.full')($)
 $(() => {
 // 2. initialize the grid component by providing grid id
   const offerIntegrationGrid = new Grid('oi_offer');
@@ -320,6 +318,15 @@ $(() => {
       maxWidth: '1200px',
       top: '5%',
       autoDimensions: false,
+      closeClick  : false,
+      openEffect  : 'none',
+      closeEffect : 'none',
+      hideOnOverlayClick: false,
+      helpers : {
+        overlay : {
+          closeClick: false
+        }
+      },
       afterShow: function () {
         let url = $('#select2-url').val();
         initSelect2(url, false);
@@ -370,7 +377,17 @@ $(() => {
           dropdownParent: $('#offer-row-form'),
           width: '800',
           height: '800',
+          modal: true,
           autoDimensions: false,
+          closeClick  : false,
+          openEffect  : 'none',
+          closeEffect : 'none',
+          hideOnOverlayClick: false,
+          helpers : {
+            overlay : {
+              closeClick: false
+            }
+          },
           afterShow: function () {
             let url = $('#select2-url').val();
             initSelect2(url, false);
@@ -404,14 +421,15 @@ $(() => {
       $('#ajax_confirmation').html('Vul a.u.b. eerst een offerte naam in!').show();
       return false;
     }
-    if(email.val() === ""){
 
+    if(email.val() === ""){
       email.trigger('focus');
       $('#ajax_confirmation').html('Vul a.u.b. eerst een email adres in!').show();
       return false;
     }
     return true;
   }
+
   $(document).on('click', '#offer-row-submit', function (e) {
     let formData = $('#offer-row-form').serializeJSON();
     let putLink = $('#offer-row-card').attr('data-link');
@@ -507,10 +525,7 @@ $(() => {
     $('#total_price_pack_products span').text(renderMoneyString(totalPackPrice));
   }
 
-
-
   $(document).on('click', '.delete-offer-row', function (e) {
-
     let deleteLink = $(this).attr('data-link');
 
     $.ajax({
@@ -528,8 +543,6 @@ $(() => {
   });
 
   new FormSubmitButton();
-
-
 });
 
 

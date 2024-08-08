@@ -25,7 +25,6 @@
 {extends file=$layout}
 
 {block name='content'}
-
   <section id="main" class="col p-3 p-xs-0 p-md-3">
     {include file='custom_blocks/notification.tpl'}
     {block name='page_header_container'}

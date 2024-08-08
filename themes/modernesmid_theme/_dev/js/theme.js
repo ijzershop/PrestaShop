@@ -25,6 +25,7 @@
 /* eslint-disable */
 import 'bootstrap';
 
+import './addtocart-button';
 import './selectors';
 import './responsive';
 import './cookie-modal';
@@ -2161,19 +2162,19 @@ $(document).ready(function () {
 // Init a timeout variable to be used below
     let timeoutAlertFunction =
     setTimeout(function () {
-        $('.alert').fadeTo(1000, 0).slideUp(1000, function () {
+        $('.alert:not(#custom-msg)').fadeTo(1000, 0).slideUp(1000, function () {
           $(this).remove();
         });
     }, 5000);
 
 
 
-    $(document).on('show','.alert', function(elem){
-      $('.alert').hover(function(){
+    $(document).on('show','.alert:not(#custom-msg)', function(elem){
+      $('.alert:not(#custom-msg)').hover(function(){
         clearTimeout(timeoutAlertFunction);
         timeoutAlertFunction =
           setTimeout(function () {
-            $('.alert').fadeTo(1000, 0).slideUp(1000, function () {
+            $('.alert:not(#custom-msg)').fadeTo(1000, 0).slideUp(1000, function () {
               $(this).remove();
             });
           }, 5000);

@@ -21,17 +21,14 @@
 {* Category pages *}
 {elseif $page.page_name == 'category' && in_array('category', $showOnPages)}
 	{assign var="showNotification" value=1}
-{* Checkout pages *}
-{elseif $page.page_name == 'module-supercheckout-supercheckout' && in_array('module-supercheckout-supercheckout', $showOnPages)}
-	{assign var="showNotification" value=1}
 {else}
 	{assign var="showNotification" value=0}
 {/if}
 
 
-{if ($showNotification > 0 || in_array('all', $showOnPages)) && strlen(Configuration::get('MSTHEMECONFIG_SHOP_NOTIFICATION_TEXT',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)) > 3}
+{if ($showNotification > 0 || in_array('all', $showOnPages)) && strlen(Configuration::get('MSTHEMECONFIG_SHOP_NOTIFICATION_TEXT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)) > 3}
 	<div class="row">
-		<div class="alert alert-{Configuration::get('MSTHEMECONFIG_SHOP_NOTIFICATION_TYPE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)} rounded-0 p-3 text-center w-100" role="alert">
+		<div id="custom-msg" class="alert alert-{Configuration::get('MSTHEMECONFIG_SHOP_NOTIFICATION_TYPE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)} rounded-0 p-3 text-center w-100" role="alert">
 		  {Configuration::get('MSTHEMECONFIG_SHOP_NOTIFICATION_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) nofilter}
 		</div>
 	</div>

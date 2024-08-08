@@ -2098,7 +2098,13 @@ main {
     direction: ltr !important;
   }
 }
+
+.cart-img{
+  max-width: 200px;
+}
+
 @media (max-width: 320px) {
+
   .cart_body {
     .side_panel {
       width: 300px;
@@ -2191,6 +2197,12 @@ main {
       vertical-align: -.4em !important;
       font-size: 2em !important;
     }
+  }
+}
+
+@media (max-width: 575px){
+  .cart-img{
+    max-width: 135px;
   }
 }
 

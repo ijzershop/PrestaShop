@@ -9,7 +9,7 @@ require_once(dirname(__DIR__).'/vendor/autoload.php');
 
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
-
+date_default_timezone_set('Europe/Amsterdam');
 use AppKernel;
 use Context;
 use Customer;
@@ -388,8 +388,8 @@ class BackupInvoicesToPCloud
      */
     private function fetchInvoicesAndCreditInvoicesList(): array
     {
-        $date_to = date('Y-m-d H:i:s', strtotime('-5 minutes'));
-        $last_updated_date = date('Y-m-d H:i:s', strtotime('-1 year'));
+        $date_to = date('Y-m-d H:i:s', strtotime('last day of -2 month'));
+        $last_updated_date = date('Y-m-d H:i:s', strtotime('first day of -3 month'));
 
         try {
             $sqlQueryInvoices = new DbQuery();

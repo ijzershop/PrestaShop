@@ -79,7 +79,7 @@
 
         <div class="d-none d-md-block">
           <ul class="footer_block_content bullet custom_links_list  list-unstyled ">
-              {if Context::getContext()->cookie->logged}
+              {if Context::getContext()->cookie->logged && !Context::getContext()->cookie->is_guest}
                 <li>
                   <a href="{$urls.pages.my_account}" class="dropdown_list_item text-decoration-none text-dark" title="Uw account">
                     <i class="fasl fa-user list_arrow st_custom_link_icon"></i> &nbsp;&nbsp;{l s='Your account' d='Shop.Theme.Customeraccount'}

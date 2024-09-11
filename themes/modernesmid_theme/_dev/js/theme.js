@@ -1374,7 +1374,7 @@ $(function () {
           addToOrderAddress.firstname = e[0].address.firstname;
           addToOrderAddress.lastname = e[0].address.lastname;
           addToOrderAddress.phone = e[0].address.phone;
-          htmlBlock = 'De bestelling met referentie <strong>' + desiredReference + '</strong> is nog beschikbaar voor gratis toevoegen. ' +
+          htmlBlock = 'De bestelling met referentie <strong>' + desiredReference + '</strong> is geselecteerd om uw huidige bestelling aan toe te voegen. ' +
             'De bestelling word geleverd op postcode <br/>' +
             '<span style="font-size:16px;" class="col-6 badge badge-success">' + e[0].postcode + '</span>' +
             '<span class="info-icon-add-to-order" data-id="add_to_order_info"><i class="icon-info ml-2"></i></span>' +

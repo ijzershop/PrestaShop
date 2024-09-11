@@ -81,8 +81,8 @@ class OfferIntegrationFormDataProvider implements FormDataProviderInterface
             'name' => 'Offerte voor ',
             'email' => '',
             'phone' => '',
-            'message' => '<small>Offerte '. $shop_name .' | '. $user .' | '. date_format(date_create(), 'd-m-Y').'</small><br><br><p>Beste klant op deze pagina staat voor u ons aanbod op maat. </p><p>Heeft u nog vragen dan horen we dat graag.</p>',
-            'employee_memo' => '',
+            'message' => '<p>Beste klant op deze pagina staat voor u ons aanbod op maat. </p><p>Heeft u nog vragen dan horen we dat graag.</p>',
+            'employee_memo' => '<small>Offerte '. $shop_name .' | '. $user .' | '. date_format(date_create(), 'd-m-Y').'</small><br><br>',
             'date_exp' => $newExpDate,
         ];
     }

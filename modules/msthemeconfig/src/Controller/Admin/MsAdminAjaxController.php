@@ -69,10 +69,13 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
     private function findProducts($term): mysqli_result|bool|array|\PDOStatement
     {
         $id_lang = $this->getContext()->language->id;
+        $id_shop = $this->getContext()->shop->id;
 
         $sql = new DbQuery();
         $sql->select('p.`id_product` as id, p.`price` as price,p.`weight` as weight, p.`id_category_default`, CONCAT_WS(" - ", cl.`name`,pl.`name`) as text');
         $sql->from('product', 'p');
+        $sql->join(Shop::addSqlAssociation('product_shop', 'ps'));
+        $sql->innerJoin('product_shop', 'ps','p.`id_product` = ps.`id_product` AND ps.`id_shop` = '. $id_shop . ' AND ps.`active` = 1');
         $sql->join(Shop::addSqlAssociation('product', 'p'));
         $sql->leftJoin(
             'product_lang',
@@ -100,7 +103,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             }
             $sql->where($where);
         }
-        $where .= ' AND cl.`id_category` NOT IN (6,382) ';
+        $where .= ' AND cl.`id_category` NOT IN (6,382,185) ';
 
         $sql->where($where);
 
@@ -310,7 +313,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
                 $ids = Tools::getValue('stock_selected_product_id');
                 $totals = Tools::getValue('stock_selected_product_qty');
                 $customizedValue = Tools::getValue('stock_selected_product_customization');
-
+                Pack::deleteItems((int)$pack->id, true);
                 for ($i = 0; $i < count($ids); $i++) {
                     $attachProduct = new Product($ids[$i]);
                     $combinations = $attachProduct->getAttributeCombinations();

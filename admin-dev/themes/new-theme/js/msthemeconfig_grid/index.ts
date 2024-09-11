@@ -245,7 +245,7 @@ $(() => {
           <div class="form-group col-md-3">
             <label for="offer-weight">Gewicht</label>
             <div class="input-group">
-              <input type="text" class="form-control" name="offer-weight" id="offer-weight" placeholder="35" value="${data.weight}">
+              <input type="text" onfocus="this.select()" onkeydown="this.value = this.value.replace(',','.')" class="form-control" name="offer-weight" id="offer-weight" placeholder="35" value="${data.weight}">
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2">Kg</span>
               </div>

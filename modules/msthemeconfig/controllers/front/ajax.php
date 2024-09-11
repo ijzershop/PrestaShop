@@ -482,6 +482,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->priority = 1;
             $credit->partial_use = 0;
 
+
             //Make a random code
             $exist = true;
             while ($exist) {
@@ -496,7 +497,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->country_restriction = 0;
             $credit->carrier_restriction = 0;
             $credit->group_restriction = 0;
-            $credit->cart_rule_restriction = 0;
+            $credit->cart_rule_restriction = 1;
             $credit->product_restriction = 0;
             $credit->shop_restriction = 0;
             $credit->free_shipping = 0;

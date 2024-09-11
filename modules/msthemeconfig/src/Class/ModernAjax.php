@@ -663,7 +663,7 @@ class ModernAjax
             case 'notification_pages':
                 $pages = CMS::listCms($this->idLang);
                 $pagesList = [];
-                $pagesList['results'][] = ["id" => 0, "text" => "Geen pagina"];
+                $pagesList['results'][] = ["id" => '0', "text" => "Geen pagina"];
                 $pagesList['results'][] = ['id' => 'my-account', 'text' => 'Mijn account pagina\'s'];
                 $pagesList['results'][] = ['id' => 'category', 'text' => 'Categorieen'];
                 $pagesList['results'][] = ['id' => 'product', 'text' => 'Producten'];

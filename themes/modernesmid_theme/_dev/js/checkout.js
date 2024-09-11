@@ -356,11 +356,8 @@ $(document).ready(() => {
   let validateCompanyInputFields = function (element) {
     $(element).val($(element).val().replace(/[.,]+/g, ''));
     $(element).siblings('.error-small').remove();
-    if (!validateName($(element).val())) {
-      $(element).parent().append(inputMessage(number_error, 'text-warning'));
-      if (validateOnlyNumber($(element).val())) {
-        $(element).parent().append(inputMessage(splchar_error, 'text-warning'));
-      }
+    if (!validateCityName($(element).val())) {
+      $(element).parent().append(inputMessage(splchar_error, 'text-warning'));
     }
   }
 

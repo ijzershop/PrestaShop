@@ -71,7 +71,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
         $id_lang = $this->getContext()->language->id;
 
         $sql = new DbQuery();
-        $sql->select('p.`id_product` as id, p.`price` as price, p.`id_category_default`, CONCAT_WS(" - ", cl.`name`,pl.`name`) as text');
+        $sql->select('p.`id_product` as id, p.`price` as price,p.`weight` as weight, p.`id_category_default`, CONCAT_WS(" - ", cl.`name`,pl.`name`) as text');
         $sql->from('product', 'p');
         $sql->join(Shop::addSqlAssociation('product', 'p'));
         $sql->leftJoin(
@@ -100,7 +100,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             }
             $sql->where($where);
         }
-        $where .= ' AND cl.`id_category` NOT IN (6,382) '. Shop::addSqlRestriction();
+        $where .= ' AND cl.`id_category` NOT IN (6,382) ';
 
         $sql->where($where);
 
@@ -148,10 +148,12 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
         $staticPrice = Product::getPriceStatic($id_product, false, $id_product_attribute);
         $name = Product::getProductName($id_product, $id_product_attribute, Context::getContext()->language->id);
         $price = $staticPrice * $qty;
+        $weight = (float)$product->weight * $qty;
+
         if (is_numeric($price)) {
-            return Response::create(json_encode(['product_name' => $name, 'id_product_attribute' => $id_product_attribute, 'price' => $price]));
+            return Response::create(json_encode(['product_name' => $name, 'id_product_attribute' => $id_product_attribute, 'price' => $price, 'weight' => $weight]));
         } else {
-            return Response::create(json_encode(['product_name' => $name, 'id_product_attribute' => $id_product_attribute, 'price' => 0.00]));
+            return Response::create(json_encode(['product_name' => $name, 'id_product_attribute' => $id_product_attribute, 'price' => 0.00, 'weight' => $weight]));
         }
     }
 

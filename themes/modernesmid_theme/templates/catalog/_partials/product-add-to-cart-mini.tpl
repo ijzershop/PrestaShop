@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-{include file='custom_blocks/addtocart_button.tpl' type="saw" product=$product}
+{*{include file='custom_blocks/addtocart_button.tpl' type="saw" product=$product}*}
 
 <div class="product-add-to-cart">
   {if !$configuration.is_catalog}

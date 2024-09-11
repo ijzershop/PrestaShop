@@ -49,6 +49,7 @@ class OfferIntegrationFormDataProvider implements FormDataProviderInterface
             'email' => $offerIntegration->getEmail(),
             'phone' => $offerIntegration->getPhone(),
             'message' => $offerIntegration->getMessage(),
+            'employee_memo' => $offerIntegration->getMemo(),
             'date_exp' => $offerIntegration->getDateExp(),
         ];
     }
@@ -60,14 +61,28 @@ class OfferIntegrationFormDataProvider implements FormDataProviderInterface
     {
         $newExpDate = new DateTime();
         $newExpDate->modify('+4 weeks');
+        $context = \Context::getContext();
+
+        if($context->shop != null){
+            $shop_name = $context->shop->name;
+        } else {
+            $shop_name = 'Ijzershop';
+        }
+
+        if($context->employee != null){
+            $user = substr(strtoupper((string)$context->employee->firstname), 0, 2);
+        } else {
+            $user = 'RO';
+        }
 
         return [
             'id_oi_offer' => '',
             'code' => date_format(date_create(), 'Ymd') . '-' . rand ( 1000 , 9999 ),
-            'name' => '',
+            'name' => 'Offerte voor ',
             'email' => '',
             'phone' => '',
-            'message' => '',
+            'message' => '<small>Offerte '. $shop_name .' | '. $user .' | '. date_format(date_create(), 'd-m-Y').'</small><br><br><p>Beste klant op deze pagina staat voor u ons aanbod op maat. </p><p>Heeft u nog vragen dan horen we dat graag.</p>',
+            'employee_memo' => '',
             'date_exp' => $newExpDate,
         ];
     }

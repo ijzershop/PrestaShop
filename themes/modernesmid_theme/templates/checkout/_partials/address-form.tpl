@@ -33,11 +33,11 @@
 
 {block name='form_buttons'}
   {if !$form_has_continue_button}
-    <button type="submit" class="btn btn-success col">{l s='Save' d='Shop.Theme.Actions'}</button>
+    <button type="button" class="btn btn-success col" name="confirm-addresses">{l s='Save' d='Shop.Theme.Actions'}</button>
     <a class="js-cancel-address cancel-address col" href="{url entity='order' params=['cancelAddress' => {$type}]}">{l s='Cancel' d='Shop.Theme.Actions'}</a>
   {else}
     <form>
-      <button type="submit" class="continue btn btn-success col mb-2" name="confirm-addresses" value="1">
+      <button type="button" class="continue btn btn-success col mb-2" name="confirm-addresses" value="1">
           {l s='Continue' d='Shop.Theme.Actions'}
       </button>
       {if $customer.addresses|count > 0}

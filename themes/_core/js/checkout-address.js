@@ -74,7 +74,7 @@ export default function () {
       const $visibleAddressError = $(
         `${prestashop.selectors.checkout.addressError}:visible`,
       );
-      switchConfirmAddressesButtonState($visibleAddressError.length <= 0);
+      //switchConfirmAddressesButtonState($visibleAddressError.length <= 0);
     },
   );
 }
@@ -114,7 +114,7 @@ $(window).on('load', () => {
   $visibleAddressError = $(
     `${prestashop.selectors.checkout.addressError}:visible`,
   ); // Refresh after possible hide
-  switchConfirmAddressesButtonState($visibleAddressError.length <= 0);
+  //switchConfirmAddressesButtonState($visibleAddressError.length <= 0);
 });
 
 /**

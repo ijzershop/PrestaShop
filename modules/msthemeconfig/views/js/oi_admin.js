@@ -1,5 +1,12 @@
 $(function(){
 
+
+
+
+  $(document).on('keyup', '#offer_integration_name', function(){
+    syncEmailAdress($(this).val());
+  });
+
   let table = `<div class="form-wrapper">
   <div class="form-group">
     <table class="table table-borderless table-condensed" id="selected-products-table">
@@ -89,6 +96,10 @@ $(function(){
       this.value = '';
     }
   });
+
+
+
+
 });
 
 function updateQtyString(e){
@@ -156,4 +167,16 @@ function makeid() {
     for( let i=0; i < 5; i++ )
         text += possible.charAt(Math.floor(Math.random() * possible.length));
     return text;
+}
+
+
+let syncEmailAdress = function(foundEmailText){
+  let testEmailRegex = /([^.@\s]+)(\.[^.@\s]+)*@([^.@\s]+\.)+([^.@\s]{2,})/;
+  let emailField = $('#offer_integration_email');
+// Check if there is an email
+  if(foundEmailText.search(testEmailRegex) !== -1){
+    let foundEmail = foundEmailText.match(testEmailRegex);
+    emailField.val(foundEmail[0]);
+
+  }
 }

@@ -16,6 +16,7 @@ namespace MsThemeConfig\Core\Form;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -59,7 +60,7 @@ class OfferIntegrationType extends TranslatorAwareType
                     new NotBlank(),
                 ],
             ])
-            ->add('phone', TextType::class, [
+            ->add('phone', HiddenType::class, [
                 'label' => 'Phone',
                 'help' => 'Het telefoonnummer van de klant',
                 'translation_domain' => 'Modules.Pricemodifier.Admin',
@@ -69,6 +70,13 @@ class OfferIntegrationType extends TranslatorAwareType
                 'label' => 'Message',
                 'attr' => ['class' => 'autoload_rte'],
                 'help' => 'Het bericht voor bij de offerte',
+                'translation_domain' => 'Modules.Pricemodifier.Admin',
+                'required' => false,
+            ])
+            ->add('employee_memo', TextareaType::class, [
+                'label' => 'Interne Memo',
+                'attr' => ['class' => 'autoload_rte'],
+                'help' => 'Interne memo voor werknemers',
                 'translation_domain' => 'Modules.Pricemodifier.Admin',
                 'required' => false,
             ])

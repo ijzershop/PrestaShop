@@ -120,23 +120,23 @@
     >
     {/block}
 
-      <div style="font-size: .8rem;min-height: 35px;" class="form-group d-block col-12 col-lg-6 p-0" id="toggle-postcode-check">
-        <label class="col-7 p-0">
-          <span class="info-icon-with-showhide-address" data-id="postcode-check-info-delivery">
-            <i class="icon-info cart-info-btn"></i>
-          </span>
-          <span id="postcode-check-switch-label">Postcode validatie <b class="text-success"><i class="fasl fa-check fa-2x"></i></b></span>
-        </label>
-        <label class="switch col-5 float-right">
-          <input type="checkbox" id="cart-postcode-check-toggle" checked>
-          <span class="slider round"></span>
-        </label>
-      </div>
-      <div  style="font-size: .8rem;text-transform: initial;display:none;" id="postcode-check-info-delivery" class="col-12 mt-2 p-0" >
-        <p class="card p-2">Bij het invullen van uw postcode en bijhorende huisnummer wordt uw adres automatisch aangevuld en gevalideerd.
-          Zo helpen we u fouten in uw adres voorkomen. <br/>Mocht u hiervan hinder ondervinden, dan kunt u deze Postcode check uitzetten.<br/>
-          <span class="mt-1"><b>Let op!</b> Het adres wordt niet gevalideerd als de postcode check <b>uit</b> staat, dus kijk uw adres goed na voordat u de bestelling afrekent.</span</p>
-      </div>
+{*      <div style="font-size: .8rem;min-height: 35px;display:none;" class="form-group d-block col-12 col-lg-6 p-0" id="toggle-postcode-check">*}
+{*        <label class="col-7 p-0">*}
+{*          <span class="info-icon-with-showhide-address" data-id="postcode-check-info-delivery">*}
+{*            <i class="icon-info cart-info-btn"></i>*}
+{*          </span>*}
+{*          <span id="postcode-check-switch-label">Postcode validatie <b class="text-success"><i class="fasl fa-check fa-2x"></i></b></span>*}
+{*        </label>*}
+{*        <label class="switch col-5 float-right">*}
+          <input type="checkbox" class="d-none" id="cart-postcode-check-toggle" checked>
+{*          <span class="slider round"></span>*}
+{*        </label>*}
+{*      </div>*}
+{*      <div  style="font-size: .8rem;text-transform: initial;display:none;" id="postcode-check-info-delivery" class="col-12 mt-2 p-0" >*}
+{*        <p class="card p-2">Bij het invullen van uw postcode en bijhorende huisnummer wordt uw adres automatisch aangevuld en gevalideerd.*}
+{*          Zo helpen we u fouten in uw adres voorkomen. <br/>Mocht u hiervan hinder ondervinden, dan kunt u deze Postcode check uitzetten.<br/>*}
+{*          <span class="mt-1"><b>Let op!</b> Het adres wordt niet gevalideerd als de postcode check <b>uit</b> staat, dus kijk uw adres goed na voordat u de bestelling afrekent.</span</p>*}
+{*      </div>*}
 
       {block name="address_form_fields"}
         <section class="form-fields row">
@@ -162,7 +162,7 @@
       <footer class="form-footer clearfix">
         <input type="hidden" name="submitAddress" value="1">
         {block name='form_buttons'}
-          <button class="btn btn-dark float-xs-right w-100" name="confirm-addresses" type="submit" class="form-control-submit" disabled>
+          <button class="btn btn-dark float-xs-right w-100" name="confirm-addresses" type="button" class="form-control-submit">
             {l s='Save' d='Shop.Theme.Actions'}
           </button>
         {/block}
@@ -175,7 +175,7 @@
 <script type="text/javascript">
 
   if(typeof postcodeApiUrl === "undefined"){
-    let postcodeApiUrl= "{url entity='module' name='msthemeconfig' controller='ajax'}";
+    const postcodeApiUrl = "{url entity='module' name='msthemeconfig' controller='ajax'}";
   }
 
 

@@ -146,10 +146,10 @@ class OfferIntegrationGridDefinitionFactory extends AbstractGridDefinitionFactor
                     'sortable' => true,
                 ]))
 
-            ->add((new HtmlColumn('message'))
-                ->setName($this->trans('Message', [], 'Admin.Global'))
+            ->add((new HtmlColumn('employee_memo'))
+                ->setName($this->trans('Memo', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'message',
+                    'field' => 'employee_memo',
                     'sortable' => false,
                 ])
             )
@@ -273,14 +273,14 @@ class OfferIntegrationGridDefinitionFactory extends AbstractGridDefinitionFactor
                 ])
                 ->setAssociatedColumn('phone')
             )
-            ->add((new Filter('message', TextType::class))
+            ->add((new Filter('employee_memo', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Message', [], 'Modules.MsThemeConfig.OfferIntegrationGridDefinitionFactory'),
+                        'placeholder' => $this->trans('Memo', [], 'Modules.MsThemeConfig.OfferIntegrationGridDefinitionFactory'),
                     ],
                 ])
-                ->setAssociatedColumn('message')
+                ->setAssociatedColumn('employee_memo')
             )
             ->add((new Filter('date_exp', DateRangeType::class))
                 ->setTypeOptions([

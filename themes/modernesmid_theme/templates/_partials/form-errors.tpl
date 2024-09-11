@@ -29,7 +29,7 @@
 
 
 <style>
-  .alert{
+  .alert:not('#custom-msg'){
     position: fixed;
     top:20%;
     left: calc(30% / 2);
@@ -41,11 +41,11 @@
   .alert-heading{
     opacity: .5;
   }
-  .alert .close{
+  .alert:not('#custom-msg') .close{
     opacity: .5;
     color:#ffffff;
   }
-  .alert .contact-msg{
+  .alert:not('#custom-msg') .contact-msg{
     opacity: .5;
   }
 </style>

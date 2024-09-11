@@ -42,7 +42,7 @@
       {elseif $field.name == 'vat_number'}
         col-12 col-sm-12
       {elseif $field.name == 'address1'}
-        col-8 col-sm-8
+        col-12 col-sm-12
       {elseif $field.name == 'house_number'}
         col-8 col-sm-2 pr-0
       {elseif $field.name == 'house_number_extension'}
@@ -52,7 +52,7 @@
       {elseif $field.name == 'city'}
         col-12
       {elseif $field.name == 'id_country'}
-        col-12 col-sm-8
+        col-12 col-xs-4 col-sm-4 col-md-4
       {elseif $field.name == 'other'}
         col-12 col-sm-12
       {elseif $field.name == 'phone'}

@@ -49,6 +49,8 @@
           <input id="price-url" value="{{ getPriceLink }}" type="hidden"/>
           <input id="offer-put-url" value="{{ putLink }}" type="hidden"/>
           <input name="new-offer-id" id="new-offer-id" value="" type="hidden"/>
+          <input name="shop-name" id="shop-name" value="{{shop_name}}" type="hidden"/>
+          <input name="employee" id="employee" value="{{employee}}" type="hidden"/>
           {{ form_errors(offerForm) }}
           {% block price_modification_form_rest %}
             {{ form_rest(offerForm) }}

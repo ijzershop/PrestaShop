@@ -96,25 +96,6 @@
       <script>
 
 
-        let required_error = "{l s='Verplicht veld' mod='msthemeconfig'}";
-        let invalid_email = "{l s='Email is ongeldig' mod='msthemeconfig'}";
-        let pwd_error = "{l s='(Minimaal vijf tekens)' mod='msthemeconfig'}";
-        let invalid_city = "{l s='Speciale karakters!<>;?=+@#°{}_$% are not allowed' mod='msthemeconfig'}";
-        let invalid_address = "{l s='Speciale tekens !<>?=+@{}_$% zijn niet toegestaan' mod='msthemeconfig'}";
-        let invalid_title = "{l s='Speciale tekens <>={} zijn niet toegestaan in de titel' mod='msthemeconfig'}";
-        let invalid_number = "{l s='Alleen +.-() en cijfers zijn toegestaan' mod='msthemeconfig'}";
-        let invalid_other_info = "{l s='Speciale tekens <>{} zijn niet toegestaan' mod='msthemeconfig'}";
-        let invalid_country_msg = "{l s='Ongeldig land' mod='msthemeconfig'}";
-        let invalid_state_msg = "{l s='Ongeldige status' mod='msthemeconfig'}";
-        let invalid_name = "{l s='Naam is ongeldig' mod='msthemeconfig'}";
-        let number_error = "{l s='Nummers zijn niet toegestaan' mod='msthemeconfig'}";
-        let toc_error = "{l s='Accepteer alstublieft onze algemene voorwaarden voordat u uw bestelling bevestigt' mod='msthemeconfig'}";
-        let zipcode_error = "{l s='Sommige producten in uw winkelwagen kunnen niet op het geselecteerde adres worden afgeleverd. Verwijder deze alstublieft of wijzig uw adres.' mod='msthemeconfig'}";
-        let order_place_confirmation = "{l s='Kloppen alle door u verstrekte gegevens?' mod='msthemeconfig'}";
-        let splchar_error = "{l s='Speciale karakters!<>,;?=+()@#°{}_$%: zijn niet toegestaan' mod='msthemeconfig'}";
-        let street_number_warning = "{l s='Het huisnummer in het adres ontbreekt. Weet u zeker dat u er geen heeft?' mod='msthemeconfig'}";
-        let not_same_email = "{l s='De email adressen komen niet overeen!' mod='msthemeconfig'}";
-        let not_valid_phone = "{l s='Het telefoonnummer is onjuist!' mod='msthemeconfig'}";
 
 
         if(typeof postcodeApiUrl === "undefined"){

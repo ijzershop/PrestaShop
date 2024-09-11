@@ -64,6 +64,7 @@ class OfferIntegrationFormDataHandler implements FormDataHandlerInterface
         $offerIntegration->setEmail($data['email']);
         $offerIntegration->setPhone($data['phone']);
         $offerIntegration->setMessage($data['message']);
+        $offerIntegration->setMemo($data['employee_memo']);
         $offerIntegration->setDateExp($data['date_exp']);
         $offerIntegration->setUpdatedAt(date_create());
         $offerIntegration->setAccessCode($this->generateAccessCode($data['email']));
@@ -87,6 +88,7 @@ class OfferIntegrationFormDataHandler implements FormDataHandlerInterface
             $offerIntegration->setEmail($data['email']);
             $offerIntegration->setPhone($data['phone']);
             $offerIntegration->setMessage($data['message']);
+            $offerIntegration->setMemo($data['employee_memo']);
             $offerIntegration->setDateExp($data['date_exp']);
             $offerIntegration->setUpdatedAt(date_create());
             if(empty($offerIntegration->getAccessCode())){

@@ -19,7 +19,8 @@ import {forEach} from "lodash";
 import exports from "@node_modules/webpack";
 import forEachRuntime = exports.util.runtime.forEachRuntime;
 const {$} = window;
-require('select2/dist/js/select2.full')($)
+import 'select2/dist/js/select2.js';
+import 'select2/dist/css/select2.css';
 $(() => {
 // 2. initialize the grid component by providing grid id
   const offerIntegrationGrid = new Grid('oi_offer');
@@ -49,9 +50,12 @@ $(() => {
   }
 
   const packedItemTemplate = function(item: any, rowId: string | number){
+
+    console.log(item);
     let name;
     let idProduct;
     let price;
+    let weight;
     let native_price = 0.00;
     let quantity;
     let customCount;
@@ -62,6 +66,7 @@ $(() => {
       name = item.name;
       idProduct = item.id;
       quantity = item.pack_quantity;
+      weight = item.weight*quantity;
       native_price = item.price*quantity;
       price  = renderMoneyString(item.price*quantity);
       let testArr = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
@@ -76,6 +81,7 @@ $(() => {
       name  = item.data.text;
       idProduct  = item.data.id;
       quantity  = 1;
+      weight = item.data.weight*quantity;
       if(item.data.price !== undefined){
         native_price = item.data.price*quantity;
         price = renderMoneyString(item.data.price*quantity);
@@ -92,7 +98,7 @@ $(() => {
       '<input type="hidden" name="stock_selected_product_id[]" data-row-id="'+rowId+'" value="'+idProduct+'"/>' +
       '<input type="hidden" name="stock_selected_product_attribute_id[]" data-row-id="'+rowId+'" value="'+idProductAttribute+'"/>' +
       '</td>' +
-      '<td  style="width:10%;padding:4px;"><span class="price_span" data-row-id="'+rowId+'" data-price="'+native_price+'">'+price+'</span></td>' +
+      '<td  style="width:10%;padding:4px;"><span class="price_span" data-row-id="'+rowId+'" data-price="'+native_price+'"  data-weight="'+weight+'">'+price+'</span></td>' +
       '<td  style="width:10%;padding:4px;"><button type="button" data-row-id="'+rowId+'" class="btn delete_selected_stock_product btn-danger w-100">X</button></td>' +
       '</tr>' +
       '<tr class="customization_row_'+rowId+'" style="'+display+'">' +
@@ -125,6 +131,7 @@ $(() => {
       $('.pack_product_name[data-row-id="'+rowId+'"]').text(data.product_name);
       $('.price_span[data-row-id="'+rowId+'"]').text(renderMoneyString(data.price));
       $('.price_span[data-row-id="'+rowId+'"]').attr('data-price', data.price);
+      $('.price_span[data-row-id="'+rowId+'"]').attr('data-weight', data.weight);
       $('[name="stock_selected_product_attribute_id[]"][data-row-id="'+rowId+'"]').val(data.id_product_attribute);
       updateTotalPrice();
     });
@@ -187,7 +194,7 @@ $(() => {
         packBlock += packedItemTemplate(pack[i], i);
       }
     } else {
-      packBlock += '<li class="list-group-item empty-text">Selecteer producten voor voorraad beheer</li>';
+      packBlock += '<li class="list-group-item empty-text">Geselecteerd(e) product(en) t.b.v voorraad</li>';
     }
 
     return `<div class="card" id="offer-row-card" data-link="${data.link}">
@@ -201,10 +208,10 @@ $(() => {
       <input type="hidden" name="offer-id" value="${data.id_oi_offer}"/>
       <input type="hidden" name="offer-row-id" value="${idProduct}"/>
       <input type="hidden" name="offer-new" value="${data.new}"/>
-        <div class="form-group">
+        <div class="form-group bg-light p-4 border-bottom-1">
           <label for="store-products">Product(en)</label>
             <select id="store-products" class="form-control" name="offer-row-product" data-toggle="select2"  aria-hidden="true" readonly="false">
-              <<option value="${data.id}" selected>${data.name}</option>
+            <option>Selecteer hier producten</option>
             </select>
         </div>
 
@@ -216,6 +223,10 @@ $(() => {
 
         </div>
         <div class="form-group">
+          <strong id="estimate_weight" class="w-100 h3 text-dark">Geschat gewicht:<span class="float-right">0.00</span> </strong>
+
+        </div>
+        <div class="form-group">
           <label for="offer-row-title">Naam</label>
           <input type="text" class="form-control" name="offer-row-title"  id="offer-row-title" placeholder="Product Naam" value="${data.name}">
         </div>
@@ -223,7 +234,7 @@ $(() => {
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="offer-price">Prijs</label>
-            <input type="text" class="form-control" name="offer-price" id="offer-price" placeholder="0.00" value="${data.price}">
+            <input type="text" onfocus="this.select()" onkeydown="this.value = this.value.replace(',','.')" class="form-control" name="offer-price" id="offer-price" value="${data.price}">
           </div>
 
           <div class="form-group col-md-3">
@@ -358,6 +369,11 @@ $(() => {
         let id = $(this).attr('data-offer-id');
         let putLink = $('#offer-put-url').val();
 
+        let insertedEmail = $('#offer_integration_email').val();
+        let employeeInitials = $('#employee').val();
+
+        let startName = 'offerte | ' + insertedEmail + ' | ' + employeeInitials;
+
         let offer =  {
           oi_offer_extra_shipping: '',
           id_product: '',
@@ -365,9 +381,9 @@ $(() => {
           formTitle: 'Create Offer',
           id_oi_offer: id,
           new: true,
-          name: '',
-          price: '',
-          quantity: '',
+          name: startName,
+          price: 0.00,
+          quantity: 1,
           weight: '',
           description_short: '',
         }
@@ -516,13 +532,16 @@ $(() => {
 
   let updateTotalPrice = function() {
     let totalPackPrice = 0;
+    let totalPackWeight = 0;
     let priceElems = $('.price_span');
 
     for (let i = 0; i < priceElems.length; i++){
       totalPackPrice = Number(totalPackPrice) + Number($(priceElems[i]).attr('data-price'));
+      totalPackWeight = Number(totalPackWeight) + Number($(priceElems[i]).attr('data-weight'));
     }
 
     $('#total_price_pack_products span').text(renderMoneyString(totalPackPrice));
+    $('#estimate_weight span').text(totalPackWeight.toFixed(2)+' Kg');
   }
 
   $(document).on('click', '.delete-offer-row', function (e) {
@@ -544,6 +563,5 @@ $(() => {
 
   new FormSubmitButton();
 });
-
 
 

@@ -26,6 +26,8 @@
 import $ from 'jquery';
 import prestashop from 'prestashop';
 
+import ConfirmDialog from "./confirm-dialog";
+
 function setUpCheckout() {
   $(prestashop.themeSelectors.checkout.termsLink).on('click', (event) => {
     event.preventDefault();
@@ -50,17 +52,16 @@ function setUpCheckout() {
   });
 }
 
-$(document).on('click', '.payment-options  input[type="radio"]', function(e){
+$(document).on('click', '.payment-options  input[type="radio"]', function (e) {
   $('.payment-option-row').removeClass('selected');
   $(this).parents('.payment-option-row').addClass('selected');
 });
 
 
-$(document).on('click', '.delivery-options  input[type="radio"]', function(e){
+$(document).on('click', '.delivery-options  input[type="radio"]', function (e) {
   $('.row.delivery-option').removeClass('selected');
   $(this).parents('.row.delivery-option').addClass('selected');
 });
-
 
 
 function toggleImage() {
@@ -81,18 +82,18 @@ function buildRequestStringData(form) {
     input = form.find('input'),
     requestString = {};
   for (let i = 0; i < select.length; i++) {
-    requestString[$(select[i]).attr('name')] =  encodeURIComponent($(select[i]).val());
+    requestString[$(select[i]).attr('name')] = encodeURIComponent($(select[i]).val());
   }
 
   for (let i = 0; i < input.length; i++) {
     if ($(input[i]).attr('type') !== 'checkbox' || ($(input[i]).attr('type') === 'checkbox' && $(input[i]).attr('checked'))) {
-      requestString[$(input[i]).attr('name')] =  encodeURIComponent($(input[i]).val());
+      requestString[$(input[i]).attr('name')] = encodeURIComponent($(input[i]).val());
     }
   }
   return JSON.stringify(requestString);
 }
 
-let showPaymentLoad = function (){
+let showPaymentLoad = function () {
   $('#wrapper').css({
     'opacity': '.2',
     'pointer-events': 'none',
@@ -101,40 +102,40 @@ let showPaymentLoad = function (){
 }
 
 $(document).ready(() => {
-  $('#payment-confirmation button[type="submit"]').on('click', function(e){
-      e.stopImmediatePropagation();
+  $('#payment-confirmation button[type="submit"]').on('click', function (e) {
+    e.stopImmediatePropagation();
 
-      if( $('.delivery-option input[type="radio"]:checked').val() === '11,' && ($('#added_to_order').length === 0 || $('#added_to_order').val().length <= 0)){
-        $('#checkout-delivery-step').trigger('click');
-        let htmlBlock = '<div class="error-text alert-danger p-2" role="alert"><strong>Er is geen bestelling geselecteerd!</strong><br/> ' +
-          'Zoek eerst een nog lopende bestelling of selecteer een andere verzendmethode. <br/>' +
-          'Heeft u wel een bestelling geselecteerd? Neem dan contact met ons op, we helpen u graag verder</div>';
-        $('.added-to-order-block a').hide();
-        $('.added-to-order-block').append(htmlBlock);
-          return false;
-      } else {
+    if ($('.delivery-option input[type="radio"]:checked').val() === '11,' && ($('#added_to_order').length === 0 || $('#added_to_order').val().length <= 0)) {
+      $('#checkout-delivery-step').trigger('click');
+      let htmlBlock = '<div class="error-text alert-danger p-2" role="alert"><strong>Er is geen bestelling geselecteerd!</strong><br/> ' +
+        'Zoek eerst een nog lopende bestelling of selecteer een andere verzendmethode. <br/>' +
+        'Heeft u wel een bestelling geselecteerd? Neem dan contact met ons op, we helpen u graag verder</div>';
+      $('.added-to-order-block a').hide();
+      $('.added-to-order-block').append(htmlBlock);
+      return false;
+    } else {
 
-        let id = $('.payment-options input[name="payment-option"]:checked').attr('id');
-        let extraData = buildRequestStringData($('#'+id+'-container'));
-        $('input#dynamic-data').remove();
-        $('<input>', {
-          type: 'hidden',
-          id: 'dynamic-data',
-          name: 'dynamic_data',
-          value: extraData
-        }).appendTo('#payment-'+id+'-form');
+      let id = $('.payment-options input[name="payment-option"]:checked').attr('id');
+      let extraData = buildRequestStringData($('#' + id + '-container'));
+      $('input#dynamic-data').remove();
+      $('<input>', {
+        type: 'hidden',
+        id: 'dynamic-data',
+        name: 'dynamic_data',
+        value: extraData
+      }).appendTo('#payment-' + id + '-form');
 
-        if ($(this).data('disabled') === true) {
-          e.preventDefault();
-        }
-        $(this).data('disabled', true);
-        $('button[type="submit"]', this).addClass('disabled');
-
-        showPaymentLoad();
-
-        $('form#payment-'+id+'-form').submit();
-
+      if ($(this).data('disabled') === true) {
+        e.preventDefault();
       }
+      $(this).data('disabled', true);
+      $('button[type="submit"]', this).addClass('disabled');
+
+      showPaymentLoad();
+
+      $('form#payment-' + id + '-form').submit();
+
+    }
   });
 
 
@@ -147,10 +148,10 @@ $(document).ready(() => {
     if (typeof params.deliveryOption === 'undefined' || params.deliveryOption.length === 0) {
       return;
     }
-    let id  =  '11,';
-    for(let i=0; i < params.dataForm.length; i++){
+    let id = '11,';
+    for (let i = 0; i < params.dataForm.length; i++) {
       let objectItem = params.dataForm[i];
-      if(objectItem.name.indexOf('delivery_option') !== -1){
+      if (objectItem.name.indexOf('delivery_option') !== -1) {
         id = objectItem.value;
       }
     }
@@ -161,8 +162,28 @@ $(document).ready(() => {
     $('.added-to-order-block').hide();
     // and show the one related to the selected carrier
     params.deliveryOption.next(prestashop.themeSelectors.checkout.carrierExtraContent).slideDown();
-    $('.added-to-order-block[data-id="'+id+'"]').show();
+    $('.added-to-order-block[data-id="' + id + '"]').show();
   });
+
+  let required_error = "Verplicht veld";
+  let invalid_email = "Email is ongeldig";
+  let pwd_error = "(Minimaal vijf tekens)";
+  let invalid_city = "Speciale karakters!<>;?=+@#°{}_$% are not allowed";
+  let invalid_address = "Speciale tekens !<>?=+@{}_$% zijn niet toegestaan";
+  let invalid_title = "Speciale tekens <>={} zijn niet toegestaan in de titel";
+  let invalid_number = "Alleen +.-() en cijfers zijn toegestaan";
+  let invalid_other_info = "Speciale tekens <>{} zijn niet toegestaan";
+  let invalid_country_msg = "Ongeldig land";
+  let invalid_state_msg = "Ongeldige status";
+  let invalid_name = "Naam is ongeldig";
+  let number_error = "Nummers zijn niet toegestaan";
+  let toc_error = "Accepteer alstublieft onze algemene voorwaarden voordat u uw bestelling bevestigt";
+  let zipcode_error = "Sommige producten in uw winkelwagen kunnen niet op het geselecteerde adres worden afgeleverd. Verwijder deze alstublieft of wijzig uw adres.";
+  let order_place_confirmation = "Kloppen alle door u verstrekte gegevens?";
+  let splchar_error = "Speciale karakters!<>,;?=+()@#°{}_$%: zijn niet toegestaan";
+  let street_number_warning = "Het huisnummer in het adres ontbreekt. Weet u zeker dat u er geen heeft?";
+  let not_same_email = "De email adressen komen niet overeen!";
+  let not_valid_phone = "Het telefoonnummer is onjuist!";
 
 
 
@@ -177,9 +198,9 @@ $(document).ready(() => {
     return reg.test(s);
   }
 
-  function validatePostCode(s, chosenCountry="13") {
+  function validatePostCode(s, chosenCountry = "13") {
     let reg = /^[1-9][0-9]{3}[\s]?[A-Za-z]{2}$/i;
-    if(chosenCountry !== "13"){
+    if (chosenCountry !== "13") {
       //belgiesche Postcode check
       reg = /^[1-9][0-9]{3}$/i;
     }
@@ -229,19 +250,19 @@ $(document).ready(() => {
     return function (e) {
       let context = this, args = arguments;
       let charTyped = String.fromCharCode(e.which);
-      if(e.type !== 'keyup'){
+      if (e.type !== 'keyup') {
         callback.apply(context, args);
       }
 
-      if(e.which === 9){
+      if (e.which === 9) {
         callback.apply(context, args);
       }
-      if (/[a-z\d]/i.test(charTyped)) {
+      // if (/[a-z\d]/i.test(charTyped)) {
         clearTimeout(timer);
         timer = setTimeout(function () {
           callback.apply(context, args);
         }, ms || 0);
-      }
+      // }
     };
   }
 
@@ -250,7 +271,7 @@ $(document).ready(() => {
        Extracted from Unicode specification, version 5.0.0, source:
        http://unicode.org/versions/Unicode5.0.0/
        */
-      var unicodeCategories = {
+      let unicodeCategories = {
         Pi: '[\u00ab\u2018\u201b\u201c\u201f\u2039\u2e02\u2e04\u2e09\u2e0c\u2e1c]',
         Sk: '[\u005e\u0060\u00a8\u00af\u00b4\u00b8\u02c2-\u02c5\u02d2-\u02df\u02e5-\u02ed\u02ef-\u02ff\u0374\u0375\u0384\u0385\u1fbd\u1fbf-\u1fc1\u1fcd-\u1fcf\u1fdd-\u1fdf\u1fed-\u1fef\u1ffd\u1ffe\u309b\u309c\ua700-\ua716\ua720\ua721\uff3e\uff40\uffe3]',
         Sm: '[\u002b\u003c-\u003e\u007c\u007e\u00ac\u00b1\u00d7\u00f7\u03f6\u2044\u2052\u207a-\u207c\u208a-\u208c\u2140-\u2144\u214b\u2190-\u2194\u219a\u219b\u21a0\u21a3\u21a6\u21ae\u21ce\u21cf\u21d2\u21d4\u21f4-\u22ff\u2308-\u230b\u2320\u2321\u237c\u239b-\u23b3\u23dc-\u23e1\u25b7\u25c1\u25f8-\u25ff\u266f\u27c0-\u27c4\u27c7-\u27ca\u27d0-\u27e5\u27f0-\u27ff\u2900-\u2982\u2999-\u29d7\u29dc-\u29fb\u29fe-\u2aff\ufb29\ufe62\ufe64-\ufe66\uff0b\uff1c-\uff1e\uff5c\uff5e\uffe2\uffe9-\uffec]',
@@ -302,8 +323,7 @@ $(document).ready(() => {
         }
         regexpString = regexpString.replace(/\\p\{(..?)}/g, function (match, group) {
           var unicode_categorie = unicodeCategories[group];
-          if (!classes)
-          {
+          if (!classes) {
             unicode_categorie.replace(/\[(.*?)]/g, "$1");
           }
 
@@ -316,44 +336,35 @@ $(document).ready(() => {
     }
   )();
 
-
-
-  let inputMessage =  function(message, textClass = ''){
-    return '<span class="error-small invalid-feedback '+textClass+'">' + message + '</span>';
+  let inputMessage = function (message, textClass = '') {
+    return '<span class="error-small invalid-feedback d-block ' + textClass + '">' + message + '</span>';
   }
 
-  let validateNameInputFields = function (element){
-    $(element).val($(element).val().replace(/[.,]+/g, ''));
-    $(element).siblings('.error-small').remove();
-    if ($(element).val() === '') {
-      $(element).parent().append(inputMessage(required_error));
-      $(element).removeClass('is-valid').addClass('is-invalid');
-    } else if (!validateName($(element).val())) {
-      $(element).removeClass('is-valid').addClass('is-invalid');
-      $(element).parent().append(inputMessage(number_error, 'text-warning'));
-      if (validateOnlyNumber($(element).val())) {
-        $(element).parent().append(inputMessage(splchar_error, 'text-warning'));
-      }
-    } else if (validateName($(element).val())) {
-      $(element).removeClass('is-invalid').addClass('is-valid');
+  let validateNameInputFields = function (elem) {
+    let element = $(elem);
+    element.val(element.val().replace(/[.,]+/g, ''));
+    element.siblings('.error-small').remove();
+    if (element.val() === '') {
+      element.parent().append(inputMessage(required_error));
+    } else if (!validateOnlyNumber(element.val()) || !validateName($(element).val())) {
+      element.parent().append(inputMessage(splchar_error, 'text-warning'));
+    } else {
+      element.siblings('.error-small').remove();
     }
   };
 
-  let validateCompanyInputFields = function(element){
+  let validateCompanyInputFields = function (element) {
     $(element).val($(element).val().replace(/[.,]+/g, ''));
     $(element).siblings('.error-small').remove();
     if (!validateName($(element).val())) {
-      $(element).removeClass('is-valid').addClass('is-invalid');
       $(element).parent().append(inputMessage(number_error, 'text-warning'));
       if (validateOnlyNumber($(element).val())) {
         $(element).parent().append(inputMessage(splchar_error, 'text-warning'));
       }
-    } else if (validateName($(element).val())) {
-      $(element).removeClass('is-invalid').addClass('is-valid');
     }
   }
 
-  let validateVatInputFields = function(element){
+  let validateVatInputFields = function (element) {
     $(element).val($(element).val().replace(/[.,]+/g, ''));
     $(element).siblings('.error-small').remove();
   }
@@ -363,19 +374,13 @@ $(document).ready(() => {
     let validateEmailElem = $('input[name="validate_email"]');
     let emailElem = $('input[name="email"]');
     if ($(element).val() === '') {
-      $(element).removeClass('is-valid').addClass('is-invalid');
       $(element).parent().append(inputMessage(required_error));
     } else if (!validateEmail($(element).val())) {
-      $(element).removeClass('is-valid').addClass('is-invalid');
       $(element).parent().append(inputMessage(invalid_email, 'text-warning'));
     } else {
-      if(validateEmailElem.length > 0 && validateEmailElem.val() !== emailElem.val()){
-        validateEmailElem.removeClass('is-valid').addClass('is-invalid');
-        emailElem.removeClass('is-valid').addClass('is-invalid');
+      if (validateEmailElem.length > 0 && validateEmailElem.val() !== emailElem.val()) {
         validateEmailElem.parent().append(inputMessage(not_same_email, 'text-warning'));
         emailElem.parent().append(inputMessage(not_same_email, 'text-warning'));
-      } else{
-        $(element).removeClass('is-invalid').addClass('is-valid');
       }
     }
   }
@@ -383,83 +388,61 @@ $(document).ready(() => {
   let validatePasswordInputFields = function (element) {
     $(element).parent().find('.error-small').remove();
     if ($(element).val() !== "" && !validatePasswd($(element).val())) {
-      $(element).removeClass('is-valid').addClass('is-invalid');
       $(element).parent().append(inputMessage(pwd_error));
-    } else {
-      $(element).removeClass('is-invalid').addClass('is-valid');
     }
   }
 
   let validateAddressInputFields = function (element) {
     $(element).parent().find('.error-small').remove();
-    $(element).removeClass('is-valid is-invalid');
     if ($(element).val() === '') {
       $(element).parent().append(inputMessage(required_error));
-      $(element).removeClass('is-valid').addClass('is-invalid');
     } else if (!validateAddressApi($(element).val())) {
-      $(element).parent().append(inputMessage(invalid_address,'text-warning'));
-      $(element).removeClass('is-valid').addClass('is-invalid');
+      $(element).parent().append(inputMessage(invalid_address, 'text-warning'));
     } else if (validateAddressApi($(element).val())) {
       $(element).parent().find('.error-small').remove();
-      $(element).removeClass('is-invalid').addClass('is-valid');
     }
-      if($('#cart-postcode-check-toggle').prop('checked') === true){
-        checkFormatAddressApiCheckout().then(r => {
-      });
-    }
+    checkFormatAddressApiCheckout().then(r => {
+    });
   }
 
   let validatePostcodeInputFields = function (element) {
     $(element).parent().find('.error-small').remove();
     if ($(element).val() === '') {
       $(element).parent().append(inputMessage(required_error));
-      $(element).removeClass('is-valid').addClass('is-invalid');
     } else if (validatePostCode($(element).val())) {
       $(element).parent().find('.error-small').remove();
-      $(element).removeClass('is-invalid').addClass('is-valid');
 
-      if($('#cart-postcode-check-toggle').prop('checked') === true){
-        if($(element).parents('.form-fields.row').find('input[name="house_number"]').val() !== ''){
-          checkFormatAddressApiCheckout().then(r => {});
-        }
-      }
-    }
-  }
-
-  let validateHouseNumberInputFields = function (element) {
-    $(element).parent().find('.error-small').remove();
-    $(element).removeClass('is-valid is-invalid');
-    if ($(element).val() === '') {
-      $(element).parent().append(inputMessage(required_error));
-      $(element).removeClass('is-valid').addClass('is-invalid');
-    } else if (!validateAddressApi($(element).val())) {
-      $(element).parent().append(inputMessage(invalid_address,'text-warning'));
-      $(element).removeClass('is-valid').addClass('is-invalid');
-    } else if (validateAddressApi($(element).val())) {
-      if (!$(element).val().match(/\d+/)) {
-        if (!$(element).parent().find('.error-small').length)
-          $(element).parent().append(inputMessage(street_number_warning,'text-warning'));
-      } else {
-        $(element).parent().find('.error-small').remove();
-      }
-      $(element).removeClass('is-invalid  is-invalid').addClass('is-valid');
-      if($('#cart-postcode-check-toggle').prop('checked') === true){
+      if ($(element).parents('.form-fields.row').find('input[name="house_number"]').val() !== '') {
         checkFormatAddressApiCheckout().then(r => {
         });
       }
     }
   }
 
-  let validateTextInputFields = function (element, required=true) {
+  let validateHouseNumberInputFields = function (element) {
+    $(element).parent().find('.error-small').remove();
+    if ($(element).val() === '') {
+      $(element).parent().append(inputMessage(required_error));
+    } else if (!validateAddressApi($(element).val())) {
+      $(element).parent().append(inputMessage(invalid_address, 'text-warning'));
+    } else if (validateAddressApi($(element).val())) {
+      if (!$(element).val().match(/\d+/)) {
+        if (!$(element).parent().find('.error-small').length)
+          $(element).parent().append(inputMessage(street_number_warning, 'text-warning'));
+      } else {
+        $(element).parent().find('.error-small').remove();
+      }
+      checkFormatAddressApiCheckout().then(r => {
+      });
+    }
+  }
+
+  let validateTextInputFields = function (element, required = true) {
     $(element).parent().find('.error-small').remove();
     if ($(element).val() === '' && required) {
       $(element).parent().append(inputMessage(required_error));
-      $(element).removeClass('is-valid').addClass('is-invalid');
     } else if (!validateMessage($(element).val())) {
       $(element).parent().append(inputMessage(invalid_other_info));
-      $(element).removeClass('is-valid').addClass('is-invalid');
-    } else if (validateMessage($(element).val())) {
-      $(element).removeClass('is-invalid').addClass('is-valid');
     }
   }
 
@@ -467,79 +450,24 @@ $(document).ready(() => {
     $(element).parent().find('.error-small').remove();
     if ($(element).val() === '') {
       $(element).parent().append(inputMessage(required_error));
-      $(element).removeClass('is-valid').addClass('is-invalid');
     } else if (!validateCityName($(element).val())) {
-      $(element).parent().append(inputMessage(invalid_city,'text-warning'));
-      $(element).removeClass('is-valid is-invalid').addClass('is-invalid');
-    } else if (validateCityName($(element).val())) {
-      $(element).removeClass('is-invalid').addClass('is-valid');
+      $(element).parent().append(inputMessage(invalid_city, 'text-warning'));
     }
-    if($('#cart-postcode-check-toggle').prop('checked') === true){
-      checkFormatAddressApiCheckout().then(r => {
-      });
-    }
+    checkFormatAddressApiCheckout().then(r => {
+    });
   }
 
-  let validatePhoneInputFields = function (element, required=true) {
+  let validatePhoneInputFields = function (element, required = true) {
     $(element).siblings('.error-small').remove();
     if ($(element).val() === '' && required) {
       $(element).parent().append(inputMessage(required_error));
-      $(element).removeClass('is-valid').addClass('is-invalid');
-    }else if (!validatePhoneNumber($(element).val())) {
+    } else if (!validatePhoneNumber($(element).val())) {
       $(element).parent().append(inputMessage(not_valid_phone, 'text-warning'));
-      $(element).removeClass('is-valid').addClass('is-invalid');
-    } else {
-      $(element).removeClass('is-invalid').addClass('is-valid');
     }
   }
-
-  let validateCountryInputFields = function (element) {
-    let flag = 0;
-    $(element).parent().find('.error-small').remove();
-    let value = $(element).val();
-    if($('#cart-postcode-check-toggle').prop('checked') === true){
-      if(value === "13"){
-        $(element).parents('form').find('[name="address1"]').addAttr('readonly');
-        $(element).parents('form').find('[name="city"]').addAttr('readonly');
-      } else {
-        $(element).parents('form').find('[name="address1"]').removeAttr('readonly');
-        $(element).parents('form').find('[name="city"]').removeAttr('readonly');
-      }
-    } else {
-      $(element).parents('form').find('[name="address1"]').removeAttr('readonly');
-      $(element).parents('form').find('[name="city"]').removeAttr('readonly');
-    }
-
-    if($('#cart-postcode-check-toggle').prop('checked') === true){
-      checkFormatAddressApiCheckout().then(r => {
-
-
-      });
-    }
-  }
-
-
-  $(document).on('change', '#cart-postcode-check-toggle', function (e) {
-    let element = $(this);
-    let value = $(element).prop('checked');
-    let idCountry = $(element).parents('form').find('.js-country').val();
-
-    if(value === true && idCountry === "13"){
-      if(idCountry === "13"){
-        $(element).parents('form').find('[name="address1"]').attr('readonly', true);
-        $(element).parents('form').find('[name="city"]').attr('readonly', true);
-      }
-    } else {
-      $(element).parents('form').find('[name="address1"]').removeAttr('readonly');
-      $(element).parents('form').find('[name="city"]').removeAttr('readonly');
-    }
-  if(value === true){
-    checkFormatAddressApiCheckout().then(r => {});
-  }
-  });
 
   // Name validation
-  $('input[name="lastname"], input[name="firstname"]').on('change paste', delayKeyUp(function (e) {
+  $('input[name="lastname"], input[name="firstname"]').on('keyup change paste', delayKeyUp(function (e) {
     e.stopImmediatePropagation();
     validateNameInputFields(this);
   }));
@@ -559,16 +487,16 @@ $(document).ready(() => {
     validateEmailInputFields(this);
   }));
   // //Password validation
-  // $('input[name="password"]').on('keyup paste', delayKeyUp(function (e) {
-  //   validatePasswordInputFields(this);
-  //   e.stopImmediatePropagation();
-  // }));
+  $('input[name="password"]').on('keyup paste', delayKeyUp(function (e) {
+    validatePasswordInputFields(this);
+    e.stopImmediatePropagation();
+  }));
   //Names on adres form validation
   $('#delivery-address input[name="firstname"], #delivery-address input[name="lastname"], #invoice-address input[name="firstname"], #invoice-address input[name="lastname"] ')
     .on('keyup paste', delayKeyUp(function (e) {
       e.stopImmediatePropagation();
       validateNameInputFields(this);
-  }));
+    }));
   //Postcode on adres form validation
   $('#customer_address_form input[name="postcode"], #delivery-address input[name="postcode"], #invoice-address input[name="postcode"]')
     .on('keyup paste', delayKeyUp(function (e) {
@@ -576,114 +504,112 @@ $(document).ready(() => {
       let value = $(this).val();
       let chosenCountry = $(this).parents('form').find('.js-country').val();
       let check = validatePostCode(value, chosenCountry);
-      if(check){
+      if (check) {
         validatePostcodeInputFields(this);
       }
-  }));
+    }));
   //Address
   $('#customer_address_form input[name="address1"], #delivery-address input[name="address1"], #invoice-address input[name="address1"]')
     .on('keyup paste', delayKeyUp(function (e) {
       validateAddressInputFields(this);
       e.stopImmediatePropagation();
-  }));
+    }));
   //Huisnummer
   $('#customer_address_form input[name="house_number"], #delivery-address input[name="house_number"], #invoice-address input[name="house_number"]')
     .on('keyup paste', delayKeyUp(function (e) {
       validateHouseNumberInputFields(this);
       e.stopImmediatePropagation();
-  }));
+    }));
   //Huisnummer extensie
   $('#customer_address_form input[name="house_number_extension"], #delivery-address input[name="house_number_extension"], #invoice-address input[name="house_number_extension"]')
     .on('keyup paste', delayKeyUp(function (e) {
-    if($('#cart-postcode-check-toggle').prop('checked') === true){
       checkFormatAddressApiCheckout().then(r => {
         return true;
       });
-    }
-  }));
-  //woonplaats
-  $('#customer_address_form input[name="city"], #delivery-address input[name="city"], #invoice-address input[name="city"]')
-    .on('keyup paste', delayKeyUp(function (e) {
-      validateCityInputFields(this);
-      e.stopImmediatePropagation();
-  }));
+    }));
   //Alias
   $('#invoice-address input[name="alias"], #customer_address_form input[name="alias"], #delivery-address input[name="alias"]').on('keyup paste', delayKeyUp(function (e) {
-      validateAliasInputFields(this);
-      e.stopImmediatePropagation();
+    validateAliasInputFields(this);
+    e.stopImmediatePropagation();
   }));
   //Company fields address
   $('#customer_address_form input[name="company"], #delivery-address input[name="company"], #invoice-address input[name="company"]').on('keyup paste', delayKeyUp(function (e) {
-      validateCompanyInputFields(this);
+    validateCompanyInputFields(this);
     e.stopImmediatePropagation();
   }));
-
   //Phone number
   $('#customer_address_form input[name="phone"], #delivery-address input[name="phone"], #invoice-address input[name="phone"]').on('keyup paste', delayKeyUp(function (e) {
-      validatePhoneInputFields(this);
+    validatePhoneInputFields(this);
     e.stopImmediatePropagation();
   }));
-
   //mobile phonenumber
   $('#customer_address_form input[name="phone_mobile"], #delivery-address input[name="phone_mobile"], #invoice-address input[name="phone_mobile"]').on('keyup paste', delayKeyUp(function (e) {
     validatePhoneInputFields(this, false);
     e.stopImmediatePropagation();
   }));
-
   //Other text data
   $('#invoice-address textarea[name="other"], #customer_address_form textarea[name="other"], #delivery-address textarea[name="other"]').on('keyup paste', delayKeyUp(function (e) {
-      validateTextInputFields(this);
+    validateTextInputFields(this);
     e.stopImmediatePropagation();
   }));
 
-  $('#customer_address_form select[name="id_country"], #delivery-address select[name="id_country"], #invoice-address select[name="id_country"]').on('change', function (e) {
-    validateCountryInputFields(this);
+  $('div#delivery-address .btn[name="confirm-addresses"], div#invoice-address .btn[name="confirm-addresses"], form#customer_address_form .btn[name="confirm-addresses"]').on('click', function (e) {
     e.stopImmediatePropagation();
 
-  });
+    let formElem = e.target.form;
+    let insertedData = new FormData(formElem);
 
-  $('.continue[name="confirm-addresses"]').on('click', function () {
-    if($('#cart-postcode-check-toggle').prop('checked') === true){
-      checkFormatAddressApiCheckout().then(r => {
-        return true;
-      });
+    let address = (insertedData.get('address1') || '').toString().toUpperCase();
+    let houseNumber = (insertedData.get('house_number') || '').toString().toUpperCase();
+    let houseNumberExtension = (insertedData.get('house_number_extension') || '').toString().toUpperCase();
+    let postcode = (insertedData.get('postcode') || '').toString().toUpperCase();
+    let city = (insertedData.get('city') || '').toString().toUpperCase();
+    let country = insertedData.get('id_country');
+    if (country === "13") {
+      country = "Nederland";
+    } else if (country === "3") {
+      country = "België";
+    } else {
+      country = "X";
     }
+
+    let insertedAddress = address + ' ' + houseNumber + houseNumberExtension + '<br>'
+      + postcode + ' ' + city
+      + '<br>' + country;
+
+    checkFormatAddressApiCheckout().then(async fullfilled => {
+      // console.log(fullfilled)
+
+        if (fullfilled) {
+          //ga verder
+          formElem.submit();
+        } else {
+          //geef melding
+          const dialog = new ConfirmDialog({
+            titleText: "Let op! adres kon niet gevalideerd worden.",
+            trueButtonText: "Ja, doorgaan",
+            trueButtonClass: "btn-success",
+            falseButtonText: "Nee, wijzigen",
+            falseButtonClass: "btn-danger",
+            questionText: '<span>' +
+              '<address class="h4 text-center">' + insertedAddress + '</address><br><br>' +
+              '<div class="text-center mb-2 font-weight-bold text-dark h6">Weet u zeker dat het ingevoerde adress correct is?<span></span>'
+          });
+
+          const shouldPostOutOfStockActionWish = await dialog.confirm();
+          if (shouldPostOutOfStockActionWish) {
+            formElem.submit();
+            return true;
+
+          } else {
+            return false;
+          }
+        }
+      },
+      rejected => {
+        return false;
+      });
   });
-
-
-
-
-
-  //
-  // function showNoShippingPhone() {
-  //   let shippingOption = $('input.supercheckout_shipping_option:checked').val();
-  //   if (shippingOption == pickupCarrier || shippingOption == add2OrderCarrier) {
-  //     if ($('#delivery-address input[name="phone"]').siblings('.error-small').length > 0 || $('#delivery-address input[name="mobile"]').siblings('.error-small').length > 0) {
-  //       $('#input-no_shipping_phone').siblings('.error-small').remove();
-  //       $('.no-shipping-names-row.phone').removeClass('d-none').show();
-  //       $('#input-no_shipping_phone').removeClass('is-valid').addClass('is-invalid');
-  //       $('#input-no_shipping_phone').parent().append('<span class="error-small">Uw geregistreerd telefoonnummer heeft een onjuist formaat.</span>');
-  //
-  //       return false;
-  //
-  //     } else {
-  //
-  //       $('#input-no_shipping_phone').siblings('.error-small').remove();
-  //       if ($('#input-no_shipping_phone').val() === '') {
-  //         $('#input-no_shipping_phone').removeClass('is-valid').addClass('is-invalid');
-  //         $('#input-no_shipping_phone').parent().append('<span class="error-small">' + required_error + '</span>');
-  //         return false;
-  //       } else if (!validatePhoneNumber($('#input-no_shipping_phone').val())) {
-  //         $('#input-no_shipping_phone').removeClass('is-valid').addClass('is-invalid');
-  //         $('#input-no_shipping_phone').parent().append('<span class="error-small text-warning">' + invalid_number + '</span>');
-  //         return false;
-  //       } else if (validatePhoneNumber($('#input-no_shipping_phone').val())) {
-  //         $('#input-no_shipping_phone').removeClass('is-invalid').addClass('is-valid');
-  //         $('#input-no_shipping_phone').siblings('.error-small').remove();
-  //       }
-  //     }
-  //   }
-  // }
 
   async function checkFormatAddressApiCheckout() {
     let validatedPayment = false;
@@ -695,82 +621,109 @@ $(document).ready(() => {
     let houseNumberPayment = '';
     let extensionPayment = '';
 
-    if ($('#delivery-address input[name="postcode"]').val() !== undefined) {
-      postcode = $('#delivery-address input[name="postcode"]').val().replace(' ', '');
-    }
-    if ($('#delivery-address input[name="house_number"]').val() !== undefined) {
-      houseNumber = $('#delivery-address input[name="house_number"]').val().replace(' ', '');
-    }
-    let extension = $('#delivery-address input[name="house_number_extension"]').val();
-
-    let street = $('#delivery-address input[name="address1"]').val();
-
-    let id_country = $('#delivery-address select[name="id_country"]').val();
-
-    let city = $('#delivery-address input[name="city"]').val();
-
-    if (postcode !== undefined && (postcode.length >= 5 || houseNumber.length > 0) &&
-      (id_country === "13" || (id_country === "3" && street.length > 0))) {
-      validated = await validateAddressApiCheckout(postcode.trim(), street.trim(), houseNumber.trim(), extension.trim(), id_country.trim(), city.trim(), "delivery");
-    }
-
-    if (!useForInvoice) {
-      validatedPayment = true;
-
-      if ($('#invoice-address input[name="postcode"]').val() !== undefined) {
-        postcodePayment = $('#invoice-address input[name="postcode"]').val().replace(' ', '');
+    if ($('#customer_address_form input[name="postcode"]').val() !== undefined) {
+      //is an my-account customer form
+      if ($('#customer_address_form input[name="postcode"]').val() !== undefined) {
+        postcode = $('#customer_address_form input[name="postcode"]').val().replace(' ', '');
       }
-      if ($('#invoice-address input[name="house_number"]').val() !== undefined) {
-        houseNumberPayment = $('#invoice-address input[name="house_number"]').val().replace(' ', '');
+      if ($('#customer_address_form input[name="house_number"]').val() !== undefined) {
+        houseNumber = $('#customer_address_form input[name="house_number"]').val().replace(' ', '');
       }
-      if ($('#invoice-address input[name="house_number_extension"]').val() !== undefined) {
-        extensionPayment = $('#invoice-address input[name="house_number_extension"]').val().replace(' ', '');
+      let extension = $('#customer_address_form input[name="house_number_extension"]').val();
+
+      let street = $('#customer_address_form input[name="address1"]').val();
+
+      let id_country = $('#customer_address_form select[name="id_country"]').val();
+
+      let city = $('#customer_address_form input[name="city"]').val();
+
+      if (postcode !== undefined && (postcode.length >= 4 || houseNumber.length > 0) &&
+        (id_country === "13" || (id_country === "3" && street.length > 0))) {
+        validated = await validateAddressApiCheckout(postcode.trim(), street.trim(), houseNumber.trim(), extension.trim(), id_country.trim(), '', "");
       }
-      let streetPayment = $('#invoice-address input[name="address1"]').val();
 
-      let cityPayment = $('#invoice-address input[name="city"]').val();
-
-      let id_countryPayment = $('#invoice-address select[name="id_country"]').val();
-      if (postcodePayment !== undefined && (postcodePayment.length >= 5 || houseNumberPayment.length > 0) &&
-        (id_countryPayment === "13" || (id_countryPayment === "3" && streetPayment.length > 0 && cityPayment.length > 0))) {
-        validatedPayment = await validateAddressApiCheckout(postcodePayment.trim(), streetPayment.trim(), houseNumberPayment.trim(), extensionPayment.trim(), id_countryPayment.trim(), cityPayment.trim(), "invoice");
+      if (validated) {
+        return true;
       }
-    }
 
-    $('#delivery-address input[name="phone"]').siblings('.error-small').remove();
-    if ($('#delivery-address input[name="phone"]').val() === '' && $('#delivery-address input[name="postcode"]').length > 3) {
-      $('#delivery-address input[name="phone"]').removeClass('is-valid').addClass('is-invalid');
-      $('#delivery-address input[name="phone"]').parent().append(inputMessage(required_error));
-      return false;
-    }
-
-    $('#invoice-address input[name="phone"]').siblings('.error-small').remove();
-    if (!$('#use_same_address').is(':checked')) {
-      if ($('#invoice-address input[name="phone"]').val() === '' && $('#delivery-address input[name="postcode"]').length > 3) {
-        $('#invoice-address input[name="phone"]').removeClass('is-valid').addClass('is-invalid');
-        $('#invoice-address input[name="phone"]').parent().append(inputMessage(required_error));
-        return false;
-      }
-    }
-
-    $('input[name="conditions_to_approve[terms-and-conditions]"]').siblings('.error-small').remove();
-    if (!$('input[name="conditions_to_approve[terms-and-conditions]"]').is(':checked')) {
-      $('input[name="conditions_to_approve[terms-and-conditions]"]').removeClass('is-valid').addClass('is-invalid');
-      $('input[name="conditions_to_approve[terms-and-conditions]"]').parent().append('<span class="error-small">Accepteer a.u.b. onze algemene voorwaarden om uw bestelling af te ronden.</span>');
-      return false;
     } else {
-      $('input[name="conditions_to_approve[terms-and-conditions]"]').removeClass('is-invalid').addClass('is-valid');
-      $('input[name="conditions_to_approve[terms-and-conditions]"]').siblings('.error-small').remove();
-    }
+      //is an checkout form
+      if ($('#delivery-address input[name="postcode"]').val() !== undefined) {
+        postcode = $('#delivery-address input[name="postcode"]').val().replace(' ', '');
+      }
+      if ($('#delivery-address input[name="house_number"]').val() !== undefined) {
+        houseNumber = $('#delivery-address input[name="house_number"]').val().replace(' ', '');
+      }
+      let extension = $('#delivery-address input[name="house_number_extension"]').val();
 
-    if ((validated && useForInvoice) || (validated && validatedPayment && !useForInvoice)) {
-      $('input[name="no_shipping_phone"]').siblings('.error-small').remove();
-      return true;
+      let street = $('#delivery-address input[name="address1"]').val();
+
+      let id_country = $('#delivery-address select[name="id_country"]').val();
+
+      let city = $('#delivery-address input[name="city"]').val();
+
+      if (postcode !== undefined && (postcode.length >= 5 || houseNumber.length > 0) &&
+        (id_country === "13" || (id_country === "3" && street.length > 0))) {
+        validated = await validateAddressApiCheckout(postcode.trim(), street.trim(), houseNumber.trim(), extension.trim(), id_country.trim(), city.trim(), "delivery");
+      }
+
+      if (!useForInvoice) {
+        validatedPayment = true;
+
+        if ($('#invoice-address input[name="postcode"]').val() !== undefined) {
+          postcodePayment = $('#invoice-address input[name="postcode"]').val().replace(' ', '');
+        }
+        if ($('#invoice-address input[name="house_number"]').val() !== undefined) {
+          houseNumberPayment = $('#invoice-address input[name="house_number"]').val().replace(' ', '');
+        }
+        if ($('#invoice-address input[name="house_number_extension"]').val() !== undefined) {
+          extensionPayment = $('#invoice-address input[name="house_number_extension"]').val().replace(' ', '');
+        }
+        let streetPayment = $('#invoice-address input[name="address1"]').val();
+
+        let cityPayment = $('#invoice-address input[name="city"]').val();
+
+        let id_countryPayment = $('#invoice-address select[name="id_country"]').val();
+        if (postcodePayment !== undefined && (postcodePayment.length >= 5 || houseNumberPayment.length > 0) &&
+          (id_countryPayment === "13" || (id_countryPayment === "3" && streetPayment.length > 0 && cityPayment.length > 0))) {
+          validatedPayment = await validateAddressApiCheckout(postcodePayment.trim(), streetPayment.trim(), houseNumberPayment.trim(), extensionPayment.trim(), id_countryPayment.trim(), cityPayment.trim(), "invoice");
+        }
+      }
+
+      // $('#delivery-address input[name="phone"]').siblings('.error-small').remove();
+      // if ($('#delivery-address input[name="phone"]').val() === '' && $('#delivery-address input[name="postcode"]').length > 3) {
+      //   $('#delivery-address input[name="phone"]').parent().append(inputMessage(required_error));
+      //   return false;
+      // }
+      //
+      // $('#invoice-address input[name="phone"]').siblings('.error-small').remove();
+      // if (!$('#use_same_address').is(':checked')) {
+      //   if ($('#invoice-address input[name="phone"]').val() === '' && $('#delivery-address input[name="postcode"]').length > 3) {
+      //     $('#invoice-address input[name="phone"]').parent().append(inputMessage(required_error));
+      //     return false;
+      //   }
+      // }
+
+      // $('input[name="conditions_to_approve[terms-and-conditions]"]').siblings('.error-small').remove();
+      // if (!$('input[name="conditions_to_approve[terms-and-conditions]"]').is(':checked')) {
+      //   $('input[name="conditions_to_approve[terms-and-conditions]"]').parent().append('<span class="error-small">Accepteer a.u.b. onze algemene voorwaarden om uw bestelling af te ronden.</span>');
+      //   return false;
+      // } else {
+      //   $('input[name="conditions_to_approve[terms-and-conditions]"]').siblings('.error-small').remove();
+      // }
+
+      if ((validated && useForInvoice) || (validated && validatedPayment && !useForInvoice)) {
+        $('input[name="no_shipping_phone"]').siblings('.error-small').remove();
+        return true;
+      }
+
+
     }
     return false;
   }
 
-  function validateAddressApiCheckout(postcode, street, houseNumber, extension, country, city, type) {
+
+  function validateAddressApiCheckout(postcode, street, houseNumber, extension, country, city, type = '') {
     return new Promise((resolve, reject) => {
       let postC = postcode.replace(' ', '');
       let houseN = houseNumber.replace(' ', '');
@@ -779,7 +732,7 @@ $(document).ready(() => {
       }
 
       $.ajax({
-        url: postcodeApiUrl,
+        url: '/module/msthemeconfig/ajax',
         async: false,
         type: 'GET',
         dataType: 'json',
@@ -794,29 +747,28 @@ $(document).ready(() => {
         },
       })
         .done(function (e) {
-          let isValidForConfirm = false;
+          let isValidForConfirm = true;
           $('.address-error-msg').text(null);
-          type = type+'-address';
+
+          if (type === '') {
+
+            type = 'customer_address_form';
+          } else {
+            type = type + '-address';
+          }
+
           $('#' + type + '-new').find('.error-small').remove();
           let newElemType = $('#' + type + '-new');
-          let countryElem = $('#'+type+' [name="id_country"]');
-          let postcodeElem = $('#'+type+' [name="postcode"]');
-          let cityElem = $('#'+type+' [name="city"]');
-          let address1Elem = $('#'+type+' [name="address1"]');
-          let houseNumberElem = $('#'+type+' [name="house_number"]');
-          let houseNumberExtElem = $('#'+type+' [name="house_number_extension"]');
+          let countryElem = $('#' + type + ' [name="id_country"]');
+          let postcodeElem = $('#' + type + ' [name="postcode"]');
+          let cityElem = $('#' + type + ' [name="city"]');
+          let address1Elem = $('#' + type + ' [name="address1"]');
+          let houseNumberElem = $('#' + type + ' [name="house_number"]');
+          let houseNumberExtElem = $('#' + type + ' [name="house_number_extension"]');
 
-          if(!e.hasOwnProperty('address')){
-            address1Elem.addClass('is-invalid').removeClass('is-valid');
-            postcodeElem.addClass('is-invalid').removeClass('is-valid');
-            houseNumberElem.addClass('is-invalid').removeClass('is-valid');
-            houseNumberExtElem.addClass('is-invalid').removeClass('is-valid');
-            countryElem.addClass('is-invalid').removeClass('is-valid');
-            cityElem.addClass('is-invalid').removeClass('is-valid');
+          if (!e.hasOwnProperty('address')) {
 
             if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field !== undefined) {
-              $('#'+type+' [name="' + e.msg.field + '"]').removeClass('is-valid').addClass('is-invalid');
-              newElemType.find('.error-small').remove();
               newElemType.append(inputMessage(e.msg.msg, 'text-warning'));
               isValidForConfirm = false;
             }
@@ -826,88 +778,47 @@ $(document).ready(() => {
           if (e.valid !== false && e.hasOwnProperty('address') && e.address.countryCode === 'NL') { // is een nederlands adres
 
             if (e.address.street !== 'undefined') {
-              address1Elem.val(e.address.street).removeClass('is-invalid').addClass('is-valid');
+              address1Elem.val(e.address.street);
               isValidForConfirm = true;
             } else {
-              address1Elem.val('').removeClass('is-valid').addClass('is-invalid');
               isValidForConfirm = false;
             }
 
-            postcodeElem.removeClass('is-invalid').addClass('is-valid');
-
             if (houseNumberElem.val().length > 0) {
-              houseNumberElem.removeClass('is-invalid').addClass('is-valid');
-              houseNumberExtElem.removeClass('is-invalid').addClass('is-valid');
               isValidForConfirm = true;
             } else {
-              newElemType.find('.error-small').remove();
               if (e.address.streetnumbers) {
                 newElemType.append(inputMessage('Bij deze postcode zijn de volgende nummers ' + e.address.streetnumbers + ' beschikbaar', 'text-warning'));
               }
               if (houseNumberElem.val() === '') {
-                houseNumberElem.addClass('is-invalid');
-                houseNumberExtElem.addClass('is-invalid');
               }
               isValidForConfirm = false;
             }
-            cityElem.removeClass('is-invalid').addClass('is-valid');
-            if (e.address.settlement !== undefined) {
-              cityElem.val(e.address.settlement).removeClass('is-invalid').addClass('is-valid');
-            }
-            countryElem.removeClass('is-invalid').addClass('is-valid');
 
+            if (e.address.settlement !== undefined) {
+              cityElem.val(e.address.settlement);
+            }
           } else if (e.valid !== false && e.hasOwnProperty('address') && e.address.countryCode === 'BE') {
-            if(e.address.street !== undefined){
-              address1Elem.val(e.address.street).removeClass('is-invalid').addClass('is-valid');
+            if (e.address.street !== undefined) {
+              address1Elem.val(e.address.street);
             }
 
-            if(address1Elem.val().length === 0){
-              address1Elem.removeClass('is-valid').addClass('is-invalid');
-            }
             // is een belgisch adres
-            postcodeElem.removeClass('is-invalid').addClass('is-valid');
-            houseNumberElem.removeClass('is-invalid').addClass('is-valid');
-            houseNumberExtElem.removeClass('is-invalid').addClass('is-valid');
-
-            countryElem.removeClass('is-invalid').addClass('is-valid');
-
             if (e.address.settlement !== undefined) {
-              cityElem.val(e.address.settlement).removeClass('is-invalid').addClass('is-valid');
+              cityElem.val(e.address.settlement);
             }
 
             isValidForConfirm = true;
-          } else if (e.valid === false || e.address.length === 0){
-
+          } else if (e.valid === false || e.address.length === 0) {
             isValidForConfirm = false;
-            address1Elem.val('').addClass('is-invalid').removeClass('is-valid');
-            postcodeElem.addClass('is-invalid').removeClass('is-valid');
-            houseNumberElem.addClass('is-invalid').removeClass('is-valid');
-            houseNumberExtElem.addClass('is-invalid').removeClass('is-valid');
-            countryElem.addClass('is-invalid').removeClass('is-valid');
-            cityElem.addClass('is-invalid').removeClass('is-valid');
 
             if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field !== undefined) {
-              $('#'+type+' [name="' + e.msg.field + '"]').removeClass('is-valid').addClass('is-invalid');
-              newElemType.find('.error-small').remove();
               newElemType.append(inputMessage(e.msg.msg, 'text-warning'));
               isValidForConfirm = false;
             }
           }
 
           if (e.msg === 'ok' && e.valid) {
-            newElemType.find('.error-small').remove();
-            address1Elem.removeClass('is-invalid').addClass('is-valid');
-            postcodeElem.removeClass('is-invalid').addClass('is-valid');
-
-            if (houseNumberElem.val().length > 0) {
-              houseNumberElem.removeClass('is-invalid').addClass('is-valid');
-              houseNumberExtElem.removeClass('is-invalid').addClass('is-valid');
-            } else {
-              houseNumberElem.addClass('is-invalid');
-              houseNumberExtElem.addClass('is-invalid');
-            }
-            cityElem.removeClass('is-invalid').addClass('is-valid');
-            countryElem.removeClass('is-invalid').addClass('is-valid');
             isValidForConfirm = true;
           }
           resolve(isValidForConfirm);
@@ -919,13 +830,12 @@ $(document).ready(() => {
   }
 
 
-
   $('.info-icon-with-showhide-address').on('click', function (event) {
     event.preventDefault();
     const id = $(this).attr('data-id');
     let textElem = $('#' + id);
 
-    if(textElem.css('display') !== 'none'){
+    if (textElem.css('display') !== 'none') {
       textElem.css('display', 'none');
     } else {
       textElem.css('display', 'inline-block');
@@ -946,19 +856,60 @@ $(document).ready(() => {
 
 
   function errorCheckAddressForm() {
-      if($('.error-small').length > 0){
-        let deliveryHouseNr = $('#delivery-address [name="house_number"]');
-        let paymentHouseNr = $('#invoice-address [name="house_number"]');
-        if(deliveryHouseNr.length > 0){
-          validateHouseNumberInputFields(deliveryHouseNr);
-          validatePhoneInputFields($('#delivery-address [name="phone"]'));
-        }
-
-        if(paymentHouseNr.length > 0){
-          validateHouseNumberInputFields(paymentHouseNr);
-          validatePhoneInputFields($('#invoice-address [name="phone"]'));
-        }
+    if ($('.error-small').length > 0) {
+      let deliveryHouseNr = $('#delivery-address [name="house_number"]');
+      let paymentHouseNr = $('#invoice-address [name="house_number"]');
+      if (deliveryHouseNr.length > 0) {
+        validateHouseNumberInputFields(deliveryHouseNr);
+        validatePhoneInputFields($('#delivery-address [name="phone"]'));
       }
+
+      if (paymentHouseNr.length > 0) {
+        validateHouseNumberInputFields(paymentHouseNr);
+        validatePhoneInputFields($('#invoice-address [name="phone"]'));
+      }
+    }
   }
- errorCheckAddressForm();
+
+  errorCheckAddressForm();
 });
+
+
+async function checkoutGuestWrongPassword(){
+  if (typeof checkoutLoginPassModal  !== "undefined" && checkoutLoginPassModal.modalChoice) {
+    //geef melding
+    const dialogGuestWrongPassword = new ConfirmDialog({
+      titleText: "Er is al een account voor dit email adres!",
+      trueButtonText: "Ja, wachtwoord opvragen",
+      trueButtonClass: "btn-success",
+      falseButtonText: "Nee, verder als gast",
+      falseButtonClass: "btn-primary",
+      questionText: '<span>' +
+        '<div class="text-center mb-2 font-weight-bold text-dark h6">Alleen het ingevulde wachtwoord is onjuist.<br/>' +
+        'Wilt u het wachtwoord wijzigen? Of verder gaan als gast?<span></span>'
+    });
+
+    const shouldPostOutOfStockActionWish = await dialogGuestWrongPassword.confirm();
+    if (shouldPostOutOfStockActionWish) {
+      window.open(prestashop.urls.base_url+'wachtwoord-opvragen?email='+checkoutLoginPassModal.email, '_blank');
+    } else {
+      $('[name="password"]').val('');
+      $('#customer-form').submit();
+    }
+    return true;
+  } else {
+    return false
+  }
+}
+
+
+$(document).ready(function(){
+
+  checkoutGuestWrongPassword().then(
+    function(value) {
+      // console.log([value, 'wrong password']);
+    }
+  );
+
+});
+

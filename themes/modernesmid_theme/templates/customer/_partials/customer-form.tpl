@@ -56,7 +56,7 @@
               Valideer E-mail
             </label>
             <div class="col-md-9">
-              <input class="form-control" name="validate_email" type="email" value="" required="required" autocomplete="false">
+              <input class="form-control" name="validate_email" type="email" value="" required="required" autocomplete="off">
             </div>
           </div>
           {/if}
@@ -143,6 +143,19 @@
             validateEmailString(emailInput);
           });
     }
+
+
+
 </script>
 {/literal}
 {/if}
+
+{block name='javascript_bottom'}
+<script type="text/javascript">
+  //Wrong password but existing customer at registration
+  let checkoutLoginPassModal = [];
+  {if property_exists(Context::getContext(), 'checkout')}
+      checkoutLoginPassModal = JSON.parse('{Context::getContext()->checkout nofilter}');
+  {/if}
+</script>
+{/block}

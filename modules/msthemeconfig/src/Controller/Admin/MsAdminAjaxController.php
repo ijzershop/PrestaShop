@@ -211,6 +211,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             $pack->min_cut_size = 0;
             $pack->min_cut_remainder = 0;
             $pack->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
+            $pack->oi_offer_memo = Tools::getValue('offer-memo');
             $pack->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
             $pack->id_category_default = $catID;
             $pack->id_tax_rules_group = 1;
@@ -295,6 +296,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             $pack->min_cut_size = 0;
             $pack->min_cut_remainder = 0;
             $pack->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
+            $pack->oi_offer_memo = Tools::getValue('offer-memo');
             $pack->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
             $pack->id_category_default = $catID;
             $pack->id_tax_rules_group = 1;

@@ -165,6 +165,7 @@ $(() => {
     quantity: any;
     weight: any;
     description_short: any;
+    oi_offer_memo: any;
   } | undefined) {
     let extraShippingSelectNo = 'checked="true"';
     let extraShippingSelectYes = '';
@@ -267,6 +268,12 @@ $(() => {
           <label for="offer-message">Omschrijving</label>
           <textarea class="autoload_rte form-control" id="offer-message" name="offer-message">
             ${data.description_short}
+          </textarea>
+        </div>
+        <div class="form-group">
+          <label for="offer-memo">Interne Memo</label>
+          <textarea class="autoload_rte form-control" id="offer-memo" name="offer-memo">
+            ${data.oi_offer_memo}
           </textarea>
         </div>
       <a id="offer-row-submit" class="btn btn-primary">Save</a>
@@ -386,6 +393,7 @@ $(() => {
           quantity: 1,
           weight: '',
           description_short: '',
+          oi_offer_memo: '',
         }
 
         // @ts-ignore
@@ -516,14 +524,16 @@ $(() => {
           $('#offer-row-table tr[data-row-id="' + idProduct + '"] td:eq(0)').html(offer.name);
           //descr
           $('#offer-row-table tr[data-row-id="' + idProduct + '"] td:eq(1)').html(`<div style="max-height: 150px;overflow: scroll">${offer.description_short}</div>`);
+          //memo
+          $('#offer-row-table tr[data-row-id="' + idProduct + '"] td:eq(2)').html(offer.oi_offer_memo);
           //price
-          $('#offer-row-table tr[data-row-id="' + idProduct + '"] td:eq(2)').html(offer.price);
+          $('#offer-row-table tr[data-row-id="' + idProduct + '"] td:eq(3)').html(offer.price);
           //qty
-          $('#offer-row-table tr[data-row-id="' + idProduct + '"] td:eq(3)').html(offer.quantity);
+          $('#offer-row-table tr[data-row-id="' + idProduct + '"] td:eq(4)').html(offer.quantity);
           //weight
-          $('#offer-row-table tr[data-row-id="' + idProduct + '"] td:eq(4)').html(offer.weight);
+          $('#offer-row-table tr[data-row-id="' + idProduct + '"] td:eq(5)').html(offer.weight);
           //extra verzending kosten
-          $('#offer-row-table tr[data-row-id="' + idProduct + '"] td:eq(5)').html(xShipping);
+          $('#offer-row-table tr[data-row-id="' + idProduct + '"] td:eq(6)').html(xShipping);
         }
 
         $('button#button_' + idProduct).attr('data-offer', JSON.stringify(offer));

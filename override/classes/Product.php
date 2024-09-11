@@ -24,6 +24,7 @@ class Product extends ProductCore {
     public $seo_keywords;
     public $alternate_name;
     public $jsonld;
+    public $oi_offer_memo;
     public $id_oi_offer;
     public $oi_offer_extra_shipping;
 
@@ -54,6 +55,7 @@ class Product extends ProductCore {
         self::$definition['fields']['oi_offer_extra_shipping'] = array('type' => self::TYPE_INT,
                                                                  'shop' => 'true',
                                                                  'required' => false);
+        self::$definition['fields']['oi_offer_memo'] = array('type' => self::TYPE_STRING, 'required' => false);
         self::$definition['fields']['name'] = array('type' => self::TYPE_STRING,
                                                                  'lang' => true,
                                                                  'validate' => 'isCatalogName',

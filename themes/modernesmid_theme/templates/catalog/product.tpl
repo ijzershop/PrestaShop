@@ -87,7 +87,7 @@
             {block name='page_header'}
             <h1 class="product-title h4 m-0 text-black">{block name='page_title'}{$product.name}{/block}</h1>
                 {block name='product_description_short'}
-                <div id="product-description-short-{$product.id}">{if !empty($product.description_short) && (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != (int)$product.id_category_default}{$product.description_short nofilter}{else}<span class="d-none"><span>{/if}</div>
+                <div id="product-description-short-{$product.id}">{if !empty($product.description_short)}{$product.description_short nofilter}{else}<span class="d-none"><span>{/if}</div>
                 {/block}
             {/block}
             {/block}

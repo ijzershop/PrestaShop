@@ -78,10 +78,10 @@ class OfferIntegrationFormDataProvider implements FormDataProviderInterface
         return [
             'id_oi_offer' => '',
             'code' => date_format(date_create(), 'Ymd') . '-' . rand ( 1000 , 9999 ),
-            'name' => 'Offerte voor ',
+            'name' => '',
             'email' => '',
             'phone' => '',
-            'message' => '<p>Beste klant op deze pagina staat voor u ons aanbod op maat. </p><p>Heeft u nog vragen dan horen we dat graag.</p>',
+            'message' => '',
             'employee_memo' => '<small>Offerte '. $shop_name .' | '. $user .' | '. date_format(date_create(), 'd-m-Y').'</small><br><br>',
             'date_exp' => $newExpDate,
         ];

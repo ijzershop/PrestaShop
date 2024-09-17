@@ -60,7 +60,7 @@
             <div
               class="col-5 {Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id,'col-sm-4 col-md-2')} pl-0 pr-2 float-left"
               {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)=='col-sm-4 col-md-1'}style="max-width: 110px;margin:0 auto;"{/if}>
-                {if $product}
+                {if $product.cover}
                   <a href="{$product.url}" class="thumbnail product-thumbnail d-block d-md-flex" data-id-product="{$product.id_product}" style="margin-top: 2.8em;">
                     <img data-product-id="{$product.id_product}" class="w-100 thumb"
                          src="{$product.cover.bySize.medium_default.url}"
@@ -70,7 +70,7 @@
                 {else}
                   <a href="{$product.url}" class="thumbnail product-thumbnail" data-product-id="{$product.id_product}"
                      data-id-product="{$product.id_product}">
-                    <img src="{$urls.no_picture_image.bySize.medium_default.url}"/>
+                    <img class="w-100 thumb" src="{$urls.no_picture_image.bySize.medium_default.url}"/>
                   </a>
                 {/if}
             </div>
@@ -190,7 +190,7 @@
             <div
               class="col-6 {Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id,'col-sm-4 col-md-2')} pl-0 pr-2 float-left"
               {if Configuration::get('MSTHEMECONFIG_CATEGORY_IMAGE_SIZE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)=='col-sm-4 col-md-1'}style="max-width: 110px;margin:0 auto;"{/if}>
-                {if $product}
+                {if $product.cover}
                   <a href="{$product.url}" class="thumbnail product-thumbnail" data-id-product="{$product.id_product}">
                     <img data-product-id="{$product.id_product}" class="w-100 thumb"
                          src="{$product.cover.bySize.medium_default.url}"
@@ -200,7 +200,7 @@
                 {else}
                   <a href="{$product.url}" class="thumbnail product-thumbnail" data-product-id="{$product.id_product}"
                      data-id-product="{$product.id_product}">
-                    <img src="{$urls.no_picture_image.bySize.medium_default.url}"/>
+                    <img class="w-100 thumb" src="{$urls.no_picture_image.bySize.medium_default.url}"/>
                   </a>
                 {/if}
               <!-- @todo: use include file='catalog/_partials/product-flags.tpl'} -->

@@ -50,8 +50,6 @@ $(() => {
   }
 
   const packedItemTemplate = function(item: any, rowId: string | number){
-
-    console.log(item);
     let name;
     let idProduct;
     let price;
@@ -63,7 +61,16 @@ $(() => {
     let display = 'display:none;'
     let idProductAttribute = 0;
     if(item.data === undefined){
-      name = item.name;
+
+    // * - O Deny orders
+    // * - 1 Allow orders
+    // * - 2 Use global setting
+
+      if(item.out_of_stock == '0' && Math.sign(item.quantity) > 0){
+        name = item.category + ' - ' + item.name + ' || ' + item.quantity + ' stuk(s)';
+      } else {
+        name = item.category + ' - ' + item.name + ' || ∞ stuk(s)';
+      }
       idProduct = item.id;
       quantity = item.pack_quantity;
       weight = item.weight*quantity;
@@ -165,6 +172,7 @@ $(() => {
     quantity: any;
     weight: any;
     description_short: any;
+    description: any;
     oi_offer_memo: any;
   } | undefined) {
     let extraShippingSelectNo = 'checked="true"';
@@ -228,6 +236,12 @@ $(() => {
 
         </div>
         <div class="form-group">
+          <label for="offer-memo">Interne Memo</label>
+          <textarea class="autoload_rte form-control" id="offer-memo" name="offer-memo">
+            ${data.oi_offer_memo}
+          </textarea>
+        </div>
+        <div class="form-group">
           <label for="offer-row-title">Naam</label>
           <input type="text" class="form-control" name="offer-row-title"  id="offer-row-title" placeholder="Product Naam" value="${data.name}">
         </div>
@@ -265,17 +279,18 @@ $(() => {
             </div>
            </div>
         <div class="form-group">
-          <label for="offer-message">Omschrijving</label>
-          <textarea class="autoload_rte form-control" id="offer-message" name="offer-message">
+          <label for="offer-message-short">Korte Omschrijving</label>
+          <textarea class="autoload_rte form-control" id="offer-message-short" name="offer-message-short">
             ${data.description_short}
           </textarea>
         </div>
         <div class="form-group">
-          <label for="offer-memo">Interne Memo</label>
-          <textarea class="autoload_rte form-control" id="offer-memo" name="offer-memo">
-            ${data.oi_offer_memo}
+          <label for="offer-message">Omschrijving</label>
+          <textarea class="autoload_rte form-control" id="offer-message" name="offer-message">
+            ${data.description}
           </textarea>
         </div>
+
       <a id="offer-row-submit" class="btn btn-primary">Save</a>
       </form>
       </p>
@@ -293,6 +308,18 @@ $(() => {
         dataType: 'json',
         type: "GET",
         url: url, processResults: function (data: { items: any; }) {
+          let list = [];
+          for (let i = 0; i < data.items.length; i++){
+            let item = data.items[i];
+            console.log(item);
+            if(item.out_of_stock == '0' && Math.sign(item.quantity) > 0){
+              item.text = item.text + ' || ' + item.quantity + ' stuk(s)';
+            } else {
+              item.text = item.text + ' || ∞ stuk(s)';
+            }
+
+            list.push(item);
+          }
           // Transforms the top-level key of the response object from 'items' to 'results'
           return {
             results: data.items
@@ -379,7 +406,7 @@ $(() => {
         let insertedEmail = $('#offer_integration_email').val();
         let employeeInitials = $('#employee').val();
 
-        let startName = 'offerte | ' + insertedEmail + ' | ' + employeeInitials;
+        let startName = '';
 
         let offer =  {
           oi_offer_extra_shipping: '',
@@ -393,6 +420,7 @@ $(() => {
           quantity: 1,
           weight: '',
           description_short: '',
+          description: '',
           oi_offer_memo: '',
         }
 
@@ -463,6 +491,7 @@ $(() => {
       formData['offer-name'] = $('#offer_integration_name').val();
       formData['offer-email'] = $('#offer_integration_email').val();
       formData['offer-message'] = $('#offer-message').val();
+      formData['offer-memo'] = $('#offer-memo').val();
       formData['offer-phone'] = $('#offer_integration_phone').val();
       formData['offer-date-exp'] = $('#offer_integration_date_exp_date').val();
     }
@@ -477,6 +506,7 @@ $(() => {
         let offer = data.offer;
         offer.name = offer.name[1];
         offer.description_short = offer.description_short[1];
+        offer.description = offer.description[1];
 
         let idProduct = offer.id;
         let xShipping = 'Nee';
@@ -497,6 +527,11 @@ $(() => {
               <td>
                 <div style="max-height: 150px;overflow: scroll">
                   ${offer.description_short}
+                </div>
+              </td>
+              <td>
+                <div style="max-height: 150px;overflow: scroll">
+                  ${offer.oi_offer_memo}
                 </div>
               </td>
               <td>${offer.price}</td>

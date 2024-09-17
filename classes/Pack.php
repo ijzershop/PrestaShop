@@ -307,6 +307,8 @@ class PackCore extends Product
          * STOCK_TYPE_PACK_BOTH - pack 1pcs + product A 10pcs + product B 20pcs = 1 pcs
          */
 
+
+
         // If no pack stock or shop default, set it from configuration
         if (empty($packStockType) || $packStockType == self::STOCK_TYPE_DEFAULT) {
             $packStockType = Configuration::get('PS_PACK_STOCK_TYPE');
@@ -320,7 +322,6 @@ class PackCore extends Product
                 $idProductAttribute
             );
         }
-
         // If the quantity of the pack depends on the products inside, or both pack and products,
         // we need to set the pack quantity to the lowest quantity of products inside.
         if (in_array($packStockType, [self::STOCK_TYPE_PACK_BOTH, self::STOCK_TYPE_PRODUCTS_ONLY])) {

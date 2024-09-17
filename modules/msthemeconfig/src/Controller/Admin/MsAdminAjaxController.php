@@ -58,6 +58,16 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
     {
         $term = $request->get('term');
         $products = $this->findProducts($term);
+
+        foreach ($products as $key => $product) {
+            if(Product::isAvailableWhenOutOfStock($product['out_of_stock'])){
+                $qty = '∞';
+            } else {
+                $qty = Product::getQuantity($product['id']);
+            }
+            $products[$key]['quantity'] = $qty;
+        }
+
         return Response::create(json_encode(['total_count' => count($products), 'items' => (array)$products]));
     }
 
@@ -72,7 +82,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
         $id_shop = $this->getContext()->shop->id;
 
         $sql = new DbQuery();
-        $sql->select('p.`id_product` as id, p.`price` as price,p.`weight` as weight, p.`id_category_default`, CONCAT_WS(" - ", cl.`name`,pl.`name`) as text');
+        $sql->select('p.`id_product` as id, p.`out_of_stock` as out_of_stock, p.`price` as price,p.`weight` as weight, p.`id_category_default`, CONCAT_WS(" - ", cl.`name`,pl.`name`) as text');
         $sql->from('product', 'p');
         $sql->join(Shop::addSqlAssociation('product_shop', 'ps'));
         $sql->innerJoin('product_shop', 'ps','p.`id_product` = ps.`id_product` AND ps.`id_shop` = '. $id_shop . ' AND ps.`active` = 1');
@@ -85,6 +95,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
         );
         $sql->leftJoin('category_lang', 'cl', 'cl.`id_category` = p.`id_category_default`');
         $sql->orderBy('cl.`name` ASC');
+        $sql->groupBy('p.`id_product`');
         $sql->limit('50');
 
         $where = ' 1 = 1 ';
@@ -196,11 +207,9 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             //Manage items voor pakket
             $id_product = Tools::getValue('offer-row-id');
             $id_pack_attribute = null;
-            $id_shop = Context::getContext()->shop->getShopId();
             $qty = (int)Tools::getValue('offer-qty', 0);
             $currentQty = (int)StockAvailable::getQuantityAvailableByProduct($id_product);
             $delta = $qty-$currentQty;
-
 
             $pack = new Pack($id_product);
             $pack->price = (float)number_format((float)Tools::getValue('offer-price'), 6, '.', '');
@@ -212,7 +221,8 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             $pack->min_cut_remainder = 0;
             $pack->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
             $pack->oi_offer_memo = Tools::getValue('offer-memo');
-            $pack->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
+            $pack->description_short = [1 => Tools::purifyHTML($_POST['offer-message-short'])];
+            $pack->description = [1 => Tools::purifyHTML($_POST['offer-message'])];
             $pack->id_category_default = $catID;
             $pack->id_tax_rules_group = 1;
             $pack->out_of_stock = 0;
@@ -220,16 +230,16 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             $pack->depends_on_stock = 1;
             $pack->pack_stock_type = PackStockType::STOCK_TYPE_BOTH;
             $pack->product_type = ProductType::TYPE_PACK;
-            $pack->update();
+            $pack->save();
             $pack->addToCategories($categoryArray);
             $pack->setAdvancedStockManagement(1);
-            StockAvailable::setProductOutOfStock((int)$id_product, false);
-            StockAvailable::updateQuantity((int)$id_product, (int)$id_pack_attribute, $delta);
-
-
-
-
+            $this->deleteExistingStockRecords((int)$id_product);
             Pack::deleteItems($id_product);
+
+            StockAvailable::setProductOutOfStock((int)$id_product, false);
+            StockAvailable::setQuantity((int)$id_product, (int)$id_pack_attribute, $delta);
+            StockAvailable::synchronize(($id_product));
+
 
             if (Tools::getIsset('stock_selected_product_id') && count(Tools::getValue('stock_selected_product_id')) > 0) {
                 $ids = Tools::getValue('stock_selected_product_id');
@@ -238,38 +248,38 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
 
                 for ($i = 0; $i < count($ids); $i++) {
                     $attachProduct = new Product($ids[$i]);
-                    $combinations = $attachProduct->getAttributeCombinations();
-
-                    $attr_names = array_column($combinations, 'attribute_name');
-                    array_multisort($attr_names, SORT_ASC, $combinations);
-
-                    if ((int)$customizedValue[$i] > 0) {
-                        $customizationValue = $customizedValue[$i];
-                        $attr_key = (int)$customizationValue - 1;
-                    } else {
-                        $customizationValue = 0;
-                        $attr_key = 0;
-                    }
-
-                    if (count($combinations) > 0) {
-                        if ($customizationValue > count($combinations)) {
-                            $neededAttribute = end($combinations);
-                        } else {
-                            $neededAttribute = $combinations[$attr_key];
-                        }
-
-                        $id_product_attribute = $neededAttribute['id_product_attribute'];
-                    } else {
-                        $id_product_attribute = 0;
-                    }
-                    Pack::addItem($pack->id, $ids[$i], (int)$totals[$i], $id_product_attribute);
+//                    $combinations = $attachProduct->getAttributeCombinations();
+//
+//                    $attr_names = array_column($combinations, 'attribute_name');
+//                    array_multisort($attr_names, SORT_ASC, $combinations);
+//
+//                    if ((int)$customizedValue[$i] > 0) {
+//                        $customizationValue = $customizedValue[$i];
+//                        $attr_key = (int)$customizationValue - 1;
+//                    } else {
+//                        $customizationValue = 0;
+//                        $attr_key = 0;
+//                    }
+//
+//                    if (count($combinations) > 0) {
+//                        if ($customizationValue > count($combinations)) {
+//                            $neededAttribute = end($combinations);
+//                        } else {
+//                            $neededAttribute = $combinations[$attr_key];
+//                        }
+//
+//                        $id_product_attribute = $neededAttribute['id_product_attribute'];
+//                    } else {
+//                        $id_product_attribute = 0;
+//                    }
+                    Pack::addItem($pack->id, $ids[$i], (int)$totals[$i]);
                 }
             }
-            //Voeg zaagsnedes toe
-            $pack->packedProducts = Pack::getItems($pack->id, 1);
-            foreach ($pack->packedProducts as $key => $packItem) {
-                $pack->packedProducts[$key]->attributes = Product::getAttributesParams($packItem->id, $packItem->id_pack_product_attribute);
-            }
+//            //Voeg zaagsnedes toe
+//            $pack->packedProducts = Pack::getItems($pack->id, 1);
+//            foreach ($pack->packedProducts as $key => $packItem) {
+//                $pack->packedProducts[$key]->attributes = Product::getAttributesParams($packItem->id, $packItem->id_pack_product_attribute);
+//            }
             $pack->update();
 
             return Response::create(json_encode(['msg' => 'Offer updated', 'offer' => $pack, 'error' => false]));
@@ -297,7 +307,8 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             $pack->min_cut_remainder = 0;
             $pack->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
             $pack->oi_offer_memo = Tools::getValue('offer-memo');
-            $pack->description_short = [1 => Tools::purifyHTML($_POST['offer-message'])];
+            $pack->description_short = [1 => Tools::purifyHTML($_POST['offer-message-short'])];
+            $pack->description = [1 => Tools::purifyHTML($_POST['offer-message'])];
             $pack->id_category_default = $catID;
             $pack->id_tax_rules_group = 1;
             $pack->out_of_stock = 0;
@@ -311,6 +322,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
 
             StockAvailable::setProductOutOfStock((int)$pack->id, false);
             StockAvailable::updateQuantity((int)$pack->id, (int)$id_pack_attribute, $qty);
+            StockAvailable::synchronize(($pack->id));
             if (Tools::getIsset('stock_selected_product_id') && count(Tools::getValue('stock_selected_product_id')) > 0) {
                 $ids = Tools::getValue('stock_selected_product_id');
                 $totals = Tools::getValue('stock_selected_product_qty');
@@ -355,6 +367,15 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
 
             return Response::create(json_encode(['msg' => 'Offer created', 'offer' => $pack, 'error' => false, 'offer-id' => $newOfferId]));
         }
+    }
+
+
+    /**
+     * @throws PrestaShopDatabaseException
+     */
+    private function deleteExistingStockRecords($id_product): void
+    {
+        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'stock_available` WHERE `id_product` = '.$id_product);
     }
 
     private function setCurrencyValue()

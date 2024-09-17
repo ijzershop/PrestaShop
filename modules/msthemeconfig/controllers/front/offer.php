@@ -46,7 +46,7 @@ class MsThemeConfigOfferModuleFrontController extends ModuleFrontController {
 
         if ($offer_id != null) {
             //get products for offer
-            $this->products = Product::getOfferRows($offer_id, $this->context->language->id);
+            $this->products = Product::getOfferRowsAsObject($offer_id, $this->context->language->id);
         }
         parent::postProcess();
     }

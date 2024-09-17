@@ -360,6 +360,34 @@ class Product extends ProductCore {
 
         return $results_array;
     }
+
+    public static function getOfferRowsAsObject($id_oi_offer = null, $id_lang = 1) {
+        if ($id_oi_offer == null || !is_numeric($id_oi_offer)) {
+            return array();
+        }
+        $context = Context::getContext();
+        $id_shop = $context->shop->id;
+        $presenter = new ProductPresenterFactory($context);
+        $assembler = new ProductAssembler($context);
+
+        $query = 'SELECT p.id_product FROM `' . _DB_PREFIX_ . 'product` as `p`
+                    '.Shop::addSqlAssociation('product', 'p').'
+                    LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` AS `pl` ON `p`.`id_product` = `pl`.`id_product`
+                    LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
+                    LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (s.`id_supplier` = p.`id_supplier`)
+                    WHERE `p`.`id_oi_offer` = ' . $id_oi_offer . '
+                    AND `pl`.`id_lang` = ' . $id_lang . ' GROUP BY `p`.`id_product`;';
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+        $results_array = array();
+        foreach ($result as $product){
+            $results_array[] = $presenter->getPresenter()->present($presenter->getPresentationSettings(),  $assembler->assembleProduct(['id_product' => $product['id_product']]), $context->language);
+        }
+
+        return $results_array;
+    }
+
+
     public static function productIsOrderable($id_product = null){
         $id_lang = (int) Context::getContext()->language->id;
         $id_shop = (int) Context::getContext()->shop->id;

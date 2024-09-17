@@ -317,6 +317,7 @@ class CartController extends CartControllerCore
                     true,
                     true
                 );
+
                 if ($update_quantity < 0) {
                     // If product has attribute, minimal quantity is set with minimal quantity of attribute
                     $minimal_quantity = ($this->id_product_attribute)

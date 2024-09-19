@@ -27,7 +27,7 @@
 
   <div class="order-confirmation-table col-12 table-responsive">
 
-<table style="min-width:500px;" class="table table-hover table-condensed">
+<table style="min-width:500px;" class="table table-condensed mb-0">
   <thead>
     <tr>
     {block name='order_items_table_head'}
@@ -105,24 +105,57 @@
                                         </td>
                 </tr>
       {/foreach}
-                </tbody>
-              </table>
+    <tr>
+      <td class="text-dark text-left disabled border-bottom-0" colspan="3">
+        <h6>Toegepaste korting</h6>
+      </td>
+      <td class="align-middle text-sm-center text-xs-right font-weight-bold text-dark">Incl. btw</td>
+      <td class="align-middle text-sm-center text-xs-right font-weight-bold text-dark">Excl. btw</td>
+    </tr>
+    {* Kortingen   *}
+    {foreach from=$cart_rules key='key' item='rule'}
+      {assign var='border_top' value=''}
+      {if $key === 0}
+        {assign var='border_top' value='border-top-0'}
+      {/if}
+      <tr class="order-line">
+        <td class="align-middle {$border_top}"></td>
+        <td class="align-middle {$border_top}" colspan="2">
+          <span>{$rule.name}</span>
+        </td>
+        {if $rule.reduction_percent > 0}
+          <td class="qty align-middle text-sm-center {$border_top}">{$rule.reduction_percent}%</td>
+          <td class="qty align-middle text-sm-center text-xs-right bold {$border_top}">{Context::getContext()->currentLocale->formatPrice($rule.value_tax_excl, 'EUR')}</td>
+        {else}
+          <td class="qty align-middle text-sm-center {$border_top}">{Context::getContext()->currentLocale->formatPrice(-$rule.reduction_amount, 'EUR')}</td>
+          <td class="qty align-middle text-sm-center text-xs-right bold {$border_top}">
+          {if $rule.reduction_tax}
+              {Context::getContext()->currentLocale->formatPrice(-$rule.reduction_amount/1.21, 'EUR')}</td>
+            {else}
+              {Context::getContext()->currentLocale->formatPrice(-$rule.reduction_amount, 'EUR')}</td>
+            {/if}
+        {/if}
+      </tr>
+    {/foreach}
+    </tbody>
+    </table>
 
-      <hr>
-      <table class="tabl col-12 col-md-4 float-right">
+
+      <hr class="w-100 mt-0">
+      <table class="table col-12 col-md-4 float-right">
             <tr>
-              <td>Producten ({$total_products})</td>
-              <td class="text-right">{Context::getContext()->currentLocale->formatPrice($subtotal_products_price,'EUR')}</td>
+              <td class="border-top-0">Producten ({$total_products})</td>
+              <td class="text-right border-top-0">{Context::getContext()->currentLocale->formatPrice($subtotal_products_price,'EUR')}</td>
             </tr>
 
         <tr>
           <td>Verzending</td>
           <td class="text-right">{if $subtotals.shipping.amount > 0}{Context::getContext()->currentLocale->formatPrice($subtotals.shipping.amount/1.21,'EUR')}{else}{Context::getContext()->currentLocale->formatPrice(0,'EUR')}{/if}</td>
         </tr>
-          {if (in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Customer::getGroupsStatic(Context::getContext()->cart->id_customer)) || (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)) && $total_discount > 0}
+          {if ((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)) && $total_discount_no_calc > 0}
             <tr>
               <td>Korting</td>
-              <td class="text-right">{Context::getContext()->currentLocale->formatPrice(0-$total_discount,'EUR')}</td>
+              <td class="text-right">{Context::getContext()->currentLocale->formatPrice(-$total_discount_no_calc_tax_exc,'EUR')}</td>
             </tr>
           {/if}
 
@@ -130,7 +163,15 @@
 
         {if $subtotals.tax.label !== null}
           <tr class="sub taxes">
-            <td><span class="label">{l s='%label%:' sprintf=['%label%' => Btw] d='Shop.Theme.Global'}</span></td><td class="text-right"><span class="value">{$subtotals.tax.value}</span></td>
+            <td><span class="label">{l s='%label%:' sprintf=['%label%' => Btw] d='Shop.Theme.Global'}</span></td><td class="text-right"><span class="value">
+                {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
+                  {if  $total_remainder < 0}
+                    {Context::getContext()->currentLocale->formatPrice($total_remainder - $total_remainder_tax_exc,  'EUR')}
+                  {else}
+                    {$subtotals.tax.value}
+                  {/if}
+              {/if}
+              </span></td>
           </tr>
         {/if}
         {if !$configuration.display_prices_tax_incl && $configuration.taxes_enabled}
@@ -145,10 +186,10 @@
         {else}
 
           {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
-            {if  $discount_check < 0}
+            {if  $total_remainder < 0}
               <tr class="total-value font-weight-bold">
                 <td><span>Terugbetaling</span></td>
-                <td class="text-right">{Context::getContext()->currentLocale->formatPrice($discount_check,  'EUR')}</td>
+                <td class="text-right">{Context::getContext()->currentLocale->formatPrice($total_remainder,  'EUR')}</td>
               </tr>
               {else}
               <tr class="total-value font-weight-bold">

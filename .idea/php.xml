@@ -336,6 +336,7 @@
       <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/segmentio/analytics-php" />
       <path value="$PROJECT_DIR$/modules/ps_facetedsearch/vendor/doctrine/collections" />
       <path value="$PROJECT_DIR$/modules/ps_facetedsearch/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/ps_imageslider/vendor/composer" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

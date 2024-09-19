@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Doctrine\\Common\\Collections\\AbstractLazyCollection' => $vendorDir . '/doctrine/collections/lib/Doctrine/Common/Collections/AbstractLazyCollection.php',
     'Doctrine\\Common\\Collections\\ArrayCollection' => $vendorDir . '/doctrine/collections/lib/Doctrine/Common/Collections/ArrayCollection.php',
     'Doctrine\\Common\\Collections\\Collection' => $vendorDir . '/doctrine/collections/lib/Doctrine/Common/Collections/Collection.php',
@@ -38,6 +39,8 @@ return array(
     'PrestaShop\\Module\\AutoUpgrade\\Parameters\\UpgradeConfigurationStorage' => $baseDir . '/classes/Parameters/UpgradeConfigurationStorage.php',
     'PrestaShop\\Module\\AutoUpgrade\\Parameters\\UpgradeFileNames' => $baseDir . '/classes/Parameters/UpgradeFileNames.php',
     'PrestaShop\\Module\\AutoUpgrade\\PrestashopConfiguration' => $baseDir . '/classes/PrestashopConfiguration.php',
+    'PrestaShop\\Module\\AutoUpgrade\\Progress\\Backlog' => $baseDir . '/classes/Progress/Backlog.php',
+    'PrestaShop\\Module\\AutoUpgrade\\Progress\\CompletionCalculator' => $baseDir . '/classes/Progress/CompletionCalculator.php',
     'PrestaShop\\Module\\AutoUpgrade\\Services\\DistributionApiService' => $baseDir . '/classes/Services/DistributionApiService.php',
     'PrestaShop\\Module\\AutoUpgrade\\State' => $baseDir . '/classes/State.php',
     'PrestaShop\\Module\\AutoUpgrade\\Task\\AbstractTask' => $baseDir . '/classes/Task/AbstractTask.php',
@@ -87,7 +90,14 @@ return array(
     'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Database' => $baseDir . '/classes/UpgradeTools/Database.php',
     'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\FileFilter' => $baseDir . '/classes/UpgradeTools/FileFilter.php',
     'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\FilesystemAdapter' => $baseDir . '/classes/UpgradeTools/FilesystemAdapter.php',
-    'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\ModuleAdapter' => $baseDir . '/classes/UpgradeTools/ModuleAdapter.php',
+    'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleAdapter' => $baseDir . '/classes/UpgradeTools/Module/ModuleAdapter.php',
+    'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleDownloader' => $baseDir . '/classes/UpgradeTools/Module/ModuleDownloader.php',
+    'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleDownloaderContext' => $baseDir . '/classes/UpgradeTools/Module/ModuleDownloaderContext.php',
+    'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleMigration' => $baseDir . '/classes/UpgradeTools/Module/ModuleMigration.php',
+    'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleMigrationContext' => $baseDir . '/classes/UpgradeTools/Module/ModuleMigrationContext.php',
+    'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleUnzipper' => $baseDir . '/classes/UpgradeTools/Module/ModuleUnzipper.php',
+    'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleUnzipperContext' => $baseDir . '/classes/UpgradeTools/Module/ModuleUnzipperContext.php',
+    'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleVersionAdapter' => $baseDir . '/classes/UpgradeTools/Module/ModuleVersionAdapter.php',
     'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\SymfonyAdapter' => $baseDir . '/classes/UpgradeTools/SymfonyAdapter.php',
     'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\TaskRepository' => $baseDir . '/classes/UpgradeTools/TaskRepository.php',
     'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\ThemeAdapter' => $baseDir . '/classes/UpgradeTools/ThemeAdapter.php',

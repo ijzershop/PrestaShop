@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit5bcf259d5a93891957e73898cf5acf17
+class ComposerStaticInit0c522d23cbd5bf0469eb75d94ecb2c0f
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
@@ -49,6 +49,7 @@ class ComposerStaticInit5bcf259d5a93891957e73898cf5acf17
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Doctrine\\Common\\Collections\\AbstractLazyCollection' => __DIR__ . '/..' . '/doctrine/collections/lib/Doctrine/Common/Collections/AbstractLazyCollection.php',
         'Doctrine\\Common\\Collections\\ArrayCollection' => __DIR__ . '/..' . '/doctrine/collections/lib/Doctrine/Common/Collections/ArrayCollection.php',
         'Doctrine\\Common\\Collections\\Collection' => __DIR__ . '/..' . '/doctrine/collections/lib/Doctrine/Common/Collections/Collection.php',
@@ -81,6 +82,8 @@ class ComposerStaticInit5bcf259d5a93891957e73898cf5acf17
         'PrestaShop\\Module\\AutoUpgrade\\Parameters\\UpgradeConfigurationStorage' => __DIR__ . '/../..' . '/classes/Parameters/UpgradeConfigurationStorage.php',
         'PrestaShop\\Module\\AutoUpgrade\\Parameters\\UpgradeFileNames' => __DIR__ . '/../..' . '/classes/Parameters/UpgradeFileNames.php',
         'PrestaShop\\Module\\AutoUpgrade\\PrestashopConfiguration' => __DIR__ . '/../..' . '/classes/PrestashopConfiguration.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Progress\\Backlog' => __DIR__ . '/../..' . '/classes/Progress/Backlog.php',
+        'PrestaShop\\Module\\AutoUpgrade\\Progress\\CompletionCalculator' => __DIR__ . '/../..' . '/classes/Progress/CompletionCalculator.php',
         'PrestaShop\\Module\\AutoUpgrade\\Services\\DistributionApiService' => __DIR__ . '/../..' . '/classes/Services/DistributionApiService.php',
         'PrestaShop\\Module\\AutoUpgrade\\State' => __DIR__ . '/../..' . '/classes/State.php',
         'PrestaShop\\Module\\AutoUpgrade\\Task\\AbstractTask' => __DIR__ . '/../..' . '/classes/Task/AbstractTask.php',
@@ -130,7 +133,14 @@ class ComposerStaticInit5bcf259d5a93891957e73898cf5acf17
         'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Database' => __DIR__ . '/../..' . '/classes/UpgradeTools/Database.php',
         'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\FileFilter' => __DIR__ . '/../..' . '/classes/UpgradeTools/FileFilter.php',
         'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\FilesystemAdapter' => __DIR__ . '/../..' . '/classes/UpgradeTools/FilesystemAdapter.php',
-        'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\ModuleAdapter' => __DIR__ . '/../..' . '/classes/UpgradeTools/ModuleAdapter.php',
+        'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleAdapter' => __DIR__ . '/../..' . '/classes/UpgradeTools/Module/ModuleAdapter.php',
+        'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleDownloader' => __DIR__ . '/../..' . '/classes/UpgradeTools/Module/ModuleDownloader.php',
+        'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleDownloaderContext' => __DIR__ . '/../..' . '/classes/UpgradeTools/Module/ModuleDownloaderContext.php',
+        'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleMigration' => __DIR__ . '/../..' . '/classes/UpgradeTools/Module/ModuleMigration.php',
+        'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleMigrationContext' => __DIR__ . '/../..' . '/classes/UpgradeTools/Module/ModuleMigrationContext.php',
+        'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleUnzipper' => __DIR__ . '/../..' . '/classes/UpgradeTools/Module/ModuleUnzipper.php',
+        'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleUnzipperContext' => __DIR__ . '/../..' . '/classes/UpgradeTools/Module/ModuleUnzipperContext.php',
+        'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\Module\\ModuleVersionAdapter' => __DIR__ . '/../..' . '/classes/UpgradeTools/Module/ModuleVersionAdapter.php',
         'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\SymfonyAdapter' => __DIR__ . '/../..' . '/classes/UpgradeTools/SymfonyAdapter.php',
         'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\TaskRepository' => __DIR__ . '/../..' . '/classes/UpgradeTools/TaskRepository.php',
         'PrestaShop\\Module\\AutoUpgrade\\UpgradeTools\\ThemeAdapter' => __DIR__ . '/../..' . '/classes/UpgradeTools/ThemeAdapter.php',
@@ -154,10 +164,10 @@ class ComposerStaticInit5bcf259d5a93891957e73898cf5acf17
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit5bcf259d5a93891957e73898cf5acf17::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit5bcf259d5a93891957e73898cf5acf17::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit5bcf259d5a93891957e73898cf5acf17::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit5bcf259d5a93891957e73898cf5acf17::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit0c522d23cbd5bf0469eb75d94ecb2c0f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit0c522d23cbd5bf0469eb75d94ecb2c0f::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit0c522d23cbd5bf0469eb75d94ecb2c0f::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit0c522d23cbd5bf0469eb75d94ecb2c0f::$classMap;
 
         }, null, ClassLoader::class);
     }

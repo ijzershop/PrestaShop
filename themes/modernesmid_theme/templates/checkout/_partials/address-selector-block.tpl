@@ -28,7 +28,7 @@
       class="js-address-item address-item{if $address.id == $selected} selected{/if} border-1 p-1"
       id="{$name|classname}-address-{$address.id}"
     >
-      <header class="h4">
+      <header class="h6">
         <label class="radio-block">
           <span class="custom-radio">
             <input
@@ -39,7 +39,7 @@
             >
             <span></span>
           </span>
-          <span class="address-alias h4">{$address.alias}</span>
+          <span class="address-alias h6">{$address.alias}</span>
           <div class="address">{$address.formatted nofilter}</div>
         </label>
       </header>

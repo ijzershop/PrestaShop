@@ -171,13 +171,11 @@ class DmsAdminOrderController extends FrameworkBundleAdminController
         $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
-
         $reductionAmountPrice = 0;
         $reductionAmountPriceProduct = 0;
         $priceFormatter = new PriceFormatter();
 
         foreach ($orderForViewing->getDiscounts()->getDiscounts() as $key => $discount) {
-
             $orderCartRule = new OrderCartRule($discount->getOrderCartRuleId());
             if ($orderCartRule) {
                 $cartRule = new CartRule($orderCartRule->id_cart_rule);
@@ -200,7 +198,7 @@ class DmsAdminOrderController extends FrameworkBundleAdminController
         $orderForViewing->getPrices()->originalReductionAmountFormatted = $priceFormatter->format($reductionAmountPrice);
         $orderForViewing->getPrices()->discountsAmountFormattedTaxExcl = $priceFormatter->format($reductionAmountPriceProduct/1.21);
         $orderForViewing->getPrices()->discountsAmountFormattedTaxIncl = $priceFormatter->format($reductionAmountPriceProduct);
-        $orderForViewing->getPrices()->remainderTotalAmount = $priceFormatter->format($reductionAmountPrice - $reductionAmountPriceProduct);
+        $orderForViewing->getPrices()->remainderTotalAmount = $priceFormatter->format($reductionAmountPriceProduct-$reductionAmountPrice);
         $formFactory = $this->get('form.factory');
 
         $updateOrderStatusForm = $formFactory->createNamed(

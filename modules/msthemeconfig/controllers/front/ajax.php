@@ -518,13 +518,13 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 'id_cart_rule' => (int)$credit->id,
             ];
 
-            Db::getInstance()->insert(
-                'cart_rule_fees',
-                $values,
-                false,
-                true,
-                DB::INSERT_IGNORE
-            );
+//            Db::getInstance()->insert(
+//                'cart_rule_fees',
+//                $values,
+//                false,
+//                true,
+//                DB::INSERT_IGNORE
+//            );
 
             $cart->addCartRule($credit->id);
 

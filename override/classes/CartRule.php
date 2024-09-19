@@ -167,20 +167,4 @@ class CartRule extends CartRuleCore
     }
 
 
-    /*
-    * module: klcartruleextender
-    * date: 2024-03-05 08:40:48
-    * version: 1.0.2
-    */
-    public static function copyConditions($id_cart_rule_source, $id_cart_rule_destination)
-    {
-        parent::copyConditions($id_cart_rule_source, $id_cart_rule_destination);
-        if (($moduleClass = Module::getInstanceByName('klcartruleextender'))
-            && $moduleClass instanceof KlCartRuleExtender
-            && $moduleClass->isEnabledForShopContext()
-            && $moduleClass->isCartRuleIncludingFees($id_cart_rule_source)
-        ) {
-            $moduleClass->addCartRuleFees([$id_cart_rule_destination]);
-        }
-    }
 }

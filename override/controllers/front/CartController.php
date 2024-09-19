@@ -1,165 +1,9 @@
 <?php
-/**
- * 2017-2024 liewebs - prestashop module developers and website designers.
- *
- * NOTICE OF LICENSE
- *  @author    liewebs <info@liewebs.com>
- *  @copyright 2017-2024 www.liewebs.com - Liewebs
- *  @license See "License registration" section
- * 	@module Advanced VAT Manager
- */
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 class CartController extends CartControllerCore
 {
-    /*
-    * module: advancedvatmanager
-    * date: 2024-07-10 13:39:04
-    * version: 1.7.0
-    */
-    public function displayAjaxUpdate()
-    {
-        if (Module::isEnabled('advancedvatmanager')) {
-            $advancedvatmanager = Module::getInstanceByName('advancedvatmanager');
-            $cookie_customer_vat_data = json_decode(Context::getContext()->cookie->__get('customer_vat_data'), true);
-            $idProductAttribute = 0;
-            $non_voec_product = false;
-            $product_price = array();
-            $groups = Tools::getValue('group');
-
-            $productsInCart = $this->context->cart->getProducts();
-            $updatedProducts = array_filter($productsInCart, [$this, 'productInCartMatchesCriteria']);
-            $updatedProduct = reset($updatedProducts);
-            if (!empty($groups)) {
-                if (method_exists('Product', 'getIdProductAttributeByIdAttributes')) {
-                    $idProductAttribute = (int) Product::getIdProductAttributeByIdAttributes(
-                        $this->id_product,
-                        $groups,
-                        true
-                    );
-                }
-                else if (method_exists('Product', 'getIdProductAttributesByIdAttributes')) {
-                    $idProductAttribute = (int) Product::getIdProductAttributesByIdAttributes(
-                        $this->id_product,
-                        $groups,
-                        true
-                    );
-                }
-            }
-            if ($idProductAttribute == 0 || !$idProductAttribute) {
-                if (Tools::getValue('id_product_attribute')) {
-                    $idProductAttribute = (int)Tools::getValue('id_product_attribute');
-                }
-                else {
-                    $idProductAttribute = $this->id_product_attribute;
-                }
-            }
-
-            if (Tools::getIsset('add') || Tools::getIsset('update')) {
-                if ($advancedvatmanager->checkNonVOECProduct(Product::getPriceStatic($this->id_product,false,$idProductAttribute))) {
-                    $non_voec_product = true;
-                }
-            }
-            else if (!empty($productsInCart)) {
-                $total_cart = $this->context->cart->getOrderTotal(false,Cart::ONLY_PRODUCTS);
-                foreach ($productsInCart as $product) {
-                    $product_price[] = Product::getPriceStatic($product['id_product'],false,$product['id_product_attribute']);
-                    if ($advancedvatmanager->checkNonVOECProduct(Product::getPriceStatic($product['id_product'],false,$product['id_product_attribute']))) {
-                        $non_voec_product = true;
-                    }
-
-                }
-                $this->context->cookie->__set('avm_cart', json_encode(array('total' => $total_cart, 'products' => $product_price)));
-            }
-
-            $cookie_customer_vat_data['no_voec_product'] = $non_voec_product;
-            Context::getContext()->cookie->__set('customer_vat_data', json_encode($cookie_customer_vat_data));
-
-            $checkNotAllowCheckout = $advancedvatmanager->checkNotAllowCheckout();
-
-            if ($checkNotAllowCheckout !== false && !$advancedvatmanager->opc_presteamshop_enabled) {
-                if (isset($this->updateOperationError)) {
-                    $this->updateOperationError[] = $checkNotAllowCheckout;
-                }
-                else {
-                    $this->errors[] = $checkNotAllowCheckout;
-                }
-            }
-        }
-        parent::displayAjaxUpdate();
-    }
-    /*
-    * module: advancedvatmanager
-    * date: 2024-07-10 13:39:04
-    * version: 1.7.0
-    */
-    public function postProcess()
-    {
-        if (Module::isEnabled('advancedvatmanager')) {
-            if (!Tools::getIsset('add')) {
-                parent::postProcess();
-            }
-            $advancedvatmanager = Module::getInstanceByName('advancedvatmanager');
-            $cookie_customer_vat_data = json_decode(Context::getContext()->cookie->__get('customer_vat_data'), true);
-            $idProductAttribute = 0;
-            $non_voec_product = false;
-            $product_price = array();
-            $groups = Tools::getValue('group');
-
-            $productsInCart = $this->context->cart->getProducts();
-            $updatedProducts = array_filter($productsInCart, [$this, 'productInCartMatchesCriteria']);
-            $updatedProduct = reset($updatedProducts);
-
-            if (!empty($groups)) {
-                $idProductAttribute = (int) Product::getIdProductAttributeByIdAttributes(
-                    $this->id_product,
-                    $groups,
-                    true
-                );
-            }
-            if (Tools::getValue('id_product_attribute')) {
-                $idProductAttribute = (int)Tools::getValue('id_product_attribute');
-            }
-            if (Tools::getIsset('add') || Tools::getIsset('update')) {
-                if ($advancedvatmanager->checkNonVOECProduct(Product::getPriceStatic($this->id_product,false,$idProductAttribute))) {
-                    $non_voec_product = true;
-                }
-            }
-            else if (!empty($productsInCart)) {
-                $total_cart = $this->context->cart->getOrderTotal(false,Cart::ONLY_PRODUCTS);
-                foreach ($productsInCart as $product) {
-                    $product_price[] = Product::getPriceStatic($product['id_product'],false,$product['id_product_attribute']);
-                    if ($advancedvatmanager->checkNonVOECProduct(Product::getPriceStatic($product['id_product'],false,$product['id_product_attribute']))) {
-                        $non_voec_product = true;
-                    }
-
-                }
-                $this->context->cookie->__set('avm_cart', json_encode(array('total' => $total_cart, 'products' => $product_price)));
-            }
-
-            $cookie_customer_vat_data['no_voec_product'] = $non_voec_product;
-            Context::getContext()->cookie->__set('customer_vat_data', json_encode($cookie_customer_vat_data));
-            $checkNotAllowCheckout = $advancedvatmanager->checkNotAllowCheckout();
-
-            if ($checkNotAllowCheckout !== false && !$advancedvatmanager->opc_presteamshop_enabled) {
-                if (version_compare(_PS_VERSION_, '1.7.0.0', '>=')) {
-                    $this->errors[] =  $checkNotAllowCheckout;
-                }
-                else {
-                    if (!Tools::getValue('ajax') || !Tools::getIsset('add') || !Tools::getIsset('update')) {
-                        $this->errors[] =  $checkNotAllowCheckout;
-                    }
-                }
-            }
-            if (Tools::getIsset('add')) {
-                parent::postProcess();
-            }
-        }
-        else {
-            parent::postProcess();
-        }
-    }
 
 
     protected function processChangeProductInCart()
@@ -209,7 +53,6 @@ class CartController extends CartControllerCore
                 ? !Configuration::get('PS_ORDER_OUT_OF_STOCK')
                 : !$product->out_of_stock;
             $this->id_product_attribute = Product::getDefaultAttribute($product->id, $minimum_quantity);
-            // @todo do something better than a redirect admin !!
             if (!$this->id_product_attribute) {
                 Tools::redirectAdmin($this->context->link->getProductLink($product));
             }
@@ -237,7 +80,6 @@ class CartController extends CartControllerCore
             }
         }
 
-        // Check product quantity availability
         if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
             $this->{$ErrorKey}[] = $this->trans(
                 'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
@@ -246,7 +88,6 @@ class CartController extends CartControllerCore
             );
         }
 
-        // Check minimal_quantity
         if (!$this->id_product_attribute) {
             if ($qty_to_check < $product->minimal_quantity) {
                 $this->errors[] = $this->trans(
@@ -270,9 +111,7 @@ class CartController extends CartControllerCore
             }
         }
 
-        // If no errors, process product addition
         if (!$this->errors) {
-            // Add cart if no cart found
             if (!$this->context->cart->id) {
                 if (Context::getContext()->cookie->id_guest) {
                     $guest = new Guest(Context::getContext()->cookie->id_guest);
@@ -284,7 +123,6 @@ class CartController extends CartControllerCore
                 }
             }
 
-            // Check customizable fields
 
             if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id) {
                 $this->{$ErrorKey}[] = $this->trans(
@@ -319,7 +157,6 @@ class CartController extends CartControllerCore
                 );
 
                 if ($update_quantity < 0) {
-                    // If product has attribute, minimal quantity is set with minimal quantity of attribute
                     $minimal_quantity = ($this->id_product_attribute)
                         ? Attribute::getAttributeMinimalQty($this->id_product_attribute)
                         : $product->minimal_quantity;
@@ -335,7 +172,6 @@ class CartController extends CartControllerCore
                         'Shop.Notifications.Error'
                     );
                 } elseif ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
-                    // check quantity after cart quantity update
                     $this->{$ErrorKey}[] = $this->trans(
                         'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
                         array('%product%' => $product->name),

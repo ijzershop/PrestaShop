@@ -61,7 +61,13 @@
                 <div class="col-12 col-sm-6 price pl-0 mt-2 mt-sm-0">
             <span class="product-price" style="line-height: .7rem;">
               <strong>
-                    <span class="inclusive-price">{$voucher.reduction_value_tax_excl}</span>
+                    <span class="inclusive-price">
+                      {if $voucher.reduction_percentage > 0}
+                        {$voucher.reduction_value_tax_excl}
+                      {else}
+                        {$voucher.reduction_amount_full}
+                      {/if}
+                    </span>
               </strong>
             </span>
                 </div>

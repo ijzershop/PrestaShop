@@ -29,6 +29,7 @@ namespace PrestaShop\Module\AutoUpgrade;
 
 use Configuration;
 use ConfigurationTest;
+use Exception;
 use PrestaShop\Module\AutoUpgrade\Exceptions\DistributionApiException;
 use PrestaShop\Module\AutoUpgrade\Services\DistributionApiService;
 use Shop;
@@ -184,11 +185,6 @@ class UpgradeSelfCheck
     const PHP_REQUIREMENTS_VALID = 1;
     const PHP_REQUIREMENTS_UNKNOWN = 2;
 
-    /**
-     * @var bool
-     */
-    private $overrideDisabled;
-
     public function __construct(
         Upgrader $upgrader,
         PrestashopConfiguration $prestashopConfiguration,
@@ -244,15 +240,6 @@ class UpgradeSelfCheck
     public function getAdminAutoUpgradeDirectoryWritableReport(): string
     {
         return $this->adminAutoUpgradeDirectoryWritableReport;
-    }
-
-    public function isOverrideDisabled(): bool
-    {
-        if (null === $this->overrideDisabled) {
-            $this->overrideDisabled = $this->checkOverrideIsDisabled();
-        }
-
-        return $this->overrideDisabled;
     }
 
     public function isShopDeactivated(): bool
@@ -332,9 +319,9 @@ class UpgradeSelfCheck
     }
 
     /**
-     * @return bool
+     * @throws Exception
      */
-    public function isShopVersionMatchingVersionInDatabase()
+    public function isShopVersionMatchingVersionInDatabase(): bool
     {
         return version_compare(
             Configuration::get('PS_VERSION_DB'),
@@ -356,7 +343,7 @@ class UpgradeSelfCheck
             && ($this->isShopDeactivated() || $this->isLocalEnvironment())
             && $this->isCacheDisabled()
             && $this->isModuleVersionLatest()
-            && $this->getPhpRequirementsState() !== $this::PHP_REQUIREMENTS_INVALID
+            && $this->getPhpRequirementsState(PHP_VERSION_ID) !== $this::PHP_REQUIREMENTS_INVALID
             && $this->isShopVersionMatchingVersionInDatabase()
             && $this->isApacheModRewriteEnabled()
             && $this->checkKeyGeneration()
@@ -378,11 +365,6 @@ class UpgradeSelfCheck
     private function checkModuleVersionIsLastest(Upgrader $upgrader): bool
     {
         return version_compare($this->getModuleVersion(), $upgrader->autoupgrade_last_version, '>=');
-    }
-
-    private function checkOverrideIsDisabled(): bool
-    {
-        return (bool) Configuration::get('PS_DISABLE_OVERRIDES');
     }
 
     private function checkIsLocalEnvironment(): bool
@@ -475,9 +457,11 @@ class UpgradeSelfCheck
     }
 
     /**
+     * @param int $currentVersionId
+     *
      * @return self::PHP_REQUIREMENTS_*
      */
-    public function getPhpRequirementsState(): int
+    public function getPhpRequirementsState($currentVersionId): int
     {
         $phpCompatibilityRange = $this->getPhpCompatibilityRange();
 
@@ -487,9 +471,13 @@ class UpgradeSelfCheck
 
         $versionMin = VersionUtils::getPhpVersionId($phpCompatibilityRange['php_min_version']);
         $versionMax = VersionUtils::getPhpVersionId($phpCompatibilityRange['php_max_version']);
-        $currentVersion = VersionUtils::getPhpMajorMinorVersionId();
 
-        if ($currentVersion >= $versionMin && $currentVersion <= $versionMax) {
+        $versionMinWithoutPatch = VersionUtils::getPhpMajorMinorVersionId($versionMin);
+        $versionMaxWithoutPatch = VersionUtils::getPhpMajorMinorVersionId($versionMax);
+
+        $currentVersion = VersionUtils::getPhpMajorMinorVersionId($currentVersionId);
+
+        if ($currentVersion >= $versionMinWithoutPatch && $currentVersion <= $versionMaxWithoutPatch) {
             return self::PHP_REQUIREMENTS_VALID;
         }
 

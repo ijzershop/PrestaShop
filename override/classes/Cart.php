@@ -1,8 +1,9 @@
 <?php
+
 use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
+
 class Cart extends CartCore
 {
-    public $added_to_order;
     public static $definition = array(
         'table' => 'cart',
         'primary' => 'id_cart',
@@ -28,10 +29,13 @@ class Cart extends CartCore
             'added_to_order' => array('type' => self::TYPE_STRING),
         ),
     );
+    public $added_to_order;
+
     public const ONLY_DISCOUNTS_NO_CALCULATION = 9;
     public const ONLY_REMAINDER_OF_DISCOUNTS = 10;
     public const ONLY_REMAINDER_UNTIL_STORE_DISCOUNT = 11;
-    public const ONLY_PRODUCTS_NO_DISCOUNTS = 11;
+    public const ONLY_PRODUCTS_NO_DISCOUNTS = 12;
+
     public
     function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
@@ -57,11 +61,74 @@ class Cart extends CartCore
         foreach (Context::getContext()->cart->getProducts() as $key => $prod) {
             $prodObj = new Product($prod['id_product']);
             if ($prodObj->oi_offer_extra_shipping > 0 && $extraShippingFee == 0) {
-                $extraShippingFee = $_total_shipping['without_tax'] / 100 * Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) - $_total_shipping['without_tax'];
+                $extraShippingFee = $_total_shipping['without_tax'] / 100 * Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) - $_total_shipping['without_tax'];
             }
         }
         return ($use_tax) ? $_total_shipping['with_tax'] + $extraShippingFee : $_total_shipping['without_tax'] + $extraShippingFee;
     }
+
+    public function getDeliveryOption($default_country = null, $dontAutoSelectOptions = false, $use_cache = true)
+    {
+        $cache_id = (int)(is_object($default_country) ? $default_country->id : 0) . '-' . (int)$dontAutoSelectOptions;
+        if (isset(static::$cacheDeliveryOption[$cache_id]) && $use_cache) {
+            return static::$cacheDeliveryOption[$cache_id];
+        }
+        $delivery_option_list = $this->getDeliveryOptionList($default_country);
+        if (isset($this->delivery_option) && $this->delivery_option != '') {
+            $delivery_option = json_decode($this->delivery_option, true);
+            $validated = true;
+            if (is_array($delivery_option)) {
+                foreach ($delivery_option as $id_address => $key) {
+                    if (!isset($delivery_option_list[$id_address][$key])) {
+                        $validated = false;
+                        break;
+                    }
+                }
+                if ($validated) {
+                    static::$cacheDeliveryOption[$cache_id] = $delivery_option;
+                    return $delivery_option;
+                }
+            }
+        }
+        if ($dontAutoSelectOptions) {
+            return false;
+        }
+        $delivery_option = [];
+        foreach ($delivery_option_list as $id_address => $options) {
+            $context = Context::getContext()->cloneContext();
+            foreach ($options as $key => $option) {
+                if (Configuration::get('PS_CARRIER_DEFAULT') == -1 && $option['is_best_price']) {
+                    $delivery_option[$id_address] = $key;
+                    break;
+                } elseif (Configuration::get('PS_CARRIER_DEFAULT') == -2 && $option['is_best_grade']) {
+                    $delivery_option[$id_address] = $key;
+                    break;
+                } elseif ($option['unique_carrier'] && in_array(Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER', $context->language->id,
+                        $context->shop->id_shop_group,
+                        $context->shop->id), array_keys($option['carrier_list'])) &&
+                    Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',
+                        $context->language->id,
+                        $context->shop->id_shop_group,
+                        $context->shop->id) == (int)$context->customer->id) {
+                    $delivery_option[$id_address] = $key;
+                    break;
+                } elseif ($option['unique_carrier'] && in_array(Configuration::get('PS_CARRIER_DEFAULT'), array_keys($option['carrier_list'])) && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',
+                        $context->language->id,
+                        $context->shop->id_shop_group,
+                        $context->shop->id) != $context->customer->id) {
+                    $delivery_option[$id_address] = $key;
+                    break;
+                }
+            }
+            reset($options);
+            if (!isset($delivery_option[$id_address])) {
+                $delivery_option[$id_address] = key($options);
+            }
+        }
+        static::$cacheDeliveryOption[$cache_id] = $delivery_option;
+        return $delivery_option;
+    }
+
     public
     function getPackageShippingCost(
         $id_carrier = null,
@@ -300,122 +367,330 @@ class Cart extends CartCore
         foreach (Context::getContext()->cart->getProducts() as $key => $prod) {
             $prodObj = new Product($prod['id_product']);
             if ($prodObj->oi_offer_extra_shipping > 0 && $extraShippingFee == 0) {
-                $extraShippingFee = $shipping_cost / 100 * Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) - $shipping_cost;
+                $extraShippingFee = $shipping_cost / 100 * Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) - $shipping_cost;
             }
         }
         $shipping_cost = (float)Tools::ps_round((float)$shipping_cost + $extraShippingFee, 2);
         Cache::store($cache_id, $shipping_cost);
         return $shipping_cost;
     }
-    public
-    function deleteProduct(
-        $id_product,
-        $id_product_attribute = 0,
-        $id_customization = 0,
-        $id_address_delivery = 0,
-        bool $preserveGiftsRemoval = true,
-        bool $useOrderPrices = false
-    ){
-        if (isset(self::$_nbProducts[$this->id])) {
-            unset(self::$_nbProducts[$this->id]);
+
+//    public function getOrderTotal(
+//        $withTaxes = true,
+//        $type = Cart::BOTH,
+//        $products = null,
+//        $id_carrier = null,
+//        $use_cache = false,
+//        $keepOrderPrices = false
+//    )
+//    {
+//        if (!is_numeric($id_carrier) && isset(Context::getContext()->cart->id_carrier) && (int)Context::getContext()->cart->id_carrier > 0) {
+//            $id_carrier = (int)Context::getContext()->cart->id_carrier;
+//        }
+//
+//
+//
+//        if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
+//            || !($moduleClass instanceof KlCartRuleExtender)
+//            || !$moduleClass->isEnabledForShopContext()
+//            || (!Configuration::get('KL_CART_RULE_EXTENDER_SHIPPING_FEES') && !Configuration::get('KL_CART_RULE_EXTENDER_WRAPPING_FEES'))
+//            || $this->getNbOfPackages() > 1
+//        ) {
+//            if(!in_array($type, [Cart::ONLY_DISCOUNTS_NO_CALCULATION, Cart::ONLY_REMAINDER_OF_DISCOUNTS, Cart::ONLY_REMAINDER_UNTIL_STORE_DISCOUNT, Cart::ONLY_PRODUCTS_NO_DISCOUNTS])){
+//
+//                $value = parent::getOrderTotal(
+//                    $withTaxes,
+//                    (int)$type,
+//                    $products,
+//                    $id_carrier,
+//                    $use_cache,
+//                    $keepOrderPrices
+//                );
+//                return $value;
+//            }
+//        }
+//        if ((int)$id_carrier <= 0) {
+//            $id_carrier = null;
+//        }
+//
+//        if(!($moduleClass = Module::getInstanceByName('klcartruleextender')) || !($moduleClass instanceof KlCartRuleExtender) || !$moduleClass->isEnabledForShopContext()){
+//            $cartRules = [];
+//            if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
+//                $cartRules = parent::getCartRules(CartRule::FILTER_ACTION_ALL, false, false);
+//            }
+//            if (null === $products) {
+//                $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
+//            }
+//
+//            $this->getCartRules(CartRule::FILTER_ACTION_ALL, false, false, $products, $id_carrier, $keepOrderPrices);
+//            $computePrecision = Context::getContext()->getComputingPrecision();
+//            $calculator = parent::newCalculator($products, $cartRules, $id_carrier, $computePrecision, $keepOrderPrices);
+//            $calculator->calculateRows();
+//        } else {
+//            $calculator = $moduleClass->getCalculator();
+//        }
+//        switch ($type) {
+//            case Cart::BOTH:
+//                $amount = $calculator->getTotal(false, true);
+//                break;
+//            case Cart::ONLY_DISCOUNTS:
+//                $amount = $calculator->getDiscountTotal();
+//                break;
+//            case Cart::ONLY_DISCOUNTS_NO_CALCULATION:
+//                $amount = $calculator->getDiscountTotal(true);
+//                break;
+//            case Cart::ONLY_PRODUCTS_NO_DISCOUNTS:
+//                $amount = $calculator->getRowTotalWithoutDiscount();
+//                break;
+//            case Cart::ONLY_REMAINDER_OF_DISCOUNTS:
+//                $discount = $calculator->getDiscountTotal(true);
+//                if ($discount->getTaxExcluded() > 0) {
+//                    $amount = $calculator->getTotal(false, true);
+//                } else {
+//                    $amount = new AmountImmutable(0, 0);
+//                }
+//                break;
+//        }
+//        $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
+//        if ($type == Cart::BOTH) {
+//            $value = max(0, $value);
+//        }
+//        return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
+//    }
+
+
+    public function  getOrderTotal(
+        $withTaxes = true,
+        $type = Cart::BOTH,
+        $products = null,
+        $id_carrier = null,
+        $use_cache = false,
+        bool $keepOrderPrices = false
+    ) {
+        if ((int) $id_carrier <= 0) {
+            $id_carrier = null;
         }
-        if (isset(self::$_totalWeight[$this->id])) {
-            unset(self::$_totalWeight[$this->id]);
+
+        // deprecated type
+        if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
+            $type = Cart::ONLY_PRODUCTS;
         }
-        if ((int)$id_customization) {
-            if (!$this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery)) {
-                return false;
+
+        // check type
+        $type = (int) $type;
+        $allowedTypes = [
+            Cart::ONLY_PRODUCTS,
+            Cart::ONLY_DISCOUNTS,
+            Cart::BOTH,
+            Cart::BOTH_WITHOUT_SHIPPING,
+            Cart::ONLY_SHIPPING,
+            Cart::ONLY_WRAPPING,
+            Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING,
+            Cart::ONLY_DISCOUNTS_NO_CALCULATION,
+            Cart::ONLY_REMAINDER_OF_DISCOUNTS,
+            Cart::ONLY_REMAINDER_UNTIL_STORE_DISCOUNT,
+            Cart::ONLY_PRODUCTS_NO_DISCOUNTS,
+        ];
+        if (!in_array($type, $allowedTypes)) {
+            throw new \Exception('Invalid calculation type: ' . $type);
+        }
+
+        // EARLY RETURNS
+
+        // if cart rules are not used
+        if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive()) {
+            return 0;
+        }
+        // no shipping cost if is a cart with only virtuals products
+        $virtual = $this->isVirtualCart();
+        if ($virtual && $type == Cart::ONLY_SHIPPING) {
+            return 0;
+        }
+        if ($virtual && $type == Cart::BOTH) {
+            $type = Cart::BOTH_WITHOUT_SHIPPING;
+        }
+
+        // filter products
+        if (null === $products) {
+            $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
+        }
+
+        if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
+            foreach ($products as $key => $product) {
+                if (!empty($product['is_virtual'])) {
+                    unset($products[$key]);
+                }
+            }
+            $type = Cart::ONLY_PRODUCTS;
+        }
+
+        if ($type == Cart::ONLY_PRODUCTS) {
+            foreach ($products as $key => $product) {
+                if (!empty($product['is_gift'])) {
+                    unset($products[$key]);
+                }
             }
         }
-        $result = Db::getInstance()->getRow('
-            SELECT SUM(`quantity`) AS \'quantity\'
-            FROM `' . _DB_PREFIX_ . 'customization`
-            WHERE `id_cart` = ' . (int)$this->id . '
-            AND `id_product` = ' . (int)$id_product . '
-            AND `id_customization` = ' . (int)$id_customization . '
-            AND `id_product_attribute` = ' . (int)$id_product_attribute);
-        if ($result === false) {
-            return false;
+
+        if (Tax::excludeTaxeOption()) {
+            $withTaxes = false;
         }
-        if (Db::getInstance()->numRows() && (int)$result['quantity']) {
-            return Db::getInstance()->execute(
-                'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-                SET `quantity` = ' . (int)$result['quantity'] . '
-                WHERE `id_cart` = ' . (int)$this->id . '
-                AND `id_product` = ' . (int)$id_product . '
-                AND `id_customization` = ' . (int)$id_customization .
-                ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int)$id_product_attribute : '')
-            );
+
+        // CART CALCULATION
+        $cartRules = [];
+        if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS, Cart::ONLY_DISCOUNTS_NO_CALCULATION, Cart::ONLY_REMAINDER_OF_DISCOUNTS])) {
+            $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
         }
-        $preservedGifts = [];
-        $giftKey = (int)$id_product . '-' . (int)$id_product_attribute;
-        if ($preserveGiftsRemoval) {
-            $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
-            if (isset($preservedGifts[$giftKey]) && $preservedGifts[$giftKey] > 0) {
-                return Db::getInstance()->execute(
-                    'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-                    SET `quantity` = ' . (int)$preservedGifts[(int)$id_product . '-' . (int)$id_product_attribute] . '
-                    WHERE `id_cart` = ' . (int)$this->id . '
-                    AND `id_product` = ' . (int)$id_product .
-                    ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int)$id_product_attribute : '')
-                );
-            }
+
+        $computePrecision = Context::getContext()->getComputingPrecision();
+        $calculator = $this->newCalculator($products, $cartRules, $id_carrier, $computePrecision, $keepOrderPrices);
+        switch ($type) {
+            case Cart::ONLY_SHIPPING:
+                $calculator->calculateRows();
+                $calculator->calculateFees();
+                $amount = $calculator->getFees()->getInitialShippingFees();
+
+                break;
+            case Cart::ONLY_WRAPPING:
+                $calculator->calculateRows();
+                $calculator->calculateFees();
+                $amount = $calculator->getFees()->getInitialWrappingFees();
+
+                break;
+            case Cart::BOTH:
+                $calculator->processCalculation();
+                $amount = $calculator->getTotal();
+
+                break;
+            case Cart::BOTH_WITHOUT_SHIPPING:
+                $calculator->calculateRows();
+                // dont process free shipping to avoid calculation loop (and maximum nested functions !)
+                $calculator->calculateCartRulesWithoutFreeShipping();
+                $amount = $calculator->getTotal(true);
+
+                break;
+            case Cart::ONLY_PRODUCTS:
+                $calculator->calculateRows();
+                $amount = $calculator->getRowTotal();
+
+                break;
+            case Cart::ONLY_DISCOUNTS:
+                $calculator->processCalculation();
+                $amount = $calculator->getDiscountTotal();
+
+                break;
+            case Cart::ONLY_DISCOUNTS_NO_CALCULATION:
+                $calculator->processCalculation();
+                $amount = $this->getDiscountTotal($calculator, $this->getTotalCalculationCartRules(CartRule::FILTER_ACTION_REDUCTION, false));
+                break;
+            case Cart::ONLY_PRODUCTS_NO_DISCOUNTS:
+                $calculator->calculateRows();
+                $amount = $calculator->getRowTotalWithoutDiscount();
+
+                break;
+            case Cart::ONLY_REMAINDER_OF_DISCOUNTS:
+                $calculator->calculateRows();
+                $discount = $this->getDiscountTotal($calculator, $this->getTotalCalculationCartRules(CartRule::FILTER_ACTION_REDUCTION, false));
+                if ($discount->getTaxExcluded() > 0) {
+                    $calculator->calculateRows();
+                    $calculator->calculateFees();
+
+                    $total = $calculator->getRowTotal();
+                    $total->add($calculator->getFees()->getFinalShippingFees());
+
+                    $amount = $total->sub($discount);
+                } else {
+                    $amount = new AmountImmutable(0, 0);
+                }
+
+                break;
+
+            default:
+                throw new \Exception('unknown cart calculation type : ' . $type);
         }
-        $result = Db::getInstance()->execute('
-        DELETE FROM `' . _DB_PREFIX_ . 'cart_product`
-        WHERE `id_product` = ' . (int)$id_product . '
-        AND `id_customization` = ' . (int)$id_customization .
-            (null !== $id_product_attribute ? ' AND `id_product_attribute` = ' . (int)$id_product_attribute : '') . '
-        AND `id_cart` = ' . (int)$this->id . '
-        ' . ((int)$id_address_delivery ? 'AND `id_address_delivery` = ' . (int)$id_address_delivery : ''));
-        if ($result) {
-            $return = $this->update();
-            $this->_products = $this->getProducts(true);
-            if (!isset($preservedGifts[$giftKey]) || $preservedGifts[$giftKey] <= 0) {
-                CartRule::autoRemoveFromCart(null, $useOrderPrices);
-                CartRule::autoAddToCart(null, $useOrderPrices);
-            }
-            return $return;
+
+        $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
+        if ($type == Cart::BOTH) {
+            $value = max(0, $value);
         }
-        return false;
+
+
+        return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
     }
-    public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
+
+    /**
+     * @return AmountImmutable
+     *
+     * @throws \Exception
+     */
+    public function getDiscountTotal($calculator, $cart_rules)
     {
-        $ssa = Module::getInstanceByName('singlestockattributespoco');
-        if (!$ssa || !$ssa->active || !$ssa->useSSA($id_product)) {
-            return parent::containsProduct($id_product, $id_product_attribute, $id_customization, $id_address_delivery);
-        }
-        $sql = 'SELECT cp.`quantity` FROM `'._DB_PREFIX_.'cart_product` cp';
-        if ($id_customization) {
-            $sql .= '
-                LEFT JOIN `'._DB_PREFIX_.'customization` c ON (
-                    c.`id_product` = cp.`id_product`
-                    AND c.`id_product_attribute` = cp.`id_product_attribute`
-                )';
-        }
-        $sql .= '
-            WHERE cp.`id_product` = '.(int)$id_product.'
-            AND cp.`id_product_attribute` = '.(int)$id_product_attribute.'
-            AND cp.`id_customization` = '.(int)$id_customization.'
-            AND cp.`id_cart` = '.(int)$this->id;
-        if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
-            $sql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
-        }
-        if ($id_customization) {
-            $sql .= ' AND c.`id_customization` = '.(int)$id_customization;
-        }
-        $ret = Db::getInstance()->getRow($sql);
-        if (isset($ret['quantity']) && $ret['quantity'] > 0) {
-            $sql = 'SELECT sum(cp.`quantity`) as qty FROM `'._DB_PREFIX_.'cart_product` cp
-                WHERE cp.`id_product` = '.(int)$id_product.'
-                AND cp.`id_cart` = '.(int)$this->id;
-            $qty = Db::getInstance()->getRow($sql);
-            if (isset($qty['qty'])) {
-                $ret['quantity'] = $qty['qty'];
+        $amount = new AmountImmutable();
+        $isFreeShippingAppliedToAmount = false;
+        foreach ($cart_rules as $cartRule) {
+            if((float)$cartRule['reduction_percent'] > 0){
+                //percentage discount
+                $amount = $amount->add(new AmountImmutable($cartRule['value_real'],$cartRule['value_tax_exc']));
+            } else {
+                //money amount
+                $amount = $amount->add(new AmountImmutable($cartRule['reduction_amount'],$cartRule['reduction_amount']/1.21));
             }
         }
-        return $ret;
+
+//        $allowedMaxDiscount = $calculator->getRowTotalWithoutDiscount();
+//
+//        if (null !== $calculator->getFees()->getFinalShippingFees()) {
+//            $shippingDiscount = (new AmountImmutable())
+//                ->add($calculator->getFees()->getInitialShippingFees())
+//                ->sub($calculator->getFees()->getFinalShippingFees())
+//            ;
+//            $allowedMaxDiscount = $allowedMaxDiscount->add($shippingDiscount);
+//        }
+//        // discount cannot be above total cart price
+//        if ($amount > $allowedMaxDiscount) {
+//            $amount = $allowedMaxDiscount;
+//        }
+
+        return $amount;
     }
+
+    public function getCartRules(
+        $filter = CartRule::FILTER_ACTION_ALL,
+        $autoAdd = true,
+        $useOrderPrices = false,
+        $products = null,
+        $id_carrier = null,
+        $keepOrderPrices = false
+    )
+    {
+        $result = parent::getCartRules($filter, $autoAdd, $useOrderPrices);
+        if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
+            || !($moduleClass instanceof KlCartRuleExtender)
+            || !$moduleClass->isEnabledForShopContext()
+            || (!Configuration::get('KL_CART_RULE_EXTENDER_SHIPPING_FEES') && !Configuration::get('KL_CART_RULE_EXTENDER_WRAPPING_FEES'))
+            || !in_array($filter, [CartRule::FILTER_ACTION_ALL])
+            || $this->getNbOfPackages() > 1
+        ) {
+            return $result;
+        }
+        if ((int)$id_carrier <= 0) {
+            $id_carrier = null;
+        }
+        if (null === $products) {
+            $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
+        }
+        $computePrecision = Context::getContext()->getComputingPrecision();
+        $newCalculator = $this->newCalculator($products, $result, $id_carrier, $computePrecision, $keepOrderPrices);
+        $calculator = $moduleClass->getCalculator();
+        $calculator
+            ->setCalculator($newCalculator)
+            ->process();
+        if ($calculator->isProcessed) {
+            $result = $calculator->getCartRules();
+        }
+        return $result;
+    }
+
     public function updateQty(
         $quantity,
         $id_product,
@@ -502,23 +777,23 @@ class Cart extends CartCore
             if ($result) {
                 if ($operator == 'up') {
                     $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
-                            FROM '._DB_PREFIX_.'product p
-                            '.Product::sqlStock('p', $id_product_attribute_default, true, $shop).'
-                            WHERE p.id_product = '.$id_product;
+                            FROM ' . _DB_PREFIX_ . 'product p
+                            ' . Product::sqlStock('p', $id_product_attribute_default, true, $shop) . '
+                            WHERE p.id_product = ' . $id_product;
                     $result2 = Db::getInstance()->getRow($sql);
                     $product_qty = (int)$result2['quantity'];
                     if (Pack::isPack($id_product)) {
                         $product_qty = Pack::getQuantity($id_product, $id_product_attribute);
                     }
                     $new_qty = (int)$result['quantity'] + (int)$quantity;
-                    $qty = '+ '.(int)$quantity;
+                    $qty = '+ ' . (int)$quantity;
                     if (!$skipAvailabilityCheckOutOfStock && !Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
                         if ($new_qty > $product_qty) {
                             return false;
                         }
                     }
                 } elseif ($operator == 'down') {
-                    $qty = '- '.(int)$quantity;
+                    $qty = '- ' . (int)$quantity;
                     $new_qty = (int)$result['quantity'] - (int)$quantity;
                     if ($new_qty < $minimal_quantity && $minimal_quantity > 1) {
                         return -1;
@@ -532,20 +807,20 @@ class Cart extends CartCore
                     return -1;
                 } else {
                     Db::getInstance()->execute(
-                        'UPDATE `'._DB_PREFIX_.'cart_product`
-                        SET `quantity` = `quantity` '.$qty.'
-                        WHERE `id_product` = '.(int)$id_product.
-                        ' AND `id_customization` = '.(int)$id_customization.
-                        (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
-                        AND `id_cart` = '.(int)$this->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
+                        'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+                        SET `quantity` = `quantity` ' . $qty . '
+                        WHERE `id_product` = ' . (int)$id_product .
+                        ' AND `id_customization` = ' . (int)$id_customization .
+                        (!empty($id_product_attribute) ? ' AND `id_product_attribute` = ' . (int)$id_product_attribute : '') . '
+                        AND `id_cart` = ' . (int)$this->id . (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = ' . (int)$id_address_delivery : '') . '
                         LIMIT 1'
                     );
                 }
             } elseif ($operator == 'up') {
                 $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
-                        FROM '._DB_PREFIX_.'product p
-                        '.Product::sqlStock('p', $id_product_attribute_default, true, $shop).'
-                        WHERE p.id_product = '.$id_product;
+                        FROM ' . _DB_PREFIX_ . 'product p
+                        ' . Product::sqlStock('p', $id_product_attribute_default, true, $shop) . '
+                        WHERE p.id_product = ' . $id_product;
                 $result2 = Db::getInstance()->getRow($sql);
                 if (Pack::isPack($id_product)) {
                     $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute);
@@ -558,7 +833,7 @@ class Cart extends CartCore
                     }
                 }
                 if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
-                    if (((int)$quantity+(int)$product_qty_by_id) > $result2['quantity']) {
+                    if (((int)$quantity + (int)$product_qty_by_id) > $result2['quantity']) {
                         return false;
                     }
                 }
@@ -566,14 +841,14 @@ class Cart extends CartCore
                     return -1;
                 }
                 $result_add = Db::getInstance()->insert('cart_product', array(
-                    'id_product' =>            (int)$id_product,
-                    'id_product_attribute' =>    (int)$id_product_attribute,
-                    'id_cart' =>                (int)$this->id,
-                    'id_address_delivery' =>    (int)$id_address_delivery,
-                    'id_shop' =>                $shop->id,
-                    'quantity' =>                (int)$quantity,
-                    'date_add' =>                date('Y-m-d H:i:s'),
-                    'id_customization' =>       (int)$id_customization,
+                    'id_product' => (int)$id_product,
+                    'id_product_attribute' => (int)$id_product_attribute,
+                    'id_cart' => (int)$this->id,
+                    'id_address_delivery' => (int)$id_address_delivery,
+                    'id_shop' => $shop->id,
+                    'quantity' => (int)$quantity,
+                    'date_add' => date('Y-m-d H:i:s'),
+                    'id_customization' => (int)$id_customization,
                 ));
                 if (!$result_add) {
                     return false;
@@ -595,6 +870,131 @@ class Cart extends CartCore
             return true;
         }
     }
+
+    public
+    function deleteProduct(
+        $id_product,
+        $id_product_attribute = 0,
+        $id_customization = 0,
+        $id_address_delivery = 0,
+        bool $preserveGiftsRemoval = true,
+        bool $useOrderPrices = false
+    )
+    {
+        if (isset(self::$_nbProducts[$this->id])) {
+            unset(self::$_nbProducts[$this->id]);
+        }
+        if (isset(self::$_totalWeight[$this->id])) {
+            unset(self::$_totalWeight[$this->id]);
+        }
+        if ((int)$id_customization) {
+            if (!$this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery)) {
+                return false;
+            }
+        }
+        $result = Db::getInstance()->getRow('
+            SELECT SUM(`quantity`) AS \'quantity\'
+            FROM `' . _DB_PREFIX_ . 'customization`
+            WHERE `id_cart` = ' . (int)$this->id . '
+            AND `id_product` = ' . (int)$id_product . '
+            AND `id_customization` = ' . (int)$id_customization . '
+            AND `id_product_attribute` = ' . (int)$id_product_attribute);
+        if ($result === false) {
+            return false;
+        }
+        if (Db::getInstance()->numRows() && (int)$result['quantity']) {
+            return Db::getInstance()->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+                SET `quantity` = ' . (int)$result['quantity'] . '
+                WHERE `id_cart` = ' . (int)$this->id . '
+                AND `id_product` = ' . (int)$id_product . '
+                AND `id_customization` = ' . (int)$id_customization .
+                ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int)$id_product_attribute : '')
+            );
+        }
+        $preservedGifts = [];
+        $giftKey = (int)$id_product . '-' . (int)$id_product_attribute;
+        if ($preserveGiftsRemoval) {
+            $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
+            if (isset($preservedGifts[$giftKey]) && $preservedGifts[$giftKey] > 0) {
+                return Db::getInstance()->execute(
+                    'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+                    SET `quantity` = ' . (int)$preservedGifts[(int)$id_product . '-' . (int)$id_product_attribute] . '
+                    WHERE `id_cart` = ' . (int)$this->id . '
+                    AND `id_product` = ' . (int)$id_product .
+                    ($id_product_attribute != null ? ' AND `id_product_attribute` = ' . (int)$id_product_attribute : '')
+                );
+            }
+        }
+        $result = Db::getInstance()->execute('
+        DELETE FROM `' . _DB_PREFIX_ . 'cart_product`
+        WHERE `id_product` = ' . (int)$id_product . '
+        AND `id_customization` = ' . (int)$id_customization .
+            (null !== $id_product_attribute ? ' AND `id_product_attribute` = ' . (int)$id_product_attribute : '') . '
+        AND `id_cart` = ' . (int)$this->id . '
+        ' . ((int)$id_address_delivery ? 'AND `id_address_delivery` = ' . (int)$id_address_delivery : ''));
+        if ($result) {
+            $return = $this->update();
+            $this->_products = $this->getProducts(true);
+            if (!isset($preservedGifts[$giftKey]) || $preservedGifts[$giftKey] <= 0) {
+                CartRule::autoRemoveFromCart(null, $useOrderPrices);
+                CartRule::autoAddToCart(null, $useOrderPrices);
+            }
+            return $return;
+        }
+        return false;
+    }
+
+    /*
+   * module: klcartruleextender
+   * date: 2023-04-05 08:02:35
+   * version: 1.0.1
+   */
+
+    public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
+    {
+        $ssa = Module::getInstanceByName('singlestockattributespoco');
+        if (!$ssa || !$ssa->active || !$ssa->useSSA($id_product)) {
+            return parent::containsProduct($id_product, $id_product_attribute, $id_customization, $id_address_delivery);
+        }
+        $sql = 'SELECT cp.`quantity` FROM `' . _DB_PREFIX_ . 'cart_product` cp';
+        if ($id_customization) {
+            $sql .= '
+                LEFT JOIN `' . _DB_PREFIX_ . 'customization` c ON (
+                    c.`id_product` = cp.`id_product`
+                    AND c.`id_product_attribute` = cp.`id_product_attribute`
+                )';
+        }
+        $sql .= '
+            WHERE cp.`id_product` = ' . (int)$id_product . '
+            AND cp.`id_product_attribute` = ' . (int)$id_product_attribute . '
+            AND cp.`id_customization` = ' . (int)$id_customization . '
+            AND cp.`id_cart` = ' . (int)$this->id;
+        if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
+            $sql .= ' AND cp.`id_address_delivery` = ' . (int)$id_address_delivery;
+        }
+        if ($id_customization) {
+            $sql .= ' AND c.`id_customization` = ' . (int)$id_customization;
+        }
+        $ret = Db::getInstance()->getRow($sql);
+        if (isset($ret['quantity']) && $ret['quantity'] > 0) {
+            $sql = 'SELECT sum(cp.`quantity`) as qty FROM `' . _DB_PREFIX_ . 'cart_product` cp
+                WHERE cp.`id_product` = ' . (int)$id_product . '
+                AND cp.`id_cart` = ' . (int)$this->id;
+            $qty = Db::getInstance()->getRow($sql);
+            if (isset($qty['qty'])) {
+                $ret['quantity'] = $qty['qty'];
+            }
+        }
+        return $ret;
+    }
+
+    /*
+    * module: klcartruleextender
+    * date: 2023-04-05 08:02:35
+    * version: 1.0.1
+    */
+
     public function checkQuantities($returnProductOnFailure = false)
     {
         $ssa = Module::getInstanceByName('singlestockattributespoco');
@@ -656,15 +1056,16 @@ class Cart extends CartCore
         }
         return true;
     }
+
     public function getTotalBeforeNextAutoDiscount($withTaxes = true, $parts = 'all')
     {
         $cartRulesCheck = CartRule::getAutoAddToCartRules(Context::getContext(), true);
         $amount = new AmountImmutable($cartRulesCheck['remaining_amount'] * 1.21, $cartRulesCheck['remaining_amount']);
-        $rule =  new CartRule($cartRulesCheck['cart_rule']->id);
+        $rule = new CartRule($cartRulesCheck['cart_rule']->id);
         $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
-        switch ($parts){
+        switch ($parts) {
             case 'name':
-                return $rule->getFieldByLang('name',  $this->id_lang);
+                return $rule->getFieldByLang('name', $this->id_lang);
                 break;
             case 'rule':
                 return $cartRulesCheck['cart_rule'];
@@ -673,180 +1074,8 @@ class Cart extends CartCore
                 return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
                 break;
             default:
-                return ['cart_rule_name' => $rule->getFieldByLang('name',  $this->id_lang),'cart_rule' => $cartRulesCheck['cart_rule'], 'amount' => Tools::ps_round($value, Context::getContext()->getComputingPrecision())];
+                return ['cart_rule_name' => $rule->getFieldByLang('name', $this->id_lang), 'cart_rule' => $cartRulesCheck['cart_rule'], 'amount' => Tools::ps_round($value, Context::getContext()->getComputingPrecision())];
                 break;
         }
-    }
-    /*
-   * module: klcartruleextender
-   * date: 2023-04-05 08:02:35
-   * version: 1.0.1
-   */
-    public function getCartRules(
-        $filter = CartRule::FILTER_ACTION_ALL,
-        $autoAdd = true,
-        $useOrderPrices = false,
-        $products = null,
-        $id_carrier = null,
-        $keepOrderPrices = false
-    )
-    {
-        $result = parent::getCartRules($filter, $autoAdd, $useOrderPrices);
-        if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
-            || !($moduleClass instanceof KlCartRuleExtender)
-            || !$moduleClass->isEnabledForShopContext()
-            || (!Configuration::get('KL_CART_RULE_EXTENDER_SHIPPING_FEES') && !Configuration::get('KL_CART_RULE_EXTENDER_WRAPPING_FEES'))
-            || !in_array($filter, [CartRule::FILTER_ACTION_ALL])
-            || $this->getNbOfPackages() > 1
-        ) {
-            return $result;
-        }
-        if ((int)$id_carrier <= 0) {
-            $id_carrier = null;
-        }
-        if (null === $products) {
-            $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
-        }
-        $computePrecision = Context::getContext()->getComputingPrecision();
-        $newCalculator = $this->newCalculator($products, $result, $id_carrier, $computePrecision, $keepOrderPrices);
-        $calculator = $moduleClass->getCalculator();
-        $calculator
-            ->setCalculator($newCalculator)
-            ->process();
-        if ($calculator->isProcessed) {
-            $result = $calculator->getCartRules();
-        }
-        return $result;
-    }
-    /*
-    * module: klcartruleextender
-    * date: 2023-04-05 08:02:35
-    * version: 1.0.1
-    */
-    public function getOrderTotal(
-        $withTaxes = true,
-        $type = Cart::BOTH,
-        $products = null,
-        $id_carrier = null,
-        $use_cache = false,
-        $keepOrderPrices = false
-    )
-    {
-        if(!is_numeric($id_carrier) && isset(Context::getContext()->cart->id_carrier) && (int)Context::getContext()->cart->id_carrier > 0){
-            $id_carrier = (int)Context::getContext()->cart->id_carrier;
-        }
-        if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
-            || !($moduleClass instanceof KlCartRuleExtender)
-            || !$moduleClass->isEnabledForShopContext()
-            || (!Configuration::get('KL_CART_RULE_EXTENDER_SHIPPING_FEES') && !Configuration::get('KL_CART_RULE_EXTENDER_WRAPPING_FEES'))
-            || $this->getNbOfPackages() > 1
-            || !in_array($type, [CART::ONLY_DISCOUNTS_NO_CALCULATION, CART::ONLY_REMAINDER_OF_DISCOUNTS, CART::ONLY_REMAINDER_UNTIL_STORE_DISCOUNT])
-        ) {
-            $value = parent::getOrderTotal(
-                $withTaxes,
-                $type,
-                $products,
-                $id_carrier,
-                $use_cache,
-                $keepOrderPrices
-            );
-            return $value;
-        }
-        if ((int)$id_carrier <= 0) {
-            $id_carrier = null;
-        }
-        $this->getCartRules(CartRule::FILTER_ACTION_ALL, false, false, $products, $id_carrier, $keepOrderPrices);
-        $calculator = $moduleClass->getCalculator();
-        if (!$calculator->isProcessed) {
-            return $value;
-        }
-        switch ($type) {
-            case CART::BOTH:
-                $amount = $calculator->getTotal(false, true);
-                break;
-            case CART::ONLY_DISCOUNTS:
-                $amount = $calculator->getDiscountTotal();
-                break;
-            case CART::ONLY_DISCOUNTS_NO_CALCULATION:
-                $amount = $calculator->getDiscountTotal(true);
-                break;
-            case CART::ONLY_PRODUCTS_NO_DISCOUNTS:
-                $amount = $calculator->getRowTotalWithoutDiscount();
-                break;
-            case CART::ONLY_REMAINDER_OF_DISCOUNTS:
-                $discount = $calculator->getDiscountTotal(true);
-                if($discount->getTaxExcluded() > 0){
-                    $amount = $calculator->getTotal(false, true);
-                } else {
-                    $amount= new AmountImmutable(0,0);
-                }
-                break;
-        }
-        $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
-        if ($type == Cart::BOTH) {
-            $value = max(0, $value);
-        }
-        return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
-    }
-    public function getDeliveryOption($default_country = null, $dontAutoSelectOptions = false, $use_cache = true)
-    {
-        $cache_id = (int) (is_object($default_country) ? $default_country->id : 0) . '-' . (int) $dontAutoSelectOptions;
-        if (isset(static::$cacheDeliveryOption[$cache_id]) && $use_cache) {
-            return static::$cacheDeliveryOption[$cache_id];
-        }
-        $delivery_option_list = $this->getDeliveryOptionList($default_country);
-        if (isset($this->delivery_option) && $this->delivery_option != '') {
-            $delivery_option = json_decode($this->delivery_option, true);
-            $validated = true;
-            if (is_array($delivery_option)) {
-                foreach ($delivery_option as $id_address => $key) {
-                    if (!isset($delivery_option_list[$id_address][$key])) {
-                        $validated = false;
-                        break;
-                    }
-                }
-                if ($validated) {
-                    static::$cacheDeliveryOption[$cache_id] = $delivery_option;
-                    return $delivery_option;
-                }
-            }
-        }
-        if ($dontAutoSelectOptions) {
-            return false;
-        }
-        $delivery_option = [];
-        foreach ($delivery_option_list as $id_address => $options) {
-            $context = Context::getContext()->cloneContext();
-            foreach ($options as $key => $option) {
-                if (Configuration::get('PS_CARRIER_DEFAULT') == -1 && $option['is_best_price']) {
-                    $delivery_option[$id_address] = $key;
-                    break;
-                } elseif (Configuration::get('PS_CARRIER_DEFAULT') == -2 && $option['is_best_grade']) {
-                    $delivery_option[$id_address] = $key;
-                    break;
-                } elseif ($option['unique_carrier'] && in_array(Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER', $context->language->id,
-                        $context->shop->id_shop_group,
-                        $context->shop->id), array_keys($option['carrier_list'])) &&
-                    Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',
-                        $context->language->id,
-                        $context->shop->id_shop_group,
-                        $context->shop->id) == (int)$context->customer->id) {
-                    $delivery_option[$id_address] = $key;
-                    break;
-                } elseif ($option['unique_carrier'] && in_array(Configuration::get('PS_CARRIER_DEFAULT'), array_keys($option['carrier_list'])) && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',
-                        $context->language->id,
-                        $context->shop->id_shop_group,
-                        $context->shop->id) != $context->customer->id) {
-                    $delivery_option[$id_address] = $key;
-                    break;
-                }
-            }
-            reset($options);
-            if (!isset($delivery_option[$id_address])) {
-                $delivery_option[$id_address] = key($options);
-            }
-        }
-        static::$cacheDeliveryOption[$cache_id] = $delivery_option;
-        return $delivery_option;
     }
 }

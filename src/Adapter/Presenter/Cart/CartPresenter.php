@@ -557,7 +557,6 @@ class CartPresenter implements PresenterInterface
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_currency'] = $cartVoucher['reduction_currency'];
             $vouchers[$cartVoucher['id_cart_rule']]['free_shipping'] = (bool) $cartVoucher['free_shipping'];
 
-
             // Voucher reduction depending of the cart tax rule
             // if $cartHasTax & voucher is tax excluded, set amount voucher to tax included
             if ($cartHasTax && $cartVoucher['reduction_tax'] == '0') {
@@ -584,23 +583,39 @@ class CartPresenter implements PresenterInterface
                 $freeShippingOnly = false;
                 $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
             }
-//Toegevoegd door JB Stoker
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_value'] = '-' . $this->priceFormatter->format((float)$cartVoucher['value_real'], Context::getContext()->currency);
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_value_tax_excl'] = '-' . $this->priceFormatter->format((float)$cartVoucher['value_tax_exc'], Context::getContext()->currency);
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = (float)$cartVoucher['value_real'];
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount_tax_excl'] = (float)$cartVoucher['value_tax_exc'];
-//Einde Toevoeging
+
+            //Toegevoegd door JB Stoker
+            if($cartVoucher['reduction_tax']){
+                $reduction = (float)$cartVoucher['reduction_amount'];
+                $reduction_tax_exc = (float)$cartVoucher['reduction_amount']/1.21;
+            } else {
+                $reduction = (float)$cartVoucher['reduction_amount']*1.21;
+                $reduction_tax_exc = (float)$cartVoucher['reduction_amount'];
+            }
+
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount_full'] = $this->priceFormatter->format( '-' . $reduction, Context::getContext()->currency);
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount_full_tax_exc'] = $this->priceFormatter->format( '-' . $reduction_tax_exc, Context::getContext()->currency);
+
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_percentage'] = $this->priceFormatter->format( '-' . (float)$cartVoucher['reduction_percent'], Context::getContext()->currency);
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_value'] = $this->priceFormatter->format( '-' . (float)$cartVoucher['value_real'], Context::getContext()->currency);
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_value_tax_excl'] = $this->priceFormatter->format( '-' . (float)$cartVoucher['value_tax_exc'], Context::getContext()->currency);
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = '-'.(float)$cartVoucher['value_real'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount_tax_excl'] = '-'.(float)$cartVoucher['value_tax_exc'];
+            //Einde Toevoeging
+
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
             if ($freeShippingOnly) {
-                $cartVoucher['reduction_formatted'] = $this->translator->trans(
+                $cartVoucher['reduction_shipping'] = $this->translator->trans(
                     'Free shipping',
                     [],
                     'Admin.Shipping.Feature'
                 );
             } else {
-                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->format($totalCartVoucherReduction);
+                $cartVoucher['reduction_shipping'] = 0;
             }
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
+
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_include_shipping'] = $cartVoucher['reduction_shipping'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $this->priceFormatter->format('-' . $totalCartVoucherReduction);
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
                 null,
@@ -616,6 +631,7 @@ class CartPresenter implements PresenterInterface
             'allowed' => (int) CartRule::isFeatureActive(),
             'added' => $vouchers,
         ];
+
     }
 
     /**

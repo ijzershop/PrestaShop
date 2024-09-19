@@ -236,20 +236,27 @@ class ModernHook
             $idOrder = $params['order']->id;
             $idCart = $params['order']->id_cart;
             $orderObject = new Order($idOrder);
-            $cartRules = $orderObject->getCartRules();
-
-            $total_discount = 0;
-            foreach ($cartRules as $rule) {
-
-                if ((float)$rule['value_tax_excl'] != '0.000000') {
-                    $total_discount += (float)$rule['value_tax_excl'];
-                }
-            }
-
             $cartObject = new Cart($idCart);
+
+            $cartRules = $cartObject->getCartRules();
+            $total_discount = $cartObject->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderObject->getCartProducts());
+            $total_discount_tax_exc = $cartObject->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderObject->getCartProducts());
+            $total_discount_no_calc = $cartObject->getOrderTotal(true, Cart::ONLY_DISCOUNTS_NO_CALCULATION, $orderObject->getCartProducts());
+            $total_discount_no_calc_tax_exc = $cartObject->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION, $orderObject->getCartProducts());
+            $total_remainder = $cartObject->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS, $orderObject->getCartProducts());
+            $total_remainder_tax_exc = $cartObject->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS, $orderObject->getCartProducts());
+
             $shipping = $orderObject->getShipping();
-            $discount_check = ($shipping[0]['shipping_cost_tax_excl'] + $cartObject->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderObject->getCartProducts()) - (float)$total_discount) * 1.21;
-            $this->smarty->assign(['total_discount' => $total_discount, 'discount_check' => $discount_check]);
+            $this->smarty->assign([
+                'total_discount' => $total_discount,
+                'total_discount_tax_exc' => $total_discount_tax_exc,
+                'total_discount_no_calc' => $total_discount_no_calc,
+                'total_discount_no_calc_tax_exc' => $total_discount_no_calc_tax_exc,
+                'total_remainder' => $total_remainder,
+                'total_remainder_tax_exc' => $total_remainder_tax_exc,
+                'cart_rules' => $cartRules,
+                ]);
+
         }
     }
     /**

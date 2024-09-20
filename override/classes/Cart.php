@@ -375,89 +375,6 @@ class Cart extends CartCore
         return $shipping_cost;
     }
 
-//    public function getOrderTotal(
-//        $withTaxes = true,
-//        $type = Cart::BOTH,
-//        $products = null,
-//        $id_carrier = null,
-//        $use_cache = false,
-//        $keepOrderPrices = false
-//    )
-//    {
-//        if (!is_numeric($id_carrier) && isset(Context::getContext()->cart->id_carrier) && (int)Context::getContext()->cart->id_carrier > 0) {
-//            $id_carrier = (int)Context::getContext()->cart->id_carrier;
-//        }
-//
-//
-//
-//        if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
-//            || !($moduleClass instanceof KlCartRuleExtender)
-//            || !$moduleClass->isEnabledForShopContext()
-//            || (!Configuration::get('KL_CART_RULE_EXTENDER_SHIPPING_FEES') && !Configuration::get('KL_CART_RULE_EXTENDER_WRAPPING_FEES'))
-//            || $this->getNbOfPackages() > 1
-//        ) {
-//            if(!in_array($type, [Cart::ONLY_DISCOUNTS_NO_CALCULATION, Cart::ONLY_REMAINDER_OF_DISCOUNTS, Cart::ONLY_REMAINDER_UNTIL_STORE_DISCOUNT, Cart::ONLY_PRODUCTS_NO_DISCOUNTS])){
-//
-//                $value = parent::getOrderTotal(
-//                    $withTaxes,
-//                    (int)$type,
-//                    $products,
-//                    $id_carrier,
-//                    $use_cache,
-//                    $keepOrderPrices
-//                );
-//                return $value;
-//            }
-//        }
-//        if ((int)$id_carrier <= 0) {
-//            $id_carrier = null;
-//        }
-//
-//        if(!($moduleClass = Module::getInstanceByName('klcartruleextender')) || !($moduleClass instanceof KlCartRuleExtender) || !$moduleClass->isEnabledForShopContext()){
-//            $cartRules = [];
-//            if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
-//                $cartRules = parent::getCartRules(CartRule::FILTER_ACTION_ALL, false, false);
-//            }
-//            if (null === $products) {
-//                $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
-//            }
-//
-//            $this->getCartRules(CartRule::FILTER_ACTION_ALL, false, false, $products, $id_carrier, $keepOrderPrices);
-//            $computePrecision = Context::getContext()->getComputingPrecision();
-//            $calculator = parent::newCalculator($products, $cartRules, $id_carrier, $computePrecision, $keepOrderPrices);
-//            $calculator->calculateRows();
-//        } else {
-//            $calculator = $moduleClass->getCalculator();
-//        }
-//        switch ($type) {
-//            case Cart::BOTH:
-//                $amount = $calculator->getTotal(false, true);
-//                break;
-//            case Cart::ONLY_DISCOUNTS:
-//                $amount = $calculator->getDiscountTotal();
-//                break;
-//            case Cart::ONLY_DISCOUNTS_NO_CALCULATION:
-//                $amount = $calculator->getDiscountTotal(true);
-//                break;
-//            case Cart::ONLY_PRODUCTS_NO_DISCOUNTS:
-//                $amount = $calculator->getRowTotalWithoutDiscount();
-//                break;
-//            case Cart::ONLY_REMAINDER_OF_DISCOUNTS:
-//                $discount = $calculator->getDiscountTotal(true);
-//                if ($discount->getTaxExcluded() > 0) {
-//                    $amount = $calculator->getTotal(false, true);
-//                } else {
-//                    $amount = new AmountImmutable(0, 0);
-//                }
-//                break;
-//        }
-//        $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
-//        if ($type == Cart::BOTH) {
-//            $value = max(0, $value);
-//        }
-//        return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
-//    }
-
 
     public function  getOrderTotal(
         $withTaxes = true,
@@ -654,42 +571,42 @@ class Cart extends CartCore
         return $amount;
     }
 
-    public function getCartRules(
-        $filter = CartRule::FILTER_ACTION_ALL,
-        $autoAdd = true,
-        $useOrderPrices = false,
-        $products = null,
-        $id_carrier = null,
-        $keepOrderPrices = false
-    )
-    {
-        $result = parent::getCartRules($filter, $autoAdd, $useOrderPrices);
-        if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
-            || !($moduleClass instanceof KlCartRuleExtender)
-            || !$moduleClass->isEnabledForShopContext()
-            || (!Configuration::get('KL_CART_RULE_EXTENDER_SHIPPING_FEES') && !Configuration::get('KL_CART_RULE_EXTENDER_WRAPPING_FEES'))
-            || !in_array($filter, [CartRule::FILTER_ACTION_ALL])
-            || $this->getNbOfPackages() > 1
-        ) {
-            return $result;
-        }
-        if ((int)$id_carrier <= 0) {
-            $id_carrier = null;
-        }
-        if (null === $products) {
-            $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
-        }
-        $computePrecision = Context::getContext()->getComputingPrecision();
-        $newCalculator = $this->newCalculator($products, $result, $id_carrier, $computePrecision, $keepOrderPrices);
-        $calculator = $moduleClass->getCalculator();
-        $calculator
-            ->setCalculator($newCalculator)
-            ->process();
-        if ($calculator->isProcessed) {
-            $result = $calculator->getCartRules();
-        }
-        return $result;
-    }
+//    public function getCartRules(
+//        $filter = CartRule::FILTER_ACTION_ALL,
+//        $autoAdd = true,
+//        $useOrderPrices = false,
+//        $products = null,
+//        $id_carrier = null,
+//        $keepOrderPrices = false
+//    )
+//    {
+//        $result = parent::getCartRules($filter, $autoAdd, $useOrderPrices);
+//        if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
+//            || !($moduleClass instanceof KlCartRuleExtender)
+//            || !$moduleClass->isEnabledForShopContext()
+//            || (!Configuration::get('KL_CART_RULE_EXTENDER_SHIPPING_FEES') && !Configuration::get('KL_CART_RULE_EXTENDER_WRAPPING_FEES'))
+//            || !in_array($filter, [CartRule::FILTER_ACTION_ALL])
+//            || $this->getNbOfPackages() > 1
+//        ) {
+//            return $result;
+//        }
+//        if ((int)$id_carrier <= 0) {
+//            $id_carrier = null;
+//        }
+//        if (null === $products) {
+//            $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
+//        }
+//        $computePrecision = Context::getContext()->getComputingPrecision();
+//        $newCalculator = $this->newCalculator($products, $result, $id_carrier, $computePrecision, $keepOrderPrices);
+//        $calculator = $moduleClass->getCalculator();
+//        $calculator
+//            ->setCalculator($newCalculator)
+//            ->process();
+//        if ($calculator->isProcessed) {
+//            $result = $calculator->getCartRules();
+//        }
+//        return $result;
+//    }
 
     public function updateQty(
         $quantity,
@@ -743,7 +660,7 @@ class Cart extends CartCore
             $minimal_quantity = (int)$product->minimal_quantity;
         }
         if (!Validate::isLoadedObject($product)) {
-            die(Tools::displayError());
+            die(Tools::displayError(sprintf('Product with ID "%s" could not be loaded.', $id_product)));
         }
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
@@ -832,8 +749,9 @@ class Cart extends CartCore
                         $product_qty_by_id += (int)$cart_item['quantity'];
                     }
                 }
-                if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
-                    if (((int)$quantity + (int)$product_qty_by_id) > $result2['quantity']) {
+
+                if (isset($result2['out_of_stock']) && !Product::isAvailableWhenOutOfStock((int) $result2['out_of_stock']) && !$skipAvailabilityCheckOutOfStock) {
+                    if ((int) $quantity > $result2['quantity']) {
                         return false;
                     }
                 }
@@ -945,12 +863,6 @@ class Cart extends CartCore
         return false;
     }
 
-    /*
-   * module: klcartruleextender
-   * date: 2023-04-05 08:02:35
-   * version: 1.0.1
-   */
-
     public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
     {
         $ssa = Module::getInstanceByName('singlestockattributespoco');
@@ -989,11 +901,6 @@ class Cart extends CartCore
         return $ret;
     }
 
-    /*
-    * module: klcartruleextender
-    * date: 2023-04-05 08:02:35
-    * version: 1.0.1
-    */
 
     public function checkQuantities($returnProductOnFailure = false)
     {

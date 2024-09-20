@@ -75,7 +75,7 @@ $(function () {
       let existingData = JSON.parse(jsonVal);
       if (existingData !== null) {
         for (let i = 0; i < existingData.length; i++) {
-          let statusText = $('#MSTHEMECONFIG_ORDERSTATE_SENDMAIL option[value=' + existingData[i].id_order_state + ']').text();
+          let statusText = existingData[i].id_order_state_text;
           let statusId = existingData[i].id_order_state;
           let statusFirstEmail = existingData[i].first_email_order_state;
           let statusSecondEmail = existingData[i].second_email_order_state;
@@ -87,7 +87,22 @@ $(function () {
   }
 
   function setEmailInputRow($parentFormElement, statusText, statusId) {
-    $('#extra_email_settings').append('<li data-id="' + statusId + '"><div class="row" data-id="' + statusId + '"> <div class="form-group col-xs-12" data-tab-id="email"><div class="form-group text-center" data-tab-id="email"><h2>Orderstatus: ' + statusText + '</h2></div> </div><div class="form-group col-xs-5" data-tab-id="email"> <label class="control-label col-lg-3"> Eerste email adres <input type="hidden" name="SENDMAIL_ORDER_STATUS[]" value="' + statusId + '"> </label> <div class="col-lg-9"> <div class="input-group"> <span class="input-group-addon"> <i class="icon-envelope"></i> </span> <input type="text" name="SENDMAIL_ORDER_STATUS_FIRST_EMAIL[]" value="" class=""> </div><p class="help-block"> Voeg een email adres toe waaraan de pakbon gezonden moet worden by order status wijziging </p></div></div><div class="form-group col-xs-5" data-tab-id="email"> <label class="control-label col-lg-3"> Tweede email adres </label> <div class="col-lg-9"> <div class="input-group"> <span class="input-group-addon"> <i class="icon-envelope"></i> </span> <input type="text" name="SENDMAIL_ORDER_STATUS_SECOND_EMAIL[]" value="" class=""> </div><p class="help-block"> Voeg een email adres toe waaraan de pakbon email CC moet worden</p></div></div><div class="form-group col-xs-2" data-tab-id="email"><label class="control-label col-lg-3"></label><div class="col-lg-9"><a class="btn btn-danger trash-sendmail-row" data-id="' + statusId + '"><i class="icon-trash"></i></a></div></div></li>');
+    $('#extra_email_settings').append('<li data-id="' + statusId + '">' +
+      '<div class="row" data-id="' + statusId + '"> ' +
+      '<div class="form-group col-xs-12" data-tab-id="email">' +
+      '<div class="form-group text-center" data-tab-id="email"><h2>Orderstatus: ' + statusText + '</h2></div> ' +
+      '</div>' +
+      '<div class="form-group col-xs-5" data-tab-id="email"> <label class="control-label col-lg-3"> Eerste email adres ' +
+      '<input type="hidden" name="SENDMAIL_ORDER_STATUS[]" value="' + statusId + '"> </label> <div class="col-lg-9"> ' +
+      '<div class="input-group"> <span class="input-group-addon"> <i class="icon-envelope"></i> </span> ' +
+      '<input type="text" name="SENDMAIL_ORDER_STATUS_FIRST_EMAIL[]" value="" class=""> </div>' +
+      '<p class="help-block"> Voeg een email adres toe waaraan de pakbon gezonden moet worden by order status wijziging </p></div></div>' +
+      '<div class="form-group col-xs-5" data-tab-id="email"> <label class="control-label col-lg-3"> Tweede email adres </label> ' +
+      '<div class="col-lg-9"> <div class="input-group"> <span class="input-group-addon"> <i class="icon-envelope"></i> </span> ' +
+      '<input type="text" name="SENDMAIL_ORDER_STATUS_SECOND_EMAIL[]" value="" class=""> </div>' +
+      '<p class="help-block"> Voeg een email adres toe waaraan de pakbon email CC moet worden</p></div></div>' +
+      '<div class="form-group col-xs-2" data-tab-id="email"><label class="control-label col-lg-3"></label><div class="col-lg-9">' +
+      '<a class="btn btn-danger trash-sendmail-row" data-id="' + statusId + '"><i class="icon-trash"></i></a></div></div></li>');
   }
 
   $(document).on('select2:select', '#MSTHEMECONFIG_ORDERSTATE_SENDMAIL', function (event) {

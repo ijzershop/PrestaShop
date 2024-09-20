@@ -391,6 +391,8 @@ class ModernAjax
                 $dataArray[$this->prefix . 'ADD2ORDER_CARRIER'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'ADD2ORDER_CARRIER', $this->idLang, $this->idShopGroup, $this->idShop, '8'), 'carriers');
 
                 $dataArray[$this->prefix . 'CUSTOM_ADDRESS_WHEN_FAIL'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'CUSTOM_ADDRESS_WHEN_FAIL', $this->idLang, $this->idShopGroup, $this->idShop, '1'), 'addresses');
+
+
                 break;
             case 'config-user':
                 $dataArray[$this->prefix . 'EMPLOYEE_WORKSHOP_PROFILES'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'EMPLOYEE_WORKSHOP_PROFILES', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'profiles');
@@ -599,7 +601,7 @@ class ModernAjax
     {
         if(!empty($options) || $options == '0'){
             $selectedOptionList = [];
-            $optionList = $this->getSelect2Data($data_type, $sort)->getContent();
+            $optionList = $this->getSelect2Data($data_type, $sort, $options)->getContent();
 
             $selectedOptions = explode(',', (string)$options);
             if ($optionList) {
@@ -621,6 +623,7 @@ class ModernAjax
             $selectedOptionList = [];
         }
 
+
         return implode("", $selectedOptionList);
     }
     /**
@@ -631,7 +634,7 @@ class ModernAjax
      * @return JsonResponse
      * @throws PrestaShopDatabaseException
      */
-    public function getSelect2Data($data_type, $sort = true): JsonResponse
+    public function getSelect2Data($data_type, $sort = true, $options=null): JsonResponse
     {
         $search = Tools::getValue('search');
         if (!$search) {
@@ -819,6 +822,14 @@ class ModernAjax
                     $sql .= " WHERE";
                 }
 
+                if($options){
+                    if(is_array($options)){
+                        $sql .= " `id_customer` = IN(".implode(',',$options).") AND ";
+                    } else {
+                        $sql .= " `id_customer` = ".$options." AND ";
+                    }
+                }
+
                 $sql .= " `active` = '1' ORDER BY `text` LIMIT 0,10";
 
                 $customerList['results'] = Db::getInstance()->executeS($sql);
@@ -870,7 +881,15 @@ class ModernAjax
                     $sql .= " WHERE";
                 }
 
-                $sql .= " `active` = '1' ORDER BY `lastname` LIMIT 0,10";
+                if($options){
+                    if(is_array($options)){
+                        $sql .= " `id_address` = IN(".implode(',',$options).") AND ";
+                    } else {
+                        $sql .= " `id_address` = ".$options." AND ";
+                    }
+                }
+
+                    $sql .= " `active` = '1' ORDER BY `lastname` LIMIT 0,10";
 
                 $addressList['results'] = Db::getInstance()->executeS($sql);
 

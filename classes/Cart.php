@@ -273,6 +273,7 @@ class CartCore extends ObjectModel
         }
 
         $return = parent::add($autoDate, $nullValues);
+
         Hook::exec('actionCartSave', ['cart' => $this]);
 
         return $return;

@@ -478,7 +478,10 @@ class MsThemeConfig extends Module
             } elseif (in_array($key, $textareaKeys)) {
                 Configuration::updateValue($key, [$idLang => Tools::getValue($key)], true, $idShopGroup, $idShop);
                 continue;
-            } elseif ($key == 'MSTHEMECONFIG_ORDERSTATE_SENDMAIL_JSON') {
+            } elseif (in_array($key, ['MSTHEMECONFIG_ORDERSTATE_SENDMAIL_JSON','SENDMAIL_ORDER_STATUS', 'SENDMAIL_ORDER_STATUS_FIRST_EMAIL', 'SENDMAIL_ORDER_STATUS_SECOND_EMAIL'])) {
+                if(in_array($key, ['SENDMAIL_ORDER_STATUS', 'SENDMAIL_ORDER_STATUS_FIRST_EMAIL', 'SENDMAIL_ORDER_STATUS_SECOND_EMAIL'])){
+                        continue;
+                }
                 $orderStateIds = Tools::getValue('SENDMAIL_ORDER_STATUS');
                 $orderStateFirstEmails = Tools::getValue('SENDMAIL_ORDER_STATUS_FIRST_EMAIL');
                 $orderStateSecondEmails = Tools::getValue('SENDMAIL_ORDER_STATUS_SECOND_EMAIL');
@@ -487,8 +490,11 @@ class MsThemeConfig extends Module
 
                 if (is_array($orderStateIds) && count($orderStateIds) > 0) {
                     for ($i = 0; $i < count($orderStateIds); $i++) {
+                        $state = new OrderState($orderStateIds[$i]);
+
                         $orderStateIdEmailArr[$i] = [];
                         $orderStateIdEmailArr[$i]['id_order_state'] = $orderStateIds[$i];
+                        $orderStateIdEmailArr[$i]['id_order_state_text'] = $state->getFieldByLang('name', 1);
                         $orderStateIdEmailArr[$i]['first_email_order_state'] = $orderStateFirstEmails[$i];
                         $orderStateIdEmailArr[$i]['second_email_order_state'] = $orderStateSecondEmails[$i];
                     }
@@ -560,7 +566,7 @@ class MsThemeConfig extends Module
     public function hookDisplayHome($params):string
     {
         $hookClass = $this->getModernHooks();
-        return $hookClass->hookDisplayHome($params);
+        return $hookClass->hookDisplayHome();
     }
     /**
      * @param $params

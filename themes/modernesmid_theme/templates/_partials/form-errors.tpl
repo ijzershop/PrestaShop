@@ -28,45 +28,45 @@
 
 
 
-<style>
-  .alert:not('#custom-msg'){
-    position: fixed;
-    top:20%;
-    left: calc(30% / 2);
-    z-index: 99;
-    width: 70%;
-    font-size: 1rem;
-    font-weight: bold;
-  }
-  .alert-heading{
-    opacity: .5;
-  }
-  .alert:not('#custom-msg') .close{
-    opacity: .5;
-    color:#ffffff;
-  }
-  .alert:not('#custom-msg') .contact-msg{
-    opacity: .5;
-  }
-</style>
+{*<style>*}
+{*  .alert:not('#custom-msg'){*}
+{*    position: fixed;*}
+{*    top:20%;*}
+{*    left: calc(30% / 2);*}
+{*    z-index: 99;*}
+{*    width: 70%;*}
+{*    font-size: 1rem;*}
+{*    font-weight: bold;*}
+{*  }*}
+{*  .alert-heading{*}
+{*    opacity: .5;*}
+{*  }*}
+{*  .alert:not('#custom-msg') .close{*}
+{*    opacity: .5;*}
+{*    color:#ffffff;*}
+{*  }*}
+{*  .alert:not('#custom-msg') .contact-msg{*}
+{*    opacity: .5;*}
+{*  }*}
+{*</style>*}
 {block name='form_errors'}
 <aside id="notifications">
-  <div class="row">
+  <div class="row pl-1 pr-1 pt-1">
 
       {block name='notifications_error'}
-        <article class="alert alert-danger col-12" role="alert" data-alert="danger">
+        <article class="alert alert-danger col-12 p-1 m-0" role="alert" data-alert="danger">
           <div class="row">
             <div class="col-2 my-auto"><i class="fasl fa-warning w-100 fa-4x"></i></div>
             <div class="col-10">
               <div class="row">
                 <div class="col-12">
-                  <h4 class="alert-heading">Er ging iets fout!
+                  <div class="alert-heading">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
-                    </button></h4>
+                    </button></div>
                   <ul class="list-unstyled mb-0">
                     {foreach $errors as $error}
-                      <li>{$error|nl2br nofilter}</li>
+                      <li><h5>{$error|nl2br nofilter}</h5></li>
                     {/foreach}
                   </ul>
                 </div>

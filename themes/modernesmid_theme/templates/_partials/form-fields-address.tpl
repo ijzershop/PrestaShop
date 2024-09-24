@@ -50,9 +50,9 @@
       {elseif $field.name == 'postcode'}
         col-12 col-sm-6
       {elseif $field.name == 'city'}
-        col-12
+        col-6
       {elseif $field.name == 'id_country'}
-        col-12
+        col-6
       {elseif $field.name == 'other'}
         col-12 col-sm-12
       {elseif $field.name == 'phone'}

@@ -23,30 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-<style>
-  .alert:not('#custom-msg'){
-    position: fixed;
-    top:20%;
-    left: calc(30% / 2);
-    z-index: 99;
-    width: 70%!important;
-    font-size: 1rem;
-    font-weight: bold;
-  }
-  .alert-heading{
-    opacity: .5;
-  }
-  .alert:not('#custom-msg') .close{
-    opacity: .5;
-    color:#ffffff;
-  }
-  .alert:not('#custom-msg') .contact-msg{
-    opacity: .5;
-  }
-</style>
-
 {if isset($notifications)}
-<aside id="notifications">
+<aside id="notifications" class="w-100 text-center">
   <div class="row">
     {if $notifications.error}
       {block name='notifications_error'}

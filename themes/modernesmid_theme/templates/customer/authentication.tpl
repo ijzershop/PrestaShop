@@ -31,9 +31,9 @@
 
 {block name='page_content'}
 <div class="col-12">
-  {block name='notifications'}
-    {include file='_partials/notifications.tpl'}
-  {/block}
+{*  {block name='notifications'}*}
+{*    {include file='_partials/notifications.tpl'}*}
+{*  {/block}*}
 </div>
 
 <div class="col-12">

@@ -1013,12 +1013,13 @@ $(function () {
           $('svg.shopping-cart[data-product-id="' + product_id + '"]').attr('data-icon', 'cart-shopping');
           if (resp.hasError === true) {
             let errorList = resp.errors.join("<br/>");
-            let contentWidth = $('#content-wrapper').width();
-
-            let alertBlock = '<div style="z-index: 99999999;position:absolute;width:' + contentWidth + 'px;top:75px;" id="alert-error-msg" class="col-12 alert alert-danger show alert-dismissible fade mx-auto" role="alert"><strong>Fout!</strong><br/>' + errorList +
+            let contentWidth = $('#notifications').width();
+console.log(contentWidth)
+            let alertWidth = contentWidth-((contentWidth/100)*30)
+            let alertBlock = '<div style="z-index: 99999999;position:absolute;width:' + alertWidth + 'px;top:25%;left:15%" id="alert-error-msg" class="col-12 alert alert-danger show alert-dismissible fade mx-auto" role="alert"><strong>Fout!</strong><br/>' + errorList +
               '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
 
-            $('#content-wrapper').prepend(alertBlock);
+            $('#notifications').prepend(alertBlock);
             let alertMsg = $('#alert-error-msg');
             alertMsg.alert();
             setTimeout(function () {
@@ -2165,7 +2166,7 @@ $(document).ready(function () {
         $('.alert:not(#custom-msg)').fadeTo(1000, 0).slideUp(1000, function () {
           $(this).remove();
         });
-    }, 5000);
+    }, 20000);
 
 
 
@@ -2177,7 +2178,7 @@ $(document).ready(function () {
             $('.alert:not(#custom-msg)').fadeTo(1000, 0).slideUp(1000, function () {
               $(this).remove();
             });
-          }, 5000);
+          }, 20000);
       });
 
     })

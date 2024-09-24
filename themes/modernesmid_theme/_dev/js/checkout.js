@@ -230,7 +230,7 @@ $(document).ready(() => {
   }
 
   function validatePasswd(s) {
-    return (s.length >= 5 && s.length < 255);
+    return (s.length >= 8 && s.length < 20);
   }
 
   function validateAddressApiTitle(s) {
@@ -346,8 +346,6 @@ $(document).ready(() => {
     element.siblings('.error-small').remove();
     if (element.val() === '') {
       element.parent().append(inputMessage(required_error));
-    } else if (!validateOnlyNumber(element.val()) || !validateName($(element).val())) {
-      element.parent().append(inputMessage(splchar_error, 'text-warning'));
     } else {
       element.siblings('.error-small').remove();
     }
@@ -356,9 +354,9 @@ $(document).ready(() => {
   let validateCompanyInputFields = function (element) {
     $(element).val($(element).val().replace(/[.,]+/g, ''));
     $(element).siblings('.error-small').remove();
-    if (!validateCityName($(element).val())) {
-      $(element).parent().append(inputMessage(splchar_error, 'text-warning'));
-    }
+    // if (!validateCityName($(element).val())) {
+    //   $(element).parent().append(inputMessage(splchar_error, 'text-warning'));
+    // }
   }
 
   let validateVatInputFields = function (element) {
@@ -372,8 +370,6 @@ $(document).ready(() => {
     let emailElem = $('input[name="email"]');
     if ($(element).val() === '') {
       $(element).parent().append(inputMessage(required_error));
-    } else if (!validateEmail($(element).val())) {
-      $(element).parent().append(inputMessage(invalid_email, 'text-warning'));
     } else {
       if (validateEmailElem.length > 0 && validateEmailElem.val() !== emailElem.val()) {
         validateEmailElem.parent().append(inputMessage(not_same_email, 'text-warning'));
@@ -458,9 +454,10 @@ $(document).ready(() => {
     $(element).siblings('.error-small').remove();
     if ($(element).val() === '' && required) {
       $(element).parent().append(inputMessage(required_error));
-    } else if (!validatePhoneNumber($(element).val())) {
-      $(element).parent().append(inputMessage(not_valid_phone, 'text-warning'));
     }
+    // else if (!validatePhoneNumber($(element).val())) {
+    //   $(element).parent().append(inputMessage(not_valid_phone, 'text-warning'));
+    // }
   }
 
   // Name validation

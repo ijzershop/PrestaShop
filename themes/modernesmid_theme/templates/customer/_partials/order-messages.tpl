@@ -29,7 +29,7 @@
       {foreach from=$order.messages item=message}
         <div class="message row card mb-2 ml-2 mr-2">
           <div class="card-header">
-              <strong> 
+              <strong>
                {AttributeGroup::stripSawCutModuleAttributeGroupName($message.name, Context::getContext()->cookie->id_lang)}
               </strong>
             <span class="float-right">{$message.message_date}</span>
@@ -43,47 +43,47 @@
   {/if}
 {/block}
 
-{block name='order_message_form'}
-  <section class="order-message-form box col-12">
-    <form action="{$urls.pages.order_detail}" method="post">
+{*{block name='order_message_form'}*}
+{*  <section class="order-message-form box col-12">*}
+{*    <form action="{$urls.pages.order_detail}" method="post">*}
 
-      <header>
-        <h4 class="h4">{l s='Add a message' d='Shop.Theme.Customeraccount'}</h4>
-        <p>{l s='If you would like to add a comment about your order, please write it in the field below.' d='Shop.Theme.Customeraccount'}</p>
-      </header>
+{*      <header>*}
+{*        <h4 class="h4">{l s='Add a message' d='Shop.Theme.Customeraccount'}</h4>*}
+{*        <p>{l s='If you would like to add a comment about your order, please write it in the field below.' d='Shop.Theme.Customeraccount'}</p>*}
+{*      </header>*}
 
-      <section class="form-fields">
+{*      <section class="form-fields">*}
 
-        <div class="form-group row">
-          <label class="col-md-2 form-control-label">{l s='Product' d='Shop.Forms.Labels'}</label>
-          <div class="col-md-10">
-            <select name="id_product" class="form-control form-control-select">
-              <option value="0">{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
-              {foreach from=$order.products item=product}
-                <option value="{$product.id_product}">
-                  {AttributeGroup::stripSawCutModuleAttributeGroupName($product.name, Context::getContext()->cookie->id_lang)}
-                </option>
-              {/foreach}
-            </select>
-          </div>
-        </div>
+{*        <div class="form-group row">*}
+{*          <label class="col-md-2 form-control-label">{l s='Product' d='Shop.Forms.Labels'}</label>*}
+{*          <div class="col-md-10">*}
+{*            <select name="id_product" class="form-control form-control-select">*}
+{*              <option value="0">{l s='-- please choose --' d='Shop.Forms.Labels'}</option>*}
+{*              {foreach from=$order.products item=product}*}
+{*                <option value="{$product.id_product}">*}
+{*                  {AttributeGroup::stripSawCutModuleAttributeGroupName($product.name, Context::getContext()->cookie->id_lang)}*}
+{*                </option>*}
+{*              {/foreach}*}
+{*            </select>*}
+{*          </div>*}
+{*        </div>*}
 
-        <div class="form-group row">
-          <label class="col-md-2 form-control-label">Uw bericht</label>
-          <div class="col-md-10">
-            <textarea rows="3" name="msgText" class="form-control"></textarea>
-          </div>
-        </div>
+{*        <div class="form-group row">*}
+{*          <label class="col-md-2 form-control-label">Uw bericht</label>*}
+{*          <div class="col-md-10">*}
+{*            <textarea rows="3" name="msgText" class="form-control"></textarea>*}
+{*          </div>*}
+{*        </div>*}
 
-      </section>
+{*      </section>*}
 
-      <footer class="form-footer text-sm-center">
-        <input type="hidden" name="id_order" value="{$order.details.id}">
-        <button type="submit" name="submitMessage" class="btn btn-primary form-control-submit w-100">
-          {l s='Send' d='Shop.Theme.Actions'}
-        </button>
-      </footer>
+{*      <footer class="form-footer text-sm-center">*}
+{*        <input type="hidden" name="id_order" value="{$order.details.id}">*}
+{*        <button type="submit" name="submitMessage" class="btn btn-primary form-control-submit w-100">*}
+{*          {l s='Send' d='Shop.Theme.Actions'}*}
+{*        </button>*}
+{*      </footer>*}
 
-    </form>
-  </section>
-{/block}
+{*    </form>*}
+{*  </section>*}
+{*{/block}*}

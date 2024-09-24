@@ -84,9 +84,9 @@
       <h4 class="col-12 h4">{l s='Follow your order\'s status step-by-step' d='Shop.Theme.Customeraccount'}</h4>
       <div class="table-responsive w-100">
 
-        <table class="table table-striped d-none d-sm-block d-md-block d-lg-block w-100">
-          <thead class="w-100">
-            <tr class="w-100">
+        <table class="table table-striped d-none d-sm-block d-md-block d-lg-block col-12 p-0">
+          <thead>
+            <tr>
               <th class="col-6">{l s='Date' d='Shop.Theme.Global'}</th>
               <th class="col-6">{l s='Status' d='Shop.Theme.Global'}</th>
             </tr>

@@ -34,7 +34,7 @@
       {if $field.name == 'company'}
         col-12 col-sm-12
       {elseif $field.name == 'alias'}
-        col-12 col-sm-12
+        d-none
       {elseif $field.name == 'lastname'}
         col-12 col-sm-6
       {elseif $field.name == 'firstname'}

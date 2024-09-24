@@ -69,11 +69,7 @@
         {elseif $field.name == 'house_number'}
           {"Nr" nofilter}
         {elseif $field.name == 'house_number_extension'}
-          {if $countryId == 13}
             {"Toev." nofilter}
-          {else}
-            {"Pand" nofilter}
-          {/if}
         {else}
           {$field.label nofilter}
         {/if}

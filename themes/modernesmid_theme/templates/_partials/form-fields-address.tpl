@@ -44,21 +44,21 @@
       {elseif $field.name == 'address1'}
         col-12 col-sm-12
       {elseif $field.name == 'house_number'}
-        col-8 col-sm-2 pr-0
+        col-8 col-sm-3 pr-0
       {elseif $field.name == 'house_number_extension'}
-        col-4 col-sm-2 pl-1
+        col-4 col-sm-3 pl-1
       {elseif $field.name == 'postcode'}
-        col-12 col-sm-4
+        col-12 col-sm-6
       {elseif $field.name == 'city'}
         col-12
       {elseif $field.name == 'id_country'}
-        col-12 col-xs-4 col-sm-4 col-md-4
+        col-12
       {elseif $field.name == 'other'}
         col-12 col-sm-12
       {elseif $field.name == 'phone'}
-        col-12 col-sm-6
+        col-12
       {elseif $field.name == 'phone_mobile'}
-        col-12 col-sm-6
+        col-12
       {/if}
 
   {if !empty($field.errors)}has-error{/if}">

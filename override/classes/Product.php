@@ -78,6 +78,8 @@ class Product extends ProductCore {
 
 
         $context = Context::getContext();
+        $result['out_of_stock'] = StockAvailable::outOfStock((int)$result['id_product']);
+
         $cartRules = $context->cart->getOrderedCartRulesIds();
 
         $prio = 50;
@@ -184,6 +186,9 @@ class Product extends ProductCore {
                 }
             }
         }
+
+
+
 
         return $result;
     }
@@ -349,7 +354,7 @@ class Product extends ProductCore {
             $row['price_tax_inc'] = Product::getPriceStatic($row['id_product'], true, null, 2);
             $row['price_tax_exc'] = Product::getPriceStatic($row['id_product'], false, null, 2);
             $row['quantity'] = (int)StockAvailable::getQuantityAvailableByProduct($row['id_product'], null);
-            $row['out_of_stock'] = (int)StockAvailable::outOfStock($row['id_product'], null);
+            $row['out_of_stock'] = (int)StockAvailable::outOfStock((int)$row['id_product']);
             $row['packedProducts'] = Pack::getItems($row['id_product'], $id_lang);
 
             foreach ($row['packedProducts'] as $key => $pack){
@@ -373,8 +378,7 @@ class Product extends ProductCore {
         $query = 'SELECT p.id_product FROM `' . _DB_PREFIX_ . 'product` as `p`
                     '.Shop::addSqlAssociation('product', 'p').'
                     LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` AS `pl` ON `p`.`id_product` = `pl`.`id_product`
-                    LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-                    LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (s.`id_supplier` = p.`id_supplier`)
+
                     WHERE `p`.`id_oi_offer` = ' . $id_oi_offer . '
                     AND `pl`.`id_lang` = ' . $id_lang . ' GROUP BY `p`.`id_product`;';
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);

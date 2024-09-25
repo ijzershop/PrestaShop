@@ -346,6 +346,8 @@ class PackCore extends Product
                 if ($nbPackAvailableForItem < $packQuantity) {
                     $packQuantity = $nbPackAvailableForItem;
                 }
+
+
             }
         } elseif (!empty($cart)) {
             $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);

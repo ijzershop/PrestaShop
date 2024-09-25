@@ -60,7 +60,8 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
         $products = $this->findProducts($term);
 
         foreach ($products as $key => $product) {
-            if(Product::isAvailableWhenOutOfStock($product['out_of_stock'])){
+            $product['out_of_stock'] = StockAvailable::outOfStock($product['id']);
+            if((int)$product['out_of_stock'] > 0){
                 $qty = '∞';
             } else {
                 $qty = Product::getQuantity($product['id']);

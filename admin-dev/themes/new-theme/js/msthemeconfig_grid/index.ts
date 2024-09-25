@@ -65,8 +65,7 @@ $(() => {
     // * - O Deny orders
     // * - 1 Allow orders
     // * - 2 Use global setting
-
-      if(item.out_of_stock == '0' && Math.sign(item.quantity) > 0){
+      if(parseInt(item.out_of_stock) === 0){
         name = item.category + ' - ' + item.name + ' || ' + item.quantity + ' stuk(s)';
       } else {
         name = item.category + ' - ' + item.name + ' || ∞ stuk(s)';
@@ -311,11 +310,11 @@ $(() => {
           let list = [];
           for (let i = 0; i < data.items.length; i++){
             let item = data.items[i];
-            console.log(item);
-            if(item.out_of_stock == '0' && Math.sign(item.quantity) > 0){
+
+            if(parseInt(item.out_of_stock) === 0){
               item.text = item.text + ' || ' + item.quantity + ' stuk(s)';
             } else {
-              item.text = item.text + ' || ∞ stuk(s)';
+              item.text = item.text + ' || ' + item.quantity + ' stuk(s)';
             }
 
             list.push(item);

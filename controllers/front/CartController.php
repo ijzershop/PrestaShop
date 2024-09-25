@@ -612,6 +612,7 @@ class CartControllerCore extends FrontController
          * We check if this product is out-of-stock.
          */
 
+
         $availableProductQuantity = Product::getQuantity($this->id_product, $this->id_product_attribute);
         if ($availableProductQuantity < $qtyToCheck) {
             return true;

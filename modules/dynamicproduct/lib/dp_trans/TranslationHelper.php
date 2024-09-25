@@ -426,7 +426,7 @@ class TranslationHelper
         $source = 'TranslationHelper';
 
         return [
-            // start front -1194575082
+            // start front 1724529016
             '2453' => $this->module->l('MB', $source),
             '77124' => $this->module->l('Max', $source),
             '77362' => $this->module->l('Min', $source),
@@ -440,11 +440,11 @@ class TranslationHelper
             '80208647' => $this->module->l('Steps', $source),
             '234648590' => $this->module->l('Click to expand/collapse this section', $source),
             '361237766' =>
-                $this->module->l('You can disable it in the main configuration page of the module', $source),
+                 $this->module->l('You can disable it in the main configuration page of the module', $source),
             '414535005' => $this->module->l('Max size', $source),
             '437675785' => $this->module->l('Max number of files', $source),
             '573578838' =>
-                $this->module->l('This product is no longer in stock with the selected values, please select smaller values.', $source),
+                 $this->module->l('This product is no longer in stock with the selected values, please select smaller values.', $source),
             '741835352' => $this->module->l('Min width', $source),
             '936937052' => $this->module->l('Import files', $source),
             '1089064661' => $this->module->l('Min height', $source),
@@ -454,6 +454,7 @@ class TranslationHelper
             '1439070864' => $this->module->l('Save customization', $source),
             '1440457123' => $this->module->l('Import an image', $source),
             '1620385193' => $this->module->l('Delete this file', $source),
+            '1721902021' => $this->module->l('Please select a country...', $source),
             '1814419550' => $this->module->l('Drag and drop file to upload', $source),
             '1949421469' => $this->module->l('Only _max_files_ file(s) can be uploaded', $source),
             '1964022964' => $this->module->l('You can save this customization without adding it to cart.', $source),
@@ -466,7 +467,7 @@ class TranslationHelper
             '-512469298' => $this->module->l('Accepted file types', $source),
             '-1213154046' => $this->module->l('Unknown step', $source),
             '-1310964303' =>
-                $this->module->l('An error prevented the dynamic product module from displaying the fields', $source),
+                 $this->module->l('An error prevented the dynamic product module from displaying the fields', $source),
             '-1893379118' => $this->module->l('Loading...', $source),
             '-116694267' => $this->module->l('Dynamic Product: Debug mode enabled', $source),
             '-979257952' => $this->module->l('Please pick a valid HEX color (#FFFFFF)', $source),
@@ -485,7 +486,7 @@ class TranslationHelper
             '-119700608' => $this->module->l('The link was copied to your clipboard', $source),
             '-1985356111' => $this->module->l('This message is only displayed to Admins', $source),
             '-2041532723' =>
-                $this->module->l('The customizations you save as an Admin can be viewed by anyone', $source),
+                 $this->module->l('The customizations you save as an Admin can be viewed by anyone', $source),
             '-1272271923' => $this->module->l('Save in my profile', $source),
             '-2121343663' => $this->module->l('Get customization link', $source),
             '-843746907' => $this->module->l('Copy link', $source),

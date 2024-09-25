@@ -32,6 +32,7 @@ if (!defined('_PS_VERSION_')) {
 use DynamicProduct\classes\models\DynamicInputField;
 use DynamicProduct\classes\models\input_fields\CheckboxInputField;
 use DynamicProduct\classes\models\input_fields\ColorPickerInputField;
+use DynamicProduct\classes\models\input_fields\CountryInputField;
 use DynamicProduct\classes\models\input_fields\CustomFieldInputField;
 use DynamicProduct\classes\models\input_fields\DateInputField;
 use DynamicProduct\classes\models\input_fields\DividerInputField;
@@ -83,6 +84,7 @@ class InputFieldFactory
         _DP_DIVIDER_ => DividerInputField::class,
         _DP_CUSTOM_ => CustomFieldInputField::class,
         _DP_PREVIEW_ => PreviewInputField::class,
+        _DP_COUNTRY_ => CountryInputField::class,
     ];
 
     public function __construct($module, $context)

@@ -2,7 +2,7 @@
 <module>
     <name>dynamicproduct</name>
     <displayName><![CDATA[Dynamisch product]]></displayName>
-    <version><![CDATA[3.17.10]]></version>
+    <version><![CDATA[3.21.0]]></version>
     <description><![CDATA[Laat uw klanten hun bestellingen personaliseren door de producten aan te passen]]></description>
     <author><![CDATA[Tuni-Soft]]></author>
     <tab><![CDATA[front_office_features]]></tab>

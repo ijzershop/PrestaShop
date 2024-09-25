@@ -406,13 +406,15 @@ class DynamicProvider
     public function getCurrentProductID(): int
     {
         $id_product = (int)\Tools::getValue('id_product');
+
         if ($id_product) {
             return $id_product;
         }
-
         global $kernel;
+
         $requestStack = $kernel->getContainer()->get('request_stack');
         $request = $requestStack->getCurrentRequest();
+
         if ($request) {
             return (int)$request->get('id');
         }

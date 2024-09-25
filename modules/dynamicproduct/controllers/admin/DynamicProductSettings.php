@@ -167,7 +167,7 @@ class DynamicProductSettingsController extends ModuleAdminController
             DynamicProductConfigLink::createLink($id_target_product, $id_source_product);
         } else {
             DynamicProductConfigLink::removeLink($id_target_product);
-            $this->module->handler->copyConfig($id_target_product, $id_source_product, false, $options, $clear);
+            $this->module->handler->copyConfig($id_target_product, $id_source_product, false, $options, $clear, $grids_new);
         }
         $this->respond();
     }

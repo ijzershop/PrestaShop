@@ -40,11 +40,11 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
     protected function processUploadImage()
     {
         $source = basename(__FILE__, '.php');
-        $id_field = (int) Tools::getValue('id_field');
+        $id_field = (int)Tools::getValue('id_field');
 
         $field = new DynamicField($id_field);
 
-        if ((int) $field->type !== _DP_IMAGE_) {
+        if ((int)$field->type !== _DP_IMAGE_) {
             $this->respond([
                 'error' => true,
                 'message' => $this->module->l('The upload could not be completed', $source),
@@ -64,7 +64,7 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
         }
 
         $uploader->setName('files');
-        $uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg']);
+        $uploader->setAcceptTypes(['jpeg', 'webp', 'png', 'jpg']);
         $files = $uploader->process();
 
         if (!count($files)) {
@@ -102,7 +102,7 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
 
             $info = getimagesize($save_path);
 
-            if ($options->min_width && (int) $info[0] < $options->min_width) {
+            if ($options->min_width && (int)$info[0] < $options->min_width) {
                 $this->respond([
                     'error' => true,
                     'message' => $this->module->l('The minimum required width is', $source)
@@ -113,7 +113,7 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
                 unlink($save_path);
             }
 
-            if ($options->min_height && (int) $info[1] < $options->min_height) {
+            if ($options->min_height && (int)$info[1] < $options->min_height) {
                 $this->respond([
                     'error' => true,
                     'message' => $this->module->l('The minimum required height is', $source)
@@ -164,11 +164,11 @@ class DynamicProductUploaderModuleFrontController extends DynamicFrontController
     protected function processUploadFile()
     {
         $source = basename(__FILE__, '.php');
-        $id_field = (int) Tools::getValue('id_field');
+        $id_field = (int)Tools::getValue('id_field');
 
         $field = new DynamicField($id_field);
 
-        if ((int) $field->type !== _DP_FILE_) {
+        if ((int)$field->type !== _DP_FILE_) {
             $this->respond([
                 'error' => true,
                 'message' => $this->module->l('The upload could not be completed', $source),

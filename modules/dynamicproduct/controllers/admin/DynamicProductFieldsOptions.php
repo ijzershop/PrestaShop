@@ -72,17 +72,17 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
-        $this->id_product = (int) Tools::getValue('id_product');
-        $this->id_field = (int) Tools::getValue('id_field');
-        $this->id_option = (int) Tools::getValue('id_option');
-        $this->id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+        $this->id_product = (int)Tools::getValue('id_product');
+        $this->id_field = (int)Tools::getValue('id_field');
+        $this->id_option = (int)Tools::getValue('id_option');
+        $this->id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
     }
 
     public function postProcess()
     {
         $source = basename(__FILE__, '.php');
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
-        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
+        if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted, false)) {
             exit(json_encode([
                 'error' => true,
                 'message' => $this->module->l('This product is for viewing only!', $source),
@@ -115,7 +115,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
 
     private function processSaveOption()
     {
-        $id_option = (int) Tools::getValue('id');
+        $id_option = (int)Tools::getValue('id');
         /** @var DynamicDropdownOption $dynamic_option */
         $dynamic_option = DynamicFieldFactory::getOptionInstance($this->id_field, $id_option);
         $dynamic_option->saveFromPost();
@@ -127,7 +127,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
             Db::getInstance()->update(
                 $table,
                 ['is_default' => 0],
-                'id_field = ' . (int) $this->id_field .
+                'id_field = ' . (int)$this->id_field .
                 ' AND `' . bqSQL($primary) . '` != ' . $id_option
             );
         }
@@ -155,7 +155,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
         if (is_array($order)) {
             foreach ($order as $position => $id_option) {
                 $option = DynamicFieldFactory::getOptionInstance($this->id_field, $id_option);
-                $option->position = (int) $position;
+                $option->position = (int)$position;
                 $option->save();
             }
         }
@@ -181,7 +181,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
 
         $uploader = new Uploader();
         $uploader->setName('file');
-        $uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg']);
+        $uploader->setAcceptTypes(['jpeg', 'webp', 'png', 'jpg']);
         $file = $uploader->process();
         $upload = $file[0];
 
@@ -224,7 +224,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
 
         $uploader = new Uploader();
         $uploader->setName('file');
-        $uploader->setAcceptTypes(['jpeg', 'png', 'jpg']);
+        $uploader->setAcceptTypes(['webp', 'jpeg', 'png', 'jpg']);
         $file = $uploader->process();
         $upload = $file[0];
 
@@ -259,7 +259,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
     private function processImportImages()
     {
         $dynamic_field = new DynamicField($this->id_field);
-        $type = (int) $dynamic_field->type;
+        $type = (int)$dynamic_field->type;
         $image_folder = self::$image_folders[$type];
         $img_dir = $this->module->provider->getDataDir('images/' . $image_folder);
 
@@ -267,7 +267,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
 
         $uploader = new Uploader();
         $uploader->setName('files');
-        $uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg']);
+        $uploader->setAcceptTypes(['jpeg', 'webp', 'png', 'jpg']);
         $files = $uploader->process();
 
         foreach ($files as $file) {
@@ -309,7 +309,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
     private function processImportPreviews()
     {
         $dynamic_field = new DynamicField($this->id_field);
-        $type = (int) $dynamic_field->type;
+        $type = (int)$dynamic_field->type;
         $image_folder = self::$image_folders[$type];
         $img_dir = $this->module->provider->getDataDir('images/' . $image_folder);
 
@@ -317,7 +317,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
 
         $uploader = new Uploader();
         $uploader->setName('files');
-        $uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg']);
+        $uploader->setAcceptTypes(['jpeg', 'webp', 'png', 'jpg']);
         $files = $uploader->process();
 
         foreach ($files as $file) {
@@ -412,7 +412,7 @@ class DynamicProductFieldsOptionsController extends ModuleAdminController
     public function respond($data = [], $success = 1)
     {
         /** @noinspection CallableParameterUseCaseInTypeContextInspection */
-        $success = $success && (int) !array_key_exists('error', $data);
+        $success = $success && (int)!array_key_exists('error', $data);
         $arr = [
             'success' => $success,
         ];

@@ -29,11 +29,17 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use Configuration;
+use Db;
+use DbQuery;
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\factory\InputFieldFactory;
 use DynamicProduct\classes\helpers\DynamicCalculatorHelper;
 use DynamicProduct\classes\helpers\DynamicFieldsHelper;
 use DynamicProduct\classes\helpers\FieldsVisibilityHelper;
+use PrestaShopDatabaseException;
+use Tools;
+use Validate;
 
 class DynamicInputField extends DynamicObject
 {
@@ -53,6 +59,8 @@ class DynamicInputField extends DynamicObject
 
     public $data;
     public $data_obj;
+
+    public $position;
 
     public $value_formatted;
     public $display_value;
@@ -107,6 +115,7 @@ class DynamicInputField extends DynamicObject
             'type' => [],
             'visible' => [],
             'data' => [],
+            'position' => [],
         ],
     ];
 
@@ -123,6 +132,7 @@ class DynamicInputField extends DynamicObject
             'type' => ['type' => self::TYPE_INT],
             'visible' => ['type' => self::TYPE_BOOL],
             'data' => ['type' => self::TYPE_STRING],
+            'position' => ['type' => self::TYPE_INT],
         ],
     ];
 
@@ -151,18 +161,20 @@ class DynamicInputField extends DynamicObject
      * @param $id_lang
      *
      * @return DynamicInputField[]
+     * @throws PrestaShopDatabaseException
      */
     public static function getByIdInput($id_input, $id_lang = null)
     {
         $input_fields = [];
-        $sql = new \DbQuery();
+        $sql = new DbQuery();
         $sql->from(self::$definition['table']);
         $sql->where('id_input = ' . (int)$id_input);
-        $rows = \Db::getInstance()->executeS($sql, false, false);
-        while ($row = \Db::getInstance()->nextRow($rows)) {
+        $sql->orderBy('position ASC');
+        $rows = Db::getInstance()->executeS($sql, false, false);
+        while ($row = Db::getInstance()->nextRow($rows)) {
             $id_input_field = $row['id_input_field'];
             $dynamic_input_field = InputFieldFactory::create((int)$row['type'], (int)$id_input_field, $id_lang);
-            if (\Validate::isLoadedObject($dynamic_input_field)) {
+            if (Validate::isLoadedObject($dynamic_input_field)) {
                 $input_fields[$dynamic_input_field->name] = $dynamic_input_field;
             }
         }
@@ -244,12 +256,10 @@ class DynamicInputField extends DynamicObject
                     $this->secondary_value = $option['secondary_value'];
                     break;
                 }
-            } else {
-                if ($option['value'] === $this->value) {
-                    $this->selected_options = [$option['id']];
-                    $this->secondary_value = $option['secondary_value'];
-                    break;
-                }
+            } elseif ($option['value'] === $this->value) {
+                $this->selected_options = [$option['id']];
+                $this->secondary_value = $option['secondary_value'];
+                break;
             }
         }
     }
@@ -408,8 +418,8 @@ class DynamicInputField extends DynamicObject
         foreach ($input_fields as $input_field) {
             $value = str_replace(
                 [
-                    "[[{$input_field->name}]]",
-                    "[{$input_field->name}]",
+                    "[[$input_field->name]]",
+                    "[$input_field->name]",
                     "{{$input_field->name}}",
                 ],
                 [
@@ -440,8 +450,8 @@ class DynamicInputField extends DynamicObject
         foreach ($input_fields as $input_field) {
             $value = str_replace(
                 [
-                    "[[{$input_field->name}]]",
-                    "[{$input_field->name}]",
+                    "[[$input_field->name]]",
+                    "[$input_field->name]",
                     "{{$input_field->name}}",
                 ],
                 [
@@ -498,7 +508,7 @@ class DynamicInputField extends DynamicObject
             return $this->label[$id_lang];
         }
 
-        $id_default_lang = (int)\Configuration::get('PS_LANG_DEFAULT');
+        $id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
         if (isset($this->label[$id_default_lang])) {
             return $this->label[$id_default_lang];
         }
@@ -802,9 +812,9 @@ class DynamicInputField extends DynamicObject
 
         if ($input_field->name == 'quantity'
             && $changed['value'] != 'quantity'
-            && \Tools::getIsset('quantity')
+            && Tools::getIsset('quantity')
         ) {
-            $input_field->value = \Tools::getValue('quantity', 1);
+            $input_field->value = Tools::getValue('quantity', 1);
         }
 
         return $input_field;

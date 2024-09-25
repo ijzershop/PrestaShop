@@ -185,7 +185,7 @@ class DynamicProductFieldsController extends ModuleAdminController
 
         $uploader = new Uploader();
         $uploader->setName('file');
-        $uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg']);
+        $uploader->setAcceptTypes(['jpeg', 'webp', 'png', 'jpg']);
         $file = $uploader->process();
         $upload = $file[0];
 

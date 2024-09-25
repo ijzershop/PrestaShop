@@ -111,8 +111,7 @@ class DynamicEquation extends DynamicObject
         $sql->where('id_formula = ' . (int)$id_formula);
         $id_equation = \Db::getInstance()->getValue($sql, false);
 
-        return new DynamicEquation($id_equation);
-
+        return new self($id_equation);
     }
 
     /**
@@ -335,7 +334,7 @@ class DynamicEquation extends DynamicObject
 
     public static function containsQuantityField($formula)
     {
-        return strpos((string)$formula, '[quantity]') !== false;
+        return strpos($formula, '[quantity]') !== false;
     }
 
     /**
@@ -598,6 +597,23 @@ class DynamicEquation extends DynamicObject
         }
         if (file_exists($allocator)) {
             include $allocator;
+        }
+
+        /** @var DynamicInputField[] $custom_fields */
+        $custom_fields = array_filter($input_fields, function ($input_field) {
+            return $input_field->type === _DP_CUSTOM_;
+        });
+
+        foreach ($custom_fields as $input_field) {
+            // check if $name can be used as a PHP variable name
+            $script_name = $input_field->getDynamicField()['settings']['script_name'];
+            if (!$script_name) {
+                $script_name = $input_field->name;
+            }
+            $custom_allocations = $module->provider->getDataFile("scripts/{$script_name}/allocations.php");
+            if (file_exists($custom_allocations)) {
+                include $custom_allocations;
+            }
         }
 
         foreach ($input_fields as $input_field) {
@@ -882,10 +898,6 @@ class DynamicEquation extends DynamicObject
         $global_declarations = [];
         $product_declarations = [];
 
-        if (!file_exists($declaration) && !file_exists($declaration_global)) {
-            return $declarations;
-        }
-
         if (file_exists($declaration_global)) {
             include $declaration_global;
         }
@@ -902,7 +914,31 @@ class DynamicEquation extends DynamicObject
             $product_declarations = array_merge([], $declarations);
         }
 
-        return array_merge($global_declarations, $product_declarations);
+        $fields = DynamicField::getFieldRowsByProduct($id_product);
+
+        /** @var DynamicInputField[] $custom_fields */
+        $custom_fields = array_filter($fields, function ($input_field) {
+            return $input_field['type'] === _DP_CUSTOM_;
+        });
+
+        $custom_declarations = [];
+        foreach ($custom_fields as $field) {
+            // check if $name can be used as a PHP variable name
+            $script_name = $field['settings']['script_name'];
+            if (!$script_name) {
+                $script_name = $field['name'];
+            }
+            $declarations_file = $module->provider->getDataFile("scripts/{$script_name}/declarations.php");
+            if (file_exists($declarations_file)) {
+                include $declarations_file;
+            }
+
+            if (is_array($declarations)) {
+                $custom_declarations = array_merge($custom_declarations, $declarations);
+            }
+        }
+
+        return array_merge($global_declarations, $product_declarations, $custom_declarations);
     }
 
     /**

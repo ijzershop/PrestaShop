@@ -209,6 +209,7 @@ CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_input_field`
     `type`            int(11)      NOT NULL,
     `visible`         tinyint(1)   NOT NULL DEFAULT 1,
     `data`            TEXT         NOT NULL,
+    `position`        int(11)      NOT NULL,
     PRIMARY KEY (`id_input_field`)
 ) ENGINE = InnoDb
   DEFAULT CHARSET = utf8

@@ -80,7 +80,7 @@ class DynamicHandler
         $this->context = $context;
     }
 
-    public function copyConfig($id_product_new, $id_product_old, $duplicating_product = false, $copy_options = [], $clear = false)
+    public function copyConfig($id_product_new, $id_product_old, $duplicating_product = false, $copy_options = [], $clear = false, $grids_new1 = [])
     {
         $default_options = [
             'steps' => true,
@@ -496,7 +496,8 @@ class DynamicHandler
             foreach ($calculation_items as $calculation_item) {
                 $calculation_item->id_product = $id_product_new;
                 $item_id_new = $calculation_item->id_item;
-                if ($calculation_item->id_item) {
+                $is_one_step_item = $calculation_item->id_item === 0;
+                if (!$is_one_step_item) {
                     switch ($calculation_item->type) {
                         case DynamicCalculationItem::CONDITION_ITEM:
                             $item_id_new = $conditions_new[$calculation_item->id_item] ?? 0;
@@ -508,12 +509,12 @@ class DynamicHandler
                             $item_id_new = $intervals_new[$calculation_item->id_item] ?? 0;
                             break;
                         case DynamicCalculationItem::GRID_ITEM:
-                            $item_id_new = $grids_new[$calculation_item->id_item] ?? 0;
+                            $item_id_new = $grids_new1[$calculation_item->id_item] ?? 0;
                             break;
                     }
+                    $calculation_item->id_item = $item_id_new;
                 }
-                $calculation_item->id_item = $item_id_new;
-                if ($item_id_new) {
+                if ($item_id_new || $is_one_step_item) {
                     $calculation_item->add();
                 }
             }

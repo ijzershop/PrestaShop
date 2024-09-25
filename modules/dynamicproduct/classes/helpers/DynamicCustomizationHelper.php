@@ -29,6 +29,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use Db;
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\models\DynamicEquation;
 use DynamicProduct\classes\models\DynamicInput;
@@ -276,8 +277,35 @@ class DynamicCustomizationHelper
      */
     public function saveInputFields($input_fields, $id_input)
     {
+        $count = count($input_fields);
         foreach ($input_fields as $input_field) {
             $input_field->id = null;
+
+            $field = $input_field->getDynamicField();
+            $field_position = (int)$field['position'];
+            $group_position = 0;
+            $group_step = 0;
+            $step_position = 0;
+            if ((int)$field['id_group']) {
+                $group_position = (int)Db::getInstance()->getValue(
+                    'SELECT position FROM ' . _DB_PREFIX_ . 'dynamicproduct_product_field_group WHERE id_product_field_group = ' . (int)$field['id_group']
+                );
+                $group_step = (int)Db::getInstance()->getValue(
+                    'SELECT id_step FROM ' . _DB_PREFIX_ . 'dynamicproduct_product_field_group WHERE id_product_field_group = ' . (int)$field['id_group']
+                );
+            }
+            if ((int)$field['id_step']) {
+                $step_position = (int)Db::getInstance()->getValue(
+                    'SELECT position FROM ' . _DB_PREFIX_ . 'dynamicproduct_product_step WHERE id_product_step = ' . (int)$field['id_step']
+                );
+            }
+            if ($group_step) {
+                $step_position = (int)Db::getInstance()->getValue(
+                    'SELECT position FROM ' . _DB_PREFIX_ . 'dynamicproduct_product_step WHERE id_product_step = ' . (int)$group_step
+                );
+            }
+
+            $input_field->position = $field_position + $group_position * 100 + $step_position * 10000;
             $input_field->id_input = (int)$id_input;
             if ($input_field->data && !is_string($input_field->data)) {
                 $input_field->data = json_encode($input_field->data);

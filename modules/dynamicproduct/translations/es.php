@@ -53,6 +53,7 @@ $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_c0806f1759022a926fe0bd86c31
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_e20cbb947afcf84cf58de1358ee1068d'] = 'Mensaje de error';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_d5255642a07f3ac10f6962c53fe55aca'] = 'Campo personalizado';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_b4cf1260b1d2b4218307824de59d5d46'] = 'Campo de vista previa';
+$_MODULE['<{dynamicproduct}prestashop>dynamicproduct_59716c97497eb9694541f7c3d37b1a4d'] = 'País';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_da22c93ccb398c72070f4000cc7b59a1'] = 'Personalización';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_01b9e63c9fbfec3fe4863e79d46956fc'] = 'Personalización del producto';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_e49e097d80a598c0fc62bfcb47f3e4fa'] = 'Este producto agrega el costo total de personalizaciones a su carrito';
@@ -548,6 +549,7 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_2593c7ce3ff937293feb1e61
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_0af5ebd5f6aa6ab6046f14d08236e61a'] = 'Guardar personalización';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_d93acf4de6a6adb671ae0d5a5e367741'] = 'Importar una imagen';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_a1997856e58a07d80e27aaf4bc7eaf88'] = 'Eliminar este archivo';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_61f250d4a9d8c24ee92aaaf174ef11b1'] = 'Seleccione un país...';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_da518aac228e8c5d9723f24279529d39'] = 'Arrastre y suelte el archivo para cargar';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_a8c3285e7ade135d5852db72e8d2a467'] = 'Solo se pueden cargar _max_files_ archivo(s)';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_94dfe893de2f24c753d4152bfe04c00a'] = 'Puede guardar esta personalización sin agregarla al carrito.';

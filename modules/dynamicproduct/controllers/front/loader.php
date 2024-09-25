@@ -43,11 +43,11 @@ class DynamicProductLoaderModuleFrontController extends DynamicFrontController
     {
         $source = basename(__FILE__, '.php');
 
-        $is_hot_mode = (int) Tools::getValue('is_hot_mode');
-        $id_product = (int) Tools::getValue('id_product');
-        $id_source_product = (int) Tools::getValue('id_source_product');
-        $id_attribute = (int) Tools::getValue('id_attribute');
-        $is_admin_edit = (int) Tools::getValue('is_admin_edit');
+        $is_hot_mode = (int)Tools::getValue('is_hot_mode');
+        $id_product = (int)Tools::getValue('id_product');
+        $id_source_product = (int)Tools::getValue('id_source_product');
+        $id_attribute = (int)Tools::getValue('id_attribute');
+        $is_admin_edit = (int)Tools::getValue('is_admin_edit');
         $url_values = Tools::getValue('url_values', []);
 
         $product_config = DynamicConfig::getByProduct($id_product);
@@ -128,6 +128,7 @@ class DynamicProductLoaderModuleFrontController extends DynamicFrontController
                 'has_groups' => $has_groups,
                 'steps' => DynamicProductStep::getRowsByProductWithLabels($id_product, $id_lang),
                 'field_types' => $this->module->field_types,
+                'countries' => $this->module->provider->getCountries($id_source_product),
                 'calculation' => $calculation,
                 'error' => $error,
                 'id_cart' => Tools::getValue('dp_cart', 0),

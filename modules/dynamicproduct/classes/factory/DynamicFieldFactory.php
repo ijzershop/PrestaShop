@@ -32,6 +32,7 @@ if (!defined('_PS_VERSION_')) {
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\models\dynamic_fields\CheckboxField;
 use DynamicProduct\classes\models\dynamic_fields\ColorPickerField;
+use DynamicProduct\classes\models\dynamic_fields\CountryField;
 use DynamicProduct\classes\models\dynamic_fields\CustomField;
 use DynamicProduct\classes\models\dynamic_fields\DateField;
 use DynamicProduct\classes\models\dynamic_fields\DropDownField;
@@ -82,13 +83,15 @@ class DynamicFieldFactory
         _DP_ERROR_ => ErrorField::class,
         _DP_CUSTOM_ => CustomField::class,
         _DP_PREVIEW_ => PreviewField::class,
+        _DP_COUNTRY_ => CountryField::class,
     ];
 
     private static $option_types = [
-        8 => DynamicDropdownOption::class,
-        12 => DynamicThumbnailsOption::class,
-        16 => DynamicRadioOption::class,
-        22 => DynamicPreviewOption::class,
+        _DP_DROPDOWN_ => DynamicDropdownOption::class,
+        _DP_THUMBNAILS_ => DynamicThumbnailsOption::class,
+        _DP_RADIO_ => DynamicRadioOption::class,
+        _DP_PREVIEW_ => DynamicPreviewOption::class,
+        _DP_COUNTRY_ => DynamicDropdownOption::class,
     ];
 
     public function __construct($module, $context)
@@ -123,9 +126,9 @@ class DynamicFieldFactory
         $sql = new \DbQuery();
         $sql->select('type');
         $sql->from($module->name . '_field');
-        $sql->where('id_field = ' . (int) $id_field);
+        $sql->where('id_field = ' . (int)$id_field);
 
-        return (int) \Db::getInstance()->getValue($sql);
+        return (int)\Db::getInstance()->getValue($sql);
     }
 
     /**
@@ -136,7 +139,7 @@ class DynamicFieldFactory
     public static function getOptionInstance($id_field, $id_option = 0)
     {
         $dynamic_field = new DynamicField($id_field);
-        $type = (int) $dynamic_field->type;
+        $type = (int)$dynamic_field->type;
         $class_name = self::$option_types[$type];
 
         return new $class_name($id_option);

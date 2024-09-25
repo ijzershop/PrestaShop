@@ -837,14 +837,14 @@ $(function () {
     let vData = cart.vouchers.added;
     let totalDiscount = 0;
     for (const voucher in vData) {
+
       if (withTaxSelection) {
-        totalDiscount = totalDiscount + vData[voucher].reduction_amount;
+        totalDiscount = totalDiscount + parseFloat(vData[voucher].reduction_amount);
       } else {
-        totalDiscount = totalDiscount + vData[voucher].reduction_amount_tax_excl;
+        totalDiscount = totalDiscount + parseFloat(vData[voucher].reduction_amount_tax_excl);
       }
     }
-
-    if (totalDiscount > 0) {
+    if (totalDiscount < 0) {
       $('#tr-header-cart-discounts').css('display', 'table-row').fadeIn(500);
     } else {
       $('#tr-header-cart-discounts').css('display', 'none').fadeOut(500);

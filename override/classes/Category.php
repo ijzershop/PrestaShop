@@ -106,6 +106,11 @@ class Category extends CategoryCore
         if ($checkAccess && ! $this->checkAccess($context->customer->id)) {
             return false;
         }
+        $catID = Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+
+        if((int)$this->id === (int)$catID){
+            return [];
+        }
 
         $front = in_array($context->controller->controller_type, ['front', 'modulefront']);
         $idSupplier = (int) Tools::getValue('id_supplier');

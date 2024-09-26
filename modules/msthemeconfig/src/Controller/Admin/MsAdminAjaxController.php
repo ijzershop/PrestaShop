@@ -209,8 +209,6 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             $id_product = Tools::getValue('offer-row-id');
             $id_pack_attribute = null;
             $qty = (int)Tools::getValue('offer-qty', 0);
-            $currentQty = (int)StockAvailable::getQuantityAvailableByProduct($id_product);
-            $delta = $qty-$currentQty;
 
             $pack = new Pack($id_product);
             $pack->price = (float)number_format((float)Tools::getValue('offer-price'), 6, '.', '');
@@ -238,7 +236,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             Pack::deleteItems($id_product);
 
             StockAvailable::setProductOutOfStock((int)$id_product, false);
-            StockAvailable::setQuantity((int)$id_product, (int)$id_pack_attribute, $delta);
+            StockAvailable::setQuantity((int)$id_product, (int)$id_pack_attribute, $qty);
             StockAvailable::synchronize(($id_product));
 
 
@@ -248,7 +246,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
                 $customizedValue = Tools::getValue('stock_selected_product_customization');
 
                 for ($i = 0; $i < count($ids); $i++) {
-                    $attachProduct = new Product($ids[$i]);
+//                    $attachProduct = new Product($ids[$i]);
 //                    $combinations = $attachProduct->getAttributeCombinations();
 //
 //                    $attr_names = array_column($combinations, 'attribute_name');

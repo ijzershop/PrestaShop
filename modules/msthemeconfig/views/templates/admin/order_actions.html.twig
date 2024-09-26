@@ -86,6 +86,18 @@
   </form>
 
 
+
+  {# HerVerzend Order Bevestiging Mail #}
+  <form class="order-actions-resend-order-conf">
+    <div class="input-group">
+      <button type="button" id="resendOrderMessageBtn" data-order-id="{{ order.id }}" class="btn btn-action">
+        <i class="material-icons">send</i>
+        {{ 'Mail bevestiging'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </div>
+  </form>
+
+
   {# Start add buttons to order view #}
 
   {# Start desired delivery date #}
@@ -256,6 +268,24 @@
 {% block javascripts %}
   <script type="text/javascript">
     $(document).ready(function () {
+
+      $('#resendOrderMessageBtn').on('click', function (event) {
+        event.preventDefault();
+        $.ajax({
+          type: 'GET',
+          url: 'index.php?ajax=1&controller=AdminOrders&action=resendOrderMessage&token=' + token,
+          data: {id_order: {{ orderForViewing.id }}},
+          success: function (r) {
+            r = JSON.parse(r);
+            if (r.success) {
+              $.growl({title: "Order bevestiging opnieuw verzonden naar klant!", message: r.msg});
+              window.location.reload(true);
+            } else {
+              $.growl.error({title: "Er ging wat mis bij het opnieuw verzenden van de order bevestiging!", message: r.msg});
+            }
+          }
+        });
+      });
 
 
       $('#migrateOrder').on('click', function (event) {

@@ -273,6 +273,22 @@ class AdminOrdersController extends AdminOrdersControllerCore
         }
     }
 
+    public function ajaxProcessResendOrderMessage(){
+
+        $id_order = Tools::getValue('id_order');
+        $order = new Order($id_order);
+        $result = PaymentModule::resendOrderConfirmationMailToCustomer($order);
+
+        if($result){
+            return die(json_encode(array('success'=>true,'msg'=>'Bestelling gekoppeld aan klant: '. $customer)));
+        } else {
+            return die(json_encode(array('success'=>false,'msg'=>'Koppelen van de bestelling aan klant : '. $customer. ' is niet gelukt, probeer het nogmaal')));
+        }
+
+        return die(json_encode(array('success'=>false,'msg'=>'Klant met naam: '. $customer.' en email adres: '.$email.' kon niet gevonden worden in de database')));
+
+    }
+
 
     public function ajaxProcessMigrateOrderToCustomer(){
         $email = Tools::getValue('customer_email');

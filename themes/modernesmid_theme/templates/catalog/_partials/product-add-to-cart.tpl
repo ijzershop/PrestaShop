@@ -34,7 +34,7 @@
             id="quantity_wanted_{$product.id_product}"
             data-product-id="{$product.id_product}"
             data-product-customization="{$product.id_customization}"
-            value="{$product.quantity_wanted}"
+            value="{if $product.quantity_wanted > 0}{$product.quantity_wanted}{else}{$product.minimal_quantity}{/if}"
             class="form-control {Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'class')}"
             min="{$product.minimal_quantity}"
             max="{Product::isAvailableForOrderCustom((int)$product.id_product, $product.id_product_attribute, 'max')}"

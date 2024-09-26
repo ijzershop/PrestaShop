@@ -74,7 +74,7 @@ class PaymentModule extends PaymentModuleCore
         } else {
             $reference = $order_reference;
         }
-        
+
 
         $this->currentOrderReference = $reference;
         $cart_total_paid = (float) Tools::ps_round(
@@ -670,4 +670,147 @@ class PaymentModule extends PaymentModuleCore
 
         return ['order' => $order, 'orderDetail' => $order_detail, 'mail' => $mail];
     }
+
+    public static function resendOrderConfirmationMailToCustomer($order){
+            $customer = $order->getCustomer();
+            $id_cart = Order::getCartIdStatic($order->id, $customer->id);
+            $context = Context::getContext();
+            $cart = new Cart($id_cart);
+            $language = $cart->getAssociatedLanguage();
+        if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && $customer->id) {
+            $invoice = new Address((int) $order->id_address_invoice);
+            $delivery = new Address((int) $order->id_address_delivery);
+            $delivery_state = $delivery->id_state ? new State((int) $delivery->id_state) : false;
+            $invoice_state = $invoice->id_state ? new State((int) $invoice->id_state) : false;
+            $carrier = $order->id_carrier ? new Carrier($order->id_carrier) : false;
+
+
+            if ((int) Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number) {
+                $context->language = $language;
+                $context->getTranslator()->setLocale($language->locale);
+                $order_invoice_list = $order->getInvoicesCollection();
+                Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
+                $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $context->smarty);
+                $file_attachement['content'] = $pdf->render(false);
+                $file_attachement['name'] = $pdf->getFilename();
+                $file_attachement['mime'] = 'application/pdf';
+            } else {
+                $file_attachement = null;
+            }
+            if (self::DEBUG_MODE) {
+                PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
+            }
+            if (Validate::isEmail($customer->email)) {
+                $data = [
+                    '{firstname}' => $customer->firstname,
+                    '{lastname}' => $customer->lastname,
+                    '{email}' => $customer->email,
+                    '{delivery_block_txt}' => self::_getFormatedAddressStatic($delivery, AddressFormat::FORMAT_NEW_LINE),
+                    '{invoice_block_txt}' => self::_getFormatedAddressStatic($invoice, AddressFormat::FORMAT_NEW_LINE),
+                    '{delivery_block_html}' => self::_getFormatedAddressStatic($delivery, '<br />', [
+                        'firstname' => '<span style="font-weight:bold;">%s</span>',
+                        'lastname' => '<span style="font-weight:bold;">%s</span>',
+                    ]),
+                    '{invoice_block_html}' => self::_getFormatedAddressStatic($invoice, '<br />', [
+                        'firstname' => '<span style="font-weight:bold;">%s</span>',
+                        'lastname' => '<span style="font-weight:bold;">%s</span>',
+                    ]),
+                    '{delivery_company}' => $delivery->company,
+                    '{delivery_firstname}' => $delivery->firstname,
+                    '{delivery_lastname}' => $delivery->lastname,
+                    '{delivery_address1}' => $delivery->address1,
+                    '{delivery_address2}' => $delivery->address2,
+                    '{delivery_city}' => $delivery->city,
+                    '{delivery_postal_code}' => $delivery->postcode,
+                    '{delivery_country}' => $delivery->country,
+                    '{delivery_state}' => $delivery->id_state ? $delivery_state->name : '',
+                    '{delivery_phone}' => ($delivery->phone) ? $delivery->phone : $delivery->phone_mobile,
+                    '{delivery_other}' => $delivery->other,
+                    '{invoice_company}' => $invoice->company,
+                    '{invoice_vat_number}' => $invoice->vat_number,
+                    '{invoice_firstname}' => $invoice->firstname,
+                    '{invoice_lastname}' => $invoice->lastname,
+                    '{invoice_address2}' => $invoice->address2,
+                    '{invoice_address1}' => $invoice->address1,
+                    '{invoice_city}' => $invoice->city,
+                    '{invoice_postal_code}' => $invoice->postcode,
+                    '{invoice_country}' => $invoice->country,
+                    '{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
+                    '{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
+                    '{invoice_other}' => $invoice->other,
+                    '{order_name}' => $order->getUniqReference(),
+                    '{id_order}' => $order->id,
+                    '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), true),
+                    '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $context->getTranslator()->trans('No carrier', [], 'Admin.Payment.Notification') : $carrier->name,
+                    '{payment}' => Tools::substr($order->payment, 0, 255) . ($order->hasBeenPaid() ? '' : '&nbsp;' . $context->getTranslator()->trans('(waiting for validation)', [], 'Emails.Body')),
+                    '{products}' => $product_list_html,
+                    '{products_txt}' => $product_list_txt,
+                    '{discounts}' => $cart_rules_list_html,
+                    '{discounts_txt}' => $cart_rules_list_txt,
+                    '{total_paid}' => Tools::getContextLocale($context)->formatPrice($order->total_paid, $context->currency->iso_code),
+                    '{total_paid_tax_excl}' => Tools::getContextLocale($context)->formatPrice($order->total_paid_tax_excl, $context->currency->iso_code),
+                    '{total_shipping_tax_excl}' => Tools::getContextLocale($context)->formatPrice($order->total_shipping_tax_excl, $context->currency->iso_code),
+                    '{total_shipping_tax_incl}' => Tools::getContextLocale($context)->formatPrice($order->total_shipping_tax_incl, $context->currency->iso_code),
+                    '{total_tax_paid}' => Tools::getContextLocale($context)->formatPrice(($order->total_paid_tax_incl - $order->total_paid_tax_excl), $context->currency->iso_code),
+                    '{recycled_packaging_label}' => $order->recyclable ? $context->getTranslator()->trans('Yes', [], 'Shop.Theme.Global') : $context->getTranslator()->trans('No', [], 'Shop.Theme.Global'),
+                    '{message}' => $order->getFirstMessage(),
+                ];
+                if (Product::getTaxCalculationMethod() == PS_TAX_EXC) {
+                    $data = array_merge($data, [
+                        '{total_products}' => Tools::getContextLocale($context)->formatPrice($order->total_products, $context->currency->iso_code),
+                        '{total_discounts}' => Tools::getContextLocale($context)->formatPrice($order->total_discounts_tax_excl, $context->currency->iso_code),
+                        '{total_shipping}' => Tools::getContextLocale($context)->formatPrice($order->total_shipping_tax_excl, $context->currency->iso_code),
+                        '{total_wrapping}' => Tools::getContextLocale($context)->formatPrice($order->total_wrapping_tax_excl, $context->currency->iso_code),
+                    ]);
+                } else {
+                    $data = array_merge($data, [
+                        '{total_products}' => Tools::getContextLocale($context)->formatPrice($order->total_products_wt, $context->currency->iso_code),
+                        '{total_discounts}' => Tools::getContextLocale($context)->formatPrice($order->total_discounts, $context->currency->iso_code),
+                        '{total_shipping}' => Tools::getContextLocale($context)->formatPrice($order->total_shipping, $context->currency->iso_code),
+                        '{total_wrapping}' => Tools::getContextLocale($context)->formatPrice($order->total_wrapping, $context->currency->iso_code),
+                    ]);
+                }
+                if (is_array($extra_vars)) {
+                    $data = array_merge($data, $extra_vars);
+                }
+
+                return Mail::Send(
+                    (int) $order->id_lang,
+                    'order_conf',
+                    $context->getTranslator()->trans(
+                        'Order confirmation',
+                        [],
+                        'Emails.Subject',
+                        $orderLanguage->locale
+                    ),
+                    $data,
+                    $customer->email,
+                    $customer->firstname . ' ' . $customer->lastname,
+                    null,
+                    null,
+                    $file_attachement,
+                    null,
+                    _PS_MAIL_DIR_,
+                    false,
+                    (int) $order->id_shop
+                );
+            }
+        }
+    }
+
+
+    /**
+     * @param Address $the_address that needs to be txt formatted
+     * @param string $line_sep
+     * @param array $fields_style
+     *
+     * @return string the txt formated address block
+     */
+    public static function _getFormatedAddressStatic(Address $the_address, $line_sep, $fields_style = [])
+    {
+        return AddressFormat::generateAddress($the_address, ['avoid' => []], $line_sep, ' ', $fields_style);
+    }
+
+
+
 }

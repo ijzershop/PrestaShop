@@ -153,10 +153,10 @@
                     addToOrderAddress.phone = "{$addToOrderAddress->phone}";
                   </script>
 
-
+                  {assign var="order_reference" value=$availableOrders[0].reference}
                   <div class="col-12 col-md-9 offset-md-2 pl-2 pt-2 added-to-order-block" data-id="{$carrier_id}">
-                    <input type="hidden" name="added_to_order" data-id="{$carrier_id}" id="added_to_order" value="{$availableOrders[0].reference}">
-                    <a style="color:#777777;" target="_blank" href="/index.php?controller=order-detail&id_order={$availableOrders[0].id_order}">Bekijk de lopende bestelling {$availableOrders[0].reference} waar u de huidige bestelling aan wilt toevoegen.</a>
+                    <input type="hidden" name="added_to_order" data-id="{$carrier_id}" id="added_to_order" value="{$order_reference}">
+                    <a style="color:#777777;" target="_blank" href="/index.php?controller=order-detail&id_order={$availableOrders[0].id_order}">Bekijk de lopende bestelling {$order_reference} waar u de huidige bestelling aan wilt toevoegen.</a>
                   </div>
 
                 {else}

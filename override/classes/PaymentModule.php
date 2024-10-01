@@ -1,5 +1,7 @@
 <?php
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
+
 class PaymentModule extends PaymentModuleCore
 {
     public function validateOrder(
@@ -205,6 +207,7 @@ class PaymentModule extends PaymentModuleCore
                     'reference' => $product['reference'],
                     'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
                     'price' => Tools::getContextLocale($this->context)->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
+                    'price_tax_excl' => Tools::getContextLocale($this->context)->formatPrice($price * $product['quantity'], $this->context->currency->iso_code),
                     'quantity' => $product['quantity'],
                     'customization' => [],
                 ];
@@ -361,6 +364,13 @@ class PaymentModule extends PaymentModuleCore
                 if (self::DEBUG_MODE) {
                     PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
                 }
+
+                if($order->total_paid_tax_incl <= 0){
+                    $totalTax = Tools::getContextLocale($this->context)->formatPrice((float)$order->total_discount_tax_incl - (float)$order->total_discount_tax_incl, $this->context->currency->iso_code);
+                } else {
+                    $totalTax = Tools::getContextLocale($this->context)->formatPrice((float)$order->total_paid_tax_incl-(float)$order->total_paid_tax_excl, $this->context->currency->iso_code);
+                }
+
                 if (Validate::isEmail($this->context->customer->email)) {
                     $data = [
                         '{firstname}' => $this->context->customer->firstname,
@@ -419,16 +429,18 @@ class PaymentModule extends PaymentModuleCore
                     if (Product::getTaxCalculationMethod() == PS_TAX_EXC) {
                         $data = array_merge($data, [
                             '{total_products}' => Tools::getContextLocale($this->context)->formatPrice($order->total_products, $this->context->currency->iso_code),
-                            '{total_discounts}' => Tools::getContextLocale($this->context)->formatPrice($order->total_discounts_tax_excl, $this->context->currency->iso_code),
+                            '{total_discounts}' => Tools::getContextLocale($this->context)->formatPrice(-$order->total_discounts_tax_excl, $this->context->currency->iso_code),
                             '{total_shipping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_excl, $this->context->currency->iso_code),
                             '{total_wrapping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_wrapping_tax_excl, $this->context->currency->iso_code),
+                            '{total_tax}' => $totalTax,
                         ]);
                     } else {
                         $data = array_merge($data, [
-                            '{total_products}' => Tools::getContextLocale($this->context)->formatPrice($order->total_products_wt, $this->context->currency->iso_code),
-                            '{total_discounts}' => Tools::getContextLocale($this->context)->formatPrice($order->total_discounts, $this->context->currency->iso_code),
-                            '{total_shipping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping, $this->context->currency->iso_code),
+                            '{total_products}' => Tools::getContextLocale($this->context)->formatPrice($order->total_products, $this->context->currency->iso_code),
+                            '{total_discounts}' => Tools::getContextLocale($this->context)->formatPrice(-$order->total_discounts_tax_excl, $this->context->currency->iso_code),
+                            '{total_shipping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_excl, $this->context->currency->iso_code),
                             '{total_wrapping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
+                            '{total_tax}' => $totalTax,
                         ]);
                     }
                     if (is_array($extra_vars)) {
@@ -574,14 +586,20 @@ class PaymentModule extends PaymentModuleCore
             (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $order->product_list, $carrierId),
             $computingPrecision
         );
+        if((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)) {
+            $discountType = Cart::ONLY_DISCOUNTS_NO_CALCULATION;
+        } else {
+            $discountType = Cart::ONLY_DISCOUNTS;
+        }
         $order->total_discounts_tax_excl = Tools::ps_round(
-            (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION, $order->product_list, $carrierId)),
+            (float)abs($cart->getOrderTotal(false, $discountType, $order->product_list, $carrierId)),
             $computingPrecision
         );
         $order->total_discounts_tax_incl = Tools::ps_round(
-            (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS_NO_CALCULATION, $order->product_list, $carrierId)),
+            (float)abs($cart->getOrderTotal(true, $discountType, $order->product_list, $carrierId)),
             $computingPrecision
         );
+
         $order->total_discounts = $order->total_discounts_tax_incl;
         $order->total_shipping_tax_excl = Tools::ps_round(
             (float) $cart->getPackageShippingCost($carrierId, false, null, $order->product_list),
@@ -700,6 +718,97 @@ class PaymentModule extends PaymentModuleCore
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
             }
+
+            //Make cart rules and products
+            $virtual_product = true;
+
+            $product_var_tpl_list = [];
+
+            foreach ($order->getProducts() as $product) {
+
+                $product_price = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($product['total_price'], Context::getContext()->getComputingPrecision()) : $product['total_wt'];
+
+                $product_var_tpl = [
+                    'id_product' => $product['id_product'],
+                    'id_product_attribute' => $product['id_product_attribute'],
+                    'reference' => $product['reference'],
+                    'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
+                    'price' => Tools::getContextLocale($context)->formatPrice($product_price, $context->currency->iso_code),
+                    'price_tax_excl' => Tools::getContextLocale($context)->formatPrice($product['total_price'], $context->currency->iso_code),
+                    'quantity' => $product['product_quantity'],
+                    'customization' => [],
+                ];
+
+                if (isset($product['price']) && $product['price']) {
+                    $product_var_tpl['unit_price'] = Tools::getContextLocale($context)->formatPrice($product['unit_price_tax_excl'], $context->currency->iso_code);
+                    $product_var_tpl['unit_price_full'] = Tools::getContextLocale($context)->formatPrice($product['unit_price_tax_excl'], $context->currency->iso_code)
+                        . ' ' . $product['unity'];
+                } else {
+                    $product_var_tpl['unit_price'] = $product_var_tpl['unit_price_full'] = '';
+                }
+
+                $customized_datas = Product::getAllCustomizedDatas((int) $order->id_cart, null, true, null, (int) $product['id_customization']);
+                if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']])) {
+                    $product_var_tpl['customization'] = [];
+                    foreach ($customized_datas[$product['id_product']][$product['id_product_attribute']][$order->id_address_delivery] as $customization) {
+                        $customization_text = '';
+                        if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
+                            foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
+                                $customization_text .= '<strong>' . $text['name'] . '</strong>: ' . $text['value'] . '<br />';
+                            }
+                        }
+
+                        if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
+                            $customization_text .= $context->getTranslator()->trans('%d image(s)', [count($customization['datas'][Product::CUSTOMIZE_FILE])], 'Admin.Payment.Notification') . '<br />';
+                        }
+
+                        $customization_quantity = (int) $customization['quantity'];
+
+                        $product_var_tpl['customization'][] = [
+                            'customization_text' => $customization_text,
+                            'customization_quantity' => $customization_quantity,
+                            'quantity' => Tools::getContextLocale($context)->formatPrice($customization_quantity * $product_price, $context->currency->iso_code),
+                        ];
+                    }
+                }
+
+                $product_var_tpl_list[] = $product_var_tpl;
+                // Check if is not a virtual product for the displaying of shipping
+                if (!$product['is_virtual']) {
+                    $virtual_product &= false;
+                }
+            }
+
+            $product_list_txt = '';
+            $product_list_html = '';
+            if (count($product_var_tpl_list) > 0) {
+                $product_list_txt = self::getEmailTemplateContentStatic('order_conf_product_list.txt', Mail::TYPE_TEXT, $product_var_tpl_list, $context);
+                $product_list_html = self::getEmailTemplateContentStatic('order_conf_product_list.tpl', Mail::TYPE_HTML, $product_var_tpl_list, $context);
+            }
+
+            // Make sure CartRule caches are empty
+            CartRule::cleanCache();
+            $cart_rules_list = $order->getCartRules();
+
+            foreach ($cart_rules_list as $index => $rule){
+                $cart_rules_list[$index]['voucher_name'] = $rule['name'];
+                $cart_rules_list[$index]['voucher_reduction'] = Tools::getContextLocale($context)->formatPrice(-$rule['value_tax_excl'], $context->currency->iso_code);
+            }
+
+            $cart_rules_list_txt = '';
+            $cart_rules_list_html = '';
+            if (count($cart_rules_list) > 0) {
+                $cart_rules_list_txt = self::getEmailTemplateContentStatic('order_conf_cart_rules.txt', Mail::TYPE_TEXT, $cart_rules_list, $context);
+                $cart_rules_list_html = self::getEmailTemplateContentStatic('order_conf_cart_rules.tpl', Mail::TYPE_HTML, $cart_rules_list, $context);
+            }
+
+            if($order->total_paid_tax_incl <= 0){
+                $totalTax = Tools::getContextLocale($context)->formatPrice((float)$order->total_discount_tax_incl - (float)$order->total_discount_tax_incl, $context->currency->iso_code);
+            } else {
+                $totalTax = Tools::getContextLocale($context)->formatPrice((float)$order->total_paid_tax_incl-(float)$order->total_paid_tax_excl, $context->currency->iso_code);
+            }
+
+
             if (Validate::isEmail($customer->email)) {
                 $data = [
                     '{firstname}' => $customer->firstname,
@@ -758,16 +867,18 @@ class PaymentModule extends PaymentModuleCore
                 if (Product::getTaxCalculationMethod() == PS_TAX_EXC) {
                     $data = array_merge($data, [
                         '{total_products}' => Tools::getContextLocale($context)->formatPrice($order->total_products, $context->currency->iso_code),
-                        '{total_discounts}' => Tools::getContextLocale($context)->formatPrice($order->total_discounts_tax_excl, $context->currency->iso_code),
+                        '{total_discounts}' => Tools::getContextLocale($context)->formatPrice(-$order->total_discounts_tax_excl, $context->currency->iso_code),
                         '{total_shipping}' => Tools::getContextLocale($context)->formatPrice($order->total_shipping_tax_excl, $context->currency->iso_code),
                         '{total_wrapping}' => Tools::getContextLocale($context)->formatPrice($order->total_wrapping_tax_excl, $context->currency->iso_code),
+                        '{total_tax}' => $totalTax,
                     ]);
                 } else {
                     $data = array_merge($data, [
-                        '{total_products}' => Tools::getContextLocale($context)->formatPrice($order->total_products_wt, $context->currency->iso_code),
-                        '{total_discounts}' => Tools::getContextLocale($context)->formatPrice($order->total_discounts, $context->currency->iso_code),
-                        '{total_shipping}' => Tools::getContextLocale($context)->formatPrice($order->total_shipping, $context->currency->iso_code),
+                        '{total_products}' => Tools::getContextLocale($context)->formatPrice($order->total_products, $context->currency->iso_code),
+                        '{total_discounts}' => Tools::getContextLocale($context)->formatPrice(-$order->total_discounts_tax_excl, $context->currency->iso_code),
+                        '{total_shipping}' => Tools::getContextLocale($context)->formatPrice($order->total_shipping_tax_excl, $context->currency->iso_code),
                         '{total_wrapping}' => Tools::getContextLocale($context)->formatPrice($order->total_wrapping, $context->currency->iso_code),
+                        '{total_tax}' => $totalTax,
                     ]);
                 }
                 if (is_array($extra_vars)) {
@@ -798,7 +909,6 @@ class PaymentModule extends PaymentModuleCore
         }
     }
 
-
     /**
      * @param Address $the_address that needs to be txt formatted
      * @param string $line_sep
@@ -811,6 +921,33 @@ class PaymentModule extends PaymentModuleCore
         return AddressFormat::generateAddress($the_address, ['avoid' => []], $line_sep, ' ', $fields_style);
     }
 
+    /**
+     * Fetch the content of $template_name inside the folder
+     * current_theme/mails/current_iso_lang/ if found, otherwise in
+     * mails/current_iso_lang.
+     *
+     * @param string $template_name template name with extension
+     * @param int $mail_type Mail::TYPE_HTML or Mail::TYPE_TEXT
+     * @param array $var sent to smarty as 'list'
+     *
+     * @return string
+     */
+    public static function getEmailTemplateContentStatic($template_name, $mail_type, $var, $context)
+    {
+        $email_configuration = Configuration::get('PS_MAIL_TYPE');
+        if ($email_configuration != $mail_type && $email_configuration != Mail::TYPE_BOTH) {
+            return '';
+        }
 
+        return self::getPartialRendererStatic($context)->render($template_name, $context->language, $var);
+    }
+
+    /**
+     * @return MailPartialTemplateRenderer
+     */
+    protected static function getPartialRendererStatic($context)
+    {
+        return  new MailPartialTemplateRenderer(Context::getContext()->smarty);
+    }
 
 }

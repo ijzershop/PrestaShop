@@ -689,9 +689,9 @@ abstract class PaymentModuleCore extends Module
                         ]);
                     } else {
                         $data = array_merge($data, [
-                            '{total_products}' => Tools::getContextLocale($this->context)->formatPrice($order->total_products_wt, $this->context->currency->iso_code),
-                            '{total_discounts}' => Tools::getContextLocale($this->context)->formatPrice($order->total_discounts, $this->context->currency->iso_code),
-                            '{total_shipping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping, $this->context->currency->iso_code),
+                            '{total_products}' => Tools::getContextLocale($this->context)->formatPrice($order->total_products, $this->context->currency->iso_code),
+                            '{total_discounts}' => Tools::getContextLocale($this->context)->formatPrice($order->total_discounts_tax_excl, $this->context->currency->iso_code),
+                            '{total_shipping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_excl, $this->context->currency->iso_code),
                             '{total_wrapping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
                         ]);
                     }
@@ -1258,9 +1258,7 @@ abstract class PaymentModuleCore extends Module
 
             $cart_rules_list[] = [
                 'voucher_name' => $cartRule->name,
-                'voucher_reduction' => ($values['tax_incl'] != 0.00 ? '-' : '') . (Product::getTaxCalculationMethod() == PS_TAX_EXC
-                    ? Tools::getContextLocale($this->context)->formatPrice($values['tax_excl'], $this->context->currency->iso_code)
-                    : Tools::getContextLocale($this->context)->formatPrice($values['tax_incl'], $this->context->currency->iso_code)
+                'voucher_reduction' => ($values['tax_incl'] != 0.00 ? '-' : '') . (Tools::getContextLocale($this->context)->formatPrice($values['tax_excl'], $this->context->currency->iso_code)
                 ),
             ];
         }

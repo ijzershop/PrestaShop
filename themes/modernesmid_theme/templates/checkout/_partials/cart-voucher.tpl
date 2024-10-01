@@ -24,6 +24,8 @@
  *}
 
   {block name='cart_voucher'}
+
+    {assign var=withTax value=Context::getContext()->cookie->price_vat_settings_incl === "true"}
 {if $cart.vouchers.added}
 {block name='cart_voucher_list'}
   <div class="col-12"><h6>Toegepaste korting</h6></div>
@@ -62,10 +64,18 @@
             <span class="product-price" style="line-height: .7rem;">
               <strong>
                     <span class="inclusive-price">
-                      {if $voucher.reduction_percentage > 0}
-                        {$voucher.reduction_value_tax_excl}
+                      {if $withTax}
+                        {if $voucher.reduction_percentage > 0}
+                          {$voucher.reduction_value}
+                        {else}
+                          {$voucher.reduction_amount_full}
+                        {/if}
                       {else}
-                        {$voucher.reduction_amount_full}
+                        {if $voucher.reduction_percentage > 0}
+                          {$voucher.reduction_value_tax_excl}
+                        {else}
+                          {$voucher.reduction_amount_full_tax_exc}
+                        {/if}
                       {/if}
                     </span>
               </strong>

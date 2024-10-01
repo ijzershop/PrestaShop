@@ -70,19 +70,6 @@
       </tr>
     {/if}
 
-
-  <tr class="bold">
-    <td class="grey">
-        {l s='Totaal (excl. btw)' d='Shop.Pdf' pdf='true'}
-    </td>
-    <td class="white">
-        {if $footer.total_paid_tax_excl <= 0 && abs($footer.total_refunded_tax_excl) > $footer.total_paid_tax_excl}
-            {displayPrice currency=$order->id_currency price=0-$footer.total_refunded_tax_excl}
-        {else}
-            {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_excl}
-        {/if}
-    </td>
-  </tr>
   <tr class="bold">
     <td class="grey">
         {l s='BTW' d='Shop.Pdf' pdf='true'}

@@ -108,7 +108,7 @@
             <tr>
               <td class="border-0"></td>
               <td colspan="2" class="border-0">Verzending</td>
-              <td class="border-0 text-right">{if $order.subtotals.shipping.amount > 0}{Context::getContext()->currentLocale->formatPrice($order.subtotals.shipping.amount, 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice(0.00, 'EUR')}{/if}</td>
+              <td class="border-0 text-right">{if $order.subtotals.shipping.amount > 0}{Context::getContext()->currentLocale->formatPrice($order.subtotals.shipping.amount/1.21, 'EUR')}{else}{Context::getContext()->currentLocale->formatPrice(0.00, 'EUR')}{/if}</td>
             </tr>
             {if $orderObject->total_discounts_tax_excl > 0}
                 <tr>
@@ -121,7 +121,7 @@
               <td class="border-0"></td>
               <td colspan="2" class="border-0" style="padding:0.75rem 0.75rem 0rem 0.75rem;">Btw (21%)</td>
               <td class="border-0 text-right" style="border-bottom:1px solid #c0c0c0c0;padding:0.75rem 0.75rem 0rem 0.75rem;">
-                  {if $orderObject->total_discounts_tax_excl > 0}
+                  {if $orderObject->total_discounts_tax_excl > 0 && (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
                   {Context::getContext()->currentLocale->formatPrice(0-($orderObject->total_refunded_tax_incl-$orderObject->total_refunded_tax_excl), 'EUR')}
                 {else}
                 {$order.subtotals.tax.value}
@@ -135,7 +135,7 @@
               <td class="border-0"></td>
               <td colspan="2" class="border-0">{$order.totals.total.label}</td>
                     <td class="text-right h4 text-dark">
-                        {if $orderObject->total_discounts_tax_excl > 0}
+                        {if $orderObject->total_discounts_tax_excl > 0 && (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
                             {Context::getContext()->currentLocale->formatPrice(0-$orderObject->total_refunded_tax_incl, 'EUR')}</td>
                             {else}
                             {Context::getContext()->currentLocale->formatPrice($order.totals.total.amount, 'EUR')}</td>

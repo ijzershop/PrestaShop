@@ -24,25 +24,12 @@
  *}
 {foreach $list as $product}
 <tr>
-	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
+	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;font-size: 12px;">
 		<table class="table" width="100%">
 			<tr>
 				<td width="5">&nbsp;</td>
-				<td style="text-align: center;">
-					<font size="2" face="Open-sans, sans-serif" color="#353943">
-						{$product['reference']}
-					</font>
-				</td>
-				<td width="5">&nbsp;</td>
-			</tr>
-		</table>
-	</td>
-	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
-		<table class="table" width="100%">
-			<tr>
-				<td width="5">&nbsp;</td>
-				<td>
-					<font size="2" face="Open-sans, sans-serif" color="#353943">
+				<td style="font-size: 12px;">
+					<font style="font-size: 12px;" face="Open-sans, sans-serif" color="#353943">
 						<strong>{AttributeGroup::stripSawCutModuleAttributeGroupName($product['name'])}</strong>
 						{if count($product['customization']) == 1}
 							<br>
@@ -57,25 +44,12 @@
 			</tr>
 		</table>
 	</td>
-	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
-		<table class="table" width="100%">
-			<tr>
-				<td width="5">&nbsp;</td>
-				<td style="text-align:right;">
-					<font size="2" face="Open-sans, sans-serif" color="#353943">
-						{$product['unit_price']}
-					</font>
-				</td>
-				<td width="5">&nbsp;</td>
-			</tr>
-		</table>
-	</td>
-	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
+	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;font-size: 12px;">
 		<table class="table" width="100%">
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td style="text-align:center;">
-					<font size="2" face="Open-sans, sans-serif" color="#353943">
+					<font style="font-size: 12px;" face="Open-sans, sans-serif" color="#353943">
 						{$product['quantity']}
 					</font>
 				</td>
@@ -83,13 +57,13 @@
 			</tr>
 		</table>
 	</td>
-	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
+	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;font-size: 12px;">
 		<table class="table" width="100%">
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td style="text-align:right;">
-					<font size="2" face="Open-sans, sans-serif" color="#353943">
-						{$product['price']}
+					<font style="font-size: 12px;" face="Open-sans, sans-serif" color="#353943">
+						{$product['price_tax_excl']}
 					</font>
 				</td>
 				<td width="5">&nbsp;</td>
@@ -100,12 +74,12 @@
   {if count($product['customization']) > 1}
   	{foreach $product['customization'] as $customization}
   		<tr>
-  		<td colspan="3" style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
+  		<td colspan="2" style="border-width:1px;border-style:solid;border-color:#D6D4D4;font-size: 12px;">
   			<table class="table" width="100%">
   				<tr>
   					<td width="5">&nbsp;</td>
   					<td>
-  						<font size="2" face="Open-sans, sans-serif" color="#353943">
+  						<font style="font-size: 12px;" face="Open-sans, sans-serif" color="#353943">
   							{$customization['customization_text'] nofilter}
   						</font>
   					</td>
@@ -113,12 +87,12 @@
   				</tr>
   			</table>
   		</td>
-  		<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
+  		<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;font-size: 12px;">
   			<table class="table" width="100%">
   				<tr>
   					<td width="5">&nbsp;</td>
   					<td style="text-align:right;">
-  						<font size="2" face="Open-sans, sans-serif" color="#353943">
+  						<font style="font-size: 12px;" face="Open-sans, sans-serif" color="#353943">
   							{if count($product['customization']) > 1}
   								{$customization['customization_quantity']}
   							{/if}
@@ -128,7 +102,7 @@
   				</tr>
   			</table>
   		</td>
-  		<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;"></td>
+  		<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;font-size: 12px;"></td>
   	</tr>
   	{/foreach}
   {/if}

@@ -548,6 +548,7 @@ class CartPresenter implements PresenterInterface
 
         $cartHasTax = null === $cart->id ? false : $cart->getAverageProductsTaxRate() * 100;
         $freeShippingAlreadySet = false;
+
         /** @var array{id_cart_rule:int, name: string, code: string, reduction_percent: float, reduction_currency: int, free_shipping: bool, reduction_tax: bool, reduction_amount:float, value_real:float|int|string, value_tax_exc:float|int|string} $cartVoucher */
         foreach ($cartVouchers as $cartVoucher) {
             $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
@@ -593,12 +594,19 @@ class CartPresenter implements PresenterInterface
                 $reduction_tax_exc = (float)$cartVoucher['reduction_amount'];
             }
 
+            $totalShippingDiscount = 0;
+            $totalShippingDiscountTaxExcl = 0;
+            if($cartVoucher['free_shipping']){
+                $totalShippingDiscount = (float)$cart->getTotalShippingCost(null, true);
+                $totalShippingDiscountTaxExcl = (float)$cart->getTotalShippingCost(null, false);
+            }
+
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount_full'] = $this->priceFormatter->format( '-' . $reduction, Context::getContext()->currency);
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount_full_tax_exc'] = $this->priceFormatter->format( '-' . $reduction_tax_exc, Context::getContext()->currency);
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_percentage'] = $this->priceFormatter->format( '-' . (float)$cartVoucher['reduction_percent'], Context::getContext()->currency);
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_value'] = $this->priceFormatter->format( '-' . (float)$cartVoucher['value_real'], Context::getContext()->currency);
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_value_tax_excl'] = $this->priceFormatter->format( '-' . (float)$cartVoucher['value_tax_exc'], Context::getContext()->currency);
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_value'] = $this->priceFormatter->format( '-' . (float)$cartVoucher['value_real']+$totalShippingDiscount, Context::getContext()->currency);
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_value_tax_excl'] = $this->priceFormatter->format( '-' . (float)$cartVoucher['value_tax_exc']+$totalShippingDiscountTaxExcl, Context::getContext()->currency);
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = '-'.(float)$cartVoucher['value_real'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount_tax_excl'] = '-'.(float)$cartVoucher['value_tax_exc'];
             //Einde Toevoeging

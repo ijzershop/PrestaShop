@@ -22,6 +22,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
+{assign var=withTax value=Context::getContext()->cookie->price_vat_settings_incl === "true"}
 <div id="order-items" class="col-12">
   <div class="row p-2">
 
@@ -31,8 +32,7 @@
   <thead>
     <tr>
     {block name='order_items_table_head'}
-      <th class="card-title text-left" colspan="2">{l s='Order items' d='Shop.Theme.Checkout'}</th>
-      <th class="card-title text-center _desktop-title">{l s='Unit price' d='Shop.Theme.Checkout'}</th>
+      <th class="card-title text-left" colspan="3">{l s='Order items' d='Shop.Theme.Checkout'}</th>
       <th class="card-title text-center _desktop-title">{l s='Quantity' d='Shop.Theme.Checkout'}</th>
       <th class="card-title text-right _desktop-title">{l s='Total products' d='Shop.Theme.Checkout'}</th>
     {/block}
@@ -55,7 +55,7 @@
               {/if}
             </span>
           </td>
-          <td class="align-middle">
+          <td class="align-middle" colspan="2">
             {if $add_product_link}<a href="{$product.url}" rel="noopener" target="_blank">{/if}
               <span>{AttributeGroup::stripSawCutModuleAttributeGroupName($product.name, Context::getContext()->cookie->id_lang)}</span>
             {if $add_product_link}</a>{/if}
@@ -98,10 +98,14 @@
             {/if}
             {hook h='displayProductPriceBlock' product=$product type="unit_price"}
           </td>
-          <td class="qty align-middle text-sm-center text-left">{Context::getContext()->currentLocale->formatPrice((float)$product.product_price, 'EUR')}</td>
           <td class="qty align-middle text-sm-center">{$product.quantity}</td>
-          <td class="qty align-middle text-right bold">{Context::getContext()->currentLocale->formatPrice((float)$product.total_price_tax_excl, 'EUR')}</td>
-        </div>
+          <td class="qty align-middle text-right bold">
+            {if $withTax}
+            {Context::getContext()->currentLocale->formatPrice((float)$product.total_price_tax_incl, 'EUR')}</td>
+          {else}
+             {Context::getContext()->currentLocale->formatPrice((float)$product.total_price_tax_excl, 'EUR')}</td>
+            {/if}
+  </div>
                                         </td>
                 </tr>
       {/foreach}
@@ -114,6 +118,7 @@
       {/if}
 
     {* Kortingen   *}
+    {assign var='first_free_shipping' value=false}
     {foreach from=$cart_rules key='key' item='rule'}
       {assign var='border_top' value=''}
       {if $key === 0}
@@ -127,15 +132,40 @@
           <td class="qty align-middle text-sm-center {$border_top}">{$rule.reduction_percent}%</td>
           <td class="qty align-middle text-right bold {$border_top}">{Context::getContext()->currentLocale->formatPrice((float)$rule.value_tax_exc, 'EUR')}</td>
         {else}
-          <td class="qty align-middle text-sm-center {$border_top}">{Context::getContext()->currentLocale->formatPrice((float)-$rule.reduction_amount, 'EUR')}</td>
-          <td class="qty align-middle text-right bold {$border_top}">
-          {if $rule.reduction_tax}
-              {Context::getContext()->currentLocale->formatPrice((float)-$rule.reduction_amount/1.21, 'EUR')}</td>
+          <td colspan="2" class="qty align-middle text-right bold {$border_top}">
+            {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
+              {if $withTax}
+                {Context::getContext()->currentLocale->formatPrice(-(float)$rule.reduction_amount, 'EUR')}
+              {else}
+                {Context::getContext()->currentLocale->formatPrice(-(float)$rule.reduction_amount/1.21, 'EUR')}
+              {/if}
             {else}
-              {Context::getContext()->currentLocale->formatPrice((float)-$rule.reduction_amount, 'EUR')}</td>
+
+              {if $withTax}
+                {Context::getContext()->currentLocale->formatPrice(-(float)$rule.value_real, 'EUR')}
+              {else}
+                {Context::getContext()->currentLocale->formatPrice(-(float)$rule.value_tax_exc, 'EUR')}
+              {/if}
             {/if}
+          </td>
         {/if}
       </tr>
+    {if $rule.free_shipping && !$first_free_shipping}
+      {assign var='first_free_shipping' value=true}
+
+      <tr class="order-line">
+        <td class="align-middle {$border_top}" colspan="3">
+          <span> Korting verzending</span>
+        </td>
+          <td colspan="2" class="qty align-middle text-right bold {$border_top}">
+              {if $withTax}
+                {Context::getContext()->currentLocale->formatPrice(-(float)$subtotals.shipping.amount,'EUR')}
+              {else}
+                {Context::getContext()->currentLocale->formatPrice(-(float)$subtotals.shipping.amount/1.21,'EUR')}
+              {/if}
+          </td>
+      </tr>
+    {/if}
     {/foreach}
     </tbody>
     </table>
@@ -157,20 +187,23 @@
               <td>Korting</td>
               <td class="text-right">{Context::getContext()->currentLocale->formatPrice((float)-$total_discount_no_calc_tax_exc,'EUR')}</td>
             </tr>
+            {else}
+            <tr>
+              <td>Korting</td>
+              <td class="text-right">{Context::getContext()->currentLocale->formatPrice((float)-$total_discount_tax_exc,'EUR')}</td>
+            </tr>
           {/if}
 
-
-
-        {if $subtotals.tax.label !== null}
+        {if $subtotals.total_paid_tax_incl !== null}
           <tr class="sub taxes">
-            <td><span class="label">{l s='%label%:' sprintf=['%label%' => Btw] d='Shop.Theme.Global'}</span></td><td class="text-right"><span class="value">
-                {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
-                  {if  $total_remainder < 0}
+            <td><span class="label">{l s='%label%:' sprintf=['%label%' => Btw] d='Shop.Theme.Global'}</span></td>
+            <td class="text-right"><span class="value">
+                {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) && $total_remainder < 0}
                     {Context::getContext()->currentLocale->formatPrice((float)$total_remainder - $total_remainder_tax_exc,  'EUR')}
                   {else}
-                    {$subtotals.tax.value}
+                    {Context::getContext()->currentLocale->formatPrice((float)$subtotals.total_paid_tax_incl-(float)$subtotals.total_paid_tax_excl,'EUR')}
                   {/if}
-              {/if}
+
               </span></td>
           </tr>
         {/if}
@@ -184,7 +217,6 @@
             <td class="text-right">{$totals.total_including_tax.value}</td>
           </tr>
         {else}
-
           {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
             {if  $total_remainder < 0}
               <tr class="total-value font-weight-bold">

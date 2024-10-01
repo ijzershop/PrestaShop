@@ -23,28 +23,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
 {foreach $list as $cart_rule}
-	<tr class="conf_body">
-		<td colspan="3" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-			<table class="table" style="width:100%;border-collapse:collapse">
-				<tr>
-					<td width="5" style="color:#333;padding:0"></td>
-					<td style="text-align:right;color: #353943;font-size: 12px">
-							<strong>{$cart_rule['voucher_name']}</strong>
-					</td>
-					<td width="5" style="color:#333;padding:0"></td>
-				</tr>
-			</table>
-		</td>
-		<td colspan="3" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-			<table class="table" style="width:100%;border-collapse:collapse">
-				<tr>
-					<td width="5" style="color:#333;padding:0"></td>
-					<td align="right" style="text-align:right;color: #353943;font-size: 12px;font-weight:bold;">
-							{$cart_rule['voucher_reduction']}
-					</td>
-					<td width="5" style="color:#333;padding:0"></td>
-				</tr>
-			</table>
-		</td>
-	</tr>
+
+<tr>
+  <td style="border-width:1px;border-style:solid;border-color:#D6D4D4;" colspan="2">
+    <table class="table" width="100%">
+      <tr>
+        <td width="5">&nbsp;</td>
+        <td>
+          <font style="font-size: 12px;" face="Open-sans, sans-serif" color="#353943">
+            <strong>{$cart_rule['voucher_name']}</strong>
+          </font>
+        </td>
+        <td width="5">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
+  <td style="border-width:1px;border-style:solid;border-color:#D6D4D4;">
+    <table class="table" width="100%">
+      <tr>
+        <td width="5">&nbsp;</td>
+        <td style="text-align:right;">
+          <font style="font-size: 12px;" face="Open-sans, sans-serif" color="#353943">
+            {$cart_rule['voucher_reduction']}
+          </font>
+        </td>
+        <td width="5">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
+</tr>
+
 {/foreach}

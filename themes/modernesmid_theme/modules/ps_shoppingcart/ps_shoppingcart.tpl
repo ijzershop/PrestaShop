@@ -50,10 +50,14 @@
         </td>
       </tr>
 
-          <tr id="tr-header-cart-discounts" {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS) <= 0}style="display: none;" {/if}>
+          <tr id="tr-header-cart-discounts" {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION) <= 0}style="display: none;" {/if}>
             <td width="60%" class="text-nowrap">Korting</td>
             <td class="text-right" id="header-cart-discounts">
-              {Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR')}
+              {if (Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id)}
+                {Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR')}
+              {else}
+                {Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_DISCOUNTS), 'EUR')}
+              {/if}
             </td>
           </tr>
     </table>

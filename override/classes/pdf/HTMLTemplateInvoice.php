@@ -332,7 +332,25 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         foreach ($cart_rules as $key => $cart_rule) {
 //            //Add return amount by balie orders
             $cartRuleData = new CartRule($cart_rule['id_cart_rule']);
-            $cart_rules[$key]['reduction_amount'] = $cartRuleData->reduction_amount;
+            if((int)$this->order->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))
+            {
+
+                $cart_rules[$key]['reduction_amount'] = $cartRuleData->reduction_amount;
+                $cart_rules[$key]['reduction_amount'] = $cartRuleData->reduction_amount;
+            }
+            else
+            {
+                $this->order_invoice->total_refunded_tax_excl = 0;
+                $this->order_invoice->total_refunded_tax_incl = 0;
+                if(is_array($cart_rule)){
+
+                    $cart_rules[$key]['reduction_amount'] = $cart_rule['value'];
+                    $cart_rules[$key]['reduction_amount_tax_excl'] = $cart_rule['value_tax_excl'];
+                } else {
+                    $cart_rules[$key]['reduction_amount'] = $cart_rule->value;
+                    $cart_rules[$key]['reduction_amount_tax_excl'] = $cart_rule->value_tax_excl;
+                }
+            }
 
             if ($cart_rule['free_shipping']) {
                 $free_shipping = true;
@@ -368,8 +386,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $products_after_discounts_tax_excl = $this->order_invoice->total_products - $product_discounts_tax_excl;
         $products_after_discounts_tax_incl = $this->order_invoice->total_products_wt - $product_discounts_tax_incl;
 
-        $shipping_tax_excl = $free_shipping ? 0 : $this->order_invoice->total_shipping_tax_excl;
-        $shipping_tax_incl = $free_shipping ? 0 : $this->order_invoice->total_shipping_tax_incl;
+        $shipping_tax_excl = $this->order_invoice->total_shipping_tax_excl;
+        $shipping_tax_incl = $this->order_invoice->total_shipping_tax_incl;
         $shipping_taxes = $shipping_tax_incl - $shipping_tax_excl;
 
         $wrapping_taxes = $this->order_invoice->total_wrapping_tax_incl - $this->order_invoice->total_wrapping_tax_excl;

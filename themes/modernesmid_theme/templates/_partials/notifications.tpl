@@ -28,7 +28,7 @@
   <div class="row">
     {if $notifications.error}
       {block name='notifications_error'}
-        <article class="alert alert-danger col-12" role="alert" data-alert="danger">
+        <article class="alert alert-danger col-12" style="z-index:9999999;" role="alert" data-alert="danger">
           <div class="row">
             <div class="col-2 my-auto"><i class="fasl fa-warning w-100 fa-4x"></i></div>
             <div class="col-10">

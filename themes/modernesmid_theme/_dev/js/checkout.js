@@ -571,9 +571,7 @@ $(document).ready(() => {
       + postcode + ' ' + city
       + '<br>' + country;
 
-    checkFormatAddressApiCheckout().then(async fullfilled => {
-      // console.log(fullfilled)
-
+    checkFormatAddressApiCheckout(true).then(async fullfilled => {
         if (fullfilled) {
           //ga verder
           formElem.submit();
@@ -605,7 +603,7 @@ $(document).ready(() => {
       });
   });
 
-  async function checkFormatAddressApiCheckout() {
+  async function checkFormatAddressApiCheckout(validate=false) {
     let validatedPayment = false;
     let validated = false;
     let useForInvoice = $('#use_same_address').is(':checked');
@@ -631,7 +629,7 @@ $(document).ready(() => {
 
       let city = $('#customer_address_form input[name="city"]').val();
 
-      if (postcode !== undefined && (postcode.length >= 4 || houseNumber.length > 0) &&
+      if (validate && postcode !== undefined && (postcode.length >= 4 || houseNumber.length > 0) &&
         (id_country === "13" || (id_country === "3" && street.length > 0))) {
         validated = await validateAddressApiCheckout(postcode.trim(), street.trim(), houseNumber.trim(), extension.trim(), id_country.trim(), '', "");
       }
@@ -656,7 +654,7 @@ $(document).ready(() => {
 
       let city = $('#delivery-address input[name="city"]').val();
 
-      if (postcode !== undefined && (postcode.length >= 5 || houseNumber.length > 0) &&
+      if (validate && postcode !== undefined && (postcode.length >= 5 || houseNumber.length > 0) &&
         (id_country === "13" || (id_country === "3" && street.length > 0))) {
         validated = await validateAddressApiCheckout(postcode.trim(), street.trim(), houseNumber.trim(), extension.trim(), id_country.trim(), city.trim(), "delivery");
       }
@@ -678,33 +676,11 @@ $(document).ready(() => {
         let cityPayment = $('#invoice-address input[name="city"]').val();
 
         let id_countryPayment = $('#invoice-address select[name="id_country"]').val();
-        if (postcodePayment !== undefined && (postcodePayment.length >= 5 || houseNumberPayment.length > 0) &&
+        if (validate && postcodePayment !== undefined && (postcodePayment.length >= 5 || houseNumberPayment.length > 0) &&
           (id_countryPayment === "13" || (id_countryPayment === "3" && streetPayment.length > 0 && cityPayment.length > 0))) {
           validatedPayment = await validateAddressApiCheckout(postcodePayment.trim(), streetPayment.trim(), houseNumberPayment.trim(), extensionPayment.trim(), id_countryPayment.trim(), cityPayment.trim(), "invoice");
         }
       }
-
-      // $('#delivery-address input[name="phone"]').siblings('.error-small').remove();
-      // if ($('#delivery-address input[name="phone"]').val() === '' && $('#delivery-address input[name="postcode"]').length > 3) {
-      //   $('#delivery-address input[name="phone"]').parent().append(inputMessage(required_error));
-      //   return false;
-      // }
-      //
-      // $('#invoice-address input[name="phone"]').siblings('.error-small').remove();
-      // if (!$('#use_same_address').is(':checked')) {
-      //   if ($('#invoice-address input[name="phone"]').val() === '' && $('#delivery-address input[name="postcode"]').length > 3) {
-      //     $('#invoice-address input[name="phone"]').parent().append(inputMessage(required_error));
-      //     return false;
-      //   }
-      // }
-
-      // $('input[name="conditions_to_approve[terms-and-conditions]"]').siblings('.error-small').remove();
-      // if (!$('input[name="conditions_to_approve[terms-and-conditions]"]').is(':checked')) {
-      //   $('input[name="conditions_to_approve[terms-and-conditions]"]').parent().append('<span class="error-small">Accepteer a.u.b. onze algemene voorwaarden om uw bestelling af te ronden.</span>');
-      //   return false;
-      // } else {
-      //   $('input[name="conditions_to_approve[terms-and-conditions]"]').siblings('.error-small').remove();
-      // }
 
       if ((validated && useForInvoice) || (validated && validatedPayment && !useForInvoice)) {
         $('input[name="no_shipping_phone"]').siblings('.error-small').remove();
@@ -743,22 +719,14 @@ $(document).ready(() => {
         .done(function (e) {
           let isValidForConfirm = true;
           $('.address-error-msg').text(null);
-
           if (type === '') {
-
             type = 'customer_address_form';
           } else {
             type = type + '-address';
           }
-
           $('#' + type + '-new').find('.error-small').remove();
           let newElemType = $('#' + type + '-new');
-          let countryElem = $('#' + type + ' [name="id_country"]');
-          let postcodeElem = $('#' + type + ' [name="postcode"]');
-          let cityElem = $('#' + type + ' [name="city"]');
-          let address1Elem = $('#' + type + ' [name="address1"]');
           let houseNumberElem = $('#' + type + ' [name="house_number"]');
-          let houseNumberExtElem = $('#' + type + ' [name="house_number_extension"]');
 
           if (!e.hasOwnProperty('address')) {
 
@@ -768,44 +736,24 @@ $(document).ready(() => {
             }
             resolve(isValidForConfirm);
           }
-
           if (e.valid !== false && e.hasOwnProperty('address') && e.address.countryCode === 'NL') { // is een nederlands adres
-
             if (e.address.street !== 'undefined') {
-              address1Elem.val(e.address.street);
               isValidForConfirm = true;
             } else {
               isValidForConfirm = false;
             }
-
             if (houseNumberElem.val().length > 0) {
               isValidForConfirm = true;
             } else {
               if (e.address.streetnumbers) {
                 newElemType.append(inputMessage('Bij deze postcode zijn de volgende nummers ' + e.address.streetnumbers + ' beschikbaar', 'text-warning'));
               }
-              if (houseNumberElem.val() === '') {
-              }
               isValidForConfirm = false;
             }
-
-            if (e.address.settlement !== undefined) {
-              cityElem.val(e.address.settlement);
-            }
           } else if (e.valid !== false && e.hasOwnProperty('address') && e.address.countryCode === 'BE') {
-            if (e.address.street !== undefined) {
-              address1Elem.val(e.address.street);
-            }
-
-            // is een belgisch adres
-            if (e.address.settlement !== undefined) {
-              cityElem.val(e.address.settlement);
-            }
-
             isValidForConfirm = true;
           } else if (e.valid === false || e.address.length === 0) {
             isValidForConfirm = false;
-
             if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field !== undefined) {
               newElemType.append(inputMessage(e.msg.msg, 'text-warning'));
               isValidForConfirm = false;

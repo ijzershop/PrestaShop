@@ -156,6 +156,7 @@ class GuestTrackingControllerCore extends FrontController
 
         $this->context->smarty->assign([
             'order' => (new OrderPresenter())->present($this->order),
+            'orderObject' => $this->order,
             'guest_email' => Tools::getValue('email'),
             'registered_customer_exists' => $registered_customer_exists,
             'is_customer' => $registered_customer_exists, // Kept for backwards compatibility

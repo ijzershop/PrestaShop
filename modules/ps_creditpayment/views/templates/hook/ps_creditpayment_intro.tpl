@@ -31,8 +31,7 @@
             placeholder="Klant" aria-label="Klant" aria-describedby="customer-selection">
       <option readonly="true">Selecteer een klant</option>
         {foreach from=$customers item=customer key=index}
-          <option value="{$customer.id_customer}"
-                  {if $index == 0}selected{/if}>{if !empty($customer.company)}{$customer.company} - {/if} {$customer.firstname} {$customer.lastname}
+          <option value="{$customer.id_customer}">{if !empty($customer.company)}{$customer.company} - {/if} {$customer.firstname} {$customer.lastname}
             - {$customer.email}</option>
         {/foreach}
     </select>

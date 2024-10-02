@@ -1,4 +1,9 @@
 #notifications {
+  position: absolute;
+  z-index:9999999;
+  width: 100%;
+  left: 0;
+  padding: 15%;
   ul {
     margin-bottom: 0;
   }

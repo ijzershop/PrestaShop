@@ -65,8 +65,17 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
         }
         $cart = $this->context->cart;
 
+        if((int)$cart->id_customer <= 0){
+           $this->errors[] = $this->trans(
+                'U heeft geen klant geselecteerd, bij klant op rekening. Let op! de betaaloptie staat nu weer op de standaard pin-betaling.',
+                array(),
+                'Shop.Notifications.Error'
+            );
 
-        if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active){
+            $this->redirectWithNotifications('index.php?controller=order&step=1');
+        }
+
+        if ($cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active){
             Tools::redirect('index.php?controller=order&step=1');
         }
 

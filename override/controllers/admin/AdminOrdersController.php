@@ -280,9 +280,9 @@ class AdminOrdersController extends AdminOrdersControllerCore
         $result = PaymentModule::resendOrderConfirmationMailToCustomer($order);
 
         if($result){
-            return die(json_encode(array('success'=>true,'msg'=>'Bestelling gekoppeld aan klant: '. $customer)));
+            return die(json_encode(array('success'=>true,'msg'=>'Bestel bevestiging verzonden naar '. $customer)));
         } else {
-            return die(json_encode(array('success'=>false,'msg'=>'Koppelen van de bestelling aan klant : '. $customer. ' is niet gelukt, probeer het nogmaal')));
+            return die(json_encode(array('success'=>false,'msg'=>'Bestelbevestiging verzenden naar '. $customer. ' is niet gelukt, probeer het nogmaal')));
         }
 
         return die(json_encode(array('success'=>false,'msg'=>'Klant met naam: '. $customer.' en email adres: '.$email.' kon niet gevonden worden in de database')));
@@ -303,9 +303,9 @@ class AdminOrdersController extends AdminOrdersControllerCore
                 // Update order and set new customer id
                 $result = Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'orders` SET `id_customer`='.$id.' WHERE `id_order` = '.(int)$order);
                 if($result){
-                    return die(json_encode(array('success'=>true,'msg'=>'Bestel bevestiging verzonden naar '. $customer)));
+                    return die(json_encode(array('success'=>true,'msg'=>'Bestelling gekoppeld aan klant: '. $customer)));
                 } else {
-                    return die(json_encode(array('success'=>false,'msg'=>'Bestelbevestiging verzenden naar '. $customer. ' is niet gelukt, probeer het nogmaal')));
+                    return die(json_encode(array('success'=>false,'msg'=>'Koppelen van de bestelling aan klant : '. $customer. ' is niet gelukt, probeer het nogmaal')));
                 }
             }
         }

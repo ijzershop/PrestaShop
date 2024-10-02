@@ -702,8 +702,7 @@ class PaymentModule extends PaymentModuleCore
             $invoice_state = $invoice->id_state ? new State((int) $invoice->id_state) : false;
             $carrier = $order->id_carrier ? new Carrier($order->id_carrier) : false;
 
-
-            if ((int) Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number) {
+            if ((int) Configuration::get('PS_INVOICE') && $order->invoice_number) {
                 $context->language = $language;
                 $context->getTranslator()->setLocale($language->locale);
                 $order_invoice_list = $order->getInvoicesCollection();

@@ -752,7 +752,7 @@ class OrderCore extends ObjectModel
             $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
         }
 
-        $product['location'] = StockAvailable::getLocation($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
+        $product['location'] = (string) StockAvailable::getLocation($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
     }
 
     /**
@@ -971,7 +971,6 @@ class OrderCore extends ObjectModel
      */
     public static function getCustomerOrders($id_customer, $show_hidden_status = false, Context $context = null)
     {
-
         if (!$context) {
             $context = Context::getContext();
         }
@@ -1000,20 +999,14 @@ class OrderCore extends ObjectModel
             return [];
         }
 
-
         foreach ($res as $key => $val) {
             // In case order creation crashed midway some data might be absent
             $orderState = !empty($val['id_order_state']) ? $indexedOrderStates[$val['id_order_state']] : null;
-
-            if($orderState == null){
-                return;
-            }
-            $res[$key]['order_state'] = $orderState['name'] ?: null;
-            $res[$key]['invoice'] = $orderState['invoice'] ?: null;
-            $res[$key]['order_state_color'] = $orderState['color'] ?: null;
-
-
+            $res[$key]['order_state'] = $orderState['name'] ?? null;
+            $res[$key]['invoice'] = $orderState['invoice'] ?? null;
+            $res[$key]['order_state_color'] = $orderState['color'] ?? null;
         }
+
         return $res;
     }
 
@@ -1483,8 +1476,6 @@ class OrderCore extends ObjectModel
         $order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
         $order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
         $order_invoice->total_paid_tax_incl = $this->total_paid_tax_incl;
-        $order_invoice->total_refunded_tax_excl = $this->total_refunded_tax_excl;
-        $order_invoice->total_refunded_tax_incl = $this->total_refunded_tax_incl;
         $order_invoice->total_products = $this->total_products;
         $order_invoice->total_products_wt = $this->total_products_wt;
         $order_invoice->total_shipping_tax_excl = $this->total_shipping_tax_excl;

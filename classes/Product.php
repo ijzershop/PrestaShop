@@ -994,10 +994,10 @@ class ProductCore extends ObjectModel
             p.`date_upd` = "' . date('Y-m-d H:i:s') . '", product_shop.`date_upd` = "' . date('Y-m-d H:i:s') . '"
             WHERE cp.`position`
             ' . ($way
-                    ? '> ' . (int) $moved_product['position'] . ' AND `position` <= ' . (int) $position
-                    : '< ' . (int) $moved_product['position'] . ' AND `position` >= ' . (int) $position) . '
+                ? '> ' . (int) $moved_product['position'] . ' AND `position` <= ' . (int) $position
+                : '< ' . (int) $moved_product['position'] . ' AND `position` >= ' . (int) $position) . '
             AND `id_category`=' . (int) $moved_product['id_category'])
-            && Db::getInstance()->execute('
+        && Db::getInstance()->execute('
             UPDATE `' . _DB_PREFIX_ . 'category_product` cp
             INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (p.`id_product` = cp.`id_product`)
             ' . Shop::addSqlAssociation('product', 'p') . '
@@ -1115,9 +1115,9 @@ class ProductCore extends ObjectModel
                 FROM ' . _DB_PREFIX_ . 'product_attribute pa
                 ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
                 ' . ($minimum_quantity > 0 ? Product::sqlStock('pa', 'pa') : '') .
-            ' WHERE product_attribute_shop.default_on = 1 '
-            . ($minimum_quantity > 0 ? ' AND IFNULL(stock.quantity, 0) >= ' . (int) $minimum_quantity : '') .
-            ' AND pa.id_product = ' . (int) $id_product;
+                ' WHERE product_attribute_shop.default_on = 1 '
+                . ($minimum_quantity > 0 ? ' AND IFNULL(stock.quantity, 0) >= ' . (int) $minimum_quantity : '') .
+                ' AND pa.id_product = ' . (int) $id_product;
         $result = (int) Db::getInstance()->getValue($sql);
 
         // If not, check if there is ANY combination matching minimum_quantity, if yes - not perfect, but works
@@ -1126,8 +1126,8 @@ class ProductCore extends ObjectModel
                     FROM ' . _DB_PREFIX_ . 'product_attribute pa
                     ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
                     ' . ($minimum_quantity > 0 ? Product::sqlStock('pa', 'pa') : '') .
-                ' WHERE pa.id_product = ' . (int) $id_product
-                . ($minimum_quantity > 0 ? ' AND IFNULL(stock.quantity, 0) >= ' . (int) $minimum_quantity : '');
+                    ' WHERE pa.id_product = ' . (int) $id_product
+                    . ($minimum_quantity > 0 ? ' AND IFNULL(stock.quantity, 0) >= ' . (int) $minimum_quantity : '');
 
             $result = (int) Db::getInstance()->getValue($sql);
         }
@@ -1666,13 +1666,13 @@ class ProductCore extends ObjectModel
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product` ' . Shop::addSqlRestrictionOnLang('pl') . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
                 LEFT JOIN `' . _DB_PREFIX_ . 'supplier` s ON (s.`id_supplier` = p.`id_supplier`)' .
-            ($id_category ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_product` c ON (c.`id_product` = p.`id_product`)' : '') . '
+                ($id_category ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_product` c ON (c.`id_product` = p.`id_product`)' : '') . '
                 WHERE pl.`id_lang` = ' . (int) $id_lang .
-            ($id_category ? ' AND c.`id_category` = ' . (int) $id_category : '') .
-            ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') .
-            ($only_active ? ' AND product_shop.`active` = 1' : '') . '
+                    ($id_category ? ' AND c.`id_category` = ' . (int) $id_category : '') .
+                    ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') .
+                    ($only_active ? ' AND product_shop.`active` = 1' : '') . '
                 ORDER BY ' . (isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . '`' . pSQL($order_by) . '` ' . pSQL($order_way) .
-            ($limit > 0 ? ' LIMIT ' . (int) $start . ',' . (int) $limit : '');
+                ($limit > 0 ? ' LIMIT ' . (int) $start . ',' . (int) $limit : '');
         $rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
         if ($order_by == 'price') {
             Tools::orderbyPrice($rq, $order_way);
@@ -2054,9 +2054,9 @@ class ProductCore extends ObjectModel
         ], 'a.`id_product` = ' . (int) $this->id . ' AND a.`id_product_attribute` = ' . (int) $id_product_attribute);
 
         $result = $result && ObjectModel::updateMultishopTable('product', [
-                'cache_default_attribute' => (int) $id_product_attribute,
-                'product_type' => $this->product_type,
-            ], 'a.`id_product` = ' . (int) $this->id);
+            'cache_default_attribute' => (int) $id_product_attribute,
+            'product_type' => $this->product_type,
+        ], 'a.`id_product` = ' . (int) $this->id);
 
         $this->cache_default_attribute = (int) $id_product_attribute;
 
@@ -2688,7 +2688,7 @@ class ProductCore extends ObjectModel
             LEFT JOIN `' . _DB_PREFIX_ . 'feature_value` as f ON (f.`id_feature_value` = p.`id_feature_value`)
             ' . (!$all_shops ? 'LEFT JOIN `' . _DB_PREFIX_ . 'feature_shop` fs ON (f.`id_feature` = fs.`id_feature`)' : null) . '
             WHERE `id_product` = ' . (int) $this->id
-            . (!$all_shops ? ' AND fs.`id_shop` = ' . (int) Context::getContext()->shop->id : '')
+                . (!$all_shops ? ' AND fs.`id_shop` = ' . (int) Context::getContext()->shop->id : '')
         );
 
         foreach ($features as $tab) {
@@ -4057,7 +4057,8 @@ class ProductCore extends ObjectModel
         int $combinationId,
         bool $withTaxes,
         bool $useReduction,
-        bool $withEcoTax
+        bool $withEcoTax,
+        int $customizationId = 0
     ): ?float {
         $sql = new DbQuery();
         $sql->select('od.*, t.rate AS tax_rate');
@@ -4066,6 +4067,9 @@ class ProductCore extends ObjectModel
         $sql->where('od.`product_id` = ' . $productId);
         if (Combination::isFeatureActive()) {
             $sql->where('od.`product_attribute_id` = ' . $combinationId);
+        }
+        if (Customization::isFeatureActive()) {
+            $sql->where('od.`id_customization` = ' . $customizationId);
         }
         $sql->leftJoin('order_detail_tax', 'odt', 'odt.id_order_detail = od.id_order_detail');
         $sql->leftJoin('tax', 't', 't.id_tax = odt.id_tax');
@@ -4692,7 +4696,7 @@ class ProductCore extends ObjectModel
                 LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (p.`id_manufacturer`= m.`id_manufacturer`)
                 ' . Product::sqlStock('p', 0) . '
                 WHERE `id_product_1` = ' . (int) $this->id .
-            ($active ? ' AND product_shop.`active` = 1 AND product_shop.`visibility` != \'none\'' : '') . '
+                ($active ? ' AND product_shop.`active` = 1 AND product_shop.`visibility` != \'none\'' : '') . '
                 GROUP BY product_shop.id_product';
 
         if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
@@ -5895,7 +5899,7 @@ class ProductCore extends ObjectModel
      *
      * @return float
      */
-    protected static function computeUnitPriceRatio(array $productRow, int $combinationId, int $quantity, Context $context): float
+    private static function computeUnitPriceRatio(array $productRow, int $combinationId, int $quantity, Context $context): float
     {
         $baseUnitPrice = 0.0;
         if (isset($productRow['unit_price'])) {
@@ -6126,7 +6130,7 @@ class ProductCore extends ObjectModel
             FROM `' . _DB_PREFIX_ . 'customized_data` cd
             NATURAL JOIN `' . _DB_PREFIX_ . 'customization` c
             LEFT JOIN `' . _DB_PREFIX_ . 'customization_field_lang` cfl ON (cfl.id_customization_field = cd.`index` AND id_lang = ' . (int) $id_lang .
-            ($id_shop ? ' AND cfl.`id_shop` = ' . (int) $id_shop : '') . ')
+                ($id_shop ? ' AND cfl.`id_shop` = ' . (int) $id_shop : '') . ')
             WHERE c.`id_cart` = ' . (int) $id_cart .
             ($only_in_cart ? ' AND c.`in_cart` = 1' : '') .
             ((int) $id_customization ? ' AND cd.`id_customization` = ' . (int) $id_customization : '') . '
@@ -6217,9 +6221,9 @@ class ProductCore extends ObjectModel
 
                 if ($customization_quantity) {
                     $product_update['total_wt'] = $price_wt * ($product_quantity - $customization_quantity);
-                    $product_update['total_customization_wt'] = $price_wt * $customization_quantity;
+                    $product_update['total_customization_wt'] = $product_update['unit_price_tax_incl'] * $customization_quantity;
                     $product_update['total'] = $price * ($product_quantity - $customization_quantity);
-                    $product_update['total_customization'] = $price * $customization_quantity;
+                    $product_update['total_customization'] = $product_update['unit_price_tax_excl'] * $customization_quantity;
                 }
             }
         }
@@ -6275,11 +6279,11 @@ class ProductCore extends ObjectModel
 
         /* Get customization field ids */
         if (($result = Db::getInstance()->executeS(
-                'SELECT `id_customization_field`, `type`
+            'SELECT `id_customization_field`, `type`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `id_product` = ' . (int) $this->id . '
             ORDER BY `id_customization_field`'
-            )) === false) {
+        )) === false) {
             return false;
         }
 
@@ -7488,7 +7492,7 @@ class ProductCore extends ObjectModel
         return Db::getInstance()->executeS('
         SELECT pa.id_product_attribute
         FROM `' . _DB_PREFIX_ . 'product_attribute` pa' .
-            ($shop_only ? Shop::addSqlAssociation('product_attribute', 'pa') : '') . '
+        ($shop_only ? Shop::addSqlAssociation('product_attribute', 'pa') : '') . '
         WHERE pa.`id_product` = ' . (int) $id_product);
     }
 
@@ -7510,7 +7514,7 @@ class ProductCore extends ObjectModel
 
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->executeS('
-            SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`,
+            SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`, agl.`public_name` as `public_group`,
             pa.`reference`, pa.`ean13`, pa.`isbn`, pa.`upc`, pa.`mpn`,
             pal.`available_now`, pal.`available_later`
             FROM `' . _DB_PREFIX_ . 'attribute` a
@@ -7667,7 +7671,7 @@ class ProductCore extends ObjectModel
             foreach ($a as &$b) {
                 $b = str_replace($sep, '_', Tools::str2url((string) $b));
             }
-            $anchor .= '/' . ($with_id && isset($a['id_attribute']) && $a['id_attribute'] ? (int) $a['id_attribute'] . $sep : '') . $a['group'] . $sep . $a['name'];
+            $anchor .= '/' . ($with_id && isset($a['id_attribute']) && $a['id_attribute'] ? (int) $a['id_attribute'] . $sep : '') . $a['public_group'] . $sep . $a['name'];
         }
 
         return $anchor;

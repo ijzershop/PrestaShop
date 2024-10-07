@@ -113,6 +113,13 @@ class GuestTrackingControllerCore extends FrontController
                     [],
                     'Shop.Notifications.Error'
                 );
+            // Check if a different customer with the same email was not already created in a different window or through backoffice
+            } elseif (Customer::customerExists($customer->email)) {
+                $this->errors[] = $this->trans(
+                    'You can\'t transform your account into a customer account, because a registered customer with the same email already exists.',
+                    [],
+                    'Shop.Notifications.Error'
+                );
             // Attempt to convert the customer
             } elseif ($customer->transformToCustomer($this->context->language->id, $password)) {
                 $this->success[] = $this->trans(
@@ -156,7 +163,6 @@ class GuestTrackingControllerCore extends FrontController
 
         $this->context->smarty->assign([
             'order' => (new OrderPresenter())->present($this->order),
-            'orderObject' => $this->order,
             'guest_email' => Tools::getValue('email'),
             'registered_customer_exists' => $registered_customer_exists,
             'is_customer' => $registered_customer_exists, // Kept for backwards compatibility

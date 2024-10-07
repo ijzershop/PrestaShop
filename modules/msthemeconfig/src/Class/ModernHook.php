@@ -1833,9 +1833,9 @@ public function hookActionFrontControllerSetVariables(&$param): void
      * @param array $params
      *
      */
-    public function hookActionObjectCategoryUpdateAfter(array $params): array
+    public function hookActionObjectCategoryUpdateAfter(array $params)
     {
-        return $this->updateCustomCategoryFields($params);
+        $this->updateCustomCategoryFields($params);
     }
 
     /**
@@ -1844,13 +1844,13 @@ public function hookActionFrontControllerSetVariables(&$param): void
      * @param array $params
      *
      */
-    private function updateCustomCategoryFields(array $params): array
+    private function updateCustomCategoryFields(array $params)
     {
+
         $idLang = Context::getContext()->language->id;
         $form_values = Tools::getAllValues();
 
         $object = $params['object'] ?? new Category($params['id']);
-
 
 
         if(isset($form_values['category'])){
@@ -1862,37 +1862,40 @@ public function hookActionFrontControllerSetVariables(&$param): void
         }
 
         if(empty($categoryFormData)){
-            return $params;
+            return;
         }
 
-        if (!isset($categoryFormData['top_description'][$idLang])) {
+        if (empty($categoryFormData['additional_description'])) {
+            $additional_description = '';
+        } else {
+            $additional_description = $categoryFormData['additional_description'][$idLang];
+        }
+
+
+        if (empty($categoryFormData['top_description'])) {
             $top_description = '';
         } else {
             $top_description = $categoryFormData['top_description'][$idLang];
         }
 
-        if (!isset($categoryFormData['second_name'][$idLang])) {
+        if (empty($categoryFormData['second_name'])) {
             $second_name = '';
         } else {
             $second_name = $categoryFormData['second_name'][$idLang];
         }
 
-        if (!isset($categoryFormData['jsonld'][$idLang])) {
+        if (empty($categoryFormData['jsonld'])) {
             $jsonld = '';
         } else {
             $jsonld = $categoryFormData['jsonld'][$idLang];
         }
 
-//        $fields = [
-//            'top_description' => $top_description,
-//            'second_name' => $second_name,
-//            'jsonld' => $jsonld,
-//        ];
-
-//        Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'category_lang WHERE id_category=' . $object->id .' AND id_lang='.$idLang)
-//        $object->clearCache();
-
-        return $params;
+        $object->additional_description[$idLang] = $additional_description;
+        $object->top_description[$idLang] = $top_description;
+        $object->second_name[$idLang] = $second_name;
+        $object->jsonld[$idLang] = $jsonld;
+        $object->update();
+        return;
     }
 
     /**
@@ -1903,9 +1906,9 @@ public function hookActionFrontControllerSetVariables(&$param): void
      * @param array $params
      *
      */
-    public function hookActionAfterCreateCategoryFormHandler(array $params): void
+    public function hookActionAfterCreateCategoryFormHandler(array $params)
     {
-        $this->updateCustomCategoryFields($params);
+//       $this->updateCustomCategoryFields($params);
     }
 
 
@@ -2008,7 +2011,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
      * @param array $params
      *
      */
-    public function hookActionAfterUpdateRootCategoryFormHandler(array $params): void
+    public function hookActionAfterUpdateRootCategoryFormHandler(array $params)
     {
         $this->updateCustomCategoryFields($params);
     }
@@ -2021,7 +2024,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
      * @param array $params
      *
      */
-    public function hookActionAfterCreateRootCategoryFormHandler(array $params): void
+    public function hookActionAfterCreateRootCategoryFormHandler(array $params)
     {
         $this->updateCustomCategoryFields($params);
     }

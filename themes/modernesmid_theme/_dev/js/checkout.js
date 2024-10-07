@@ -492,62 +492,62 @@ $(document).ready(() => {
       validateNameInputFields(this);
     }));
   //Postcode on adres form validation
-  $('#customer_address_form input[name="postcode"], #delivery-address input[name="postcode"], #invoice-address input[name="postcode"]')
+  $('#customer_address_form input[name="postcode"],#checkout-form input[name="postcode"], #delivery-address input[name="postcode"], #invoice-address input[name="postcode"]')
     .on('keyup paste', delayKeyUp(function (e) {
       e.stopImmediatePropagation();
-      let value = $(this).val();
-      let chosenCountry = $(this).parents('form').find('.js-country').val();
-      let check = validatePostCode(value, chosenCountry);
-      if (check) {
-        validatePostcodeInputFields(this);
-      }
+      // let value = $(this).val();
+      // let chosenCountry = $(this).parents('form').find('.js-country').val();
+      // let check = validatePostCode(value, chosenCountry);
+      // if (check) {
+      //   validatePostcodeInputFields(this);
+      // }
     }));
   //Address
-  $('#customer_address_form input[name="address1"], #delivery-address input[name="address1"], #invoice-address input[name="address1"]')
+  $('#customer_address_form input[name="address1"],#checkout-form input[name="address1"], #delivery-address input[name="address1"], #invoice-address input[name="address1"]')
     .on('keyup paste', delayKeyUp(function (e) {
       validateAddressInputFields(this);
       e.stopImmediatePropagation();
     }));
   //Huisnummer
-  $('#customer_address_form input[name="house_number"], #delivery-address input[name="house_number"], #invoice-address input[name="house_number"]')
+  $('#customer_address_form input[name="house_number"],#checkout-form input[name="house_number"], #delivery-address input[name="house_number"], #invoice-address input[name="house_number"]')
     .on('keyup paste', delayKeyUp(function (e) {
       validateHouseNumberInputFields(this);
       e.stopImmediatePropagation();
     }));
   //Huisnummer extensie
-  $('#customer_address_form input[name="house_number_extension"], #delivery-address input[name="house_number_extension"], #invoice-address input[name="house_number_extension"]')
+  $('#customer_address_form input[name="house_number_extension"],#checkout-form input[name="house_number_extension"], #delivery-address input[name="house_number_extension"], #invoice-address input[name="house_number_extension"]')
     .on('keyup paste', delayKeyUp(function (e) {
       checkFormatAddressApiCheckout().then(r => {
         return true;
       });
     }));
   //Alias
-  $('#invoice-address input[name="alias"], #customer_address_form input[name="alias"], #delivery-address input[name="alias"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#invoice-address input[name="alias"], #customer_address_form input[name="alias"],#checkout-form input[name="alias"], #delivery-address input[name="alias"]').on('keyup paste', delayKeyUp(function (e) {
     validateAliasInputFields(this);
     e.stopImmediatePropagation();
   }));
   //Company fields address
-  $('#customer_address_form input[name="company"], #delivery-address input[name="company"], #invoice-address input[name="company"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#customer_address_form input[name="company"],#checkout-form input[name="company"], #delivery-address input[name="company"], #invoice-address input[name="company"]').on('keyup paste', delayKeyUp(function (e) {
     validateCompanyInputFields(this);
     e.stopImmediatePropagation();
   }));
   //Phone number
-  $('#customer_address_form input[name="phone"], #delivery-address input[name="phone"], #invoice-address input[name="phone"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#customer_address_form input[name="phone"],#checkout-form input[name="phone"], #delivery-address input[name="phone"], #invoice-address input[name="phone"]').on('keyup paste', delayKeyUp(function (e) {
     validatePhoneInputFields(this);
     e.stopImmediatePropagation();
   }));
   //mobile phonenumber
-  $('#customer_address_form input[name="phone_mobile"], #delivery-address input[name="phone_mobile"], #invoice-address input[name="phone_mobile"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#customer_address_form input[name="phone_mobile"],#checkout-form input[name="phone_mobile"], #delivery-address input[name="phone_mobile"], #invoice-address input[name="phone_mobile"]').on('keyup paste', delayKeyUp(function (e) {
     validatePhoneInputFields(this, false);
     e.stopImmediatePropagation();
   }));
   //Other text data
-  $('#invoice-address textarea[name="other"], #customer_address_form textarea[name="other"], #delivery-address textarea[name="other"]').on('keyup paste', delayKeyUp(function (e) {
+  $('#invoice-address textarea[name="other"], #customer_address_form textarea[name="other"],#checkout-form textarea[name="other"], #delivery-address textarea[name="other"]').on('keyup paste', delayKeyUp(function (e) {
     validateTextInputFields(this);
     e.stopImmediatePropagation();
   }));
 
-  $('div#delivery-address .btn[name="confirm-addresses"], div#invoice-address .btn[name="confirm-addresses"], form#customer_address_form .btn[name="confirm-addresses"]').on('click', function (e) {
+  $(document).on('click', 'div#delivery-address .btn[name="confirm-addresses"], div#invoice-address .btn[name="confirm-addresses"], form#customer_address_form .btn[name="confirm-addresses"], form#checkout-form .btn[name="confirm-addresses"]', function (e) {
     e.stopImmediatePropagation();
 
     let formElem = e.target.form;
@@ -566,10 +566,10 @@ $(document).ready(() => {
     } else {
       country = "X";
     }
-
     let insertedAddress = address + ' ' + houseNumber + houseNumberExtension + '<br>'
       + postcode + ' ' + city
       + '<br>' + country;
+    console.log([insertedData, insertedAddress]);
 
     checkFormatAddressApiCheckout(true).then(async fullfilled => {
         if (fullfilled) {
@@ -629,8 +629,31 @@ $(document).ready(() => {
 
       let city = $('#customer_address_form input[name="city"]').val();
 
-      if (validate && postcode !== undefined && (postcode.length >= 4 || houseNumber.length > 0) &&
-        (id_country === "13" || (id_country === "3" && street.length > 0))) {
+      if (validate && postcode !== undefined && (postcode.length >= 4 || houseNumber.length > 0)) {
+        validated = await validateAddressApiCheckout(postcode.trim(), street.trim(), houseNumber.trim(), extension.trim(), id_country.trim(), '', "");
+      }
+
+      if (validated) {
+        return true;
+      }
+
+    }else if ($('#checkout-form input[name="postcode"]').val() !== undefined) {
+      //is an my-account customer form
+      if ($('#checkout-form input[name="postcode"]').val() !== undefined) {
+        postcode = $('#checkout-form input[name="postcode"]').val().replace(' ', '');
+      }
+      if ($('#checkout-form input[name="house_number"]').val() !== undefined) {
+        houseNumber = $('#checkout-form input[name="house_number"]').val().replace(' ', '');
+      }
+      let extension = $('#checkout-form input[name="house_number_extension"]').val();
+
+      let street = $('#checkout-form input[name="address1"]').val();
+
+      let id_country = $('#checkout-form select[name="id_country"]').val();
+
+      let city = $('#checkout-form input[name="city"]').val();
+
+      if (validate && postcode !== undefined && (postcode.length >= 4 || houseNumber.length > 0)) {
         validated = await validateAddressApiCheckout(postcode.trim(), street.trim(), houseNumber.trim(), extension.trim(), id_country.trim(), '', "");
       }
 
@@ -654,8 +677,7 @@ $(document).ready(() => {
 
       let city = $('#delivery-address input[name="city"]').val();
 
-      if (validate && postcode !== undefined && (postcode.length >= 5 || houseNumber.length > 0) &&
-        (id_country === "13" || (id_country === "3" && street.length > 0))) {
+      if (validate && postcode !== undefined && (postcode.length >= 4 || houseNumber.length > 0)) {
         validated = await validateAddressApiCheckout(postcode.trim(), street.trim(), houseNumber.trim(), extension.trim(), id_country.trim(), city.trim(), "delivery");
       }
 
@@ -676,8 +698,7 @@ $(document).ready(() => {
         let cityPayment = $('#invoice-address input[name="city"]').val();
 
         let id_countryPayment = $('#invoice-address select[name="id_country"]').val();
-        if (validate && postcodePayment !== undefined && (postcodePayment.length >= 5 || houseNumberPayment.length > 0) &&
-          (id_countryPayment === "13" || (id_countryPayment === "3" && streetPayment.length > 0 && cityPayment.length > 0))) {
+        if (validate && postcodePayment !== undefined && (postcodePayment.length >= 4 || houseNumberPayment.length > 0)) {
           validatedPayment = await validateAddressApiCheckout(postcodePayment.trim(), streetPayment.trim(), houseNumberPayment.trim(), extensionPayment.trim(), id_countryPayment.trim(), cityPayment.trim(), "invoice");
         }
       }

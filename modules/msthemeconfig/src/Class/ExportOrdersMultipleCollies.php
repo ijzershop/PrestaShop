@@ -275,6 +275,7 @@ class ExportOrdersMultipleCollies
             $sql->where('o.current_state IN (' . $state . ')');
             $sql->where('o.id_carrier = ' . $carrier);
         }
+        $sql->groupBy('o.id_order');
         $sql->limit($max);
 
         return Db::getInstance()->executeS($sql);

@@ -23,38 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {if $errors|count}
-
-
-
-
-
-{*<style>*}
-{*  .alert:not('#custom-msg'){*}
-{*    position: fixed;*}
-{*    top:20%;*}
-{*    left: calc(30% / 2);*}
-{*    z-index: 99;*}
-{*    width: 70%;*}
-{*    font-size: 1rem;*}
-{*    font-weight: bold;*}
-{*  }*}
-{*  .alert-heading{*}
-{*    opacity: .5;*}
-{*  }*}
-{*  .alert:not('#custom-msg') .close{*}
-{*    opacity: .5;*}
-{*    color:#ffffff;*}
-{*  }*}
-{*  .alert:not('#custom-msg') .contact-msg{*}
-{*    opacity: .5;*}
-{*  }*}
-{*</style>*}
 {block name='form_errors'}
 <aside id="notifications">
   <div class="row pl-1 pr-1 pt-1">
 
       {block name='notifications_error'}
-        <article class="alert alert-danger col-12 p-1 m-0" role="alert" data-alert="danger">
+        <article style="z-index: 999999;" class="alert alert-danger col-12 p-1 m-0" role="alert" data-alert="danger">
           <div class="row">
             <div class="col-2 my-auto"><i class="fasl fa-warning w-100 fa-4x"></i></div>
             <div class="col-10">

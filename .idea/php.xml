@@ -331,12 +331,10 @@
       <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/guzzlehttp/guzzle" />
       <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/psr/http-factory" />
-      <path value="$PROJECT_DIR$/vendor/pcloud/pcloud-php-sdk" />
       <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/segmentio/analytics-php" />
-      <path value="$PROJECT_DIR$/modules/ps_facetedsearch/vendor/doctrine/collections" />
-      <path value="$PROJECT_DIR$/modules/ps_facetedsearch/vendor/composer" />
       <path value="$PROJECT_DIR$/modules/ps_imageslider/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/pcloud/pcloud-php-sdk" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

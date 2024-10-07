@@ -325,8 +325,6 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_mbo_backup/vendor/symfony/string" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_mbo_backup/vendor/symfony/workflow" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/segmentio/analytics-php" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/ps_facetedsearch/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/ps_facetedsearch/vendor/doctrine/collections" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_imageslider/vendor/composer" />
     </content>
     <orderEntry type="inheritedJdk" />

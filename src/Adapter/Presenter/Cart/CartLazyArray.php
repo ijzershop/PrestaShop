@@ -542,6 +542,33 @@ class CartLazyArray extends AbstractLazyArray
                 $totalCartVoucherReduction = $this->cartPresenter->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
             }
 
+            //Toegevoegd door JB Stoker
+            if($cartVoucher['reduction_tax']){
+                $reduction = (float)$cartVoucher['reduction_amount'];
+                $reduction_tax_exc = (float)$cartVoucher['reduction_amount']/1.21;
+            } else {
+                $reduction = (float)$cartVoucher['reduction_amount']*1.21;
+                $reduction_tax_exc = (float)$cartVoucher['reduction_amount'];
+            }
+
+            $totalShippingDiscount = 0;
+            $totalShippingDiscountTaxExcl = 0;
+            if($cartVoucher['free_shipping']){
+                $totalShippingDiscount = (float)$this->cart->getTotalShippingCost(null, true);
+                $totalShippingDiscountTaxExcl = (float)$this->cart->getTotalShippingCost(null, false);
+            }
+
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount_full'] = $this->priceFormatter->format( '-' . $reduction, Context::getContext()->currency);
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount_full_tax_exc'] = $this->priceFormatter->format( '-' . $reduction_tax_exc, Context::getContext()->currency);
+
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_percentage'] = $this->priceFormatter->format( '-' . (float)$cartVoucher['reduction_percent'], Context::getContext()->currency);
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_value'] = $this->priceFormatter->format( '-' . (float)$cartVoucher['value_real']+$totalShippingDiscount, Context::getContext()->currency);
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_value_tax_excl'] = $this->priceFormatter->format( '-' . (float)$cartVoucher['value_tax_exc']+$totalShippingDiscountTaxExcl, Context::getContext()->currency);
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = '-'.(float)$cartVoucher['value_real'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount_tax_excl'] = '-'.(float)$cartVoucher['value_tax_exc'];
+            //Einde Toevoeging
+
+
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
             if ($freeShippingOnly) {
                 $cartVoucher['reduction_formatted'] = $this->translator->trans(
@@ -549,10 +576,18 @@ class CartLazyArray extends AbstractLazyArray
                     [],
                     'Admin.Shipping.Feature'
                 );
+                $cartVoucher['reduction_shipping'] = $this->translator->trans(
+                    'Free shipping',
+                    [],
+                    'Admin.Shipping.Feature'
+                );
             } else {
                 $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->format($totalCartVoucherReduction);
+                $cartVoucher['reduction_shipping'] = 0;
             }
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
+
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_include_shipping'] = $cartVoucher['reduction_shipping'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $this->priceFormatter->format('-' . $totalCartVoucherReduction);
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
                 null,

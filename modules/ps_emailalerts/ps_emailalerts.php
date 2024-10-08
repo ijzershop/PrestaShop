@@ -641,7 +641,7 @@ class Ps_EmailAlerts extends Module
             '{gift_message}' => $order->gift_message,
             '{message}' => $message,
         ];
-
+dd($template_vars);
         // Shop iso
         $iso = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
 

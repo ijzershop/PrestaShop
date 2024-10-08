@@ -489,6 +489,7 @@ class Mail extends MailCore
                 $templateVars['{shop_logo}'] = $message->embed(\Swift_Image::fromPath($logo));
             }
 
+
             if ((Context::getContext()->link instanceof Link) === false) {
                 Context::getContext()->link = new Link();
             }
@@ -509,8 +510,6 @@ class Mail extends MailCore
             /**
              * End added template vars
              */
-
-
 
             $templateVars['{shop_name}'] = Tools::safeOutput($configuration['PS_SHOP_NAME']);
             $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink(

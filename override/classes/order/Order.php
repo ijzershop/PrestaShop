@@ -72,7 +72,7 @@ public $shipping_number;
     public function getProductsDetail()
     {
         // The `od.ecotax` is a newly added at end as ecotax is used in multiples columns but it's the ecotax value we need
-        $sql = 'SELECT p.*, ps.*, od.*, pl.*, cd.value as customization, cd.technical_image as technical_image';
+        $sql = 'SELECT p.*, ps.*, od.*, pl.*, cd.value as customization,od.product_attribute_id as id_product_attribute, cd.technical_image as technical_image';
         $sql .= ' FROM `%sorder_detail` od';
         $sql .= ' LEFT JOIN `%sproduct` p ON (p.id_product = od.product_id)';
         $sql .= ' LEFT JOIN `%sproduct_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)';
@@ -87,7 +87,6 @@ public $shipping_number;
         $sql .= ' WHERE od.`id_order` = %d';
         $sql .= ' GROUP BY od.`id_order_detail`';
         $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id);
-
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 

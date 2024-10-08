@@ -298,7 +298,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             $order_detail
         );
 
-        if (Configuration::get('PS_PDF_IMG_INVOICE')) {
+
+
             foreach ($order_details as &$order_detail) {
                 if ($order_detail['image'] != null) {
                     $name = 'product_mini_' . (int)$order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int)$order_detail['product_attribute_id'] : '') . '.jpg';
@@ -319,7 +320,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                 }
             }
             unset($order_detail); // don't overwrite the last order_detail later
-        }
+
 
         $cart_rules = $this->order->getCartRules();
         $free_shipping = false;

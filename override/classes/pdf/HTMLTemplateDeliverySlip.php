@@ -184,16 +184,15 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                 }
             }
 
+            if (!is_null($order_detail['customizedDatas'])) {
+                foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
+                    if (!is_null($customization)) {
 
-           if (!is_null($order_detail['customizedDatas'])) {
-               foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
-                   if (!is_null($customization)) {
+                        foreach ($customization as $customizationId => $customized) {
 
-                       foreach ($customization as $customizationId => $customized) {
-                           if (isset($customized['datas'])) {
-                                   if (isset($customized['datas'][1][0]['technical_image'])) {
+                            if (isset($customized['datas'])) {
+                                if (isset($customized['datas'][1][0]['technical_image'])) {
                                        $file = $customized['datas'][1][0]['technical_image'];
-                                       // dd(exif_imagetype('https://ijzershop.nl/'.$file));
                                        if (!exif_imagetype('https://ijzershop.nl/'.$file)) {
                                             $order_detail['customizedDatas'][$addressId][$customizationId]['datas'][1][0]['technical_image'] = "";
 

@@ -1,0 +1,9 @@
+{shop_url}
+
+{employee} wil deze discussie naar u doorzenden.
+
+Bericht geschiedenis: {messages}
+
+{employee} heeft {comment} toegevoegd
+
+{custom_footer_html}

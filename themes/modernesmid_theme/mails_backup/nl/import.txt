@@ -1,0 +1,5 @@
+{shop_url}
+
+Het bestand {filename} is succesvol geïmporteerd naar uw webwinkel.
+
+{custom_footer_html}

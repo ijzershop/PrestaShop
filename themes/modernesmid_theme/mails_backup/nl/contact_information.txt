@@ -1,0 +1,25 @@
+{shop_url}
+
+Information request from {shop_name} by {name}
+
+E-mailadres van de klant: {email}
+
+Postcode:  {postcode}
+
+Phone number:  {phonenumber}
+
+Bestelreferentie:  {order_reference}
+
+Bijlage: {attached_file}
+
+Klantbericht:
+
+{message}
+
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
+
+[telefoon: 058-2123138](tel://0900-2502500)
+
+[email: info@v15.nl](mailto:info@v15.nl)
+
+{custom_footer_html}

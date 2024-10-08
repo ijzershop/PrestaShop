@@ -26,7 +26,7 @@
 	<tr>
 		<th class="header small" valign="middle">{l s='Invoice Number' d='Shop.Pdf' pdf='true'}</th>
 		<th class="header small" valign="middle">{l s='Invoice Date' d='Shop.Pdf' pdf='true'}</th>
-		<th class="header small" valign="middle">{l s='Order Reference' d='Shop.Pdf' pdf='true'}</th>
+		<th class="header small" valign="middle">{l s='Factuurnummer' d='Shop.Pdf' pdf='true'}</th>
 		<th class="header small" valign="middle">{l s='Order date' d='Shop.Pdf' pdf='true'}</th>
 		{if $addresses.invoice->vat_number}
 			<th class="header small" valign="middle">{l s='VAT Number' d='Shop.Pdf' pdf='true'}</th>

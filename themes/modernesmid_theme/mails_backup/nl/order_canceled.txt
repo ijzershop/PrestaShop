@@ -1,0 +1,17 @@
+{shop_url}
+
+Your order with the reference {order_name} has been canceled by us.
+
+Ga naar uw klantaccount voor meer info hieromtrent.
+
+Wat is de status van uw bestelling?
+Volg de status en details in uw eigen    [> klantaccount]({my_account_url})
+Geen account? Volg dan uw bestelling via    [> bestelling volgen]({guest_tracking_url})
+
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
+
+[telefoon: 058-2123138](tel://0900-2502500)
+
+[email: info@v15.nl](mailto:info@v15.nl)
+
+{custom_footer_html}

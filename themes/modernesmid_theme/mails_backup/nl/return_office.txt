@@ -1,0 +1,35 @@
+{shop_url}
+
+Er is een retour aanvraag vanuit [{shop_name}]({shop_url}) op {date} gedaan door {firstname} {lastname}
+Telefoon:	{phonenumber}
+Email:	{email}
+
+Bekijk deze retour aanvraag op [Link Retour Aanvraag]({office_return_request_link})
+
+Klant bericht
+{customer_msg}
+
+Referentie	Product	Aantal  {products_txt}
+[geuploade afbeelding]
+
+Iets vergeten te bestellen?Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.
+
+Wat is de status van uw bestelling?
+Volg de status en details in uw eigen    [> klantaccount]({my_account_url})
+Geen account? Volg dan uw bestelling via    [> bestelling volgen]({guest_tracking_url})
+
+Heeft u een vraag?
+Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
+[> veel gestelde vragen]({faq_page})
+
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
+
+[telefoon: 058-2123138](tel://0900-2502500)
+
+[email: info@v15.nl](mailto:info@v15.nl)
+
+Hoeveel sterren krijgen wij van u?,
+Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
+>  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
+
+{custom_footer_html}

@@ -127,7 +127,7 @@ class DynamicInput extends DynamicObject
     {
         parent::__construct($id, $id_lang, $id_shop);
         if($this->true_conditions == "[]"){
-        $this->true_conditions_array = json_decode($this->true_conditions, true);
+            $this->true_conditions_array = json_decode($this->true_conditions, true);
         } else {
             $this->true_conditions_array = [];
         }
@@ -323,7 +323,7 @@ class DynamicInput extends DynamicObject
             return \Cache::retrieve($cache_key);
         }
 
-        $sql = 'SELECT id_input FROM `' . _DB_PREFIX_ . 'dynamicproduct_input`
+        $sql = 'SELECT id_input FROM `' . _DB_PREFIX_ . 'dynamicproduct_input` 
             WHERE `id_customization` = ' . (int)$id_customization;
 
         $id_input = \Db::getInstance()->getValue($sql);
@@ -403,8 +403,8 @@ class DynamicInput extends DynamicObject
      */
     public function getOrderDetail()
     {
-        $sql = 'SELECT id_order_detail
-        FROM `' . _DB_PREFIX_ . 'order_detail`
+        $sql = 'SELECT id_order_detail 
+        FROM `' . _DB_PREFIX_ . 'order_detail` 
         WHERE `id_customization` = ' . (int)$this->id_customization;
         $id_order_detail = (int)\Db::getInstance()->getValue($sql);
 
@@ -485,9 +485,9 @@ class DynamicInput extends DynamicObject
                         FROM ' . _DB_PREFIX_ . 'dynamicproduct_input_field
                         WHERE `id_input` IN (' . pSQL($inputs_list) . ')
                         AND `name` IN (
-                            "width",
-                            "width_m",
-                            "width_mm",
+                            "width", 
+                            "width_m", 
+                            "width_mm", 
                             "height",
                             "height_m",
                             "height_mm",
@@ -548,8 +548,8 @@ class DynamicInput extends DynamicObject
         $id_cart = $module->provider->getCart();
 
         // check if product exists in cart wihtout id_customization
-        $sql = 'SELECT `quantity`
-        FROM `' . _DB_PREFIX_ . 'cart_product`
+        $sql = 'SELECT `quantity` 
+        FROM `' . _DB_PREFIX_ . 'cart_product` 
         WHERE `id_cart` = ' . (int)$id_cart .
             ' AND `id_product` = ' . (int)$product->id .
             ' AND `id_customization` = 0';

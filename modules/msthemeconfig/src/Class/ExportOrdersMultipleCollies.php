@@ -1,7 +1,4 @@
 <?php
-declare(strict_types=1);
-
-
 namespace MsThemeConfig\Class;
 
 use Configuration;
@@ -73,6 +70,7 @@ class ExportOrdersMultipleCollies
      */
     public function __construct($id_order, float $weight = 1, int $weightOption = 0, int $collies = 1, string $collieType = 'COL')
     {
+
         $this->idOrder = $id_order;
         $this->debug = false;
         $this->weight = (float)$weight;
@@ -86,7 +84,6 @@ class ExportOrdersMultipleCollies
         $this->idShopGroup = $this->context->shop->id_shop_group;
         $this->statusShipped = (int)Configuration::get('KOOPMANORDEREXPORT_STATUS_TRANSFERRED', $this->idLang, $this->idShopGroup, $this->idShop);
         $this->soapOptions = ['stream_context' => stream_context_create(['ssl' => ['verify_peer' => false, 'verify_peer_name' => false,],]),];
-
         $folder = Configuration::get('KOOPMANORDEREXPORT_LABELS_FOLDER', $this->idLang, $this->idShopGroup, $this->idShop);
 
         $this->labelsFolder = str_replace('private_html', 'public_html', $_SERVER['DOCUMENT_ROOT'] . '/upload/' . $folder);
@@ -139,6 +136,7 @@ class ExportOrdersMultipleCollies
      */
     private function prepareLabelsFolder(): void
     {
+
         if (!is_dir($this->getLaneFolder())) {
             @mkdir($this->getLaneFolder(), 0755);
         }
@@ -186,8 +184,11 @@ class ExportOrdersMultipleCollies
      **/
     public function export(): bool
     {
+
         try {
             $orders = $this->getOrders($this->selectStatus, $this->selectCarrier, 1, $this->idOrder);
+
+
         } catch (PrestaShopDatabaseException $e) {
             die(sprintf('Error met %s en melding: error (new SoapClient) - %s<br/>', $e->getCode(), $e->getMessage()));
         }
@@ -264,9 +265,9 @@ class ExportOrdersMultipleCollies
         $sql->select('o.*, c.*, a.*, co.*, at.reference as added_to_reference, at.id_order as added_to_id,
          GROUP_CONCAT(aw.reference) as added_with_reference, GROUP_CONCAT(aw.id_order) as added_with_id');
         $sql->from('orders', 'o');
-        $sql->innerJoin('customer', 'c', 'c.id_customer = o.id_customer');
-        $sql->innerJoin('address', 'a', 'a.id_address = o.id_address_delivery');
-        $sql->innerJoin('country', 'co', 'co.id_country = a.id_country');
+        $sql->leftJoin('customer', 'c', 'c.id_customer = o.id_customer');
+        $sql->leftJoin('address', 'a', 'a.id_address = o.id_address_delivery');
+        $sql->leftJoin('country', 'co', 'co.id_country = a.id_country');
         $sql->leftJoin('orders', 'at', 'at.reference = o.added_to_order');
         $sql->leftJoin('orders', 'aw', 'aw.added_to_order = o.reference');
         if (isset($id_order)) { //als id is meegegeven dan maakt state en carrier niet meer uit
@@ -294,7 +295,6 @@ class ExportOrdersMultipleCollies
      */
     private function processOrdersNew($orders, int $collies = 1, int|float|string $weight = 0, string $collieType = 'COL'): void
     {
-
         if (empty($orders)) {
             die("Error met melding: Geen order id's beschikbaar<br/>");
         }
@@ -304,7 +304,6 @@ class ExportOrdersMultipleCollies
         } catch (Exception $e) {
             die(sprintf('Error met %s en melding: error (new SoapClient) - %s<br/>', $e->getCode(), $e->getMessage()));
         }
-
         $login = new stdClass();
         $login->username = $this->apiUserName;
         $login->password = $this->apiPass;
@@ -941,6 +940,7 @@ class ExportOrdersMultipleCollies
         if ($this->updateBool) {
             //orders selecteren die met eerdere acties op 'Ligt klaar voor verzenden' staan (of andere update_status)
             $orders = $this->getOrders($this->updateStatus, $this->selectCarrier);
+
             foreach ($orders as $order) {
                 $this->ordersOk[] = $order['id_order'];
             }

@@ -718,7 +718,6 @@ class PaymentModule extends PaymentModuleCore
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
             }
 
-            //Make cart rules and products
             $virtual_product = true;
 
             $product_var_tpl_list = [];
@@ -772,7 +771,6 @@ class PaymentModule extends PaymentModuleCore
                 }
 
                 $product_var_tpl_list[] = $product_var_tpl;
-                // Check if is not a virtual product for the displaying of shipping
                 if (!$product['is_virtual']) {
                     $virtual_product &= false;
                 }
@@ -785,7 +783,6 @@ class PaymentModule extends PaymentModuleCore
                 $product_list_html = self::getEmailTemplateContentStatic('order_conf_product_list.tpl', Mail::TYPE_HTML, $product_var_tpl_list, $context);
             }
 
-            // Make sure CartRule caches are empty
             CartRule::cleanCache();
             $cart_rules_list = $order->getCartRules();
 
@@ -908,29 +905,11 @@ class PaymentModule extends PaymentModuleCore
         }
     }
 
-    /**
-     * @param Address $the_address that needs to be txt formatted
-     * @param string $line_sep
-     * @param array $fields_style
-     *
-     * @return string the txt formated address block
-     */
     public static function _getFormatedAddressStatic(Address $the_address, $line_sep, $fields_style = [])
     {
         return AddressFormat::generateAddress($the_address, ['avoid' => []], $line_sep, ' ', $fields_style);
     }
 
-    /**
-     * Fetch the content of $template_name inside the folder
-     * current_theme/mails/current_iso_lang/ if found, otherwise in
-     * mails/current_iso_lang.
-     *
-     * @param string $template_name template name with extension
-     * @param int $mail_type Mail::TYPE_HTML or Mail::TYPE_TEXT
-     * @param array $var sent to smarty as 'list'
-     *
-     * @return string
-     */
     public static function getEmailTemplateContentStatic($template_name, $mail_type, $var, $context)
     {
         $email_configuration = Configuration::get('PS_MAIL_TYPE');
@@ -941,9 +920,6 @@ class PaymentModule extends PaymentModuleCore
         return self::getPartialRendererStatic($context)->render($template_name, $context->language, $var);
     }
 
-    /**
-     * @return MailPartialTemplateRenderer
-     */
     protected static function getPartialRendererStatic($context)
     {
         return  new MailPartialTemplateRenderer(Context::getContext()->smarty);

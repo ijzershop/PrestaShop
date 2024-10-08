@@ -1654,7 +1654,7 @@ class DynamicHandler
                 $sql = '
                 SELECT c.id_customization FROM `' . _DB_PREFIX_ . 'customization` c
                 JOIN    `' . _DB_PREFIX_ . 'customized_data` cd ON cd.id_customization = c.id_customization
-                WHERE   (cd.value = "' . pSQL($old_value) . '" OR cd.value = ' . (int)$id_input . ')
+                WHERE   (cd.value = "' . pSQL($old_value) . '" OR cd.value = ' . (int)$id_input . ') 
                         AND c.id_cart = ' . (int)$id_cart_new . ';';
                 $id_customization_new = (int)\Db::getInstance()->getValue($sql);
 
@@ -1788,7 +1788,7 @@ class DynamicHandler
         $sql = '
         SELECT ov.id_option, dpif.options, i.id_input, dpif.type
             FROM `' . _DB_PREFIX_ . 'dynamicproduct_condition` c
-             JOIN `' . _DB_PREFIX_ . 'dynamicproduct_condition_option_visibility` ov
+             JOIN `' . _DB_PREFIX_ . 'dynamicproduct_condition_option_visibility` ov 
              ON c.`id_condition` = ov.`id_condition`
              JOIN `' . _DB_PREFIX_ . 'dynamicproduct_input` i ON c.`id_product` = i.`id_product`
              JOIN `' . _DB_PREFIX_ . 'customization` cus ON i.`id_customization` = cus.`id_customization`

@@ -28,9 +28,9 @@ class FixStockAvailable
      */
     public function __construct()
     {
-        $this->setNewQty = false;
-        $this->new_qty = 10;
-        $this->failedQty = -10;
+        $this->setNewQty = true;
+        $this->new_qty = 1000;
+        $this->failedQty = -1;
         $this->validList = [];
         $this->unvalidList = [];
         /**
@@ -68,7 +68,11 @@ class FixStockAvailable
             }
 
             $this->subtractInvalidProductStockRows();
-            $this->setInvalidRecordsToValue();
+
+            if($this->setNewQty){
+                $this->setInvalidRecordsToValue();
+            }
+
 
         } catch (Exception $exception){
             return file_put_contents($this->errorFile, "Error: ". $exception->getMessage() . "with code:" . $exception->getCode(). PHP_EOL, FILE_APPEND);
@@ -107,8 +111,10 @@ class FixStockAvailable
                     if ($id_stock_available_combination > 0) {
                         $stockObject = new StockAvailable($id_stock_available_combination);
 
-                        if($stockObject->id_shop_group === $this->id_shop_group && $this->setNewQty){
-                                $this->setStockAvailableQty($combination['id_product'], $combination['id_product_attribute'], $id_shop, $this->id_shop_group, $this->new_qty);
+                        if($stockObject->id_shop_group === $this->id_shop_group){
+                                if($this->setNewQty){
+                                    $this->setStockAvailableQty($combination['id_product'], $combination['id_product_attribute'], $id_shop, $this->id_shop_group, $this->new_qty);
+                                }
 
                                 $newQty = $newQty+$this->new_qty;
                                 $combinationStockAvailableId = $id_stock_available_combination . ',';
@@ -122,8 +128,10 @@ class FixStockAvailable
 
             if ($id_stock_available > 0) {
                 $stockObject = new StockAvailable($id_stock_available);
-                if($stockObject->id_shop_group === $this->id_shop_group && $this->setNewQty){
-                    $this->setStockAvailableQty($product->id, 0, $id_shop, $this->id_shop_group, $newQty);
+                if($stockObject->id_shop_group === $this->id_shop_group){
+                    if($this->setNewQty){
+                        $this->setStockAvailableQty($product->id, 0, $id_shop, $this->id_shop_group, $newQty);
+                    }
 
                     $stockAvailableId = $id_stock_available . ',';
                     file_put_contents($this->validFile, $stockAvailableId, FILE_APPEND);

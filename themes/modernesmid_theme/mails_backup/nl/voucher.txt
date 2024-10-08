@@ -1,0 +1,9 @@
+{shop_url}
+
+We willen jouw graag informeren over een kortingscode die is aangemaakt op uw naam voor bestelling met referentie {order_name}.
+
+KORTINGSCODE: {voucher_num} voor een bedrag van {voucher_amount}
+
+Om deze te gebruiken, knip/plak deze code tijdens het bestellen.
+
+{custom_footer_html}

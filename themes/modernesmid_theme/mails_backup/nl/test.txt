@@ -1,0 +1,7 @@
+{shop_url}
+
+Dit is een test e-mail van uw shop.
+
+Als u dit kunt lezen, dan is de test geslaagd!
+
+{custom_footer_html}

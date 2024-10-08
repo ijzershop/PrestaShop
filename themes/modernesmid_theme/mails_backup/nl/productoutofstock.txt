@@ -1,0 +1,9 @@
+{shop_url}
+
+Er zijn nu minder dan {last_qty} producten op voorraad.
+
+Resterende voorraad: {qty}
+
+Vul uw inventaris aan, ga naar het gedeelte Catalogus> Voorraad van uw backoffice om uw voorraad te beheren.
+
+{custom_footer_html}

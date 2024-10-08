@@ -480,7 +480,7 @@ class Ps_EmailAlerts extends Module
 
             $product_var_tpl = [
                 'id_product' => $product['id_product'],
-                'id_product_attribute' => $product['id_product_attribute'],
+                'id_product_attribute' => null,
                 'reference' => $product['reference'],
                 'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
                 'price' => Tools::getContextLocale($context)->formatPrice($product_price, $context->currency->iso_code),
@@ -498,9 +498,9 @@ class Ps_EmailAlerts extends Module
             }
 
             $customized_datas = Product::getAllCustomizedDatas((int) $order->id_cart, null, true, null, (int) $product['id_customization']);
-            if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']])) {
+            if (isset($customized_datas[$product['id_product']][0])) {
                 $product_var_tpl['customization'] = [];
-                foreach ($customized_datas[$product['id_product']][$product['id_product_attribute']][$order->id_address_delivery] as $customization) {
+                foreach ($customized_datas[$product['id_product']][0][$order->id_address_delivery] as $customization) {
                     $customization_text = '';
                     if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
                         foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
@@ -568,7 +568,7 @@ class Ps_EmailAlerts extends Module
         $order_state = $params['orderStatus'];
 
         if($order->total_paid_tax_incl <= 0){
-            $totalTax = Tools::getContextLocale($context)->formatPrice((float)$order->total_discount_tax_incl - (float)$order->total_discount_tax_incl, $context->currency->iso_code);
+            $totalTax = Tools::getContextLocale($context)->formatPrice((float)$order->total_discounts_tax_incl - (float)$order->total_discounts_tax_excl, $context->currency->iso_code);
         } else {
             $totalTax = Tools::getContextLocale($context)->formatPrice((float)$order->total_paid_tax_incl-(float)$order->total_paid_tax_excl, $context->currency->iso_code);
         }

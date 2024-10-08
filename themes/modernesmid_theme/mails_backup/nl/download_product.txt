@@ -1,0 +1,13 @@
+{shop_url}
+
+Te downloaden product(en)
+
+U heeft {nbProducts} product(en) beschikbaar om te downloaden via deze link(s):
+
+{virtualProducts}
+
+Follow your order and download your invoice on our shop, go to the [> order history and details]({history_url}) section of your customer account.
+
+If you have a guest account, you can follow your order via the [> guest tracking]({guest_tracking_url}) section on our shop.
+
+{custom_footer_html}

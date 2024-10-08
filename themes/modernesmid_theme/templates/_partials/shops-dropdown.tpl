@@ -1,4 +1,4 @@
-<div class="btn-group" id="store-switcher">
+<!-- <div class="btn-group" id="store-switcher">
   <button type="button" class="btn btn-outline btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Bekijk onze andere winkels
   </button>
@@ -16,4 +16,4 @@
       {/foreach}
     {/foreach}
   </div>
-</div>
+</div> -->

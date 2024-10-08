@@ -32,7 +32,6 @@ class ps_creditpaymentAjaxModuleFrontController extends ModuleFrontController
                         'email' => $customersWithGroup[$i]['email']));
                 }
             }
-            dd($customers);
         }
 
 

@@ -122,7 +122,7 @@
           <td class="right white" colspan="2">
             - {displayPrice currency=$order->id_currency price=$cart_rule.reduction_amount}</td>
           <td class="right white" colspan="2">
-            - {displayPrice currency=$order->id_currency price=($cart_rule.reduction_amount_tax_excl)}</td>
+            - {displayPrice currency=$order->id_currency price=((float)$cart_rule.reduction_amount/1.21)}</td>
         {else}
           <td class="right white" colspan="2">- {displayPrice currency=$order->id_currency price=$cart_rule.value}</td>
           <td class="right white" colspan="2">

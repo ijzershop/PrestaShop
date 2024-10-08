@@ -26,7 +26,7 @@
 	<tr>
     <th class="header small" valign="middle">{l s='Besteldatum' d='Shop.Pdf' pdf='true'}</th>
     <th class="header small" valign="middle">{l s='Factuurdatum' d='Shop.Pdf' pdf='true'}</th>
-    <th class="header small" valign="middle">{l s='Referentie' d='Shop.Pdf' pdf='true'}</th>
+    <th class="header small" valign="middle">{l s='Factuurnummer' d='Shop.Pdf' pdf='true'}</th>
 	</tr>
 	<tr>
     <td class="center small white">{dateFormat date=$order->date_add full=0}</td>

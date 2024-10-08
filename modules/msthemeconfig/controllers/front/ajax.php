@@ -1522,7 +1522,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
         $export = new ExportOrdersMultipleCollies($id_order, $weight, $weight_option, $collies, $collieType);
         $export->export();
-
         if($export->redirect){
             $readyForShippingStatus = Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 

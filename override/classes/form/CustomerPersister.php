@@ -149,6 +149,33 @@ class CustomerPersister extends CustomerPersisterCore
 
     private function create(Customer $customer, $plainTextPassword)
     {
+//        dd($customer->lastname);
+        // If ordering without registration is not enabled, we need to force it
+        if (empty($customer->firstname)) {
+            $this->context->controller->errors[] = $this->translator->trans(
+                'Voornaam is verplicht',
+                [],
+                'Shop.Notifications.Error'
+            );
+            return false;
+        }
+        if (empty($customer->lastname)) {
+            $this->context->controller->errors['lastname'][] = $this->translator->trans(
+                'Achternaam is verplicht',
+                [],
+                'Shop.Notifications.Error'
+            );
+            return false;
+        }
+        if (empty($customer->email)) {
+            $this->context->controller->errors['email'][] = $this->translator->trans(
+                'Email is required',
+                [],
+                'Shop.Notifications.Error'
+            );
+            return false;
+        }
+
         /*
          * If there is no password provided, we are registering a guest
          */

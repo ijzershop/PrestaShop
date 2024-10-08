@@ -388,12 +388,10 @@ class Cart extends CartCore
             $id_carrier = null;
         }
 
-        // deprecated type
         if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
             $type = Cart::ONLY_PRODUCTS;
         }
 
-        // check type
         $type = (int) $type;
         $allowedTypes = [
             Cart::ONLY_PRODUCTS,
@@ -412,13 +410,10 @@ class Cart extends CartCore
             throw new \Exception('Invalid calculation type: ' . $type);
         }
 
-        // EARLY RETURNS
 
-        // if cart rules are not used
         if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive()) {
             return 0;
         }
-        // no shipping cost if is a cart with only virtuals products
         $virtual = $this->isVirtualCart();
         if ($virtual && $type == Cart::ONLY_SHIPPING) {
             return 0;
@@ -427,7 +422,6 @@ class Cart extends CartCore
             $type = Cart::BOTH_WITHOUT_SHIPPING;
         }
 
-        // filter products
         if (null === $products) {
             $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
         }
@@ -453,7 +447,6 @@ class Cart extends CartCore
             $withTaxes = false;
         }
 
-        // CART CALCULATION
         $cartRules = [];
         if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS, Cart::ONLY_DISCOUNTS_NO_CALCULATION, Cart::ONLY_REMAINDER_OF_DISCOUNTS])) {
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
@@ -481,7 +474,6 @@ class Cart extends CartCore
                 break;
             case Cart::BOTH_WITHOUT_SHIPPING:
                 $calculator->calculateRows();
-                // dont process free shipping to avoid calculation loop (and maximum nested functions !)
                 $calculator->calculateCartRulesWithoutFreeShipping();
                 $amount = $calculator->getTotal(true);
 
@@ -546,67 +538,16 @@ class Cart extends CartCore
         $isFreeShippingAppliedToAmount = false;
         foreach ($cart_rules as $cartRule) {
             if((float)$cartRule['reduction_percent'] > 0){
-                //percentage discount
                 $amount = $amount->add(new AmountImmutable($cartRule['value_real'],$cartRule['value_tax_exc']));
             } else {
-                //money amount
                 $amount = $amount->add(new AmountImmutable($cartRule['reduction_amount'],$cartRule['reduction_amount']/1.21));
             }
         }
 
-//        $allowedMaxDiscount = $calculator->getRowTotalWithoutDiscount();
-//
-//        if (null !== $calculator->getFees()->getFinalShippingFees()) {
-//            $shippingDiscount = (new AmountImmutable())
-//                ->add($calculator->getFees()->getInitialShippingFees())
-//                ->sub($calculator->getFees()->getFinalShippingFees())
-//            ;
-//            $allowedMaxDiscount = $allowedMaxDiscount->add($shippingDiscount);
-//        }
-//        // discount cannot be above total cart price
-//        if ($amount > $allowedMaxDiscount) {
-//            $amount = $allowedMaxDiscount;
-//        }
 
         return $amount;
     }
 
-//    public function getCartRules(
-//        $filter = CartRule::FILTER_ACTION_ALL,
-//        $autoAdd = true,
-//        $useOrderPrices = false,
-//        $products = null,
-//        $id_carrier = null,
-//        $keepOrderPrices = false
-//    )
-//    {
-//        $result = parent::getCartRules($filter, $autoAdd, $useOrderPrices);
-//        if (!($moduleClass = Module::getInstanceByName('klcartruleextender'))
-//            || !($moduleClass instanceof KlCartRuleExtender)
-//            || !$moduleClass->isEnabledForShopContext()
-//            || (!Configuration::get('KL_CART_RULE_EXTENDER_SHIPPING_FEES') && !Configuration::get('KL_CART_RULE_EXTENDER_WRAPPING_FEES'))
-//            || !in_array($filter, [CartRule::FILTER_ACTION_ALL])
-//            || $this->getNbOfPackages() > 1
-//        ) {
-//            return $result;
-//        }
-//        if ((int)$id_carrier <= 0) {
-//            $id_carrier = null;
-//        }
-//        if (null === $products) {
-//            $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
-//        }
-//        $computePrecision = Context::getContext()->getComputingPrecision();
-//        $newCalculator = $this->newCalculator($products, $result, $id_carrier, $computePrecision, $keepOrderPrices);
-//        $calculator = $moduleClass->getCalculator();
-//        $calculator
-//            ->setCalculator($newCalculator)
-//            ->process();
-//        if ($calculator->isProcessed) {
-//            $result = $calculator->getCartRules();
-//        }
-//        return $result;
-//    }
 
     public function updateQty(
         $quantity,

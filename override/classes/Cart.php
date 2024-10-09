@@ -609,6 +609,7 @@ class Cart extends CartCore
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
         }
+
         $data = [
             'cart' => $this,
             'product' => $product,
@@ -926,4 +927,5 @@ class Cart extends CartCore
                 break;
         }
     }
+
 }

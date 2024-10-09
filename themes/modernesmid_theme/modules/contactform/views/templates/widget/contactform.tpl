@@ -135,7 +135,7 @@
               {else}
             <div class="card card-body">
             <div class="form-row">
-              <span class="col form-text text-muted">Vul eerst uw bestelling referentie en bijhorende postcode in. Klik daarna op <button disabled onclick="void(0)" type="button" style="font-size: .5rem;" class="btn-sm btn btn-success"><i class="fasl fa-magnifying-glass"></i></button> om de producten van uw bestelling op te halen. U kunt dan per product aangeven welke u wilt retourneren</span>
+              <span class="col form-text text-muted">Vul eerst uw bestelling factuurnummer en bijhorende postcode in. Klik daarna op <button disabled onclick="void(0)" type="button" style="font-size: .5rem;" class="btn-sm btn btn-success"><i class="fasl fa-magnifying-glass"></i></button> om de producten van uw bestelling op te halen. U kunt dan per product aangeven welke u wilt retourneren</span>
               <br/>
             </div>
             <div class="form-row">

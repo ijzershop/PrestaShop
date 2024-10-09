@@ -1375,13 +1375,13 @@ $(function () {
           addToOrderAddress.firstname = e[0].address.firstname;
           addToOrderAddress.lastname = e[0].address.lastname;
           addToOrderAddress.phone = e[0].address.phone;
-          htmlBlock = 'De bestelling met referentie <strong>' + desiredReference + '</strong> is geselecteerd om uw huidige bestelling aan toe te voegen. ' +
+          htmlBlock = 'De bestelling met factuurnummer <strong>' + desiredReference + '</strong> is geselecteerd om uw huidige bestelling aan toe te voegen. ' +
             'De bestelling word geleverd op postcode <br/>' +
             '<span style="font-size:16px;" class="col-6 badge badge-success">' + e[0].postcode + '</span>' +
             '<span class="info-icon-add-to-order" data-id="add_to_order_info"><i class="icon-info ml-2"></i></span>' +
             '<br/>' +
             '<div style="display:none;" class="border-bottom-0 pb-1 pt-2 col" id="add_to_order_info">' +
-            '<span class="col-12 text-left width-100" style="color:blue;">Vanwege de AVG regels kunnen wij u niet meer informatie verschaffen dan de postcode. Kijk daarom de postcode en uw referentie goed na voordat u deze bestelling er aan toevoegd.</span>' +
+            '<span class="col-12 text-left width-100" style="color:blue;">Vanwege de AVG regels kunnen wij u niet meer informatie verschaffen dan de postcode. Kijk daarom de postcode en uw factuurnummer goed na voordat u deze bestelling er aan toevoegd.</span>' +
             '</div><br/>'
             + '<div class="btn-group w-100"><a id="searchOrderByReferenceAgain" class="btn btn-sm btn-primary text-white" href="#"><i class="fasl fa-magnifying-glass"></i> Opnieuw Zoeken</a>';
 
@@ -1393,7 +1393,7 @@ $(function () {
           $('.add-to-existing-order-form input[type="radio"]').removeAttr('disabled').prop('checked', true);
           $('#desired_reference').addClass('is-valid');
         } else {
-          htmlBlock = '<strong>De gewenste bestelling is niet meer voor toevoegen beschikbaar!</strong> Zoek nogmaal op referentie of selecteer een andere verzendmethode';
+          htmlBlock = '<strong>De gewenste bestelling is niet meer voor toevoegen beschikbaar!</strong> Zoek nogmaal op factuurnummer of selecteer een andere verzendmethode';
           $('#desired_reference_error').html(htmlBlock);
           $('#desired_reference_error').show();
           $('#desired_reference').addClass('is-invalid');

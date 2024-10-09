@@ -742,7 +742,7 @@ class ExportOrdersMultipleCollies
             $this->output .= sprintf('<input type="hidden" name="%s" value="%s"/>', $key, $value);
         }
 
-        $this->output .= 'Dit is een toevoeging aan bestelling met referentie(s): <table class="table w-100">';
+        $this->output .= 'Dit is een toevoeging aan bestelling met factuurnummer(s): <table class="table w-100">';
 
         foreach ($linkedIdArray as $i => $link) {
             $orderCarrier = new Order($link);
@@ -800,7 +800,7 @@ class ExportOrdersMultipleCollies
             $this->output .= sprintf('<input type="hidden" name="%s" value="%s"/>', $key, $value);
         }
 
-        $this->output .= 'Deze bestelling heeft één of meerdere toevoeging(en) met referentie(s): <table class="table w-100">';
+        $this->output .= 'Deze bestelling heeft één of meerdere toevoeging(en) met factuurnummer(s): <table class="table w-100">';
 
         foreach ($linkedIdArray as $i => $link) {
             $orderCarrier = new Order($link);

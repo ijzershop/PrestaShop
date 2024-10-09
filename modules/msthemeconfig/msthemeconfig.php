@@ -844,9 +844,13 @@ class MsThemeConfig extends Module
      */
     public function hookActionObjectCategoryUpdateAfter($params)
     {
-        $hookClass = $this->getModernHooks();
-        $hookClass->hookActionObjectCategoryUpdateAfter($params);
-        return true;
+        try {
+            $hookClass = $this->getModernHooks();
+            $hookClass->hookActionObjectCategoryUpdateAfter($params);
+        } catch (\PrestaShopException $e) {
+            dd($e);
+        }
+        die();
     }
 
     /**

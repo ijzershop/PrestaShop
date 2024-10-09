@@ -346,17 +346,16 @@ $(document).ready(() => {
     element.siblings('.error-small').remove();
     if (element.val() === '') {
       element.parent().append(inputMessage(required_error));
+      $(element).addClass('is-invalid');
     } else {
-      element.siblings('.error-small').remove();
+      $(element).parent().find('.error-small').remove();
+      $(element).removeClass('is-invalid');
     }
   };
 
   let validateCompanyInputFields = function (element) {
     $(element).val($(element).val().replace(/[.,]+/g, ''));
     $(element).siblings('.error-small').remove();
-    // if (!validateCityName($(element).val())) {
-    //   $(element).parent().append(inputMessage(splchar_error, 'text-warning'));
-    // }
   }
 
   let validateVatInputFields = function (element) {
@@ -389,26 +388,21 @@ $(document).ready(() => {
     $(element).parent().find('.error-small').remove();
     if ($(element).val() === '') {
       $(element).parent().append(inputMessage(required_error));
-    } else if (!validateAddressApi($(element).val())) {
-      $(element).parent().append(inputMessage(invalid_address, 'text-warning'));
-    } else if (validateAddressApi($(element).val())) {
+      $(element).addClass('is-invalid');
+    } else {
       $(element).parent().find('.error-small').remove();
+      $(element).removeClass('is-invalid');
     }
-    checkFormatAddressApiCheckout().then(r => {
-    });
   }
 
   let validatePostcodeInputFields = function (element) {
     $(element).parent().find('.error-small').remove();
     if ($(element).val() === '') {
       $(element).parent().append(inputMessage(required_error));
-    } else if (validatePostCode($(element).val())) {
+      $(element).addClass('is-invalid');
+    } else {
       $(element).parent().find('.error-small').remove();
-
-      if ($(element).parents('.form-fields.row').find('input[name="house_number"]').val() !== '') {
-        checkFormatAddressApiCheckout().then(r => {
-        });
-      }
+      $(element).removeClass('is-invalid');
     }
   }
 
@@ -416,17 +410,10 @@ $(document).ready(() => {
     $(element).parent().find('.error-small').remove();
     if ($(element).val() === '') {
       $(element).parent().append(inputMessage(required_error));
-    } else if (!validateAddressApi($(element).val())) {
-      $(element).parent().append(inputMessage(invalid_address, 'text-warning'));
-    } else if (validateAddressApi($(element).val())) {
-      if (!$(element).val().match(/\d+/)) {
-        if (!$(element).parent().find('.error-small').length)
-          $(element).parent().append(inputMessage(street_number_warning, 'text-warning'));
-      } else {
-        $(element).parent().find('.error-small').remove();
-      }
-      checkFormatAddressApiCheckout().then(r => {
-      });
+      $(element).addClass('is-invalid');
+    } else {
+      $(element).parent().find('.error-small').remove();
+      $(element).removeClass('is-invalid');
     }
   }
 
@@ -443,11 +430,11 @@ $(document).ready(() => {
     $(element).parent().find('.error-small').remove();
     if ($(element).val() === '') {
       $(element).parent().append(inputMessage(required_error));
-    } else if (!validateCityName($(element).val())) {
-      $(element).parent().append(inputMessage(invalid_city, 'text-warning'));
+      $(element).addClass('is-invalid');
+    } else {
+      $(element).parent().find('.error-small').remove();
+      $(element).removeClass('is-invalid');
     }
-    checkFormatAddressApiCheckout().then(r => {
-    });
   }
 
   let validatePhoneInputFields = function (element, required = true) {
@@ -455,9 +442,6 @@ $(document).ready(() => {
     if ($(element).val() === '' && required) {
       $(element).parent().append(inputMessage(required_error));
     }
-    // else if (!validatePhoneNumber($(element).val())) {
-    //   $(element).parent().append(inputMessage(not_valid_phone, 'text-warning'));
-    // }
   }
 
   // Name validation
@@ -494,13 +478,8 @@ $(document).ready(() => {
   //Postcode on adres form validation
   $('#customer_address_form input[name="postcode"],#checkout-form input[name="postcode"], #delivery-address input[name="postcode"], #invoice-address input[name="postcode"]')
     .on('keyup paste', delayKeyUp(function (e) {
+      validatePostcodeInputFields(this);
       e.stopImmediatePropagation();
-      // let value = $(this).val();
-      // let chosenCountry = $(this).parents('form').find('.js-country').val();
-      // let check = validatePostCode(value, chosenCountry);
-      // if (check) {
-      //   validatePostcodeInputFields(this);
-      // }
     }));
   //Address
   $('#customer_address_form input[name="address1"],#checkout-form input[name="address1"], #delivery-address input[name="address1"], #invoice-address input[name="address1"]')
@@ -547,6 +526,68 @@ $(document).ready(() => {
     e.stopImmediatePropagation();
   }));
 
+  let validateAllAddressInputs = function(insertedData = []){
+    let check = true;
+
+    let firstname = (insertedData.get('firstname') || '').toString().toUpperCase();
+    let lastname = (insertedData.get('lastname') || '').toString().toUpperCase();
+    let address = (insertedData.get('address1') || '').toString().toUpperCase();
+    let houseNumber = (insertedData.get('house_number') || '').toString().toUpperCase();
+    let postcode = (insertedData.get('postcode') || '').toString().toUpperCase();
+    let city = (insertedData.get('city') || '').toString().toUpperCase();
+
+    let fnameElem = $('[name="firstname"]');
+    let lnameElem = $('[name="lastname"]');
+    let addressElem = $('[name="address1"]');
+    let numberElem = $('[name="house_number"]');
+    let postcodeElem = $('[name="postcode"]');
+    let cityElem = $('[name="city"]');
+
+    if(address.length === 0){
+      validateAddressInputFields(addressElem);
+      check = false;
+    } else {
+      addressElem.parent().find('.error-small').remove();
+      addressElem.removeClass('is-invalid');
+    }
+    if(houseNumber.length === 0){
+      validateHouseNumberInputFields(numberElem);
+      check = false;
+    } else {
+      numberElem.parent().find('.error-small').remove();
+      numberElem.removeClass('is-invalid');
+    }
+    if(postcode.length === 0){
+      validatePostcodeInputFields(postcodeElem);
+      check = false;
+    } else {
+      postcodeElem.parent().find('.error-small').remove();
+      postcodeElem.removeClass('is-invalid');
+    }
+    if(city.length === 0){
+      validateCityInputFields(cityElem);
+      check = false;
+    } else {
+      cityElem.parent().find('.error-small').remove();
+      cityElem.removeClass('is-invalid');
+    }
+    if(firstname.length === 0){
+      validateNameInputFields(fnameElem);
+      check = false;
+    } else {
+      fnameElem.parent().find('.error-small').remove();
+      fnameElem.removeClass('is-invalid');
+    }
+    if(lastname.length === 0){
+      validateNameInputFields(lnameElem);
+      check = false;
+    } else {
+      lnameElem.parent().find('.error-small').remove();
+      lnameElem.removeClass('is-invalid');
+    }
+    return check;
+  }
+
   $(document).on('click', 'div#delivery-address .btn[name="confirm-addresses"], div#invoice-address .btn[name="confirm-addresses"], form#customer_address_form .btn[name="confirm-addresses"], form#checkout-form .btn[name="confirm-addresses"]', function (e) {
     e.stopImmediatePropagation();
 
@@ -569,38 +610,44 @@ $(document).ready(() => {
     let insertedAddress = address + ' ' + houseNumber + houseNumberExtension + '<br>'
       + postcode + ' ' + city
       + '<br>' + country;
-    console.log([insertedData, insertedAddress]);
 
-    checkFormatAddressApiCheckout(true).then(async fullfilled => {
-        if (fullfilled) {
-          //ga verder
-          formElem.submit();
-        } else {
-          //geef melding
-          const dialog = new ConfirmDialog({
-            titleText: "Let op! adres kon niet gevalideerd worden.",
-            trueButtonText: "Ja, doorgaan",
-            trueButtonClass: "btn-success",
-            falseButtonText: "Nee, wijzigen",
-            falseButtonClass: "btn-danger",
-            questionText: '<span>' +
-              '<address class="h4 text-center">' + insertedAddress + '</address><br><br>' +
-              '<div class="text-center mb-2 font-weight-bold text-dark h6">Weet u zeker dat het ingevoerde adress correct is?<span></span>'
-          });
-
-          const shouldPostOutOfStockActionWish = await dialog.confirm();
-          if (shouldPostOutOfStockActionWish) {
+    let check = validateAllAddressInputs(insertedData, formElem);
+    if(check){
+      checkFormatAddressApiCheckout(true).then(async fullfilled => {
+          if (fullfilled) {
+            //ga verder
             formElem.submit();
-            return true;
-
           } else {
-            return false;
+            //geef melding
+            const dialog = new ConfirmDialog({
+              titleText: "Let op! adres kon niet gevalideerd worden.",
+              trueButtonText: "Ja, doorgaan",
+              trueButtonClass: "btn-success",
+              falseButtonText: "Nee, wijzigen",
+              falseButtonClass: "btn-danger",
+              questionText: '<span>' +
+                '<address class="h4 text-center">' + insertedAddress + '</address><br><br>' +
+                '<div class="text-center mb-2 font-weight-bold text-dark h6">Weet u zeker dat het ingevoerde adress correct is?<span></span>'
+            });
+
+            const shouldPostOutOfStockActionWish = await dialog.confirm();
+            if (shouldPostOutOfStockActionWish) {
+              formElem.submit();
+              return true;
+
+            } else {
+              return false;
+            }
           }
-        }
-      },
-      rejected => {
-        return false;
-      });
+        },
+        rejected => {
+          return false;
+        });
+
+    }
+    return false;
+
+
   });
 
   async function checkFormatAddressApiCheckout(validate=false) {

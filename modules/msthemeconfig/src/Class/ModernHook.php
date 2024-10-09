@@ -1836,6 +1836,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
     public function hookActionObjectCategoryUpdateAfter(array $params)
     {
         $this->updateCustomCategoryFields($params);
+        die();
     }
 
     /**
@@ -1865,37 +1866,38 @@ public function hookActionFrontControllerSetVariables(&$param): void
             return;
         }
 
+
+
         if (empty($categoryFormData['additional_description'])) {
             $additional_description = '';
         } else {
-            $additional_description = $categoryFormData['additional_description'][$idLang];
+            $additional_description = $categoryFormData['additional_description'];
         }
 
 
         if (empty($categoryFormData['top_description'])) {
             $top_description = '';
         } else {
-            $top_description = $categoryFormData['top_description'][$idLang];
+            $top_description = $categoryFormData['top_description'];
         }
 
         if (empty($categoryFormData['second_name'])) {
             $second_name = '';
         } else {
-            $second_name = $categoryFormData['second_name'][$idLang];
+            $second_name = $categoryFormData['second_name'];
         }
 
         if (empty($categoryFormData['jsonld'])) {
             $jsonld = '';
         } else {
-            $jsonld = $categoryFormData['jsonld'][$idLang];
+            $jsonld = $categoryFormData['jsonld'];
         }
 
-        $object->additional_description[$idLang] = $additional_description;
-        $object->top_description[$idLang] = $top_description;
-        $object->second_name[$idLang] = $second_name;
-        $object->jsonld[$idLang] = $jsonld;
-        $object->update();
-        return;
+        $object->additional_description = $additional_description;
+        $object->top_description = $top_description;
+        $object->second_name = $second_name;
+        $object->jsonld = $jsonld;
+        return $object->update(false, true);
     }
 
     /**
@@ -1908,7 +1910,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
      */
     public function hookActionAfterCreateCategoryFormHandler(array $params)
     {
-//       $this->updateCustomCategoryFields($params);
+       $this->updateCustomCategoryFields($params);
     }
 
 
